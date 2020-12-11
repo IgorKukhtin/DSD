@@ -2,7 +2,7 @@ object ProdColorGroupEditForm: TProdColorGroupEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1072#1090#1077#1075#1086#1088#1080#1103' Boat Structure>'
-  ClientHeight = 200
+  ClientHeight = 246
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@ object ProdColorGroupEditForm: TProdColorGroupEditForm
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 163
+    Top = 209
     Width = 75
     Height = 25
     Action = actInsertUpdateGuides
@@ -38,7 +38,7 @@ object ProdColorGroupEditForm: TProdColorGroupEditForm
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 163
+    Top = 209
     Width = 75
     Height = 25
     Action = actFormClose
@@ -63,13 +63,30 @@ object ProdColorGroupEditForm: TProdColorGroupEditForm
   end
   object cxLabel3: TcxLabel
     Left = 10
-    Top = 100
+    Top = 146
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit
     Left = 10
-    Top = 120
+    Top = 166
     TabOrder = 7
+    Width = 273
+  end
+  object cxLabel4: TcxLabel
+    Left = 10
+    Top = 98
+    Caption = #1042#1080#1076' Boat Structure'
+  end
+  object edProdColorKind: TcxButtonEdit
+    Left = 10
+    Top = 117
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 9
     Width = 273
   end
   object ActionList: TActionList
@@ -139,6 +156,14 @@ object ProdColorGroupEditForm: TProdColorGroupEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProdColorKindId'
+        Value = Null
+        Component = GuidesProdColorKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 96
@@ -188,6 +213,21 @@ object ProdColorGroupEditForm: TProdColorGroupEditForm
         Component = edComment
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProdColorKindId'
+        Value = Null
+        Component = GuidesProdColorKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProdColorKindName'
+        Value = Null
+        Component = GuidesProdColorKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184
@@ -206,10 +246,39 @@ object ProdColorGroupEditForm: TProdColorGroupEditForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 160
-    Top = 104
+    Top = 150
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 104
-    Top = 104
+    Top = 150
+  end
+  object GuidesProdColorKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edProdColorKind
+    FormNameParam.Value = 'TProdColorKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TProdColorKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesProdColorKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesProdColorKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 126
+    Top = 108
   end
 end

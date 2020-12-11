@@ -63,6 +63,7 @@ type
     Comment: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    ProdColorKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

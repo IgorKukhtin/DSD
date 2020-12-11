@@ -1,12 +1,14 @@
 -- Торговая марка
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorGroup (Integer, Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorGroup (Integer, Integer, TVarChar, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdColorGroup(
  INOUT ioId              Integer,       -- ключ объекта <Бренд>
  INOUT ioCode            Integer,       -- свойство <Код Бренда>
     IN inName            TVarChar,      -- главное Название Бренда
     IN inComment         TVarChar,      -- 
+    IN inProdColorKindId Integer ,      -- 
     IN inSession         TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -34,6 +36,9 @@ BEGIN
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ProdColorGroup_Comment(), ioId, inComment);
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdColorGroup_ProdColorKind(), ioId, inProdColorKindId);
 
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>

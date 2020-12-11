@@ -40,6 +40,9 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel3: TcxLabel;
     edComment: TcxTextEdit;
+    cxLabel4: TcxLabel;
+    edProdColorKind: TcxButtonEdit;
+    GuidesProdColorKind: TdsdGuides;
   private
     { Private declarations }
   public

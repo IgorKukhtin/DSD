@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ProdColorGroup(
    
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , ProdColorKindId Integer, ProdColorKindName TVarChar
              , Comment TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
@@ -28,6 +29,8 @@ BEGIN
              Object_ProdColorGroup.Id         AS Id
            , Object_ProdColorGroup.ObjectCode AS Code
            , Object_ProdColorGroup.ValueData  AS Name
+           , Object_ProdColorKind.Id          AS ProdColorKindId
+           , Object_ProdColorKind.ValueData   AS ProdColorKindName
            , ObjectString_Comment.ValueData   AS Comment
 
            , Object_Insert.ValueData          AS InsertName
@@ -37,6 +40,11 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_ProdColorGroup.Id
                                 AND ObjectString_Comment.DescId = zc_ObjectString_ProdColorGroup_Comment()  
+
+          LEFT JOIN ObjectLink AS ObjectLink_ProdColorKind
+                               ON ObjectLink_ProdColorKind.ObjectId = Object_ProdColorGroup.Id
+                              AND ObjectLink_ProdColorKind.DescId = zc_ObjectLink_ProdColorGroup_ProdColorKind()
+          LEFT JOIN Object AS Object_ProdColorKind ON Object_ProdColorKind.Id = ObjectLink_ProdColorKind.ChildObjectId 
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_ProdColorGroup.Id
@@ -58,6 +66,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+11.12.20          * ProdColorKindId
 08.10.20          *
 */
 

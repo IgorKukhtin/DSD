@@ -3,7 +3,7 @@ object ProdColorGroupForm: TProdColorGroupForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1072#1090#1077#1075#1086#1088#1080#1103' Boat Structure>'
   ClientHeight = 376
-  ClientWidth = 394
+  ClientWidth = 486
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,12 +19,13 @@ object ProdColorGroupForm: TProdColorGroupForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 394
+    Width = 486
     Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 394
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -65,6 +66,14 @@ object ProdColorGroupForm: TProdColorGroupForm
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 200
+      end
+      object ProdColorKindName: TcxGridDBColumn
+        Caption = #1042#1080#1076#1099' Boat Structure'
+        DataBinding.FieldName = 'ProdColorKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 136
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
