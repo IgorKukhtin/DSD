@@ -51,7 +51,7 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
     TabOrder = 4
     Width = 273
   end
