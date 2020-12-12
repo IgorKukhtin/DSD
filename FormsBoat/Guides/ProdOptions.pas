@@ -64,7 +64,7 @@ type
     Comment: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
-    Power: TcxGridDBColumn;
+    Level: TcxGridDBColumn;
   private
     { Private declarations }
   public

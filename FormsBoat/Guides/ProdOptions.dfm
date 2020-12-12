@@ -51,7 +51,7 @@ object ProdOptionsForm: TProdOptionsForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object Code: TcxGridDBColumn
-        Caption = #1040#1088#1090#1080#1082#1091#1083
+        Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -67,11 +67,12 @@ object ProdOptionsForm: TProdOptionsForm
         Options.Editing = False
         Width = 189
       end
-      object Power: TcxGridDBColumn
-        Caption = #1059#1088#1086#1074#1077#1085#1100
+      object Level: TcxGridDBColumn
+        Caption = #8470' '#1087'/'#1087
         DataBinding.FieldName = 'Level'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 113
@@ -551,6 +552,7 @@ object ProdOptionsForm: TProdOptionsForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 104
     Top = 248

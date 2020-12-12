@@ -153,7 +153,7 @@ object ProdModelEditForm: TProdModelEditForm
   object cxLabel10: TcxLabel
     Left = 153
     Top = 153
-    Caption = #1057#1080#1076#1077#1085#1100#1103
+    Caption = #1050#1086#1083'-'#1074#1086' '#1084#1077#1089#1090
   end
   object edSeating: TcxCurrencyEdit
     Left = 153

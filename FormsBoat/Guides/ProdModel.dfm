@@ -50,8 +50,16 @@ object ProdModelForm: TProdModelForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object BrandName: TcxGridDBColumn
+        Caption = #1052#1072#1088#1082#1072
+        DataBinding.FieldName = 'BrandName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object Code: TcxGridDBColumn
-        Caption = #1040#1088#1090#1080#1082#1091#1083
+        Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -66,14 +74,6 @@ object ProdModelForm: TProdModelForm
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 189
-      end
-      object BrandName: TcxGridDBColumn
-        Caption = #1052#1072#1088#1082#1072
-        DataBinding.FieldName = 'BrandName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
       end
       object ProdEngineName: TcxGridDBColumn
         Caption = #1052#1086#1090#1086#1088
@@ -138,9 +138,10 @@ object ProdModelForm: TProdModelForm
         Width = 66
       end
       object Seating: TcxGridDBColumn
-        Caption = #1057#1080#1076#1077#1085#1100#1103
+        Caption = #1050#1086#1083'-'#1074#1086' '#1084#1077#1089#1090
         DataBinding.FieldName = 'Seating'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter

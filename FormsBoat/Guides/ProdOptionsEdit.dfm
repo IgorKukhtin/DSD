@@ -75,7 +75,7 @@ object ProdOptionsEditForm: TProdOptionsEditForm
   object cxLabel6: TcxLabel
     Left = 10
     Top = 99
-    Caption = #1059#1088#1086#1074#1077#1085#1100
+    Caption = #8470' '#1087'/'#1087
   end
   object edLevel: TcxCurrencyEdit
     Left = 10

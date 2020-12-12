@@ -51,7 +51,7 @@ object ProdEngineForm: TProdEngineForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object Code: TcxGridDBColumn
-        Caption = #1040#1088#1090#1080#1082#1091#1083
+        Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -551,6 +551,7 @@ object ProdEngineForm: TProdEngineForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 104
     Top = 248
