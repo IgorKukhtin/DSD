@@ -672,6 +672,21 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           Options.Editing = False
           Width = 40
         end
+        object ReceiptLevelName_ch2: TcxGridDBColumn
+          Caption = #1069#1090#1072#1087' '#1089#1073#1086#1088#1082#1080
+          DataBinding.FieldName = 'ReceiptLevelName'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Action = actChoiceFormReceiptLevel_ch2
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 78
+        end
         object ObjectCode_ch2: TcxGridDBColumn
           Caption = #1050#1086#1076
           DataBinding.FieldName = 'ObjectCode'
@@ -965,13 +980,12 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitLeft = 2
-    ExplicitTop = 241
     object cxGridGoods: TcxGrid
       Left = 0
-      Top = 23
-      Width = 361
-      Height = 180
+      Top = 17
+      Width = 536
+      Height = 186
+      Align = alClient
       PopupMenu = PopupMenuColor
       TabOrder = 0
       LookAndFeel.NativeStyle = True
@@ -1070,6 +1084,21 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
           Width = 40
+        end
+        object ReceiptLevelName_ch1: TcxGridDBColumn
+          Caption = #1069#1090#1072#1087' '#1089#1073#1086#1088#1082#1080
+          DataBinding.FieldName = 'ReceiptLevelName'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Action = actChoiceFormReceiptLevel_ch1
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 75
         end
         object ObjectCode_ch1: TcxGridDBColumn
           Caption = 'Interne Nr'
@@ -2175,6 +2204,33 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ImageIndex = 0
     end
+    object actChoiceFormReceiptLevel_ch1: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFormGoods'
+      FormName = 'TReceiptLevelForm'
+      FormNameParam.Value = 'TReceiptLevelForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = GoodsCDS
+          ComponentItem = 'ReceiptLevelId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = GoodsCDS
+          ComponentItem = 'ReceiptLevelName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actChoiceFormGoods: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -2277,6 +2333,33 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           Component = GoodsCDS
           ComponentItem = 'BasisPriceWVAT'
           DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actChoiceFormReceiptLevel_ch2: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFormProdColorPattern'
+      FormName = 'TReceiptLevelForm'
+      FormNameParam.Value = 'TReceiptLevelForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ProdColorPatternCDS
+          ComponentItem = 'ReceiptLevelId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ProdColorPatternCDS
+          ComponentItem = 'ReceiptLevelName'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -2484,13 +2567,13 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     MasterSource = DataSource
     PacketRecords = 0
     Params = <>
-    Left = 624
-    Top = 320
+    Left = 656
+    Top = 312
   end
   object ProdColorPatternDS: TDataSource
     DataSet = ProdColorPatternCDS
-    Left = 680
-    Top = 328
+    Left = 744
+    Top = 320
   end
   object dsdDBViewAddOnProdColorPattern: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2519,8 +2602,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 736
-    Top = 320
+    Left = 824
+    Top = 312
   end
   object GoodsCDS: TClientDataSet
     Aggregates = <>
@@ -2650,6 +2733,14 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inReceiptLevelId'
+        Value = Null
+        Component = GoodsCDS
+        ComponentItem = 'ReceiptLevelId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inValue'
         Value = Null
         Component = GoodsCDS
@@ -2737,6 +2828,14 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inReceiptLevelId'
+        Value = Null
+        Component = GoodsCDS
+        ComponentItem = 'ReceiptLevelId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inValue'
         Value = Null
         Component = ProdColorPatternCDS
@@ -2746,8 +2845,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 568
-    Top = 336
+    Left = 608
+    Top = 352
   end
   object spErasedGoods: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_ProdColorPattern'
@@ -2795,7 +2894,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       end>
     PackSize = 1
     Left = 152
-    Top = 304
+    Top = 320
   end
   object spErasedProdColorPattern: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_ProdColorPattern'

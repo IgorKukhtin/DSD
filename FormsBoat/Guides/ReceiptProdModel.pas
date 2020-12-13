@@ -154,6 +154,8 @@ type
     Panel1: TPanel;
     Panel2: TPanel;
     Panel3: TPanel;
+    actChoiceFormReceiptLevel_ch1: TOpenChoiceForm;
+    actChoiceFormReceiptLevel_ch2: TOpenChoiceForm;
   private
     { Private declarations }
   public

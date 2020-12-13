@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptProdModelChild_ProdColorPatter
 RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
              , Value TFloat
              , ReceiptProdModelId Integer, ReceiptProdModelName TVarChar
+             , ReceiptLevelId Integer, ReceiptLevelName TVarChar
              , ObjectId Integer, ObjectCode Integer, ObjectName TVarChar
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
@@ -58,6 +59,9 @@ BEGIN
 
          , Object_ReceiptProdModel.Id        ::Integer  AS ReceiptProdModelId
          , Object_ReceiptProdModel.ValueData ::TVarChar AS ReceiptProdModelName
+
+         , Object_ReceiptLevel.Id            ::Integer  AS ReceiptLevelId
+         , Object_ReceiptLevel.ValueData     ::TVarChar AS ReceiptLevelName
 
          , Object_Object.Id                  ::Integer  AS ObjectId
          , Object_Object.ObjectCode          ::Integer  AS ObjectCode
@@ -133,6 +137,11 @@ BEGIN
                                ON ObjectLink_ReceiptProdModel.ObjectId = Object_ReceiptProdModelChild.Id
                               AND ObjectLink_ReceiptProdModel.DescId = zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel()
           LEFT JOIN Object AS Object_ReceiptProdModel ON Object_ReceiptProdModel.Id = ObjectLink_ReceiptProdModel.ChildObjectId 
+
+          LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
+                               ON ObjectLink_ReceiptLevel.ObjectId = Object_ReceiptProdModelChild.Id
+                              AND ObjectLink_ReceiptLevel.DescId = zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel()
+          LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = ObjectLink_ReceiptLevel.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Object
                                ON ObjectLink_Object.ObjectId = Object_ReceiptProdModelChild.Id

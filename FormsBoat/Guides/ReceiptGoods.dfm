@@ -27,7 +27,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 813
     object cxGrid: TcxGrid
       Left = 0
       Top = 17
@@ -38,8 +37,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitTop = 23
-      ExplicitWidth = 481
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -386,7 +383,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       Color = clSkyBlue
       ParentBackground = False
       TabOrder = 1
-      ExplicitWidth = 813
     end
   end
   object PanelGoods: TPanel
@@ -398,9 +394,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = -6
-    ExplicitTop = 257
-    ExplicitHeight = 401
     object cxGridCh1: TcxGrid
       Left = 0
       Top = 17
@@ -411,10 +404,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitLeft = 16
-      ExplicitTop = 33
-      ExplicitWidth = 497
-      ExplicitHeight = 312
       object cxGridDBTableViewCh1: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = Child1DS
@@ -490,7 +479,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           item
             Format = 'C'#1090#1088#1086#1082': ,0'
             Kind = skCount
-            Column = GoodsName_ch1
+            Column = ObjectName_ch1
           end>
         DataController.Summary.SummaryGroups = <>
         Images = dmMain.SortImageList
@@ -547,9 +536,17 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           HeaderAlignmentVert = vaCenter
           Width = 55
         end
-        object GoodsCode_ch1: TcxGridDBColumn
+        object DescName_ch1: TcxGridDBColumn
+          Caption = #1069#1083#1077#1084#1077#1085#1090
+          DataBinding.FieldName = 'DescName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
+        end
+        object ObjectCode_ch1: TcxGridDBColumn
           Caption = 'Interne Nr'
-          DataBinding.FieldName = 'GoodsCode'
+          DataBinding.FieldName = 'ObjectCode'
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
@@ -557,9 +554,9 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           Options.Editing = False
           Width = 60
         end
-        object GoodsName_ch1: TcxGridDBColumn
-          Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
-          DataBinding.FieldName = 'GoodsName'
+        object ObjectName_ch1: TcxGridDBColumn
+          Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
+          DataBinding.FieldName = 'ObjectName'
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
             item
@@ -567,7 +564,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
               Default = True
               Kind = bkEllipsis
             end>
-          Properties.ReadOnly = False
+          Properties.ReadOnly = True
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 209
@@ -779,11 +776,10 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       Width = 567
       Height = 17
       Align = alTop
-      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
       Color = clAqua
       ParentBackground = False
       TabOrder = 1
-      ExplicitWidth = 529
     end
   end
   object cxTopSplitter: TcxSplitter
@@ -793,7 +789,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
     Height = 5
     AlignSplitter = salTop
     Control = PanelMaster
-    ExplicitWidth = 813
   end
   object cxRightSplitter: TcxSplitter
     Left = 1064
@@ -801,9 +796,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
     Width = 8
     Height = 302
     AlignSplitter = salRight
-    ExplicitLeft = 519
-    ExplicitTop = 257
-    ExplicitHeight = 401
   end
   object Panel2: TPanel
     Left = 575
@@ -813,10 +805,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
     Align = alClient
     Caption = 'Panel2'
     TabOrder = 8
-    ExplicitLeft = 616
-    ExplicitTop = 257
-    ExplicitWidth = 448
-    ExplicitHeight = 400
     object cxGridCh2: TcxGrid
       Left = 1
       Top = 18
@@ -827,10 +815,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitLeft = 0
-      ExplicitTop = 65
-      ExplicitWidth = 449
-      ExplicitHeight = 280
       object cxGridDBTableViewCh2: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = Child2DS
@@ -906,7 +890,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           item
             Format = 'C'#1090#1088#1086#1082': ,0'
             Kind = skCount
-            Column = GoodsName_ch2
+            Column = ObjectName_ch2
           end>
         DataController.Summary.SummaryGroups = <>
         Images = dmMain.SortImageList
@@ -963,9 +947,17 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           HeaderAlignmentVert = vaCenter
           Width = 55
         end
-        object GoodsCode_ch2: TcxGridDBColumn
+        object DescName_ch2: TcxGridDBColumn
+          Caption = #1069#1083#1077#1084#1077#1085#1090
+          DataBinding.FieldName = 'DescName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
+        end
+        object ObjectCode_ch2: TcxGridDBColumn
           Caption = 'Interne Nr'
-          DataBinding.FieldName = 'GoodsCode'
+          DataBinding.FieldName = 'ObjectCode'
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
@@ -973,9 +965,9 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           Options.Editing = False
           Width = 60
         end
-        object GoodsName_ch2: TcxGridDBColumn
-          Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
-          DataBinding.FieldName = 'GoodsName'
+        object ObjectName_ch2: TcxGridDBColumn
+          Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
+          DataBinding.FieldName = 'ObjectName'
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
             item
@@ -983,7 +975,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
               Default = True
               Kind = bkEllipsis
             end>
-          Properties.ReadOnly = False
+          Properties.ReadOnly = True
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 154
@@ -1195,13 +1187,10 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       Width = 487
       Height = 17
       Align = alTop
-      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
       Color = clLime
       ParentBackground = False
       TabOrder = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 442
     end
   end
   object cxSplitter1: TcxSplitter
@@ -1210,8 +1199,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
     Width = 8
     Height = 302
     Control = PanelGoods
-    ExplicitLeft = 1072
-    ExplicitHeight = 401
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -1768,14 +1755,14 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           Name = 'Key'
           Value = Null
           Component = Child2CDS
-          ComponentItem = 'GoodsId'
+          ComponentItem = 'ObjectId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = Child2CDS
-          ComponentItem = 'GoodsName'
+          ComponentItem = 'ObjectName'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -1803,14 +1790,14 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           Name = 'Key'
           Value = Null
           Component = Child1CDS
-          ComponentItem = 'GoodsId'
+          ComponentItem = 'ObjectId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = Child1CDS
-          ComponentItem = 'GoodsName'
+          ComponentItem = 'ObjectName'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -2112,10 +2099,10 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsId'
+        Name = 'inObjectId'
         Value = Null
         Component = Child1CDS
-        ComponentItem = 'GoodsId'
+        ComponentItem = 'ObjectId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2382,10 +2369,10 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsId'
+        Name = 'inObjectId'
         Value = Null
         Component = Child2CDS
-        ComponentItem = 'GoodsId'
+        ComponentItem = 'ObjectId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

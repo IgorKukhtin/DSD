@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptGoodsChild(
 RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
              , Value TFloat
              , ReceiptGoodsId Integer, ReceiptGoodsName TVarChar
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , ObjectId Integer, ObjectCode Integer, ObjectName TVarChar, DescName TVarChar
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean
@@ -59,9 +59,10 @@ BEGIN
          , Object_ReceiptGoods.Id        ::Integer  AS ReceiptGoodsId
          , Object_ReceiptGoods.ValueData ::TVarChar AS ReceiptGoodsName
 
-         , Object_Goods.Id               ::Integer  AS GoodsId
-         , Object_Goods.ObjectCode       ::Integer  AS GoodsCode
-         , Object_Goods.ValueData        ::TVarChar AS GoodsName
+         , Object_Object.Id              ::Integer  AS ObjectId
+         , Object_Object.ObjectCode      ::Integer  AS ObjectCode
+         , Object_Object.ValueData       ::TVarChar AS ObjectName
+         , ObjectDesc.ItemName           ::TVarChar AS DescName
 
          , Object_Insert.ValueData                  AS InsertName
          , Object_Update.ValueData                  AS UpdateName
@@ -123,10 +124,11 @@ BEGIN
                               AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
           LEFT JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id = ObjectLink_ReceiptGoods.ChildObjectId 
 
-          LEFT JOIN ObjectLink AS ObjectLink_Goods
-                               ON ObjectLink_Goods.ObjectId = Object_ReceiptGoodsChild.Id
-                              AND ObjectLink_Goods.DescId = zc_ObjectLink_ReceiptGoodsChild_Goods()
-          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_Object
+                               ON ObjectLink_Object.ObjectId = Object_ReceiptGoodsChild.Id
+                              AND ObjectLink_Object.DescId = zc_ObjectLink_ReceiptGoodsChild_Object()
+          LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId
+          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Object.DescId
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_ReceiptGoodsChild.Id
@@ -148,37 +150,37 @@ BEGIN
 
           --
           LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
-                                 ON ObjectString_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                 ON ObjectString_GoodsGroupFull.ObjectId = Object_Object.Id
                                 AND ObjectString_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
           LEFT JOIN ObjectString AS ObjectString_Article
-                                 ON ObjectString_Article.ObjectId = Object_Goods.Id
+                                 ON ObjectString_Article.ObjectId = Object_Object.Id
                                 AND ObjectString_Article.DescId = zc_ObjectString_Article()
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                               ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                               ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Object.Id
                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_ProdColor
-                               ON ObjectLink_Goods_ProdColor.ObjectId = Object_Goods.Id
+                               ON ObjectLink_Goods_ProdColor.ObjectId = Object_Object.Id
                               AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
           LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                               ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                               ON ObjectLink_Goods_Measure.ObjectId = Object_Object.Id
                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
           LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
-                                ON ObjectFloat_EKPrice.ObjectId = Object_Goods.Id
+                                ON ObjectFloat_EKPrice.ObjectId = Object_Object.Id
                                AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
           LEFT JOIN ObjectFloat AS ObjectFloat_EmpfPrice
-                                ON ObjectFloat_EmpfPrice.ObjectId = Object_Goods.Id
+                                ON ObjectFloat_EmpfPrice.ObjectId = Object_Object.Id
                                AND ObjectFloat_EmpfPrice.DescId   = zc_ObjectFloat_Goods_EmpfPrice()
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_TaxKind
-                               ON ObjectLink_Goods_TaxKind.ObjectId = Object_Goods.Id
+                               ON ObjectLink_Goods_TaxKind.ObjectId = Object_Object.Id
                               AND ObjectLink_Goods_TaxKind.DescId = zc_ObjectLink_Goods_TaxKind()
           LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_Goods_TaxKind.ChildObjectId
 
@@ -186,7 +188,7 @@ BEGIN
                                 ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
                                AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
 
-          LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
+          LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Object.Id
 
      WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
       AND (Object_ReceiptGoodsChild.isErased = FALSE OR inIsErased = TRUE)

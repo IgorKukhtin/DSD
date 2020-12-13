@@ -10,7 +10,7 @@ RETURNS TABLE (Id Integer
              , Comment TVarChar
              , Value TFloat
              , ReceiptGoodsId Integer, ReceiptGoodsName TVarChar
-             , GoodsId Integer, GoodsName TVarChar
+             , ObjectId Integer, ObjectName TVarChar
 ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -29,8 +29,8 @@ BEGIN
            , 0  :: TFloat             AS Value
            , 0  :: Integer            AS ReceiptGoodsId
            , '' :: TVarChar           AS ReceiptGoodsName
-           , 0  :: Integer            AS GoodsId
-           , '' :: TVarChar           AS GoodsName
+           , 0  :: Integer            AS ObjectId
+           , '' :: TVarChar           AS ObjectName
        ;
    ELSE
      RETURN QUERY
@@ -44,8 +44,8 @@ BEGIN
          , Object_ReceiptGoods.Id        ::Integer  AS ReceiptGoodsId
          , Object_ReceiptGoods.ValueData ::TVarChar AS ReceiptGoodsName
 
-         , Object_Goods.Id               ::Integer  AS GoodsId
-         , Object_Goods.ValueData        ::TVarChar AS GoodsName
+         , Object_Object.Id               ::Integer  AS ObjectId
+         , Object_Object.ValueData        ::TVarChar AS ObjectName
      FROM Object AS Object_ReceiptGoodsChild
  
           LEFT JOIN ObjectFloat AS ObjectFloat_Value
@@ -57,10 +57,10 @@ BEGIN
                               AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
           LEFT JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id = ObjectLink_ReceiptGoods.ChildObjectId 
 
-          LEFT JOIN ObjectLink AS ObjectLink_Goods
-                               ON ObjectLink_Goods.ObjectId = Object_ReceiptGoodsChild.Id
-                              AND ObjectLink_Goods.DescId = zc_ObjectLink_ReceiptGoodsChild_Goods()
-          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_Object
+                               ON ObjectLink_Object.ObjectId = Object_ReceiptGoodsChild.Id
+                              AND ObjectLink_Object.DescId = zc_ObjectLink_ReceiptGoodsChild_Object()
+          LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId
 
      WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
       AND Object_ReceiptGoodsChild.Id = inId

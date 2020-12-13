@@ -244,6 +244,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptProdModelChild_Object() RETURNS 
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ReceiptProdModelChild_Object', 'Комплектующие /Шаблоны Цвета (Лодка)', zc_Object_ReceiptProdModelChild(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptProdModelChild_Object');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel', 'Этап сборки', zc_Object_ReceiptProdModelChild(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel');
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptGoods_Object() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptGoods_Object'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ReceiptGoods_Object', 'Комплектующие (узел)', zc_Object_ReceiptGoods(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptGoods_Object');
@@ -261,6 +265,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptGoodsChild_Goods() RETURNS Integ
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ReceiptGoodsChild_Goods', 'Комплектующие', zc_Object_ReceiptGoodsChild(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptGoodsChild_Goods');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptGoodsChild_Object() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptGoodsChild_Object'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ReceiptGoodsChild_Object', 'Комплектующие', zc_Object_ReceiptGoodsChild(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptGoodsChild_Object');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern', 'Элемент Boat Structure', zc_Object_ReceiptGoodsChild(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern');
@@ -277,6 +286,8 @@ SELECT 'zc_ObjectLink_ColorPattern_Model', 'Модель', zc_Object_ColorPattern(), z
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.12.20         * zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel
+                    zc_ObjectLink_ReceiptGoodsChild_Object
  11.12.20         * zc_ObjectLink_ProdColorGroup_ProdColorKind
                     zc_ObjectLink_ProdColorPattern_ColorPattern
                     zc_ObjectLink_ReceiptGoods_ColorPattern

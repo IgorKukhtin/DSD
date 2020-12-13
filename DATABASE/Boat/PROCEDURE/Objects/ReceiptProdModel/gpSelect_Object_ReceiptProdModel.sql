@@ -185,11 +185,11 @@ BEGIN
                                                    ON ObjectFloat_ReceiptGoodsChild_Value.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
                                                   AND ObjectFloat_ReceiptGoodsChild_Value.DescId = zc_ObjectFloat_ReceiptGoodsChild_Value() 
                    
-                             LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoodsChild_Goods
-                                                  ON ObjectLink_ReceiptGoodsChild_Goods.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
-                                                 AND ObjectLink_ReceiptGoodsChild_Goods.DescId = zc_ObjectLink_ReceiptGoodsChild_Goods()
+                             LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoodsChild_Object
+                                                  ON ObjectLink_ReceiptGoodsChild_Object.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
+                                                 AND ObjectLink_ReceiptGoodsChild_Object.DescId = zc_ObjectLink_ReceiptGoodsChild_Object()
                 
-                             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (ObjectLink_ReceiptGoodsChild_Goods.ChildObjectId,tmpReceiptProdModelChild.ObjectId)
+                             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (ObjectLink_ReceiptGoodsChild_Object.ChildObjectId,tmpReceiptProdModelChild.ObjectId)
                 
                              LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
                                                    ON ObjectFloat_EKPrice.ObjectId = Object_Goods.Id

@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoodsChild(
  INOUT ioId                  Integer   ,    -- ключ объекта <>
     IN inComment             TVarChar  ,    -- Название объекта
     IN inReceiptGoodsId      Integer   ,
-    IN inGoodsId             Integer   ,
+    IN inObjectId            Integer   ,
     IN inProdColorPatternId  Integer   , 
     IN inValue               TFloat    , 
     IN inSession             TVarChar       -- сессия пользователя
@@ -35,7 +35,7 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods(), ioId, inReceiptGoodsId);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoodsChild_Goods(), ioId, inGoodsId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoodsChild_Object(), ioId, inObjectId);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern(), ioId, inProdColorPatternId);
 

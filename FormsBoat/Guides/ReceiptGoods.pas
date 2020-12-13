@@ -129,8 +129,8 @@ type
     GoodsGroupNameFull_ch2: TcxGridDBColumn;
     GoodsGroupName_2: TcxGridDBColumn;
     Article_2: TcxGridDBColumn;
-    GoodsCode_ch2: TcxGridDBColumn;
-    GoodsName_ch2: TcxGridDBColumn;
+    ObjectCode_ch2: TcxGridDBColumn;
+    ObjectName_ch2: TcxGridDBColumn;
     ProdColorName_ch2: TcxGridDBColumn;
     MeasureName_ch2: TcxGridDBColumn;
     Value_ch2: TcxGridDBColumn;
@@ -158,6 +158,7 @@ type
     actChoiceFormProdColorPattern: TOpenChoiceForm;
     actChoiceFormProdColorPattern2: TOpenChoiceForm;
     dsdUpdateDataSet_Child2: TdsdUpdateDataSet;
+    DescName_ch1: TcxGridDBColumn;
   private
     { Private declarations }
   public

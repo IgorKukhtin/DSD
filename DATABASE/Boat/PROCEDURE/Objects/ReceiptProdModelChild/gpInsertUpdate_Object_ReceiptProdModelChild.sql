@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_Object_ReceiptProdModelChild()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModelChild(Integer, TVarChar, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModelChild(Integer, TVarChar, Integer, Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptProdModelChild(
  INOUT ioId                  Integer   ,    -- ключ объекта <>
     IN inComment             TVarChar  ,    -- Название объекта
     IN inReceiptProdModelId  Integer   ,
     IN inObjectId            Integer   ,
+    IN inReceiptLevelId      Integer   ,
     IN inValue               TFloat    , 
    OUT outEKPrice_summ       TFloat    ,
    OUT outEKPriceWVAT_summ   TFloat    ,
@@ -39,6 +41,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel(), ioId, inReceiptProdModelId);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptProdModelChild_Object(), ioId, inObjectId);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel(), ioId, inReceiptLevelId);
+   
    
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
@@ -108,6 +113,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.12.20         * ReceiptLevel
  01.12.20         *
 */
 

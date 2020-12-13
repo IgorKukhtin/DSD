@@ -73,19 +73,19 @@ BEGIN
                                                             AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
                                         LEFT JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id = ObjectLink_ReceiptGoods.ChildObjectId 
                               
-                                        LEFT JOIN ObjectLink AS ObjectLink_Goods
-                                                             ON ObjectLink_Goods.ObjectId = Object_ReceiptGoodsChild.Id
-                                                            AND ObjectLink_Goods.DescId = zc_ObjectLink_ReceiptGoodsChild_Goods()
+                                        LEFT JOIN ObjectLink AS ObjectLink_Object
+                                                             ON ObjectLink_Object.ObjectId = Object_ReceiptGoodsChild.Id
+                                                            AND ObjectLink_Object.DescId = zc_ObjectLink_ReceiptGoodsChild_Object()
                                
                                         LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
-                                                              ON ObjectFloat_EKPrice.ObjectId = ObjectLink_Goods.ChildObjectId
+                                                              ON ObjectFloat_EKPrice.ObjectId = ObjectLink_Object.ChildObjectId
                                                              AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
                                         LEFT JOIN ObjectFloat AS ObjectFloat_EmpfPrice
-                                                              ON ObjectFloat_EmpfPrice.ObjectId = ObjectLink_Goods.ChildObjectId
+                                                              ON ObjectFloat_EmpfPrice.ObjectId = ObjectLink_Object.ChildObjectId
                                                              AND ObjectFloat_EmpfPrice.DescId   = zc_ObjectFloat_Goods_EmpfPrice()
                               
                                         LEFT JOIN ObjectLink AS ObjectLink_Goods_TaxKind
-                                                             ON ObjectLink_Goods_TaxKind.ObjectId = ObjectLink_Goods.ChildObjectId
+                                                             ON ObjectLink_Goods_TaxKind.ObjectId = ObjectLink_Object.ChildObjectId
                                                             AND ObjectLink_Goods_TaxKind.DescId = zc_ObjectLink_Goods_TaxKind()
                                         LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_Goods_TaxKind.ChildObjectId
                               
@@ -93,7 +93,7 @@ BEGIN
                                                               ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
                                                              AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
                               
-                                        LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = ObjectLink_Goods.ChildObjectId
+                                        LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = ObjectLink_Object.ChildObjectId
                               
                                    WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
                                     AND (Object_ReceiptGoodsChild.isErased = FALSE OR inIsErased = TRUE)

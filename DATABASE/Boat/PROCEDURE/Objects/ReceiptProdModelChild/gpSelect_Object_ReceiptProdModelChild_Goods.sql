@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptProdModelChild_Goods(
 /*RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
              , Value TFloat
              , ReceiptProdModelId Integer, ReceiptProdModelName TVarChar
+             , ReceiptLevelId Integer, ReceiptLevelName TVarChar
              , GoodsId_parent Integer, GoodsCode_parent Integer, GoodsName_parent TVarChar
              , ObjectId Integer, ObjectCode Integer, ObjectName TVarChar
              , InsertName TVarChar, UpdateName TVarChar
@@ -129,11 +130,11 @@ BEGIN
                                    ON ObjectFloat_ReceiptGoodsChild_Value.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
                                   AND ObjectFloat_ReceiptGoodsChild_Value.DescId = zc_ObjectFloat_ReceiptGoodsChild_Value() 
    
-             LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoodsChild_Goods
-                                  ON ObjectLink_ReceiptGoodsChild_Goods.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
-                                 AND ObjectLink_ReceiptGoodsChild_Goods.DescId = zc_ObjectLink_ReceiptGoodsChild_Goods()
+             LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoodsChild_Object
+                                  ON ObjectLink_ReceiptGoodsChild_Object.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
+                                 AND ObjectLink_ReceiptGoodsChild_Object.DescId = zc_ObjectLink_ReceiptGoodsChild_Object()
 
-             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (ObjectLink_ReceiptGoodsChild_Goods.ChildObjectId,tmpGoods.GoodsId)
+             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (ObjectLink_ReceiptGoodsChild_Object.ChildObjectId,tmpGoods.GoodsId)
 
             --
              LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
@@ -225,6 +226,9 @@ BEGIN
          , Object_ReceiptProdModel.Id        ::Integer  AS ReceiptProdModelId
          , Object_ReceiptProdModel.ValueData ::TVarChar AS ReceiptProdModelName
 
+         , Object_ReceiptLevel.Id            ::Integer  AS ReceiptLevelId
+         , Object_ReceiptLevel.ValueData     ::TVarChar AS ReceiptLevelName
+
          , Object_Object.Id                  ::Integer  AS ObjectId
          , Object_Object.ObjectCode          ::Integer  AS ObjectCode
          , Object_Object.ValueData           ::TVarChar AS ObjectName
@@ -265,6 +269,11 @@ BEGIN
                                ON ObjectLink_ReceiptProdModel.ObjectId = Object_ReceiptProdModelChild.Id
                               AND ObjectLink_ReceiptProdModel.DescId = zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel()
           LEFT JOIN Object AS Object_ReceiptProdModel ON Object_ReceiptProdModel.Id = ObjectLink_ReceiptProdModel.ChildObjectId 
+
+          LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
+                               ON ObjectLink_ReceiptLevel.ObjectId = Object_ReceiptProdModelChild.Id
+                              AND ObjectLink_ReceiptLevel.DescId = zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel()
+          LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = ObjectLink_ReceiptLevel.ChildObjectId 
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_ReceiptProdModelChild.Id
@@ -332,6 +341,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.12.20         * add ReceiptLevel
  09.12.20         *
  01.12.20         *
 */
