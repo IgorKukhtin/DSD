@@ -7,7 +7,7 @@ DROP FUNCTION IF EXISTS gpReport_CheckBonusTest2 (TDateTime, TDateTime, Integer,
 CREATE OR REPLACE FUNCTION gpReport_CheckBonusTest2 (
     IN inStartDate           TDateTime ,  
     IN inEndDate             TDateTime ,
-    IN inPaidKindID          Integer   ,
+    IN inPaidKindId          Integer   ,
     IN inJuridicalId         Integer   ,
     IN inBranchId            Integer   , 
     IN inisMovement          Boolean   , -- по документам
@@ -454,13 +454,21 @@ BEGIN
                                                 AND ObjectLink_Retail.DescId = zc_ObjectLink_PartnerExternal_Retail()
                          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Retail.ChildObjectId*/
                     )
-     -- 
+     -- получаем расчетные данные из отчета по внешним продажам
     , tmpReport AS (SELECT tmpReport.PartnerId
                          , tmpReport.TotalSumm_calc
-                         , tmpReport.AmountKg
-                         , tmpReport.PartKg
+                         , tmpReport.AmountKg                    -- Кол-во, кг - внешняя продажа
+                         , tmpReport.PartKg                      -- Доля продаж в кг
                          , tmpReport.PartnerRealId 
                          , tmpReport.PartnerRealName
+                         , tmpReport.TotalSumm_calc              -- Расчетная сумма продаж, грн  БАЗА
+                         , tmpReport.TotalWeight_calc            -- Расчетная сумма продаж, кг
+                         , tmpReport.SaleReturn_Summ             -- Чистая продажа, грн
+                         , tmpReport.Sale_Summ                   -- Продажа, грн
+                         , tmpReport.Return_Summ                 -- Возврат, грн
+                         , tmpReport.SaleReturn_Weight           -- Чистая продажа, кг
+                         , tmpReport.Sale_Weight                 -- продажа, кг
+                         , tmpReport.Return_Weight               -- возврат , кг
                     FROM (SELECT DISTINCT tmpRetail.RetailId FROM tmpRetail) AS tmp
                          LEFT JOIN gpReport_SaleExternal (inStartDate    := inStartDate    ::TDateTime 
                                                         , inEndDate      := inEndDate      ::TDateTime    
@@ -470,14 +478,37 @@ BEGIN
                                                         ) AS tmpReport ON tmpReport.RetailId = tmp.RetailId
                    )
 
- Правильно привязать и получить всю инфу по договору и т.д.
-        --ограничиваем контрагентами
-      , tmpMovementCont AS (SELECT tmpReport.* 
+        --ограничиваем контрагентами и привязываем свойства договора
+      , tmpMovementCont AS (SELECT tmpContractGroup.JuridicalId
+                                 , tmpContractGroup.ContractId_master
+                                 , tmpContractGroup.ContractId_child
+                                 , tmpContractGroup.InfoMoneyId_child
+                                 , tmpContractGroup.PaidKindId_byBase
+                                 , tmpContractGroup.ContractConditionId
+                                 --, tmpReport.PartnerRealName  --- ?? может и не нужно показывать
+                                 , tmpReport.PartnerId
+                                 , tmpReport.TotalSumm_calc    AS Sum_CheckBonus --расчетная база
+                                 , tmpReport.AmountKg
+                                 , tmpReport.PartKg
+                                 , tmpReport.TotalSumm_calc
+                                 , tmpReport.TotalWeight_calc
+                                 , tmpReport.SaleReturn_Summ   AS Sum_SaleReturnIn -- 
+                                 , tmpReport.Sale_Summ         AS Sum_Sale
+                                 , tmpReport.Return_Summ       AS Sum_Return
+                                 , tmpReport.SaleReturn_Weight
+                                 , tmpReport.Sale_Weight       AS Sum_Sale_weight
+                                 , tmpReport.Return_Weight     AS Sum_ReturnIn_weight
+                                 , (tmpContract.Value * tmpReport.TotalSumm_calc / 100)   AS Sum_Bonus -- Начисления (расчет)
+                                 , PercentRetBonus
                             FROM tmpReport
-                             INNER JOIN tmpContractPartner ON tmpContractPartner.ContractConditionId = tmpReport.ContractConditionId
-                                                          AND tmpContractPartner.PaidKindId_byBase = tmpReport.PaidKindId_byBase
-                                                          AND tmpContractPartner.PartnerId = tmpReport.PartnerId
-                                                          AND tmpContractPartner.ContractId = tmpReport.ContractId_master
+                             INNER JOIN tmpContractPartner ON tmpContractPartner.PartnerId = tmpReport.PartnerId
+                             LEFT JOIN tmpContractGroup ON tmpContractGroup.ConditionKindId = tmpContractPartner.ContractConditionId
+                             LEFT JOIN tmpContract ON tmpContract.JuridicalId       = tmpContractGroup.JuridicalId
+                                                  AND tmpContract.ContractId_child  = tmpContractGroup.ContractId_child
+                                                  AND tmpContract.InfoMoneyId_child = tmpContractGroup.InfoMoneyId_child
+                                                  AND tmpContract.PaidKindId_byBase = tmpContractGroup.PaidKindId_byBase
+                                                  AND tmpContract.ContractConditionId = tmpContractGroup.ContractConditionId
+                                                  AND tmpContract.ContractId_master = tmpContractGroup.ContractId_master
                             )
 
        -- сгруппировываем данные и подвязываем вес
@@ -488,32 +519,50 @@ BEGIN
                              , tmpGroup.InfoMoneyId_child
                              , tmpGroup.PaidKindId_byBase
                              , tmpGroup.ContractConditionId
-                             , tmpGroup.BranchId
-                             , CASE WHEN inisMovement = TRUE THEN tmpGroup.MovementId ELSE 0 END      AS MovementId
-                             , CASE WHEN inisMovement = TRUE THEN tmpGroup.MovementDescId ELSE 0 END  AS MovementDescId
+                             , COALESCE (ObjectLink_PersonalServiceList_Branch.ChildObjectId,0) AS BranchId
+                            
+                             , SUM (tmpGroup.Sum_CheckBonus)      AS Sum_CheckBonus
+                             , SUM (tmpGroup.Sum_Bonus)           AS Sum_Bonus 
+
                              , SUM (tmpGroup.Sum_Sale)            AS Sum_Sale
                              , SUM (tmpGroup.Sum_SaleReturnIn)    AS Sum_SaleReturnIn
-                             , SUM (tmpGroup.Sum_Account)         AS Sum_Account
-                             , SUM (tmpGroup.Sum_AccountSendDebt) AS Sum_AccountSendDebt
                              , SUM (tmpGroup.Sum_Return)          AS Sum_Return
 
-                             , SUM (tmpWeight.Sale_AmountPartner_Weight)   AS Sum_Sale_weight
-                             , SUM (tmpWeight.Return_AmountPartner_Weight) AS Sum_ReturnIn_weight
+                             , SUM (tmpGroup.Sum_Sale_weight)     AS Sum_Sale_weight
+                             , SUM (tmpGroup.Sum_ReturnIn_weight) AS Sum_ReturnIn_weight
+
                         FROM tmpMovementCont AS tmpGroup
-                             LEFT JOIN tmpWeight ON tmpWeight.MovementId = tmpGroup.MovementId
-                        WHERE tmpGroup.BranchId = inBranchId OR inBranchId = 0
+                             -- для Базы БН получаем филиал по сотруднику из договора, по ведомости 
+                             LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalTrade
+                                                  ON ObjectLink_Contract_PersonalTrade.ObjectId = tmpContainer.ContractId_master
+                                                 AND ObjectLink_Contract_PersonalTrade.DescId = zc_ObjectLink_Contract_PersonalTrade()
+                                                 AND tmpContainer.PaidKindId_byBase = zc_Enum_PaidKind_FirstForm()
+                             
+                             -- для Базы нал берем филиал по сотруднику из контрагента, по ведомости
+                             LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                                  ON ObjectLink_Partner_PersonalTrade.ObjectId = CASE WHEN Object.DescId = zc_Object_Partner() THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END ELSE 0 END
+                                                 AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                                 AND (tmpContainer.PaidKindId_byBase = zc_Enum_PaidKind_SecondForm()
+                                                     OR COALESCE (ObjectLink_Contract_PersonalTrade.ChildObjectId,0) = 0 
+                                                     )
+
+                             LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                                                  ON ObjectLink_Personal_PersonalServiceList.ObjectId = COALESCE (ObjectLink_Contract_PersonalTrade.ChildObjectId, ObjectLink_Partner_PersonalTrade.ChildObjectId)
+                                                 AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+                             LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Branch
+                                                  ON ObjectLink_PersonalServiceList_Branch.ObjectId = ObjectLink_Personal_PersonalServiceList.ChildObjectId
+                                                 AND ObjectLink_PersonalServiceList_Branch.DescId = zc_ObjectLink_PersonalServiceList_Branch()
+                        WHERE (COALESCE (ObjectLink_PersonalServiceList_Branch.ChildObjectId,0) = inBranchId OR inBranchId = 0)
                         GROUP BY tmpGroup.JuridicalId
                                , tmpGroup.PartnerId
-                               , tmpGroup.ContractId_child
+                               , tmpGroup.ContractId_master
+                               , tmpGroup.ContractId_child 
                                , tmpGroup.InfoMoneyId_child
                                , tmpGroup.PaidKindId_byBase
                                , tmpGroup.ContractConditionId
-                               , CASE WHEN inisMovement = TRUE THEN tmpGroup.MovementId ELSE 0 END
-                               , CASE WHEN inisMovement = TRUE THEN tmpGroup.MovementDescId ELSE 0 END
-                               , tmpGroup.BranchId
-                               , tmpGroup.ContractId_master
+                               , COALESCE (ObjectLink_PersonalServiceList_Branch.ChildObjectId,0)
                        ) 
-       
+
       , tmpMovement AS (SELECT tmpGroup.JuridicalId
                              , tmpGroup.PartnerId
                              , tmpGroup.ContractId_child
