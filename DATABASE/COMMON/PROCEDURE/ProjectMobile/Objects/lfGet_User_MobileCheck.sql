@@ -25,7 +25,7 @@ BEGIN
          -- Проверка
          IF COALESCE (vbUserId_Member, 0) = 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Для ФИО <%> не определно значение <Пользователь>.', lfGet_Object_ValueData (inMemberId);
+             RAISE EXCEPTION 'Ошибка.Для ФИО <%> не определено значение <Пользователь>.', lfGet_Object_ValueData (inMemberId);
          END IF;
 
      ELSEIF vbIsProjectMobile = TRUE
@@ -45,7 +45,7 @@ BEGIN
      -- Проверка - Торговый агент видит только себя
      IF vbIsProjectMobile = TRUE AND vbUserId_Member <> inUserId
      THEN
-         RAISE EXCEPTION 'Ошибка.Не достаточно прав доступа.';
+         RAISE EXCEPTION 'Ошибка.Недостаточно прав доступа.';
      END IF;
 
 

@@ -115,6 +115,27 @@ BEGIN
                            WHERE ObjectLink_User_Member.ObjectId = vbUserId_Mobile
                              AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
                           UNION
+                           SELECT DISTINCT ObjectLink_User_Member_trade.ObjectId AS UserId
+                           FROM ObjectLink AS ObjectLink_User_Member
+                                INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                      ON ObjectLink_Personal_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                                     AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+                                INNER JOIN ObjectLink AS OL
+                                                      ON OL.ChildObjectId = ObjectLink_Personal_Member.ObjectId
+                                                     AND OL.DescId        = zc_ObjectLink_Partner_Personal()
+                                INNER JOIN ObjectLink AS OL_Partner_PersonalTrade
+                                                      ON OL_Partner_PersonalTrade.ObjectId = OL.ObjectId
+                                                     AND OL_Partner_PersonalTrade.DescId   = zc_ObjectLink_Partner_PersonalTrade()
+                                INNER JOIN ObjectLink AS ObjectLink_Personal_Member_trade
+                                                      ON ObjectLink_Personal_Member_trade.ObjectId = OL_Partner_PersonalTrade.ChildObjectId
+                                                     AND ObjectLink_Personal_Member_trade.DescId   = zc_ObjectLink_Personal_Member()
+                                INNER JOIN ObjectLink AS ObjectLink_User_Member_trade
+                                                      ON ObjectLink_User_Member_trade.ChildObjectId = ObjectLink_Personal_Member_trade.ChildObjectId
+                                                     AND ObjectLink_User_Member_trade.DescId        = zc_ObjectLink_User_Member()
+                           WHERE ObjectLink_User_Member.ObjectId = 1130000 -- Люклянчук О.В.
+                             AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+                             AND vbUserId_Mobile = 4538468 -- Спічка Є.А.
+                          UNION
                            SELECT vbUserId_Mobile AS UserId
                           UNION
                            SELECT Object.Id AS UserId FROM Object WHERE Object.DescId = zc_Object_User() AND vbUserId_Mobile = 0

@@ -38,7 +38,6 @@ BEGIN
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;
 
-   -- проверка - если заполнен товар - выдавать сообщ об ошибке, иначе сохранять в св-во Comment
    -- получаем цвет из Goods
    vbProdColorName := (SELECT Object_ProdColor.ValueData
                        FROM ObjectLink AS ObjectLink_Goods_ProdColor
@@ -46,6 +45,7 @@ BEGIN
                        WHERE ObjectLink_Goods_ProdColor.ObjectId = inGoodsId
                          AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
                        );
+   -- проверка - если заполнен товар - выдавать сообщ об ошибке, иначе сохранять в св-во Comment
    IF COALESCE (ioProdColorName,'') <> '' AND COALESCE (ioProdColorName,'') <> COALESCE (vbProdColorName,'')
    THEN
        IF COALESCE (inGoodsId,0) <> 0

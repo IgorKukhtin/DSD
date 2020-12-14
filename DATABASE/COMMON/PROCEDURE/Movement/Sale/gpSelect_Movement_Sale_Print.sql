@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_Print(
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
-AS 
+AS
 $BODY$
     DECLARE vbUserId Integer;
 
@@ -39,6 +39,7 @@ $BODY$
     DECLARE vbTotalCountKg_only TFloat;
 
     DECLARE vbIsProcess_BranchIn Boolean;
+    DECLARE vbIsGoodsCode Boolean;
 
     DECLARE vbWeighingCount   Integer;
     DECLARE vbStoreKeeperName TVarChar;
@@ -58,7 +59,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= lpGetUserBySession (inSession);
-     
+
      -- !!! для Киева + Львов
      vbIsKiev:= EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.ObjectId IN (8411, 3080691) AND MLO.DescId = zc_MovementLinkObject_From());
 
@@ -100,6 +101,27 @@ BEGIN
                                                                                              , zfConvert_DateToString ((SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MovementDate_OperDatePartner()));
      END IF;
 
+
+     -- isGoodsCode
+     vbIsGoodsCode:=(SELECT 1
+                   FROM Movement
+                        LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                               ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                              AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                        LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                     ON MovementLinkObject_To.MovementId = Movement.Id
+                                                    AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                        LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                             ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                            AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+   
+                        LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
+                                                                            ON OH_JuridicalDetails_To.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId)
+                                                                           AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_To.StartDate
+                                                                           AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_To.EndDate
+                   WHERE Movement.Id     = inMovementId
+                     AND Movement.DescId = zc_Movement_Sale()
+                  );
 
 
      -- параметры из документа
@@ -215,7 +237,7 @@ BEGIN
     CREATE TEMP TABLE tmpObject_GoodsPropertyValue (ObjectId Integer, GoodsId Integer, GoodsKindId Integer, Name TVarChar,
                                                     Amount TFloat, AmountDoc TFloat, BoxCount TFloat,
                                                     BarCode TVarChar, Article TVarChar,
-                                                    BarCodeGLN  TVarChar, ArticleGLN TVarChar, 
+                                                    BarCodeGLN  TVarChar, ArticleGLN TVarChar,
                                                     isWeigth Boolean) ON COMMIT DROP;
     INSERT INTO  tmpObject_GoodsPropertyValue (ObjectId, GoodsId, GoodsKindId, Name, Amount, AmountDoc, BoxCount, BarCode, Article, BarCodeGLN, ArticleGLN, isWeigth)
         SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -401,7 +423,7 @@ BEGIN
                                                                OR tmpObject_GoodsPropertyValue.ArticleGLN <> ''
                                                                OR tmpObject_GoodsPropertyValue.Name <> '')
         ) AS tmpMI;
-    ELSE 
+    ELSE
             -- Расчет шт для штучного товара, который нужно показать как кг, чтоб снять это кол-во с итого шт.
         SELECT TotalCountSh_Kg, TotalCountKg_only
                INTO vbTotalCountSh_Kg, vbTotalCountKg_only
@@ -444,7 +466,7 @@ BEGIN
                         LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                              ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
                                             AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-      
+
                         LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = tmpMI.GoodsId
                                                               AND tmpObject_GoodsPropertyValue.GoodsKindId = tmpMI.GoodsKindId
                                                               AND (tmpObject_GoodsPropertyValue.Article <> ''
@@ -516,8 +538,8 @@ BEGIN
                                                                 , zc_MovementString_InvNumberPartner()
                                                                  )
                                   )
-    
-                                
+
+
           , tmpMovementFloat AS (SELECT *
                                   FROM MovementFloat
                                   WHERE MovementFloat.MovementId = inMovementId
@@ -531,7 +553,7 @@ BEGIN
                                   )
 
           , tmpMovement AS (SELECT * FROM Movement WHERE Movement.Id = inMovementId)
-            
+
        SELECT
              Movement.Id                                AS Id
            , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) AS IdBarCode
@@ -570,7 +592,7 @@ BEGIN
            , vbExtraChargesPercent - vbDiscountPercent  AS ChangePercent
            , MovementFloat_TotalCount.ValueData         AS TotalCount
            , FLOOR (MovementFloat_TotalCount.ValueData) AS TotalCount_floor
-           
+
            , vbTotalCountKg_only AS TotalCountKg_only
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbTotalCountKg ELSE MovementFloat_TotalCountKg.ValueData END AS TotalCountKg
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbTotalCountSh ELSE MovementFloat_TotalCountSh.ValueData - COALESCE (vbTotalCountSh_Kg,0) END AS TotalCountSh
@@ -769,6 +791,7 @@ BEGIN
            , 'м.Дніпро' :: TVarChar AS CityOf                             -- Мiсце складання
 
            , CASE WHEN vbContractId = 4440485 THEN TRUE ELSE FALSE END :: Boolean AS isFozzyPage2  -- для договора Id = 4440485(№7183Р(14781)) + доп страничка
+
        FROM tmpMovement AS Movement
             LEFT JOIN tmpMovementLinkMovement AS MovementLinkMovement_Sale
                                               ON MovementLinkMovement_Sale.MovementId = Movement.Id
@@ -1044,7 +1067,7 @@ BEGIN
             LEFT JOIN tmpMovementLinkMovement AS MovementLinkMovement_Master
                                               ON MovementLinkMovement_Master.MovementId = Movement.Id
                                              AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
-            LEFT JOIN tmpMovementString_ord AS MS_InvNumberPartner_Master 
+            LEFT JOIN tmpMovementString_ord AS MS_InvNumberPartner_Master
                                             ON MS_InvNumberPartner_Master.MovementId = MovementLinkMovement_Master.MovementChildId
                                            AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
 
@@ -1555,6 +1578,7 @@ BEGIN
                           THEN zfConvert_StringToNumber (COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, '0')))
                      ELSE '0'
                 END :: Integer
+              , CASE WHEN vbIsGoodsCode = TRUE THEN Object_Goods.ObjectCode ELSE 0 END
               , Object_Goods.ValueData, Object_GoodsKind.ValueData
        ;
 
@@ -1574,21 +1598,21 @@ BEGIN
                                                       ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                      AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
                           LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
-        
+
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-        
+
                      -- !!!временно отключил!!!
                      WHERE MovementItem.MovementId = NULL -- inMovementId
-        
+
                        AND MovementItem.DescId     = zc_MI_Master()
                        AND MovementItem.isErased   = FALSE
                        -- AND COALESCE (MIFloat_Price.ValueData, 0) = 0
                        AND 1 = 0 -- !!!временно отключил!!!
                      GROUP BY MovementItem.ObjectId
                             , MILinkObject_GoodsKind.ObjectId
-                    ) 
+                    )
       SELECT Object_Goods.ObjectCode         AS GoodsCode
            , (Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
            , Object_Goods.ValueData          AS GoodsName_two

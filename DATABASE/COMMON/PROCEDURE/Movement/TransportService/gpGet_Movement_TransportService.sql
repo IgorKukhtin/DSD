@@ -94,10 +94,11 @@ BEGIN
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
             LEFT JOIN Object_Unit_View AS View_Unit
                                        ON View_Unit.BranchId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = lpGetAccessKey (vbUserId, zc_Enum_Process_Get_Movement_TransportService()))
-                                      AND View_Unit.Id IN (SELECT lfObject_Unit_byProfitLossDirection.UnitId
-                                                           FROM lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection
-                                                           WHERE lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId = zc_Enum_ProfitLossDirection_40100()
-                                                              OR (lfSelect.ProfitLossDirectionId = zc_Enum_ProfitLossDirection_40200() AND lfSelect.UnitName ILIKE '%Транспорт%')
+                                      AND View_Unit.Id IN (SELECT lfSelect.UnitId
+                                                           FROM lfSelect_Object_Unit_byProfitLossDirection() AS lfSelect
+                                                           WHERE lfSelect.ProfitLossDirectionId = zc_Enum_ProfitLossDirection_40100()
+                                                              OR (lfSelect.ProfitLossDirectionId = zc_Enum_ProfitLossDirection_40200()
+                                                              AND lfSelect.UnitName ILIKE '%Транспорт%')
                                                           )
        ;
 
