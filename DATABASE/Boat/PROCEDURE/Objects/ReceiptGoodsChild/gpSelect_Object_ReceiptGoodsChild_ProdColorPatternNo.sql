@@ -30,9 +30,12 @@ RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
               )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId       Integer;
+   DECLARE vbIsShowAll    Boolean;
    DECLARE vbPriceWithVAT Boolean;
 BEGIN
+
+vbIsShowAll:= TRUE;
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_ReceiptGoodsChild());
@@ -119,6 +122,12 @@ BEGIN
 
      FROM Object AS Object_ReceiptGoodsChild
 
+          INNER JOIN ObjectLink AS ObjectLink_Object
+                                ON ObjectLink_Object.ObjectId = Object_ReceiptGoodsChild.Id
+                               AND ObjectLink_Object.DescId = zc_ObjectLink_ReceiptGoodsChild_Object()
+          INNER JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId
+          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Object.DescId
+
           LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                 ON ObjectFloat_Value.ObjectId = Object_ReceiptGoodsChild.Id
                                AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptGoodsChild_Value() 
@@ -132,12 +141,6 @@ BEGIN
                                ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
                               AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
           LEFT JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id = ObjectLink_ReceiptGoods.ChildObjectId 
-
-          LEFT JOIN ObjectLink AS ObjectLink_Object
-                               ON ObjectLink_Object.ObjectId = Object_ReceiptGoodsChild.Id
-                              AND ObjectLink_Object.DescId = zc_ObjectLink_ReceiptGoodsChild_Object()
-          LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId
-          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Object.DescId
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_ReceiptGoodsChild.Id
