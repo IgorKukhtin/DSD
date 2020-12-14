@@ -994,10 +994,6 @@
 				<Form>PersonalReportJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ProfitLossServiceJournal.pas">
-				<Form>ProfitLossServiceJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\PersonalReport.pas">
 				<Form>PersonalReportForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -4182,6 +4178,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\GoodsByGoodsKindQuality.pas">
 				<Form>GoodsByGoodsKindQualityForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ProfitLossServiceJournal.pas">
+				<Form>ProfitLossServiceJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

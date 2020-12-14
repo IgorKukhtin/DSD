@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
              , CurrencyPartnerName TVarChar
              , Comment TVarChar
+             , RetailId Integer, RetailName TVarChar
              , JuridicalCode Integer, JuridicalName TVarChar, ItemName TVarChar, OKPO TVarChar
              , InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar
@@ -136,6 +137,8 @@ BEGIN
            
            , MIString_Comment.ValueData                     AS Comment
 
+           , Object_Retail.Id                               AS RetailId
+           , Object_Retail.ValueData                        AS RetailName
            , Object_Juridical.ObjectCode                    AS JuridicalCode
            , Object_Juridical.ValueData                     AS JuridicalName
            , ObjectDesc.ItemName                            AS ItemName
@@ -203,6 +206,10 @@ BEGIN
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
             LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementItem.ObjectId)
 
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                 ON ObjectLink_Juridical_Retail.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementItem.ObjectId)
+                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
             LEFT JOIN MovementItemString AS MIString_Comment 
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
