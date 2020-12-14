@@ -35,6 +35,8 @@ BEGIN
                        , SaleReturn_Summ, SaleReturn_Summ_10300, SaleReturn_SummCost, SaleReturn_SummCost_40200, SaleReturn_Amount_Weight, SaleReturn_Amount_Sh
                        , BonusBasis, Bonus, Plan_Weight, Plan_Summ
                        , Money_Summ, SendDebt_Summ, Money_SendDebt_Summ
+
+                       , ContractConditionKindId, BonusKindId, BonusTax
                         )
 
    WITH tmpPartnerAddress AS (SELECT * FROM Object_Partner_Address_View)
@@ -125,6 +127,10 @@ BEGIN
                               , COALESCE (MILinkObject_Goods.ObjectId, 0)                                 AS GoodsId
                               , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                             AS GoodsKindId
 
+                              , COALESCE (MILinkObject_ContractConditionKind.ObjectId,0)                  AS ContractConditionKindId
+                              , COALESCE (MILinkObject_BonusKind.ObjectId,0)                              AS BonusKindId
+                              , COALESCE (MIFloat_BonusValue.ValueData,0)                                 AS BonusTax
+
                               , SUM (CASE WHEN MILinkObject_ContractChild.ObjectId > 0 OR MovementBoolean_isLoad.ValueData = TRUE
                                                THEN COALESCE (MovementItem.Amount, -1 * MovementItemContainer.Amount)
                                           ELSE 0
@@ -170,12 +176,23 @@ BEGIN
                               LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
                                                                ON MILinkObject_Branch.MovementItemId = MovementItem.Id
                                                               AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
+                              LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractConditionKind
+                                                               ON MILinkObject_ContractConditionKind.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()
+                              LEFT JOIN MovementItemLinkObject AS MILinkObject_BonusKind
+                                                               ON MILinkObject_BonusKind.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_BonusKind.DescId = zc_MILinkObject_BonusKind()
+
                               LEFT JOIN MovementItemDate AS MIDate_OperDate
                                                          ON MIDate_OperDate.MovementItemId = MovementItem.Id
                                                         AND MIDate_OperDate.DescId = zc_MIDate_OperDate()
                               LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                           ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                                          AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+
+                              LEFT JOIN MovementItemFloat AS MIFloat_BonusValue
+                                                          ON MIFloat_BonusValue.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_BonusValue.DescId = zc_MIFloat_BonusValue()
 
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                                            ON MovementLinkObject_PaidKind.MovementId = MIFloat_MovementId.ValueData :: Integer
@@ -240,6 +257,10 @@ BEGIN
 
                  , 0 AS BonusBasis
                  , 0 AS Bonus
+
+                 , 0          AS ContractConditionKindId
+                 , 0          AS BonusKindId
+                 , 0 ::TFloat AS BonusTax
             FROM tmpOperation_SaleReturn
                  INNER JOIN ObjectLink AS ObjectLink_InfoMoneyDestination
                                        ON ObjectLink_InfoMoneyDestination.ObjectId = tmpOperation_SaleReturn.InfoMoneyId
@@ -293,6 +314,11 @@ BEGIN
 
                  , (tmpBonus.BonusBasis) AS BonusBasis
                  , (tmpBonus.Bonus)      AS Bonus
+
+                 , tmpBonus.ContractConditionKindId
+                 , tmpBonus.BonusKindId
+                 , tmpBonus.BonusTax  :: TFloat
+
             FROM tmpBonus)
 
           , tmpOperation AS 
@@ -340,6 +366,10 @@ BEGIN
                  , SUM (tmpOperation_all.BonusBasis) AS BonusBasis
                  , SUM (tmpOperation_all.Bonus)      AS Bonus
 
+                 , tmpOperation_all.ContractConditionKindId
+                 , tmpOperation_all.BonusKindId
+                 , tmpOperation_all.BonusTax
+
             FROM tmpOperation_all
             GROUP BY tmpOperation_all.OperDate
 
@@ -352,6 +382,10 @@ BEGIN
 
                    , tmpOperation_all.GoodsId
                    , tmpOperation_all.GoodsKindId
+
+                   , tmpOperation_all.ContractConditionKindId
+                   , tmpOperation_all.BonusKindId
+                   , tmpOperation_all.BonusTax
             )
 
       -- –≈«”À‹“¿“
@@ -442,6 +476,10 @@ BEGIN
            , 0, 0
            , 0, 0, 0
 
+           , tmpResult.ContractConditionKindId
+           , tmpResult.BonusKindId
+           , tmpResult.BonusTax
+
       FROM (SELECT tmpOperation.OperDate
 
                  , tmpOperation.JuridicalId
@@ -453,6 +491,10 @@ BEGIN
 
                  , tmpOperation.GoodsId
                  , tmpOperation.GoodsKindId
+
+                 , tmpOperation.ContractConditionKindId
+                 , tmpOperation.BonusKindId
+                 , tmpOperation.BonusTax
 
                  , SUM (tmpOperation.Actions_Summ) AS Actions_Summ
                  , SUM (tmpOperation.Sale_Summ)    AS Sale_Summ
@@ -511,6 +553,10 @@ BEGIN
 
                    , tmpOperation.GoodsId
                    , tmpOperation.GoodsKindId
+
+                   , tmpOperation.ContractConditionKindId
+                   , tmpOperation.BonusKindId
+                   , tmpOperation.BonusTax
            ) AS tmpResult
 
            LEFT JOIN tmpPartnerAddress AS View_Partner_Address ON View_Partner_Address.PartnerId = tmpResult.PartnerId
@@ -607,6 +653,10 @@ BEGIN
            , -1 * SUM (CASE WHEN Movement.DescId IN (zc_Movement_Cash(), zc_Movement_BankAccount()) THEN MovementItemContainer.Amount ELSE 0 END) AS Money_Summ
            , -1 * SUM (CASE WHEN Movement.DescId = zc_Movement_SendDebt() THEN MovementItemContainer.Amount ELSE 0 END) AS SendDebt_Summ
            , -1 * SUM (MovementItemContainer.Amount) AS Money_SendDebt_Summ
+
+           , 0 AS ContractConditionKindId
+           , 0 AS BonusKindId
+           , 0 ::TFloat AS BonusTax
 
    FROM Movement
         JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id

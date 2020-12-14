@@ -5,7 +5,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1203
-  ExplicitHeight = 518
+  ExplicitHeight = 521
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -284,6 +284,14 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'. '#1088#1072#1089#1095#1077#1090' '#1080#1079' '#1079#1072#1103#1074#1082#1080
             Width = 62
+          end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
           end
           object ContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
@@ -1440,7 +1448,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
         end
         item
           Name = 'inIsByDoc'
-          Value = 'False'
+          Value = False
           Component = edByDoc
           DataType = ftBoolean
           ParamType = ptInput
@@ -1578,7 +1586,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
       end
       item
         Name = 'inIsByDoc'
-        Value = 'False'
+        Value = False
         Component = edByDoc
         DataType = ftBoolean
         ParamType = ptInput
@@ -2032,7 +2040,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
       end
       item
         Name = 'inIsByDoc'
-        Value = 'False'
+        Value = False
         Component = edByDoc
         DataType = ftBoolean
         ParamType = ptInput

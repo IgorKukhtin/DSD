@@ -63,6 +63,7 @@ RETURNS TABLE (OperDate               TDateTime
              , Amount_WeightSK TFloat
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyCode_goods Integer, InfoMoneyName_goods TVarChar, InfoMoneyName_goods_all TVarChar
+             , Comment TVarChar
               )
 AS
 $BODY$
@@ -138,6 +139,8 @@ BEGIN
 
                              , CASE WHEN inIsByDoc = TRUE THEN MovementDate_OperDatePartner.ValueData ELSE Null END  :: TDateTime  AS OperDatePartner_order
                              , CASE WHEN inIsByDoc = TRUE THEN (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) ELSE Null END :: TDateTime AS OperDatePartner_sale
+                             
+                             , CASE WHEN inIsByDoc = TRUE THEN COALESCE (MovementString_Comment.ValueData,'') ELSE '' END ::TVarChar AS Comment
                         FROM Movement
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -184,7 +187,11 @@ BEGIN
                             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                                     ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
-                 
+
+                            LEFT JOIN MovementString AS MovementString_Comment
+                                                     ON MovementString_Comment.MovementId = Movement.Id
+                                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                    AND MovementItem.DescId     = zc_MI_Master()
                                                    AND MovementItem.isErased   = FALSE
@@ -212,7 +219,7 @@ BEGIN
                             LEFT JOIN ObjectFloat AS ObjectFloat_DocumentDayCount 
                                                   ON ObjectFloat_DocumentDayCount.ObjectId = MovementLinkObject_From.ObjectId 
                                                  AND ObjectFloat_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
-                 
+
                         WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                           AND Movement.StatusId = zc_Enum_Status_Complete()
                           AND Movement.DescId = zc_Movement_OrderExternal()
@@ -244,6 +251,7 @@ BEGIN
 
                             , CASE WHEN inIsByDoc = TRUE THEN MovementDate_OperDatePartner.ValueData ELSE Null END
                             , CASE WHEN inIsByDoc = TRUE THEN (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) ELSE Null END
+                            , CASE WHEN inIsByDoc = TRUE THEN COALESCE (MovementString_Comment.ValueData,'') ELSE '' END
                           )
 
      , tmpMovement AS (SELECT tmpMovement2.MovementId
@@ -261,25 +269,26 @@ BEGIN
                             , tmpMovement2.InfoMoneyId
                             , tmpMovement2.OperDatePartner_order
                             , tmpMovement2.OperDatePartner_sale
+                            , tmpMovement2.Comment
                 
-                           , SUM (Amount1 + Amount2 + tmpMovement2.AmountSecond1 + tmpMovement2.AmountSecond2) AS Amount
-                           , SUM (Amount1 + Amount2 )                                AS AmountZakaz
-                           , SUM (tmpMovement2.AmountSecond1)                        AS AmountSecond1
-                           , SUM (tmpMovement2.AmountSecond2)                        AS AmountSecond2
-                           , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN Amount1 ELSE 0 END)                                 AS Amount_Sh1
-                           , SUM (Amount1 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)  AS Amount_Weight1
-                           , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN Amount2 ELSE 0 END)                                 AS Amount_Sh2
-                           , SUM (Amount2 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)  AS Amount_Weight2
-                
-                           , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMovement2.AmountSecond1 ELSE 0 END)                    AS AmountSecond_Sh1
-                           , SUM (tmpMovement2.AmountSecond1 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)  AS AmountSecond_Weight1
-                           , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMovement2.AmountSecond2 ELSE 0 END)                    AS AmountSecond_Sh2
-                           , SUM (tmpMovement2.AmountSecond2 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)  AS AmountSecond_Weight2
-                
-                           , SUM (Amount1 * Price) AS Summ1
-                           , SUM (Amount2 * Price) AS Summ2
-                           , SUM (tmpMovement2.AmountSecond1 * Price) AS SummSecond1
-                           , SUM (tmpMovement2.AmountSecond2 * Price) AS SummSecond2
+                            , SUM (Amount1 + Amount2 + tmpMovement2.AmountSecond1 + tmpMovement2.AmountSecond2) AS Amount
+                            , SUM (Amount1 + Amount2 )                                AS AmountZakaz
+                            , SUM (tmpMovement2.AmountSecond1)                        AS AmountSecond1
+                            , SUM (tmpMovement2.AmountSecond2)                        AS AmountSecond2
+                            , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN Amount1 ELSE 0 END)                                 AS Amount_Sh1
+                            , SUM (Amount1 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)  AS Amount_Weight1
+                            , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN Amount2 ELSE 0 END)                                 AS Amount_Sh2
+                            , SUM (Amount2 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)  AS Amount_Weight2
+                 
+                            , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMovement2.AmountSecond1 ELSE 0 END)                    AS AmountSecond_Sh1
+                            , SUM (tmpMovement2.AmountSecond1 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)  AS AmountSecond_Weight1
+                            , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMovement2.AmountSecond2 ELSE 0 END)                    AS AmountSecond_Sh2
+                            , SUM (tmpMovement2.AmountSecond2 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)  AS AmountSecond_Weight2
+                 
+                            , SUM (Amount1 * Price) AS Summ1
+                            , SUM (Amount2 * Price) AS Summ2
+                            , SUM (tmpMovement2.AmountSecond1 * Price) AS SummSecond1
+                            , SUM (tmpMovement2.AmountSecond2 * Price) AS SummSecond2
                 
                        FROM tmpMovement2
                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = tmpMovement2.GoodsId
@@ -302,6 +311,7 @@ BEGIN
                               , tmpMovement2.RetailId
                               , tmpMovement2.OperDatePartner_order
                               , tmpMovement2.OperDatePartner_sale
+                              , tmpMovement2.Comment
                       )
      -- выбираем для заказов документы продажи и перемещения по цене 
      , tmpMLM AS (SELECT MovementLinkMovement.*
@@ -408,6 +418,8 @@ BEGIN
            , View_InfoMoney_goods.InfoMoneyCode                   AS InfoMoneyCode_goods
            , View_InfoMoney_goods.InfoMoneyName                   AS InfoMoneyName_goods
            , View_InfoMoney_goods.InfoMoneyName_all               AS InfoMoneyName_goods_all
+           
+           , tmpMovement.Comment ::TVarChar
 
        FROM tmpMovement
           LEFT JOIN Movement ON Movement.Id = tmpMovement.MovementId
@@ -484,6 +496,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.12.20         * add Comment
  26.06.18         *
  18.04.18         *
  25.05.17         *
