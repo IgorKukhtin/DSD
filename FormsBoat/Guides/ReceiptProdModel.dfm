@@ -657,6 +657,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         OptionsCustomize.ColumnsQuickCustomization = True
         OptionsData.Deleting = False
         OptionsData.DeletingConfirmation = False
+        OptionsData.Editing = False
+        OptionsData.Inserting = False
         OptionsView.CellAutoHeight = True
         OptionsView.Footer = True
         OptionsView.GroupSummaryLayout = gslAlignWithColumns
@@ -1023,6 +1025,11 @@ object ReceiptProdModelForm: TReceiptProdModelForm
             Format = ',0.00##'
             Kind = skSum
             Column = Value_ch1
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = Value_servise_ch1
           end>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -1062,6 +1069,11 @@ object ReceiptProdModelForm: TReceiptProdModelForm
             Format = ',0.00##'
             Kind = skSum
             Column = Value_ch1
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = Value_servise_ch1
           end>
         DataController.Summary.SummaryGroups = <>
         Images = dmMain.SortImageList
@@ -1099,6 +1111,14 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 75
+        end
+        object DescName_ch1: TcxGridDBColumn
+          Caption = #1069#1083#1077#1084#1077#1085#1090
+          DataBinding.FieldName = 'DescName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
         end
         object ObjectCode_ch1: TcxGridDBColumn
           Caption = 'Interne Nr'
@@ -1143,7 +1163,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           Width = 172
         end
         object ObjectName_ch1: TcxGridDBColumn
-          Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+          Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
           DataBinding.FieldName = 'ObjectName'
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
@@ -1182,6 +1202,17 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077
           Width = 50
+        end
+        object Value_servise_ch1: TcxGridDBColumn
+          Caption = 'Value (servise)'
+          DataBinding.FieldName = 'Value_servise'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077
+          Width = 63
         end
         object EKPrice_ch1: TcxGridDBColumn
           Caption = 'Netto EK'
@@ -1606,7 +1637,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Width = 536
       Height = 17
       Align = alTop
-      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
       Color = clAqua
       ParentBackground = False
       TabOrder = 1
@@ -1877,8 +1908,9 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         end>
     end
     object BarSubItemColor: TdxBarSubItem
-      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099
       Category = 0
+      Hint = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
       Visible = ivAlways
       ItemLinks = <
         item
@@ -2236,8 +2268,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'actChoiceFormGoods'
-      FormName = 'TGoodsForm'
-      FormNameParam.Value = 'TGoodsForm'
+      FormName = 'TUnion_Goods_ReceiptServiceForm'
+      FormNameParam.Value = 'TUnion_Goods_ReceiptServiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -2612,13 +2644,13 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     MasterSource = DataSource
     PacketRecords = 0
     Params = <>
-    Left = 256
-    Top = 288
+    Left = 240
+    Top = 352
   end
   object GoodsDS: TDataSource
     DataSet = GoodsCDS
-    Left = 304
-    Top = 296
+    Left = 280
+    Top = 360
   end
   object dsdDBViewAddOnGoods: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

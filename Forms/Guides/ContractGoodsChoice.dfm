@@ -46,6 +46,23 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object GoodsGroupNameFull: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'GoodsGroupNameFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 150
+          end
+          object GoodsGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'GoodsGroupName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 172
+          end
           object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
@@ -59,6 +76,14 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 123
+          end
+          object MeasureName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
           object GoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -940,6 +965,7 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     inherited actRefresh: TdsdDataSetRefresh
@@ -1505,7 +1531,6 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
     Top = 224
   end
   inherited PopupMenu: TPopupMenu
-    Left = 152
     Top = 256
   end
   object GuidesRetail: TdsdGuides
@@ -1889,6 +1914,7 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 768
     Top = 320
@@ -1993,8 +2019,8 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 544
-    Top = 8
+    Left = 520
+    Top = 88
   end
   object GuidesGoodsProperty: TdsdGuides
     KeyField = 'Id'

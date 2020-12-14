@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_full TVarChar, OperDate
              , Comment TVarChar
              , JuridicalCode Integer, JuridicalName TVarChar, ItemName TVarChar, OKPO TVarChar
              , JuridicalCode_Child Integer, JuridicalName_Child TVarChar, OKPO_Child TVarChar
+             , RetailId Integer, RetailName TVarChar
              , PartnerCode Integer, PartnerName TVarChar, ItemName_Partner TVarChar
              , InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar
@@ -105,6 +106,9 @@ BEGIN
            , Object_Juridical_Child.ValueData               AS JuridicalName_Child
            , ObjectHistory_JuridicalDetails_View_Child.OKPO AS OKPO_Child
 
+           , Object_Retail.Id                               AS RetailId
+           , Object_Retail.ValueData                        AS RetailName
+
            , Object_Partner.ObjectCode                      AS PartnerCode
            , Object_Partner.ValueData                       AS PartnerName
            , ObjectDesc_Partner.ItemName                    AS ItemName_Partner
@@ -152,8 +156,13 @@ BEGIN
             
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementItem.ObjectId)
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Juridical.DescId
-                        
+
             LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementItem.ObjectId)
+
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                 ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
+                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
             LEFT JOIN MovementItemFloat AS MIFloat_BonusValue
                                         ON MIFloat_BonusValue.MovementItemId = MovementItem.Id

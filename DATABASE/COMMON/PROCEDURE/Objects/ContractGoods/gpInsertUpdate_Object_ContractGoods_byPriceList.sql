@@ -33,6 +33,11 @@ BEGIN
        inGoodsPropertyId := zfCalc_GoodsPropertyId (inContractId,0,0);
    END IF;
 
+   IF COALESCE (inGoodsPropertyId,0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка. Не выбран классификатор';
+   END IF;
+
    --Записываем свойство договора  zc_ObjectLink_Contract_PriceListGoods, zc_ObjectLink_Contract_GoodsProperty
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Contract_PriceListGoods(), inContractId, inPriceListId);
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Contract_GoodsProperty(), inContractId, inGoodsPropertyId);
@@ -192,7 +197,7 @@ BEGIN
    WHERE (tmpData.Price <> tmpContractGoods.Price OR tmpContractGoods.Id IS NULL)
       AND COALESCE (tmpData.Price,0) <> 0;
    
-
+RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from tmpData);
 
 END;
 $BODY$

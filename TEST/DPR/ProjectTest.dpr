@@ -18,6 +18,8 @@ program ProjectTest;
 
 
 
+
+
 uses
   DUnitTestRunner,
   VKDBFDataSet in '..\..\SOURCE\DBF\VKDBFDataSet.pas',
@@ -351,7 +353,6 @@ uses
   ReturnOutPartnerJournal in '..\..\Forms\Document\ReturnOutPartnerJournal.pas' {ReturnOutPartnerJournalForm: TParentForm},
   ReturnOutPartner in '..\..\Forms\Document\ReturnOutPartner.pas' {ReturnOutPartnerForm: TParentForm},
   PersonalReportJournal in '..\..\Forms\Document\PersonalReportJournal.pas' {PersonalReportJournalForm: TParentForm},
-  ProfitLossServiceJournal in '..\..\Forms\Document\ProfitLossServiceJournal.pas' {ProfitLossServiceJournalForm: TParentForm},
   PersonalReport in '..\..\Forms\Document\PersonalReport.pas' {PersonalReportForm: TParentForm},
   ServiceTest in '..\SOURCE\Movement\All\ServiceTest.pas',
   MemberExternal in '..\..\Forms\Guides\MemberExternal.pas' {MemberExternalForm: TParentForm},
@@ -1217,7 +1218,8 @@ uses
   ReestrIncomeJournal in '..\..\Forms\Document\ReestrIncomeJournal.pas' {ReestrIncomeJournalForm: TParentForm},
   ReestrIncomeStartMovement in '..\..\Forms\Document\ReestrIncomeStartMovement.pas' {ReestrIncomeStartMovementForm: TParentForm},
   ReestrIncomeUpdateMovement in '..\..\Forms\Document\ReestrIncomeUpdateMovement.pas' {ReestrIncomeUpdateMovementForm: TParentForm},
-  GoodsByGoodsKindQuality in '..\..\Forms\Guides\GoodsByGoodsKindQuality.pas' {GoodsByGoodsKindQualityForm: TParentForm};
+  GoodsByGoodsKindQuality in '..\..\Forms\Guides\GoodsByGoodsKindQuality.pas' {GoodsByGoodsKindQualityForm: TParentForm},
+  ProfitLossServiceJournal in '..\..\Forms\Document\ProfitLossServiceJournal.pas' {ProfitLossServiceJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

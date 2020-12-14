@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpReport_SaleExternal(
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , FromName TVarChar, PartnerName_from TVarChar
+             , FromName TVarChar
+             , PartnerId_from Integer, PartnerName_from TVarChar
              , PartnerRealId Integer, PartnerRealName TVarChar
              , GoodsPropertyName TVarChar
              , AmountSh TFloat
@@ -222,6 +223,7 @@ BEGIN
                       , Object_Status.ObjectCode    AS StatusCode
                       , Object_Status.ValueData     AS StatusName
                       , Movement.FromName
+                      , Movement.PartnerId_from
                       , Movement.PartnerName_from
                       , Movement.PartnerRealId
                       , Movement.PartnerRealName
@@ -242,6 +244,7 @@ BEGIN
            , tmpData.StatusCode
            , tmpData.StatusName
            , tmpData.FromName
+           , tmpData.PartnerId_from
            , tmpData.PartnerName_from
            , tmpData.PartnerRealId
            , tmpData.PartnerRealName

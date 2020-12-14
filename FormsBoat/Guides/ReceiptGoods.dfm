@@ -611,6 +611,17 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077
           Width = 121
         end
+        object Value_servise_ch1: TcxGridDBColumn
+          Caption = 'Value (servise)'
+          DataBinding.FieldName = 'Value_servise'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077
+          Width = 63
+        end
         object EKPrice_ch1: TcxGridDBColumn
           Caption = 'Netto EK'
           DataBinding.FieldName = 'EKPrice'
@@ -980,6 +991,15 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           HeaderAlignmentVert = vaCenter
           Width = 154
         end
+        object ProdColorGroupName_ch2: TcxGridDBColumn
+          Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103
+          DataBinding.FieldName = 'ProdColorGroupName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1050#1072#1090#1077#1075#1086#1088#1080#1103
+          Options.Editing = False
+          Width = 127
+        end
         object ProdColorPatternName_ch2: TcxGridDBColumn
           Caption = #1069#1083#1077#1084#1077#1085#1090' Boat Structure'
           DataBinding.FieldName = 'ProdColorPatternName'
@@ -1021,6 +1041,17 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077
           Width = 121
+        end
+        object Value_servise_ch2: TcxGridDBColumn
+          Caption = 'Value (servise)'
+          DataBinding.FieldName = 'Value_servise'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077
+          Width = 63
         end
         object EKPrice_ch2: TcxGridDBColumn
           Caption = 'Netto EK'
@@ -1746,8 +1777,8 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'actChoiceFormGoods'
-      FormName = 'TGoodsForm'
-      FormNameParam.Value = 'TGoodsForm'
+      FormName = 'TUnion_Goods_ReceiptServiceForm'
+      FormNameParam.Value = 'TUnion_Goods_ReceiptServiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1781,8 +1812,8 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'actChoiceFormGoods'
-      FormName = 'TGoodsForm'
-      FormNameParam.Value = 'TGoodsForm'
+      FormName = 'TUnion_Goods_ReceiptServiceForm'
+      FormNameParam.Value = 'TUnion_Goods_ReceiptServiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

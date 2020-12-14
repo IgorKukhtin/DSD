@@ -19,6 +19,8 @@ RETURNS TABLE (Id Integer, Code INTEGER
              , PriceListId Integer, PriceListName TVarChar
              , PriceListGoodsId Integer, PriceListGoodsName TVarChar
              , GoodsPropertyId Integer, GoodsPropertyName TVarChar
+             , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
+             , MeasureId Integer, MeasureName TVarChar
              , GoodsId Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
              , TradeMarkId Integer, TradeMarkName TVarChar
@@ -165,6 +167,12 @@ BEGIN
            , Object_GoodsProperty.Id            AS GoodsPropertyId
            , Object_GoodsProperty.ValueData     AS GoodsPropertyName
 
+           , Object_GoodsGroup.Id        AS GoodsGroupId
+           , Object_GoodsGroup.ValueData AS GoodsGroupName
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+           , Object_Measure.Id               AS MeasureId
+           , Object_Measure.ValueData        AS MeasureName
+
            , Object_Goods.Id                  AS GoodsId
            , Object_Goods.ValueData           AS GoodsName
            , Object_GoodsKind.Id              AS GoodsKindId
@@ -280,6 +288,20 @@ BEGIN
                                  ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
             LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
             LEFT JOIN ObjectDate AS ObjectDate_Signing
                                  ON ObjectDate_Signing.ObjectId = Object_Contract_View.ContractId
