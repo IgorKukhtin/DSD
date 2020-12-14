@@ -7,8 +7,10 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptGoodsChild(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
-             , Value TFloat
+             , Value TFloat, Value_servise TFloat
              , ReceiptGoodsId Integer, ReceiptGoodsName TVarChar
+             , ProdColorGroupId Integer, ProdColorGroupName TVarChar
+             , ProdColorPatternId Integer, ProdColorPatternName TVarChar
              , ObjectId Integer, ObjectCode Integer, ObjectName TVarChar, DescName TVarChar
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
@@ -29,9 +31,12 @@ RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
               )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId       Integer;
+   DECLARE vbIsShowAll    Boolean;
    DECLARE vbPriceWithVAT Boolean;
 BEGIN
+
+vbIsShowAll:= TRUE;
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_ReceiptGoodsChild());
@@ -54,15 +59,22 @@ BEGIN
          , ROW_NUMBER() OVER (PARTITION BY Object_ReceiptGoods.Id ORDER BY Object_ReceiptGoodsChild.Id ASC) :: Integer AS NPP
          , Object_ReceiptGoodsChild.ValueData       AS Comment
 
-         , ObjectFloat_Value.ValueData   ::TFloat   AS Value
+         , CASE WHEN ObjectDesc.Id <> zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData ELSE 0 END ::TFloat   AS Value
+         , CASE WHEN ObjectDesc.Id =  zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData ELSE 0 END ::TFloat   AS Value_servise
 
          , Object_ReceiptGoods.Id        ::Integer  AS ReceiptGoodsId
          , Object_ReceiptGoods.ValueData ::TVarChar AS ReceiptGoodsName
+         
+         , Object_ProdColorGroup.Id           ::Integer  AS ProdColorGroupId
+         , Object_ProdColorGroup.ValueData    ::TVarChar AS ProdColorGroupName
 
-         , Object_Object.Id              ::Integer  AS ObjectId
-         , Object_Object.ObjectCode      ::Integer  AS ObjectCode
-         , Object_Object.ValueData       ::TVarChar AS ObjectName
-         , ObjectDesc.ItemName           ::TVarChar AS DescName
+         , Object_ProdColorPattern.Id         ::Integer  AS ProdColorPatternId
+         , Object_ProdColorPattern.ValueData  ::TVarChar AS ProdColorPatternName
+
+         , Object_Object.Id               ::Integer  AS ObjectId
+         , Object_Object.ObjectCode       ::Integer  AS ObjectCode
+         , Object_Object.ValueData        ::TVarChar AS ObjectName
+         , ObjectDesc.ItemName            ::TVarChar AS DescName
 
          , Object_Insert.ValueData                  AS InsertName
          , Object_Update.ValueData                  AS UpdateName
@@ -115,20 +127,30 @@ BEGIN
 
      FROM Object AS Object_ReceiptGoodsChild
 
-          LEFT JOIN ObjectFloat AS ObjectFloat_Value
-                                ON ObjectFloat_Value.ObjectId = Object_ReceiptGoodsChild.Id
-                               AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptGoodsChild_Value() 
-
-          LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoods
-                               ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
-                              AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
-          LEFT JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id = ObjectLink_ReceiptGoods.ChildObjectId 
-
           LEFT JOIN ObjectLink AS ObjectLink_Object
                                ON ObjectLink_Object.ObjectId = Object_ReceiptGoodsChild.Id
                               AND ObjectLink_Object.DescId = zc_ObjectLink_ReceiptGoodsChild_Object()
           LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Object.DescId
+
+          LEFT JOIN ObjectFloat AS ObjectFloat_Value
+                                ON ObjectFloat_Value.ObjectId = Object_ReceiptGoodsChild.Id
+                               AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptGoodsChild_Value() 
+
+          LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                               ON ObjectLink_ProdColorPattern.ObjectId = Object_ReceiptGoodsChild.Id
+                              AND ObjectLink_ProdColorPattern.DescId = zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern()
+          LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = ObjectLink_ProdColorPattern.ChildObjectId 
+
+          LEFT JOIN ObjectLink AS ObjectLink_ProdColorGroup
+                               ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id
+                              AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+          LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoods
+                               ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
+                              AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+          LEFT JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id = ObjectLink_ReceiptGoods.ChildObjectId 
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_ReceiptGoodsChild.Id
@@ -205,4 +227,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ReceiptGoodsChild (false, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ReceiptGoodsChild_ProdColorPatternNo (false, zfCalc_UserAdmin())
