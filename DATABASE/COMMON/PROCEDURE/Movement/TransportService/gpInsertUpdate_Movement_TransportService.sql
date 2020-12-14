@@ -111,7 +111,7 @@ BEGIN
                                  AND ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId
                               ), 0);
 
-         ioAmount:= COALESCE (inSummTransport, 0) * vbValue;
+         ioAmount:= COALESCE (inSummTransport, 0) * vbValue / 100;
      ELSE
      IF inContractConditionKindId IN (zc_Enum_ContractConditionKind_TransportOneTrip()   -- Ставка за маршрут в одну сторону, грн 
                                     , zc_Enum_ContractConditionKind_TransportOneTrip10() -- Ставка за маршрут 10т. в одну сторону, грн 

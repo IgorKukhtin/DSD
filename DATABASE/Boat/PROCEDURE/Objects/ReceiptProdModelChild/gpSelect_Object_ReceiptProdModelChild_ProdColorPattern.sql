@@ -106,7 +106,7 @@ BEGIN
           , Object_ProdColorPattern.Id         AS ProdColorPatternId
           , Object_ProdColorPattern.ObjectCode AS ProdColorPatternCode
           , Object_ProdColorPattern.ValueData  AS ProdColorPatternName
-          , ROW_NUMBER() OVER (PARTITION BY Object_ProdColorGroup.Id ORDER BY Object_ProdColorPattern.ObjectCode ASC) :: Integer AS NPP
+          , ROW_NUMBER() OVER (PARTITION BY tmpProdColorPattern.ReceiptProdModelId ORDER BY Object_ProdColorPattern.ObjectCode ASC) :: Integer AS NPP
  
           , ObjectString_Comment.ValueData     ::TVarChar  AS Comment
  

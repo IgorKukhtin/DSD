@@ -611,6 +611,17 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077
           Width = 121
         end
+        object Value_servise_ch1: TcxGridDBColumn
+          Caption = 'Value (servise)'
+          DataBinding.FieldName = 'Value_servise'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077
+          Width = 63
+        end
         object EKPrice_ch1: TcxGridDBColumn
           Caption = 'Netto EK'
           DataBinding.FieldName = 'EKPrice'
@@ -1021,6 +1032,17 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077
           Width = 121
+        end
+        object Value_servise_ch2: TcxGridDBColumn
+          Caption = 'Value (servise)'
+          DataBinding.FieldName = 'Value_servise'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077
+          Width = 63
         end
         object EKPrice_ch2: TcxGridDBColumn
           Caption = 'Netto EK'

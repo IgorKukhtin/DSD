@@ -199,7 +199,6 @@ uses
   ReceiptProdModelEdit in '..\..\FormsBoat\Guides\ReceiptProdModelEdit.pas' {ReceiptProdModelEditForm: TParentForm},
   ReceiptGoodsEdit in '..\..\FormsBoat\Guides\ReceiptGoodsEdit.pas' {ReceiptGoodsEditForm: TParentForm},
   ReceiptGoods in '..\..\FormsBoat\Guides\ReceiptGoods.pas' {ReceiptGoodsForm: TParentForm},
-  ReceiptProdModel in '..\..\FormsBoat\Guides\ReceiptProdModel.pas' {ReceiptProdModelForm: TParentForm},
   ProdColorKind in '..\..\FormsBoat\Kind\ProdColorKind.pas' {ProdColorKindForm: TParentForm},
   ColorPattern in '..\..\FormsBoat\Guides\ColorPattern.pas' {ColorPatternForm: TParentForm},
   ColorPatternEdit in '..\..\FormsBoat\Guides\ColorPatternEdit.pas' {ColorPatternEditForm: TParentForm},
@@ -207,7 +206,8 @@ uses
   ReceiptLevelEdit in '..\..\FormsBoat\Guides\ReceiptLevelEdit.pas' {ReceiptLevelEditForm: TParentForm},
   ReceiptService in '..\..\FormsBoat\Guides\ReceiptService.pas' {ReceiptServiceForm: TParentForm},
   ReceiptServiceEdit in '..\..\FormsBoat\Guides\ReceiptServiceEdit.pas' {ReceiptServiceEditForm: TParentForm},
-  Union_Goods_ReceiptService in '..\..\FormsBoat\Guides\Union_Goods_ReceiptService.pas' {Union_Goods_ReceiptServiceForm: TParentForm};
+  Union_Goods_ReceiptService in '..\..\FormsBoat\Guides\Union_Goods_ReceiptService.pas' {Union_Goods_ReceiptServiceForm: TParentForm},
+  ReceiptProdModel in '..\..\FormsBoat\Guides\ReceiptProdModel.pas' {ReceiptProdModelForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

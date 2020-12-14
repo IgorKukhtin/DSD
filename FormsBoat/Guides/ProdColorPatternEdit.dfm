@@ -389,7 +389,7 @@ object ProdColorPatternEditForm: TProdColorPatternEditForm
         MultiSelectSeparator = ','
       end>
     Left = 206
-    Top = 115
+    Top = 107
   end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'

@@ -631,10 +631,6 @@
 				<Form>ReceiptGoodsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ReceiptProdModel.pas">
-				<Form>ReceiptProdModelForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Kind\ProdColorKind.pas">
 				<Form>ProdColorKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -665,6 +661,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Guides\Union_Goods_ReceiptService.pas">
 				<Form>Union_Goods_ReceiptServiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\ReceiptProdModel.pas">
+				<Form>ReceiptProdModelForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

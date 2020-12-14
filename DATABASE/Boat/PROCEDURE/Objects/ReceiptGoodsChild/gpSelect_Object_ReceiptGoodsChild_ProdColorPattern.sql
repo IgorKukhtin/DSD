@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptGoodsChild_ProdColorPattern(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
-             , Value TFloat
+             , Value TFloat, Value_servise TFloat
              , ReceiptGoodsId Integer, ReceiptGoodsName TVarChar
              , ProdColorPatternId Integer, ProdColorPatternName TVarChar
              , ObjectId Integer, ObjectCode Integer, ObjectName TVarChar, DescName TVarChar
@@ -55,8 +55,9 @@ BEGIN
          , ROW_NUMBER() OVER (PARTITION BY Object_ReceiptGoods.Id ORDER BY Object_ReceiptGoodsChild.Id ASC) :: Integer AS NPP
          , Object_ReceiptGoodsChild.ValueData       AS Comment
 
-         , ObjectFloat_Value.ValueData   ::TFloat   AS Value
-
+         , CASE WHEN ObjectDesc.Id <> zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData ELSE 0 END ::TFloat   AS Value
+         , CASE WHEN ObjectDesc.Id =  zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData ELSE 0 END ::TFloat   AS Value_servise
+         
          , Object_ReceiptGoods.Id        ::Integer  AS ReceiptGoodsId
          , Object_ReceiptGoods.ValueData ::TVarChar AS ReceiptGoodsName
          

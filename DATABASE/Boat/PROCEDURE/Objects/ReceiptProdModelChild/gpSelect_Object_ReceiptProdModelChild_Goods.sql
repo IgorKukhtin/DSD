@@ -63,7 +63,7 @@ BEGIN
                                  AND ObjectLink_Object.DescId = zc_ObjectLink_ReceiptProdModelChild_Object()
              INNER JOIN Object AS Object_Object
                                ON Object_Object.Id = ObjectLink_Object.ChildObjectId
-                              AND Object_Object.DescId = zc_Object_Goods()
+                              --AND Object_Object.DescId = zc_Object_Goods()
         WHERE Object_ReceiptProdModelChild.DescId = zc_Object_ReceiptProdModelChild()
          AND (Object_ReceiptProdModelChild.isErased = FALSE OR inIsErased = TRUE)
         );
@@ -221,7 +221,8 @@ BEGIN
          , ROW_NUMBER() OVER (PARTITION BY Object_ReceiptProdModel.Id ORDER BY Object_ReceiptProdModelChild.Id ASC) :: Integer AS NPP
          , Object_ReceiptProdModelChild.ValueData       AS Comment
 
-         , ObjectFloat_Value.ValueData       ::TFloat   AS Value
+         , CASE WHEN ObjectDesc.Id = zc_Object_Goods() THEN ObjectFloat_Value.ValueData ELSE 0 END ::TFloat   AS Value
+         , CASE WHEN ObjectDesc.Id = zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData ELSE 0 END ::TFloat   AS Value_servise
 
          , Object_ReceiptProdModel.Id        ::Integer  AS ReceiptProdModelId
          , Object_ReceiptProdModel.ValueData ::TVarChar AS ReceiptProdModelName
@@ -232,13 +233,14 @@ BEGIN
          , Object_Object.Id                  ::Integer  AS ObjectId
          , Object_Object.ObjectCode          ::Integer  AS ObjectCode
          , Object_Object.ValueData           ::TVarChar AS ObjectName
+         , ObjectDesc.ItemName               ::TVarChar AS DescName
 
          , Object_Insert.ValueData                      AS InsertName
          , Object_Update.ValueData                      AS UpdateName
          , ObjectDate_Insert.ValueData                  AS InsertDate
          , ObjectDate_Update.ValueData                  AS UpdateDate
          , Object_ReceiptProdModelChild.isErased        AS isErased
-         
+
          --
          , ObjectString_GoodsGroupFull.ValueData      AS GoodsGroupNameFull
          , Object_GoodsGroup.ValueData                AS GoodsGroupName
@@ -297,6 +299,7 @@ BEGIN
           LEFT JOIN tmpChild ON tmpChild.GoodsId_parent = Object_ReceiptProdModelChild.GoodsId
           
           LEFT JOIN Object AS Object_Object ON Object_Object.Id = Object_ReceiptProdModelChild.GoodsId
+          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Object.DescId
 
           LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
                                  ON ObjectString_GoodsGroupFull.ObjectId = Object_Object.Id

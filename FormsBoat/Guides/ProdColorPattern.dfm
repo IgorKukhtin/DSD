@@ -952,6 +952,14 @@ object ProdColorPatternForm: TProdColorPatternForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inColorPatternId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ColorPatternId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inProdColorGroupId'
         Value = ''
         Component = MasterCDS
