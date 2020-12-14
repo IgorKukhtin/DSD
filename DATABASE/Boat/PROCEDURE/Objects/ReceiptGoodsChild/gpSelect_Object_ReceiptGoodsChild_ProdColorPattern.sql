@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptGoodsChild_ProdColorPattern(
 RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
              , Value TFloat, Value_servise TFloat
              , ReceiptGoodsId Integer, ReceiptGoodsName TVarChar
+             , ProdColorGroupId Integer, ProdColorGroupName TVarChar
              , ProdColorPatternId Integer, ProdColorPatternName TVarChar
              , ObjectId Integer, ObjectCode Integer, ObjectName TVarChar, DescName TVarChar
              , InsertName TVarChar, UpdateName TVarChar
@@ -60,6 +61,9 @@ BEGIN
          
          , Object_ReceiptGoods.Id        ::Integer  AS ReceiptGoodsId
          , Object_ReceiptGoods.ValueData ::TVarChar AS ReceiptGoodsName
+
+         , Object_ProdColorGroup.Id           ::Integer  AS ProdColorGroupId
+         , Object_ProdColorGroup.ValueData    ::TVarChar AS ProdColorGroupName
          
          , Object_ProdColorPattern.Id        ::Integer  AS ProdColorPatternId
          , Object_ProdColorPattern.ValueData ::TVarChar AS ProdColorPatternName
@@ -128,6 +132,11 @@ BEGIN
                                ON ObjectLink_ProdColorPattern.ObjectId = Object_ReceiptGoodsChild.Id
                               AND ObjectLink_ProdColorPattern.DescId = zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern()
           LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = ObjectLink_ProdColorPattern.ChildObjectId 
+
+          LEFT JOIN ObjectLink AS ObjectLink_ProdColorGroup
+                               ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id
+                              AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+          LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoods
                                ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id

@@ -991,6 +991,15 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           HeaderAlignmentVert = vaCenter
           Width = 154
         end
+        object ProdColorGroupName_ch2: TcxGridDBColumn
+          Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103
+          DataBinding.FieldName = 'ProdColorGroupName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1050#1072#1090#1077#1075#1086#1088#1080#1103
+          Options.Editing = False
+          Width = 127
+        end
         object ProdColorPatternName_ch2: TcxGridDBColumn
           Caption = #1069#1083#1077#1084#1077#1085#1090' Boat Structure'
           DataBinding.FieldName = 'ProdColorPatternName'
