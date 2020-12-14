@@ -1746,8 +1746,8 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'actChoiceFormGoods'
-      FormName = 'TGoodsForm'
-      FormNameParam.Value = 'TGoodsForm'
+      FormName = 'TUnion_Goods_ReceiptServiceForm'
+      FormNameParam.Value = 'TUnion_Goods_ReceiptServiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1781,8 +1781,8 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'actChoiceFormGoods'
-      FormName = 'TGoodsForm'
-      FormNameParam.Value = 'TGoodsForm'
+      FormName = 'TUnion_Goods_ReceiptServiceForm'
+      FormNameParam.Value = 'TUnion_Goods_ReceiptServiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

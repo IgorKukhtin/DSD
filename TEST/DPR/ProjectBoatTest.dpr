@@ -206,7 +206,8 @@ uses
   ReceiptLevel in '..\..\FormsBoat\Guides\ReceiptLevel.pas' {ReceiptLevelForm: TParentForm},
   ReceiptLevelEdit in '..\..\FormsBoat\Guides\ReceiptLevelEdit.pas' {ReceiptLevelEditForm: TParentForm},
   ReceiptService in '..\..\FormsBoat\Guides\ReceiptService.pas' {ReceiptServiceForm: TParentForm},
-  ReceiptServiceEdit in '..\..\FormsBoat\Guides\ReceiptServiceEdit.pas' {ReceiptServiceEditForm: TParentForm};
+  ReceiptServiceEdit in '..\..\FormsBoat\Guides\ReceiptServiceEdit.pas' {ReceiptServiceEditForm: TParentForm},
+  Union_Goods_ReceiptService in '..\..\FormsBoat\Guides\Union_Goods_ReceiptService.pas' {Union_Goods_ReceiptServiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

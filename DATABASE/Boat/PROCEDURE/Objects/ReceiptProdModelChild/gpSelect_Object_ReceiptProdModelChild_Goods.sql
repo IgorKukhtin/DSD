@@ -298,32 +298,32 @@ BEGIN
           
           LEFT JOIN Object AS Object_Object ON Object_Object.Id = Object_ReceiptProdModelChild.GoodsId
 
-             LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
-                                    ON ObjectString_GoodsGroupFull.ObjectId = Object_Object.Id
-                                   AND ObjectString_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+          LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
+                                 ON ObjectString_GoodsGroupFull.ObjectId = Object_Object.Id
+                                AND ObjectString_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
-             LEFT JOIN ObjectString AS ObjectString_Article
-                                    ON ObjectString_Article.ObjectId = Object_Object.Id
-                                   AND ObjectString_Article.DescId = zc_ObjectString_Article()
+          LEFT JOIN ObjectString AS ObjectString_Article
+                                 ON ObjectString_Article.ObjectId = Object_Object.Id
+                                AND ObjectString_Article.DescId = zc_ObjectString_Article()
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Object.Id
-                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                               ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Object.Id
+                              AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+          LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_ProdColor
-                                  ON ObjectLink_Goods_ProdColor.ObjectId = Object_Object.Id
-                                 AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
-             LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_ProdColor
+                               ON ObjectLink_Goods_ProdColor.ObjectId = Object_Object.Id
+                              AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
+          LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Object.Id
-                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                               ON ObjectLink_Goods_Measure.ObjectId = Object_Object.Id
+                              AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
      WHERE Object_ReceiptProdModelChild.DescId = zc_Object_ReceiptProdModelChild()
       AND (Object_ReceiptProdModelChild.isErased = FALSE OR inIsErased = TRUE)
-      AND Object_Object.DescId = zc_Object_Goods()
+      --AND Object_Object.DescId = zc_Object_Goods()
      ;
       RETURN NEXT Cursor1;
 

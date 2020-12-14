@@ -56,6 +56,7 @@ type
     procedure LoadReceiptLevelFormTest;
     procedure LoadReceiptGoodsFormTest;
     procedure LoadReceiptServiceFormTest;
+    procedure LoadUnionFormTest;
     procedure LoadUnitFormTest;
     procedure FormTest;
   end;
@@ -486,6 +487,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_ObjectForm');
+end;
+
+procedure TLoadFormTest.LoadUnionFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnion_Goods_ReceiptServiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnion_Goods_ReceiptServiceForm');
 end;
 
 procedure TLoadFormTest.LoadImportSettingsFormTest;
