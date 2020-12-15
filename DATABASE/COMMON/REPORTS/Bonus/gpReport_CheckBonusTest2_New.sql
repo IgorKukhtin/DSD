@@ -774,7 +774,7 @@ BEGIN
                                               THEN tmpContractBonus.ContractId_find
                                          ELSE tmpContract.ContractId_master
                                     END AS ContractId_find
-      
+ 
                                   , tmpContract.InfoMoneyId_master
                                   , tmpContract.InfoMoneyId_child 
                                   , CASE WHEN tmpContract.InfoMoneyId_Condition <> 0
@@ -795,7 +795,7 @@ BEGIN
                                     END AS PartnerId
                                   -- подменяем обратно ФО bз усл.договора на ФО из договора
                                   , tmpContract.PaidKindId                                 --tmpMovement.PaidKindId AS PaidKindId
-                                  , tmpContract.PaidKindId_byBase  AS PaidKindId_child     -- ФО договора базы
+                                  , View_Contract_InvNumber_child.PaidKindId   AS PaidKindId_child  --tmpContract.PaidKindId_byBase  AS PaidKindId_child     -- ФО договора базы
                                   , tmpContract.ContractConditionKindId
                                   , tmpContract.BonusKindId
                                   , COALESCE (tmpContract.Value,0) AS Value
@@ -842,6 +842,7 @@ BEGIN
                                                         AND tmpMovement.ContractConditionId = tmpContract.ContractConditionId
                                                         AND tmpMovement.ContractId_master = tmpContract.ContractId_master
                                   LEFT JOIN tmpContractBonus ON tmpContractBonus.ContractId_master = tmpContract.ContractId_master
+                                  LEFT JOIN tmpContract_full AS View_Contract_InvNumber_child  ON View_Contract_InvNumber_child.ContractId  = tmpContract.ContractId_child
       
                              ) AS tmp
                      UNION ALL 
@@ -864,7 +865,7 @@ BEGIN
                             --, CASE WHEN View_Contract_InvNumber_child.PaidKindId = zc_Enum_PaidKind_FirstForm() THEN 0 ELSE COALESCE (ObjectLink_Partner_Juridical.ObjectId,0) END AS PartnerId
                             , COALESCE (ObjectLink_Partner_Juridical.ObjectId,0) AS PartnerId
                             , MILinkObject_PaidKind.ObjectId                 AS PaidKindId
-                            , View_Contract_InvNumber_child.PaidKindId       AS PaidKindId_child
+                            , View_Contract_InvNumber_child.PaidKindId      AS PaidKindId_child 
                             , MILinkObject_ContractConditionKind.ObjectId    AS ContractConditionKindId
                             , MILinkObject_BonusKind.ObjectId                AS BonusKindId
                             , COALESCE (MIFloat_BonusValue.ValueData,0)      AS Value

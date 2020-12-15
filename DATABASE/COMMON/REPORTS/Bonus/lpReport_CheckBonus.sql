@@ -792,7 +792,7 @@ BEGIN
                                     END AS PartnerId
                                   -- подменяем обратно ФО bз усл.договора на ФО из договора
                                   , tmpContract.PaidKindId                                 --tmpMovement.PaidKindId AS PaidKindId
-                                  , tmpContract.PaidKindId_byBase  AS PaidKindId_child     -- ФО договора базы
+                                  , View_Contract_InvNumber_child.PaidKindId   AS PaidKindId_child  --, tmpContract.PaidKindId_byBase  AS PaidKindId_child     -- ФО договора базы
                                   , tmpContract.ContractConditionKindId
                                   , tmpContract.BonusKindId
                                   , COALESCE (tmpContract.Value,0) AS Value
@@ -831,7 +831,7 @@ BEGIN
                                   , COALESCE (tmpMovement.MovementId,0) AS MovementId
                                   , tmpMovement.MovementDescId
                                   , COALESCE (tmpMovement.BranchId,0)   AS BranchId
-                                  , CASE WHEN inSessiON = '5' THEN tmpContract.ContractConditionId ELSE 0 END AS ContractConditionId
+                                  , CASE WHEN inSessiON = '5' THEN tmpContract.ContractConditionId ELSE 0 END AS ContractConditionId  ---,0 as ContractConditionId --
                              FROM tmpContract
                                   INNER JOIN tmpMovement ON tmpMovement.JuridicalId       = tmpContract.JuridicalId
                                                         AND tmpMovement.ContractId_child  = tmpContract.ContractId_child
@@ -840,6 +840,7 @@ BEGIN
                                                         AND tmpMovement.ContractConditionId = tmpContract.ContractConditionId
                                                         AND tmpMovement.ContractId_master = tmpContract.ContractId_master
                                   LEFT JOIN tmpContractBonus ON tmpContractBonus.ContractId_master = tmpContract.ContractId_master
+                                  LEFT JOIN tmpContract_full AS View_Contract_InvNumber_child  ON View_Contract_InvNumber_child.ContractId  = tmpContract.ContractId_child
       
                              ) AS tmp
                      UNION ALL 
