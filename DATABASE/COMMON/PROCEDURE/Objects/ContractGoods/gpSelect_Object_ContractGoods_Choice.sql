@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer, Code INTEGER
              , GoodsPropertyId Integer, GoodsPropertyName TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , MeasureId Integer, MeasureName TVarChar
-             , GoodsId Integer, GoodsName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
              , TradeMarkId Integer, TradeMarkName TVarChar
              , StartDate TDateTime, EndDate TDateTime
@@ -174,6 +174,7 @@ BEGIN
            , Object_Measure.ValueData        AS MeasureName
 
            , Object_Goods.Id                  AS GoodsId
+           , Object_Goods.ObjectCode          AS GoodsCode
            , Object_Goods.ValueData           AS GoodsName
            , Object_GoodsKind.Id              AS GoodsKindId
            , Object_GoodsKind.ValueData       AS GoodsKindName
@@ -413,12 +414,12 @@ BEGIN
                                  ON ObjectLink_Update.ObjectId = Object_Contract_View.ContractId 
                                 AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId   
-    
+
             LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDocument
                                  ON ObjectLink_Contract_JuridicalDocument.ObjectId = Object_Contract_View.ContractId 
                                 AND ObjectLink_Contract_JuridicalDocument.DescId = zc_ObjectLink_Contract_JuridicalDocument()
             LEFT JOIN Object AS Object_JuridicalDocument ON Object_JuridicalDocument.Id = ObjectLink_Contract_JuridicalDocument.ChildObjectId
-    
+
             LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
             LEFT JOIN Object_Contract_InvNumber_Key_View AS View_Contract_InvNumber_Key ON View_Contract_InvNumber_Key.ContractId = Object_Contract_View.ContractId
 

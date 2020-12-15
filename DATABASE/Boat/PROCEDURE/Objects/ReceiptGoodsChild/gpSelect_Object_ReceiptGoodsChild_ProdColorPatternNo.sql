@@ -123,10 +123,10 @@ vbIsShowAll:= TRUE;
 
      FROM Object AS Object_ReceiptGoodsChild
 
-          INNER JOIN ObjectLink AS ObjectLink_Object
+          LEFT JOIN ObjectLink AS ObjectLink_Object
                                 ON ObjectLink_Object.ObjectId = Object_ReceiptGoodsChild.Id
                                AND ObjectLink_Object.DescId = zc_ObjectLink_ReceiptGoodsChild_Object()
-          INNER JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId
+          LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Object.DescId
 
           LEFT JOIN ObjectFloat AS ObjectFloat_Value

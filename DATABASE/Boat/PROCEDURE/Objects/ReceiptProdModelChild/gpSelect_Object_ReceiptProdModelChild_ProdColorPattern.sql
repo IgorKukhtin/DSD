@@ -1,29 +1,29 @@
--- Function: gpSelect_Object_ReceiptProdModelChild_ProdColorPattern()
+-- Function: gpSelect_Object_ReceiptGoodsChild_ProdColorPattern_ProdColorPattern()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptProdModelChild_ProdColorPattern (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptGoodsChild_ProdColorPattern (Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptProdModelChild_ProdColorPattern(
+CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptGoodsChild_ProdColorPattern(
     IN inIsErased    Boolean,       -- признак показать удаленные да / нет 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (ReceiptProdModelId Integer
-             , ProdColorPatternId Integer, ProdColorPatternCode Integer, ProdColorPatternName TVarChar
-             , NPP Integer
-             , Comment TVarChar
+RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
+             , Value TFloat
+             , ReceiptGoodsId Integer, ReceiptGoodsName TVarChar
              , ProdColorGroupId Integer, ProdColorGroupName TVarChar
-             , ColorPatternId Integer, ColorPatternName TVarChar
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , ProdColorPatternId Integer, ProdColorPatternCode Integer, ProdColorPatternName TVarChar
+             , ObjectId Integer, ObjectCode Integer, ObjectName TVarChar
+             , InsertName TVarChar, UpdateName TVarChar
+             , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean
              , GoodsGroupNameFull TVarChar
              , GoodsGroupName TVarChar
              , Article TVarChar
              , ProdColorName TVarChar
              , MeasureName TVarChar
-             , Value TFloat
              , EKPrice TFloat, EKPriceWVAT TFloat
              , EmpfPrice TFloat, EmpfPriceWVAT TFloat
              , BasisPrice TFloat, BasisPriceWVAT TFloat
-             
+
              , EKPrice_summ TFloat
              , EKPriceWVAT_summ TFloat
              , Basis_summ TFloat
@@ -35,12 +35,14 @@ $BODY$
    DECLARE vbPriceWithVAT Boolean;
 BEGIN
 
-   -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_ReceiptProdModelChild());
-   vbUserId:= lpGetUserBySession (inSession);
+     -- проверка прав пользователя на вызов процедуры
+     -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_ReceiptGoodsChild());
+     vbUserId:= lpGetUserBySession (inSession);
 
      -- Определили
      vbPriceWithVAT:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = zc_PriceList_Basis() AND ObjectBoolean.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT());
+
+
 
      RETURN QUERY
      WITH tmpPriceBasis AS (SELECT tmp.GoodsId
@@ -48,152 +50,130 @@ BEGIN
                             FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
                                                                      , inOperDate   := CURRENT_DATE) AS tmp
                            )
-        -- элементы ReceiptProdModelChild
-        , tmpReceiptProdModelChild AS(SELECT Object_ReceiptProdModelChild.*
-                                         , ObjectLink_Object.ChildObjectId           AS ObjectId
-                                         , ObjectLink_ReceiptProdModel.ChildObjectId AS ReceiptProdModelId
-                                         , ObjectFloat_Value.ValueData               AS Value
-                                    FROM Object AS Object_ReceiptProdModelChild
-                                         LEFT JOIN ObjectLink AS ObjectLink_Object
-                                                              ON ObjectLink_Object.ObjectId = Object_ReceiptProdModelChild.Id
-                                                             AND ObjectLink_Object.DescId = zc_ObjectLink_ReceiptProdModelChild_Object()
+     --
+     SELECT 
+           Object_ReceiptGoodsChild.Id              AS Id
+         , ROW_NUMBER() OVER (PARTITION BY Object_ReceiptGoods.Id ORDER BY Object_ReceiptGoodsChild.Id ASC) :: Integer AS NPP
+         , Object_ReceiptGoodsChild.ValueData       AS Comment
 
-                                         LEFT JOIN ObjectLink AS ObjectLink_ReceiptProdModel
-                                                              ON ObjectLink_ReceiptProdModel.ObjectId = Object_ReceiptProdModelChild.Id
-                                                             AND ObjectLink_ReceiptProdModel.DescId = zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel()
+         , ObjectFloat_Value.ValueData  ::TFloat   AS Value
 
-                                         LEFT JOIN ObjectFloat AS ObjectFloat_Value
-                                                               ON ObjectFloat_Value.ObjectId = Object_ReceiptProdModelChild.Id
-                                                              AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptProdModelChild_Value() 
+         , Object_ReceiptGoods.Id        ::Integer  AS ReceiptGoodsId
+         , Object_ReceiptGoods.ValueData ::TVarChar AS ReceiptGoodsName
 
-                                    WHERE Object_ReceiptProdModelChild.DescId = zc_Object_ReceiptProdModelChild()
-                                      AND (Object_ReceiptProdModelChild.isErased = FALSE OR inIsErased = TRUE)
-                                   )
+         , Object_ProdColorGroup.Id           ::Integer  AS ProdColorGroupId
+         , Object_ProdColorGroup.ValueData    ::TVarChar AS ProdColorGroupName
+         
+         , Object_ProdColorPattern.Id         ::Integer  AS ProdColorPatternId
+         , Object_ProdColorPattern.ObjectCode ::Integer  AS ProdColorPatternCode
+         , Object_ProdColorPattern.ValueData  ::TVarChar AS ProdColorPatternName
 
-        -- связываем с ReceiptGoods и ReceiptGoodsChild, и уже из ReceiptGoodsChild получаем ProdColorPattern (zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern)
-        , tmpProdColorPattern AS (SELECT tmpReceiptProdModelChild.ReceiptProdModelId
-                                       , ObjectLink_ProdColorPattern.ChildObjectId AS ProdColorPatternId
-                                       , SUM (COALESCE (tmpReceiptProdModelChild.Value,0) * (COALESCE (ObjectFloat_Value.ValueData,0))) AS Value
-                                  FROM tmpReceiptProdModelChild
-                                       INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods_Object
-                                                             ON ObjectLink_ReceiptGoods_Object.ChildObjectId = tmpReceiptProdModelChild.ObjectId
-                                                            AND ObjectLink_ReceiptGoods_Object.DescId = zc_ObjectLink_ReceiptGoods_Object()
-                          
-                                       INNER JOIN ObjectBoolean AS ObjectBoolean_Main
-                                                                ON ObjectBoolean_Main.ObjectId = ObjectLink_ReceiptGoods_Object.ObjectId
-                                                               AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_ReceiptGoods_Main()
-                                                               AND COALESCE (ObjectBoolean_Main.ValueData, FALSE) = TRUE
+         , Object_Goods.Id               ::Integer  AS ObjectId
+         , Object_Goods.ObjectCode       ::Integer  AS ObjectCode
+         , Object_Goods.ValueData        ::TVarChar AS ObjectName
 
-                                       INNER JOIN ObjectLink AS ObjectLink_ReceiptGoodsChild_ReceiptGoods
-                                                             ON ObjectLink_ReceiptGoodsChild_ReceiptGoods.ChildObjectId = ObjectLink_ReceiptGoods_Object.ObjectId
-                                                            AND ObjectLink_ReceiptGoodsChild_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+         , Object_Insert.ValueData                  AS InsertName
+         , Object_Update.ValueData                  AS UpdateName
+         , ObjectDate_Insert.ValueData              AS InsertDate
+         , ObjectDate_Update.ValueData              AS UpdateDate
+         , Object_ReceiptGoodsChild.isErased        AS isErased
 
-                                       INNER JOIN ObjectLink AS ObjectLink_ProdColorPattern
-                                                             ON ObjectLink_ProdColorPattern.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
-                                                            AND ObjectLink_ProdColorPattern.DescId = zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern()
-                                                            AND COALESCE (ObjectLink_ProdColorPattern.ChildObjectId,0) <> 0
-                                       LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = ObjectLink_ProdColorPattern.ChildObjectId 
+         , ObjectString_GoodsGroupFull.ValueData ::TVarChar  AS GoodsGroupNameFull
+         , Object_GoodsGroup.ValueData           ::TVarChar  AS GoodsGroupName
+         , ObjectString_Article.ValueData        ::TVarChar  AS Article
+         , Object_ProdColor.ValueData            :: TVarChar AS ProdColorName
+         , Object_Measure.ValueData              ::TVarChar  AS MeasureName
 
-                                       LEFT JOIN ObjectFloat AS ObjectFloat_Value
-                                                             ON ObjectFloat_Value.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
-                                                            AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptGoodsChild_Value()
-                                  GROUP BY tmpReceiptProdModelChild.ReceiptProdModelId
-                                         , ObjectLink_ProdColorPattern.ChildObjectId                                 
-)
-        
-     ------
-     SELECT tmpProdColorPattern.ReceiptProdModelId
-          , Object_ProdColorPattern.Id         AS ProdColorPatternId
-          , Object_ProdColorPattern.ObjectCode AS ProdColorPatternCode
-          , Object_ProdColorPattern.ValueData  AS ProdColorPatternName
-          , ROW_NUMBER() OVER (PARTITION BY tmpProdColorPattern.ReceiptProdModelId ORDER BY Object_ProdColorPattern.ObjectCode ASC) :: Integer AS NPP
- 
-          , ObjectString_Comment.ValueData     ::TVarChar  AS Comment
- 
-          , Object_ProdColorGroup.Id           ::Integer  AS ProdColorGroupId
-          , Object_ProdColorGroup.ValueData    ::TVarChar AS ProdColorGroupName
- 
-          , Object_ColorPattern.Id             ::Integer  AS ColorPatternId
-          , Object_ColorPattern.ValueData      ::TVarChar AS ColorPatternName
- 
-          , Object_Goods.Id                    ::Integer  AS GoodsId
-          , Object_Goods.ObjectCode            ::Integer  AS GoodsCode
-          , Object_Goods.ValueData             ::TVarChar AS GoodsName
- 
-          , Object_ProdColorPattern.isErased   AS isErased
- 
-          , ObjectString_GoodsGroupFull.ValueData      AS GoodsGroupNameFull
-          , Object_GoodsGroup.ValueData                AS GoodsGroupName
-          , ObjectString_Article.ValueData             AS Article
-          , CASE WHEN ObjectLink_Goods.ChildObjectId IS NULL THEN ObjectString_Comment.ValueData ELSE Object_ProdColor.ValueData END :: TVarChar AS ProdColorName
-          , Object_Measure.ValueData                   AS MeasureName
- 
-          , tmpProdColorPattern.Value ::TFloat
-          , ObjectFloat_EKPrice.ValueData   ::TFloat   AS EKPrice
-          , CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
-               * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS EKPriceWVAT-- расчет входной цены с НДС, до 4 знаков
+         , ObjectFloat_EKPrice.ValueData   ::TFloat   AS EKPrice
+         , CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
+              * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS EKPriceWVAT-- расчет входной цены с НДС, до 4 знаков
 
          , ObjectFloat_EmpfPrice.ValueData ::TFloat   AS EmpfPrice
          , CAST (COALESCE (ObjectFloat_EmpfPrice.ValueData, 0)
               * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100) ) AS NUMERIC (16, 2)) ::TFloat AS EmpfPriceWVAT-- расчет рекомендованной цены с НДС, до 4 знаков
- 
-           -- расчет базовой цены без НДС, до 2 знаков
-         , CASE WHEN vbPriceWithVAT = FALSE
-                THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
-                ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
-           END ::TFloat  AS BasisPrice   -- сохраненная цена - цена без НДС
- 
-           -- расчет базовой цены с НДС, до 2 знаков
-         , CASE WHEN vbPriceWithVAT = FALSE
-                THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
-                ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
-           END ::TFloat  AS BasisPriceWVAT
 
-----
-          , (tmpProdColorPattern.Value * ObjectFloat_EKPrice.ValueData)   ::TFloat   AS EKPrice_summ
-           -- расчет суммы входной цены с НДС, до 4 знаков
-          , CAST (tmpProdColorPattern.Value
-               * COALESCE (ObjectFloat_EKPrice.ValueData, 0)
-               * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS EKPriceWVAT_summ
- 
-           -- расчет суммы базовой цены без НДС, до 2 знаков
-         , (tmpProdColorPattern.Value
-           * CASE WHEN vbPriceWithVAT = FALSE
-                THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
-                ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
-             END) ::TFloat  AS Basis_summ   -- сохраненная цена - цена без НДС
- 
-           -- расчет суммы базовой цены с НДС, до 2 знаков
-         , (tmpProdColorPattern.Value
-           * CASE WHEN vbPriceWithVAT = FALSE
-                THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
-                ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
-             END) ::TFloat  AS BasisWVAT_summ
+          -- расчет базовой цены без НДС, до 2 знаков
+        , CASE WHEN vbPriceWithVAT = FALSE
+               THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
+               ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+          END ::TFloat  AS BasisPrice   -- сохраненная цена - цена без НДС
 
+          -- расчет базовой цены с НДС, до 2 знаков
+        , CASE WHEN vbPriceWithVAT = FALSE
+               THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+               ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
+          END ::TFloat  AS BasisPriceWVAT
 
-     FROM tmpProdColorPattern
-          LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = tmpProdColorPattern.ProdColorPatternId
+        , (ObjectFloat_Value.ValueData * ObjectFloat_EKPrice.ValueData) :: TFloat AS EKPrice_summ
+        , (ObjectFloat_Value.ValueData
+             * CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
+                    * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))) :: TFloat AS EKPriceWVAT_summ
+                    
+        , (ObjectFloat_Value.ValueData
+            * CASE WHEN vbPriceWithVAT = FALSE
+                   THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
+                   ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+              END)  :: TFloat AS Basis_summ
 
-          LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
-                               ON ObjectLink_ColorPattern.ObjectId = Object_ProdColorPattern.Id
-                              AND ObjectLink_ColorPattern.DescId = zc_ObjectLink_ProdColorPattern_ColorPattern()
-          LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ColorPattern.ChildObjectId
+        , (ObjectFloat_Value.ValueData
+            * CASE WHEN vbPriceWithVAT = FALSE
+                    THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                    ELSE COALESCE (tmpPriceBasis.ValuePrice, 0) 
+               END) ::TFloat BasisWVAT_summ
 
-          LEFT JOIN ObjectString AS ObjectString_Comment
-                                 ON ObjectString_Comment.ObjectId = Object_ProdColorPattern.Id
-                                AND ObjectString_Comment.DescId = zc_ObjectString_ProdColorPattern_Comment()
+     FROM Object AS Object_ReceiptGoodsChild
+
+          LEFT JOIN ObjectFloat AS ObjectFloat_Value
+                                ON ObjectFloat_Value.ObjectId = Object_ReceiptGoodsChild.Id
+                               AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptGoodsChild_Value() 
+
+          LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                               ON ObjectLink_ProdColorPattern.ObjectId = Object_ReceiptGoodsChild.Id
+                              AND ObjectLink_ProdColorPattern.DescId = zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern()
+          LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = ObjectLink_ProdColorPattern.ChildObjectId 
 
           LEFT JOIN ObjectLink AS ObjectLink_ProdColorGroup
                                ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id
                               AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
           LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoods
+                               ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
+                              AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+          LEFT JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id = ObjectLink_ReceiptGoods.ChildObjectId 
+
           LEFT JOIN ObjectLink AS ObjectLink_Goods
                                ON ObjectLink_Goods.ObjectId = Object_ProdColorPattern.Id
                               AND ObjectLink_Goods.DescId = zc_ObjectLink_ProdColorPattern_Goods()
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods.ChildObjectId
 
+         /* LEFT JOIN ObjectLink AS ObjectLink_Object
+                               ON ObjectLink_Object.ObjectId = Object_ReceiptGoodsChild.Id
+                              AND ObjectLink_Object.DescId = zc_ObjectLink_ReceiptGoodsChild_Object()
+          LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId
+          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Object.DescId*/
+          
+
+          LEFT JOIN ObjectLink AS ObjectLink_Insert
+                               ON ObjectLink_Insert.ObjectId = Object_ReceiptGoodsChild.Id
+                              AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
+          LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId 
+
+          LEFT JOIN ObjectLink AS ObjectLink_Update
+                               ON ObjectLink_Update.ObjectId = Object_ReceiptGoodsChild.Id
+                              AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
+          LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId 
+
+          LEFT JOIN ObjectDate AS ObjectDate_Insert
+                               ON ObjectDate_Insert.ObjectId = Object_ReceiptGoodsChild.Id
+                              AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
+
+          LEFT JOIN ObjectDate AS ObjectDate_Update
+                               ON ObjectDate_Update.ObjectId = Object_ReceiptGoodsChild.Id
+                              AND ObjectDate_Update.DescId = zc_ObjectDate_Protocol_Update()
+
           --
+          
           LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
                                  ON ObjectString_GoodsGroupFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
@@ -235,6 +215,9 @@ BEGIN
 
           LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
 
+     WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
+      AND (Object_ReceiptGoodsChild.isErased = FALSE OR inIsErased = TRUE)
+      AND COALESCE (ObjectLink_ProdColorPattern.ChildObjectId,0) <> 0
      ;
 END;
 $BODY$
@@ -248,5 +231,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ReceiptProdModelChild_ProdColorPattern (false, zfCalc_UserAdmin())
-
+-- SELECT * FROM gpSelect_Object_ReceiptGoodsChild_ProdColorPattern (false, zfCalc_UserAdmin())

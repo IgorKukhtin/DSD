@@ -34,7 +34,7 @@ RETURNS TABLE (OperDate TDateTime, OperDatePartner TDateTime
              , AmountSale_Weight TFloat, AmountSale_Sh TFloat, AmountSale TFloat
              , PriceSale TFloat, SumSale TFloat
              , InfoMoneyName TVarChar
-
+             
              , CountDiff_B  TFloat
              , CountDiff_M  TFloat
              , WeightDiff_B TFloat
@@ -227,7 +227,7 @@ BEGIN
                                                       AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                      
                                 LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                                         ON MovementString_InvNumberPartner.MovementId = Movement.Id
+                                                         ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                                         AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
         
                             WHERE MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
@@ -239,9 +239,7 @@ BEGIN
                               AND COALESCE (MovementLinkMovement_Order.MovementId, 0) = 0
                             )
    -- все продажи и заявки
-    , tmpMovementAll AS (SELECT *
-                              , MovementString_Comment.ValueData AS Comment
-                              , ROW_NUMBER() OVER (PARTITION BY tmpMovementAll.MovementId_Order ORDER BY tmpMovementAll.MovementId_Sale) AS Ord
+    , tmpMovementAll AS (SELECT *, ROW_NUMBER() OVER (PARTITION BY tmpMovementAll.MovementId_Order ORDER BY tmpMovementAll.MovementId_Sale) AS Ord
                          FROM (
                                SELECT tmp.MovementId_Sale
                                     , tmp.OperDate_Sale
@@ -275,7 +273,6 @@ BEGIN
                                     , tmp.PaidKindId
                                FROM tmpMovementOrder AS tmp
                                ) AS tmpMovementAll
-                               
                         )
                    
      -- данные по продажам
