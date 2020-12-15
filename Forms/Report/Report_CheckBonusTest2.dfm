@@ -183,7 +183,7 @@ inherited Report_CheckBonusTest2Form: TReport_CheckBonusTest2Form
           end
           object InvNumber_child: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'. ('#1073#1072#1079#1072')'
-            DataBinding.FieldName = 'InvNumber_child'
+            DataBinding.FieldName = 'A'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1232,8 +1232,8 @@ inherited Report_CheckBonusTest2Form: TReport_CheckBonusTest2Form
       item
         Component = GuidesBranch
       end>
-    Left = 184
-    Top = 136
+    Left = 200
+    Top = 208
   end
   object GuidesDocumentTaxKind: TdsdGuides
     KeyField = 'Id'
