@@ -64,8 +64,16 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
             Width = 172
           end
           object Code: TcxGridDBColumn
-            Caption = #1050#1086#1076
+            Caption = #1050#1086#1076' '#1089#1074#1103#1079#1080
             DataBinding.FieldName = 'Code'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 62
+          end
+          object GoodsCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1090#1086#1074'.)'
+            DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 62
