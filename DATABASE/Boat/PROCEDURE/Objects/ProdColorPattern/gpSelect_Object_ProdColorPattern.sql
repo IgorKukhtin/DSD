@@ -34,6 +34,7 @@ $BODY$
 BEGIN
 
 vbIsShowAll:= TRUE;
+--vbIsShowAll:= FALSE;
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_ProdColorPattern());
