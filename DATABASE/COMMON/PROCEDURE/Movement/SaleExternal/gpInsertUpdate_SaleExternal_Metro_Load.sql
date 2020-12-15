@@ -47,18 +47,32 @@ BEGIN
      END IF;
 
      --ищем PartnerExternal
-     vbPartnerExternalId := (SELECT Object_PartnerExternal.Id 
-                             FROM Object AS Object_PartnerExternal
-                                  INNER JOIN ObjectString AS ObjectString_ObjectCode
-                                                          ON ObjectString_ObjectCode.ObjectId = Object_PartnerExternal.Id 
-                                                         AND ObjectString_ObjectCode.DescId = zc_ObjectString_PartnerExternal_ObjectCode()
-                                                         AND ObjectString_ObjectCode.ValueData = inPartnerExternalCode
-                                  LEFT JOIN ObjectLink AS ObjectLink_Retail
-                                                       ON ObjectLink_Retail.ObjectId = Object_PartnerExternal.Id 
-                                                      AND ObjectLink_Retail.DescId = zc_ObjectLink_PartnerExternal_Retail()
-                             WHERE Object_PartnerExternal.DescId = zc_Object_PartnerExternal()
-                               AND (ObjectLink_Retail.ChildObjectId = inRetailId OR COALESCE(ObjectLink_Retail.ChildObjectId,0) = 0)
-                             );
+     IF COALESCE (inPartnerExternalCode,'') <> ''
+     THEN
+         vbPartnerExternalId := (SELECT Object_PartnerExternal.Id 
+                                 FROM Object AS Object_PartnerExternal
+                                      INNER JOIN ObjectString AS ObjectString_ObjectCode
+                                                              ON ObjectString_ObjectCode.ObjectId = Object_PartnerExternal.Id 
+                                                             AND ObjectString_ObjectCode.DescId = zc_ObjectString_PartnerExternal_ObjectCode()
+                                                             AND ObjectString_ObjectCode.ValueData = inPartnerExternalCode
+                                      LEFT JOIN ObjectLink AS ObjectLink_Retail
+                                                           ON ObjectLink_Retail.ObjectId = Object_PartnerExternal.Id 
+                                                          AND ObjectLink_Retail.DescId = zc_ObjectLink_PartnerExternal_Retail()
+                                 WHERE Object_PartnerExternal.DescId = zc_Object_PartnerExternal()
+                                   AND (ObjectLink_Retail.ChildObjectId = inRetailId OR COALESCE(ObjectLink_Retail.ChildObjectId,0) = 0)
+                                 );
+     ELSE 
+     -- иначе ищем по наименованию
+         vbPartnerExternalId := (SELECT Object_PartnerExternal.Id 
+                                 FROM Object AS Object_PartnerExternal
+                                      LEFT JOIN ObjectLink AS ObjectLink_Retail
+                                                           ON ObjectLink_Retail.ObjectId = Object_PartnerExternal.Id 
+                                                          AND ObjectLink_Retail.DescId = zc_ObjectLink_PartnerExternal_Retail()
+                                 WHERE Object_PartnerExternal.DescId = zc_Object_PartnerExternal()
+                                   AND TRIM (COALESCE (Object_PartnerExternal.ValueData, '')) = TRIM (inPartnerExternalName)
+                                   AND (ObjectLink_Retail.ChildObjectId = inRetailId OR COALESCE(ObjectLink_Retail.ChildObjectId,0) = 0)
+                                 );
+     END IF; 
      
      --если не найден
      IF COALESCE (vbPartnerExternalId,0) = 0
@@ -66,7 +80,7 @@ BEGIN
          --RAISE EXCEPTION 'Ошибка.Контрагент внешний - <%> не найден.', inPartnerExternalName;
          vbPartnerExternalId :=  lpInsertUpdate_Object_PartnerExternal (ioId         := 0                                                 :: Integer 
                                                                       , inCode       := lfGet_ObjectCode(0, zc_Object_PartnerExternal())  :: Integer 
-                                                                      , inName       := inPartnerExternalName                             :: TVarChar
+                                                                      , inName       := TRIM (inPartnerExternalName)                      :: TVarChar
                                                                       , inObjectCode := inPartnerExternalCode                             :: TVarChar
                                                                       , inPartnerId  := 0                                                 :: Integer 
                                                                       , inContractId := 0                                                 :: Integer 
