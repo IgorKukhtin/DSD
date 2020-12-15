@@ -17,6 +17,7 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
              , Amount_WorkProgress_in TFloat
              , CuterCount TFloat
              , RealWeight TFloat
+             , RealWeightMsg TFloat
              , Amount_GP_in_calc TFloat
              , Amount_GP_in TFloat
              , AmountReceipt_out TFloat
@@ -189,6 +190,7 @@ BEGIN
                            , SUM (tmp.Amount_WorkProgress_in) AS Amount_WorkProgress_in
                            , SUM (tmp.CuterCount)             AS CuterCount
                            , SUM (tmp.RealWeight)             AS RealWeight
+                           , SUM (tmp.RealWeightMsg)          AS RealWeightMsg
                            , SUM (tmp.Amount_GP_in_calc)      AS Amount_GP_in_calc
                            , SUM (tmp.Amount_GP_in)           AS Amount_GP_in
                            , SUM (tmp.AmountReceipt_out)      AS AmountReceipt_out
@@ -204,6 +206,7 @@ BEGIN
                            , SUM (tmpMI_WorkProgress_in.Amount)                 AS Amount_WorkProgress_in
                            , SUM (COALESCE (MIFloat_CuterCount.ValueData, 0))   AS CuterCount
                            , SUM (COALESCE (MIFloat_RealWeight.ValueData, 0))   AS RealWeight
+                           , SUM (COALESCE (MIFloat_RealWeightMsg.ValueData,0)) AS RealWeightMsg
                            , SUM (CASE WHEN ObjectFloat_TotalWeight.ValueData <> 0
                                             THEN (tmpMI_WorkProgress_in.Amount - COALESCE (tmpMI_WorkProgress_oth.Amount, 0)) * COALESCE (ObjectFloat_TaxExit.ValueData, 0) / ObjectFloat_TotalWeight.ValueData
                                        ELSE 0
@@ -223,6 +226,10 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_RealWeight
                                                        ON MIFloat_RealWeight.MovementItemId = tmpMI_WorkProgress_in.MovementItemId
                                                       AND MIFloat_RealWeight.DescId = zc_MIFloat_RealWeight()
+                           LEFT JOIN MovementItemFloat AS MIFloat_RealWeightMsg
+                                                       ON MIFloat_RealWeightMsg.MovementItemId = tmpMI_WorkProgress_in.MovementItemId
+                                                      AND MIFloat_RealWeightMsg.DescId = zc_MIFloat_RealWeightMsg()
+
                            LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
                                                             ON MILO_GoodsKindComplete.MovementItemId = tmpMI_WorkProgress_in.MovementItemId
                                                            AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
@@ -257,6 +264,7 @@ BEGIN
                            , 0 AS Amount_WorkProgress_in
                            , 0 AS CuterCount
                            , 0 AS RealWeight
+                           , 0 AS RealWeightMsg
                            , 0 AS Amount_GP_in_calc
                            , 0 AS TaxExit
                            , 0 AS calcIn
@@ -278,6 +286,7 @@ BEGIN
                            , 0 AS Amount_WorkProgress_in
                            , 0 AS CuterCount
                            , 0 AS RealWeight
+                           , 0 AS RealWeightMsg
                            , 0 AS Amount_GP_in_calc
                            , 0 AS TaxExit
                            , 0 AS calcIn
@@ -305,7 +314,8 @@ BEGIN
                      AND COALESCE (tmpResult.RealWeight, 0) = 0
                      THEN tmpResult.Amount_WorkProgress_in
                 ELSE tmpResult.RealWeight
-           END :: TFloat               AS RealWeight
+           END                         :: TFloat        AS RealWeight
+         , tmpResult.RealWeightMsg     :: TFloat        AS RealWeightMsg  
          , tmpResult.Amount_GP_in_calc :: TFloat        AS Amount_GP_in_calc
          , tmpResult.Amount_GP_in :: TFloat             AS Amount_GP_in
          , tmpResult.AmountReceipt_out :: TFloat        AS AmountReceipt_out
@@ -362,6 +372,7 @@ ALTER FUNCTION gpReport_GoodsMI_ProductionUnion_TaxExit (TDateTime, TDateTime, I
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 15.12.20         * RealWeightMsg
  17.03.15                                        *
 */
 
