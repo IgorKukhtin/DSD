@@ -7,9 +7,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_SaleExternal_Metro_Load(
     IN inOperDate              TDateTime , --
     IN inRetailId              Integer   , --
     IN inPartnerExternalCode   TVarChar  , --
-    IN inPartnerExternalName   TVarChar  , -- 
-    IN inArticle               TVarChar  , -- 
-    IN inGoodsName             TVarChar  , -- 
+    IN inPartnerExternalName   TVarChar  , --
+    IN inArticle               TVarChar  , --
+    IN inGoodsName             TVarChar  , --
     IN inAmount                TFloat    , -- количество
     IN inSession               TVarChar    -- сессия пользователя
 )
@@ -33,7 +33,7 @@ BEGIN
      THEN
          RETURN;
      END IF;
-     
+
      -- проверка
      IF COALESCE (inAmount,0) = 0
      THEN
@@ -49,43 +49,44 @@ BEGIN
      --ищем PartnerExternal
      IF COALESCE (inPartnerExternalCode,'') <> ''
      THEN
-         vbPartnerExternalId := (SELECT Object_PartnerExternal.Id 
+         vbPartnerExternalId := (SELECT Object_PartnerExternal.Id
                                  FROM Object AS Object_PartnerExternal
                                       INNER JOIN ObjectString AS ObjectString_ObjectCode
-                                                              ON ObjectString_ObjectCode.ObjectId = Object_PartnerExternal.Id 
+                                                              ON ObjectString_ObjectCode.ObjectId = Object_PartnerExternal.Id
                                                              AND ObjectString_ObjectCode.DescId = zc_ObjectString_PartnerExternal_ObjectCode()
                                                              AND ObjectString_ObjectCode.ValueData = inPartnerExternalCode
                                       LEFT JOIN ObjectLink AS ObjectLink_Retail
-                                                           ON ObjectLink_Retail.ObjectId = Object_PartnerExternal.Id 
+                                                           ON ObjectLink_Retail.ObjectId = Object_PartnerExternal.Id
                                                           AND ObjectLink_Retail.DescId = zc_ObjectLink_PartnerExternal_Retail()
                                  WHERE Object_PartnerExternal.DescId = zc_Object_PartnerExternal()
                                    AND (ObjectLink_Retail.ChildObjectId = inRetailId OR COALESCE(ObjectLink_Retail.ChildObjectId,0) = 0)
                                  );
-     ELSE 
+     ELSE
      -- иначе ищем по наименованию
-         vbPartnerExternalId := (SELECT Object_PartnerExternal.Id 
+         vbPartnerExternalId := (SELECT Object_PartnerExternal.Id
                                  FROM Object AS Object_PartnerExternal
                                       LEFT JOIN ObjectLink AS ObjectLink_Retail
-                                                           ON ObjectLink_Retail.ObjectId = Object_PartnerExternal.Id 
+                                                           ON ObjectLink_Retail.ObjectId = Object_PartnerExternal.Id
                                                           AND ObjectLink_Retail.DescId = zc_ObjectLink_PartnerExternal_Retail()
                                  WHERE Object_PartnerExternal.DescId = zc_Object_PartnerExternal()
                                    AND TRIM (COALESCE (Object_PartnerExternal.ValueData, '')) = TRIM (inPartnerExternalName)
                                    AND (ObjectLink_Retail.ChildObjectId = inRetailId OR COALESCE(ObjectLink_Retail.ChildObjectId,0) = 0)
-                                 );
-     END IF; 
-     
+                                 LIMIT 1
+                                );
+     END IF;
+
      --если не найден
      IF COALESCE (vbPartnerExternalId,0) = 0
      THEN
          --RAISE EXCEPTION 'Ошибка.Контрагент внешний - <%> не найден.', inPartnerExternalName;
-         vbPartnerExternalId :=  lpInsertUpdate_Object_PartnerExternal (ioId         := 0                                                 :: Integer 
-                                                                      , inCode       := lfGet_ObjectCode(0, zc_Object_PartnerExternal())  :: Integer 
+         vbPartnerExternalId :=  lpInsertUpdate_Object_PartnerExternal (ioId         := 0                                                 :: Integer
+                                                                      , inCode       := lfGet_ObjectCode(0, zc_Object_PartnerExternal())  :: Integer
                                                                       , inName       := TRIM (inPartnerExternalName)                      :: TVarChar
                                                                       , inObjectCode := inPartnerExternalCode                             :: TVarChar
-                                                                      , inPartnerId  := 0                                                 :: Integer 
-                                                                      , inContractId := 0                                                 :: Integer 
-                                                                      , inRetailId   := inRetailId                                        :: Integer 
-                                                                      , inUserId     := vbUserId                                          :: Integer 
+                                                                      , inPartnerId  := 0                                                 :: Integer
+                                                                      , inContractId := 0                                                 :: Integer
+                                                                      , inRetailId   := inRetailId                                        :: Integer
+                                                                      , inUserId     := vbUserId                                          :: Integer
                                                                       );
      ELSE
          --если элемент найден пересохраним только параметр торг. сеть
@@ -94,10 +95,10 @@ BEGIN
 
      IF COALESCE ((SELECT ObjectLink_Partner.ChildObjectId
                    FROM ObjectLink AS ObjectLink_Partner
-                   WHERE ObjectLink_Partner.ObjectId = vbPartnerExternalId 
+                   WHERE ObjectLink_Partner.ObjectId = vbPartnerExternalId
                      AND ObjectLink_Partner.DescId = zc_ObjectLink_PartnerExternal_Partner())
                 , 0) <> 0
-     THEN 
+     THEN
          --находим Классификатор свойств товаров, по связи с partner , далее juridical, далее GoodsProperty
          vbGoodsPropertyId := (SELECT ObjectLink_Juridical_GoodsProperty.ChildObjectId
                                FROM ObjectLink AS ObjectLink_Partner
@@ -107,7 +108,7 @@ BEGIN
                                     LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
                                                          ON ObjectLink_Juridical_GoodsProperty.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                                         AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
-                               WHERE ObjectLink_Partner.ObjectId = vbPartnerExternalId 
+                               WHERE ObjectLink_Partner.ObjectId = vbPartnerExternalId
                                  AND ObjectLink_Partner.DescId = zc_ObjectLink_PartnerExternal_Partner()
                                );
      END IF;
@@ -122,14 +123,14 @@ BEGIN
                , tmp.GoodsPropertyValueId
                , tmp.GoodsPropertyId
    INTO vbGoodsId, vbGoodsKindId, vbGoodsPropertyValueId, vbGoodsPropertyId
-     FROM 
+     FROM
           (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId     AS GoodsId
                 , ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId AS GoodsKindId
                 , ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId  AS GoodsPropertyValueId
                 , ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId  AS GoodsPropertyId
                   -- если вдруг не 1 классификатор , берем максимальный
                 , MAX (ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId) OVER (PARTITION BY ObjectLink_GoodsPropertyValue_Goods.ChildObjectId ,ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId) AS GoodsPropertyId_max
-             FROM 
+             FROM
                   (SELECT vbGoodsPropertyId AS GoodsPropertyId
                    WHERE COALESCE (vbGoodsPropertyId,0) <> 0
                   UNION
@@ -137,7 +138,7 @@ BEGIN
                         , COALESCE (ObjectLink_Contract_GoodsProperty.ChildObjectId
                         , COALESCE (ObjectLink_Juridical_GoodsProperty.ChildObjectId
                         , COALESCE (ObjectLink_Retail_GoodsProperty.ChildObjectId)))) AS GoodsPropertyId
-                   FROM 
+                   FROM
                        (SELECT ObjectLink_Juridical_Retail.ObjectId AS JuridicalId
                              , ObjectLink_Partner_Juridical.ObjectId AS PartnerId
                              , ObjectLink_Contract_Juridical.ObjectId AS ContractId
@@ -193,7 +194,7 @@ BEGIN
      PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_GoodsPropertyValue_NameExternal(), vbGoodsPropertyValueId, inGoodsName);
 
 
-     -- пробуем найти документ 
+     -- пробуем найти документ
      vbMovementId := (SELECT Movement.Id
                       FROM Movement
                            INNER JOIN MovementLinkObject AS MovementLinkObject_From
@@ -241,13 +242,13 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItem_SaleExternal (ioId           := COALESCE (vbId,0) ::Integer
                                                      , inMovementId   := vbMovementId      ::Integer
                                                      , inGoodsId      := vbGoodsId         ::Integer
-                                                     , inAmount       := CASE WHEN ObjectLink_Measure.ChildObjectId = zc_Measure_Sh() 
+                                                     , inAmount       := CASE WHEN ObjectLink_Measure.ChildObjectId = zc_Measure_Sh()
                                                                               THEN inAmount -- inAmount / CASE WHEN ObjectFloat_Weight.ValueData > 0 THEN ObjectFloat_Weight.ValueData ELSE 1 END
                                                                               ELSE inAmount
                                                                          END               ::TFloat
                                                      , inGoodsKindId  := vbGoodsKindId     ::Integer
                                                      , inUserId       := vbUserId          ::Integer
-                                                      ) 
+                                                      )
      FROM ObjectLink AS ObjectLink_Measure
           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                 ON ObjectFloat_Weight.ObjectId = ObjectLink_Measure.ObjectId
