@@ -212,6 +212,8 @@ type
     N9: TMenuItem;
     actReceiptService: TdsdOpenForm;
     miReceiptService: TMenuItem;
+    actTranslateMessage: TdsdOpenForm;
+    miTranslateMessage: TMenuItem;
   private
     { Private declarations }
   public

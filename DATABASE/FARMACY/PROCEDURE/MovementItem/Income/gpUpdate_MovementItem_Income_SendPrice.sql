@@ -153,17 +153,17 @@ BEGIN
                         (zc_MIFloat_PriceSale(), MovementItem_Income_View.Id, 
                          zfCalc_SalePrice(MovementItem_Income.PriceWithVAT                            -- Цена С НДС
                                         , MarginCondition.MarginPercent                               -- % наценки в КАТЕГОРИИ
-                                        , CASE WHEN vbisTopNo_Unit = TRUE THEN FALSE ELSE COALESCE (NULLIF (View_Price.isTop, FALSE), Object_Goods_View.isTOP) END             -- ТОП позиция
-                                        , CASE WHEN vbisTopNo_Unit = TRUE THEN 0     ELSE COALESCE (NULLIF (View_Price.PercentMarkup, 0), Object_Goods_View.PercentMarkup) END -- % наценки у товара
+                                        , CASE WHEN vbisTopNo_Unit = TRUE THEN FALSE ELSE COALESCE (NULLIF (View_Price.isTop, FALSE), Object_Goods_Retail.isTOP) END             -- ТОП позиция
+                                        , CASE WHEN vbisTopNo_Unit = TRUE THEN 0     ELSE COALESCE (NULLIF (View_Price.PercentMarkup, 0), Object_Goods_Retail.PercentMarkup) END -- % наценки у товара
                                         , vbJuridicalPercent                                          -- % корректировки у Юр Лица для ТОПа
                                         , CASE WHEN vbisTopNo_Unit = TRUE THEN 0     
                                                ELSE CASE WHEN View_Price.Fix = TRUE AND View_Price.Price <> 0 
-                                                         THEN View_Price.Price ELSE Object_Goods_View.Price 
+                                                         THEN View_Price.Price ELSE Object_Goods_Retail.Price 
                                                     END
                                           END)                                                        -- Цена у товара (фиксированная)
                          )) 
          FROM MarginCondition, MovementItem_Income_View, MovementItem_Income
-              LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = MovementItem_Income.GoodsId
+              LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem_Income.GoodsId
               LEFT JOIN tmpPrice_View AS View_Price
                                       ON View_Price.GoodsId = MovementItem_Income.GoodsId
                          --            AND View_Price.UnitId  = vbToId
@@ -178,8 +178,29 @@ BEGIN
         -- Определяем, что приход идет на последнее подразделение в ветке
         IF (SELECT Count(*) FROM Object_Unit_View WHERE ParentId = vbToId) = 0 THEN 
            -- считаем номер документа
-           vbInvNumberPoint := COALESCE((SELECT MAX(zfConvert_StringToNumber(InvNumberBranch)) + 1
-                                  FROM Movement_Income_View WHERE ToId = vbToId), 1);
+           vbInvNumberPoint := COALESCE( (WITH tmpMovement AS (SELECT Movement.Id
+                                                               FROM Movement
+                                                                    INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                                                  ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                                                 AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                                                                 and MovementLinkObject_To.ObjectId = vbToId
+                                                               WHERE Movement.DescId = zc_Movement_Income()
+                                                               )
+                                             , tmpSTR AS (SELECT *
+                                                          FROM MovementString  AS MovementString_InvNumberBranch
+                                                          WHERE MovementString_InvNumberBranch.MovementId IN ( SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                                            AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
+                                                            AND COALESCE (MovementString_InvNumberBranch.ValueData ,'') <>''
+                                                          )
+                                             SELECT MAX(zfConvert_StringToNumber(MovementString_InvNumberBranch.ValueData)) + 1 
+                                             FROM tmpMovement
+                                                  INNER JOIN tmpSTR AS MovementString_InvNumberBranch
+                                                                    ON MovementString_InvNumberBranch.MovementId = tmpMovement.Id
+                                                                   AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
+                                          )
+           
+           /*SELECT MAX(zfConvert_StringToNumber(InvNumberBranch)) + 1 FROM Movement_Income_View WHERE ToId = vbToId*/
+                                       , 1);
 
            PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberBranch(), inMovementId, vbInvNumberPoint::TVarChar);
 

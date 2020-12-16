@@ -207,7 +207,8 @@ uses
   ReceiptService in '..\..\FormsBoat\Guides\ReceiptService.pas' {ReceiptServiceForm: TParentForm},
   ReceiptServiceEdit in '..\..\FormsBoat\Guides\ReceiptServiceEdit.pas' {ReceiptServiceEditForm: TParentForm},
   Union_Goods_ReceiptService in '..\..\FormsBoat\Guides\Union_Goods_ReceiptService.pas' {Union_Goods_ReceiptServiceForm: TParentForm},
-  ReceiptProdModel in '..\..\FormsBoat\Guides\ReceiptProdModel.pas' {ReceiptProdModelForm: TParentForm};
+  ReceiptProdModel in '..\..\FormsBoat\Guides\ReceiptProdModel.pas' {ReceiptProdModelForm: TParentForm},
+  TranslateMessage in '..\..\FormsBoat\Guides\TranslateMessage.pas' {TranslateMessageForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
