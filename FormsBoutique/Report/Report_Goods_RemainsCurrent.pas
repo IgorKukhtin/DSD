@@ -159,6 +159,8 @@ type
     actExport_file: TdsdStoredProcExportToFile;
     actGet_Export_FileName2: TdsdExecStoredProc;
     spGet_Export_FileName2: TdsdStoredProc;
+    actPrint_Curr: TdsdPrintAction;
+    bbPrint_Curr: TdxBarButton;
   private
     { Private declarations }
   public

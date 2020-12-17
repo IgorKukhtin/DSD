@@ -6,10 +6,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -358
-  ExplicitTop = -141
   ExplicitWidth = 1147
-  ExplicitHeight = 598
+  ExplicitHeight = 601
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -1605,6 +1603,74 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1086' '#1055#1072#1088#1090#1080#1080' '#1076#1083#1103' OLAP - '#1044#1040
       ImageIndex = 76
     end
+    object actPrint_Curr: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' '#1090#1086#1074#1072#1088#1086#1074' '#1087#1086' '#1094#1077#1085#1077' '#1087#1088#1072#1081#1089#1072' '#1074' '#1074#1072#1083#1102#1090#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' '#1090#1086#1074#1072#1088#1086#1074' '#1087#1086' '#1094#1077#1085#1077' '#1087#1088#1072#1081#1089#1072' '#1074' '#1074#1072#1083#1102#1090#1077
+      ImageIndex = 20
+      DataSets = <
+        item
+          UserName = 'frxDBDItems'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerName'
+          Value = ''
+          Component = GuidesPartner
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BrandName'
+          Value = ''
+          Component = GuidesBrand
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodName'
+          Value = ''
+          Component = GuidesPeriod
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartYear'
+          Value = '0'
+          Component = GuidesStartYear
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndYear'
+          Value = '0'
+          Component = GuidesEndYear
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintReport_Goods_RemainsCurrent_curr'
+      ReportNameParam.Value = 'PrintReport_Goods_RemainsCurrent_curr'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object spUpdate_Part_isOlapYes: TdsdExecStoredProc
       Category = 'Olap'
       MoveParams = <>
@@ -2571,6 +2637,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Curr'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2665,6 +2735,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     end
     object bbGoodsPrintList_Print_fp: TdxBarButton
       Action = mactGoodsPrintList_Print_fp
+      Category = 0
+    end
+    object bbPrint_Curr: TdxBarButton
+      Action = actPrint_Curr
       Category = 0
     end
   end

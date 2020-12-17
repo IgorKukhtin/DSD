@@ -771,16 +771,20 @@ BEGIN
            , CAST (tmpData.TotalSummPrice * tmpData.CurrencyValue_doc / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.ParValue_doc <> 0 THEN tmpData.ParValue_doc ELSE 1 END AS NUMERIC (16, 2)) :: TFloat AS TotalSummBalance_doc
 
              -- Сумма по прайсу - остаток итого с учетом долга
-           , tmpData.TotalSummPriceList      :: TFloat AS TotalSummPriceList
+           --, tmpData.TotalSummPriceList      :: TFloat AS TotalSummPriceList
+           , CAST (tmpData.TotalSummPriceList * CASE WHEN tmpData.CurrencyId = zc_Currency_GRN() THEN 1 WHEN tmpData.CurrencyValue <> 0 THEN tmpData.CurrencyValue ELSE 1 END
+                                              * CASE WHEN tmpData.CurrencyId = zc_Currency_GRN() THEN 1 WHEN tmpData.ParValue <> 0      THEN tmpData.ParValue      ELSE 1 END
+                   AS NUMERIC (16, 2)) :: TFloat AS TotalSummPriceList
+
 
              -- *Сумма по прайсу в валюте - остаток итого с учетом долга по курсу на тек.дату
-           , CAST (tmpData.TotalSummPriceList / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.CurrencyValue <> 0 THEN tmpData.CurrencyValue ELSE 1 END
-                                              * CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.ParValue <> 0      THEN tmpData.ParValue      ELSE 1 END
+           , CAST (tmpData.TotalSummPriceList / CASE WHEN tmpData.CurrencyId <> zc_Currency_GRN() THEN 1 WHEN tmpData.CurrencyValue <> 0 THEN tmpData.CurrencyValue ELSE 1 END
+                                              * CASE WHEN tmpData.CurrencyId <> zc_Currency_GRN() THEN 1 WHEN tmpData.ParValue <> 0      THEN tmpData.ParValue      ELSE 1 END
                    AS NUMERIC (16, 2)) :: TFloat AS TotalSummPriceList_curr
 
              -- *Сумма по прайсу в валюте - остаток итого с учетом долга по курсу документа
-           , CAST (tmpData.TotalSummPriceList / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.CurrencyValue_doc <> 0 THEN tmpData.CurrencyValue_doc ELSE 1 END
-                                              * CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.ParValue_doc <> 0      THEN tmpData.ParValue_doc      ELSE 1 END
+           , CAST (tmpData.TotalSummPriceList / CASE WHEN tmpData.CurrencyId <> zc_Currency_GRN() THEN 1 WHEN tmpData.CurrencyValue_doc <> 0 THEN tmpData.CurrencyValue_doc ELSE 1 END
+                                              * CASE WHEN tmpData.CurrencyId <> zc_Currency_GRN() THEN 1 WHEN tmpData.ParValue_doc <> 0      THEN tmpData.ParValue_doc      ELSE 1 END
                    AS NUMERIC (16, 2)) :: TFloat AS TotalSummPriceList_curr_doc
 
              -- Сумма вх. без скидки в валюте (информативно)
