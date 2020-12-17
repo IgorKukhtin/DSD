@@ -381,6 +381,14 @@ object ProdColorPatternForm: TProdColorPatternForm
         end
         item
           Visible = True
+          ItemName = 'bbactShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbShowAll'
         end
         item
@@ -465,7 +473,7 @@ object ProdColorPatternForm: TProdColorPatternForm
       Category = 0
     end
     object bbShowAll: TdxBarButton
-      Action = actShowAll
+      Action = actShowErased
       Category = 0
     end
     object dxBarControlContainerItem1: TdxBarControlContainerItem
@@ -481,6 +489,10 @@ object ProdColorPatternForm: TProdColorPatternForm
       Hint = 'New Item'
       Visible = ivAlways
       Control = edColorPattern
+    end
+    object bbactShowAll: TdxBarButton
+      Action = actShowAll
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -681,7 +693,7 @@ object ProdColorPatternForm: TProdColorPatternForm
         end>
       isShowModal = False
     end
-    object actShowAll: TBooleanStoredProcAction
+    object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -691,14 +703,14 @@ object ProdColorPatternForm: TProdColorPatternForm
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
+      ImageIndex = 64
       Value = False
       HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndexTrue = 62
-      ImageIndexFalse = 63
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
     end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -818,6 +830,25 @@ object ProdColorPatternForm: TProdColorPatternForm
         end>
       isShowModal = False
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ProdColorPattern'
@@ -838,6 +869,14 @@ object ProdColorPatternForm: TProdColorPatternForm
       item
         Name = 'inIsErased'
         Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsShowAll'
+        Value = Null
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput

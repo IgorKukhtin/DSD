@@ -2,10 +2,12 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ProdColorPattern (Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_ProdColorPattern (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ProdColorPattern (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ProdColorPattern(
     IN inColorPatternId   Integer,
     IN inIsErased         Boolean,       -- признак показать удаленные да / нет
+    IN inIsShowAll        Boolean,
     IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -340,4 +342,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ProdColorPattern (inColorPatternId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ProdColorPattern (inColorPatternId:= 0, inIsErased:= FALSE, inIsShowAll := FALSE, inSession:= zfCalc_UserAdmin())

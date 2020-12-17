@@ -60,7 +60,7 @@ type
     DBViewAddOn: TdsdDBViewAddOn;
     actProtocol: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
-    actShowAll: TBooleanStoredProcAction;
+    actShowErased: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     Comment: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
@@ -76,6 +76,8 @@ type
     dxBarControlContainerItem2: TdxBarControlContainerItem;
     FormParams: TdsdFormParams;
     RefreshDispatcher: TRefreshDispatcher;
+    actShowAll: TBooleanStoredProcAction;
+    bbactShowAll: TdxBarButton;
   private
     { Private declarations }
   public
