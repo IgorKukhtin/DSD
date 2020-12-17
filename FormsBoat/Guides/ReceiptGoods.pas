@@ -148,7 +148,6 @@ type
     cxSplitter1: TcxSplitter;
     Panel4: TPanel;
     spInsertUpdate_Child2: TdsdStoredProc;
-    ProdColorPatternName_ch1: TcxGridDBColumn;
     ProdColorPatternName_ch2: TcxGridDBColumn;
     actChoiceFormGoods2: TOpenChoiceForm;
     actChoiceFormProdColorPattern: TOpenChoiceForm;

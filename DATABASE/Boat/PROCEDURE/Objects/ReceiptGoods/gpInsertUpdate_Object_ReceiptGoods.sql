@@ -42,7 +42,11 @@ BEGIN
    inUserCode := (CASE WHEN COALESCE (inUserCode,'') <>'' THEN inUserCode ELSE COALESCE (vbGoodsCode,'') END) :: TVarChar;
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_ReceiptGoods(), inCode, COALESCE (vbGoodsName,'')||'-'||COALESCE (inComment,'')||'-'||COALESCE (inUserCode,''));
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_ReceiptGoods(), inCode
+                               , COALESCE (vbGoodsName,'')
+                              || CASE WHEN inComment <> '' THEN '-' || inComment ELSE '' END
+                            --||'-' || COALESCE (inUserCode,'')
+                                );
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ReceiptGoods_Comment(), ioId, inComment);

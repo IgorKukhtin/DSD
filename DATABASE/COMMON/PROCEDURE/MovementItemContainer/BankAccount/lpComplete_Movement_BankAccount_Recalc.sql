@@ -188,9 +188,11 @@ BEGIN
      IF COALESCE ((SELECT SUM (_tmpItem_PersonalService.SummCardRecalc) FROM _tmpItem_PersonalService), 0)
      <> -1 * COALESCE ((SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()) , 0)
      THEN
-         RAISE EXCEPTION 'Ошибка.Сумма бо банку <%> не соответствует сумме в начислениях <%>.'
+         RAISE EXCEPTION 'Ошибка.Сумма бо банку <%> не соответствует сумме в начислениях <%>.(%)(%)'
                 , zfConvert_FloatToString (-1 * (SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()))
                 , zfConvert_FloatToString ((SELECT SUM (_tmpItem_PersonalService.SummCardRecalc) FROM _tmpItem_PersonalService))
+                , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_PersonalServiceBN)
+                , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_PersonalServiceBN))
                  ;
      END IF;
      -- проверка - распределенная сумма должны соответствовать

@@ -5534,6 +5534,9 @@
       end
       item
         Control = edSignInternal
+      end
+      item
+        Control = deEndReturn
       end>
     Left = 256
     Top = 265

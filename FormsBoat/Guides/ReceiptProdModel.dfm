@@ -3,7 +3,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1052#1086#1076#1077#1083#1080'>'
   ClientHeight = 443
-  ClientWidth = 988
+  ClientWidth = 1288
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,22 +21,24 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   object PanelMaster: TPanel
     Left = 0
     Top = 26
-    Width = 988
+    Width = 1288
     Height = 209
     Align = alTop
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 988
     object cxGrid: TcxGrid
       Left = 0
       Top = 17
-      Width = 988
+      Width = 1288
       Height = 192
       Align = alClient
       PopupMenu = PopupMenu
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitWidth = 988
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -513,19 +515,20 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     object Panel3: TPanel
       Left = 0
       Top = 0
-      Width = 988
+      Width = 1288
       Height = 17
       Align = alTop
       Caption = #1057#1073#1086#1088#1082#1072' '#1084#1086#1076#1077#1083#1080
       Color = clSkyBlue
       ParentBackground = False
       TabOrder = 1
+      ExplicitWidth = 988
     end
   end
   object PanelProdColorPattern: TPanel
-    Left = 544
+    Left = 776
     Top = 240
-    Width = 444
+    Width = 512
     Height = 203
     Align = alRight
     BevelEdges = [beLeft]
@@ -535,13 +538,14 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     object cxGridProdColorPattern: TcxGrid
       Left = 0
       Top = 17
-      Width = 442
+      Width = 510
       Height = 186
       Align = alClient
       PopupMenu = PopupMenuOption
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitWidth = 442
       object cxGridDBTableViewProdColorPattern: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ProdColorPatternDS
@@ -675,7 +679,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           Width = 40
         end
         object ReceiptLevelName_ch2: TcxGridDBColumn
-          Caption = #1069#1090#1072#1087' '#1089#1073#1086#1088#1082#1080
+          Caption = 'Level'
           DataBinding.FieldName = 'ReceiptLevelName'
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
@@ -685,8 +689,10 @@ object ReceiptProdModelForm: TReceiptProdModelForm
               Kind = bkEllipsis
             end>
           Properties.ReadOnly = True
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          HeaderHint = #1069#1090#1072#1087' '#1089#1073#1086#1088#1082#1080
           Width = 78
         end
         object ObjectCode_ch2: TcxGridDBColumn
@@ -964,34 +970,37 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     object Panel2: TPanel
       Left = 0
       Top = 0
-      Width = 442
+      Width = 510
       Height = 17
       Align = alTop
       Caption = 'Items Boat Structure'
       Color = clLime
       ParentBackground = False
       TabOrder = 1
+      ExplicitWidth = 442
     end
   end
   object PanelGoods: TPanel
     Left = 0
     Top = 240
-    Width = 536
+    Width = 768
     Height = 203
     Align = alClient
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitWidth = 536
     object cxGridGoods: TcxGrid
       Left = 0
       Top = 17
-      Width = 536
+      Width = 768
       Height = 186
       Align = alClient
       PopupMenu = PopupMenuColor
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitWidth = 536
       object cxGridDBTableViewGoods: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = GoodsDS
@@ -1098,7 +1107,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           Width = 40
         end
         object ReceiptLevelName_ch1: TcxGridDBColumn
-          Caption = #1069#1090#1072#1087' '#1089#1073#1086#1088#1082#1080
+          Caption = 'Level'
           DataBinding.FieldName = 'ReceiptLevelName'
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
@@ -1180,6 +1189,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         object MeasureName_ch1: TcxGridDBColumn
           Caption = #1045#1076'. '#1080#1079#1084'.'
           DataBinding.FieldName = 'MeasureName'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
@@ -1634,30 +1644,33 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     object Panel1: TPanel
       Left = 0
       Top = 0
-      Width = 536
+      Width = 768
       Height = 17
       Align = alTop
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
       Color = clAqua
       ParentBackground = False
       TabOrder = 1
+      ExplicitWidth = 536
     end
   end
   object cxTopSplitter: TcxSplitter
     Left = 0
     Top = 235
-    Width = 988
+    Width = 1288
     Height = 5
     AlignSplitter = salTop
     Control = PanelMaster
+    ExplicitWidth = 988
   end
   object cxRightSplitter: TcxSplitter
-    Left = 536
+    Left = 768
     Top = 240
     Width = 8
     Height = 203
     AlignSplitter = salRight
     Control = PanelProdColorPattern
+    ExplicitLeft = 536
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -1927,7 +1940,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         end>
     end
     object BarSubItemOption: TdxBarSubItem
-      Caption = #1064#1072#1073#1083#1086#1085#1099' Farbe'
+      Caption = 'Boat Structure'
       Category = 0
       Visible = ivAlways
       ItemLinks = <

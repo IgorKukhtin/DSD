@@ -26,7 +26,9 @@ BEGIN
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_Route());
    vbUserId:= lpGetUserBySession (inSession);
    -- определяется - может ли пользовать видеть весь справочник
-   vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
+   vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId)
+                 OR vbUserId = 943150 -- Туржанская А.В.
+                 ;
 
    -- Результат
    RETURN QUERY

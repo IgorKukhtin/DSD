@@ -25,7 +25,7 @@ BEGIN
       -- определяется
       vbValue_Receipt:= COALESCE ((SELECT ObjectFloat_Value.ValueData FROM ObjectFloat AS ObjectFloat_Value WHERE ObjectFloat_Value.ObjectId = inReceiptId AND ObjectFloat_Value.DescId = zc_ObjectFloat_Receipt_Value()), 0);
       -- определяется
-      vbGoodsId_master:= COALESCE ((SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.Id = inParentId AND MovementItem.ObjectId IN (7129, 2328)), 0); -- ЯЗЫК СВИН. ВАРЕН.
+      vbGoodsId_master:= COALESCE ((SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.Id = inParentId AND MovementItem.ObjectId IN (7129, 2328, 6646)), 0); -- ЯЗЫК СВИН. ВАРЕН.
 
 
        -- пересчет кол-во для zc_MI_Master

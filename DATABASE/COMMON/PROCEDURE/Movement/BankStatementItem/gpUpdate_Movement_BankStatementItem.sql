@@ -41,15 +41,16 @@ BEGIN
                          )
      THEN
          -- всегда 1-ое число месяца
-         ioServiceDate := DATE_TRUNC ('MONTH', ioServiceDate);
+         outServiceDate := DATE_TRUNC ('MONTH', inServiceDate);
      ELSE
-         ioServiceDate := NULL;
+         outServiceDate := NULL;
      END IF;
 
      
      -- проверили статус
      PERFORM lpInsertUpdate_Movement (ioId:= Id, inDescId:= DescId, inInvNumber:= InvNumber, inOperDate:= OperDate, inParentId:= ParentId, inAccessKeyId:= AccessKeyId)
-     FROM Movement WHERE Id = ioId;
+     FROM Movement WHERE Id = ioId -- AND inSession <> '5'
+    ;
 
 
      -- Проверка установки значений
@@ -108,7 +109,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_ServiceDate(), ioId, outServiceDate);
 
      -- сохранили протокол
-     -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, FALSE);
 
 END;
 $BODY$
