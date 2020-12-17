@@ -16,7 +16,6 @@ type
   published
     procedure MainFormTest;
     procedure LoadServiceFormTest;
-    procedure LoadTranslateWordFormTest;
     procedure LoadLanguageFormTest;
     procedure LoadBankFormTest;
     procedure LoadBrandFormTest;
@@ -56,6 +55,8 @@ type
     procedure LoadReceiptLevelFormTest;
     procedure LoadReceiptGoodsFormTest;
     procedure LoadReceiptServiceFormTest;
+    procedure LoadTranslateMessageFormTest;
+    procedure LoadTranslateWordFormTest;
     procedure LoadUnionFormTest;
     procedure LoadUnitFormTest;
     procedure FormTest;
@@ -147,6 +148,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescDataForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementDescDataForm');
 
+end;
+
+procedure TLoadFormTest.LoadTranslateMessageFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTranslateMessageForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTranslateMessageForm');
 end;
 
 procedure TLoadFormTest.LoadTranslateWordFormTest;

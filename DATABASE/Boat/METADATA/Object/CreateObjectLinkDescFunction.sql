@@ -283,9 +283,20 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ColorPattern_Model() RETURNS Integer AS
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ColorPattern_Model', 'Модель', zc_Object_ColorPattern(), zc_Object_ProdModel() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ColorPattern_Model');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_TranslateMessage_Language() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_TranslateMessage_Language'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_TranslateMessage_Language', 'Язык перевода', zc_Object_TranslateMessage(), zc_Object_Language() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_TranslateMessage_Language');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_TranslateMessage_Parent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_TranslateMessage_Parent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_TranslateMessage_Parent', 'Перевод Слов', zc_Object_TranslateMessage(), zc_Object_TranslateWord() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_TranslateMessage_Parent');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.12.20         * zc_ObjectLink_TranslateMessage_Language
+                    zc_ObjectLink_TranslateMessage_Parent
  12.12.20         * zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel
                     zc_ObjectLink_ReceiptGoodsChild_Object
  11.12.20         * zc_ObjectLink_ProdColorGroup_ProdColorKind
