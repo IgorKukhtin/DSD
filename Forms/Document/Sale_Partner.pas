@@ -207,6 +207,11 @@ type
     macUpdate_PartionGoodsDate: TMultiAction;
     macUpdate_PartionGoodsDateList: TMultiAction;
     bbUpdate_PartionGoodsDateList: TdxBarButton;
+    spUpdate_Invnumber: TdsdStoredProc;
+    actUpdate_Invnumber: TdsdUpdateDataSet;
+    actUpdate_InvnumberDialog: TExecuteDialog;
+    macUpdate_Invnumber: TMultiAction;
+    bbUpdate_Invnumber: TdxBarButton;
   private
     { Private declarations }
   public

@@ -2360,6 +2360,52 @@ inherited Sale_OrderForm: TSale_OrderForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1072#1088#1090#1080#1080
       ImageIndex = 67
     end
+    object actUpdate_Invnumber: TdsdUpdateDataSet
+      Category = 'Invnumber'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Invnumber
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Invnumber
+        end>
+      Caption = 'actUpdate_Invnumber'
+    end
+    object actUpdate_InvnumberDialog: TExecuteDialog
+      Category = 'Invnumber'
+      MoveParams = <>
+      Caption = 'actUpdate_InvnumberDialog'
+      FormName = 'TChangeInvNumberDialogForm'
+      FormNameParam.Value = 'TChangeInvNumberDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inInvNumber'
+          Value = ''
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macUpdate_Invnumber: TMultiAction
+      Category = 'Invnumber'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_InvnumberDialog
+        end
+        item
+          Action = actUpdate_Invnumber
+        end>
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1089#1082#1083#1072#1076#1089#1082#1086#1081' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1089#1082#1083#1072#1076#1089#1082#1086#1081' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1089#1082#1083#1072#1076#1089#1082#1086#1081' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 43
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -2489,6 +2535,14 @@ inherited Sale_OrderForm: TSale_OrderForm
         item
           Visible = True
           ItemName = 'bbUpdate_PartionGoodsDateList'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Invnumber'
         end
         item
           Visible = True
@@ -2771,6 +2825,10 @@ inherited Sale_OrderForm: TSale_OrderForm
     end
     object bbUpdate_PartionGoodsDateList: TdxBarButton
       Action = macUpdate_PartionGoodsDateList
+      Category = 0
+    end
+    object bbUpdate_Invnumber: TdxBarButton
+      Action = macUpdate_Invnumber
       Category = 0
     end
   end
@@ -5460,5 +5518,30 @@ inherited Sale_OrderForm: TSale_OrderForm
     PackSize = 1
     Left = 1136
     Top = 291
+  end
+  object spUpdate_Invnumber: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Sale_Invnumber'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumber'
+        Value = ''
+        Component = edInvNumber
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1208
+    Top = 251
   end
 end

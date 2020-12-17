@@ -2501,6 +2501,52 @@ inherited SaleForm: TSaleForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1072#1088#1090#1080#1080
       ImageIndex = 67
     end
+    object actUpdate_Invnumber: TdsdUpdateDataSet
+      Category = 'Invnumber'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Invnumber
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Invnumber
+        end>
+      Caption = 'actUpdate_Invnumber'
+    end
+    object actUpdate_InvnumberDialog: TExecuteDialog
+      Category = 'Invnumber'
+      MoveParams = <>
+      Caption = 'actUpdate_InvnumberDialog'
+      FormName = 'TChangeInvNumberDialogForm'
+      FormNameParam.Value = 'TChangeInvNumberDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inInvNumber'
+          Value = 0.000000000000000000
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macUpdate_Invnumber: TMultiAction
+      Category = 'Invnumber'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_InvnumberDialog
+        end
+        item
+          Action = actUpdate_Invnumber
+        end>
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1089#1082#1083#1072#1076#1089#1082#1086#1081' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1089#1082#1083#1072#1076#1089#1082#1086#1081' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1089#1082#1083#1072#1076#1089#1082#1086#1081' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 43
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -2630,6 +2676,14 @@ inherited SaleForm: TSaleForm
         item
           Visible = True
           ItemName = 'bbUpdate_PartionGoodsDateList'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Invnumber'
         end
         item
           Visible = True
@@ -2796,6 +2850,10 @@ inherited SaleForm: TSaleForm
           ItemName = 'dxBarStatic'
         end>
     end
+    inherited dxBarStatic: TdxBarStatic
+      Caption = '   '
+      Hint = '   '
+    end
     inherited bbPrint: TdxBarButton
       Action = mactPrint_Sale
       Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -2811,6 +2869,10 @@ inherited SaleForm: TSaleForm
     object bbPrintTax_Client: TdxBarButton [7]
       Action = mactPrint_Tax_Client
       Category = 0
+    end
+    inherited bbStatic: TdxBarStatic
+      Caption = '   '
+      Hint = '   '
     end
     object bbTax: TdxBarButton
       Action = actTax
@@ -2920,6 +2982,10 @@ inherited SaleForm: TSaleForm
     end
     object bbUpdate_PartionGoodsDateList: TdxBarButton
       Action = macUpdate_PartionGoodsDateList
+      Category = 0
+    end
+    object bbUpdate_Invnumber: TdxBarButton
+      Action = macUpdate_Invnumber
       Category = 0
     end
   end
@@ -5714,5 +5780,30 @@ inherited SaleForm: TSaleForm
     PackSize = 1
     Left = 1136
     Top = 347
+  end
+  object spUpdate_Invnumber: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Sale_Invnumber'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumber'
+        Value = 43831d
+        Component = edInvNumber
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1136
+    Top = 419
   end
 end

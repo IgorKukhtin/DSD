@@ -1089,6 +1089,9 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChangeInvnumberDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TChangeInvnumberDialogForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementPromo_DateDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementPromo_DateDialogForm');
   exit;
