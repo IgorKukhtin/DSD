@@ -93,7 +93,9 @@ BEGIN
                                               , inGoodsId                := inGoodsId
                                               , inGoodsId_child          := ioGoodsChildId
                                               , inGoodsKindId            := inGoodsKindId
+                                              , inGoodsKindId_Complete   := inGoodsKindId_Complete
                                               , inGoodsKindId_child      := inGoodsKindChildId
+                                              , inGoodsKindId_Complete_child:= inGoodsKindId_Complete_child
                                               , inAmount                 := outAmountIn
                                               , inAmount_child           := inAmountOut
                                               , inPartionGoods           := inPartionGoods
