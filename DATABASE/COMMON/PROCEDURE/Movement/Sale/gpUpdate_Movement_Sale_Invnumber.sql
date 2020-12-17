@@ -20,7 +20,7 @@ BEGIN
      UPDATE Movement SET InvNumber = inInvNumber WHERE Id = inId;
 
      -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (inId, inUserId, FALSE);
+     PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
 
 END;
 $BODY$

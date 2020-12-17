@@ -5789,7 +5789,7 @@ inherited SaleForm: TSaleForm
       item
         Name = 'inId'
         Value = Null
-        Component = MasterCDS
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','

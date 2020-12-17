@@ -5527,7 +5527,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'inId'
         Value = Null
-        Component = MasterCDS
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -4983,7 +4983,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       item
         Name = 'inId'
         Value = Null
-        Component = MasterCDS
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
