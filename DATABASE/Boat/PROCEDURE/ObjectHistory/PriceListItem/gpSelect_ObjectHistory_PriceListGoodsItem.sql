@@ -22,7 +22,12 @@ BEGIN
                                               , 140209 -- Пав-ны продажа
                                                )
      THEN
-         RAISE EXCEPTION 'Ошибка. Нет прав на Просмотр прайса <%>', lfGet_Object_ValueData (inPriceListId);
+         --RAISE EXCEPTION 'Ошибка. Нет прав на Просмотр прайса <%>', lfGet_Object_ValueData (inPriceListId);
+         RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка. Нет прав на Просмотр прайса <%>'     :: TVarChar
+                                               , inProcedureName := 'gpInsertUpdate_ObjectHistory_PriceListTax'   :: TVarChar
+                                               , inUserId        := vbUserId
+                                               , inParam1        := lfGet_Object_ValueData (inPriceListId)        :: TVarChar
+                                               );
      END IF;*/
 
 /*
@@ -31,7 +36,12 @@ BEGIN
         AND COALESCE (inPriceListId, 0) NOT IN (zc_PriceList_Fuel()
                                                )
      THEN
-         RAISE EXCEPTION 'Ошибка. Нет прав на Просмотр прайса <%>', lfGet_Object_ValueData (inPriceListId);
+         --RAISE EXCEPTION 'Ошибка. Нет прав на Просмотр прайса <%>', lfGet_Object_ValueData (inPriceListId);
+         RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка. Нет прав на Просмотр прайса <%>'     :: TVarChar
+                                               , inProcedureName := 'gpInsertUpdate_ObjectHistory_PriceListTax'   :: TVarChar
+                                               , inUserId        := vbUserId
+                                               , inParam1        := lfGet_Object_ValueData (inPriceListId)        :: TVarChar
+                                               );
      END IF;
 */
 

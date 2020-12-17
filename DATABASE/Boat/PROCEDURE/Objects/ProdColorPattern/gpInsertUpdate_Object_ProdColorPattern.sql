@@ -32,7 +32,11 @@ BEGIN
    -- проверка inColorPatternId должно быть внесено
    IF COALESCE (inColorPatternId,0) = 0
    THEN
-        RAISE EXCEPTION 'Ошибка.Значение <Шаблон Boat Structure> должено быть заполнено.';
+        --RAISE EXCEPTION 'Ошибка.Значение <Шаблон Boat Structure> должено быть заполнено.';
+        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Значение <Шаблон Boat Structure> должено быть заполнено.':: TVarChar
+                                              , inProcedureName := 'gpInsertUpdate_Object_ProdColorPattern' :: TVarChar
+                                              , inUserId        := vbUserId
+                                              );
    END IF;
    
    -- определяем признак Создание/Корректировка
@@ -51,7 +55,12 @@ BEGIN
        IF COALESCE (inGoodsId,0) <> 0
        THEN
             ioProdColorName := vbProdColorName;
-            RAISE EXCEPTION 'Ошибка.Цвет определен в <%>.', lfGet_Object_ValueData (inGoodsId);
+            --RAISE EXCEPTION 'Ошибка.Цвет определен в <%>.', lfGet_Object_ValueData (inGoodsId);
+            RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Цвет определен в <%>.' :: TVarChar
+                                                  , inProcedureName := 'gpInsertUpdate_Object_ProdColorPattern' :: TVarChar
+                                                  , inUserId        := vbUserId
+                                                  , inParam1        := lfGet_Object_ValueData (inGoodsId) :: TVarChar
+                                                  );
        ELSE
             ioComment := ioProdColorName;
        END IF;

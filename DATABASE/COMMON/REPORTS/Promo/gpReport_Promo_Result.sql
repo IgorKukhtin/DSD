@@ -70,6 +70,7 @@ RETURNS TABLE(
     ,SummPromo            TFloat    --ТО (грн) акционный период по акционным ценам
     ,ContractCondition    TFloat    -- Бонус сети, %
     ,Profit               TFloat    --
+    ,AdvertisingName      TBlob     -- * рекламн.поддержка
     ,Comment              TVarChar  --примечание
     ,CommentMain          TVarChar  --
     )
@@ -361,6 +362,17 @@ BEGIN
                        ) * COALESCE (MI_PromoGoods.AmountSaleWeight, 0) 
                  ELSE 0
             END                               :: TFloat    AS Profit
+
+
+          , (SELECT STRING_AGG (Movement_PromoAdvertising.AdvertisingName,'; ')
+                 FROM (SELECT DISTINCT Movement_PromoAdvertising_View.AdvertisingName
+                       FROM Movement_PromoAdvertising_View
+                       WHERE Movement_PromoAdvertising_View.ParentId = Movement_Promo.Id
+                         AND COALESCE (Movement_PromoAdvertising_View.AdvertisingName,'') <> ''
+                         AND Movement_PromoAdvertising_View.isErASed = FALSE
+                      ) AS Movement_PromoAdvertising
+            )                                 :: TBlob     AS AdvertisingName
+
           , ''                                :: TVarChar  AS Comment                -- Примечание
           , ''                                :: TVarChar  AS CommentMain            -- Примечание
         FROM tmpMovement AS Movement_Promo

@@ -26,7 +26,12 @@ BEGIN
 
    IF COALESCE (inObjectId, 0) = 0 
    THEN
-       RAISE EXCEPTION 'Error. inObjectId = %', inObjectId;
+       --RAISE EXCEPTION 'Error. inObjectId = %', inObjectId;
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Error. inObjectId = <%>.'     :: TVarChar
+                                             , inProcedureName := 'lpInsertUpdate_ObjectHistory' :: TVarChar
+                                             , inUserId        := vbUserId
+                                             , inParam1        := inObjectId                     :: TVarChar
+                                             );
    END IF;
 
   -- если его нет - попробуем найти

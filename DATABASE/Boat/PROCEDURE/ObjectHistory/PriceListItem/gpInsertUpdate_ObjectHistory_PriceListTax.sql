@@ -23,25 +23,43 @@ BEGIN
    -- Проверка
    IF COALESCE (inPriceListFromId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Ошибка.Не определено значение <Прайс-лист основание>.';
+       --RAISE EXCEPTION 'Ошибка.Не определено значение <Прайс-лист основание>.';
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Не определено значение <Прайс-лист основание>.' :: TVarChar
+                                             , inProcedureName := 'gpInsertUpdate_ObjectHistory_PriceListTax'   :: TVarChar
+                                             , inUserId        := vbUserId
+                                             );
    END IF;
 
    -- Проверка
    IF COALESCE (inPriceListToId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Ошибка.Не определено значение <Прайс-лист результат>.';
+       --RAISE EXCEPTION 'Ошибка.Не определено значение <Прайс-лист результат>.';
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Не определено значение <Прайс-лист результат>.' :: TVarChar
+                                             , inProcedureName := 'gpInsertUpdate_ObjectHistory_PriceListTax'   :: TVarChar
+                                             , inUserId        := vbUserId
+                                             );
    END IF;
 
    -- Проверка
    IF inOperDate < DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 MONTH'
    THEN
-       RAISE EXCEPTION 'Ошибка.Значение <Изменение цены с> не может быть раньше чем <%>.', DATE (DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 MONTH');
+       --RAISE EXCEPTION 'Ошибка.Значение <Изменение цены с> не может быть раньше чем <%>.', DATE (DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 MONTH');
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Значение <Изменение цены с> не может быть раньше чем <%>.' :: TVarChar
+                                             , inProcedureName := 'gpInsertUpdate_ObjectHistory_PriceListTax'   :: TVarChar
+                                             , inUserId        := vbUserId
+                                             , inParam1        := DATE (DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 MONTH')     :: TVarChar
+                                             );
    END IF;
 
    -- Проверка
    IF inOperDateFrom < DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 MONTH'
    THEN
-       RAISE EXCEPTION 'Ошибка.Значение <Дата цены основания> не может быть раньше чем <%>.', DATE (DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 MONTH');
+       --RAISE EXCEPTION 'Ошибка.Значение <Дата цены основания> не может быть раньше чем <%>.', DATE (DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 MONTH');
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Значение <Дата цены основания> не может быть раньше чем <%>.' :: TVarChar
+                                             , inProcedureName := 'gpInsertUpdate_ObjectHistory_PriceListTax'   :: TVarChar
+                                             , inUserId        := vbUserId
+                                             , inParam1        := DATE (DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 MONTH')        :: TVarChar
+                                             );
    END IF;
 
 

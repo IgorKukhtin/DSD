@@ -23,7 +23,12 @@ BEGIN
      IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 78489 AND UserId = vbUserId)
         AND COALESCE (inPriceListId, 0) NOT IN (zc_PriceList_Fuel())
      THEN
-         RAISE EXCEPTION 'Ошибка. Нет прав на Просмотр прайса <%>', lfGet_Object_ValueData (inPriceListId);
+         --RAISE EXCEPTION 'Ошибка. Нет прав на Просмотр прайса <%>', lfGet_Object_ValueData (inPriceListId);
+         RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка. Нет прав на Просмотр прайса <%>'     :: TVarChar
+                                               , inProcedureName := 'gpSelect_ObjectHistory_PriceListItem'        :: TVarChar
+                                               , inUserId        := vbUserId
+                                               , inParam1        := lfGet_Object_ValueData (inPriceListId)        :: TVarChar
+                                               );
      END IF;
 */
      -- определяем период , цены за месяц

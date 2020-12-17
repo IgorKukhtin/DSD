@@ -322,6 +322,13 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             Options.Editing = False
             Width = 71
           end
+          object AdvertisingName: TcxGridDBColumn
+            Caption = #1056#1077#1082#1083#1072#1084#1085'. '#1087#1086#1076#1076#1077#1088#1078#1082#1072
+            DataBinding.FieldName = 'AdvertisingName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 73
+          end
           object AmountPlanMin: TcxGridDBColumn
             Caption = #1052#1080#1085#1080#1084#1091#1084' '#1087#1083#1072#1085#1080#1088#1091#1077#1084#1086#1075#1086' '#1086#1073#1098#1077#1084#1072' '#1087#1088#1086#1076#1072#1078' '#1074' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', '#1082#1075', '#1096#1090
             DataBinding.FieldName = 'AmountPlanMin'

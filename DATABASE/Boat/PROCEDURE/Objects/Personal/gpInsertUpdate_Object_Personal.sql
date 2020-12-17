@@ -32,17 +32,29 @@ BEGIN
    -- проверка
    IF COALESCE (inMemberId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Ошибка. <ФИО> не выбрано.';
+       --RAISE EXCEPTION 'Ошибка. <ФИО> не выбрано.';
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка. <ФИО> не выбрано.' :: TVarChar
+                                             , inProcedureName := 'gpInsertUpdate_Object_Personal' :: TVarChar
+                                             , inUserId        := vbUserId
+                                             );
    END IF;
    -- проверка
    IF COALESCE (inUnitId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Ошибка. <Подразделение> не выбрано.';
+       --RAISE EXCEPTION 'Ошибка. <Подразделение> не выбрано.';
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка. <Подразделение> не выбрано.' :: TVarChar
+                                             , inProcedureName := 'gpInsertUpdate_Object_Personal' :: TVarChar
+                                             , inUserId        := vbUserId
+                                             );
    END IF;
    -- проверка
    IF COALESCE (inPositionId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Ошибка. <Должность> не выбрана.';
+       --RAISE EXCEPTION 'Ошибка. <Должность> не выбрана.';
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка. <Должность> не выбрана.' :: TVarChar
+                                             , inProcedureName := 'gpInsertUpdate_Object_Personal' :: TVarChar
+                                             , inUserId        := vbUserId
+                                             );
    END IF;
 
    -- определяем параметры, т.к. значения должны быть синхронизированы с объектом <Физические лица>
@@ -57,21 +69,40 @@ BEGIN
               --AND PositionLevelId = COALESCE (inPositionLevelId, 0)
                 AND PersonalId <> COALESCE(ioId, 0)) 
    THEN
-      RAISE EXCEPTION 'Значение <%> для подразделения: <%> должность: <%> не уникально в справочнике <%>.'   ---разряд должности: <%>
+      /*RAISE EXCEPTION 'Значение <%> для подразделения: <%> должность: <%> не уникально в справочнике <%>.'   ---разряд должности: <%>
                     , vbName
                     , lfGet_Object_ValueData_sh (inUnitId)
                     , lfGet_Object_ValueData_sh (inPositionId)
                     --, COALESCE (lfGet_Object_ValueData_sh (inPositionLevelId), '')
                     , (SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Personal());
+      */
+
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Значение <%> для подразделения: <%> должность: <%> не уникально в справочнике <%>.' :: TVarChar
+                                             , inProcedureName := 'gpInsertUpdate_Object_Personal' :: TVarChar
+                                             , inUserId        := vbUserId
+                                             , inParam1        := vbName :: TVarChar
+                                             , inParam2        := lfGet_Object_ValueData_sh (inUnitId)     :: TVarChar
+                                             , inParam3        := lfGet_Object_ValueData_sh (inPositionId) :: TVarChar
+                                             , inParam4        := (SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Personal()) :: TVarChar
+                                             );
+
    END IF;
    -- Основное место работы - только одно
    IF inIsMain = TRUE
       AND EXISTS (SELECT 1 FROM Object_Personal_View AS View_Personal WHERE View_Personal.MemberId = inMemberId AND View_Personal.isMain = TRUE AND View_Personal.PersonalId <> COALESCE(ioId, 0)) THEN
-      RAISE EXCEPTION 'Значение <Основное место работы> = ДА, уже установлено для подразделения: <%> должность: <%>. Этот признак можно установить только 1 раз.'
+      /*RAISE EXCEPTION 'Значение <Основное место работы> = ДА, уже установлено для подразделения: <%> должность: <%>. Этот признак можно установить только 1 раз.'
                     , lfGet_Object_ValueData_sh ((SELECT View_Personal.UnitId          FROM Object_Personal_View AS View_Personal WHERE View_Personal.MemberId = inMemberId AND View_Personal.isMain = TRUE ORDER BY View_Personal.PersonalId LIMIT 1))
                     , lfGet_Object_ValueData_sh ((SELECT View_Personal.PositionId      FROM Object_Personal_View AS View_Personal WHERE View_Personal.MemberId = inMemberId AND View_Personal.isMain = TRUE ORDER BY View_Personal.PersonalId LIMIT 1))
                     --, lfGet_Object_ValueData_sh ((SELECT View_Personal.PositionLevelId FROM Object_Personal_View AS View_Personal WHERE View_Personal.MemberId = inMemberId AND View_Personal.isMain = TRUE ORDER BY View_Personal.PersonalId LIMIT 1))
                      ;
+      */
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Значение <Основное место работы> = ДА, уже установлено для подразделения: <%> должность: <%>. Этот признак можно установить только 1 раз.' :: TVarChar
+                                             , inProcedureName := 'gpInsertUpdate_Object_Personal' :: TVarChar
+                                             , inUserId        := vbUserId
+                                             , inParam1        := lfGet_Object_ValueData_sh ((SELECT View_Personal.UnitId          FROM Object_Personal_View AS View_Personal WHERE View_Personal.MemberId = inMemberId AND View_Personal.isMain = TRUE ORDER BY View_Personal.PersonalId LIMIT 1)) :: TVarChar
+                                             , inParam2        := lfGet_Object_ValueData_sh ((SELECT View_Personal.PositionId      FROM Object_Personal_View AS View_Personal WHERE View_Personal.MemberId = inMemberId AND View_Personal.isMain = TRUE ORDER BY View_Personal.PersonalId LIMIT 1)) :: TVarChar
+                                             );
+
    END IF;
    
    -- сохранили <Объект>

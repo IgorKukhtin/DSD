@@ -31,7 +31,13 @@ BEGIN
    -- Check
    IF NOT EXISTS (SELECT Id FROM ObjectHistory WHERE Id = ioId AND ObjectId = vbPriceListItemId)
    THEN
-       RAISE EXCEPTION 'Error. Id = % where ObjectId <> vbPriceListItemId %', ioId, vbPriceListItemId;
+       --RAISE EXCEPTION 'Error. Id = % where ObjectId <> vbPriceListItemId %', ioId, vbPriceListItemId;
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Error. Id = <%> where ObjectId <> vbPriceListItemId <%>' :: TVarChar
+                                             , inProcedureName := 'gpInsertUpdate_ObjectHistory_PriceListItemLast_Sybase'   :: TVarChar
+                                             , inUserId        := vbUserId
+                                             , inParam1        := ioId               :: TVarChar
+                                             , inParam2        := vbPriceListItemId  :: TVarChar
+                                             );
    END IF;
 
    -- Устанавливаем цену

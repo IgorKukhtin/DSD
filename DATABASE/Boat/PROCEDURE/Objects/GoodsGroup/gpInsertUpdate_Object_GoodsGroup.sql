@@ -29,7 +29,11 @@ BEGIN
 
    -- Проверка
    IF TRIM (inName) = '' THEN
-      RAISE EXCEPTION 'Ошибка.Необходимо ввести Название.';
+      --RAISE EXCEPTION 'Ошибка.Необходимо ввести Название.';
+      RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Необходимо ввести Название.' :: TVarChar
+                                            , inProcedureName := 'gpInsertUpdate_Object_GoodsGroup' :: TVarChar
+                                            , inUserId        := vbUserId
+                                            );
    END IF;
 
    -- проверка уникальность <Название> для !!!<Группа>!!
@@ -43,7 +47,13 @@ BEGIN
                 AND Object.Id <> COALESCE (ioId, 0)
              )
    THEN
-       RAISE EXCEPTION 'Ошибка.Группа товара <%> для <%> уже существует.', TRIM (inName), lfGet_Object_ValueData_sh (inParentId);
+       --RAISE EXCEPTION 'Ошибка.Группа товара <%> для <%> уже существует.', TRIM (inName), lfGet_Object_ValueData_sh (inParentId);
+         RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Группа товара <%> для <%> уже существует.' :: TVarChar
+                                               , inProcedureName := 'gpInsertUpdate_Object_GoodsGroup' :: TVarChar
+                                               , inUserId        := vbUserId
+                                               , inParam1        := TRIM (inName)    :: TVarChar
+                                               , inParam2        := lfGet_Object_ValueData_sh (inParentId) :: TVarChar
+                                               );
    END IF;
 
    -- проверка прав уникальности для свойства <Код>

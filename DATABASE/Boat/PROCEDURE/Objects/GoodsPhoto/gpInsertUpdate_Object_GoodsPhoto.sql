@@ -20,7 +20,11 @@ BEGIN
     -- проверка
    IF COALESCE (inGoodsId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Ошибка! Договор не установлен!';
+       --RAISE EXCEPTION 'Ошибка! Договор не установлен!';
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка! Договор не установлен!' :: TVarChar
+                                             , inProcedureName := 'gpInsertUpdate_Object_GoodsPhoto' :: TVarChar
+                                             , inUserId        := vbUserId
+                                             );
    END IF;
    
    -- сохранили <Объект>

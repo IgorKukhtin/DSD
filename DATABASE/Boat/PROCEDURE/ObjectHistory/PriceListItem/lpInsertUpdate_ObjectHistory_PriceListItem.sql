@@ -22,7 +22,12 @@ BEGIN
                                             , 140209 -- Пав-ны продажа
                                              )
    THEN
-       RAISE EXCEPTION 'Ошибка. Нет прав корректировать прайс <%>', lfGet_Object_ValueData (inPriceListId);
+       --RAISE EXCEPTION 'Ошибка. Нет прав корректировать прайс <%>', lfGet_Object_ValueData (inPriceListId);
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка. Нет прав корректировать прайс <%>'   :: TVarChar
+                                             , inProcedureName := 'lpInsertUpdate_ObjectHistory_PriceListItem'  :: TVarChar
+                                             , inUserId        := vbUserId
+                                             , inParam1        := lfGet_Object_ValueData (inPriceListId)        :: TVarChar
+                                             );
    END IF;
 */
 

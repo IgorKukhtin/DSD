@@ -39,7 +39,12 @@ BEGIN
                                             , 140209 -- Пав-ны продажа
                                              )
    THEN
-       RAISE EXCEPTION 'Ошибка. Нет прав корректировать прайс <%>', lfGet_Object_ValueData (inPriceListId);
+       --RAISE EXCEPTION 'Ошибка. Нет прав корректировать прайс <%>', lfGet_Object_ValueData (inPriceListId);
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка. Нет прав корректировать прайс <%>'      :: TVarChar
+                                             , inProcedureName := 'gpInsertUpdate_ObjectHistory_PriceListItemLast' :: TVarChar
+                                             , inUserId        := vbUserId
+                                             , inParam1        := lfGet_Object_ValueData (inPriceListId)           :: TVarChar
+                                             );
    END IF;
 
 
@@ -66,7 +71,12 @@ BEGIN
                                                 AND ObjectLink_CardFuel_Juridical.DescId   = zc_ObjectLink_CardFuel_Juridical()
                                              )
    THEN
-       RAISE EXCEPTION 'Ошибка. Нет прав корректировать прайс <%>', lfGet_Object_ValueData (inPriceListId);
+       --RAISE EXCEPTION 'Ошибка. Нет прав корректировать прайс <%>', lfGet_Object_ValueData (inPriceListId);
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка. Нет прав корректировать прайс <%>'      :: TVarChar
+                                             , inProcedureName := 'gpInsertUpdate_ObjectHistory_PriceListItemLast' :: TVarChar
+                                             , inUserId        := vbUserId)
+                                             , inParam1        := lfGet_Object_ValueData (inPriceListId)           :: TVarChar
+                                             );
    END IF;
 */
 

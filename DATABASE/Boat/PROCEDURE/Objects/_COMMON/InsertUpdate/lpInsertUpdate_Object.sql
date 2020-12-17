@@ -43,8 +43,6 @@ BEGIN
        IF COALESCE (inDescId, -1) <> COALESCE (vbDescId, -2)
        THEN
            RAISE EXCEPTION 'Ошибка изменения DescId с <%>(<%>) на <%>(<%>)', (SELECT ItemName FROM ObjectDesc WHERE Id = vbDescId), vbDescId
-                                                                           , (SELECT ItemName FROM ObjectDesc WHERE Id = inDescId), inDescId
-                                                                            ;
        END IF;
 
    END IF; -- if COALESCE (ioId, 0) = 0

@@ -1,27 +1,31 @@
 -- Function: lfMessageTraslate (TVarChar, TVarChar, TVarChar)
 
 DROP FUNCTION IF EXISTS lfMessageTraslate (TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS lfMessageTraslate (TVarChar, TVarChar, Integer
+                                         , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                         , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION lfMessageTraslate(
     IN inMessage        TVarChar  ,
     IN inProcedureName  TVarChar  ,
-    IN inParam1         TVarChar  ,
-    IN inParam2         TVarChar  ,
-    IN inParam3         TVarChar  ,
-    IN inParam4         TVarChar  ,
-    IN inParam5         TVarChar  ,
-    IN inParam6         TVarChar  ,
-    IN inParam7         TVarChar  ,
-    IN inParam8         TVarChar  ,
-    IN inParam9         TVarChar  ,
-    IN inParam10        TVarChar  ,
+    IN inUserId         Integer   ,
    OUT outMessage       TVarChar  ,
-    IN inSession        TVarChar       -- сессия пользователя
+    IN inParam1         TVarChar DEFAULT '',
+    IN inParam2         TVarChar DEFAULT '',
+    IN inParam3         TVarChar DEFAULT '',
+    IN inParam4         TVarChar DEFAULT '',
+    IN inParam5         TVarChar DEFAULT '',
+    IN inParam6         TVarChar DEFAULT '',
+    IN inParam7         TVarChar DEFAULT '',
+    IN inParam8         TVarChar DEFAULT '',
+    IN inParam9         TVarChar DEFAULT '',
+    IN inParam10        TVarChar DEFAULT '',
+
+  -- сессия пользователя
 )
 RETURNS TVarChar
 AS
 $BODY$
-   DECLARE vbUserId Integer;
    DECLARE vbId Integer;
    DECLARE vbLanguageId1 Integer;
    DECLARE vbvbLanguageId_user Integer;
@@ -30,13 +34,11 @@ $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_TranslateWord());
-   vbUserId:= lpGetUserBySession (inSession);
-
 
    -- Нашли главный Язык, он первый
    vbLanguageId1:= (WITH tmpList AS (SELECT Object.Id, ROW_NUMBER() OVER (ORDER BY Object.Id ASC) AS Ord FROM Object WHERE Object.DescId = zc_Object_Language()) SELECT tmpList.Id FROM tmpList WHERE tmpList.Ord = 1);
    -- определяем язык пользователя
-   vbvbLanguageId_user := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbUserId AND OL.DescId = zc_ObjectLink_User_Language());
+   vbvbLanguageId_user := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inUserId AND OL.DescId = zc_ObjectLink_User_Language());
 
 
    -- Находим гл. элемент сообщене на рус. языке , ключ - vbLanguageId1 + inName + inProcedureName

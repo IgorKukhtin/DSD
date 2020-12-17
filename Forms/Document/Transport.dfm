@@ -58,7 +58,6 @@
       Properties.Buttons = <
         item
           Default = True
-          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -3307,11 +3306,11 @@
   object GuidesBranchForwarding: TdsdGuides
     KeyField = 'Id'
     LookupControl = edBranchForwarding
-    FormNameParam.Value = 'TBranch_orUnit_ObjectForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TBranch_orUnit_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -3330,7 +3329,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1098
+    Left = 1082
     Top = 59
   end
   object spInsertUpdateMIChild: TdsdStoredProc
@@ -3870,6 +3869,8 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 285
     Top = 304
   end
@@ -3884,6 +3885,8 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 368
     Top = 328
   end
@@ -4291,6 +4294,8 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 271
     Top = 388
   end

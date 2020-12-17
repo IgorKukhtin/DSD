@@ -1,23 +1,23 @@
 inherited Unit_ObjectForm: TUnit_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
   ClientHeight = 420
-  ClientWidth = 699
-  ExplicitWidth = 715
-  ExplicitHeight = 455
+  ClientWidth = 702
+  ExplicitWidth = 718
+  ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 699
+    Width = 702
     Height = 394
     ExplicitWidth = 699
     ExplicitHeight = 394
     ClientRectBottom = 394
-    ClientRectRight = 699
+    ClientRectRight = 702
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 699
       ExplicitHeight = 394
       inherited cxGrid: TcxGrid
-        Width = 699
+        Width = 702
         Height = 394
         ExplicitWidth = 699
         ExplicitHeight = 394

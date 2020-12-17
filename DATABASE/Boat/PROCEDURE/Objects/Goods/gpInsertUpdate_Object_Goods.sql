@@ -52,7 +52,7 @@ BEGIN
    vbIsInsert:= COALESCE (ioId, 0) = 0;
 
    -- Если код не установлен, определяем его как последний+1
-   inCode:= lfGet_ObjectCode (inCode, zc_Object_Brand());    
+   inCode:= lfGet_ObjectCode (inCode, zc_Object_Goods());
 
    -- проверка уникальности <Код>
    IF inCode <> 0 THEN PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), inCode); END IF;
@@ -62,21 +62,32 @@ BEGIN
    -- проверка <inName>
    IF TRIM (COALESCE (inName, '')) = ''
    THEN
-       RAISE EXCEPTION 'Ошибка.Значение <Название> должно быть установлено.';
+       --RAISE EXCEPTION 'Ошибка.Значение <Название> должно быть установлено.';
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Значение <Название> должно быть установлено.'
+                                             , inProcedureName := 'gpInsertUpdate_Object_Goods'
+                                             , inUserId        := vbUserId);
    END IF;
 
    -- проверка <GoodsGroupId>
    IF COALESCE (inGoodsGroupId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Ошибка.Значение <Группа товаров> должно быть установлено.';
+       --RAISE EXCEPTION 'Ошибка.Значение <Группа товаров> должно быть установлено.';
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Значение <Группа товаров> должно быть установлено.'
+                                             , inProcedureName := 'gpInsertUpdate_Object_Goods'
+                                             , inUserId        := vbUserId);       
    END IF;
-  
+
    -- из ближайшей группы где установлено <УП статья назначения>
    vbInfoMoneyId:= lfGet_Object_GoodsGroup_InfomoneyId (inGoodsGroupId);
    -- проверка <InfoMoneyId>
    /*IF COALESCE (vbInfoMoneyId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Ошибка.Значение <УП статья назначения> не найдена для группы <%>.', lfGet_Object_ValueData (inGoodsGroupId);
+       --RAISE EXCEPTION 'Ошибка.Значение <УП статья назначения> не найдена для группы <%>.', lfGet_Object_ValueData (inGoodsGroupId);
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Значение <УП статья назначения> не найдена для группы <%>.'  :: TVarChar
+                                             , inProcedureName := 'gpInsertUpdate_Object_Goods'           :: TVarChar
+                                             , inUserId        := vbUserId
+                                             , inParam1        := lfGet_Object_ValueData (inGoodsGroupId) :: TVarChar
+                                             );
    END IF;
    */
    

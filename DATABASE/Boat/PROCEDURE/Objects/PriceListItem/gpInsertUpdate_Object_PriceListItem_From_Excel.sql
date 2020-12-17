@@ -28,13 +28,23 @@ BEGIN
 
     IF COALESCE (vbGoodsId, 0) = 0
     THEN
-        RAISE EXCEPTION 'Ошибка.Значение код товара = <%> не найден.', inGoodsCode;
+       -- RAISE EXCEPTION 'Ошибка.Значение код товара = <%> не найден.', inGoodsCode;
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Значение код товара = <%> не найден.' :: TVarChar
+                                             , inProcedureName := 'gpInsertUpdate_Object_PriceListItem_From_Excel' :: TVarChar
+                                             , inUserId        := vbUserId
+                                             , inParam1        := inGoodsCode :: TVarChar
+                                             );
     END IF;
     */
 
     IF inPriceValue < 0
     THEN
-        RAISE EXCEPTION 'Ошибка. Цена = <%> не может быть меньше нуля.', inPriceValue;
+       -- RAISE EXCEPTION 'Ошибка. Цена = <%> не может быть меньше нуля.', inPriceValue;
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка. Цена = <%> не может быть меньше нуля.' :: TVarChar
+                                             , inProcedureName := 'gpInsertUpdate_Object_PriceListItem_From_Excel' :: TVarChar
+                                             , inUserId        := vbUserId
+                                             , inParam1        := inPriceValue :: TVarChar
+                                             );
     END IF;
 
     --

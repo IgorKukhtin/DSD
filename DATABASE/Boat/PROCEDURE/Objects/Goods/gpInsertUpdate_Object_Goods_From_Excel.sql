@@ -83,7 +83,14 @@ BEGIN
    ELSE
        IF COALESCE (vbGoodsId, 0) = 0
        THEN
-           RAISE EXCEPTION 'Ошибка.Для товара <%> <%> не установлен код <%>.', inArticle, inName, inObjectCode;
+           --RAISE EXCEPTION 'Ошибка.Для товара <%> <%> не установлен код <%>.', inArticle, inName, inObjectCode;
+           RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Для товара <%> <%> не установлен код <%>.' :: TVarChar
+                                                 , inProcedureName := 'gpInsertUpdate_Object_Goods_From_Excel' :: TVarChar
+                                                 , inUserId        := vbUserId
+                                                 , inParam1        := inArticle    :: TVarChar
+                                                 , inParam2        := inName       :: TVarChar
+                                                 , inParam3        := inObjectCode :: TVarChar
+                                                 );
        END IF;
 
        RETURN;
@@ -114,7 +121,13 @@ BEGIN
           --если не нашли ощибка
    IF COALESCE (vbGoodsGroupId,0) = 0
    THEN
-        RAISE EXCEPTION 'Ошибка.Группа товара с кодом = <%> не найдена. Товар <%>', inGoodsGroupCode, inName;
+        --RAISE EXCEPTION 'Ошибка.Группа товара с кодом = <%> не найдена. Товар <%>', inGoodsGroupCode, inName;
+        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Группа товара с кодом = <%> не найдена. Товар <%>' :: TVarChar
+                                              , inProcedureName := 'gpInsertUpdate_Object_Goods_From_Excel' :: TVarChar
+                                              , inUserId        := vbUserId
+                                              , inParam1        := inGoodsGroupCode    :: TVarChar
+                                              , inParam2        := inName       :: TVarChar
+                                              );
    END IF;
 
    IF COALESCE (inPartnerCode, 0) <> 0
@@ -124,7 +137,12 @@ BEGIN
        --если не нашли ощибка
        IF COALESCE (vbPartnerId,0) = 0
        THEN
-            RAISE EXCEPTION 'Ошибка.Партнер с кодом = <%> не найден.', inPartnerCode;
+            --RAISE EXCEPTION 'Ошибка.Партнер с кодом = <%> не найден.', inPartnerCode;
+            RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Партнер с кодом = <%> не найден.' :: TVarChar
+                                                  , inProcedureName := 'gpInsertUpdate_Object_Goods_From_Excel' :: TVarChar
+                                                  , inUserId        := vbUserId
+                                                  , inParam1        := inPartnerCode    :: TVarChar
+                                                  );
        END IF;
    END IF;
 
