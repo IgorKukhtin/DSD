@@ -121,7 +121,7 @@ AS
        AND OH_JuridicalDetails.OKPO IN ('32294926', '40720198', '32294897')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
--- ЕПІЦЕНТР К ТОВ, Рідо Груп, 
+-- ЕПІЦЕНТР К ТОВ, Рідо Груп, Легіон 2015 ТОВ, Арітейл
       SELECT
              zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
@@ -132,7 +132,7 @@ AS
            , CAST ('PrintMovement_Sale32490244' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('32490244', '41744911', '39775097')
+       AND OH_JuridicalDetails.OKPO IN ('32490244', '41744911', '39775097', '41135005')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
 -- Ашан Україна Гіпермаркет ТОВ + РІАЛ ІСТЕЙТ Ф.К.А.У.

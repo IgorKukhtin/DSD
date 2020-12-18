@@ -443,6 +443,9 @@ BEGIN
                                -- , 'ÑÊËÀÄ:'
                                , tmpLanguageParam.Value1 ||': '
                               || ObjectBlob_Info.ValueData
+                              
+                              || CASE WHEN Object_StickerSkin.ValueData ILIKE '%áåç îáîëîíêè%' THEN ' ' || Object_StickerSkin.ValueData || CHR (13) ELSE '' END
+                              
                               -- || 'ÓÌÎÂÈ ÒÀ ÒÅÐÌ²Í ÇÁÅÐ²ÃÀÍÍß:' || COALESCE (Object_StickerPack.ValueData, '') || ':'
                               || tmpLanguageParam.Value2 ||': ' || COALESCE (Object_StickerPack.ValueData, '') || ': '
                               || CASE WHEN ObjectFloat_Value1.ValueData > 0 THEN
