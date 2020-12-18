@@ -27,7 +27,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 1072
     object cxGrid: TcxGrid
       Left = 0
       Top = 17
@@ -38,7 +37,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitWidth = 1072
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -565,7 +563,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       Color = clSkyBlue
       ParentBackground = False
       TabOrder = 1
-      ExplicitWidth = 1072
     end
   end
   object PanelGoods: TPanel
@@ -971,7 +968,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
     Height = 5
     AlignSplitter = salTop
     Control = PanelMaster
-    ExplicitWidth = 1072
   end
   object cxRightSplitter: TcxSplitter
     Left = 1264
@@ -979,7 +975,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
     Width = 8
     Height = 302
     AlignSplitter = salRight
-    ExplicitLeft = 1064
   end
   object Panel2: TPanel
     Left = 575
@@ -989,7 +984,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
     Align = alClient
     Caption = 'Panel2'
     TabOrder = 8
-    ExplicitWidth = 489
     object cxGridCh2: TcxGrid
       Left = 1
       Top = 18
@@ -1000,7 +994,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitWidth = 487
       object cxGridDBTableViewCh2: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = Child2DS
@@ -1345,7 +1338,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       Color = clLime
       ParentBackground = False
       TabOrder = 1
-      ExplicitWidth = 487
     end
   end
   object cxSplitter1: TcxSplitter
@@ -1435,6 +1427,10 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbShowAll_ch1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1447,7 +1443,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         end
         item
           Visible = True
-          ItemName = 'bbShowAll'
+          ItemName = 'bbShowAllErased'
         end
         item
           Visible = True
@@ -1535,7 +1531,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       Action = actProtocol
       Category = 0
     end
-    object bbShowAll: TdxBarButton
+    object bbShowAllErased: TdxBarButton
       Action = actShowAllErased
       Category = 0
     end
@@ -1688,6 +1684,10 @@ object ReceiptGoodsForm: TReceiptGoodsForm
     end
     object bbUnErasedProdColorPattern: TdxBarButton
       Action = actUnErasedProdColorPattern
+      Category = 0
+    end
+    object bbShowAll_ch1: TdxBarButton
+      Action = actShowAll_ch1
       Category = 0
     end
   end
@@ -2141,6 +2141,25 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         end>
       isShowModal = False
     end
+    object actShowAll_ch1: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect_child1
+      StoredProcList = <
+        item
+          StoredProc = spSelect_child1
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ReceiptGoods'
@@ -2569,6 +2588,14 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         Name = 'inIsErased'
         Value = False
         Component = actShowAllErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsShowAll'
+        Value = Null
+        Component = actShowAll_ch1
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -61,7 +61,7 @@ type
     actProtocol: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     actShowAllErased: TBooleanStoredProcAction;
-    bbShowAll: TdxBarButton;
+    bbShowAllErased: TdxBarButton;
     Comment: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
@@ -163,6 +163,8 @@ type
     dxBarSubItem1: TdxBarSubItem;
     bbSetErasedProdColorPattern: TdxBarButton;
     bbUnErasedProdColorPattern: TdxBarButton;
+    actShowAll_ch1: TBooleanStoredProcAction;
+    bbShowAll_ch1: TdxBarButton;
   private
     { Private declarations }
   public
