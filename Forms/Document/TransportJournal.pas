@@ -124,6 +124,8 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     AmountCost: TcxGridDBColumn;
     AmountMemberCost: TcxGridDBColumn;
+    BranchCode_ProfitLoss: TcxGridDBColumn;
+    BranchName_ProfitLoss: TcxGridDBColumn;
   private
   public
   end;

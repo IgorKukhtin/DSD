@@ -162,7 +162,7 @@ BEGIN
        , MovementDesc.ItemName                        AS ItemName
        , COALESCE (Object_From.ValueData, CASE WHEN MovementItem.Amount > 0 THEN Object_MoneyPlace.ValueData ELSE NULL END) ::TVarChar AS FromName
        , COALESCE (Object_To.ValueData, CASE WHEN MovementItem.Amount < 0 THEN Object_MoneyPlace.ValueData ELSE NULL END)   ::TVarChar AS ToName
-       , MovementString_Comment.ValueData :: TVarChar AS MovementComment
+       , COALESCE (MovementString_Comment.ValueData, MIS_Comment.ValueData) :: TVarChar AS MovementComment
        , tmpData.ServiceSumma             :: TFloat   AS ServiceSumma
        , tmpData.BankSumma                :: TFloat   AS BankSumma
        , tmpData.IncomeSumma              :: TFloat   AS IncomeSumma
@@ -192,6 +192,9 @@ BEGIN
                              AND MovementItem.DescId = zc_MI_Master()
                              AND MovementItem.IsErased = FALSE
 
+       LEFT JOIN MovementItemString AS MIS_Comment
+                                    ON MIS_Comment.MovementItemId = MovementItem.Id
+                                   AND MIS_Comment.DescId         = zc_MIString_Comment()
        LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
                                         ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
                                        AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()

@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS lpComplete_Movement_TransportService (Integer, Integer);
 CREATE OR REPLACE FUNCTION lpComplete_Movement_TransportService(
     IN inMovementId        Integer  , -- ключ Документа
     IN inUserId            Integer    -- Пользователь
-)                              
+)
 RETURNS VOID
 --  RETURNS TABLE (MovementItemId Integer, MovementId Integer, OperDate TDateTime, JuridicalId_From Integer, isCorporate Boolean, PersonalId_From Integer, UnitId Integer, BranchId_Unit Integer, PersonalId_Packer Integer, PaidKindId Integer, ContractId Integer, ContainerId_Goods Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, OperCount TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, tmpOperSumm_Packer TFloat, OperSumm_Packer TFloat, AccountDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, InfoMoneyDestinationId_isCorporate Integer, InfoMoneyId_isCorporate Integer, JuridicalId_basis Integer, BusinessId Integer, isPartionCount Boolean, isPartionSumm Boolean, PartionMovementId Integer, PartionGoodsId Integer)
 AS
@@ -56,12 +56,23 @@ BEGIN
                -- Главное Юр.лицо всегда из договора (а не по Подразделению - Место отправки)
              , COALESCE (ObjectLink_Contract_JuridicalBasis.ChildObjectId, 0) AS JuridicalId_Basis
 
-             , CASE WHEN ObjectLink_UnitRoute_Branch.ChildObjectId IS NULL -- если у подразделения маршрута нет филиала
+               -- Подраделение (ОПиУ) (здесь не используется, используется в следующей проводки)
+             , CASE -- если филиал = "пусто", тогда затраты по принадлежности маршрута к подразделению, т.е. это мясо(з+сб), снабжение, админ, произв.
+                    WHEN ObjectLink_UnitRoute_Branch.ChildObjectId IS NULL
+                         THEN COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0)
+
+                    -- если "собственный" маршрут, тогда затраты по принадлежности маршрута к подразделению, т.е. это филиалы - теоретически здесь "Содержание филиалов"
+                    WHEN ObjectLink_UnitRoute_Branch.ChildObjectId  = COALESCE (ObjectLink_Route_Branch.ChildObjectId, 0)
                          THEN COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0) -- затраты по принадлежности маршрута к подразделению
-                    WHEN ObjectLink_UnitRoute_Branch.ChildObjectId  = COALESCE (ObjectLink_Route_Branch.ChildObjectId, 0) -- если филиал у подразделения маршрута = филиал у маршрута
-                         THEN COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0) -- затраты по принадлежности маршрута к подразделению
+
+                    -- если маршрут "на филиал" и это наша машина, тогда затраты падают на филиал - теоретически здесь "Содержание транспорта"
+                    WHEN ObjectLink_UnitRoute_Branch.ChildObjectId  <> ObjectLink_Route_Branch.ChildObjectId AND ObjectLink_Route_Branch.ChildObjectId > 0
+                         THEN COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0)
+
                     ELSE MovementLinkObject_UnitForwarding.ObjectId -- иначе Подразделение (Место отправки)
-               END AS UnitId   -- Подраделение (ОПиУ), а могло быть UnitId_Route (здесь не используется, используется в следующей проводки)
+
+               END AS UnitId
+
              , 0 AS PositionId -- не используется
 
                -- Филиал Баланс: по "месту отправки" (нужен для НАЛ долгов)
@@ -77,10 +88,19 @@ BEGIN
 
              , zc_Enum_AnalyzerId_ProfitLoss() AS AnalyzerId   -- есть аналитика, т.е. то что относится к ОПиУ
              , MILinkObject_Car.ObjectId       AS ObjectIntId_Analyzer   -- Автомобиль !!!при формировании проводок замена с UnitId!!!
-             , CASE WHEN ObjectLink_UnitRoute_Branch.ChildObjectId  = COALESCE (ObjectLink_Route_Branch.ChildObjectId, 0) -- если филиал у подразделения маршрута = филиал у маршрута
+
+               -- Филиал (ОПиУ), а могло быть BranchId_Route
+             , CASE -- если "собственный" маршрут, тогда затраты по принадлежности маршрута к подразделению, т.е. это филиалы - теоретически здесь "Содержание филиалов"
+                    WHEN ObjectLink_UnitRoute_Branch.ChildObjectId  = COALESCE (ObjectLink_Route_Branch.ChildObjectId, 0)
                          THEN COALESCE (ObjectLink_UnitRoute_Branch.ChildObjectId, 0) -- затраты по принадлежности маршрут -> подразделение -> филиал
+
+                    -- если маршрут "на филиал" и это наша машина, тогда затраты падают на филиал - теоретически здесь "Содержание транспорта"
+                    WHEN ObjectLink_UnitRoute_Branch.ChildObjectId  <> ObjectLink_Route_Branch.ChildObjectId AND ObjectLink_Route_Branch.ChildObjectId > 0
+                         THEN COALESCE (ObjectLink_Route_Branch.ChildObjectId, 0)
+
                     ELSE 0 -- иначе затраты без принадлежности к филиалу
-               END AS ObjectExtId_Analyzer   -- Филиал (ОПиУ), а могло быть BranchId_Route
+
+               END AS ObjectExtId_Analyzer   
 
              , FALSE AS IsActive
              , TRUE AS IsMaster
@@ -354,7 +374,7 @@ $BODY$
  25.05.14                                        * add lpComplete_Movement
  10.05.14                                        * add lpInsert_MovementProtocol
  25.01.14                                        * all
- 04.01.14         * 
+ 04.01.14         *
 */
 
 -- тест

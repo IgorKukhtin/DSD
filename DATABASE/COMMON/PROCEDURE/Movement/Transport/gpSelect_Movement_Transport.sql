@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , HoursWork TFloat, HoursAdd TFloat
              , AmountCost TFloat, AmountMemberCost TFloat
              , Comment TVarChar
+             , BranchCode_ProfitLoss Integer, BranchName_ProfitLoss TVarChar
              , BranchCode Integer, BranchName TVarChar
              , CarName TVarChar, CarModelName TVarChar, CarTrailerName TVarChar
              , PersonalDriverName TVarChar
@@ -80,27 +81,30 @@ BEGIN
              Movement.Id
            , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
            , Movement.OperDate
-           , Object_Status.ObjectCode   AS StatusCode
-           , Object_Status.ValueData    AS StatusName
+           , Object_Status.ObjectCode             AS StatusCode
+           , Object_Status.ValueData              AS StatusName
            
-           , MovementDate_StartRunPlan.ValueData AS StartRunPlan 
-           , MovementDate_EndRunPlan.ValueData   AS EndRunPlan 
-           , MovementDate_StartRun.ValueData     AS StartRun 
-           , MovementDate_EndRun.ValueData       AS EndRun           
+           , MovementDate_StartRunPlan.ValueData  AS StartRunPlan 
+           , MovementDate_EndRunPlan.ValueData    AS EndRunPlan 
+           , MovementDate_StartRun.ValueData      AS StartRun 
+           , MovementDate_EndRun.ValueData        AS EndRun           
           
            , CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat) AS HoursWork
-           , MovementFloat_HoursAdd.ValueData      AS HoursAdd
+           , MovementFloat_HoursAdd.ValueData     AS HoursAdd
                       
            , MovementFloat_AmountCost.ValueData       AS AmountCost
            , MovementFloat_AmountMemberCost.ValueData AS AmountMemberCost
 
-           , MovementString_Comment.ValueData      AS Comment
+           , MovementString_Comment.ValueData     AS Comment
 
-           , View_Unit.BranchCode
-           , View_Unit.BranchName
-           , Object_Car.ValueData        AS CarName
-           , Object_CarModel.ValueData   AS CarModelName
-           , Object_CarTrailer.ValueData AS CarTrailerName
+           , Object_Branch_pl.ObjectCode          AS BranchCode_ProfitLoss
+           , Object_Branch_pl.ValueData           AS BranchName_ProfitLoss
+
+           , Object_Branch_unit_car.ObjectCode    AS BranchCode
+           , Object_Branch_unit_car.ValueData     AS BranchName
+           , Object_Car.ValueData                 AS CarName
+           , Object_CarModel.ValueData            AS CarModelName
+           , Object_CarTrailer.ValueData          AS CarTrailerName
 
            , View_PersonalDriver.PersonalName     AS PersonalDriverName
            , View_PersonalDriverMore.PersonalName AS PersonalDriverMoreName
@@ -148,13 +152,20 @@ BEGIN
                                      ON MovementString_Comment.MovementId =  Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Branch
+                                         ON MovementLinkObject_Branch.MovementId = Movement.Id
+                                        AND MovementLinkObject_Branch.DescId     = zc_MovementLinkObject_Branch()
+            LEFT JOIN Object AS Object_Branch_pl ON Object_Branch_pl.Id = MovementLinkObject_Branch.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
                                          ON MovementLinkObject_Car.MovementId = Movement.Id
                                         AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
             LEFT JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id
                                                        AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
-            LEFT JOIN Object_Unit_View AS View_Unit ON View_Unit.Id = ObjectLink_Car_Unit.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch_car ON ObjectLink_Unit_Branch_car.ObjectId = ObjectLink_Car_Unit.ChildObjectId
+                                                              AND ObjectLink_Unit_Branch_car.DescId    = zc_ObjectLink_Unit_Branch()
+            LEFT JOIN Object AS Object_Branch_unit_car ON Object_Branch_unit_car.Id = ObjectLink_Unit_Branch_car.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
                                                            AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()

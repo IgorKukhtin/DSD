@@ -502,12 +502,6 @@ BEGIN
           ) AS _tmp;
 
 
-     -- проверка - MovementId_Invoice
-     IF vbMovementDescId = zc_Movement_IncomeAsset() AND COALESCE (vbMovementId_Invoice, 0) = 0
-     THEN
-         RAISE EXCEPTION 'Ошибка.Необходимо заполнить значение <№ док. Счет>.';
-     END IF;
-
      -- проверка
      IF COALESCE (vbContractId, 0) = 0
      THEN
@@ -1028,6 +1022,21 @@ BEGIN
              ) AS tmp
              ) AS _tmp
         ;
+
+     -- проверка - MovementId_Invoice
+     IF vbMovementDescId = zc_Movement_IncomeAsset() AND COALESCE (vbMovementId_Invoice, 0) = 0
+     THEN
+         IF NOT EXISTS (SELECT 1 FROM _tmpItem)
+         THEN
+             RAISE EXCEPTION 'Ошибка.В документе не заполнено кол-во.';
+         ELSE
+             IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.OperSumm_Partner <> 0)
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Необходимо заполнить значение <№ док. Счет>.';
+             END IF;
+         END IF;
+     END IF;
+
 
      -- !!!с/с тары будем списывать сразу в ОПиУ!!!
      UPDATE _tmpItem SET ContainerId_ProfitLoss = lpInsertFind_Container

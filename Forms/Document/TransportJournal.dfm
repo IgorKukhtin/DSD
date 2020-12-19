@@ -124,7 +124,6 @@ object TransportJournalForm: TTransportJournalForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
@@ -213,19 +212,36 @@ object TransportJournalForm: TTransportJournalForm
         Width = 60
       end
       object BranchCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1092#1080#1083#1080#1072#1083#1072
+        Caption = #1050#1086#1076' '#1092'. ('#1072#1074#1090'.)'
         DataBinding.FieldName = 'BranchCode'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1076' '#1092#1080#1083#1080#1072#1083#1072' ('#1072#1074#1090#1086#1084#1086#1073#1080#1083#1100')'
         Width = 45
       end
       object BranchName: TcxGridDBColumn
-        Caption = #1060#1080#1083#1080#1072#1083
+        Caption = #1060#1080#1083#1080#1072#1083' ('#1072#1074#1090#1086#1084#1086#1073#1080#1083#1100')'
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
+      end
+      object BranchCode_ProfitLoss: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1092'. ('#1054#1055#1080#1059')'
+        DataBinding.FieldName = 'BranchCode_ProfitLoss'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1076' '#1092#1080#1083#1080#1072#1083#1072' ('#1054#1055#1080#1059')'
+        Width = 55
+      end
+      object BranchName_ProfitLoss: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083' ('#1054#1055#1080#1059')'
+        DataBinding.FieldName = 'BranchName_ProfitLoss'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object UnitForwardingName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1052#1077#1089#1090#1086' '#1086#1090#1087#1088#1072#1074#1082#1080')'
@@ -1141,6 +1157,8 @@ object TransportJournalForm: TTransportJournalForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 160
     Top = 200
   end
@@ -1179,7 +1197,7 @@ object TransportJournalForm: TTransportJournalForm
       end
       item
         Name = 'inislastcomplete'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -523,7 +523,7 @@ BEGIN
                                                                                         , inGoodsId       := CASE WHEN vbMemberId <> 0 THEN _tmpItem.GoodsId ELSE NULL END
                                                                                         , inStorageId     := CASE WHEN vbMemberId <> 0 THEN _tmpItem.StorageId_Item ELSE NULL END
                                                                                         , inInvNumber     := CASE WHEN vbMemberId <> 0 THEN _tmpItem.PartionGoods ELSE NULL END
-                                                                                        , inOperDate      := CASE WHEN vbMemberId <> 0 THEN _tmpItem.PartionGoodsDate ELSE NULL END
+                                                                                        , inOperDate      := CASE WHEN vbMemberId <> 0 THEN CASE WHEN _tmpItem.PartionGoodsDate IN (zc_DateStart(), zc_DateEnd()) THEN vbOperDate ELSE COALESCE (_tmpItem.PartionGoodsDate, vbOperDate) END ELSE NULL END
                                                                                         , inPrice         := CASE WHEN vbMemberId <> 0 THEN _tmpItem.Price_Partion ELSE NULL END
                                                                                          )
                                                ELSE lpInsertFind_Object_PartionGoods ('')

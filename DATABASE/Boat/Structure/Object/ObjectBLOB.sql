@@ -18,6 +18,8 @@ CREATE TABLE ObjectBLOB(
 
 /*-------------------------------------------------------------------------------*/
 /*                                  »Ì‰ÂÍÒ˚                                      */
+CREATE UNIQUE INDEX idx_ObjectBLOB_ObjectId_DescId ON ObjectBLOB (ObjectId, DescId);
+CREATE INDEX idx_ObjectBLOB_DescId ON ObjectBLOB (DescId);
 
 /*
  œ–»Ã≈◊¿Õ»ﬂ:
