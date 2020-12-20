@@ -5,9 +5,10 @@
 -- Процедура проверяет уникальность поля ValueData у объекта
 
 CREATE OR REPLACE FUNCTION lpCheckUnique_ObjectString_ValueData(
-inId integer, 
-inDescId integer,
-inValueData tvarchar)
+        inId        integer, 
+        inDescId    integer,
+        inValueData tvarchar,
+        inUserId    integer)
   RETURNS void AS
 $BODY$
 DECLARE
@@ -20,8 +21,15 @@ BEGIN
      JOIN ObjectStringDesc 
        ON ObjectStringDesc.DescId = ObjectDesc.Id
         WHERE ObjectStringDesc.Id = inDescId;
-     RAISE EXCEPTION 'Значение "%" не уникально для поля "%" справочника "%"', inValueData, FieldName, ObjectName;
-     
+
+     --RAISE EXCEPTION 'Значение "%" не уникально для поля "%" справочника "%"', inValueData, FieldName, ObjectName;
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Значение "<%>" не уникально для поля "<%>" справочника "<%>"' :: TVarChar
+                                             , inProcedureName := 'lpCheckUnique_ObjectString_ValueData'    :: TVarChar
+                                             , inUserId        := inUserId
+                                             , inParam1        := inValueData :: TVarChar
+                                             , inParam2        := FieldName   :: TVarChar
+                                             , inParam3        := ObjectName  :: TVarChar
+                                             );
   END IF; 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE

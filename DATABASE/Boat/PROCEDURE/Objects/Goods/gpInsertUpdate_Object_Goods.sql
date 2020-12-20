@@ -55,9 +55,9 @@ BEGIN
    inCode:= lfGet_ObjectCode (inCode, zc_Object_Goods());
 
    -- проверка уникальности < од>
-   IF inCode <> 0 THEN PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), inCode); END IF;
+   IF inCode <> 0 THEN PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), inCode, vbUserId); END IF;
    -- !!! проверка уникальности <Ќаименование>
-   -- PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Goods(), inName);
+   -- PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Goods(), inName, vbUserId);
 
    -- проверка <inName>
    IF TRIM (COALESCE (inName, '')) = ''

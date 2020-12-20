@@ -7,7 +7,8 @@
 CREATE OR REPLACE FUNCTION lpCheck_Object_CycleLink(
  inObjectId               integer,    -- Ссылка на главный объект
  inDescId                 integer,    -- Деск сслыки на родителя
- inObjectParentId         integer     -- Объект Родитель
+ inObjectParentId         integer,     -- Объект Родитель
+ inUserId                 integer
 )
   RETURNS void AS
 $BODY$
@@ -28,12 +29,12 @@ BEGIN
                )
      THEN
         SELECT ItemName INTO DescName FROM ObjectLinkDesc WHERE Id = inDescId;
-        RAISE EXCEPTION 'Нельзя установить связь "%" из-за циклической ссылки', DescName;
-        /*RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Нельзя установить связь "%" из-за циклической ссылки' :: TVarChar
+        --RAISE EXCEPTION 'Нельзя установить связь "%" из-за циклической ссылки', DescName;
+        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Нельзя установить связь "<%>" из-за циклической ссылки' :: TVarChar
                                               , inProcedureName := 'lpCheck_Object_CycleLink'                             :: TVarChar
                                               , inUserId        := vbUserId
                                               , inParam1        := DescName                                               :: TVarChar
-                                              );*/
+                                              );
      END IF;
   END IF; 
 END;$BODY$

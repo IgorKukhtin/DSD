@@ -84,7 +84,14 @@ BEGIN
          -- Проверка
          IF COALESCE (inIsProcess, FALSE) <> TRUE AND COALESCE (inIsExit, FALSE) <> TRUE
          THEN
-             RAISE EXCEPTION 'Ошибка.inIsConnect - <%> + inIsProcess - <%> + inIsExit - <%>', inIsConnect, inIsProcess, inIsExit;
+             --RAISE EXCEPTION 'Ошибка.inIsConnect - <%> + inIsProcess - <%> + inIsExit - <%>', inIsConnect, inIsProcess, inIsExit;
+             RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.inIsConnect - <%> + inIsProcess - <%> + inIsExit - <%>' :: TVarChar
+                                                   , inProcedureName := 'lpInsert_LoginProtocol' :: TVarChar
+                                                   , inUserId        := inUserId
+                                                   , inParam1        := inIsConnect :: TVarChar
+                                                   , inParam2        := inIsProcess :: TVarChar
+                                                   , inParam3        := inIsExit    :: TVarChar
+                                                   );
          END IF;
 
     END IF;

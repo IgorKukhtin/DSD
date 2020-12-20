@@ -20,15 +20,26 @@ BEGIN
    -- проверка
    IF COALESCE (inLanguageId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Ошибка. <Язык> не выбран.';
+       --RAISE EXCEPTION 'Ошибка. <Язык> не выбран.';
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка. <Язык> не выбран.' :: TVarChar
+                                             , inProcedureName := 'lpInsertUpdate_Object_TranslateMessage'    :: TVarChar
+                                             , inUserId        := inUserId
+                                             );
    END IF;
 
    -- проверка - "главный" язык перевода - должен быть №1
    IF COALESCE (inParentId, 0) = 0 AND inLanguageId <> COALESCE ((SELECT MIN (Id) FROM Object WHERE Object.DescId = zc_Object_Language()), 0)
    THEN
-       RAISE EXCEPTION 'Ошибка.Должен быть выбран главный язык Перевода = <%>.Но был выбран <%>.'
+       /*RAISE EXCEPTION 'Ошибка.Должен быть выбран главный язык Перевода = <%>.Но был выбран <%>.'
                       , lfGet_Object_ValueData_sh ((SELECT MIN (Id) FROM Object WHERE Object.DescId = zc_Object_Language()))
                       , lfGet_Object_ValueData_sh (inLanguageId);
+       */
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Должен быть выбран главный язык Перевода = <%>.Но был выбран <%>.' :: TVarChar
+                                             , inProcedureName := 'lpInsertUpdate_Object_TranslateMessage'    :: TVarChar
+                                             , inUserId        := inUserId
+                                             , inParam1        := lfGet_Object_ValueData_sh ((SELECT MIN (Id) FROM Object WHERE Object.DescId = zc_Object_Language())) :: TVarChar
+                                             , inParam2        := lfGet_Object_ValueData_sh (inLanguageId) :: TVarChar
+                                             );
    END IF;
    -- проверка
    IF ioId > 0 AND COALESCE (inParentId, 0) = 0
@@ -43,7 +54,12 @@ BEGIN
                     AND ObjectLink_TranslateMessage_Language.ChildObjectId = inLanguageId
                  )
    THEN
-       RAISE EXCEPTION 'Ошибка.Язык Перевода <%> не может стать главным.', lfGet_Object_ValueData_sh (inLanguageId);
+       --RAISE EXCEPTION 'Ошибка.Язык Перевода <%> не может стать главным.', lfGet_Object_ValueData_sh (inLanguageId);
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Язык Перевода <%> не может стать главным.' :: TVarChar
+                                             , inProcedureName := 'lpInsertUpdate_Object_TranslateMessage'    :: TVarChar
+                                             , inUserId        := inUserId
+                                             , inParam1        := lfGet_Object_ValueData_sh (inLanguageId) :: TVarChar
+                                             );
    END IF;
    -- проверка
    IF ioId > 0 AND inParentId > 0
@@ -58,7 +74,12 @@ BEGIN
                         AND ObjectLink_TranslateMessage_Language.ChildObjectId = inLanguageId
                      )
    THEN
-       RAISE EXCEPTION 'Ошибка.Язык Перевода <%> не может стать НЕ главным.', lfGet_Object_ValueData_sh (inLanguageId);
+       --RAISE EXCEPTION 'Ошибка.Язык Перевода <%> не может стать НЕ главным.', lfGet_Object_ValueData_sh (inLanguageId);
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Язык Перевода <%> не может стать НЕ главным.' :: TVarChar
+                                             , inProcedureName := 'lpInsertUpdate_Object_TranslateMessage'    :: TVarChar
+                                             , inUserId        := inUserId
+                                             , inParam1        := lfGet_Object_ValueData_sh (inLanguageId) :: TVarChar
+                                             );
    END IF;
 
 
@@ -73,7 +94,13 @@ BEGIN
    -- проверка - для "главного" языка перевода - должно быть слово
    IF COALESCE (inParentId, 0) = 0 AND COALESCE (TRIM (inValue), '') = ''
    THEN
-       RAISE EXCEPTION 'Ошибка.Перевода слова <%> пустой для <%>.', inValue, lfGet_Object_ValueData_sh (inLanguageId);
+       --RAISE EXCEPTION 'Ошибка.Перевода слова <%> пустой для <%>.', inValue, lfGet_Object_ValueData_sh (inLanguageId);
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Перевода слова <%> пустой для <%>.' :: TVarChar
+                                             , inProcedureName := 'lpInsertUpdate_Object_TranslateMessage'    :: TVarChar
+                                             , inUserId        := inUserId
+                                             , inParam1        := inValue :: TVarChar
+                                             , inParam2        := lfGet_Object_ValueData_sh (inLanguageId) :: TVarChar
+                                             );
    END IF;
 
 
@@ -98,7 +125,14 @@ BEGIN
        -- проверка
        IF COALESCE (TRIM (inName), '') = ''
        THEN
-           RAISE EXCEPTION 'Ошибка.Контрол в программе <%> пустой для <%> + <%>.', inName, inValue, lfGet_Object_ValueData_sh (inLanguageId);
+           --RAISE EXCEPTION 'Ошибка.Контрол в программе <%> пустой для <%> + <%>.', inName, inValue, lfGet_Object_ValueData_sh (inLanguageId);
+           RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Контрол в программе <%> пустой для <%> + <%>.' :: TVarChar
+                                                 , inProcedureName := 'lpInsertUpdate_Object_TranslateMessage'    :: TVarChar
+                                                 , inUserId        := inUserId
+                                                 , inParam1        := inName :: TVarChar
+                                                 , inParam2        := inValue :: TVarChar
+                                                 , inParam3        := lfGet_Object_ValueData_sh (inLanguageId) :: TVarChar
+                                                 );
        END IF;
 
        -- сохранили <название Элемента>

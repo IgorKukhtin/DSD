@@ -23,9 +23,9 @@ BEGIN
 
 
    -- проверка уникальности для свойства <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_InfoMoneyGroup(), inName);
+   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_InfoMoneyGroup(), inName,vbUserId);
    -- проверка уникальности для свойства <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_InfoMoneyGroup(), vbCode_max);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_InfoMoneyGroup(), vbCode_max, vbUserId);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_InfoMoneyGroup(), vbCode_max, inName);

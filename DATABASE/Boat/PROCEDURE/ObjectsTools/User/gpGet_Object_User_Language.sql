@@ -24,7 +24,12 @@ BEGIN
       -- Проверка
       IF COALESCE (vbUserId, 0) = 0
       THEN
-          RAISE EXCEPTION 'Ошибка.Не найден пользователь для сессии = <%>', inSession;
+          --RAISE EXCEPTION 'Ошибка.Не найден пользователь для сессии = <%>', inSession;
+          RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Не найден пользователь для сессии = <%>' :: TVarChar
+                                                , inProcedureName := 'gpGet_Object_User_Language' :: TVarChar
+                                                , inUserId        := vbUserId
+                                                , inParam1        := inSession :: TVarChar
+                                                );
       END IF;
 
       vbLanguageId:= COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbUserId AND OL.DescId = zc_ObjectLink_User_Language())

@@ -9,17 +9,24 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_Form_HelpFile(
 )
   RETURNS VOID AS
 $BODY$
-DECLARE 
-  Id integer;
+   DECLARE Id integer;
+   DECLARE vbUserId Integer;
 BEGIN
 --   PERFORM lpCheckRight(inSession, zc_Enum_Process_Forms());
+ 
+    -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpGetUserBySession (inSession);
    
     SELECT Object.Id INTO Id 
     FROM Object 
     WHERE DescId = zc_Object_Form() AND ValueData = inFormName;
 
     IF COALESCE(Id, 0) = 0 THEN
-        RAISE EXCEPTION 'Ошибка! Элемент справочника не сохранен.';
+        --RAISE EXCEPTION 'Ошибка! Элемент справочника не сохранен.';
+        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка! Элемент справочника не сохранен.' :: TVarChar
+                                              , inProcedureName := 'gpUpdate_Object_Form_HelpFile' :: TVarChar
+                                              , inUserId        := vbUserId
+                                              );
     END IF;
 
     PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Form_HelpFile(), Id, inHelpFile);

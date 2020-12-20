@@ -23,9 +23,9 @@ BEGIN
    inCode := lfGet_ObjectCode(inCode, zc_Object_Role()); 
    
    -- проверка уникальности для свойства <Наименование Действия>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Role(), inName);
+   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Role(), inName, UserId);
    -- проверка уникальности для свойства <Код Марки Действия>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Role(), inCode);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Role(), inCode, UserId);
 
 
    -- сохранили <Объект>

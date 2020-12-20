@@ -26,7 +26,7 @@ BEGIN
    ioCode:= lfGet_ObjectCode (ioCode, zc_Object_GoodsTag());
 
    -- проверка прав уникальности для свойства <Наименование >
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_GoodsTag(), inName);
+   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_GoodsTag(), inName, vbUserId);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_GoodsTag(), ioCode, inName);

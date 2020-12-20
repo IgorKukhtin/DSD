@@ -21,7 +21,11 @@ BEGIN
 
   -- проверка
   IF COALESCE (inObjectId, 0) = 0 THEN
-     RAISE EXCEPTION 'Ошибка.Просмотр протокола недоступен.';
+     --RAISE EXCEPTION 'Ошибка.Просмотр протокола недоступен.';
+     RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Просмотр протокола недоступен.' :: TVarChar
+                                           , inProcedureName := 'gpSelect_Protocol' :: TVarChar
+                                           , inUserId        := inUserId
+                                           );
   END IF;
 
 

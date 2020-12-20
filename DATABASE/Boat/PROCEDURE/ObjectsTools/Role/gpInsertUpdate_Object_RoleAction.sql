@@ -19,12 +19,20 @@ BEGIN
    -- проверка
    IF COALESCE (inRoleId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Ошибка.Не установлено значение <Role>.';
+       --RAISE EXCEPTION 'Ошибка.Не установлено значение <Role>.';
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Не установлено значение <Role>.' :: TVarChar
+                                             , inProcedureName := 'gpInsertUpdate_Object_RoleAction' :: TVarChar
+                                             , inUserId        := vbUserId
+                                             );
    END IF;
    -- проверка
    IF COALESCE (inActionId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Ошибка.Не установлено значение <Action>.';
+       --RAISE EXCEPTION 'Ошибка.Не установлено значение <Action>.';
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Не установлено значение <Action>.' :: TVarChar
+                                             , inProcedureName := 'gpInsertUpdate_Object_RoleAction' :: TVarChar
+                                             , inUserId        := vbUserId
+                                             );
    END IF;
 
    -- пытаемся найти

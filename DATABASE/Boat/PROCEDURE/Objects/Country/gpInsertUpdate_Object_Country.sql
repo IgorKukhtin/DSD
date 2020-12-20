@@ -27,9 +27,9 @@ BEGIN
    ioCode:= lfGet_ObjectCode (ioCode, zc_Object_Country()); 
 
    -- проверка уникальности для свойства <Наименование Страна>
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Country(), inName);
+   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Country(), inName, vbUserId);
    -- проверка уникальности для свойства <Код Страна>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Country(), ioCode);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Country(), ioCode, vbUserId);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Country(), ioCode, inName);
