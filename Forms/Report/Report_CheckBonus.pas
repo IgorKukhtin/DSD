@@ -89,6 +89,12 @@ type
     actPrintSing: TdsdPrintAction;
     bbPrintSing: TdxBarButton;
     Sum_AccountSendDebt: TcxGridDBColumn;
+    actPrintGroup: TdsdPrintAction;
+    bbPrintGroup: TdxBarButton;
+    isSalePart: TcxGridDBColumn;
+    AmountKg: TcxGridDBColumn;
+    AmountSh: TcxGridDBColumn;
+    PartKg: TcxGridDBColumn;
   private
     { Private declarations }
   public
