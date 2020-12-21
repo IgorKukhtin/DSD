@@ -59,6 +59,7 @@ BEGIN
        IF (COALESCE(inAmount, 0) <> COALESCE((SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.ID = ioId), 0) OR
            COALESCE(vbCommentTRId, 0) <> COALESCE(inCommentTRID, 0))
           AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+          AND vbUserId <> 11263040 
        THEN
          RAISE EXCEPTION 'Ошибка.Изменятьпозиции количество по строкам сформированным из перемещений по СУН запрещено.';
        END IF;

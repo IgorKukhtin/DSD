@@ -94,11 +94,11 @@ inherited DivisionPartiesForm: TDivisionPartiesForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'AmountDay'
+          Name = 'isBanFiscalSale'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'AmountDay'
-          DataType = ftFloat
+          ComponentItem = 'isBanFiscalSale'
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
     end

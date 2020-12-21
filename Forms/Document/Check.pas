@@ -181,6 +181,10 @@ type
     colDivisionPartiesName: TcxGridDBColumn;
     colisPresent: TcxGridDBColumn;
     colColor_calc: TcxGridDBColumn;
+    actChoiceDivisionPartiesKind: TOpenChoiceForm;
+    actExecDivisionParties: TdsdExecStoredProc;
+    dxBarButton14: TdxBarButton;
+    spUpdateDivisionPartiesId: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -21,8 +21,6 @@ inherited CheckForm: TCheckForm
       inherited cxGrid: TcxGrid
         Width = 804
         Height = 214
-        ExplicitLeft = 272
-        ExplicitTop = 16
         ExplicitWidth = 804
         ExplicitHeight = 214
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1825,7 +1823,7 @@ inherited CheckForm: TCheckForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'astChoicePartionDateKind'
+      Caption = 'actChoiceNDSKind'
       FormName = 'TNDSKindForm'
       FormNameParam.Value = 'TNDSKindForm'
       FormNameParam.DataType = ftString
@@ -1841,6 +1839,7 @@ inherited CheckForm: TCheckForm
       isShowModal = True
     end
     object actExecspUpdateNDSKindId: TdsdExecStoredProc
+      Category = 'DSDLib'
       MoveParams = <>
       AfterAction = actRefresh
       BeforeAction = actChoiceNDSKind
@@ -1853,6 +1852,40 @@ inherited CheckForm: TCheckForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1074#1080#1076' '#1053#1044#1057' '#1087#1086' '#1089#1090#1088#1086#1095#1082#1077
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1074#1080#1076' '#1053#1044#1057' '#1087#1086' '#1089#1090#1088#1086#1095#1082#1077
       ImageIndex = 79
+    end
+    object actChoiceDivisionPartiesKind: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceDivisionPartiesKind'
+      FormName = 'TDivisionPartiesForm'
+      FormNameParam.Value = 'TDivisionPartiesForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DivisionPartiesId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actExecDivisionParties: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actChoiceDivisionPartiesKind
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateDivisionPartiesId
+      StoredProcList = <
+        item
+          StoredProc = spUpdateDivisionPartiesId
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1074#1080#1076' '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081' '#1087#1072#1088#1090#1080#1081' '#1087#1086' '#1089#1090#1088#1086#1095#1082#1077
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1074#1080#1076' '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081' '#1087#1072#1088#1090#1080#1081' '#1087#1086' '#1089#1090#1088#1086#1095#1082#1077
+      ImageIndex = 76
     end
   end
   inherited MasterDS: TDataSource
@@ -1973,6 +2006,10 @@ inherited CheckForm: TCheckForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton14'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2083,6 +2120,10 @@ inherited CheckForm: TCheckForm
       Action = actExecspUpdateNDSKindId
       Category = 0
     end
+    object dxBarButton14: TdxBarButton
+      Action = actExecDivisionParties
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
@@ -2185,6 +2226,11 @@ inherited CheckForm: TCheckForm
       end
       item
         Name = 'NDSKindId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DivisionPartiesId'
         Value = Null
         MultiSelectSeparator = ','
       end>
@@ -3142,6 +3188,7 @@ inherited CheckForm: TCheckForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = -1
       end>
+    ShowFieldImageList = <>
     SearchAsFilter = False
     PropertiesCellList = <>
     Left = 318
@@ -3412,5 +3459,38 @@ inherited CheckForm: TCheckForm
     PackSize = 1
     Left = 650
     Top = 281
+  end
+  object spUpdateDivisionPartiesId: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Check_DivisionPartiesId'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDivisionPartiesId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DivisionPartiesId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 490
+    Top = 329
   end
 end
