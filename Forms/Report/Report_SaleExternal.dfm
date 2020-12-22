@@ -1,28 +1,28 @@
 inherited Report_SaleExternalForm: TReport_SaleExternalForm
   Caption = #1054#1090#1095#1077#1090' <'#1042#1085#1077#1096#1085#1080#1077' '#1055#1088#1086#1076#1072#1078#1080'>'
   ClientHeight = 483
-  ClientWidth = 1077
+  ClientWidth = 1218
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1093
+  ExplicitWidth = 1234
   ExplicitHeight = 521
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 58
-    Width = 1077
+    Width = 1218
     Height = 425
     TabOrder = 3
     ExplicitTop = 58
     ExplicitWidth = 1077
     ExplicitHeight = 425
     ClientRectBottom = 425
-    ClientRectRight = 1077
+    ClientRectRight = 1218
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1077
       ExplicitHeight = 425
       inherited cxGrid: TcxGrid
-        Width = 1077
+        Width = 1218
         Height = 425
         ExplicitWidth = 1077
         ExplicitHeight = 425
@@ -418,7 +418,7 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1077
+    Width = 1218
     Height = 32
     ExplicitWidth = 1077
     ExplicitHeight = 32
@@ -443,7 +443,7 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
       ExplicitLeft = 209
     end
     object edRetail: TcxButtonEdit
-      Left = 503
+      Left = 497
       Top = 5
       Properties.Buttons = <
         item
@@ -454,17 +454,17 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
       Width = 140
     end
     object cxLabel3: TcxLabel
-      Left = 420
+      Left = 416
       Top = 6
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100':'
     end
     object cxLabel4: TcxLabel
-      Left = 655
+      Left = 932
       Top = 6
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 744
+      Left = 1024
       Top = 5
       Properties.Buttons = <
         item
@@ -472,7 +472,24 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
           Kind = bkEllipsis
         end>
       TabOrder = 7
-      Width = 228
+      Width = 182
+    end
+    object cxLabel5: TcxLabel
+      Left = 644
+      Top = 6
+      Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
+    end
+    object edJuridical: TcxButtonEdit
+      Left = 751
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 9
+      Width = 174
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -567,6 +584,23 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
           Name = 'GoodsGroupName'
           Value = Null
           Component = GuidesGoodsGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = GuidesJuridical
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = GuidesJuridical
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -705,6 +739,14 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsGroupId'
         Value = '0'
         Component = GuidesGoodsGroup
@@ -802,6 +844,7 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
         Component = GuidesGoodsGroup
       end
       item
+        Component = GuidesJuridical
       end
       item
       end
@@ -940,8 +983,8 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 784
-    Top = 7
+    Left = 1032
+    Top = 65535
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -954,5 +997,36 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
     Params = <>
     Left = 724
     Top = 334
+  end
+  object GuidesJuridical: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    Key = '0'
+    FormNameParam.Name = 'TJuridical_ObjectForm'
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 816
+    Top = 8
   end
 end

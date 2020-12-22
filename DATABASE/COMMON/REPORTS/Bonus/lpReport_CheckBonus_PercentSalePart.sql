@@ -348,7 +348,8 @@ BEGIN
                          LEFT JOIN gpReport_SaleExternal (inStartDate    := inStartDate    ::TDateTime 
                                                         , inEndDate      := inEndDate      ::TDateTime    
                                                         , inRetailId     := tmp.RetailId   ::Integer      
-                                                        , inGoodsGroupId := 0              ::Integer      
+                                                        , inJuridicalId  := CASE WHEN tmp.RetailId = 310859 THEN 15196 ELSE 0 END ::Integer   -- для Новуса ограничиваем еще юрлицом
+                                                        , inGoodsGroupId := 1832           ::Integer       --1832  Готовая продукция
                                                         , inSession      := inSession      ::TVarChar
                                                         ) AS tmpReport ON 1=1
                    )

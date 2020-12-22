@@ -48,6 +48,9 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     actPrint: TdsdPrintAction;
+    cxLabel5: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    GuidesJuridical: TdsdGuides;
   private
     { Private declarations }
   public

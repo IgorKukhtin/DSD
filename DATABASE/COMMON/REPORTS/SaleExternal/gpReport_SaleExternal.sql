@@ -1,11 +1,13 @@
 -- Function: gpReport_SaleExternal()
 
-DROP FUNCTION IF EXISTS gpReport_SaleExternal (TDateTime, TDateTime, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_SaleExternal (TDateTime, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_SaleExternal (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_SaleExternal(
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
     IN inRetailId           Integer   ,
+    IN inJuridicalId        Integer   ,
     IN inGoodsGroupId       Integer   ,
     IN inSession            TVarChar    -- сессия пользователя
 )
@@ -152,7 +154,7 @@ BEGIN
                     , tmp.AmountKg
                     , tmp.AmountSh
                     , tmp.TotalAmountKg
-                    , CASE WHEN COALESCE (tmp.TotalAmountKg,0) <> 0 THEN tmp.AmountKg / tmp.TotalAmountKg ELSE 0 END :: TFloat AS PartKg
+                    , CASE WHEN COALESCE (tmp.TotalAmountKg,0) <> 0 THEN tmp.AmountKg / tmp.TotalAmountKg *100 ELSE 0 END  AS PartKg
                FROM (
                      SELECT tmpMovementAll.Id                                AS MovementId
       
@@ -246,7 +248,7 @@ BEGIN
                                                                        , inBranchId     := 0              ::Integer      
                                                                        , inAreaId       := 0              ::Integer
                                                                        , inRetailId     := tmpRet.PartnerRealId  ::Integer      
-                                                                       , inJuridicalId  := 0              ::Integer      
+                                                                       , inJuridicalId  := inJuridicalId  ::Integer      
                                                                        , inPaidKindId   := 0              ::Integer
                                                                        , inTradeMarkId  := 0              ::Integer      
                                                                        , inGoodsGroupId := inGoodsGroupId ::Integer      
@@ -293,9 +295,9 @@ BEGIN
                       , Movement.PartnerRealId
                       , Movement.PartnerRealName
                       , Movement.GoodsPropertyName
-                      , tmpMI.AmountSh   :: TFloat  AS AmountSh
-                      , tmpMI.AmountKg   :: TFloat  AS AmountKg
-                      , tmpMI.PartKg     :: TFloat  AS PartKg
+                      , tmpMI.AmountSh   AS AmountSh
+                      , tmpMI.AmountKg   AS AmountKg
+                      , tmpMI.PartKg     AS PartKg
                  FROM tmpMovementAll AS Movement
                       LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
                       INNER JOIN tmpMI ON tmpMI.MovementId = Movement.Id
@@ -319,8 +321,8 @@ BEGIN
            , tmpData.AmountKg   :: TFloat
            , tmpData.PartKg     :: TFloat
            
-           , (COALESCE (tmpReport_rc.SaleReturn_Summ, tmpReport_ret.SaleReturn_Summ)     * tmpData.PartKg) :: TFloat AS TotalSumm_calc               -- Расчетная сумма продаж, грн (от факта)
-           , (COALESCE (tmpReport_rc.SaleReturn_Weight, tmpReport_ret.SaleReturn_Weight) * tmpData.PartKg) :: TFloat AS TotalWeight_calc             -- Раасчетная сумма продаж, кг (от факта)
+           , (COALESCE (tmpReport_rc.SaleReturn_Summ, tmpReport_ret.SaleReturn_Summ)     * tmpData.PartKg/100) :: TFloat AS TotalSumm_calc               -- Расчетная сумма продаж, грн (от факта)
+           , (COALESCE (tmpReport_rc.SaleReturn_Weight, tmpReport_ret.SaleReturn_Weight) * tmpData.PartKg/100) :: TFloat AS TotalWeight_calc             -- Раасчетная сумма продаж, кг (от факта)
            
            , tmpReport.SaleReturn_Summ    :: TFloat
            , tmpReport.Sale_Summ          :: TFloat

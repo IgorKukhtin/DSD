@@ -166,6 +166,7 @@ BEGIN
                                                              AND tmpCCPartner.PartnerId = tmpContractPartner_only.PartnerId
                                --WHERE COALESCE ((SELECT COUNT(*) FROM tmpCCPartner),0) = 0
                                  WHERE tmpCCPartner.PartnerId IS NULL
+                                  AND tmpContractPartner_only.ContractConditionId NOT IN (SELECT DISTINCT tmpCCPartner.ContractConditionId FROM tmpCCPartner )
                                 UNION
                                  -- если вдруг в условии договора есть контрагенты, которых нет в договоре
                                  SELECT tmpContract_full.ContractId AS ContractId

@@ -2017,13 +2017,13 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleExternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleExternalDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleExternalDialogForm');
-  exit;
-
+ // exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceNoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceNoForm');
   exit;

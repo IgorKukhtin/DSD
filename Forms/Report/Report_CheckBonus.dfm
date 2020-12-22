@@ -601,6 +601,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             Caption = #1044#1086#1083#1077#1074#1072#1103' '#1087#1088#1086#1076#1072#1078#1072
             DataBinding.FieldName = 'isSalePart'
             Visible = False
+            Options.Editing = False
             Width = 60
           end
           object AmountKg: TcxGridDBColumn

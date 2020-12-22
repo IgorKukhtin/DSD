@@ -3,7 +3,7 @@ object Report_SaleExternalDialogForm: TReport_SaleExternalDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1042#1085#1077#1096#1085#1080#1077' '#1055#1088#1086#1076#1072#1078#1080'>'
-  ClientHeight = 198
+  ClientHeight = 240
   ClientWidth = 336
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_SaleExternalDialogForm: TReport_SaleExternalDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 62
-    Top = 154
+    Top = 200
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_SaleExternalDialogForm: TReport_SaleExternalDialogForm
   end
   object cxButton2: TcxButton
     Left = 203
-    Top = 154
+    Top = 200
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -80,12 +80,12 @@ object Report_SaleExternalDialogForm: TReport_SaleExternalDialogForm
   end
   object cxLabel1: TcxLabel
     Left = 3
-    Top = 109
+    Top = 154
     Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074
   end
   object edGoodsGroup: TcxButtonEdit
     Left = 89
-    Top = 108
+    Top = 153
     Properties.Buttons = <
       item
         Default = True
@@ -93,6 +93,23 @@ object Report_SaleExternalDialogForm: TReport_SaleExternalDialogForm
       end>
     TabOrder = 9
     Width = 224
+  end
+  object cxLabel5: TcxLabel
+    Left = 8
+    Top = 108
+    Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
+  end
+  object edJuridical: TcxButtonEdit
+    Left = 114
+    Top = 107
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 199
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -168,9 +185,26 @@ object Report_SaleExternalDialogForm: TReport_SaleExternalDialogForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalId'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 245
-    Top = 120
+    Top = 166
   end
   object GuidesRetail: TdsdGuides
     KeyField = 'Id'
@@ -229,6 +263,37 @@ object Report_SaleExternalDialogForm: TReport_SaleExternalDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 160
-    Top = 119
+    Top = 165
+  end
+  object GuidesJuridical: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    Key = '0'
+    FormNameParam.Name = 'TJuridical_ObjectForm'
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 200
+    Top = 112
   end
 end
