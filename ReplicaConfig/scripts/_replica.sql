@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS _replica.clients (
 
 --DROP TABLE IF EXISTS _replica.table_update_data;
 CREATE TABLE IF NOT EXISTS _replica.table_update_data (
-  ID              SERIAL PRIMARY KEY,
+  ID              BIGSERIAL PRIMARY KEY,
   schema_name     TEXT,
   table_name      TEXT,
   pk_keys         TEXT,
