@@ -28,7 +28,7 @@ BEGIN
    inCode:=lfGet_ObjectCode (inCode, zc_Object_User()); 
  
    -- проверка уникальности для свойства <Наименование Пользователя>
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_User(), inUserName);
+   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_User(), inUserName, vbUserId);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_User(), inCode, inUserName);

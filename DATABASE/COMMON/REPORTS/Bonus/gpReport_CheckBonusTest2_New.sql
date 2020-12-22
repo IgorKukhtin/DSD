@@ -1364,6 +1364,99 @@ BEGIN
 
             LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = Object_Juridical.Id
                                     AND tmpObjectBonus.PartnerId   = COALESCE (Object_Partner.Id, 0)
+
+                    --
+     UNION
+       SELECT NULL :: TDateTime AS OperDate_Movement
+            , NULL :: TDateTime AS OperDatePartner
+            , NULL :: TVarChar  AS InvNumber_Movement
+            , NULL :: TVarChar  AS DescName_Movement
+            , tmpData.ContractId_master
+            , tmpData.ContractId_child
+            , tmpData.ContractId_find
+            , tmpData.InvNumber_master ::TVarChar
+            , tmpData.InvNumber_child  ::TVarChar
+            , tmpData.InvNumber_find   ::TVarChar
+
+            , tmpData.ContractTagName_child        ::TVarChar
+            , tmpData.ContractStateKindCode_child  
+
+            , tmpData.InfoMoneyId_master
+            , tmpData.InfoMoneyId_find
+
+            , tmpData.InfoMoneyName_master
+            , tmpData.InfoMoneyName_child
+            , tmpData.InfoMoneyName_find
+
+            , tmpData.JuridicalId
+            , tmpData.JuridicalName
+
+            , tmpData.PaidKindId
+            , tmpData.PaidKindName
+            , tmpData.PaidKindName_Child
+
+            , tmpData.ConditionKindId
+            , tmpData.ConditionKindName
+
+            , tmpData.BonusKindId
+            , tmpData.BonusKindName
+            
+            , tmpData.BranchId
+            , tmpData.BranchName
+            , tmpData.BranchId_inf
+            , tmpData.BranchName_inf
+
+            , tmpData.RetailName
+            , tmpData.PersonalCode
+            , tmpData.PersonalName
+            , tmpData.PartnerId
+            , tmpData.PartnerName
+
+            , tmpData.Value
+            , tmpData.PercentRetBonus
+            , tmpData.PercentRetBonus_fact
+            , tmpData.PercentRetBonus_diff
+
+            , tmpData.PercentRetBonus_fact_weight
+            , tmpData.PercentRetBonus_diff_weight
+
+            , tmpData.Sum_CheckBonus
+            , tmpData.Sum_CheckBonusFact
+            , tmpData.Sum_Bonus
+            , tmpData.Sum_BonusFact
+            , tmpData.Sum_SaleFact
+            , 0  :: TFloat   AS Sum_Account
+            , 0  :: TFloat   AS Sum_AccountSendDebt
+            , tmpData.Sum_Sale
+            , tmpData.Sum_Return
+            , tmpData.Sum_SaleReturnIn
+
+            , tmpData.Sum_Sale_weight
+            , tmpData.Sum_ReturnIn_weight
+            
+            , tmpData.Comment :: TVarChar                        
+            , tmpObjectBonus.Id  AS ReportBonusId
+            , CASE WHEN tmpObjectBonus.Id IS NULL OR tmpObjectBonus.isErased = True THEN TRUE ELSE FALSE END :: Boolean AS isSend
+
+            , ''  :: TVarChar AS FromName_Movement
+            , ''  :: TVarChar AS ToName_Movement
+            , ''  :: TVarChar AS PaidKindName_Movement
+            , ''  :: TVarChar AS ContractCode_Movement
+            , ''  :: TVarChar AS ContractName_Movement
+            , ''  :: TVarChar AS ContractTagName_Movement
+            , 0  :: TFloat   AS TotalCount_Movement
+            , 0  :: TFloat   AS TotalCountPartner_Movement
+            , 0  :: TFloat   AS TotalSumm_Movement
+       FROM gpReport_CheckBonus_PersentSalePart (inStartDate    := inStartDate
+                                               , inEndDate      := inEndDate
+                                               , inPaidKindId   := inPaidKindId
+                                               , inJuridicalId  := inJuridicalId
+                                               , inBranchId     := inBranchId
+                                               , inSession      := inSession
+                                                ) AS tmpData
+
+            LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = tmpData.JuridicalId
+                                    AND tmpObjectBonus.PartnerId   = COALESCE (tmpData.PartnerId, 0)
           ;
 
 END;

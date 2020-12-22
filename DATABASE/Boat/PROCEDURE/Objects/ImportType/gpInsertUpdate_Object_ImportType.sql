@@ -26,9 +26,9 @@ BEGIN
 
    
    -- проверка уникальности <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_ImportType(), inName);
+   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_ImportType(), inName, vbUserId);
    -- проверка уникальности <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_ImportType(), vbCode);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_ImportType(), vbCode, vbUserId);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_ImportType(), vbCode, inName);

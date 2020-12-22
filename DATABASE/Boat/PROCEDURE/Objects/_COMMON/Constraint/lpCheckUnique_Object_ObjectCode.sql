@@ -3,9 +3,11 @@
 -- DROP FUNCTION lpCheckUnique_Object_ObjectCode(integer, integer,integer);
 
 CREATE OR REPLACE FUNCTION lpCheckUnique_Object_ObjectCode(
-inId integer, 
-inDescId integer,
-inObjectCode integer)
+    inId         integer, 
+    inDescId     integer,
+    inObjectCode integer,
+    inUserId     integer
+   )
   RETURNS void AS   
 $BODY$
 DECLARE
@@ -15,7 +17,13 @@ BEGIN
   IF COALESCE( inObjectCode, 0) <> 0 THEN
     IF EXISTS (SELECT ObjectCode FROM Object WHERE DescId = inDescId AND ObjectCode = inObjectCode AND Id <> COALESCE( inId, 0) ) THEN
        SELECT ItemName INTO ObjectName FROM ObjectDesc WHERE Id = inDescId;
-       RAISE EXCEPTION 'Значение "%" не уникально для справочника "%"', inObjectCode, ObjectName;
+       --RAISE EXCEPTION 'Значение "%" не уникально для справочника "%"', inObjectCode, ObjectName;
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Значение "<%>" не уникально для справочника "<%>"'  :: TVarChar
+                                             , inProcedureName := 'lpCheckUnique_Object_ObjectCode'    :: TVarChar
+                                             , inUserId        := inUserId
+                                             , inParam1        := inObjectCode :: TVarChar
+                                             , inParam2        := ObjectName  :: TVarChar
+                                             );
     END IF; 
   END IF; 
 

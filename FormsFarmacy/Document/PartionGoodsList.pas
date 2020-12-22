@@ -20,6 +20,8 @@ type
     GoodsName: TcxGridDBColumn;
     PartionDateKindName: TcxGridDBColumn;
     Remains: TcxGridDBColumn;
+    DivisionPartiesName: TcxGridDBColumn;
+    NDS: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -26,14 +26,14 @@ BEGIN
    inCode:=lfGet_ObjectCode (inCode, zc_Object_Bank());
 
    -- проверка прав уникальности для свойства <Наименование Банка>
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Bank(), inName);
+   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Bank(), inName, vbUserId);
    -- проверка прав уникальности для свойства <Код Банка>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Bank(), inCode);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Bank(), inCode, vbUserId);
 
    -- проверка прав уникальности для свойства <IBAN>
    IF inIBAN <> ''
    THEN
-       PERFORM lpCheckUnique_ObjectString_ValueData (ioId, zc_ObjectString_Bank_IBAN(), inIBAN);
+       PERFORM lpCheckUnique_ObjectString_ValueData (ioId, zc_ObjectString_Bank_IBAN(), inIBAN, vbUserId);
    END IF;
 
    -- сохранили <Объект>

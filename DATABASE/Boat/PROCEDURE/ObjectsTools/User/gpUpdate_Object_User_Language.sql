@@ -18,7 +18,12 @@ BEGIN
       -- Проверка
       IF COALESCE (vbUserId, 0) = 0
       THEN
-          RAISE EXCEPTION 'Ошибка.Не найден пользователь для сессии = <%>', inSession;
+          --RAISE EXCEPTION 'Ошибка.Не найден пользователь для сессии = <%>', inSession;
+          RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Не найден пользователь для сессии = <%>' :: TVarChar
+                                                , inProcedureName := 'gpUpdate_Object_User_Language' :: TVarChar
+                                                , inUserId        := vbUserId
+                                                , inParam1        := inSession :: TVarChar
+                                                );
       END IF;
 
       -- поиск
@@ -26,7 +31,12 @@ BEGIN
       -- Проверка
       IF COALESCE (vbLanguageId, 0) = 0
       THEN
-          RAISE EXCEPTION 'Ошибка.Не найден язык перевода для кода = <%>', inLanguageCode;
+          --RAISE EXCEPTION 'Ошибка.Не найден язык перевода для кода = <%>', inLanguageCode;
+          RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Не найден язык перевода для кода = <%>' :: TVarChar
+                                                , inProcedureName := 'gpUpdate_Object_User_Language' :: TVarChar
+                                                , inUserId        := vbUserId
+                                                , inParam1        := inLanguageCode :: TVarChar
+                                                );
       END IF;
 
 

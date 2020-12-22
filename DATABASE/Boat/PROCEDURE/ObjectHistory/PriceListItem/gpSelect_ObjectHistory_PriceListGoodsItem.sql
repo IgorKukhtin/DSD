@@ -24,7 +24,7 @@ BEGIN
      THEN
          --RAISE EXCEPTION 'Ошибка. Нет прав на Просмотр прайса <%>', lfGet_Object_ValueData (inPriceListId);
          RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка. Нет прав на Просмотр прайса <%>'     :: TVarChar
-                                               , inProcedureName := 'gpInsertUpdate_ObjectHistory_PriceListTax'   :: TVarChar
+                                               , inProcedureName := 'gpSelect_ObjectHistory_PriceListGoodsItem'   :: TVarChar
                                                , inUserId        := vbUserId
                                                , inParam1        := lfGet_Object_ValueData (inPriceListId)        :: TVarChar
                                                );
@@ -38,7 +38,7 @@ BEGIN
      THEN
          --RAISE EXCEPTION 'Ошибка. Нет прав на Просмотр прайса <%>', lfGet_Object_ValueData (inPriceListId);
          RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка. Нет прав на Просмотр прайса <%>'     :: TVarChar
-                                               , inProcedureName := 'gpInsertUpdate_ObjectHistory_PriceListTax'   :: TVarChar
+                                               , inProcedureName := 'gpSelect_ObjectHistory_PriceListGoodsItem'   :: TVarChar
                                                , inUserId        := vbUserId
                                                , inParam1        := lfGet_Object_ValueData (inPriceListId)        :: TVarChar
                                                );

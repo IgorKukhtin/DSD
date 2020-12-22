@@ -441,16 +441,17 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberSPChoiceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberSPChoiceDialogForm');
 
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalUserForm');
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceDeferredCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceDeferredCheckForm');
   exit;
 
+  }
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckForm');
@@ -459,7 +460,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionGoodsListForm');
-
+            {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJackdawsChecksForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJackdawsChecksForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJackdawsChecksEditForm'));

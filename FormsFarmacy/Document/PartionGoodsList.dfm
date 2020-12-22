@@ -1,15 +1,19 @@
 inherited PartionGoodsListForm: TPartionGoodsListForm
   Caption = #1053#1072#1083#1080#1095#1080#1077' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1072' '#1087#1086' '#1089#1088#1086#1082#1072#1084
+  ClientWidth = 755
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 591
+  ExplicitWidth = 771
   ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Width = 755
+    ClientRectRight = 755
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 575
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
+        Width = 755
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
@@ -28,7 +32,7 @@ inherited PartionGoodsListForm: TPartionGoodsListForm
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 267
+            Width = 224
           end
           object PartionDateKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1089#1088#1086#1082#1072
@@ -36,6 +40,22 @@ inherited PartionGoodsListForm: TPartionGoodsListForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 164
+          end
+          object DivisionPartiesName: TcxGridDBColumn
+            Caption = #1056#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1087#1072#1088#1090#1080#1081
+            DataBinding.FieldName = 'DivisionPartiesName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 149
+          end
+          object NDS: TcxGridDBColumn
+            Caption = #1053#1044#1057
+            DataBinding.FieldName = 'NDS'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 56
           end
           object Remains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082

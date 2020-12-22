@@ -31,7 +31,7 @@ BEGIN
    END IF; 
 
    -- проверка уникальности для свойства <Наименование Единицы измерения>
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Measure(), inName); 
+   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Measure(), inName, vbUserId); 
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Measure(), ioCode, inName);

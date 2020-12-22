@@ -597,6 +597,30 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             Options.Editing = False
             Width = 70
           end
+          object isSalePart: TcxGridDBColumn
+            Caption = #1044#1086#1083#1077#1074#1072#1103' '#1087#1088#1086#1076#1072#1078#1072
+            DataBinding.FieldName = 'isSalePart'
+            Visible = False
+            Width = 60
+          end
+          object AmountKg: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086', '#1082#1075' ('#1074#1085#1077#1096#1085'. '#1087#1088#1086#1076'.)'
+            DataBinding.FieldName = 'AmountKg'
+            Visible = False
+            Width = 60
+          end
+          object AmountSh: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1074#1085#1077#1096#1085'. '#1087#1088#1086#1076'.)'
+            DataBinding.FieldName = 'AmountSh'
+            Visible = False
+            Width = 60
+          end
+          object PartKg: TcxGridDBColumn
+            Caption = #1044#1086#1083#1103' '#1087#1088#1086#1076#1072#1078' '#1074' '#1082#1075
+            DataBinding.FieldName = 'PartKg'
+            Visible = False
+            Width = 60
+          end
         end
       end
     end
@@ -953,6 +977,85 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         end>
       ReportName = #1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' '#1076#1083#1103' '#1087#1086#1076#1087#1080#1089#1080
       ReportNameParam.Value = #1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' '#1076#1083#1103' '#1087#1086#1076#1087#1080#1089#1080
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintGroup: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42370d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'StartDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42370d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'EndDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1044#1086#1083#1077#1074#1072#1103' '#1087#1088#1086#1076#1072#1078#1072')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1044#1086#1083#1077#1074#1072#1103' '#1087#1088#1086#1076#1072#1078#1072')'
+      ImageIndex = 17
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 
+            'RetailName;JuridicalName;PartnerName;PaidKindName_Child;Personal' +
+            'Name;ConditionKindName;Value;PersonalName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchName'
+          Value = ''
+          Component = GuidesBranch
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1080#1090#1086#1075#1080')'
+      ReportNameParam.Value = #1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1080#1090#1086#1075#1080')'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1389,6 +1492,14 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintGroup'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1429,13 +1540,17 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       Category = 0
       ImageIndex = 15
     end
+    object bbPrintGroup: TdxBarButton
+      Action = actPrintGroup
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 368
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 80
-    Top = 144
+    Left = 120
+    Top = 184
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -1454,8 +1569,8 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       item
         Component = GuidesBranch
       end>
-    Left = 184
-    Top = 136
+    Left = 192
+    Top = 208
   end
   object GuidesDocumentTaxKind: TdsdGuides
     KeyField = 'Id'
@@ -1622,8 +1737,8 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 525
-    Top = 30
+    Left = 541
+    Top = 6
   end
   object spUpdateSend_No: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ReportBonus'

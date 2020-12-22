@@ -126,7 +126,11 @@ BEGIN
      inBrandName:= TRIM (inBrandName);
      -- проверка
      IF COALESCE (TRIM (inBrandName), '') = '' THEN
-        RAISE EXCEPTION 'Ошибка.Должен быть заполнен BrandName.';
+        --RAISE EXCEPTION 'Ошибка.Должен быть заполнен BrandName.';
+        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Должен быть заполнен BrandName.' :: TVarChar
+                                              , inProcedureName := 'gpInsertUpdate_Object_Boat_From_Excel'    :: TVarChar
+                                              , inUserId        := vbUserId
+                                              );
      END IF;
 
      -- Поиск
@@ -149,7 +153,11 @@ BEGIN
      inProdEngineName:= TRIM (inProdEngineName);
      -- проверка
      IF COALESCE (TRIM (inProdEngineName), '') = '' THEN
-        RAISE EXCEPTION 'Ошибка.Должен быть заполнен Engine.';
+        --RAISE EXCEPTION 'Ошибка.Должен быть заполнен Engine.';
+        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Должен быть заполнен Engine.' :: TVarChar
+                                              , inProcedureName := 'gpInsertUpdate_Object_Boat_From_Excel'    :: TVarChar
+                                              , inUserId        := vbUserId
+                                              );
      END IF;
 
      -- Поиск
@@ -173,7 +181,11 @@ BEGIN
      inProdModelName:= TRIM (inProdModelName);
      -- проверка
      IF COALESCE (TRIM (inProdModelName), '') = '' THEN
-        RAISE EXCEPTION 'Ошибка.Должен быть заполнен Model.';
+        --RAISE EXCEPTION 'Ошибка.Должен быть заполнен Model.';
+        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Должен быть заполнен Model.' :: TVarChar
+                                              , inProcedureName := 'gpInsertUpdate_Object_Boat_From_Excel'    :: TVarChar
+                                              , inUserId        := vbUserId
+                                              );
      END IF;
 
      -- Поиск
@@ -204,15 +216,27 @@ BEGIN
      inArticle:= TRIM (inArticle);
      -- проверка
      IF COALESCE (TRIM (inArticle), '') = '' THEN
-        RAISE EXCEPTION 'Ошибка.Должен быть заполнен Артикул - лодки.';
+        --RAISE EXCEPTION 'Ошибка.Должен быть заполнен Артикул - лодки.';
+        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Должен быть заполнен Артикул - лодки.' :: TVarChar
+                                              , inProcedureName := 'gpInsertUpdate_Object_Boat_From_Excel'    :: TVarChar
+                                              , inUserId        := vbUserId
+                                              );
      END IF;
      -- проверка
      IF COALESCE (TRIM (inCIN), '') = '' THEN
-        RAISE EXCEPTION 'Ошибка.Должен быть заполнен CIN.';
+        --RAISE EXCEPTION 'Ошибка.Должен быть заполнен CIN.';
+        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Должен быть заполнен CIN.' :: TVarChar
+                                              , inProcedureName := 'gpInsertUpdate_Object_Boat_From_Excel'    :: TVarChar
+                                              , inUserId        := vbUserId
+                                              );
      END IF;
      -- проверка
      IF COALESCE (TRIM (inEngineNum), '') = '' THEN
-        RAISE EXCEPTION 'Ошибка.Должен быть заполнен EngineNum.';
+        --RAISE EXCEPTION 'Ошибка.Должен быть заполнен EngineNum.';
+        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Должен быть заполнен EngineNum.' :: TVarChar
+                                              , inProcedureName := 'gpInsertUpdate_Object_Boat_From_Excel'    :: TVarChar
+                                              , inUserId        := vbUserId
+                                              );
      END IF;
 
      -- Поиск
@@ -221,7 +245,7 @@ BEGIN
      IF COALESCE (vbProductId, 0) = 0 OR 1=1
      THEN
          -- Создание
-         vbProductId := (SELECT tmp.ioId FROM gpInsertUpdate_Object_Product (ioId            := vbProductId
+         vbProductId := (SELECT tmp.ioId FROM gpInsertUpdate_Object_Boat_From_Excel (ioId            := vbProductId
                                                                            , inCode          := CASE WHEN vbProductId > 0 THEN (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbProductId) ELSE NEXTVAL ('Object_Product_seq') END :: Integer
                                                                            , inName          := SUBSTRING (inBrandName, 1, 2) || ' ' || inProdModelName || ' ' || inProdEngineName || ' ' || inCIN
                                                                            , inBrandId       := vbBrandId

@@ -44,7 +44,7 @@ BEGIN
    END IF;
    
    -- проверка прав уникальности для свойства <Наименование >
-   --PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_ProdColorItems(), inName);
+   --PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_ProdColorItems(), inName, vbUserId);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_ProdColorItems(), vbCode_calc, '');

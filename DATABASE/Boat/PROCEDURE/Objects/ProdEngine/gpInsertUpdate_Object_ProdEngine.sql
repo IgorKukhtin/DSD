@@ -29,7 +29,7 @@ BEGIN
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_ProdEngine());
 
    -- проверка прав уникальности для свойства <Наименование >
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_ProdEngine(), inName);
+   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_ProdEngine(), inName, vbUserId);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_ProdEngine(), vbCode_calc, inName);

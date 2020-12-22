@@ -22,9 +22,9 @@ BEGIN
    inCode := lfGet_ObjectCode(inCode, zc_Object_Action()); 
    
    -- проверка уникальности для свойства <Наименование Действия>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Action(), inName);
+   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Action(), inName, UserId);
    -- проверка уникальности для свойства <Код Марки Действия>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Action(), inCode);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Action(), inCode, UserId);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Action(), inCode, inName);

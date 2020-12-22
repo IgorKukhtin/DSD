@@ -49,8 +49,14 @@ RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber
              , PercentRetBonus_diff  TFloat
              , PercentRetBonus_fact_weight TFloat
              , PercentRetBonus_diff_weight TFloat
+
+             , AmountKg  TFloat
+             , AmountSh  TFloat
+             , PartKg    TFloat
+
              , Comment TVarChar
              , ReportBonusId Integer, isSend Boolean
+             , isSalePart Boolean
               ) 
 AS
 $BODY$
@@ -196,9 +202,13 @@ BEGIN
            , tmp.PercentRetBonus_diff
            , tmp.PercentRetBonus_fact_weight
            , tmp.PercentRetBonus_diff_weight
+           , tmp.AmountKg  ::TFloat
+           , tmp.AmountSh  ::TFloat
+           , tmp.PartKg    ::TFloat
            , tmp.Comment
            , tmpObjectBonus.Id :: Integer AS ReportBonusId
            , CASE WHEN tmpObjectBonus.Id IS NULL OR tmpObjectBonus.isErased = True THEN TRUE ELSE FALSE END :: Boolean AS isSend
+           , tmp.isSalePart
       FROM lpReport_CheckBonus (inStartDate           := inStartDate                                --gpReport_CheckBonusTest2_old
                               , inEndDate             := inEndDate
                               , inPaidKindID          := zc_Enum_PaidKind_FirstForm()
@@ -249,9 +259,15 @@ BEGIN
            , tmp.PercentRetBonus_diff
            , tmp.PercentRetBonus_fact_weight
            , tmp.PercentRetBonus_diff_weight
+
+           , tmp.AmountKg  ::TFloat
+           , tmp.AmountSh  ::TFloat
+           , tmp.PartKg    ::TFloat
+            
            , tmp.Comment
            , tmpObjectBonus.Id :: Integer AS ReportBonusId
            , CASE WHEN tmpObjectBonus.Id IS NULL OR tmpObjectBonus.isErased = TRUE THEN TRUE ELSE FALSE END :: Boolean AS isSend
+           , tmp.isSalePart
       FROM lpReport_CheckBonus (inStartDate           := inStartDate                                --gpReport_CheckBonusTest2_old
                               , inEndDate             := inEndDate
                               , inPaidKindID          := zc_Enum_PaidKind_SecondForm()

@@ -24,9 +24,9 @@ BEGIN
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Language()); 
    
    -- проверка прав уникальности для свойства <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Language(), inName);
+   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Language(), inName, vbUserId);
    -- проверка прав уникальности для свойства <Код >
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Language(), vbCode_calc);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Language(), vbCode_calc, vbUserId);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Language(), vbCode_calc, inName);

@@ -44,7 +44,11 @@ BEGIN
 
    -- проверка - должен быть Артикул - лодки
    IF COALESCE (inCode, 0) = 0 THEN
-      RAISE EXCEPTION 'Ошибка.Должен быть определен Код - лодки.';
+      --RAISE EXCEPTION 'Ошибка.Должен быть определен Код - лодки.';
+      RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Должен быть определен Код - лодки.' :: TVarChar
+                                            , inProcedureName := 'gpInsertUpdate_Object_Product'    :: TVarChar
+                                            , inUserId        := vbUserId
+                                            );
    END IF;
 
    inName:= SUBSTRING (COALESCE ((SELECT Object.ValueData FROM Object WHERE Object.Id = inBrandId), ''), 1, 2)
@@ -54,7 +58,7 @@ BEGIN
              ;
 
    -- проверка прав уникальности для свойства <Наименование >
- --PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Product(), inName);
+ --PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Product(), inName, vbUserId);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Product(), inCode, inName);

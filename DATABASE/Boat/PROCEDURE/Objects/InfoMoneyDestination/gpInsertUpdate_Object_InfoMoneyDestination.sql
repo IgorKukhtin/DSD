@@ -26,9 +26,9 @@ BEGIN
    vbCode_max:=lfGet_ObjectCode (inCode, zc_Object_InfoMoneyDestination()); 
 
    -- !!! проверка прав уникальности <Наименование>
-   -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_InfoMoneyDestination(), inName);
+   -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_InfoMoneyDestination(), inName,vbUserId);
    -- проверка уникальности для свойства <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_InfoMoneyDestination(), vbCode_max);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_InfoMoneyDestination(), vbCode_max, vbUserId);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_InfoMoneyDestination(), vbCode_max, inName);

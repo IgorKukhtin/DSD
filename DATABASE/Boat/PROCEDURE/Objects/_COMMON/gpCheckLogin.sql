@@ -32,7 +32,7 @@ BEGIN
     IF NOT FOUND THEN
        --RAISE EXCEPTION 'Неправильный логин или пароль';
        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Неправильный логин или пароль' :: TVarChar
-                                             , inProcedureName := 'gpCheckLogin'                             :: TVarChar
+                                             , inProcedureName := 'gpCheckLogin'                  :: TVarChar
                                              , inUserId        := vbUserId
                                              );
     ELSE

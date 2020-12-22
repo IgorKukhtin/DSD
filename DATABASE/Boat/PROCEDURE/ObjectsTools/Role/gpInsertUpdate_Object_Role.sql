@@ -21,7 +21,7 @@ BEGIN
    IF inCode = 0 THEN inCode := NEXTVAL ('Object_Role_seq'); END IF; 
    
    -- проверка уникальности для свойства <Наименование Действия>
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Role(), inName);
+   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Role(), inName, vbUserId);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Role(), inCode, inName);

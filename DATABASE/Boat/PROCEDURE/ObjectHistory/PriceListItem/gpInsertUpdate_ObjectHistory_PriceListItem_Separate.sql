@@ -42,7 +42,7 @@ BEGIN
    IF NOT EXISTS (SELECT 1 FROM Object WHERE Object.Id = vbPriceListId AND Object.DescId = zc_Object_PriceList() AND Object.isErased = FALSE)
    THEN
         --RAISE EXCEPTION 'Ошибка.Прайс <расчет цен по дням - обвалка> не найден';
-        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Прайс <расчет цен по дням - обвалка> не найден' :: TVarChar
+        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Прайс <%> не найден' :: TVarChar
                                               , inProcedureName := 'gpInsertUpdate_ObjectHistory_PriceListItem_Separate'   :: TVarChar
                                               , inUserId        := vbUserId);
    END IF;

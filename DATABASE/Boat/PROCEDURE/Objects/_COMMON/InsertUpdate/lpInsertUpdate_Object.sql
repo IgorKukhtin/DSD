@@ -13,7 +13,14 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object(
 AS
 $BODY$
   DECLARE vbDescId Integer;
+  DECLARE vbUserId Integer;
 BEGIN
+   --
+   vbUserId := (SELECT Object_RoleAccessKey_View.UserId 
+                FROM Object_RoleAccessKey_View
+                WHERE Object_RoleAccessKey_View.AccessKeyId = inAccessKeyId
+                LIMIT 1
+                );
 
    IF COALESCE (ioId, 0) = 0 THEN
       -- добавили новый элемент справочника и вернули значение <Ключ объекта>
@@ -31,7 +38,12 @@ BEGIN
        -- если такой элемент не был найден
        IF NOT FOUND THEN
           -- Ошибка
-          RAISE EXCEPTION 'Ошибка. Запрещаем создание записи с определенным ключом <%>', ioId;
+          --RAISE EXCEPTION 'Ошибка. Запрещаем создание записи с определенным ключом <%>', ioId;
+          RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка. Запрещаем создание записи с определенным ключом <%>' :: TVarChar
+                                                , inProcedureName := 'lpInsertUpdate_Object' :: TVarChar
+                                                , inUserId        := vbUserId
+                                                , inParam1        := ioId                    :: TVarChar
+                                                );
 
           -- добавили новый элемент справочника со значением <Ключ объекта>
           INSERT INTO Object (Id, DescId, ObjectCode, ValueData, AccessKeyId)
@@ -42,7 +54,18 @@ BEGIN
        -- Проверка - т.к. DescId - !!!НЕ МЕНЯЕТСЯ!!!
        IF COALESCE (inDescId, -1) <> COALESCE (vbDescId, -2)
        THEN
-           RAISE EXCEPTION 'Ошибка изменения DescId с <%>(<%>) на <%>(<%>)', (SELECT ItemName FROM ObjectDesc WHERE Id = vbDescId), vbDescId
+           /*RAISE EXCEPTION 'Ошибка изменения DescId с <%>(<%>) на <%>(<%>)', (SELECT ItemName FROM ObjectDesc WHERE Id = vbDescId), vbDescId
+                                                                           , (SELECT ItemName FROM ObjectDesc WHERE Id = inDescId), inDescId;
+           */
+           RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка изменения DescId с <%>(<%>) на <%>(<%>)' :: TVarChar
+                                                 , inProcedureName := 'lpInsertUpdate_Object' :: TVarChar
+                                                 , inUserId        := vbUserId
+                                                 , inParam1        := (SELECT ItemName FROM ObjectDesc WHERE Id = vbDescId) :: TVarChar
+                                                 , inParam2        := vbDescId                                              :: TVarChar
+                                                 , inParam3        := (SELECT ItemName FROM ObjectDesc WHERE Id = inDescId) :: TVarChar
+                                                 , inParam4        := inDescId                                              :: TVarChar
+                                                 );
+
        END IF;
 
    END IF; -- if COALESCE (ioId, 0) = 0

@@ -154,7 +154,7 @@ BEGIN
             , MovementFloat_TotalSumm.ValueData          AS TotalSumm
             , Object_Unit.ValueData                      AS UnitName
             , Object_CashRegister.ValueData              AS CashRegisterName
-            , MovementLinkObject_CheckMember.ObjectId    AS CashMemberId
+            , COALESCE(MovementLinkObject_CheckMember.ObjectId, 0)    AS CashMemberId
             , CASE WHEN MovementString_InvNumberOrder.ValueData <> '' AND COALESCE (Object_CashMember.ValueData, '') = '' THEN zc_Member_Site() ELSE Object_CashMember.ValueData END :: TVarChar AS CashMember
 	        , MovementString_Bayer.ValueData             AS Bayer
 
@@ -191,10 +191,10 @@ BEGIN
             , MIString_GUID.ValueData AS PromoCodeGUID
             , CASE WHEN Movement_PromoCode.DescId <> zc_Movement_Loyalty() THEN 
                    COALESCE(MovementFloat_ChangePercent.ValueData,0) END::TFloat AS PromoCodeChangePercent
-            , Object_MemberSP.Id                                        AS MemberSPId
+            , COALESCE(Object_MemberSP.Id, 0)                                    AS MemberSPId
             , CASE WHEN COALESCE(MovementBoolean_Site.ValueData, False) = True THEN vbSiteDiscount ELSE 0 END::TFloat  AS SiteDiscount
 
-            , Object_PartionDateKind.ID                         AS PartionDateKindId
+            , COALESCE(Object_PartionDateKind.ID, 0)            AS PartionDateKindId
             , Object_PartionDateKind.ValueData                  AS PartionDateKindName
             , COALESCE(ObjectFloat_Month.ValueData, 0)::TFloat  AS AmountMonth
             , MovementDate_Delay.ValueData                      AS DateDelay
@@ -378,4 +378,4 @@ ALTER FUNCTION gpSelect_Movement_CheckLoadCash (TVarChar, TVarChar) OWNER TO pos
 -- тест
 -- 
 
-select * from gpSelect_Movement_CheckLoadCash(inVIPOrder := '315994' ,  inSession := '3');
+select * from gpSelect_Movement_CheckLoadCash(inVIPOrder := '317434' ,  inSession := '3');

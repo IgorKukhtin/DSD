@@ -26,10 +26,10 @@ BEGIN
    vbCode_max:=lfGet_ObjectCode (inCode, zc_Object_InfoMoney());
    
    -- !!! проверка прав уникальности <Наименование>
-   -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_InfoMoney(), inName);
+   -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_InfoMoney(), inName, vbUserId);
 
    -- проверка уникальности <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_InfoMoney(), vbCode_max);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_InfoMoney(), vbCode_max, vbUserId);
 
    -- сохранили объект
    ioId := lpInsertUpdate_Object( ioId, zc_Object_InfoMoney(), vbCode_max, inName);
