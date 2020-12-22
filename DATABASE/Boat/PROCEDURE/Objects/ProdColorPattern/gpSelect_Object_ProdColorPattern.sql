@@ -27,17 +27,13 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , EKPrice TFloat, EKPriceWVAT TFloat
              , EmpfPrice TFloat, EmpfPriceWVAT TFloat
              , BasisPrice TFloat, BasisPriceWVAT TFloat
+             , isEnabled Boolean
               )
 AS
 $BODY$
    DECLARE vbUserId       Integer;
    DECLARE vbPriceWithVAT Boolean;
-   DECLARE vbIsShowAll    Boolean;
 BEGIN
-
-vbIsShowAll:= TRUE;
-vbIsShowAll:= FALSE;
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_ProdColorPattern());
      vbUserId:= lpGetUserBySession (inSession);
@@ -160,10 +156,9 @@ vbIsShowAll:= FALSE;
                            LEFT JOIN ObjectLink AS ObjectLink_Goods_TaxKind
                                                 ON ObjectLink_Goods_TaxKind.ObjectId = Object_Goods.Id
                                                AND ObjectLink_Goods_TaxKind.DescId = zc_ObjectLink_Goods_TaxKind()
-                           LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_Goods_TaxKind.ChildObjectId
 
                            LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                                 ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
+                                                 ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_Goods_TaxKind.ChildObjectId
                                                 AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
 
                            LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
@@ -211,6 +206,8 @@ vbIsShowAll:= FALSE;
           -- расчет базовой цены с НДС, до 2 знаков
         , tmpData.BasisPriceWVAT
 
+        , TRUE :: Boolean AS isEnabled
+
      FROM tmpData
      WHERE tmpData.ColorPatternId = inColorPatternId
         OR inColorPatternId       = 0
@@ -254,6 +251,8 @@ vbIsShowAll:= FALSE;
         , tmpData.BasisPrice
           -- расчет базовой цены с НДС, до 2 знаков
         , tmpData.BasisPriceWVAT
+        
+        , FALSE :: Boolean AS isEnabled
 
      FROM Object AS Object_ColorPattern
           INNER JOIN (SELECT 0                  :: Integer AS Id
@@ -326,9 +325,10 @@ vbIsShowAll:= FALSE;
 
      WHERE Object_ColorPattern.DescId   = zc_Object_ColorPattern()
        AND Object_ColorPattern.isErased = FALSE
-       AND Object_ColorPattern.Id       = inColorPatternId
+       AND (Object_ColorPattern.Id       = inColorPatternId
+         OR inColorPatternId       = 0)
        AND tmpData_check.ColorPatternId IS NULL
-       AND vbIsShowAll                  = TRUE
+       AND inIsShowAll                  = TRUE
      ;
 END;
 $BODY$

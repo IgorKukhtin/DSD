@@ -74,7 +74,7 @@ type
     dsdDBViewAddOnProdColorPattern: TdsdDBViewAddOn;
     cxGridProdColorPattern: TcxGrid;
     cxGridDBTableViewProdColorPattern: TcxGridDBTableView;
-    ObjectName_ch2: TcxGridDBColumn;
+    ProdColorPatternName_ch2: TcxGridDBColumn;
     Value_ch2: TcxGridDBColumn;
     Comment_ch2: TcxGridDBColumn;
     InsertDate_ch2: TcxGridDBColumn;
@@ -147,7 +147,6 @@ type
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
     Value_ch1: TcxGridDBColumn;
-    ObjectCode_ch2: TcxGridDBColumn;
     PanelMaster: TPanel;
     PanelGoods: TPanel;
     PanelProdColorPattern: TPanel;

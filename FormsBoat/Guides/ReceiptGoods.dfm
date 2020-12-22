@@ -338,6 +338,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         object MeasureName: TcxGridDBColumn
           Caption = #1045#1076'. '#1080#1079#1084'.'
           DataBinding.FieldName = 'MeasureName'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
@@ -393,18 +394,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           Options.Editing = False
           Width = 70
         end
-        object EKPrice_summ_colPat: TcxGridDBColumn
-          Caption = 'Total EK (pat.col.)'
-          DataBinding.FieldName = 'EKPrice_summ_colPat'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057' ('#1064#1072#1073#1083#1086#1085#1099' Farbe)'
-          Options.Editing = False
-          Width = 70
-        end
         object EKPrice_summ_goods: TcxGridDBColumn
           Caption = 'Total EK (art.)'
           DataBinding.FieldName = 'EKPrice_summ_goods'
@@ -417,16 +406,15 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           Options.Editing = False
           Width = 70
         end
-        object EKPriceWVAT_summ_colPat: TcxGridDBColumn
-          Caption = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057' (pat.col.)'
-          DataBinding.FieldName = 'EKPriceWVAT_summ_colPat'
+        object EKPrice_summ_colPat: TcxGridDBColumn
+          Caption = 'Total EK (Items)'
+          DataBinding.FieldName = 'EKPrice_summ_colPat'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057' ('#1064#1072#1073#1083#1086#1085#1099' Farbe)'
+          HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057' (Items Boat Structure)'
           Options.Editing = False
           Width = 70
         end
@@ -443,15 +431,16 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           Options.Editing = False
           Width = 70
         end
-        object Basis_summ_colPat: TcxGridDBColumn
-          Caption = 'Total LP (pat.col.)'
-          DataBinding.FieldName = 'Basis_summ_colPat'
+        object EKPriceWVAT_summ_colPat: TcxGridDBColumn
+          Caption = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057' (Items)'
+          DataBinding.FieldName = 'EKPriceWVAT_summ_colPat'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057' ('#1064#1072#1073#1083#1086#1085#1099' Farbe)'
+          HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057' (Items Boat Structure)'
           Options.Editing = False
           Width = 70
         end
@@ -467,16 +456,15 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           Options.Editing = False
           Width = 70
         end
-        object BasisWVAT_summ_colPat: TcxGridDBColumn
-          Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057' (pat.col.)'
-          DataBinding.FieldName = 'BasisWVAT_summ_colPat'
+        object Basis_summ_colPat: TcxGridDBColumn
+          Caption = 'Total LP (Items)'
+          DataBinding.FieldName = 'Basis_summ_colPat'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057' ('#1064#1072#1073#1083#1086#1085#1099' Farbe)'
+          HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057' (Items Boat Structure)'
           Options.Editing = False
           Width = 70
         end
@@ -490,6 +478,19 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057' ('#1082#1086#1084#1087#1083#1077#1082#1090'.)'
+          Options.Editing = False
+          Width = 70
+        end
+        object BasisWVAT_summ_colPat: TcxGridDBColumn
+          Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057' (Items)'
+          DataBinding.FieldName = 'BasisWVAT_summ_colPat'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057' (Items Boat Structure)'
           Options.Editing = False
           Width = 70
         end
@@ -753,6 +754,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         object ProdColorName_ch1: TcxGridDBColumn
           Caption = 'Farbe'
           DataBinding.FieldName = 'ProdColorName'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
@@ -778,7 +780,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           Width = 45
         end
         object Value_servise_ch1: TcxGridDBColumn
-          Caption = 'Value (hours)'
+          Caption = 'Value (servise)'
           DataBinding.FieldName = 'Value_servise'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
@@ -786,6 +788,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077
+          Options.Editing = False
           Width = 63
         end
         object EKPrice_ch1: TcxGridDBColumn
@@ -1085,6 +1088,13 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         OptionsView.HeaderHeight = 40
         OptionsView.Indicator = True
         Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+        object isEnabled_ch2: TcxGridDBColumn
+          Caption = 'Yes/no'
+          DataBinding.FieldName = 'isEnabled'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 35
+        end
         object NPP_ch2: TcxGridDBColumn
           Caption = #8470' '#1087'/'#1087
           DataBinding.FieldName = 'NPP'
@@ -1115,6 +1125,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           Properties.ReadOnly = True
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          Options.Editing = False
           Width = 58
         end
         object ProdColorName_ch2: TcxGridDBColumn
@@ -1191,7 +1202,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           Properties.ReadOnly = True
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Options.Editing = False
           Width = 110
         end
         object MeasureName_ch2: TcxGridDBColumn
@@ -1203,19 +1213,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           Options.Editing = False
           Width = 55
         end
-        object EKPrice_ch2: TcxGridDBColumn
-          Caption = 'Netto EK'
-          DataBinding.FieldName = 'EKPrice'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
-          Options.Editing = False
-          Width = 70
-        end
         object EKPriceWVAT_ch2: TcxGridDBColumn
           Caption = #1062#1077#1085#1072' '#1074#1093'. '#1089' '#1053#1044#1057
           DataBinding.FieldName = 'EKPriceWVAT'
@@ -1226,6 +1223,19 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1089' '#1053#1044#1057
+          Options.Editing = False
+          Width = 70
+        end
+        object EKPrice_ch2: TcxGridDBColumn
+          Caption = 'Netto EK'
+          DataBinding.FieldName = 'EKPrice'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
           Options.Editing = False
           Width = 70
         end
@@ -1427,11 +1437,11 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         end
         item
           Visible = True
-          ItemName = 'bbShowAll_ch1'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'bbShowAll_ch1'
         end
         item
           Visible = True
@@ -1663,7 +1673,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
     object dxBarSubItem1: TdxBarSubItem
       Caption = 'Boat Structure'
       Category = 0
-      Visible = ivAlways
+      Visible = ivNever
       ItemLinks = <
         item
           Visible = True
@@ -1687,7 +1697,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       Category = 0
     end
     object bbShowAll_ch1: TdxBarButton
-      Action = actShowAll_ch1
+      Action = actShowAll_ch2
       Category = 0
     end
   end
@@ -1953,6 +1963,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
     object InsertRecordProdColorPattern: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableViewCh2
       Action = actChoiceFormProdColorPattern2
@@ -1976,9 +1987,9 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'actChoiceFormGoods'
-      FormName = 'TProdColorPatternForm'
-      FormNameParam.Value = 'TProdColorPatternForm'
+      Caption = 'actChoiceFormGoods2'
+      FormName = 'TGoodsForm'
+      FormNameParam.Value = 'TGoodsForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1986,14 +1997,14 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           Name = 'Key'
           Value = Null
           Component = Child2CDS
-          ComponentItem = 'ObjectId'
+          ComponentItem = 'GoodsId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = Child2CDS
-          ComponentItem = 'ObjectName'
+          ComponentItem = 'GoodsName'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -2002,6 +2013,21 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           Value = Null
           Component = Child2CDS
           ComponentItem = 'Article'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = Child2CDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProdColorName'
+          Value = Null
+          Component = Child2CDS
+          ComponentItem = 'ProdColorName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -2037,6 +2063,21 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           Value = Null
           Component = Child1CDS
           ComponentItem = 'Article'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = Child1CDS
+          ComponentItem = 'ObjectCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProdColorName'
+          Value = Null
+          Component = Child1CDS
+          ComponentItem = 'ProdColorName'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -2141,13 +2182,13 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         end>
       isShowModal = False
     end
-    object actShowAll_ch1: TBooleanStoredProcAction
+    object actShowAll_ch2: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect_child1
+      StoredProc = spSelect_child2
       StoredProcList = <
         item
-          StoredProc = spSelect_child1
+          StoredProc = spSelect_child2
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
@@ -2317,6 +2358,14 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       end>
     Params = <
       item
+        Name = 'inIsShowAll'
+        Value = Null
+        Component = actShowAll_ch2
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsErased'
         Value = False
         Component = actShowAllErased
@@ -2378,6 +2427,22 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         Component = Child1CDS
         ComponentItem = 'Value'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioValue_service'
+        Value = Null
+        Component = Child1CDS
+        ComponentItem = 'Value_servise'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsEnabled'
+        Value = True
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -2549,6 +2614,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
   end
   object dsdDBViewAddOnCh2: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewCh2
     OnDblClickActionList = <
       item
         Action = actChoiceGuides
@@ -2585,17 +2651,17 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       end>
     Params = <
       item
-        Name = 'inIsErased'
-        Value = False
-        Component = actShowAllErased
+        Name = 'inIsShowAll'
+        Value = Null
+        Component = actShowAll_ch2
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsShowAll'
-        Value = Null
-        Component = actShowAll_ch1
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowAllErased
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2637,6 +2703,8 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       item
         Name = 'inObjectId'
         Value = Null
+        Component = Child2CDS
+        ComponentItem = 'GoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2656,10 +2724,26 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioValue_service'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsEnabled'
+        Value = Null
+        Component = Child2CDS
+        ComponentItem = 'isEnabled'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 972
-    Top = 376
+    Top = 360
   end
   object spErasedProdColorPattern: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_ReceiptGoodsChild'
@@ -2707,6 +2791,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       end>
     PackSize = 1
     Left = 896
-    Top = 376
+    Top = 392
   end
 end

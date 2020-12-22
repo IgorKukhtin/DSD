@@ -448,6 +448,7 @@ object GoodsForm: TGoodsForm
     Caption = 'PanelPhoto'
     ShowCaption = False
     TabOrder = 5
+    Visible = False
     object Image3: TcxImage
       Left = 305
       Top = 1

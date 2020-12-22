@@ -46,7 +46,6 @@ object ProdColorItemsForm: TProdColorItemsForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.Footer = True
-      OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet

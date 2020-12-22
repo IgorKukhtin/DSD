@@ -46,10 +46,16 @@ object ProdColorPatternForm: TProdColorPatternForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
       OptionsView.Footer = True
-      OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object isEnabled: TcxGridDBColumn
+        Caption = 'Yes/no'
+        DataBinding.FieldName = 'isEnabled'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 35
+      end
       object NPP: TcxGridDBColumn
         Caption = #8470' '#1087'/'#1087
         DataBinding.FieldName = 'NPP'
@@ -297,6 +303,12 @@ object ProdColorPatternForm: TProdColorPatternForm
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = GuidesColorPattern
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
       item
         Component = Owner
         Properties.Strings = (

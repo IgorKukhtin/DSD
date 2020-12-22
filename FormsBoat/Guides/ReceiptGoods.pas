@@ -163,8 +163,9 @@ type
     dxBarSubItem1: TdxBarSubItem;
     bbSetErasedProdColorPattern: TdxBarButton;
     bbUnErasedProdColorPattern: TdxBarButton;
-    actShowAll_ch1: TBooleanStoredProcAction;
+    actShowAll_ch2: TBooleanStoredProcAction;
     bbShowAll_ch1: TdxBarButton;
+    isEnabled_ch2: TcxGridDBColumn;
   private
     { Private declarations }
   public

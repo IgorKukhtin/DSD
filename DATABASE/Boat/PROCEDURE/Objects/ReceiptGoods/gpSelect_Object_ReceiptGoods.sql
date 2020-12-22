@@ -58,30 +58,30 @@ BEGIN
 
         , tmpReceiptGoodsChild AS (SELECT ObjectLink_ReceiptGoods.ChildObjectId  ::Integer  AS ReceiptGoodsId
 
-                                        , SUM (CASE WHEN ObjectLink_ProdColorPattern.ChildObjectId IS NULL THEN ObjectFloat_Value.ValueData * ObjectFloat_EKPrice.ValueData ELSE 0 END) :: TFloat AS EKPrice_summ_goods
+                                        , SUM (CASE WHEN ObjectLink_ProdColorPattern.ChildObjectId IS NULL THEN ObjectFloat_Value.ValueData * COALESCE (ObjectFloat_EKPrice.ValueData, 1) ELSE 0 END) :: TFloat AS EKPrice_summ_goods
                                         , SUM (CASE WHEN ObjectLink_ProdColorPattern.ChildObjectId IS NULL THEN 1 ELSE 0 END
                                                * ObjectFloat_Value.ValueData
-                                               * CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
+                                               * CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 1)
                                                       * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))) :: TFloat AS EKPriceWVAT_summ_goods
                     
                                         , SUM (CASE WHEN ObjectLink_ProdColorPattern.ChildObjectId IS NULL THEN 1 ELSE 0 END
                                                * ObjectFloat_Value.ValueData
                                                * CASE WHEN vbPriceWithVAT = FALSE
-                                                      THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
-                                                      ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                                                      THEN COALESCE (tmpPriceBasis.ValuePrice, 1)
+                                                      ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 1) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
                                                  END)  :: TFloat AS Basis_summ_goods
 
                                         , SUM (CASE WHEN ObjectLink_ProdColorPattern.ChildObjectId IS NULL THEN 1 ELSE 0 END
                                                * ObjectFloat_Value.ValueData
                                                * CASE WHEN vbPriceWithVAT = FALSE
-                                                       THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
-                                                       ELSE COALESCE (tmpPriceBasis.ValuePrice, 0) 
+                                                       THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 1) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                                                       ELSE COALESCE (tmpPriceBasis.ValuePrice, 1) 
                                                   END) ::TFloat BasisWVAT_summ_goods
                                         ------------------
                                         , SUM (CASE WHEN COALESCE (ObjectLink_ProdColorPattern.ChildObjectId,0)<>0 THEN ObjectFloat_Value.ValueData * ObjectFloat_EKPrice.ValueData ELSE 0 END) :: TFloat AS EKPrice_summ_colPat
                                         , SUM (CASE WHEN COALESCE (ObjectLink_ProdColorPattern.ChildObjectId,0)<>0 THEN 1 ELSE 0 END
                                                * ObjectFloat_Value.ValueData
-                                               * CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
+                                               * CAST (ObjectFloat_EKPrice.ValueData
                                                       * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))) :: TFloat AS EKPriceWVAT_summ_colPat
                     
                                         , SUM (CASE WHEN COALESCE (ObjectLink_ProdColorPattern.ChildObjectId,0)<>0 THEN 1 ELSE 0 END
@@ -107,19 +107,18 @@ BEGIN
                                         LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoods
                                                              ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
                                                             AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
-                                        LEFT JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id = ObjectLink_ReceiptGoods.ChildObjectId 
 
                                         LEFT JOIN ObjectLink AS ObjectLink_Object
                                                              ON ObjectLink_Object.ObjectId = Object_ReceiptGoodsChild.Id
-                                                            AND ObjectLink_Object.DescId = zc_ObjectLink_ReceiptGoodsChild_Object()
+                                                            AND ObjectLink_Object.DescId   = zc_ObjectLink_ReceiptGoodsChild_Object()
 
                                         LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern
                                                              ON ObjectLink_ProdColorPattern.ObjectId = Object_ReceiptGoodsChild.Id
-                                                            AND ObjectLink_ProdColorPattern.DescId = zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern()
+                                                            AND ObjectLink_ProdColorPattern.DescId   = zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern()
           
                                         LEFT JOIN ObjectLink AS ObjectLink_Goods
                                                              ON ObjectLink_Goods.ObjectId = ObjectLink_ProdColorPattern.ChildObjectId
-                                                            AND ObjectLink_Goods.DescId = zc_ObjectLink_ProdColorPattern_Goods()
+                                                            AND ObjectLink_Goods.DescId   = zc_ObjectLink_ProdColorPattern_Goods()
 
                                         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (ObjectLink_Object.ChildObjectId, ObjectLink_Goods.ChildObjectId)
 
@@ -142,12 +141,9 @@ BEGIN
                                         LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
                               
                                    WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
-                                    AND (Object_ReceiptGoodsChild.isErased = FALSE OR inIsErased = TRUE)
+                                     AND Object_ReceiptGoodsChild.isErased = FALSE
                                    GROUP BY ObjectLink_ReceiptGoods.ChildObjectId
                                    )
-
-
-
      --
      SELECT 
            Object_ReceiptGoods.Id         AS Id 
@@ -171,7 +167,7 @@ BEGIN
          , ObjectDate_Update.ValueData        AS UpdateDate
          , Object_ReceiptGoods.isErased       AS isErased
 
-         --
+           --
          , ObjectString_GoodsGroupFull.ValueData ::TVarChar  AS GoodsGroupNameFull
          , Object_GoodsGroup.ValueData           ::TVarChar  AS GoodsGroupName
          , ObjectString_Article.ValueData        ::TVarChar  AS Article

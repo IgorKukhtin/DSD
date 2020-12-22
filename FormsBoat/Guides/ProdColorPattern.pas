@@ -78,6 +78,7 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     actShowAll: TBooleanStoredProcAction;
     bbactShowAll: TdxBarButton;
+    isEnabled: TcxGridDBColumn;
   private
     { Private declarations }
   public
