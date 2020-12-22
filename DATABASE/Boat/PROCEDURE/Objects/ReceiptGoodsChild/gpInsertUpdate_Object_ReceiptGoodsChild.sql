@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoodsChild(
     IN inObjectId            Integer   ,
     IN inProdColorPatternId  Integer   , 
     IN inValue               TFloat    , 
-    IN ioValue_service       TFloat    , 
+ INOUT ioValue_service       TFloat    , 
     IN inIsEnabled           Boolean   , 
     IN inSession             TVarChar       -- сессия пользователя
 )
@@ -28,7 +28,7 @@ BEGIN
 
 
    -- замена
-   IF inValue = 0 AND EXISTS (SELECT FROM Object WHERE Object.Id = inObjectId AND Object.DescId =  zc_Object_ReceiptService())
+   IF inValue = 0 AND EXISTS (SELECT 1 FROM Object WHERE Object.Id = inObjectId AND Object.DescId =  zc_Object_ReceiptService())
    THEN
        inValue:= ioValue_service;
    ELSE
@@ -77,7 +77,7 @@ BEGIN
        PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern(), ioId, inProdColorPatternId);
 
        -- замена
-       IF inValue = 0 AND EXISTS (SELECT FROM Object WHERE Object.Id = inObjectId AND Object.DescId =  zc_Object_ReceiptService())
+       IF inValue = 0 AND EXISTS (SELECT 1 FROM Object WHERE Object.Id = inObjectId AND Object.DescId =  zc_Object_ReceiptService())
        THEN
            ioValue_service:= inValue;
            inValue:= 0;

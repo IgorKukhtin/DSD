@@ -43,34 +43,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         DataController.Filter.Options = [fcoCaseInsensitive]
         DataController.Summary.DefaultGroupSummaryItems = <
           item
-            Format = ',0.####'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00'
-            Kind = skSum
-          end
-          item
             Format = ',0.00##'
             Kind = skSum
             Column = EKPrice_summ
@@ -135,34 +107,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
             Format = 'C'#1090#1088#1086#1082': ,0'
             Kind = skCount
             Column = Name
-          end
-          item
-            Format = ',0.####'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00'
-            Kind = skSum
           end
           item
             Format = ',0.00##'
@@ -1068,14 +1012,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         OptionsView.HeaderHeight = 40
         OptionsView.Indicator = True
         Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-        object NPP_ch1: TcxGridDBColumn
-          Caption = #8470' '#1087'/'#1087
-          DataBinding.FieldName = 'NPP'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 40
-        end
         object ReceiptLevelName_ch1: TcxGridDBColumn
           Caption = 'Level'
           DataBinding.FieldName = 'ReceiptLevelName'
@@ -1090,6 +1026,14 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 75
+        end
+        object NPP_ch1: TcxGridDBColumn
+          Caption = #8470' '#1087'/'#1087
+          DataBinding.FieldName = 'NPP'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 40
         end
         object DescName_ch1: TcxGridDBColumn
           Caption = #1069#1083#1077#1084#1077#1085#1090
@@ -1194,6 +1138,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077
+          Options.Editing = False
           Width = 63
         end
         object EKPrice_ch1: TcxGridDBColumn
@@ -1353,8 +1298,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           Options.Editing = False
           Width = 78
         end
-        object ObjectId_ch1: TcxGridDBColumn
-          DataBinding.FieldName = 'ObjectId'
+        object Id_ch1: TcxGridDBColumn
+          DataBinding.FieldName = 'Id'
           Visible = False
           VisibleForCustomization = False
           Width = 60
@@ -1363,8 +1308,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       object ChildView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = GoodsChildDS
-        DataController.DetailKeyFieldNames = 'GoodsId_parent'
-        DataController.MasterKeyFieldNames = 'ObjectId'
+        DataController.DetailKeyFieldNames = 'ReceiptProdModelChildId'
+        DataController.MasterKeyFieldNames = 'Id'
         DataController.Summary.DefaultGroupSummaryItems = <
           item
             Format = ',0.00##'
@@ -1419,7 +1364,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         OptionsView.ColumnAutoWidth = True
         OptionsView.Footer = True
         OptionsView.GroupByBox = False
-        OptionsView.GroupFooters = gfVisibleWhenExpanded
+        OptionsView.GroupSummaryLayout = gslAlignWithColumns
         OptionsView.HeaderAutoHeight = True
         Styles.Content = dmMain.cxContentStyle
         Styles.Inactive = dmMain.cxSelection
@@ -1601,7 +1546,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           Options.Editing = False
           Width = 70
         end
-        object GoodsId_parent_ch3: TcxGridDBColumn
+        object ReceiptProdModelChildId_ch3: TcxGridDBColumn
           DataBinding.FieldName = 'GoodsId_parent'
           Visible = False
           VisibleForCustomization = False
@@ -2664,8 +2609,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 224
-    Top = 416
+    Left = 376
+    Top = 352
   end
   object spSelect_Goods: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ReceiptProdModelChild_Goods'
@@ -2767,6 +2712,15 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioValue_service'
+        Value = Null
+        Component = GoodsCDS
+        ComponentItem = 'Value_service'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outEKPrice_summ'
         Value = Null
         Component = GoodsCDS
@@ -2799,11 +2753,10 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 16
-    Top = 344
+    Left = 40
+    Top = 288
   end
   object spInsertUpdate_ProdColorPattern: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_ReceiptProdModelChild'
     DataSet = ProdColorPatternCDS
     DataSets = <
       item
@@ -2914,7 +2867,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     Top = 320
   end
   object spErasedProdColorPattern: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_ProdColorPattern'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2938,7 +2890,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     Top = 240
   end
   object spUnErasedProdColorPattern: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_ProdColorPattern'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -3122,8 +3073,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   object GoodsChildCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
-    IndexFieldNames = 'GoodsId_parent'
-    MasterFields = 'ObjectId'
+    IndexFieldNames = 'ReceiptProdModelChildId'
+    MasterFields = 'Id'
     MasterSource = GoodsDS
     PacketRecords = 0
     Params = <>

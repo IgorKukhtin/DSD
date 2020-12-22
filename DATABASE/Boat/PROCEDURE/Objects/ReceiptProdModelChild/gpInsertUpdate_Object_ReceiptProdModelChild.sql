@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_Object_ReceiptProdModelChild()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModelChild(Integer, TVarChar, Integer, Integer, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModelChild(Integer, TVarChar, Integer, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModelChild (Integer, TVarChar, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModelChild (Integer, TVarChar, Integer, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModelChild (Integer, TVarChar, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptProdModelChild(
  INOUT ioId                  Integer   ,    -- ключ объекта <>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptProdModelChild(
     IN inObjectId            Integer   ,
     IN inReceiptLevelId      Integer   ,
     IN inValue               TFloat    , 
+ INOUT ioValue_service       TFloat    , 
    OUT outEKPrice_summ       TFloat    ,
    OUT outEKPriceWVAT_summ   TFloat    ,
    OUT outBasis_summ         TFloat    ,
@@ -23,10 +25,29 @@ $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbPriceWithVAT Boolean;
 BEGIN
-   
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ReceiptProdModelChild());
    vbUserId:= lpGetUserBySession (inSession);
+
+
+   -- замена
+   IF inValue = 0 AND EXISTS (SELECT FROM Object WHERE Object.Id = inObjectId AND Object.DescId =  zc_Object_ReceiptService())
+   THEN
+       inValue:= ioValue_service;
+   ELSE
+       ioValue_service:= 0;
+   END IF;
+
+
+   -- Проверка
+   IF COALESCE (inObjectId, 0) = 0
+   THEN
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Элемент не установлен.'
+                                             , inProcedureName := 'gpInsertUpdate_Object_ReceiptProdModelChild'
+                                             , inUserId        := vbUserId
+                                              );
+   END IF;
+
 
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -56,6 +77,15 @@ BEGIN
       -- сохранили свойство <Пользователь (корр)>
       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Update(), ioId, vbUserId);
    END IF;
+
+
+   -- замена
+   IF inValue = 0 AND EXISTS (SELECT 1 FROM Object WHERE Object.Id = inObjectId AND Object.DescId =  zc_Object_ReceiptService())
+   THEN
+       ioValue_service:= inValue;
+       inValue:= 0;
+   END IF;
+
 
    -- Определили
    vbPriceWithVAT:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = zc_PriceList_Basis() AND ObjectBoolean.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT());
