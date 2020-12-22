@@ -92,9 +92,20 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_ReceiptGoodsChild_Value() RETURNS Inte
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_ReceiptGoodsChild(), 'zc_ObjectFloat_ReceiptGoodsChild_Value', 'Значение' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReceiptGoodsChild_Value');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_ReceiptService_EKPrice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReceiptService_EKPrice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ReceiptService(), 'zc_ObjectFloat_ReceiptService_EKPrice', 'Вх. цена без ндс' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReceiptService_EKPrice');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_ReceiptService_SalePrice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReceiptService_SalePrice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ReceiptService(), 'zc_ObjectFloat_ReceiptService_SalePrice', 'Цена продажи без ндс' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReceiptService_SalePrice');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.12.20         * zc_ObjectFloat_ReceiptService_EKPrice
+                    zc_ObjectFloat_ReceiptService_SalePrice
  01.12.20         * zc_ObjectFloat_ReceiptProdModelChild_Value
                     zc_ObjectFloat_ReceiptGoodsChild_Value
  11.11.20         * zc_ObjectFloat_Goods_...

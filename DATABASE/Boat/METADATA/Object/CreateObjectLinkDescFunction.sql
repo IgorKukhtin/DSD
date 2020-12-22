@@ -291,10 +291,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_TranslateMessage_Parent() RETURNS Integ
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_TranslateMessage_Parent', 'Перевод Слов', zc_Object_TranslateMessage(), zc_Object_TranslateWord() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_TranslateMessage_Parent');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptService_TaxKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptService_TaxKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ReceiptService_TaxKind', 'Тип НДС', zc_Object_ReceiptService(), zc_Object_TaxKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptService_TaxKind');
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.12.20         * zc_ObjectLink_ReceiptService_TaxKind
  15.12.20         * zc_ObjectLink_TranslateMessage_Language
                     zc_ObjectLink_TranslateMessage_Parent
  12.12.20         * zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel

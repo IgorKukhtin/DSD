@@ -7,7 +7,9 @@ CREATE OR REPLACE FUNCTION gpGet_Object_ReceiptService(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Article TVarChar
-             , Comment TVarChar) 
+             , Comment TVarChar
+             , TaxKindId Integer, TaxKindName TVarChar
+             , EKPrice TFloat, SalePrice TFloat) 
 AS
 $BODY$
 BEGIN
@@ -24,6 +26,10 @@ BEGIN
            , '' :: TVarChar    AS Name
            , '' :: TVarChar    AS Article
            , '' :: TVarChar    AS Comment
+           , 0  :: Integer     AS TaxKindId
+           , '' :: TVarChar    AS TaxKindName
+           , 0  :: TFloat      AS EKPrice
+           , 0  :: TFloat      AS SalePrice
        ;
    ELSE
        RETURN QUERY
@@ -33,6 +39,12 @@ BEGIN
            , Object_ReceiptService.ValueData  AS Name
            , ObjectString_Article.ValueData   AS Article
            , COALESCE (ObjectString_Comment.ValueData, NULL) :: TVarChar AS Comment
+
+           , Object_TaxKind.Id                                     AS TaxKindId
+           , Object_TaxKind.ValueData                              AS TaxKindName
+           , COALESCE (ObjectFloat_EKPrice.ValueData,0)   ::TFloat AS EKPrice
+           , COALESCE (ObjectFloat_SalePrice.ValueData,0) ::TFloat AS SalePrice
+           
        FROM Object AS Object_ReceiptService
            LEFT JOIN ObjectString AS ObjectString_Comment
                                   ON ObjectString_Comment.ObjectId = Object_ReceiptService.Id
@@ -40,6 +52,20 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_Article
                                   ON ObjectString_Article.ObjectId = Object_ReceiptService.Id
                                  AND ObjectString_Article.DescId = zc_ObjectString_Article()
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
+                                 ON ObjectFloat_EKPrice.ObjectId = Object_ReceiptService.Id
+                                AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_ReceiptService_EKPrice()
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_SalePrice
+                                 ON ObjectFloat_SalePrice.ObjectId = Object_ReceiptService.Id
+                                AND ObjectFloat_SalePrice.DescId = zc_ObjectFloat_ReceiptService_SalePrice()
+
+           LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+                                ON ObjectLink_TaxKind.ObjectId = Object_ReceiptService.Id
+                               AND ObjectLink_TaxKind.DescId = zc_ObjectLink_ReceiptService_TaxKind()
+           LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
+
        WHERE Object_ReceiptService.Id = inId;
    END IF;
 

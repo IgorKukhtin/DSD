@@ -18,7 +18,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  dsdGuides, cxMaskEdit, cxButtonEdit;
 
 type
   TReceiptServiceEditForm = class(TParentForm)
@@ -41,6 +42,13 @@ type
     edComment: TcxTextEdit;
     edArticle: TcxTextEdit;
     cxLabel18: TcxLabel;
+    cxLabel17: TcxLabel;
+    edTaxKind: TcxButtonEdit;
+    GuidesTaxKind: TdsdGuides;
+    cxLabel15: TcxLabel;
+    edEKPrice: TcxCurrencyEdit;
+    edSalePrice: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
   private
     { Private declarations }
   public
