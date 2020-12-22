@@ -77,37 +77,37 @@ BEGIN
          , Object_ProdColor.ValueData            :: TVarChar AS ProdColorName
          , Object_Measure.ValueData              ::TVarChar  AS MeasureName
 
-         , ObjectFloat_EKPrice.ValueData   ::TFloat   AS EKPrice
-         , CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
+         , COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0)   ::TFloat   AS EKPrice
+         , CAST (COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0)
               * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS EKPriceWVAT-- расчет входной цены с НДС, до 4 знаков
 
           -- расчет базовой цены без НДС, до 2 знаков
         , CASE WHEN vbPriceWithVAT = FALSE
-               THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
-               ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+               THEN COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0)
+               ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
           END ::TFloat  AS BasisPrice   -- сохраненная цена - цена без НДС
 
           -- расчет базовой цены с НДС, до 2 знаков
         , CASE WHEN vbPriceWithVAT = FALSE
-               THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
-               ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
+               THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+               ELSE COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0)
           END ::TFloat  AS BasisPriceWVAT
 
-        , (ObjectFloat_Value.ValueData * COALESCE (ObjectFloat_EKPrice.ValueData, 1)) :: TFloat AS EKPrice_summ
+        , (ObjectFloat_Value.ValueData * COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0)) :: TFloat AS EKPrice_summ
         , (ObjectFloat_Value.ValueData
-             * CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 1)
+             * CAST (COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0)
                     * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))) :: TFloat AS EKPriceWVAT_summ
                     
         , (ObjectFloat_Value.ValueData
             * CASE WHEN vbPriceWithVAT = FALSE
-                   THEN COALESCE (tmpPriceBasis.ValuePrice, 1)
-                   ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 1) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                   THEN COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0)
+                   ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
               END)  :: TFloat AS Basis_summ
 
         , (ObjectFloat_Value.ValueData
             * CASE WHEN vbPriceWithVAT = FALSE
-                    THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 1) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
-                    ELSE COALESCE (tmpPriceBasis.ValuePrice, 1) 
+                    THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                    ELSE COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0) 
                END) ::TFloat BasisWVAT_summ
 
      FROM Object AS Object_ReceiptGoodsChild
@@ -177,11 +177,21 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
                                 ON ObjectFloat_EKPrice.ObjectId = Object_Object.Id
                                AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
+          LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptService_EKPrice
+                                ON ObjectFloat_ReceiptService_EKPrice.ObjectId = Object_Object.Id
+                               AND ObjectFloat_ReceiptService_EKPrice.DescId = zc_ObjectFloat_ReceiptService_EKPrice()
+
+          LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptService_SalePrice
+                                ON ObjectFloat_ReceiptService_SalePrice.ObjectId = Object_Object.Id
+                               AND ObjectFloat_ReceiptService_SalePrice.DescId = zc_ObjectFloat_ReceiptService_SalePrice()
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_TaxKind
                                ON ObjectLink_Goods_TaxKind.ObjectId = Object_Object.Id
                               AND ObjectLink_Goods_TaxKind.DescId = zc_ObjectLink_Goods_TaxKind()
-          LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_Goods_TaxKind.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_ReceiptService_TaxKind
+                               ON ObjectLink_ReceiptService_TaxKind.ObjectId = Object_Object.Id
+                              AND ObjectLink_ReceiptService_TaxKind.DescId = zc_ObjectLink_ReceiptService_TaxKind()
+          LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = COALESCE (ObjectLink_Goods_TaxKind.ChildObjectId, ObjectLink_ReceiptService_TaxKind.ChildObjectId)
 
           LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
                                 ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
