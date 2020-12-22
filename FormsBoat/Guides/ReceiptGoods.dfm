@@ -542,7 +542,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           item
             Format = ',0.00##;-,0.00##; ;'
             Kind = skSum
-            Column = Value_servise_ch1
+            Column = Value_service_ch1
           end
           item
             Format = ',0.00##'
@@ -578,7 +578,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           item
             Format = ',0.00##;-,0.00##; ;'
             Kind = skSum
-            Column = Value_servise_ch1
+            Column = Value_service_ch1
           end
           item
             Format = ',0.00##'
@@ -714,18 +714,18 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077
+          HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
           Width = 45
         end
-        object Value_servise_ch1: TcxGridDBColumn
-          Caption = 'Value (servise)'
-          DataBinding.FieldName = 'Value_servise'
+        object Value_service_ch1: TcxGridDBColumn
+          Caption = 'Value (service)'
+          DataBinding.FieldName = 'Value_service'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077
+          HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
           Options.Editing = False
           Width = 63
         end
@@ -2334,19 +2334,19 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inValue'
+        Name = 'ioValue'
         Value = Null
         Component = Child1CDS
         ComponentItem = 'Value'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
         Name = 'ioValue_service'
         Value = Null
         Component = Child1CDS
-        ComponentItem = 'Value_servise'
+        ComponentItem = 'Value_service'
         DataType = ftFloat
         ParamType = ptInputOutput
         MultiSelectSeparator = ','

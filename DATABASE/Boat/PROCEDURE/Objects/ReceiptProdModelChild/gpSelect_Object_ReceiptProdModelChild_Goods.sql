@@ -279,7 +279,7 @@ BEGIN
          , tmpReceiptProdModelChild.ValueData               AS Comment
 
          , CASE WHEN ObjectDesc.Id = zc_Object_Goods()          THEN tmpReceiptProdModelChild.Value ELSE 0 END ::TFloat   AS Value
-         , CASE WHEN ObjectDesc.Id = zc_Object_ReceiptService() THEN tmpReceiptProdModelChild.Value ELSE 0 END ::TFloat   AS Value_servise
+         , CASE WHEN ObjectDesc.Id = zc_Object_ReceiptService() THEN tmpReceiptProdModelChild.Value ELSE 0 END ::TFloat   AS Value_service
 
          , tmpReceiptProdModelChild.ReceiptProdModelId
 

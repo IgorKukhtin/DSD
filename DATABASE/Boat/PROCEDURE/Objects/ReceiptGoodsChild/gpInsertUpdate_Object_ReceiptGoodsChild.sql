@@ -11,12 +11,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoodsChild(
     IN inReceiptGoodsId      Integer   ,
     IN inObjectId            Integer   ,
     IN inProdColorPatternId  Integer   , 
-    IN inValue               TFloat    , 
+ INOUT ioValue               TFloat    , 
  INOUT ioValue_service       TFloat    , 
     IN inIsEnabled           Boolean   , 
     IN inSession             TVarChar       -- сессия пользователя
 )
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -28,9 +28,9 @@ BEGIN
 
 
    -- замена
-   IF inValue = 0 AND EXISTS (SELECT 1 FROM Object WHERE Object.Id = inObjectId AND Object.DescId =  zc_Object_ReceiptService())
+   IF ioValue = 0 AND EXISTS (SELECT 1 FROM Object WHERE Object.Id = inObjectId AND Object.DescId =  zc_Object_ReceiptService())
    THEN
-       inValue:= ioValue_service;
+       ioValue:= ioValue_service;
    ELSE
        ioValue_service:= 0;
    END IF;
@@ -67,7 +67,7 @@ BEGIN
        ioId := lpInsertUpdate_Object(ioId, zc_Object_ReceiptGoodsChild(), 0, inComment);
     
        -- сохранили свойство <>
-       PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReceiptGoodsChild_Value(), ioId, inValue);
+       PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReceiptGoodsChild_Value(), ioId, ioValue);
           
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods(), ioId, inReceiptGoodsId);
@@ -77,10 +77,10 @@ BEGIN
        PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern(), ioId, inProdColorPatternId);
 
        -- замена
-       IF inValue = 0 AND EXISTS (SELECT 1 FROM Object WHERE Object.Id = inObjectId AND Object.DescId =  zc_Object_ReceiptService())
+       IF EXISTS (SELECT 1 FROM Object WHERE Object.Id = inObjectId AND Object.DescId =  zc_Object_ReceiptService())
        THEN
-           ioValue_service:= inValue;
-           inValue:= 0;
+           ioValue_service:= ioValue;
+           ioValue:= 0;
        END IF;
 
    END IF;

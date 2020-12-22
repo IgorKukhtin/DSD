@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptProdModelChild(
     IN inReceiptProdModelId  Integer   ,
     IN inObjectId            Integer   ,
     IN inReceiptLevelId      Integer   ,
-    IN inValue               TFloat    , 
+ INOUT ioValue               TFloat    , 
  INOUT ioValue_service       TFloat    , 
    OUT outEKPrice_summ       TFloat    ,
    OUT outEKPriceWVAT_summ   TFloat    ,
@@ -31,9 +31,9 @@ BEGIN
 
 
    -- замена
-   IF inValue = 0 AND EXISTS (SELECT FROM Object WHERE Object.Id = inObjectId AND Object.DescId =  zc_Object_ReceiptService())
+   IF ioValue = 0 AND EXISTS (SELECT FROM Object WHERE Object.Id = inObjectId AND Object.DescId =  zc_Object_ReceiptService())
    THEN
-       inValue:= ioValue_service;
+       ioValue:= ioValue_service;
    ELSE
        ioValue_service:= 0;
    END IF;
@@ -56,7 +56,7 @@ BEGIN
    ioId := lpInsertUpdate_Object(ioId, zc_Object_ReceiptProdModelChild(), 0, inComment);
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReceiptProdModelChild_Value(), ioId, inValue);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReceiptProdModelChild_Value(), ioId, ioValue);
       
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel(), ioId, inReceiptProdModelId);
@@ -80,10 +80,10 @@ BEGIN
 
 
    -- замена
-   IF inValue = 0 AND EXISTS (SELECT 1 FROM Object WHERE Object.Id = inObjectId AND Object.DescId =  zc_Object_ReceiptService())
+   IF EXISTS (SELECT 1 FROM Object WHERE Object.Id = inObjectId AND Object.DescId =  zc_Object_ReceiptService())
    THEN
-       ioValue_service:= inValue;
-       inValue:= 0;
+       ioValue_service:= ioValue;
+       ioValue:= 0;
    END IF;
 
 
@@ -91,18 +91,18 @@ BEGIN
    vbPriceWithVAT:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = zc_PriceList_Basis() AND ObjectBoolean.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT());
 
    -- если выбран товар получаем цены и возвращаем суммы
-   SELECT (inValue * ObjectFloat_EKPrice.ValueData) :: TFloat AS EKPrice_summ
-        , (inValue
+   SELECT (ioValue * ObjectFloat_EKPrice.ValueData) :: TFloat AS EKPrice_summ
+        , (ioValue
              * CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
                     * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))) :: TFloat AS EKPriceWVAT_summ
                     
-        , (inValue
+        , (ioValue
             * CASE WHEN vbPriceWithVAT = FALSE
                    THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
                    ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
               END)  :: TFloat AS Basis_summ
 
-        , (inValue
+        , (ioValue
             * CASE WHEN vbPriceWithVAT = FALSE
                     THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
                     ELSE COALESCE (tmpPriceBasis.ValuePrice, 0) 
