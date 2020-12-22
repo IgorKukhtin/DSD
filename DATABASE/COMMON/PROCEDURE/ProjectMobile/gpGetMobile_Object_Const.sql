@@ -67,8 +67,14 @@ BEGIN
      -- нашли параметры
      SELECT ObjectLink_User_Member.ChildObjectId AS MemberId
           , lfSelect.PersonalId                  AS PersonalId
-          , lfSelect.UnitId                      AS UnitId
-          , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis()) AS BranchId
+          , CASE WHEN inSession = '5866615' -- Матіюк В.Ю.
+                      THEN 8411 -- Склад ГП ф.Киев
+                 ELSE lfSelect.UnitId                      
+            END AS UnitId
+          , CASE WHEN inSession = '5866615' -- Матіюк В.Ю.
+                      THEN 8379 -- филиал Киев
+                 ELSE COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
+            END AS BranchId
             INTO vbMemberId, vbPersonalId, vbUnitId, vbBranchId
      FROM ObjectLink AS ObjectLink_User_Member
           LEFT JOIN lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
