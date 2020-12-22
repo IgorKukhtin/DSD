@@ -492,35 +492,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         DataController.Filter.Options = [fcoCaseInsensitive]
         DataController.Summary.DefaultGroupSummaryItems = <
           item
-            Format = ',0.####'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = Value_ch2
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-          end
-          item
             Format = ',0.00##'
             Kind = skSum
             Column = EKPrice_summ_ch2
@@ -544,36 +515,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           item
             Format = 'C'#1090#1088#1086#1082': ,0'
             Kind = skCount
-            Column = ProdColorPatternName_ch2
-          end
-          item
-            Format = ',0.####'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = Value_ch2
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
+            Column = ProdColorGroupName_ch2
           end
           item
             Format = ',0.00##'
@@ -921,10 +863,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         DataController.Filter.Options = [fcoCaseInsensitive]
         DataController.Summary.DefaultGroupSummaryItems = <
           item
-            Format = ',0.####'
-            Kind = skSum
-          end
-          item
             Format = ',0.00##'
             Kind = skSum
             Column = EKPrice_summ_ch1
@@ -955,14 +893,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
             Column = Value_servise_ch1
           end>
         DataController.Summary.FooterSummaryItems = <
-          item
-            Format = 'C'#1090#1088#1086#1082': ,0'
-            Kind = skCount
-          end
-          item
-            Format = ',0.####'
-            Kind = skSum
-          end
           item
             Format = 'C'#1090#1088#1086#1082': ,0'
             Kind = skCount
