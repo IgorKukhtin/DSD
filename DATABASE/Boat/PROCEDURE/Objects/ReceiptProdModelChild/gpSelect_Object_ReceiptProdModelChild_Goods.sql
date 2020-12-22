@@ -57,7 +57,6 @@ BEGIN
                     THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
                     ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
                END  :: TFloat AS BasisPrice
-
                -- Цена продажи с ндс
              , CASE WHEN vbPriceWithVAT = FALSE
                     THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
@@ -173,7 +172,7 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_Object
                                   ON ObjectLink_Object.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
                                  AND ObjectLink_Object.DescId   = zc_ObjectLink_ReceiptGoodsChild_Object()
-             -- без этой структуры
+             -- с этой структурой
              LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern
                                   ON ObjectLink_ProdColorPattern.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
                                  AND ObjectLink_ProdColorPattern.DescId   = zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern()
@@ -182,7 +181,8 @@ BEGIN
                                    ON ObjectFloat_Value.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
                                   AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ReceiptGoodsChild_Value()
 
-             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Object.ChildObjectId
+             -- !!!с этой структурой!!!
+             INNER JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Object.ChildObjectId
 
              --
              LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
@@ -224,7 +224,7 @@ BEGIN
              LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
 
         -- без этой структуры
-        WHERE ObjectLink_ProdColorPattern.ChildObjectId IS NULL
+        -- WHERE ObjectLink_ProdColorPattern.ChildObjectId IS NULL
        );
 
 
@@ -309,10 +309,10 @@ BEGIN
          , tmpChild.Basis_summ        :: TFloat AS BasisPrice
          , tmpChild.BasisWVAT_summ    :: TFloat AS BasisPriceWVAT
 
-        , tmpChild.EKPrice_summ       :: TFloat AS EKPrice_summ
-        , tmpChild.EKPriceWVAT_summ   :: TFloat AS EKPriceWVAT_summ
-        , tmpChild.Basis_summ         :: TFloat AS Basis_summ
-        , tmpChild.BasisWVAT_summ     :: TFloat AS BasisWVAT_summ
+         , tmpChild.EKPrice_summ       :: TFloat AS EKPrice_summ
+         , tmpChild.EKPriceWVAT_summ   :: TFloat AS EKPriceWVAT_summ
+         , tmpChild.Basis_summ         :: TFloat AS Basis_summ
+         , tmpChild.BasisWVAT_summ     :: TFloat AS BasisWVAT_summ
 
      FROM tmpReceiptProdModelChild
 

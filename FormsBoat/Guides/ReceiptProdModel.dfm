@@ -61,46 +61,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
             Format = ',0.00##'
             Kind = skSum
             Column = BasisWVAT_summ
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = EKPrice_summ_colPat
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = EKPrice_summ_goods
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = EKPriceWVAT_summ_colPat
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = EKPriceWVAT_summ_goods
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = Basis_summ_colPat
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = Basis_summ_goods
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = BasisWVAT_summ_colPat
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = BasisWVAT_summ_goods
           end>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -127,46 +87,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
             Format = ',0.00##'
             Kind = skSum
             Column = BasisWVAT_summ
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = EKPrice_summ_colPat
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = EKPrice_summ_goods
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = EKPriceWVAT_summ_colPat
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = EKPriceWVAT_summ_goods
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = Basis_summ_colPat
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = Basis_summ_goods
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = BasisWVAT_summ_colPat
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = BasisWVAT_summ_goods
           end>
         DataController.Summary.SummaryGroups = <>
         Images = dmMain.SortImageList
@@ -291,106 +211,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1048#1058#1054#1043#1054' '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
-          Options.Editing = False
-          Width = 70
-        end
-        object EKPrice_summ_goods: TcxGridDBColumn
-          Caption = 'Total EK (art.)'
-          DataBinding.FieldName = 'EKPrice_summ_goods'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057' ('#1082#1086#1084#1087#1083#1077#1082#1090'.)'
-          Options.Editing = False
-          Width = 70
-        end
-        object EKPrice_summ_colPat: TcxGridDBColumn
-          Caption = 'Total EK (Items)'
-          DataBinding.FieldName = 'EKPrice_summ_colPat'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057' (Items Boat Structure)'
-          Options.Editing = False
-          Width = 70
-        end
-        object EKPriceWVAT_summ_goods: TcxGridDBColumn
-          Caption = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057' (art.)'
-          DataBinding.FieldName = 'EKPriceWVAT_summ_goods'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057' ('#1082#1086#1084#1087#1083#1077#1082#1090'.)'
-          Options.Editing = False
-          Width = 70
-        end
-        object EKPriceWVAT_summ_colPat: TcxGridDBColumn
-          Caption = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057' (Items)'
-          DataBinding.FieldName = 'EKPriceWVAT_summ_colPat'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057' (Items Boat Structure)'
-          Options.Editing = False
-          Width = 70
-        end
-        object Basis_summ_goods: TcxGridDBColumn
-          Caption = 'Total LP (art.)'
-          DataBinding.FieldName = 'Basis_summ_goods'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057' ('#1082#1086#1084#1087#1083#1077#1082#1090'.)'
-          Options.Editing = False
-          Width = 70
-        end
-        object Basis_summ_colPat: TcxGridDBColumn
-          Caption = 'Total LP (Items)'
-          DataBinding.FieldName = 'Basis_summ_colPat'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057' (Items Boat Structure)'
-          Options.Editing = False
-          Width = 70
-        end
-        object BasisWVAT_summ_goods: TcxGridDBColumn
-          Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057' (art.)'
-          DataBinding.FieldName = 'BasisWVAT_summ_goods'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057' ('#1082#1086#1084#1087#1083#1077#1082#1090'.)'
-          Options.Editing = False
-          Width = 70
-        end
-        object BasisWVAT_summ_colPat: TcxGridDBColumn
-          Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057' (Items)'
-          DataBinding.FieldName = 'BasisWVAT_summ_colPat'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057' (Items Boat Structure)'
           Options.Editing = False
           Width = 70
         end

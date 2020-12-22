@@ -191,6 +191,7 @@ BEGIN
 
      WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
       AND (Object_ReceiptGoodsChild.isErased = FALSE OR inIsErased = TRUE)
+      -- без этой структуры
       AND ObjectLink_ProdColorPattern.ChildObjectId IS NULL
      ;
 END;

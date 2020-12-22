@@ -85,7 +85,7 @@ BEGIN
 
 
      -- проверка
-     IF inRealWeight > 1000000
+     IF inRealWeight > 1000000 AND inBranchCode NOT IN (301, 302, 303) -- Склад специй ...
      THEN
          RAISE EXCEPTION 'Ошибка Вес <%>.', inRealWeight;
      END IF;
