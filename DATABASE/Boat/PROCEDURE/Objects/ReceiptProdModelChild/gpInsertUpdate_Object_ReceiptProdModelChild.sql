@@ -40,6 +40,14 @@ BEGIN
 
 
    -- Проверка
+   IF COALESCE (inReceiptProdModelId, 0) = 0
+   THEN
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.ReceiptProdModelId не установлен.'
+                                             , inProcedureName := 'gpInsertUpdate_Object_ReceiptProdModelChild'
+                                             , inUserId        := vbUserId
+                                              );
+   END IF;
+   -- Проверка
    IF COALESCE (inObjectId, 0) = 0
    THEN
        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Элемент не установлен.'

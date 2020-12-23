@@ -36,6 +36,16 @@ BEGIN
    END IF;
 
 
+
+   -- Проверка
+   IF COALESCE (inReceiptGoodsId, 0) = 0
+   THEN
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.ReceiptGoodsId не установлен.'
+                                             , inProcedureName := 'gpInsertUpdate_Object_ReceiptGoodsChild'
+                                             , inUserId        := vbUserId
+                                              );
+   END IF;
+
    -- Проверка
    IF COALESCE (inObjectId, 0) = 0 AND COALESCE (inProdColorPatternId, 0) = 0
    THEN

@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Int
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptItems(
  INOUT ioId               Integer   ,    -- ключ объекта <>
-    IN inCode             Integer   ,    -- Код объекта 
+    IN inCode             Integer   ,    -- Код объекта
     --IN inName             TVarChar  ,    -- Название объекта
     IN inProductId        Integer   ,
     IN inProdOptionsId    Integer   ,
@@ -16,16 +16,35 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptItems(
     IN inComment          TVarChar  ,
     IN inSession          TVarChar       -- сессия пользователя
 )
-  RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;
-   DECLARE vbIsInsert Boolean; 
+   DECLARE vbIsInsert Boolean;
 BEGIN
-   
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ProdOptItems());
    vbUserId:= lpGetUserBySession (inSession);
+
+
+   -- Проверка
+   IF COALESCE (inProductId, 0) = 0
+   THEN
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.ProductId не установлен.'
+                                             , inProcedureName := 'gpInsertUpdate_Object_ProdOptItems'
+                                             , inUserId        := vbUserId
+                                              );
+   END IF;
+   -- Проверка
+   IF COALESCE (inProdOptPatternId, 0) = 0
+   THEN
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Элемент не установлен.'
+                                             , inProcedureName := 'gpInsertUpdate_Object_ProdOptItems'
+                                             , inUserId        := vbUserId
+                                              );
+   END IF;
+
 
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -40,11 +59,11 @@ BEGIN
                                                           AND ObjectLink_Product.DescId = zc_ObjectLink_ProdOptItems_Product()
                                                           AND ObjectLink_Product.ChildObjectId = inProductId AND COALESCE (inProductId,0) <> 0
                                 WHERE Object_ProdOptItems.DescId = zc_Object_ProdOptItems())
-                               , 0) + 1; 
-   ELSE 
+                               , 0) + 1;
+   ELSE
         vbCode_calc:= inCode;
    END IF;
-   
+
    -- проверка прав уникальности для свойства <Наименование >
    --PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_ProdOptItems(), inName, vbUserId);
 
@@ -60,7 +79,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_PriceIn(), ioId, inPriceIn);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_PriceOut(), ioId, inPriceOut);
-   
+
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptItems_Product(), ioId, inProductId);
 

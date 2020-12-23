@@ -52,28 +52,104 @@ BEGIN
                        FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
                                                                 , inOperDate   := CURRENT_DATE) AS tmp
                       )
-     -- получили все шаблоны
-   , tmpProdColorPattern AS (SELECT Object_ProdColorPattern.Id      AS ProdColorPatternId
-                                  , ObjectLink_Goods.ChildObjectId  AS GoodsId
-                             FROM Object AS Object_ProdColorPattern
-                                  INNER JOIN ObjectLink AS ObjectLink_Goods
-                                                        ON ObjectLink_Goods.ObjectId = Object_ProdColorPattern.Id
-                                                       AND ObjectLink_Goods.DescId   = zc_ObjectLink_ProdColorPattern_Goods()
-                             WHERE Object_ProdColorPattern.DescId   = zc_Object_ProdColorPattern()
-                               AND Object_ProdColorPattern.isErased = FALSE
-                               AND inIsShowAll = TRUE
-                            )
-   -- выбираем все лодки + определ€ем продана да/нет
+          -- элементы ReceiptProdModelChild
+        , tmpReceiptProdModelChild AS(SELECT Object_ReceiptProdModel.Id                      AS ReceiptProdModelId
+                                           , Object_ReceiptProdModelChild.Id                 AS ReceiptProdModelChildId
+                                             -- ћодель лодки у шаблона ProdModel
+                                           , ObjectLink_Model.ChildObjectId                  AS ModelId
+                                             -- элемент который будем раскладывать
+                                           , ObjectLink_Object.ChildObjectId                 AS ObjectId
+                                             -- значение                                     
+                                           , ObjectFloat_Value.ValueData                     AS Value
+
+                                      FROM Object AS Object_ReceiptProdModel
+                                           -- это главный шаблон ProdModel
+                                           INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                                    ON ObjectBoolean_Main.ObjectId  = Object_ReceiptProdModel.Id
+                                                                   AND ObjectBoolean_Main.DescId    = zc_ObjectBoolean_ReceiptProdModel_Main()
+                                                                   AND ObjectBoolean_Main.ValueData = TRUE
+                                           -- ћодель лодки у шаблона ProdModel
+                                           LEFT JOIN ObjectLink AS ObjectLink_Model
+                                                                ON ObjectLink_Model.ObjectId = Object_ReceiptProdModel.Id
+                                                               AND ObjectLink_Model.DescId   = zc_ObjectLink_ReceiptProdModel_Model()
+                                           -- элементы ReceiptProdModelChild
+                                           INNER JOIN ObjectLink AS ObjectLink_ReceiptProdModel
+                                                                 ON ObjectLink_ReceiptProdModel.ChildObjectId = Object_ReceiptProdModel.Id
+                                                                AND ObjectLink_ReceiptProdModel.DescId        = zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel()
+                                           -- элемент не удален
+                                           INNER JOIN Object AS Object_ReceiptProdModelChild ON Object_ReceiptProdModelChild.Id       = ObjectLink_ReceiptProdModel.ObjectId
+                                                                                            AND Object_ReceiptProdModelChild.isErased = FALSE
+                                           -- из чего собираетс€
+                                           LEFT JOIN ObjectLink AS ObjectLink_Object
+                                                                ON ObjectLink_Object.ObjectId = Object_ReceiptProdModelChild.Id
+                                                               AND ObjectLink_Object.DescId   = zc_ObjectLink_ReceiptProdModelChild_Object()
+                                           -- значение в сборке
+                                           LEFT JOIN ObjectFloat AS ObjectFloat_Value
+                                                                 ON ObjectFloat_Value.ObjectId = Object_ReceiptProdModelChild.Id
+                                                                AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ReceiptProdModelChild_Value()
+
+                                      WHERE Object_ReceiptProdModel.DescId   = zc_Object_ReceiptProdModel()
+                                        AND Object_ReceiptProdModel.isErased = FALSE
+                                     )
+          -- раскладываем ReceiptProdModelChild - дл€ каждой ModelId
+        , tmpProdColorPattern AS (SELECT tmpReceiptProdModelChild.ModelId                  AS ModelId
+                                       , tmpReceiptProdModelChild.ReceiptProdModelId       AS ReceiptProdModelId
+                                       , tmpReceiptProdModelChild.ReceiptProdModelChildId  AS ReceiptProdModelChildId
+                                       , Object_ReceiptGoodsChild.Id                       AS ReceiptGoodsChildId
+                                         -- если мен€ли на другой товар, не тот что в Boat Structure
+                                       , ObjectLink_Object.ChildObjectId                   AS GoodsId
+                                         -- нашли Ёлемент Boat Structure
+                                       , ObjectLink_ProdColorPattern.ChildObjectId         AS ProdColorPatternId
+                                         -- умножили
+                                       , tmpReceiptProdModelChild.Value * ObjectFloat_Value.ValueData AS Value
+                                  FROM tmpReceiptProdModelChild
+                                       -- нашли его в сборке узлов
+                                       INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods_Object
+                                                             ON ObjectLink_ReceiptGoods_Object.ChildObjectId = tmpReceiptProdModelChild.ObjectId
+                                                            AND ObjectLink_ReceiptGoods_Object.DescId        = zc_ObjectLink_ReceiptGoods_Object()
+                                       -- это главный шаблон
+                                       INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                                ON ObjectBoolean_Main.ObjectId  = ObjectLink_ReceiptGoods_Object.ObjectId
+                                                               AND ObjectBoolean_Main.DescId    = zc_ObjectBoolean_ReceiptGoods_Main()
+                                                               AND ObjectBoolean_Main.ValueData = TRUE
+                                       -- из чего состоит
+                                       INNER JOIN ObjectLink AS ObjectLink_ReceiptGoodsChild_ReceiptGoods
+                                                             ON ObjectLink_ReceiptGoodsChild_ReceiptGoods.ChildObjectId = ObjectLink_ReceiptGoods_Object.ObjectId
+                                                            AND ObjectLink_ReceiptGoodsChild_ReceiptGoods.DescId        = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+                                       -- не удален
+                                       INNER JOIN Object AS Object_ReceiptGoodsChild ON Object_ReceiptGoodsChild.Id       = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
+                                                                                    AND Object_ReceiptGoodsChild.isErased = FALSE
+                                       -- только с такой структурой
+                                       INNER JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                                                             ON ObjectLink_ProdColorPattern.ObjectId      = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
+                                                            AND ObjectLink_ProdColorPattern.DescId        = zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern()
+                                                            AND ObjectLink_ProdColorPattern.ChildObjectId <> 0
+                                       -- если была "замена" - " омплектующего"
+                                       LEFT JOIN ObjectLink AS ObjectLink_Object
+                                                            ON ObjectLink_Object.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
+                                                           AND ObjectLink_Object.DescId   = zc_ObjectLink_ReceiptGoodsChild_Object()
+                                       -- значение в сборке
+                                       LEFT JOIN ObjectFloat AS ObjectFloat_Value
+                                                             ON ObjectFloat_Value.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
+                                                            AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ReceiptGoodsChild_Value()
+                                 )
+     -- все лодки + определ€ем продана да/нет
    , tmpProduct AS (SELECT Object_Product.*
                          , CASE WHEN COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() THEN FALSE ELSE TRUE END ::Boolean AS isSale
+                         , ObjectLink_Model.ChildObjectId AS ModelId
                     FROM Object AS Object_Product
+                         -- ћодель лодки
+                         LEFT JOIN ObjectLink AS ObjectLink_Model
+                                              ON ObjectLink_Model.ObjectId = Object_Product.Id
+                                             AND ObjectLink_Model.DescId   = zc_ObjectLink_Product_Model()
+                         -- продана да/нет
                          LEFT JOIN ObjectDate AS ObjectDate_DateSale
                                               ON ObjectDate_DateSale.ObjectId = Object_Product.Id
-                                             AND ObjectDate_DateSale.DescId = zc_ObjectDate_Product_DateSale()
+                                             AND ObjectDate_DateSale.DescId   = zc_ObjectDate_Product_DateSale()
                     WHERE Object_Product.DescId = zc_Object_Product()
                      AND (COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() OR inIsSale = TRUE)
-                    )
-
+                   )
+     -- существующие элементы Boat Structure
    , tmpRes_all AS (SELECT Object_ProdColorItems.Id         AS Id
                          , Object_ProdColorItems.ObjectCode AS Code
                          , Object_ProdColorItems.ValueData  AS Name
@@ -84,15 +160,17 @@ BEGIN
                          , ObjectLink_ProdColorPattern.ChildObjectId AS ProdColorPatternId
 
                     FROM Object AS Object_ProdColorItems
+                         -- Ћодка
                          LEFT JOIN ObjectLink AS ObjectLink_Product
                                               ON ObjectLink_Product.ObjectId = Object_ProdColorItems.Id
                                              AND ObjectLink_Product.DescId   = zc_ObjectLink_ProdColorItems_Product()
                          INNER JOIN tmpProduct ON tmpProduct.Id = ObjectLink_Product.ChildObjectId
 
+                         -- если мен€ли на другой товар, не тот что в ReceiptGoodsChild
                          LEFT JOIN ObjectLink AS ObjectLink_Goods
                                               ON ObjectLink_Goods.ObjectId = Object_ProdColorItems.Id
                                              AND ObjectLink_Goods.DescId   = zc_ObjectLink_ProdColorItems_Goods()
-
+                         -- Ёлемент
                          LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern
                                               ON ObjectLink_ProdColorPattern.ObjectId = Object_ProdColorItems.Id
                                              AND ObjectLink_ProdColorPattern.DescId   = zc_ObjectLink_ProdColorItems_ProdColorPattern()
@@ -120,9 +198,8 @@ BEGIN
                         , tmpProdColorPattern.GoodsId
                         , tmpProdColorPattern.ProdColorPatternId
                     FROM tmpProdColorPattern
-                         JOIN tmpProduct AS Object_Product ON Object_Product.isErased = FALSE
-                         LEFT JOIN tmpRes_all ON tmpRes_all.ProductId = Object_Product.Id
-                                             AND COALESCE (tmpRes_all.GoodsId,0) = COALESCE (tmpProdColorPattern.GoodsId,0)
+                         JOIN tmpProduct AS Object_Product ON Object_Product.ModelId = tmpProdColorPattern.ModelId
+                         LEFT JOIN tmpRes_all ON tmpRes_all.ProductId          = Object_Product.Id
                                              AND tmpRes_all.ProdColorPatternId = tmpProdColorPattern.ProdColorPatternId
                     WHERE tmpRes_all.ProductId IS NULL
                    )

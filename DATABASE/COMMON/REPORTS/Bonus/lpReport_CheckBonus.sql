@@ -972,8 +972,8 @@ BEGIN
                             , tmpData.ContractId_master  AS ContractId_find
 
                             , tmpData.InfoMoneyId_master AS InfoMoneyId_master
-                            , tmpData.InfoMoneyId_child  AS InfoMoneyId_child
-                            , 0                          AS InfoMoneyId_find
+                            , tmpData.InfoMoneyId_master AS InfoMoneyId_child
+                            , tmpData.InfoMoneyId_master AS InfoMoneyId_find
 
                             , tmpData.JuridicalId               AS JuridicalId
                             , 0                                 AS PartnerId

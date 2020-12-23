@@ -20,10 +20,28 @@ $BODY$
    DECLARE vbCode_calc Integer;
    DECLARE vbIsInsert Boolean; 
 BEGIN
-   
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ProdColorItems());
    vbUserId:= lpGetUserBySession (inSession);
+
+
+   -- Проверка
+   IF COALESCE (inProductId, 0) = 0
+   THEN
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.ProductId не установлен.'
+                                             , inProcedureName := 'gpInsertUpdate_Object_ProdColorItems'
+                                             , inUserId        := vbUserId
+                                              );
+   END IF;
+   -- Проверка
+   IF COALESCE (inProdColorPatternId, 0) = 0
+   THEN
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Элемент не установлен.'
+                                             , inProcedureName := 'gpInsertUpdate_Object_ProdColorItems'
+                                             , inUserId        := vbUserId
+                                              );
+   END IF;
+
 
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;

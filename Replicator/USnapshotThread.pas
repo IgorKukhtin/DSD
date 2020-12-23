@@ -558,69 +558,79 @@ begin
         ' ;';
       FTables.Open;
 
-      CheckPaused;
-      while not Terminated and not FTables.Eof do
-      begin
-        FCurrTable := FTables.FieldByName('table_name').AsString;
-        FKeyFields := FTables.FieldByName('key_fields').AsString;
-        FHasBlob := FTables.FieldByName('has_blob').AsBoolean;
-        FIsCompositeKey := FTables.FieldByName('is_composite_key').AsBoolean;
-        if SameText(FCurrTable, 'containerlinkobject') then
-          FRealKeyField := 'containerid'
-        else if FIsCompositeKey then
-          FRealKeyField := Copy(FKeyFields, 1, Pos(',', FKeyFields) - 1)
-        else
-          FRealKeyField := FKeyFields;
+      try
+        //FSlaveConn.StartTransaction;
 
-        Synchronize(
-          procedure
-          begin
-            if Assigned(OnNewTable) then
-              OnNewTable(FCurrTable);
-          end);
-        UpdateStatus('Получение количества записей ..');
+        CheckPaused;
+        while not Terminated and not FTables.Eof do
+        begin
+          FCurrTable := FTables.FieldByName('table_name').AsString;
+          FKeyFields := FTables.FieldByName('key_fields').AsString;
+          FHasBlob := FTables.FieldByName('has_blob').AsBoolean;
+          FIsCompositeKey := FTables.FieldByName('is_composite_key').AsBoolean;
+          if SameText(FCurrTable, 'containerlinkobject') then
+            FRealKeyField := 'containerid'
+          else if FIsCompositeKey then
+            FRealKeyField := Copy(FKeyFields, 1, Pos(',', FKeyFields) - 1)
+          else
+            FRealKeyField := FKeyFields;
 
-        FTempQuery.Close;
-        FTempQuery.Connection := FMasterConn;
-
-//        if FTables.FieldByName('is_composite_key').AsBoolean then
-//          FTempQuery.SQL.Text := 'select count(*) as TotalCount from '+ FCurrTable
-//        else
-//          FTempQuery.SQL.Text := 'select count('+ FTables.FieldByName('key_fields').AsString +') as TotalCount from '+ FCurrTable;
-
-        FTempQuery.ParamCheck := false;
-        FTempQuery.SQL.Text := 'SELECT reltuples::bigint AS TotalCount FROM pg_class WHERE relname ILIKE '+ QuotedStr(FCurrTable) +';';
-        FTempQuery.Open;
-
-        FTotalCount := FTempQuery.FieldByName('TotalCount').AsInteger;
-        FTempQuery.Close;
-        FTempQuery.ParamCheck := true;
-        FProcessedCount := 0;
-
-        UpdateProcessedCount;
-
-        if FSlaveConn.ExecuteDirect('ALTER TABLE '+ FCurrTable +' DISABLE TRIGGER ALL') then
-          try
-            if SameText(FCurrTable, 'objectblob') then
-              CopyBlobRecords
-            else
-              CopyBatchRecordsValues;
-              //CopyBatchRecords;
-          finally
-            if not FSlaveConn.ExecuteDirect('ALTER TABLE '+ FCurrTable +' ENABLE TRIGGER ALL') then
-              ProcessError('Для таблицы '+ FCurrTable +' триггеры были отключены, но не восстановлены');
-          end;
-
-        if not Terminated then
           Synchronize(
             procedure
             begin
-              if Assigned(OnFinishTable) then
-                OnFinishTable(FCurrTable);
+              if Assigned(OnNewTable) then
+                OnNewTable(FCurrTable);
             end);
-        FTables.Next;
-        CheckPaused;
-      end;
+          UpdateStatus('Получение количества записей ..');
+
+          FTempQuery.Close;
+          FTempQuery.Connection := FMasterConn;
+
+  //        if FTables.FieldByName('is_composite_key').AsBoolean then
+  //          FTempQuery.SQL.Text := 'select count(*) as TotalCount from '+ FCurrTable
+  //        else
+  //          FTempQuery.SQL.Text := 'select count('+ FTables.FieldByName('key_fields').AsString +') as TotalCount from '+ FCurrTable;
+
+          FTempQuery.ParamCheck := false;
+          FTempQuery.SQL.Text := 'SELECT reltuples::bigint AS TotalCount FROM pg_class WHERE relname ILIKE '+ QuotedStr(FCurrTable) +';';
+          FTempQuery.Open;
+
+          FTotalCount := FTempQuery.FieldByName('TotalCount').AsInteger;
+          FTempQuery.Close;
+          FTempQuery.ParamCheck := true;
+          FProcessedCount := 0;
+
+          UpdateProcessedCount;
+
+          if FSlaveConn.ExecuteDirect('ALTER TABLE '+ FCurrTable +' DISABLE TRIGGER ALL') then
+          //if FSlaveConn.ExecuteDirect('SET CONSTRAINTS ALL DEFERRED') then
+
+            try
+              if SameText(FCurrTable, 'objectblob') then
+                CopyBlobRecords
+              else
+                CopyBatchRecordsValues;
+                //CopyBatchRecords;
+            finally
+              if not FSlaveConn.ExecuteDirect('ALTER TABLE '+ FCurrTable +' ENABLE TRIGGER ALL') then
+              ProcessError('Для таблицы '+ FCurrTable +' триггеры были отключены, но не восстановлены');
+            end;
+
+          if not Terminated then
+            Synchronize(
+              procedure
+              begin
+                if Assigned(OnFinishTable) then
+                  OnFinishTable(FCurrTable);
+              end);
+          FTables.Next;
+          CheckPaused;
+        end;
+      finally
+
+        //FSlaveConn.Commit;
+      end
+
     except on E: Exception do
       ProcessError(E.Message);
     end;
