@@ -56,17 +56,18 @@ BEGIN
                                              -- значение
                                            , ObjectFloat_Value.ValueData               AS Value
                                       FROM Object AS Object_ReceiptProdModelChild
+                                           -- из чего собирается
                                            LEFT JOIN ObjectLink AS ObjectLink_Object
                                                                 ON ObjectLink_Object.ObjectId = Object_ReceiptProdModelChild.Id
                                                                AND ObjectLink_Object.DescId   = zc_ObjectLink_ReceiptProdModelChild_Object()
-
+                                           -- шаблон ProdModel
                                            LEFT JOIN ObjectLink AS ObjectLink_ReceiptProdModel
                                                                 ON ObjectLink_ReceiptProdModel.ObjectId = Object_ReceiptProdModelChild.Id
-                                                               AND ObjectLink_ReceiptProdModel.DescId = zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel()
-
+                                                               AND ObjectLink_ReceiptProdModel.DescId   = zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel()
+                                            -- значение в сборке
                                            LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                                                  ON ObjectFloat_Value.ObjectId = Object_ReceiptProdModelChild.Id
-                                                                AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptProdModelChild_Value()
+                                                                AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ReceiptProdModelChild_Value()
 
                                       WHERE Object_ReceiptProdModelChild.DescId   = zc_Object_ReceiptProdModelChild()
                                         AND Object_ReceiptProdModelChild.isErased = FALSE
@@ -76,7 +77,9 @@ BEGIN
         , tmpProdColorPattern AS (SELECT tmpReceiptProdModelChild.ReceiptProdModelId     AS ReceiptProdModelId
                                        , Object_ReceiptGoodsChild.Id                     AS ReceiptGoodsChildId
                                        , Object_ReceiptGoodsChild.isErased               AS isErased
+                                         -- если меняли на другой товар, не тот что в Boat Structure
                                        , ObjectLink_Object.ChildObjectId                 AS ObjectId
+                                         -- нашли Элемент Boat Structure
                                        , ObjectLink_ProdColorPattern.ChildObjectId       AS ProdColorPatternId
                                          -- умножили
                                        , tmpReceiptProdModelChild.Value * ObjectFloat_Value.ValueData AS Value
@@ -94,7 +97,7 @@ BEGIN
                                        INNER JOIN ObjectLink AS ObjectLink_ReceiptGoodsChild_ReceiptGoods
                                                              ON ObjectLink_ReceiptGoodsChild_ReceiptGoods.ChildObjectId = ObjectLink_ReceiptGoods_Object.ObjectId
                                                             AND ObjectLink_ReceiptGoodsChild_ReceiptGoods.DescId        = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
-                                       -- не удален
+                                       -- элемент не удален
                                        INNER JOIN Object AS Object_ReceiptGoodsChild ON Object_ReceiptGoodsChild.Id       = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
                                                                                     AND Object_ReceiptGoodsChild.isErased = FALSE
                                        -- только с такой структурой
@@ -197,7 +200,8 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Goods
                                ON ObjectLink_Goods.ObjectId = Object_ProdColorPattern.Id
                               AND ObjectLink_Goods.DescId = zc_ObjectLink_ProdColorPattern_Goods()
-          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods.ChildObjectId
+          -- !!!замена!!!
+          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (tmpProdColorPattern.ObjectId, ObjectLink_Goods.ChildObjectId)
 
           --
           LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
@@ -215,9 +219,8 @@ BEGIN
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_ProdColor
                                ON ObjectLink_Goods_ProdColor.ObjectId = Object_Goods.Id
-                              AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
-          -- !!!замена!!!
-          LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = COALESCE (tmpProdColorPattern.ObjectId, ObjectLink_Goods.ChildObjectId)
+                              AND ObjectLink_Goods_ProdColor.DescId   = zc_ObjectLink_Goods_ProdColor()
+          LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id

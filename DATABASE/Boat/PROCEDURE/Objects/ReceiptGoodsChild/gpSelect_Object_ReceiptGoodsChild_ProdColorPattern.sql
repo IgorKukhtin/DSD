@@ -67,9 +67,13 @@ BEGIN
           -- существующие элементы Boat Structure
         , tmpItems AS (SELECT Object_ReceiptGoodsChild.Id                     AS ReceiptGoodsChildId
                             , ObjectLink_ReceiptGoods.ChildObjectId           AS ReceiptGoodsId
+                              -- если меняли на другой товар, не тот что в Boat Structure
                             , ObjectLink_Object.ChildObjectId                 AS ObjectId
+                              -- нашли Элемент Boat Structure
                             , ObjectLink_ProdColorPattern.ChildObjectId       AS ProdColorPatternId
+                              -- значение                                     
                             , ObjectFloat_Value.ValueData                     AS Value
+                              --
                             , Object_ReceiptGoodsChild.ValueData              AS Comment
                             , Object_ReceiptGoodsChild.isErased               AS isErased
                        FROM Object AS Object_ReceiptGoodsChild
@@ -83,7 +87,7 @@ BEGIN
                             LEFT JOIN ObjectLink AS ObjectLink_Object
                                                  ON ObjectLink_Object.ObjectId = Object_ReceiptGoodsChild.Id
                                                 AND ObjectLink_Object.DescId   = zc_ObjectLink_ReceiptGoodsChild_Object()
-
+                            -- значение в сборке
                             LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                                   ON ObjectFloat_Value.ObjectId = Object_ReceiptGoodsChild.Id
                                                  AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptGoodsChild_Value()
@@ -192,7 +196,7 @@ BEGIN
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods
                                ON ObjectLink_Goods.ObjectId = Object_ProdColorPattern.Id
-                              AND ObjectLink_Goods.DescId = zc_ObjectLink_ProdColorPattern_Goods()
+                              AND ObjectLink_Goods.DescId   = zc_ObjectLink_ProdColorPattern_Goods()
           -- !!!замена!!!
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (tmpProdColorPattern.ObjectId, ObjectLink_Goods.ChildObjectId)
 
