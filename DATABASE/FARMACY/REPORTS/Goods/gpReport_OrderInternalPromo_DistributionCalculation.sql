@@ -116,6 +116,8 @@ BEGIN
         WHERE CASE WHEN COALESCE(vbTotalSummSIP, 0) <> 0 THEN OIPromo.PriceSIP ELSE OIPromo.Price END > 0
           AND OIPromo.Price > 0
           AND (OIPromo.isChecked = True OR vbisChecked = False);
+          
+     CREATE INDEX idx_tmpGoods_GoodsId ON tmpGoods(GoodsId, PriceCalc);
 
      IF COALESCE(vbTotalSummSIP, 0) <> 0
      THEN
@@ -218,6 +220,9 @@ BEGIN
 
          ) AS T1;
 
+     CREATE INDEX idx_tmpData_UnitID_GoodsId ON tmpData(UnitID, GoodsId, AverageSalesRate, Remains, MCS, SettlementStart, Distributed);
+         
+         
      vbDayCalc := 0; vbTotalSummSIP := 0;
      WHILE vbDayCalc < 500 AND vbTotalSummSIP < vbTotalSummPrice
      LOOP
@@ -225,6 +230,7 @@ BEGIN
 
          vbQueryText := 'ALTER TABLE tmpData ADD COLUMN Value' || vbDayCalc::Text || ' TFloat NOT NULL DEFAULT 0 ' ||
                                           ', ADD COLUMN Summa' || vbDayCalc::Text || ' TFloat NOT NULL DEFAULT 0 ';
+
          EXECUTE vbQueryText;
 
          OPEN curResult_next FOR
@@ -263,7 +269,6 @@ BEGIN
                             LEFT JOIN tmpGoods ON tmpGoods.GoodsID = tmpData.GoodsID);
 
      END LOOP;
-
 
      -- округлили количесто и убрали минусы
      UPDATE tmpData SET Distributed = CASE WHEN Distributed < 0 THEN 0 ELSE ROUND(Distributed, 0) END;
@@ -327,7 +332,6 @@ BEGIN
             , tmpGoods.GoodsName;
      RETURN NEXT cur2;
 
-
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -343,4 +347,4 @@ ALTER FUNCTION gpReport_OrderInternalPromo_DistributionCalculation (Integer, TVa
 */
 
 -- тест
---  select * from gpReport_OrderInternalPromo_DistributionCalculation(inMovementID := 19522677, inSession := '3');
+--  select * from gpReport_OrderInternalPromo_DistributionCalculation(inMovementID := 21527309  , inSession := '3');

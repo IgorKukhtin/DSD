@@ -1002,7 +1002,7 @@ inherited CheckForm: TCheckForm
       ImageIndex = 3
       FormName = 'TCheckPrintDialogForm'
       FormNameParam.Value = 'TCheckPrintDialogForm'
-      FormNameParam.DataType = ftDateTime
+      FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptInputOutput
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1887,6 +1887,47 @@ inherited CheckForm: TCheckForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1074#1080#1076' '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081' '#1087#1072#1088#1090#1080#1081' '#1087#1086' '#1089#1090#1088#1086#1095#1082#1077
       ImageIndex = 76
     end
+    object actPriceDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actAmountDialog'
+      FormName = 'TSummaDialogForm'
+      FormNameParam.Value = 'TSummaDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Summa'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Price'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1042#1074#1077#1076#1080#1090#1077' '#1094#1077#1085#1091' '#1090#1086#1074#1072#1088#1072
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actSetPrice: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actPriceDialog
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdatePrice
+      StoredProcList = <
+        item
+          StoredProc = spUpdatePrice
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1091' '#1087#1086' '#1089#1090#1088#1086#1095#1082#1077
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1091' '#1087#1086' '#1089#1090#1088#1086#1095#1082#1077
+      ImageIndex = 75
+    end
   end
   inherited MasterDS: TDataSource
     Top = 306
@@ -1999,6 +2040,10 @@ inherited CheckForm: TCheckForm
         item
           Visible = True
           ItemName = 'dxBarButton8'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton15'
         end
         item
           Visible = True
@@ -2124,6 +2169,10 @@ inherited CheckForm: TCheckForm
       Action = actExecDivisionParties
       Category = 0
     end
+    object dxBarButton15: TdxBarButton
+      Action = actSetPrice
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
@@ -2232,6 +2281,12 @@ inherited CheckForm: TCheckForm
       item
         Name = 'DivisionPartiesId'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Price'
+        Value = '0'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 56
@@ -3492,5 +3547,39 @@ inherited CheckForm: TCheckForm
     PackSize = 1
     Left = 490
     Top = 329
+  end
+  object spUpdatePrice: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementIten_Check_Price'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementItemID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrice'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 202
+    Top = 416
   end
 end

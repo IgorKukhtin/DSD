@@ -9,19 +9,23 @@ CREATE OR REPLACE FUNCTION gpReport_Sale_PartialSale(
     IN inFromId        Integer ,
     IN inSession       TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id          Integer
-             , InvNumber   TVarChar
-             , OperDate    TDateTime
-             , UnitId      Integer
-             , UnitName    TVarChar
-             , GoodsId     Integer
-             , GoodsCode   Integer
-             , GoodsName   TVarChar
-             , Amount      TFloat
-             , Price       TFloat
-             , Summ        TFloat
-             , PriceSale   TFloat
-             , SummSale    TFloat
+RETURNS TABLE (Id            Integer
+             , InvNumber     TVarChar
+             , OperDate      TDateTime
+             , FromId        Integer
+             , FromName      TVarChar
+             , JuridicalId   Integer
+             , JuridicalName TVarChar
+             , UnitId        Integer
+             , UnitName      TVarChar
+             , GoodsId       Integer
+             , GoodsCode     Integer
+             , GoodsName     TVarChar
+             , Amount        TFloat
+             , Price         TFloat
+             , Summ          TFloat
+             , PriceSale     TFloat
+             , SummSale      TFloat
               )
 AS
 $BODY$
@@ -34,11 +38,35 @@ BEGIN
 
    RETURN QUERY
    WITH
+        tmpContract AS ( --Договора с оплатой частями
+                        SELECT 
+                               Object_Contract_View.Id
+                             , Object_Contract_View.JuridicalId
+                        FROM Object_Contract_View
+
+                             LEFT JOIN ObjectBoolean AS ObjectBoolean_PartialPay
+                                                     ON ObjectBoolean_PartialPay.ObjectId = Object_Contract_View.ContractId
+                                                    AND ObjectBoolean_PartialPay.DescId = zc_ObjectBoolean_Contract_PartialPay()
+                        WHERE Object_Contract_View.isErased = False
+                          AND COALESCE (ObjectBoolean_PartialPay.ValueData, FALSE) = TRUE
+                          AND (Object_Contract_View.JuridicalId = inFromId OR COALESCE (inFromId, 0) = 0)
+                        ),
+        tmpIncomeAll AS ( --Остатки по приходу
+                             SELECT Movement.Id                           AS Id
+                             FROM MovementLinkObject AS MovementLinkObject_Contract
+
+                                    INNER JOIN Movement ON MovementLinkObject_Contract.MovementId = Movement.Id
+
+                             WHERE MovementLinkObject_Contract.MovementId > 15000000
+                               AND Movement.DescId = zc_Movement_Income()
+                               AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                               AND MovementLinkObject_Contract.ObjectId in (SELECT tmpContract.ID FROM tmpContract)
+                             ),
         tmpIncome AS ( --Остатки по приходу
                              SELECT Movement.Id                           AS MovementId
                                   , MovementLinkObject_From.ObjectId      AS FromId
                                   , MovementLinkObject_Juridical.ObjectId AS JuridicalId
-                             FROM Movement
+                             FROM tmpIncomeAll AS Movement 
 
                                     LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                                  ON MovementLinkObject_From.MovementId = Movement.Id
@@ -46,19 +74,7 @@ BEGIN
                                     LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                                                  ON MovementLinkObject_Juridical.MovementId = Movement.Id
                                                                 AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
-
-                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                                                 ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                                                AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-                                    LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
-                                    LEFT JOIN ObjectBoolean AS ObjectBoolean_PartialPay
-                                                            ON ObjectBoolean_PartialPay.ObjectId = Object_Contract.Id
-                                                           AND ObjectBoolean_PartialPay.DescId = zc_ObjectBoolean_Contract_PartialPay()
-
-                             WHERE Movement.Id > 15000000
-                               AND MovementLinkObject_From.ObjectId = inFromId
-                               AND MovementLinkObject_Juridical.ObjectId = inJuridicalId
-                               AND COALESCE (ObjectBoolean_PartialPay.ValueData, FALSE) = TRUE
+                             WHERE (MovementLinkObject_Juridical.ObjectId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
                              ),
         tmpIncomeList AS ( --Остатки по приходу
                              SELECT Movement.MovementId             AS MovementId
@@ -68,17 +84,18 @@ BEGIN
                                   , MovementItem_Income.Amount      AS AmountInIncome
                                   , Movement.FromId                 AS FromId
                                   , Movement.JuridicalId            AS JuridicalId
-                             FROM tmpIncome AS Movement
+                             FROM MovementItem AS MovementItem_Income
 
-                                    LEFT JOIN MovementItem AS MovementItem_Income ON MovementItem_Income.DescId     = zc_MI_Master()
-                                                                                 AND MovementItem_Income.MovementId = Movement.MovementId
-                                                                                 AND MovementItem_Income.isErased   = FALSE
+                                    LEFT JOIN tmpIncome AS Movement ON MovementItem_Income.MovementId = Movement.MovementId
 
                                     LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                                 ON MIFloat_Price.MovementItemId = MovementItem_Income.Id
                                                                AND MIFloat_Price.DescId = zc_MIFloat_PriceWithVAT()
 
-                             WHERE Movement.MovementId in (SELECT DISTINCT tmpIncome.MovementId FROM tmpIncome)
+                             WHERE MovementItem_Income.MovementId in (SELECT DISTINCT tmpIncome.MovementId FROM tmpIncome)
+                               AND MovementItem_Income.DescId     = zc_MI_Master()
+                               AND MovementItem_Income.MovementId = Movement.MovementId
+                               AND MovementItem_Income.isErased   = FALSE
                              ),
         tmpContainerRemainsAll AS ( --Остатки по приходу
                              SELECT Object_PartionMovementItem.ObjectCode                             AS MovementItemId
@@ -102,6 +119,10 @@ BEGIN
    SELECT MovementItemContainer.MovementId           AS Id
         , Movement.InvNumber                         AS InvNumber
         , Movement.OperDate                          AS OperDate
+        , Object_From.Id                             AS FromId
+        , Object_From.ValueData                      AS FromName
+        , Object_Juridical.Id                        AS JuridicalId
+        , Object_Juridical.ValueData                 AS JuridicalName
         , MovementLinkObject_Unit.ObjectId           AS UnitId
         , Object_Unit.ValueData                      AS UnitName
         , MovementItem.ObjectId                      AS GoodsId
@@ -147,6 +168,9 @@ BEGIN
                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
         LEFT JOIN tmpIncomeList ON tmpIncomeList.MovementItemId = Container.MovementItemId
+        
+        LEFT JOIN Object AS Object_From ON Object_From.Id = tmpIncomeList.FromId
+        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpIncomeList.JuridicalId
    ORDER BY OperDate
   ;
 END;

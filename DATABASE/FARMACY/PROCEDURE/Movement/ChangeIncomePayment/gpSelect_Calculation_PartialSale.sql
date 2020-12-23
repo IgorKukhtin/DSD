@@ -30,7 +30,6 @@ BEGIN
                                  LEFT JOIN Object AS Object_Movement ON Object_Movement.Id = Container.ObjectId
                                                                     AND Object_Movement.DescId = zc_Object_PartionMovement()
                             WHERE Container.DescId = zc_Container_SummIncomeMovementPayment()
-                              AND Container.Amount  > 0
                               AND Object_Movement.ObjectCode > 15000000
                            ),
         tmpContainerPartialPay AS
@@ -113,7 +112,7 @@ BEGIN
                                   LEFT JOIN tmpContainerRemains ON tmpContainerRemains.MovementItemId = tmpIncomeList.MovementItemId
                              GROUP BY tmpIncomeList.MovementId),
         tmpPartialSale AS (SELECT Income.JuridicalId, Income.FromId, Container.Amount
-                           FROM (SELECT tmpIncome.FromId, tmpIncome.JuridicalId FROM tmpIncome) AS Income
+                           FROM (SELECT DISTINCT tmpIncome.FromId, tmpIncome.JuridicalId FROM tmpIncome) AS Income
 
                                 INNER JOIN ContainerLinkObject AS CLO_JuridicalBasis
                                                                ON CLO_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
@@ -121,7 +120,7 @@ BEGIN
 
                                 INNER JOIN Container ON Container.Id =  CLO_JuridicalBasis.ContainerId
                                                     AND Container.DescId = zc_Container_SummIncomeMovementPayment()
-                                                    AND Container.Amount <> 0
+                                                  --  AND Container.Amount <> 0
                                                     AND Container.ObjectId = zc_Enum_ChangeIncomePaymentKind_PartialSale()
 
                                 INNER JOIN ContainerLinkObject AS CLO_Juridical
@@ -165,5 +164,6 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Calculation_PartialSale (inOperDate := CURRENT_DATE + INTERVAL '1 DAY', inSession:= '3')
+-- 
+SELECT * FROM gpSelect_Calculation_PartialSale (inOperDate := CURRENT_DATE - INTERVAL '1 DAY', inSession:= '3')
                               

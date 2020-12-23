@@ -6031,10 +6031,10 @@ var
       dsdPasswordWages.StoredProcName := 'gpGet_User_PasswordWages';
       dsdPasswordWages.OutputType := otResult;
       dsdPasswordWages.Params.Clear;
-      dsdPasswordWages.Params.AddParam('outOperDate', ftDateTime,
+      dsdPasswordWages.Params.AddParam('outPasswordWages', ftString,
         ptOutput, Null);
       dsdPasswordWages.Execute(false, false);
-      Result := dsdPasswordWages.ParamByName('outOperDate').AsString;
+      Result := dsdPasswordWages.ParamByName('outPasswordWages').AsString;
     finally
       freeAndNil(dsdPasswordWages);
     end;

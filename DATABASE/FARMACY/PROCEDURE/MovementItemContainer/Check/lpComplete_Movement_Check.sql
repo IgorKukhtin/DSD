@@ -553,6 +553,22 @@ BEGIN
        WHERE MovementFloat_LoyaltySMID.DescID = zc_MovementFloat_LoyaltySMID()
          AND MovementFloat_LoyaltySMID. MovementId = inMovementId;
      END IF;
+     
+     IF EXISTS(SELECT 1 FROM MovementLinkObject AS MLO_ConfirmedKind
+               WHERE MLO_ConfirmedKind.MovementId = inMovementId
+                 AND MLO_ConfirmedKind.DescId     = zc_MovementLinkObject_ConfirmedKind()
+                 AND MLO_ConfirmedKind.ObjectId   = zc_Enum_ConfirmedKind_Complete())
+     THEN
+     
+       IF NOT EXISTS(SELECT 1 FROM MovementLinkObject 
+                     WHERE MovementLinkObject.MovementId            = inMovementId
+                       AND MovementLinkObject.DescId                IN (zc_MovementLinkObject_Insert(), zc_MovementLinkObject_UserConfirmedKind())
+                       AND COALESCE(MovementLinkObject.ObjectId, 0) <> 0)
+       THEN
+          -- сохранили свойство <Пользователь (подтверждения) для того чтоб попало в ЗП>
+          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_UserConfirmedKind(), inMovementId, inUserId);
+       END IF;
+     END IF;
 
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId

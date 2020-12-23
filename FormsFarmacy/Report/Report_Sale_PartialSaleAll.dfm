@@ -1,8 +1,8 @@
-inherited Report_Sale_PartialSaleForm: TReport_Sale_PartialSaleForm
+inherited Report_Sale_PartialSaleAllForm: TReport_Sale_PartialSaleAllForm
   Caption = #1055#1088#1086#1076#1072#1078#1080' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1079#1072' '#1087#1077#1088#1080#1086#1076
   ClientHeight = 433
   ClientWidth = 759
-  AddOnFormData.Params = FormParams
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 775
   ExplicitHeight = 472
   PixelsPerInch = 96
@@ -51,6 +51,22 @@ inherited Report_Sale_PartialSaleForm: TReport_Sale_PartialSaleForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object FromName: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+            DataBinding.FieldName = 'FromName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 122
+          end
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1053#1072#1096#1077' '#1102#1088'. '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 136
+          end
           object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'OperDate'
@@ -146,9 +162,9 @@ inherited Report_Sale_PartialSaleForm: TReport_Sale_PartialSaleForm
     ExplicitWidth = 759
     ExplicitHeight = 59
     inherited deStart: TcxDateEdit
-      Left = 105
+      Left = 102
       Top = 8
-      ExplicitLeft = 105
+      ExplicitLeft = 102
       ExplicitTop = 8
     end
     inherited deEnd: TcxDateEdit
@@ -169,30 +185,63 @@ inherited Report_Sale_PartialSaleForm: TReport_Sale_PartialSaleForm
       ExplicitLeft = 196
       ExplicitTop = 9
     end
-    object edJuridicalName: TcxTextEdit
-      Left = 97
-      Top = 32
-      Properties.ReadOnly = True
-      TabOrder = 4
-      Width = 224
-    end
     object cxLabel3: TcxLabel
-      Left = 7
+      Left = 8
       Top = 33
       Caption = #1053#1072#1096#1077' '#1102#1088'. '#1083#1080#1094#1086':'
-    end
-    object edFromName: TcxTextEdit
-      Left = 417
-      Top = 32
-      Properties.ReadOnly = True
-      TabOrder = 6
-      Width = 208
     end
     object cxLabel4: TcxLabel
       Left = 346
       Top = 35
       Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
     end
+    object edFrom: TcxButtonEdit
+      Left = 417
+      Top = 32
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 6
+      Width = 301
+    end
+    object edJuridical: TcxButtonEdit
+      Left = 102
+      Top = 32
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 7
+      Width = 237
+    end
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = GuidesFrom
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesJuridical
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
   end
   inherited ActionList: TActionList
     object ExecuteDialog: TExecuteDialog
@@ -201,8 +250,8 @@ inherited Report_Sale_PartialSaleForm: TReport_Sale_PartialSaleForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_PeriodDialogForm'
-      FormNameParam.Value = 'TReport_PeriodDialogForm'
+      FormName = 'TReport_Sale_PartialSaleAllDialogForm'
+      FormNameParam.Value = 'TReport_Sale_PartialSaleAllDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -218,6 +267,37 @@ inherited Report_Sale_PartialSaleForm: TReport_Sale_PartialSaleForm
           Value = 'NULL'
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromId'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromlName'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = GuidesJuridical
+          ComponentItem = 'Key'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = GuidesJuridical
+          ComponentItem = 'TextValue'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -255,16 +335,16 @@ inherited Report_Sale_PartialSaleForm: TReport_Sale_PartialSaleForm
       item
         Name = 'inJuridicalId'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'JuridicalId'
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inFromId'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'FromId'
+        Component = GuidesFrom
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -295,6 +375,10 @@ inherited Report_Sale_PartialSaleForm: TReport_Sale_PartialSaleForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -321,6 +405,10 @@ inherited Report_Sale_PartialSaleForm: TReport_Sale_PartialSaleForm
       Action = actRefresh
       Category = 0
     end
+    object dxBarButton3: TdxBarButton
+      Action = ExecuteDialog
+      Category = 0
+    end
   end
   inherited PeriodChoice: TPeriodChoice
     Top = 104
@@ -329,46 +417,62 @@ inherited Report_Sale_PartialSaleForm: TReport_Sale_PartialSaleForm
     Left = 80
     Top = 152
   end
-  object FormParams: TdsdFormParams
+  object GuidesFrom: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edFrom
+    FormNameParam.Value = 'TJuridicalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridicalForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'StartDate'
-        Value = 'NULL'
-        Component = deStart
-        DataType = ftDateTime
+        Name = 'Key'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'EndDate'
-        Value = 'NULL'
-        Component = deEnd
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'JuridicalId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'JuridicalName'
-        Value = Null
-        Component = edJuridicalName
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
         DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'FromId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'FromName'
-        Value = Null
-        Component = edFromName
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 176
-    Top = 264
+    Left = 528
+    Top = 24
+  end
+  object GuidesJuridical: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridicalCorporateForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridicalCorporateForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 208
+    Top = 24
   end
 end
