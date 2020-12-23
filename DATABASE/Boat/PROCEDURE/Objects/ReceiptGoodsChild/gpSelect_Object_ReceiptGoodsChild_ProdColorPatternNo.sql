@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
              , EKPriceWVAT_summ TFloat
              , Basis_summ TFloat
              , BasisWVAT_summ TFloat
+             , Color_value Integer
               )
 AS
 $BODY$
@@ -109,6 +110,8 @@ BEGIN
                     THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
                     ELSE COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0) 
                END) ::TFloat BasisWVAT_summ
+
+        , 15138790 /*zc_Color_Pink()*/     ::Integer                  AS Color_value                          --  фон для Value
 
      FROM Object AS Object_ReceiptGoodsChild
 

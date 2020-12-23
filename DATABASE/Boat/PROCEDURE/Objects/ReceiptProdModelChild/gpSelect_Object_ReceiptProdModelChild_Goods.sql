@@ -1,10 +1,12 @@
 -- Function: gpSelect_Object_ReceiptProdModelChild_Goods()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptProdModelChild_Goods (Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptProdModelChild_Goods (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptProdModelChild_Goods (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptProdModelChild_Goods(
-    IN inIsErased    Boolean,       -- признак показать удаленные да / нет
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inReceiptLevelId  Integer,
+    IN inIsErased        Boolean,       -- признак показать удаленные да / нет
+    IN inSession         TVarChar       -- сессия пользователя
 )
 RETURNS SETOF refcursor
 
@@ -30,8 +32,9 @@ BEGIN
              , tmp.ValuePrice
         FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
                                                  , inOperDate   := CURRENT_DATE) AS tmp
-       UNION
-        SELECT Object.Id, 1 AS ValuePrice FROM Object WHERE Object.DescId = zc_Object_ReceiptService()
+       -- было когда не было цен на работы/услуги
+       --UNION
+       -- SELECT Object.Id, 1 AS ValuePrice FROM Object WHERE Object.DescId = zc_Object_ReceiptService()
        );
 
      -- элементы ReceiptProdModelChild
@@ -47,23 +50,28 @@ BEGIN
              , COALESCE (ObjectFloat_Value.ValueData, 0)   :: TFloat AS Value
 
                -- Цена вх. без НДС
-             , COALESCE (ObjectFloat_EKPrice.ValueData, 0) :: TFloat AS EKPrice
+             , COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0) :: TFloat AS EKPrice
                -- Цена вх. с НДС
-             , CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
+             , CAST (COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0)
                     * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2)) :: TFloat AS EKPriceWVAT
 
                -- Цена продажи без ндс
              , CASE WHEN vbPriceWithVAT = FALSE
-                    THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
-                    ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                    THEN COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0)
+                    ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
                END  :: TFloat AS BasisPrice
                -- Цена продажи с ндс
              , CASE WHEN vbPriceWithVAT = FALSE
-                    THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
-                    ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
+                    THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                    ELSE COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0)
                END ::TFloat AS BasisPriceWVAT
 
         FROM Object AS Object_ReceiptProdModelChild
+
+             LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
+                                  ON ObjectLink_ReceiptLevel.ObjectId = Object_ReceiptProdModelChild.Id
+                                 AND ObjectLink_ReceiptLevel.DescId   = zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel()
+
              LEFT JOIN ObjectLink AS ObjectLink_Object
                                   ON ObjectLink_Object.ObjectId = Object_ReceiptProdModelChild.Id
                                  AND ObjectLink_Object.DescId   = zc_ObjectLink_ReceiptProdModelChild_Object()
@@ -80,19 +88,32 @@ BEGIN
                                    ON ObjectFloat_EKPrice.ObjectId = ObjectLink_Object.ChildObjectId
                                   AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
 
+                -- цены для Работы/Услуги вход. без ндс
+             LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptService_EKPrice
+                                   ON ObjectFloat_ReceiptService_EKPrice.ObjectId = ObjectLink_Object.ChildObjectId
+                                  AND ObjectFloat_ReceiptService_EKPrice.DescId = zc_ObjectFloat_ReceiptService_EKPrice()
+                -- цены для Работы/Услуги продажи без ндс
+             LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptService_SalePrice
+                                   ON ObjectFloat_ReceiptService_SalePrice.ObjectId = ObjectLink_Object.ChildObjectId
+                                  AND ObjectFloat_ReceiptService_SalePrice.DescId = zc_ObjectFloat_ReceiptService_SalePrice()
+
              LEFT JOIN ObjectLink AS ObjectLink_Goods_TaxKind
                                   ON ObjectLink_Goods_TaxKind.ObjectId = ObjectLink_Object.ChildObjectId
                                  AND ObjectLink_Goods_TaxKind.DescId = zc_ObjectLink_Goods_TaxKind()
-             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_Goods_TaxKind.ChildObjectId
+             -- Работы / услуги тип НДС
+             LEFT JOIN ObjectLink AS ObjectLink_ReceiptService_TaxKind
+                                  ON ObjectLink_ReceiptService_TaxKind.ObjectId = ObjectLink_Object.ChildObjectId
+                                 AND ObjectLink_ReceiptService_TaxKind.DescId = zc_ObjectLink_ReceiptService_TaxKind()
 
              LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                   ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_Object.ChildObjectId
+                                   ON ObjectFloat_TaxKind_Value.ObjectId = COALESCE (ObjectLink_Goods_TaxKind.ChildObjectId, ObjectLink_ReceiptService_TaxKind.ChildObjectId)
                                   AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()
 
              LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = ObjectLink_Object.ChildObjectId
 
         WHERE Object_ReceiptProdModelChild.DescId   = zc_Object_ReceiptProdModelChild()
           AND (Object_ReceiptProdModelChild.isErased = FALSE OR inIsErased = TRUE)
+          AND (ObjectLink_ReceiptLevel.ChildObjectId = inReceiptLevelId OR inReceiptLevelId = 0)
        );
 
      -- раскладываем ReceiptProdModelChild
@@ -114,41 +135,41 @@ BEGIN
              , (tmpReceiptProdModelChild.Value * COALESCE (ObjectFloat_Value.ValueData, 0)) :: TFloat AS Value
 
                -- Цена вх. без НДС
-             , COALESCE (ObjectFloat_EKPrice.ValueData, 0) :: TFloat AS EKPrice
+             , COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0) :: TFloat AS EKPrice
                -- Цена вх. с НДС
-             , CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
+             , CAST (COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0)
                     * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2)) :: TFloat AS EKPriceWVAT
 
                -- Цена продажи без ндс
              , CASE WHEN vbPriceWithVAT = FALSE
-                    THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
-                    ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                    THEN COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0)
+                    ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
                END  :: TFloat AS BasisPrice
 
                -- Цена продажи с ндс
              , CASE WHEN vbPriceWithVAT = FALSE
-                    THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
-                    ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
+                    THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                    ELSE COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0)
                END ::TFloat AS BasisPriceWVAT
 
                -- Сумма вх. без НДС
-             , (tmpReceiptProdModelChild.Value * COALESCE (ObjectFloat_Value.ValueData, 0) * COALESCE (ObjectFloat_EKPrice.ValueData, 0)) :: TFloat AS EKPrice_summ
+             , (tmpReceiptProdModelChild.Value * COALESCE (ObjectFloat_Value.ValueData, 0) * COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0)) :: TFloat AS EKPrice_summ
                -- Сумма вх. с НДС
              , (tmpReceiptProdModelChild.Value * COALESCE (ObjectFloat_Value.ValueData, 0)
-                    * CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
+                    * CAST (COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0)
                            * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))) :: TFloat AS EKPriceWVAT_summ
 
                -- Сумма продажи без НДС
              , (tmpReceiptProdModelChild.Value * COALESCE (ObjectFloat_Value.ValueData, 0)
                 * CASE WHEN vbPriceWithVAT = FALSE
-                       THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
-                       ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                       THEN COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0)
+                       ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
                   END)  :: TFloat AS Basis_summ
                -- Сумма продажи с НДС
              , (tmpReceiptProdModelChild.Value * COALESCE (ObjectFloat_Value.ValueData, 0)
                 * CASE WHEN vbPriceWithVAT = FALSE
-                        THEN CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
-                        ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
+                        THEN CAST (COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                        ELSE COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0)
                    END) ::TFloat AS BasisWVAT_summ
 
         FROM tmpReceiptProdModelChild
@@ -212,10 +233,23 @@ BEGIN
                                    ON ObjectFloat_EKPrice.ObjectId = Object_Goods.Id
                                   AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
 
+                -- цены для Работы/Услуги вход. без ндс
+             LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptService_EKPrice
+                                   ON ObjectFloat_ReceiptService_EKPrice.ObjectId = Object_Goods.Id
+                                  AND ObjectFloat_ReceiptService_EKPrice.DescId = zc_ObjectFloat_ReceiptService_EKPrice()
+                -- цены для Работы/Услуги продажи без ндс
+             LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptService_SalePrice
+                                   ON ObjectFloat_ReceiptService_SalePrice.ObjectId = Object_Goods.Id
+                                  AND ObjectFloat_ReceiptService_SalePrice.DescId = zc_ObjectFloat_ReceiptService_SalePrice()
+
              LEFT JOIN ObjectLink AS ObjectLink_Goods_TaxKind
                                   ON ObjectLink_Goods_TaxKind.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_TaxKind.DescId = zc_ObjectLink_Goods_TaxKind()
-             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_Goods_TaxKind.ChildObjectId
+             -- Работы / услуги тип НДС
+             LEFT JOIN ObjectLink AS ObjectLink_ReceiptService_TaxKind
+                                  ON ObjectLink_ReceiptService_TaxKind.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_ReceiptService_TaxKind.DescId = zc_ObjectLink_ReceiptService_TaxKind()
+             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = COALESCE (ObjectLink_Goods_TaxKind.ChildObjectId, ObjectLink_ReceiptService_TaxKind.ChildObjectId)
 
              LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
                                    ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
@@ -243,6 +277,8 @@ BEGIN
              , (tmpReceiptProdModelChild.Value * tmpReceiptProdModelChild.EKPriceWVAT)    :: TFloat AS EKPriceWVAT_summ
              , (tmpReceiptProdModelChild.Value * tmpReceiptProdModelChild.BasisPrice)     :: TFloat AS Basis_summ
              , (tmpReceiptProdModelChild.Value * tmpReceiptProdModelChild.BasisPriceWVAT) :: TFloat AS BasisWVAT_summ
+             --
+             , FALSE AS isReceiptGoods
 
         FROM tmpReceiptProdModelChild
              LEFT JOIN tmpReceiptGoodsChild ON tmpReceiptGoodsChild.ReceiptProdModelChildId = tmpReceiptProdModelChild.ReceiptProdModelChildId
@@ -263,7 +299,8 @@ BEGIN
              , SUM (tmpReceiptGoodsChild.EKPriceWVAT_summ) :: TFloat AS EKPriceWVAT_summ
              , SUM (tmpReceiptGoodsChild.Basis_summ)       :: TFloat AS Basis_summ
              , SUM (tmpReceiptGoodsChild.BasisWVAT_summ)   :: TFloat AS BasisWVAT_summ
-
+             --
+             , TRUE AS isReceiptGoods
         FROM tmpReceiptProdModelChild
              INNER JOIN tmpReceiptGoodsChild ON tmpReceiptGoodsChild.ReceiptProdModelChildId = tmpReceiptProdModelChild.ReceiptProdModelChildId
         GROUP BY tmpReceiptProdModelChild.ReceiptProdModelChildId
@@ -304,16 +341,25 @@ BEGIN
          , Object_ProdColor.ValueData                 AS ProdColorName
          , Object_Measure.ValueData                   AS MeasureName
 
-         , tmpChild.EKPrice_summ      :: TFloat AS EKPrice
-         , tmpChild.EKPriceWVAT_summ  :: TFloat AS EKPriceWVAT
-         , tmpChild.Basis_summ        :: TFloat AS BasisPrice
-         , tmpChild.BasisWVAT_summ    :: TFloat AS BasisPriceWVAT
+         , tmpChild.EKPrice            :: TFloat AS EKPrice
+         , tmpChild.EKPriceWVAT        :: TFloat AS EKPriceWVAT
+         , tmpChild.BasisPrice         :: TFloat AS BasisPrice
+         , tmpChild.BasisPriceWVAT     :: TFloat AS BasisPriceWVAT
 
          , tmpChild.EKPrice_summ       :: TFloat AS EKPrice_summ
          , tmpChild.EKPriceWVAT_summ   :: TFloat AS EKPriceWVAT_summ
          , tmpChild.Basis_summ         :: TFloat AS Basis_summ
          , tmpChild.BasisWVAT_summ     :: TFloat AS BasisWVAT_summ
+         --         
+         , 15138790 /*zc_Color_Pink()*/                       AS Color_value                          --  фон для Value
+         
+         , CASE WHEN Object_ReceiptLevel.Id = 32658 THEN zc_Color_Blue()      --32658;1;"Boat"
+                WHEN Object_ReceiptLevel.Id = 32851 THEN 3372543              --32851;2;"Electric"  --zc_Color_Aqua()
+                WHEN Object_ReceiptLevel.Id = 32852 THEN 40704                --32852;3;"Engine"  zc_Color_Greenl()
+                ELSE  zc_Color_Black()
+           END                                   AS Color_Level                          --  цвет шрифта по ReceiptLevelId
 
+         , tmpChild.isReceiptGoods = TRUE   AS Bold_isReceiptGoods                       --  если товар раскладывается, его выделить жирным цветом ???
      FROM tmpReceiptProdModelChild
 
           LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
@@ -372,7 +418,6 @@ BEGIN
      ;
       RETURN NEXT Cursor1;
 
-
      -- Результат
      OPEN Cursor2 FOR
      SELECT *
@@ -393,4 +438,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ReceiptProdModelChild_Goods (false, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ReceiptProdModelChild_Goods (0,false, zfCalc_UserAdmin());
+--FETCH ALL "<unnamed portal 89>";

@@ -23,7 +23,7 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   cxCurrencyEdit, cxSplitter, cxButtonEdit, ExternalLoad, Vcl.Menus,
-  Vcl.ExtCtrls;
+  Vcl.ExtCtrls, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxLabel;
 
 type
   TReceiptProdModelForm = class(TParentForm)
@@ -155,6 +155,15 @@ type
     Panel3: TPanel;
     actChoiceFormReceiptLevel_ch1: TOpenChoiceForm;
     actChoiceFormReceiptLevel_ch2: TOpenChoiceForm;
+    cxLabel6: TcxLabel;
+    edReceiptLevel: TcxButtonEdit;
+    GuidesReceiptLevel: TdsdGuides;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    RefreshDispatcher: TRefreshDispatcher;
+    Color_value_ch1: TcxGridDBColumn;
+    Color_Level_ch1: TcxGridDBColumn;
+    Bold_isReceiptGoods_ch1: TcxGridDBColumn;
   private
     { Private declarations }
   public

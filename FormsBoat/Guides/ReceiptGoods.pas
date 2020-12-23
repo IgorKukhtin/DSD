@@ -166,6 +166,7 @@ type
     actShowAll_ch2: TBooleanStoredProcAction;
     bbShowAll_ch1: TdxBarButton;
     isEnabled_ch2: TcxGridDBColumn;
+    Color_value_ch1: TcxGridDBColumn;
   private
     { Private declarations }
   public
