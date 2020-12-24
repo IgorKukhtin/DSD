@@ -28,6 +28,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isProdOptions Boolean
              , isDiff Boolean
              , isEnabled Boolean
+             , isSale Boolean
              , isErased Boolean
 
              , GoodsGroupNameFull TVarChar
@@ -36,7 +37,6 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ProdColorName TVarChar
              , MeasureName TVarChar
              , EKPrice TFloat, EKPriceWVAT TFloat
-             , EmpfPrice TFloat, EmpfPriceWVAT TFloat
              , BasisPrice TFloat, BasisPriceWVAT TFloat
               )
 AS
@@ -52,6 +52,7 @@ BEGIN
      -- Определили
      vbPriceWithVAT:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = zc_PriceList_Basis() AND ObjectBoolean.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT());
 
+     -- Результат
      RETURN QUERY
      WITH
      --базовые цены
@@ -144,6 +145,7 @@ BEGIN
      -- все лодки + определяем продана да/нет
    , tmpProduct AS (SELECT Object_Product.*
                          , ObjectLink_Model.ChildObjectId AS ModelId
+                         , CASE WHEN COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() THEN FALSE ELSE TRUE END ::Boolean AS isSale
                     FROM Object AS Object_Product
                          -- Модель лодки
                          LEFT JOIN ObjectLink AS ObjectLink_Model
@@ -260,6 +262,7 @@ BEGIN
          , COALESCE (ObjectBoolean_ProdOptions.ValueData, FALSE) :: Boolean AS isProdOptions
          , Object_ProdColorItems.isDiff     AS isDiff
          , Object_ProdColorItems.isEnabled  AS isEnabled
+         , Object_Product.isSale            AS isSale
          , Object_ProdColorItems.isErased   AS isErased
 
          --
@@ -269,21 +272,19 @@ BEGIN
          , CASE WHEN Object_ProdColorItems.GoodsId IS NULL THEN ObjectString_ProdColorPattern_Comment.ValueData ELSE Object_ProdColor.ValueData END :: TVarChar AS ProdColorName
          , Object_Measure.ValueData                   AS MeasureName
 
+          -- Цена вх. без НДС
          , ObjectFloat_EKPrice.ValueData   ::TFloat   AS EKPrice
+           -- Цена вх. с НДС                
          , CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
               * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS EKPriceWVAT-- расчет входной цены с НДС, до 4 знаков
 
-         , ObjectFloat_EmpfPrice.ValueData ::TFloat   AS EmpfPrice
-         , CAST (COALESCE (ObjectFloat_EmpfPrice.ValueData, 0)
-              * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100) ) AS NUMERIC (16, 2)) ::TFloat AS EmpfPriceWVAT-- расчет рекомендованной цены с НДС, до 4 знаков
-
-          -- расчет базовой цены без НДС, до 2 знаков
+          -- Цена продажи без ндс          
         , CASE WHEN vbPriceWithVAT = FALSE
                THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
                ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
           END ::TFloat  AS BasisPrice   -- сохраненная цена - цена без НДС
 
-          -- расчет базовой цены с НДС, до 2 знаков
+          -- Цена продажи с ндс
         , CASE WHEN vbPriceWithVAT = FALSE
                THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
                ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
@@ -293,7 +294,7 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_ProdColorItems.Id
                                 AND ObjectString_Comment.DescId = zc_ObjectString_ProdColorItems_Comment()
-          -- добавить как Опцию (да/ нет)
+          -- добавить как Опцию (да/нет)
           LEFT JOIN ObjectBoolean AS ObjectBoolean_ProdOptions
                                   ON ObjectBoolean_ProdOptions.ObjectId = Object_ProdColorItems.Id
                                  AND ObjectBoolean_ProdOptions.DescId   = zc_ObjectBoolean_ProdColorItems_ProdOptions()
@@ -347,9 +348,6 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
                                 ON ObjectFloat_EKPrice.ObjectId = Object_Goods.Id
                                AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
-          LEFT JOIN ObjectFloat AS ObjectFloat_EmpfPrice
-                                ON ObjectFloat_EmpfPrice.ObjectId = Object_Goods.Id
-                               AND ObjectFloat_EmpfPrice.DescId   = zc_ObjectFloat_Goods_EmpfPrice()
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_TaxKind
                                ON ObjectLink_Goods_TaxKind.ObjectId = Object_Goods.Id
