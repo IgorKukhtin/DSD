@@ -355,8 +355,8 @@ BEGIN
          
          , CASE WHEN ObjectDesc.Id = zc_Object_ReceiptService() THEN 15073510  -- малиновый
                 WHEN Object_ReceiptLevel.Id = 32658 THEN zc_Color_Blue()       -- синий                   32658;1;"Boat"
-                WHEN Object_ReceiptLevel.Id = 32851 THEN 3372543               -- оранжевый               32851;2;"Electric"  --zc_Color_Aqua()
-                WHEN Object_ReceiptLevel.Id = 32852 THEN 40704                 -- зеленый                 32852;3;"Engine"  zc_Color_Greenl()
+                WHEN Object_ReceiptLevel.Id = 32851 THEN 3372543               -- оранжевый               32851;2;"Electric"
+                WHEN Object_ReceiptLevel.Id = 32852 THEN 40704                 -- зеленый                 32852;3;"Engine"
                 ELSE  zc_Color_Black()
            END                                   AS Color_Level                          --  цвет шрифта по ReceiptLevelId
 
