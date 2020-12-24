@@ -32,13 +32,14 @@ BEGIN
                         )
 
        SELECT Object_Goods.Id                     AS Id
---            , CASE WHEN Object_Goods.ObjectCode IN (3029, 3028, 7594) THEN ObjectBlob_GoodsPhoto_Data1.ValueData ELSE '' END :: TBlob AS Image1
---            , CASE WHEN Object_Goods.ObjectCode IN (3029, 3028, 7594) THEN ObjectBlob_GoodsPhoto_Data2.ValueData ELSE '' END :: TBlob  AS Image2
---            , CASE WHEN Object_Goods.ObjectCode IN (3029, 3028, 7594) THEN ObjectBlob_GoodsPhoto_Data3.ValueData ELSE '' END :: TBlob  AS Image3
+            , CASE WHEN Object_Goods.ObjectCode IN (3029, 3028, 7594) THEN ObjectBlob_GoodsPhoto_Data1.ValueData ELSE '' END :: TBlob AS Image1
+            , CASE WHEN Object_Goods.ObjectCode IN (3029, 3028, 7594) THEN ObjectBlob_GoodsPhoto_Data2.ValueData ELSE '' END :: TBlob  AS Image2
+            , CASE WHEN Object_Goods.ObjectCode IN (3029, 3028, 7594) THEN ObjectBlob_GoodsPhoto_Data3.ValueData ELSE '' END :: TBlob  AS Image3
            
-            , ''  :: TBlob AS Image1
+          /*  , ''  :: TBlob AS Image1
             , ''  :: TBlob AS Image2
             , ''  :: TBlob AS Image3
+            */
        FROM Object AS Object_Goods
             LEFT JOIN tmpPhoto AS tmpPhoto1
                                ON tmpPhoto1.GoodsId = Object_Goods.Id

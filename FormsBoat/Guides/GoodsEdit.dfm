@@ -421,7 +421,7 @@
       Left = 0
       Top = 231
       Width = 519
-      Height = 273
+      Height = 238
       Align = alClient
       Images = dmMain.ImageList
       LayoutStyle = lsMultiRecordView
@@ -437,6 +437,7 @@
       Styles.Header = dmMain.cxHeaderStyle
       TabOrder = 0
       DataController.DataSource = PhotoDS
+      ExplicitHeight = 205
       Version = 1
       object colFileName: TcxDBEditorRow
         Options.CanAutoHeight = False
@@ -515,32 +516,32 @@
     end
     object PanelPhoto: TPanel
       Left = 0
-      Top = 504
+      Top = 469
       Width = 519
-      Height = 147
+      Height = 182
       Align = alBottom
       Caption = 'PanelPhoto'
       ShowCaption = False
       TabOrder = 4
       object Image3: TcxImage
-        Left = 305
+        Left = 341
         Top = 1
         Align = alLeft
         Properties.ReadOnly = True
         TabOrder = 0
-        ExplicitLeft = 317
-        ExplicitTop = 6
-        Height = 145
-        Width = 152
+        ExplicitLeft = 305
+        Height = 180
+        Width = 170
       end
       object Image2: TcxImage
-        Left = 153
+        Left = 171
         Top = 1
         Align = alLeft
         Properties.ReadOnly = True
         TabOrder = 1
-        Height = 145
-        Width = 152
+        ExplicitLeft = 153
+        Height = 180
+        Width = 170
       end
       object Image1: TcxImage
         Left = 1
@@ -548,23 +549,25 @@
         Align = alLeft
         Properties.ReadOnly = True
         TabOrder = 2
-        Height = 145
-        Width = 152
+        Height = 180
+        Width = 170
       end
       object cxGrid1: TcxGrid
-        Left = 69
-        Top = 30
+        Left = 85
+        Top = 54
         Width = 330
         Height = 107
         TabOrder = 3
         Visible = False
         object cxGrid1DBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = DataSource
           DataController.Summary.DefaultGroupSummaryItems = <>
           DataController.Summary.FooterSummaryItems = <>
           DataController.Summary.SummaryGroups = <>
           object cxGrid1DBTableView1Column1: TcxGridDBColumn
             DataBinding.FieldName = 'Id'
+            Width = 60
           end
         end
         object cxGrid1Level1: TcxGridLevel
@@ -2038,8 +2041,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 712
-    Top = 584
+    Left = 688
+    Top = 568
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
