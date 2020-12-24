@@ -89,6 +89,7 @@ BEGIN
                               AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
     WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_0();
     --
+
     SELECT CASE WHEN ObjectFloat_Day.ValueData > 0 THEN ObjectFloat_Day.ValueData ELSE COALESCE (ObjectFloat_Month.ValueData, 0) END
          , CASE WHEN ObjectFloat_Day.ValueData > 0 THEN FALSE ELSE TRUE END
            INTO vbMonth_1, vbIsMonth_1
@@ -101,6 +102,7 @@ BEGIN
                               AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
     WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_1();
     --
+
     SELECT CASE WHEN ObjectFloat_Day.ValueData > 0 THEN ObjectFloat_Day.ValueData ELSE COALESCE (ObjectFloat_Month.ValueData, 0) END
          , CASE WHEN ObjectFloat_Day.ValueData > 0 THEN FALSE ELSE TRUE END
            INTO vbMonth_6, vbIsMonth_6
@@ -112,7 +114,6 @@ BEGIN
                                ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
                               AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
     WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6();
-
 
     -- таблица
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmpGoodsMinPrice_List')
@@ -134,6 +135,7 @@ BEGIN
     vbDate180 := CURRENT_DATE + CASE WHEN vbIsMonth_6 = TRUE THEN vbMonth_6 ||' MONTH'  ELSE vbMonth_6 ||' DAY' END :: INTERVAL;
     vbDate30  := CURRENT_DATE + CASE WHEN vbIsMonth_1 = TRUE THEN vbMonth_1 ||' MONTH'  ELSE vbMonth_1 ||' DAY' END :: INTERVAL;
     vbDate0   := CURRENT_DATE + CASE WHEN vbIsMonth_0 = TRUE THEN vbMonth_0 ||' MONTH'  ELSE vbMonth_0 ||' DAY' END :: INTERVAL;
+
 
     -- парсим подразделения
     vbIndex := 1;
@@ -158,6 +160,7 @@ BEGIN
     -- !!!Временно!!!
     -- INSERT INTO _tmpUnitMinPrice_List (UnitId) SELECT 0 WHERE NOT EXISTS (SELECT 1 FROM _tmpUnitMinPrice_List);
 
+
     -- парсим товары
     IF COALESCE(inGoodsId_list, '') <> ''
     THEN
@@ -173,6 +176,7 @@ BEGIN
 
     -- !!!Оптимизация!!!
     ANALYZE _tmpUnitMinPrice_List;
+
 
     -- если нет товаров
     IF NOT EXISTS (SELECT 1 FROM _tmpGoodsMinPrice_List WHERE GoodsId <> 0)
@@ -208,6 +212,7 @@ BEGIN
                                                         AND ObjectLink_Goods_GoodsGroup.DescId        = zc_ObjectLink_Goods_GoodsGroup()
           ;
     END IF;
+
 
     -- !!!Оптимизация!!!
     ANALYZE _tmpGoodsMinPrice_List;
@@ -251,6 +256,7 @@ BEGIN
     -- !!!Оптимизация!!!
     ANALYZE _tmpContainerCount;
 
+
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpMovementCheck'))
     THEN
         -- таблица
@@ -292,6 +298,7 @@ BEGIN
         DELETE FROM _tmpContainerCountPD;
     END IF;
     --
+
     INSERT INTO _tmpContainerCountPD (UnitId, GoodsId, PartionDateKindId, Amount, Remains, PriceWithVAT, PartionDateDiscount)
       WITH           -- Резервы по срокам
              MovementItemChildId AS (SELECT MovementItemChild.Id
@@ -386,6 +393,7 @@ BEGIN
 
     -- !!!Оптимизация!!!
     ANALYZE _tmpContainerCountPD;
+
 
     -- еще оптимизируем - _tmpList
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpList'))
@@ -521,21 +529,26 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-       WITH tmpMI_Deferred AS
-               (SELECT MovementLinkObject_Unit.ObjectId AS UnitId
-                     , MovementItem.ObjectId     AS GoodsId
-                     , SUM (MovementItem.Amount) AS Amount
+       WITH tmpMI_DeferredAll AS
+               (SELECT Movement.Id                        AS Id
+                     , MovementLinkObject_Unit.ObjectId   AS UnitId
                 FROM _tmpMovementCheck AS Movement
 
                      INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                    ON MovementLinkObject_Unit.movementid = Movement.Id
                                                   AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                            
+               )
+          , tmpMI_Deferred AS
+               (SELECT Movement.UnitId
+                     , MovementItem.ObjectId              AS GoodsId
+                     , SUM (MovementItem.Amount)          AS Amount
+                FROM tmpMI_DeferredAll AS Movement
 
                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                             AND MovementItem.DescId     = zc_MI_Master()
                                             AND MovementItem.isErased   = FALSE
-
-                GROUP BY MovementLinkObject_Unit.ObjectId
+                GROUP BY Movement.UnitId
                        , MovementItem.ObjectId
                )
           , MarginCategory_Unit AS
@@ -813,4 +826,7 @@ $BODY$
 -- SELECT p.* FROM gpselect_goodsonunit_forsite ('375626,11769526,183292,4135547,377606,6128298,9951517,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377610,377594,11300059,377574,12812109,183291,1781716,5120968,9771036,8698426,6608396,375627,11152911,10128935,472116', '22579,54100,6994,352890,54649,29983,48988,964555,54625,54613,28849,54640,30310,34831,982510,1106785,1243320,2366715,1243457,34867,50134,4509209,22573,50725,1106995,1960400,50152,51202,34846,28858', TRUE, zfCalc_UserSite()) AS p
 --
 
-SELECT OBJECT.valuedata, p.* FROM gpselect_goodsonunit_forsite ('375626,11769526,183292,4135547,377606,6128298,9951517,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377610,377594,11300059,377574,12812109,183291,1781716,5120968,9771036,8698426,6608396,375627,11152911,10128935,472116', '494103', TRUE, zfCalc_UserSite()) AS p LEFT JOIN OBJECT ON OBJECT.ID = p.ID
+SELECT OBJECT.valuedata, p.* FROM gpselect_goodsonunit_forsite ('15212291,11769526,183292,4135547,14422124,14422095,377606,6128298,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377610,377594,377574,12812109,13711869,183291,1781716,5120968,9771036,6608396,375626,375627,11152911,10128935,472116,15171089', '36358,33727,8083882', TRUE, zfCalc_UserSite()) AS p LEFT JOIN OBJECT ON OBJECT.ID = p.ID
+
+
+--SELECT p.* FROM gpselect_goodsonunit_forsite ('377610,11769526,183292,4135547,14422124,14422095,377606,6128298,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377594,377574,15212291,12812109,13711869,183291,1781716,5120968,9771036,6608396,375626,375627,11152911,10128935,472116,15171089', '10615,15208,3031,22420,9985,5303682,6970592,14273738,26701,27199,21898,1199196,1199199,2600865,12745,33004', TRUE, zfCalc_UserSite()) AS p

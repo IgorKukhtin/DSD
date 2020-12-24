@@ -46,6 +46,10 @@ BEGIN
 
      -- проверяем регион пользователя
      vbAreaId:= (SELECT outAreaId FROM gpGet_Area_byUser(inSession));
+     
+     inGoodsSearch := '%' || zfCalc_TVarChar_Upper(inGoodsSearch) || '%';
+     inProducerSearch := '%' || zfCalc_TVarChar_Upper(inProducerSearch) || '%';
+     
 
      if COALESCE (vbAreaId, 0) = 0
      THEN
@@ -70,7 +74,6 @@ BEGIN
      ELSE
        vbJuridicalId := 0;
      END IF;
-
 
      RETURN QUERY
      WITH DD AS (SELECT DISTINCT Object_MarginCategoryItem_View.MarginPercent
@@ -102,6 +105,7 @@ BEGIN
                 AND ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Goods()
                 AND (ObjectBoolean_Top.ValueData = TRUE OR ObjectFloat_PercentMarkup.ValueData <> 0)
              )
+             
    SELECT
          LoadPriceListItem.Id                AS Id,
          LoadPriceListItem.CommonCode        AS CommonCode,
@@ -188,11 +192,11 @@ BEGIN
             LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = LinkGoodsObject.GoodsId
 
       WHERE
-        upper(LoadPriceListItem.GoodsName) LIKE UPPER ('%' || inGoodsSearch || '%')
+        LoadPriceListItem.GoodsNameUpper ILIKE inGoodsSearch
         AND
-        upper(LoadPriceListItem.ProducerName) LIKE UPPER ('%' || inProducerSearch || '%')
+        LoadPriceListItem.ProducerNameUpper ILIKE  inProducerSearch
         AND
-        upper (CAST (COALESCE (Object_Goods.GoodsCode, 0) AS TVarChar)) LIKE UPPER ('%' || inCodeSearch || '%')
+        CAST (COALESCE (Object_Goods.GoodsCode, 0) AS TVarChar) ILIKE ('%' || inCodeSearch || '%')
         AND
         (
             inGoodsSearch <> ''
@@ -225,4 +229,4 @@ $BODY$
 -- тест
 -- select * from gpSelect_GoodsSearch(inAreaId := 5803492, inGoodsSearch := '111' , inProducerSearch := '' , inCodeSearch := '' ,  inSession := '3990942 ');
 
-select * from gpSelect_GoodsSearch(inAreaId := 0 , inGoodsSearch := '' , inProducerSearch := '' , inCodeSearch := '26815' ,  inSession := '3');
+select * from gpSelect_GoodsSearch(inAreaId := 0 , inGoodsSearch := 'детралекс%1000' , inProducerSearch := '' , inCodeSearch := '' ,  inSession := '3');

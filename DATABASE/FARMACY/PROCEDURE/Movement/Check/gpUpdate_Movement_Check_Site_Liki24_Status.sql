@@ -34,6 +34,12 @@ BEGIN
       -- Удалили документ
       PERFORM gpSetErased_Movement_Check (inMovementId:= inMovementId, inSession:= inSession);
     ELSE
+
+      IF inBookingStatus = 'PreApproved'
+      THEN
+        PERFORM gpUpdate_Movement_Check_ConfirmedKindSite (inMovementId := inMovementId, inSession := inSession);
+      END IF;
+
       -- сохранили протокол
       PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
     END IF;

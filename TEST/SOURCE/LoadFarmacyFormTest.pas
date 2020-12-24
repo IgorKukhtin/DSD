@@ -455,12 +455,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckForm');
-
-
+            {
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionGoodsListForm');
-            {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJackdawsChecksForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJackdawsChecksForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJackdawsChecksEditForm'));
@@ -2519,6 +2518,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCalculationPartialSaleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_PartialSaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_PartialSaleForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_PartialSaleAllForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_PartialSaleAllForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_PartialSaleAllDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_PartialSaleAllDialogForm');
 end;
 
 procedure TLoadFormTest.LoadChangeIncomePaymentKindFormTest;

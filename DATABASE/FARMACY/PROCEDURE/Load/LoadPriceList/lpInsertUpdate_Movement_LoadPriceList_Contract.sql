@@ -309,6 +309,9 @@ end if;
         END IF;
     END IF;
 
+   -- Временно обновляем название и поставщика в верхнем регистре
+   UPDATE LoadPriceListItem SET GoodsNameUpper = zfCalc_TVarChar_Upper(GoodsName), ProducerNameUpper = zfCalc_TVarChar_Upper(ProducerName)
+   WHERE LoadPriceListItem.Id = vbLoadPriceListItemsId;
 
 END;
 $BODY$

@@ -1,10 +1,12 @@
 -- Function: gpSelect_Object_ReceiptProdModelChild_ProdColorPattern()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptProdModelChild_ProdColorPattern (Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptProdModelChild_ProdColorPattern (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptProdModelChild_ProdColorPattern (Integer,Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptProdModelChild_ProdColorPattern(
-    IN inIsErased    Boolean,       -- признак показать удаленные да / нет
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inReceiptLevelId  Integer,
+    IN inIsErased        Boolean,       -- признак показать удаленные да / нет
+    IN inSession         TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, ReceiptProdModelId Integer
              , Value TFloat
@@ -56,6 +58,10 @@ BEGIN
                                              -- значение
                                            , ObjectFloat_Value.ValueData               AS Value
                                       FROM Object AS Object_ReceiptProdModelChild
+
+                                           LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
+                                                                ON ObjectLink_ReceiptLevel.ObjectId = Object_ReceiptProdModelChild.Id
+                                                               AND ObjectLink_ReceiptLevel.DescId   = zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel()
                                            -- из чего собирается
                                            LEFT JOIN ObjectLink AS ObjectLink_Object
                                                                 ON ObjectLink_Object.ObjectId = Object_ReceiptProdModelChild.Id
@@ -71,6 +77,7 @@ BEGIN
 
                                       WHERE Object_ReceiptProdModelChild.DescId   = zc_Object_ReceiptProdModelChild()
                                         AND Object_ReceiptProdModelChild.isErased = FALSE
+                                        AND (ObjectLink_ReceiptLevel.ChildObjectId = inReceiptLevelId OR inReceiptLevelId = 0)
                                      )
 
           -- раскладываем ReceiptProdModelChild

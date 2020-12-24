@@ -686,10 +686,10 @@ BEGIN
 
                          , MAX (tmpAll.Comment) :: TVarChar AS Comment
                     FROM tmpAll
-                    WHERE tmpAll.Sum_CheckBonus <> 0
+                 /*   WHERE tmpAll.Sum_CheckBonus <> 0
                         OR tmpAll.Sum_Bonus <> 0
                         OR tmpAll.Sum_BonusFact <> 0
-                    GROUP BY  tmpAll.ContractId_master
+                    */GROUP BY  tmpAll.ContractId_master
                             , tmpAll.ContractId_child
                             , tmpAll.ContractId_find
                             , tmpAll.InvNumber_master

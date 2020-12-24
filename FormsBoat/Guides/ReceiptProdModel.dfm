@@ -285,6 +285,23 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       ParentBackground = False
       TabOrder = 1
     end
+    object cxLabel6: TcxLabel
+      Left = 338
+      Top = 24
+      Caption = #1069#1090#1072#1087' '#1089#1073#1086#1088#1082#1080':'
+    end
+    object edReceiptLevel: TcxButtonEdit
+      Left = 415
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 3
+      Width = 245
+    end
   end
   object PanelProdColorPattern: TPanel
     Left = 776
@@ -1054,6 +1071,24 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           VisibleForCustomization = False
           Width = 60
         end
+        object Color_value_ch1: TcxGridDBColumn
+          DataBinding.FieldName = 'Color_value'
+          Visible = False
+          VisibleForCustomization = False
+          Width = 60
+        end
+        object Color_Level_ch1: TcxGridDBColumn
+          DataBinding.FieldName = 'Color_Level'
+          Visible = False
+          VisibleForCustomization = False
+          Width = 60
+        end
+        object Bold_isReceiptGoods_ch1: TcxGridDBColumn
+          DataBinding.FieldName = 'Bold_isReceiptGoods'
+          Visible = False
+          VisibleForCustomization = False
+          Width = 60
+        end
       end
       object ChildView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
@@ -1434,6 +1469,18 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         end
         item
           Visible = True
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbShowAll'
         end
         item
@@ -1629,6 +1676,20 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1083#1086#1076#1082#1080' (+'#1087#1088#1086#1076#1072#1085#1085#1099#1077')'
       Visible = ivAlways
       ImageIndex = 63
+    end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel6
+    end
+    object dxBarControlContainerItem2: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edReceiptLevel
     end
   end
   object ActionList: TActionList
@@ -2353,7 +2414,20 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ValueColumn = Color_Level_ch1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Value_ch1
+        BackGroundValueColumn = Color_value_ch1
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+        ValueBoldColumn = Bold_isReceiptGoods_ch1
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
@@ -2375,6 +2449,14 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     OutputType = otMultiDataSet
     Params = <
       item
+        Name = 'inReceiptLevelId'
+        Value = Null
+        Component = GuidesReceiptLevel
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsErased'
         Value = False
         Component = actShowAllErased
@@ -2394,6 +2476,14 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         DataSet = ProdColorPatternCDS
       end>
     Params = <
+      item
+        Name = 'inReceiptLevelId'
+        Value = Null
+        Component = GuidesReceiptLevel
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inIsErased'
         Value = Null
@@ -2659,8 +2749,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 984
-    Top = 272
+    Left = 1000
+    Top = 240
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -2835,5 +2925,45 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     DataSet = GoodsChildCDS
     Left = 136
     Top = 392
+  end
+  object GuidesReceiptLevel: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edReceiptLevel
+    FormNameParam.Value = 'TReceiptLevelForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TReceiptLevelForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesReceiptLevel
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesReceiptLevel
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 520
+    Top = 48
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = GuidesReceiptLevel
+      end>
+    Left = 936
+    Top = 56
   end
 end

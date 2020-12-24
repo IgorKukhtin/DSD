@@ -2999,12 +2999,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\LossFundJournal.pas">
 				<Form>LossFundJournalForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\LossFund.pas">
 				<Form>LossFundForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_IncomeSale_UseNDSKind.pas">
@@ -3173,12 +3171,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\IncomeHouseholdInventoryCash.pas">
 				<Form>IncomeHouseholdInventoryCashForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\IncomeHouseholdInventoryCashJournal.pas">
 				<Form>IncomeHouseholdInventoryCashJournalForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_HouseholdInventoryRemainsCash.pas">
@@ -3243,12 +3239,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\ReturnInCash.pas">
 				<Form>ReturnInCashForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\ReturnInJournalCash.pas">
 				<Form>ReturnInJournalCashForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_PositionsUKTVEDonSUN.pas">
@@ -3321,32 +3315,26 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\CheckVIP.pas">
 				<Form>CheckVIPForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\CheckVIP_Search.pas">
 				<Form>CheckVIP_SearchForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\CheckDelayVIP.pas">
 				<Form>CheckDelayVIPForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\CheckSite_Search.pas">
 				<Form>CheckSite_SearchForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\CheckSite.pas">
 				<Form>CheckSiteForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\CheckDelaySite.pas">
 				<Form>CheckDelaySiteForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_ChangeCommentsSUN.pas">
@@ -3464,6 +3452,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\AmbulantClinicSPEdit.pas">
 				<Form>AmbulantClinicSPEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Sale_PartialSaleAll.pas">
+				<Form>Report_Sale_PartialSaleAllForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Sale_PartialSaleAllDialog.pas">
+				<Form>Report_Sale_PartialSaleAllDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

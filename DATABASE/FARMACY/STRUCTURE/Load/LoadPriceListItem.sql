@@ -24,6 +24,8 @@ CREATE TABLE LoadPriceListItem
   ProducerName    TVarChar , -- Производитель     
   PackCount       TVarChar , -- Количество в упаковке
   BarCode         TVarChar , -- Штрих-код
+  GoodsNameUpper     TVarChar , -- Наименование товара поставщика
+  ProducerNameUpper  TVarChar , -- Производитель     
   CONSTRAINT fk_LoadPriceListItem_LoadMovementId FOREIGN KEY (LoadPriceListId)  REFERENCES LoadPriceList (id),
   CONSTRAINT fk_LoadPriceListItem_GoodsId        FOREIGN KEY (GoodsId)          REFERENCES Object (id))
 WITH (
@@ -40,7 +42,14 @@ CREATE INDEX idx_LoadPriceListItem_LoadPriceListId_BarCode ON LoadPriceListItem(
 CREATE INDEX idx_LoadPriceListItem_GoodsId         ON LoadPriceListItem(GoodsId); 
 
 
-/*-------------------------------------------------------------------------------*/
+/*
+
+  ALTER TABLE LoadPriceListItem ADD COLUMN GoodsNameUpper     TVarChar
+  ALTER TABLE LoadPriceListItem ADD COLUMN ProducerNameUpper  TVarChar
+
+  UPDATE LoadPriceListItem SET GoodsNameUpper = zfCalc_TVarChar_Upper(GoodsName), ProducerNameUpper = zfCalc_TVarChar_Upper(ProducerName)
+
+*/
 
 
 

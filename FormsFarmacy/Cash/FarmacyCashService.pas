@@ -2729,22 +2729,22 @@ end;
 
 procedure TMainCashForm2.PauseUpdateCheck;
 begin
-  while True do
-  begin
-    spPauseUpdateCheck.Execute;
-    if not spPauseUpdateCheck.ParamByName('outisPause').Value then Exit;
-    sleep(10000);
-  end;
+//  while True do
+//  begin
+//    spPauseUpdateCheck.Execute;
+//    if not spPauseUpdateCheck.ParamByName('outisPause').Value then Exit;
+//    sleep(10000);
+//  end;
 end;
 
 procedure TMainCashForm2.PauseUpdateRemains;
 begin
-  while True do
-  begin
-    spPauseUpdateRemains.Execute;
-    if not spPauseUpdateRemains.ParamByName('outisPause').Value then Exit;
-    sleep(10000);
-  end;
+//  while True do
+//  begin
+//    spPauseUpdateRemains.Execute;
+//    if not spPauseUpdateRemains.ParamByName('outisPause').Value then Exit;
+//    sleep(10000);
+//  end;
 end;
 
 

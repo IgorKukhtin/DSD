@@ -974,7 +974,9 @@ uses
   RepricePromoUnit in '..\..\FormsFarmacy\ConnectWithOld\RepricePromoUnit.pas' {RepricePromoUnitForm},
   Calculation_SAUA in '..\..\FormsFarmacy\ConnectWithOld\Calculation_SAUA.pas' {Calculation_SAUAForm: TParentForm},
   AmbulantClinicSP in '..\..\FormsFarmacy\Guides\AmbulantClinicSP.pas' {AmbulantClinicSPForm: TParentForm},
-  AmbulantClinicSPEdit in '..\..\FormsFarmacy\Guides\AmbulantClinicSPEdit.pas' {AmbulantClinicSPEditForm: TParentForm};
+  AmbulantClinicSPEdit in '..\..\FormsFarmacy\Guides\AmbulantClinicSPEdit.pas' {AmbulantClinicSPEditForm: TParentForm},
+  Report_Sale_PartialSaleAll in '..\..\FormsFarmacy\Report\Report_Sale_PartialSaleAll.pas' {Report_Sale_PartialSaleAllForm: TParentForm},
+  Report_Sale_PartialSaleAllDialog in '..\..\FormsFarmacy\Report\Report_Sale_PartialSaleAllDialog.pas' {Report_Sale_PartialSaleAllDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

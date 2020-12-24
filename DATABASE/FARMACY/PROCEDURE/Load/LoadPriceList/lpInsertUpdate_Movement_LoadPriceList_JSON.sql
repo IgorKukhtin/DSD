@@ -383,7 +383,8 @@ BEGIN
 
 
     -- добавляем новое
-    INSERT INTO LoadPriceListItem (LoadPriceListId, CommonCode, BarCode, CodeUKTZED, GoodsCode, GoodsName, GoodsNDS, GoodsId, Price, PriceOriginal, ExpirationDate, PackCount, ProducerName, Remains)
+    INSERT INTO LoadPriceListItem (LoadPriceListId, CommonCode, BarCode, CodeUKTZED, GoodsCode, GoodsName, GoodsNDS, GoodsId, 
+                                   Price, PriceOriginal, ExpirationDate, PackCount, ProducerName, Remains)
     /*
     SELECT LoadPriceListId, inCommonCode, inBarCode, inCodeUKTZED, inGoodsCode, inGoodsName, inGoodsNDS, GoodsId, inPrice, PriceOriginal, inExpirationDate, inPackCount, inProducerName
     FROM
@@ -413,6 +414,10 @@ BEGIN
                                    AND COALESCE(LoadPriceListItem.GoodsCode, '') = COALESCE(tblJSON.inGoodsCode, '') 
                                    AND COALESCE(LoadPriceListItem.GoodsName, '') = COALESCE(tblJSON.inGoodsName, '') 
           WHERE LoadPriceListItem.LoadPriceListId = vbLoadPriceListId);
+          
+   -- Временно обновляем название и поставщика в верхнем регистре
+   UPDATE LoadPriceListItem SET GoodsNameUpper = zfCalc_TVarChar_Upper(GoodsName), ProducerNameUpper = zfCalc_TVarChar_Upper(ProducerName)
+   WHERE LoadPriceListItem.LoadPriceListId = vbLoadPriceListId;
             
 END;
 $BODY$

@@ -185,6 +185,10 @@ type
     actExecDivisionParties: TdsdExecStoredProc;
     dxBarButton14: TdxBarButton;
     spUpdateDivisionPartiesId: TdsdStoredProc;
+    actPriceDialog: TExecuteDialog;
+    actSetPrice: TdsdExecStoredProc;
+    spUpdatePrice: TdsdStoredProc;
+    dxBarButton15: TdxBarButton;
   private
     { Private declarations }
   public

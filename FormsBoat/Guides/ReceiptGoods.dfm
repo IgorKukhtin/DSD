@@ -885,6 +885,12 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           Options.Editing = False
           Width = 78
         end
+        object Color_value_ch1: TcxGridDBColumn
+          DataBinding.FieldName = 'Color_value'
+          Visible = False
+          VisibleForCustomization = False
+          Width = 60
+        end
       end
       object cxGridLevel1: TcxGridLevel
         GridView = cxGridDBTableViewCh1
@@ -1349,11 +1355,11 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'bbShowAll_ch1'
         end
         item
           Visible = True
-          ItemName = 'bbShowAll_ch1'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -1849,6 +1855,9 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           StoredProc = spSelect
         end
         item
+          StoredProc = spSelect_child1
+        end
+        item
           StoredProc = spSelect_child2
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
@@ -2252,7 +2261,12 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = Value_ch1
+        BackGroundValueColumn = Color_value_ch1
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
