@@ -63,13 +63,13 @@ BEGIN
     vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
 
 
-    IF COALESCE((SELECT count(*) as CountProc
+/*    IF COALESCE((SELECT count(*) as CountProc
                  FROM pg_stat_activity
                  WHERE state = 'active'
                    AND query ilike '%gpSelect_CashRemains_Diff_ver2%'), 0) > 7
     THEN
       Return;
-    END IF;
+    END IF; */
 
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());

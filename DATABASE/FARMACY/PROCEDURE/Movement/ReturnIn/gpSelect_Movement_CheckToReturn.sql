@@ -46,6 +46,8 @@ BEGIN
        AND Movement.OperDate BETWEEN inOperDate AND inOperDate + INTERVAL '1 DAY'
        AND COALESCE(MovementFloat_TotalSumm.ValueData, 0) = inSumma
        AND MovementLinkObject_Unit.ObjectId = inUnitId;
+       
+    CREATE INDEX idx_tmpMovement_Id ON _tmpMovement(Id);
 
     OPEN Cursor1 FOR
        SELECT Movement.Id
@@ -209,4 +211,5 @@ ALTER FUNCTION gpSelect_Movement_CheckToReturn (Integer, TDateTime, TFloat, TVar
 
 -- тест
 --
-SELECT * FROM gpSelect_Movement_CheckToReturn (inUnitId := 183292 , inOperDate := '04.08.2020', inSumma := '206.40', inSession:= '3')
+
+select * from gpSelect_Movement_CheckToReturn(inUnitId := 377605 , inOperDate := ('24.12.2020')::TDateTime , inSumma := 2.2 ,  inSession := '3990942');
