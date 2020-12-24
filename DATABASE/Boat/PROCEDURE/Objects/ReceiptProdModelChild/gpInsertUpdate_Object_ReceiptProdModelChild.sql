@@ -38,6 +38,9 @@ BEGIN
    THEN
        ioValue:= ioValue_service;
    ELSE
+       -- замена
+       IF ioValue = 0 THEN ioValue:= 1; END IF;
+       --
        ioValue_service:= 0;
    END IF;
 
