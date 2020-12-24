@@ -888,8 +888,16 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         object Color_value_ch1: TcxGridDBColumn
           DataBinding.FieldName = 'Color_value'
           Visible = False
+          Options.Editing = False
           VisibleForCustomization = False
           Width = 60
+        end
+        object Color_Level_ch1: TcxGridDBColumn
+          DataBinding.FieldName = 'Color_Level'
+          Visible = False
+          Options.Editing = False
+          VisibleForCustomization = False
+          Width = 30
         end
       end
       object cxGridLevel1: TcxGridLevel
@@ -2266,14 +2274,18 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         ColorColumn = Value_ch1
         BackGroundValueColumn = Color_value_ch1
         ColorValueList = <>
+      end
+      item
+        ValueColumn = Color_Level_ch1
+        ColorValueList = <>
       end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 360
-    Top = 344
+    Left = 416
+    Top = 384
   end
   object spSelect_child2: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ReceiptGoodsChild_ProdColorPattern'
