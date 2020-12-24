@@ -15,7 +15,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , BrandId Integer, BrandName TVarChar
              , ModelId Integer, ModelName TVarChar
              , EngineId Integer, EngineName TVarChar
-             ) AS
+             , isBasicConf Boolean, isProdColorPattern Boolean
+              ) AS
 $BODY$BEGIN
    
    -- проверка прав пользователя на вызов процедуры
@@ -25,27 +26,29 @@ $BODY$BEGIN
    THEN
        RETURN QUERY 
        SELECT
-             CAST (0 as Integer)    AS Id
+             CAST (0 as Integer)       AS Id
            , lfGet_ObjectCode(0, zc_Object_Product())   AS Code
-           , CAST ('' as TVarChar)  AS Name
+           , CAST ('' as TVarChar)     AS Name
            
-           , CAST (0 AS TFloat)     AS Hours
-           , CAST (Null AS TDateTime)  AS DateStart
-           , CAST (Null AS TDateTime)  AS DateBegin
-           , CAST (Null AS TDateTime)  AS DateSale
-           , CAST ('' AS TVarChar)  AS Article
-           , CAST ('' AS TVarChar)  AS CIN
-           , CAST ('' AS TVarChar)  AS EngineNum
-           , CAST ('' AS TVarChar)  AS Comment
+           , CAST (0 AS TFloat)        AS Hours
+           , CAST (NULL AS TDateTime)  AS DateStart
+           , CAST (NULL AS TDateTime)  AS DateBegin
+           , CAST (NULL AS TDateTime)  AS DateSale
+           , CAST ('' AS TVarChar)     AS Article
+           , CAST ('' AS TVarChar)     AS CIN
+           , CAST ('' AS TVarChar)     AS EngineNum
+           , CAST ('' AS TVarChar)     AS Comment
            
           -- , CAST (0 AS Integer)    AS ProdGroupId
           -- , CAST ('' AS TVarChar)  AS ProdGroupName
-           , CAST (0 AS Integer)    AS BrandId
-           , CAST ('' AS TVarChar)  AS BrandName
-           , CAST (0 AS Integer)    AS ModelId
-           , CAST ('' AS TVarChar)  AS ModelName
-           , CAST (0 AS Integer)    AS EngineId
-           , CAST ('' AS TVarChar)  AS EngineName
+           , CAST (0 AS Integer)       AS BrandId
+           , CAST ('' AS TVarChar)     AS BrandName
+           , CAST (0 AS Integer)       AS ModelId
+           , CAST ('' AS TVarChar)     AS ModelName
+           , CAST (0 AS Integer)       AS EngineId
+           , CAST ('' AS TVarChar)     AS EngineName
+           , CAST (TRUE AS Boolean)    AS isBasicConf
+           , CAST (TRUE AS Boolean)    AS isProdColorPattern
        ;
    ELSE
      RETURN QUERY 
@@ -75,10 +78,13 @@ $BODY$BEGIN
          , Object_Engine.Id                AS EngineId
          , Object_Engine.ValueData         AS EngineName
 
+         , COALESCE (ObjectBoolean_BasicConf.ValueData, FALSE) :: Boolean AS isBasicConf
+         , CAST (FALSE AS Boolean)         AS isProdColorPattern
+
      FROM Object AS Object_Product
-          LEFT JOIN ObjectString AS ObjectString_Comment
-                                 ON ObjectString_Comment.ObjectId = Object_Product.Id
-                                AND ObjectString_Comment.DescId = zc_ObjectString_Product_Comment()  
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_BasicConf
+                                  ON ObjectBoolean_BasicConf.ObjectId = Object_Product.Id
+                                 AND ObjectBoolean_BasicConf.DescId   = zc_ObjectBoolean_Product_BasicConf()  
 
           LEFT JOIN ObjectFloat AS ObjectFloat_Hours
                                 ON ObjectFloat_Hours.ObjectId = Object_Product.Id
@@ -107,6 +113,10 @@ $BODY$BEGIN
           LEFT JOIN ObjectString AS ObjectString_EngineNum
                                  ON ObjectString_EngineNum.ObjectId = Object_Product.Id
                                 AND ObjectString_EngineNum.DescId = zc_ObjectString_Product_EngineNum()
+
+          LEFT JOIN ObjectString AS ObjectString_Comment
+                                 ON ObjectString_Comment.ObjectId = Object_Product.Id
+                                AND ObjectString_Comment.DescId = zc_ObjectString_Product_Comment()  
 
           /*LEFT JOIN ObjectLink AS ObjectLink_ProdGroup
                                ON ObjectLink_ProdGroup.ObjectId = Object_Product.Id

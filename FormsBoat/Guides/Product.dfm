@@ -3,7 +3,7 @@ object ProductForm: TProductForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <Boat>'
   ClientHeight = 447
-  ClientWidth = 988
+  ClientWidth = 1188
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,22 +21,24 @@ object ProductForm: TProductForm
   object PanelMaster: TPanel
     Left = 0
     Top = 26
-    Width = 988
+    Width = 1188
     Height = 209
     Align = alTop
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 988
     object cxGrid: TcxGrid
       Left = 0
       Top = 17
-      Width = 988
+      Width = 1188
       Height = 192
       Align = alClient
       PopupMenu = PopupMenu
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitWidth = 988
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -141,34 +143,35 @@ object ProductForm: TProductForm
           HeaderHint = #1055#1088#1086#1076#1072#1085#1072' ('#1076#1072'/'#1085#1077#1090')'
           Width = 72
         end
+        object isBasicConf: TcxGridDBColumn
+          Caption = 'Basic Yes/no'
+          DataBinding.FieldName = 'isBasicConf'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1042#1082#1083#1102#1095#1080#1090#1100' '#1073#1072#1079#1086#1074#1091#1102' '#1050#1086#1084#1087#1083#1077#1082#1090#1072#1094#1080#1102' '#1052#1086#1076#1077#1083#1080' Yes/no'
+          Options.Editing = False
+          Width = 55
+        end
         object Code: TcxGridDBColumn
-          Caption = #1050#1086#1076
+          Caption = 'Interne Nr'
           DataBinding.FieldName = 'Code'
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1082#1086#1076
           Options.Editing = False
           Width = 43
         end
         object Article: TcxGridDBColumn
-          Caption = #1040#1088#1090#1080#1082#1091#1083
+          Caption = 'Artikel Nr'
           DataBinding.FieldName = 'Article'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
           Width = 55
         end
-        object Name: TcxGridDBColumn
-          Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-          DataBinding.FieldName = 'Name'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderGlyphAlignmentHorz = taCenter
-          Options.Editing = False
-          Width = 189
-        end
         object BrandName: TcxGridDBColumn
-          Caption = #1052#1072#1088#1082#1072
+          Caption = 'Brand'
           DataBinding.FieldName = 'BrandName'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
@@ -176,7 +179,7 @@ object ProductForm: TProductForm
           Width = 80
         end
         object ModelName: TcxGridDBColumn
-          Caption = #1052#1086#1076#1077#1083#1100
+          Caption = 'Model'
           DataBinding.FieldName = 'ModelName'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
@@ -184,7 +187,7 @@ object ProductForm: TProductForm
           Width = 80
         end
         object ProdColorName: TcxGridDBColumn
-          Caption = 'Color'
+          Caption = '~Color'
           DataBinding.FieldName = 'ProdColorName'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
@@ -201,7 +204,7 @@ object ProductForm: TProductForm
           Width = 80
         end
         object EngineNum: TcxGridDBColumn
-          Caption = #8470' Engine'
+          Caption = 'Engine Nr'
           DataBinding.FieldName = 'EngineNum'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
@@ -216,69 +219,85 @@ object ProductForm: TProductForm
           Options.Editing = False
           Width = 76
         end
-        object PriceIn: TcxGridDBColumn
-          Caption = #1062#1077#1085#1072' '#1074#1093'.'
-          DataBinding.FieldName = 'PriceIn'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        object Name: TcxGridDBColumn
+          Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+          DataBinding.FieldName = 'Name'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          HeaderGlyphAlignmentHorz = taCenter
           Options.Editing = False
-          Width = 80
-        end
-        object PriceOut: TcxGridDBColumn
-          Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '
-          DataBinding.FieldName = 'PriceOut'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.00;-,0.00; ;'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 80
-        end
-        object PriceIn2: TcxGridDBColumn
-          Caption = #1062#1077#1085#1072' '#1074#1093'. (options)'
-          DataBinding.FieldName = 'PriceIn2'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.00;-,0.00; ;'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 80
-        end
-        object PriceOut2: TcxGridDBColumn
-          Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' (options)'
-          DataBinding.FieldName = 'PriceOut2'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.00;-,0.00; ;'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 80
+          Width = 100
         end
         object PriceIn3: TcxGridDBColumn
-          Caption = #1062#1077#1085#1072' '#1074#1093'. ('#1080#1090#1086#1075#1086')'
+          Caption = 'Total EK'
           DataBinding.FieldName = 'PriceIn3'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.00;-,0.00; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057' Total'
           Options.Editing = False
           Width = 80
         end
         object PriceOut3: TcxGridDBColumn
-          Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080'  ('#1080#1090#1086#1075#1086')'
+          Caption = 'Total Ladenpreis'
           DataBinding.FieldName = 'PriceOut3'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.00;-,0.00; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089' Total'
+          Options.Editing = False
+          Width = 80
+        end
+        object PriceIn: TcxGridDBColumn
+          Caption = 'Netto EK (Basic)'
+          DataBinding.FieldName = 'PriceIn'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057' '#1041#1072#1079#1086#1074#1072#1103' '#1050#1086#1084#1087#1083#1077#1082#1090#1072#1094#1080#1103
+          Options.Editing = False
+          Width = 70
+        end
+        object PriceOut: TcxGridDBColumn
+          Caption = 'Ladenpreis (Basic)'
+          DataBinding.FieldName = 'PriceOut'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089' '#1041#1072#1079#1086#1074#1072#1103' '#1050#1086#1084#1087#1083#1077#1082#1090#1072#1094#1080#1103
+          Options.Editing = False
+          Width = 80
+        end
+        object PriceIn2: TcxGridDBColumn
+          Caption = 'Netto EK (options)'
+          DataBinding.FieldName = 'PriceIn2'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057' (options)'
+          Options.Editing = False
+          Width = 80
+        end
+        object PriceOut2: TcxGridDBColumn
+          Caption = 'Ladenpreis (options)'
+          DataBinding.FieldName = 'PriceOut2'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089' (options)'
           Options.Editing = False
           Width = 80
         end
@@ -370,17 +389,18 @@ object ProductForm: TProductForm
     object Panel3: TPanel
       Left = 0
       Top = 0
-      Width = 988
+      Width = 1188
       Height = 17
       Align = alTop
       Caption = 'Boat'
       Color = clSkyBlue
       ParentBackground = False
       TabOrder = 1
+      ExplicitWidth = 988
     end
   end
   object PanelProdOptItems: TPanel
-    Left = 452
+    Left = 652
     Top = 240
     Width = 536
     Height = 207
@@ -388,6 +408,7 @@ object ProductForm: TProductForm
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitLeft = 452
     object cxGridProdOptItems: TcxGrid
       Left = 0
       Top = 17
@@ -474,7 +495,8 @@ object ProductForm: TProductForm
               Default = True
               Kind = bkEllipsis
             end>
-          Properties.ReadOnly = False
+          Properties.ReadOnly = True
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderGlyphAlignmentHorz = taCenter
@@ -584,22 +606,24 @@ object ProductForm: TProductForm
   object PanelProdColorItems: TPanel
     Left = 0
     Top = 240
-    Width = 444
+    Width = 644
     Height = 207
     Align = alClient
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitWidth = 444
     object cxGridProdColorItems: TcxGrid
       Left = 0
       Top = 17
-      Width = 444
+      Width = 644
       Height = 190
       Align = alClient
       PopupMenu = PopupMenuColor
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitWidth = 444
       object cxGridDBTableViewProdColorItems: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ProdColorItemsDS
@@ -632,6 +656,13 @@ object ProductForm: TProductForm
         OptionsView.HeaderHeight = 40
         OptionsView.Indicator = True
         Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+        object isEnabled_ch1: TcxGridDBColumn
+          Caption = 'Yes/no'
+          DataBinding.FieldName = 'isEnabled'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 45
+        end
         object NPP_ch1: TcxGridDBColumn
           Caption = #8470' '#1087'/'#1087
           DataBinding.FieldName = 'NPP'
@@ -662,7 +693,8 @@ object ProductForm: TProductForm
           Properties.ReadOnly = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 80
+          Options.Editing = False
+          Width = 100
         end
         object ProdColorPatternName_ch1: TcxGridDBColumn
           Caption = #1069#1083#1077#1084#1077#1085#1090
@@ -678,7 +710,17 @@ object ProductForm: TProductForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderGlyphAlignmentHorz = taCenter
-          Width = 132
+          Options.Editing = False
+          Width = 58
+        end
+        object isDiff_ch1: TcxGridDBColumn
+          Caption = 'Diff'
+          DataBinding.FieldName = 'isDiff'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1090' '#1041#1072#1079#1086#1074#1086#1081' '#1050#1086#1084#1087#1083#1077#1082#1090#1072#1094#1080#1080' Yes/no'
+          Options.Editing = False
+          Width = 50
         end
         object ProdColorName_ch1: TcxGridDBColumn
           Caption = 'Farbe'
@@ -719,9 +761,16 @@ object ProductForm: TProductForm
         object Article_ch1: TcxGridDBColumn
           Caption = 'Artikel Nr'
           DataBinding.FieldName = 'Article'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Action = actChoiceFormGoods
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Options.Editing = False
           Width = 70
         end
         object GoodsName_ch1: TcxGridDBColumn
@@ -743,6 +792,7 @@ object ProductForm: TProductForm
         object MeasureName_ch1: TcxGridDBColumn
           Caption = #1045#1076'. '#1080#1079#1084'.'
           DataBinding.FieldName = 'MeasureName'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
@@ -849,30 +899,33 @@ object ProductForm: TProductForm
     object Panel2: TPanel
       Left = 0
       Top = 0
-      Width = 444
+      Width = 644
       Height = 17
       Align = alTop
       Caption = 'Items Boat Structure'
       Color = clLime
       ParentBackground = False
       TabOrder = 1
+      ExplicitWidth = 444
     end
   end
   object cxTopSplitter: TcxSplitter
     Left = 0
     Top = 235
-    Width = 988
+    Width = 1188
     Height = 5
     AlignSplitter = salTop
     Control = PanelMaster
+    ExplicitWidth = 988
   end
   object cxRightSplitter: TcxSplitter
-    Left = 444
+    Left = 644
     Top = 240
     Width = 8
     Height = 207
     AlignSplitter = salRight
     Control = PanelProdOptItems
+    ExplicitLeft = 444
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -897,8 +950,8 @@ object ProductForm: TProductForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 96
-    Top = 64
+    Left = 144
+    Top = 40
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -1137,7 +1190,7 @@ object ProductForm: TProductForm
         end>
     end
     object BarSubItemColor: TdxBarSubItem
-      Caption = 'Farbe'
+      Caption = 'Boat Structure'
       Category = 0
       Visible = ivAlways
       ItemLinks = <
@@ -2169,6 +2222,15 @@ object ProductForm: TProductForm
         Component = ProdColorItemsCDS
         ComponentItem = 'Comment'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsEnabled'
+        Value = Null
+        Component = ProdColorItemsCDS
+        ComponentItem = 'isEnabled'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

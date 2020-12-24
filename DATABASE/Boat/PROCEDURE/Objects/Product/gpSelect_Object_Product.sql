@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ProdColorName TVarChar
              , PriceIn TFloat, PriceOut TFloat
              , PriceIn2 TFloat, PriceOut2 TFloat
              , PriceIn3 TFloat, PriceOut3 TFloat
+             , isBasicConf Boolean
              , Color_fon Integer
              , isErased Boolean
               )
@@ -137,6 +138,8 @@ BEGIN
                              ELSE 0
                         END :: TFloat AS PriceOut
              
+                      , COALESCE (ObjectBoolean_BasicConf.ValueData, FALSE) :: Boolean AS isBasicConf
+
                   FROM Object AS Object_Product
                        LEFT JOIN tmpObjAll ON tmpObjAll.Id =  Object_Product.Id
                        LEFT JOIN tmpProdColorItems AS tmpProdColorItems_1
@@ -146,9 +149,9 @@ BEGIN
                                                    ON tmpProdColorItems_2.ProductId = Object_Product.Id
                                                   AND tmpProdColorItems_2.NPP = 2
              
-                       LEFT JOIN ObjectString AS ObjectString_Comment
-                                              ON ObjectString_Comment.ObjectId = Object_Product.Id
-                                             AND ObjectString_Comment.DescId = zc_ObjectString_Product_Comment()
+                       LEFT JOIN ObjectBoolean AS ObjectBoolean_BasicConf
+                                               ON ObjectBoolean_BasicConf.ObjectId = Object_Product.Id
+                                              AND ObjectBoolean_BasicConf.DescId   = zc_ObjectBoolean_Product_BasicConf()  
              
                        LEFT JOIN ObjectFloat AS ObjectFloat_Hours
                                              ON ObjectFloat_Hours.ObjectId = Object_Product.Id
@@ -178,6 +181,10 @@ BEGIN
                                               ON ObjectString_EngineNum.ObjectId = Object_Product.Id
                                              AND ObjectString_EngineNum.DescId = zc_ObjectString_Product_EngineNum()
              
+                       LEFT JOIN ObjectString AS ObjectString_Comment
+                                              ON ObjectString_Comment.ObjectId = Object_Product.Id
+                                             AND ObjectString_Comment.DescId = zc_ObjectString_Product_Comment()
+
                        LEFT JOIN ObjectLink AS ObjectLink_ProdGroup
                                             ON ObjectLink_ProdGroup.ObjectId = Object_Product.Id
                                            AND ObjectLink_ProdGroup.DescId = zc_ObjectLink_Product_ProdGroup()
@@ -251,6 +258,8 @@ BEGIN
 
          , (COALESCE (tmpResAll.PriceIn, 0) + COALESCE (tmpProdOptItems.PriceIn, 0))   :: TFloat AS PriceIn3
          , (COALESCE (tmpResAll.PriceOut, 0) + COALESCE (tmpProdOptItems.PriceOut, 0)) :: TFloat AS PriceOut3
+         
+         , tmpResAll.isBasicConf
          
          , CASE WHEN tmpResAll.isSale
                      THEN zc_Color_Lime()

@@ -10,17 +10,17 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoodsChild(
     IN inComment             TVarChar  ,    -- Название объекта
     IN inReceiptGoodsId      Integer   ,
     IN inObjectId            Integer   ,
-    IN inProdColorPatternId  Integer   , 
- INOUT ioValue               TFloat    , 
- INOUT ioValue_service       TFloat    , 
-    IN inIsEnabled           Boolean   , 
+    IN inProdColorPatternId  Integer   ,
+ INOUT ioValue               TFloat    ,
+ INOUT ioValue_service       TFloat    ,
+    IN inIsEnabled           Boolean   ,
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbIsInsert Boolean; 
+   DECLARE vbIsInsert Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ReceiptGoodsChild());
@@ -72,13 +72,13 @@ BEGIN
    ELSE
        -- определяем признак Создание/Корректировка
        vbIsInsert:= COALESCE (ioId, 0) = 0;
-    
+
        -- сохранили <Объект>
        ioId := lpInsertUpdate_Object(ioId, zc_Object_ReceiptGoodsChild(), 0, inComment);
-    
+
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReceiptGoodsChild_Value(), ioId, ioValue);
-          
+
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods(), ioId, inReceiptGoodsId);
        -- сохранили свойство <>
@@ -94,7 +94,7 @@ BEGIN
        END IF;
 
    END IF;
-   
+
 
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
@@ -106,9 +106,9 @@ BEGIN
       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), ioId, CURRENT_TIMESTAMP);
       -- сохранили свойство <Пользователь (корр)>
       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Update(), ioId, vbUserId);
-   
-   
+
    END IF;
+
 
    IF inIsEnabled = TRUE
    THEN

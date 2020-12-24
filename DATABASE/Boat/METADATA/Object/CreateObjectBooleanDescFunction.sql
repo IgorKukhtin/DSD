@@ -12,6 +12,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_ReceiptGoods_Main() RETURNS Integer 
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_ReceiptGoods(), 'zc_ObjectBoolean_ReceiptGoods_Main', 'Признак главный' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_ReceiptGoods_Main');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_ProdColorItems_ProdOptions() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_ProdColorItems_ProdOptions'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ProdColorItems(), 'zc_ObjectBoolean_ProdColorItems_ProdOptions', 'Добавить как Опцию' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_ProdColorItems_ProdOptions');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Product_BasicConf() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Product_BasicConf'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Product(), 'zc_ObjectBoolean_Product_BasicConf', 'включать все Комплектующие' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Product_BasicConf');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Product_ProdColorPattern() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Product_ProdColorPattern'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Product(), 'zc_ObjectBoolean_Product_ProdColorPattern', 'включать все Комплектующие' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Product_ProdColorPattern');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.

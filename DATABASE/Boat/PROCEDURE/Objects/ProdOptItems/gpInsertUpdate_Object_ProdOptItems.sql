@@ -39,10 +39,24 @@ BEGIN
    -- Проверка
    IF COALESCE (inProdOptPatternId, 0) = 0
    THEN
-       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Элемент не установлен.'
+       inProdOptPatternId:= (SELECT MIN (Object.Id) FROM Object WHERE Object.DescId = zc_Object_ProdOptPattern() AND Object.isErased = FALSE
+                             AND Object.Id NOT IN (SELECT ObjectLink_ProdOptPattern.ChildObjectId
+                                                   FROM Object AS Object_ProdOptItems
+                                                        INNER JOIN ObjectLink AS ObjectLink_Product
+                                                                             ON ObjectLink_Product.ObjectId      = Object_ProdOptItems.Id
+                                                                            AND ObjectLink_Product.DescId        = zc_ObjectLink_ProdOptItems_Product()
+                                                                            AND ObjectLink_Product.ChildObjectId = inProductId
+
+                                                        INNER JOIN ObjectLink AS ObjectLink_ProdOptPattern
+                                                                              ON ObjectLink_ProdOptPattern.ObjectId = Object_ProdOptItems.Id
+                                                                             AND ObjectLink_ProdOptPattern.DescId   = zc_ObjectLink_ProdOptItems_ProdOptPattern()
+                                                   WHERE Object_ProdOptItems.DescId = zc_Object_ProdOptItems()
+                                                     AND Object_ProdOptItems.isErased = FALSE
+                                                  ));
+     /*RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Элемент не установлен.'
                                              , inProcedureName := 'gpInsertUpdate_Object_ProdOptItems'
                                              , inUserId        := vbUserId
-                                              );
+                                              );*/
    END IF;
 
 

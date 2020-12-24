@@ -20,7 +20,7 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   dsdGuides, cxMaskEdit, cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
-  cxDropDownEdit, cxCalendar;
+  cxDropDownEdit, cxCalendar, cxCheckBox;
 
 type
   TProductEditForm = class(TParentForm)
@@ -64,6 +64,8 @@ type
     cxLabel13: TcxLabel;
     edEngine: TcxButtonEdit;
     GuidesProdEngine: TdsdGuides;
+    cbBasicConf: TcxCheckBox;
+    cbProdColorPattern: TcxCheckBox;
   private
     { Private declarations }
   public

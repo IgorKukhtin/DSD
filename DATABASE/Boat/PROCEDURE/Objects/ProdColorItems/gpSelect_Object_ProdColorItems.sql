@@ -13,15 +13,21 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ProdColorItems(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , NPP Integer
              , Comment TVarChar
+
              , ProductId Integer, ProductName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , ProdColorPatternId Integer, ProdColorPatternName TVarChar
              , ProdColorGroupId Integer, ProdColorGroupName TVarChar
+
              , Color_fon Integer
+
              , InsertName TVarChar
              , InsertDate TDateTime
-             , isSale Boolean
+
+             , isDiff Boolean
+             , isEnabled Boolean
              , isErased Boolean
+
              , GoodsGroupNameFull TVarChar
              , GoodsGroupName TVarChar
              , Article TVarChar
@@ -90,6 +96,7 @@ BEGIN
 
                                       WHERE Object_ReceiptProdModel.DescId   = zc_Object_ReceiptProdModel()
                                         AND Object_ReceiptProdModel.isErased = FALSE
+                                        AND inIsShowAll                      = TRUE
                                      )
           -- раскладываем ReceiptProdModelChild - для каждой ModelId
         , tmpProdColorPattern AS (SELECT tmpReceiptProdModelChild.ModelId                  AS ModelId
@@ -135,7 +142,6 @@ BEGIN
                                  )
      -- все лодки + определяем продана да/нет
    , tmpProduct AS (SELECT Object_Product.*
-                         , CASE WHEN COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() THEN FALSE ELSE TRUE END ::Boolean AS isSale
                          , ObjectLink_Model.ChildObjectId AS ModelId
                     FROM Object AS Object_Product
                          -- Модель лодки
@@ -181,25 +187,35 @@ BEGIN
        , tmpRes AS (SELECT tmpRes_all.Id
                          , tmpRes_all.Code
                          , tmpRes_all.Name
+                         , CASE WHEN tmpProdColorPattern.ProdColorPatternId > 0 AND tmpProdColorPattern.GoodsId <> tmpRes_all.GoodsId
+                                     THEN TRUE
+                                ELSE FALSE
+                           END  :: Boolean AS isDiff
+                         , TRUE :: Boolean AS isEnabled
                          , tmpRes_all.isErased
                          , tmpRes_all.ProductId
                          , tmpRes_all.GoodsId
                          , tmpRes_all.ProdColorPatternId
                      FROM tmpRes_all
+                          LEFT JOIN tmpProduct ON tmpProduct.ModelId = tmpRes_all.ProductId
+                          LEFT JOIN tmpProdColorPattern ON tmpProdColorPattern.ModelId            = tmpProduct.ModelId
+                                                       AND tmpProdColorPattern.ProdColorPatternId = tmpProdColorPattern.ProdColorPatternId
 
                    UNION ALL
                     SELECT
-                          0     :: Integer  AS Id
-                        , 0     :: Integer  AS Code
-                        , ''    :: TVarChar AS Name
-                        , FALSE :: Boolean  AS isErased
-
-                        , Object_Product.Id AS ProductId
-                        , tmpProdColorPattern.GoodsId
-                        , tmpProdColorPattern.ProdColorPatternId
+                           0     :: Integer  AS Id
+                         , 0     :: Integer  AS Code
+                         , ''    :: TVarChar AS Name
+                         , FALSE :: Boolean  AS isDiff
+                         , FALSE :: Boolean  AS isEnabled
+                         , FALSE :: Boolean  AS isErased
+ 
+                         , tmpProduct.Id     AS ProductId
+                         , tmpProdColorPattern.GoodsId
+                         , tmpProdColorPattern.ProdColorPatternId
                     FROM tmpProdColorPattern
-                         JOIN tmpProduct AS Object_Product ON Object_Product.ModelId = tmpProdColorPattern.ModelId
-                         LEFT JOIN tmpRes_all ON tmpRes_all.ProductId          = Object_Product.Id
+                         JOIN tmpProduct ON tmpProduct.ModelId = tmpProdColorPattern.ModelId
+                         LEFT JOIN tmpRes_all ON tmpRes_all.ProductId          = tmpProduct.Id
                                              AND tmpRes_all.ProdColorPatternId = tmpProdColorPattern.ProdColorPatternId
                     WHERE tmpRes_all.ProductId IS NULL
                    )
@@ -209,7 +225,7 @@ BEGIN
            Object_ProdColorItems.Id    AS Id
          , Object_ProdColorItems.Code  AS Code
          , Object_ProdColorItems.Name  AS Name
-         , ROW_NUMBER() OVER (PARTITION BY Object_Product.Id ORDER BY Object_Goods.ObjectCode ASC, Object_ProdColorPattern.ObjectCode ASC, Object_ProdColorPattern.Id ASC) :: Integer AS NPP
+         , ROW_NUMBER() OVER (PARTITION BY Object_Product.Id ORDER BY Object_ProdColorPattern.ObjectCode ASC, Object_ProdColorPattern.Id ASC) :: Integer AS NPP
 
          , ObjectString_Comment.ValueData     ::TVarChar  AS Comment
 
@@ -234,7 +250,9 @@ BEGIN
 
          , Object_Insert.ValueData          AS InsertName
          , ObjectDate_Insert.ValueData      AS InsertDate
-         , Object_Product.isSale ::Boolean  AS isSale
+
+         , Object_ProdColorItems.isDiff     AS isDiff
+         , Object_ProdColorItems.isEnabled  AS isEnabled
          , Object_ProdColorItems.isErased   AS isErased
 
          --

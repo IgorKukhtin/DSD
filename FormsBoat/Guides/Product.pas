@@ -161,6 +161,9 @@ type
     Panel3: TPanel;
     Panel2: TPanel;
     Panel1: TPanel;
+    isEnabled_ch1: TcxGridDBColumn;
+    isBasicConf: TcxGridDBColumn;
+    isDiff_ch1: TcxGridDBColumn;
   private
     { Private declarations }
   public
