@@ -3,12 +3,14 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModelChild (Integer, TVarChar, Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModelChild (Integer, TVarChar, Integer, Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModelChild (Integer, TVarChar, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModelChild (Integer, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptProdModelChild(
  INOUT ioId                  Integer   ,    -- ключ объекта <>
     IN inComment             TVarChar  ,    -- Название объекта
     IN inReceiptProdModelId  Integer   ,
     IN inObjectId            Integer   ,
+    IN inReceiptLevelId_top  Integer   ,
     IN inReceiptLevelId      Integer   ,
  INOUT ioValue               TFloat    , 
  INOUT ioValue_service       TFloat    , 
@@ -16,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptProdModelChild(
    OUT outEKPriceWVAT_summ   TFloat    ,
    OUT outBasis_summ         TFloat    ,
    OUT outBasisWVAT_summ     TFloat    ,
+   OUT outReceiptLevelName   TVarChar  ,
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -56,6 +59,11 @@ BEGIN
                                               );
    END IF;
 
+   -- переопределяем
+   IF COALESCE (inReceiptLevelId, 0) = 0
+   THEN
+       inReceiptLevelId := inReceiptLevelId_top;
+   END IF;
 
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -140,6 +148,9 @@ BEGIN
                                                             , inOperDate   := CURRENT_DATE) AS tmp
                   ) AS tmpPriceBasis ON tmpPriceBasis.GoodsId = COALESCE (ObjectLink_Goods.ChildObjectId, Object.Id)
    WHERE Object.Id = inObjectId;
+
+
+   outReceiptLevelName :=  (SELECT Object.ValueData FROM Object WHERE Object.Id = inReceiptLevelId); 
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

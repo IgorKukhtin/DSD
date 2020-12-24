@@ -52,6 +52,7 @@ object ProdColorItemsEditForm: TProdColorItemsEditForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = False
+    Style.Color = 15073510
     TabOrder = 4
     Width = 273
   end

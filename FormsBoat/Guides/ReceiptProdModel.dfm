@@ -182,7 +182,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1048#1058#1054#1043#1054' '#1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057
@@ -207,7 +206,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1048#1058#1054#1043#1054' '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
@@ -288,7 +286,10 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     object cxLabel6: TcxLabel
       Left = 338
       Top = 24
-      Caption = #1069#1090#1072#1087' '#1089#1073#1086#1088#1082#1080':'
+      Hint = #1069#1090#1072#1087' '#1089#1073#1086#1088#1082#1080
+      Caption = 'Level:'
+      ParentShowHint = False
+      ShowHint = True
     end
     object edReceiptLevel: TcxButtonEdit
       Left = 415
@@ -1376,7 +1377,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   object DataSource: TDataSource
     DataSet = MasterCDS
     Left = 608
-    Top = 88
+    Top = 128
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
@@ -2535,6 +2536,14 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inReceiptLevelId_top'
+        Value = Null
+        Component = GuidesReceiptLevel
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inReceiptLevelId'
         Value = Null
         Component = GoodsCDS
@@ -2590,6 +2599,14 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         Component = GoodsCDS
         ComponentItem = 'BasisWVAT_summ'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outReceiptLevelName'
+        Value = Null
+        Component = GoodsCDS
+        ComponentItem = 'ReceiptLevelName'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
