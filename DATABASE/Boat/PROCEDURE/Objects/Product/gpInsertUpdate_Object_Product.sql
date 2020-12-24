@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Product(
     IN inBrandId               Integer   ,
     IN inModelId               Integer   ,
     IN inEngineId              Integer   ,
-    IN inIsBasicConf           Boolean   ,    -- включать базовую Комплектацию 
+    IN inIsBasicConf           Boolean   ,    -- включать базовую Комплектацию
     IN inIsProdColorPattern    Boolean   ,    -- автоматически добавить все Items Boat Structure
     IN inHours                 TFloat    ,
     IN inDateStart             TDateTime ,
@@ -113,7 +113,14 @@ BEGIN
 
 
    -- только при создании
-   IF vbIsInsert = TRUE AND inIsProdColorPattern = TRUE
+   IF inIsProdColorPattern = TRUE AND (vbIsInsert = TRUE OR NOT EXISTS (SELECT 1
+                                                                        FROM ObjectLink AS ObjectLink_Product
+                                                                             INNER JOIN Object AS Object_ProdColorItems
+                                                                                               ON Object_ProdColorItems.Id       = ObjectLink_Product.ObjectId
+                                                                                              AND Object_ProdColorItems.isErased = FALSE
+                                                                        WHERE ObjectLink_Product.ChildObjectId = ioId
+                                                                          AND ObjectLink_Product.DescId        = zc_ObjectLink_ProdColorItems_Product()
+                                                                       ))
    THEN
        -- добавить все Items Boat Structure
        PERFORM gpInsertUpdate_Object_ProdColorItems (ioId                  := 0
@@ -123,6 +130,7 @@ BEGIN
                                                    , inProdColorPatternId  := tmp.ProdColorPatternId
                                                    , inComment             := ''
                                                    , inIsEnabled           := TRUE
+                                                   , ioIsProdOptions       := FALSE
                                                    , inSession             := inSession
                                                     )
        FROM gpSelect_Object_ProdColorItems (inIsShowAll:= TRUE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
