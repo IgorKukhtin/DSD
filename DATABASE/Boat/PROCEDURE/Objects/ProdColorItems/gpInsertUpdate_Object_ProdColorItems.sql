@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorItems (Integer, Integer, 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorItems (Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorItems (Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorItems (Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorItems (Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdColorItems(
  INOUT ioId                  Integer   ,    -- ключ объекта <Лодки>
@@ -13,9 +14,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdColorItems(
     IN inProdColorPatternId  Integer   ,
     IN inComment             TVarChar  ,
     IN inIsEnabled           Boolean   , 
+ INOUT ioIsProdOptions       Boolean   ,
     IN inSession             TVarChar       -- сессия пользователя
 )
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -85,7 +87,10 @@ BEGIN
     
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ProdColorItems_Comment(), ioId, inComment);
-    
+
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_ProdColorItems_ProdOptions(), ioId, ioIsProdOptions);
+
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdColorItems_Product(), ioId, inProductId);
     

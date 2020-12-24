@@ -164,6 +164,7 @@ type
     isEnabled_ch1: TcxGridDBColumn;
     isBasicConf: TcxGridDBColumn;
     isDiff_ch1: TcxGridDBColumn;
+    IsProdOptions_ch1: TcxGridDBColumn;
   private
     { Private declarations }
   public

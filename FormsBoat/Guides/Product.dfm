@@ -27,7 +27,6 @@ object ProductForm: TProductForm
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 988
     object cxGrid: TcxGrid
       Left = 0
       Top = 17
@@ -38,7 +37,6 @@ object ProductForm: TProductForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitWidth = 988
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -396,7 +394,6 @@ object ProductForm: TProductForm
       Color = clSkyBlue
       ParentBackground = False
       TabOrder = 1
-      ExplicitWidth = 988
     end
   end
   object PanelProdOptItems: TPanel
@@ -408,7 +405,6 @@ object ProductForm: TProductForm
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitLeft = 452
     object cxGridProdOptItems: TcxGrid
       Left = 0
       Top = 17
@@ -612,7 +608,6 @@ object ProductForm: TProductForm
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitWidth = 444
     object cxGridProdColorItems: TcxGrid
       Left = 0
       Top = 17
@@ -623,7 +618,6 @@ object ProductForm: TProductForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitWidth = 444
       object cxGridDBTableViewProdColorItems: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ProdColorItemsDS
@@ -662,6 +656,14 @@ object ProductForm: TProductForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 45
+        end
+        object IsProdOptions_ch1: TcxGridDBColumn
+          Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082#1072#1082' '#1054#1087#1094#1080#1102
+          DataBinding.FieldName = 'IsProdOptions'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082#1072#1082' '#1054#1087#1094#1080#1102
+          Width = 62
         end
         object NPP_ch1: TcxGridDBColumn
           Caption = #8470' '#1087'/'#1087
@@ -906,7 +908,6 @@ object ProductForm: TProductForm
       Color = clLime
       ParentBackground = False
       TabOrder = 1
-      ExplicitWidth = 444
     end
   end
   object cxTopSplitter: TcxSplitter
@@ -916,7 +917,6 @@ object ProductForm: TProductForm
     Height = 5
     AlignSplitter = salTop
     Control = PanelMaster
-    ExplicitWidth = 988
   end
   object cxRightSplitter: TcxSplitter
     Left = 644
@@ -925,7 +925,6 @@ object ProductForm: TProductForm
     Height = 207
     AlignSplitter = salRight
     Control = PanelProdOptItems
-    ExplicitLeft = 444
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -2233,10 +2232,19 @@ object ProductForm: TProductForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioIsProdOptions'
+        Value = Null
+        Component = ProdColorItemsCDS
+        ComponentItem = 'IsProdOptions'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 40
-    Top = 288
+    Left = 32
+    Top = 320
   end
   object spInsertUpdateProdOptItems: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ProdOptItems'

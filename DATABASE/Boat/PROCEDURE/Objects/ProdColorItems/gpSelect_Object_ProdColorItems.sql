@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
 
+             , isProdOptions Boolean
              , isDiff Boolean
              , isEnabled Boolean
              , isErased Boolean
@@ -256,6 +257,7 @@ BEGIN
          , Object_Insert.ValueData          AS InsertName
          , ObjectDate_Insert.ValueData      AS InsertDate
 
+         , COALESCE (ObjectBoolean_ProdOptions.ValueData, FALSE) :: Boolean AS isProdOptions
          , Object_ProdColorItems.isDiff     AS isDiff
          , Object_ProdColorItems.isEnabled  AS isEnabled
          , Object_ProdColorItems.isErased   AS isErased
@@ -291,6 +293,10 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_ProdColorItems.Id
                                 AND ObjectString_Comment.DescId = zc_ObjectString_ProdColorItems_Comment()
+          -- добавить как Опцию (да/ нет)
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_ProdOptions
+                                  ON ObjectBoolean_ProdOptions.ObjectId = Object_ProdColorItems.Id
+                                 AND ObjectBoolean_ProdOptions.DescId   = zc_ObjectBoolean_ProdColorItems_ProdOptions()
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_ProdColorItems.Id
