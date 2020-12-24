@@ -480,7 +480,7 @@ object GoodsForm: TGoodsForm
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 40
-    Top = 272
+    Top = 232
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>

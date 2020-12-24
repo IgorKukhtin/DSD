@@ -23,7 +23,10 @@ uses
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, cxButtonEdit, dsdAddOn, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxCalendar, dxSkinsdxBarPainter, cxStyles, cxVGrid, cxDBVGrid,
-  cxInplaceContainer, dxBar, Vcl.ExtCtrls, dxBarExtItems, cxClasses, Document;
+  cxInplaceContainer, dxBar, Vcl.ExtCtrls, dxBarExtItems, cxClasses, Document,
+  cxImage, dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage,
+  cxDBData, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
+  cxGridTableView, cxGridDBTableView, cxGrid;
 
 type
   TGoodsEditForm = class(TParentForm)
@@ -149,6 +152,18 @@ type
     MultiActionInsertPhoto: TMultiAction;
     actInsertPhoto: TdsdExecStoredProc;
     actDeletePhoto: TdsdExecStoredProc;
+    PanelPhoto: TPanel;
+    Image3: TcxImage;
+    Image2: TcxImage;
+    Image1: TcxImage;
+    spGetPhoto_panel: TdsdStoredProc;
+    DataSource: TDataSource;
+    ClientDataSet: TClientDataSet;
+    DBViewAddOn: TdsdDBViewAddOn;
+    cxGrid1DBTableView1: TcxGridDBTableView;
+    cxGrid1Level1: TcxGridLevel;
+    cxGrid1: TcxGrid;
+    cxGrid1DBTableView1Column1: TcxGridDBColumn;
   private
     { Private declarations }
   public

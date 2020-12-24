@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
-  ClientHeight = 641
+  ClientHeight = 651
   ClientWidth = 863
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -410,18 +410,18 @@
     Width = 135
   end
   object Panel: TPanel
-    Left = 352
+    Left = 344
     Top = 0
-    Width = 511
-    Height = 641
+    Width = 519
+    Height = 651
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 53
     object cxDBVerticalGrid: TcxDBVerticalGrid
       Left = 0
-      Top = 249
-      Width = 511
-      Height = 392
+      Top = 231
+      Width = 519
+      Height = 273
       Align = alClient
       Images = dmMain.ImageList
       LayoutStyle = lsMultiRecordView
@@ -460,15 +460,15 @@
     object dxBarDockControl1: TdxBarDockControl
       Left = 0
       Top = 0
-      Width = 511
+      Width = 519
       Height = 26
       Align = dalTop
       BarManager = BarManager
     end
     object dxBarDockControl3: TdxBarDockControl
       Left = 0
-      Top = 223
-      Width = 511
+      Top = 205
+      Width = 519
       Height = 26
       Align = dalTop
       BarManager = BarManager
@@ -476,8 +476,8 @@
     object cxDBVerticalGrid1: TcxDBVerticalGrid
       Left = 0
       Top = 26
-      Width = 511
-      Height = 197
+      Width = 519
+      Height = 179
       Align = alTop
       Images = dmMain.ImageList
       LayoutStyle = lsMultiRecordView
@@ -513,6 +513,65 @@
         Version = 1
       end
     end
+    object PanelPhoto: TPanel
+      Left = 0
+      Top = 504
+      Width = 519
+      Height = 147
+      Align = alBottom
+      Caption = 'PanelPhoto'
+      ShowCaption = False
+      TabOrder = 4
+      object Image3: TcxImage
+        Left = 305
+        Top = 1
+        Align = alLeft
+        Properties.ReadOnly = True
+        TabOrder = 0
+        ExplicitLeft = 317
+        ExplicitTop = 6
+        Height = 145
+        Width = 152
+      end
+      object Image2: TcxImage
+        Left = 153
+        Top = 1
+        Align = alLeft
+        Properties.ReadOnly = True
+        TabOrder = 1
+        Height = 145
+        Width = 152
+      end
+      object Image1: TcxImage
+        Left = 1
+        Top = 1
+        Align = alLeft
+        Properties.ReadOnly = True
+        TabOrder = 2
+        Height = 145
+        Width = 152
+      end
+      object cxGrid1: TcxGrid
+        Left = 69
+        Top = 30
+        Width = 330
+        Height = 107
+        TabOrder = 3
+        Visible = False
+        object cxGrid1DBTableView1: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          object cxGrid1DBTableView1Column1: TcxGridDBColumn
+            DataBinding.FieldName = 'Id'
+          end
+        end
+        object cxGrid1Level1: TcxGridLevel
+          GridView = cxGrid1DBTableView1
+        end
+      end
+    end
   end
   object ActionList: TActionList
     Left = 248
@@ -530,6 +589,9 @@
         end
         item
           StoredProc = spPhotoSelect
+        end
+        item
+          StoredProc = spGetPhoto_panel
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1616,8 +1678,8 @@
     Top = 392
   end
   object ActionList1: TActionList
-    Left = 405
-    Top = 437
+    Left = 453
+    Top = 421
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1958,5 +2020,74 @@
       Action = actDeleteDocument
       Category = 0
     end
+  end
+  object spGetPhoto_panel: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_Goods_photo'
+    DataSet = ClientDataSet
+    DataSets = <
+      item
+        DataSet = ClientDataSet
+      end>
+    Params = <
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = dsdFormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 712
+    Top = 584
+  end
+  object DataSource: TDataSource
+    DataSet = ClientDataSet
+    Left = 808
+    Top = 528
+  end
+  object ClientDataSet: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 760
+    Top = 528
+  end
+  object DBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGrid1DBTableView1
+    OnDblClickActionList = <
+      item
+      end
+      item
+      end>
+    ActionItemList = <
+      item
+        ShortCut = 13
+      end
+      item
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <
+      item
+        FieldName = 'Image1'
+        Image = Image1
+      end
+      item
+        FieldName = 'Image2'
+        Image = Image2
+      end
+      item
+        FieldName = 'Image3'
+        Image = Image3
+      end>
+    PropertiesCellList = <>
+    Left = 792
+    Top = 592
   end
 end
