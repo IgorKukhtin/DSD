@@ -45,18 +45,33 @@ BEGIN
                                      , Object_ProdColor.ValueData       AS ProdColorName
                                      , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Product.ChildObjectId ORDER BY Object_ProdColorGroup.ObjectCode ASC, Object_ProdColorItems.ObjectCode ASC) :: Integer AS NPP
                                  FROM Object AS Object_ProdColorItems
+                                      -- Лодка
                                       LEFT JOIN ObjectLink AS ObjectLink_Product
                                                            ON ObjectLink_Product.ObjectId = Object_ProdColorItems.Id
                                                           AND ObjectLink_Product.DescId = zc_ObjectLink_ProdColorItems_Product()
+                                      -- Товар - если была замена
+                                      LEFT JOIN ObjectLink AS ObjectLink_Goods
+                                                           ON ObjectLink_Goods.ObjectId = Object_ProdColorItems.Id
+                                                          AND ObjectLink_Goods.DescId = zc_ObjectLink_ProdColorItems_Goods()
+                                      -- Boat Structure
+                                      LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                                                           ON ObjectLink_ProdColorPattern.ObjectId = Object_ProdColorItems.Id
+                                                          AND ObjectLink_ProdColorPattern.DescId   = zc_ObjectLink_ProdColorItems_ProdColorPattern()
 
+                                      -- Категория/Группа Boat Structure
                                       LEFT JOIN ObjectLink AS ObjectLink_ProdColorGroup
-                                                           ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorItems.Id
-                                                          AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorItems_ProdColorGroup()
+                                                           ON ObjectLink_ProdColorGroup.ObjectId = ObjectLink_ProdColorPattern.ChildObjectId
+                                                          AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
                                       LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId
 
+                                      -- Товар Boat Structure
+                                      LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern_Goods
+                                                           ON ObjectLink_ProdColorPattern_Goods.ObjectId = ObjectLink_ProdColorPattern.ChildObjectId
+                                                          AND ObjectLink_ProdColorPattern_Goods.DescId = zc_ObjectLink_ProdColorPattern_Goods()
+                                      -- Цвет Или/Или
                                       LEFT JOIN ObjectLink AS ObjectLink_ProdColor
-                                                           ON ObjectLink_ProdColor.ObjectId = Object_ProdColorItems.Id
-                                                          AND ObjectLink_ProdColor.DescId = zc_ObjectLink_ProdColorItems_ProdColor()
+                                                           ON ObjectLink_ProdColor.ObjectId = COALESCE (ObjectLink_Goods.ChildObjectId, ObjectLink_ProdColorPattern_Goods.ChildObjectId)
+                                                          AND ObjectLink_ProdColor.DescId   = zc_ObjectLink_Goods_ProdColor()
                                       LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_ProdColor.ChildObjectId
 
 

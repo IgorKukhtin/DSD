@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
 
              , ProductId Integer, ProductName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsId_Receipt Integer
              , ProdColorPatternId Integer, ProdColorPatternName TVarChar
              , ProdColorGroupId Integer, ProdColorGroupName TVarChar
 
@@ -96,7 +97,6 @@ BEGIN
 
                                       WHERE Object_ReceiptProdModel.DescId   = zc_Object_ReceiptProdModel()
                                         AND Object_ReceiptProdModel.isErased = FALSE
-                                        AND inIsShowAll                      = TRUE
                                      )
           -- раскладываем ReceiptProdModelChild - для каждой ModelId
         , tmpProdColorPattern AS (SELECT tmpReceiptProdModelChild.ModelId                  AS ModelId
@@ -187,7 +187,7 @@ BEGIN
        , tmpRes AS (SELECT tmpRes_all.Id
                          , tmpRes_all.Code
                          , tmpRes_all.Name
-                         , CASE WHEN tmpProdColorPattern.ProdColorPatternId > 0 AND tmpProdColorPattern.GoodsId <> tmpRes_all.GoodsId
+                         , CASE WHEN tmpProdColorPattern.ProdColorPatternId > 0 AND COALESCE (tmpProdColorPattern.GoodsId, 0) <> COALESCE (tmpRes_all.GoodsId, 0)
                                      THEN TRUE
                                 ELSE FALSE
                            END  :: Boolean AS isDiff
@@ -196,10 +196,11 @@ BEGIN
                          , tmpRes_all.ProductId
                          , tmpRes_all.GoodsId
                          , tmpRes_all.ProdColorPatternId
+                         , tmpProdColorPattern.GoodsId AS GoodsId_Receipt
                      FROM tmpRes_all
-                          LEFT JOIN tmpProduct ON tmpProduct.ModelId = tmpRes_all.ProductId
+                          LEFT JOIN tmpProduct ON tmpProduct.Id = tmpRes_all.ProductId
                           LEFT JOIN tmpProdColorPattern ON tmpProdColorPattern.ModelId            = tmpProduct.ModelId
-                                                       AND tmpProdColorPattern.ProdColorPatternId = tmpProdColorPattern.ProdColorPatternId
+                                                       AND tmpProdColorPattern.ProdColorPatternId = tmpRes_all.ProdColorPatternId
 
                    UNION ALL
                     SELECT
@@ -213,11 +214,13 @@ BEGIN
                          , tmpProduct.Id     AS ProductId
                          , tmpProdColorPattern.GoodsId
                          , tmpProdColorPattern.ProdColorPatternId
+                         , tmpProdColorPattern.GoodsId AS GoodsId_Receipt
                     FROM tmpProdColorPattern
                          JOIN tmpProduct ON tmpProduct.ModelId = tmpProdColorPattern.ModelId
                          LEFT JOIN tmpRes_all ON tmpRes_all.ProductId          = tmpProduct.Id
                                              AND tmpRes_all.ProdColorPatternId = tmpProdColorPattern.ProdColorPatternId
                     WHERE tmpRes_all.ProductId IS NULL
+                      AND inIsShowAll          = TRUE
                    )
 
      -- Результат
@@ -235,6 +238,8 @@ BEGIN
          , Object_Goods.Id           ::Integer   AS GoodsId
          , Object_Goods.ObjectCode   ::Integer   AS GoodsCode
          , Object_Goods.ValueData    ::TVarChar  AS GoodsName
+         
+         , Object_ProdColorItems.GoodsId_Receipt
 
          , Object_ProdColorPattern.Id         ::Integer   AS ProdColorPatternId
          , Object_ProdColorPattern.ValueData  ::TVarChar  AS ProdColorPatternName
