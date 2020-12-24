@@ -2037,6 +2037,9 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         end
         item
           StoredProc = spSelect_child1
+        end
+        item
+          StoredProc = spSelect_child2
         end>
       Caption = 'actUpdateDataSet_Child1'
       DataSource = Child1DS

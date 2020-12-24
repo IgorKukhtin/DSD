@@ -2188,6 +2188,12 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdate_Goods
+        end
+        item
+          StoredProc = spSelect_Goods
+        end
+        item
+          StoredProc = spSelect_ProdColorPattern
         end>
       Caption = 'actUpdateDataSetGoods'
       DataSource = GoodsDS

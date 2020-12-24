@@ -701,23 +701,25 @@ object ProductForm: TProductForm
           Width = 80
         end
         object PriceIn_ch2: TcxGridDBColumn
-          Caption = #1062#1077#1085#1072', '#1074#1093'.'
+          Caption = 'Netto EK'
           DataBinding.FieldName = 'PriceIn'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
           Width = 80
         end
         object PriceOut_ch2: TcxGridDBColumn
-          Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
+          Caption = 'Ladenpreis'
           DataBinding.FieldName = 'PriceOut'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089
           Width = 66
         end
         object Comment_ch2: TcxGridDBColumn
@@ -1855,6 +1857,12 @@ object ProductForm: TProductForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdateProdColorItems
+        end
+        item
+          StoredProc = spSelect_ProdColorItems
+        end
+        item
+          StoredProc = spSelect_ProdOptItems
         end>
       Caption = 'actUpdateDataSetProdColorItems'
       DataSource = ProdColorItemsDS
