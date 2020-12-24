@@ -2424,10 +2424,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         ColorColumn = Value_ch1
         BackGroundValueColumn = Color_value_ch1
         ColorValueList = <>
-      end
-      item
-        ColorValueList = <>
-        ValueBoldColumn = Bold_isReceiptGoods_ch1
       end>
     ColumnAddOnList = <>
     ColumnEnterList = <>

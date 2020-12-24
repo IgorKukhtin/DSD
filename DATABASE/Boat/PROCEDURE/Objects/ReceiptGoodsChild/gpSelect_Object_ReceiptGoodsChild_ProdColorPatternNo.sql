@@ -28,6 +28,7 @@ RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
              , Basis_summ TFloat
              , BasisWVAT_summ TFloat
              , Color_value Integer
+             , Color_Level Integer
               )
 AS
 $BODY$
@@ -112,6 +113,9 @@ BEGIN
                END) ::TFloat BasisWVAT_summ
 
         , 15138790 /*zc_Color_Pink()*/     ::Integer                  AS Color_value                          --  фон для Value
+        , CASE WHEN ObjectDesc.Id = zc_Object_ReceiptService() THEN 15073510  -- малиновый
+               ELSE  zc_Color_Blue() --zc_Color_Black()
+          END                              ::Integer                  AS Color_Level
 
      FROM Object AS Object_ReceiptGoodsChild
 
