@@ -476,7 +476,7 @@ begin
                  aSaleRequest.OrderCode := ParamByName('outInvoiceNumber').Value;
                  //Дата прихода
                  aSaleRequest.OrderDate:= TXSDateTime.Create;
-                 aSaleRequest.OrderDate.AsDateTime:= TXSStrToDate(ParamByName('outInvoiceDate').Value);
+                 aSaleRequest.OrderDate.AsDateTime:= ParamByName('outInvoiceDate').Value;
               end;
 
               try
@@ -1339,7 +1339,7 @@ begin
              ParamByName('inAmount').Value  := CheckCDS.FieldByName('Amount').AsCurrency;
              Execute;
              FInvoiceNumber := ParamByName('outInvoiceNumber').Value;
-             FInvoiceDate := TXSStrToDate(ParamByName('outInvoiceDate').Value);
+             FInvoiceDate := ParamByName('outInvoiceDate').Value;
           end;
 
           try

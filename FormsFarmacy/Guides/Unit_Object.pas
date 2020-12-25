@@ -98,7 +98,6 @@ type
     bbUpdateKoeffSUN: TdxBarButton;
     spUpdate_Unit_isSUN_v2_Yes: TdsdStoredProc;
     spUpdate_Unit_isSUN_in_yes: TdsdStoredProc;
-    spUpdate_Unit_isSUN_out_yes: TdsdStoredProc;
     actUpdate_Unit_isSUN_v2_Yes: TdsdExecStoredProc;
     actUpdate_Unit_isSUN_in_yes: TdsdExecStoredProc;
     actUpdate_Unit_isSUN_out_yes: TdsdExecStoredProc;
@@ -238,7 +237,6 @@ type
     macUpdate_Unit_isSUN_v3_out_no: TMultiAction;
     macUpdate_Unit_isSUN_v3_in_no: TMultiAction;
     bbUpdate_Unit_isSUN_in_no: TdxBarButton;
-    spUpdate_Unit_isSUN_out_no: TdsdStoredProc;
     actUpdate_Unit_isSUN_out_no: TdsdExecStoredProc;
     bbUpdate_Unit_isSUN_out_no: TdxBarButton;
     spUpdate_Unit_isSUN_NotSold_no: TdsdStoredProc;
@@ -337,6 +335,26 @@ type
     actExecUpdate_isShareFromPrice: TdsdExecStoredProc;
     bbisShareFromPrice: TdxBarButton;
     dxBarStatic2: TdxBarStatic;
+    isSUN_Supplement_in: TcxGridDBColumn;
+    isSUN_Supplement_out: TcxGridDBColumn;
+    spUpdate_Unit_isSUN_Supplement_in_yes: TdsdStoredProc;
+    spUpdate_Unit_isSUN_Supplement_in_no: TdsdStoredProc;
+    spUpdate_Unit_isSUN_out_no: TdsdStoredProc;
+    spUpdate_Unit_isSUN_out_yes: TdsdStoredProc;
+    spUpdate_Unit_isSUN_Supplement_out_yes: TdsdStoredProc;
+    spUpdate_Unit_isSUN_Supplement_out_no: TdsdStoredProc;
+    actUpdate_Unit_isSUN_Supplement_in_yes: TdsdExecStoredProc;
+    actUpdate_Unit_isSUN_Supplement_in_no: TdsdExecStoredProc;
+    macUpdate_Unit_isSUN_Supplement_out_yes: TMultiAction;
+    macUpdate_Unit_isSUN_Supplement_out_no: TMultiAction;
+    macUpdate_Unit_isSUN_Supplement_in_yes: TMultiAction;
+    macUpdate_Unit_isSUN_Supplement_in_no: TMultiAction;
+    actUpdate_Unit_isSUN_Supplement_out_yes: TdsdExecStoredProc;
+    actUpdate_Unit_isSUN_Supplement_out_no: TdsdExecStoredProc;
+    bbUpdate_Unit_isSUN_Supplement_in_yes: TdxBarButton;
+    bbUpdate_Unit_isSUN_Supplement_out_yes: TdxBarButton;
+    bbUpdate_Unit_isSUN_Supplement_in_no: TdxBarButton;
+    bbUpdate_Unit_isSUN_Supplement_out_no: TdxBarButton;
   private
     { Private declarations }
   public
