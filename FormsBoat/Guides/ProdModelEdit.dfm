@@ -2,7 +2,7 @@ object ProdModelEditForm: TProdModelEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1052#1086#1076#1077#1083#1080'>'
-  ClientHeight = 439
+  ClientHeight = 479
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@ object ProdModelEditForm: TProdModelEditForm
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 398
+    Top = 454
     Width = 75
     Height = 25
     Action = actInsertUpdateGuides
@@ -38,7 +38,7 @@ object ProdModelEditForm: TProdModelEditForm
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 398
+    Top = 454
     Width = 75
     Height = 25
     Action = actFormClose
@@ -63,12 +63,12 @@ object ProdModelEditForm: TProdModelEditForm
   end
   object cxLabel3: TcxLabel
     Left = 10
-    Top = 338
+    Top = 394
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit
     Left = 10
-    Top = 358
+    Top = 414
     TabOrder = 7
     Width = 273
   end
@@ -482,11 +482,11 @@ object ProdModelEditForm: TProdModelEditForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 112
-    Top = 407
+    Top = 463
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 272
-    Top = 400
+    Top = 456
   end
   object GuidesBrand: TdsdGuides
     KeyField = 'Id'

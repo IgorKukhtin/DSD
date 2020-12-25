@@ -64,7 +64,7 @@ type
     Comment: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
-    Level: TcxGridDBColumn;
+    SalePrice: TcxGridDBColumn;
   private
     { Private declarations }
   public

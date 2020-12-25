@@ -301,11 +301,22 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptService_TaxKind() RETURNS Intege
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ReceiptService_TaxKind', 'Тип НДС', zc_Object_ReceiptService(), zc_Object_TaxKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptService_TaxKind');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ProdOptions_TaxKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdOptions_TaxKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ProdOptions_TaxKind', 'Тип НДС', zc_Object_ProdOptions(), zc_Object_TaxKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdOptions_TaxKind');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ProdOptions_Model() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdOptions_Model'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ProdOptions_Model', 'Модель', zc_Object_ProdOptions(), zc_Object_ProdModel() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdOptions_Model');
+
+
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.12.20         * zc_ObjectLink_ProdOptions_TaxKind
+                    zc_ObjectLink_ProdOptions_Model
  22.12.20         * zc_ObjectLink_ReceiptService_TaxKind
  15.12.20         * zc_ObjectLink_TranslateMessage_Language
                     zc_ObjectLink_TranslateMessage_Parent

@@ -2,7 +2,7 @@ object ProdOptionsEditForm: TProdOptionsEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1054#1087#1094#1080#1080'>'
-  ClientHeight = 253
+  ClientHeight = 455
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@ object ProdOptionsEditForm: TProdOptionsEditForm
   end
   object cxButton1: TcxButton
     Left = 33
-    Top = 212
+    Top = 415
     Width = 75
     Height = 25
     Action = actInsertUpdateGuides
@@ -38,7 +38,7 @@ object ProdOptionsEditForm: TProdOptionsEditForm
   end
   object cxButton2: TcxButton
     Left = 177
-    Top = 212
+    Top = 415
     Width = 75
     Height = 25
     Action = actFormClose
@@ -63,26 +63,96 @@ object ProdOptionsEditForm: TProdOptionsEditForm
   end
   object cxLabel3: TcxLabel
     Left = 10
-    Top = 152
+    Top = 355
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit
     Left = 10
-    Top = 169
+    Top = 372
     TabOrder = 7
     Width = 273
   end
   object cxLabel6: TcxLabel
     Left = 10
     Top = 99
-    Caption = #8470' '#1087'/'#1087
+    Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089
   end
-  object edLevel: TcxCurrencyEdit
+  object edSalePrice: TcxCurrencyEdit
     Left = 10
     Top = 119
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 9
+    Width = 273
+  end
+  object cxLabel12: TcxLabel
+    Left = 10
+    Top = 197
+    Caption = #1052#1086#1076#1077#1083#1100
+  end
+  object edModel: TcxButtonEdit
+    Left = 10
+    Top = 217
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 273
+  end
+  object cxLabel11: TcxLabel
+    Left = 10
+    Top = 247
+    Caption = #1052#1072#1088#1082#1072
+  end
+  object edBrand: TcxButtonEdit
+    Left = 10
+    Top = 267
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 13
+    Width = 273
+  end
+  object cxLabel4: TcxLabel
+    Left = 10
+    Top = 294
+    Caption = #1052#1086#1090#1086#1088
+  end
+  object edProdEngine: TcxButtonEdit
+    Left = 10
+    Top = 314
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 15
+    Width = 273
+  end
+  object cxLabel5: TcxLabel
+    Left = 10
+    Top = 150
+    Caption = #1058#1080#1087' '#1053#1044#1057
+  end
+  object edTaxKind: TcxButtonEdit
+    Left = 10
+    Top = 170
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 17
     Width = 273
   end
   object ActionList: TActionList
@@ -146,9 +216,9 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inLevel'
+        Name = 'inSalePrice'
         Value = Null
-        Component = edLevel
+        Component = edSalePrice
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -158,6 +228,22 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         Value = Null
         Component = edComment
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inModelId'
+        Value = Null
+        Component = GuidesModel
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTaxKindId'
+        Value = Null
+        Component = GuidesTaxKind
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -204,9 +290,9 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Level'
+        Name = 'SalePrice'
         Value = Null
-        Component = edLevel
+        Component = edSalePrice
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -214,6 +300,51 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         Name = 'Comment'
         Value = Null
         Component = edComment
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindId'
+        Value = Null
+        Component = GuidesTaxKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindName'
+        Value = Null
+        Component = GuidesTaxKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ModelId'
+        Value = Null
+        Component = GuidesModel
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ModelName'
+        Value = Null
+        Component = GuidesModel
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProdEngineId'
+        Value = Null
+        Component = GuidesProdEngine
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProdEngineName'
+        Value = Null
+        Component = GuidesProdEngine
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -234,10 +365,196 @@ object ProdOptionsEditForm: TProdOptionsEditForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 200
-    Top = 160
+    Top = 363
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 256
-    Top = 360
+    Left = 240
+    Top = 408
+  end
+  object GuidesModel: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edModel
+    FormNameParam.Value = 'TProdModelForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TProdModelForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesModel
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesModel
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BrandId'
+        Value = ''
+        Component = GuidesBrand
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BrandName'
+        Value = ''
+        Component = GuidesBrand
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProdEngineId'
+        Value = ''
+        Component = GuidesProdEngine
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProdEngineName'
+        Value = ''
+        Component = GuidesProdEngine
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 183
+    Top = 207
+  end
+  object GuidesBrand: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBrand
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TBrandForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBrandForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBrand
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBrand
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 103
+    Top = 255
+  end
+  object GuidesProdEngine: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edProdEngine
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TProdEngineForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TProdEngineForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesProdEngine
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesProdEngine
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 143
+    Top = 302
+  end
+  object GuidesTaxKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edTaxKind
+    FormNameParam.Value = 'TTaxKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TTaxKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesTaxKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesTaxKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BrandId'
+        Value = ''
+        Component = GuidesBrand
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BrandName'
+        Value = ''
+        Component = GuidesBrand
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProdEngineId'
+        Value = ''
+        Component = GuidesProdEngine
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProdEngineName'
+        Value = ''
+        Component = GuidesProdEngine
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 175
+    Top = 152
   end
 end

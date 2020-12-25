@@ -41,7 +41,19 @@ type
     cxLabel3: TcxLabel;
     edComment: TcxTextEdit;
     cxLabel6: TcxLabel;
-    edLevel: TcxCurrencyEdit;
+    edSalePrice: TcxCurrencyEdit;
+    cxLabel12: TcxLabel;
+    edModel: TcxButtonEdit;
+    cxLabel11: TcxLabel;
+    edBrand: TcxButtonEdit;
+    cxLabel4: TcxLabel;
+    edProdEngine: TcxButtonEdit;
+    GuidesModel: TdsdGuides;
+    GuidesBrand: TdsdGuides;
+    GuidesProdEngine: TdsdGuides;
+    cxLabel5: TcxLabel;
+    edTaxKind: TcxButtonEdit;
+    GuidesTaxKind: TdsdGuides;
   private
     { Private declarations }
   public

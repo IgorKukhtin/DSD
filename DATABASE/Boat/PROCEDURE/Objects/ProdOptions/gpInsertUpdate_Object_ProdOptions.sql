@@ -1,14 +1,17 @@
 -- Function: gpInsertUpdate_Object_ProdOptions()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptions(Integer, Integer, TVarChar, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptions(Integer, Integer, TVarChar, TFloat, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptions(
- INOUT ioId       Integer   ,    -- ключ объекта <Названия опций>
-    IN inCode     Integer   ,    -- Код объекта 
-    IN inName     TVarChar  ,    -- Название объекта 
-    IN inLevel    TFloat    ,
-    IN inComment  TVarChar  ,
-    IN inSession  TVarChar       -- сессия пользователя
+ INOUT ioId           Integer   ,    -- ключ объекта <Названия опций>
+    IN inCode         Integer   ,    -- Код объекта 
+    IN inName         TVarChar  ,    -- Название объекта 
+    IN inSalePrice    TFloat    ,
+    IN inComment      TVarChar  ,
+    IN inModelId      Integer   ,
+    IN inTaxKindId    Integer   ,
+    IN inSession      TVarChar       -- сессия пользователя
 )
 RETURNS Integer
 AS
@@ -38,8 +41,12 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ProdOptions_Comment(), ioId, inComment);
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptions_Level(), ioId, inLevel);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptions_SalePrice(), ioId, inSalePrice);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptions_TaxKind(), ioId, inTaxKindId);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptions_Model(), ioId, inModelId);
 
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>

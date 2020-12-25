@@ -67,15 +67,63 @@ object ProdOptionsForm: TProdOptionsForm
         Options.Editing = False
         Width = 189
       end
-      object Level: TcxGridDBColumn
-        Caption = #8470' '#1087'/'#1087
-        DataBinding.FieldName = 'Level'
+      object SalePrice: TcxGridDBColumn
+        Caption = 'Ladenpreis'
+        DataBinding.FieldName = 'SalePrice'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 108
+      end
+      object SalePriceWVAT: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' c '#1085#1076#1089
+        DataBinding.FieldName = 'SalePriceWVAT'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 108
+      end
+      object ModelName: TcxGridDBColumn
+        Caption = #1052#1086#1076#1077#1083#1100
+        DataBinding.FieldName = 'ModelName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 113
+      end
+      object BrandName: TcxGridDBColumn
+        Caption = #1052#1072#1088#1082#1072
+        DataBinding.FieldName = 'BrandName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object ProdEngineName: TcxGridDBColumn
+        Caption = #1052#1086#1090#1086#1088
+        DataBinding.FieldName = 'ProdEngineName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 140
+      end
+      object TaxKindName: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1053#1044#1057
+        DataBinding.FieldName = 'TaxKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object TaxKind_Value: TcxGridDBColumn
+        Caption = #1053#1044#1057
+        DataBinding.FieldName = 'TaxKind_Value'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 45
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077

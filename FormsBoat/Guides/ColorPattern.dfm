@@ -85,6 +85,22 @@ object ColorPatternForm: TColorPatternForm
         Options.Editing = False
         Width = 113
       end
+      object BrandName: TcxGridDBColumn
+        Caption = #1052#1072#1088#1082#1072
+        DataBinding.FieldName = 'BrandName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object ProdEngineName: TcxGridDBColumn
+        Caption = #1052#1086#1090#1086#1088
+        DataBinding.FieldName = 'ProdEngineName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 140
+      end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
