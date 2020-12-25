@@ -79,6 +79,8 @@ type
     actShowAll: TBooleanStoredProcAction;
     bbactShowAll: TdxBarButton;
     isEnabled: TcxGridDBColumn;
+    ProdOptionsName: TcxGridDBColumn;
+    actChoiceFormOption: TOpenChoiceForm;
   private
     { Private declarations }
   public

@@ -1,6 +1,7 @@
 -- Function: gpGet_Object_ProdColorPattern()
 
 DROP FUNCTION IF EXISTS gpGet_Object_ProdColorPattern (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_ProdColorPattern (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_ProdColorPattern(
     IN inId              Integer ,
@@ -12,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ProdColorGroupId Integer, ProdColorGroupName TVarChar
              , ColorPatternId Integer, ColorPatternName TVarChar
              , GoodsId Integer, GoodsName TVarChar
+             , ProdOptionsId Integer, ProdOptionsName TVarChar
 ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -35,6 +37,8 @@ BEGIN
            , Object_ColorPattern.ValueData :: TVarChar AS ColorPatternName
            , 0  :: Integer            AS GoodsId
            , '' :: TVarChar           AS GoodsName
+           , 0  :: Integer            AS ProdOptionsId
+           , '' :: TVarChar           AS ProdOptionsName
        FROM Object AS Object_ColorPattern
        WHERE Object_ColorPattern.Id = inColorPatternId
          AND Object_ColorPattern.DescId = zc_Object_ColorPattern()
@@ -58,6 +62,9 @@ BEGIN
 
          , Object_Goods.Id                    ::Integer  AS GoodsId
          , Object_Goods.ValueData             ::TVarChar AS GoodsName
+
+         , Object_ProdOptions.Id              ::Integer  AS ProdOptionsId
+         , Object_ProdOptions.ValueData       ::TVarChar AS ProdOptionsName
      FROM Object AS Object_ProdColorPattern
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_ProdColorPattern.Id
@@ -78,6 +85,11 @@ BEGIN
                               AND ObjectLink_Goods.DescId = zc_ObjectLink_ProdColorPattern_Goods()
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_ProdOptions
+                               ON ObjectLink_ProdOptions.ObjectId = Object_ProdColorPattern.Id
+                              AND ObjectLink_ProdOptions.DescId = zc_ObjectLink_ProdColorPattern_ProdOptions()
+          LEFT JOIN Object AS Object_ProdOptions ON Object_ProdOptions.Id = ObjectLink_ProdOptions.ChildObjectId
+
      WHERE Object_ProdColorPattern.DescId = zc_Object_ProdColorPattern()
       AND Object_ProdColorPattern.Id = inId
      ;
@@ -96,4 +108,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ProdColorPattern (false,false, zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Object_ProdColorPattern (0,1, zfCalc_UserAdmin())

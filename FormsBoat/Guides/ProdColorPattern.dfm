@@ -230,6 +230,43 @@ object ProdColorPatternForm: TProdColorPatternForm
         Options.Editing = False
         Width = 100
       end
+      object ProdOptionsName: TcxGridDBColumn
+        Caption = 'Options'
+        DataBinding.FieldName = 'ProdOptionsName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceFormOption
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1087#1094#1080#1103
+        Width = 84
+      end
+      object SalePrice: TcxGridDBColumn
+        Caption = 'Ladenpreis (Options)'
+        DataBinding.FieldName = 'SalePrice'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089' (Options)'
+        Width = 108
+      end
+      object SalePriceWVAT: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' c '#1085#1076#1089' (Options)'
+        DataBinding.FieldName = 'SalePriceWVAT'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' c '#1085#1076#1089' (Options)'
+        Width = 108
+      end
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
         DataBinding.FieldName = 'InsertDate'
@@ -274,13 +311,13 @@ object ProdColorPatternForm: TProdColorPatternForm
     end
   end
   object cxLabel6: TcxLabel
-    Left = 332
-    Top = 67
+    Left = 308
+    Top = 179
     Caption = #1064#1072#1073#1083#1086#1085' Boat Structure:'
   end
   object edColorPattern: TcxButtonEdit
-    Left = 455
-    Top = 66
+    Left = 375
+    Top = 178
     Properties.Buttons = <
       item
         Default = True
@@ -736,6 +773,49 @@ object ProdColorPatternForm: TProdColorPatternForm
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
     end
+    object actChoiceFormOption: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFormProdColor'
+      FormName = 'TProdOptionsForm'
+      FormNameParam.Value = 'TProdOptionsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ProdOptionsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ProdOptionsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SalePrice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'SalePrice'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SalePriceWVAT'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'SalePriceWVAT'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actChoiceFormGoods: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1031,6 +1111,14 @@ object ProdColorPatternForm: TProdColorPatternForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProdOptionsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ProdOptionsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

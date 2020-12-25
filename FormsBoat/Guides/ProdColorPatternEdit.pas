@@ -49,6 +49,9 @@ type
     GuidesColorPattern: TdsdGuides;
     edColorPattern: TcxButtonEdit;
     cxLabel6: TcxLabel;
+    cxLabel7: TcxLabel;
+    cxButtonEdit1: TcxButtonEdit;
+    GuidesProdOptions: TdsdGuides;
   private
     { Private declarations }
   public

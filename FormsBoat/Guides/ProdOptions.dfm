@@ -74,6 +74,7 @@ object ProdOptionsForm: TProdOptionsForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089
         Width = 108
       end
       object SalePriceWVAT: TcxGridDBColumn
@@ -83,6 +84,7 @@ object ProdOptionsForm: TProdOptionsForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' c '#1085#1076#1089
         Width = 108
       end
       object ModelName: TcxGridDBColumn
@@ -451,6 +453,22 @@ object ProdOptionsForm: TProdOptionsForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SalePrice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'SalePrice'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SalePriceWVAT'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'SalePriceWVAT'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ProdColorGroupId Integer, ProdColorGroupName TVarChar
              , ColorPatternId Integer, ColorPatternName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , ProdOptionsId Integer, ProdOptionsName TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
              , isErased Boolean
@@ -27,6 +28,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , EKPrice TFloat, EKPriceWVAT TFloat
              , EmpfPrice TFloat, EmpfPriceWVAT TFloat
              , BasisPrice TFloat, BasisPriceWVAT TFloat
+             , SalePrice TFloat, SalePriceWVAT TFloat
              , isEnabled Boolean
               )
 AS
@@ -64,6 +66,9 @@ BEGIN
                           , Object_Goods.ObjectCode            ::Integer  AS GoodsCode
                           , Object_Goods.ValueData             ::TVarChar AS GoodsName
 
+                          , Object_ProdOptions.Id              ::Integer  AS ProdOptionsId
+                          , Object_ProdOptions.ValueData       ::TVarChar AS ProdOptionsName
+
                           , Object_Insert.ValueData            AS InsertName
                           , ObjectDate_Insert.ValueData        AS InsertDate
                           , Object_ProdColorPattern.isErased   AS isErased
@@ -94,6 +99,12 @@ BEGIN
                                 ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
                            END ::TFloat  AS BasisPriceWVAT
 
+                         -- цена опции без НДС
+                         , ObjectFloat_SalePrice.ValueData AS SalePrice
+                         -- цена опции с НДС
+                         , CAST (COALESCE (ObjectFloat_SalePrice.ValueData, 0)
+                              * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS SalePriceWVAT
+
                       FROM Object AS Object_ProdColorPattern
                            LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
                                                 ON ObjectLink_ColorPattern.ObjectId = Object_ProdColorPattern.Id
@@ -113,6 +124,24 @@ BEGIN
                                                 ON ObjectLink_Goods.ObjectId = Object_ProdColorPattern.Id
                                                AND ObjectLink_Goods.DescId = zc_ObjectLink_ProdColorPattern_Goods()
                            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods.ChildObjectId
+
+                           LEFT JOIN ObjectLink AS ObjectLink_ProdOptions
+                                                ON ObjectLink_ProdOptions.ObjectId = Object_ProdColorPattern.Id
+                                               AND ObjectLink_ProdOptions.DescId = zc_ObjectLink_ProdColorPattern_ProdOptions()
+                           LEFT JOIN Object AS Object_ProdOptions ON Object_ProdOptions.Id = ObjectLink_ProdOptions.ChildObjectId
+
+                           LEFT JOIN ObjectLink AS ObjectLink_ProdOptions_TaxKind
+                                                ON ObjectLink_ProdOptions_TaxKind.ObjectId = Object_ProdOptions.Id
+                                               AND ObjectLink_ProdOptions_TaxKind.DescId = zc_ObjectLink_ProdOptions_TaxKind()
+                           LEFT JOIN Object AS Object_TaxKind_opt ON Object_TaxKind_opt.Id = ObjectLink_ProdOptions_TaxKind.ChildObjectId 
+
+                           LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value_opt
+                                                 ON ObjectFloat_TaxKind_Value_opt.ObjectId = Object_TaxKind_opt.Id
+                                                AND ObjectFloat_TaxKind_Value_opt.DescId = zc_ObjectFloat_TaxKind_Value()
+
+                           LEFT JOIN ObjectFloat AS ObjectFloat_SalePrice
+                                                 ON ObjectFloat_SalePrice.ObjectId = Object_ProdOptions.Id
+                                                AND ObjectFloat_SalePrice.DescId = zc_ObjectFloat_ProdOptions_SalePrice()
 
                            LEFT JOIN ObjectLink AS ObjectLink_Insert
                                                 ON ObjectLink_Insert.ObjectId = Object_ProdColorPattern.Id
@@ -185,6 +214,9 @@ BEGIN
          , tmpData.GoodsCode
          , tmpData.GoodsName
 
+         , tmpData.ProdOptionsId
+         , tmpData.ProdOptionsName
+
          , tmpData.InsertName
          , tmpData.InsertDate
          , tmpData.isErased
@@ -205,6 +237,11 @@ BEGIN
         , tmpData.BasisPrice
           -- расчет базовой цены с НДС, до 2 знаков
         , tmpData.BasisPriceWVAT
+
+        -- цена опции без НДС
+        , tmpData.SalePrice     ::TFloat
+        -- цена опции с НДС
+        , tmpData.SalePriceWVAT ::TFloat
 
         , TRUE :: Boolean AS isEnabled
 
@@ -231,6 +268,9 @@ BEGIN
          , tmpData.GoodsCode
          , tmpData.GoodsName
 
+         , tmpData.ProdOptionsId
+         , tmpData.ProdOptionsName
+
          , tmpData.InsertName
          , tmpData.InsertDate
          , tmpData.isErased
@@ -251,7 +291,12 @@ BEGIN
         , tmpData.BasisPrice
           -- расчет базовой цены с НДС, до 2 знаков
         , tmpData.BasisPriceWVAT
-        
+
+        -- цена опции без НДС
+        , tmpData.SalePrice     ::TFloat
+        -- цена опции с НДС
+        , tmpData.SalePriceWVAT ::TFloat
+
         , FALSE :: Boolean AS isEnabled
 
      FROM Object AS Object_ColorPattern
@@ -267,6 +312,9 @@ BEGIN
                            , tmpData.GoodsId
                            , tmpData.GoodsCode
                            , tmpData.GoodsName
+
+                           , tmpData.ProdOptionsId
+                           , tmpData.ProdOptionsName
 
                            , NULL  :: TVarChar  AS InsertName
                            , NULL  :: TDateTime AS InsertDate
@@ -288,6 +336,11 @@ BEGIN
                           , tmpData.BasisPrice
                             -- расчет базовой цены с НДС, до 2 знаков
                           , tmpData.BasisPriceWVAT
+
+                          -- цена опции без НДС
+                          , tmpData.SalePrice     ::TFloat
+                          -- цена опции с НДС
+                          , tmpData.SalePriceWVAT ::TFloat
                       FROM tmpData
                       WHERE tmpData.isErased = FALSE
                       GROUP BY tmpData.Name
@@ -301,6 +354,9 @@ BEGIN
                              , tmpData.GoodsCode
                              , tmpData.GoodsName
   
+                             , tmpData.ProdOptionsId
+                             , tmpData.ProdOptionsName
+
                              , tmpData.GoodsGroupNameFull
                              , tmpData.GoodsGroupName
                              , tmpData.Article
@@ -317,6 +373,9 @@ BEGIN
                             , tmpData.BasisPrice
                               -- расчет базовой цены с НДС, до 2 знаков
                             , tmpData.BasisPriceWVAT
+
+                            , tmpData.SalePrice
+                            , tmpData.SalePriceWVAT
                      ) AS tmpData ON 1=1
 
           LEFT JOIN tmpData AS tmpData_check ON tmpData_check.ColorPatternId   = Object_ColorPattern.Id
@@ -337,6 +396,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.12.20         *
  01.12.20         * zc_ObjectLink_ProdColorPattern_Goods
  15.10.20         *
 */

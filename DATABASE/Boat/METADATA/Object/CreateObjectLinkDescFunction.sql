@@ -152,6 +152,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ProdColorPattern_ColorPattern () RETURN
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ProdColorPattern_ColorPattern ', 'Шаблон Boat Structure', zc_Object_ProdColorPattern(), zc_Object_ColorPattern() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdColorPattern_ColorPattern ');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ProdColorPattern_ProdOptions () RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdColorPattern_ProdOptions '); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ProdColorPattern_ProdOptions ', 'Опция', zc_Object_ProdColorPattern(), zc_Object_ColorPattern() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdColorPattern_ProdOptions ');
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_PLZ_Country() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PLZ_Country'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
@@ -317,6 +320,7 @@ SELECT 'zc_ObjectLink_ProdOptions_Model', 'Модель', zc_Object_ProdOptions(), zc_
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  25.12.20         * zc_ObjectLink_ProdOptions_TaxKind
                     zc_ObjectLink_ProdOptions_Model
+                    zc_ObjectLink_ProdColorPattern_ProdOptions
  22.12.20         * zc_ObjectLink_ReceiptService_TaxKind
  15.12.20         * zc_ObjectLink_TranslateMessage_Language
                     zc_ObjectLink_TranslateMessage_Parent
