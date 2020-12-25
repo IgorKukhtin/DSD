@@ -22,15 +22,17 @@ BEGIN
        RETURN QUERY
        SELECT
               0 :: Integer     AS Id
-           , lfGet_ObjectCode(0, zc_Object_ReceiptService())   AS Code
-           , '' :: TVarChar    AS Name
-           , '' :: TVarChar    AS Article
-           , '' :: TVarChar    AS Comment
-           , 0  :: Integer     AS TaxKindId
-           , '' :: TVarChar    AS TaxKindName
-           , 0  :: TFloat      AS EKPrice
-           , 0  :: TFloat      AS SalePrice
-       ;
+           , lfGet_ObjectCode (0, zc_Object_ReceiptService()) AS Code
+           , '' :: TVarChar           AS Name
+           , '' :: TVarChar           AS Article
+           , '' :: TVarChar           AS Comment
+           , Object_TaxKind.Id        AS TaxKindId
+           , Object_TaxKind.ValueData AS TaxKindName
+           , 0  :: TFloat             AS EKPrice
+           , 0  :: TFloat             AS SalePrice
+       FROM Object AS Object_TaxKind
+       WHERE Object_TaxKind.Id = zc_Enum_TaxKind_Basis()
+      ;
    ELSE
        RETURN QUERY
        SELECT
@@ -73,7 +75,6 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
-
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -82,4 +83,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_ReceiptService(0, '2')
+-- SELECT * FROM gpGet_Object_ReceiptService (0, zfCalc_UserAdmin())

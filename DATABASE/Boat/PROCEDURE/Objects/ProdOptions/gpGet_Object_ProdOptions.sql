@@ -24,7 +24,7 @@ $BODY$BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)      AS Id
-           , lfGet_ObjectCode(0, zc_Object_ProdOptions())   AS Code
+           , lfGet_ObjectCode (0, zc_Object_ProdOptions()) AS Code
            , CAST ('' as TVarChar)    AS NAME
 
            , 0  :: Integer            AS ModelId
@@ -34,12 +34,14 @@ $BODY$BEGIN
            , CAST (0  AS Integer)     AS ProdEngineId
            , CAST ('' AS TVarChar)    AS ProdEngineName
 
-           , 0  :: Integer            AS TaxKindId
-           , '' :: TVarChar           AS TaxKindName
+           , Object_TaxKind.Id        AS TaxKindId
+           , Object_TaxKind.ValueData AS TaxKindName
 
            , CAST (0 AS TFloat)       AS SalePrice
            , CAST ('' AS TVarChar)    AS Comment
-           ;
+       FROM Object AS Object_TaxKind
+       WHERE Object_TaxKind.Id = zc_Enum_TaxKind_Basis()
+      ;
    ELSE
      RETURN QUERY 
      SELECT 
@@ -94,7 +96,6 @@ $BODY$BEGIN
    
 END;
 $BODY$
-
 LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------
@@ -105,4 +106,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_ProdOptions(0, '2')
+-- SELECT * FROM gpGet_Object_ProdOptions (0, zfCalc_UserAdmin())

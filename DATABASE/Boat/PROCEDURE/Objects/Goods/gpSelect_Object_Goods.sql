@@ -28,7 +28,6 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyId Integer
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
-             , Image1 TBlob, Image2 TBlob, Image3 TBlob
              , isDoc Boolean, isPhoto Boolean
              , isErased Boolean
               )
@@ -41,8 +40,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Object_Goods());
      vbUserId:= lpGetUserBySession (inSession);
-     -- определяется - есть ли ограничения
-     -- vbAccessKeyRight:= NOT zfCalc_AccessKey_GuideAll (vbUserId) AND EXISTS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId);
+
 
      -- Определили
      vbPriceWithVAT:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = zc_PriceList_Basis() AND ObjectBoolean.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT());
@@ -145,14 +143,6 @@ BEGIN
             , ObjectDate_Insert.ValueData        AS InsertDate
             , Object_Update.ValueData            AS UpdateName
             , ObjectDate_Update.ValueData        AS UpdateDate
-
---            , CASE WHEN Object_Goods.ObjectCode IN (3029, 3028, 7594) THEN ObjectBlob_GoodsPhoto_Data1.ValueData ELSE '' END :: TBlob AS Image1
---            , CASE WHEN Object_Goods.ObjectCode IN (3029, 3028, 7594) THEN ObjectBlob_GoodsPhoto_Data2.ValueData ELSE '' END :: TBlob  AS Image2
---            , CASE WHEN Object_Goods.ObjectCode IN (3029, 3028, 7594) THEN ObjectBlob_GoodsPhoto_Data3.ValueData ELSE '' END :: TBlob  AS Image3
-           
-            , ''  :: TBlob AS Image1
-            , ''  :: TBlob AS Image2
-            , ''  :: TBlob AS Image3
 
             , CASE WHEN tmpDoc.GoodsId    > 0 THEN TRUE ELSE FALSE END :: Boolean AS isDoc
             , CASE WHEN tmpPhoto1.GoodsId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPhoto

@@ -100,10 +100,6 @@ type
     spGetImportSettingId: TdsdStoredProc;
     spUnErased: TdsdStoredProc;
     spErased: TdsdStoredProc;
-    PanelPhoto: TPanel;
-    Image3: TcxImage;
-    Image2: TcxImage;
-    Image1: TcxImage;
     isDoc: TcxGridDBColumn;
     isPhoto: TcxGridDBColumn;
     UpdateName: TcxGridDBColumn;

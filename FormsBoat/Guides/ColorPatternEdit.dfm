@@ -58,7 +58,7 @@ object ColorPatternEditForm: TColorPatternEditForm
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
     TabOrder = 5
     Width = 273
   end
@@ -87,7 +87,7 @@ object ColorPatternEditForm: TColorPatternEditForm
   object cxLabel12: TcxLabel
     Left = 10
     Top = 144
-    Caption = #1052#1086#1076#1077#1083#1100
+    Caption = 'Model'
   end
   object edModel: TcxButtonEdit
     Left = 10
@@ -104,7 +104,7 @@ object ColorPatternEditForm: TColorPatternEditForm
   object cxLabel11: TcxLabel
     Left = 10
     Top = 194
-    Caption = #1052#1072#1088#1082#1072
+    Caption = 'Brand'
   end
   object edBrand: TcxButtonEdit
     Left = 10
@@ -122,7 +122,7 @@ object ColorPatternEditForm: TColorPatternEditForm
   object cxLabel4: TcxLabel
     Left = 10
     Top = 241
-    Caption = #1052#1086#1090#1086#1088
+    Caption = 'Engine'
   end
   object edProdEngine: TcxButtonEdit
     Left = 10

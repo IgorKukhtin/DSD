@@ -3,7 +3,7 @@ object ColorPatternForm: TColorPatternForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1064#1072#1073#1083#1086#1085' Boat Structure>'
   ClientHeight = 376
-  ClientWidth = 541
+  ClientWidth = 765
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object ColorPatternForm: TColorPatternForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 541
+    Width = 765
     Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 541
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -45,7 +46,6 @@ object ColorPatternForm: TColorPatternForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -66,7 +66,7 @@ object ColorPatternForm: TColorPatternForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100#1089#1082#1080#1081' '#1050#1086#1076
         Options.Editing = False
-        Width = 66
+        Width = 80
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -77,29 +77,29 @@ object ColorPatternForm: TColorPatternForm
         Options.Editing = False
         Width = 176
       end
-      object ModelName: TcxGridDBColumn
-        Caption = #1052#1086#1076#1077#1083#1100
-        DataBinding.FieldName = 'ModelName'
+      object BrandName: TcxGridDBColumn
+        Caption = 'Brand'
+        DataBinding.FieldName = 'BrandName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 113
+        Width = 120
       end
-      object BrandName: TcxGridDBColumn
-        Caption = #1052#1072#1088#1082#1072
-        DataBinding.FieldName = 'BrandName'
+      object ModelName: TcxGridDBColumn
+        Caption = 'Model'
+        DataBinding.FieldName = 'ModelName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
       end
       object ProdEngineName: TcxGridDBColumn
-        Caption = #1052#1086#1090#1086#1088
+        Caption = 'Engine'
         DataBinding.FieldName = 'ProdEngineName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 140
+        Width = 80
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077

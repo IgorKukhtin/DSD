@@ -133,7 +133,7 @@ BEGIN
                            LEFT JOIN ObjectLink AS ObjectLink_ProdOptions_TaxKind
                                                 ON ObjectLink_ProdOptions_TaxKind.ObjectId = Object_ProdOptions.Id
                                                AND ObjectLink_ProdOptions_TaxKind.DescId = zc_ObjectLink_ProdOptions_TaxKind()
-                           LEFT JOIN Object AS Object_TaxKind_opt ON Object_TaxKind_opt.Id = ObjectLink_ProdOptions_TaxKind.ChildObjectId 
+                           LEFT JOIN Object AS Object_TaxKind_opt ON Object_TaxKind_opt.Id = ObjectLink_ProdOptions_TaxKind.ChildObjectId
 
                            LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value_opt
                                                  ON ObjectFloat_TaxKind_Value_opt.ObjectId = Object_TaxKind_opt.Id
@@ -227,20 +227,20 @@ BEGIN
          , tmpData.ProdColorName
          , tmpData.MeasureName
 
+           -- Цена вх. без НДС
          , tmpData.EKPrice
-         , tmpData.EKPriceWVAT -- расчет входной цены с НДС, до 4 знаков
+         , tmpData.EKPriceWVAT
 
+           -- рекомендованная цена без НДС
          , tmpData.EmpfPrice
-         , tmpData.EmpfPriceWVAT-- расчет рекомендованной цены с НДС, до 4 знаков
+         , tmpData.EmpfPriceWVAT
 
-          -- расчет базовой цены без НДС, до 2 знаков
+          -- Цена продажи без НДС
         , tmpData.BasisPrice
-          -- расчет базовой цены с НДС, до 2 знаков
         , tmpData.BasisPriceWVAT
 
-        -- цена опции без НДС
+          -- Цена Options без НДС
         , tmpData.SalePrice     ::TFloat
-        -- цена опции с НДС
         , tmpData.SalePriceWVAT ::TFloat
 
         , TRUE :: Boolean AS isEnabled
@@ -281,20 +281,20 @@ BEGIN
          , tmpData.ProdColorName
          , tmpData.MeasureName
 
+           -- Цена вх. без НДС
          , tmpData.EKPrice
-         , tmpData.EKPriceWVAT -- расчет входной цены с НДС, до 4 знаков
+         , tmpData.EKPriceWVAT
 
+           -- рекомендованная цена без НДС
          , tmpData.EmpfPrice
-         , tmpData.EmpfPriceWVAT-- расчет рекомендованной цены с НДС, до 4 знаков
+         , tmpData.EmpfPriceWVAT
 
-          -- расчет базовой цены без НДС, до 2 знаков
+          -- Цена продажи без НДС
         , tmpData.BasisPrice
-          -- расчет базовой цены с НДС, до 2 знаков
         , tmpData.BasisPriceWVAT
 
-        -- цена опции без НДС
+          -- Цена Options без НДС
         , tmpData.SalePrice     ::TFloat
-        -- цена опции с НДС
         , tmpData.SalePriceWVAT ::TFloat
 
         , FALSE :: Boolean AS isEnabled
@@ -313,8 +313,8 @@ BEGIN
                            , tmpData.GoodsCode
                            , tmpData.GoodsName
 
-                           , tmpData.ProdOptionsId
-                           , tmpData.ProdOptionsName
+                           , 0     :: Integer   AS ProdOptionsId
+                           , ''    :: TVarChar  AS ProdOptionsName
 
                            , NULL  :: TVarChar  AS InsertName
                            , NULL  :: TDateTime AS InsertDate
@@ -326,56 +326,49 @@ BEGIN
                            , tmpData.ProdColorName
                            , tmpData.MeasureName
 
+                             -- Цена вх. без НДС
                            , tmpData.EKPrice
-                           , tmpData.EKPriceWVAT -- расчет входной цены с НДС, до 4 знаков
+                           , tmpData.EKPriceWVAT
 
+                             -- рекомендованная цена без НДС
                            , tmpData.EmpfPrice
-                           , tmpData.EmpfPriceWVAT-- расчет рекомендованной цены с НДС, до 4 знаков
+                           , tmpData.EmpfPriceWVAT
 
-                            -- расчет базовой цены без НДС, до 2 знаков
+                            -- Цена продажи без НДС
                           , tmpData.BasisPrice
-                            -- расчет базовой цены с НДС, до 2 знаков
                           , tmpData.BasisPriceWVAT
 
-                          -- цена опции без НДС
-                          , tmpData.SalePrice     ::TFloat
-                          -- цена опции с НДС
-                          , tmpData.SalePriceWVAT ::TFloat
+                            -- Цена Options без НДС
+                          , 0         :: TFloat AS SalePrice
+                          , 0         :: TFloat AS SalePriceWVAT
+
                       FROM tmpData
                       WHERE tmpData.isErased = FALSE
                       GROUP BY tmpData.Name
-  
+
                              , tmpData.Comment
-  
+
                              , tmpData.ProdColorGroupId
                              , tmpData.ProdColorGroupName
-  
+
                              , tmpData.GoodsId
                              , tmpData.GoodsCode
                              , tmpData.GoodsName
-  
-                             , tmpData.ProdOptionsId
-                             , tmpData.ProdOptionsName
 
                              , tmpData.GoodsGroupNameFull
                              , tmpData.GoodsGroupName
                              , tmpData.Article
                              , tmpData.ProdColorName
                              , tmpData.MeasureName
-  
-                             , tmpData.EKPrice
-                             , tmpData.EKPriceWVAT -- расчет входной цены с НДС, до 4 знаков
-  
-                             , tmpData.EmpfPrice
-                             , tmpData.EmpfPriceWVAT-- расчет рекомендованной цены с НДС, до 4 знаков
-  
-                              -- расчет базовой цены без НДС, до 2 знаков
-                            , tmpData.BasisPrice
-                              -- расчет базовой цены с НДС, до 2 знаков
-                            , tmpData.BasisPriceWVAT
 
-                            , tmpData.SalePrice
-                            , tmpData.SalePriceWVAT
+                             , tmpData.EKPrice
+                             , tmpData.EKPriceWVAT
+
+                             , tmpData.EmpfPrice
+                             , tmpData.EmpfPriceWVAT
+
+                            , tmpData.BasisPrice
+                            , tmpData.BasisPriceWVAT
                      ) AS tmpData ON 1=1
 
           LEFT JOIN tmpData AS tmpData_check ON tmpData_check.ColorPatternId   = Object_ColorPattern.Id

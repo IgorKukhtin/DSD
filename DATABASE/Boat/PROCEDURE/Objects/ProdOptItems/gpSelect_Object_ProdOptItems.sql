@@ -71,12 +71,12 @@ BEGIN
                          , CAST (ObjectFloat_EKPrice.ValueData
                                 * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2)) :: TFloat AS EKPriceWVAT
 
-                           -- Цена продажи без ндс
+                           -- Цена продажи без НДС
                          , CASE WHEN vbPriceWithVAT = FALSE
                                 THEN tmpPriceBasis.ValuePrice
                                 ELSE CAST (tmpPriceBasis.ValuePrice * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
                            END  :: TFloat AS BasisPrice
-                           -- Цена продажи с ндс
+                           -- Цена продажи с НДС
                          , CASE WHEN vbPriceWithVAT = FALSE
                                 THEN CAST (tmpPriceBasis.ValuePrice * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
                                 ELSE tmpPriceBasis.ValuePrice
@@ -174,9 +174,9 @@ BEGIN
                            -- Цена вх. с НДС                
                          , tmpProdColorItems.EKPriceWVAT    AS PriceInWVAT
                                                             
-                           -- Цена продажи без ндс          
+                           -- Цена продажи без НДС          
                          , tmpProdColorItems.BasisPrice     AS PriceOut
-                           -- Цена продажи с ндс
+                           -- Цена продажи с НДС
                          , tmpProdColorItems.BasisPriceWVAT AS PriceOutWVAT
 
                     FROM tmpProdColorItems

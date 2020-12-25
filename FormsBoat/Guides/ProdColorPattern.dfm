@@ -31,12 +31,72 @@ object ProdColorPatternForm: TProdColorPatternForm
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
-      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.DefaultGroupSummaryItems = <
+        item
+          Format = ',0.00##'
+          Kind = skSum
+          Column = EKPrice
+        end
+        item
+          Format = ',0.00##'
+          Kind = skSum
+          Column = EKPriceWVAT
+        end
+        item
+          Format = ',0.00##'
+          Kind = skSum
+          Column = BasisPrice
+        end
+        item
+          Format = ',0.00##'
+          Kind = skSum
+          Column = BasisPriceWVAT
+        end
+        item
+          Format = ',0.00##'
+          Kind = skSum
+          Column = SalePrice
+        end
+        item
+          Format = ',0.00##'
+          Kind = skSum
+          Column = SalePriceWVAT
+        end>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = 'C'#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = Name
+        end
+        item
+          Format = ',0.00##'
+          Kind = skSum
+          Column = EKPrice
+        end
+        item
+          Format = ',0.00##'
+          Kind = skSum
+          Column = EKPriceWVAT
+        end
+        item
+          Format = ',0.00##'
+          Kind = skSum
+          Column = BasisPrice
+        end
+        item
+          Format = ',0.00##'
+          Kind = skSum
+          Column = BasisPriceWVAT
+        end
+        item
+          Format = ',0.00##'
+          Kind = skSum
+          Column = SalePrice
+        end
+        item
+          Format = ',0.00##'
+          Kind = skSum
+          Column = SalePriceWVAT
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -114,6 +174,22 @@ object ProdColorPatternForm: TProdColorPatternForm
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
+      object ProdOptionsName: TcxGridDBColumn
+        Caption = 'Options'
+        DataBinding.FieldName = 'ProdOptionsName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceFormOption
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1087#1094#1080#1103
+        Width = 84
+      end
       object GoodsCode: TcxGridDBColumn
         Caption = 'Interne Nr'
         DataBinding.FieldName = 'GoodsCode'
@@ -175,6 +251,7 @@ object ProdColorPatternForm: TProdColorPatternForm
       object MeasureName: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'.'
         DataBinding.FieldName = 'MeasureName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -230,22 +307,6 @@ object ProdColorPatternForm: TProdColorPatternForm
         Options.Editing = False
         Width = 100
       end
-      object ProdOptionsName: TcxGridDBColumn
-        Caption = 'Options'
-        DataBinding.FieldName = 'ProdOptionsName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = actChoiceFormOption
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1054#1087#1094#1080#1103
-        Width = 84
-      end
       object SalePrice: TcxGridDBColumn
         Caption = 'Ladenpreis (Options)'
         DataBinding.FieldName = 'SalePrice'
@@ -254,6 +315,7 @@ object ProdColorPatternForm: TProdColorPatternForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089' (Options)'
+        Options.Editing = False
         Width = 108
       end
       object SalePriceWVAT: TcxGridDBColumn
