@@ -16,7 +16,8 @@ CREATE TABLE MovementDesc
    Id                    SERIAL NOT NULL PRIMARY KEY, 
    Code                  TVarChar NOT NULL UNIQUE,
    ItemName              TVarChar,
-   FormId                Integer
+   FormId                Integer,
+   CONSTRAINT fk_MovementDesc_FormId FOREIGN KEY(FormId) REFERENCES Object(Id)
 )
 WITH (
   OIDS=FALSE

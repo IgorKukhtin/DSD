@@ -13,8 +13,8 @@ CREATE TABLE MovementItemString(
    ValueData             TVarChar,
 
    CONSTRAINT pk_MovementItemString          PRIMARY KEY (MovementItemId, DescId),
-   CONSTRAINT pk_MovementItemString_DescId   FOREIGN KEY(DescId) REFERENCES MovementItemStringDesc(Id),
-   CONSTRAINT pk_MovementItemString_MovementItemId FOREIGN KEY(MovementItemId) REFERENCES MovementItem(Id) );
+   CONSTRAINT fk_MovementItemString_DescId   FOREIGN KEY(DescId) REFERENCES MovementItemStringDesc(Id),
+   CONSTRAINT fk_MovementItemString_MovementItemId FOREIGN KEY(MovementItemId) REFERENCES MovementItem(Id) );
 
 /*-------------------------------------------------------------------------------*/
 /*                                  Индексы                                      */

@@ -13,8 +13,8 @@ CREATE TABLE ObjectString(
    ValueData             TVarChar,
 
    CONSTRAINT pk_ObjectString          PRIMARY KEY (ObjectId, DescId),
-   CONSTRAINT pk_ObjectString_DescId   FOREIGN KEY(DescId) REFERENCES ObjectStringDesc(Id),
-   CONSTRAINT pk_ObjectString_ObjectId FOREIGN KEY(ObjectId) REFERENCES Object(Id) );
+   CONSTRAINT fk_ObjectString_DescId   FOREIGN KEY(DescId) REFERENCES ObjectStringDesc(Id),
+   CONSTRAINT fk_ObjectString_ObjectId FOREIGN KEY(ObjectId) REFERENCES Object(Id) );
 
 /*-------------------------------------------------------------------------------*/
 /*                                  Индексы                                      */

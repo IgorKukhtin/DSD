@@ -36,6 +36,7 @@ CREATE TABLE MovementItemContainer(
    CONSTRAINT fk_MovementItemContainer_ParentId FOREIGN KEY(ParentId) REFERENCES MovementItemContainer(Id),
    CONSTRAINT fk_MovementItemContainer_MovementItemId FOREIGN KEY (MovementItemId) REFERENCES MovementItem(id),
    CONSTRAINT fk_MovementItemContainer_MovementDescId FOREIGN KEY(MovementDescId) REFERENCES MovementDesc(Id)
+   CONSTRAINT fk_MovementItemContainer_MovementDescId FOREIGN KEY(MovementDescId) REFERENCES MovementDesc(Id),
 );
 
 /*-------------------------------------------------------------------------------*/

@@ -13,8 +13,8 @@ CREATE TABLE MovementBoolean(
    ValueData             Boolean,
 
    CONSTRAINT pk_MovementBoolean          PRIMARY KEY (MovementId, DescId),
-   CONSTRAINT pk_MovementBoolean_DescId   FOREIGN KEY(DescId) REFERENCES MovementBooleanDesc(Id),
-   CONSTRAINT pk_MovementBoolean_MovementId FOREIGN KEY(MovementId) REFERENCES Movement(Id) );
+   CONSTRAINT fk_MovementBoolean_DescId   FOREIGN KEY(DescId) REFERENCES MovementBooleanDesc(Id),
+   CONSTRAINT fk_MovementBoolean_MovementId FOREIGN KEY(MovementId) REFERENCES Movement(Id) );
 
 /*-------------------------------------------------------------------------------*/
 

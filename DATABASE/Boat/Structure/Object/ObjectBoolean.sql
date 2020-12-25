@@ -13,8 +13,8 @@ CREATE TABLE ObjectBoolean(
    ValueData             Boolean,
 
    CONSTRAINT pk_ObjectBoolean          PRIMARY KEY (ObjectId, DescId),
-   CONSTRAINT pk_ObjectBoolean_DescId   FOREIGN KEY(DescId) REFERENCES ObjectBooleanDesc(Id),
-   CONSTRAINT pk_ObjectBoolean_ObjectId FOREIGN KEY(ObjectId) REFERENCES Object(Id) );
+   CONSTRAINT fk_ObjectBoolean_DescId   FOREIGN KEY(DescId) REFERENCES ObjectBooleanDesc(Id),
+   CONSTRAINT fk_ObjectBoolean_ObjectId FOREIGN KEY(ObjectId) REFERENCES Object(Id) );
 
 /*-------------------------------------------------------------------------------*/
 /*                                  Индексы                                      */
