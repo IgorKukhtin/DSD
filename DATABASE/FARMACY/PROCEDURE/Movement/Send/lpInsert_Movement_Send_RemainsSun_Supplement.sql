@@ -71,7 +71,7 @@ BEGIN
      -- все Подразделения для схемы SUN Supplement
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpUnit_SUN_Supplement'))
      THEN
-       CREATE TEMP TABLE _tmpUnit_SUN_Supplement   (UnitId Integer, DeySupplSun1 Integer, MonthSupplSun1 Integer) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpUnit_SUN_Supplement   (UnitId Integer, DeySupplSun1 Integer, MonthSupplSun1 Integer, isSUN_Supplement_in Boolean, isSUN_Supplement_out Boolean) ON COMMIT DROP;
      END IF;
 
      -- Исключения по техническим переучетам по Аптекам - если есть в непроведенных ТП то исключаем из распределения
@@ -120,14 +120,22 @@ BEGIN
      DELETE FROM _tmpResult_Supplement;
 
      -- все Подразделения для схемы SUN
-     INSERT INTO _tmpUnit_SUN_Supplement (UnitId, DeySupplSun1, MonthSupplSun1)
+     INSERT INTO _tmpUnit_SUN_Supplement (UnitId, DeySupplSun1, MonthSupplSun1, isSUN_Supplement_in, isSUN_Supplement_out)
         SELECT OB.ObjectId
-             , COALESCE (NULLIF(OF_DeySupplSun1.ValueData, 0), 30)::Integer  AS DeySupplSun1
-             , COALESCE (NULLIF(OF_MonthSupplSun1.ValueData, 0), 8)::Integer AS MonthSupplSun1
+             , COALESCE (NULLIF(OF_DeySupplSun1.ValueData, 0), 30)::Integer              AS DeySupplSun1
+             , COALESCE (NULLIF(OF_MonthSupplSun1.ValueData, 0), 8)::Integer             AS MonthSupplSun1
+             , COALESCE (ObjectBoolean_SUN_Supplement_in.ValueData, FALSE)  :: Boolean   AS isSUN_Supplement_in
+             , COALESCE (ObjectBoolean_SUN_Supplement_out.ValueData, FALSE) :: Boolean   AS isSUN_Supplement_out             
         FROM ObjectBoolean AS OB
              LEFT JOIN ObjectFloat   AS OF_DeySupplSun1  ON OF_DeySupplSun1.ObjectId  = OB.ObjectId AND OF_DeySupplSun1.DescId     = zc_ObjectFloat_Unit_DeySupplSun1()
              LEFT JOIN ObjectFloat   AS OF_MonthSupplSun1 ON OF_MonthSupplSun1.ObjectId = OB.ObjectId AND OF_MonthSupplSun1.DescId = zc_ObjectFloat_Unit_MonthSupplSun1()
              LEFT JOIN ObjectString  AS OS_ListDaySUN  ON OS_ListDaySUN.ObjectId  = OB.ObjectId AND OS_ListDaySUN.DescId  = zc_ObjectString_Unit_ListDaySUN()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_Supplement_in
+                                     ON ObjectBoolean_SUN_Supplement_in.ObjectId = OB.ObjectId
+                                    AND ObjectBoolean_SUN_Supplement_in.DescId = zc_ObjectBoolean_Unit_SUN_Supplement_in()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_Supplement_out
+                                     ON ObjectBoolean_SUN_Supplement_out.ObjectId = OB.ObjectId
+                                    AND ObjectBoolean_SUN_Supplement_out.DescId = zc_ObjectBoolean_Unit_SUN_Supplement_out()
              -- !!!только для этого водителя!!!
              /*INNER JOIN ObjectLink AS ObjectLink_Unit_Driver
                                    ON ObjectLink_Unit_Driver.ObjectId      = OB.ObjectId
@@ -135,9 +143,9 @@ BEGIN
                                   AND ObjectLink_Unit_Driver.ChildObjectId = inDriverId*/
         WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN()
           -- если указан день недели - проверим его
-          AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = ''
-          --OR inUserId = 3 -- Админ - отладка
-              )
+          AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = '')
+          AND (COALESCE (ObjectBoolean_SUN_Supplement_in.ValueData, FALSE) = TRUE 
+            OR COALESCE (ObjectBoolean_SUN_Supplement_out.ValueData, FALSE) = TRUE)         
        ;
 
 
@@ -460,6 +468,8 @@ BEGIN
 
             LEFT JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsID = _tmpRemains_all_Supplement.GoodsId
 
+            LEFT JOIN _tmpUnit_SUN_Supplement ON _tmpUnit_SUN_Supplement.UnitId = _tmpRemains_all_Supplement.UnitId
+            
        WHERE CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
                  CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
                       THEN - _tmpRemains_all_Supplement.AmountRemains
@@ -471,6 +481,7 @@ BEGIN
                              ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
                              END / COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)) * COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
                  END < 0
+         AND _tmpUnit_SUN_Supplement.isSUN_Supplement_out = True
        ORDER BY CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
                       THEN - _tmpRemains_all_Supplement.AmountRemains
                       ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
@@ -504,6 +515,8 @@ BEGIN
 
                   LEFT JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsID = _tmpRemains_all_Supplement.GoodsId
 
+                  LEFT JOIN _tmpUnit_SUN_Supplement ON _tmpUnit_SUN_Supplement.UnitId = _tmpRemains_all_Supplement.UnitId
+
              WHERE (CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
                     CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
                          THEN - _tmpRemains_all_Supplement.AmountRemains
@@ -517,6 +530,7 @@ BEGIN
 
                     END) > 0
                AND _tmpRemains_all_Supplement.GoodsId = vbGoodsId
+               AND _tmpUnit_SUN_Supplement.isSUN_Supplement_in = True
              ORDER BY (CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
                             THEN - _tmpRemains_all_Supplement.AmountRemains
                             ELSE (_tmpRemains_all_Supplement.Need  -_tmpRemains_all_Supplement.AmountRemains)::Integer
@@ -633,4 +647,4 @@ $BODY$
 
 -- SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '0 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 
-select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('07.12.2020')::TDateTime ,  inSession := '3');
+select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('28.12.2020')::TDateTime ,  inSession := '3');
