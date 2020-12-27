@@ -48,9 +48,6 @@ type
     cxGridLevel1: TcxGridLevel;
     ClientDataSet: TClientDataSet;
     DataSource: TDataSource;
-    cxLabel5: TcxLabel;
-    edMember: TcxButtonEdit;
-    MemberGuides: TdsdGuides;
     actUpdateDataSource: TdsdUpdateDataSet;
     MovementItemProtocolOpenForm: TdsdOpenForm;
     cxSplitter1: TcxSplitter;
@@ -64,7 +61,6 @@ type
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    CarModelName: TcxGridDBColumn;
     macMISetErased: TMultiAction;
     actExternalDialog: TExecuteDialog;
     bbExternalDialog: TdxBarButton;
@@ -80,7 +76,6 @@ type
     GuidesPersonal: TdsdGuides;
     cxLabel19: TcxLabel;
     cePersonalTrade: TcxButtonEdit;
-    cbReestrKind: TcxCheckBox;
     GuidesPersonalTrade: TdsdGuides;
     actPrintGroup: TdsdPrintAction;
     actPrintPeriodGroup: TdsdPrintAction;

@@ -8,10 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_ReestrIncome(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , CarId Integer, CarName TVarChar
-             , PersonalDriverId Integer, PersonalDriverName TVarChar
-             , MemberId Integer, MemberName TVarChar
-             , MovementId_Transport Integer, InvNumber_Transport TVarChar
+             , InsertId Integer, InsertName TVarChar
               )
 AS
 $BODY$
@@ -31,18 +28,10 @@ BEGIN
              , Object_Status.Code               AS StatusCode
              , Object_Status.Name               AS StatusName
 
-             , 0                     AS CarId
-             , CAST ('' AS TVarChar) AS CarName
-             , 0                     AS PersonalDriverId
-             , CAST ('' AS TVarChar) AS PersonalDriverName
-
-             , 0                     AS MemberId
-             , CAST ('' AS TVarChar) AS MemberName
-
-             , 0                     AS MovementId_Transport
-             , '' :: TVarChar        AS InvNumber_Transport 
-
-          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
+             , 0                       AS InsertId
+             , Object_Insert.ValueData AS InsertName
+          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
+               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId;
      ELSE
        RETURN QUERY 
        
@@ -54,38 +43,16 @@ BEGIN
              , Object_Status.ObjectCode          AS StatusCode
              , Object_Status.ValueData           AS StatusName
 
-             , Object_Car.Id                     AS CarId
-             , Object_Car.ValueData              AS CarName
-             , Object_PersonalDriver.Id          AS PersonalDriverId
-             , Object_PersonalDriver.ValueData   AS PersonalDriverName
-             , Object_Member.Id                  AS MemberId
-             , Object_Member.ValueData           AS MemberName
-            
-             , Movement_Transport.Id                     AS MovementId_Transport
-             , ('№ ' || Movement_Transport.InvNumber || ' от ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar AS InvNumber_Transport
+             , Object_Insert.Id                  AS InsertId
+             , Object_Insert.ValueData           AS InsertName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
-                                         ON MovementLinkObject_Car.MovementId = Movement.Id
-                                        AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
-            LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
-                                         ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
-                                        AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
-            LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Member
-                                         ON MovementLinkObject_Member.MovementId = Movement.Id
-                                        AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
-            LEFT JOIN Object AS Object_Member ON Object_Member.Id = MovementLinkObject_Member.ObjectId
-
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
-                                           ON MovementLinkMovement_Transport.MovementId = Movement.Id
-                                          AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
-            LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
+            LEFT JOIN MovementLinkObject AS MLO_Insert
+                                         ON MLO_Insert.MovementId = Movement.Id
+                                        AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
 
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_ReestrIncome();
@@ -103,4 +70,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_ReestrIncome (inMovementId:= 0 ::integer,  inOperDate:= CURRENT_DATE ::TDateTime, inSession:= '5'::TVarChar)
+-- SELECT * FROM gpGet_Movement_ReestrIncome (inMovementId:= 0 ::integer, inSession:= '5'::TVarChar)

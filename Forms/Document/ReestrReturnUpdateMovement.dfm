@@ -1684,6 +1684,7 @@ inherited ReestrReturnUpdateMovementForm: TReestrReturnUpdateMovementForm
         Column = BarCode
       end>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 376
     Top = 16

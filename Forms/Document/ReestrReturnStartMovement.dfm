@@ -1,27 +1,27 @@
 inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1077#1077#1089#1090#1088' '#1074#1086#1079#1074#1088#1072#1090#1086#1074' ('#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072')>'
   ClientHeight = 404
-  ClientWidth = 937
+  ClientWidth = 945
   AddOnFormData.RefreshAction = actRefreshStart
-  ExplicitWidth = 953
+  ExplicitWidth = 961
   ExplicitHeight = 442
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 937
+    Width = 945
     Height = 321
     ExplicitTop = 83
     ExplicitWidth = 937
     ExplicitHeight = 321
     ClientRectBottom = 321
-    ClientRectRight = 937
+    ClientRectRight = 945
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 937
       ExplicitHeight = 297
       inherited cxGrid: TcxGrid
         Top = 67
-        Width = 937
+        Width = 945
         Height = 230
         ExplicitTop = 67
         ExplicitWidth = 937
@@ -321,11 +321,12 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
-        Width = 937
+        Width = 945
         Height = 59
         Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 937
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           Navigator.Buttons.Append.Visible = False
@@ -434,17 +435,18 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 59
-        Width = 937
+        Width = 945
         Height = 8
         HotZoneClassName = 'TcxSimpleStyle'
         HotZone.Visible = False
         AlignSplitter = salTop
         Control = cxGrid1
+        ExplicitWidth = 937
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 937
+    Width = 945
     Height = 57
     TabOrder = 3
     ExplicitWidth = 937

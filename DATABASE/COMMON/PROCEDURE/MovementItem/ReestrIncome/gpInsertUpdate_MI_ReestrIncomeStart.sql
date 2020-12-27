@@ -1,19 +1,15 @@
 -- Function: gpInsertUpdate_MI_ReestrIncomeStart()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ReestrIncomeStart (Integer, TDateTime, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ReestrIncomeStart (Integer, TDateTime, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ReestrIncomeStart(
  INOUT ioMovementId               Integer   , -- Ключ объекта <Документ>
     IN inOperDate                 TDateTime , -- Дата документа
-    IN inCarId                    Integer   , -- Автомобиль
-    IN inPersonalDriverId         Integer   , -- Сотрудник (водитель)
-    IN inMemberId                 Integer   , -- Физические лица(экспедитор)
- INOUT ioMovementId_TransportTop  Integer   , -- Ключ документа Путевой лист/Начисления наемный транспорт - в шапке
-    IN inBarCode_Transport        TVarChar  , -- Ш/к документа Путевой лист/Начисления наемный транспорт - в гриде
-    IN inBarCode                  TVarChar  , -- Ш/к документа <Продажа>
+    IN inBarCode                  TVarChar  , -- Ш/к документа <Приход>
     IN inSession                  TVarChar    -- сессия пользователя
 )                              
-RETURNS RECORD
+RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -22,57 +18,17 @@ $BODY$
    DECLARE vbIsInsert        Boolean;
    DECLARE vbId_mi           Integer;
    DECLARE vbMovementId_Income Integer;
-   DECLARE vbMovementDescId_TransportTop Integer;
    DECLARE vbMemberId        Integer; -- <Физическое лицо> - кто сформировал визу "Вывезено со склада"
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ReestrIncome());
      
      -- определяется что это режим Find ioMovementId, и если не нашли, тогда будет Insert
-     vbIsFindOnly:= COALESCE (ioMovementId, 0) = 0 AND (ioMovementId_TransportTop <> 0 OR inBarCode_Transport <> '')
-                AND inCarId                    = 0
-                AND inPersonalDriverId         = 0
-                AND inMemberId                 = 0
-                AND TRIM (inBarCode)           = ''
-               ;
-
-     -- найдем Путевой лист
-     IF TRIM (inBarCode_Transport) <> ''
-     THEN
-         IF CHAR_LENGTH (inBarCode_Transport) >= 13
-         THEN -- по штрих коду, но для "проверки" ограничение - 8 DAY
-              ioMovementId_TransportTop:= (SELECT Movement.Id
-                                           FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode_Transport, 4, 13-4)) AS MovementId
-                                                ) AS tmp
-                                                INNER JOIN Movement ON Movement.Id = tmp.MovementId
-                                                                   AND Movement.DescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
-                                                                   AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '60 DAY' AND CURRENT_DATE + INTERVAL '8 DAY'
-                                                                   AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                          );
-         ELSE -- по InvNumber, но для скорости ограничение - 8 DAY
-              ioMovementId_TransportTop:= (SELECT Movement.Id
-                                           FROM Movement
-                                           WHERE Movement.InvNumber = TRIM (inBarCode_Transport)
-                                             AND Movement.DescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
-                                             AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '60 DAY' AND CURRENT_DATE + INTERVAL '8 DAY'
-                                             AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                          );
-         END IF;
-
-         -- найдем
-         vbMovementDescId_TransportTop:= (SELECT Movement.DescId FROM Movement WHERE Movement.Id = ioMovementId_TransportTop);
-
-         -- Проверка
-         IF COALESCE (ioMovementId_TransportTop, 0) = 0
-         THEN
-             RAISE EXCEPTION 'Ошибка.Документ <Путевой лист> с № <%> не найден.', inBarCode_Transport;
-         END IF;
-
-     END IF;
+     vbIsFindOnly:= COALESCE (ioMovementId, 0) = 0 AND TRIM (inBarCode) = '';
 
 
      -- если меняется Путевой лист - будет режим Find !!!другой!!! ioMovementId
-     IF ioMovementId > 0 AND ioMovementId_TransportTop <> 0 AND NOT EXISTS (SELECT 1 FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = ioMovementId AND MLM.DescId = zc_MovementLinkMovement_Transport() AND COALESCE (MLM.MovementChildId, 0) = COALESCE (ioMovementId_TransportTop, 0))
+     IF ioMovementId > 0 AND NOT EXISTS (SELECT 1 FROM MovementLinkObject AS MLО WHERE MLО.MovementId = ioMovementId AND MLО.DescId = zc_MovementLinkObject_Insert())
      THEN
          ioMovementId:= 0;
          vbIsFindOnly:= TRUE;
@@ -80,15 +36,16 @@ BEGIN
 
 
      -- найдем Документ <Реестр накладных>
-     IF ioMovementId_TransportTop <> 0 AND COALESCE (ioMovementId, 0) = 0
+     IF COALESCE (ioMovementId, 0) = 0
      THEN
-          ioMovementId:= COALESCE ((SELECT MLM.MovementId
-                                    FROM MovementLinkMovement AS MLM
-                                         INNER JOIN Movement ON Movement.Id       = MLM.MovementId
+          ioMovementId:= COALESCE ((SELECT MLО.MovementId
+                                    FROM MovementLinkObject AS MLО
+                                         INNER JOIN Movement ON Movement.Id       = MLО.MovementId
                                                             AND Movement.DescId   = zc_Movement_ReestrIncome()
                                                             AND Movement.StatusId = zc_Enum_Status_Erased()
-                                    WHERE MLM.MovementChildId = ioMovementId_TransportTop
-                                      AND MLM.DescId = zc_MovementLinkMovement_Transport()
+                                                            AND Movement.OperDate = inoperdate
+                                    WHERE MLО.ObjectId = vbUserId
+                                      AND MLО.DescId = zc_MovementLinkObject_Insert()
                                    ), 0);
           -- криво, но если не нашли - сделаем Insert
           IF ioMovementId = 0
@@ -98,7 +55,7 @@ BEGIN
      END IF;
 
 
-     -- найдем Продажу покупателю
+     -- найдем приход
      IF TRIM (inBarCode) <> ''
      THEN
          IF CHAR_LENGTH (inBarCode) >= 13
@@ -158,50 +115,10 @@ BEGIN
      END IF;
 
 
-     -- найдем <Физические лица(экспедитор)> в путевом листе, хотя там он как Personal
-     IF ioMovementId_TransportTop <> 0 -- AND COALESCE (inMemberId, 0) = 0
-     THEN
-          inMemberId:= COALESCE ((SELECT COALESCE (ObjectLink.ChildObjectId, MLO.ObjectId) -- т.е. если в путевом листе сразу будет Member
-                                  FROM MovementLinkObject AS MLO
-                                       LEFT JOIN ObjectLink ON ObjectLink.ObjectId = MLO.ObjectId AND ObjectLink.DescId = zc_ObjectLink_Personal_Member()
-                                  WHERE MLO.MovementId = ioMovementId_TransportTop
-                                    AND MLO.DescId     = zc_MovementLinkObject_Personal()
-                                 ),  inMemberId);
-     END IF;
-     -- если ... - найдем <Физические лица(экспедитор)> в Заявке, называется zc_MovementLinkObject_Personal, на самом деле он там как Member
-     IF COALESCE (inMemberId, 0) = 0
-     THEN
-          inMemberId:= COALESCE ((SELECT MLO.ObjectId
-                                  FROM MovementLinkMovement AS MLM
-                                       LEFT JOIN MovementLinkObject AS MLO
-                                                                    ON MLO.MovementId = MLM.MovementChildId
-                                                                   AND MLO.DescId     = zc_MovementLinkObject_Personal()
-                                  WHERE MLM.MovementId = vbMovementId_Income
-                                    AND MLM.DescId     = zc_MovementLinkMovement_Order()
-                                 ),  inMemberId);
-     END IF;
-
-
      -- только в этом случае - ничего не делаем
      IF vbIsFindOnly                   = TRUE
      THEN
          RETURN; -- !!!выход!!!
-     END IF;
-
-
-     -- Проверка
-     IF COALESCE (ioMovementId_TransportTop, 0) = 0 AND (COALESCE (inCarId ,0) = 0 OR COALESCE (inPersonalDriverId, 0) = 0)
-     THEN
-         IF COALESCE (ioMovementId_TransportTop, 0) = 0 AND COALESCE (inCarId ,0) = 0 AND COALESCE (inPersonalDriverId, 0) = 0
-         THEN
-             RAISE EXCEPTION 'Ошибка.Не определен документ <Путевой лист> с Ш/К = <%>.', inBarCode_Transport;
-         ELSEIF COALESCE (inCarId ,0) = 0
-         THEN
-             RAISE EXCEPTION 'Ошибка.Не определен <№ автомобиля>.';
-         ELSEIF COALESCE (inPersonalDriverId, 0) = 0
-         THEN
-             RAISE EXCEPTION 'Ошибка.Не определено <ФИО> водителя.';
-         END IF;
      END IF;
 
 
@@ -214,17 +131,6 @@ BEGIN
                                                                                                     , inBranchCode := 1
                                                                                                     , inSession    := inSession
                                                                                                      )
-                                                          -- если есть - Определили по путевому ИЛИ  Начисления наемный транспорт
-                                                        , inCarId            := CASE WHEN ioMovementId_TransportTop > 0 THEN COALESCE ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioMovementId_TransportTop AND DescId = zc_MovementLinkObject_Car())
-                                                                                                                                     , (SELECT MILinkObject.ObjectId FROM MovementItem INNER JOIN MovementItemLinkObject AS MILinkObject ON MILinkObject.MovementItemId = MovementItem.Id AND MILinkObject.DescId = zc_MILinkObject_Car() WHERE MovementItem.MovementId = ioMovementId_TransportTop AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE AND vbMovementDescId_TransportTop = zc_Movement_TransportService())
-                                                                                                                                      )
-                                                                                                                        ELSE inCarId
-                                                                                END
-                                                          -- если есть - Определили по путевому, НО нельзя будет еще сделать для Начисления наемный транспорт
-                                                        , inPersonalDriverId := CASE WHEN ioMovementId_TransportTop > 0 THEN (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioMovementId_TransportTop AND DescId = zc_MovementLinkObject_PersonalDriver()) ELSE inPersonalDriverId END
-                                                          -- можно будет найти из Заявки
-                                                        , inMemberId         := inMemberId
-                                                        , inMovementId_Transport := ioMovementId_TransportTop
                                                         , inUserId           := vbUserId
                                                          );
 
@@ -245,7 +151,7 @@ BEGIN
               RAISE EXCEPTION 'Ошибка.У пользователя <%> не определно значение <Физ.лицо>.', lfGet_Object_ValueData (vbUserId);
           END IF;
 
-          -- Поиск элемента для документа <Продажа>
+          -- Поиск элемента для документа <приход>
           vbId_mi:= (SELECT MF_MovementItemId.ValueData :: Integer
                      FROM MovementFloat AS MF_MovementItemId
                      WHERE MF_MovementItemId.MovementId = vbMovementId_Income
@@ -290,7 +196,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.12.20         *
  22.10.16         *
 */
 
