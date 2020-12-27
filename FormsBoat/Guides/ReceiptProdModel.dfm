@@ -2425,6 +2425,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       item
         ValueColumn = Color_Level_ch1
         ColorValueList = <>
+        ValueBoldColumn = Bold_isReceiptGoods_ch1
       end
       item
         ColorColumn = Value_ch1
@@ -2778,8 +2779,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         Value = Null
         MultiSelectSeparator = ','
       end>
-    Left = 768
-    Top = 72
+    Left = 760
+    Top = 120
   end
   object spGetImportSettingId: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'

@@ -22,7 +22,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCurrencyEdit;
+  cxCurrencyEdit, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxButtonEdit,
+  cxLabel;
 
 type
   TProdOptionsForm = class(TParentForm)
@@ -65,6 +66,18 @@ type
     spUnErased: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     SalePrice: TcxGridDBColumn;
+    cxLabel6: TcxLabel;
+    edProdModel: TcxButtonEdit;
+    GuidesProdModel: TdsdGuides;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    bbModel: TdxBarControlContainerItem;
+    FormParams: TdsdFormParams;
+    RefreshDispatcher: TRefreshDispatcher;
+    cxLabel1: TcxLabel;
+    edBrand: TcxButtonEdit;
+    GuidesBrand: TdsdGuides;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    dxBarControlContainerItem3: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

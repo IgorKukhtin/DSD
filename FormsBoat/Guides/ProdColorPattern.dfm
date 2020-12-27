@@ -27,6 +27,7 @@ object ProdColorPatternForm: TProdColorPatternForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitTop = 18
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -874,6 +875,36 @@ object ProdColorPatternForm: TProdColorPatternForm
           Component = MasterCDS
           ComponentItem = 'SalePriceWVAT'
           DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ModelId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ModelId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ModelName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ModelName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BrandId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BrandId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BrandName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BrandName'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False

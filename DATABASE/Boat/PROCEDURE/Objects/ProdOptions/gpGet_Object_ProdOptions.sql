@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ModelId Integer, ModelName TVarChar
              , BrandId Integer, BrandName TVarChar
              , ProdEngineId Integer, ProdEngineName TVarChar
+             , GoodsId Integer, GoodsName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
              , SalePrice TFloat
              , Comment TVarChar
@@ -33,6 +34,8 @@ $BODY$BEGIN
            , CAST ('' AS TVarChar)    AS BrandName
            , CAST (0  AS Integer)     AS ProdEngineId
            , CAST ('' AS TVarChar)    AS ProdEngineName
+           , 0  :: Integer            AS GoodsId
+           , '' :: TVarChar           AS GoodsName
 
            , Object_TaxKind.Id        AS TaxKindId
            , Object_TaxKind.ValueData AS TaxKindName
@@ -56,6 +59,9 @@ $BODY$BEGIN
          , Object_ProdEngine.Id               AS ProdEngineId
          , Object_ProdEngine.ValueData        AS ProdEngineName
 
+         , Object_Goods.Id         ::Integer  AS GoodsId
+         , Object_Goods.ValueData  ::TVarChar AS GoodsName
+
          , Object_TaxKind.Id                  AS TaxKindId
          , Object_TaxKind.ValueData           AS TaxKindName
 
@@ -72,10 +78,15 @@ $BODY$BEGIN
                                 ON ObjectFloat_SalePrice.ObjectId = Object_ProdOptions.Id
                                AND ObjectFloat_SalePrice.DescId = zc_ObjectFloat_ProdOptions_SalePrice()
 
+          LEFT JOIN ObjectLink AS ObjectLink_Goods
+                               ON ObjectLink_Goods.ObjectId = Object_ProdOptions.Id
+                              AND ObjectLink_Goods.DescId = zc_ObjectLink_ProdOptions_Goods()
+          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods.ChildObjectId
+
           LEFT JOIN ObjectLink AS ObjectLink_Model
                                ON ObjectLink_Model.ObjectId = Object_ProdOptions.Id
                               AND ObjectLink_Model.DescId = zc_ObjectLink_ProdOptions_Model()
-          LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId 
+          LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_TaxKind
                                ON ObjectLink_TaxKind.ObjectId = Object_ProdOptions.Id
