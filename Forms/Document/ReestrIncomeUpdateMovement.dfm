@@ -131,7 +131,7 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = InvNumber_Sale
+              Column = InvNumber_Income
             end
             item
               Format = ',0.####'
@@ -159,9 +159,9 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
             Options.Editing = False
             Width = 37
           end
-          object BarCode_Sale: TcxGridDBColumn [1]
+          object BarCode_Income: TcxGridDBColumn [1]
             Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076
-            DataBinding.FieldName = 'BarCode_Sale'
+            DataBinding.FieldName = 'BarCode_Income'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -174,9 +174,9 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 74
           end
-          object StatusCode_Sale: TcxGridDBColumn [3]
+          object StatusCode_Income: TcxGridDBColumn [3]
             Caption = #1057#1090#1072#1090#1091#1089' ('#1085#1072#1082#1083#1072#1076#1085#1072#1103')'
-            DataBinding.FieldName = 'StatusCode_Sale'
+            DataBinding.FieldName = 'StatusCode_Income'
             PropertiesClassName = 'TcxImageComboBoxProperties'
             Properties.Images = dmMain.ImageList
             Properties.Items = <
@@ -199,9 +199,9 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object OperDate_Sale: TcxGridDBColumn [4]
+          object OperDate_Income: TcxGridDBColumn [4]
             Caption = #1044#1072#1090#1072' '#1089#1082#1083#1072#1076' ('#1085#1072#1082#1083#1072#1076#1085#1072#1103')'
-            DataBinding.FieldName = 'OperDate_Sale'
+            DataBinding.FieldName = 'OperDate_Income'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -214,9 +214,9 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object InvNumber_Sale: TcxGridDBColumn [6]
+          object InvNumber_Income: TcxGridDBColumn [6]
             Caption = #8470' '#1076#1086#1082'. ('#1085#1072#1082#1083#1072#1076#1085#1072#1103')'
-            DataBinding.FieldName = 'InvNumber_Sale'
+            DataBinding.FieldName = 'InvNumber_Income'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -312,80 +312,7 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
             Options.Editing = False
             Width = 60
           end
-          object StatusCode_Transport: TcxGridDBColumn [18]
-            Caption = #1057#1090#1072#1090#1091#1089' ('#1055'.'#1083'.)'
-            DataBinding.FieldName = 'StatusCode_Transport'
-            PropertiesClassName = 'TcxImageComboBoxProperties'
-            Properties.Images = dmMain.ImageList
-            Properties.Items = <
-              item
-                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
-                ImageIndex = 11
-                Value = 1
-              end
-              item
-                Description = #1055#1088#1086#1074#1077#1076#1077#1085
-                ImageIndex = 12
-                Value = 2
-              end
-              item
-                Description = #1059#1076#1072#1083#1077#1085
-                ImageIndex = 13
-                Value = 3
-              end>
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object OperDate_Transport: TcxGridDBColumn [19]
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1055'.'#1083'.'
-            DataBinding.FieldName = 'OperDate_Transport'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object InvNumber_Transport: TcxGridDBColumn [20]
-            Caption = #8470' '#1076#1086#1082'. '#1055'.'#1083'.'
-            DataBinding.FieldName = 'InvNumber_Transport'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object CarModelName: TcxGridDBColumn [21]
-            Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
-            DataBinding.FieldName = 'CarModelName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object CarName: TcxGridDBColumn [22]
-            Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
-            DataBinding.FieldName = 'CarName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object PersonalDriverName: TcxGridDBColumn [23]
-            Caption = #1042#1086#1076#1080#1090#1077#1083#1100
-            DataBinding.FieldName = 'PersonalDriverName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object MemberName: TcxGridDBColumn [24]
-            Caption = #1069#1082#1089#1087#1077#1076#1080#1090#1086#1088
-            DataBinding.FieldName = 'MemberName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          inherited colOperDate: TcxGridDBColumn [25]
+          inherited colOperDate: TcxGridDBColumn [18]
             Caption = #1044#1072#1090#1072' ('#1088#1077#1077#1089#1090#1088')'
             HeaderAlignmentHorz = taCenter
             Width = 55
@@ -395,7 +322,7 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
             HeaderAlignmentHorz = taCenter
             Width = 77
           end
-          inherited colStatus: TcxGridDBColumn [27]
+          inherited colStatus: TcxGridDBColumn [20]
             Caption = #1057#1090#1072#1090#1091#1089' ('#1088#1077#1077#1089#1090#1088')'
             HeaderAlignmentHorz = taCenter
             Width = 55
@@ -561,40 +488,6 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 120
-          end
-          object MemberCode_driver: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1060#1048#1054' ('#1074'./'#1101'.)'
-            DataBinding.FieldName = 'MemberCode_driver'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object MemberName_driver: TcxGridDBColumn
-            Caption = #1060#1048#1054' ('#1074#1086#1076#1080#1090#1077#1083#1100'/'#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
-            DataBinding.FieldName = 'MemberName_driver'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 150
-          end
-          object PositionName_driver: TcxGridDBColumn
-            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1074#1086#1076#1080#1090#1077#1083#1100'/'#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
-            DataBinding.FieldName = 'PositionName_driver'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 150
-          end
-          object UnitName_driver: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1074#1086#1076#1080#1090#1077#1083#1100'/'#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
-            DataBinding.FieldName = 'UnitName_driver'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 150
           end
         end
       end
@@ -777,12 +670,12 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
       ExplicitTop = 4
     end
     object cxLabel18: TcxLabel
-      Left = 376
+      Left = 593
       Top = 44
       Caption = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088')'
     end
     object cePersonal: TcxButtonEdit
-      Left = 376
+      Left = 593
       Top = 62
       Properties.Buttons = <
         item
@@ -794,12 +687,12 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
       Width = 195
     end
     object cxLabel19: TcxLabel
-      Left = 593
+      Left = 810
       Top = 44
       Caption = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1090#1086#1088#1075#1086#1074#1099#1081')'
     end
     object cePersonalTrade: TcxButtonEdit
-      Left = 593
+      Left = 810
       Top = 62
       Properties.Buttons = <
         item
@@ -809,16 +702,6 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
       Properties.ReadOnly = True
       TabOrder = 7
       Width = 195
-    end
-    object cbReestrKind: TcxCheckBox
-      Left = 812
-      Top = 62
-      Hint = #1055#1077#1095#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089' '#1074#1080#1079#1086#1081' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
-      Caption = #1090#1086#1083#1100#1082#1086' '#1089' '#1074#1080#1079#1086#1081
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 8
-      Width = 103
     end
   end
   object cxLabel27: TcxLabel [2]
@@ -847,29 +730,12 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
     Text = #1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072
     Width = 225
   end
-  object cxLabel5: TcxLabel [4]
-    Left = 241
-    Top = 4
-    Caption = #1069#1082#1089#1087#1077#1076#1080#1090#1086#1088' / '#1042#1086#1076#1080#1090#1077#1083#1100' ('#1086#1090' '#1082#1086#1075#1086' '#1087#1086#1083#1091#1095#1077#1085#1072' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' '#1076#1083#1103' '#1074#1080#1079#1099')'
-  end
-  object edMember: TcxButtonEdit [5]
-    Left = 241
-    Top = 22
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 9
-    Width = 332
-  end
-  object edIsShowAll: TcxCheckBox [6]
+  object edIsShowAll: TcxCheckBox [4]
     Left = 812
     Top = 22
     Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1042#1089#1077#1084' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103#1084
     State = cbsChecked
-    TabOrder = 10
+    TabOrder = 8
     Width = 185
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1356,15 +1222,11 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
         item
           Name = 'DriverId'
           Value = 0
-          Component = MemberGuides
-          ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end
         item
           Name = 'DriverName'
           Value = ''
-          Component = MemberGuides
-          ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -1813,14 +1675,12 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
       item
         Name = 'inMemberId'
         Value = Null
-        Component = MemberGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 368
-    Top = 227
+    Left = 352
+    Top = 259
   end
   object ReestrKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -1863,41 +1723,6 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
     DataSet = ClientDataSet
     Left = 600
     Top = 99
-  end
-  object MemberGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edMember
-    Key = '0'
-    FormNameParam.Value = 'TMemberPosition_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMemberPosition_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = '0'
-        Component = MemberGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = MemberGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterPositionId'
-        Value = 8466
-        MultiSelectSeparator = ','
-      end>
-    Left = 317
-    Top = 13
   end
   object spSelectBarCode: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_Reestr_BarCode'
@@ -2140,7 +1965,6 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
       item
         Name = 'inIsReestrKind'
         Value = False
-        Component = cbReestrKind
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2264,7 +2088,6 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
       item
         Name = 'inIsReestrKind'
         Value = False
-        Component = cbReestrKind
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

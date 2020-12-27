@@ -1,15 +1,12 @@
 -- Function: lpInsertUpdate_Movement_ReestrIncome()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ReestrIncome (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ReestrIncome (Integer, TVarChar, TDateTime, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ReestrIncome(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
     IN inInvNumber            TVarChar  , -- Номер документа
     IN inOperDate             TDateTime , -- Дата документа
-    IN inCarId                Integer   , -- Автомобиль
-    IN inPersonalDriverId     Integer   , -- Сотрудник (водитель)
-    IN inMemberId             Integer   , -- Физические лица(экспедитор)
-    IN inMovementId_Transport Integer   , -- Путевой лист/Начисления наемный транспорт
     IN inUserId               Integer     -- пользователь
 )
 RETURNS Integer
@@ -18,19 +15,8 @@ $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
 BEGIN
-     -- Проверка
-     IF COALESCE (inMovementId_Transport, 0) = 0 AND COALESCE (inCarId, 0) = 0 AND inUserId > 0
-     THEN 
-         RAISE EXCEPTION 'Ошибка. Необходимо установить документ <Путевой лист> или выбрать из справочника <Автомобиль>.';
-     END IF;
-
-
      -- определяем ключ доступа !!!то что захардкоженно - временно!!!
-     vbAccessKeyId:= CASE WHEN 1 = 1
-                               THEN lpGetAccessKey (ABS (inUserId), zc_Enum_Process_InsertUpdate_Movement_Income_Partner())
-                          ELSE zc_Enum_Process_AccessKey_DocumentDnepr()
-                     END;
-
+     vbAccessKeyId:= zc_Enum_Process_AccessKey_DocumentDnepr();
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -38,24 +24,22 @@ BEGIN
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ReestrIncome(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
 
-     -- признак что он НЕ "пустышка"
-     IF inUserId > 0
+     IF inUserId > 0 AND vbIsInsert = True
      THEN
-         -- сохранили связь с <>
-         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Car(), ioId, inCarId);
-         -- сохранили связь с <>
-         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalDriver(), ioId, inPersonalDriverId);
-         -- сохранили связь с <>
-         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Member(), ioId, inMemberId);
+         -- сохранили свойство <когда сформирована виза "" (т.е. добавлен новый документ в реестр)>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
+         -- сохранили свойство <кто сформировал визу "" (т.е. добавлен новый документ в реестр)>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
+     END IF;
 
-         -- сохранили связь с документом <Путевой лист> или <Начисления наемный транспорт>
-         PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Transport(), ioId, inMovementId_Transport);
-
-         -- сохранили свойство <когда сформирована виза "Вывезено со склада" (т.е. добавлен последний документ в реестр)>
+     IF inUserId > 0 AND vbIsInsert = False
+     THEN
+         -- сохранили свойство <когда сформирована виза "Получено от клиента" (т.е. добавлен последний документ в реестр)>
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), ioId, CURRENT_TIMESTAMP);
-         -- сохранили свойство <кто сформировал визу "" (т.е. добавлен последний документ в реестр)>
+         -- сохранили свойство <кто сформировал визу "Вывезено со склада" (т.е. добавлен последний документ в реестр)>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Update(), ioId, inUserId);
      END IF;
+     
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, ABS (inUserId), vbIsInsert);
@@ -66,7 +50,7 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  20.10.16         *
 */
 

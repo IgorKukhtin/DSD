@@ -11,11 +11,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_ReestrIncomeUser(
 RETURNS TABLE ( Id Integer, MovementId Integer, LineNum Integer
               , StatusCode Integer, StatusName TVarChar
               , OperDate TDateTime, InvNumber TVarChar
-              , CarName TVarChar, CarModelName TVarChar
-              , PersonalDriverName TVarChar
-              , MemberName TVarChar
               , UpdateName TVarChar, UpdateDate TDateTime
-              , InvNumber_Transport TVarChar, OperDate_Transport TDateTime, StatusCode_Transport Integer, StatusName_Transport TVarChar
+
               , Date_Insert TDateTime, MemberName_Insert TVarChar
               , Date_Snab TDateTime, Date_SnabRe TDateTime
               , Date_Remake TDateTime, Date_Econom TDateTime, Date_Buh TDateTime, Date_EconomIn TDateTime, Date_EconomOut TDateTime
@@ -109,19 +106,10 @@ BEGIN
             , Object_Status.ValueData           AS StatusName
             , Movement_ReestrIncome.OperDate            AS OperDate
             , Movement_ReestrIncome.InvNumber           AS InvNumber
-            , Object_ReestrIncome_Car.ValueData         AS CarName
-            , Object_CarModel.ValueData                 AS CarModelName
-            , Object_ReestrIncome_Personal.ValueData    AS PersonalDriverName
-            , Object_ReestrIncome_Member.ValueData      AS MemberName
 
             , Object_Update.ValueData                   AS UpdateName
             , MovementDate_Update.ValueData             AS UpdateDate
 
-            , Movement_ReestrIncome_Transport.InvNumber AS InvNumber_Transport
-            , Movement_ReestrIncome_Transport.OperDate  AS OperDate_Transport
-            , Object_Status_Transport.ObjectCode        AS StatusCode_Transport
-            , Object_Status_Transport.ValueData         AS StatusName_Transport
-  
             , MIDate_Insert.ValueData                   AS Date_Insert
             , Object_Member.ValueData                   AS MemberName_Insert
 
@@ -185,33 +173,6 @@ BEGIN
                                          ON MLO_Update.MovementId = Movement_ReestrIncome.Id
                                         AND MLO_Update.DescId = zc_MovementLinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId  
-
-            LEFT JOIN MovementLinkMovement AS MLM_ReestrIncome_Transpor
-                                           ON MLM_ReestrIncome_Transpor.MovementId = Movement_ReestrIncome.Id
-                                          AND MLM_ReestrIncome_Transpor.DescId = zc_MovementLinkMovement_Transport()
-            LEFT JOIN Movement AS Movement_ReestrIncome_Transport ON Movement_ReestrIncome_Transport.Id = MLM_ReestrIncome_Transpor.MovementChildId
-            LEFT JOIN Object AS Object_Status_Transport ON Object_Status_Transport.Id = Movement_ReestrIncome_Transport.StatusId
-
-            LEFT JOIN MovementLinkObject AS MLO_ReestrIncome_Car
-                                         ON MLO_ReestrIncome_Car.MovementId = Movement_ReestrIncome.Id
-                                        AND MLO_ReestrIncome_Car.DescId = zc_MovementLinkObject_Car()
-            LEFT JOIN Object AS Object_ReestrIncome_Car ON Object_ReestrIncome_Car.Id = MLO_ReestrIncome_Car.ObjectId
-
-            LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel
-                                 ON ObjectLink_Car_CarModel.ObjectId = Object_ReestrIncome_Car.Id
-                                AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
-            LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
-
-            LEFT JOIN MovementLinkObject AS MLO_ReestrIncome_PersonalDriver
-                                         ON MLO_ReestrIncome_PersonalDriver.MovementId = Movement_ReestrIncome.Id
-                                        AND MLO_ReestrIncome_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
-            LEFT JOIN Object AS Object_ReestrIncome_Personal ON Object_ReestrIncome_Personal.Id = MLO_ReestrIncome_PersonalDriver.ObjectId
-
-            LEFT JOIN MovementLinkObject AS MLO_ReestrIncome_Member
-                                         ON MLO_ReestrIncome_Member.MovementId = Movement_ReestrIncome.Id
-                                        AND MLO_ReestrIncome_Member.DescId = zc_MovementLinkObject_Member()
-            LEFT JOIN Object AS Object_ReestrIncome_Member ON Object_ReestrIncome_Member.Id = MLO_ReestrIncome_Member.ObjectId
-
 
             LEFT JOIN MovementItemDate AS MIDate_Insert
                                        ON MIDate_Insert.MovementItemId = MovementItem.Id
