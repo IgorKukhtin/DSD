@@ -37,7 +37,7 @@ object MainForm: TMainForm
       BevelOuter = bvNone
       TabOrder = 0
       object bbDeleteItem: TSpeedButton
-        Left = 299
+        Left = 339
         Top = 2
         Width = 31
         Height = 29
@@ -87,7 +87,7 @@ object MainForm: TMainForm
         OnClick = bbDeleteItemClick
       end
       object bbExit: TSpeedButton
-        Left = 644
+        Left = 659
         Top = 2
         Width = 31
         Height = 29
@@ -105,7 +105,7 @@ object MainForm: TMainForm
         ShowHint = True
       end
       object bbRefresh: TSpeedButton
-        Left = 505
+        Left = 516
         Top = 2
         Width = 31
         Height = 29
@@ -122,27 +122,8 @@ object MainForm: TMainForm
         ParentShowHint = False
         ShowHint = True
       end
-      object bbRefreshZakaz: TSpeedButton
-        Left = 675
-        Top = 5
-        Width = 31
-        Height = 29
-        Hint = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100' '#1079#1072#1103#1074#1082#1091
-        Glyph.Data = {
-          F6000000424DF600000000000000760000002800000010000000100000000100
-          0400000000008000000000000000000000001000000000000000000000000000
-          8000008000000080800080000000800080008080000080808000C0C0C0000000
-          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
-          8888888888888888888873333333333333387BBBBBBBBBBBBB387BBBBBBBBBBB
-          BB387BBBBBBBBBBBBB387BBBBBBBBBBBBB387BBBBBBBBBBBBB387BBBBBBBBBBB
-          BB387BBBBBBBBBBBBB387BBBBBBBBBBBBB387BBBBBBBBBBBBBB888BBBBBB0888
-          8888888777778888888888888888888888888888888888888888}
-        ParentShowHint = False
-        ShowHint = True
-        Visible = False
-      end
       object bbChangeNumberTare: TSpeedButton
-        Left = 233
+        Left = 273
         Top = 2
         Width = 31
         Height = 29
@@ -161,7 +142,7 @@ object MainForm: TMainForm
         OnClick = bbChangeNumberTareClick
       end
       object bbChangeLevelNumber: TSpeedButton
-        Left = 264
+        Left = 304
         Top = 2
         Width = 31
         Height = 29
@@ -179,27 +160,8 @@ object MainForm: TMainForm
         ShowHint = True
         OnClick = bbChangeLevelNumberClick
       end
-      object bbExportToEDI: TSpeedButton
-        Left = 684
-        Top = 2
-        Width = 31
-        Height = 29
-        Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1085#1072#1082#1083#1072#1076#1085#1091#1102' EDI'
-        Glyph.Data = {
-          F6000000424DF600000000000000760000002800000010000000100000000100
-          0400000000008000000000000000000000001000000000000000000000000000
-          8000008000000080800080000000800080008080000080808000C0C0C0000000
-          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
-          888888888888888888888888888888888888873333333333338887BB3B33B3B3
-          B38887B3B3B13B3B3388873B3B9913B3B38887B3B399973B3388873B397B9973
-          B38887B397BBB997338887FFFFFFFF91BB8888FBBBBB88891888888FFFF88888
-          9188888888888888898888888888888888988888888888888888}
-        ParentShowHint = False
-        ShowHint = True
-        Visible = False
-      end
       object bbChoice_UnComlete: TSpeedButton
-        Left = 429
+        Left = 448
         Top = 2
         Width = 31
         Height = 29
@@ -227,7 +189,7 @@ object MainForm: TMainForm
         OnClick = bbChoice_UnComleteClick
       end
       object bbView_all: TSpeedButton
-        Left = 463
+        Left = 479
         Top = 2
         Width = 31
         Height = 29
@@ -255,7 +217,7 @@ object MainForm: TMainForm
         OnClick = bbView_allClick
       end
       object bbChangeCountPack: TSpeedButton
-        Left = 171
+        Left = 211
         Top = 2
         Width = 31
         Height = 29
@@ -274,7 +236,7 @@ object MainForm: TMainForm
         OnClick = bbChangeCountPackClick
       end
       object bbChangeHeadCount: TSpeedButton
-        Left = 106
+        Left = 146
         Top = 2
         Width = 31
         Height = 29
@@ -293,7 +255,7 @@ object MainForm: TMainForm
         OnClick = bbChangeHeadCountClick
       end
       object bbChangeBoxCount: TSpeedButton
-        Left = 202
+        Left = 242
         Top = 2
         Width = 31
         Height = 29
@@ -312,7 +274,7 @@ object MainForm: TMainForm
         OnClick = bbChangeBoxCountClick
       end
       object bbChangePartionGoods: TSpeedButton
-        Left = 137
+        Left = 177
         Top = 2
         Width = 31
         Height = 29
@@ -331,7 +293,7 @@ object MainForm: TMainForm
         OnClick = bbChangePartionGoodsClick
       end
       object bbSale_Order_all: TSpeedButton
-        Left = 544
+        Left = 558
         Top = 2
         Width = 31
         Height = 29
@@ -355,7 +317,7 @@ object MainForm: TMainForm
         OnClick = bbSale_Order_allClick
       end
       object bbSale_Order_diff: TSpeedButton
-        Left = 577
+        Left = 588
         Top = 2
         Width = 31
         Height = 29
@@ -374,7 +336,7 @@ object MainForm: TMainForm
         OnClick = bbSale_Order_diffClick
       end
       object bbUpdateUnit: TSpeedButton
-        Left = 332
+        Left = 372
         Top = 2
         Width = 31
         Height = 29
@@ -395,7 +357,7 @@ object MainForm: TMainForm
         OnClick = bbUpdateUnitClick
       end
       object bbReestrKind_PartnerOut: TSpeedButton
-        Left = 695
+        Left = 697
         Top = 2
         Width = 31
         Height = 29
@@ -439,7 +401,7 @@ object MainForm: TMainForm
         ShowHint = True
       end
       object bbReestrKind_PartnerOut_two: TSpeedButton
-        Left = 726
+        Left = 727
         Top = 2
         Width = 31
         Height = 29
@@ -527,7 +489,7 @@ object MainForm: TMainForm
         ShowHint = True
       end
       object bbReestrReturn: TSpeedButton
-        Left = 15
+        Left = 55
         Top = 2
         Width = 31
         Height = 29
@@ -571,7 +533,7 @@ object MainForm: TMainForm
         ShowHint = True
       end
       object bbUpdatePartner: TSpeedButton
-        Left = 350
+        Left = 382
         Top = 2
         Width = 31
         Height = 29
@@ -590,7 +552,7 @@ object MainForm: TMainForm
         OnClick = bbUpdatePartnerClick
       end
       object bbGuideGoodsView: TSpeedButton
-        Left = 393
+        Left = 417
         Top = 2
         Width = 31
         Height = 29
@@ -618,7 +580,7 @@ object MainForm: TMainForm
         OnClick = bbGuideGoodsViewClick
       end
       object bbSale_Order_diffTax: TSpeedButton
-        Left = 610
+        Left = 618
         Top = 2
         Width = 31
         Height = 29
@@ -637,7 +599,7 @@ object MainForm: TMainForm
         OnClick = bbSale_Order_diffTaxClick
       end
       object bbReestrStartTTN: TSpeedButton
-        Left = 788
+        Left = 787
         Top = 2
         Width = 31
         Height = 29
@@ -681,7 +643,7 @@ object MainForm: TMainForm
         ShowHint = True
       end
       object bbReestrPartnerInTTN: TSpeedButton
-        Left = 818
+        Left = 817
         Top = 1
         Width = 31
         Height = 29
@@ -725,7 +687,7 @@ object MainForm: TMainForm
         ShowHint = True
       end
       object bbSetPartionGoods: TSpeedButton
-        Left = 62
+        Left = 102
         Top = 1
         Width = 31
         Height = 29
@@ -778,6 +740,42 @@ object MainForm: TMainForm
         ParentShowHint = False
         ShowHint = True
         OnClick = bbSetPartionGoodsClick
+      end
+      object bbReestrKind_Income: TSpeedButton
+        Left = 6
+        Top = 2
+        Width = 31
+        Height = 29
+        Action = actReestrIncomeStart
+        Glyph.Data = {
+          36030000424D3603000000000000360000002800000010000000100000000100
+          1800000000000003000000000000000000000000000000000000FF00FFFF00FF
+          FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00
+          FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF00
+          0000000000000000000000000000000000000000000000000000FF00FFFF00FF
+          FF00FFFF00FFFF00FFFF00FFFF00FF000000FFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFF000000FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF00
+          0000FFFFFF000000000000FFFFFF000000000000FFFFFF000000FF00FFFF00FF
+          FF00FFFF00FFFF00FFFF00FFFF00FF000000FFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFF000000FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF00
+          0000FFFFFF000000000000FFFFFF000000000000FFFFFF000000FF00FFFF00FF
+          FF00FFFF00FFFF00FFFF00FFFF00FF000000FFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFF000000FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF84
+          0000840000840000840000840000840000840000840000840000FF00FFFF00FF
+          000000000000000000000000FF00FF8400008400008400008400008400008400
+          00840000840000840000FF00FFFF00FF00000000FFFF00FFFF000000FF00FFFF
+          00FFFF00FFFF00FFFF00FF0000FF0000FF0000FF0000FFFF00FF000000000000
+          00000000FFFF00FFFF000000000000000000FF00FFFF00FFFF00FF0000FFFF00
+          FFFF00FF0000FFFF00FF00000000FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00
+          0000FF00FFFF00FFFF00FF0000FFFF00FFFF00FF0000FFFF00FF00000000FFFF
+          00FFFF00FFFF00FFFF00FFFF00FFFF000000FF00FFFF00FFFF00FF0000FF0000
+          FF0000FF0000FFFF00FF00000000000000000000FFFF00FFFF00000000000000
+          0000FF00FFFF00FFFF00FF0000FF0000FFFF00FFFF00FFFF00FFFF00FFFF00FF
+          00000000FFFF00FFFF000000FF00FFFF00FFFF00FFFF00FFFF00FFFF00FF0000
+          FF0000FFFF00FFFF00FFFF00FFFF00FF000000000000000000000000FF00FFFF
+          00FFFF00FFFF00FFFF00FFFF00FFFF00FF0000FF0000FFFF00FF}
+        ParentShowHint = False
+        ShowHint = True
       end
     end
     object infoPanelTotalSumm: TPanel
@@ -2945,6 +2943,7 @@ object MainForm: TMainForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 408
     Top = 392
@@ -3108,6 +3107,22 @@ object MainForm: TMainForm
           Name = 'inReestrKindName'
           Value = #1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072
           DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actReestrIncomeStart: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1080#1079#1091' '#1076#1083#1103' '#1055#1088#1080#1093#1086#1076' <'#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072'>'
+      FormName = 'TReestrIncomeStartMovementForm'
+      FormNameParam.Value = 'TReestrIncomeStartMovementForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = 0
           MultiSelectSeparator = ','
         end>
       isShowModal = False

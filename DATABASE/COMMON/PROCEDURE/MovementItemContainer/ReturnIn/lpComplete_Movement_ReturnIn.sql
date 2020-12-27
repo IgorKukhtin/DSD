@@ -26,6 +26,8 @@ $BODY$
 
   DECLARE vbOperSumm_PriceList_byItem TFloat;
   DECLARE vbOperSumm_PriceList TFloat;
+  DECLARE vbOperSumm_PriceList_real_byItem TFloat;
+  DECLARE vbOperSumm_PriceList_real TFloat;
   DECLARE vbOperSumm_Partner_byItem TFloat;
   DECLARE vbOperSumm_Partner TFloat;
   DECLARE vbOperSumm_Partner_ChangePercent_byItem TFloat;
@@ -410,7 +412,7 @@ BEGIN
      -- заполняем таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementItemId
                          , ContainerId_Goods, ContainerId_GoodsPartner, ContainerId_GoodsTransit, GoodsId, GoodsKindId, AssetId, PartionGoods, PartionGoodsDate, ChangePercent, isChangePrice
-                         , OperCount, OperCount_Partner, tmpOperSumm_PriceList, OperSumm_PriceList, tmpOperSumm_Partner, tmpOperSumm_Partner_original, OperSumm_Partner, OperSumm_Partner_ChangePercent
+                         , OperCount, OperCount_Partner, tmpOperSumm_PriceList, OperSumm_PriceList, tmpOperSumm_PriceList_real, OperSumm_PriceList_real, tmpOperSumm_Partner, tmpOperSumm_Partner_original, OperSumm_Partner, OperSumm_Partner_ChangePercent
                          , ContainerId_ProfitLoss_10700
                          , ContainerId_Partner, AccountId_Partner, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_To
@@ -585,16 +587,27 @@ BEGIN
                    ELSE _tmp.OperCount_Partner
               END AS OperCount_Partner
 
-              -- промежуточная (в ценах док-та) сумма прайс-листа по Контрагенту !!!без скидки!!! - с округлением до 2-х знаков
-            , _tmp.tmpOperSumm_PriceList
-              -- конечная сумма прайс-листа по Контрагенту !!! без скидки !!!
-            , CASE WHEN vbPriceWithVAT_PriceList OR vbVATPercent_PriceList = 0
+              -- 1.1. промежуточная (в ценах док-та) сумма прайс-листа по Контрагенту !!!без скидки!!! - с округлением до 2-х знаков - кол-во у Покупателя
+            , _tmp.tmpOperSumm_PriceList AS tmpOperSumm_PriceList
+              -- 1.2. конечная сумма прайс-листа по Контрагенту !!! без скидки !!! - кол-во у Покупателя
+            , CASE WHEN vbPriceWithVAT_PriceList = TRUE OR vbVATPercent_PriceList = 0
                       -- если цены с НДС или %НДС=0, тогда ничего не делаем
                       THEN _tmp.tmpOperSumm_PriceList
                    WHEN vbVATPercent_PriceList > 0
                       -- если цены без НДС, тогда получаем сумму с НДС
                       THEN CAST ( (1 + vbVATPercent_PriceList / 100) * _tmp.tmpOperSumm_PriceList AS NUMERIC (16, 2))
               END AS OperSumm_PriceList
+
+              -- 2.1. промежуточная (в ценах док-та) сумма прайс-листа по Контрагенту !!!без скидки!!! - с округлением до 2-х знаков - кол-во Склад
+            , _tmp.tmpOperSumm_PriceList AS tmpOperSumm_PriceList_real
+              -- 2.2. конечная сумма прайс-листа по Контрагенту !!! без скидки !!! - кол-во Склад
+            , CASE WHEN vbPriceWithVAT_PriceList = TRUE OR vbVATPercent_PriceList = 0
+                      -- если цены с НДС или %НДС=0, тогда ничего не делаем
+                      THEN _tmp.tmpOperSumm_PriceList
+                   WHEN vbVATPercent_PriceList > 0
+                      -- если цены без НДС, тогда получаем сумму с НДС
+                      THEN CAST ( (1 + vbVATPercent_PriceList / 100) * _tmp.tmpOperSumm_PriceList AS NUMERIC (16, 2))
+              END AS OperSumm_PriceList_real
 
               -- промежуточная сумма по Контрагенту !!!почти без скидки(т.е. учтена если надо)!!! - с округлением до 2-х знаков
             , _tmp.tmpOperSumm_Partner
@@ -695,8 +708,10 @@ BEGIN
                     -- количество у контрагента
                   , tmpMI.OperCount_Partner
 
-                    -- промежуточная сумма прайс-листа по Контрагенту - с округлением до 2-х знаков
+                    -- промежуточная сумма прайс-листа по Контрагенту - с округлением до 2-х знаков - кол-во у Покупателя
                   , COALESCE (CAST (tmpMI.OperCount_Partner * COALESCE (tmpPL_Basis_kind.PriceListPrice, tmpPL_Basis.PriceListPrice, 0) AS NUMERIC (16, 2)), 0) AS tmpOperSumm_PriceList
+                    -- промежуточная сумма прайс-листа по Контрагенту - с округлением до 2-х знаков - кол-во Склад
+                  , COALESCE (CAST (tmpMI.OperCount * COALESCE (tmpPL_Basis_kind.PriceListPrice, tmpPL_Basis.PriceListPrice, 0) AS NUMERIC (16, 2)), 0) AS tmpOperSumm_PriceList_real
                     -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков + учтена скидка в цене (!!!если надо!!!)
                   , CASE WHEN tmpMI.CountForPrice <> 0 THEN CAST (tmpMI.OperCount_Partner * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
                                                        ELSE CAST (tmpMI.OperCount_Partner * tmpMI.Price AS NUMERIC (16, 2))
@@ -845,7 +860,7 @@ BEGIN
 
 
      -- Расчеты сумм
-     SELECT -- Расчет Итоговой суммы прайс-листа по Контрагенту
+     SELECT -- Расчет Итоговой суммы прайс-листа по Контрагенту - кол-во у Покупателя
             CASE WHEN vbPriceWithVAT_PriceList OR vbVATPercent_PriceList = 0
                     -- если цены с НДС или %НДС=0, тогда ничего не делаем
                     THEN _tmpItem.tmpOperSumm_PriceList
@@ -853,6 +868,15 @@ BEGIN
                     -- если цены без НДС, тогда получаем сумму с НДС
                     THEN CAST ( (1 + vbVATPercent_PriceList / 100) * _tmpItem.tmpOperSumm_PriceList AS NUMERIC (16, 2))
             END AS OperSumm_PriceList
+
+          , -- Расчет Итоговой суммы прайс-листа по Контрагенту - кол-во у Покупателя
+            CASE WHEN vbPriceWithVAT_PriceList OR vbVATPercent_PriceList = 0
+                    -- если цены с НДС или %НДС=0, тогда ничего не делаем
+                    THEN _tmpItem.tmpOperSumm_PriceList_real
+                 WHEN vbVATPercent_PriceList > 0
+                    -- если цены без НДС, тогда получаем сумму с НДС
+                    THEN CAST ( (1 + vbVATPercent_PriceList / 100) * _tmpItem.tmpOperSumm_PriceList_real AS NUMERIC (16, 2))
+            END AS OperSumm_PriceList_real
 
           , -- Расчет Итоговой суммы по Контрагенту !!!без скидки!!!
             CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
@@ -883,8 +907,9 @@ BEGIN
                               ELSE CAST ( (1 + vbVATPercent / 100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2))
                          END
             END
-            INTO vbOperSumm_PriceList, vbOperSumm_Partner, vbOperSumm_Partner_ChangePercent
+            INTO vbOperSumm_PriceList, vbOperSumm_PriceList_real, vbOperSumm_Partner, vbOperSumm_Partner_ChangePercent
      FROM (SELECT SUM (CASE WHEN vbOperDatePartner < '01.07.2014' THEN _tmpItem.tmpOperSumm_PriceList ELSE CAST (_tmpItem.OperCount_Partner * _tmpItem.PriceListPrice AS NUMERIC (16, 2)) END) AS tmpOperSumm_PriceList
+                , SUM (CASE WHEN vbOperDatePartner < '01.07.2014' THEN _tmpItem.tmpOperSumm_PriceList ELSE CAST (_tmpItem.OperCount         * _tmpItem.PriceListPrice AS NUMERIC (16, 2)) END) AS tmpOperSumm_PriceList_real
                 , SUM (CASE WHEN vbOperDatePartner < '01.07.2014' THEN _tmpItem.tmpOperSumm_Partner -- так получаем по каждому товару отдельно (даже если он повторяется)
                             WHEN _tmpItem.CountForPrice <> 0 THEN CAST (_tmpItem.OperCount_Partner * _tmpItem.Price / _tmpItem.CountForPrice AS NUMERIC (16, 2))
                                                              ELSE CAST (_tmpItem.OperCount_Partner * _tmpItem.Price AS NUMERIC (16, 2))
@@ -898,8 +923,9 @@ BEGIN
                       , _tmpItem.Price_original
                       , _tmpItem.CountForPrice
                       , SUM (_tmpItem.tmpOperSumm_PriceList) AS tmpOperSumm_PriceList
-                      , SUM (_tmpItem.OperCount_Partner) AS OperCount_Partner
-                      , SUM (_tmpItem.tmpOperSumm_Partner) AS tmpOperSumm_Partner
+                      , SUM (_tmpItem.OperCount_Partner)     AS OperCount_Partner
+                      , SUM (_tmpItem.OperCount)             AS OperCount
+                      , SUM (_tmpItem.tmpOperSumm_Partner)   AS tmpOperSumm_Partner
                       , SUM (_tmpItem.tmpOperSumm_Partner_original) AS tmpOperSumm_Partner_original
                  FROM _tmpItem
                  GROUP BY _tmpItem.PriceListPrice
@@ -913,7 +939,7 @@ BEGIN
      ;
 
      -- Расчет Итоговых сумм по Контрагенту (по элементам)
-     SELECT SUM (_tmpItem.OperSumm_PriceList), SUM (_tmpItem.OperSumm_Partner), SUM (_tmpItem.OperSumm_Partner_ChangePercent) INTO vbOperSumm_PriceList_byItem, vbOperSumm_Partner_byItem, vbOperSumm_Partner_ChangePercent_byItem FROM _tmpItem;
+     SELECT SUM (_tmpItem.OperSumm_PriceList), SUM (_tmpItem.OperSumm_PriceList_real), SUM (_tmpItem.OperSumm_Partner), SUM (_tmpItem.OperSumm_Partner_ChangePercent) INTO vbOperSumm_PriceList_byItem, vbOperSumm_PriceList_real_byItem, vbOperSumm_Partner_byItem, vbOperSumm_Partner_ChangePercent_byItem FROM _tmpItem;
 
      -- если не равны ДВЕ Итоговые суммы прайс-листа по Контрагенту
      IF COALESCE (vbOperSumm_PriceList, 0) <> COALESCE (vbOperSumm_PriceList_byItem, 0)
@@ -921,6 +947,14 @@ BEGIN
          -- на разницу корректируем самую большую сумму (теоретически может получиться Значение < 0, но эту ошибку не обрабатываем)
          UPDATE _tmpItem SET OperSumm_PriceList = _tmpItem.OperSumm_PriceList - (vbOperSumm_PriceList_byItem - vbOperSumm_PriceList)
          WHERE _tmpItem.MovementItemId IN (SELECT MAX (_tmpItem.MovementItemId) FROM _tmpItem WHERE _tmpItem.OperSumm_PriceList IN (SELECT MAX (_tmpItem.OperSumm_PriceList) FROM _tmpItem)
+                                          );
+     END IF;
+     -- если не равны ДВЕ Итоговые суммы прайс-листа по Контрагенту
+     IF COALESCE (vbOperSumm_PriceList_real, 0) <> COALESCE (vbOperSumm_PriceList_real_byItem, 0)
+     THEN
+         -- на разницу корректируем самую большую сумму (теоретически может получиться Значение < 0, но эту ошибку не обрабатываем)
+         UPDATE _tmpItem SET OperSumm_PriceList_real = _tmpItem.OperSumm_PriceList_real - (vbOperSumm_PriceList_real_byItem - vbOperSumm_PriceList_real)
+         WHERE _tmpItem.MovementItemId IN (SELECT _tmpItem.MovementItemId FROM _tmpItem ORDER BY _tmpItem.OperSumm_PriceList_real DESC LIMIT 1
                                           );
      END IF;
      -- если не равны ДВЕ Итоговые суммы по Контрагенту !!!без скидки!!!
@@ -1738,7 +1772,7 @@ BEGIN
             INNER JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = _tmpItem.MovementItemId
 
      UNION ALL
-       -- это необычная проводка - !!!прибыль текущего периода!!! по ценам ПРАЙСА zc_PriceList_Basis
+       -- это необычная проводка - !!!прибыль текущего периода!!! по ценам ПРАЙСА zc_PriceList_Basis - кол-во у Покупателя
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId
             , CASE WHEN tmp.mySign > 0 THEN _tmpItem.ContainerId_SummIn_60000 ELSE _tmpItem.ContainerId_SummOut_60000 END AS ContainerId
             , CASE WHEN tmp.mySign > 0 THEN _tmpItem.AccountId_SummIn_60000   ELSE _tmpItem.AccountId_SummOut_60000   END AS AccountId  -- счет есть всегда
@@ -1751,6 +1785,24 @@ BEGIN
             , _tmpItem.ContainerId_Goods               AS ContainerIntId_Analyzer  -- Контейнер "товар"
             , 0                                        AS ParentId
             , tmp.mySign * _tmpItem.OperSumm_PriceList AS Amount
+            , vbOperDate                               AS OperDate -- т.е. по "Дате склад"
+            , tmp.isActive                             AS isActive
+       FROM (SELECT 1 AS mySign, TRUE AS isActive UNION SELECT -1 AS mySign, FALSE AS isActive) AS tmp
+             INNER JOIN _tmpItem ON AccountId_SummIn_60000 <> 0 OR AccountId_SummOut_60000 <> 0
+     UNION ALL
+       -- это необычная проводка - !!!прибыль текущего периода!!! по ценам ПРАЙСА zc_PriceList_Basis - кол-во Склад
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId
+            , CASE WHEN tmp.mySign > 0 THEN _tmpItem.ContainerId_SummIn_60000 ELSE _tmpItem.ContainerId_SummOut_60000 END AS ContainerId
+            , CASE WHEN tmp.mySign > 0 THEN _tmpItem.AccountId_SummIn_60000   ELSE _tmpItem.AccountId_SummOut_60000   END AS AccountId  -- счет есть всегда
+            , zc_Enum_AnalyzerId_ReturnInSumm_40200()  AS AnalyzerId               -- Сумма с/с, возврат, Разница в весе-- !!!аналитика есть всегда!!! (она нужна для склада)
+            , _tmpItem.GoodsId                         AS ObjectId_Analyzer
+            , vbWhereObjectId_Analyzer                 AS WhereObjectId_Analyzer
+            , vbContainerId_Analyzer                   AS ContainerId_Analyzer
+            , _tmpItem.GoodsKindId                     AS ObjectIntId_Analyzer     -- вид товара
+            , vbObjectExtId_Analyzer                   AS ObjectExtId_Analyzer     -- покупатель / физ.лицо
+            , _tmpItem.ContainerId_Goods               AS ContainerIntId_Analyzer  -- Контейнер "товар"
+            , 0                                        AS ParentId
+            , tmp.mySign * (_tmpItem.OperSumm_PriceList_real - _tmpItem.OperSumm_PriceList) AS Amount
             , vbOperDate                               AS OperDate -- т.е. по "Дате склад"
             , tmp.isActive                             AS isActive
        FROM (SELECT 1 AS mySign, TRUE AS isActive UNION SELECT -1 AS mySign, FALSE AS isActive) AS tmp

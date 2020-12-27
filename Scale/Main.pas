@@ -25,10 +25,8 @@ type
     bbDeleteItem: TSpeedButton;
     bbExit: TSpeedButton;
     bbRefresh: TSpeedButton;
-    bbRefreshZakaz: TSpeedButton;
     bbChangeNumberTare: TSpeedButton;
     bbChangeLevelNumber: TSpeedButton;
-    bbExportToEDI: TSpeedButton;
     infoPanelTotalSumm: TPanel;
     gbRealWeight: TGroupBox;
     PanelRealWeight: TPanel;
@@ -247,6 +245,8 @@ type
     WeightTare6: TcxGridDBColumn;
     CountTareTotal: TcxGridDBColumn;
     bbSetPartionGoods: TSpeedButton;
+    bbReestrKind_Income: TSpeedButton;
+    actReestrIncomeStart: TdsdOpenForm;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -1519,6 +1519,7 @@ begin
      bbReestrKind_PartnerOut.Visible:=false;
      bbReestrKind_PartnerOut_two.Visible:=false;
      bbReestrKind_PartnerOut_three.Visible:=false;
+     bbReestrKind_Income.Visible:=false;
      //
      // StickerPack
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName').Index].Caption    := 'Вид пакування';

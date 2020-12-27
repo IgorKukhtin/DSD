@@ -166,6 +166,7 @@ else*/
                                           , Plan1 TFloat, Plan2 TFloat, Plan3 TFloat, Plan4 TFloat, Plan5 TFloat, Plan6 TFloat, Plan7 TFloat
                                           , AmountResult TFloat, AmountSecondResult TFloat
                                           , AmountNextResult TFloat, AmountNextSecondResult TFloat
+                                          , isCalculated Boolean
                                            ) ON COMMIT DROP;
         END IF;
         -- Данные - Child
@@ -178,6 +179,7 @@ else*/
                                 , AmountSecondResult
                                 , AmountNextResult
                                 , AmountNextSecondResult
+                                , isCalculated
                                  )
             WITH -- заменяем товары на "Главный Товар в планировании прихода с упаковки"
                  tmpGoodsByGoodsKind AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId         AS GoodsId
@@ -274,6 +276,8 @@ else*/
                 , CASE WHEN inIsPackSecond = TRUE THEN 0 ELSE tmpMI.AmountSecondResult            END AS AmountSecondResult
                 , CASE WHEN inIsPack       = TRUE THEN 0 ELSE 0 /*tmpMI.AmountNextResult*/        END AS AmountNextResult
                 , CASE WHEN inIsPackSecond = TRUE THEN 0 ELSE 0 /*tmpMI.AmountNextSecondResult*/  END AS AmountNextSecondResult
+                
+                , tmpMI.isCalculated
 
            FROM (SELECT MovementItem.Id                                AS MovementItemId
                       , CASE WHEN MILinkObject_GoodsComplete.ObjectId     > 0 THEN MILinkObject_GoodsComplete.ObjectId     ELSE MovementItem.ObjectId                         END AS GoodsId_complete
@@ -405,6 +409,8 @@ else*/
                                                   , MovementItem.Id DESC
                                           ) AS Ord
 
+                      , COALESCE (MIBoolean_Calculated.ValueData, TRUE) AS isCalculated
+
                  FROM MovementItem
                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -524,10 +530,17 @@ else*/
                                            ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
                                           AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
 
+                      LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                                    ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
+                                                   AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
+
                  WHERE MovementItem.MovementId = inMovementId
                    AND MovementItem.DescId     = zc_MI_Master()
                    AND MovementItem.isErased   = FALSE
                    AND COALESCE (MIFloat_ContainerId.ValueData, 0) = 0 -- отбросили остатки на ПР-ВЕ
+                   
+                  -- AND MIBoolean_Calculated.MovementItemId IS NULL
+
                 ) AS tmpMI
            WHERE tmpMI.Ord = 1
           ;
@@ -985,7 +998,10 @@ else*/
              vbNumber:= 0;
              WHILE vbNumber <= inNumber
              LOOP
-                 UPDATE _tmpMI_Child SET AmountNextSecondResult = _tmpMI_Child.AmountNextSecondResult + tmpResult.Amount_result
+                 UPDATE _tmpMI_Child SET AmountNextSecondResult = CASE WHEN _tmpMI_Child.isCalculated = TRUE
+                                                                            THEN _tmpMI_Child.AmountNextSecondResult + tmpResult.Amount_result
+                                                                       ELSE _tmpMI_Child.AmountNextSecondResult
+                                                                  END
                  FROM (WITH -- сумма - сколько уже распределили
                             tmpMI_summ AS (SELECT _tmpMI_Child.GoodsId_complete             AS GoodsId_master
                                                 , _tmpMI_Child.GoodsKindId_complete         AS GoodsKindId_master

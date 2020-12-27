@@ -135,6 +135,7 @@ BEGIN
 
          SELECT
              Movement.Id
+           , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) AS IdBarCode
            , Movement.InvNumber
            , Movement.OperDate
            , Object_Status.ObjectCode          AS StatusCode
