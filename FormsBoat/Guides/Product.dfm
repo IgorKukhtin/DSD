@@ -1765,6 +1765,36 @@ object ProductForm: TProductForm
           ComponentItem = 'ProdOptionsName'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ModelId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ModelId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ModelName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ModelName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BrandId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BrandId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BrandName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BrandName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
