@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ProdModel(
     IN inIsShowAll   Boolean,            -- признак показать удаленные да / нет 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_full TVarChar
              , Length TFloat, Beam TFloat, Height TFloat, Weight TFloat, Fuel TFloat, Speed TFloat, Seating TFloat
              , Comment TVarChar
              , BrandId Integer, BrandName TVarChar
@@ -27,6 +27,7 @@ BEGIN
            Object_ProdModel.Id             AS Id 
          , Object_ProdModel.ObjectCode     AS Code
          , Object_ProdModel.ValueData      AS Name
+         , (Object_ProdModel.ValueData ||' (' || Object_Brand.ValueData||')') ::TVarChar AS Name_full
 
          , ObjectFloat_Length.ValueData    AS Length
          , ObjectFloat_Beam.ValueData      AS Beam

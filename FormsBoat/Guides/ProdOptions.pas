@@ -73,9 +73,6 @@ type
     bbModel: TdxBarControlContainerItem;
     FormParams: TdsdFormParams;
     RefreshDispatcher: TRefreshDispatcher;
-    cxLabel1: TcxLabel;
-    edBrand: TcxButtonEdit;
-    GuidesBrand: TdsdGuides;
     dxBarControlContainerItem2: TdxBarControlContainerItem;
     dxBarControlContainerItem3: TdxBarControlContainerItem;
   private

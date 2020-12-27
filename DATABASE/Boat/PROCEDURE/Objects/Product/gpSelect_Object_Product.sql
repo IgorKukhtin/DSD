@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ProdColorName TVarChar
              , Comment TVarChar
              , ProdGroupId Integer, ProdGroupName TVarChar
              , BrandId Integer, BrandName TVarChar
-             , ModelId Integer, ModelName TVarChar
+             , ModelId Integer, ModelName TVarChar, ModelName_full TVarChar
              , EngineId Integer, EngineName TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
@@ -443,6 +443,7 @@ BEGIN
               
                        , Object_Model.Id                 AS ModelId
                        , Object_Model.ValueData          AS ModelName
+                       , (Object_Model.ValueData ||' (' || Object_Brand.ValueData||')') ::TVarChar AS ModelName_full
               
                        , Object_Engine.Id                AS EngineId
                        , Object_Engine.ValueData         AS EngineName
@@ -586,6 +587,7 @@ BEGIN
 
          , tmpResAll.ModelId
          , tmpResAll.ModelName
+         , tmpResAll.ModelName_full
 
          , tmpResAll.EngineId
          , tmpResAll.EngineName

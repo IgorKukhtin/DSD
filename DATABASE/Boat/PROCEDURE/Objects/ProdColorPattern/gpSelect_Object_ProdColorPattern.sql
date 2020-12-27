@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Comment TVarChar
              , ProdColorGroupId Integer, ProdColorGroupName TVarChar
              , ColorPatternId Integer, ColorPatternName TVarChar
-             , ModelId Integer, ModelCode Integer, ModelName TVarChar
+             , ModelId Integer, ModelCode Integer, ModelName TVarChar, ModelName_full TVarChar
              , BrandId Integer, BrandName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , ProdOptionsId Integer, ProdOptionsName TVarChar
@@ -231,6 +231,7 @@ BEGIN
          , tmpData.ModelId
          , tmpData.ModelCode
          , tmpData.ModelName
+         , tmpData.ModelName ||' (' || tmpData.BrandName||')') ::TVarChar AS ModelName_full
          , tmpData.BrandId
          , tmpData.BrandName
 
@@ -291,6 +292,7 @@ BEGIN
          , Object_Model.Id         ::Integer  AS ModelId
          , Object_Model.ObjectCode ::Integer  AS ModelCode
          , Object_Model.ValueData  ::TVarChar AS ModelName
+         , (Object_Model.ValueData ||' (' || Object_Brand.ValueData||')') ::TVarChar AS ModelName_full
          , Object_Brand.Id                    AS BrandId
          , Object_Brand.ValueData             AS BrandName
          

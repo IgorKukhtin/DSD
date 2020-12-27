@@ -172,7 +172,7 @@ BEGIN
           LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
 
      WHERE Object_ProdOptions.DescId = zc_Object_ProdOptions()
-      AND (ObjectLink_Model.ChildObjectId = inModelId OR inModelId = 0)
+      AND (ObjectLink_Model.ChildObjectId = inModelId OR inModelId = 0 OR COALESCE (ObjectLink_Model.ChildObjectId,0) = 0)
       AND (Object_ProdOptions.isErased = FALSE OR inIsShowAll = TRUE);  
 
 END;

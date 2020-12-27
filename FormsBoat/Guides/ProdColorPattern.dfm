@@ -27,7 +27,6 @@ object ProdColorPatternForm: TProdColorPatternForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 18
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -374,13 +373,13 @@ object ProdColorPatternForm: TProdColorPatternForm
     end
   end
   object cxLabel6: TcxLabel
-    Left = 308
-    Top = 179
+    Left = 276
+    Top = 155
     Caption = #1064#1072#1073#1083#1086#1085' Boat Structure:'
   end
   object edColorPattern: TcxButtonEdit
-    Left = 375
-    Top = 178
+    Left = 276
+    Top = 170
     Properties.Buttons = <
       item
         Default = True
@@ -885,25 +884,10 @@ object ProdColorPatternForm: TProdColorPatternForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'ModelName'
+          Name = 'ModelName_full'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'ModelName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'BrandId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'BrandId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'BrandName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'BrandName'
+          ComponentItem = 'ModelName_full'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

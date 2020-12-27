@@ -27,7 +27,6 @@ object ProdOptionsForm: TProdOptionsForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 34
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -283,25 +282,8 @@ object ProdOptionsForm: TProdOptionsForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 6
+    TabOrder = 4
     Width = 245
-  end
-  object cxLabel1: TcxLabel
-    Left = 261
-    Top = 118
-    Caption = 'Brand:'
-  end
-  object edBrand: TcxButtonEdit
-    Left = 303
-    Top = 117
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 8
-    Width = 138
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -393,18 +375,6 @@ object ProdOptionsForm: TProdOptionsForm
         item
           Visible = True
           ItemName = 'bbModel'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarControlContainerItem2'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarControlContainerItem3'
         end
         item
           Visible = True
@@ -514,14 +484,12 @@ object ProdOptionsForm: TProdOptionsForm
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
-      Control = cxLabel1
     end
     object dxBarControlContainerItem3: TdxBarControlContainerItem
       Caption = 'New Item'
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
-      Control = edBrand
     end
   end
   object ActionList: TActionList
@@ -859,26 +827,9 @@ object ProdOptionsForm: TProdOptionsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TextValue'
+        Name = 'ModelName_full'
         Value = ''
         Component = GuidesProdModel
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'BrandId'
-        Value = Null
-        Component = GuidesBrand
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'BrandName'
-        Value = Null
-        Component = GuidesBrand
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -897,7 +848,7 @@ object ProdOptionsForm: TProdOptionsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ModelName'
+        Name = 'ModelName_full'
         Value = ''
         Component = GuidesProdModel
         ComponentItem = 'TextValue'
@@ -917,35 +868,5 @@ object ProdOptionsForm: TProdOptionsForm
       end>
     Left = 568
     Top = 80
-  end
-  object GuidesBrand: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edBrand
-    DisableGuidesOpen = True
-    FormNameParam.Value = 'TBrandForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TBrandForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesBrand
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesBrand
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 352
-    Top = 115
   end
 end
