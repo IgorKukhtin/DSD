@@ -923,10 +923,11 @@
             Kind = bkEllipsis
           end>
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1076#1083#1103' '#1087#1086#1080#1089#1082#1072' '#1073#1086#1085#1091#1089#1085#1086#1075#1086' '#1076#1086#1075#1086#1074#1086#1088#1072
         Width = 141
       end
       object ContractSendName: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1075'. '#1084#1072#1088#1082#1077#1090#1080#1085#1075
+        Caption = #8470' '#1076#1086#1075'. '#1084#1072#1088#1082#1077#1090'./'#1073#1072#1079#1072
         DataBinding.FieldName = 'ContractSendName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -937,11 +938,13 @@
           end>
         Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1077#1088#1077#1074#1099#1089#1090#1072#1074#1083#1077#1085#1080#1077' '#1084#1072#1088#1082#1077#1090#1080#1085#1075
-        Width = 80
+        HeaderHint = 
+          #8470' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1077#1088#1077#1074#1099#1089#1090#1072#1074#1083#1077#1085#1080#1077' '#1084#1072#1088#1082#1077#1090#1080#1085#1075' '#1080#1083#1080' '#1087#1086#1080#1089#1082' '#1073#1072#1079#1099' '#1076#1083#1103' '#1084#1072#1088#1082#1077#1090'. ' +
+          #1076#1086#1075#1086#1074#1086#1088#1072
+        Width = 88
       end
       object ContractStateKindCode_Send: TcxGridDBColumn
-        Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'. '#1084#1072#1088#1082#1077#1090'.'
+        Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'. '#1084#1072#1088#1082#1077#1090'./'#1073#1072#1079#1072
         DataBinding.FieldName = 'ContractStateKindCode_Send'
         PropertiesClassName = 'TcxImageComboBoxProperties'
         Properties.Alignment.Horz = taLeftJustify
@@ -974,7 +977,7 @@
         Width = 67
       end
       object ContractTagName_Send: TcxGridDBColumn
-        Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'. '#1084#1072#1088#1082#1077#1090'.'
+        Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'. '#1084#1072#1088#1082#1077#1090'./'#1073#1072#1079#1072
         DataBinding.FieldName = 'ContractTagName_Send'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -984,6 +987,7 @@
         Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'InfoMoneyCode_Send'
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1084#1072#1088#1082#1077#1090'./'#1073#1072#1079#1072
         Options.Editing = False
         Width = 120
       end
@@ -991,6 +995,7 @@
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName_Send'
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1084#1072#1088#1082#1077#1090'./'#1073#1072#1079#1072
         Options.Editing = False
         Width = 120
       end
@@ -998,13 +1003,15 @@
         Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
         DataBinding.FieldName = 'JuridicalCode_Send'
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1084#1072#1088#1082#1077#1090'./'#1073#1072#1079#1072
         Options.Editing = False
-        Width = 120
+        Width = 45
       end
       object JuridicalName_Send: TcxGridDBColumn
         Caption = #1070#1088'. '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName_Send'
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1084#1072#1088#1082#1077#1090'./'#1073#1072#1079#1072
         Options.Editing = False
         Width = 120
       end
@@ -2210,7 +2217,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1091#1089#1083'. '#1076#1086#1075'.)'
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072')'
       ImageIndex = 2
-      ShortCut = 46
+      ShortCut = 8238
       ErasedFieldName = 'isErased'
       DataSource = CCPartnerDS
     end
@@ -2252,7 +2259,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1090#1086#1074#1072#1088
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091
       ImageIndex = 2
-      ShortCut = 46
+      ShortCut = 8238
       ErasedFieldName = 'isErased'
       DataSource = DataSourceGoods
     end
@@ -2267,7 +2274,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
       ImageIndex = 2
-      ShortCut = 46
+      ShortCut = 8238
       ErasedFieldName = 'isErased'
       DataSource = DataSourcePartner
     end
@@ -2282,7 +2289,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
-      ShortCut = 46
+      ShortCut = 8238
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
@@ -2373,7 +2380,7 @@
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
+      ShortCut = 8238
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = CCPartnerDS
@@ -2473,7 +2480,7 @@
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
+      ShortCut = 8238
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSourceGoods
@@ -2489,7 +2496,7 @@
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
+      ShortCut = 8238
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSourcePartner
@@ -2505,7 +2512,7 @@
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
+      ShortCut = 8238
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
