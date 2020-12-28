@@ -35,7 +35,7 @@ BEGIN
        AND Movement_Promo.StatusId <> zc_Enum_Status_Erased();
 
 
-     -- еслиесть "без учета % скидки", тогда zc_MovementFloat_ChangePercent = 0" 
+     -- если есть "без учета % скидки", тогда zc_MovementFloat_ChangePercent = 0" 
      IF EXISTS (SELECT MI_Child.ObjectId 
                 FROM MovementItem AS MI_Child 
                 WHERE MI_Child.MovementId = inMovementId 
@@ -44,7 +44,7 @@ BEGIN
      THEN 
           outChangePercent:=0;
      ELSE
-         --если несколько дог, и разная скидка то ошибка
+         -- если несколько дог, и разная скидка то ошибка
          IF (SELECT SUM (tmp.Count) FROM _tmpChangePercent AS tmp) > 1
          THEN 
               -- ошибка
