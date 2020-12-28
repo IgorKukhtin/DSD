@@ -159,6 +159,9 @@ type
     isBasicConf: TcxGridDBColumn;
     isDiff_ch1: TcxGridDBColumn;
     IsProdOptions_ch1: TcxGridDBColumn;
+    GoodsName_ch2: TcxGridDBColumn;
+    actChoiceFormGoods_optitems: TOpenChoiceForm;
+    GoodsCode_ch2: TcxGridDBColumn;
   private
     { Private declarations }
   public

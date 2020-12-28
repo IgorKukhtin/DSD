@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ProdEngineId Integer, ProdEngineName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar, TaxKind_Value TFloat
-             , SalePrice TFloat, SalePriceWVAT TFloat
+             , EKPrice TFloat, EKPriceWVAT TFloat
              , BasisPrice TFloat, BasisPriceWVAT TFloat
              , Comment TVarChar
              , InsertName TVarChar
@@ -66,16 +66,27 @@ BEGIN
          , Object_TaxKind.ValueData            AS TaxKindName
          , ObjectFloat_TaxKind_Value.ValueData AS TaxKind_Value
 
-         , ObjectFloat_SalePrice.ValueData ::TFloat AS SalePrice
-         , CAST (COALESCE (ObjectFloat_SalePrice.ValueData, 0) * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2)) ::TFloat AS SalePriceWVAT    -- цена продажи с НДС
+         -- если указан товар цены берем из него
+         -- вх.цена всегда из товара
+         , ObjectFloat_EKPrice.ValueData   ::TFloat   AS EKPrice
+         , CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
+              * (1 + (COALESCE (ObjectFloat_TaxKind_Value_goods.ValueData, 0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS EKPriceWVAT
 
-         , CASE WHEN vbPriceWithVAT = FALSE
-                THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
-                ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value_goods.ValueData,0) / 100)  AS NUMERIC (16, 2))
-           END ::TFloat AS BasisPrice
-         , CASE WHEN vbPriceWithVAT = FALSE
-                THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value_goods.ValueData,0) / 100)  AS NUMERIC (16, 2))
-                ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
+           -- цена продажи  если товар указан то берем цену товара, только если нет товара берем SalePrice 
+           -- расчет базовой цены без НДС, до 2 знаков
+         , CASE WHEN COALESCE (ObjectLink_Goods.ChildObjectId,0) <> 0 THEN CASE WHEN vbPriceWithVAT = FALSE
+                                                                   THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
+                                                                   ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value_goods.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                                                              END
+                ELSE COALESCE (ObjectFloat_SalePrice.ValueData,0)
+           END ::TFloat  AS BasisPrice   -- сохраненная цена - цена без НДС
+
+           -- расчет базовой цены с НДС, до 2 знаков
+         , CASE WHEN COALESCE (ObjectLink_Goods.ChildObjectId,0) <> 0 THEN CASE WHEN vbPriceWithVAT = FALSE
+                                                                   THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                                                                   ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
+                                                              END
+                ELSE CAST (COALESCE (ObjectFloat_SalePrice.ValueData, 0) * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))
            END ::TFloat  AS BasisPriceWVAT
 
          , ObjectString_Comment.ValueData  AS Comment
@@ -160,6 +171,10 @@ BEGIN
                                ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+          LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
+                                ON ObjectFloat_EKPrice.ObjectId = Object_Goods.Id
+                               AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_TaxKind
                                ON ObjectLink_Goods_TaxKind.ObjectId = Object_Goods.Id

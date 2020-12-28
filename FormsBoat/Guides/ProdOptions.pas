@@ -65,7 +65,6 @@ type
     Comment: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
-    SalePrice: TcxGridDBColumn;
     cxLabel6: TcxLabel;
     edProdModel: TcxButtonEdit;
     GuidesProdModel: TdsdGuides;
@@ -75,6 +74,9 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     dxBarControlContainerItem2: TdxBarControlContainerItem;
     dxBarControlContainerItem3: TdxBarControlContainerItem;
+    actChoiceFormGoods: TOpenChoiceForm;
+    actChoiceFormModel: TOpenChoiceForm;
+    spInsertUpdate: TdsdStoredProc;
   private
     { Private declarations }
   public
