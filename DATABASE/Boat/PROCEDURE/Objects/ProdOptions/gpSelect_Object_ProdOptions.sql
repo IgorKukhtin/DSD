@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ProdEngineId Integer, ProdEngineName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar, TaxKind_Value TFloat
-             , SalePrice TFloat, SalePriceWVAT TFloat
+             , EKPrice TFloat, EKPriceWVAT TFloat
              , BasisPrice TFloat, BasisPriceWVAT TFloat
              , Comment TVarChar
              , InsertName TVarChar

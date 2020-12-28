@@ -27,7 +27,6 @@ object ProdOptionsForm: TProdOptionsForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = 24
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -101,7 +100,6 @@ object ProdOptionsForm: TProdOptionsForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
@@ -136,9 +134,16 @@ object ProdOptionsForm: TProdOptionsForm
       object ModelName: TcxGridDBColumn
         Caption = 'Model'
         DataBinding.FieldName = 'ModelName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceFormModel
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 70
       end
       object ProdEngineName: TcxGridDBColumn
@@ -203,9 +208,16 @@ object ProdOptionsForm: TProdOptionsForm
       object GoodsName: TcxGridDBColumn
         Caption = #1050#1086#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
         DataBinding.FieldName = 'GoodsName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceFormGoods
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 206
       end
       object MeasureName: TcxGridDBColumn
@@ -763,11 +775,179 @@ object ProdOptionsForm: TProdOptionsForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate
       StoredProcList = <
         item
+          StoredProc = spInsertUpdate
+        end
+        item
+          StoredProc = spSelect
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
+    end
+    object actChoiceFormModel: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFormModel'
+      FormName = 'TProdModelForm'
+      FormNameParam.Value = 'TProdModelForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ModelId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ModelName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BrandId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BrandId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BrandName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BrandName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProdEngineId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ProdEngineId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProdEngineName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ProdEngineName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actChoiceFormGoods: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFormGoods'
+      FormName = 'TGoodsForm'
+      FormNameParam.Value = 'TGoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Article'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Article'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupNameFull'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsGroupNameFull'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsGroupName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProdColorName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ProdColorName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MeasureName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MeasureName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EKPrice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'EKPrice'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EKPriceWVAT'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'EKPriceWVAT'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BasisPrice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BasisPrice'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BasisPriceWVAT'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BasisPriceWVAT'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object spSelect: TdsdStoredProc
@@ -939,5 +1119,81 @@ object ProdOptionsForm: TProdOptionsForm
       end>
     Left = 568
     Top = 80
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_ProdOptions'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioCode'
+        Value = 0.000000000000000000
+        Component = MasterCDS
+        ComponentItem = 'Code'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'Name'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSalePrice'
+        Value = 0.000000000000000000
+        Component = MasterCDS
+        ComponentItem = 'BasisPrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inModelId'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'ModelId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTaxKindId'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'TaxKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 480
+    Top = 168
   end
 end
