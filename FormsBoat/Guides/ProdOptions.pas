@@ -65,7 +65,6 @@ type
     Comment: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
-    SalePrice: TcxGridDBColumn;
     cxLabel6: TcxLabel;
     edProdModel: TcxButtonEdit;
     GuidesProdModel: TdsdGuides;
