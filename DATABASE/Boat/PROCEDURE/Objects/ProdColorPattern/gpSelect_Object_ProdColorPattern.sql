@@ -15,6 +15,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Comment TVarChar
              , ProdColorGroupId Integer, ProdColorGroupName TVarChar
              , ColorPatternId Integer, ColorPatternName TVarChar
+             , ModelId Integer, ModelCode Integer, ModelName TVarChar, ModelName_full TVarChar
+             , BrandId Integer, BrandName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , ProdOptionsId Integer, ProdOptionsName TVarChar
              , InsertName TVarChar
@@ -61,6 +63,12 @@ BEGIN
 
                           , Object_ColorPattern.Id             ::Integer  AS ColorPatternId
                           , Object_ColorPattern.ValueData      ::TVarChar AS ColorPatternName
+
+                          , Object_Model.Id         ::Integer  AS ModelId
+                          , Object_Model.ObjectCode ::Integer  AS ModelCode
+                          , Object_Model.ValueData  ::TVarChar AS ModelName
+                          , Object_Brand.Id                    AS BrandId
+                          , Object_Brand.ValueData             AS BrandName
 
                           , Object_Goods.Id                    ::Integer  AS GoodsId
                           , Object_Goods.ObjectCode            ::Integer  AS GoodsCode
@@ -191,6 +199,16 @@ BEGIN
                                                 AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
 
                            LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
+                           ---
+                           LEFT JOIN ObjectLink AS ObjectLink_Model
+                                                ON ObjectLink_Model.ObjectId = Object_ColorPattern.Id
+                                               AND ObjectLink_Model.DescId = zc_ObjectLink_ColorPattern_Model()
+                           LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
+
+                           LEFT JOIN ObjectLink AS ObjectLink_Brand
+                                                ON ObjectLink_Brand.ObjectId = Object_Model.Id
+                                               AND ObjectLink_Brand.DescId = zc_ObjectLink_ProdModel_Brand()
+                           LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
 
                       WHERE Object_ProdColorPattern.DescId = zc_Object_ProdColorPattern()
                        AND (Object_ProdColorPattern.isErased = FALSE OR inIsErased = TRUE)
@@ -209,6 +227,13 @@ BEGIN
 
          , tmpData.ColorPatternId
          , tmpData.ColorPatternName
+
+         , tmpData.ModelId
+         , tmpData.ModelCode
+         , tmpData.ModelName
+         , tmpData.ModelName ||' (' || tmpData.BrandName||')') ::TVarChar AS ModelName_full
+         , tmpData.BrandId
+         , tmpData.BrandName
 
          , tmpData.GoodsId
          , tmpData.GoodsCode
@@ -264,6 +289,13 @@ BEGIN
          , Object_ColorPattern.Id        AS ColorPatternId
          , Object_ColorPattern.ValueData AS ColorPatternName
 
+         , Object_Model.Id         ::Integer  AS ModelId
+         , Object_Model.ObjectCode ::Integer  AS ModelCode
+         , Object_Model.ValueData  ::TVarChar AS ModelName
+         , (Object_Model.ValueData ||' (' || Object_Brand.ValueData||')') ::TVarChar AS ModelName_full
+         , Object_Brand.Id                    AS BrandId
+         , Object_Brand.ValueData             AS BrandName
+         
          , tmpData.GoodsId
          , tmpData.GoodsCode
          , tmpData.GoodsName
@@ -374,6 +406,17 @@ BEGIN
           LEFT JOIN tmpData AS tmpData_check ON tmpData_check.ColorPatternId   = Object_ColorPattern.Id
                                             AND tmpData_check.ProdColorGroupId = tmpData.ProdColorGroupId
                                             AND tmpData_check.Code             = tmpData.Code
+
+          ---
+          LEFT JOIN ObjectLink AS ObjectLink_Model
+                               ON ObjectLink_Model.ObjectId = Object_ColorPattern.Id
+                              AND ObjectLink_Model.DescId = zc_ObjectLink_ColorPattern_Model()
+          LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
+ 
+          LEFT JOIN ObjectLink AS ObjectLink_Brand
+                               ON ObjectLink_Brand.ObjectId = Object_Model.Id
+                              AND ObjectLink_Brand.DescId = zc_ObjectLink_ProdModel_Brand()
+          LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
 
      WHERE Object_ColorPattern.DescId   = zc_Object_ColorPattern()
        AND Object_ColorPattern.isErased = FALSE

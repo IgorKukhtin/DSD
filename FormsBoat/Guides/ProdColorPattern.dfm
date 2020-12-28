@@ -373,13 +373,13 @@ object ProdColorPatternForm: TProdColorPatternForm
     end
   end
   object cxLabel6: TcxLabel
-    Left = 308
-    Top = 179
+    Left = 276
+    Top = 155
     Caption = #1064#1072#1073#1083#1086#1085' Boat Structure:'
   end
   object edColorPattern: TcxButtonEdit
-    Left = 375
-    Top = 178
+    Left = 276
+    Top = 170
     Properties.Buttons = <
       item
         Default = True
@@ -874,6 +874,21 @@ object ProdColorPatternForm: TProdColorPatternForm
           Component = MasterCDS
           ComponentItem = 'SalePriceWVAT'
           DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ModelId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ModelId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ModelName_full'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ModelName_full'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False

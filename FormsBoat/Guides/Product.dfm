@@ -1765,6 +1765,21 @@ object ProductForm: TProductForm
           ComponentItem = 'ProdOptionsName'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ModelId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ModelId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ModelName_full'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ModelName_full'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2235,8 +2250,8 @@ object ProductForm: TProductForm
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 736
-    Top = 296
+    Left = 728
+    Top = 344
   end
   object ProdColorItemsCDS: TClientDataSet
     Aggregates = <>
