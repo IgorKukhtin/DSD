@@ -162,6 +162,7 @@ type
     GoodsName_ch2: TcxGridDBColumn;
     actChoiceFormGoods_optitems: TOpenChoiceForm;
     GoodsCode_ch2: TcxGridDBColumn;
+    isEnabled_ch2: TcxGridDBColumn;
   private
     { Private declarations }
   public

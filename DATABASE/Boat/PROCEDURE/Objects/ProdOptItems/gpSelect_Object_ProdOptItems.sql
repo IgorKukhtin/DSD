@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
              , isSale Boolean
+             , isEnabled Boolean
              , isErased Boolean
 
              , GoodsGroupNameFull TVarChar
@@ -50,16 +51,71 @@ BEGIN
      -- Результат
      RETURN QUERY
      WITH
-         --базовые цены
+         -- базовые цены
          tmpPriceBasis AS (SELECT tmp.GoodsId
                                 , tmp.ValuePrice
                            FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
                                                                     , inOperDate   := CURRENT_DATE) AS tmp
                           )
+           -- все Опции по моделям
+         , tmpProdOptions AS (SELECT Object_ProdOptions.*
+                                   , COALESCE (ObjectLink_Model.ChildObjectId, 0) AS ModelId
+                                   , ObjectLink_Goods.ChildObjectId AS GoodsId
+                                     -- Цена вх. без НДС
+                                   , ObjectFloat_EKPrice.ValueData AS EKPrice
+                                     -- Цена вх. с НДС
+                                   , CAST (ObjectFloat_EKPrice.ValueData
+                                          * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2)) :: TFloat AS EKPriceWVAT
+          
+                                     -- Цена продажи без НДС
+                                   , CASE WHEN vbPriceWithVAT = FALSE
+                                          THEN tmpPriceBasis.ValuePrice
+                                          ELSE CAST (tmpPriceBasis.ValuePrice * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                                     END  :: TFloat AS BasisPrice
+                                     -- Цена продажи с НДС
+                                   , CASE WHEN vbPriceWithVAT = FALSE
+                                          THEN CAST (tmpPriceBasis.ValuePrice * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                                          ELSE tmpPriceBasis.ValuePrice
+                                     END ::TFloat AS BasisPriceWVAT
+                              FROM Object AS Object_ProdOptions
+                                   -- Модель лодки
+                                   LEFT JOIN ObjectLink AS ObjectLink_Model
+                                                        ON ObjectLink_Model.ObjectId = Object_ProdOptions.Id
+                                                       AND ObjectLink_Model.DescId = zc_ObjectLink_ProdOptions_Model()
+                                   -- Комплектующие
+                                   LEFT JOIN ObjectLink AS ObjectLink_Goods
+                                                        ON ObjectLink_Goods.ObjectId = Object_ProdOptions.Id
+                                                       AND ObjectLink_Goods.DescId   = zc_ObjectLink_ProdOptions_Goods()
+
+                                   LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = ObjectLink_Goods.ChildObjectId
+          
+                                   LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
+                                                         ON ObjectFloat_EKPrice.ObjectId = ObjectLink_Goods.ChildObjectId
+                                                        AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
+          
+                                   LEFT JOIN ObjectLink AS ObjectLink_Goods_TaxKind
+                                                        ON ObjectLink_Goods_TaxKind.ObjectId = ObjectLink_Goods.ChildObjectId
+                                                       AND ObjectLink_Goods_TaxKind.DescId   = zc_ObjectLink_Goods_TaxKind()
+                                   LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_Goods_TaxKind.ChildObjectId
+          
+                                   LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                                         ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_Goods.ChildObjectId
+                                                        AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()
+
+                              WHERE Object_ProdOptions.DescId   = zc_Object_ProdOptions()
+                                AND Object_ProdOptions.isErased = FALSE
+                                AND inIsShowAll                 = TRUE
+                             )
            -- все лодки + определяем продана да/нет
          , tmpProduct AS (SELECT Object_Product.*
+                               , ObjectLink_Model.ChildObjectId AS ModelId
                                , CASE WHEN COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() THEN FALSE ELSE TRUE END ::Boolean AS isSale
                           FROM Object AS Object_Product
+                               -- Модель лодки
+                               LEFT JOIN ObjectLink AS ObjectLink_Model
+                                                    ON ObjectLink_Model.ObjectId = Object_Product.Id
+                                                   AND ObjectLink_Model.DescId   = zc_ObjectLink_Product_Model()
+                               -- продана да/нет
                                LEFT JOIN ObjectDate AS ObjectDate_DateSale
                                                     ON ObjectDate_DateSale.ObjectId = Object_Product.Id
                                                    AND ObjectDate_DateSale.DescId = zc_ObjectDate_Product_DateSale()
@@ -124,7 +180,7 @@ BEGIN
 
                          LEFT JOIN ObjectLink AS ObjectLink_Goods_TaxKind
                                               ON ObjectLink_Goods_TaxKind.ObjectId = ObjectLink_Goods.ChildObjectId
-                                             AND ObjectLink_Goods_TaxKind.DescId = zc_ObjectLink_Goods_TaxKind()
+                                             AND ObjectLink_Goods_TaxKind.DescId   = zc_ObjectLink_Goods_TaxKind()
                          LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_Goods_TaxKind.ChildObjectId
 
                          LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
@@ -134,8 +190,8 @@ BEGIN
                     WHERE Object_ProdColorItems.DescId = zc_Object_ProdColorItems()
                      AND (Object_ProdColorItems.isErased = FALSE OR inIsErased = TRUE)
                    )
-         -- существующие элементы ProdOptItems
-       , tmpRes AS (SELECT Object_ProdOptItems.Id           AS Id
+    -- существующие элементы ProdOptItems
+   , tmpRes_all AS (SELECT Object_ProdOptItems.Id           AS Id
                          , Object_ProdOptItems.ObjectCode   AS Code
                          , Object_ProdOptItems.ValueData    AS Name
                          , Object_ProdOptItems.isErased     AS isErased
@@ -204,6 +260,52 @@ BEGIN
                          , tmpProdColorItems.BasisPriceWVAT AS PriceOutWVAT
 
                     FROM tmpProdColorItems
+                   )
+         -- все элементы ProdOptItems
+       , tmpRes AS (SELECT tmpRes_all.Id
+                         , tmpRes_all.Code
+                         , tmpRes_all.Name
+                         , TRUE :: Boolean AS isEnabled
+                         , tmpRes_all.isErased
+
+                         , tmpRes_all.ProductId
+                         , tmpRes_all.GoodsId
+                         , tmpRes_all.ProdOptPatternId
+                         , tmpRes_all.ProdOptionsId
+
+                         , tmpRes_all.PriceIn
+                         , tmpRes_all.PriceInWVAT
+                         , tmpRes_all.PriceOut
+                         , tmpRes_all.PriceOutWVAT
+                         
+                    FROM tmpRes_all
+                   UNION ALL
+                    SELECT 0     :: Integer  AS Id
+                         , 0     :: Integer  AS Code
+                         , ''    :: TVarChar AS Name
+                         , FALSE :: Boolean  AS isEnabled
+                         , FALSE :: Boolean  AS isErased
+
+                         , tmpProduct.Id     AS ProductId
+                         , tmpProdOptions.GoodsId
+                         , 0     :: Integer  AS ProdOptPatternId
+                         , tmpProdOptions.Id AS ProdOptionsId
+
+                           -- Цена вх. без НДС
+                         , tmpProdOptions.EKPrice        AS PriceIn
+                           -- Цена вх. с НДС                
+                         , tmpProdOptions.EKPriceWVAT    AS PriceInWVAT
+                                                            
+                           -- Цена продажи без НДС          
+                         , tmpProdOptions.BasisPrice     AS PriceOut
+                           -- Цена продажи с НДС
+                         , tmpProdOptions.BasisPriceWVAT AS PriceOutWVAT
+
+                    FROM tmpProdOptions
+                         LEFT JOIN tmpProduct ON tmpProduct.ModelId = tmpProdOptions.ModelId OR tmpProdOptions.ModelId = 0
+                         LEFT JOIN tmpRes_all ON tmpRes_all.ProductId     = tmpProduct.Id 
+                                             AND tmpRes_all.ProdOptionsId = tmpProdOptions.Id
+                    WHERE tmpRes_all.ProdOptionsId IS NULL
                    )
        -- свойства для комплектующих
        , tmpParams AS (SELECT tmpObject.ProdOptionsId
@@ -327,6 +429,7 @@ BEGIN
          , Object_Insert.ValueData            ::TVarChar  AS InsertName
          , ObjectDate_Insert.ValueData        ::TDateTime AS InsertDate
          , Object_Product.isSale              ::Boolean   AS isSale
+         , Object_ProdOptItems.isEnabled      ::Boolean   AS isEnabled
          , Object_ProdOptItems.isErased       ::Boolean   AS isErased
 
          , tmpParams.GoodsGroupNameFull
