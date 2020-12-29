@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Comment TVarChar
 
              , ProductId Integer, ProductName TVarChar
+             , ReceiptProdModelId Integer, ReceiptProdModelName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsId_Receipt Integer
              , ProdColorPatternId Integer, ProdColorPatternName TVarChar
@@ -144,6 +145,7 @@ BEGIN
                                  )
      -- все лодки + определяем продана да/нет
    , tmpProduct AS (SELECT Object_Product.*
+                         , ObjectLink_ReceiptProdModel.ChildObjectId AS ReceiptProdModelId
                          , ObjectLink_Model.ChildObjectId AS ModelId
                          , CASE WHEN COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() THEN FALSE ELSE TRUE END ::Boolean AS isSale
                     FROM Object AS Object_Product
@@ -151,6 +153,12 @@ BEGIN
                          LEFT JOIN ObjectLink AS ObjectLink_Model
                                               ON ObjectLink_Model.ObjectId = Object_Product.Id
                                              AND ObjectLink_Model.DescId   = zc_ObjectLink_Product_Model()
+                         -- Шаблон сборки Модели
+                         LEFT JOIN ObjectLink AS ObjectLink_ReceiptProdModel
+                                              ON ObjectLink_ReceiptProdModel.ObjectId = Object_Product.Id
+                                             AND ObjectLink_ReceiptProdModel.DescId = zc_ObjectLink_Product_ReceiptProdModel()
+                         LEFT JOIN Object AS Object_ReceiptProdModel ON Object_ReceiptProdModel.Id = ObjectLink_ReceiptProdModel.ChildObjectId
+
                          -- продана да/нет
                          LEFT JOIN ObjectDate AS ObjectDate_DateSale
                                               ON ObjectDate_DateSale.ObjectId = Object_Product.Id
@@ -165,6 +173,7 @@ BEGIN
                          , Object_ProdColorItems.isErased   AS isErased
 
                          , ObjectLink_Product.ChildObjectId          AS ProductId
+                         , tmpProduct.ReceiptProdModelId             AS ReceiptProdModelId
                          , ObjectLink_Goods.ChildObjectId            AS GoodsId
                          , ObjectLink_ProdColorPattern.ChildObjectId AS ProdColorPatternId
 
@@ -197,13 +206,16 @@ BEGIN
                          , TRUE :: Boolean AS isEnabled
                          , tmpRes_all.isErased
                          , tmpRes_all.ProductId
+                         , tmpRes_all.ReceiptProdModelId
                          , tmpRes_all.GoodsId
                          , tmpRes_all.ProdColorPatternId
                          , tmpProdColorPattern.GoodsId AS GoodsId_Receipt
                      FROM tmpRes_all
                           LEFT JOIN tmpProduct ON tmpProduct.Id = tmpRes_all.ProductId
+                                              AND tmpProduct.ReceiptProdModelId = tmpRes_all.ReceiptProdModelId
                           LEFT JOIN tmpProdColorPattern ON tmpProdColorPattern.ModelId            = tmpProduct.ModelId
                                                        AND tmpProdColorPattern.ProdColorPatternId = tmpRes_all.ProdColorPatternId
+                                                       AND tmpProdColorPattern.ReceiptProdModelId = tmpRes_all.ReceiptProdModelId
 
                    UNION ALL
                     SELECT
@@ -215,13 +227,16 @@ BEGIN
                          , FALSE :: Boolean  AS isErased
  
                          , tmpProduct.Id     AS ProductId
+                         , tmpProduct.ReceiptProdModelId
                          , tmpProdColorPattern.GoodsId
                          , tmpProdColorPattern.ProdColorPatternId
                          , tmpProdColorPattern.GoodsId AS GoodsId_Receipt
                     FROM tmpProdColorPattern
                          JOIN tmpProduct ON tmpProduct.ModelId = tmpProdColorPattern.ModelId
+                                        AND tmpProduct.ReceiptProdModelId = tmpProdColorPattern.ReceiptProdModelId
                          LEFT JOIN tmpRes_all ON tmpRes_all.ProductId          = tmpProduct.Id
                                              AND tmpRes_all.ProdColorPatternId = tmpProdColorPattern.ProdColorPatternId
+                                             AND tmpRes_all.ReceiptProdModelId = tmpProdColorPattern.ReceiptProdModelId
                     WHERE tmpRes_all.ProductId IS NULL
                       AND inIsShowAll          = TRUE
                    )
@@ -237,6 +252,9 @@ BEGIN
 
          , Object_Product.Id                  ::Integer   AS ProductId
          , Object_Product.ValueData           ::TVarChar  AS ProductName
+
+         , Object_ReceiptProdModel.Id         ::Integer   AS ReceiptProdModelId
+         , Object_ReceiptProdModel.ValueData  ::TVarChar  AS ReceiptProdModelName
 
          , Object_Goods.Id           ::Integer   AS GoodsId
          , Object_Goods.ObjectCode   ::Integer   AS GoodsCode
@@ -311,6 +329,7 @@ BEGIN
           LEFT JOIN tmpProduct AS Object_Product      ON Object_Product.Id          = Object_ProdColorItems.ProductId
           LEFT JOIN Object AS Object_Goods            ON Object_Goods.Id            = Object_ProdColorItems.GoodsId
           LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = Object_ProdColorItems.ProdColorPatternId
+          LEFT JOIN Object AS Object_ReceiptProdModel ON Object_ReceiptProdModel.Id = Object_ProdColorItems.ReceiptProdModelId
 
           LEFT JOIN ObjectLink AS ObjectLink_ProdColorGroup
                                ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id

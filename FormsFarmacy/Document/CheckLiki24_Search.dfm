@@ -1,5 +1,5 @@
-inherited CheckSite_SearchForm: TCheckSite_SearchForm
-  Caption = #1055#1086#1080#1089#1082' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1086#1074' '#1074' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1093' '#1095#1077#1082#1072#1093'  '#1089' '#1089#1072#1081#1090#1072' '#1058#1072#1073#1083#1077#1090#1082#1080
+inherited CheckLiki24_SearchForm: TCheckLiki24_SearchForm
+  Caption = #1055#1086#1080#1089#1082' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1086#1074' '#1074' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1093' '#1095#1077#1082#1072#1093'  '#1089' '#1089#1072#1081#1090#1072' Liki24'
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -245,7 +245,7 @@ inherited CheckSite_SearchForm: TCheckSite_SearchForm
     Params = <
       item
         Name = 'inType'
-        Value = 2
+        Value = 3
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -256,6 +256,69 @@ inherited CheckSite_SearchForm: TCheckSite_SearchForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbConfirmedKind_Complete'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbConfirmedKind_UnComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <

@@ -534,6 +534,15 @@ type
     actLoadVIPOrder: TMultiAction;
     actExecLoadVIPOrder: TdsdExecStoredProc;
     spSelectChechHead: TdsdStoredProc;
+    actOpenCheckLiki24: TOpenChoiceForm;
+    actOpenCheckLiki24_Search: TOpenChoiceForm;
+    actOpenDelayLiki24: TdsdOpenForm;
+    N54: TMenuItem;
+    N55: TMenuItem;
+    N56: TMenuItem;
+    Liki241: TMenuItem;
+    actLoadLiki24: TMultiAction;
+    actLoadLiki24_Search: TMultiAction;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -1886,6 +1895,16 @@ begin
         LoadVIPCheck;
     22:
       if actLoadSite_Search.Execute and
+        ((FormParams.ParamByName('CheckId').Value <> 0) or
+        (FormParams.ParamByName('ManagerName').AsString <> '')) then
+        LoadVIPCheck;
+
+    31:
+      if actLoadLiki24.Execute and ((FormParams.ParamByName('CheckId').Value <> 0)
+        or (FormParams.ParamByName('ManagerName').AsString <> '')) then
+        LoadVIPCheck;
+    32:
+      if actLoadLiki24_Search.Execute and
         ((FormParams.ParamByName('CheckId').Value <> 0) or
         (FormParams.ParamByName('ManagerName').AsString <> '')) then
         LoadVIPCheck;

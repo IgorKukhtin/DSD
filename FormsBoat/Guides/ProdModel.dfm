@@ -75,6 +75,15 @@ object ProdModelForm: TProdModelForm
         Options.Editing = False
         Width = 189
       end
+      object ReceiptProdModelName: TcxGridDBColumn
+        Caption = #1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1052#1086#1076#1077#1083#1080
+        DataBinding.FieldName = 'ReceiptProdModelName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1052#1086#1076#1077#1083#1080
+        Options.Editing = False
+        Width = 112
+      end
       object ProdEngineName: TcxGridDBColumn
         Caption = #1052#1086#1090#1086#1088
         DataBinding.FieldName = 'ProdEngineName'
@@ -510,6 +519,21 @@ object ProdModelForm: TProdModelForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Name_full'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReceiptProdModelId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ReceiptProdModelId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReceiptProdModelName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ReceiptProdModelName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

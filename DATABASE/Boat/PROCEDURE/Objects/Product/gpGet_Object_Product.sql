@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , BrandId Integer, BrandName TVarChar
              , ModelId Integer, ModelName TVarChar
              , EngineId Integer, EngineName TVarChar
+             , ReceiptProdModelId Integer, ReceiptProdModelName TVarChar
              , isBasicConf Boolean, isProdColorPattern Boolean
               ) AS
 $BODY$BEGIN
@@ -47,6 +48,8 @@ $BODY$BEGIN
            , CAST ('' AS TVarChar)     AS ModelName
            , CAST (0 AS Integer)       AS EngineId
            , CAST ('' AS TVarChar)     AS EngineName
+           , CAST (0 AS Integer)       AS ReceiptProdModelId
+           , CAST ('' AS TVarChar)     AS ReceiptProdModelName
            , CAST (TRUE AS Boolean)    AS isBasicConf
            , CAST (TRUE AS Boolean)    AS isProdColorPattern
        ;
@@ -77,6 +80,9 @@ $BODY$BEGIN
 
          , Object_Engine.Id                AS EngineId
          , Object_Engine.ValueData         AS EngineName
+
+         , Object_ReceiptProdModel.Id        AS ReceiptProdModelId
+         , Object_ReceiptProdModel.ValueData AS ReceiptProdModelName
 
          , COALESCE (ObjectBoolean_BasicConf.ValueData, FALSE) :: Boolean AS isBasicConf
          , CAST (FALSE AS Boolean)         AS isProdColorPattern
@@ -123,6 +129,11 @@ $BODY$BEGIN
                               AND ObjectLink_ProdGroup.DescId = zc_ObjectLink_Product_ProdGroup()
           LEFT JOIN Object AS Object_ProdGroup ON Object_ProdGroup.Id = ObjectLink_ProdGroup.ChildObjectId
           */
+
+          LEFT JOIN ObjectLink AS ObjectLink_ReceiptProdModel
+                               ON ObjectLink_ReceiptProdModel.ObjectId = Object_Product.Id
+                              AND ObjectLink_ReceiptProdModel.DescId = zc_ObjectLink_Product_ReceiptProdModel()
+          LEFT JOIN Object AS Object_ReceiptProdModel ON Object_ReceiptProdModel.Id = ObjectLink_ReceiptProdModel.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Brand
                                ON ObjectLink_Brand.ObjectId = Object_Product.Id

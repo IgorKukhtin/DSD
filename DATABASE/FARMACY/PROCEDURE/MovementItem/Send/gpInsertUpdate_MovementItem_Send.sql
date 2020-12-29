@@ -49,6 +49,7 @@ $BODY$
    DECLARE vbTRInvNumber   TVarChar; 
    DECLARE vbTROperDate    TDateTime;
    DECLARE vbTRStatusId    Integer;
+   DECLARE vbisDeferred    Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
@@ -65,7 +66,8 @@ BEGIN
          , DATE_TRUNC ('DAY', MovementDate_Insert.ValueData)
          , COALESCE (MovementFloat_TotalCount.ValueData, 0)
          , COALESCE (ObjectFloat_CashSettings_DaySaleForSUN.ValueData, 0)::Integer
-    INTO vbStatusId, vbUnitId, vbFromId, vbIsSUN, vbIsSUN_v2, vbIsSUN_v3, vbIsDefSUN, vbInsertDate, vbTotalCountOld, vbDaySaleForSUN
+         , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean
+    INTO vbStatusId, vbUnitId, vbFromId, vbIsSUN, vbIsSUN_v2, vbIsSUN_v3, vbIsDefSUN, vbInsertDate, vbTotalCountOld, vbDaySaleForSUN, vbisDeferred
     FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = Movement.Id
@@ -89,6 +91,10 @@ BEGIN
           LEFT JOIN MovementBoolean AS MovementBoolean_DefSUN
                                     ON MovementBoolean_DefSUN.MovementId = Movement.Id
                                    AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_DefSUN()
+          LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                    ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                   AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+
           LEFT JOIN MovementDate AS MovementDate_Insert
                                  ON MovementDate_Insert.MovementId = Movement.Id
                                 AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
@@ -184,7 +190,7 @@ BEGIN
 
     IF vbisSUN = TRUE AND COALESCE (ioId, 0) <> 0
        AND COALESCE (vbCommentSendId, 0) <> COALESCE (inCommentTRID, 0)
-       AND COALESCE (vbStatusId, 0) <> zc_Enum_Status_UnComplete()
+       AND (COALESCE (vbStatusId, 0) <> zc_Enum_Status_UnComplete() OR vbisDeferred = TRUE)
        AND COALESCE (vbAmount, 0) = COALESCE (inAmount, 0)
        AND COALESCE (vbAmountManual, 0) = COALESCE (vbAmountManual, 0)
        AND COALESCE (vbAmountStorage, 0) = COALESCE (inAmountStorage, 0)
@@ -199,7 +205,7 @@ BEGIN
          COALESCE ((SELECT ChildObjectId FROM ObjectLink
                     WHERE ObjectId = inCommentTRID
                       AND DescId = zc_ObjectLink_CommentSend_CommentTR()), 0) AND
-         (COALESCE (vbStatusId, 0) = zc_Enum_Status_Complete() OR COALESCE (vbTotalCountOld, 0) = 0)
+         (COALESCE (vbStatusId, 0) = zc_Enum_Status_Complete() OR COALESCE (vbTotalCountOld, 0) = 0 OR vbisDeferred = TRUE)
       THEN
         PERFORM  gpSelect_MovementSUN_TechnicalRediscount(inMovementId, inSession);
       END IF;
@@ -607,4 +613,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_MovementItem_Send (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
-

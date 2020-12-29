@@ -2,7 +2,7 @@ object ProdColorItemsForm: TProdColorItemsForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <Boat Structure>'
-  ClientHeight = 376
+  ClientHeight = 386
   ClientWidth = 725
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,11 +21,12 @@ object ProdColorItemsForm: TProdColorItemsForm
     Left = 0
     Top = 26
     Width = 725
-    Height = 350
+    Height = 360
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource

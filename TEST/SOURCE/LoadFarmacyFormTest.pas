@@ -36,6 +36,7 @@ type
     procedure LoadCheckFormTest;
     procedure LoadCheckDeferredFormTest;
     procedure LoadCheckVIPFormTest;
+    procedure LoadCheckLiki24FormTest;
     procedure LoadCheckSiteFormTest;
     procedure LoadConditionsKeepFormTest;
     procedure LoadContactPersonFormTest;
@@ -2378,6 +2379,18 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckDelayDeferredForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckDelayDeferredForm');
+end;
+
+procedure TLoadFormTest.LoadCheckLiki24FormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckLiki24Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckLiki24Form');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckLiki24_SearchForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckLiki24_SearchForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckDelayLiki24Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckDelayLiki24Form');
 end;
 
 procedure TLoadFormTest.LoadCheckVIPFormTest;

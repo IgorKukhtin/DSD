@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_full TVarChar
              , Comment TVarChar
              , BrandId Integer, BrandName TVarChar
              , ProdEngineId Integer, ProdEngineName TVarChar
+             , ReceiptProdModelId Integer, ReceiptProdModelName TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
              , isErased boolean) AS
@@ -22,7 +23,25 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_ProdModel());
    vbUserId:= lpGetUserBySession (inSession);
 
-     RETURN QUERY 
+     RETURN QUERY
+     WITH tmpReceiptProdModel AS (SELECT ObjectLink_Model.ChildObjectId    AS ModelId
+                                       , Object_ReceiptProdModel.Id        AS ReceiptProdModelId
+                                       , Object_ReceiptProdModel.ValueData AS ReceiptProdModelName
+                                  FROM Object AS Object_ReceiptProdModel
+                                     INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                              ON ObjectBoolean_Main.ObjectId = Object_ReceiptProdModel.Id
+                                                             AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_ReceiptProdModel_Main()
+                                                             AND ObjectBoolean_Main.ValueData = TRUE
+
+                                     LEFT JOIN ObjectLink AS ObjectLink_Model
+                                                          ON ObjectLink_Model.ObjectId = Object_ReceiptProdModel.Id
+                                                         AND ObjectLink_Model.DescId = zc_ObjectLink_ReceiptProdModel_Model()
+                                     LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
+                                  WHERE Object_ReceiptProdModel.DescId = zc_Object_ReceiptProdModel()
+                                    AND Object_ReceiptProdModel.isErased = FALSE
+                                 )
+
+
      SELECT 
            Object_ProdModel.Id             AS Id 
          , Object_ProdModel.ObjectCode     AS Code
@@ -42,6 +61,9 @@ BEGIN
          , Object_Brand.ValueData          AS BrandName
          , Object_ProdEngine.Id            AS ProdEngineId
          , Object_ProdEngine.ValueData     AS ProdEngineName
+
+         , tmpReceiptProdModel.ReceiptProdModelId
+         , tmpReceiptProdModel.ReceiptProdModelName
 
          , Object_Insert.ValueData         AS InsertName
          , ObjectDate_Insert.ValueData     AS InsertDate
@@ -89,6 +111,8 @@ BEGIN
                                ON ObjectLink_ProdEngine.ObjectId = Object_ProdModel.Id
                               AND ObjectLink_ProdEngine.DescId = zc_ObjectLink_ProdModel_ProdEngine()
           LEFT JOIN Object AS Object_ProdEngine ON Object_ProdEngine.Id = ObjectLink_ProdEngine.ChildObjectId
+
+          LEFT JOIN tmpReceiptProdModel ON tmpReceiptProdModel.ModelId = Object_ProdModel.Id
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_ProdModel.Id

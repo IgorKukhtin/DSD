@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Product(Integer, Integer, TVarChar, Integer, Integer, Integer, TFloat, TDateTime, TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Product(Integer, Integer, TVarChar, Integer, Integer, Integer, Boolean, Boolean, TFloat, TDateTime, TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Product(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TDateTime, TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Product(
  INOUT ioId                    Integer   ,    -- ключ объекта <Лодки>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Product(
     IN inBrandId               Integer   ,
     IN inModelId               Integer   ,
     IN inEngineId              Integer   ,
+    IN inReceiptProdModelId    Integer   ,    --
     IN inIsBasicConf           Boolean   ,    -- включать базовую Комплектацию
     IN inIsProdColorPattern    Boolean   ,    -- автоматически добавить все Items Boat Structure
     IN inHours                 TFloat    ,
@@ -66,6 +68,15 @@ BEGIN
                                               );
    END IF;
 
+   -- Проверка
+   IF COALESCE (inReceiptProdModelId, 0) = 0
+   THEN
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Должен быть определен <Шаблон сборки Модели>' :: TVarChar
+                                             , inProcedureName := 'gpInsertUpdate_Object_Product'
+                                             , inUserId        := vbUserId
+                                              );
+   END IF;
+
    -- проверка уникальности <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), inCode, vbUserId);
 
@@ -111,16 +122,25 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Product_Engine(), ioId, inEngineId);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Product_ReceiptProdModel(), ioId, inReceiptProdModelId);
+   
 
    -- только при создании
    IF inIsProdColorPattern = TRUE AND (vbIsInsert = TRUE OR NOT EXISTS (SELECT 1
+                                                                        FROM gpSelect_Object_ProdColorItems (inIsShowAll:= FALSE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
+                                                                        WHERE tmp.ProductId = ioId
+                                                                          AND tmp.ReceiptProdModelId = inReceiptProdModelId)
+                                                                        )
+
+                                                                       /*(SELECT 1
                                                                         FROM ObjectLink AS ObjectLink_Product
                                                                              INNER JOIN Object AS Object_ProdColorItems
                                                                                                ON Object_ProdColorItems.Id       = ObjectLink_Product.ObjectId
                                                                                               AND Object_ProdColorItems.isErased = FALSE
                                                                         WHERE ObjectLink_Product.ChildObjectId = ioId
                                                                           AND ObjectLink_Product.DescId        = zc_ObjectLink_ProdColorItems_Product()
-                                                                       ))
+                                                                       ))*/
    THEN
        -- добавить все Items Boat Structure
        PERFORM gpInsertUpdate_Object_ProdColorItems (ioId                  := 0
@@ -132,9 +152,10 @@ BEGIN
                                                    , inIsEnabled           := TRUE
                                                    , ioIsProdOptions       := FALSE
                                                    , inSession             := inSession
-                                                    )
+                                                    ) 
        FROM gpSelect_Object_ProdColorItems (inIsShowAll:= TRUE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
-       WHERE tmp.ProductId = ioId;
+       WHERE tmp.ProductId = ioId
+         AND tmp.ReceiptProdModelId = inReceiptProdModelId;
 
    END IF;
 

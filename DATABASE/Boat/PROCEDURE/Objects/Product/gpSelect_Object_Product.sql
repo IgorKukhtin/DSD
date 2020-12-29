@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ProdColorName TVarChar
              , BrandId Integer, BrandName TVarChar
              , ModelId Integer, ModelName TVarChar, ModelName_full TVarChar
              , EngineId Integer, EngineName TVarChar
+             , ReceiptProdModelId Integer, ReceiptProdModelName TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
              , isSale Boolean
@@ -110,7 +111,7 @@ BEGIN
    , tmpProduct AS (SELECT Object_Product.*
                         , ObjectDate_DateSale.ValueData    AS DateSale
                         , ObjectLink_Model.ChildObjectId   AS ModelId
-                        , ObjectLink_ReceiptProdModel_Model.ObjectId AS ReceiptProdModelId
+                        , COALESCE (ObjectLink_ReceiptProdModel.ChildObjectId,0) AS ReceiptProdModelId
                         , CASE WHEN COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() THEN FALSE ELSE TRUE END ::Boolean AS isSale
                         , COALESCE (ObjectBoolean_BasicConf.ValueData, FALSE) :: Boolean AS isBasicConf
                     FROM Object AS Object_Product
@@ -126,9 +127,9 @@ BEGIN
                                               ON ObjectLink_Model.ObjectId = Object_Product.Id
                                              AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model()
 
-                         LEFT JOIN ObjectLink AS ObjectLink_ReceiptProdModel_Model
-                                              ON ObjectLink_ReceiptProdModel_Model.ChildObjectId = ObjectLink_Model.ChildObjectId
-                                             AND ObjectLink_ReceiptProdModel_Model.DescId = zc_ObjectLink_ReceiptProdModel_Model()
+                         LEFT JOIN ObjectLink AS ObjectLink_ReceiptProdModel
+                                              ON ObjectLink_ReceiptProdModel.ObjectId = Object_Product.Id
+                                             AND ObjectLink_ReceiptProdModel.DescId = zc_ObjectLink_Product_ReceiptProdModel()
 
                     WHERE Object_Product.DescId = zc_Object_Product()
                      AND (Object_Product.isErased = FALSE OR inIsShowAll = TRUE)
@@ -373,6 +374,7 @@ BEGIN
                      )
          -- группируем все по ReceiptProdModelId
        , tmpPrice AS (SELECT tmpProduct.Id AS ProductId
+                           , tmpProduct.ReceiptProdModelId
                              --
                            , SUM (tmp.EKPrice_summ)     :: TFloat AS EKPrice_summ
                            , SUM (tmp.EKPriceWVAT_summ) :: TFloat AS EKPriceWVAT_summ
@@ -414,6 +416,7 @@ BEGIN
                                       GROUP BY tmpReceiptProdModelChild.ReceiptProdModelId
                                      ) AS tmp ON tmp.ReceiptProdModelId = tmpProduct.ReceiptProdModelId
                       GROUP BY tmpProduct.Id
+                             , tmpProduct.ReceiptProdModelId
                      )
  ------
 
@@ -447,7 +450,10 @@ BEGIN
               
                        , Object_Engine.Id                AS EngineId
                        , Object_Engine.ValueData         AS EngineName
-              
+
+                       , Object_ReceiptProdModel.Id        AS ReceiptProdModelId
+                       , Object_ReceiptProdModel.ValueData AS ReceiptProdModelName
+
                        , Object_Insert.ValueData         AS InsertName
                        , ObjectDate_Insert.ValueData     AS InsertDate
                        --, CASE WHEN COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() THEN FALSE ELSE TRUE END ::Boolean AS isSale
@@ -486,12 +492,11 @@ BEGIN
                         LEFT JOIN tmpProdColorItems AS tmpProdColorItems_2
                                                     ON tmpProdColorItems_2.ProductId = Object_Product.Id
                                                    AND tmpProdColorItems_2.NPP = 2
-              
+
                         /*LEFT JOIN ObjectBoolean AS ObjectBoolean_BasicConf
                                                 ON ObjectBoolean_BasicConf.ObjectId = Object_Product.Id
                                                AND ObjectBoolean_BasicConf.DescId   = zc_ObjectBoolean_Product_BasicConf() 
                         */ 
-              
                         LEFT JOIN ObjectFloat AS ObjectFloat_Hours
                                               ON ObjectFloat_Hours.ObjectId = Object_Product.Id
                                              AND ObjectFloat_Hours.DescId = zc_ObjectFloat_Product_Hours()
@@ -540,7 +545,7 @@ BEGIN
                         LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
                         */
                         LEFT JOIN Object AS Object_Model ON Object_Model.Id = Object_Product.ModelId
-                        
+                        LEFT JOIN Object AS Object_ReceiptProdModel ON Object_ReceiptProdModel.Id = Object_Product.ReceiptProdModelId
 
                         LEFT JOIN ObjectLink AS ObjectLink_Engine
                                              ON ObjectLink_Engine.ObjectId = Object_Product.Id
@@ -557,6 +562,7 @@ BEGIN
                                             AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
 
                         LEFT JOIN tmpPrice ON tmpPrice.ProductId = Object_Product.Id
+                                          AND tmpPrice.ReceiptProdModelId = Object_Product.ReceiptProdModelId
 
                    /*WHERE Object_Product.DescId = zc_Object_Product()
                     AND (Object_Product.isErased = FALSE OR inIsShowAll = TRUE)
@@ -591,6 +597,9 @@ BEGIN
 
          , tmpResAll.EngineId
          , tmpResAll.EngineName
+         
+         , tmpResAll.ReceiptProdModelId
+         , tmpResAll.ReceiptProdModelName
 
          , tmpResAll.InsertName
          , tmpResAll.InsertDate
