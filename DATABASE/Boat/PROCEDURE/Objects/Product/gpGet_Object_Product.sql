@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Comment TVarChar
              --, ProdGroupId Integer, ProdGroupName TVarChar
              , BrandId Integer, BrandName TVarChar
-             , ModelId Integer, ModelName TVarChar
+             , ModelId Integer, ModelName TVarChar, ModelName_full TVarChar
              , EngineId Integer, EngineName TVarChar
              , ReceiptProdModelId Integer, ReceiptProdModelName TVarChar
              , isBasicConf Boolean, isProdColorPattern Boolean
@@ -46,6 +46,7 @@ $BODY$BEGIN
            , CAST ('' AS TVarChar)     AS BrandName
            , CAST (0 AS Integer)       AS ModelId
            , CAST ('' AS TVarChar)     AS ModelName
+           , CAST ('' AS TVarChar)     AS ModelName_full
            , CAST (0 AS Integer)       AS EngineId
            , CAST ('' AS TVarChar)     AS EngineName
            , CAST (0 AS Integer)       AS ReceiptProdModelId
@@ -77,6 +78,7 @@ $BODY$BEGIN
 
          , Object_Model.Id                 AS ModelId
          , Object_Model.ValueData          AS ModelName
+         , (Object_Model.ValueData ||' (' || Object_Brand_Model.ValueData||')') ::TVarChar AS ModelName_full
 
          , Object_Engine.Id                AS EngineId
          , Object_Engine.ValueData         AS EngineName
@@ -144,6 +146,11 @@ $BODY$BEGIN
                                ON ObjectLink_Model.ObjectId = Object_Product.Id
                               AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model()
           LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId 
+
+          LEFT JOIN ObjectLink AS ObjectLink_ProdModel_Brand
+                               ON ObjectLink_ProdModel_Brand.ObjectId = Object_Model.Id
+                              AND ObjectLink_ProdModel_Brand.DescId = zc_ObjectLink_ProdModel_Brand()
+          LEFT JOIN Object AS Object_Brand_Model ON Object_Brand_Model.Id = ObjectLink_ProdModel_Brand.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Engine
                                ON ObjectLink_Engine.ObjectId = Object_Product.Id

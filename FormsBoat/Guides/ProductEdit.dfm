@@ -550,6 +550,14 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ModelName_full'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ModelName_full'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'EngineId'
         Value = Null
         Component = GuidesProdEngine
@@ -817,6 +825,22 @@ object ProductEditForm: TProductEditForm
         Value = ''
         Component = GuidesProdEngine
         ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ModelId'
+        Value = Null
+        Component = GuidesModel
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ModelName_full'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ModelName_full'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

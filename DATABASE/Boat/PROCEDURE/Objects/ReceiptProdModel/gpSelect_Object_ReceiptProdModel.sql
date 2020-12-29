@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_ReceiptProdModel()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptProdModel (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptProdModel (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptProdModel(
+    IN inModelId         Integer,
     IN inIsErased        Boolean,       -- признак показать удаленные да / нет
     IN inSession         TVarChar       -- сессия пользователя
 )
@@ -308,6 +310,7 @@ BEGIN
 
      WHERE Object_ReceiptProdModel.DescId = zc_Object_ReceiptProdModel()
       AND (Object_ReceiptProdModel.isErased = FALSE OR inIsErased = TRUE)
+      AND (ObjectLink_Model.ChildObjectId = inModelId OR inModelId = 0)
      ;
 END;
 $BODY$
@@ -321,4 +324,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ReceiptProdModel (false, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ReceiptProdModel (0, false, zfCalc_UserAdmin())
