@@ -976,7 +976,9 @@ uses
   AmbulantClinicSP in '..\..\FormsFarmacy\Guides\AmbulantClinicSP.pas' {AmbulantClinicSPForm: TParentForm},
   AmbulantClinicSPEdit in '..\..\FormsFarmacy\Guides\AmbulantClinicSPEdit.pas' {AmbulantClinicSPEditForm: TParentForm},
   Report_Sale_PartialSaleAll in '..\..\FormsFarmacy\Report\Report_Sale_PartialSaleAll.pas' {Report_Sale_PartialSaleAllForm: TParentForm},
-  Report_Sale_PartialSaleAllDialog in '..\..\FormsFarmacy\Report\Report_Sale_PartialSaleAllDialog.pas' {Report_Sale_PartialSaleAllDialogForm: TParentForm};
+  Report_Sale_PartialSaleAllDialog in '..\..\FormsFarmacy\Report\Report_Sale_PartialSaleAllDialog.pas' {Report_Sale_PartialSaleAllDialogForm: TParentForm},
+  Report_Income_PartialSaleDialog in '..\..\FormsFarmacy\Report\Report_Income_PartialSaleDialog.pas' {Report_Income_PartialSaleDialogForm: TParentForm},
+  Report_Income_PartialSale in '..\..\FormsFarmacy\Report\Report_Income_PartialSale.pas' {Report_Income_PartialSaleForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -90,13 +90,17 @@ BEGIN
                                         AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
             INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_To.ObjectId
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                 ON ObjectLink_Unit_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()  
         
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                          ON MovementLinkObject_Juridical.MovementId = Movement.Id
                                         AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
-            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId -- ObjectLink_Unit_Juridical.ChildObjectId
             LEFT JOIN ObjectHistory AS ObjectHistory_Juridical_to
-                                    ON ObjectHistory_Juridical_to.ObjectId = MovementLinkObject_Juridical.ObjectId
+                                    ON ObjectHistory_Juridical_to.ObjectId = Object_Juridical.Id
                                    AND ObjectHistory_Juridical_to.DescId = zc_ObjectHistory_JuridicalDetails()
                                    AND Movement.OperDate >= ObjectHistory_Juridical_to.StartDate AND Movement.OperDate < ObjectHistory_Juridical_to.EndDate
             LEFT JOIN ObjectHistoryString AS ObjectHistoryString_OKPO_to
@@ -131,4 +135,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Income_Pfizer (inDiscountExternalId := 1, inSession:= zfCalc_UserAdmin())
+-- 
+SELECT * FROM gpSelect_Movement_Income_Pfizer (inDiscountExternalId := 2807930 , inSession:= '11697839')

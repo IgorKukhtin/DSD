@@ -444,7 +444,7 @@ BEGIN
 
    IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_PartialSale(), zc_Enum_Role_PharmacyManager()))
       AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_SendVIP()))
-      AND date_part('DOW', CURRENT_DATE)::Integer = 1 AND (inNumberPUSH = 1 OR
+      AND date_part('DOW', CURRENT_DATE)::Integer in (1, 4) AND (inNumberPUSH = 1 OR
       (DATE_PART('HOUR', CURRENT_TIME)::Integer IN (12, 16) AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer >= 00 AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer <= 20))
    THEN
 

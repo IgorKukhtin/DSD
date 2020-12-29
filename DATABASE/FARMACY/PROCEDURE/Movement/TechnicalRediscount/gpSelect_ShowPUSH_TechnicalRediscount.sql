@@ -16,6 +16,7 @@ BEGIN
 
    IF EXISTS(SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementID)
    THEN
+     outShowMessage := False;
      RETURN;
    END IF;
    
@@ -42,3 +43,5 @@ LANGUAGE plpgsql VOLATILE;
 
 -- SELECT * FROM gpSelect_ShowPUSH_TechnicalRediscount(inMovementID := 19447685 , inSession := '3')
 
+
+select * from gpSelect_ShowPUSH_TechnicalRediscount(inMovementID := 21332817 ,  inSession := '3999200');

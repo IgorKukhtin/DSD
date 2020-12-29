@@ -2074,6 +2074,45 @@ inherited GoodsForm: TGoodsForm
       isShowModal = True
       OpenBeforeShow = True
     end
+    object actGetImportSetting_Goods_inSupplementSUN1: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSetting_Goods_inSupplementSUN1
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSetting_Goods_inSupplementSUN1
+        end>
+      Caption = 'actGetImportSetting_Goods_Price'
+    end
+    object actDoLoadinSupplementSUN1: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <>
+    end
+    object macLoadinSupplementSUN1: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_Goods_inSupplementSUN1
+        end
+        item
+          Action = actDoLoadinSupplementSUN1
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1087#1088#1080#1079#1085#1072#1082#1086#1074' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1082' '#1057#1059#1053'1?'
+      InfoAfterExecute = #1055#1088#1080#1079#1085#1072#1082#1080' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1082' '#1057#1059#1053'1 '#1080#1079' '#1092#1072#1081#1083#1072' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1082' '#1057#1059#1053'1'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1082' '#1057#1059#1053'1'
+      ImageIndex = 66
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -2196,6 +2235,10 @@ inherited GoodsForm: TGoodsForm
         item
           Visible = True
           ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton5'
         end
         item
           Visible = True
@@ -2481,6 +2524,10 @@ inherited GoodsForm: TGoodsForm
       Action = actUpdate_PercentWages
       Category = 0
     end
+    object dxBarButton5: TdxBarButton
+      Action = macLoadinSupplementSUN1
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
@@ -2729,40 +2776,40 @@ inherited GoodsForm: TGoodsForm
       end
       item
         Name = 'PercentMarkup'
-        Value = 0c
+        Value = 0.000000000000000000
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'Price'
-        Value = 0c
+        Value = 0.000000000000000000
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'inKoeffSUN_v1'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inKoeffSUN_v2'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inKoeffSUN_v4'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inKoeffSUN_Supplementv1'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2797,7 +2844,7 @@ inherited GoodsForm: TGoodsForm
       end
       item
         Name = 'SummaWages'
-        Value = 0c
+        Value = 0.000000000000000000
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -2808,7 +2855,7 @@ inherited GoodsForm: TGoodsForm
       end
       item
         Name = 'PercentWages'
-        Value = 0c
+        Value = 0.000000000000000000
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -3051,7 +3098,7 @@ inherited GoodsForm: TGoodsForm
       end
       item
         Name = 'inLastPriceDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'LastPriceDate'
         DataType = ftDateTime
@@ -3060,7 +3107,7 @@ inherited GoodsForm: TGoodsForm
       end
       item
         Name = 'inLastPriceOldDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'LastPriceOldDate'
         DataType = ftDateTime
@@ -3228,7 +3275,7 @@ inherited GoodsForm: TGoodsForm
       end>
     PackSize = 1
     Left = 360
-    Top = 128
+    Top = 144
   end
   object spUpdate_Goods_AllowDivision: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_AllowDivision'
@@ -3436,7 +3483,7 @@ inherited GoodsForm: TGoodsForm
       end
       item
         Name = 'outisNot'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'isNot'
         DataType = ftDateTime
@@ -3686,14 +3733,14 @@ inherited GoodsForm: TGoodsForm
       end
       item
         Name = 'inPercentMarkup'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4122,5 +4169,37 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 712
     Top = 264
+  end
+  object spGetImportSetting_Goods_inSupplementSUN1: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TGoodsForm;zc_Object_ImportSetting_inSupplementSUN1'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 360
+    Top = 96
   end
 end

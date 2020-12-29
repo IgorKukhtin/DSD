@@ -113,14 +113,14 @@ inherited CalculationPartialSaleForm: TCalculationPartialSaleForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = ''
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -168,7 +168,7 @@ inherited CalculationPartialSaleForm: TCalculationPartialSaleForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'DateStart'
           DataType = ftDateTime
@@ -176,7 +176,7 @@ inherited CalculationPartialSaleForm: TCalculationPartialSaleForm
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'DateEnd'
           DataType = ftDateTime
@@ -222,6 +222,19 @@ inherited CalculationPartialSaleForm: TCalculationPartialSaleForm
       ImageIndex = 16
       FormName = 'TReport_Sale_PartialSaleAllForm'
       FormNameParam.Value = 'TReport_Sale_PartialSaleAllForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_Income_PartialSale: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1042#1086#1079#1084#1086#1078#1085#1086#1089#1090#1100' '#1086#1087#1083#1072#1090#1099' '#1087#1088#1080#1093#1086#1076#1086#1074' '#1087#1088#1080' '#1086#1087#1083#1072#1090#1077' '#1095#1072#1089#1090#1103#1084#1080
+      Hint = #1042#1086#1079#1084#1086#1078#1085#1086#1089#1090#1100' '#1086#1087#1083#1072#1090#1099' '#1087#1088#1080#1093#1086#1076#1086#1074' '#1087#1088#1080' '#1086#1087#1083#1072#1090#1077' '#1095#1072#1089#1090#1103#1084#1080
+      ImageIndex = 19
+      FormName = 'TReport_Income_PartialSaleForm'
+      FormNameParam.Value = 'TReport_Income_PartialSaleForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -290,6 +303,10 @@ inherited CalculationPartialSaleForm: TCalculationPartialSaleForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -313,6 +330,10 @@ inherited CalculationPartialSaleForm: TCalculationPartialSaleForm
       Action = actReport_Sale_PartialSaleAll
       Category = 0
     end
+    object dxBarButton3: TdxBarButton
+      Action = actReport_Income_PartialSale
+      Category = 0
+    end
   end
   inherited PeriodChoice: TPeriodChoice
     Top = 104
@@ -325,7 +346,7 @@ inherited CalculationPartialSaleForm: TCalculationPartialSaleForm
     Params = <
       item
         Name = 'OperDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -340,7 +361,7 @@ inherited CalculationPartialSaleForm: TCalculationPartialSaleForm
     Params = <
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput

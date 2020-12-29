@@ -127,7 +127,7 @@ BEGIN
                                                               ON CLO_Juridical.ContainerId = Container.Id
                                                              AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
                                                              AND CLO_Juridical.ObjectId = Income.FromId),
-         tmpNoPay AS (SELECT tmpIncome.JuridicalId, tmpIncome.FromId, SUM(tmpContainerPartialPay.Amount - tmpIncomeRemains.SummaRemains) AS Summa
+         tmpNoPay AS (SELECT tmpIncome.JuridicalId, tmpIncome.FromId, SUM(tmpContainerPartialPay.Amount - COALESCE(tmpIncomeRemains.SummaRemains, 0)) AS Summa
                       FROM tmpContainerPartialPay
 
                            INNER JOIN tmpIncomeRemains ON tmpIncomeRemains.MovementId = tmpContainerPartialPay.MovementId
@@ -165,5 +165,5 @@ $BODY$
 
 -- тест
 -- 
-SELECT * FROM gpSelect_Calculation_PartialSale (inOperDate := CURRENT_DATE - INTERVAL '1 DAY', inSession:= '3')
+SELECT * FROM gpSelect_Calculation_PartialSale (inOperDate := CURRENT_DATE, inSession:= '3')
                               
