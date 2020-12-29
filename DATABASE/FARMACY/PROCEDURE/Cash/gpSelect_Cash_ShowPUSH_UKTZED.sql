@@ -14,8 +14,20 @@ AS
 $BODY$
    DECLARE vbName  TVarChar;
    DECLARE vbJuridical Integer;
+   DECLARE vbUserId Integer;
+   DECLARE vbUnitId Integer;
+   DECLARE vbUnitKey TVarChar;
 BEGIN
 
+  -- проверка прав пользовател€ на вызов процедуры
+  -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
+  vbUserId:= lpGetUserBySession (inSession);
+  vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+  IF vbUnitKey = '' THEN
+     vbUnitKey := '0';
+  END IF;
+  vbUnitId := vbUnitKey::Integer;
+    
   outShowMessage := True;
   outPUSHType := 3;
   outText := '';
@@ -33,7 +45,8 @@ BEGIN
               AND Container.Amount > 0
               AND COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False) = FALSE)
   THEN
-    WITH tmpContainer AS (SELECT zfConvert_FloatToString(SUM(Container.Amount))||'уп.  '||Object_Unit.ValueData AS ValueData
+    WITH tmpContainer AS (SELECT zfConvert_FloatToString(SUM(Container.Amount))||'уп.  '||Object_Unit.ValueData||
+                                 CASE WHEN Container.WhereObjectId = vbUnitId THEN ' (можете опустить эту позицию без ” “¬Ёƒ и пробить обычным фискальным чеком)' ELSE '' END AS ValueData
                           FROM Container
 
                                LEFT JOIN Object AS Object_Unit ON Object_Unit.ID = Container.WhereObjectId
@@ -49,7 +62,7 @@ BEGIN
                             AND Container.DescId = zc_Container_Count()
                             AND Container.Amount <> 0
                             AND COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False) = FALSE
-                          GROUP BY Object_Unit.ValueData)
+                          GROUP BY Container.WhereObjectId, Object_Unit.ValueData)
 
     SELECT string_agg(tmpContainer.ValueData, Chr(13))
     INTO outText
@@ -72,4 +85,4 @@ LANGUAGE plpgsql VOLATILE;
 
 */
 
--- select * from gpSelect_Cash_ShowPUSH_UKTZED(inGoodsId := 14244560  ,  inSession := '3');
+-- select * from gpSelect_Cash_ShowPUSH_UKTZED(inGoodsId := 3586  ,  inSession := '3');

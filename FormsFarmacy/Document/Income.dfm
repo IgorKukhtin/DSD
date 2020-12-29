@@ -1484,7 +1484,7 @@
         end
         item
           Name = 'PaymentDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'PaymentDate'
           DataType = ftDateTime
@@ -1548,7 +1548,7 @@
         end
         item
           Name = 'isPrice'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1605,7 +1605,7 @@
         end
         item
           Name = 'isPrice'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1769,7 +1769,7 @@
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'OperDateUpdate'
           DataType = ftDateTime
@@ -2345,7 +2345,7 @@
       end
       item
         Name = 'PaymentDate'
-        Value = 'NULL'
+        Value = Null
         Component = edPaymentDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -2359,7 +2359,7 @@
       end
       item
         Name = 'OperDateUpdate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
@@ -2417,7 +2417,7 @@
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -2484,7 +2484,7 @@
       end
       item
         Name = 'PaymentDate'
-        Value = 'NULL'
+        Value = Null
         Component = edPaymentDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -2545,7 +2545,7 @@
       end
       item
         Name = 'DateLastPay'
-        Value = 'NULL'
+        Value = Null
         Component = вуDateLastPay
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -2588,7 +2588,7 @@
       end
       item
         Name = 'CheckDate'
-        Value = 'NULL'
+        Value = Null
         Component = edCheckDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -2617,7 +2617,7 @@
       end
       item
         Name = 'OperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'OperDateUpdate'
         DataType = ftDateTime
@@ -2662,7 +2662,7 @@
       end
       item
         Name = 'inPriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         ParamType = ptInput
@@ -2718,7 +2718,7 @@
       end
       item
         Name = 'inPaymentDate'
-        Value = ''
+        Value = Null
         Component = edPaymentDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -2734,7 +2734,7 @@
       end
       item
         Name = 'inOperDateBranch'
-        Value = ''
+        Value = Null
         Component = edPointDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -3572,7 +3572,7 @@
       end
       item
         Name = 'inisDeferred'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3603,7 +3603,7 @@
       end
       item
         Name = 'inisDeferred'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3650,7 +3650,7 @@
       end
       item
         Name = 'inisSaveNull'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3674,7 +3674,7 @@
       end
       item
         Name = 'inIsCurrentData'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3814,7 +3814,7 @@
       end
       item
         Name = 'outOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','

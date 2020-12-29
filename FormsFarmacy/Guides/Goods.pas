@@ -242,6 +242,11 @@ type
     spUpdate_SummaWages: TdsdStoredProc;
     spUpdate_PercentWages: TdsdStoredProc;
     KoeffSUN_Supplementv1: TcxGridDBColumn;
+    actGetImportSetting_Goods_inSupplementSUN1: TdsdExecStoredProc;
+    actDoLoadinSupplementSUN1: TExecuteImportSettingsAction;
+    macLoadinSupplementSUN1: TMultiAction;
+    spGetImportSetting_Goods_inSupplementSUN1: TdsdStoredProc;
+    dxBarButton5: TdxBarButton;
   private
     { Private declarations }
   public

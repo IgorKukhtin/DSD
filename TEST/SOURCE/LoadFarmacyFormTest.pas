@@ -2523,6 +2523,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_PartialSaleAllForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_PartialSaleAllDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_PartialSaleAllDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Income_PartialSaleDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Income_PartialSaleDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Income_PartialSaleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Income_PartialSaleForm');
 end;
 
 procedure TLoadFormTest.LoadChangeIncomePaymentKindFormTest;

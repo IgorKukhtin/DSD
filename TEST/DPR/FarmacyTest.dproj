@@ -3462,6 +3462,14 @@
 				<Form>Report_Sale_PartialSaleAllDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Income_PartialSaleDialog.pas">
+				<Form>Report_Income_PartialSaleDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Income_PartialSale.pas">
+				<Form>Report_Income_PartialSaleForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
