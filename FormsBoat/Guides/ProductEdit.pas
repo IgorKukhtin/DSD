@@ -66,6 +66,9 @@ type
     GuidesProdEngine: TdsdGuides;
     cbBasicConf: TcxCheckBox;
     cbProdColorPattern: TcxCheckBox;
+    cxLabel14: TcxLabel;
+    edReceiptProdModel: TcxButtonEdit;
+    GuidesReceiptProdModel: TdsdGuides;
   private
     { Private declarations }
   public

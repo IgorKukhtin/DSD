@@ -101,6 +101,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Product_Engine() RETURNS Integer AS $BO
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Product_Engine', 'Мотор', zc_Object_Product(), zc_Object_ProdEngine() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Product_Engine');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Product_ReceiptProdModel() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Product_ReceiptProdModel'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Product_ReceiptProdModel', 'Шаблон сборка Модели', zc_Object_Product(), zc_Object_ReceiptProdModel() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Product_ReceiptProdModel');
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_ProdColorItems_Product() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdColorItems_Product'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ProdColorItems_Product', 'Лодка', zc_Object_ProdColorItems(), zc_Object_Product() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdColorItems_Product');
@@ -322,6 +326,7 @@ SELECT 'zc_ObjectLink_ProdOptions_Goods', 'Комплектующие', zc_Object_ProdOptions
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.12.20         * zc_ObjectLink_Product_ReceiptProdModel
  25.12.20         * zc_ObjectLink_ProdOptions_TaxKind
                     zc_ObjectLink_ProdOptions_Goods
                     zc_ObjectLink_ProdOptions_Model

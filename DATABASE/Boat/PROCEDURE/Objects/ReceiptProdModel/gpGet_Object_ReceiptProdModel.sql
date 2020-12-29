@@ -28,7 +28,7 @@ BEGIN
            , '' :: TVarChar           AS Name
            , '' :: TVarChar           AS UserCode
            , '' :: TVarChar           AS Comment
-           , FALSE :: Boolean         AS isMain
+           , TRUE :: Boolean          AS isMain
            , 0  :: Integer            AS ModelId
            , '' :: TVarChar           AS ModelName
        ;

@@ -318,6 +318,15 @@ object ProductForm: TProductForm
           Options.Editing = False
           Width = 66
         end
+        object ReceiptProdModelName: TcxGridDBColumn
+          Caption = #1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1052#1086#1076#1077#1083#1080
+          DataBinding.FieldName = 'ReceiptProdModelName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1052#1086#1076#1077#1083#1080
+          Options.Editing = False
+          Width = 112
+        end
         object CIN: TcxGridDBColumn
           DataBinding.FieldName = 'CIN'
           HeaderAlignmentHorz = taCenter
@@ -1326,7 +1335,7 @@ object ProductForm: TProductForm
   object DataSource: TDataSource
     DataSet = MasterCDS
     Left = 608
-    Top = 88
+    Top = 120
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
@@ -2528,7 +2537,7 @@ object ProductForm: TProductForm
     ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 656
-    Top = 112
+    Top = 128
   end
   object spUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_Product'
