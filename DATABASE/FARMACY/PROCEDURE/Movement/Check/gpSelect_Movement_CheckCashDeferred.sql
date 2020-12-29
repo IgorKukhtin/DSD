@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpSelect_Movement_CheckCashDeferred (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_CheckCashDeferred(
-    IN inType          Integer,    -- 0 - все 1 - VIP 2 - Site
+    IN inType          Integer,    -- 0 - все 1 - VIP 2 - Tabletki 3 - Liki24
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -70,15 +70,14 @@ BEGIN
              , Movement.ConfirmedKindId
              , Movement.CommentError
              , MovementLinkObject_CheckSourceKind.ObjectId AS CheckSourceKindID
-             , COALESCE (ObjectBoolean_CheckSourceKind_Site.ValueData, FALSE) AS isShowSite
+             , COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) 
+               NOT IN (zc_Enum_CheckSourceKind_Liki24(), zc_Enum_CheckSourceKind_Tabletki())                  AS isShowVIP
+             , COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Liki24()   AS isShowLiki24
+             , COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Tabletki() AS isShowTabletki
         FROM tmpMov AS Movement
             LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_CheckSourceKind
                                             ON MovementLinkObject_CheckSourceKind.MovementId =  Movement.Id
                                            AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
-
-            LEFT JOIN ObjectBoolean AS ObjectBoolean_CheckSourceKind_Site
-                                    ON ObjectBoolean_CheckSourceKind_Site.ObjectId = MovementLinkObject_CheckSourceKind.ObjectId
-                                   AND ObjectBoolean_CheckSourceKind_Site.DescId = zc_ObjectBoolean_CheckSourceKind_Site()
         );
 
 
@@ -339,7 +338,7 @@ BEGIN
                                      ON MovementString_BookingId.MovementId = Movement.Id
                                     AND MovementString_BookingId.DescId = zc_MovementString_BookingId()
        WHERE tmpMov.isDeferred = True
-         AND (inType = 0 OR inType = 1 AND tmpMov.isShowSite = FALSE OR inType = 2 AND tmpMov.isShowSite = TRUE)
+         AND (inType = 0 OR inType = 1 AND tmpMov.isShowVIP = TRUE OR inType = 2 AND tmpMov.isShowTabletki = TRUE OR inType in (1, 3) AND tmpMov.isShowLiki24 = TRUE)
        );
 
     RETURN NEXT Cursor1;
@@ -535,7 +534,7 @@ BEGIN
                                AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
 
        WHERE Movement.isDeferred = True
-         AND (inType = 0 OR inType = 1 AND Movement.isShowSite = FALSE OR inType = 2 AND Movement.isShowSite = TRUE)
+         AND (inType = 0 OR inType = 1 AND Movement.isShowVIP = TRUE OR inType = 2 AND Movement.isShowTabletki = TRUE OR inType in (1, 3) AND Movement.isShowLiki24 = TRUE)
        );
 
     RETURN NEXT Cursor2;
@@ -553,4 +552,4 @@ ALTER FUNCTION gpSelect_Movement_CheckCashDeferred (Integer, TVarChar) OWNER TO 
 
 -- тест
 --
-SELECT * FROM gpSelect_Movement_CheckCashDeferred (inType := 0, inSession:= '3')
+SELECT * FROM gpSelect_Movement_CheckCashDeferred (inType := 3, inSession:= '3')

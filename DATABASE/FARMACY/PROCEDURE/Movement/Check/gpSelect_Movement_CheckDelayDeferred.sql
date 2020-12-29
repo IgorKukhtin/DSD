@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpSelect_Movement_CheckDelayDeferred (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_CheckDelayDeferred(
-    IN inType          Integer,    -- 0 - все 1 - VIP 2 - Site
+    IN inType          Integer,    -- 0 - все 1 - VIP 2 - Tabletki 3 - Liki24
     IN inIsShowAll     Boolean,    -- за последнии 10 дней
     IN inSession       TVarChar    -- сессия пользователя
 )
@@ -71,8 +71,10 @@ BEGIN
                                             ON MovementLinkObject_ConfirmedKind.MovementId = Movement.Id
                                            AND MovementLinkObject_ConfirmedKind.DescId = zc_MovementLinkObject_ConfirmedKind()
         WHERE (inType = 0 OR
-               inType = 1 AND COALESCE (ObjectBoolean_CheckSourceKind_Site.ValueData, FALSE) = FALSE OR
-               inType = 2 AND COALESCE (ObjectBoolean_CheckSourceKind_Site.ValueData, FALSE) = TRUE)
+               inType = 1 AND COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) 
+                          NOT IN (zc_Enum_CheckSourceKind_Liki24(), zc_Enum_CheckSourceKind_Tabletki())  OR
+               inType = 2 AND COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Tabletki() OR
+               inType in (1, 3) AND COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Liki24())
         );
 
     OPEN Cursor1 FOR (
@@ -509,4 +511,4 @@ ALTER FUNCTION gpSelect_Movement_CheckDelayDeferred (Integer, Boolean, TVarChar)
 
 -- тест
 --
-SELECT * FROM gpSelect_Movement_CheckDelayDeferred (inType := 0, inIsShowAll := true, inSession:= '3')
+SELECT * FROM gpSelect_Movement_CheckDelayDeferred (inType := 3, inIsShowAll := true, inSession:= '3')

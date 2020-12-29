@@ -1,5 +1,5 @@
 inherited CheckSiteForm: TCheckSiteForm
-  Caption = #1055#1086#1080#1089#1082' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1086#1074' '#1074' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1093' '#1095#1077#1082#1072#1093'  '#1089' '#1089#1072#1081#1090#1072' '#1058#1072#1073#1083#1077#1090#1082#1080
+  Caption = #1054#1090#1083#1086#1078#1077#1085#1085#1099#1077' '#1095#1077#1082#1080'  '#1089' '#1089#1072#1081#1090#1072' '#1058#1072#1073#1083#1077#1090#1082#1080
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -136,6 +136,7 @@ inherited CheckSiteForm: TCheckSiteForm
         end
         item
           Name = 'OperDateSP'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDateSP'
           DataType = ftDateTime
@@ -243,10 +244,35 @@ inherited CheckSiteForm: TCheckSiteForm
         end
         item
           Name = 'isBanAdd'
-          Value = False
           Component = MasterCDS
           ComponentItem = 'isBanAdd'
           DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+    end
+    inherited actCheckCash: TdsdOpenForm
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
     end
@@ -266,6 +292,12 @@ inherited CheckSiteForm: TCheckSiteForm
       0
       26
       0)
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        ColorValueList = <>
+      end>
   end
   inherited dsdDBViewAddOn1: TdsdDBViewAddOn
     ColorRuleList = <
