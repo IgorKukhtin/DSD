@@ -170,7 +170,7 @@ BEGIN
 
                     FROM Object AS Object_ProdColorItems
                          -- Лодка
-                         LEFT JOIN ObjectLink AS ObjectLink_Product
+                         INNER JOIN ObjectLink AS ObjectLink_Product
                                               ON ObjectLink_Product.ObjectId = Object_ProdColorItems.Id
                                              AND ObjectLink_Product.DescId   = zc_ObjectLink_ProdColorItems_Product()
                          INNER JOIN tmpProduct ON tmpProduct.Id = ObjectLink_Product.ChildObjectId

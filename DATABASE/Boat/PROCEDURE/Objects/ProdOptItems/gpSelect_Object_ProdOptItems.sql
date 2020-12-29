@@ -57,6 +57,34 @@ BEGIN
                            FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
                                                                     , inOperDate   := CURRENT_DATE) AS tmp
                           )
+      -- все Элементы Boat Structure по моделям
+    , tmpProdColorPattern AS (SELECT ObjectLink_ProdColorPattern_ProdOptions.ObjectId      AS ProdColorPatternId
+                                   , ObjectLink_ProdColorPattern_ProdOptions.ChildObjectId AS ProdOptionsId
+                                     -- Цена вх. без НДС
+                                   , ObjectFloat_EKPrice.ValueData AS EKPrice
+                                     -- Цена вх. с НДС
+                                   , CAST (ObjectFloat_EKPrice.ValueData
+                                          * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2)) :: TFloat AS EKPriceWVAT
+          
+                                     -- Цена продажи без НДС
+                                   , CASE WHEN vbPriceWithVAT = FALSE
+                                          THEN tmpPriceBasis.ValuePrice
+                                          ELSE CAST (tmpPriceBasis.ValuePrice * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                                     END  :: TFloat AS BasisPrice
+                                     -- Цена продажи с НДС
+                                   , CASE WHEN vbPriceWithVAT = FALSE
+                                          THEN CAST (tmpPriceBasis.ValuePrice * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                                          ELSE tmpPriceBasis.ValuePrice
+                                     END ::TFloat AS BasisPriceWVAT
+                              FROM ObjectLink AS ObjectLink_ProdColorPattern_ProdOptions
+                                   -- Опция не удалена
+                                   INNER JOIN Object AS Object_ProdOptions ON Object_ProdOptions.Id       = ObjectLink_ProdColorPattern_ProdOptions.ChildObjectId
+                                                                          AND Object_ProdOptions.isErased = FALSE
+                                   -- Комплектующие
+                                   LEFT JOIN ObjectLink AS ObjectLink_Goods
+                                                        ON ObjectLink_Goods.ObjectId = Object_ProdColorItems.Id
+                                                       AND ObjectLink_Goods.DescId   = zc_ObjectLink_ProdColorItems_Goods()
+                              WHERE ObjectLink_ProdColorPattern_ProdOptions.DescId = zc_ObjectLink_ProdColorPattern_ProdOptions()
            -- все Опции по моделям
          , tmpProdOptions AS (SELECT Object_ProdOptions.*
                                    , COALESCE (ObjectLink_Model.ChildObjectId, 0) AS ModelId
@@ -152,9 +180,9 @@ BEGIN
 
                     FROM Object AS Object_ProdColorItems
                          -- Лодка
-                         LEFT JOIN ObjectLink AS ObjectLink_Product
-                                              ON ObjectLink_Product.ObjectId = Object_ProdColorItems.Id
-                                             AND ObjectLink_Product.DescId   = zc_ObjectLink_ProdColorItems_Product()
+                         INNER JOIN ObjectLink AS ObjectLink_Product
+                                               ON ObjectLink_Product.ObjectId = Object_ProdColorItems.Id
+                                              AND ObjectLink_Product.DescId   = zc_ObjectLink_ProdColorItems_Product()
                          INNER JOIN tmpProduct ON tmpProduct.Id = ObjectLink_Product.ChildObjectId
 
                          -- условие что надо добавить в Опцию
@@ -208,9 +236,9 @@ BEGIN
                          
                     FROM Object AS Object_ProdOptItems
                          -- Лодка
-                         LEFT JOIN ObjectLink AS ObjectLink_Product
-                                              ON ObjectLink_Product.ObjectId = Object_ProdOptItems.Id
-                                             AND ObjectLink_Product.DescId   = zc_ObjectLink_ProdOptItems_Product()
+                         INNER JOIN ObjectLink AS ObjectLink_Product
+                                               ON ObjectLink_Product.ObjectId = Object_ProdOptItems.Id
+                                              AND ObjectLink_Product.DescId   = zc_ObjectLink_ProdOptItems_Product()
                          INNER JOIN tmpProduct ON tmpProduct.Id = ObjectLink_Product.ChildObjectId
 
                          -- Элемент
