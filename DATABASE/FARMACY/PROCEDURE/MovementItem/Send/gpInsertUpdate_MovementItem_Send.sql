@@ -112,8 +112,24 @@ BEGIN
     
     IF COALESCE (inCommentTRID, 0) <> 0
     THEN
-       WITH tmpProtocolAll AS (SELECT  MovementItem.Id
-                                     , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
+       WITH tmpProtocolUnion AS (SELECT  MovementItemProtocol.Id
+                                       , MovementItemProtocol.MovementItemId
+                                       , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
+                                  FROM MovementItemProtocol
+                                  WHERE MovementItemProtocol.MovementItemId = ioId
+                                        AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
+                                        AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
+                                  UNION ALL
+                                  SELECT MovementItemProtocol.Id
+                                       , MovementItemProtocol.MovementItemId
+                                       , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
+                                  FROM MovementItemProtocol_old AS MovementItemProtocol
+                                  WHERE MovementItemProtocol.MovementItemId = ioId
+                                        AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
+                                        AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
+                                  )
+           , tmpProtocolAll AS (SELECT  MovementItem.Id
+                                     , MovementItemProtocol.ProtocolData
                                      , MovementItem.Amount
                                      , MovementItem.ObjectId
                                      , Object_Goods_Main.Name
@@ -123,11 +139,9 @@ BEGIN
                                      INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItem.objectid
                                      INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
 
-                                     INNER JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
-                                                                    AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
-                                                                    AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
+                                     INNER JOIN tmpProtocolUnion AS MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
                                 WHERE  MovementItem.Id = ioId
-                                )
+                                ) 
            , tmpProtocol AS (SELECT tmpProtocolAll.Id
                                   , tmpProtocolAll.ObjectId
                                   , SUBSTRING(tmpProtocolAll.ProtocolData, 1, POSITION('"' IN tmpProtocolAll.ProtocolData) - 1)::TFloat AS AmountAuto

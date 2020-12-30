@@ -26,11 +26,27 @@ BEGIN
 
   -- Результат
   RETURN QUERY
-  WITH tmpProtocolAll AS (SELECT Movement.ID
+  WITH tmpProtocolUnion AS (SELECT  MovementItemProtocol.Id
+                                  , MovementItemProtocol.MovementItemId
+                                  , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
+                             FROM MovementItemProtocol
+                             WHERE MovementItemProtocol.MovementItemId IN (SELECT MovementItem.ID FROM MovementItem WHERE MovementItem.MovementId = inMovementID)
+                                   AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
+                                   AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
+                             UNION ALL
+                             SELECT MovementItemProtocol.Id
+                                  , MovementItemProtocol.MovementItemId
+                                  , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
+                             FROM MovementItemProtocol_old AS MovementItemProtocol
+                             WHERE MovementItemProtocol.MovementItemId  IN (SELECT MovementItem.ID FROM MovementItem WHERE MovementItem.MovementId = inMovementID)
+                                   AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
+                                   AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
+                            )
+      , tmpProtocolAll AS (SELECT Movement.ID
                                , Movement.InvNumber
                                , Movement.OperDate
                                , MovementItemProtocol.MovementItemId
-                               , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
+                               , MovementItemProtocol.ProtocolData
                                , MovementItem.Amount
                                , MovementItem.ObjectId
                                , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
@@ -42,9 +58,8 @@ BEGIN
                                INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
                                                            AND Object_Goods_Main.isInvisibleSUN = False
 
-                               INNER JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
-                                                              AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
-                                                              AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
+                               INNER JOIN tmpProtocolUnion AS MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
+
                           WHERE Movement.ID = inMovementID
                           )
      , tmpProtocol AS (SELECT tmpProtocolAll.Id
@@ -121,4 +136,4 @@ ALTER FUNCTION gpSelect_MovementOccupancySUN (Integer, TVarChar) OWNER TO postgr
 */
 
 -- тест
---SELECT * FROM gpSelect_MovementOccupancySUN (inMovementID:= 19363037, inSession:= '3')
+--SELECT * FROM gpSelect_MovementOccupancySUN (inMovementID:= 21592297 , inSession:= '3')
