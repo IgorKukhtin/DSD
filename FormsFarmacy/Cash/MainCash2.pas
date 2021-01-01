@@ -4,7 +4,7 @@ interface
 
 uses
   DataModul, Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
-  System.Classes,
+  System.Classes, System.StrUtils,
   Vcl.Graphics, System.DateUtils,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorBase, Vcl.ActnList, dsdAction,
   cxPropertiesStore, dsdAddOn, cxGraphics, cxControls, cxLookAndFeels,
@@ -718,7 +718,7 @@ type
 
     FAnalogFilter: Integer;
 
-    FIsVIP, FIsSite : Boolean;
+    FIsVIP, FIsTabletki, FIsLiki24 : Boolean;
     FStepSecond : Boolean;
 
     aDistributionPromoId : array of Integer;
@@ -10401,15 +10401,17 @@ begin
         btnVIP.Colors.Default := clRed;
       end;
 
-      if not FIsSite then btnVIP.Caption := 'VIP'
-      else if not FIsVIP then btnVIP.Caption := 'Таблетки'
-      else btnVIP.Caption := 'Vip/Табл';
+      btnVIP.Caption := '';
+      if FIsVIP then btnVIP.Caption := 'VIP';
+      if FIsTabletki then btnVIP.Caption := btnVIP.Caption + IfThen(btnVIP.Caption = '', '', '/') + 'Табл';
+      if FIsLiki24 then btnVIP.Caption := btnVIP.Caption + IfThen(btnVIP.Caption = '', '', '/') + 'Liki';
+      if btnVIP.Caption = '' then btnVIP.Caption := 'Vip/Табл/Liki';
 
     end else
     begin
       btnVIP.Colors.NormalText := clDefault;
       btnVIP.Colors.Default := clDefault;
-      btnVIP.Caption := 'Vip/Табл';
+      btnVIP.Caption := 'Vip/Табл/Liki';
     end;
 
     if fBlinkCheck = True then
@@ -10457,7 +10459,8 @@ begin
       spGet_BlinkVIP.Execute;
       lMovementId_BlinkVIP := spGet_BlinkVIP.ParamByName('outMovementId_list').Value;
       FIsVIP := spGet_BlinkVIP.ParamByName('outIsVIP').Value;
-      FIsSite := spGet_BlinkVIP.ParamByName('outIsSite').Value;
+      FIsTabletki := spGet_BlinkVIP.ParamByName('outIsTabletki').Value;
+      FIsLiki24 := spGet_BlinkVIP.ParamByName('outIsLiki24').Value;
 
       // в этом случае кнопка будет мигать
       fBlinkVIP := lMovementId_BlinkVIP <> '';

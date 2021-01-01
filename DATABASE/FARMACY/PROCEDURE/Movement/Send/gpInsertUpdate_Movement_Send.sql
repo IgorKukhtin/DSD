@@ -1,448 +1,118 @@
--- Function: gpInsertUpdate_MovementItem_Send()
+-- Function: gpInsertUpdate_Movement_Send()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Boolean, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Boolean, Boolean, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inGoodsId             Integer   , -- Товары
-    IN inAmount              TFloat    , -- Количество
-    IN inPrice               TFloat    , -- Цена Усред. закуп.
-    IN inPriceUnitFrom       TFloat    , -- Цена отправителя
- INOUT ioPriceUnitTo         TFloat    , -- Цена получателя
-   OUT outSumma              TFloat    , -- Сумма
-   OUT outSummaUnitTo        TFloat    , -- Сумма в ценах получателя
-    IN inAmountManual        TFloat    , -- Кол-во ручное
-    IN inAmountStorage       TFloat    , -- Факт кол-во точки-отправителя
-   OUT outAmountDiff         TFloat    , -- Загружаемое кол-во  минус  Факт кол-во точки-получателя
-   OUT outAmountStorageDiff  TFloat    , -- Загружаемое кол-во  минус  Факт кол-во точки-отправителя
-    IN inReasonDifferencesId Integer   , -- Причина разногласия
-    IN inCommentTRID         Integer   , -- Комментарий
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Send(
+ INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
+    IN inInvNumber           TVarChar  , -- Номер документа
+    IN inOperDate            TDateTime , -- Дата документа
+    IN inFromId              Integer   , -- От кого (в документе)
+    IN inToId                Integer   , -- Кому (в документе)
+    IN inComment             TVarChar  , -- Примечание
+    IN inChecked             Boolean   , -- Проверен
+    IN inisComplete          Boolean   , -- Собрано фармацевтом
+    IN inNumberSeats         Integer   , -- Количество мест
+    IN inDriverSunId         Integer   , -- Водитель получивший товар
     IN inSession             TVarChar    -- сессия пользователя
 )
-AS
-$BODY$
+RETURNS Integer AS
+$body$
    DECLARE vbUserId Integer;
-   DECLARE vbIsInsert Boolean;
-   DECLARE vbUnitId Integer;
-   DECLARE vbFromId Integer;
    DECLARE vbUnitKey TVarChar;
    DECLARE vbUserUnitId Integer;
-
-   DECLARE vbAmount        TFloat;
-   DECLARE vbAmountManual  TFloat;
-   DECLARE vbAmountStorage TFloat;
-   DECLARE vbAmountAuto    TFloat;
-   DECLARE vbIsSUN         Boolean;
-   DECLARE vbIsSUN_v2      Boolean;
-   DECLARE vbIsSUN_v3      Boolean;
-   DECLARE vbIsDefSUN      Boolean;
-   DECLARE vbInsertDate    TDateTime;
-   DECLARE vbTotalCount    TFloat;
-   DECLARE vbTotalCountOld TFloat;
-   DECLARE vbCommentSendId Integer;
-   DECLARE vbStatusId      Integer;
-   DECLARE vbAmountPromo   TFloat;
-   DECLARE vbRemains       TFloat;
 BEGIN
-    -- проверка прав пользователя на вызов процедуры
-    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
-    vbUserId := inSession;
-
-    --определяем подразделение получателя
-    SELECT Movement.StatusId
-         , MovementLinkObject_To.ObjectId                               AS UnitId
-         , COALESCE (MovementBoolean_SUN.ValueData, FALSE)::Boolean     AS isSUN
-         , COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE)::Boolean  AS isSUN_v2
-         , COALESCE (MovementBoolean_SUN_v3.ValueData, FALSE)::Boolean  AS isSUN_v3
-         , COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)::Boolean  AS isDefSUN
-         , DATE_TRUNC ('DAY', MovementDate_Insert.ValueData)
-         , COALESCE (MovementFloat_TotalCount.ValueData, 0)
-    INTO vbStatusId, vbUnitId, vbIsSUN, vbIsSUN_v2, vbIsSUN_v3, vbIsDefSUN, vbInsertDate, vbTotalCountOld
-    FROM Movement
-          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                       ON MovementLinkObject_To.MovementId = Movement.Id
-                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-
-          LEFT JOIN MovementBoolean AS MovementBoolean_SUN
-                                    ON MovementBoolean_SUN.MovementId = Movement.Id
-                                   AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
-
-          LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v2
-                                    ON MovementBoolean_SUN_v2.MovementId = Movement.Id
-                                   AND MovementBoolean_SUN_v2.DescId = zc_MovementBoolean_SUN_v2()
-          LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v3
-                                    ON MovementBoolean_SUN_v3.MovementId = Movement.Id
-                                   AND MovementBoolean_SUN_v3.DescId = zc_MovementBoolean_SUN_v3()
-
-          LEFT JOIN MovementBoolean AS MovementBoolean_DefSUN
-                                    ON MovementBoolean_DefSUN.MovementId = Movement.Id
-                                   AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_DefSUN()
-          LEFT JOIN MovementDate AS MovementDate_Insert
-                                 ON MovementDate_Insert.MovementId = Movement.Id
-                                AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
-          LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                  ON MovementFloat_TotalCount.MovementId = Movement.Id
-                                 AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
-    WHERE Movement.Id = inMovementId;
-
-    IF COALESCE (ioId, 0) = 0 AND (vbIsSUN = TRUE OR vbIsSUN_v2 = TRUE OR vbIsSUN_v3 = TRUE) AND
-      NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
-    THEN
-      RAISE EXCEPTION 'Ошибка. В перемещения по СУН добавление товара запрещено.';
-    END IF;
-
-    -- Получаем предыдущее значение количеств
-    SELECT
-           MovementItem.Amount                         AS Amount
-         , COALESCE(MIFloat_AmountManual.ValueData,0)  AS AmountManual
-         , COALESCE(MIFloat_AmountStorage.ValueData,0) AS AmountStorage
-         , COALESCE (MILinkObject_CommentSend.ObjectId, 0)
-    INTO vbAmount, vbAmountManual, vbAmountStorage, vbCommentSendId
-    FROM MovementItem
-               LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
-                                           ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
-                                          AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
-               LEFT JOIN MovementItemFloat AS MIFloat_AmountStorage
-                                           ON MIFloat_AmountStorage.MovementItemId = MovementItem.Id
-                                          AND MIFloat_AmountStorage.DescId = zc_MIFloat_AmountStorage()
-               LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentSend
-                                                ON MILinkObject_CommentSend.MovementItemId = MovementItem.Id
-                                               AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
-    WHERE MovementItem.Id = ioId;
-
-    IF vbisSUN = TRUE AND COALESCE (ioId, 0) <> 0
-       AND COALESCE (vbCommentSendId, 0) <> COALESCE (inCommentTRID, 0)
-       AND COALESCE (vbStatusId, 0) <> zc_Enum_Status_UnComplete()
-       AND COALESCE (vbAmount, 0) = COALESCE (inAmount, 0)
-       AND COALESCE (vbAmountManual, 0) = COALESCE (vbAmountManual, 0)
-       AND COALESCE (vbAmountStorage, 0) = COALESCE (inAmountStorage, 0)
-       AND EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
-    THEN
-      -- Сохранили <Комментарий>
-      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_CommentSend(), ioId, inCommentTRID);
-
-      IF COALESCE ((SELECT ChildObjectId FROM ObjectLink
-                    WHERE ObjectId = vbCommentSendId
-                      AND DescId = zc_ObjectLink_CommentSend_CommentTR()), 0) <>
-         COALESCE ((SELECT ChildObjectId FROM ObjectLink
-                    WHERE ObjectId = inCommentTRID
-                      AND DescId = zc_ObjectLink_CommentSend_CommentTR()), 0) AND
-         (COALESCE (vbStatusId, 0) = zc_Enum_Status_Complete() OR COALESCE (vbTotalCountOld, 0) = 0)
-      THEN
-        PERFORM  gpSelect_MovementSUN_TechnicalRediscount(inMovementId, inSession);
-      END IF;
-      raise notice 'Value 04';
-      RETURN;
-    END IF;
-
-    -- Для роли "Безнал" отключаем проверки
-    IF NOT EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
-              WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_Cashless())
-    THEN
-      -- Для роли "Кассир аптеки"
-      IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
-                WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_CashierPharmacy())
-      THEN
+     -- проверка прав пользователя на вызов процедуры
+     --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Send());
+     vbUserId := inSession;
+    
+/*     IF COALESCE (ioId, 0) <> 0 AND (COALESCE (inFromId, 0) = 0 OR COALESCE (inToId, 0) = 0)
+     THEN 
+       RAISE EXCEPTION 'Ошибка. Не заполнено подразделение..';             
+     END IF;     
+*/
+     IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+               WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = 308121) -- Для роли "Кассир аптеки"
+     THEN
+     
         vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
         IF vbUnitKey = '' THEN
           vbUnitKey := '0';
         END IF;
         vbUserUnitId := vbUnitKey::Integer;
-
+        
         IF COALESCE (vbUserUnitId, 0) = 0
+        THEN 
+          RAISE EXCEPTION 'Ошибка. Не найдено подразделение сотрудника.';     
+        END IF;     
+        
+        IF COALESCE (ioId, 0) <> 0
         THEN
-          RAISE EXCEPTION 'Ошибка. Не найдено подразделение сотрудника.';
-        END IF;
-
-        IF vbisDefSUN = TRUE
-        THEN
-          RAISE EXCEPTION 'Ошибка. Коллеги, вы не можете редактировать данное перемещение! Проверьте фильтр на Перемещение по СУН.';
-        END IF;
-
-        IF vbIsSUN = TRUE AND EXISTS(SELECT 1
-                                     FROM Object AS Object_CashSettings
-                                          LEFT JOIN ObjectDate AS ObjectDate_CashSettings_DateBanSUN
-                                                               ON ObjectDate_CashSettings_DateBanSUN.ObjectId = Object_CashSettings.Id
-                                                              AND ObjectDate_CashSettings_DateBanSUN.DescId = zc_ObjectDate_CashSettings_DateBanSUN()
-                                     WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
-                                       AND ObjectDate_CashSettings_DateBanSUN.ValueData = vbInsertDate)
-        THEN
-          RAISE EXCEPTION 'Ошибка. Работа СУН пока невозможна, ожидайте сообщение IT.';
-        END IF;
-
-        --определяем подразделение отправителя
-        SELECT MovementLinkObject_From.ObjectId AS vbFromId
-               INTO vbFromId
-        FROM MovementLinkObject AS MovementLinkObject_From
-        WHERE MovementLinkObject_From.MovementId = inMovementId
-          AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From();
-
-        IF COALESCE (vbFromId, 0) <> COALESCE (vbUserUnitId, 0) AND COALESCE (vbUnitId, 0) <> COALESCE (vbUserUnitId, 0)
-        THEN
-          RAISE EXCEPTION 'Ошибка. Вам разрешено работать только с подразделением <%>.', (SELECT ValueData FROM Object WHERE ID = vbUserUnitId);
-        END IF;
-
-        IF vbUnitId <> 11299914 /*OR (DATE_TRUNC ('MONTH', CURRENT_DATE) + INTERVAL '1 MONTH' - ('' ||
-            CASE WHEN date_part('isodow', DATE_TRUNC ('MONTH', CURRENT_DATE) + INTERVAL '1 MONTH') = 1
-                 THEN 6 - date_part('isodow', DATE_TRUNC ('MONTH', CURRENT_DATE) + INTERVAL '1 MONTH')
-                 ELSE date_part('isodow', DATE_TRUNC ('MONTH', CURRENT_DATE) + INTERVAL '1 MONTH') - 2 END|| 'DAY ')::INTERVAL) <= CURRENT_DATE*/
-        THEN
-          IF COALESCE (vbFromId, 0) = COALESCE (vbUserUnitId, 0)
+          IF EXISTS(SELECT 
+                            1 
+                    FROM Movement
+                         INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                       ON MovementLinkObject_From.MovementId = Movement.Id
+                                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                         INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                       ON MovementLinkObject_To.MovementId = Movement.Id
+                                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                    WHERE Movement.Id = ioId 
+                      AND COALESCE (MovementLinkObject_From.ObjectId, 0) <> COALESCE (vbUserUnitId, 0) 
+                      AND COALESCE (MovementLinkObject_To.ObjectId, 0) <> COALESCE (vbUserUnitId, 0))
           THEN
-            IF COALESCE (vbAmountManual, 0) <> COALESCE (inAmountManual, 0)
-            THEN
-              RAISE EXCEPTION 'Ошибка. Изменять <Факт кол-во точки-получателя> вам запрещено.';
-            END IF;
-          END IF;
-
-          IF COALESCE (vbUnitId, 0) = COALESCE (vbUserUnitId, 0)
-          THEN
-            IF COALESCE (vbAmount, 0) <> COALESCE (inAmount, 0) OR
-             COALESCE (vbAmountStorage, 0) <> COALESCE (vbAmountStorage, 0)
-            THEN
-              RAISE EXCEPTION 'Ошибка. Изменять <Кол-во, загружаемое в точку-получатель> и <Факт кол-во точки-отправителя> вам запрещено.';
-            END IF;
-          END IF;
-
-          IF COALESCE (ioId, 0) <> 0 AND vbIsSUN = TRUE AND ceil(vbAmount) < inAmount
-          THEN
-            RAISE EXCEPTION 'Ошибка. Увеличивать количество в перемещениях по СУН вам запрещено.';
+            RAISE EXCEPTION 'Ошибка. Изменение подразделения запрещено..';                       
           END IF;
         END IF;
+        
+        IF COALESCE (inFromId, 0) <> COALESCE (vbUserUnitId, 0) AND COALESCE (inToId, 0) <> COALESCE (vbUserUnitId, 0) 
+        THEN 
+          RAISE EXCEPTION 'Ошибка. Вам разрешено работать только с подразделением <%>.', (SELECT ValueData FROM Object WHERE ID = vbUserUnitId);     
+        END IF;     
+        
+        IF (COALESCE (ioId, 0) = 0 OR inToId <> (SELECT MovementLinkObject_To.ObjectId FROM MovementLinkObject AS MovementLinkObject_To
+                                                 WHERE MovementLinkObject_To.MovementId = ioId
+                                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()))
+          AND inToId = (SELECT ObjectLink_Unit_UnitOverdue.ChildObjectId FROM ObjectLink AS ObjectLink_Unit_UnitOverdue
+                        WHERE ObjectLink_Unit_UnitOverdue.ObjectId = vbUserUnitId
+                          AND ObjectLink_Unit_UnitOverdue.DescId = zc_ObjectLink_Unit_UnitOverdue()) 
+        THEN 
+          RAISE EXCEPTION 'Ошибка. Вам запрещено создавать перемещения на виртуальный склад Сроки.';     
+        END IF;     
+        
+     END IF;     
 
-/*        IF EXISTS(SELECT 1 FROM MovementBoolean
-                  WHERE MovementBoolean.MovementId = inMovementId
-                    AND MovementBoolean.DescId = zc_MovementBoolean_isAuto()
-                    AND MovementBoolean.ValueData = TRUE)
-        THEN
-
-          IF COALESCE (ioId, 0) = 0 OR EXISTS(SELECT 1 FROM MovementItem
-                                              WHERE MovementItem.ID = ioId
-                                                AND MovementItem.Amount < inAmount)
-          THEN
-            RAISE EXCEPTION 'Ошибка. Увеличивать количество в автоматически сформированных перемещениях вам запрещено.';
-          END IF;
-        END IF;
-*/
-
-        IF vbIsSUN = TRUE AND vbInsertDate >= '25.08.2020' AND COALESCE (inCommentTRID, 0) = 0
-        THEN
-           WITH tmpProtocolAll AS (SELECT  MovementItem.Id
-                                         , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
-                                         , MovementItem.Amount
-                                         , MovementItem.ObjectId
-                                         , Object_Goods_Main.Name
-                                         , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
-                                    FROM MovementItem
-
-                                         INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItem.objectid
-                                         INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
-                                                                     AND Object_Goods_Main.isInvisibleSUN = False
-
-                                         INNER JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
-                                                                        AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
-                                                                        AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
-                                    WHERE  MovementItem.Id = ioId
-                                    )
-               , tmpProtocol AS (SELECT tmpProtocolAll.Id
-                                      , tmpProtocolAll.ObjectId
-                                      , SUBSTRING(tmpProtocolAll.ProtocolData, 1, POSITION('"' IN tmpProtocolAll.ProtocolData) - 1)::TFloat AS AmountAuto
-                                      , tmpProtocolAll.Name
-                                      , tmpProtocolAll.Amount
-                                 FROM tmpProtocolAll
-                                      LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentSend
-                                                                       ON MILinkObject_CommentSend.MovementItemId = tmpProtocolAll.Id
-                                                                      AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
-                                 WHERE tmpProtocolAll.Ord = 1
-                                   AND COALESCE (MILinkObject_CommentSend.ObjectId, 0) = 0)
-
-           SELECT tmpProtocol.AmountAuto
-           INTO vbAmountAuto
-           FROM tmpProtocol;
-
-           IF COALESCE(vbAmountAuto, 0) > COALESCE(inAmount, 0)
-           THEN
-              RAISE EXCEPTION 'Ошибка. Количество % меньше сформировано % укажите причину уменьшения количества!', inAmount, vbAmountAuto;
-           END IF;
-        END IF;
-      END IF;
-
-      IF COALESCE(inCommentTRID, 0) <> 0 AND COALESCE(inCommentTRID, 0) <> COALESCE(vbCommentSendId, 0)
-         AND EXISTS(SELECT 1 FROM ObjectBoolean
-                    WHERE ObjectBoolean.ObjectId = inCommentTRID
-                      AND ObjectBoolean.DescId = zc_ObjectBoolean_CommentSun_Promo()
-                      AND ObjectBoolean.ValueData = TRUE)
-      THEN
-          vbAmountPromo := (SELECT Sum(MI_Goods.Amount) AS Amount
-                            FROM Movement
-
-                                 INNER JOIN MovementLinkObject AS MovementLinkObject_UnitCategory
-                                                               ON MovementLinkObject_UnitCategory.MovementId = Movement.Id
-                                                              AND MovementLinkObject_UnitCategory.DescId = zc_MovementLinkObject_UnitCategory()
-                                 INNER JOIN ObjectLink AS OL_UnitCategory
-                                                       ON OL_UnitCategory.DescId = zc_ObjectLink_Unit_Category()
-                                                      AND OL_UnitCategory.Objectid = vbFromId
-                                                      AND OL_UnitCategory.ChildObjectId = MovementLinkObject_UnitCategory.ObjectId
-
-                                 INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
-                                                                    AND MI_Goods.DescId = zc_MI_Master()
-                                                                    AND MI_Goods.isErased = FALSE
-                                                                    AND MI_Goods.ObjectId = inGoodsId
-
-                            WHERE Movement.StatusId = zc_Enum_Status_Complete()
-                              AND Movement.DescId = zc_Movement_PromoUnit()
-                              AND Movement.OperDate = DATE_TRUNC ('MONTH', CURRENT_DATE));
-
-          vbRemains := (SELECT Sum(Container.Amount) AS Amount
-                            FROM Container
-                            WHERE Container.DescId = zc_Container_Count()
-                              AND Container.ObjectId = inGoodsId
-                              AND Container.WhereObjectId = vbFromId
-                              AND Container.Amount <> 0);
-
-           WITH tmpProtocolAll AS (SELECT  MovementItem.Id
-                                         , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
-                                         , MovementItem.Amount
-                                         , MovementItem.ObjectId
-                                         , Object_Goods_Main.Name
-                                         , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
-                                    FROM MovementItem
-
-                                         INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItem.objectid
-                                         INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
-                                                                     AND Object_Goods_Main.isInvisibleSUN = False
-
-                                         INNER JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
-                                                                        AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
-                                                                        AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
-                                    WHERE  MovementItem.Id = ioId
-                                    )
-               , tmpProtocol AS (SELECT tmpProtocolAll.Id
-                                      , tmpProtocolAll.ObjectId
-                                      , SUBSTRING(tmpProtocolAll.ProtocolData, 1, POSITION('"' IN tmpProtocolAll.ProtocolData) - 1)::TFloat AS AmountAuto
-                                      , tmpProtocolAll.Name
-                                      , tmpProtocolAll.Amount
-                                 FROM tmpProtocolAll
-                                      LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentSend
-                                                                       ON MILinkObject_CommentSend.MovementItemId = tmpProtocolAll.Id
-                                                                      AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
-                                 WHERE tmpProtocolAll.Ord = 1
-                                   AND COALESCE (MILinkObject_CommentSend.ObjectId, 0) = 0)
-
-           SELECT tmpProtocol.AmountAuto
-           INTO vbAmountAuto
-           FROM tmpProtocol;
-
-        IF COALESCE (vbAmountPromo, 0) < (COALESCE (vbRemains, 0) - COALESCE (vbAmountAuto, 0))
-        THEN
-          RAISE EXCEPTION 'Ошибка. Остаток с учетом зануления <%> больше чем в плане по точке <%> использование коментария <%> запрещено.',
-                           COALESCE (vbRemains, 0) - COALESCE (vbAmountAuto, 0), COALESCE (vbAmountPromo, 0), (SELECT Object.ValueData FROM Object WHERE Object.ID = inCommentTRID);
-        END IF;
-      END IF;
-
-
-      -- Для менеджеров
-      IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
-                WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId in (zc_Enum_Role_PharmacyManager(), zc_Enum_Role_SeniorManager()))
-         AND vbUserId NOT IN (183242 )
-      THEN
-
-        IF COALESCE (vbAmountManual, 0) <> COALESCE (inAmountManual, 0) OR
-         COALESCE (vbAmountStorage, 0) <> COALESCE (inAmountStorage, 0)
-        THEN
-          RAISE EXCEPTION 'Ошибка. Изменять <Факт кол-во точки-получателя> и <Факт кол-во точки-отправителя> вам запрещено.';
-        END IF;
-      END IF;
-
-    END IF;
-
-    IF COALESCE(inCommentTRID, 0) = 14883331
-       AND NOT EXISTS(SELECT 1 FROM Object_Goods_Retail WHERE Object_Goods_Retail.ID = inGoodsId AND COALESCE(Object_Goods_Retail.GoodsPairSunId, 0) <> 0)
-    THEN
-       RAISE EXCEPTION 'Ошибка. Использование коментария <%> с товаром <%> запрещено.',
-                           (SELECT Object.ValueData FROM Object WHERE Object.ID = 14883331), (SELECT Object.ValueData FROM Object WHERE Object.ID = inGoodsId);
-    END IF;
-
-    IF vbIsSUN = TRUE AND COALESCE (inReasonDifferencesId, 0) <> 0
-    THEN
-       RAISE EXCEPTION 'Ошибка. В перемещениях СУН причину разногласия использовать нельзя.';
-    END IF;
-
-    --если цена получателя = 0 заменяем ее на цену отвравителя и записываем в прайс
-    IF COALESCE (ioPriceUnitTo, 0) = 0 AND COALESCE (inPriceUnitFrom, 0) <> 0
-    THEN
-        ioPriceUnitTo := inPriceUnitFrom;
-
-        --переоценить товар
-        PERFORM lpInsertUpdate_Object_Price(inGoodsId := inGoodsId,
-                                            inUnitId  := vbUnitId,
-                                            inPrice   := ioPriceUnitTo,
-                                            inDate    := CURRENT_DATE::TDateTime,
-                                            inUserId  := vbUserId);
-    END IF;
-
-    --Посчитали сумму
-    outSumma := ROUND(inAmount * inPrice, 2);
-    outAmountDiff := COALESCE (inAmountManual,0) - COALESCE (inAmount,0);
-    outAmountStorageDiff := COALESCE (inAmountStorage,0) - COALESCE (inAmount,0);
-
-    outSummaUnitTo := ROUND(inAmount * ioPriceUnitTo, 2);
-
-
-    IF outAmountDiff = 0
-    THEN
-        inReasonDifferencesId := 0;
-    END IF;
-
-     -- сохранили
-    ioId := lpInsertUpdate_MovementItem_Send (ioId                 := ioId
-                                            , inMovementId         := inMovementId
-                                            , inGoodsId            := inGoodsId
-                                            , inAmount             := inAmount
-                                            , inAmountManual       := inAmountManual
-                                            , inAmountStorage      := inAmountStorage
-                                            , inReasonDifferencesId:= inReasonDifferencesId
-                                            , inCommentTRID        := inCommentTRID
-                                            , inUserId             := vbUserId
-                                             );
-
-    -- Добавили в ТП
-    IF vbIsSUN = TRUE
-    THEN
-
-      --определяем
-      SELECT COALESCE (MovementFloat_TotalCount.ValueData, 0)
-      INTO vbTotalCount
-      FROM Movement
-            LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                    ON MovementFloat_TotalCount.MovementId = Movement.Id
-                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
-
-      WHERE Movement.Id = inMovementId;
-
-      IF COALESCE (vbTotalCount, 0) = 0 OR COALESCE (vbTotalCountOld, 0) = 0
-      THEN
-        PERFORM  gpSelect_MovementSUN_TechnicalRediscount(inMovementId, inSession);
-      END IF;
-    END IF;
+     -- сохранили <Документ>
+     ioId := lpInsertUpdate_Movement_Send (ioId               := ioId
+                                         , inInvNumber        := inInvNumber
+                                         , inOperDate         := inOperDate
+                                         , inFromId           := inFromId
+                                         , inToId             := inToId
+                                         , inComment          := inComment
+                                         , inChecked          := inChecked
+                                         , inisComplete       := inisComplete
+                                         , inNumberSeats      := inNumberSeats
+                                         , inDriverSunId      := inDriverSunId
+                                         , inUserId           := vbUserId
+                                          );
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, TVarChar) OWNER TO postgres;
+
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
- 23.08.20                                                                      * СУН в ТП
- 21.12.19                                                                      * звпрет добавления в перемещения по СУН
- 01.04.19                                                                      *
- 05.02.19         * add inAmountStorage
- 19.12.18                                                                      *
- 07.09.17         *
- 28.06.16         *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 18.12.18                                                       *  
+ 15.11.16         * inisComplete
+ 28.06.16         * 
  29.05.15                                        *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_Send (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_Movement_Send (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')

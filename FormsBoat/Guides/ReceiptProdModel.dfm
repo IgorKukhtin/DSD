@@ -37,6 +37,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitTop = 16
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -301,7 +302,24 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         end>
       Properties.ReadOnly = True
       TabOrder = 3
-      Width = 245
+      Width = 178
+    end
+    object cxLabel12: TcxLabel
+      Left = 668
+      Top = 23
+      Caption = 'Model:'
+    end
+    object edModel: TcxButtonEdit
+      Left = 706
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 5
+      Width = 151
     end
   end
   object PanelProdColorPattern: TPanel
@@ -1466,6 +1484,14 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         end
         item
           Visible = True
+          ItemName = 'bbcxLabel12'
+        end
+        item
+          Visible = True
+          ItemName = 'bbbedModel'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1691,6 +1717,20 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Hint = 'New Item'
       Visible = ivAlways
       Control = edReceiptLevel
+    end
+    object bbcxLabel12: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel12
+    end
+    object bbbedModel: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edModel
     end
   end
   object ActionList: TActionList
@@ -2247,6 +2287,14 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       end>
     Params = <
       item
+        Name = 'inModelId'
+        Value = Null
+        Component = GuidesModel
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsErased'
         Value = False
         Component = actShowAllErased
@@ -2778,6 +2826,21 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         Name = 'ImportSettingId'
         Value = Null
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ModelId'
+        Value = Null
+        Component = GuidesModel
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ModelName_full'
+        Value = Null
+        Component = GuidesModel
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 760
     Top = 120
@@ -2982,8 +3045,40 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     ComponentList = <
       item
         Component = GuidesReceiptLevel
+      end
+      item
+        Component = GuidesModel
       end>
     Left = 936
     Top = 56
+  end
+  object GuidesModel: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edModel
+    FormNameParam.Value = 'TProdModelForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TProdModelForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesModel
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ModelName_full'
+        Value = ''
+        Component = GuidesModel
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 815
+    Top = 50
   end
 end

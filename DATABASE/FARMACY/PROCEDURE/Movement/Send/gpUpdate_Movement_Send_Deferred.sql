@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_Send_Deferred(
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS Boolean AS
-$body$
+$BODY$
    DECLARE vbUserId Integer;
    DECLARE vbStatusId Integer;
    DECLARE vbisDeferred Boolean;
@@ -205,17 +205,34 @@ BEGIN
            IF (vbOccupancySUN > 0) AND vbisSUN = TRUE AND vbisReceived = FALSE
              AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
            THEN
-             IF (WITH tmpProtocolAll AS (SELECT MovementItemProtocol.MovementItemId
-                                              , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
+             IF (WITH tmpProtocolUnion AS (SELECT  MovementItemProtocol.Id
+                                                 , MovementItemProtocol.MovementItemId
+                                                 , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
+                                            FROM MovementItemProtocol
+                                            WHERE MovementItemProtocol.MovementItemId IN (SELECT MovementItem.ID FROM MovementItem WHERE MovementItem.MovementId = inMovementID)
+                                                  AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
+                                                  AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
+                                            UNION ALL
+                                            SELECT MovementItemProtocol.Id
+                                                 , MovementItemProtocol.MovementItemId
+                                                 , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
+                                            FROM MovementItemProtocol_old AS MovementItemProtocol
+                                            WHERE MovementItemProtocol.MovementItemId  IN (SELECT MovementItem.ID FROM MovementItem WHERE MovementItem.MovementId = inMovementID)
+                                                  AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
+                                                  AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
+                                          )
+                    , tmpProtocolAll AS (SELECT MovementItemProtocol.MovementItemId
+                                              , MovementItemProtocol.ProtocolData
                                               , MovementItem.Amount
                                               , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
                                          FROM MovementItem
                                               INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItem.objectid
                                               INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
                                                                           AND Object_Goods_Main.isInvisibleSUN = False
-                                              INNER JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
-                                                                             AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
-                                                                             AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
+                                              INNER JOIN tmpProtocolUnion AS MovementItemProtocol 
+                                                                          ON MovementItemProtocol.MovementItemId = MovementItem.Id
+                                                                         AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
+                                                                         AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
                                          WHERE MovementItem.MovementId = inMovementId)
                     , tmpProtocol AS (SELECT tmpProtocolAll.MovementItemId
                                            , SUBSTRING(tmpProtocolAll.ProtocolData, 1, POSITION('"' IN tmpProtocolAll.ProtocolData) - 1)::TFloat AS AmountAuto

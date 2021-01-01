@@ -6,6 +6,8 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Check_ConfirmedKind(
    OUT outMovementId_list  TVarChar,  -- 
    OUT outIsVIP            Boolean,  -- 
    OUT outIsSite           Boolean,  -- 
+   OUT outIsTabletki       Boolean,  -- 
+   OUT outIsLiki24         Boolean,  -- 
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS RECORD
@@ -113,9 +115,13 @@ BEGIN
                                           WHERE MovementLinkObject.MovementId in (select tmpMov.ID from tmpMov))
                                             
     SELECT STRING_AGG (COALESCE (Movement.Id :: TVarChar, ''), ';') AS RetV
-         , SUM(CASE WHEN COALESCE (ObjectBoolean_CheckSourceKind_Site.ValueData, FALSE) = FALSE THEN 1 ELSE 0 END) > 0 
+         , SUM(CASE WHEN COALESCE (ObjectBoolean_CheckSourceKind_Site.ValueData, FALSE) = FALSE
+                         OR COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) 
+                            NOT IN (zc_Enum_CheckSourceKind_Liki24(), zc_Enum_CheckSourceKind_Tabletki()) THEN 1 ELSE 0 END) > 0 
          , SUM(CASE WHEN COALESCE (ObjectBoolean_CheckSourceKind_Site.ValueData, FALSE) = TRUE THEN 1 ELSE 0 END) > 0 
-    INTO outMovementId_list, outIsVIP, outIsSite
+         , SUM(CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Tabletki() THEN 1 ELSE 0 END) > 0 
+         , SUM(CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Liki24() THEN 1 ELSE 0 END) > 0 
+    INTO outMovementId_list, outIsVIP, outIsSite, outIsTabletki, outIsLiki24
     FROM tmpMov AS Movement
          LEFT JOIN tmpErr ON tmpErr.MovementId = Movement.Id
 
@@ -131,6 +137,8 @@ BEGIN
     outMovementId_list := COALESCE (outMovementId_list, '');
     outIsVIP := COALESCE (outIsVIP, False); 
     outIsSite := COALESCE (outIsSite, False);
+    outIsTabletki := COALESCE (outIsTabletki, False);
+    outIsLiki24 := COALESCE (outIsLiki24, False);
 
 END;
 $BODY$

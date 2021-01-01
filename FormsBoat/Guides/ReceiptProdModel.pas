@@ -164,6 +164,11 @@ type
     Color_value_ch1: TcxGridDBColumn;
     Color_Level_ch1: TcxGridDBColumn;
     Bold_isReceiptGoods_ch1: TcxGridDBColumn;
+    cxLabel12: TcxLabel;
+    edModel: TcxButtonEdit;
+    GuidesModel: TdsdGuides;
+    bbcxLabel12: TdxBarControlContainerItem;
+    bbbedModel: TdxBarControlContainerItem;
   private
     { Private declarations }
   public
