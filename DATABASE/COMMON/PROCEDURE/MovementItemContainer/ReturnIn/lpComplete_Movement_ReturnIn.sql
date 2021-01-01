@@ -599,14 +599,14 @@ BEGIN
               END AS OperSumm_PriceList
 
               -- 2.1. промежуточная (в ценах док-та) сумма прайс-листа по Контрагенту !!!без скидки!!! - с округлением до 2-х знаков - кол-во Склад
-            , _tmp.tmpOperSumm_PriceList AS tmpOperSumm_PriceList_real
+            , _tmp.tmpOperSumm_PriceList_real AS tmpOperSumm_PriceList_real
               -- 2.2. конечная сумма прайс-листа по Контрагенту !!! без скидки !!! - кол-во Склад
             , CASE WHEN vbPriceWithVAT_PriceList = TRUE OR vbVATPercent_PriceList = 0
                       -- если цены с НДС или %НДС=0, тогда ничего не делаем
-                      THEN _tmp.tmpOperSumm_PriceList
+                      THEN _tmp.tmpOperSumm_PriceList_real
                    WHEN vbVATPercent_PriceList > 0
                       -- если цены без НДС, тогда получаем сумму с НДС
-                      THEN CAST ( (1 + vbVATPercent_PriceList / 100) * _tmp.tmpOperSumm_PriceList AS NUMERIC (16, 2))
+                      THEN CAST ( (1 + vbVATPercent_PriceList / 100) * _tmp.tmpOperSumm_PriceList_real AS NUMERIC (16, 2))
               END AS OperSumm_PriceList_real
 
               -- промежуточная сумма по Контрагенту !!!почти без скидки(т.е. учтена если надо)!!! - с округлением до 2-х знаков
@@ -1809,6 +1809,15 @@ BEGIN
              INNER JOIN _tmpItem ON AccountId_SummIn_60000 <> 0 OR AccountId_SummOut_60000 <> 0
       ;
 
+
+if inUserId = 5 
+then
+    RAISE EXCEPTION 'Ошибка 2.<%> %   %' 
+, (select (_tmpItem.OperSumm_PriceList_real ) from _tmpItem where _tmpItem.MovementItemId = 188899816)
+, (select ( _tmpItem.OperSumm_PriceList) from _tmpItem where _tmpItem.MovementItemId = 188899816)
+, (select ( _tmpItem.OperCount) from _tmpItem where _tmpItem.MovementItemId = 188899816)
+;
+end if;
 
      -- 2.0. создаем контейнеры для Проводки - Прибыль
      UPDATE _tmpItemPartnerTo SET ContainerId_ProfitLoss_10700 = _tmpItem_byDestination.ContainerId_ProfitLoss_10700 -- Счет - прибыль (ОПиУ - Сумма возвратов)

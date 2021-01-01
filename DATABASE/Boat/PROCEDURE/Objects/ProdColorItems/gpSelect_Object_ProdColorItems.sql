@@ -45,10 +45,10 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbPriceWithVAT Boolean;
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_ProdColorItems());
+     vbUserId:= lpGetUserBySession (inSession);
 
-   -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_ProdColorItems());
-   vbUserId:= lpGetUserBySession (inSession);
 
      -- Определили
      vbPriceWithVAT:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = zc_PriceList_Basis() AND ObjectBoolean.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT());

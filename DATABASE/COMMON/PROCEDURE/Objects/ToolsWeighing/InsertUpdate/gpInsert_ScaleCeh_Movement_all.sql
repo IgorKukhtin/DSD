@@ -339,6 +339,77 @@ BEGIN
      -- для zc_Movement_Inventory
      IF vbMovementDescId = zc_Movement_Inventory()
      THEN
+           -- Проверка
+           IF 1 <              (SELECT COUNT (*)
+                                FROM Movement
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_From_find
+                                                                   ON MovementLinkObject_From_find.MovementId = inMovementId
+                                                                  AND MovementLinkObject_From_find.DescId = zc_MovementLinkObject_From()
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To_find
+                                                                   ON MovementLinkObject_To_find.MovementId = inMovementId
+                                                                  AND MovementLinkObject_To_find.DescId = zc_MovementLinkObject_To()
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                   ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                                  AND MovementLinkObject_From.ObjectId = MovementLinkObject_From_find.ObjectId
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                   ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                                  AND MovementLinkObject_To.ObjectId = MovementLinkObject_To_find.ObjectId
+                                WHERE Movement.DescId = zc_Movement_Inventory()
+                                  AND Movement.OperDate = inOperDate - INTERVAL '1 DAY'
+                                  AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                               )
+           THEN
+               RAISE EXCEPTION 'Ошибка.За <%> найдены два документа Инвентаризации № <%> и № <%>. А должен быть только один.'
+                             , zfConvert_DateToString (inOperDate - INTERVAL '1 DAY')
+                             , (SELECT Movement.InvNumber
+                                FROM Movement
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_From_find
+                                                                   ON MovementLinkObject_From_find.MovementId = inMovementId
+                                                                  AND MovementLinkObject_From_find.DescId = zc_MovementLinkObject_From()
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To_find
+                                                                   ON MovementLinkObject_To_find.MovementId = inMovementId
+                                                                  AND MovementLinkObject_To_find.DescId = zc_MovementLinkObject_To()
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                   ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                                  AND MovementLinkObject_From.ObjectId = MovementLinkObject_From_find.ObjectId
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                   ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                                  AND MovementLinkObject_To.ObjectId = MovementLinkObject_To_find.ObjectId
+                                WHERE Movement.DescId = zc_Movement_Inventory()
+                                  AND Movement.OperDate = inOperDate - INTERVAL '1 DAY'
+                                  AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                                ORDER BY Movement.Id ASC
+                                LIMIT 1
+                               )
+                             , (SELECT Movement.InvNumber
+                                FROM Movement
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_From_find
+                                                                   ON MovementLinkObject_From_find.MovementId = inMovementId
+                                                                  AND MovementLinkObject_From_find.DescId = zc_MovementLinkObject_From()
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To_find
+                                                                   ON MovementLinkObject_To_find.MovementId = inMovementId
+                                                                  AND MovementLinkObject_To_find.DescId = zc_MovementLinkObject_To()
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                   ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                                  AND MovementLinkObject_From.ObjectId = MovementLinkObject_From_find.ObjectId
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                   ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                                  AND MovementLinkObject_To.ObjectId = MovementLinkObject_To_find.ObjectId
+                                WHERE Movement.DescId = zc_Movement_Inventory()
+                                  AND Movement.OperDate = inOperDate - INTERVAL '1 DAY'
+                                  AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                                ORDER BY Movement.Id DESC
+                                LIMIT 1
+                               )
+                               ;
+           END IF;
+
            -- поиск существующего документа <Инвентаризация> по ВСЕМ параметрам
            vbMovementId_find:= (SELECT Movement.Id
                                 FROM Movement
@@ -358,7 +429,8 @@ BEGIN
                                                                   AND MovementLinkObject_To.ObjectId = MovementLinkObject_To_find.ObjectId
                                 WHERE Movement.DescId = zc_Movement_Inventory()
                                   AND Movement.OperDate = inOperDate - INTERVAL '1 DAY'
-                                  AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete()));
+                                  AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                               );
      END IF;
 
 
@@ -1413,7 +1485,7 @@ BEGIN
      END IF;
 
 
-if inSession = '5' AND 1=0
+if (inSession = '5' AND 1=1)
 then
     RAISE EXCEPTION 'Admin - Errr _end <%>', (select Movement.InvNumber from Movement where Movement.Id = vbMovementId_begin);
     -- 'Повторите действие через 3 мин.'

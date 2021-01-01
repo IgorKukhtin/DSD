@@ -91,9 +91,9 @@ BEGIN
                                             ON MovementDate_OperDatePartner.MovementId = Movement.Id
                                            AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                 WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_Sale()
-                  AND COALESCE (MovementDate_OperDatePartner.ValueData, zc_DateStart()) < (Movement.OperDate - INTERVAL '5 DAY')
+                  AND COALESCE (MovementDate_OperDatePartner.ValueData, zc_DateStart()) < (Movement.OperDate - INTERVAL '15 DAY')
                   AND (EXTRACT (MONTH FROM Movement.OperDate) = EXTRACT (MONTH FROM CURRENT_DATE)
-                    OR EXTRACT (MONTH FROM Movement.OperDate) = EXTRACT (MONTH FROM CURRENT_DATE - INTERVAL '7 DAY')
+                    OR EXTRACT (MONTH FROM Movement.OperDate) = EXTRACT (MONTH FROM CURRENT_DATE - INTERVAL '17 DAY')
                       )
                )
      THEN

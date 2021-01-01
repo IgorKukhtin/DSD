@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, TVarChar, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptItems(
  INOUT ioId               Integer   ,    -- ключ объекта <>
@@ -17,7 +18,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptItems(
     IN inPriceOut         TFloat    ,
     IN inPartNumber       TVarChar  ,
     IN inComment          TVarChar  ,
-    IN inSession          TVarChar       -- сессия пользователя
+    IN inProdColorPatternId Integer,
+    IN inSession          TVarChar   
+        -- сессия пользователя
 )
 RETURNS RECORD
 AS
@@ -61,6 +64,35 @@ BEGIN
                                              , inUserId        := vbUserId
                                               );*/
    END IF;
+
+
+
+   IF EXISTS (SELECT 1 FROM ObjectLink WHERE ObjectLink.DescId = zc_ObjectLink_ProdColorPattern_ProdOptions() AND ObjectLink.ChildObjectId = inProdOptionsId)
+   OR inProdColorPatternId > 0
+   THEN
+   
+        PERFORM gpInsertUpdate_Object_ProdColorItems(ioId                  := tmp.Id
+                                                   , inCode                := tmp.Code
+                                                   , inProductId           := inProductId
+                                                   , inGoodsId             := ioGoodsId
+                                                   , inProdColorPatternId  := inProdColorPatternId
+                                                   , inComment             := '' :: TVarChar
+                                                   , inIsEnabled           := TRUE :: Boolean
+                                                   , ioIsProdOptions       := TRUE  :: Boolean
+                                                   , inSession             := inSession
+                                                   )
+                                                   
+        FROM gpSelect_Object_ProdColorItems (false,false,false, zfCalc_UserAdmin()) as tmp
+        WHERE tmp.ProductId = inProductId
+        AND tmp.ProdColorPatternId = inProdColorPatternId
+        ;
+   
+        --    
+        RETURN;
+        
+   -- ELSE 
+     --  RAISE EXCEPTION 'Ошибка.OK';
+    END IF;
 
 
    -- определяем признак Создание/Корректировка

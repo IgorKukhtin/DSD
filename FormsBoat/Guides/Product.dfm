@@ -768,6 +768,7 @@ object ProductForm: TProductForm
               Default = True
               Kind = bkEllipsis
             end>
+          Properties.ReadOnly = True
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 80
@@ -2867,7 +2868,7 @@ object ProductForm: TProductForm
       item
         Name = 'outGoodsName'
         Value = Null
-        Component = MasterCDS
+        Component = ProdOptItemsCDS
         ComponentItem = 'GoodsName'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2905,6 +2906,14 @@ object ProductForm: TProductForm
         Component = ProdOptItemsCDS
         ComponentItem = 'Comment'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProdColorPatternId'
+        Value = Null
+        Component = ProdOptItemsCDS
+        ComponentItem = 'ProdColorPatternId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -2981,8 +2990,8 @@ object ProductForm: TProductForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 832
-    Top = 344
+    Left = 824
+    Top = 312
   end
   object spUnErasedOpt: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_ProdOptItems'

@@ -218,7 +218,7 @@ BEGIN
 
    , tmpResult AS (SELECT tmpMI.MovementItemId
                         , COALESCE (tmpMI.GoodsId, tmpMI_parent_find.GoodsId)         AS GoodsId
-                        , CASE WHEN tmpMI.Amount <> 0 THEN tmpMI.Amount ELSE tmpMI_parent_find.Amount END AS Amount
+                        , CASE WHEN tmpMI.Amount <> 0 OR 1=1 THEN tmpMI.Amount ELSE tmpMI_parent_find.Amount END AS Amount
                         , tmpMI.AmountPartner
                         , COALESCE (tmpMI.GoodsKindId, tmpMI_parent_find.GoodsKindId) AS GoodsKindId
                         , COALESCE (tmpMI.Price, tmpMI_parent_find.Price)             AS Price
@@ -618,7 +618,7 @@ BEGIN
 
    , tmpResult AS (SELECT tmpMI.MovementItemId
                         , COALESCE (tmpMI.GoodsId, tmpMI_parent_find.GoodsId)         AS GoodsId
-                        , CASE WHEN tmpMI.Amount <> 0 THEN tmpMI.Amount ELSE tmpMI_parent_find.Amount END AS Amount
+                        , CASE WHEN tmpMI.Amount <> 0 OR 1=1 THEN tmpMI.Amount ELSE tmpMI_parent_find.Amount END AS Amount
                         , tmpMI.AmountPartner
                         , COALESCE (tmpMI.GoodsKindId, tmpMI_parent_find.GoodsKindId) AS GoodsKindId
                         , COALESCE (tmpMI.Price, tmpMI_parent_find.Price)             AS Price
