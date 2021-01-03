@@ -6,6 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_GoodsRemains_FileName(
    OUT outFileName            TVarChar  ,
    OUT outDefaultFileExt      TVarChar  ,
    OUT outEncodingANSI        Boolean   ,
+   OUT outExportType          TVarChar  ,
     IN inSession              TVarChar
 )
   RETURNS RECORD
@@ -17,10 +18,11 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Результат
-     SELECT ('GoodsRemains_' || CURRENT_DATE) AS outFileName
-          , 'xml'                             AS outDefaultFileExt
-          , FALSE                              AS outEncodingANSI
-   INTO outFileName, outDefaultFileExt, outEncodingANSI
+     SELECT ('Podium_' || REPLACE (REPLACE (zfConvert_DateTimeShortToString (CURRENT_TIMESTAMP), '.', '_'), ':', '_')) AS outFileName
+          , 'xml'                                  AS outDefaultFileExt
+          , FALSE                                  AS outEncodingANSI
+          , 'cxegExportToTextUTF8'                 AS outExportType
+           INTO outFileName, outDefaultFileExt, outEncodingANSI, outExportType
      ;
 
 END;

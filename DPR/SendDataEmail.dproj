@@ -71,10 +71,9 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+			<Debugger_RunParams>-interval 720</Debugger_RunParams>
 			<DCC_UnitSearchPath>..\SOURCE\DBF;..\SOURCE\COMPONENT;..\SOURCE\DevAddOn;..\SOURCE\EDI;..\SOURCE;..\SOURCE\MeDOC;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-			<Icon_MainIcon>EDIOrdersLoader_Icon.ico</Icon_MainIcon>
-			<Debugger_RunParams>-interval 3</Debugger_RunParams>
 			<DCC_RangeChecking>true</DCC_RangeChecking>
 			<DCC_DcuOutput>..\DCU</DCC_DcuOutput>
 			<VerInfo_Locale>1033</VerInfo_Locale>
@@ -98,6 +97,8 @@
 			<DelphiCompile Include="$(MainSource)">
 				<MainSource>MainSource</MainSource>
 			</DelphiCompile>
+			<DCCReference Include="..\SOURCE\UtilConst.pas"/>
+			<DCCReference Include="..\SOURCE\Log.pas"/>
 			<DCCReference Include="..\SendDataEmail\SendDataEmail.Main.pas">
 				<Form>MainForm</Form>
 			</DCCReference>

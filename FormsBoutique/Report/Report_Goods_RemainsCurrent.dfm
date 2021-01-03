@@ -7,7 +7,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1147
-  ExplicitHeight = 601
+  ExplicitHeight = 598
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -2289,7 +2289,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     object actExport_Grid: TExportGrid
       Category = 'Export_file'
       MoveParams = <>
-      ExportType = cxegExportToText
+      ExportType = cxegExportToTextUTF8
       Grid = ExportXmlGrid
       Caption = 'actExport_Grid'
       OpenAfterCreate = False

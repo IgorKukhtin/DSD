@@ -1809,7 +1809,7 @@ BEGIN
              INNER JOIN _tmpItem ON AccountId_SummIn_60000 <> 0 OR AccountId_SummOut_60000 <> 0
       ;
 
-
+/*
 if inUserId = 5 
 then
     RAISE EXCEPTION 'Ошибка 2.<%> %   %' 
@@ -1818,7 +1818,7 @@ then
 , (select ( _tmpItem.OperCount) from _tmpItem where _tmpItem.MovementItemId = 188899816)
 ;
 end if;
-
+*/
      -- 2.0. создаем контейнеры для Проводки - Прибыль
      UPDATE _tmpItemPartnerTo SET ContainerId_ProfitLoss_10700 = _tmpItem_byDestination.ContainerId_ProfitLoss_10700 -- Счет - прибыль (ОПиУ - Сумма возвратов)
                                 , ContainerId_ProfitLoss_10800 = _tmpItem_byDestination.ContainerId_ProfitLoss_10800 -- Счет - прибыль (ОПиУ - Себестоимость возвратов)
