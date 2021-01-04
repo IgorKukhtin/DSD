@@ -59,7 +59,7 @@ object ClientEditForm: TClientEditForm
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
     TabOrder = 5
-    Width = 273
+    Width = 135
   end
   object cxLabel3: TcxLabel
     Left = 10
@@ -71,6 +71,19 @@ object ClientEditForm: TClientEditForm
     Top = 120
     TabOrder = 7
     Width = 273
+  end
+  object cxLabel6: TcxLabel
+    Left = 176
+    Top = 8
+    Caption = '% '#1089#1082#1080#1076#1082#1080
+  end
+  object edDiscountTax: TcxCurrencyEdit
+    Left = 176
+    Top = 30
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 9
+    Width = 107
   end
   object ActionList: TActionList
     Left = 152
@@ -133,6 +146,14 @@ object ClientEditForm: TClientEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inDiscountTax'
+        Value = Null
+        Component = edDiscountTax
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = edComment
@@ -152,7 +173,7 @@ object ClientEditForm: TClientEditForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 96
+    Left = 56
     Top = 8
   end
   object spGet: TdsdStoredProc
@@ -188,10 +209,17 @@ object ClientEditForm: TClientEditForm
         Component = edComment
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountTax'
+        Value = Null
+        Component = edDiscountTax
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 184
-    Top = 16
+    Left = 192
+    Top = 56
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <

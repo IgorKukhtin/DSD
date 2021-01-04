@@ -63,6 +63,7 @@ type
     Comment: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    DiscountTax: TcxGridDBColumn;
   private
     { Private declarations }
   public

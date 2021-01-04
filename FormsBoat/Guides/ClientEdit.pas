@@ -40,6 +40,8 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel3: TcxLabel;
     edComment: TcxTextEdit;
+    cxLabel6: TcxLabel;
+    edDiscountTax: TcxCurrencyEdit;
   private
     { Private declarations }
   public

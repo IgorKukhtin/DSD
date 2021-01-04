@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Client(
    
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , DiscountTax TFloat
              , Comment TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
@@ -28,6 +29,8 @@ BEGIN
              Object_Client.Id                AS Id
            , Object_Client.ObjectCode        AS Code
            , Object_Client.ValueData         AS Name
+           
+           , COALESCE (ObjectFloat_DiscountTax.ValueData,0) ::TFloat AS DiscountTax
            , ObjectString_Comment.ValueData  AS Comment
 
            , Object_Insert.ValueData         AS InsertName
@@ -37,6 +40,10 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_Client.Id
                                 AND ObjectString_Comment.DescId = zc_ObjectString_Client_Comment()  
+
+          LEFT JOIN ObjectFloat AS ObjectFloat_DiscountTax
+                                ON ObjectFloat_DiscountTax.ObjectId = Object_Client.Id
+                               AND ObjectFloat_DiscountTax.DescId = zc_ObjectFloat_Client_DiscountTax()  
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_Client.Id
@@ -58,6 +65,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+04.01.21          *
 22.10.20          *
 */
 
