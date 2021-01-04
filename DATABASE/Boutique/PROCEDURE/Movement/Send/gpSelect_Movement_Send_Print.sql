@@ -15,13 +15,53 @@ $BODY$
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
 
-    DECLARE vbDescId Integer;
-    DECLARE vbStatusId Integer;
+    DECLARE vbDescId     Integer;
+    DECLARE vbStatusId   Integer;
     DECLARE vbPaidKindId Integer;
+
+    DECLARE vbUnitId_From        Integer;
+    DECLARE vbUnitId_To          Integer;
+    DECLARE vbPriceListId_from   Integer;
+    DECLARE vbPriceListId_to     Integer;
+    DECLARE vbCurrencyId_pl_from Integer;
+    DECLARE vbCurrencyId_pl_to   Integer;
+    DECLARE vbOperDate           TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Send_Print());
      vbUserId:= inSession;
+
+     -- данные из шапки
+     SELECT Movement.OperDate                                                                AS OperDate
+          , MovementLinkObject_From.ObjectId                                                 AS vbUnitId_From
+          , MovementLinkObject_To.ObjectId                                                   AS vbUnitId_To
+          , COALESCE (ObjectLink_Unit_PriceList_from.ChildObjectId, zc_PriceList_Basis())    AS PriceListId_from
+          , COALESCE (ObjectLink_Unit_PriceList_to.ChildObjectId, zc_PriceList_Basis())      AS PriceListId_to
+          , COALESCE (ObjectLink_PriceList_Currency_from.ChildObjectId, zc_Currency_Basis()) AS CurrencyId_pl_from
+          , COALESCE (ObjectLink_PriceList_Currency_to.ChildObjectId, zc_Currency_Basis())   AS CurrencyId_pl_to
+            INTO vbOperDate, vbUnitId_From, vbUnitId_To, vbPriceListId_from, vbPriceListId_to, vbCurrencyId_pl_from, vbCurrencyId_pl_to
+     FROM Movement
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                       ON MovementLinkObject_From.MovementId = Movement.Id
+                                      AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_PriceList_from
+                               ON ObjectLink_Unit_PriceList_from.ObjectId = MovementLinkObject_From.ObjectId
+                              AND ObjectLink_Unit_PriceList_from.DescId   = zc_ObjectLink_Unit_PriceList()
+          LEFT JOIN ObjectLink AS ObjectLink_PriceList_Currency_from
+                               ON ObjectLink_PriceList_Currency_from.ObjectId = ObjectLink_Unit_PriceList_from.ChildObjectId
+                              AND ObjectLink_PriceList_Currency_from.DescId   = zc_ObjectLink_PriceList_Currency()
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                       ON MovementLinkObject_To.MovementId = Movement.Id
+                                      AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_PriceList_to
+                               ON ObjectLink_Unit_PriceList_to.ObjectId = MovementLinkObject_To.ObjectId
+                              AND ObjectLink_Unit_PriceList_to.DescId   = zc_ObjectLink_Unit_PriceList()
+          LEFT JOIN ObjectLink AS ObjectLink_PriceList_Currency_to
+                               ON ObjectLink_PriceList_Currency_to.ObjectId = ObjectLink_Unit_PriceList_to.ChildObjectId
+                              AND ObjectLink_PriceList_Currency_to.DescId   = zc_ObjectLink_PriceList_Currency()
+
+     WHERE Movement.Id = inMovementId;
 
       --
     OPEN Cursor1 FOR
@@ -123,6 +163,37 @@ BEGIN
                          AND MovementItem.Amount     > 0
                        )
 
+         ---сезонная скидка
+        , tmpDiscountList AS (SELECT DISTINCT vbUnitId_From AS UnitId, tmpMI.GoodsId FROM tmpMI
+                             UNION
+                              SELECT DISTINCT vbUnitId_To   AS UnitId, tmpMI.GoodsId FROM tmpMI
+                              )
+
+        , tmpOL1 AS (SELECT * FROM ObjectLink WHERE ObjectLink.ChildObjectId IN (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
+                                                AND ObjectLink.DescId        = zc_ObjectLink_DiscountPeriodItem_Goods()
+                    )
+        , tmpOL2 AS (SELECT * FROM ObjectLink WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpOL1.ObjectId FROM tmpOL1)
+                                                AND ObjectLink.DescId   = zc_ObjectLink_DiscountPeriodItem_Unit()
+                    )
+
+        , tmpDiscount AS (SELECT ObjectLink_DiscountPeriodItem_Unit.ChildObjectId      AS UnitId
+                               , ObjectLink_DiscountPeriodItem_Goods.ChildObjectId     AS GoodsId
+                               , ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData AS DiscountTax
+                          FROM tmpDiscountList
+                               INNER JOIN tmpOL1 AS ObjectLink_DiscountPeriodItem_Goods
+                                                     ON ObjectLink_DiscountPeriodItem_Goods.ChildObjectId = tmpDiscountList.GoodsId
+                               INNER JOIN tmpOL2 AS ObjectLink_DiscountPeriodItem_Unit
+                                                     ON ObjectLink_DiscountPeriodItem_Unit.ObjectId      = ObjectLink_DiscountPeriodItem_Goods.ObjectId
+                                                    AND ObjectLink_DiscountPeriodItem_Unit.ChildObjectId = tmpDiscountList.UnitId
+                               INNER JOIN ObjectHistory AS ObjectHistory_DiscountPeriodItem
+                                                        ON ObjectHistory_DiscountPeriodItem.ObjectId = ObjectLink_DiscountPeriodItem_Goods.ObjectId
+                                                       AND ObjectHistory_DiscountPeriodItem.DescId   = zc_ObjectHistory_DiscountPeriodItem()
+                                                       AND vbOperDate >= ObjectHistory_DiscountPeriodItem.StartDate AND vbOperDate < ObjectHistory_DiscountPeriodItem.EndDate
+                                                      -- AND ObjectHistory_DiscountPeriodItem.EndDate  = zc_DateEnd()
+                               LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_DiscountPeriodItem_Value
+                                                            ON ObjectHistoryFloat_DiscountPeriodItem_Value.ObjectHistoryId = ObjectHistory_DiscountPeriodItem.Id
+                                                           AND ObjectHistoryFloat_DiscountPeriodItem_Value.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value()
+                         )
        -- результат
      , tmpData AS (SELECT tmpMI.Id
                         , tmpMI.PartionId
@@ -148,6 +219,11 @@ BEGIN
                         , zfCalc_SummPriceList (tmpMI.Amount, tmpMI.OperPriceList)                                       AS TotalSummPriceList
                         , zfCalc_SummPriceList (tmpMI.Amount, tmpMI.OperPriceListTo)                                     AS TotalSummPriceListTo
 
+                          -- цены с учетом сезонной скидки
+                        , CAST (tmpMI.OperPriceList * (1 - COALESCE (tmpDiscount_From.DiscountTax, 0) / 100) AS NUMERIC (16, 0))     :: TFloat AS OperPriceList_disc
+                        , CAST (tmpMI.OperPriceListTo * (1 - COALESCE (tmpDiscount_To.DiscountTax, 0) / 100) AS NUMERIC (16, 0))     :: TFloat AS OperPriceListTo_disc
+                        , zfCalc_SummPriceList (tmpMI.Amount, CAST (tmpMI.OperPriceList * (1 - COALESCE (tmpDiscount_From.DiscountTax, 0) / 100) AS NUMERIC (16, 0)))  AS TotalSummPriceList_disc
+                        , zfCalc_SummPriceList (tmpMI.Amount, CAST (tmpMI.OperPriceListTo * (1 - COALESCE (tmpDiscount_To.DiscountTax, 0) / 100) AS NUMERIC (16, 0)))  AS TotalSummPriceListTo_disc
                     FROM tmpMI
                          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
                          LEFT JOIN Object_PartionGoods    ON Object_PartionGoods.MovementItemId = tmpMI.PartionId                                 
@@ -165,7 +241,18 @@ BEGIN
                          LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                                 ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
                                                AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+                         --для подразделения от кого
+                         LEFT JOIN tmpDiscount AS tmpDiscount_From
+                                               ON tmpDiscount_From.UnitId  = vbUnitId_From
+                                              AND tmpDiscount_From.GoodsId = tmpMI.GoodsId
+                         --для подразделения кому
+                         LEFT JOIN tmpDiscount AS tmpDiscount_To
+                                               ON tmpDiscount_To.UnitId  = vbUnitId_To
+                                              AND tmpDiscount_To.GoodsId = tmpMI.GoodsId
                   )
+
+
        SELECT tmpData.Id
             , tmpData.PartionId
             , tmpData.GoodsId
@@ -187,6 +274,11 @@ BEGIN
             , tmpData.TotalSumm            ::TFloat
             , tmpData.TotalSummPriceList   ::TFloat
             , tmpData.TotalSummPriceListTo ::TFloat
+
+            , tmpData.OperPriceList_disc         ::TFloat
+            , tmpData.OperPriceListTo_disc       ::TFloat 
+            , tmpData.TotalSummPriceList_disc    ::TFloat
+            , tmpData.TotalSummPriceListTo_disc  ::TFloat
        FROM tmpData
        WHERE zc_Enum_GlobalConst_isTerry() = TRUE
      UNION
@@ -212,6 +304,11 @@ BEGIN
             , SUM (tmpData.TotalSummPriceList)   ::TFloat AS TotalSummPriceList
             , SUM (tmpData.TotalSummPriceListTo) ::TFloat AS TotalSummPriceListTo
 
+            , tmpData.OperPriceList_disc         ::TFloat
+            , tmpData.OperPriceListTo_disc       ::TFloat 
+            , SUM (tmpData.TotalSummPriceList_disc)    ::TFloat AS TotalSummPriceList_disc
+            , SUM (tmpData.TotalSummPriceListTo_disc)  ::TFloat AS TotalSummPriceListTo_disc
+
        FROM tmpData
        WHERE zc_Enum_GlobalConst_isTerry() = FALSE -- для Подиум
        GROUP BY tmpData.GoodsId
@@ -228,6 +325,8 @@ BEGIN
               , tmpData.OperPrice
               , tmpData.OperPriceList
               , tmpData.OperPriceListTo
+              , tmpData.OperPriceList_disc
+              , tmpData.OperPriceListTo_disc
        ORDER BY 4
        ;
 
