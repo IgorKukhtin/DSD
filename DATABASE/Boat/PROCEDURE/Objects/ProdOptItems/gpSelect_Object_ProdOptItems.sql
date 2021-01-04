@@ -32,6 +32,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Article TVarChar
              , ProdColorName TVarChar
              , MeasureName TVarChar
+             , DiscountTax    TFloat
              , EKPrice        TFloat
              , EKPriceWVAT    TFloat
              , BasisPrice     TFloat
@@ -273,6 +274,8 @@ BEGIN
                          , ObjectLink_ProdOptPattern.ChildObjectId AS ProdOptPatternId
                          , ObjectLink_ProdOptions.ChildObjectId    AS ProdOptionsId
                          , 0                                       AS ProdColorPatternId
+                         
+                         , COALESCE (ObjectFloat_DiscountTax.ValueData,0) AS DiscountTax
 
                          , ObjectFloat_PriceIn.ValueData      ::TFloat    AS PriceIn
                          , 0                                  ::TFloat    AS PriceInWVAT
@@ -300,6 +303,10 @@ BEGIN
                                              AND ObjectLink_ProdOptions.DescId = zc_ObjectLink_ProdOptItems_ProdOptions()
                          LEFT JOIN Object AS Object_ProdOptions ON Object_ProdOptions.Id = ObjectLink_ProdOptions.ChildObjectId
 
+                         LEFT JOIN ObjectFloat AS ObjectFloat_DiscountTax
+                                               ON ObjectFloat_DiscountTax.ObjectId = Object_ProdOptItems.Id
+                                              AND ObjectFloat_DiscountTax.DescId = zc_ObjectFloat_ProdOptItems_DiscountTax()
+
                         --
                         LEFT JOIN ObjectFloat AS ObjectFloat_PriceIn
                                               ON ObjectFloat_PriceIn.ObjectId = Object_ProdOptItems.Id
@@ -323,6 +330,8 @@ BEGIN
                          , 0                                    AS ProdOptPatternId
                          , tmpProdColorItems.ProdOptionsId      AS ProdOptionsId
                          , tmpProdColorItems.ProdColorPatternId AS ProdColorPatternId
+                         
+                         , 0                                    AS DiscountTax
 
                            -- Цена вх. без НДС
                          , tmpProdColorItems.EKPrice        AS PriceIn
@@ -348,6 +357,7 @@ BEGIN
                          , tmpRes_all.ProdOptPatternId
                          , tmpRes_all.ProdOptionsId
                          , tmpRes_all.ProdColorPatternId
+                         , tmpRes_all.DiscountTax
 
                          , tmpRes_all.PriceIn AS EKPrice
                          , tmpRes_all.PriceInWVAT AS EKPriceWVAT
@@ -368,6 +378,7 @@ BEGIN
                          , 0     :: Integer  AS ProdOptPatternId
                          , tmpProdOptions.Id AS ProdOptionsId
                          , tmpProdOptions.ProdColorPatternId
+                         , 0     :: TFloat   AS DiscountTax                          
 
                            -- Цена вх. без НДС
                          , tmpProdOptions.EKPrice        AS PriceIn
@@ -517,6 +528,8 @@ BEGIN
          , tmpParams.Article
          , tmpParams.ProdColorName
          , tmpParams.MeasureName
+         
+         , Object_ProdOptItems.DiscountTax    ::TFloat
 
            -- Цена вх.
          , tmpParams.EKPrice        ::TFloat
@@ -525,15 +538,15 @@ BEGIN
          , Object_ProdOptItems.BasisPrice     ::TFloat
          , Object_ProdOptItems.BasisPriceWVAT ::TFloat
 
-                           -- Цена вх. без НДС
-                         , 0 :: TFloat        AS PriceIn
-                           -- Цена вх. с НДС                
-                         , 0 :: TFloat    AS PriceInWVAT
-                                                            
-                           -- Цена продажи без НДС          
-                         , 0 :: TFloat     AS PriceOut
-                           -- Цена продажи с НДС
-                         , 0 :: TFloat AS PriceOutWVAT
+           -- Цена вх. без НДС
+         , 0 :: TFloat        AS PriceIn
+           -- Цена вх. с НДС                
+         , 0 :: TFloat    AS PriceInWVAT
+                                            
+           -- Цена продажи без НДС          
+         , 0 :: TFloat     AS PriceOut
+           -- Цена продажи с НДС
+         , 0 :: TFloat AS PriceOutWVAT
 
      FROM tmpRes AS Object_ProdOptItems
           LEFT JOIN ObjectString AS ObjectString_Comment

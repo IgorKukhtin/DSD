@@ -164,6 +164,7 @@ type
     GoodsCode_ch2: TcxGridDBColumn;
     isEnabled_ch2: TcxGridDBColumn;
     ReceiptProdModelName: TcxGridDBColumn;
+    DiscountTax_ch2: TcxGridDBColumn;
   private
     { Private declarations }
   public

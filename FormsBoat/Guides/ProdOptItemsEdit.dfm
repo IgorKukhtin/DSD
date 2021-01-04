@@ -53,7 +53,7 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = False
     TabOrder = 4
-    Width = 273
+    Width = 130
   end
   object cxLabel3: TcxLabel
     Left = 10
@@ -151,6 +151,19 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
     TabOrder = 17
     Width = 273
   end
+  object cxLabel5: TcxLabel
+    Left = 176
+    Top = 8
+    Caption = '% '#1089#1082#1080#1076#1082#1080
+  end
+  object edDiscountTax: TcxCurrencyEdit
+    Left = 176
+    Top = 30
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 19
+    Width = 107
+  end
   object ActionList: TActionList
     Left = 152
     Top = 56
@@ -244,6 +257,14 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inDiscountTax'
+        Value = Null
+        Component = edDiscountTax
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inPartNumber'
         Value = Null
         Component = edPartNumber
@@ -321,6 +342,13 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
         Component = GuidesProdOptions
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountTax'
+        Value = Null
+        Component = edDiscountTax
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item

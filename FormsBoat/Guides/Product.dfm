@@ -857,6 +857,16 @@ object ProductForm: TProductForm
           HeaderHint = #8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1086#1075#1086' '#1076#1086#1087'. '#1086#1073#1086#1088#1091#1076#1086#1074#1072#1085#1080#1103
           Width = 80
         end
+        object DiscountTax_ch2: TcxGridDBColumn
+          Caption = '% '#1089#1082#1080#1076#1082#1080
+          DataBinding.FieldName = 'DiscountTax'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 60
+        end
         object EKPrice_ch2: TcxGridDBColumn
           Caption = 'Netto EK'
           DataBinding.FieldName = 'EKPrice'
@@ -2887,6 +2897,15 @@ object ProductForm: TProductForm
         Value = Null
         Component = ProdOptItemsCDS
         ComponentItem = 'PriceOut'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscountTax'
+        Value = Null
+        Component = ProdOptItemsCDS
+        ComponentItem = 'DiscountTax'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

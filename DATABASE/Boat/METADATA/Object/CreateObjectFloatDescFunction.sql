@@ -108,10 +108,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Client_DiscountTax() RETURNS Integer A
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Client(), 'zc_ObjectFloat_Client_DiscountTax', '% скидки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Client_DiscountTax');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_ProdOptItems_DiscountTax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ProdOptItems_DiscountTax'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ProdOptItems(), 'zc_ObjectFloat_ProdOptItems_DiscountTax', '% скидки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ProdOptItems_DiscountTax');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 04.01.20         * zc_ObjectFloat_Client_DiscountTax
+ 04.01.21         * zc_ObjectFloat_Client_DiscountTax
+                    zc_ObjectFloat_ProdOptItems_DiscountTax
  25.12.20         * zc_ObjectFloat_ProdOptions_SalePrice
  22.12.20         * zc_ObjectFloat_ReceiptService_EKPrice
                     zc_ObjectFloat_ReceiptService_SalePrice

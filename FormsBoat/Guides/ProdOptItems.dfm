@@ -82,6 +82,17 @@ object ProdOptItemsForm: TProdOptItemsForm
         Options.Editing = False
         Width = 189
       end
+      object DiscountTax: TcxGridDBColumn
+        Caption = '% '#1089#1082#1080#1076#1082#1080
+        DataBinding.FieldName = 'DiscountTax'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object optPriceIn: TcxGridDBColumn
         Caption = #1062#1077#1085#1072', '#1074#1093'.'
         DataBinding.FieldName = 'PriceIn'

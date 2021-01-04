@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, TVa
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptItems(
  INOUT ioId               Integer   ,    -- ключ объекта <>
@@ -16,6 +17,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptItems(
    OUT outGoodsName       TVarChar  ,
     IN inPriceIn          TFloat    ,
     IN inPriceOut         TFloat    ,
+    IN inDiscountTax      TFloat    ,
     IN inPartNumber       TVarChar  ,
     IN inComment          TVarChar  ,
     IN inProdColorPatternId Integer,
@@ -130,6 +132,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_PriceOut(), ioId, inPriceOut);
 
    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_DiscountTax(), ioId, inDiscountTax);
+
+   -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptItems_Product(), ioId, inProductId);
 
    -- сохранили свойство <>
@@ -160,6 +165,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.01.21         * inDiscountTax
  09.10.20         *
 */
 
