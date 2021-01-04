@@ -59,6 +59,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Product_Hours() RETURNS Integer AS $BO
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_ProdOptions(), 'zc_ObjectFloat_Product_Hours', 'Время обслуживания,ч.' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Product_Hours');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Product_DiscountTax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Product_DiscountTax'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ProdOptions(), 'zc_ObjectFloat_Product_DiscountTax', '% скидки (основной)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Product_DiscountTax');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Product_DiscountNextTax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Product_DiscountNextTax'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ProdOptions(), 'zc_ObjectFloat_Product_DiscountNextTax', '% скидки (дополнительный)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Product_DiscountNextTax');
+
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_ProdOptItems_PriceIn() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ProdOptItems_PriceIn'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_ProdOptItems(), 'zc_ObjectFloat_ProdOptItems_PriceIn', 'Вх. цена' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ProdOptItems_PriceIn');
@@ -117,6 +125,8 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  04.01.21         * zc_ObjectFloat_Client_DiscountTax
                     zc_ObjectFloat_ProdOptItems_DiscountTax
+                    zc_ObjectFloat_Product_DiscountTax
+                    zc_ObjectFloat_Product_DiscountNextTax
  25.12.20         * zc_ObjectFloat_ProdOptions_SalePrice
  22.12.20         * zc_ObjectFloat_ReceiptService_EKPrice
                     zc_ObjectFloat_ReceiptService_SalePrice

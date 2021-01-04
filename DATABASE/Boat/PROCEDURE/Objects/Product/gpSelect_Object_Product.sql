@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Product(
     IN inSession     TVarChar       -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ProdColorName TVarChar
-             , Hours TFloat
+             , Hours TFloat, DiscountTax TFloat, DiscountNextTax TFloat
              , DateStart TDateTime, DateBegin TDateTime, DateSale TDateTime
              , Article TVarChar, CIN TVarChar, EngineNum TVarChar
              , Comment TVarChar
@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ProdColorName TVarChar
              , ModelId Integer, ModelName TVarChar, ModelName_full TVarChar
              , EngineId Integer, EngineName TVarChar
              , ReceiptProdModelId Integer, ReceiptProdModelName TVarChar
+             , ClientId Integer, ClientName TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
              , isSale Boolean
@@ -428,7 +429,10 @@ BEGIN
                               ELSE COALESCE (tmpProdColorItems_1.ProdColorName, '') || ' / ' || COALESCE (tmpProdColorItems_2.ProdColorName, '')
                          END :: TVarChar AS ProdColorName
               
-                       , ObjectFloat_Hours.ValueData      AS Hours
+                       , ObjectFloat_Hours.ValueData           AS Hours
+                       , ObjectFloat_DiscountTax.ValueData     AS DiscountTax
+                       , ObjectFloat_DiscountNextTax.ValueData AS DiscountNextTax
+
                        , ObjectDate_DateStart.ValueData   AS DateStart
                        , ObjectDate_DateBegin.ValueData   AS DateBegin
                        --, ObjectDate_DateSale.ValueData    AS DateSale
@@ -453,6 +457,9 @@ BEGIN
 
                        , Object_ReceiptProdModel.Id        AS ReceiptProdModelId
                        , Object_ReceiptProdModel.ValueData AS ReceiptProdModelName
+                       
+                       , Object_Client.Id                AS ClientId
+                       , Object_Client.ValueData         AS ClientName
 
                        , Object_Insert.ValueData         AS InsertName
                        , ObjectDate_Insert.ValueData     AS InsertDate
@@ -500,7 +507,13 @@ BEGIN
                         LEFT JOIN ObjectFloat AS ObjectFloat_Hours
                                               ON ObjectFloat_Hours.ObjectId = Object_Product.Id
                                              AND ObjectFloat_Hours.DescId = zc_ObjectFloat_Product_Hours()
-              
+                        LEFT JOIN ObjectFloat AS ObjectFloat_DiscountTax
+                                              ON ObjectFloat_DiscountTax.ObjectId = Object_Product.Id
+                                             AND ObjectFloat_DiscountTax.DescId = zc_ObjectFloat_Product_DiscountTax()
+                        LEFT JOIN ObjectFloat AS ObjectFloat_DiscountNextTax
+                                              ON ObjectFloat_DiscountNextTax.ObjectId = Object_Product.Id
+                                             AND ObjectFloat_DiscountNextTax.DescId = zc_ObjectFloat_Product_DiscountNextTax()
+
                         LEFT JOIN ObjectDate AS ObjectDate_DateStart
                                              ON ObjectDate_DateStart.ObjectId = Object_Product.Id
                                             AND ObjectDate_DateStart.DescId = zc_ObjectDate_Product_DateStart()
@@ -539,6 +552,11 @@ BEGIN
                                             AND ObjectLink_Brand.DescId = zc_ObjectLink_Product_Brand()
                         LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
 
+                        LEFT JOIN ObjectLink AS ObjectLink_Client
+                                             ON ObjectLink_Client.ObjectId = Object_Product.Id
+                                            AND ObjectLink_Client.DescId = zc_ObjectLink_Product_Client()
+                        LEFT JOIN Object AS Object_Client ON Object_Client.Id = ObjectLink_Client.ChildObjectId
+
                         /*LEFT JOIN ObjectLink AS ObjectLink_Model
                                              ON ObjectLink_Model.ObjectId = Object_Product.Id
                                             AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model()
@@ -576,7 +594,9 @@ BEGIN
          , tmpResAll.Name
          , tmpResAll.ProdColorName
 
-         , tmpResAll.Hours
+         , tmpResAll.Hours            ::TFloat
+         , tmpResAll.DiscountTax      ::TFloat
+         , tmpResAll.DiscountNextTax  ::TFloat
          , tmpResAll.DateStart
          , tmpResAll.DateBegin
          , tmpResAll.DateSale
@@ -600,6 +620,9 @@ BEGIN
          
          , tmpResAll.ReceiptProdModelId
          , tmpResAll.ReceiptProdModelName
+         
+         , tmpResAll.ClientId
+         , tmpResAll.ClientName
 
          , tmpResAll.InsertName
          , tmpResAll.InsertDate
@@ -665,6 +688,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 04.01.21         *
  08.10.20         *
 */
 

@@ -69,6 +69,13 @@ type
     cxLabel14: TcxLabel;
     edReceiptProdModel: TcxButtonEdit;
     GuidesReceiptProdModel: TdsdGuides;
+    edDiscountNextTax: TcxCurrencyEdit;
+    cxLabel15: TcxLabel;
+    cxLabel16: TcxLabel;
+    edClienttext: TcxLabel;
+    edClient: TcxButtonEdit;
+    GuidesClient: TdsdGuides;
+    edDiscountTax: TcxCurrencyEdit;
   private
     { Private declarations }
   public

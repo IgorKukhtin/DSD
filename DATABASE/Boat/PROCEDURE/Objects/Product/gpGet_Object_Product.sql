@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Product(
     IN inSession     TVarChar       -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , Hours TFloat
+             , Hours TFloat, DiscountTax TFloat, DiscountNextTax TFloat
              , DateStart TDateTime, DateBegin TDateTime, DateSale TDateTime
              , Article TVarChar, CIN TVarChar, EngineNum TVarChar
              , Comment TVarChar
@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ModelId Integer, ModelName TVarChar, ModelName_full TVarChar
              , EngineId Integer, EngineName TVarChar
              , ReceiptProdModelId Integer, ReceiptProdModelName TVarChar
+             , ClientId Integer, ClientName TVarChar
              , isBasicConf Boolean, isProdColorPattern Boolean
               ) AS
 $BODY$BEGIN
@@ -32,6 +33,8 @@ $BODY$BEGIN
            , CAST ('' as TVarChar)     AS Name
            
            , CAST (0 AS TFloat)        AS Hours
+           , CAST (0 AS TFloat)        AS DiscountTax
+           , CAST (0 AS TFloat)        AS DiscountNextTax
            , CAST (NULL AS TDateTime)  AS DateStart
            , CAST (NULL AS TDateTime)  AS DateBegin
            , CAST (NULL AS TDateTime)  AS DateSale
@@ -51,6 +54,8 @@ $BODY$BEGIN
            , CAST ('' AS TVarChar)     AS EngineName
            , CAST (0 AS Integer)       AS ReceiptProdModelId
            , CAST ('' AS TVarChar)     AS ReceiptProdModelName
+           , CAST (0 AS Integer)       AS ClientId
+           , CAST ('' AS TVarChar)     AS ClientName
            , CAST (TRUE AS Boolean)    AS isBasicConf
            , CAST (TRUE AS Boolean)    AS isProdColorPattern
        ;
@@ -62,6 +67,8 @@ $BODY$BEGIN
          , Object_Product.ValueData      AS Name
 
          , ObjectFloat_Hours.ValueData      AS Hours
+         , ObjectFloat_DiscountTax.ValueData     AS DiscountTax
+         , ObjectFloat_DiscountNextTax.ValueData AS DiscountNextTax
          , ObjectDate_DateStart.ValueData   AS DateStart
          , ObjectDate_DateBegin.ValueData   AS DateBegin
          , ObjectDate_DateSale.ValueData    AS DateSale
@@ -73,21 +80,24 @@ $BODY$BEGIN
          --, Object_ProdGroup.Id             AS ProdGroupId
          --, Object_ProdGroup.ValueData      AS ProdGroupName
 
-         , Object_Brand.Id                 AS BrandId
-         , Object_Brand.ValueData          AS BrandName
+         , Object_Brand.Id                   AS BrandId
+         , Object_Brand.ValueData            AS BrandName
 
-         , Object_Model.Id                 AS ModelId
-         , Object_Model.ValueData          AS ModelName
+         , Object_Model.Id                   AS ModelId
+         , Object_Model.ValueData            AS ModelName
          , (Object_Model.ValueData ||' (' || Object_Brand_Model.ValueData||')') ::TVarChar AS ModelName_full
 
-         , Object_Engine.Id                AS EngineId
-         , Object_Engine.ValueData         AS EngineName
+         , Object_Engine.Id                  AS EngineId
+         , Object_Engine.ValueData           AS EngineName
 
          , Object_ReceiptProdModel.Id        AS ReceiptProdModelId
          , Object_ReceiptProdModel.ValueData AS ReceiptProdModelName
 
+         , Object_Client.Id                  AS ClientId
+         , Object_Client.ValueData           AS ClientName
+
          , COALESCE (ObjectBoolean_BasicConf.ValueData, FALSE) :: Boolean AS isBasicConf
-         , CAST (FALSE AS Boolean)         AS isProdColorPattern
+         , CAST (FALSE AS Boolean)           AS isProdColorPattern
 
      FROM Object AS Object_Product
           LEFT JOIN ObjectBoolean AS ObjectBoolean_BasicConf
@@ -97,6 +107,13 @@ $BODY$BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_Hours
                                 ON ObjectFloat_Hours.ObjectId = Object_Product.Id
                                AND ObjectFloat_Hours.DescId = zc_ObjectFloat_Product_Hours()
+
+          LEFT JOIN ObjectFloat AS ObjectFloat_DiscountTax
+                                ON ObjectFloat_DiscountTax.ObjectId = Object_Product.Id
+                               AND ObjectFloat_DiscountTax.DescId = zc_ObjectFloat_Product_DiscountTax()
+          LEFT JOIN ObjectFloat AS ObjectFloat_DiscountNextTax
+                                ON ObjectFloat_DiscountNextTax.ObjectId = Object_Product.Id
+                               AND ObjectFloat_DiscountNextTax.DescId = zc_ObjectFloat_Product_DiscountNextTax()
 
           LEFT JOIN ObjectDate AS ObjectDate_DateStart
                                ON ObjectDate_DateStart.ObjectId = Object_Product.Id
@@ -142,6 +159,11 @@ $BODY$BEGIN
                               AND ObjectLink_Brand.DescId = zc_ObjectLink_Product_Brand()
           LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId 
 
+          LEFT JOIN ObjectLink AS ObjectLink_Client
+                               ON ObjectLink_Client.ObjectId = Object_Product.Id
+                              AND ObjectLink_Client.DescId = zc_ObjectLink_Product_Client()
+          LEFT JOIN Object AS Object_Client ON Object_Client.Id = ObjectLink_Client.ChildObjectId
+
           LEFT JOIN ObjectLink AS ObjectLink_Model
                                ON ObjectLink_Model.ObjectId = Object_Product.Id
                               AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model()
@@ -168,6 +190,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 04.01.21         *
  08.10.20         *
 */
 
