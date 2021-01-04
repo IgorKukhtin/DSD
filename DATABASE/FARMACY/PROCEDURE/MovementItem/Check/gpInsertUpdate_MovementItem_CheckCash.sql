@@ -125,6 +125,11 @@ BEGIN
 
     END IF;
 
+    IF inAmount < 0
+    THEN
+        RAISE EXCEPTION 'Количество должно быть положительным или равно нолю.';
+    END IF;      
+
      -- определяется признак Создание/Корректировка
     vbIsInsert:= COALESCE (ioId, 0) = 0;
 

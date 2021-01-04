@@ -36,6 +36,10 @@ BEGIN
         RAISE EXCEPTION 'Не задан документ или неправельная связь';
     END IF;
     
+    IF inAmount < 0
+    THEN
+        RAISE EXCEPTION 'Количество должно быть положительным или равно нолю.';
+    END IF;      
     
     IF EXISTS(SELECT 1 FROM MovementLinkObject AS MovementLinkObject_CheckSourceKind
               WHERE MovementLinkObject_CheckSourceKind.MovementId = inMovementId

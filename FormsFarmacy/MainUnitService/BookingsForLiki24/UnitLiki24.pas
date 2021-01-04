@@ -288,7 +288,7 @@ begin
     jsonBody.AddPair('bookingId', TJSONString.Create(AbookingId));
     jsonBody.AddPair('externalBookingId', TJSONString.Create(AexternalBookingId));
     jsonBody.AddPair('status', TJSONString.Create(AStatus));
-    jsonBody.AddPair('bookingCode', TJSONString.Create(AbookingCode));
+    jsonBody.AddPair('bookingCode', TJSONString.Create(AexternalBookingId));
     jsonBody.AddPair('items', AJSONAItems);
 
     FRESTClient.BaseURL := FBaseURL;
