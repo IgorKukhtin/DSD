@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isReport4  Boolean
              , isReport5  Boolean
              , isReport6  Boolean
+             , isReport7  Boolean
              , isQuarter  Boolean
              , is4Month   Boolean
              , isErased   Boolean
@@ -57,6 +58,7 @@ BEGIN
            , FALSE :: Boolean   AS isReport4
            , FALSE :: Boolean   AS isReport5
            , FALSE :: Boolean   AS isReport6
+           , FALSE :: Boolean   AS isReport7
            , FALSE :: Boolean   AS isQuarter
            , FALSE :: Boolean   AS is4Month
 
@@ -89,6 +91,7 @@ BEGIN
            , COALESCE (ObjectBoolean_Maker_Report4.ValueData, FALSE) :: Boolean AS isReport4
            , COALESCE (ObjectBoolean_Maker_Report5.ValueData, FALSE) :: Boolean AS isReport5
            , COALESCE (ObjectBoolean_Maker_Report6.ValueData, FALSE) :: Boolean AS isReport6
+           , COALESCE (ObjectBoolean_Maker_Report7.ValueData, FALSE) :: Boolean AS isReport7
            , COALESCE (ObjectBoolean_Maker_Quarter.ValueData, FALSE) :: Boolean AS isQuarter
            , COALESCE (ObjectBoolean_Maker_4Month.ValueData, FALSE) :: Boolean  AS is4Month
 
@@ -131,6 +134,9 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Maker_Report6
                                    ON ObjectBoolean_Maker_Report6.ObjectId = Object_Maker.Id
                                   AND ObjectBoolean_Maker_Report6.DescId = zc_ObjectBoolean_Maker_Report6()
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Maker_Report7
+                                   ON ObjectBoolean_Maker_Report7.ObjectId = Object_Maker.Id
+                                  AND ObjectBoolean_Maker_Report7.DescId = zc_ObjectBoolean_Maker_Report7()
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Maker_Quarter
                                    ON ObjectBoolean_Maker_Quarter.ObjectId = Object_Maker.Id
                                   AND ObjectBoolean_Maker_Quarter.DescId = zc_ObjectBoolean_Maker_Quarter()
@@ -158,6 +164,7 @@ ALTER FUNCTION gpGet_Object_Maker(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 04.01.21                                                       *
  14.01.20                                                       *
  07.08.19                                                       *
  05.04.19                                                       *

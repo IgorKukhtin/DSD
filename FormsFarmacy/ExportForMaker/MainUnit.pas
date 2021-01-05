@@ -63,6 +63,8 @@ type
     N5: TMenuItem;
     isReport6: TcxGridDBColumn;
     N6: TMenuItem;
+    isReport7: TcxGridDBColumn;
+    N7: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
@@ -114,6 +116,7 @@ type
     procedure ReportAnalysisRemainsSelling(ADateStart, ADateEnd : TDateTime);
     procedure ReportGoodsPartionDate;
     procedure ReportStockTimingRemainder;
+    procedure ReportPayIncome(ADateStart, ADateEnd : TDateTime);
 
     procedure ExportAnalysisRemainsSelling;
   end;
@@ -211,6 +214,14 @@ begin
       btnSendMailClick(Nil);
     end;
 
+    if qryMaker.FieldByName('isReport7').AsBoolean then
+    begin
+      RepType := 6;
+      ReportPayIncome(DateStart, DateEnd);
+      btnExportClick(Nil);
+      btnSendMailClick(Nil);
+    end;
+
     if FormAddFile then
     begin
       if qryMaker.FieldByName('isReport1').AsBoolean then
@@ -241,6 +252,14 @@ begin
       begin
         RepType := 3;
         ReportIncomeConsumptionBalance(DateStartAdd, DateEndAdd);
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
+
+      if qryMaker.FieldByName('isReport7').AsBoolean then
+      begin
+        RepType := 6;
+        ReportPayIncome(DateStartAdd, DateEndAdd);
         btnExportClick(Nil);
         btnSendMailClick(Nil);
       end;
@@ -280,6 +299,14 @@ begin
         btnExportClick(Nil);
         btnSendMailClick(Nil);
       end;
+
+      if qryMaker.FieldByName('isReport7').AsBoolean then
+      begin
+        RepType := 6;
+        ReportPayIncome(DateStartQuarter, DateEndQuarter);
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
     end;
 
       // дополнительно отчеты за 4 месяца
@@ -313,6 +340,14 @@ begin
       begin
         RepType := 3;
         ReportIncomeConsumptionBalance(DateStart4Month, DateEnd4Month);
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
+
+      if qryMaker.FieldByName('isReport7').AsBoolean then
+      begin
+        RepType := 6;
+        ReportPayIncome(DateStart4Month, DateEnd4Month);
         btnExportClick(Nil);
         btnSendMailClick(Nil);
       end;
@@ -656,6 +691,52 @@ begin
   end;
 end;
 
+procedure TMainForm.ReportPayIncome(ADateStart, ADateEnd : TDateTime);
+  var I : integer;
+begin
+  Add_Log('Начало Формирования отчета Оплата приходов с ' +
+                                          FormatDateTime('dd.mm.yyyy', ADateStart) + ' по ' +
+                                          FormatDateTime('dd.mm.yyyy', ADateEnd));
+  FileName := 'Отчет Оплата приходов';
+  Subject := FileName + ' за период с ' + FormatDateTime('dd.mm.yyyy', ADateStart) + ' по ' +
+                                          FormatDateTime('dd.mm.yyyy', ADateEnd);
+
+  if qryReport_Upload.Active then qryReport_Upload.Close;
+  if grtvMaker.ColumnCount > 0 then grtvMaker.ClearItems;
+  if grtvMaker.DataController.Summary.FooterSummaryItems.Count > 0 then
+    grtvMaker.DataController.Summary.FooterSummaryItems.Clear;
+  qryReport_Upload.SQL.Text :=
+    'select '#13#10 +
+    '  MainJuridicalName AS "Наше юр. лицо", '#13#10 +
+    '  UnitName AS "Подразделение", '#13#10 +
+    '  OperDate AS "Дата", '#13#10 +
+    '  InvNumber AS "№ документа", '#13#10 +
+    '  JuridicalName AS "Поставщик", '#13#10 +
+    '  SummaJuridical AS "Сумма прихода с НДС", '#13#10 +
+    '  OperDatePay AS "Дата оплаты", '#13#10 +
+    '  SummaNoPay AS "Оплачено на дату оплаты", '#13#10 +
+    '  SummaPay AS "Сумма оплаты", '#13#10 +
+    '  SummaRemainder AS "Сумма остатка" '#13#10 +
+    'from gpReport_Movement_PayIncome(:inStartDate, :inEndDate, :inMaker, ''3'')'#13#10 +
+    'where UnitID not in (SELECT Object_Unit_View.Id FROM Object_Unit_View WHERE COALESCE (Object_Unit_View.ParentId, 0) = 0)';
+
+  qryReport_Upload.Params.ParamByName('inStartDate').Value := ADateStart;
+  qryReport_Upload.Params.ParamByName('inEndDate').Value := ADateEnd;
+  qryReport_Upload.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
+
+  OpenAndFormatSQL;
+
+  if grtvMaker.ColumnCount = 0 then Exit;
+
+  with TcxGridDBTableSummaryItem(grtvMaker.DataController.Summary.FooterSummaryItems.Add) do
+  begin
+    Column := grtvMaker.Columns[8];
+    Format := '0.##';
+    Kind := skSum;
+  end;
+end;
+
+
 procedure TMainForm.ReportIncomeConsumptionBalance(ADateStart, ADateEnd : TDateTime);
   var I : integer;
 begin
@@ -784,6 +865,7 @@ begin
     3 : ReportIncomeConsumptionBalance(DateStart, DateEnd);
     4 : ReportGoodsPartionDate;
     5 : ReportStockTimingRemainder;
+    6 : ReportPayIncome(DateStart, DateEnd);
   end;
 end;
 

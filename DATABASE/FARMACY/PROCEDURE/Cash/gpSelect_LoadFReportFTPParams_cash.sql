@@ -18,7 +18,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_DiffKind());
 
-    outHost := '134.249.138.177';
+    outHost := 'ftp.neboley.dp.ua'; --'134.249.138.177';
     outPort := 12021;
     outUsername := 'zreport';
     outPassword := 'ZAaYuMuDg3bv9ZHF';

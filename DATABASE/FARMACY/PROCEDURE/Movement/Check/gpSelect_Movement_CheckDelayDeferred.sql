@@ -74,7 +74,7 @@ BEGIN
                inType = 1 AND COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) 
                           NOT IN (zc_Enum_CheckSourceKind_Liki24(), zc_Enum_CheckSourceKind_Tabletki())  OR
                inType = 2 AND COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Tabletki() OR
-               inType in (1, 3) AND COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Liki24())
+               inType = 3 AND COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Liki24())
         );
 
     OPEN Cursor1 FOR (

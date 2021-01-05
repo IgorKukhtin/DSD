@@ -536,7 +536,7 @@ BEGIN
                                AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
 
        WHERE Movement.isDeferred = True
-         AND (inType = 0 OR inType = 1 AND Movement.isShowVIP = TRUE OR inType = 2 AND Movement.isShowTabletki = TRUE OR inType in (1, 3) AND Movement.isShowLiki24 = TRUE)
+         AND (inType = 0 OR inType = 1 AND Movement.isShowVIP = TRUE OR inType = 2 AND Movement.isShowTabletki = TRUE OR inType = 3 AND Movement.isShowLiki24 = TRUE)
        );
 
     RETURN NEXT Cursor2;

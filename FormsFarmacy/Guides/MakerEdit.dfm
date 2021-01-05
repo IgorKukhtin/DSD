@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1053#1086#1074#1099#1081' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
-  ClientHeight = 493
+  ClientHeight = 517
   ClientWidth = 372
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 81
-    Top = 456
+    Top = 472
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 227
-    Top = 456
+    Top = 472
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -193,7 +193,7 @@
   end
   object cbQuarter: TcxCheckBox
     Left = 40
-    Top = 404
+    Top = 423
     Hint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
     Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086' '#1082#1074#1072#1088#1090#1072#1083#1100#1085#1099#1077' '#1086#1090#1095#1077#1090#1099
     ParentShowHint = False
@@ -203,7 +203,7 @@
   end
   object cb4Month: TcxCheckBox
     Left = 40
-    Top = 424
+    Top = 443
     Hint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
     Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1095#1077#1090#1099' '#1079#1072' 4 '#1084#1077#1089#1103#1094#1072
     ParentShowHint = False
@@ -229,6 +229,16 @@
     ParentShowHint = False
     ShowHint = True
     TabOrder = 25
+    Width = 324
+  end
+  object cbReport7: TcxCheckBox
+    Left = 40
+    Top = 403
+    Hint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1086#1087#1083#1072#1090#1077' '#1087#1088#1080#1093#1086#1076#1086#1074'"'
+    Caption = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1086#1087#1083#1072#1090#1077' '#1087#1088#1080#1093#1086#1076#1086#1074'"'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 26
     Width = 324
   end
   object ActionList: TActionList
@@ -310,7 +320,7 @@
       end
       item
         Name = 'inSendPlan'
-        Value = 'NULL'
+        Value = Null
         Component = edSendPlan
         DataType = ftDateTime
         ParamType = ptInput
@@ -318,7 +328,7 @@
       end
       item
         Name = 'inSendReal'
-        Value = 'NULL'
+        Value = Null
         Component = edSendReal
         DataType = ftDateTime
         ParamType = ptInput
@@ -389,9 +399,9 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisQuarter'
+        Name = 'inisReport7'
         Value = Null
-        Component = cbQuarter
+        Component = cbReport7
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -400,6 +410,14 @@
         Name = 'inis4Month'
         Value = Null
         Component = cb4Month
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisQuarter'
+        Value = Null
+        Component = cbQuarter
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -477,14 +495,14 @@
       end
       item
         Name = 'SendPlan'
-        Value = 'NULL'
+        Value = Null
         Component = edSendPlan
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'SendReal'
-        Value = 'NULL'
+        Value = Null
         Component = edSendReal
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -542,6 +560,13 @@
         Name = 'isReport6'
         Value = Null
         Component = cbReport6
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isReport7'
+        Value = Null
+        Component = cbReport7
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end

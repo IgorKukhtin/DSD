@@ -104,6 +104,7 @@ type
     isReport6: TcxGridDBColumn;
     bbProtocolOpenForm: TdxBarButton;
     actProtocolOpenForm: TdsdOpenForm;
+    isReport7: TcxGridDBColumn;
   private
     { Private declarations }
   public
