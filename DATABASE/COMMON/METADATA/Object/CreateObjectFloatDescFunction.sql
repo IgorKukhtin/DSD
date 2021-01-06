@@ -1865,6 +1865,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_PercentWages() RETURNS Integer A
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_PercentWages', '% от продажи в зарплату' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_PercentWages');  
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_SummaWagesStore() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_SummaWagesStore'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_SummaWagesStore', 'Статичиское значение за 1 единицу продажи в зарплату для кладовщика' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_SummaWagesStore');
+  
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_PercentWagesStore() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_PercentWagesStore'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_PercentWagesStore', '% от продажи в зарплату для кладовщика' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_PercentWagesStore');  
+
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_Juridical_CodeOrangeCard() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Juridical_CodeOrangeCard'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Juridical(), 'zc_ObjectFloat_Juridical_CodeOrangeCard', 'Код в системе "Оранж Кард"' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Juridical_CodeOrangeCard');

@@ -2455,12 +2455,17 @@ SELECT 'zc_ObjectLink_Unit_UnitSAUA', 'Связь со Slave в системе автоматического 
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_MedicSP_AmbulantClinicSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MedicSP_AmbulantClinicSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
-SELECT 'zc_ObjectLink_MedicSP_AmbulantClinicSP', 'Связь с Амбулаторией', zc_Object_MedicSP(), zc_Object_PartnerMedical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MedicSP_AmbulantClinicSP');
+SELECT 'zc_ObjectLink_MedicSP_AmbulantClinicSP', 'Связь с Амбулаторией', zc_Object_MedicSP(), zc_Object_AmbulantClinicSP() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MedicSP_AmbulantClinicSP');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Maker_Juridical() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Maker_Juridical'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Maker_Juridical', 'Юр. лицо поставщик', zc_Object_Maker(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Maker_Juridical');
+  
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 05.01.21                                                                                      * zc_ObjectLink_Maker_Juridical
  10.12.20         * zc_ObjectLink_PartnerExternal_PartnerReal
  20.11.20                                                                                      * zc_ObjectLink_MedicSP_AmbulantClinicSP
  17.11.20         * zc_ObjectLink_Asset_AssetType

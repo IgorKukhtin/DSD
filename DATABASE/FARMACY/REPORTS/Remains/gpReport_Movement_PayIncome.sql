@@ -18,7 +18,6 @@ RETURNS TABLE (MovementId Integer
              , MainJuridicalName TVarChar
              , JuridicalId Integer
              , JuridicalName TVarChar
-             , SummaJuridical TFloat
              , TotalSumm TFloat
                                      
              , OperDatePay TDateTime
@@ -29,38 +28,66 @@ RETURNS TABLE (MovementId Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbJuridicalId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_BankAccount());
      vbUserId:= lpGetUserBySession (inSession);
+     
+     SELECT COALESCE(ObjectLink_Maker_Juridical.ChildObjectId , 0)
+     INTO vbJuridicalId
+     FROM ObjectLink AS ObjectLink_Maker_Juridical                                
+     WHERE ObjectLink_Maker_Juridical.ObjectId = inMakerId
+       AND ObjectLink_Maker_Juridical.DescId = zc_ObjectLink_Maker_Juridical();
+                               
+     IF COALESCE(vbJuridicalId, 0) = 0
+     THEN
+        RAISE EXCEPTION 'Оштбка. Не определен поставщик у произвадителя.';
+     END IF;
 
      -- Результат
      RETURN QUERY 
-        WITH tmpMovement AS (SELECT Movement.MovementId
+        WITH tmpMovementAll AS (SELECT Movement.ID                       AS MovementId
+                                     , Movement.InvNumber
+                                     , Movement.OperDate
+                                     , MovementLinkObject_From.ObjectId  AS JuridicalId
+                                FROM Movement
+   
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                   ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                                  AND MovementLinkObject_From.ObjectId = vbJuridicalId
+                                
+                                WHERE Movement.StatusId = zc_Enum_Status_Complete()
+                                  AND Movement.OperDate >= '01.01.2020' AND Movement.OperDate < CURRENT_DATE + interval '1 day'
+                                  AND Movement.DescId = zc_Movement_Income()
+                                ),
+             tmpMovement AS (SELECT Movement.MovementId
                                   , Movement.InvNumber
                                   , Movement.OperDate
-                                  , Movement.UnitId
-                                  , Movement.MainJuridicalId
+                                  , MovementLinkObject_To.ObjectId                         AS UnitId
+                                  , MovementLinkObject_Juridical.ObjectId                  AS MainJuridicalId
                                   , Movement.JuridicalId
-                                  , Round(SUM(Movement.PriceWithVAT * Movement.Amount), 2) AS SummaJuridical
-                             FROM gpReport_MovementIncome_Promo (inMakerId:= inMakerId, inStartDate:= '01.01.2020', inEndDate:= CURRENT_DATE, inSession:= '3') AS Movement
-                             GROUP BY Movement.MovementId
-                                    , Movement.InvNumber  
-                                    , Movement.OperDate
-                                    , Movement.UnitId
-                                    , Movement.MainJuridicalId
-                                    , Movement.JuridicalId),
+                             FROM tmpMovementAll AS Movement
+
+                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                               ON MovementLinkObject_To.MovementId = Movement.MovementId
+                                                              AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+
+                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                                               ON MovementLinkObject_Juridical.MovementId = Movement.MovementId
+                                                              AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+                             ),
              tmpMovementSum AS (SELECT Movement.MovementId
                                      , Movement.InvNumber
                                      , Movement.OperDate
                                      , Movement.UnitId
                                      , Movement.MainJuridicalId
                                      , Movement.JuridicalId
-                                     , Movement.SummaJuridical
                                      , MovementFloat_TotalSumm.ValueData     AS TotalSumm
                                      
                                      , MICP.OperDate                         AS OperDatePay 
-                                     , Round(-1.0 * MICP.Amount * Movement.SummaJuridical / MovementFloat_TotalSumm.ValueData, 2)  AS SummaPay 
+                                     , Round(-1.0 * MICP.Amount, 2)          AS SummaPay 
                                      , MIC.ContainerId
                                 FROM tmpMovement AS Movement
                                 
@@ -87,7 +114,6 @@ BEGIN
                                      , Movement.UnitId
                                      , Movement.MainJuridicalId
                                      , Movement.JuridicalId
-                                     , Movement.SummaJuridical
                                      , Movement.TotalSumm
                                                              
                                      , Movement.OperDatePay 
@@ -101,14 +127,13 @@ BEGIN
                                        , Movement.UnitId
                                        , Movement.MainJuridicalId
                                        , Movement.JuridicalId
-                                       , Movement.SummaJuridical
                                        , Movement.TotalSumm                                                     
                                        , Movement.OperDatePay 
                                        , Movement.ContainerId
                                 ), 
              tmpMovementNoPay AS (SELECT Movement.MovementId
                                        , Movement.OperDatePay 
-                                       , Round(SUM(MICP.Amount * Movement.SummaJuridical / Movement.TotalSumm), 2) AS SummaNoPay
+                                       , Round(SUM(MICP.Amount), 2) AS SummaNoPay
                                   FROM tmpMovementPay AS Movement
                                   
                                        LEFT JOIN MovementItemContainer AS MICP 
@@ -130,7 +155,6 @@ BEGIN
              , Object_MainJuridical.ValueData            AS MainJuridicalName
              , Movement.JuridicalId
              , Object_Juridical.ValueData                AS JuridicalName
-             , Movement.SummaJuridical::TFloat
              , Movement.TotalSumm::TFloat
                                      
              , Movement.OperDatePay 
@@ -165,4 +189,5 @@ $BODY$
  */
 
 -- тест
--- SELECT * FROM gpReport_Movement_PayIncome (inStartDate:= '01.12.2020', inEndDate:= '31.12.2020', inMakerId:= 15451717 , inSession:= zfCalc_UserAdmin())
+--
+ SELECT * FROM gpReport_Movement_PayIncome (inStartDate:= '01.12.2020', inEndDate:= '31.12.2020', inMakerId:= 15451717 , inSession:= zfCalc_UserAdmin())

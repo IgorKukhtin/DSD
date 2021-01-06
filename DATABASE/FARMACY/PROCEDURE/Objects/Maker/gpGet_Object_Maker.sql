@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Maker(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
              , CountryId Integer, CountryCode Integer, CountryName TVarChar
              , ContactPersonId Integer, ContactPersonCode Integer, ContactPersonName TVarChar
+             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , SendPlan TDateTime
              , SendReal TDateTime
              , AmountDay TFloat
@@ -42,9 +43,13 @@ BEGIN
            , CAST (0 as Integer)   AS CountryCode
            , CAST ('' as TVarChar) AS CountryName
 
-           , CAST (0 as Integer)   AS CountryId
-           , CAST (0 as Integer)   AS CountryCode
-           , CAST ('' as TVarChar) AS CountryName
+           , CAST (0 as Integer)   AS ContactPersonId
+           , CAST (0 as Integer)   AS ContactPersonCode
+           , CAST ('' as TVarChar) AS ContactPersonName
+
+           , CAST (0 as Integer)   AS JuridicalId
+           , CAST (0 as Integer)   AS JuridicalCode
+           , CAST ('' as TVarChar) AS JuridicalName
 
            , NULL  :: TDateTime AS SendPlan
            , NULL  :: TDateTime AS SendReal
@@ -79,6 +84,10 @@ BEGIN
            , Object_ContactPerson.ObjectCode  AS ContactPersonCode
            , Object_ContactPerson.ValueData   AS ContactPersonName
 
+           , Object_Juridical.Id          AS JuridicalId
+           , Object_Juridical.ObjectCode  AS JuridicalCode
+           , Object_Juridical.ValueData   AS JuridicalName
+
            , COALESCE (ObjectDate_SendPlan.ValueData, NULL) :: TDateTime AS SendPlan
            , COALESCE (ObjectDate_SendReal.ValueData, NULL) :: TDateTime AS SendReal
 
@@ -108,6 +117,11 @@ BEGIN
                                 ON ObjectLink_Maker_ContactPerson.ObjectId = Object_Maker.Id 
                                AND ObjectLink_Maker_ContactPerson.DescId = zc_ObjectLink_Maker_ContactPerson()
            LEFT JOIN Object AS Object_ContactPerson ON Object_ContactPerson.Id = ObjectLink_Maker_ContactPerson.ChildObjectId 
+
+           LEFT JOIN ObjectLink AS ObjectLink_Maker_Juridical
+                                ON ObjectLink_Maker_Juridical.ObjectId = Object_Maker.Id 
+                               AND ObjectLink_Maker_Juridical.DescId = zc_ObjectLink_Maker_Juridical()
+           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Maker_Juridical.ChildObjectId 
 
            LEFT JOIN ObjectDate AS ObjectDate_SendPlan
                                 ON ObjectDate_SendPlan.ObjectId = Object_Maker.Id

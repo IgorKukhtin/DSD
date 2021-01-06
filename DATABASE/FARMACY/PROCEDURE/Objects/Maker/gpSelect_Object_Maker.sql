@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Maker(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
              , CountryId Integer, CountryCode Integer, CountryName TVarChar
              , ContactPersonId Integer, ContactPersonCode Integer, ContactPersonName TVarChar
+             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , Phone TVarChar, Mail TVarChar
              , SendPlan TDateTime
              , SendReal TDateTime
@@ -42,6 +43,10 @@ $BODY$BEGIN
            , Object_ContactPerson.Id          AS ContactPersonId
            , Object_ContactPerson.ObjectCode  AS ContactPersonCode
            , Object_ContactPerson.ValueData   AS ContactPersonName
+
+           , Object_Juridical.Id          AS JuridicalId
+           , Object_Juridical.ObjectCode  AS JuridicalCode
+           , Object_Juridical.ValueData   AS JuridicalName
 
            , ObjectString_Phone.ValueData     AS Phone
            , ObjectString_Mail.ValueData      AS Mail
@@ -83,6 +88,11 @@ $BODY$BEGIN
                                 ON ObjectLink_Maker_ContactPerson.ObjectId = Object_Maker.Id 
                                AND ObjectLink_Maker_ContactPerson.DescId = zc_ObjectLink_Maker_ContactPerson()
            LEFT JOIN Object AS Object_ContactPerson ON Object_ContactPerson.Id = ObjectLink_Maker_ContactPerson.ChildObjectId 
+
+           LEFT JOIN ObjectLink AS ObjectLink_Maker_Juridical
+                                ON ObjectLink_Maker_Juridical.ObjectId = Object_Maker.Id 
+                               AND ObjectLink_Maker_Juridical.DescId = zc_ObjectLink_Maker_Juridical()
+           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Maker_Juridical.ChildObjectId 
 
            LEFT JOIN ObjectDate AS ObjectDate_SendPlan
                                 ON ObjectDate_SendPlan.ObjectId = Object_Maker.Id

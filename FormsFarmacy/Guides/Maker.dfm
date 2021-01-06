@@ -93,6 +93,17 @@ object MakerForm: TMakerForm
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
+      object MainJuridicalName: TcxGridDBColumn
+        Caption = #1070#1088'. '#1083#1080#1094#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082
+        DataBinding.FieldName = 'JuridicalName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = 
+          #1070#1088'. '#1083#1080#1094#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082'. '#1045#1089#1083#1080' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100' '#1103#1074#1083#1103#1077#1090#1100#1089#1103' '#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1084' '#1076 +
+          #1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1086#1087#1083#1072#1090' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1072#1084
+        Options.Editing = False
+        Width = 91
+      end
       object Phone: TcxGridDBColumn
         Caption = #1058#1077#1083#1077#1092#1086#1085' ('#1082#1086#1085#1090'. '#1083#1080#1094#1086')'
         DataBinding.FieldName = 'Phone'

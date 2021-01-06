@@ -1778,7 +1778,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
           OnClick = btnDanhsonPharmaEmailClick
         end
         object btnDanhsonPharmaExport: TButton
-          Left = 623
+          Left = 711
           Top = 0
           Width = 58
           Height = 25
@@ -1818,13 +1818,22 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
           Caption = #1044#1072#1090#1072' '#1086#1090#1095#1077#1090#1072':'
         end
         object btnDanhsonPharmaWeekExecute: TButton
-          Left = 519
+          Left = 517
           Top = 0
           Width = 90
           Height = 25
           Caption = #1047#1072' '#1085#1077#1076#1077#1083#1102
           TabOrder = 6
           OnClick = btnDanhsonPharmaWeekExecuteClick
+        end
+        object btnDanhsonPharmaMonthExecute: TButton
+          Left = 613
+          Top = 0
+          Width = 90
+          Height = 25
+          Caption = #1047#1072' '#1084#1077#1089#1103#1094
+          TabOrder = 7
+          OnClick = btnDanhsonPharmaMonthExecuteClick
         end
       end
       object grDanhsonPharma: TcxGrid

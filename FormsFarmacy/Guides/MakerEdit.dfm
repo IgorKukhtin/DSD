@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1053#1086#1074#1099#1081' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
-  ClientHeight = 517
+  ClientHeight = 542
   ClientWidth = 372
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 81
-    Top = 472
+    Top = 514
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 227
-    Top = 472
+    Top = 514
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -97,12 +97,12 @@
   end
   object cxLabel7: TcxLabel
     Left = 40
-    Top = 194
+    Top = 236
     Caption = #1055#1083#1072#1085#1080#1088#1091#1077#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1100
   end
   object edSendPlan: TcxDateEdit
     Left = 40
-    Top = 212
+    Top = 254
     EditValue = 42370d
     Properties.Kind = ckDateTime
     Properties.SaveTime = False
@@ -112,12 +112,12 @@
   end
   object cxLabel3: TcxLabel
     Left = 191
-    Top = 194
+    Top = 236
     Caption = #1059#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1086
   end
   object edSendReal: TcxDateEdit
     Left = 191
-    Top = 212
+    Top = 254
     EditValue = 42370d
     Properties.Kind = ckDateTime
     Properties.SaveTime = False
@@ -127,7 +127,7 @@
   end
   object cbReport1: TcxCheckBox
     Left = 40
-    Top = 282
+    Top = 324
     Caption = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1072#1084'"'
     ParentShowHint = False
     ShowHint = True
@@ -136,7 +136,7 @@
   end
   object cbReport2: TcxCheckBox
     Left = 40
-    Top = 302
+    Top = 344
     Caption = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084'"'
     ParentShowHint = False
     ShowHint = True
@@ -145,7 +145,7 @@
   end
   object cbReport3: TcxCheckBox
     Left = 40
-    Top = 322
+    Top = 364
     Hint = ' '#9#1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1086#1089#1090#1072#1090#1082#1072#1084#1080' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072'"'
     Caption = ' '#9#1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1086#1089#1090'. '#1085#1072' '#1082#1086#1085'. '#1087#1077#1088#1080#1086#1076#1072'"'
     ParentShowHint = False
@@ -155,7 +155,7 @@
   end
   object cbReport4: TcxCheckBox
     Left = 40
-    Top = 342
+    Top = 384
     Hint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
     Caption = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
     ParentShowHint = False
@@ -165,12 +165,12 @@
   end
   object cxLabel5: TcxLabel
     Left = 40
-    Top = 237
+    Top = 279
     Caption = #1055#1077#1088#1080#1086#1076'-'#1089#1090#1100' '#1086#1090#1087#1088'. '#1074' '#1076#1085#1103#1093
   end
   object edAmountDay: TcxCurrencyEdit
     Left = 40
-    Top = 255
+    Top = 297
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = False
@@ -179,12 +179,12 @@
   end
   object cxLabel6: TcxLabel
     Left = 191
-    Top = 237
+    Top = 279
     Caption = #1055#1077#1088#1080#1086#1076'-'#1089#1090#1100' '#1086#1090#1087#1088'. '#1074' '#1084#1077#1089#1103#1094#1072#1093
   end
   object edAmountMonth: TcxCurrencyEdit
     Left = 191
-    Top = 255
+    Top = 297
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = False
@@ -193,7 +193,7 @@
   end
   object cbQuarter: TcxCheckBox
     Left = 40
-    Top = 423
+    Top = 465
     Hint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
     Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086' '#1082#1074#1072#1088#1090#1072#1083#1100#1085#1099#1077' '#1086#1090#1095#1077#1090#1099
     ParentShowHint = False
@@ -203,7 +203,7 @@
   end
   object cb4Month: TcxCheckBox
     Left = 40
-    Top = 443
+    Top = 485
     Hint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
     Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1095#1077#1090#1099' '#1079#1072' 4 '#1084#1077#1089#1103#1094#1072
     ParentShowHint = False
@@ -213,7 +213,7 @@
   end
   object cbReport5: TcxCheckBox
     Left = 40
-    Top = 362
+    Top = 404
     Hint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
     Caption = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1089#1088#1086#1082#1072#1084'"'
     ParentShowHint = False
@@ -223,7 +223,7 @@
   end
   object cbReport6: TcxCheckBox
     Left = 40
-    Top = 383
+    Top = 425
     Hint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1085#1072' '#1074#1080#1088#1090#1091#1072#1083#1100#1085#1086#1084' '#1089#1082#1083#1072#1076#1077'"'
     Caption = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1085#1072' '#1074#1080#1088#1090#1091#1072#1083#1100#1085#1086#1084' '#1089#1082#1083#1072#1076#1077'"'
     ParentShowHint = False
@@ -233,13 +233,30 @@
   end
   object cbReport7: TcxCheckBox
     Left = 40
-    Top = 403
+    Top = 445
     Hint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1086#1087#1083#1072#1090#1077' '#1087#1088#1080#1093#1086#1076#1086#1074'"'
     Caption = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1086#1087#1083#1072#1090#1077' '#1087#1088#1080#1093#1086#1076#1086#1074'"'
     ParentShowHint = False
     ShowHint = True
     TabOrder = 26
     Width = 324
+  end
+  object edJuridical: TcxButtonEdit
+    Left = 40
+    Top = 209
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 27
+    Width = 296
+  end
+  object cxLabel8: TcxLabel
+    Left = 40
+    Top = 190
+    Caption = #1070#1088'. '#1083#1080#1094#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082
   end
   object ActionList: TActionList
     Left = 272
@@ -314,6 +331,14 @@
         Name = 'inContactPersonId'
         Value = Null
         Component = GuidesContactPerson
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -494,6 +519,21 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'JuridicalId'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'SendPlan'
         Value = Null
         Component = edSendPlan
@@ -664,5 +704,34 @@
       end>
     Left = 216
     Top = 140
+  end
+  object GuidesJuridical: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridicalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridicalForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 248
+    Top = 196
   end
 end

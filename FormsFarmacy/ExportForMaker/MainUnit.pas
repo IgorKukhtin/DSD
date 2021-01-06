@@ -712,7 +712,7 @@ begin
     '  OperDate AS "Дата", '#13#10 +
     '  InvNumber AS "№ документа", '#13#10 +
     '  JuridicalName AS "Поставщик", '#13#10 +
-    '  SummaJuridical AS "Сумма прихода с НДС", '#13#10 +
+    '  TotalSumm AS "Сумма прихода с НДС", '#13#10 +
     '  OperDatePay AS "Дата оплаты", '#13#10 +
     '  SummaNoPay AS "Оплачено на дату оплаты", '#13#10 +
     '  SummaPay AS "Сумма оплаты", '#13#10 +

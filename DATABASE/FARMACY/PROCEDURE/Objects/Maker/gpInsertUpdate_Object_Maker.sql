@@ -8,6 +8,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Maker (Integer,Integer,TVarChar, I
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Maker (Integer,Integer,TVarChar, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Maker (Integer,Integer,TVarChar, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Maker (Integer,Integer,TVarChar, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Maker (Integer,Integer,TVarChar, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Maker(
  INOUT ioId              Integer   ,    -- ключ объекта <Производитель>
@@ -15,6 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Maker(
     IN inName            TVarChar  ,    -- Название объекта <>
     IN inCountryId       Integer   ,    -- Страна
     IN inContactPersonId Integer   ,    -- Контактные лица
+    IN inJuridicalId     Integer   ,    -- Юр. лицо поставщик
     IN inSendPlan        TDateTime,     -- Когда планируем отправить(дата/время)
     IN inSendReal        TDateTime,     -- Когда успешно прошла отправка (дата/время)
     IN inDay             TFloat    ,    -- периодичность отправки в дня
@@ -54,6 +56,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Maker_Country(), ioId, inCountryId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Maker_ContactPerson(), ioId, inContactPersonId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Maker_Juridical(), ioId, inJuridicalId);
 
    IF COALESCE (inDay, 0) <> 0 AND COALESCE (inMonth, 0) <> 0 
    THEN
