@@ -31,6 +31,7 @@ $BODY$
    DECLARE vbAccessKeyAll Boolean;
    DECLARE vbIsAllUnit Boolean;
    DECLARE vbObjectId_Constraint Integer;
+   DECLARE vbPersonalServiceListId_check Integer;
 
    DECLARE vbInfoMoneyId Integer;
    DECLARE vbInfoMoneyName TVarChar;
@@ -53,6 +54,33 @@ BEGIN
 
    -- определяется уровень доступа
    vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
+
+
+   -- определяется - Ведомость коммерческий отдел (руководители)
+   vbPersonalServiceListId_check:= (WITH tmpPersonal AS (SELECT lfSelect.MemberId
+                                                              , lfSelect.PersonalId
+                                                              , lfSelect.isDateOut
+                                                         FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                                                        )
+                                       , tmpUser AS (SELECT tmpPersonal.PersonalId
+                                                     FROM ObjectLink AS ObjectLink_User_Member
+                                                          JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
+                                                                          AND tmpPersonal.isDateOut = FALSE
+                                                     WHERE ObjectLink_User_Member.ObjectId = vbUserId
+                                                       AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+                                                    )
+                                    -- Ведомость коммерческий отдел (руководители)
+                                    SELECT ObjectLink_Personal_PersonalServiceList.ChildObjectId
+                                    FROM Object_Personal_View
+                                         INNER JOIN tmpUser ON tmpUser.PersonalId = Object_Personal_View.PersonalId
+                                         INNER JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                                                               ON ObjectLink_Personal_PersonalServiceList.ObjectId      = Object_Personal_View.PersonalId
+                                                              AND ObjectLink_Personal_PersonalServiceList.DescId        = zc_ObjectLink_Personal_PersonalServiceList()
+                                                              AND ObjectLink_Personal_PersonalServiceList.ChildObjectId = 305297 -- Ведомость коммерческий отдел (руководители)
+                                    WHERE Object_Personal_View.isErased   = FALSE
+                                       AND Object_Personal_View.isDateOut = FALSE
+                                    LIMIT 1
+                                   );
 
 
    -- определяется Дефолт
@@ -205,6 +233,7 @@ BEGIN
          OR Object_Personal_View.PositionId = 81178 -- экспедитор
          OR Object_Personal_View.PositionId = 8466  -- водитель
          OR Object_Personal_View.PositionId = 12946 -- заготовитель ж/в
+         OR ObjectLink_Personal_PersonalServiceList.ChildObjectId = vbPersonalServiceListId_check -- Ведомость коммерческий отдел (руководители)
            )
        AND (View_RoleAccessKeyGuide.UnitId_PersonalService > 0
             OR vbIsAllUnit = TRUE
@@ -212,6 +241,7 @@ BEGIN
             OR Object_Personal_View.PositionId = 12436 -- бухгалтер
             OR Object_Personal_View.UnitId     = 8386  -- Бухгалтерия
             OR Object_Personal_View.UnitId     = 8408  -- Отдел коммерции ф.Днепр
+            OR ObjectLink_Personal_PersonalServiceList.ChildObjectId = vbPersonalServiceListId_check -- Ведомость коммерческий отдел (руководители)
            )
        AND (Object_Personal_View.isErased = FALSE
             OR (Object_Personal_View.isErased = TRUE AND inIsShowAll = TRUE OR inIsPeriod = TRUE)
@@ -444,9 +474,6 @@ order by Object_p.ValueData
 
 
 */
+--SELECT DATE_PART('YEAR', AGE ('31.01.2019'::TDateTime+ interval '1 day' , '01.04.2018'::TDateTime))
 -- тест
 -- SELECT * FROM gpSelect_Object_Personal (inStartDate:= null, inEndDate:= null, inIsPeriod:= FALSE, inIsShowAll:= TRUE, inSession:= zfCalc_UserAdmin())
-
-
-
---SELECT DATE_PART('YEAR', AGE ('31.01.2019'::TDateTime+ interval '1 day' , '01.04.2018'::TDateTime))

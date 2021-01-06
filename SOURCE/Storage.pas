@@ -697,7 +697,9 @@ begin
       Logger.AddToLog(' TStorage.ExecuteProc( ... if Ok then Length = ' + IntToStr(Length(DString)) + ' ...');
 
       //Logger.AddToLog(' TStorage.ExecuteProc( ... if Ok then Length = ' + IntToStr(Length(DString)) + ' ...');
+
       //Logger.AddToLog('_DString_:');
+      //Logger.AddToLog('');
       //Logger.AddToLog(DString);
       //Logger.AddToLog('');
       //Logger.AddToLog('_end_DString_:');
@@ -718,9 +720,11 @@ begin
         Result := PrepareStr;
 
       //Logger.AddToLog('_Res_:');
+      //Logger.AddToLog('');
       //Logger.AddToLog(Result);
       //Logger.AddToLog('');
       //Logger.AddToLog('_end_Res_:');
+
     end else
       //Logger.AddToLog(' TStorage.ExecuteProc( ... else ...')
       ;

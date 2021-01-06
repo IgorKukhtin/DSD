@@ -4,9 +4,8 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
   ClientWidth = 984
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitTop = -38
   ExplicitWidth = 1000
-  ExplicitHeight = 574
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -351,6 +350,9 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -623,6 +625,7 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
     Top = 200
   end
   inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_ProductionUnion'
     Left = 368
     Top = 144
   end

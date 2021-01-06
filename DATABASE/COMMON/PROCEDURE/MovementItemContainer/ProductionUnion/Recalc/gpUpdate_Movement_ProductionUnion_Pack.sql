@@ -14,7 +14,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_ProductionUnion_Defroster());
+   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_ProductionUnion_Pack());
 
    -- Пересчет
    PERFORM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate  := TRUE

@@ -626,9 +626,17 @@ BEGIN
                                                  ELSE 0
                                             END    AS PartnerId
                                             -- Только продажи
-                                          ,  (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN COALESCE(MIContainer.Amount,0) ELSE 0 END) AS Sum_Sale
+                                          ,  (CASE WHEN (MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_PriceCorrective()) AND inPaidKindId = zc_Enum_PaidKind_SecondForm())
+                                                     OR (MIContainer.MovementDescId IN (zc_Movement_Sale()) AND inPaidKindId <> zc_Enum_PaidKind_SecondForm())
+                                                        THEN COALESCE (MIContainer.Amount,0)
+                                                   ELSE 0
+                                              END) AS Sum_Sale
                                             -- продажи - возвраты
-                                          ,  (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN COALESCE(MIContainer.Amount,0) ELSE 0 END) AS Sum_SaleReturnIn
+                                          ,  (CASE WHEN (MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_PriceCorrective()) AND inPaidKindId = zc_Enum_PaidKind_SecondForm())
+                                                     OR (MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) AND inPaidKindId <> zc_Enum_PaidKind_SecondForm())
+                                                        THEN COALESCE (MIContainer.Amount, 0)
+                                                   ELSE 0
+                                              END) AS Sum_SaleReturnIn
                                             -- оплаты
                                           ,  (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
                                                            THEN -1 * COALESCE (MIContainer.Amount, 0)
@@ -640,7 +648,7 @@ BEGIN
                                                       ELSE 0
                                                  END) AS Sum_AccountSendDebt
 
-                                          ,  (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN (-1)*COALESCE(MIContainer.Amount,0) ELSE 0 END) AS Sum_Return  -- возврат
+                                          ,  (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN -1 * COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Sum_Return  -- возврат
                                           --, CASE WHEN inisMovement = TRUE THEN MIContainer.MovementDescId ELSE 0 END  AS MovementDescId
                                           --, CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE 0 END      AS MovementId
                                           , MIContainer.MovementDescId  AS MovementDescId
@@ -674,7 +682,7 @@ BEGIN
                                                               
                                      WHERE MIContainer.DescId = zc_MIContainer_Summ()
                                        AND (MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < vbEndDate)
-                                       AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_SendDebt())  -- взаимозачет убираем, чтоб он не влиял на бонусы
+                                       AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_SendDebt(), zc_Movement_PriceCorrective())  -- взаимозачет убираем, чтоб он не влиял на бонусы
                                        AND (COALESCE (ObjectLink_PersonalServiceList_Branch.ChildObjectId,0) = inBranchId OR inBranchId = 0)
                                      ) AS tmp
                                GROUP BY tmp.JuridicalId
@@ -1200,7 +1208,7 @@ BEGIN
 
                                    , MovementFloat_TotalCount.ValueData         AS TotalCount
                                    , MovementFloat_TotalCountPartner.ValueData  AS TotalCountPartner
-                                   , CASE WHEN tmpMov.MovementDescId = zc_Movement_ReturnIn() THEN (-1) * MovementFloat_TotalSumm.ValueData 
+                                   , CASE WHEN tmpMov.MovementDescId IN (zc_Movement_ReturnIn(), zc_Movement_PriceCorrective()) THEN (-1) * MovementFloat_TotalSumm.ValueData 
                                           WHEN tmpMov.MovementDescId = zc_Movement_Sale() THEN MovementFloat_TotalSumm.ValueData
                                           WHEN tmpMov.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash()) THEN MovementItem.Amount --MovementFloat_TotalSumm
                                      END AS TotalSumm

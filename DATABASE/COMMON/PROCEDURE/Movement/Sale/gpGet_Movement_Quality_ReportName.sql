@@ -17,8 +17,8 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Quality());
      
-       -- КОВБАСКИ БАВАРСЬКІ С/К в/г ПРЕМІЯ 120 гр/шт
-       vbIsGoodsCode_2393:= EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE AND MI.ObjectId = 6048195);
+       -- КОВБАСКИ БАВАРСЬКІ С/К в/г ПРЕМІЯ 120 гр/шт + 2222
+       vbIsGoodsCode_2393:= EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE AND MI.ObjectId IN (6048195, 417105));
 
        --
        SELECT COALESCE (PrintForms_View.PrintFormName, 'PrintMovement_Quality')

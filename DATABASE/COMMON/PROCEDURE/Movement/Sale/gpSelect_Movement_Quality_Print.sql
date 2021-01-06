@@ -467,8 +467,8 @@ BEGIN
 
            , (tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl) :: TDateTime AS OperDate_end
            
-             -- 2393 - ÊÎÂÁÀÑÊÈ ÁÀÂÀÐÑÜÊ² Ñ/Ê â/ã ÏÐÅÌ²ß 120 ãð/øò
-           , CASE WHEN tmpMI.ObjectId = 6048195
+             -- 2393 - ÊÎÂÁÀÑÊÈ ÁÀÂÀÐÑÜÊ² Ñ/Ê â/ã ÏÐÅÌ²ß 120 ãð/øò + 2222
+           , CASE WHEN tmpMI.ObjectId IN (6048195, 417105)
                        THEN tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl
                   ELSE tmpMovement_QualityParams.OperDateIn
              END :: TDateTime AS OperDate_part

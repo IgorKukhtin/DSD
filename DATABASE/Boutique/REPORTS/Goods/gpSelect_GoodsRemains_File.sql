@@ -127,6 +127,10 @@ BEGIN
 
                       WHERE Container.DescId = zc_Container_Count()
                         AND (Container.Amount > 0)
+                        AND (Object_PartionGoods.PeriodYear > 2020
+                             -- Весна-Лето
+                          OR (Object_PartionGoods.PeriodYear = 2020 AND ObjectLink_Partner_Period.ChildObjectId = 1074)
+                            )
                      -- AND CLO_Client.ContainerId IS NULL
                      -- LIMIT 1
                       /*  AND (ObjectLink_Partner_Period.ChildObjectId = inPeriodId   OR inPeriodId  = 0)

@@ -1226,21 +1226,21 @@ begin
      //
      if (ParamStr(2)='autoALL') and (BranchEdit.Text <> 'BranchId : 0')
      then begin
-           if ((Hour_calc = 4) and (Minute_calc >=20 ) and (Minute_calc < 55))
+           if ((Hour_calc = 4) and (Minute_calc >=39 ) and (Minute_calc < 59))
            then begin
-                     myLogMemo_add('start stop 35 min');
-                     MyDelay(35*60*1000);
+                     myLogMemo_add('start stop 20 min');
+                     MyDelay(20*60*1000);
                      myLogMemo_add('end stop');
            end;
            //
-           if ((Hour_calc = 23) and (Minute_calc >=31 ))
+           if ((Hour_calc = 23) and (Minute_calc >=39 )and (Minute_calc < 59))
            then begin
-                     myLogMemo_add('start stop 30 min');
-                     MyDelay(30*60*1000);
+                     myLogMemo_add('start stop 20 min');
+                     MyDelay(20*60*1000);
                      myLogMemo_add('end stop');
            end;
            //
-           if ((Hour_calc = 21) and (Minute_calc >=21 )and (Minute_calc < 35))
+           if ((Hour_calc = 21) and (Minute_calc >=20 )and (Minute_calc < 35))
            then begin
                      myLogMemo_add('start stop 15 min');
                      MyDelay(15*60*1000);
@@ -1250,12 +1250,13 @@ begin
            exit;
       end;
      //
-     if ((Hour_calc = 7) or ((Hour_calc = 21) and (Minute_calc > 20)) or (Hour_calc = 23)
-      or ((Hour_calc = 4) and (Minute_calc >= 20) and (Minute_calc <= 55) and ((ParamStr(6)='VAC_5')or(ParamStr(7)='VAC_5')or(ParamStr(8)='VAC_5')))
+     if  (((Hour_calc = 7)  and (Minute_calc >= 25))
+       or ((Hour_calc = 21) and (Minute_calc >= 20))
+       or ((Hour_calc = 23) and (Minute_calc >= 38))
+       or ((Hour_calc = 4)  and (Minute_calc >= 40) and ((ParamStr(6)='VAC_5')or(ParamStr(7)='VAC_5')or(ParamStr(8)='VAC_5')))
          )
-        and (beginVACUUM < 4) and (ParamStr(2)='autoALL')
-     //if (Hour_calc = 14) and (beginVACUUM < 4) and (ParamStr(2)='autoALL')
-        and (BranchEdit.Text = 'BranchId : 0')
+     and (beginVACUUM < 4) and (ParamStr(2)='autoALL')
+     and (BranchEdit.Text = 'BranchId : 0')
      then
           try
               if beginVACUUM_ii = 0
@@ -1268,7 +1269,7 @@ begin
                                 +'   and query NOT ILIKE ' + FormatToVarCharServer_notNULL('%from pg_stat_activity as Load_PostgreSql%')
                                  );
               myLogMemo_add('rec VACUUM = ' + IntToStr(toSqlQuery_two.RecordCount));
-              if not ((Hour_calc = 4) and (Minute_calc >= 20) and (Minute_calc <= 55)) then
+              if not ((Hour_calc = 4) and (Minute_calc >= 20) and (Minute_calc <= 59)) then
               if toSqlQuery_two.RecordCount > 0 then
               begin
                    myLogMemo_add('-');
@@ -1283,9 +1284,9 @@ begin
                    //
                    myLogMemo_add('-');
                    //
-                   if not ((Hour_calc = 4) and (Minute_calc >= 20) and (Minute_calc <= 55)) then
+                   if not ((Hour_calc = 4) and (Minute_calc >= 20) and (Minute_calc <= 59)) then
                    begin
-                      MyDelay(1 * 1000);
+                      MyDelay(1 * 100);
                       exit;
                    end;
               end;
@@ -1310,7 +1311,7 @@ begin
                      end;
                    //
                    myLogMemo_add('-');
-                   if not ((Hour_calc = 4) and (Minute_calc >= 20) and (Minute_calc <= 55)) then
+                   if not ((Hour_calc = 4) and (Minute_calc >= 20) and (Minute_calc <= 59)) then
                    begin
                       MyDelay(1 * 1000);
                       exit;
