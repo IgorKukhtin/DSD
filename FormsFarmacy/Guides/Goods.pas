@@ -247,6 +247,18 @@ type
     macLoadinSupplementSUN1: TMultiAction;
     spGetImportSetting_Goods_inSupplementSUN1: TdsdStoredProc;
     dxBarButton5: TdxBarButton;
+    SummaWagesStore: TcxGridDBColumn;
+    PercentWagesStore: TcxGridDBColumn;
+    actUpdate_SummaWagesStore: TMultiAction;
+    actExec_Update_SummaWagesStore: TdsdExecStoredProc;
+    actExecuteDialog_Update_SummaWagesStore: TExecuteDialog;
+    actUpdate_PercentWagesStore: TMultiAction;
+    actExec_Update_PercentWagesStore: TdsdExecStoredProc;
+    actExecuteDialogUpdate_PercentWagesStore: TExecuteDialog;
+    spUpdate_PercentWagesStore: TdsdStoredProc;
+    spUpdate_SummaWagesStore: TdsdStoredProc;
+    dxBarButton6: TdxBarButton;
+    dxBarButton7: TdxBarButton;
   private
     { Private declarations }
   public

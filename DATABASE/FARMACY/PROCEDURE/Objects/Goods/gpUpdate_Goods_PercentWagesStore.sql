@@ -1,10 +1,10 @@
--- Function: gpUpdate_Goods_PercentWages()
+-- Function: gpUpdate_Goods_PercentWagesStore()
 
-DROP FUNCTION IF EXISTS gpUpdate_Goods_PercentWages(Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Goods_PercentWagesStore(Integer, TFloat, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_Goods_PercentWages(
+CREATE OR REPLACE FUNCTION gpUpdate_Goods_PercentWagesStore(
     IN inId               Integer   ,    -- ключ объекта <Товар>
-    IN inPercentWages     TFloat    ,    -- % от продажи в зарплату
+    IN inPercentWagesStore     TFloat    ,    -- % от продажи в зарплату
     IN inSession          TVarChar       -- текущий пользователь
 )
 RETURNS VOID AS
@@ -21,16 +21,16 @@ BEGIN
    vbUserId := lpGetUserBySession (inSession);
    
    -- сохранили св-во
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_PercentWages(), inId, inPercentWages);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_PercentWagesStore(), inId, inPercentWagesStore);
 
     -- Сохранили в плоскую таблицй
    BEGIN
-     UPDATE Object_Goods_Retail SET PercentWages = inPercentWages
+     UPDATE Object_Goods_Retail SET PercentWagesStore = inPercentWagesStore
      WHERE Object_Goods_Retail.Id = inId;  
    EXCEPTION
       WHEN others THEN 
         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
-        PERFORM lpAddObject_Goods_Temp_Error('gpUpdate_Goods_PercentWages', text_var1::TVarChar, vbUserId);
+        PERFORM lpAddObject_Goods_Temp_Error('gpUpdate_Goods_PercentWagesStore', text_var1::TVarChar, vbUserId);
    END;
 
 
@@ -44,5 +44,5 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
-29.10.20                                                        *
+06.01.21                                                        *
 */

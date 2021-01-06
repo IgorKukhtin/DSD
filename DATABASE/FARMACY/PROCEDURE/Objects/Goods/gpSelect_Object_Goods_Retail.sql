@@ -45,7 +45,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , isSupplementSUN1 boolean
              , isExceptionUKTZED boolean
              , isPresent boolean
-             , SummaWages TFloat, PercentWages TFloat
+             , SummaWages TFloat, PercentWages TFloat, SummaWagesStore TFloat, PercentWagesStore TFloat
               ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -342,6 +342,8 @@ BEGIN
            , Object_Goods_Main.isPresent                                         AS isPresent
            , Object_Goods_Retail.SummaWages                                      AS SummaWages
            , Object_Goods_Retail.PercentWages                                    AS PercentWages
+           , Object_Goods_Retail.SummaWagesStore                                 AS SummaWagesStore
+           , Object_Goods_Retail.PercentWagesStore                               AS PercentWagesStore
 
       FROM Object_Goods_Retail
 
