@@ -981,7 +981,9 @@ uses
   Report_Income_PartialSale in '..\..\FormsFarmacy\Report\Report_Income_PartialSale.pas' {Report_Income_PartialSaleForm: TParentForm},
   CheckLiki24_Search in '..\..\FormsFarmacy\Document\CheckLiki24_Search.pas' {CheckLiki24_SearchForm: TParentForm},
   CheckLiki24 in '..\..\FormsFarmacy\Document\CheckLiki24.pas' {CheckLiki24Form: TParentForm},
-  CheckDelayLiki24 in '..\..\FormsFarmacy\Document\CheckDelayLiki24.pas' {CheckDelayLiki24Form: TParentForm};
+  CheckDelayLiki24 in '..\..\FormsFarmacy\Document\CheckDelayLiki24.pas' {CheckDelayLiki24Form: TParentForm},
+  Report_MovementCheckSiteDialog in '..\..\FormsFarmacy\Report\Report_MovementCheckSiteDialog.pas' {Report_MovementCheckSiteDialogForm: TParentForm},
+  Report_MovementCheckSite in '..\..\FormsFarmacy\Report\Report_MovementCheckSite.pas' {Report_MovementCheckSiteForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

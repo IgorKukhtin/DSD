@@ -30,7 +30,8 @@ BEGIN
            , '' :: TVarChar           AS Name
            ,  0 :: TFloat             AS PriceIn
            ,  0 :: TFloat             AS PriceOut
-           , '' :: TFloat             AS PartNumber
+           ,  0 :: TFloat             AS DiscountTax
+           , '' :: TVarChar           AS PartNumber
            , '' :: TVarChar           AS Comment
            ,  0 :: Integer            AS ProductId
            , '' :: TVarChar           AS ProductName
@@ -48,6 +49,7 @@ BEGIN
 
          , ObjectFloat_PriceIn.ValueData      ::TFloat    AS PriceIn
          , ObjectFloat_PriceOut.ValueData     ::TFloat    AS PriceOut
+         , ObjectFloat_DiscountTax.ValueData  ::TFloat    AS DiscountTax
          , ObjectString_PartNumber.ValueData  ::TVarChar  AS PartNumber
          , ObjectString_Comment.ValueData     ::TVarChar  AS Comment
 
@@ -74,6 +76,9 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_PriceOut
                                 ON ObjectFloat_PriceOut.ObjectId = Object_ProdOptItems.Id
                                AND ObjectFloat_PriceOut.DescId = zc_ObjectFloat_ProdOptItems_PriceOut()
+          LEFT JOIN ObjectFloat AS ObjectFloat_DiscountTax
+                                ON ObjectFloat_DiscountTax.ObjectId = Object_ProdOptItems.Id
+                               AND ObjectFloat_DiscountTax.DescId = zc_ObjectFloat_Client_DiscountTax()
 
           LEFT JOIN ObjectLink AS ObjectLink_Product
                                ON ObjectLink_Product.ObjectId = Object_ProdOptItems.Id
@@ -103,6 +108,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 04.01.21         * DiscountTax
  08.10.20         *
 */
 

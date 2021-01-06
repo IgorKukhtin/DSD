@@ -738,6 +738,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMakerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMakerEditForm');
 
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMakerReportEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMakerReportEditForm');
 
@@ -748,6 +749,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCountryForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountryEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCountryEditForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadMargineCategory;
@@ -964,11 +966,15 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckSiteDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckSiteDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckSiteForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckSiteForm');
+
+ {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceCheckForm');
-
-
-   {
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ClippedReprice_SaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ClippedReprice_SaleForm');

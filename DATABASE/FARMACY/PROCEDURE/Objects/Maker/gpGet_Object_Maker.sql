@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Maker(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
              , CountryId Integer, CountryCode Integer, CountryName TVarChar
              , ContactPersonId Integer, ContactPersonCode Integer, ContactPersonName TVarChar
+             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , SendPlan TDateTime
              , SendReal TDateTime
              , AmountDay TFloat
@@ -19,6 +20,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isReport4  Boolean
              , isReport5  Boolean
              , isReport6  Boolean
+             , isReport7  Boolean
              , isQuarter  Boolean
              , is4Month   Boolean
              , isErased   Boolean
@@ -41,9 +43,13 @@ BEGIN
            , CAST (0 as Integer)   AS CountryCode
            , CAST ('' as TVarChar) AS CountryName
 
-           , CAST (0 as Integer)   AS CountryId
-           , CAST (0 as Integer)   AS CountryCode
-           , CAST ('' as TVarChar) AS CountryName
+           , CAST (0 as Integer)   AS ContactPersonId
+           , CAST (0 as Integer)   AS ContactPersonCode
+           , CAST ('' as TVarChar) AS ContactPersonName
+
+           , CAST (0 as Integer)   AS JuridicalId
+           , CAST (0 as Integer)   AS JuridicalCode
+           , CAST ('' as TVarChar) AS JuridicalName
 
            , NULL  :: TDateTime AS SendPlan
            , NULL  :: TDateTime AS SendReal
@@ -57,6 +63,7 @@ BEGIN
            , FALSE :: Boolean   AS isReport4
            , FALSE :: Boolean   AS isReport5
            , FALSE :: Boolean   AS isReport6
+           , FALSE :: Boolean   AS isReport7
            , FALSE :: Boolean   AS isQuarter
            , FALSE :: Boolean   AS is4Month
 
@@ -77,6 +84,10 @@ BEGIN
            , Object_ContactPerson.ObjectCode  AS ContactPersonCode
            , Object_ContactPerson.ValueData   AS ContactPersonName
 
+           , Object_Juridical.Id          AS JuridicalId
+           , Object_Juridical.ObjectCode  AS JuridicalCode
+           , Object_Juridical.ValueData   AS JuridicalName
+
            , COALESCE (ObjectDate_SendPlan.ValueData, NULL) :: TDateTime AS SendPlan
            , COALESCE (ObjectDate_SendReal.ValueData, NULL) :: TDateTime AS SendReal
 
@@ -89,6 +100,7 @@ BEGIN
            , COALESCE (ObjectBoolean_Maker_Report4.ValueData, FALSE) :: Boolean AS isReport4
            , COALESCE (ObjectBoolean_Maker_Report5.ValueData, FALSE) :: Boolean AS isReport5
            , COALESCE (ObjectBoolean_Maker_Report6.ValueData, FALSE) :: Boolean AS isReport6
+           , COALESCE (ObjectBoolean_Maker_Report7.ValueData, FALSE) :: Boolean AS isReport7
            , COALESCE (ObjectBoolean_Maker_Quarter.ValueData, FALSE) :: Boolean AS isQuarter
            , COALESCE (ObjectBoolean_Maker_4Month.ValueData, FALSE) :: Boolean  AS is4Month
 
@@ -105,6 +117,11 @@ BEGIN
                                 ON ObjectLink_Maker_ContactPerson.ObjectId = Object_Maker.Id 
                                AND ObjectLink_Maker_ContactPerson.DescId = zc_ObjectLink_Maker_ContactPerson()
            LEFT JOIN Object AS Object_ContactPerson ON Object_ContactPerson.Id = ObjectLink_Maker_ContactPerson.ChildObjectId 
+
+           LEFT JOIN ObjectLink AS ObjectLink_Maker_Juridical
+                                ON ObjectLink_Maker_Juridical.ObjectId = Object_Maker.Id 
+                               AND ObjectLink_Maker_Juridical.DescId = zc_ObjectLink_Maker_Juridical()
+           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Maker_Juridical.ChildObjectId 
 
            LEFT JOIN ObjectDate AS ObjectDate_SendPlan
                                 ON ObjectDate_SendPlan.ObjectId = Object_Maker.Id
@@ -131,6 +148,9 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Maker_Report6
                                    ON ObjectBoolean_Maker_Report6.ObjectId = Object_Maker.Id
                                   AND ObjectBoolean_Maker_Report6.DescId = zc_ObjectBoolean_Maker_Report6()
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Maker_Report7
+                                   ON ObjectBoolean_Maker_Report7.ObjectId = Object_Maker.Id
+                                  AND ObjectBoolean_Maker_Report7.DescId = zc_ObjectBoolean_Maker_Report7()
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Maker_Quarter
                                    ON ObjectBoolean_Maker_Quarter.ObjectId = Object_Maker.Id
                                   AND ObjectBoolean_Maker_Quarter.DescId = zc_ObjectBoolean_Maker_Quarter()
@@ -158,6 +178,7 @@ ALTER FUNCTION gpGet_Object_Maker(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 04.01.21                                                       *
  14.01.20                                                       *
  07.08.19                                                       *
  05.04.19                                                       *

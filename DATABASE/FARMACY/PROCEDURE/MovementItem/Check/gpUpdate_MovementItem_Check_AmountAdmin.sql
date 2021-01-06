@@ -55,6 +55,11 @@ BEGIN
         RAISE EXCEPTION 'Не задан документ или неправельная связь';
     END IF;
 
+    IF inAmount < 0
+    THEN
+        RAISE EXCEPTION 'Количество должно быть положительным или равно нолю.';
+    END IF;      
+
     -- сохранили <Элемент документа>
     UPDATE MovementItem SET Amount = inAmount 
     WHERE DescId = zc_MI_Master() AND ID = inId;
@@ -75,4 +80,3 @@ ALTER FUNCTION gpUpdate_MovementItem_Check_AmountAdmin (Integer, Integer, TFloat
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
  10.10.19                                                       *
 */
-

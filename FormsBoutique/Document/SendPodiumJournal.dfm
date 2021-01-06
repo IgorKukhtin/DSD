@@ -678,7 +678,7 @@ object SendPodiumJournalForm: TSendPodiumJournalForm
         end
         item
           Name = 'isOperPrice'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -711,7 +711,7 @@ object SendPodiumJournalForm: TSendPodiumJournalForm
           StoredProc = spSelectPrint
         end>
       Caption = #1055#1077#1095#1072#1090#1100' ('#1074' '#1094#1077#1085#1072#1093' '#1086#1090#1082#1086#1075#1086'/'#1082#1086#1084#1091')'
-      Hint = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1074' '#1094#1077#1085#1072#1093' '#1086#1090#1082#1086#1075#1086'/'#1082#1086#1084#1091')'
       ImageIndex = 17
       DataSets = <
         item
@@ -733,14 +733,14 @@ object SendPodiumJournalForm: TSendPodiumJournalForm
         end
         item
           Name = 'isOperPrice'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPriceAll'
-          Value = 'true'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -796,14 +796,14 @@ object SendPodiumJournalForm: TSendPodiumJournalForm
         end
         item
           Name = 'isOperPrice'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPriceAll'
-          Value = 'false'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1422,6 +1422,7 @@ object SendPodiumJournalForm: TSendPodiumJournalForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 248
     Top = 216

@@ -3414,7 +3414,7 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'ChangePercent'
-          Value = 25000c
+          Value = 2.500000000000000000
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>
@@ -4047,7 +4047,7 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'ChangePercent'
-          Value = '2'
+          Value = 2.000000000000000000
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>
@@ -4062,6 +4062,34 @@ inherited MainForm: TMainForm
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_MovementCheckSite: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1055#1088#1086#1076#1072#1078#1080' '#1095#1077#1088#1077#1079' '#1089#1072#1081#1090
+      FormName = 'TReport_MovementCheckSiteForm'
+      FormNameParam.Value = 'TReport_MovementCheckSiteForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'FormCaption'
+          Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' ('#1055#1088#1086#1084#1086' '#1074#1088#1072#1095#1080'  ('#1064#1077#1074#1095#1077#1085#1082#1086' 9))'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PromoCodeID'
+          Value = 21042082
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ChangePercent'
+          Value = 2.000000000000000000
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
       isShowModal = False
     end
   end
@@ -4713,6 +4741,9 @@ inherited MainForm: TMainForm
       end
       object miReport_IncomeSale_UseNDSKind: TMenuItem
         Action = actReport_IncomeSale_UseNDSKind
+      end
+      object N269: TMenuItem
+        Action = actReport_MovementCheckSite
       end
       object N178: TMenuItem
         Caption = '-'

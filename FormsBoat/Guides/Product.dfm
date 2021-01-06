@@ -284,6 +284,15 @@ object ProductForm: TProductForm
           Options.Editing = False
           Width = 80
         end
+        object ClientName: TcxGridDBColumn
+          Caption = 'Kunden'
+          DataBinding.FieldName = 'ClientName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1050#1083#1080#1077#1085#1090
+          Options.Editing = False
+          Width = 80
+        end
         object ModelName: TcxGridDBColumn
           Caption = 'Model'
           DataBinding.FieldName = 'ModelName'
@@ -503,6 +512,28 @@ object ProductForm: TProductForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1042#1088#1077#1084#1103' '#1086#1073#1089#1083#1091#1078#1080#1074#1072#1085#1080#1103', '#1095'.'
+          Options.Editing = False
+          Width = 84
+        end
+        object DiscountTax: TcxGridDBColumn
+          Caption = '% '#1089#1082#1080#1076#1082#1080
+          DataBinding.FieldName = 'DiscountTax'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = '% '#1089#1082#1080#1076#1082#1080
+          Options.Editing = False
+          Width = 84
+        end
+        object DiscountNextTax: TcxGridDBColumn
+          Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1076#1086#1087'.)'
+          DataBinding.FieldName = 'DiscountNextTax'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = '% '#1089#1082#1080#1076#1082#1080' ('#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081')'
           Options.Editing = False
           Width = 84
         end
@@ -856,6 +887,16 @@ object ProductForm: TProductForm
           HeaderAlignmentVert = vaCenter
           HeaderHint = #8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1086#1075#1086' '#1076#1086#1087'. '#1086#1073#1086#1088#1091#1076#1086#1074#1072#1085#1080#1103
           Width = 80
+        end
+        object DiscountTax_ch2: TcxGridDBColumn
+          Caption = '% '#1089#1082#1080#1076#1082#1080
+          DataBinding.FieldName = 'DiscountTax'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 60
         end
         object EKPrice_ch2: TcxGridDBColumn
           Caption = 'Netto EK'
@@ -2887,6 +2928,15 @@ object ProductForm: TProductForm
         Value = Null
         Component = ProdOptItemsCDS
         ComponentItem = 'PriceOut'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscountTax'
+        Value = Null
+        Component = ProdOptItemsCDS
+        ComponentItem = 'DiscountTax'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -52,6 +52,10 @@ type
     cb4Month: TcxCheckBox;
     cbReport5: TcxCheckBox;
     cbReport6: TcxCheckBox;
+    cbReport7: TcxCheckBox;
+    edJuridical: TcxButtonEdit;
+    cxLabel8: TcxLabel;
+    GuidesJuridical: TdsdGuides;
   private
     { Private declarations }
   public

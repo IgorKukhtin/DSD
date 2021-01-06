@@ -2067,10 +2067,12 @@ begin
   //
   spGetMoneyInCash.ParamByName('inDate').Value := Date;
   spGetMoneyInCash.Execute;
-  lblMoneyInCash.Caption := FormatFloat(',0.00',
-    spGetMoneyInCash.ParamByName('outTotalSumm').AsFloat);
-  //
-  TimerMoneyInCash.Enabled := True;
+  try
+    lblMoneyInCash.Caption := FormatFloat(',0.00',
+      spGetMoneyInCash.ParamByName('outTotalSumm').AsFloat);
+  finally
+    TimerMoneyInCash.Enabled := True;
+  end;
 end;
 
 // Установка фильтра по аналогу
@@ -2197,9 +2199,7 @@ begin
   TimerMoneyInCash.Enabled := false;
   try
     lblMoneyInCash.Caption := '0.00';
-    TimerMoneyInCash.Enabled := false;
   finally
-    TimerMoneyInCash.Enabled := True;
   end;
 end;
 

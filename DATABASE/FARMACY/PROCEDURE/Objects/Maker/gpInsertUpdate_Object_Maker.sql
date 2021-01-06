@@ -7,6 +7,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Maker (Integer,Integer,TVarChar, I
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Maker (Integer,Integer,TVarChar, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Maker (Integer,Integer,TVarChar, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Maker (Integer,Integer,TVarChar, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Maker (Integer,Integer,TVarChar, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Maker (Integer,Integer,TVarChar, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Maker(
  INOUT ioId              Integer   ,    -- ключ объекта <Производитель>
@@ -14,6 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Maker(
     IN inName            TVarChar  ,    -- Название объекта <>
     IN inCountryId       Integer   ,    -- Страна
     IN inContactPersonId Integer   ,    -- Контактные лица
+    IN inJuridicalId     Integer   ,    -- Юр. лицо поставщик
     IN inSendPlan        TDateTime,     -- Когда планируем отправить(дата/время)
     IN inSendReal        TDateTime,     -- Когда успешно прошла отправка (дата/время)
     IN inDay             TFloat    ,    -- периодичность отправки в дня
@@ -24,6 +27,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Maker(
     IN inisReport4       Boolean,       -- отправлять "приход расход остаток"
     IN inisReport5       Boolean,       -- отправлять "отчет по срокам"
     IN inisReport6       Boolean,       -- отправлять "отчет по товару на виртуальном складе"
+    IN inisReport7       Boolean,       -- отправлять "отчет по оплате приходов"
     IN inisQuarter       Boolean,       -- Отправлять дополнительно квартальные отчеты
     IN inis4Month        Boolean,       -- Отправлять дополнительно отчеты за 4 месяца
     IN inSession         TVarChar       -- сессия пользователя
@@ -52,6 +56,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Maker_Country(), ioId, inCountryId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Maker_ContactPerson(), ioId, inContactPersonId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Maker_Juridical(), ioId, inJuridicalId);
 
    IF COALESCE (inDay, 0) <> 0 AND COALESCE (inMonth, 0) <> 0 
    THEN
@@ -81,6 +87,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Maker_Report5(), ioId, inisReport5);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Maker_Report6(), ioId, inisReport6);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Maker_Report7(), ioId, inisReport7);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Maker_Quarter(), ioId, inisQuarter);
    -- сохранили свойство <>

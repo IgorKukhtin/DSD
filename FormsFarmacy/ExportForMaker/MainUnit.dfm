@@ -232,6 +232,13 @@ object MainForm: TMainForm
         HeaderAlignmentVert = vaCenter
         Width = 87
       end
+      object isReport7: TcxGridDBColumn
+        Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1086#1087#1083#1072#1090#1077' '#1087#1088#1080#1093#1086#1076#1086#1074'"'
+        DataBinding.FieldName = 'isReport7'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 88
+      end
       object isQuarter: TcxGridDBColumn
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086' '#1082#1074#1072#1088#1090#1072#1083#1100#1085#1099#1077' '#1086#1090#1095#1077#1090#1099
         DataBinding.FieldName = 'isQuarter'
@@ -341,7 +348,8 @@ object MainForm: TMainForm
         ') = TRUE  OR'
       
         'COALESCE (isReport5, FALSE) = TRUE OR COALESCE (isReport6, FALSE' +
-        ') = TRUE) AND'
+        ') = TRUE OR '
+      'COALESCE (isReport7, FALSE) = TRUE) AND'
       'COALESCE (Mail, '#39#39') <> '#39#39';')
     Params = <>
     Left = 144
@@ -406,6 +414,11 @@ object MainForm: TMainForm
     object N6: TMenuItem
       Tag = 5
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1085#1072' '#1074#1080#1088#1090#1091#1072#1083#1100#1085#1086#1084' '#1089#1082#1083#1072#1076#1077
+      OnClick = pmClick
+    end
+    object N7: TMenuItem
+      Tag = 6
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1087#1083#1072#1090#1077' '#1087#1088#1080#1093#1086#1076#1086#1074
       OnClick = pmClick
     end
   end
