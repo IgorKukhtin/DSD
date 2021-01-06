@@ -27,8 +27,6 @@ object PriceListItemForm: TPriceListItemForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = -8
-    ExplicitTop = 89
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -417,6 +415,12 @@ object PriceListItemForm: TPriceListItemForm
         Options.Editing = False
         VisibleForCustomization = False
         Width = 20
+      end
+      object OperPriceList: TcxGridDBColumn
+        DataBinding.FieldName = 'OperPriceList'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -1601,6 +1605,7 @@ object PriceListItemForm: TPriceListItemForm
         Column = ValuePrice
       end>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 192
     Top = 256
