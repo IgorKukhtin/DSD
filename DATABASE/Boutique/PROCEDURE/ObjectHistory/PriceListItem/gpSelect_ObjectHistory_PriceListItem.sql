@@ -316,7 +316,7 @@ BEGIN
            , CAST (CASE WHEN (tmpPartionGoods.OperPrice * COALESCE (tmpCurrency.Amount, tmpPartionGoods.CurrencyValue) / CASE WHEN tmpPartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 WHEN COALESCE (tmpCurrency.ParValue, tmpPartionGoods.ParValue) <> 0 THEN COALESCE (tmpCurrency.ParValue, tmpPartionGoods.ParValue) ELSE 1 END)
                               <> 0
                         THEN (100 * tmpPartionGoods.OperPriceList
-                            / (tmpPartionGoods.OperPrice /* * COALESCE (tmpCurrency.Amount, tmpPartionGoods.CurrencyValue) / CASE WHEN tmpPartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 WHEN COALESCE (tmpCurrency.ParValue, tmpPartionGoods.ParValue) <> 0 THEN COALESCE (tmpCurrency.ParValue, tmpPartionGoods.ParValue) ELSE 1 END)*/
+                            / (tmpPartionGoods.OperPrice) /* * COALESCE (tmpCurrency.Amount, tmpPartionGoods.CurrencyValue) / CASE WHEN tmpPartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 WHEN COALESCE (tmpCurrency.ParValue, tmpPartionGoods.ParValue) <> 0 THEN COALESCE (tmpCurrency.ParValue, tmpPartionGoods.ParValue) ELSE 1 END)*/
                               - 100)
                         ELSE 0
                    END AS NUMERIC (16, 0)) :: TFloat AS PriceTax
