@@ -95,7 +95,7 @@ BEGIN
 
      ELSE
      -- !!!1 - Loss!!!
-     IF vbMovementDescId = zc_Movement_Loss()
+     IF vbMovementDescId IN (zc_Movement_Loss(), zc_Movement_LossAsset())
      THEN
              -- создаются временные таблицы - для формирование данных для проводок
              PERFORM lpComplete_Movement_Loss_CreateTemp();
@@ -128,7 +128,7 @@ BEGIN
 
      ELSE
      -- !!!4 - Sale!!!
-     IF vbMovementDescId = zc_Movement_Sale()
+     IF vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_SaleAsset())
      THEN
              -- создаются временные таблицы - для формирование данных для проводок
              PERFORM lpComplete_Movement_Sale_CreateTemp();
@@ -149,7 +149,7 @@ BEGIN
 
      ELSE
      -- !!!6.1. - Send!!!
-     IF vbMovementDescId = zc_Movement_Send()
+     IF vbMovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset())
      THEN
              -- создаются временные таблицы - для формирование данных для проводок
              -- PERFORM lpComplete_Movement_Send_CreateTemp();
