@@ -2,7 +2,7 @@
 
 DROP FUNCTION gpSelect_GoodsRemains_File (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_GoodsRemains_File(
+CREATE OR REPLACE FUNCTION gpSelect_GoodsRemains_File (
     IN inUnitId               Integer   , --подразделение
     IN inSession              TVarChar    -- сесси€ пользовател€
 )
@@ -59,12 +59,12 @@ BEGIN
      CREATE TEMP TABLE _tmpData (UnitId Integer, UnitName TVarChar, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, LabelName TVarChar
                                , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupId_parent Integer, PartnerName TVarChar
                                , BrandName TVarChar, PeriodName TVarChar, PeriodYear TVarChar, SizeName TVarChar, CurrencyName TVarChar
-                               , Amount TFloat, OperPriceList TFloat
-                               , OperPriceList_grn TFloat, OperPriceList_grn_disc TFloat, AmountCurrency TFloat, DiscountTax TFloat) ON COMMIT DROP;
+                               , Amount TFloat, OperPriceList TFloat, OperPriceList_curr TFloat
+                               , OperPriceList_grn TFloat, OperPriceList_grn_curr TFloat, OperPriceList_grn_disc TFloat, AmountCurrency TFloat, DiscountTax TFloat) ON COMMIT DROP;
 
      INSERT INTO _tmpData (UnitId, UnitName, GoodsId, GoodsCode, GoodsName, LabelName, GoodsGroupId, GoodsGroupName, GoodsGroupId_parent
-                         , PartnerName, BrandName, PeriodName, PeriodYear, SizeName, CurrencyName, Amount, OperPriceList
-                         , OperPriceList_grn, OperPriceList_grn_disc, AmountCurrency, DiscountTax)
+                         , PartnerName, BrandName, PeriodName, PeriodYear, SizeName, CurrencyName, Amount, OperPriceList, OperPriceList_curr
+                         , OperPriceList_grn, OperPriceList_grn_curr, OperPriceList_grn_disc, AmountCurrency, DiscountTax)
      WITH
      -- ѕоследн€€ цена из ѕрайс-листа
      tmpPriceList AS (SELECT _tmpUnit.UnitId                                  AS UnitId
@@ -93,6 +93,42 @@ BEGIN
                                                       AND ObjectHistoryLink_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
                       WHERE zc_Enum_GlobalConst_isTerry() = FALSE
                      )
+     -- перва€ цена из прайса
+   , tmpPriceList_fp AS (SELECT DISTINCT
+                                tmp.UnitId
+                              , tmp.GoodsId
+                              , tmp.OperPriceList
+                              , tmp.CurrencyId_pl
+                         FROM (SELECT DISTINCT
+                                      _tmpUnit.UnitId
+                                    , ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
+                                    , ObjectHistoryFloat_PriceListItem_Value.ValueData AS OperPriceList
+                                    , COALESCE (ObjectHistoryLink_Currency.ObjectId, _tmpUnit.CurrencyId_pl) AS CurrencyId_pl
+                                    , ObjectHistory_PriceListItem.StartDate
+                                    , MIN (ObjectHistory_PriceListItem.StartDate) OVER (PARTITION BY _tmpUnit.UnitId, ObjectLink_PriceListItem_Goods.ChildObjectId) AS FirstDate
+                               FROM _tmpUnit
+                                 INNER JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
+                                                       ON ObjectLink_PriceListItem_PriceList.ChildObjectId = _tmpUnit.PriceListId
+                                                      AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                                 INNER JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
+                                                       ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                      AND ObjectLink_PriceListItem_Goods.DescId   = zc_ObjectLink_PriceListItem_Goods()
+      
+                                 LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                         ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                        AND ObjectHistory_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
+                                 LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
+                                                              ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                             AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+      
+                                 LEFT JOIN ObjectHistoryLink AS ObjectHistoryLink_Currency
+                                                             ON ObjectHistoryLink_Currency.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                            AND ObjectHistoryLink_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
+                               WHERE zc_Enum_GlobalConst_isTerry() = FALSE
+                              ) AS tmp
+                         WHERE tmp.StartDate = tmp.FirstDate
+                        )
+
      -- ќстатки + ѕартии - PREMIATA ¬есна-Ћето 2020
    , tmpContainer AS (SELECT Container.WhereObjectId                                   AS UnitId
                            , Container.ObjectId                                        AS GoodsId    -- Id код товара
@@ -106,9 +142,12 @@ BEGIN
                            , Object_PartionGoods.GoodsGroupId      -- categoryId
                            , Object_PartionGoods.LabelId           --description
                            , Object_PartionGoods.CurrencyId        --currencyId ????
-                           , COALESCE (tmpPriceList.OperPriceList, Object_PartionGoods.OperPriceList) AS OperPriceList   --price
-                           , Object_PartionGoods.OperPriceList                                        AS OperPriceList_partion
+
                            , COALESCE (tmpPriceList.CurrencyId_pl, zc_Currency_Basis())               AS CurrencyId_pl   ---currencyId
+                           --
+                           , COALESCE (tmpPriceList_fp.OperPriceList, Object_PartionGoods.OperPriceList) AS OperPriceList   --перва€ цена
+                           --
+                           , COALESCE (tmpPriceList.OperPriceList, Object_PartionGoods.OperPriceList) AS OperPriceList_curr   -- текуща€
                       FROM Container
                            INNER JOIN _tmpUnit ON _tmpUnit.UnitId = Container.WhereObjectId
                            INNER JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = Container.PartionId
@@ -121,7 +160,10 @@ BEGIN
                            LEFT JOIN ContainerLinkObject AS CLO_Client
                                                          ON CLO_Client.ContainerId = Container.Id
                                                         AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
-                           -- цена из ѕрайс-листа
+                           -- цена из ѕрайс-листа перва€
+                           LEFT JOIN tmpPriceList_fp ON tmpPriceList_fp.UnitId  = Container.WhereObjectId
+                                                    AND tmpPriceList_fp.GoodsId = Container.ObjectId
+                           -- цена из ѕрайс-листа последн€€ч
                            LEFT JOIN tmpPriceList ON tmpPriceList.UnitId  = Container.WhereObjectId
                                                  AND tmpPriceList.GoodsId = Container.ObjectId
 
@@ -194,13 +236,22 @@ BEGIN
           , Object_GoodsSize.ValueData                              AS SizeName
           , Object_Currency.ValueData                               AS CurrencyName
           , tmpContainer.Remains                                    AS Amount
-            -- цена - если % сез. скидки = 0 берем цену из партии, а ценой со скидкой будет текуща€
-          , CASE WHEN COALESCE (tmpDiscount.DiscountTax, 0) <> 0 THEN tmpContainer.OperPriceList ELSE tmpContainer.OperPriceList_partion END AS OperPriceList
+           
+           -- цена - если % сез. скидки = 0 берем цену из партии, а ценой со скидкой будет текуща€
+          --, CASE WHEN COALESCE (tmpDiscount.DiscountTax, 0) <> 0 THEN tmpContainer.OperPriceList ELSE tmpContainer.OperPriceList_partion END AS OperPriceList
+          , tmpContainer.OperPriceList AS OperPriceList
+          , tmpContainer.OperPriceList_curr AS OperPriceList_curr
+
            -- цена в грн
-          , CASE WHEN COALESCE (tmpDiscount.DiscountTax, 0) <> 0 THEN tmpContainer.OperPriceList ELSE tmpContainer.OperPriceList_partion END
-                 * CASE WHEN tmpContainer.CurrencyId_pl = zc_Currency_Basis() THEN 1 ELSE tmpCurrency.Amount / COALESCE (tmpCurrency.ParValue, 1) END AS OperPriceList_grn
+          , tmpContainer.OperPriceList
+                 * CASE WHEN tmpContainer.CurrencyId = zc_Currency_Basis() THEN 1 ELSE tmpCurrency.Amount / COALESCE (tmpCurrency.ParValue, 1) END AS OperPriceList_grn
+
+          , tmpContainer.OperPriceList_curr
+                 * CASE WHEN tmpContainer.CurrencyId = zc_Currency_Basis() THEN 1 ELSE tmpCurrency.Amount / COALESCE (tmpCurrency.ParValue, 1) END AS OperPriceList_grn_curr
+
+
           -- цены в грн с учетом сезонной скидки
-          , CAST (tmpContainer.OperPriceList * CASE WHEN tmpContainer.CurrencyId_pl = zc_Currency_Basis() THEN 1 ELSE tmpCurrency.Amount / COALESCE (tmpCurrency.ParValue,1) END
+          , CAST (tmpContainer.OperPriceList_curr * CASE WHEN tmpContainer.CurrencyId = zc_Currency_Basis() THEN 1 ELSE tmpCurrency.Amount / COALESCE (tmpCurrency.ParValue,1) END
                * (1 - COALESCE (tmpDiscount.DiscountTax, 0) / 100) AS NUMERIC (16, 0)) :: TFloat AS OperPriceList_grn_disc
            -- курс валюты
           , tmpCurrency.Amount / COALESCE (tmpCurrency.ParValue, 1) AS AmountCurrency
@@ -216,14 +267,14 @@ BEGIN
           LEFT JOIN Object AS Object_GoodsSize  ON Object_GoodsSize.Id  = tmpContainer.GoodsSizeId
           LEFT JOIN Object AS Object_Brand      ON Object_Brand.Id      = tmpContainer.BrandId
           LEFT JOIN Object AS Object_Period     ON Object_Period.Id     = tmpContainer.PeriodId
-          LEFT JOIN Object AS Object_Currency   ON Object_Currency.Id   = tmpContainer.CurrencyId_pl
+          LEFT JOIN Object AS Object_Currency   ON Object_Currency.Id   = tmpContainer.CurrencyId
 
           LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_Parent
                                ON ObjectLink_GoodsGroup_Parent.ObjectId = tmpContainer.GoodsGroupId
                               AND ObjectLink_GoodsGroup_Parent.DescId = zc_ObjectLink_GoodsGroup_Parent()
           LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_GoodsGroup_Parent.ChildObjectId
 
-          LEFT JOIN tmpCurrency  ON tmpCurrency.CurrencyToId = tmpContainer.CurrencyId_pl
+          LEFT JOIN tmpCurrency  ON tmpCurrency.CurrencyToId = tmpContainer.CurrencyId
 
           LEFT JOIN tmpDiscount ON tmpDiscount.UnitId  = tmpContainer.UnitId
                                AND tmpDiscount.GoodsId = tmpContainer.GoodsId
@@ -237,6 +288,7 @@ BEGIN
      INSERT INTO _Result(RowData) VALUES ('<?xml version="1.0" encoding="UTF-8"?>');
      INSERT INTO _Result(RowData) VALUES ('<!DOCTYPE yml_catalog SYSTEM "shops.dtd">');
      INSERT INTO _Result(RowData) VALUES ('<yml_catalog date="'||CURRENT_TIMESTAMP||'">');
+
 
      -- данные магазина
      INSERT INTO _Result(RowData) VALUES ('<shop>');
@@ -290,10 +342,16 @@ BEGIN
          || '<price>'|| COALESCE (tmp.OperPriceList, 0) :: TVarChar ||'</price>'                           -- цена в валюте
          || '<priceGrn>'|| COALESCE (tmp.OperPriceList_grn, 0) :: TVarChar ||'</priceGrn>'                 -- цена в грн
          || '<priceGrnDisc>'|| COALESCE (tmp.OperPriceList_grn_disc, 0) :: TVarChar ||'</priceGrnDisc>'    -- цена в грн с уч. скидки
-         || '<amount>'|| COALESCE (tmp.Amount, 0) :: TVarChar ||'</amount>'                                -- остаток
+         --
+         || '<price_curr>'|| COALESCE (tmp.OperPriceList_curr, 0) :: TVarChar ||'</price_curr>'                           -- цена в валюте
+         || '<priceGrn_curr>'|| COALESCE (tmp.OperPriceList_grn_curr, 0) :: TVarChar ||'</priceGrn_curr>'                 -- цена в грн
+         
+         || '<amount>'|| (COALESCE (tmp.Amount, 0)) :: TVarChar ||'</amount>'                                -- остаток
          || '<currencyId>'|| COALESCE (tmp.CurrencyName, '') || '</currencyId>'
          || '<amountCur>'|| COALESCE (tmp.AmountCurrency, 0) :: TVarChar ||'</amountCur>'                  -- курс
-         || '<discount>'|| COALESCE (tmp.DiscountTax, 0) :: TVarChar ||'</discount>'                       -- % сез. скидки
+         || '<discount>'|| CASE WHEN COALESCE (tmp.DiscountTax_6318, 0) <> 0 THEN COALESCE (tmp.DiscountTax_6318, 0)
+                                ELSE COALESCE (tmp.DiscountTax_6319, 0)
+                           END :: TVarChar ||'</discount>'                       -- % сез. скидки
          || '<vat>NO_VAT</vat>'
          || '<categoryId>'|| COALESCE (tmp.GoodsGroupId, 0) :: TVarChar ||'</categoryId>'
          || '<name>'|| COALESCE (tmp.BrandName, '') || '</name>'
@@ -301,7 +359,81 @@ BEGIN
          || '<![CDATA['|| COALESCE (tmp.LabelName, '') || ']]>'
          || '</description>'
          || '</offer>'
-     FROM _tmpData AS tmp
+     FROM (--если inUnitId = 0 группируем товары вместе
+           SELECT tmp.UnitName                             AS UnitName
+                , COALESCE (tmp.GoodsCode, 0)              AS GoodsCode
+                , COALESCE (tmp.SizeName, '')              AS SizeName
+                , COALESCE (tmp.OperPriceList, 0)          AS OperPriceList
+                , COALESCE (tmp.OperPriceList_grn, 0)      AS OperPriceList_grn
+                , COALESCE (tmp.OperPriceList_grn_disc, 0) AS OperPriceList_grn_disc
+                , COALESCE (tmp.OperPriceList_curr, 0)     AS OperPriceList_curr
+                , COALESCE (tmp.OperPriceList_grn_curr, 0) AS OperPriceList_grn_curr
+                , COALESCE (tmp.CurrencyName, '')          AS CurrencyName
+                , COALESCE (tmp.AmountCurrency, 0)         AS AmountCurrency
+                , Max (COALESCE (tmp.DiscountTax_6318, 0)) AS DiscountTax_6318
+                , Max (COALESCE (tmp.DiscountTax_6319, 0)) AS DiscountTax_6319
+                , COALESCE (tmp.GoodsGroupId, 0)           AS GoodsGroupId
+                , COALESCE (tmp.BrandName, '')             AS BrandName
+                , COALESCE (tmp.LabelName, '')             AS LabelName
+                , SUM (COALESCE (tmp.Amount, 0))           AS Amount
+           FROM  
+               (--данные магазина 6318
+                SELECT CASE WHEN inUnitId <> 0 THEN tmp.UnitName ELSE '' END AS UnitName
+                     , COALESCE (tmp.GoodsCode, 0)                 AS GoodsCode
+                     , COALESCE (tmp.SizeName, '')                 AS SizeName
+                     , COALESCE (tmp.OperPriceList, 0)             AS OperPriceList
+                     , COALESCE (tmp.OperPriceList, 0)             AS OperPriceList_curr
+                     , COALESCE (tmp.OperPriceList_grn, 0)         AS OperPriceList_grn
+                     , COALESCE (tmp.OperPriceList_grn, 0)         AS OperPriceList_grn_curr
+                     , COALESCE (tmp.OperPriceList_grn_disc, 0)    AS OperPriceList_grn_disc
+                     , COALESCE (tmp.CurrencyName, '')             AS CurrencyName
+                     , COALESCE (tmp.AmountCurrency, 0)            AS AmountCurrency
+                     , COALESCE (tmp.DiscountTax, 0)               AS DiscountTax_6318
+                     , 0                                           AS DiscountTax_6319
+                     , COALESCE (tmp.GoodsGroupId, 0)              AS GoodsGroupId
+                     , COALESCE (tmp.BrandName, '')                AS BrandName
+                     , COALESCE (tmp.LabelName, '')                AS LabelName
+                     , COALESCE (tmp.Amount, 0)                    AS Amount
+                FROM _tmpData AS tmp
+                WHERE tmp.UnitId = 6318
+              UNION
+                --данные магазина 6319
+                SELECT CASE WHEN inUnitId <> 0 THEN tmp.UnitName ELSE '' END AS UnitName
+                     , COALESCE (tmp.GoodsCode, 0)                 AS GoodsCode
+                     , COALESCE (tmp.SizeName, '')                 AS SizeName
+                     , COALESCE (tmp.OperPriceList, 0)             AS OperPriceList
+                     , COALESCE (tmp.OperPriceList, 0)             AS OperPriceList_curr
+                     , COALESCE (tmp.OperPriceList_grn, 0)         AS OperPriceList_grn
+                     , COALESCE (tmp.OperPriceList_grn, 0)         AS OperPriceList_grn_curr
+                     , COALESCE (tmp.OperPriceList_grn_disc, 0)    AS OperPriceList_grn_disc
+                     , COALESCE (tmp.CurrencyName, '')             AS CurrencyName
+                     , COALESCE (tmp.AmountCurrency, 0)            AS AmountCurrency
+                     , 0                                           AS DiscountTax_6318
+                     , COALESCE (tmp.DiscountTax, 0)               AS DiscountTax_6319
+                     , COALESCE (tmp.GoodsGroupId, 0)              AS GoodsGroupId
+                     , COALESCE (tmp.BrandName, '')                AS BrandName
+                     , COALESCE (tmp.LabelName, '')                AS LabelName
+                     , COALESCE (tmp.Amount, 0)                    AS Amount
+                FROM _tmpData AS tmp
+                WHERE tmp.UnitId = 6319
+                
+               ) AS tmp
+           GROUP BY tmp.UnitName
+                  , COALESCE (tmp.GoodsCode, 0)
+                  , COALESCE (tmp.SizeName, '')
+                  , COALESCE (tmp.OperPriceList, 0)
+                  , COALESCE (tmp.OperPriceList_grn, 0)
+                  , COALESCE (tmp.OperPriceList_curr, 0)
+                  , COALESCE (tmp.OperPriceList_grn_curr, 0)
+                  , COALESCE (tmp.OperPriceList_grn_disc, 0)
+                  , COALESCE (tmp.CurrencyName, '')
+                  , COALESCE (tmp.AmountCurrency, 0)
+                  , COALESCE (tmp.DiscountTax_6318, 0)
+                  , COALESCE (tmp.DiscountTax_6319, 0)
+                  , COALESCE (tmp.GoodsGroupId, 0)
+                  , COALESCE (tmp.BrandName, '')
+                  , COALESCE (tmp.LabelName, '')
+           ) AS tmp
      ORDER BY tmp.GoodsCode :: Integer
      ;
 
@@ -309,7 +441,6 @@ BEGIN
      INSERT INTO _Result(RowData) VALUES ('</offers>');
      INSERT INTO _Result(RowData) VALUES ('</shop>');
      INSERT INTO _Result(RowData) VALUES ('</yml_catalog>');
-
 
      -- –езультат
      RETURN QUERY
@@ -331,4 +462,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_GoodsRemains_File (inUnitId:= 6318, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_GoodsRemains_File (inUnitId:= 0, inSession:= zfCalc_UserAdmin())

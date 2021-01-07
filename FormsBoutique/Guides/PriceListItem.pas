@@ -117,6 +117,7 @@ type
     actPrintSticker_fp: TdsdPrintAction;
     macPrintSticker_fp: TMultiAction;
     bbPrintSticker_fp: TdxBarButton;
+    OperPriceList: TcxGridDBColumn;
   private
     { Private declarations }
   public
