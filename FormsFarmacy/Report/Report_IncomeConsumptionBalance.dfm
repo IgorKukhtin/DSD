@@ -2,7 +2,7 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
   Left = 0
   Top = 0
   Caption = #1054#1090#1095#1077#1090' '#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082
-  ClientHeight = 660
+  ClientHeight = 668
   ClientWidth = 1329
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -56,26 +56,30 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
     Left = 1064
     Top = 57
     Width = 265
-    Height = 603
+    Height = 611
     Align = alRight
     ShowCaption = False
     TabOrder = 2
+    ExplicitHeight = 603
     object Panel3: TPanel
       Left = 1
       Top = 265
       Width = 263
-      Height = 337
+      Height = 345
       Align = alClient
       BevelOuter = bvNone
       ShowCaption = False
       TabOrder = 0
+      ExplicitHeight = 337
       object cxgChoiceGoods: TcxGrid
         Left = 0
         Top = 21
         Width = 263
-        Height = 285
+        Height = 293
         Align = alClient
         TabOrder = 0
+        ExplicitLeft = 5
+        ExplicitTop = 16
         object cxgChoiceGoodsDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           Navigator.Buttons.Insert.Visible = False
@@ -131,12 +135,13 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
       end
       object Panel7: TPanel
         Left = 0
-        Top = 306
+        Top = 314
         Width = 263
         Height = 31
         Align = alBottom
         ShowCaption = False
         TabOrder = 2
+        ExplicitTop = 306
         object cxButton2: TcxButton
           Left = 1
           Top = 1
@@ -244,105 +249,138 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
     Left = 1056
     Top = 57
     Width = 8
-    Height = 603
+    Height = 611
     AlignSplitter = salRight
     Control = Panel2
+    ExplicitHeight = 603
   end
   object cxIncomeConsumptionBalance: TcxGrid
     Left = 0
     Top = 57
     Width = 1056
-    Height = 603
+    Height = 611
     Align = alClient
     TabOrder = 7
+    ExplicitHeight = 603
     object cxIncomeConsumptionBalanceDBBandedTableView1: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <
         item
+          Format = ',0.000;-,0.000; ;'
           Kind = skSum
           Column = colSaldoIn
         end
         item
+          Format = ',0.00;-,0.00; ;'
           Kind = skSum
           Column = colSummaIn
         end
         item
+          Format = ',0.000;-,0.000; ;'
           Kind = skSum
           Column = colAmountIncome
         end
         item
+          Format = ',0.00;-,0.00; ;'
           Kind = skSum
           Column = colAmountIncomeSumWith
         end
         item
+          Format = ',0.00;-,0.00; ;'
           Kind = skSum
           Column = colAmountIncomeSum
         end
         item
+          Format = ',0.000;-,0.000; ;'
           Kind = skSum
           Column = colAmountReturnOut
         end
         item
+          Format = ',0.00;-,0.00; ;'
           Kind = skSum
           Column = colAmountReturnOutSum
         end
         item
+          Format = ',0.000;-,0.000; ;'
           Kind = skSum
-          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column1
+          Column = AmountCheck
         end
         item
+          Format = ',0.00;-,0.00; ;'
           Kind = skSum
-          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column2
+          Column = AmountCheckSumJuridical
         end
         item
+          Format = ',0.00;-,0.00; ;'
           Kind = skSum
-          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column3
+          Column = AmountCheckSum
         end
         item
+          Format = ',0.000;-,0.000; ;'
           Kind = skSum
-          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column4
+          Column = AmountSale
         end
         item
+          Format = ',0.00;-,0.00; ;'
           Kind = skSum
-          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column5
+          Column = AmountSaleSumJuridical
         end
         item
+          Format = ',0.00;-,0.00; ;'
           Kind = skSum
-          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column6
+          Column = AmountSaleSum
         end
         item
+          Format = ',0.000;-,0.000; ;'
           Kind = skSum
-          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column7
+          Column = AmountInventory
         end
         item
+          Format = ',0.00;-,0.00; ;'
           Kind = skSum
-          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column8
+          Column = AmountInventorySum
         end
         item
+          Format = ',0.000;-,0.000; ;'
           Kind = skSum
-          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column9
+          Column = AmountLoss
         end
         item
+          Format = ',0.00;-,0.00; ;'
           Kind = skSum
-          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column10
+          Column = AmountLossSum
         end
         item
+          Format = ',0.000;-,0.000; ;'
           Kind = skSum
-          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column11
+          Column = AmountSend
         end
         item
+          Format = ',0.00;-,0.00; ;'
           Kind = skSum
-          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column12
+          Column = AmountSendSum
         end
         item
+          Format = ',0.000;-,0.000; ;'
           Kind = skSum
-          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column13
+          Column = SaldoOut
         end
         item
+          Format = ',0.00;-,0.00; ;'
           Kind = skSum
-          Column = cxIncomeConsumptionBalanceDBBandedTableView1Column14
+          Column = SummaOut
+        end
+        item
+          Format = ',0.000;-,0.000; ;'
+          Kind = skSum
+          Column = AmountReturnIn
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Column = AmountReturnInSum
         end>
       DataController.Summary.SummaryGroups = <>
       OptionsData.Deleting = False
@@ -369,6 +407,9 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         end
         item
           Caption = #1055#1088#1086#1076#1072#1078#1080' '#1087#1086' '#1073'/'#1085
+        end
+        item
+          Caption = #1042#1086#1079#1074#1088#1072#1090#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
         end
         item
           Caption = #1055#1077#1088#1077#1091#1095#1077#1090
@@ -447,7 +488,7 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         DataBinding.FieldName = 'SaldoIn'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 3
-        Properties.DisplayFormat = ',0.000'
+        Properties.DisplayFormat = ',0.000;-,0.000; ;'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
@@ -460,7 +501,7 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         DataBinding.FieldName = 'SummaIn'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 2
-        Properties.DisplayFormat = ',0.00'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
@@ -473,7 +514,7 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         DataBinding.FieldName = 'AmountIncome'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 3
-        Properties.DisplayFormat = ',0.000'
+        Properties.DisplayFormat = ',0.000;-,0.000; ;'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
@@ -486,7 +527,7 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         DataBinding.FieldName = 'AmountIncomeSumWith'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 2
-        Properties.DisplayFormat = ',0.00'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
@@ -498,7 +539,7 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         Caption = #1089#1091#1084#1084#1072' '#1089' '#1053#1044#1057', '#1075#1088#1085
         DataBinding.FieldName = 'AmountIncomeSum'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
@@ -511,7 +552,7 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         DataBinding.FieldName = 'AmountReturnOut'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 3
-        Properties.DisplayFormat = ',0.000'
+        Properties.DisplayFormat = ',0.000;-,0.000; ;'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
@@ -523,7 +564,7 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         Caption = #1089#1091#1084#1084#1072' '#1089' '#1053#1044#1057', '#1075#1088#1085
         DataBinding.FieldName = 'AmountReturnOutSum'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
@@ -531,12 +572,12 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         Position.ColIndex = 1
         Position.RowIndex = 0
       end
-      object cxIncomeConsumptionBalanceDBBandedTableView1Column1: TcxGridDBBandedColumn
+      object AmountCheck: TcxGridDBBandedColumn
         Caption = #1082#1086#1083#1080#1095#1077#1089#1090#1074#1086', '#1096#1090
         DataBinding.FieldName = 'AmountCheck'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 3
-        Properties.DisplayFormat = ',0.000'
+        Properties.DisplayFormat = ',0.000;-,0.000; ;'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
@@ -544,11 +585,11 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         Position.ColIndex = 0
         Position.RowIndex = 0
       end
-      object cxIncomeConsumptionBalanceDBBandedTableView1Column2: TcxGridDBBandedColumn
+      object AmountCheckSumJuridical: TcxGridDBBandedColumn
         Caption = #1089#1091#1084#1084#1072' '#1079#1072#1082#1091#1087#1082#1077' '#1089' '#1053#1044#1057', '#1075#1088#1085
         DataBinding.FieldName = 'AmountCheckSumJuridical'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
@@ -556,11 +597,11 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         Position.ColIndex = 1
         Position.RowIndex = 0
       end
-      object cxIncomeConsumptionBalanceDBBandedTableView1Column3: TcxGridDBBandedColumn
+      object AmountCheckSum: TcxGridDBBandedColumn
         Caption = #1089#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079'. '#1089' '#1053#1044#1057', '#1075#1088#1085
         DataBinding.FieldName = 'AmountCheckSum'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
@@ -568,12 +609,12 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         Position.ColIndex = 2
         Position.RowIndex = 0
       end
-      object cxIncomeConsumptionBalanceDBBandedTableView1Column4: TcxGridDBBandedColumn
+      object AmountSale: TcxGridDBBandedColumn
         Caption = #1082#1086#1083#1080#1095#1077#1089#1090#1074#1086', '#1096#1090
         DataBinding.FieldName = 'AmountSale'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 3
-        Properties.DisplayFormat = ',0.000'
+        Properties.DisplayFormat = ',0.000;-,0.000; ;'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
@@ -581,11 +622,11 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         Position.ColIndex = 0
         Position.RowIndex = 0
       end
-      object cxIncomeConsumptionBalanceDBBandedTableView1Column5: TcxGridDBBandedColumn
+      object AmountSaleSumJuridical: TcxGridDBBandedColumn
         Caption = #1089#1091#1084#1084#1072' '#1079#1072#1082#1091#1087#1082#1077' '#1089' '#1053#1044#1057', '#1075#1088#1085
         DataBinding.FieldName = 'AmountSaleSumJuridical'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
@@ -593,11 +634,11 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         Position.ColIndex = 1
         Position.RowIndex = 0
       end
-      object cxIncomeConsumptionBalanceDBBandedTableView1Column6: TcxGridDBBandedColumn
-        Caption = #1089#1091#1084#1084#1072' '#1079#1077#1072#1083#1080#1079'. '#1089' '#1053#1044#1057', '#1075#1088#1085
+      object AmountSaleSum: TcxGridDBBandedColumn
+        Caption = #1089#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079'. '#1089' '#1053#1044#1057', '#1075#1088#1085
         DataBinding.FieldName = 'AmountSaleSum'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
@@ -605,103 +646,130 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         Position.ColIndex = 2
         Position.RowIndex = 0
       end
-      object cxIncomeConsumptionBalanceDBBandedTableView1Column7: TcxGridDBBandedColumn
+      object AmountReturnIn: TcxGridDBBandedColumn
+        Caption = #1082#1086#1083#1080#1095#1077#1089#1090#1074#1086', '#1096#1090
+        DataBinding.FieldName = 'AmountReturnIn'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.000;-,0.000; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+        Position.BandIndex = 7
+        Position.ColIndex = 0
+        Position.RowIndex = 0
+      end
+      object AmountReturnInSum: TcxGridDBBandedColumn
+        Caption = #1089#1091#1084#1084#1072' '#1074#1086#1079#1074#1088'. '#1089' '#1053#1044#1057', '#1075#1088#1085
+        DataBinding.FieldName = 'AmountReturnInSum'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+        Position.BandIndex = 7
+        Position.ColIndex = 1
+        Position.RowIndex = 0
+      end
+      object AmountInventory: TcxGridDBBandedColumn
         Caption = #1082#1086#1083#1080#1095#1077#1089#1090#1074#1086', '#1096#1090
         DataBinding.FieldName = 'AmountInventory'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 3
-        Properties.DisplayFormat = ',0.000'
+        Properties.DisplayFormat = ',0.000;-,0.000; ;'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
-        Position.BandIndex = 7
+        Position.BandIndex = 8
         Position.ColIndex = 0
         Position.RowIndex = 0
       end
-      object cxIncomeConsumptionBalanceDBBandedTableView1Column8: TcxGridDBBandedColumn
+      object AmountInventorySum: TcxGridDBBandedColumn
         Caption = #1089#1091#1084#1084#1072' '#1089' '#1053#1044#1057', '#1075#1088#1085
         DataBinding.FieldName = 'AmountInventorySum'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
-        Position.BandIndex = 7
+        Position.BandIndex = 8
         Position.ColIndex = 1
         Position.RowIndex = 0
       end
-      object cxIncomeConsumptionBalanceDBBandedTableView1Column9: TcxGridDBBandedColumn
+      object AmountLoss: TcxGridDBBandedColumn
         Caption = #1082#1086#1083#1080#1095#1077#1089#1090#1074#1086', '#1096#1090
         DataBinding.FieldName = 'AmountLoss'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 3
-        Properties.DisplayFormat = ',0.000'
+        Properties.DisplayFormat = ',0.000;-,0.000; ;'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
-        Position.BandIndex = 8
+        Position.BandIndex = 9
         Position.ColIndex = 0
         Position.RowIndex = 0
       end
-      object cxIncomeConsumptionBalanceDBBandedTableView1Column10: TcxGridDBBandedColumn
+      object AmountLossSum: TcxGridDBBandedColumn
         Caption = #1089#1091#1084#1084#1072' '#1089' '#1053#1044#1057', '#1075#1088#1085
         DataBinding.FieldName = 'AmountLossSum'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
-        Position.BandIndex = 8
+        Position.BandIndex = 9
         Position.ColIndex = 1
         Position.RowIndex = 0
       end
-      object cxIncomeConsumptionBalanceDBBandedTableView1Column11: TcxGridDBBandedColumn
+      object AmountSend: TcxGridDBBandedColumn
         Caption = #1082#1086#1083#1080#1095#1077#1089#1090#1074#1086', '#1096#1090
         DataBinding.FieldName = 'AmountSend'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 3
-        Properties.DisplayFormat = ',0.000'
+        Properties.DisplayFormat = ',0.000;-,0.000; ;'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
-        Position.BandIndex = 9
+        Position.BandIndex = 10
         Position.ColIndex = 0
         Position.RowIndex = 0
       end
-      object cxIncomeConsumptionBalanceDBBandedTableView1Column12: TcxGridDBBandedColumn
+      object AmountSendSum: TcxGridDBBandedColumn
         Caption = #1089#1091#1084#1084#1072' '#1089' '#1053#1044#1057', '#1075#1088#1085
         DataBinding.FieldName = 'AmountSendSum'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
-        Position.BandIndex = 9
+        Position.BandIndex = 10
         Position.ColIndex = 1
         Position.RowIndex = 0
       end
-      object cxIncomeConsumptionBalanceDBBandedTableView1Column13: TcxGridDBBandedColumn
+      object SaldoOut: TcxGridDBBandedColumn
         Caption = #1082#1086#1083#1080#1095#1077#1089#1090#1074#1086', '#1096#1090
         DataBinding.FieldName = 'SaldoOut'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 3
-        Properties.DisplayFormat = ',0.000'
+        Properties.DisplayFormat = ',0.000;-,0.000; ;'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
-        Position.BandIndex = 10
+        Position.BandIndex = 11
         Position.ColIndex = 0
         Position.RowIndex = 0
       end
-      object cxIncomeConsumptionBalanceDBBandedTableView1Column14: TcxGridDBBandedColumn
+      object SummaOut: TcxGridDBBandedColumn
         Caption = #1089#1091#1084#1084#1072' '#1089' '#1053#1044#1057', '#1075#1088#1085
         DataBinding.FieldName = 'SummaOut'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
-        Position.BandIndex = 10
+        Position.BandIndex = 11
         Position.ColIndex = 1
         Position.RowIndex = 0
       end
@@ -912,6 +980,9 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
       StoredProcList = <
         item
           StoredProc = dsdStoredProc
+        end
+        item
+          StoredProc = dsdStoredProcGoods
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1021,22 +1092,12 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpReport_IncomeConsumptionBalance'
+    StoredProcName = 'gpReport_IncomeConsumptionBalanceData'
     DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet
-      end
-      item
-        DataSet = cdsGoods
-      end
-      item
-        DataSet = cdsPromo
-      end
-      item
-        DataSet = cdsPromoGoods
       end>
-    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inStartDate'
@@ -1126,5 +1187,40 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
     Params = <>
     Left = 40
     Top = 448
+  end
+  object dsdStoredProcGoods: TdsdStoredProc
+    StoredProcName = 'gpReport_IncomeConsumptionBalanceGoods'
+    DataSet = cdsGoods
+    DataSets = <
+      item
+        DataSet = cdsGoods
+      end
+      item
+        DataSet = cdsPromo
+      end
+      item
+        DataSet = cdsPromoGoods
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 42370d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 42370d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 272
+    Top = 344
   end
 end
