@@ -58,6 +58,9 @@ type
     BankOTPXLSLoad: TClientBankLoadAction;
     BankOTPXLS: TMultiAction;
     bbBankOTPXLS: TdxBarButton;
+    mRaiffeisenBankLoad: TMultiAction;
+    RaiffeisenBankLoad: TClientBankLoadAction;
+    bbRaiffeisenBankLoad: TdxBarButton;
   private
     { Private declarations }
   public

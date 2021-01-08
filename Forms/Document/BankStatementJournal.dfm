@@ -162,14 +162,41 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
         item
           Action = actRefresh
         end>
-      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1055#1088#1086#1082#1088#1077#1076#1080#1090' '#1041#1072#1085#1082#1072
-      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1055#1088#1086#1082#1088#1077#1076#1080#1090' '#1041#1072#1085#1082#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1055#1088#1086#1082#1088#1077#1076#1080#1090' '#1041#1072#1085#1082
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1055#1088#1086#1082#1088#1077#1076#1080#1090' '#1041#1072#1085#1082
+      ImageIndex = 73
+    end
+    object RaiffeisenBankLoad: TClientBankLoadAction [4]
+      Category = 'Load'
+      MoveParams = <>
+      ClientBankType = cbProkreditBank
+      StartDateParam.Value = 43831d
+      StartDateParam.Component = deStart
+      StartDateParam.DataType = ftDateTime
+      StartDateParam.MultiSelectSeparator = ','
+      EndDateParam.Value = 43831d
+      EndDateParam.Component = deEnd
+      EndDateParam.DataType = ftDateTime
+      EndDateParam.MultiSelectSeparator = ','
+    end
+    object mRaiffeisenBankLoad: TMultiAction [5]
+      Category = 'Load'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = RaiffeisenBankLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1056#1072#1081#1092#1092#1072#1081#1079#1077#1085' '#1041#1072#1085#1082
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1056#1072#1081#1092#1092#1072#1081#1079#1077#1085' '#1041#1072#1085#1082
       ImageIndex = 73
     end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TBankStatementForm'
     end
-    object BankMarfinLoad: TClientBankLoadAction [6]
+    object BankMarfinLoad: TClientBankLoadAction [8]
       Category = 'Load'
       MoveParams = <>
       ClientBankType = cbMarfinBank
@@ -182,7 +209,7 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       EndDateParam.DataType = ftDateTime
       EndDateParam.MultiSelectSeparator = ','
     end
-    object BankMarfin: TMultiAction [7]
+    object BankMarfin: TMultiAction [9]
       Category = 'Load'
       MoveParams = <>
       ActionList = <
@@ -565,6 +592,14 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
           ItemName = 'bbProkreditBank'
         end
         item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRaiffeisenBankLoad'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
@@ -651,6 +686,10 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     end
     object bbBankOTPXLS: TdxBarButton
       Action = BankOTPXLS
+      Category = 0
+    end
+    object bbRaiffeisenBankLoad: TdxBarButton
+      Action = mRaiffeisenBankLoad
       Category = 0
     end
   end

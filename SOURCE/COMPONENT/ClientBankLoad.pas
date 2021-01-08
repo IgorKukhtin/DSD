@@ -9,7 +9,7 @@ uses dsdAction, DB, dsdDb, Classes, ExternalLoad {$IFDEF DELPHI103RIO}, Actions 
 type
 
   TClientBankType = (cbPrivatBank, cbForum, cbVostok, cbFidoBank, cbOTPBank, cbOTPBankXLS,
-    cbPireusBank, cbPireusBankDBF, cbMarfinBank, cbUrkExim, cbProkreditBank);
+    cbPireusBank, cbPireusBankDBF, cbMarfinBank, cbUrkExim, cbProkreditBank, cbRaiffeisenBank);
 
   TClientBankLoad = class(TFileExternalLoad)
   private
@@ -246,6 +246,24 @@ type
     function GetCurrencyName: string; override;
   end;
 
+  TRaiffeisenBankLoad = class(TClientBankLoad)
+    function IsDebet: boolean; override;
+    function GetOperSumm: real; override;
+    function GetDocNumber: string; override;
+    function GetOperDate: TDateTime; override;
+
+    function GetBankAccountMain: string; override;
+    function GetOKPO: string; override;
+    function GetBankAccount: string; override;
+    function GetBankMFOMain: string; override;
+    function GetBankMFO: string; override;
+    function GetJuridicalName: string; override;
+    function GetBankName: string; override;
+    function GetComment: string; override;
+    function GetCurrencyCode: string; override;
+    function GetCurrencyName: string; override;
+  end;
+
 constructor TClientBankLoadAction.Create(Owner: TComponent);
 begin
   inherited;
@@ -289,6 +307,9 @@ begin
       result := TUkrEximBankLoad.Create(StartDate, EndDate);
     cbProkreditBank:
       result := TProkeditBankLoad.Create(StartDate, EndDate);
+    cbRaiffeisenBank:
+      result := TRaiffeisenBankLoad.Create(StartDate, EndDate);
+
   end;
 end;
 
@@ -1182,6 +1203,102 @@ function TProkeditBankLoad.IsDebet: boolean;
 begin
   result := FDataSet.FieldByName('DK').AsInteger = 2
 end;
+
+{ TRaiffeisenBankLoad }
+
+function TRaiffeisenBankLoad.GetBankAccount: string;
+begin
+  if IsDebet then
+    result := FDataSet.FieldByName('KL_CHK').AsString
+  else
+    result := FDataSet.FieldByName('KL_CHK_K').AsString
+end;
+
+function TRaiffeisenBankLoad.GetBankAccountMain: string;
+begin
+  if not IsDebet then
+    result := FDataSet.FieldByName('KL_CHK').AsString
+  else
+    result := FDataSet.FieldByName('KL_CHK_K').AsString
+end;
+
+function TRaiffeisenBankLoad.GetBankMFO: string;
+begin
+  if IsDebet then
+    result := FDataSet.FieldByName('MFO').AsString
+  else
+    result := FDataSet.FieldByName('MFO_K').AsString
+end;
+
+function TRaiffeisenBankLoad.GetBankMFOMain: string;
+begin
+  if IsDebet then
+    result := FDataSet.FieldByName('MFO_K').AsString
+  else
+    result := FDataSet.FieldByName('MFO').AsString
+end;
+
+function TRaiffeisenBankLoad.GetBankName: string;
+begin
+  if IsDebet then
+    result := FDataSet.FieldByName('MFO_NM').AsString
+  else
+    result := FDataSet.FieldByName('MFO_NM_K').AsString;
+end;
+
+function TRaiffeisenBankLoad.GetComment: string;
+begin
+  result := FDataSet.FieldByName('N_P').AsString
+end;
+
+function TRaiffeisenBankLoad.GetCurrencyCode: string;
+begin
+  result := FDataSet.FieldByName('CUR_ID').AsString
+end;
+
+function TRaiffeisenBankLoad.GetCurrencyName: string;
+begin
+  result := ''
+end;
+
+function TRaiffeisenBankLoad.GetDocNumber: string;
+begin
+  result := FDataSet.FieldByName('ND').AsString
+end;
+
+function TRaiffeisenBankLoad.GetJuridicalName: string;
+begin
+  if IsDebet then
+    result := FDataSet.FieldByName('KL_NM').AsString
+  else
+    result := FDataSet.FieldByName('KL_NM_K').AsString;
+end;
+
+function TRaiffeisenBankLoad.GetOKPO: string;
+begin
+  if IsDebet then
+    result := trim(FDataSet.FieldByName('KL_OKP').AsString)
+  else
+    result := trim(FDataSet.FieldByName('KL_OKP_K').AsString);
+end;
+
+function TRaiffeisenBankLoad.GetOperDate: TDateTime;
+begin
+  result := FDataSet.FieldByName('DATA').AsDateTime;
+end;
+
+function TRaiffeisenBankLoad.GetOperSumm: real;
+begin
+  result := FDataSet.FieldByName('S').AsFloat;
+  if IsDebet then
+     result := - result;
+end;
+
+function TRaiffeisenBankLoad.IsDebet: boolean;
+begin
+  result := FDataSet.FieldByName('DK').AsInteger = 2
+end;
+
 
 initialization
   RegisterClass(TClientBankLoadAction)
