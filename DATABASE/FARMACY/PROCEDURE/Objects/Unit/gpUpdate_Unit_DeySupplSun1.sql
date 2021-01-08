@@ -1,58 +1,27 @@
--- Function: gpUpdate_Unit_HT_SUN()
+-- Function: gpUpdate_Object_Goods_IsUpload()
 
-DROP FUNCTION IF EXISTS gpUpdate_Unit_HT_SUN(Integer, Boolean, Boolean, Boolean, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_Unit_HT_SUN(Integer, Boolean, Boolean, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Unit_DeySupplSun1 (Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_Unit_HT_SUN(
-    IN inId             Integer   ,    -- ключ объекта <>
-    IN inis_v1          Boolean   ,    --
-    IN inis_v2          Boolean   ,    --
-    IN inis_v4          Boolean   ,    --
-    IN inis_All         Boolean   ,    --
-    IN inHT_SUN_v1      TFloat    ,    --
-    IN inHT_SUN_v2      TFloat    ,    --
-    IN inHT_SUN_v4      TFloat    ,    --
-    IN inHT_SUN_All     TFloat    ,    --
-    IN inSession        TVarChar       -- текущий пользователь
+CREATE OR REPLACE FUNCTION gpUpdate_Unit_DeySupplSun1(
+    IN inId                  Integer   ,    -- ключ объекта <Подразделение>
+    IN inDeySupplSun1        Integer   ,    -- Дни продаж в Дополнение СУН1
+    IN inSession             TVarChar       -- текущий пользователь
 )
-RETURNS VOID
-AS
+RETURNS VOID AS
 $BODY$
-   DECLARE vbUserId     Integer;
-   DECLARE text_var1    text;
+   DECLARE vbUserId Integer;
 BEGIN
 
    IF COALESCE(inId, 0) = 0 THEN
       RETURN;
    END IF;
-   
-   -- проверка прав пользователя на вызов процедуры
+
    vbUserId := lpGetUserBySession (inSession);
 
-   IF COALESCE (inis_v1, FALSE) = TRUE
-   THEN
-       -- сохранили <>
-       PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_HT_SUN_v1(), inId, inHT_SUN_v1);
-   END IF;
-   
-   IF COALESCE (inis_v2, FALSE) = TRUE
-   THEN
-       -- сохранили <>
-       PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_HT_SUN_v2(), inId, inHT_SUN_v2);
-   END IF;
-   
-   IF COALESCE (inis_v4, FALSE) = TRUE
-   THEN
-       -- сохранили <>
-       PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_HT_SUN_v4(), inId, inHT_SUN_v4);
-   END IF;
-  
-   IF COALESCE (inis_All, FALSE) = TRUE
-   THEN
-       -- сохранили <>
-       PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_HT_SUN_All(), inId, inHT_SUN_All);
-   END IF;
-  
+   -- определили признак
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Unit_DeySupplSun1(), inId, inDeySupplSun1);
+
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
 
@@ -63,6 +32,6 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 22.06.20                                                       *
- 15.05.20         *
+ 09.06.20                                                       *
 */
+--gpUpdate_Unit_DeySupplSun1()
