@@ -678,6 +678,11 @@ BEGIN
                                                              AND _tmpItem_find.ObjectDescId   = zc_Object_Cash()
                                                              AND _tmpItem_find.CurrencyId     <> zc_Enum_Currency_Basis()
                     WHERE _tmpItem.IsMaster = TRUE AND _tmpItem.CurrencyId <> zc_Enum_Currency_Basis()
+                    --AND _tmpItem.OperSumm > 0
+                   )
+    AND NOT EXISTS (SELECT 1
+                    FROM _tmpItem
+                    WHERE _tmpItem.IsMaster = TRUE AND _tmpItem.CurrencyId <> zc_Enum_Currency_Basis()
                       AND _tmpItem.OperSumm > 0
                    )
    /*OR EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.IsMaster = TRUE AND _tmpItem.OperSumm < 0)
