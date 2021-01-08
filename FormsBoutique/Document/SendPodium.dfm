@@ -1486,8 +1486,8 @@ object SendPodiumForm: TSendPodiumForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' ('#1074' '#1094#1077#1085#1072#1093' '#1086#1090#1082#1086#1075#1086'/'#1082#1086#1084#1091')'
-      Hint = #1055#1077#1095#1072#1090#1100' ('#1074' '#1094#1077#1085#1072#1093' '#1086#1090#1082#1086#1075#1086'/'#1082#1086#1084#1091')'
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1074' '#1094#1077#1085#1072#1093' '#1086#1090' '#1082#1086#1075#1086'/'#1082#1086#1084#1091')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1074' '#1094#1077#1085#1072#1093' '#1086#1090' '#1082#1086#1075#1086'/'#1082#1086#1084#1091')'
       ImageIndex = 17
       ShortCut = 16464
       DataSets = <
@@ -1501,29 +1501,6 @@ object SendPodiumForm: TSendPodiumForm
           IndexFieldNames = 'GoodsCode;GoodsSizeName'
         end>
       Params = <
-        item
-          Name = 'InvNumber'
-          Value = ''
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'From'
-          Value = ''
-          Component = GuidesTo
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'OperDate'
-          Value = 0d
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
         item
           Name = 'isOperPrice'
           Value = False
