@@ -419,7 +419,6 @@ object PriceListItemForm: TPriceListItemForm
       object OperPriceList: TcxGridDBColumn
         DataBinding.FieldName = 'OperPriceList'
         Visible = False
-        VisibleForCustomization = False
         Width = 70
       end
     end
