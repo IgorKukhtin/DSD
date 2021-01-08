@@ -355,6 +355,10 @@ type
     bbUpdate_Unit_isSUN_Supplement_out_yes: TdxBarButton;
     bbUpdate_Unit_isSUN_Supplement_in_no: TdxBarButton;
     bbUpdate_Unit_isSUN_Supplement_out_no: TdxBarButton;
+    spUpdate_SunAllParam: TdsdStoredProc;
+    actOpenChoiceUnitTree: TOpenChoiceForm;
+    actUpdate_SunAllParam: TdsdExecStoredProc;
+    dxBarButton11: TdxBarButton;
   private
     { Private declarations }
   public

@@ -3,7 +3,6 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 484
   ClientWidth = 1434
   PopupMenu = PopupMenu
-  ExplicitLeft = -98
   ExplicitWidth = 1450
   ExplicitHeight = 523
   PixelsPerInch = 96
@@ -906,6 +905,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
   end
   inherited ActionList: TActionList
+    Left = 79
     object actUpdate_Unit_isSUN_No: TdsdExecStoredProc [0]
       Category = 'isSUN'
       MoveParams = <>
@@ -3245,6 +3245,40 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' ('#1055#1088#1080#1077#1084') - '#1053#1077#1090
       ImageIndex = 48
     end
+    object actOpenChoiceUnitTree: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TUserForm'
+      FormName = 'TUnitTreeForm'
+      FormNameParam.Value = 'TUnitTreeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'UnitFrom'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actUpdate_SunAllParam: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actOpenChoiceUnitTree
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SunAllParam
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SunAllParam
+        end>
+      Caption = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1074#1089#1077' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1087#1086' '#1057#1059#1053
+      Hint = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1074#1089#1077' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1087#1086' '#1057#1059#1053
+      ImageIndex = 30
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -3933,6 +3967,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         item
           Visible = True
           ItemName = 'bbisShareFromPrice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton11'
         end>
     end
     object dxBarButton6: TdxBarButton
@@ -3987,6 +4025,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object bbUpdate_Unit_isSUN_Supplement_out_no: TdxBarButton
       Action = macUpdate_Unit_isSUN_Supplement_out_no
+      Category = 0
+    end
+    object dxBarButton11: TdxBarButton
+      Action = actUpdate_SunAllParam
       Category = 0
     end
   end
@@ -4256,7 +4298,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'ioCreateDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'CreateDate'
         DataType = ftDateTime
@@ -4265,7 +4307,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'ioCloseDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'CloseDate'
         DataType = ftDateTime
@@ -4486,7 +4528,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inKoeffInSUN'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'KoeffInSUN'
         DataType = ftFloat
@@ -4495,7 +4537,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inKoeffOutSUN'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'KoeffOutSUN'
         DataType = ftFloat
@@ -4978,7 +5020,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'PercentSAUA'
-        Value = 0c
+        Value = 0.000000000000000000
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -4986,6 +5028,11 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         Name = 'LabelPercentSAUA'
         Value = ' '#1055#1088#1086#1094#1077#1085#1090' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1076#1083#1103' '#1057#1040#1059#1040' '
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitFrom'
+        Value = Null
         MultiSelectSeparator = ','
       end>
     Left = 29
@@ -6146,7 +6193,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inPercentSAUA'
-        Value = 0c
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -6462,5 +6509,30 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 1352
     Top = 339
+  end
+  object spUpdate_SunAllParam: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_SunAllParam'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnnitFrom'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'UnitFrom'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1144
+    Top = 411
   end
 end
