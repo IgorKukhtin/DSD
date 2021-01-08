@@ -710,8 +710,8 @@ object SendPodiumJournalForm: TSendPodiumJournalForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' ('#1074' '#1094#1077#1085#1072#1093' '#1086#1090#1082#1086#1075#1086'/'#1082#1086#1084#1091')'
-      Hint = #1055#1077#1095#1072#1090#1100' ('#1074' '#1094#1077#1085#1072#1093' '#1086#1090#1082#1086#1075#1086'/'#1082#1086#1084#1091')'
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1074' '#1094#1077#1085#1072#1093' '#1086#1090' '#1082#1086#1075#1086'/'#1082#1086#1084#1091')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1074' '#1094#1077#1085#1072#1093' '#1086#1090' '#1082#1086#1075#1086'/'#1082#1086#1084#1091')'
       ImageIndex = 17
       DataSets = <
         item
@@ -724,13 +724,6 @@ object SendPodiumJournalForm: TSendPodiumJournalForm
           IndexFieldNames = 'GoodsCode;GoodsSizeName'
         end>
       Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
         item
           Name = 'isOperPrice'
           Value = False
