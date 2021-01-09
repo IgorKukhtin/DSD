@@ -321,7 +321,7 @@ BEGIN
                                                   ELSE COALESCE (View_InfoMoney.InfoMoneyId, 0)
                                              END AS InfoMoneyId_child
 
-                                             -- стать€ из услови€ - ограничение при поиске Ѕазы
+                                             -- стать€ из услови€ - ограничение при поиске маркет-договор начислени€
                                            , COALESCE (ObjectLink_ContractCondition_InfoMoney.ChildObjectId, 0) AS InfoMoneyId_Condition
                                              -- форма оплаты
                                            , View_Contract.PaidKindId AS PaidKindId
@@ -370,7 +370,8 @@ BEGIN
                                                                 AND ObjectLink_ContractCondition_Contract.DescId   = zc_ObjectLink_ContractCondition_Contract()
                                            -- а это сам договор, в котором бонусное условие
                                            INNER JOIN tmpContract_find AS View_Contract ON View_Contract.ContractId = ObjectLink_ContractCondition_Contract.ChildObjectId
-                                                                      --AND View_Contract.PaidKindId = inPaidKindId
+                                                                                     --AND View_Contract.PaidKindId = inPaidKindId
+                                           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract.InfoMoneyId
 
                                            -- «начение - %
                                            INNER JOIN ObjectFloat AS ObjectFloat_Value 
@@ -401,7 +402,6 @@ BEGIN
                                            LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_InfoMoney
                                                                 ON ObjectLink_ContractCondition_InfoMoney.ObjectId = Object_ContractCondition.Id
                                                                AND ObjectLink_ContractCondition_InfoMoney.DescId   = zc_ObjectLink_ContractCondition_InfoMoney()
-                                           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract.InfoMoneyId
 
                                            -- ‘ќ в условии договора
                                            LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_PaidKind
@@ -553,6 +553,7 @@ BEGIN
                       FROM tmpContractConditionKind
                            LEFT JOIN tmpContract_full AS View_Contract_child ON View_Contract_child.ContractId = tmpContractConditionKind.ContractId_baza
                       WHERE tmpContractConditionKind.InfoMoneyId_master <> tmpContractConditionKind.InfoMoneyId_child
+                        -- в бонусном договоре точно указано где вз€ть базу
                         AND tmpContractConditionKind.ContractId_baza > 0
 
                     UNION ALL
@@ -582,6 +583,7 @@ BEGIN
                                                       AND View_Contract_child.InfoMoneyId = tmpContractConditionKind.InfoMoneyId_child
                       -- это будут бонусные договора
                       WHERE tmpContractConditionKind.InfoMoneyId_master <> tmpContractConditionKind.InfoMoneyId_child
+                        -- Ќ≈ указано где вз€ть базу
                         AND tmpContractConditionKind.ContractId_baza = 0
                      )
         
