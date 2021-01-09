@@ -64,9 +64,10 @@ begin
   exit;
   LoadReportFromFile('PrintMovement_IncomeStickerPODIUM_fp', ReportPath + '\PrintMovement_IncomeStickerPODIUM_fp.fr3');
   exit;
-
+  }
   LoadReportFromFile('PrintMovement_SendPODIUM', ReportPath + '\PrintMovement_SendPODIUM.fr3');
   exit;
+   {
   LoadReportFromFile('PrintMovement_IncomePODIUM', ReportPath + '\PrintMovement_IncomePODIUM.fr3');
   exit;
   LoadReportFromFile('Анализ продаж1', ReportPath + '\Анализ продаж1.fr3');

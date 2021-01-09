@@ -149,6 +149,8 @@ BEGIN
                            , MovementItem.Amount 
                            , COALESCE (MIFloat_OperPriceList.ValueData, 0)   AS OperPriceList
                            , COALESCE (MIFloat_OperPriceListTo.ValueData, 0) AS OperPriceListTo
+                           , COALESCE (MIFloat_CurrencyValue.ValueData, 0)   AS CurrencyValue
+                           , COALESCE (MIFloat_ParValue.ValueData, 0)        AS ParValue
                            , MovementItem.isErased
                        FROM MovementItem 
                             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
@@ -157,11 +159,59 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceListTo
                                                         ON MIFloat_OperPriceListTo.MovementItemId = MovementItem.Id
                                                        AND MIFloat_OperPriceListTo.DescId = zc_MIFloat_OperPriceListTo()
+
+                            LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValue
+                                                        ON MIFloat_CurrencyValue.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_CurrencyValue.DescId         = zc_MIFloat_CurrencyValue()
+                            LEFT JOIN MovementItemFloat AS MIFloat_ParValue
+                                                        ON MIFloat_ParValue.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
                        WHERE MovementItem.MovementId = inMovementId
                          AND MovementItem.DescId     = zc_MI_Master()
                          AND MovementItem.isErased   = FALSE
                          AND MovementItem.Amount     > 0
                        )
+
+    -- Последняя цена из Прайс-листа - vbPriceListId_from
+    , tmpPriceList_from AS (SELECT tmp.GoodsId
+                                 , COALESCE (OH_PriceListItem_Currency.ObjectId, vbCurrencyId_pl_from) AS CurrencyId
+                            FROM (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI) AS tmp
+                                 INNER JOIN ObjectLink AS OL_PriceListItem_Goods
+                                                       ON OL_PriceListItem_Goods.ChildObjectId = tmp.GoodsId
+                                                      AND OL_PriceListItem_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
+                                 INNER JOIN ObjectLink AS OL_PriceListItem_PriceList
+                                                       ON OL_PriceListItem_PriceList.ObjectId      = OL_PriceListItem_Goods.ObjectId
+                                                      AND OL_PriceListItem_PriceList.ChildObjectId = vbPriceListId_from
+                                                      AND OL_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+
+                                 INNER JOIN ObjectHistory AS OH_PriceListItem
+                                                          ON OH_PriceListItem.ObjectId = OL_PriceListItem_Goods.ObjectId
+                                                         AND OH_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
+                                                         AND OH_PriceListItem.EndDate  = zc_DateEnd() -- !!!Последняя цена!!!
+                                 LEFT JOIN ObjectHistoryLink AS OH_PriceListItem_Currency
+                                                             ON OH_PriceListItem_Currency.ObjectHistoryId = OH_PriceListItem.Id
+                                                            AND OH_PriceListItem_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
+                           )
+      -- Последняя цена из Прайс-листа - vbPriceListId_to
+    , tmpPriceList_to AS (SELECT tmp.GoodsId
+                               , COALESCE (OH_PriceListItem_Currency.ObjectId, vbCurrencyId_pl_to) AS CurrencyId
+                          FROM (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI) AS tmp
+                               INNER JOIN ObjectLink AS OL_PriceListItem_Goods
+                                                     ON OL_PriceListItem_Goods.ChildObjectId = tmp.GoodsId
+                                                    AND OL_PriceListItem_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
+                               INNER JOIN ObjectLink AS OL_PriceListItem_PriceList
+                                                     ON OL_PriceListItem_PriceList.ObjectId      = OL_PriceListItem_Goods.ObjectId
+                                                    AND OL_PriceListItem_PriceList.ChildObjectId = vbPriceListId_to
+                                                    AND OL_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+
+                               INNER JOIN ObjectHistory AS OH_PriceListItem
+                                                        ON OH_PriceListItem.ObjectId = OL_PriceListItem_Goods.ObjectId
+                                                       AND OH_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
+                                                       AND OH_PriceListItem.EndDate  = zc_DateEnd() -- !!!Последняя цена!!!
+                               LEFT JOIN ObjectHistoryLink AS OH_PriceListItem_Currency
+                                                           ON OH_PriceListItem_Currency.ObjectHistoryId = OH_PriceListItem.Id
+                                                          AND OH_PriceListItem_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
+                         )
 
          ---сезонная скидка
         , tmpDiscountList AS (SELECT DISTINCT vbUnitId_From AS UnitId, tmpMI.GoodsId FROM tmpMI
@@ -194,6 +244,18 @@ BEGIN
                                                             ON ObjectHistoryFloat_DiscountPeriodItem_Value.ObjectHistoryId = ObjectHistory_DiscountPeriodItem.Id
                                                            AND ObjectHistoryFloat_DiscountPeriodItem_Value.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value()
                          )
+
+        -- Определили курс на Дату документа (Кому)
+        , tmpCurrency_to AS (SELECT tmpCurrency.CurrencyToId           AS CurrencyId
+                                  , COALESCE (tmpCurrency.Amount, 1)   AS CurrencyValue
+                                  , COALESCE (tmpCurrency.ParValue, 0) AS ParValue
+                             FROM (SELECT DISTINCT tmpPriceList_to.CurrencyId FROM tmpPriceList_to) AS tmp
+                                  LEFT JOIN lfSelect_Movement_Currency_byDate (inOperDate      := vbOperDate
+                                                                             , inCurrencyFromId:= zc_Currency_Basis()
+                                                                             , inCurrencyToId  := tmp.CurrencyId
+                                                                              ) AS tmpCurrency ON tmpCurrency.CurrencyToId = tmp.CurrencyId
+                            )
+
        -- результат
      , tmpData AS (SELECT tmpMI.Id
                         , tmpMI.PartionId
@@ -211,6 +273,9 @@ BEGIN
                         , Object_GoodsSize.ValueData     AS GoodsSizeName 
                         , Object_Currency.ValueData      AS CurrencyName
 
+                        , Object_Currency_pl_from.ValueData AS CurrencyName_pl
+                        , Object_Currency_pl_to.ValueData   AS CurrencyName_pl_to
+
                         , tmpMI.Amount
                         , Object_PartionGoods.OperPrice      ::TFloat
                         , tmpMI.OperPriceList                ::TFloat
@@ -224,6 +289,42 @@ BEGIN
                         , CAST (tmpMI.OperPriceListTo * (1 - COALESCE (tmpDiscount_To.DiscountTax, 0) / 100) AS NUMERIC (16, 0))     :: TFloat AS OperPriceListTo_disc
                         , zfCalc_SummPriceList (tmpMI.Amount, CAST (tmpMI.OperPriceList * (1 - COALESCE (tmpDiscount_From.DiscountTax, 0) / 100) AS NUMERIC (16, 0)))  AS TotalSummPriceList_disc
                         , zfCalc_SummPriceList (tmpMI.Amount, CAST (tmpMI.OperPriceListTo * (1 - COALESCE (tmpDiscount_To.DiscountTax, 0) / 100) AS NUMERIC (16, 0)))  AS TotalSummPriceListTo_disc
+                        
+                        -- Суммы в грн от кого и кому со скидкой
+                        , zfCalc_SummPriceList (tmpMI.Amount, CAST ( tmpMI.OperPriceList * (1 - COALESCE (tmpDiscount_From.DiscountTax, 0) / 100) 
+                                                                    * CASE WHEN tmpPriceList_from.CurrencyId = zc_Currency_GRN()
+                                                                           THEN 1
+                                                                           ELSE tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END
+                                                                      END
+                                                                   AS NUMERIC (16, 0)) )  AS TotalSummPriceList_grn
+                        
+                        
+                        
+                        
+                        , zfCalc_SummPriceList (tmpMI.Amount, CAST (tmpMI.OperPriceListTo * (1 - COALESCE (tmpDiscount_To.DiscountTax, 0) / 100)
+                                                                    * CASE WHEN tmpPriceList_to.CurrencyId = zc_Currency_GRN()
+                                                                           THEN 1
+                                                                           ELSE tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END
+                                                                      END
+                                                                    AS NUMERIC (16, 0)))  AS TotalSummPriceListTo_grn
+                        
+                        -- Суммы в Валюте от кого и кому со скидкой
+                        , zfCalc_SummPriceList (tmpMI.Amount, CAST ( tmpMI.OperPriceList * (1 - COALESCE (tmpDiscount_From.DiscountTax, 0) / 100) 
+                                                                    / CASE WHEN tmpPriceList_from.CurrencyId <> zc_Currency_GRN()
+                                                                           THEN 1
+                                                                           ELSE tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END
+                                                                      END
+                                                                   AS NUMERIC (16, 0)) )  AS TotalSummPriceList_curr
+                        
+                        
+                        
+                        
+                        , zfCalc_SummPriceList (tmpMI.Amount, CAST (tmpMI.OperPriceListTo * (1 - COALESCE (tmpDiscount_To.DiscountTax, 0) / 100)
+                                                                    / CASE WHEN tmpPriceList_to.CurrencyId <> zc_Currency_GRN()
+                                                                           THEN 1
+                                                                           ELSE tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END
+                                                                      END
+                                                                    AS NUMERIC (16, 0)))  AS TotalSummPriceListTo_curr
                     FROM tmpMI
                          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
                          LEFT JOIN Object_PartionGoods    ON Object_PartionGoods.MovementItemId = tmpMI.PartionId                                 
@@ -250,6 +351,12 @@ BEGIN
                          LEFT JOIN tmpDiscount AS tmpDiscount_To
                                                ON tmpDiscount_To.UnitId  = vbUnitId_To
                                               AND tmpDiscount_To.GoodsId = tmpMI.GoodsId
+
+                         LEFT JOIN tmpPriceList_from ON tmpPriceList_from.GoodsId = tmpMI.GoodsId
+                         LEFT JOIN tmpPriceList_to   ON tmpPriceList_to.GoodsId   = tmpMI.GoodsId
+                         LEFT JOIN tmpCurrency_to    ON tmpCurrency_to.CurrencyId = tmpPriceList_to.CurrencyId
+                         LEFT JOIN Object AS Object_Currency_pl_from ON Object_Currency_pl_from.Id = tmpPriceList_from.CurrencyId
+                         LEFT JOIN Object AS Object_Currency_pl_to   ON Object_Currency_pl_to.Id   = tmpPriceList_to.CurrencyId
                   )
 
 
@@ -266,6 +373,8 @@ BEGIN
             , tmpData.LineFabricaName
             , tmpData.LabelName
             , tmpData.CurrencyName
+            , tmpData.CurrencyName_pl
+            , tmpData.CurrencyName_pl_to
             , tmpData.GoodsSizeName
             , tmpData.Amount               ::TFloat
             , tmpData.OperPrice            ::TFloat
@@ -279,6 +388,11 @@ BEGIN
             , tmpData.OperPriceListTo_disc       ::TFloat 
             , tmpData.TotalSummPriceList_disc    ::TFloat
             , tmpData.TotalSummPriceListTo_disc  ::TFloat
+            
+            , tmpData.TotalSummPriceList_grn     ::TFloat
+            , tmpData.TotalSummPriceListTo_grn   ::TFloat
+            , tmpData.TotalSummPriceList_curr    ::TFloat
+            , tmpData.TotalSummPriceListTo_curr  ::TFloat
        FROM tmpData
        WHERE zc_Enum_GlobalConst_isTerry() = TRUE
      UNION
@@ -295,6 +409,8 @@ BEGIN
             , tmpData.LineFabricaName
             , tmpData.LabelName
             , tmpData.CurrencyName
+            , tmpData.CurrencyName_pl
+            , tmpData.CurrencyName_pl_to
             , STRING_AGG ('[' ||tmpData.GoodsSizeName ||'] '||zfConvert_FloatToString (tmpData.Amount), '; ') AS GoodsSizeName
             , SUM (tmpData.Amount)               ::TFloat AS Amount
             , tmpData.OperPrice                  ::TFloat
@@ -309,6 +425,11 @@ BEGIN
             , SUM (tmpData.TotalSummPriceList_disc)    ::TFloat AS TotalSummPriceList_disc
             , SUM (tmpData.TotalSummPriceListTo_disc)  ::TFloat AS TotalSummPriceListTo_disc
 
+            , SUM (tmpData.TotalSummPriceList_grn)     ::TFloat AS TotalSummPriceList_grn
+            , SUM (tmpData.TotalSummPriceListTo_grn)   ::TFloat AS TotalSummPriceListTo_grn
+            , SUM (tmpData.TotalSummPriceList_curr)    ::TFloat AS TotalSummPriceList_curr
+            , SUM (tmpData.TotalSummPriceListTo_curr)  ::TFloat AS TotalSummPriceListTo_curr
+
        FROM tmpData
        WHERE zc_Enum_GlobalConst_isTerry() = FALSE -- для Подиум
        GROUP BY tmpData.GoodsId
@@ -322,11 +443,14 @@ BEGIN
               , tmpData.LineFabricaName
               , tmpData.LabelName
               , tmpData.CurrencyName
+              , tmpData.CurrencyName_pl
+              , tmpData.CurrencyName_pl_to
               , tmpData.OperPrice
               , tmpData.OperPriceList
               , tmpData.OperPriceListTo
               , tmpData.OperPriceList_disc
               , tmpData.OperPriceListTo_disc
+              
        ORDER BY 4
        ;
 
