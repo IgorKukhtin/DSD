@@ -5,18 +5,23 @@ DROP FUNCTION IF EXISTS lpSelect_Object_ReceiptProdModelChild_detail (Integer);
 CREATE OR REPLACE FUNCTION lpSelect_Object_ReceiptProdModelChild_detail(
     IN inUserId      Integer        -- пользователь
 )
-RETURNS TABLE (ModelId Integer
+RETURNS TABLE (ModelId Integer, ModelName TVarChar
                --
              , isMain Boolean
              , ReceiptProdModelId Integer, ReceiptProdModelChildId Integer
-             , ObjectId Integer
+             , ObjectId_parent Integer, ObjectCode_parent Integer, ObjectName_parent TVarChar, DescName_parent TVarChar
+             , ObjectId Integer, ObjectCode Integer, ObjectName TVarChar, ObjectDescId Integer, DescName TVarChar
                -- значение
              , Value TFloat
                --
              , ReceiptGoodsChildId Integer
-             , ProdColorPatternId Integer
+               -- Boat Structure
+             , ProdColorGroupId Integer, ProdColorGroupName TVarChar
+             , ProdColorPatternId Integer, ProdColorPatternName TVarChar
+             , ProdColorId Integer, ProdColorName TVarChar
+               -- если это Boat Structure и этот элемент может идти как опция
              , ProdOptionsId Integer, ProdOptionsCode Integer, ProdOptionsName TVarChar
-
+               --
              , EKPrice TFloat, EKPriceWVAT TFloat
              , BasisPrice TFloat, BasisPriceWVAT TFloat
               )
@@ -84,6 +89,7 @@ BEGIN
                                          --
                                        , tmpReceiptProdModelChild.ReceiptProdModelId       AS ReceiptProdModelId
                                        , tmpReceiptProdModelChild.ReceiptProdModelChildId  AS ReceiptProdModelChildId
+                                       , tmpReceiptProdModelChild.ObjectId                 AS ObjectId_parent
                                        , Object_ReceiptGoodsChild.Id                       AS ReceiptGoodsChildId
                                          -- разложили или если меняли "Комплектующее", не тот что в Boat Structure
                                        , ObjectLink_Object.ChildObjectId                   AS GoodsId
@@ -91,6 +97,7 @@ BEGIN
                                        , COALESCE (ObjectLink_ProdColorPattern.ChildObjectId, 0) AS ProdColorPatternId
                                          -- умножили
                                        , tmpReceiptProdModelChild.Value * ObjectFloat_Value.ValueData AS Value
+
                                   FROM tmpReceiptProdModelChild
                                        -- нашли его в сборке узлов
                                        INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods_Object
@@ -129,6 +136,8 @@ BEGIN
                                            , tmpReceiptProdModelChild.isMain
                                            , tmpReceiptProdModelChild.ReceiptProdModelId
                                            , tmpReceiptProdModelChild.ReceiptProdModelChildId
+                                             -- элемент который НЕ раскладывается
+                                           , tmpReceiptProdModelChild.ObjectId AS ObjectId_parent
                                              -- элемент ReceiptProdModelChild
                                            , tmpReceiptProdModelChild.ObjectId
                                              -- значение
@@ -139,32 +148,47 @@ BEGIN
                                       FROM tmpReceiptProdModelChild
                                            LEFT JOIN tmpReceiptGoodsChild ON tmpReceiptGoodsChild.ReceiptProdModelChildId = tmpReceiptProdModelChild.ReceiptProdModelChildId
                                       WHERE tmpReceiptGoodsChild.ReceiptProdModelChildId IS NULL
+
                                      UNION ALL
                                       SELECT tmpReceiptGoodsChild.ModelId
                                            , tmpReceiptGoodsChild.isMain
                                            , tmpReceiptGoodsChild.ReceiptProdModelId
                                            , tmpReceiptGoodsChild.ReceiptProdModelChildId
+                                             -- элемент который раскладываем
+                                           , tmpReceiptGoodsChild.ObjectId_parent
+                                             -- на что раскладываем
                                            , tmpReceiptGoodsChild.GoodsId AS ObjectId
                                              -- значение
                                            , tmpReceiptGoodsChild.Value
                                              --
                                            , tmpReceiptGoodsChild.ReceiptGoodsChildId
                                            , tmpReceiptGoodsChild.ProdColorPatternId
+
                                       FROM tmpReceiptGoodsChild
                                      )
        --
        SELECT tmpRes.ModelId
+            , Object_Model.ValueData AS ModelName
               --
             , tmpRes.isMain
             , tmpRes.ReceiptProdModelId
             , tmpRes.ReceiptProdModelChildId
               -- элемент ReceiptProdModelChild
-            , tmpRes.ObjectId
+            , tmpRes.ObjectId_parent, Object_parent.ObjectCode AS ObjectCode_parent, Object_parent.ValueData AS ObjectName_parent, ObjectDesc_parent.ItemName AS DescName_parent
+              -- элемент ReceiptProdModelChild или разложили на ReceiptGoodsChild
+            , tmpRes.ObjectId, Object.ObjectCode, Object.ValueData AS ObjectName, Object.DescId AS ObjectDescId, ObjectDesc.ItemName AS DescName
               -- значение
             , tmpRes.Value :: TFloat AS Value
               --
             , tmpRes.ReceiptGoodsChildId
-            , tmpRes.ProdColorPatternId
+
+            , Object_ProdColorGroup.Id AS ProdColorGroupId, Object_ProdColorGroup.ValueData AS ProdColorGroupName
+            , tmpRes.ProdColorPatternId, Object_ProdColorPattern.ValueData AS ProdColorPatternName
+
+              -- значение Farbe
+            , Object_ProdColor.Id           AS ProdColorId
+              -- если у Boat Structure нет товара, тогда значение Farbe берем = Comment
+            , CASE WHEN ObjectLink_ProdColorPattern_Goods.ChildObjectId IS NULL AND tmpRes.ProdColorPatternId > 0 THEN ObjectString_ProdColorPattern_Comment.ValueData ELSE Object_ProdColor.ValueData END :: TVarChar AS ProdColorName
 
             , Object_ProdOptions.Id         AS ProdOptionsId
             , Object_ProdOptions.ObjectCode AS ProdOptionsCode
@@ -189,10 +213,41 @@ BEGIN
              END ::TFloat  AS BasisPriceWVAT
 
        FROM tmpRes
+            -- Boat Structure
+            LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = tmpRes.ProdColorPatternId
+            LEFT JOIN ObjectLink AS ObjectLink_ProdColorGroup
+                                 ON ObjectLink_ProdColorGroup.ObjectId = tmpRes.ProdColorPatternId
+                                AND ObjectLink_ProdColorGroup.DescId   = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+            LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId
+
+            LEFT JOIN ObjectString AS ObjectString_ProdColorPattern_Comment
+                                   ON ObjectString_ProdColorPattern_Comment.ObjectId = tmpRes.ProdColorPatternId
+                                  AND ObjectString_ProdColorPattern_Comment.DescId   = zc_ObjectString_ProdColorPattern_Comment()
+
+            -- если у Boat Structure нет товара, тогда значение Farbe берем = Comment
+            LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern_Goods
+                                 ON ObjectLink_ProdColorPattern_Goods.ObjectId = tmpRes.ProdColorPatternId
+                                AND ObjectLink_ProdColorPattern_Goods.DescId   = zc_ObjectLink_ProdColorPattern_Goods()
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_ProdColor
+                                 ON ObjectLink_Goods_ProdColor.ObjectId = tmpRes.ObjectId
+                                AND ObjectLink_Goods_ProdColor.DescId   = zc_ObjectLink_Goods_ProdColor()
+            LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
+
+            -- Boat Structure -> ProdOptions
             LEFT JOIN ObjectLink AS ObjectLink_ProdOptions
                                  ON ObjectLink_ProdOptions.ObjectId = tmpRes.ProdColorPatternId
                                 AND ObjectLink_ProdOptions.DescId   = zc_ObjectLink_ProdColorPattern_ProdOptions()
             LEFT JOIN Object AS Object_ProdOptions ON Object_ProdOptions.Id = ObjectLink_ProdOptions.ChildObjectId
+
+            --
+            LEFT JOIN Object AS Object_Model ON Object_Model.Id = tmpRes.ModelId
+
+            -- элемент ReceiptProdModelChild
+            LEFT JOIN Object AS Object_parent ON Object_parent.Id = tmpRes.ObjectId_parent
+            LEFT JOIN ObjectDesc AS ObjectDesc_parent ON ObjectDesc_parent.Id = Object_parent.DescId
+            -- элемент ReceiptProdModelChild или разложили на ReceiptGoodsChild
+            LEFT JOIN Object ON Object.Id = tmpRes.ObjectId
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object.DescId
 
             -- Options
             LEFT JOIN ObjectFloat AS ObjectFloat_SalePrice
@@ -242,4 +297,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpSelect_Object_ReceiptProdModelChild_detail (zfCalc_UserAdmin() :: Integer)
+-- SELECT * FROM lpSelect_Object_ReceiptProdModelChild_detail (zfCalc_UserAdmin() :: Integer) ORDER BY ModelId

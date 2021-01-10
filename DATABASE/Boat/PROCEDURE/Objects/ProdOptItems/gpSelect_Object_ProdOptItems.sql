@@ -69,7 +69,7 @@ BEGIN
                            FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
                                                                     , inOperDate   := CURRENT_DATE) AS tmp
                           )
-      -- все Ёлементы Boat Structure по модел€м
+      -- все Ёлементы Boat Structure - по модел€м
     , tmpProdColorPattern AS (SELECT lpSelect.ModelId
                                    , lpSelect.ObjectId
                                      -- значение

@@ -46,12 +46,10 @@ type
     cxLabel4: TcxLabel;
     cxLabel5: TcxLabel;
     cxLabel7: TcxLabel;
-    cxLabel8: TcxLabel;
     cxLabel9: TcxLabel;
     edDateStart: TcxDateEdit;
     edDateBegin: TcxDateEdit;
     edDateSale: TcxDateEdit;
-    edArticle: TcxTextEdit;
     edCIN: TcxTextEdit;
     cxLabel10: TcxLabel;
     edEngineNum: TcxTextEdit;

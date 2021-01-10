@@ -107,15 +107,10 @@ object ProductEditForm: TProductEditForm
     Top = 284
     Caption = #1055#1086#1089#1083'. '#1074#1088#1077#1084#1103' '#1086#1073#1089#1083#1091#1078'.,'#1095'.'
   end
-  object cxLabel8: TcxLabel
-    Left = 10
-    Top = 60
-    Caption = 'Artikel Nr'
-  end
   object cxLabel9: TcxLabel
-    Left = 151
-    Top = 60
-    Caption = 'CIN'
+    Left = 10
+    Top = 58
+    Caption = 'CIN Nr.'
   end
   object edDateStart: TcxDateEdit
     Left = 10
@@ -123,7 +118,7 @@ object ProductEditForm: TProductEditForm
     EditValue = 42160d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 15
+    TabOrder = 14
     Width = 82
   end
   object edDateBegin: TcxDateEdit
@@ -132,7 +127,7 @@ object ProductEditForm: TProductEditForm
     EditValue = 42160d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 16
+    TabOrder = 15
     Width = 82
   end
   object edDateSale: TcxDateEdit
@@ -141,30 +136,24 @@ object ProductEditForm: TProductEditForm
     EditValue = 42160d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 17
+    TabOrder = 16
     Width = 82
   end
-  object edArticle: TcxTextEdit
+  object edCIN: TcxTextEdit
     Left = 10
     Top = 77
-    TabOrder = 18
-    Width = 132
-  end
-  object edCIN: TcxTextEdit
-    Left = 151
-    Top = 77
-    TabOrder = 19
-    Width = 132
+    TabOrder = 17
+    Width = 273
   end
   object cxLabel10: TcxLabel
     Left = 10
     Top = 285
-    Caption = 'Engine Nr'
+    Caption = 'Engine Nr.'
   end
   object edEngineNum: TcxTextEdit
     Left = 10
     Top = 305
-    TabOrder = 21
+    TabOrder = 19
     Width = 132
   end
   object cxLabel11: TcxLabel
@@ -181,7 +170,7 @@ object ProductEditForm: TProductEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 23
+    TabOrder = 21
     Width = 273
   end
   object cxLabel12: TcxLabel
@@ -198,7 +187,7 @@ object ProductEditForm: TProductEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 25
+    TabOrder = 23
     Width = 273
   end
   object cxLabel13: TcxLabel
@@ -215,7 +204,7 @@ object ProductEditForm: TProductEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 27
+    TabOrder = 25
     Width = 273
   end
   object cbBasicConf: TcxCheckBox
@@ -229,14 +218,14 @@ object ProductEditForm: TProductEditForm
     Style.Font.Name = 'Tahoma'
     Style.Font.Style = [fsBold]
     Style.IsFontAssigned = True
-    TabOrder = 28
+    TabOrder = 26
     Width = 132
   end
   object cbProdColorPattern: TcxCheckBox
     Left = 151
     Top = 37
     Caption = 'Add Boat Structure'
-    TabOrder = 29
+    TabOrder = 27
     Width = 132
   end
   object cxLabel14: TcxLabel
@@ -253,7 +242,7 @@ object ProductEditForm: TProductEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 31
+    TabOrder = 29
     Width = 273
   end
   object edDiscountNextTax: TcxCurrencyEdit
@@ -261,18 +250,18 @@ object ProductEditForm: TProductEditForm
     Top = 392
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
-    TabOrder = 32
+    TabOrder = 30
     Width = 132
   end
   object cxLabel15: TcxLabel
     Left = 151
     Top = 371
-    Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1076#1086#1087'.)'
+    Caption = '% '#1089#1082'. ('#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081')'
   end
   object cxLabel16: TcxLabel
     Left = 10
     Top = 372
-    Caption = '% '#1089#1082#1080#1076#1082#1080
+    Caption = '% '#1089#1082'. ('#1086#1089#1085#1086#1074#1085#1086#1081')'
   end
   object edClienttext: TcxLabel
     Left = 10
@@ -291,7 +280,7 @@ object ProductEditForm: TProductEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 36
+    TabOrder = 34
     Width = 273
   end
   object edDiscountTax: TcxCurrencyEdit
@@ -299,7 +288,7 @@ object ProductEditForm: TProductEditForm
     Top = 392
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
-    TabOrder = 37
+    TabOrder = 35
     Width = 132
   end
   object ActionList: TActionList
@@ -467,14 +456,6 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inArticle'
-        Value = Null
-        Component = edArticle
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inCIN'
         Value = Null
         Component = edCIN
@@ -566,13 +547,6 @@ object ProductEditForm: TProductEditForm
         Value = 'NULL'
         Component = edDateSale
         DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Article'
-        Value = Null
-        Component = edArticle
-        DataType = ftString
         MultiSelectSeparator = ','
       end
       item

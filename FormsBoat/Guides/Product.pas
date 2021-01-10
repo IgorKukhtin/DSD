@@ -69,7 +69,6 @@ type
     DateStart: TcxGridDBColumn;
     DateBegin: TcxGridDBColumn;
     DateSale: TcxGridDBColumn;
-    Article: TcxGridDBColumn;
     CIN: TcxGridDBColumn;
     EngineNum: TcxGridDBColumn;
     BrandName: TcxGridDBColumn;

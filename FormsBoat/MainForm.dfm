@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 805
   KeyPreview = True
   ExplicitWidth = 821
-  ExplicitHeight = 226
+  ExplicitHeight = 223
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -1015,6 +1015,7 @@ inherited MainForm: TMainForm
       end
       object miProdColorPattern: TMenuItem
         Action = actProdColorPattern
+        Caption = 'Boat Structure'
       end
       object miProdColorGroup: TMenuItem
         Action = actProdColorGroup
@@ -1028,6 +1029,7 @@ inherited MainForm: TMainForm
       end
       object miProdColorItems: TMenuItem
         Action = actProdColorItems
+        Caption = #1069#1083#1077#1084#1077#1085#1090#1099' Boat Structure'
       end
       object miLine32_: TMenuItem
         Caption = '-'

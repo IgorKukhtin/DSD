@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Product(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ProdColorName TVarChar
              , Hours TFloat, DiscountTax TFloat, DiscountNextTax TFloat
              , DateStart TDateTime, DateBegin TDateTime, DateSale TDateTime
-             , Article TVarChar, CIN TVarChar, EngineNum TVarChar
+             , CIN TVarChar, EngineNum TVarChar
              , Comment TVarChar
              , ProdGroupId Integer, ProdGroupName TVarChar
              , BrandId Integer, BrandName TVarChar
@@ -60,7 +60,7 @@ BEGIN
 
 
      RETURN QUERY
-     WITH 
+     WITH
      tmpProdColorItems AS (SELECT ObjectLink_Product.ChildObjectId AS ProductId
                                 , Object_ProdColorItems.ObjectCode AS ProdColorItemsCode
                                 , Object_ProdColorItems.ValueData  AS ProdColorItemsName
@@ -119,11 +119,11 @@ BEGIN
                          LEFT JOIN ObjectDate AS ObjectDate_DateSale
                                               ON ObjectDate_DateSale.ObjectId = Object_Product.Id
                                              AND ObjectDate_DateSale.DescId = zc_ObjectDate_Product_DateSale()
- 
+
                          LEFT JOIN ObjectBoolean AS ObjectBoolean_BasicConf
                                                  ON ObjectBoolean_BasicConf.ObjectId = Object_Product.Id
                                                 AND ObjectBoolean_BasicConf.DescId   = zc_ObjectBoolean_Product_BasicConf()
-                                               
+
                          LEFT JOIN ObjectLink AS ObjectLink_Model
                                               ON ObjectLink_Model.ObjectId = Object_Product.Id
                                              AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model()
@@ -143,10 +143,10 @@ BEGIN
                                  INNER JOIN ObjectLink AS ObjectLink_Product
                                                        ON ObjectLink_Product.ChildObjectId = tmpProduct.Id
                                                       AND ObjectLink_Product.DescId = zc_ObjectLink_ProdOptItems_Product()
-                                                 
+
                                  INNER JOIN Object AS Object_ProdOptItems
                                                    ON Object_ProdOptItems.DescId = zc_Object_ProdOptItems()
-                                                  AND Object_ProdOptItems.isErased = FALSE 
+                                                  AND Object_ProdOptItems.isErased = FALSE
                             )
 
    , tmpProdOptItems AS (SELECT tmpProdOptItemsAll.ProductId
@@ -177,30 +177,30 @@ BEGIN
                                      -- ‡Ò˜ÂÚ ·‡ÁÓ‚ÓÈ ˆÂÌ˚ Ò Õƒ—, ‰Ó 2 ÁÌ‡ÍÓ‚
                                    , SUM (CASE WHEN vbPriceWithVAT = FALSE
                                                THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
-                                               ELSE COALESCE (tmpPriceBasis.ValuePrice, 0) 
+                                               ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
                                           END) ::TFloat  AS BasisWVAT_summ
 
                               FROM tmpProdOptItemsAll
                                   INNER JOIN ObjectLink AS ObjectLink_Goods
                                                         ON ObjectLink_Goods.ObjectId = tmpProdOptItemsAll.ProdOptItemsId
                                                        AND ObjectLink_Goods.DescId = zc_ObjectLink_ProdOptItems_Goods()
-                
+
                                   LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
                                                         ON ObjectFloat_EKPrice.ObjectId = ObjectLink_Goods.ChildObjectId
                                                        AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
-                
+
                                   LEFT JOIN ObjectLink AS ObjectLink_Goods_TaxKind
                                                        ON ObjectLink_Goods_TaxKind.ObjectId = ObjectLink_Goods.ChildObjectId
                                                       AND ObjectLink_Goods_TaxKind.DescId = zc_ObjectLink_Goods_TaxKind()
-                
+
                                   LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
                                                         ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_Goods_TaxKind.ChildObjectId
                                                        AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
-                
+
                                   LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = ObjectLink_Goods.ChildObjectId
                               GROUP BY tmpProdOptItemsAll.ProductId
                               )
-   
+
    ------------------
 
    , tmpObjAll AS (SELECT Object_Product.*
@@ -256,7 +256,7 @@ BEGIN
                            LEFT JOIN ObjectLink AS ObjectLink_Object
                                                 ON ObjectLink_Object.ObjectId = Object_ReceiptProdModelChild.Id
                                                AND ObjectLink_Object.DescId   = zc_ObjectLink_ReceiptProdModelChild_Object()
- 
+
                            LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                                  ON ObjectFloat_Value.ObjectId = Object_ReceiptProdModelChild.Id
                                                 AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptProdModelChild_Value()
@@ -428,7 +428,7 @@ BEGIN
                               THEN tmpProdColorItems_1.ProdColorName
                               ELSE COALESCE (tmpProdColorItems_1.ProdColorName, '') || ' / ' || COALESCE (tmpProdColorItems_2.ProdColorName, '')
                          END :: TVarChar AS ProdColorName
-              
+
                        , ObjectFloat_Hours.ValueData           AS Hours
                        , ObjectFloat_DiscountTax.ValueData     AS DiscountTax
                        , ObjectFloat_DiscountNextTax.ValueData AS DiscountNextTax
@@ -437,27 +437,26 @@ BEGIN
                        , ObjectDate_DateBegin.ValueData   AS DateBegin
                        --, ObjectDate_DateSale.ValueData    AS DateSale
                        , Object_Product.DateSale          AS DateSale
-                       , ObjectString_Article.ValueData   AS Article
                        , ObjectString_CIN.ValueData       AS CIN
                        , ObjectString_EngineNum.ValueData AS EngineNum
                        , ObjectString_Comment.ValueData   AS Comment
-              
+
                        , Object_ProdGroup.Id             AS ProdGroupId
                        , Object_ProdGroup.ValueData      AS ProdGroupName
-              
+
                        , Object_Brand.Id                 AS BrandId
                        , Object_Brand.ValueData          AS BrandName
-              
+
                        , Object_Model.Id                 AS ModelId
                        , Object_Model.ValueData          AS ModelName
                        , (Object_Model.ValueData ||' (' || Object_Brand.ValueData||')') ::TVarChar AS ModelName_full
-              
+
                        , Object_Engine.Id                AS EngineId
                        , Object_Engine.ValueData         AS EngineName
 
                        , Object_ReceiptProdModel.Id        AS ReceiptProdModelId
                        , Object_ReceiptProdModel.ValueData AS ReceiptProdModelName
-                       
+
                        , Object_Client.Id                AS ClientId
                        , Object_Client.ValueData         AS ClientName
 
@@ -466,17 +465,17 @@ BEGIN
                        --, CASE WHEN COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() THEN FALSE ELSE TRUE END ::Boolean AS isSale
                        , Object_Product.isSale ::Boolean AS isSale
                        , Object_Product.isErased         AS isErased
-              
-                       , CASE WHEN tmpObjAll.Ord = 1 THEN 4750 
-                              WHEN tmpObjAll.Ord = 2 THEN 4560 
-                              WHEN tmpObjAll.Ord = 3 THEN 25456 
+
+                       , CASE WHEN tmpObjAll.Ord = 1 THEN 4750
+                              WHEN tmpObjAll.Ord = 2 THEN 4560
+                              WHEN tmpObjAll.Ord = 3 THEN 25456
                               WHEN tmpObjAll.Ord = 4 THEN 29357
                               WHEN tmpObjAll.Ord = 5 THEN 32347
                               ELSE 0
                          END :: TFloat AS PriceIn
-              
+
                        , CASE WHEN tmpObjAll.Ord = 1 THEN 4750  + 1645
-                              WHEN tmpObjAll.Ord = 2 THEN 4560  + 1345 
+                              WHEN tmpObjAll.Ord = 2 THEN 4560  + 1345
                               WHEN tmpObjAll.Ord = 3 THEN 25456  + 14234
                               WHEN tmpObjAll.Ord = 4 THEN 29357  + 21700
                               WHEN tmpObjAll.Ord = 5 THEN 32347  + 18345
@@ -490,7 +489,7 @@ BEGIN
 
                        --, COALESCE (ObjectBoolean_BasicConf.ValueData, FALSE) :: Boolean AS isBasicConf
                        , Object_Product.isBasicConf      AS isBasicConf
- 
+
                    FROM tmpProduct AS Object_Product
                         LEFT JOIN tmpObjAll ON tmpObjAll.Id =  Object_Product.Id
                         LEFT JOIN tmpProdColorItems AS tmpProdColorItems_1
@@ -502,8 +501,8 @@ BEGIN
 
                         /*LEFT JOIN ObjectBoolean AS ObjectBoolean_BasicConf
                                                 ON ObjectBoolean_BasicConf.ObjectId = Object_Product.Id
-                                               AND ObjectBoolean_BasicConf.DescId   = zc_ObjectBoolean_Product_BasicConf() 
-                        */ 
+                                               AND ObjectBoolean_BasicConf.DescId   = zc_ObjectBoolean_Product_BasicConf()
+                        */
                         LEFT JOIN ObjectFloat AS ObjectFloat_Hours
                                               ON ObjectFloat_Hours.ObjectId = Object_Product.Id
                                              AND ObjectFloat_Hours.DescId = zc_ObjectFloat_Product_Hours()
@@ -517,18 +516,14 @@ BEGIN
                         LEFT JOIN ObjectDate AS ObjectDate_DateStart
                                              ON ObjectDate_DateStart.ObjectId = Object_Product.Id
                                             AND ObjectDate_DateStart.DescId = zc_ObjectDate_Product_DateStart()
-              
+
                         LEFT JOIN ObjectDate AS ObjectDate_DateBegin
                                              ON ObjectDate_DateBegin.ObjectId = Object_Product.Id
                                             AND ObjectDate_DateBegin.DescId = zc_ObjectDate_Product_DateBegin()
-              
+
                         /*LEFT JOIN ObjectDate AS ObjectDate_DateSale
                                              ON ObjectDate_DateSale.ObjectId = Object_Product.Id
                                             AND ObjectDate_DateSale.DescId = zc_ObjectDate_Product_DateSale()*/
-
-                        LEFT JOIN ObjectString AS ObjectString_Article
-                                               ON ObjectString_Article.ObjectId = Object_Product.Id
-                                              AND ObjectString_Article.DescId = zc_ObjectString_Article()
 
                         LEFT JOIN ObjectString AS ObjectString_CIN
                                                ON ObjectString_CIN.ObjectId = Object_Product.Id
@@ -600,7 +595,6 @@ BEGIN
          , tmpResAll.DateStart
          , tmpResAll.DateBegin
          , tmpResAll.DateSale
-         , tmpResAll.Article
          , tmpResAll.CIN
          , tmpResAll.EngineNum
          , tmpResAll.Comment
@@ -617,10 +611,10 @@ BEGIN
 
          , tmpResAll.EngineId
          , tmpResAll.EngineName
-         
+
          , tmpResAll.ReceiptProdModelId
          , tmpResAll.ReceiptProdModelName
-         
+
          , tmpResAll.ClientId
          , tmpResAll.ClientName
 
@@ -650,9 +644,9 @@ BEGIN
          , (COALESCE (tmpResAll.EKPrice_summ, 0)     + COALESCE (tmpProdOptItemsPrice.EKPrice_summ, 0))      :: TFloat AS EKPrice_summ
          , (COALESCE (tmpResAll.EKPriceWVAT_summ, 0) + COALESCE (tmpProdOptItemsPrice.EKPriceWVAT_summ, 0))  :: TFloat AS EKPriceWVAT_summ
          , (COALESCE (tmpResAll.Basis_summ, 0)       + COALESCE (tmpProdOptItemsPrice.Basis_summ, 0))        :: TFloat AS Basis_summ
-         , (COALESCE (tmpResAll.BasisWVAT_summ, 0)   + COALESCE (tmpProdOptItemsPrice.BasisWVAT_summ, 0))    :: TFloat AS BasisWVAT_summ        
-         
-         
+         , (COALESCE (tmpResAll.BasisWVAT_summ, 0)   + COALESCE (tmpProdOptItemsPrice.BasisWVAT_summ, 0))    :: TFloat AS BasisWVAT_summ
+
+
 */
          , tmpProdOptItems.PriceIn     :: TFloat AS EKPrice_summ2
          , (tmpProdOptItems.PriceIn * (1.16)) :: TFloat AS EKPriceWVAT_summ2
@@ -665,7 +659,7 @@ BEGIN
          , (COALESCE (tmpResAll.BasisWVAT_summ, 0)   + COALESCE (tmpProdOptItems.PriceOut, 0)* (1.16))    :: TFloat AS BasisWVAT_summ
 
          , tmpResAll.isBasicConf
-         
+
          , CASE WHEN tmpResAll.isSale
                      THEN zc_Color_Lime()
                 ELSE
@@ -684,7 +678,6 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
-
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
@@ -694,5 +687,5 @@ $BODY$
 
 -- ÚÂÒÚ
 --
- --SELECT * FROM gpSelect_Object_Product (false, true, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Product (false, true, zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_Object_Product (false, false, zfCalc_UserAdmin())

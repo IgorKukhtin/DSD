@@ -55,12 +55,12 @@ BEGIN
              , CAST (COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0)
                     * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2)) :: TFloat AS EKPriceWVAT
 
-               -- Цена продажи без ндс
+               -- Цена продажи без НДС
              , CASE WHEN vbPriceWithVAT = FALSE
                     THEN COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0)
                     ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
                END  :: TFloat AS BasisPrice
-               -- Цена продажи с ндс
+               -- Цена продажи с НДС
              , CASE WHEN vbPriceWithVAT = FALSE
                     THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
                     ELSE COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0)
@@ -88,11 +88,11 @@ BEGIN
                                    ON ObjectFloat_EKPrice.ObjectId = ObjectLink_Object.ChildObjectId
                                   AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
 
-                -- цены для Работы/Услуги вход. без ндс
+                -- цены для Работы/Услуги вход. без НДС
              LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptService_EKPrice
                                    ON ObjectFloat_ReceiptService_EKPrice.ObjectId = ObjectLink_Object.ChildObjectId
                                   AND ObjectFloat_ReceiptService_EKPrice.DescId = zc_ObjectFloat_ReceiptService_EKPrice()
-                -- цены для Работы/Услуги продажи без ндс
+                -- цены для Работы/Услуги продажи без НДС
              LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptService_SalePrice
                                    ON ObjectFloat_ReceiptService_SalePrice.ObjectId = ObjectLink_Object.ChildObjectId
                                   AND ObjectFloat_ReceiptService_SalePrice.DescId = zc_ObjectFloat_ReceiptService_SalePrice()
@@ -140,13 +140,13 @@ BEGIN
              , CAST (COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0)
                     * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2)) :: TFloat AS EKPriceWVAT
 
-               -- Цена продажи без ндс
+               -- Цена продажи без НДС
              , CASE WHEN vbPriceWithVAT = FALSE
                     THEN COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0)
                     ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
                END  :: TFloat AS BasisPrice
 
-               -- Цена продажи с ндс
+               -- Цена продажи с НДС
              , CASE WHEN vbPriceWithVAT = FALSE
                     THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
                     ELSE COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0)
@@ -233,11 +233,11 @@ BEGIN
                                    ON ObjectFloat_EKPrice.ObjectId = Object_Goods.Id
                                   AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
 
-                -- цены для Работы/Услуги вход. без ндс
+                -- цены для Работы/Услуги вход. без НДС
              LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptService_EKPrice
                                    ON ObjectFloat_ReceiptService_EKPrice.ObjectId = Object_Goods.Id
                                   AND ObjectFloat_ReceiptService_EKPrice.DescId = zc_ObjectFloat_ReceiptService_EKPrice()
-                -- цены для Работы/Услуги продажи без ндс
+                -- цены для Работы/Услуги продажи без НДС
              LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptService_SalePrice
                                    ON ObjectFloat_ReceiptService_SalePrice.ObjectId = Object_Goods.Id
                                   AND ObjectFloat_ReceiptService_SalePrice.DescId = zc_ObjectFloat_ReceiptService_SalePrice()
@@ -268,9 +268,9 @@ BEGIN
              , tmpReceiptProdModelChild.EKPrice
                -- Цена вх. с НДС
              , tmpReceiptProdModelChild.EKPriceWVAT
-               -- Цена продажи без ндс
+               -- Цена продажи без НДС
              , tmpReceiptProdModelChild.BasisPrice
-               -- Цена продажи с ндс
+               -- Цена продажи с НДС
              , tmpReceiptProdModelChild.BasisPriceWVAT
                --
              , (tmpReceiptProdModelChild.Value * tmpReceiptProdModelChild.EKPrice)        :: TFloat AS EKPrice_summ
@@ -290,9 +290,9 @@ BEGIN
              , CASE WHEN tmpReceiptProdModelChild.Value > 0 THEN SUM (tmpReceiptGoodsChild.EKPrice_summ)     / tmpReceiptProdModelChild.Value ELSE 0 END :: TFloat AS EKPrice
                -- Цена вх. с НДС
              , CASE WHEN tmpReceiptProdModelChild.Value > 0 THEN SUM (tmpReceiptGoodsChild.EKPriceWVAT_summ) / tmpReceiptProdModelChild.Value ELSE 0 END :: TFloat AS EKPriceWVAT
-               -- Цена продажи без ндс
+               -- Цена продажи без НДС
              , CASE WHEN tmpReceiptProdModelChild.Value > 0 THEN SUM (tmpReceiptGoodsChild.Basis_summ)       / tmpReceiptProdModelChild.Value ELSE 0 END :: TFloat AS BasisPrice
-               -- Цена продажи с ндс
+               -- Цена продажи с НДС
              , CASE WHEN tmpReceiptProdModelChild.Value > 0 THEN SUM (tmpReceiptGoodsChild.BasisWVAT_summ)   / tmpReceiptProdModelChild.Value ELSE 0 END :: TFloat AS BasisPriceWVAT
                --
              , SUM (tmpReceiptGoodsChild.EKPrice_summ)     :: TFloat AS EKPrice_summ

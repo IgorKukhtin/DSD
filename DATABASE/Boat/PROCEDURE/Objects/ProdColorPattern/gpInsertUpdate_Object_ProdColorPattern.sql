@@ -41,6 +41,20 @@ BEGIN
                                               );
    END IF;
    
+   -- проверка - такую опций здесь определять нельзя, т.к. у неё есть товар
+   IF EXISTS (SELECT 1 FROM ObjectLink AS ObjectLink_ProdOptions_Goods
+              WHERE ObjectLink_ProdOptions_Goods.ObjectId      = inProdOptionsId
+                AND ObjectLink_ProdOptions_Goods.DescId        = zc_ObjectLink_ProdOptions_Goods()
+                AND ObjectLink_ProdOptions_Goods.ChildObjectId > 0
+             )
+   THEN
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Выбранная Опция уже связана зо значением <Комплектующие>.'
+                                             , inProcedureName := 'gpInsertUpdate_Object_ProdOptions'
+                                             , inUserId        := vbUserId
+                                              );
+   END IF;
+
+
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;
 

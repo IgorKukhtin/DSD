@@ -37,7 +37,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitTop = 16
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -688,7 +687,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Width = 510
       Height = 17
       Align = alTop
-      Caption = 'Items Boat Structure'
+      Caption = 'Boat Structure'
       Color = clLime
       ParentBackground = False
       TabOrder = 1

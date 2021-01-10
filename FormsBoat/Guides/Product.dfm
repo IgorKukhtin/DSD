@@ -268,13 +268,13 @@ object ProductForm: TProductForm
           Options.Editing = False
           Width = 43
         end
-        object Article: TcxGridDBColumn
-          Caption = 'Artikel Nr'
-          DataBinding.FieldName = 'Article'
+        object CIN: TcxGridDBColumn
+          Caption = 'CIN Nr.'
+          DataBinding.FieldName = 'CIN'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
-          Width = 55
+          Width = 100
         end
         object BrandName: TcxGridDBColumn
           Caption = 'Brand'
@@ -319,7 +319,7 @@ object ProductForm: TProductForm
           Width = 80
         end
         object EngineNum: TcxGridDBColumn
-          Caption = 'Engine Nr'
+          Caption = 'Engine Nr.'
           DataBinding.FieldName = 'EngineNum'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
@@ -335,13 +335,6 @@ object ProductForm: TProductForm
           HeaderHint = #1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1052#1086#1076#1077#1083#1080
           Options.Editing = False
           Width = 112
-        end
-        object CIN: TcxGridDBColumn
-          DataBinding.FieldName = 'CIN'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 76
         end
         object Name: TcxGridDBColumn
           Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -371,6 +364,7 @@ object ProductForm: TProductForm
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1048#1058#1054#1043#1054' '#1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057
@@ -522,7 +516,7 @@ object ProductForm: TProductForm
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = '% '#1089#1082#1080#1076#1082#1080
+          HeaderHint = '% '#1089#1082#1080#1076#1082#1080' ('#1086#1089#1085#1086#1074#1085#1086#1081')'
           Options.Editing = False
           Width = 84
         end

@@ -77,6 +77,8 @@ type
     actChoiceFormGoods: TOpenChoiceForm;
     actChoiceFormModel: TOpenChoiceForm;
     spInsertUpdate: TdsdStoredProc;
+    SalePrice: TcxGridDBColumn;
+    SalePriceWVAT: TcxGridDBColumn;
   private
     { Private declarations }
   public

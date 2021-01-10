@@ -33,8 +33,21 @@ BEGIN
     -- Если код не установлен, определяем его как последний+1
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_ProdOptions()); 
 
-   -- проверка прав уникальности для свойства <Наименование >
+   -- проверка уникальности для свойства <Название >
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_ProdOptions(), inName, vbUserId);
+
+   -- проверка - у таких опций здесь нельзя установить значение <Комплектующие>
+   IF inGoodsId >0
+      AND EXISTS (SELECT 1 FROM ObjectLink AS ObjectLink_ProdColorPattern_ProdOptions
+                  WHERE ObjectLink_ProdColorPattern_ProdOptions.ChildObjectId = ioId
+                    AND ObjectLink_ProdColorPattern_ProdOptions.DescId        = zc_ObjectLink_ProdColorPattern_ProdOptions()
+                 )
+   THEN
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Для выбранной Опции нельзя установить значение <Комплектующие>.Т.к. значение определено в <Boat Structure>.'
+                                             , inProcedureName := 'gpInsertUpdate_Object_ProdOptions'
+                                             , inUserId        := vbUserId
+                                              );
+   END IF;
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_ProdOptions(), vbCode_calc, inName);

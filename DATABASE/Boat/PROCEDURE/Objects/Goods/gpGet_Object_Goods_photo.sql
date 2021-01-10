@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpGet_Object_Goods_photo (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Goods_photo(
-    IN inGoodsId          Integer,       -- Товар 
+    IN inGoodsId          Integer,       -- Товар
     IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
@@ -14,11 +14,10 @@ $BODY$
    DECLARE vbPriceListId Integer;
    DECLARE vbPriceListName TVarChar;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_Goods());
-    
-       RETURN QUERY 
+
+       RETURN QUERY
        WITH tmpPhoto AS (SELECT ObjectLink_GoodsPhoto_Goods.ChildObjectId AS GoodsId
                               , Object_GoodsPhoto.Id                      AS PhotoId
                               , ROW_NUMBER() OVER (PARTITION BY ObjectLink_GoodsPhoto_Goods.ChildObjectId ORDER BY Object_GoodsPhoto.Id) AS Ord
@@ -32,10 +31,10 @@ BEGIN
                         )
 
        SELECT Object_Goods.Id                     AS Id
-            , CASE WHEN Object_Goods.ObjectCode IN (3029, 3028, 7594) THEN ObjectBlob_GoodsPhoto_Data1.ValueData ELSE '' END :: TBlob AS Image1
-            , CASE WHEN Object_Goods.ObjectCode IN (3029, 3028, 7594) THEN ObjectBlob_GoodsPhoto_Data2.ValueData ELSE '' END :: TBlob  AS Image2
-            , CASE WHEN Object_Goods.ObjectCode IN (3029, 3028, 7594) THEN ObjectBlob_GoodsPhoto_Data3.ValueData ELSE '' END :: TBlob  AS Image3
-           
+            , ObjectBlob_GoodsPhoto_Data1.ValueData AS Image1
+            , ObjectBlob_GoodsPhoto_Data2.ValueData AS Image2
+            , ObjectBlob_GoodsPhoto_Data3.ValueData AS Image3
+
           /*  , ''  :: TBlob AS Image1
             , ''  :: TBlob AS Image2
             , ''  :: TBlob AS Image3
@@ -57,15 +56,13 @@ BEGIN
                                ON tmpPhoto3.GoodsId = Object_Goods.Id
                               AND tmpPhoto3.Ord = 3
             LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data3
-                                 ON ObjectBlob_GoodsPhoto_Data3.ObjectId = tmpPhoto3.PhotoId                          
+                                 ON ObjectBlob_GoodsPhoto_Data3.ObjectId = tmpPhoto3.PhotoId
        WHERE Object_Goods.DescId = zc_Object_Goods()
          AND Object_Goods.Id = inGoodsId;
-  
+
 END;
 $BODY$
-
 LANGUAGE plpgsql VOLATILE;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
