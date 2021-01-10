@@ -1,8 +1,9 @@
 -- Function: gpReport_IncomeConsumptionBalanceData()
 
-DROP FUNCTION IF EXISTS gpReport_IncomeConsumptionBalanceData (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_IncomeConsumptionBalanceData (Integer, TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_IncomeConsumptionBalanceData(
+    IN inUnitId        Integer ,   -- Подразделение
     IN inStartDate     TDateTime , -- Начало периода
     IN inEndDate       TDateTime , -- Конец периода
     IN inSession       TVarChar    -- сессия пользователя
@@ -69,6 +70,7 @@ BEGIN
                              , SUM((AnalysisContainer.Saldo  *
                                  AnalysisContainer.Price)::NUMERIC (16, 2))::TFloat                          AS Summa
                         FROM AnalysisContainer AS AnalysisContainer
+                        WHERE AnalysisContainer.UnitID = inUnitId
                         GROUP BY AnalysisContainer.UnitID
                                , AnalysisContainer.GoodsId
                         ),
@@ -80,6 +82,7 @@ BEGIN
                              , SUM(MovementItem.SaldoSum)                                                AS Summa
                         FROM AnalysisContainerItem AS MovementItem
                         WHERE MovementItem.Operdate > vbEndDate
+                          AND MovementItem.UnitID = inUnitId
                         GROUP BY MovementItem.UnitID
                                , MovementItem.GoodsId ),
 
@@ -121,6 +124,7 @@ BEGIN
                         FROM AnalysisContainerItem AS AnalysisContainerItem
                         WHERE AnalysisContainerItem.Operdate >= vbStartDate
                           AND AnalysisContainerItem.Operdate <= vbEndDate
+                          AND AnalysisContainerItem.UnitID = inUnitId
                         GROUP BY AnalysisContainerItem.UnitID, AnalysisContainerItem.GoodsId
                         )
 
@@ -140,11 +144,23 @@ BEGIN
                         WHERE Movement.StatusId = zc_Enum_Status_Complete()
                           AND Movement.DescId = zc_Movement_Promo()
                         )
+  , tmpUnit AS (SELECT
+                       Object_Unit.ID                       AS Id
+                     , Object_Parent.ValueData              AS ParentName
+                     , Object_Unit.ValueData                AS UnitName
+                FROM Object AS Object_Unit  
+                     LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
+                                          ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
+                                         AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
+                     LEFT JOIN Object AS Object_Parent
+                                      ON Object_Parent.Id = ObjectLink_Unit_Parent.ChildObjectId
+                WHERE Object_Unit.DescId = zc_Object_Unit()
+                )
 
 
     SELECT
-        Object_Parent.ValueData              AS ParentName
-      , Object_Unit.ValueData                AS UnitName
+        Object_Unit.ParentName               AS ParentName
+      , Object_Unit.UnitName                 AS UnitName
 
       , Object_Goods_Main.ObjectCode         AS GoodsId
       , Object_Goods_Main.Name               AS GoodsName
@@ -196,21 +212,14 @@ BEGIN
                                   ON tmpMovement.UnitID = tmpContainer.UnitID
                                  AND tmpMovement.GoodsId = tmpContainer.GoodsId
 
-        INNER JOIN Object AS Object_Unit  ON Object_Unit.Id  = tmpContainer.UnitID
+        INNER JOIN tmpUnit AS Object_Unit  ON Object_Unit.Id  = tmpContainer.UnitID
 
         INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = tmpContainer.GoodsId
         INNER JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
 
-        LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
-                             ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
-                            AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
-        LEFT JOIN Object AS Object_Parent
-                         ON Object_Parent.Id = ObjectLink_Unit_Parent.ChildObjectId
-
         LEFT JOIN tmpGoodsChecked ON tmpGoodsChecked.GoodsId = Object_Goods_Main.ObjectCode
 
-    WHERE COALESCE(tmpMovement.CountItem, tmpContainer.Saldo - COALESCE(tmpSaldoOut.Saldo, 0)) <> 0
-    ORDER BY Object_Goods_Main.ObjectCode, Object_Goods_Main.Name, Object_Unit.ValueData;
+    WHERE COALESCE(tmpMovement.CountItem, tmpContainer.Saldo - COALESCE(tmpSaldoOut.Saldo, 0)) <> 0;
 
 END;
 $BODY$
@@ -226,4 +235,6 @@ $BODY$
 
 -- тест
 --
-select * from gpReport_IncomeConsumptionBalanceData(inStartDate := ('01.01.2021')::TDateTime , inEndDate := ('30.01.2021')::TDateTime , inSession := '3');
+-- select * from gpReport_IncomeConsumptionBalanceData(inStartDate := ('01.01.2021')::TDateTime , inEndDate := ('30.01.2021')::TDateTime , inSession := '3');
+
+select * from gpReport_IncomeConsumptionBalanceData(inUnitId := 15171089, inStartDate := ('01.12.2020')::TDateTime , inEndDate := ('31.12.2020')::TDateTime ,  inSession := '3');

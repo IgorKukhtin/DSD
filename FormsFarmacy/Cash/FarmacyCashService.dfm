@@ -25969,7 +25969,7 @@ object MainCashForm2: TMainCashForm2
       end
       item
         Name = 'inDateInput'
-        Value = 'NULL'
+        Value = Null
         Component = ListDiffCDS
         ComponentItem = 'DateInput'
         DataType = ftDateTime
@@ -26059,7 +26059,7 @@ object MainCashForm2: TMainCashForm2
       end
       item
         Name = 'inDateLogIn'
-        Value = 'NULL'
+        Value = Null
         Component = EmployeeWorkLogCDS
         ComponentItem = 'DateLogIn'
         DataType = ftDateTime
@@ -26068,7 +26068,7 @@ object MainCashForm2: TMainCashForm2
       end
       item
         Name = 'inDateZReport'
-        Value = 'NULL'
+        Value = Null
         Component = EmployeeWorkLogCDS
         ComponentItem = 'DateZReport'
         DataType = ftDateTime
@@ -26077,7 +26077,7 @@ object MainCashForm2: TMainCashForm2
       end
       item
         Name = 'inDateLogOut'
-        Value = 'NULL'
+        Value = Null
         Component = EmployeeWorkLogCDS
         ComponentItem = 'DateLogOut'
         DataType = ftDateTime
@@ -26134,7 +26134,7 @@ object MainCashForm2: TMainCashForm2
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = EmployeeScheduleCDS
         ComponentItem = 'Date'
         DataType = ftDateTime
@@ -26143,7 +26143,7 @@ object MainCashForm2: TMainCashForm2
       end
       item
         Name = 'inDateStart'
-        Value = 'NULL'
+        Value = Null
         Component = EmployeeScheduleCDS
         ComponentItem = 'DateStart'
         DataType = ftDateTime
@@ -26152,7 +26152,7 @@ object MainCashForm2: TMainCashForm2
       end
       item
         Name = 'inDateEnd'
-        Value = 'NULL'
+        Value = Null
         Component = EmployeeScheduleCDS
         ComponentItem = 'DateEnd'
         DataType = ftDateTime

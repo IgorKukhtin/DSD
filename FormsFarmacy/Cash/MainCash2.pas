@@ -543,6 +543,7 @@ type
     Liki241: TMenuItem;
     actLoadLiki24: TMultiAction;
     actLoadLiki24_Search: TMultiAction;
+    Color_IPE: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -840,6 +841,10 @@ type
     procedure SaveHardwareData;
     // Установить дисконтную программу
     procedure SetDiscountExternal(ACode : Integer = 0; ADiscountCard : String = '');
+
+    // Пропись выполнения плана по сотруднику
+    procedure UpdateImplementationPlanEmployee;
+
 
   public
     procedure pGet_OldSP(var APartnerMedicalId: Integer;
@@ -3394,6 +3399,7 @@ begin
       finally
         ReleaseMutex(MutexGoodsExpirationDate);
       end;
+      UpdateImplementationPlanEmployee;
     finally
       RemainsCDS.EnableControls;
       ExpirationDateCDS.EnableControls;
@@ -10703,6 +10709,7 @@ begin
       finally
         ReleaseMutex(MutexGoodsExpirationDate);
       end;
+      UpdateImplementationPlanEmployee;
       // корректируем новые остатки с учетом того, что уже было в чеке
       CheckCDS.First;
       while not CheckCDS.Eof do
@@ -11459,6 +11466,65 @@ begin
   finally
     DistributionPromoCDS.Free;
   end;
+end;
+
+// Пропись выполнения плана по сотруднику
+procedure TMainCashForm2.UpdateImplementationPlanEmployee;
+var ds : TClientDataSet;
+begin
+
+  // Очищаем данные по выполнению плана сотрудника
+  RemainsCDS.First;
+  while not RemainsCDS.Eof do
+  begin
+    if RemainsCDS.FieldByName('Color_IPE').AsInteger <> 0 then
+    begin
+      RemainsCDS.Edit;
+      RemainsCDS.FieldByName('Color_IPE').AsInteger := 0;
+      RemainsCDS.Post;
+    end;
+    RemainsCDS.Next;
+  end;
+
+  // Загрузка ImplementationPlanEmployee_lcl по выполнению плана сотрудника
+  if FileExists(ImplementationPlanEmployee_lcl) then
+  begin
+    WaitForSingleObject(MutexDiffCDS, MutexImplementationPlanEmployee);
+    ds := TClientDataSet.Create(nil);
+    try
+      try
+
+        LoadLocalData(ds, ImplementationPlanEmployee_lcl);
+        if not ds.Active then ds.Open;
+
+        ds.First;
+        if ds.IsEmpty then Exit
+        else if ds.FieldByName('UserId').AsString <> gc_User.Session then Exit;
+
+        while not ds.Eof do
+        begin
+
+          if RemainsCDS.Locate('GoodsCode', ds.FieldByName('GoodsCode').AsInteger, []) and
+             (RemainsCDS.FieldByName('Color_IPE').AsInteger <> ds.FieldByName('Color').AsInteger) then
+          begin
+            RemainsCDS.Edit;
+            RemainsCDS.FieldByName('Color_IPE').AsInteger := ds.FieldByName('Color').AsInteger;
+            RemainsCDS.Post;
+          end;
+          ds.Next;
+        end;
+
+      Except ON E:Exception do
+        Add_Log('Ошибка загрузки выполнения плана сотрудника:' + E.Message);
+      end;
+    finally
+      Add_Log('End MutexImplementationPlanEmployee');
+      ReleaseMutex(MutexImplementationPlanEmployee);
+      ds.Close;
+      ds.Free;
+    end;
+  end;
+
 end;
 
 

@@ -213,6 +213,7 @@ type
     procedure SaveGoodsExpirationDate;
     procedure SaveBuyer;
     procedure SaveDistributionPromo;
+    procedure SaveImplementationPlanEmployee;
 //    procedure SaveGoodsAnalog;
 
     procedure SendZReport;
@@ -249,7 +250,8 @@ var
   AllowedConduct : Boolean = false;
 
   FM_SERVISE: Integer;
-    function GenerateGUID: String;
+
+  function GenerateGUID: String;
 implementation
 
 {$R *.dfm}
@@ -447,6 +449,8 @@ begin
       SaveCashRemainsDif;
       //Получение остатков по партиям
       if not gc_User.Local then SaveGoodsExpirationDate;
+      //Получение выполнения плана продаж по сотруднику
+      SaveImplementationPlanEmployee;
       //Получение справочника аналогов
 //      if not gc_User.Local then SaveGoodsAnalog;
       // Отправка сообщения приложению про надобность обновить остатки из файла
@@ -531,6 +535,8 @@ begin   //yes
         if not gc_User.Local then SaveBuyer;
         //Получение Раздача акционных материалов
         if not gc_User.Local then SaveDistributionPromo;
+        //Получение выполнения плана продаж по сотруднику
+        if not gc_User.Local then SaveImplementationPlanEmployee;
         //Получение справочника аналогов
 //        if not gc_User.Local then SaveGoodsAnalog;
 
@@ -2142,6 +2148,49 @@ begin
       on E: Exception do
       begin
         Add_Log('SaveDistributionPromo Exception: ' + E.Message);
+        Exit;
+      end;
+    end;
+  finally
+    freeAndNil(sp);
+  end;
+end;
+
+procedure TMainCashForm2.SaveImplementationPlanEmployee;
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+begin
+  tiServise.Hint := 'Получение выполнения плана продаж по сотруднику';
+  sp := TdsdStoredProc.Create(nil);
+  try
+    try
+      ds := TClientDataSet.Create(nil);
+      try
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
+
+        sp.StoredProcName := 'gpSelect_GetImplementationPlanEmployeeCash';
+        sp.Execute;
+        Add_Log('Start MutexImplementationPlanEmployee');
+        WaitForSingleObject(MutexImplementationPlanEmployee, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+        try
+
+
+          SaveLocalData(ds,ImplementationPlanEmployee_lcl);
+
+        finally
+          Add_Log('End MutexImplementationPlanEmployee');
+          ReleaseMutex(MutexImplementationPlanEmployee);
+        end;
+
+      finally
+        ds.free;
+      end;
+    except
+      on E: Exception do
+      begin
+        Add_Log('SaveImplementationPlanEmployee Exception: ' + E.Message);
         Exit;
       end;
     end;

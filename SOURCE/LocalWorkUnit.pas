@@ -44,6 +44,7 @@ function UserSettings_lcl: String;
 function EmployeeSchedule_lcl: String;
 function Buyer_lcl: String;
 function DistributionPromo_lcl: String;
+function ImplementationPlanEmployee_lcl: String;
 
 procedure SaveLocalData(ASrc: TClientDataSet; AFileName: String);
 procedure LoadLocalData(ADst: TClientDataSet; AFileName: String);
@@ -59,7 +60,8 @@ var
   MutexUserSettings, MutexDBF, MutexDBFDiff,  MutexVip, MutexRemains, MutexAlternative, MutexRefresh,
   MutexAllowedConduct, MutexGoods, MutexDiffCDS, MutexDiffKind, MutexEmployeeWorkLog,
   MutexBankPOSTerminal, MutexUnitConfig, MutexTaxUnitNight, MutexGoodsExpirationDate,
-  MutexGoodsAnalog, MutexUserHelsi, MutexEmployeeSchedule, MutexBuyer, MutexDistributionPromo : THandle;
+  MutexGoodsAnalog, MutexUserHelsi, MutexEmployeeSchedule, MutexBuyer, MutexDistributionPromo,
+  MutexImplementationPlanEmployee : THandle;
 
 implementation
 
@@ -181,6 +183,11 @@ End;
 function DistributionPromo_lcl: String;
 Begin
   Result := ExtractFilePath(Application.ExeName) + 'DistributionPromo.local';
+End;
+
+function ImplementationPlanEmployee_lcl: String;
+Begin
+  Result := ExtractFilePath(Application.ExeName) + 'ImplementationPlanEmployee.local';
 End;
 
 function AddIntField(ADBFFieldDefs: TVKDBFFieldDefs; AName: string): TVKDBFFieldDef;

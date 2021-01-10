@@ -23,6 +23,15 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
     Height = 31
     Align = alTop
     TabOrder = 0
+    object lblProggres1: TLabel
+      Left = 499
+      Top = 1
+      Width = 22
+      Height = 13
+      Alignment = taCenter
+      Caption = '0 / 0'
+      Visible = False
+    end
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -51,6 +60,20 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
       Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
+    object ProgressBar1: TProgressBar
+      Left = 461
+      Top = 15
+      Width = 84
+      Height = 10
+      TabOrder = 4
+      Visible = False
+    end
+    object cxLabel3: TcxLabel
+      Left = 401
+      Top = 6
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072':'
+      Visible = False
+    end
   end
   object Panel2: TPanel
     Left = 1064
@@ -60,7 +83,6 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
     Align = alRight
     ShowCaption = False
     TabOrder = 2
-    ExplicitHeight = 603
     object Panel3: TPanel
       Left = 1
       Top = 265
@@ -70,7 +92,6 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
       BevelOuter = bvNone
       ShowCaption = False
       TabOrder = 0
-      ExplicitHeight = 337
       object cxgChoiceGoods: TcxGrid
         Left = 0
         Top = 21
@@ -78,8 +99,6 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         Height = 293
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 5
-        ExplicitTop = 16
         object cxgChoiceGoodsDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           Navigator.Buttons.Insert.Visible = False
@@ -141,7 +160,6 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         Align = alBottom
         ShowCaption = False
         TabOrder = 2
-        ExplicitTop = 306
         object cxButton2: TcxButton
           Left = 1
           Top = 1
@@ -238,7 +256,7 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
     end
     object cxSplitter2: TcxSplitter
       Left = 1
-      Top = 257
+      Top = 668
       Width = 263
       Height = 8
       AlignSplitter = salTop
@@ -252,7 +270,6 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
     Height = 611
     AlignSplitter = salRight
     Control = Panel2
-    ExplicitHeight = 603
   end
   object cxIncomeConsumptionBalance: TcxGrid
     Left = 0
@@ -261,7 +278,6 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
     Height = 611
     Align = alClient
     TabOrder = 7
-    ExplicitHeight = 603
     object cxIncomeConsumptionBalanceDBBandedTableView1: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -976,10 +992,10 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = dsdStoredProcUnit
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = dsdStoredProcUnit
         end
         item
           StoredProc = dsdStoredProcGoods
@@ -1100,6 +1116,12 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
       end>
     Params = <
       item
+        Name = 'inUnitId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inStartDate'
         Value = 41640d
         Component = deStart
@@ -1120,7 +1142,7 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
     Top = 264
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 528
+    Left = 568
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -1221,6 +1243,31 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
       end>
     PackSize = 1
     Left = 272
-    Top = 344
+    Top = 328
+  end
+  object dsdStoredProcUnit: TdsdStoredProc
+    StoredProcName = 'gpReport_IncomeConsumptionBalanceUnit'
+    DataSet = cdsPromoUnit
+    DataSets = <
+      item
+        DataSet = cdsPromoUnit
+      end>
+    Params = <>
+    PackSize = 1
+    AfterExecute = dsdStoredProcUnitAfterExecute
+    Left = 272
+    Top = 392
+  end
+  object ClientDataSetTemp: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 448
+    Top = 264
+  end
+  object cdsPromoUnit: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 144
+    Top = 448
   end
 end
