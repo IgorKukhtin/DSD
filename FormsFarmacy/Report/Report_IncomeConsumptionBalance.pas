@@ -123,11 +123,18 @@ type
     AmountReturnIn: TcxGridDBBandedColumn;
     AmountReturnInSum: TcxGridDBBandedColumn;
     dsdStoredProcGoods: TdsdStoredProc;
+    dsdStoredProcUnit: TdsdStoredProc;
+    ClientDataSetTemp: TClientDataSet;
+    cdsPromoUnit: TClientDataSet;
+    ProgressBar1: TProgressBar;
+    lblProggres1: TLabel;
+    cxLabel3: TcxLabel;
     procedure actSetGoodsExecute(Sender: TObject);
     procedure actSetPromoExecute(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure actAddGoodsExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure dsdStoredProcUnitAfterExecute(Sender: TObject);
   private
   public
   end;
@@ -216,6 +223,52 @@ begin
   finally
     cdsPromoGoods.Filtered := False;
     cdsPromoGoods.Filter := '';
+  end;
+end;
+
+procedure TReport_IncomeConsumptionBalanceForm.dsdStoredProcUnitAfterExecute(
+  Sender: TObject);
+begin
+  try
+    cxIncomeConsumptionBalanceDBBandedTableView1.DataController.DataSource := Nil;
+    cdsPromoUnit.First;
+
+    lblProggres1.Caption := IntToStr(cdsPromoUnit.RecNo)+' / '+IntToStr(cdsPromoUnit.RecordCount);
+    lblProggres1.Repaint;
+    ProgressBar1.Position := cdsPromoUnit.RecNo;
+    ProgressBar1.Max := cdsPromoUnit.RecordCount;
+    ProgressBar1.Repaint;
+    Application.ProcessMessages;
+
+    cxLabel3.Visible := True;
+    lblProggres1.Visible := True;
+    ProgressBar1.Visible := True;
+    dsdStoredProc.ParamByName('inUnitId').Value := cdsPromoUnit.FieldByName('UnitId').AsInteger;
+    dsdStoredProc.Execute;
+    dsdStoredProc.DataSet := ClientDataSetTemp;
+    cdsPromoUnit.Next;
+    while not cdsPromoUnit.Eof do
+    begin
+
+      lblProggres1.Caption := IntToStr(cdsPromoUnit.RecNo)+' / '+IntToStr(cdsPromoUnit.RecordCount);
+      lblProggres1.Repaint;
+      ProgressBar1.Position := cdsPromoUnit.RecNo;
+      ProgressBar1.Repaint;
+      Application.ProcessMessages;
+
+      ClientDataSetTemp.Close;
+      dsdStoredProc.ParamByName('inUnitId').Value := cdsPromoUnit.FieldByName('UnitId').AsInteger;
+      dsdStoredProc.Execute;
+      if not ClientDataSetTemp.IsEmpty then ClientDataSet.AppendData(ClientDataSetTemp.Data, False);
+      cdsPromoUnit.Next;
+    end;
+  finally
+    dsdStoredProc.DataSet := ClientDataSet;
+    cxIncomeConsumptionBalanceDBBandedTableView1.DataController.DataSource := DataSource;
+    cxLabel3.Visible := False;
+    lblProggres1.Visible := False;
+    ProgressBar1.Visible := False;
+    Application.ProcessMessages;
   end;
 end;
 

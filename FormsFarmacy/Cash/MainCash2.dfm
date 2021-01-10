@@ -331,6 +331,37 @@ inherited MainCashForm2: TMainCashForm2
           Options.Editing = False
           Width = 25
         end
+        object Color_IPE: TcxGridDBColumn
+          Caption = #1055#1083#1072#1085
+          DataBinding.FieldName = 'Color_IPE'
+          PropertiesClassName = 'TcxImageComboBoxProperties'
+          Properties.Alignment.Horz = taLeftJustify
+          Properties.Images = dmMain.ImageList
+          Properties.Items = <
+            item
+              Value = 0
+            end
+            item
+              Description = #1042#1089#1077#1075#1086' '#1087#1088#1086#1076#1072#1085#1086' < '#1079#1085#1072#1095#1077#1085#1080#1077' min '#1087#1083#1072#1085' '
+              ImageIndex = 7
+              Value = 1
+            end
+            item
+              Description = #1042#1089#1077#1075#1086' '#1087#1088#1086#1076#1072#1085#1086' >= min '#1087#1083#1072#1085' '#1085#1086' < '#1087#1083#1072#1085' '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080' '
+              ImageIndex = 79
+              Value = 2
+            end
+            item
+              Description = #1042#1089#1077#1075#1086' '#1087#1088#1086#1076#1072#1085#1086' > min '#1087#1083#1072#1085' '#1080' >= '#1087#1083#1072#1085' '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080' '
+              ImageIndex = 80
+              Value = 3
+            end>
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taCenter
+          HeaderHint = #1062#1074#1077#1090#1085#1099#1077' '#1075#1072#1083#1086#1095#1082#1080' '#1087#1086' '#1087#1083#1072#1085#1091' '#1087#1088#1086#1076#1072#1078
+          Options.Editing = False
+          Width = 47
+        end
         object MainColName: TcxGridDBColumn
           Caption = #1053#1072#1079#1074#1072#1085#1080#1077
           DataBinding.FieldName = 'GoodsName'

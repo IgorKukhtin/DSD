@@ -532,6 +532,7 @@ BEGIN
                                                         ON MovementItem_Child.MovementId = Movement.Id
                                                        AND MovementItem_Child.DescId = zc_MI_Child()
                                                        AND MovementItem_Child.ObjectId = vbUnitId
+                                                       AND MovementItem_Child.isErased = False
 
                                  LEFT JOIN tmpMovementItemUnit AS MovementItemUnit
                                                                ON MovementItemUnit.MovementId = Movement.Id

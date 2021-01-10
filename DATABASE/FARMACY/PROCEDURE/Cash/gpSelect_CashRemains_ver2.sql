@@ -41,7 +41,8 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                NotTransferTime boolean,
                NDSKindId Integer,
                isPresent boolean,
-               DistributionPromoID Integer
+               DistributionPromoID Integer,
+               Color_IPE Integer
 
              , PartionDateKindId_check   Integer
              , Price_check               TFloat
@@ -897,6 +898,7 @@ BEGIN
           , COALESCE(CashSessionSnapShot.NDSKindId, Object_Goods_Main.NDSKindId) AS NDSKindId
           , Object_Goods_Main.isPresent                                          AS isPresent
           , tmpDistributionPromo.DistributionPromoID                             AS DistributionPromoID
+          , 0                                                      AS Color_IPE
 
           , CashSessionSnapShot.PartionDateKindId   AS PartionDateKindId_check
           , CashSessionSnapShot.Price               AS Price_check
