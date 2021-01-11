@@ -29,7 +29,7 @@ object ProdModelEditForm: TProdModelEditForm
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 454
+    Top = 447
     Width = 75
     Height = 25
     Action = actInsertUpdateGuides
@@ -38,7 +38,7 @@ object ProdModelEditForm: TProdModelEditForm
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 454
+    Top = 447
     Width = 75
     Height = 25
     Action = actFormClose
@@ -63,12 +63,12 @@ object ProdModelEditForm: TProdModelEditForm
   end
   object cxLabel3: TcxLabel
     Left = 10
-    Top = 394
+    Top = 387
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit
     Left = 10
-    Top = 414
+    Top = 407
     TabOrder = 7
     Width = 273
   end
@@ -197,6 +197,17 @@ object ProdModelEditForm: TProdModelEditForm
     TabOrder = 25
     Width = 273
   end
+  object cxLabel13: TcxLabel
+    Left = 10
+    Top = 337
+    Caption = 'Pattern CIN'
+  end
+  object edPatternCIN: TcxTextEdit
+    Left = 10
+    Top = 357
+    TabOrder = 27
+    Width = 273
+  end
   object ActionList: TActionList
     Left = 152
     Top = 56
@@ -310,6 +321,14 @@ object ProdModelEditForm: TProdModelEditForm
         Value = Null
         Component = edSeating
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPatternCIN'
+        Value = Null
+        Component = edPatternCIN
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -462,6 +481,13 @@ object ProdModelEditForm: TProdModelEditForm
         Value = Null
         Component = GuidesProdEngine
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PatternCIN'
+        Value = Null
+        Component = edPatternCIN
         DataType = ftString
         MultiSelectSeparator = ','
       end>

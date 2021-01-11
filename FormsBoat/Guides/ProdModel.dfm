@@ -84,6 +84,15 @@ object ProdModelForm: TProdModelForm
         Options.Editing = False
         Width = 112
       end
+      object PatternCIN: TcxGridDBColumn
+        Caption = 'Pattern CIN'
+        DataBinding.FieldName = 'PatternCIN'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1096#1072#1073#1083#1086#1085' '#1076#1083#1103' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1103' CIN '#1083#1086#1076#1082#1080
+        Options.Editing = False
+        Width = 70
+      end
       object ProdEngineName: TcxGridDBColumn
         Caption = #1052#1086#1090#1086#1088
         DataBinding.FieldName = 'ProdEngineName'

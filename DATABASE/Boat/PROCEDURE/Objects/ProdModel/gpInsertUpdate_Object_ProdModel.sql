@@ -3,6 +3,8 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdModel(Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdModel(Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdModel(Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdModel(Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdModel(
  INOUT ioId       Integer   ,    -- ключ объекта <Модели>
@@ -15,6 +17,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdModel(
     IN inFuel     TFloat    ,
     IN inSpeed    TFloat    ,
     IN inSeating  TFloat    ,
+    IN inPatternCIN  TVarChar  ,
     IN inComment  TVarChar  ,
     IN inBrandId  Integer   ,
     IN inProdEngineId  Integer   ,
@@ -46,7 +49,9 @@ BEGIN
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ProdModel_Comment(), ioId, inComment);
-
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ProdModel_PatternCIN(), ioId, inPatternCIN);
+   
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdModel_Length(), ioId, inLength);
    -- сохранили свойство <>
@@ -84,6 +89,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.01.21         * PatternCIN
  30.11.20         * add inProdEngineId
  24.11.20         * add inBrandId
  08.10.20         *
