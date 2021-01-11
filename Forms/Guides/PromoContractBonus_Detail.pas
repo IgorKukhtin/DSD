@@ -1,4 +1,4 @@
-unit Contract;
+unit PromoContractBonus_Detail;
 
 interface
 
@@ -23,10 +23,10 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, dsdGuides;
 
 type
-  TContractForm = class(TParentForm)
+  TPromoContractBonus_DetailForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     InvNumber: TcxGridDBColumn;
@@ -38,10 +38,6 @@ type
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
     bbRefresh: TdxBarButton;
-    bbInsert: TdxBarButton;
-    bbEdit: TdxBarButton;
-    bbSetErased: TdxBarButton;
-    bbSetUnErased: TdxBarButton;
     bbGridToExcel: TdxBarButton;
     dxBarStatic1: TdxBarStatic;
     bbChoiceGuides: TdxBarButton;
@@ -52,7 +48,7 @@ type
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
@@ -84,14 +80,10 @@ type
     cxGridLevel2: TcxGridLevel;
     ContractConditionDS: TDataSource;
     CDSContractCondition: TClientDataSet;
-    spInsertUpdateContractCondition: TdsdStoredProc;
-    spSelectContractCondition: TdsdStoredProc;
     ContractConditionKindChoiceForm: TOpenChoiceForm;
     InsertRecordCCK: TInsertRecord;
-    bbInsertRecCCK: TdxBarButton;
     actContractCondition: TdsdUpdateDataSet;
     OKPO: TcxGridDBColumn;
-    spInsertUpdate: TdsdStoredProc;
     PaidKindChoiceForm: TOpenChoiceForm;
     actUpdateDataSet: TdsdUpdateDataSet;
     JuridicalChoiceForm: TOpenChoiceForm;
@@ -128,39 +120,20 @@ type
     DateDocument: TcxGridDBColumn;
     PersonalChoiceForm: TOpenChoiceForm;
     JuridicalGroupName: TcxGridDBColumn;
-    deStart: TcxDateEdit;
-    cxlEnd: TcxLabel;
-    deEnd: TcxDateEdit;
-    cbPeriod: TcxCheckBox;
-    bbStartDate: TdxBarControlContainerItem;
-    bbEnd: TdxBarControlContainerItem;
-    bbEndDate: TdxBarControlContainerItem;
-    bbIsEndDate: TdxBarControlContainerItem;
-    bbIsPeriod: TdxBarControlContainerItem;
-    cbEndDate: TcxCheckBox;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
     GLNCode: TcxGridDBColumn;
     ContractTagGroupName: TcxGridDBColumn;
     JuridicalDocumentChoiceForm: TOpenChoiceForm;
     JuridicalDocumentName: TcxGridDBColumn;
-    cxGridPartner: TcxGrid;
-    cxGridDBTableViewPartner: TcxGridDBTableView;
-    PartnerName: TcxGridDBColumn;
-    cxGridLevePartner: TcxGridLevel;
-    CDSContractPartner: TClientDataSet;
-    DataSourcePartner: TDataSource;
-    spSelectContractPartner: TdsdStoredProc;
-    spInsertUpdateContractPartner: TdsdStoredProc;
+    cxGridContract_Child: TcxGrid;
+    cxGridDBTableViewContract_Child: TcxGridDBTableView;
+    cxGridLeveContract_Child: TcxGridLevel;
     PartnerChoiceForm: TOpenChoiceForm;
-    dsdDBViewAddOnPartner: TdsdDBViewAddOn;
+    dsdDBViewAddOnContract_Child: TdsdDBViewAddOn;
     InsertRecordCP: TInsertRecord;
-    bbRecordCP: TdxBarButton;
-    colCode: TcxGridDBColumn;
     dsdUpdateDataSet1: TdsdUpdateDataSet;
     ProtocolOpenForm: TdsdOpenForm;
-    bbProtocol: TdxBarButton;
-    cxTopSplitter: TcxSplitter;
     cxRightSplitter: TcxSplitter;
     Panel: TPanel;
     cxGridGoods: TcxGrid;
@@ -171,37 +144,24 @@ type
     CDSContractGoods: TClientDataSet;
     DataSourceGoods: TDataSource;
     dsdDBViewAddOnGoods: TdsdDBViewAddOn;
-    spSelectContractGoods: TdsdStoredProc;
-    spInsertUpdateContractGoods: TdsdStoredProc;
     GoodsKindName: TcxGridDBColumn;
     Price: TcxGridDBColumn;
     InsertRecordGoods: TInsertRecord;
     GoodsChoiceForm: TOpenChoiceForm;
-    bbRecordGoods: TdxBarButton;
     GoodsKindChoiceForm: TOpenChoiceForm;
     actUpdateDSGoods: TdsdUpdateDataSet;
-    PartnerCode: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
-    spErasedUnErasedPartner: TdsdStoredProc;
     spErasedUnErasedGoods: TdsdStoredProc;
     dsdSetErasedPartner: TdsdUpdateErased;
     dsdSetErasedGoods: TdsdUpdateErased;
-    bbSetErasedPartner: TdxBarButton;
-    bbSetErasedGoods: TdxBarButton;
     clPisErased: TcxGridDBColumn;
     clGisErased: TcxGridDBColumn;
     dsdSetUnErasedPartner: TdsdUpdateErased;
     dsdSetUnErasedGoods: TdsdUpdateErased;
-    bbSetUnErasedPartner: TdxBarButton;
-    bbSetUnErasedGoods: TdxBarButton;
     ProtocolOpenFormCondition: TdsdOpenForm;
     ProtocolOpenFormPartner: TdsdOpenForm;
     ProtocolOpenFormGoods: TdsdOpenForm;
-    bbProtocolOpenFormCondition: TdxBarButton;
-    bbProtocolOpenFormPartner: TdxBarButton;
-    bbProtocolOpenFormGoods: TdxBarButton;
     PriceListName: TcxGridDBColumn;
-    isConnected: TcxGridDBColumn;
     GoodsPropertyName: TcxGridDBColumn;
     RetailName: TcxGridDBColumn;
     GoodsPropertyChoiceForm: TOpenChoiceForm;
@@ -211,9 +171,7 @@ type
     Panel1: TPanel;
     ContractSendName: TcxGridDBColumn;
     ContractSendChoiceForm: TOpenChoiceForm;
-    spUpdateDefaultOut: TdsdStoredProc;
     actUpdateVat: TdsdExecStoredProc;
-    bbCustom: TdxBarButton;
     isVat: TcxGridDBColumn;
     CurrencyName: TcxGridDBColumn;
     JuridicalInvoiceName: TcxGridDBColumn;
@@ -221,52 +179,32 @@ type
     clPartnerCode: TcxGridDBColumn;
     spUpdateVat: TdsdStoredProc;
     actUpdateDefaultOut: TdsdExecStoredProc;
-    bbUpdateDefaultOut: TdxBarButton;
     colStartDate: TcxGridDBColumn;
     colEndDate: TcxGridDBColumn;
     ccPaidKindName: TcxGridDBColumn;
     PaidKindChoiceForm——: TOpenChoiceForm;
-    spUpdate_isWMS: TdsdStoredProc;
     actUpdate_isWMS: TdsdExecStoredProc;
-    bbUpdate_isWMS: TdxBarButton;
     clPercentRetBonus: TcxGridDBColumn;
-    spUpdateStateKind_Closed: TdsdStoredProc;
     actUpdateStateKind_Closed: TdsdExecStoredProc;
     macUpdateStateKind_Closed_list: TMultiAction;
     macUpdateStateKind_Closed: TMultiAction;
-    bbUpdateStateKind_Closed: TdxBarButton;
     actRefreshContract: TdsdDataSetRefresh;
     actContractGoodsChoiceOpenForm: TdsdOpenForm;
-    bbContractGoodsChoiceOpenForm: TdxBarButton;
-    CCPartner: TcxGrid;
-    cxGridDBTableViewCCPartner: TcxGridDBTableView;
-    ccpCode: TcxGridDBColumn;
-    ccpPartnerCode: TcxGridDBColumn;
-    ccpPartnerName: TcxGridDBColumn;
-    ccpisErased: TcxGridDBColumn;
-    cxGridLevelCCPartner: TcxGridLevel;
-    CCPartnerDS: TDataSource;
-    CCPartnerCDS: TClientDataSet;
+    Contract_ChildDS: TDataSource;
+    Contract_ChildCDS: TClientDataSet;
     cxSplitter1: TcxSplitter;
     cxSplitter2: TcxSplitter;
     cxSplitter3: TcxSplitter;
-    dsdDBViewAddOnCCPartner: TdsdDBViewAddOn;
-    spInsertUpdateCCPartner: TdsdStoredProc;
-    spSelectCCPartner: TdsdStoredProc;
-    spErasedUnErasedCCPartner: TdsdStoredProc;
     PartnerContractConditionChoiceForm: TOpenChoiceForm;
     actUpdateDataSetCCPartner: TdsdUpdateDataSet;
     InsertRecordCCPartner: TInsertRecord;
     dsdSetErasedCCPartner: TdsdUpdateErased;
     dsdSetUnErased——Partner: TdsdUpdateErased;
-    bbInsertRecordCCPartner: TdxBarButton;
-    bbdsdSetErasedCCPartner: TdxBarButton;
-    bbdsdSetUnErased——Partner: TdxBarButton;
     ProtocolOpenFormCCPartner: TdsdOpenForm;
-    bbProtocolOpenFormCCPartner: TdxBarButton;
-    spDelete_ContractSend: TdsdStoredProc;
-    actDelete_ContractSend: TdsdExecStoredProc;
-    bbDelete_ContractSend: TdxBarButton;
+    cxLabel5: TcxLabel;
+    edPromo: TcxButtonEdit;
+    GuidesPromo: TdsdGuides;
+    FormParams: TdsdFormParams;
 
   private
     { Private declarations }
@@ -279,6 +217,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TContractForm);
+  RegisterClass(TPromoContractBonus_DetailForm);
 
 end.

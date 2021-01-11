@@ -86,7 +86,7 @@ BEGIN
                        FROM (SELECT ROW_NUMBER() OVER(ORDER BY MID.ValueData desc) AS Num, MID.DescId 
                              FROM MovementItemDate AS MID
                              WHERE MID.MovementItemId = inId
-                               AND MID.DescId IN (zc_MIDate_EconomIn, zc_MIDate_EconomOut(), zc_MIDate_Snab(), zc_MIDate_SnabRe(), zc_MIDate_Econom()
+                               AND MID.DescId IN (zc_MIDate_EconomIn(), zc_MIDate_EconomOut(), zc_MIDate_Snab(), zc_MIDate_SnabRe(), zc_MIDate_Econom()
                                                 , zc_MIDate_Remake(), zc_MIDate_Buh())
                                AND MID.ValueData IS NOT NULL
                        ) AS tmp

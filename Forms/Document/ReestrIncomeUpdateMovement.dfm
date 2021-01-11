@@ -1310,7 +1310,7 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
     Top = 307
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_MI_ReestrUser'
+    StoredProcName = 'gpSelect_MI_ReestrIncomeUser'
     Params = <
       item
         Name = 'instartdate'
@@ -1372,10 +1372,6 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExternalDialog'
         end
         item
           Visible = True
@@ -1553,7 +1549,7 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
     Top = 290
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MI_Reestr_ReestrKindErased'
+    StoredProcName = 'gpUpdate_MI_ReestrIncome_ReestrKindErased'
     Params = <
       item
         Name = 'inid'
@@ -1651,7 +1647,7 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
     Top = 312
   end
   object spUpdateMI: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MI_Reestr'
+    StoredProcName = 'gpUpdate_MI_ReestrIncome'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1669,12 +1665,6 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
         Value = Null
         Component = ReestrKindGuides
         ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMemberId'
-        Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

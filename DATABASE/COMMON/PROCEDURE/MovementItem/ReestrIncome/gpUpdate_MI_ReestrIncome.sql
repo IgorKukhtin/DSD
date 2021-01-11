@@ -1,11 +1,12 @@
 -- Function: gpUpdate_MI_ReestrIncome()
 
 DROP FUNCTION IF EXISTS gpUpdate_MI_ReestrIncome (TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_ReestrIncome (TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_ReestrIncome(
     IN inBarCode              TVarChar  , -- штрихкод документа продажи 
     IN inReestrKindId         Integer   , -- Тип состояния по реестру
-    IN inMemberId             Integer   , -- Физические лица(водитель/экспедитор) кто сдал документ для визы
+    --IN inMemberId             Integer   , -- Физические лица(водитель/экспедитор) кто сдал документ для визы
     IN inSession              TVarChar    -- сессия пользователя
 )                              
 RETURNS VOID
@@ -52,7 +53,7 @@ BEGIN
 
 
      -- Проверка
-     IF inMemberId = 0 AND inReestrKindId IN (zc_Enum_ReestrKind_PartnerIn(), zc_Enum_ReestrKind_RemakeIn())
+  /*   IF inMemberId = 0 AND inReestrKindId IN (zc_Enum_ReestrKind_PartnerIn(), zc_Enum_ReestrKind_RemakeIn())
      THEN
          -- должен быть кто сдал документ для визы
          RAISE EXCEPTION 'Ошибка.Для визы <%> не определен <Экспедитор / Водитель (от кого получена накладная)>.', lfGet_Object_ValueData (inReestrKindId);
@@ -61,7 +62,7 @@ BEGIN
          -- НЕ должно быть кто сдал документ для визы
          RAISE EXCEPTION 'Ошибка.Для визы <%> значение <Экспедитор / Водитель (от кого получена накладная)> должно быть пустым.', lfGet_Object_ValueData (inReestrKindId);
      END IF;
-
+*/
 
      -- найдем Продажу покупателю
      IF CHAR_LENGTH (inBarCode) >= 13
@@ -103,16 +104,16 @@ BEGIN
          --
          -- Попробуем найти "пустышку"
          vbMovementId_ReestrIncome:= (SELECT Movement.Id
-                                FROM Movement
-                                     LEFT JOIN MovementLinkMovement AS MLM_Transport
-                                                                    ON MLM_Transport.MovementId = Movement.Id
-                                                                   AND MLM_Transport.DescId = zc_MovementLinkMovement_Transport()
-                                WHERE Movement.OperDate = CURRENT_DATE
-                                  AND Movement.DescId = zc_Movement_ReestrIncome()
-                                  AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                  AND MLM_Transport.MovementId IS NULL
-                                LIMIT 1 -- Прийдется так "криво" обойти вариант если вдруг парраллельно создадут новый док.
-                               );
+                                      FROM Movement
+                                           LEFT JOIN MovementLinkMovement AS MLM_Transport
+                                                                          ON MLM_Transport.MovementId = Movement.Id
+                                                                         AND MLM_Transport.DescId = zc_MovementLinkMovement_Transport()
+                                      WHERE Movement.OperDate = CURRENT_DATE
+                                        AND Movement.DescId = zc_Movement_ReestrIncome()
+                                        AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                        AND MLM_Transport.MovementId IS NULL
+                                      LIMIT 1 -- Прийдется так "криво" обойти вариант если вдруг парраллельно создадут новый док.
+                                     );
 
          -- Если не нашли "пустышку"
          IF COALESCE (vbMovementId_ReestrIncome, 0) = 0
@@ -120,14 +121,14 @@ BEGIN
              -- создаем
              vbMovementId_ReestrIncome:=
                     lpInsertUpdate_Movement_ReestrIncome (ioId               := vbMovementId_ReestrIncome
-                                                  , inInvNumber        := NEXTVAL ('Movement_ReestrIncome_seq') :: TVarChar
-                                                  , inOperDate         := CURRENT_DATE
-                                                  , inCarId            := NULL
-                                                  , inPersonalDriverId := NULL
-                                                  , inMemberId         := NULL
-                                                  , inMovementId_Transport := NULL
-                                                  , inUserId           := -1 * vbUserId -- !!! с минусом, значит "пустышка"!!!
-                                                   );
+                                                        , inInvNumber        := NEXTVAL ('Movement_ReestrIncome_seq') :: TVarChar
+                                                        , inOperDate         := CURRENT_DATE
+                                                        , inCarId            := NULL
+                                                        , inPersonalDriverId := NULL
+                                                        , inMemberId         := NULL
+                                                        , inMovementId_Transport := NULL
+                                                        , inUserId           := -1 * vbUserId -- !!! с минусом, значит "пустышка"!!!
+                                                         );
          END IF;
 
          -- сохранили <Элемент документа> - но "криво" <кто сформировал визу "Вывезено со склада">
@@ -147,7 +148,7 @@ BEGIN
        -- сохранили связь с <кто сформировал визу>
        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartnerInTo(), vbId_mi, vbMemberId_user);
        -- сохранили связь с <кто сдал документ для визы "Получено от клиента">
-       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartnerInFrom(), vbId_mi, inMemberId);
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartnerInFrom(), vbId_mi, NULL);
     END IF;
  
 
@@ -239,4 +240,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpUpdate_MI_ReestrIncome (inBarCode:= '4323306', inOperDate:= '23.10.2016', inCarId:= 340655, inPersonalDriverId:= 0, inMemberId:= 0, inDocumentId_Transport:= 2298218, inSession:= '5');
+-- 

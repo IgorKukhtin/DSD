@@ -55,10 +55,12 @@ BEGIN
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeBuh()   THEN zc_MIDate_RemakeBuh()
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_Remake()      THEN zc_MIDate_Remake()
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_Econom()      THEN zc_MIDate_Econom()
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_EconomIn()    THEN zc_MIDate_EconomIn()
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()         THEN zc_MIDate_Buh()
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_TransferIn()  THEN zc_MIDate_TransferIn()
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_TransferOut() THEN zc_MIDate_TransferOut()
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_Log()         THEN zc_MIDate_Log()
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_EconomOut() THEN zc_MIDate_EconomOut()
                              END AS DateDescId
                       );
      -- Определяется
@@ -71,6 +73,8 @@ BEGIN
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_TransferIn()  THEN zc_MILinkObject_TransferIn()
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_TransferOut() THEN zc_MILinkObject_TransferOut()
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_Log()         THEN zc_MILinkObject_Log()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_EconomIn()  THEN zc_MILinkObject_EconomIn()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_EconomOut() THEN zc_MILinkObject_EconomOut()
                                  END AS MILinkObjectId
                       );
 

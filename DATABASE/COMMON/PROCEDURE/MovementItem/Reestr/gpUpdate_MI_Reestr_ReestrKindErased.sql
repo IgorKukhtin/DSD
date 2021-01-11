@@ -106,7 +106,7 @@ BEGIN
                        FROM (SELECT ROW_NUMBER() OVER(ORDER BY MID.ValueData desc) AS Num, MID.DescId 
                              FROM MovementItemDate AS MID
                              WHERE MID.MovementItemId = inId
-                               AND MID.DescId IN (zc_MIDate_Log, zc_MIDate_PartnerIn(), zc_MIDate_RemakeIn(), zc_MIDate_RemakeBuh(), zc_MIDate_Econom()
+                               AND MID.DescId IN (zc_MIDate_Log(), zc_MIDate_PartnerIn(), zc_MIDate_RemakeIn(), zc_MIDate_RemakeBuh(), zc_MIDate_Econom()
                                                 , zc_MIDate_Remake(), zc_MIDate_Buh(), zc_MIDate_TransferIn(), zc_MIDate_TransferOut())
                                AND MID.ValueData IS NOT NULL
                        ) AS tmp
