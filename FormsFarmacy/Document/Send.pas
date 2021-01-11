@@ -187,6 +187,12 @@ type
     actExecLoadIncome: TdsdExecStoredProc;
     dxBarButton8: TdxBarButton;
     spAddIncome: TdsdStoredProc;
+    actMISetErasedDetail: TdsdUpdateErased;
+    actMISetUnErasedDetail: TdsdUpdateErased;
+    bbMISetErasedDetail: TdxBarButton;
+    bbMISetUnErasedDetail: TdxBarButton;
+    spErasedMIMasterDetail: TdsdStoredProc;
+    spUnErasedMIMasterDetail: TdsdStoredProc;
   private
     { Private declarations }
   public

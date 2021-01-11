@@ -34,6 +34,7 @@ type
     property onChange: TNotifyEvent read FonChange write FonChange;
     function AsString: string;
     function AsFloat: double;
+    function AsInteger: Integer;
     procedure Assign(Source: TPersistent); override;
     constructor Create(Collection: TCollection); overload; override;
     constructor Create; reintroduce; overload;
@@ -627,13 +628,17 @@ end;
 { TdsdParam }
 
 function TdsdParam.AsFloat: double;
-var D: Variant;
+var Flo : Extended;
 begin
-  D := Value;
-  case VarType(D) of
-    vtExtended: result := D;
-    vtString, vtWideString, vtClass: result := gfStrToFloat(D);
-  end;
+  if TryStrToFloat(VarToStr(Value), Flo) then Result := Flo
+  else Result := 0;
+end;
+
+function TdsdParam.AsInteger: Integer;
+var Int: Integer;
+begin
+  if TryStrToInt(VarToStr(Value), Int) then Result := Int
+  else Result := 0;
 end;
 
 procedure TdsdParam.Assign(Source: TPersistent);
@@ -813,6 +818,8 @@ var
   IDs: String;
   Clmn: TcxGridDBColumn;
   Bol : Boolean;
+  Flo : Extended;
+  DT : TDateTime;
 begin
   if Assigned(FComponent) and (not Assigned(FComponent.Owner)
        or (Assigned(FComponent.Owner) and (not (csWriting in (FComponent.Owner).ComponentState)))) then begin
@@ -905,16 +912,34 @@ begin
   end
   else
   Begin
-    if VarIsNull(FValue) AND (DataType = ftDateTime) then
-      Result := 'NULL'
-    else
-    if not VarIsNull(FValue) AND (DataType = ftBoolean) then
-    begin
-      if TryStrToBool(FValue, Bol) then Result := Bol
-      else Result := False;
-    end
-    else
+    try
+//      if VarIsNull(FValue) AND (DataType = ftDateTime) then
+//        Result := 'NULL'
+//      else
+//
+      if not VarIsNull(FValue) AND (DataType = ftDateTime) then
+      begin
+        if (VarToStr(FValue) = 'NULL') OR (VarToStr(FValue) = '') OR (VarToStr(FValue) = '0') then Result := NULL
+        else if TryStrToDateTime(VarToStr(FValue), DT) then Result := FValue
+        else Result := gfXSStrToDate(FValue)
+      end
+      else
+      if not VarIsNull(FValue) AND (DataType = ftBoolean) then
+      begin
+        if TryStrToBool(VarToStr(FValue), Bol) then Result := Bol
+        else Result := FValue;
+      end
+      else
+      if not VarIsNull(FValue) AND (DataType = ftFloat) then
+      begin
+        if TryStrToFloat(ReplaceStr(ReplaceStr(VarToStr(FValue), '.', FormatSettings.DecimalSeparator), ',', FormatSettings.DecimalSeparator), Flo) then Result := Flo
+        else Result := FValue;
+      end
+      else
+        Result := FValue
+    except
       Result := FValue
+    end;
   End;
 end;
 
@@ -940,6 +965,7 @@ end;
 procedure TdsdParam.SetInDataSet(const DataSet: TDataSet; const FieldName: string; const Value: Variant);
 var Field: TField;
     Bol : Boolean;
+    DT : TDateTime;
 begin
   if DataSet.Active then begin
     if not (DataSet.State in [dsEdit, dsInsert]) then
@@ -948,7 +974,7 @@ begin
     if Assigned(Field) then begin
          // в случае дробного числа и если строка, то надо конвертить
          if (Field.DataType in [ftFloat, ftInteger]) and (VarType(FValue) in [vtString, vtClass]) then begin
-             if FValue = '' then
+             if VarToStr(FValue) = '' then
                 Field.Value := null
              else
                 Field.Value := gfStrToFloat(FValue)
@@ -956,15 +982,17 @@ begin
          else
            // в случае даты и если строка, то надо конвертить
            if (Field.DataType in [ftDateTime, ftDate, ftTime]) and (VarType(FValue) in [vtString, vtClass]) then begin
-              if FValue = '' then
+              if VarToStr(FValue) = '' then
                 Field.Value := null
+              else if TryStrToDateTime(VarToStr(FValue), DT) then
+                Field.Value := FValue
               else
                 Field.Value := gfXSStrToDate(FValue); // convert to TDateTime
            end
            // в случае логического и если строка, то надо конвертить
            else
            if (Field.DataType in [ftBoolean]) and (VarType(FValue) in [vtString, vtClass]) then begin
-              if FValue = '' then
+              if VarToStr(FValue) = '' then
                 Field.Value := null
               else
                 if TryStrToBool(FValue, Bol) then
@@ -989,6 +1017,8 @@ var
   PhotoName: string;
   E : TcxExport;
   I : integer;
+  DT : TDateTime;
+  Flo : Extended;
 begin
   FValue := Value;
   // передаем значение параметра дальше по цепочке
@@ -1025,14 +1055,19 @@ begin
              Params.AddParam(FComponentItem, ftString, ptInput, FValue);
         end;
      if Component is TcxCurrencyEdit then
-        (Component as TcxCurrencyEdit).Value := gfStrToFloat(FValue);
+     begin
+        if TryStrToFloat(ReplaceStr(ReplaceStr(VarToStr(FValue), '.', FormatSettings.DecimalSeparator), ',', FormatSettings.DecimalSeparator), Flo) then
+          (Component as TcxCurrencyEdit).Value := Flo
+        else
+          (Component as TcxCurrencyEdit).Clear;
+     end;
      if Component is TcxCheckBox then
         (Component as TcxCheckBox).Checked := StrToBool(FValue);
      if Component is TcxDateEdit then
-        if VarType(FValue) = vtObject then
-          (Component as TcxDateEdit).Date := FValue
-        else begin
-          if (FValue <> '') AND (FValue <> 'NULL') then
+        if TryStrToDateTime(VarToStr(FValue), DT) then (Component as TcxDateEdit).Date := FValue
+        else
+        begin
+          if not VarIsNull(FValue) AND (VarToStr(FValue) <> '') AND (VarToStr(FValue) <> '0') AND (VarToStr(FValue) <> 'NULL') then
              (Component as TcxDateEdit).Date := gfXSStrToDate(FValue) // convert to TDateTime
           else
              (Component as TcxDateEdit).Clear;
