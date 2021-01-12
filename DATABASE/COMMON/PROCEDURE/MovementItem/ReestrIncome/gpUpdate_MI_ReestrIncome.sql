@@ -71,16 +71,16 @@ BEGIN
                                  FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId
                                       ) AS tmp
                                       INNER JOIN Movement ON Movement.Id     = tmp.MovementId
-                                                         AND Movement.DescId IN (zc_Movement_Income())
-                                                         AND Movement.OperDate >= CURRENT_DATE - INTERVAL '12 MONTH'
+                                                         AND Movement.DescId IN (zc_Movement_Income(), zc_Movement_ReturnOut())
+                                                         AND Movement.OperDate >= CURRENT_DATE - INTERVAL '4 MONTH'
                                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
                                 );
      ELSE -- по InvNumber, но для скорости ограничение - 4 MONTH
           vbMovementId_Income:= (SELECT Movement.Id
                                  FROM Movement
                                  WHERE Movement.InvNumber = TRIM (inBarCode)
-                                   AND Movement.DescId    IN (zc_Movement_Income())
-                                   AND Movement.OperDate >= CURRENT_DATE - INTERVAL '12 MONTH'
+                                   AND Movement.DescId    IN (zc_Movement_Income(), zc_Movement_ReturnOut())
+                                   AND Movement.OperDate >= CURRENT_DATE - INTERVAL '4 MONTH'
                                    AND Movement.StatusId <> zc_Enum_Status_Erased()
                                 );
      END IF;
