@@ -1,0 +1,57 @@
+-- Function: lpInsertUpdate_Movement_ReestrReturnOut()
+
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ReestrReturnOut (Integer, TVarChar, TDateTime, Integer);
+
+CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ReestrReturnOut(
+ INOUT ioId                   Integer   , -- Ключ объекта <Документ>
+    IN inInvNumber            TVarChar  , -- Номер документа
+    IN inOperDate             TDateTime , -- Дата документа
+    IN inUserId               Integer     -- пользователь
+)
+RETURNS Integer
+AS
+$BODY$
+   DECLARE vbAccessKeyId Integer;
+   DECLARE vbIsInsert Boolean;
+BEGIN
+     -- определяем ключ доступа !!!то что захардкоженно - временно!!!
+     vbAccessKeyId:= zc_Enum_Process_AccessKey_DocumentDnepr();
+
+     -- определяем признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
+
+     -- сохранили <Документ>
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ReestrReturnOut(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
+
+     IF inUserId > 0 AND vbIsInsert = True
+     THEN
+         -- сохранили свойство <когда сформирована виза "" (т.е. добавлен новый документ в реестр)>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
+         -- сохранили свойство <кто сформировал визу "" (т.е. добавлен новый документ в реестр)>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
+     END IF;
+
+     IF inUserId > 0 AND vbIsInsert = False
+     THEN
+         -- сохранили свойство <когда сформирована виза "Получено от клиента" (т.е. добавлен последний документ в реестр)>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), ioId, CURRENT_TIMESTAMP);
+         -- сохранили свойство <кто сформировал визу "Вывезено со склада" (т.е. добавлен последний документ в реестр)>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Update(), ioId, inUserId);
+     END IF;
+     
+
+     -- сохранили протокол
+     PERFORM lpInsert_MovementProtocol (ioId, ABS (inUserId), vbIsInsert);
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.01.21         *
+*/
+
+-- тест
+-- SELECT * FROM lpInsertUpdate_Movement_ReestrReturnOut (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inMemberId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')

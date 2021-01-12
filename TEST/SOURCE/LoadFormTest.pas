@@ -149,6 +149,7 @@ type
     procedure LoadReestrKindFormTest;
     procedure LoadReportFormTest;
     procedure LoadReestrIncomeFormTest;
+    procedure LoadReestrReturnOutFormTest;
     procedure LoadReestrReturnFormTest;
     procedure LoadReestrTransportGoodsFormTest;
     procedure LoadReportAssetFormTest;
@@ -1829,6 +1830,18 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrIncomeUpdateMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReestrIncomeUpdateMovementForm');
+end;
+
+    procedure TLoadFormTest.LoadReestrReturnOutFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrReturnOutJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReestrReturnOutJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrReturnOutStartMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReestrReturnOutStartMovementForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrReturnOutUpdateMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReestrReturnOutUpdateMovementForm');
 end;
 
 procedure TLoadFormTest.LoadReestrReturnFormTest;
