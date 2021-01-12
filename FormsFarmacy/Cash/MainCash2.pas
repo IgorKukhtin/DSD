@@ -704,7 +704,7 @@ type
     VIPForm: TParentForm;
     // для мигания кнопки
     fBlinkVIP, fBlinkCheck, fBanCash: Boolean;
-    time_onBlink, time_onBlinkCheck, time_onBanCash: TDateTime;
+    time_onBlink, time_onBlinkCheck: TDateTime;
     MovementId_BlinkVIP: String;
     FSaveCheckToMemData: Boolean;
     FShowMessageCheckConnection: Boolean;
@@ -2787,7 +2787,7 @@ begin
     exit;
   end;
 
-  if not gc_User.Local and fBanCash then
+  if fBanCash then
   begin
     ShowMessage
       ('Уважаемые коллеги, вы не поставили отметку времени прихода и ухода в график (Ctrl+T), исходя из персонального графика работы (время вводится с шагом 30 мин)');
@@ -8157,7 +8157,7 @@ procedure TMainCashForm2.MainGridDBTableViewCanFocusRecord
 begin
   inherited;
 
-  if AAllow and not gc_User.Local and fBanCash then
+  if AAllow and fBanCash then
     ShowMessage
       ('Уважаемые коллеги, вы не поставили отметку времени прихода и ухода в график (Ctrl+T), исходя из персонального графика работы (время вводится с шагом 30 мин)');
 end;
@@ -8225,18 +8225,13 @@ end;
 
 procedure TMainCashForm2.N22Click(Sender: TObject);
 begin
-
-  if gc_User.Local then
-  begin
-    with TEmployeeScheduleCashForm.Create(nil) do
-      try
-        EmployeeScheduleCashExecute;
-      finally
-        Free;
-      end;
-  end
-  else
-    actEmployeeScheduleUser.Execute;
+  with TEmployeeScheduleCashForm.Create(nil) do
+  try
+    EmployeeScheduleCashExecute;
+    SetBanCash(True);
+  finally
+    Free;
+  end;
 end;
 
 procedure TMainCashForm2.NewCheck(ANeedRemainsRefresh: Boolean = True);
@@ -10392,7 +10387,6 @@ begin
 
     SetBlinkVIP(false);
     SetBlinkCheck(false);
-    SetBanCash(false);
 
     if fBlinkVIP = True then
     begin
@@ -10531,23 +10525,47 @@ begin
 end;
 
 procedure TMainCashForm2.SetBanCash(isRefresh: Boolean);
+  var EmployeeScheduleCDS : TClientDataSet;
 begin
-  if gc_User.Local then
-    exit; // только 2 форма
-  // если прошло > 50 сек - захардкодил
-  if ((Now - time_onBanCash) > 0.003) and (fBanCash = True) or (isRefresh = True)
-  then
+  if isRefresh Then fBanCash := True;
+  if fBanCash = False then Exit;
 
-    try
-      // сохранили время "последней" обработки
-      time_onBanCash := Now;
+  if not gc_User.Local then
+  Begin
+    spGet_User_IsAdmin.Execute;
+    if spGet_User_IsAdmin.ParamByName('gpGet_User_IsAdmin').Value = True then
+    begin
+      fBanCash := False;
+      Exit;
+    end;
+  End else if gc_User.Session = '3' then
+  begin
+    fBanCash := False;
+    Exit;
+  end;
+
 
       // Получили статус не отметился
-      spGet_BanCash.Execute;
-      fBanCash := spGet_BanCash.ParamByName('outBanCash').Value;
-    except
-      fBanCash := True;
-    end;
+  if not FileExists(EmployeeSchedule_lcl) then
+  begin
+    fBanCash := True;
+    Exit;
+  end;
+
+  EmployeeScheduleCDS :=  TClientDataSet.Create(Nil);
+  WaitForSingleObject(MutexEmployeeSchedule, INFINITE);
+  try
+    LoadLocalData(EmployeeScheduleCDS, EmployeeSchedule_lcl);
+    if not EmployeeScheduleCDS.Active then EmployeeScheduleCDS.Open;
+
+    fBanCash := not EmployeeScheduleCDS.Locate('UserID;Date', VarArrayOf([gc_User.Session, Date]), []);
+
+  finally
+    if EmployeeScheduleCDS.Active then EmployeeScheduleCDS.Close;
+    EmployeeScheduleCDS.Free;
+    ReleaseMutex(MutexEmployeeWorkLog);
+  end;
+
 end;
 
 procedure TMainCashForm2.pGet_OldSP(var APartnerMedicalId: Integer;

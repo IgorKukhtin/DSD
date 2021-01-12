@@ -18,7 +18,8 @@ RETURNS TABLE (Id Integer, ParentId integer
              , PartionDateKindName TVarChar
              , DateInsert          TDateTime
              , PartyRelated        Boolean
-             , Color_calc Integer
+             , Color_calc          Integer
+             , isErased            Boolean
               )
 AS
 $BODY$
@@ -243,6 +244,7 @@ BEGIN
              , CASE WHEN COALESCE(tmpMI_Child_ContainerId.MovementItemId, 0) = 0 THEN FALSE ELSE TRUE END AS PartyRelated
 
              , CASE WHEN COALESCE(tmpContainerTo.ObjectId, 0) <> 0 THEN zc_Color_Black() ELSE zc_Color_Red() END  AS Color_calc
+             , MovementItem.isErased                                            AS isErased
          FROM tmpMIContainerAll AS Container
 
               LEFT JOIN MovementItem ON MovementItem.ID = Container.MovementItemId
@@ -494,6 +496,7 @@ BEGIN
              , DATE_TRUNC ('DAY', MIDate_Insert.ValueData)       :: TDateTime   AS DateInsert
              , CASE WHEN COALESCE(Container.ID, 0) = 0 THEN FALSE ELSE TRUE END AS PartyRelated
              , CASE WHEN COALESCE(tmpContainerTo.ObjectId, 0) <> 0 THEN zc_Color_Black() ELSE zc_Color_Red() END  AS Color_calc
+             , MovementItem.isErased                                            AS isErased
          FROM tmpMIContainerAll AS Container
 
               LEFT JOIN MovementItem ON MovementItem.ID = Container.MovementItemId
@@ -725,6 +728,7 @@ BEGIN
              , CASE WHEN COALESCE(Container.ID, 0) = 0 THEN FALSE ELSE TRUE END AS PartyRelated
 
              , CASE WHEN COALESCE(tmpContainerTo.ObjectId, 0) <> 0 THEN zc_Color_Black() ELSE zc_Color_Red() END  AS Color_calc
+             , MovementItem.isErased                                            AS isErased
          FROM tmpMIContainerAll AS Container
 
               LEFT JOIN MovementItem ON MovementItem.ID = Container.MovementItemId
@@ -759,5 +763,5 @@ $BODY$
 -- select * from gpSelect_MovementItem_Send_Child(inMovementId := 16804677 ,  inSession := '3');
 
 -- 
-select * from gpSelect_MovementItem_Send_Child (inMovementId := 20000655       ,  inSession := '3');
+--select * from gpSelect_MovementItem_Send_Child (inMovementId := 20000655       ,  inSession := '3');
 -- select * from gpSelect_MovementItem_Send_Child(inMovementId := 19872428  ,  inSession := '3') left join Object ON Object.Id = GoodsId;

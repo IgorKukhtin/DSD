@@ -1546,6 +1546,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbDelete_ContractSend'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenFormCondition'
         end
         item
@@ -1823,6 +1831,10 @@
     end
     object bbProtocolOpenFormCCPartner: TdxBarButton
       Action = ProtocolOpenFormCCPartner
+      Category = 0
+    end
+    object bbDelete_ContractSend: TdxBarButton
+      Action = actDelete_ContractSend
       Category = 0
     end
   end
@@ -2900,6 +2912,19 @@
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actDelete_ContractSend: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spDelete_ContractSend
+      StoredProcList = <
+        item
+          StoredProc = spDelete_ContractSend
+        end>
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' '#8470' '#1076#1086#1075'. '#1084#1072#1088#1082#1077#1090'./'#1073#1072#1079#1072
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' '#8470' '#1076#1086#1075'. '#1084#1072#1088#1082#1077#1090'./'#1073#1072#1079#1072
+      ImageIndex = 77
     end
     object GoodsKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -4080,5 +4105,30 @@
     PackSize = 1
     Left = 688
     Top = 408
+  end
+  object spDelete_ContractSend: TdsdStoredProc
+    StoredProcName = 'gpDelete_Object_ContractCondition_ContractSend'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = CDSContractCondition
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outContractSendName'
+        Value = Null
+        Component = actContractCondition
+        ComponentItem = 'ContractSendName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 352
+    Top = 488
   end
 end

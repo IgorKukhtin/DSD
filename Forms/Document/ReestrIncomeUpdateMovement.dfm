@@ -1,5 +1,5 @@
 inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
-  Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1080#1079#1091' '#1074' '#1085#1072#1082#1083#1072#1076#1085#1099#1093
+  Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1080#1079#1091' '#1074' <'#1056#1077#1077#1089#1090#1088' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
   ClientHeight = 400
   ClientWidth = 1007
   ObjectMenuItem = Excel1
@@ -1310,7 +1310,7 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
     Top = 307
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_MI_ReestrUser'
+    StoredProcName = 'gpSelect_MI_ReestrIncomeUser'
     Params = <
       item
         Name = 'instartdate'
@@ -1372,10 +1372,6 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExternalDialog'
         end
         item
           Visible = True
@@ -1553,7 +1549,7 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
     Top = 290
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MI_Reestr_ReestrKindErased'
+    StoredProcName = 'gpUpdate_MI_ReestrIncome_ReestrKindErased'
     Params = <
       item
         Name = 'inid'
@@ -1651,7 +1647,7 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
     Top = 312
   end
   object spUpdateMI: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MI_Reestr'
+    StoredProcName = 'gpUpdate_MI_ReestrIncome'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1669,12 +1665,6 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
         Value = Null
         Component = ReestrKindGuides
         ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMemberId'
-        Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

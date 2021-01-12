@@ -2965,12 +2965,12 @@ begin
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChangePercentDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChangePercentDialogForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoManagerDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoManagerForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoManagerJournalForm');
 
@@ -2983,6 +2983,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoPartnerForm');
   }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoContractBonus_DetailForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoContractBonus_DetailForm');
 end;
 
 procedure TLoadFormTest.LoadPromoKindFormTest;

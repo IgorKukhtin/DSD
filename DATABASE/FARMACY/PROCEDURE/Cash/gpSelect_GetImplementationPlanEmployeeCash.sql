@@ -35,7 +35,7 @@ BEGIN
     FOR vbRec IN EXECUTE 'FETCH ALL IN' || QUOTE_IDENT (vbCurName1)
     LOOP
        INSERT INTO tmpResultData 
-        VALUES (vbUserId, vbRec.GoodsCode, CASE WHEN COALESCE(vbRec.AmountPlanCash, 0) = 0 THEN 0
+        VALUES (vbUserId, vbRec.GoodsCode, CASE WHEN COALESCE(vbRec.AmountPlanAwardCash, 0) = 0 THEN 0
                                                 WHEN vbRec.AmountCash < vbRec.AmountPlanCash THEN 1       -- Red
                                                 WHEN vbRec.AmountCash < vbRec.AmountPlanAwardCash THEN 2  -- Green
                                                 ELSE 3 END::Integer);                      -- Blue
@@ -57,6 +57,4 @@ $BODY$
 */
 
 -- тест
--- 
-
-select * from gpSelect_GetImplementationPlanEmployeeCash(inSession := '3');
+-- select * from gpSelect_GetImplementationPlanEmployeeCash(inSession := '3');

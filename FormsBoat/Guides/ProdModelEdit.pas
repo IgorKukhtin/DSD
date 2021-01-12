@@ -60,6 +60,8 @@ type
     cxLabel12: TcxLabel;
     edProdEngine: TcxButtonEdit;
     GuidesProdEngine: TdsdGuides;
+    cxLabel13: TcxLabel;
+    edPatternCIN: TcxTextEdit;
   private
     { Private declarations }
   public

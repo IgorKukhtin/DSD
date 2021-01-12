@@ -35,6 +35,9 @@ $BODY$
    DECLARE vbUserId Integer;
  --DECLARE vbCode_calc Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbDateStart TDateTime;
+   DECLARE vbModelId Integer;
+   DECLARE vbModelNom TVarChar;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Product());
@@ -49,6 +52,51 @@ BEGIN
    -- !!! временно !!!
    IF CEIL (inCode / 2) * 2 = inCode THEN inDateSale:= NULL; END IF;
 
+
+   -- 
+   --находим сохраненную дату производства и модель, если изменили то нужно изменять CIN, 
+   vbDateStart := (SELECT ObjectDate_DateStart.ValueData
+                   FROM ObjectDate AS ObjectDate_DateStart
+                   WHERE ObjectDate_DateStart.ObjectId = ioId
+                     AND ObjectDate_DateStart.DescId = zc_ObjectDate_Product_DateStart()
+                   );
+   vbModelId := (SELECT ObjectLink_Model.ChildObjectId
+                 FROM ObjectLink AS ObjectLink_Model
+                 WHERE ObjectLink_Model.ObjectId = ioId
+                   AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model()
+                 );
+
+
+   IF (vbDateStart <> inDateStart) OR (vbModelId <> inModelId)
+   THEN
+       -- находим последний номер конкретной модели + 1
+       vbModelNom := COALESCE ((SELECT LPAD ( (1 + MAX (SUBSTRING (ObjectString_CIN.ValueData, 8, 4)) :: Integer) :: TVarChar, 4, '0')
+                                FROM ObjectLink AS ObjectLink_Model
+                                     LEFT JOIN ObjectString AS ObjectString_CIN
+                                                            ON ObjectString_CIN.ObjectId = ObjectLink_Model.ObjectId
+                                                           AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
+                                WHERE ObjectLink_Model.ChildObjectId = inModelId
+                                  AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model())
+                                , '0001'
+                               ) ::TVarChar ;
+
+       /* zc_ObjectString_ProdModel_PatternCIN 
+          потом последний номер конкретной модели +1 
+          потом 1 буква месяца (от 1 до 12)
+          потом 1 цифра 0 
+          потом 2 цифры год производства
+       Пример: DE-AGLD0001A020 или DE-AGLA0002F019*/
+
+       inCIN := (SELECT ObjectString_PatternCIN.ValueData
+                      || vbModelNom
+                      || LEFT (zfCalc_MonthName_English( inDateStart), 1)
+                      || '0'
+                      || RIGHT ( (EXTRACT (YEAR FROM inDateStart) ::TVarChar), 2)
+                 FROM ObjectString AS ObjectString_PatternCIN
+                 WHERE ObjectString_PatternCIN.ObjectId = inModelId
+                   AND ObjectString_PatternCIN.DescId = zc_ObjectString_ProdModel_PatternCIN()
+                 );
+   END IF;
 
    -- проверка - должен быть Код
    IF COALESCE (inCode, 0) = 0 THEN
@@ -192,6 +240,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.01.21         *
  04.01.21         *
  09.10.20         *
 */

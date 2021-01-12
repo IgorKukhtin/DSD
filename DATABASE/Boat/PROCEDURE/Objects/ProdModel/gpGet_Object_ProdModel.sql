@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_ProdModel(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Length TFloat, Beam TFloat, Height TFloat
              , Weight TFloat, Fuel TFloat, Speed TFloat, Seating TFloat
-             , Comment TVarChar
+             , PatternCIN TVarChar, Comment TVarChar
              , BrandId Integer, BrandName TVarChar
              , ProdEngineId Integer, ProdEngineName TVarChar
              ) AS
@@ -33,6 +33,7 @@ $BODY$BEGIN
            , CAST (0 AS TFloat)     AS Fuel
            , CAST (0 AS TFloat)     AS Speed
            , CAST (0 AS TFloat)     AS Seating
+           , CAST ('' AS TVarChar)  AS PatternCIN
            , CAST ('' AS TVarChar)  AS Comment
            , CAST (0  AS Integer)   AS BrandId
            , CAST ('' AS TVarChar)  AS BrandName
@@ -53,6 +54,7 @@ $BODY$BEGIN
          , ObjectFloat_Fuel.ValueData      AS Fuel
          , ObjectFloat_Speed.ValueData     AS Speed
          , ObjectFloat_Seating.ValueData   AS Seating
+         , ObjectString_PatternCIN.ValueData  AS PatternCIN
          , ObjectString_Comment.ValueData  AS Comment
 
          , Object_Brand.Id                 AS BrandId
@@ -63,6 +65,10 @@ $BODY$BEGIN
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_ProdModel.Id
                                 AND ObjectString_Comment.DescId = zc_ObjectString_ProdModel_Comment()  
+
+          LEFT JOIN ObjectString AS ObjectString_PatternCIN
+                                 ON ObjectString_PatternCIN.ObjectId = Object_ProdModel.Id
+                                AND ObjectString_PatternCIN.DescId = zc_ObjectString_ProdModel_PatternCIN()
 
           LEFT JOIN ObjectFloat AS ObjectFloat_Length
                                 ON ObjectFloat_Length.ObjectId = Object_ProdModel.Id
@@ -112,6 +118,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 11.01.21         * PatternCIN
  24.11.20         * add Brand
  08.10.20         *
 */

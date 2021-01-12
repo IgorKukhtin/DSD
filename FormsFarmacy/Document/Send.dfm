@@ -613,6 +613,7 @@ inherited SendForm: TSendForm
             DataBinding.FieldName = 'PartyRelated'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 75
           end
           object chAmount: TcxGridDBColumn
@@ -1322,7 +1323,7 @@ inherited SendForm: TSendForm
         end
         item
           Name = 'OperDatePartion'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartionGoodsOperDate'
           DataType = ftDateTime
@@ -1642,7 +1643,7 @@ inherited SendForm: TSendForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = edOperDate
           DataType = ftDateTime
           ParamType = ptInput
@@ -1849,6 +1850,42 @@ inherited SendForm: TSendForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1090#1086#1074#1072#1088' '#1089' '#1087#1088#1080#1093#1086#1076#1085#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 29
     end
+    object actMISetErasedDetail: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedMIMasterDetail
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIMasterDetail
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1088#1080#1074#1103#1079#1082#1091' '#1082' '#1087#1072#1088#1090#1080#1080'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1088#1080#1074#1103#1079#1082#1091' '#1082' '#1087#1072#1088#1090#1080#1080'>'
+      ImageIndex = 2
+      ErasedFieldName = 'isErased'
+      DataSource = DetailDS
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
+    end
+    object actMISetUnErasedDetail: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUnErasedMIMasterDetail
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIMasterDetail
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1055#1088#1080#1074#1103#1079#1082#1091' '#1082' '#1087#1072#1088#1090#1080#1080'>'
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1055#1088#1080#1074#1103#1079#1082#1091' '#1082' '#1087#1072#1088#1090#1080#1080'>'
+      ImageIndex = 8
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = DetailDS
+    end
   end
   inherited MasterDS: TDataSource
     Top = 424
@@ -1956,11 +1993,23 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'bbMISetErasedDetail'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMISetUnErasedDetail'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -1973,10 +2022,6 @@ inherited SendForm: TSendForm
         item
           Visible = True
           ItemName = 'bbDeferredYes'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -2120,6 +2165,14 @@ inherited SendForm: TSendForm
       Action = actExecLoadIncome
       Category = 0
     end
+    object bbMISetErasedDetail: TdxBarButton
+      Action = actMISetErasedDetail
+      Category = 0
+    end
+    object bbMISetUnErasedDetail: TdxBarButton
+      Action = actMISetUnErasedDetail
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -2257,7 +2310,7 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -2645,43 +2698,11 @@ inherited SendForm: TSendForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 638
     Top = 448
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetUnErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 558
     Top = 416
   end
@@ -2846,7 +2867,7 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'inAmount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3393,7 +3414,7 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'outOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -3578,6 +3599,7 @@ inherited SendForm: TSendForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 0
       end>
+    ShowFieldImageList = <>
     SearchAsFilter = False
     KeepSelectColor = True
     PropertiesCellList = <>
@@ -3990,5 +4012,55 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 606
     Top = 280
+  end
+  object spErasedMIMasterDetail: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_Send_SetErasedDetail'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'ID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 670
+    Top = 544
+  end
+  object spUnErasedMIMasterDetail: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_Send_SetUnErasedDetail'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 582
+    Top = 544
   end
 end

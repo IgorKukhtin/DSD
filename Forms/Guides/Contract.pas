@@ -264,6 +264,9 @@ type
     bbdsdSetUnErased——Partner: TdxBarButton;
     ProtocolOpenFormCCPartner: TdsdOpenForm;
     bbProtocolOpenFormCCPartner: TdxBarButton;
+    spDelete_ContractSend: TdsdStoredProc;
+    actDelete_ContractSend: TdsdExecStoredProc;
+    bbDelete_ContractSend: TdxBarButton;
 
   private
     { Private declarations }

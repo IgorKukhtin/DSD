@@ -72,6 +72,7 @@ type
     Speed: TcxGridDBColumn;
     Seating: TcxGridDBColumn;
     BrandName: TcxGridDBColumn;
+    PatternCIN: TcxGridDBColumn;
   private
     { Private declarations }
   public

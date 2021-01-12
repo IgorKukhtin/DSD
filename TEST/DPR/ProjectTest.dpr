@@ -1220,7 +1220,8 @@ uses
   ReestrIncomeUpdateMovement in '..\..\Forms\Document\ReestrIncomeUpdateMovement.pas' {ReestrIncomeUpdateMovementForm: TParentForm},
   GoodsByGoodsKindQuality in '..\..\Forms\Guides\GoodsByGoodsKindQuality.pas' {GoodsByGoodsKindQualityForm: TParentForm},
   ProfitLossServiceJournal in '..\..\Forms\Document\ProfitLossServiceJournal.pas' {ProfitLossServiceJournalForm: TParentForm},
-  ChangeInvnumberDialog in '..\..\Forms\Document\ChangeInvnumberDialog.pas' {ChangeInvNumberDialogForm: TParentForm};
+  ChangeInvnumberDialog in '..\..\Forms\Document\ChangeInvnumberDialog.pas' {ChangeInvNumberDialogForm: TParentForm},
+  PromoContractBonus_Detail in '..\..\Forms\Guides\PromoContractBonus_Detail.pas' {PromoContractBonus_DetailForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

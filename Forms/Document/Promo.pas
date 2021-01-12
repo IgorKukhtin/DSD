@@ -438,6 +438,8 @@ type
     macUpdate_calc: TMultiAction;
     actRefreshCalc: TdsdDataSetRefresh;
     CountForPrice: TcxGridDBColumn;
+    actOpenFormPromoContractBonus_Detail: TdsdOpenForm;
+    bbOpenFormPromoContractBonus_Detail: TdxBarButton;
   private
     { Private declarations }
   public

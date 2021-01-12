@@ -4,7 +4,7 @@
   ClientHeight = 684
   ClientWidth = 1366
   ExplicitWidth = 1382
-  ExplicitHeight = 719
+  ExplicitHeight = 722
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2781,7 +2781,7 @@
     Top = 288
   end
   inherited ActionList: TActionList
-    Left = 207
+    Left = 231
     Top = 231
     object actInsertUpdate_MI_PriceCalc: TdsdExecStoredProc [0]
       Category = 'Update_MI_Param'
@@ -3301,7 +3301,37 @@
           StoredProc = spSelectMIPromoStateKind
         end>
     end
-    object macInsertUpdate_MI_Param: TMultiAction [27]
+    object actOpenFormPromoContractBonus_Detail: TdsdOpenForm [27]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1041#1086#1085#1091#1089' '#1089#1077#1090#1080
+      Hint = #1044#1077#1090#1072#1083#1100#1085#1086' '#1041#1086#1085#1091#1089' '#1089#1077#1090#1080
+      ImageIndex = 42
+      FormName = 'TPromoContractBonus_DetailForm'
+      FormNameParam.Value = 'TPromoContractBonus_DetailForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberFull'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InvNumberFull'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object macInsertUpdate_MI_Param: TMultiAction [28]
       Category = 'Update_MI_Param'
       MoveParams = <>
       ActionList = <
@@ -3368,7 +3398,7 @@
       ReportName = #1040#1082#1094#1080#1103
       ReportNameParam.Value = #1040#1082#1094#1080#1103
     end
-    object actInsertUpdate_MI_Param: TdsdExecStoredProc [30]
+    object actInsertUpdate_MI_Param: TdsdExecStoredProc [31]
       Category = 'Update_MI_Param'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3379,7 +3409,7 @@
         end>
       Caption = 'actInsertUpdate_MI_Param'
     end
-    object actPromoStateKindChoice: TOpenChoiceForm [34]
+    object actPromoStateKindChoice: TOpenChoiceForm [35]
       Category = 'PromoStateKind'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3410,7 +3440,7 @@
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1058#1086#1074#1072#1088'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1058#1086#1074#1072#1088'>'
     end
-    object actPartnerProtocolOpenForm: TdsdOpenForm [38]
+    object actPartnerProtocolOpenForm: TdsdOpenForm [39]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1057#1077#1090#1100'/'#1070#1088'.'#1083#1080#1094#1086'/'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
@@ -3440,7 +3470,7 @@
         end>
       isShowModal = False
     end
-    object actConditionPromoProtocolOpenForm: TdsdOpenForm [39]
+    object actConditionPromoProtocolOpenForm: TdsdOpenForm [40]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
@@ -3470,7 +3500,7 @@
         end>
       isShowModal = False
     end
-    object actAdvertisingProtocolOpenForm: TdsdOpenForm [40]
+    object actAdvertisingProtocolOpenForm: TdsdOpenForm [41]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
@@ -4604,6 +4634,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbOpenFormPromoContractBonus_Detail'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bsSign'
         end
         item
@@ -4899,6 +4937,10 @@
     end
     object bbUpdate_MI_ContractCondition: TdxBarButton
       Action = macUpdate_calc
+      Category = 0
+    end
+    object bbOpenFormPromoContractBonus_Detail: TdxBarButton
+      Action = actOpenFormPromoContractBonus_Detail
       Category = 0
     end
   end
