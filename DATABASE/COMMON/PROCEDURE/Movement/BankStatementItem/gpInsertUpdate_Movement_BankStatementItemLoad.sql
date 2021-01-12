@@ -42,6 +42,10 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankStatementItemLoad());
  
+
+    --
+    IF inBankMFOMain = '380805' THEN inAmount:= -1 * inAmount; END IF;
+
  
     -- 1. Найти счет от кого и кому в справочнике счетов.
     vbMainBankAccountId:= (SELECT View_BankAccount.Id
@@ -185,19 +189,23 @@ BEGIN
     -- нашли свойство Юр. лица
     vbJuridicalId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_Juridical() AND MLO.MovementId = vbMovementItemId);
     -- сначала поиск через Назначение платежа - Удержание
-    IF COALESCE(vbJuridicalId, 0) = 0
+    IF COALESCE(vbJuridicalId, 0) = 0 AND EXISTS (WITH tmpMember AS (SELECT ObjectString.ValueData
+                                                                     FROM ObjectString
+                                                                     WHERE ObjectString.ValueData <> ''
+                                                                       AND ObjectString.DescId = zc_ObjectString_MemberMinus_DetailPayment()
+                                                                    )
+                                                  SELECT 1 FROM tmpMember WHERE TRIM (inComment) ILIKE TRIM (tmpMember.ValueData)
+                                                 )
     THEN
-        vbJuridicalId:= (WITH tmpMember AS (SELECT ObjectLink_MemberMinus_From.ChildObjectId AS MemberId
+        vbJuridicalId:= (WITH tmpMember AS (SELECT ObjectLink_MemberMinus_From.ChildObjectId AS MemberId, ObjectString.ValueData
                                             FROM ObjectString
                                                  JOIN ObjectLink AS ObjectLink_MemberMinus_From
                                                                  ON ObjectLink_MemberMinus_From.ObjectId = ObjectString.ObjectId
                                                                 AND ObjectLink_MemberMinus_From.DescId = zc_ObjectLink_MemberMinus_From()
                                             WHERE ObjectString.ValueData <> ''
-                                              AND TRIM (inComment) ILIKE ObjectString.ValueData
                                               AND ObjectString.DescId = zc_ObjectString_MemberMinus_DetailPayment()
-                                            LIMIT 1 -- на всякий случай
                                            )
-                         SELECT tmpMember.MemberId FROM tmpMember
+                         SELECT tmpMember.MemberId FROM tmpMember WHERE TRIM (inComment) ILIKE TRIM (tmpMember.ValueData) LIMIT 1 -- на всякий случай
                          -- SELECT tmp.PersonalId FROM gpGet_Object_Member ((SELECT tmpMember.MemberId FROM tmpMember), inSession) AS tmp
                         );
         -- если нашли, УП статья будет такой
@@ -293,11 +301,34 @@ BEGIN
     -- SELECT ObjectId INTO vbInfoMoneyId FROM MovementLinkObject WHERE DescId = zc_MovementLinkObject_InfoMoney() AND MovementId = vbMovementItemId;
 
 
-    -- если НЕ Заработная плата + Алименты
-    IF COALESCE (vbInfoMoneyId, 0) <> zc_Enum_InfoMoney_60102()
+    -- если НЕ Заработная плата + Алименты OR Заработная плата + Удержания сторон. юр.л.
+    IF COALESCE (vbInfoMoneyId, 0) NOT IN (zc_Enum_InfoMoney_60102(), 979902)
     THEN
 
-        CREATE TEMP TABLE _tmpContract_find ON COMMIT DROP AS (SELECT * FROM Object_Contract_View WHERE Object_Contract_View.JuridicalId = vbJuridicalId);
+        CREATE TEMP TABLE _tmpContract_find ON COMMIT DROP AS -- (SELECT * FROM Object_Contract_View WHERE Object_Contract_View.JuridicalId = vbJuridicalId);
+              (SELECT Object_Contract.Id                                  AS ContractId
+                    , Object_Contract.isErased                            AS isErased
+                    , ObjectLink_Contract_ContractStateKind.ChildObjectId AS ContractStateKindId
+                    , ObjectLink_Contract_PaidKind.ChildObjectId          AS PaidKindId
+                    , ObjectLink_Contract_InfoMoney.ChildObjectId         AS InfoMoneyId
+                    , ObjectLink_Contract_Juridical.ChildObjectId         AS JuridicalId
+               FROM ObjectLink AS ObjectLink_Contract_Juridical
+                    INNER JOIN Object AS Object_Contract ON Object_Contract.Id       = ObjectLink_Contract_Juridical.ObjectId
+                                                        AND Object_Contract.isErased = FALSE
+                    LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
+                                         ON ObjectLink_Contract_ContractStateKind.ObjectId      = Object_Contract.Id
+                                        AND ObjectLink_Contract_ContractStateKind.DescId        = zc_ObjectLink_Contract_ContractStateKind() 
+                    LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
+                                         ON ObjectLink_Contract_PaidKind.ObjectId = Object_Contract.Id
+                                        AND ObjectLink_Contract_PaidKind.DescId   = zc_ObjectLink_Contract_PaidKind()
+                    LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                         ON ObjectLink_Contract_InfoMoney.ObjectId = Object_Contract.Id
+                                        AND ObjectLink_Contract_InfoMoney.DescId   = zc_ObjectLink_Contract_InfoMoney()
+               WHERE ObjectLink_Contract_Juridical.ChildObjectId = vbJuridicalId
+                 AND ObjectLink_Contract_Juridical.DescId        = zc_ObjectLink_Contract_Juridical()
+                 AND COALESCE (ObjectLink_Contract_ContractStateKind.ChildObjectId, 0) <> zc_Enum_ContractStateKind_Close()
+              );
+
     
 
         -- 1. если Приход

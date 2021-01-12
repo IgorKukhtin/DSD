@@ -191,7 +191,8 @@ BEGIN
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = MovementLinkObject_Member.ObjectId
 
             -- строчная часть реестра
-            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                   AND MovementItem.isErased   = FALSE
             LEFT JOIN Object AS Object_ObjectMember ON Object_ObjectMember.Id = MovementItem.ObjectId
  
             LEFT JOIN MovementItemDate AS MIDate_Insert

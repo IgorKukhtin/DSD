@@ -21,7 +21,10 @@ BEGIN
        vbIsGoodsCode_2393:= EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE AND MI.ObjectId IN (6048195, 417105));
 
        --
-       SELECT COALESCE (PrintForms_View.PrintFormName, 'PrintMovement_Quality')
+       SELECT CASE WHEN vbIsGoodsCode_2393 = TRUE
+                   THEN 'PrintMovement_Quality32294926'
+                   ELSE COALESCE (PrintForms_View.PrintFormName, 'PrintMovement_Quality')
+              END
               INTO vbPrintFormName
        FROM Movement
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To

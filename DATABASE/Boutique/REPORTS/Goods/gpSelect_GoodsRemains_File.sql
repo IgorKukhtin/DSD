@@ -219,8 +219,7 @@ BEGIN
                                       WHERE tmpContainer_all.UnitId = 6318
                                         -- если есть остаток
                                         AND tmpContainer_all.Remains > 0
-                                     ) AS tmpContainer_all_podium ON tmpContainer_all_podium.UnitId  = tmpContainer_all.UnitId
-                                                                 AND tmpContainer_all_podium.GoodsId = tmpContainer_all.GoodsId
+                                     ) AS tmpContainer_all_podium ON tmpContainer_all_podium.GoodsId = tmpContainer_all.GoodsId
                            -- первая цена - в магазине
                            LEFT JOIN tmpPriceList_fp AS tmpPriceList_fp_unit
                                                      ON tmpPriceList_fp_unit.UnitId  = tmpContainer_all.UnitId
@@ -377,7 +376,7 @@ BEGIN
      INSERT INTO _Result(RowData)
      SELECT '<offer id="' || COALESCE (tmp.GoodsCode, 0) :: TVarChar || '"'
          || CASE WHEN COALESCE (tmp.Amount, 0) <> 0 THEN ' available="true">' ELSE ' available="false">' END
-         || '<unitname>'||tmp.UnitName||'</unitname>'
+       --|| '<unitname>'||tmp.UnitName||'</unitname>'
        --|| '<labelname>'||tmp.LabelName||'</labelname>'
          || '<sizename>'|| COALESCE (tmp.SizeName, '') ||'</sizename>'
          --|| '<url>'||tmp.PartnerName||'</url>'
