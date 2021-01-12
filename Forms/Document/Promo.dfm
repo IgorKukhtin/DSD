@@ -2781,7 +2781,7 @@
     Top = 288
   end
   inherited ActionList: TActionList
-    Left = 207
+    Left = 231
     Top = 231
     object actInsertUpdate_MI_PriceCalc: TdsdExecStoredProc [0]
       Category = 'Update_MI_Param'

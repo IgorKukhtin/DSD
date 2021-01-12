@@ -335,8 +335,18 @@
       DataController.DataSource = ContractConditionDS
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
-      DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.DefaultGroupSummaryItems = <
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Value
+        end>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Value
+        end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
@@ -345,6 +355,7 @@
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
+      OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -592,6 +603,10 @@
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
+      ExplicitLeft = 120
+      ExplicitTop = 88
+      ExplicitWidth = 451
+      ExplicitHeight = 140
       object cxGridDBTableViewContract_Child: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = Contract_ChildDS
@@ -1058,7 +1073,7 @@
     Width = 1216
     Height = 5
     AlignSplitter = salBottom
-    Control = cxGridContractCondition
+    Control = Panel
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
