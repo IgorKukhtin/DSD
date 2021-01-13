@@ -1222,9 +1222,9 @@ uses
   ProfitLossServiceJournal in '..\..\Forms\Document\ProfitLossServiceJournal.pas' {ProfitLossServiceJournalForm: TParentForm},
   ChangeInvnumberDialog in '..\..\Forms\Document\ChangeInvnumberDialog.pas' {ChangeInvNumberDialogForm: TParentForm},
   PromoContractBonus_Detail in '..\..\Forms\Guides\PromoContractBonus_Detail.pas' {PromoContractBonus_DetailForm: TParentForm},
-  ReestrReturnOutStartMovement in '..\..\Forms\Document\ReestrReturnOutStartMovement.pas' {ReestrReturnOutStartMovementForm: TParentForm},
   ReestrReturnOutUpdateMovement in '..\..\Forms\Document\ReestrReturnOutUpdateMovement.pas' {ReestrReturnOutUpdateMovementForm: TParentForm},
-  ReestrReturnOutJournal in '..\..\Forms\Document\ReestrReturnOutJournal.pas' {ReestrReturnOutJournalForm: TParentForm};
+  ReestrReturnOutJournal in '..\..\Forms\Document\ReestrReturnOutJournal.pas' {ReestrReturnOutJournalForm: TParentForm},
+  ReestrReturnOutStartMovement in '..\..\Forms\Document\ReestrReturnOutStartMovement.pas' {ReestrReturnOutStartMovementForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
@@ -1235,8 +1235,6 @@ begin
   gc_isSetDefault := true;
   dsdProject := prProject;
   Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TReestrReturnOutUpdateMovementForm, ReestrReturnOutUpdateMovementForm);
-  Application.CreateForm(TReestrReturnOutJournalForm, ReestrReturnOutJournalForm);
   Application.Run;
   DUnitTestRunner.RunRegisteredTests;
 end.

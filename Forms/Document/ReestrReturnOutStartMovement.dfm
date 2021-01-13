@@ -1095,7 +1095,7 @@ inherited ReestrReturnOutStartMovementForm: TReestrReturnOutStartMovementForm
     Top = 328
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_MI_ReestrIncome'
+    StoredProcName = 'gpSelect_MI_ReestrReturnOut'
     Params = <
       item
         Name = 'inMovementId'
@@ -1349,7 +1349,7 @@ inherited ReestrReturnOutStartMovementForm: TReestrReturnOutStartMovementForm
     Top = 8
   end
   inherited spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_ReestrIncome'
+    StoredProcName = 'gpGet_Movement_ReestrReturnOut'
     Params = <
       item
         Name = 'inMovementId'
@@ -1423,7 +1423,7 @@ inherited ReestrReturnOutStartMovementForm: TReestrReturnOutStartMovementForm
     Top = 320
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_ReestrIncome'
+    StoredProcName = 'gpInsertUpdate_Movement_ReestrReturnOut'
     Params = <
       item
         Name = 'ioId'
@@ -1527,7 +1527,7 @@ inherited ReestrReturnOutStartMovementForm: TReestrReturnOutStartMovementForm
     Top = 320
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_ReestrIncomeStart'
+    StoredProcName = 'gpInsertUpdate_MI_ReestrReturnOutStart'
     Params = <
       item
         Name = 'ioMovementId'
@@ -1668,7 +1668,7 @@ inherited ReestrReturnOutStartMovementForm: TReestrReturnOutStartMovementForm
     Top = 124
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ReestrIncome_Print'
+    StoredProcName = 'gpSelect_Movement_ReestrReturnOut_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

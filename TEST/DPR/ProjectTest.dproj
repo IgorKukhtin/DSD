@@ -4192,16 +4192,16 @@
 				<Form>PromoContractBonus_DetailForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ReestrReturnOutStartMovement.pas">
-				<Form>ReestrReturnOutStartMovementForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ReestrReturnOutUpdateMovement.pas">
 				<Form>ReestrReturnOutUpdateMovementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ReestrReturnOutJournal.pas">
 				<Form>ReestrReturnOutJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ReestrReturnOutStartMovement.pas">
+				<Form>ReestrReturnOutStartMovementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
