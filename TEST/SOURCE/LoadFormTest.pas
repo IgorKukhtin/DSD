@@ -111,6 +111,7 @@ type
     procedure LoadMovementFormTest;
     procedure LoadOrderFinanceFormTest;
     procedure LoadOrderFinanceMovementFormTest;
+    procedure LoadOrderSaleFormTest;
     procedure LoadOrderIncomeFormTest;
     procedure LoadOrderInternalFormTest;
     procedure LoadOrderExternalFormTest;
@@ -824,6 +825,12 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyPlace_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyPlace_ObjectForm');
+end;
+
+procedure TLoadFormTest.LoadOrderSaleFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderSaleJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderSaleJournalForm');
 end;
 
 procedure TLoadFormTest.LoadOrderFinanceMovementFormTest;
@@ -2757,9 +2764,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceList_Unit_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceList_Unit_ObjectForm');
   exit;
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalRetailPartner_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalRetailPartner_ObjectForm');
   exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalUnitFounder_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalUnitFounder_ObjectForm');
 

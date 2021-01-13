@@ -1823,6 +1823,8 @@ inherited ReestrReturnOutUpdateMovementForm: TReestrReturnOutUpdateMovementForm
       item
         Name = 'inReestrKindId'
         Value = '0'
+        Component = ReestrKindGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1832,9 +1834,17 @@ inherited ReestrReturnOutUpdateMovementForm: TReestrReturnOutUpdateMovementForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsShowAll'
+        Value = Null
+        Component = edIsShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 567
+    Left = 559
     Top = 176
   end
   object spSelectPrintPeriod: TdsdStoredProc
@@ -1951,6 +1961,14 @@ inherited ReestrReturnOutUpdateMovementForm: TReestrReturnOutUpdateMovementForm
       item
         Name = 'inIsReestrKind'
         Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsShowAll'
+        Value = Null
+        Component = edIsShowAll
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

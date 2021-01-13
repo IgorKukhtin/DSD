@@ -1718,6 +1718,13 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisShowAll'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 519
@@ -2010,6 +2017,13 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
       item
         Name = 'inIsReestrKind'
         Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisShowAll'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

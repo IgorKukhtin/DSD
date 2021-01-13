@@ -1706,8 +1706,8 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 544
-    Top = 99
+    Left = 552
+    Top = 123
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -1827,12 +1827,22 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
       item
         Name = 'inReestrKindId'
         Value = '0'
+        Component = ReestrKindGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inIsReestrKind'
         Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisShowAll'
+        Value = Null
+        Component = edIsShowAll
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1905,8 +1915,8 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 631
-    Top = 296
+    Left = 615
+    Top = 264
   end
   object spSelectPrintGroup: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ReestrIncome_Print'
@@ -1958,9 +1968,17 @@ inherited ReestrIncomeUpdateMovementForm: TReestrIncomeUpdateMovementForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisShowAll'
+        Value = Null
+        Component = edIsShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 639
+    Left = 647
     Top = 168
   end
   object GuidesPersonal: TdsdGuides

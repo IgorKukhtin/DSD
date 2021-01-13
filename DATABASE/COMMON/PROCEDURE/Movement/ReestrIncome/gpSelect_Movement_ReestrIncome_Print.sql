@@ -1,6 +1,7 @@
 -- Function: gpSelect_Movement_ReestrIncome()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_ReestrIncome_Print (Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ReestrIncome_Print (Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ReestrIncome_Print(
     IN inMovementId        Integer   ,
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ReestrIncome_Print(
     IN inPersonalTradeId   Integer   DEFAULT 0,
     IN inReestrKindId      Integer   DEFAULT 0,
     IN inIsReestrKind      Boolean   DEFAULT FALSE,
+    IN inisShowAll         Boolean   DEFAULT FALSE,
     IN inSession           TVarChar  DEFAULT ''  -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -19,6 +21,8 @@ $BODY$
 
    DECLARE vbMemberId      Integer;
    DECLARE vbMemberTradeId Integer;
+   DECLARE vbMemberId_User  Integer;
+   DECLARE vbMILinkObjectId Integer;
 
    DECLARE Cursor1 refcursor;
    DECLARE Cursor2 refcursor;
@@ -32,6 +36,25 @@ BEGIN
      vbMemberId     := COALESCE ((SELECT ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inPersonalId      AND OL.DescId = zc_ObjectLink_Personal_Member()), 0);
      vbMemberTradeId:= COALESCE ((SELECT ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inPersonalTradeId AND OL.DescId = zc_ObjectLink_Personal_Member()), 0);
 
+     -- Определяется <Физическое лицо> - кто сформировал визу inReestrKindId
+     vbMemberId_User:= CASE WHEN vbUserId = 5 THEN 9457 ELSE
+                       (SELECT ObjectLink_User_Member.ChildObjectId
+                        FROM ObjectLink AS ObjectLink_User_Member
+                        WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                          AND ObjectLink_User_Member.ObjectId = vbUserId)
+                       END
+                      ;
+     -- Определяется
+     vbMILinkObjectId := (SELECT CASE WHEN inReestrKindId = zc_Enum_ReestrKind_EconomIn()  THEN zc_MILinkObject_EconomIn()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_EconomOut() THEN zc_MILinkObject_EconomOut()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_Snab()      THEN zc_MILinkObject_Snab()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_SnabRe()    THEN zc_MILinkObject_SnabRe()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_Remake()    THEN zc_MILinkObject_Remake()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_Econom()    THEN zc_MILinkObject_Econom()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()       THEN zc_MILinkObject_Buh()
+                                 END AS MILinkObjectId
+                      );
+                      
      -- Определяется
      SELECT Movement.DescId, Movement.StatusId
             INTO vbDescId, vbStatusId
@@ -399,13 +422,18 @@ BEGIN
                                  ON ObjectLink_PersonalTrade_Member.ObjectId = ObjectLink_Partner_PersonalTrade.ChildObjectId
                                 AND ObjectLink_PersonalTrade_Member.DescId = zc_ObjectLink_Personal_Member()
             LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = ObjectLink_PersonalTrade_Member.ChildObjectId -- ObjectLink_Partner_PersonalTrade.ChildObjectId
+            
+            LEFT JOIN tmpMILO ON tmpMILO.MovementItemId = tmpMI.MovementItemId
+                             AND tmpMILO.DescId = vbMILinkObjectId          
 
        WHERE ((inIsReestrKind = TRUE AND MovementLinkObject_ReestrKind.ObjectId = inReestrKindId) 
           OR inIsReestrKind = FALSE
              )
          AND (Object_Personal.Id      = vbMemberId        OR vbMemberId        = 0)
+         
          AND (Object_PersonalTrade.Id = vbMemberTradeId   OR vbMemberTradeId   = 0)
-
+        
+         AND (tmpMILO.ObjectId = vbMemberId_User OR inisShowAll = True)
        ORDER BY tmpMI.GroupNum
               , Object_From.ValueData
               , MovementDate_OperDatePartner.ValueData

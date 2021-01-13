@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderSale (Integer, TVarChar, TD
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderSale(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
-    IN inInvNumber           TVarChar  , -- Номер документа
+ INOUT ioInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inPartnerId           Integer   , --
     IN inTotalCountKg        TFloat    , 
@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderSale(
     IN inComment             TVarChar  , -- Примечание
     IN inUserId              Integer     -- пользователь
 )
-RETURNS Integer AS
+RETURNS RECORD AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
@@ -28,11 +28,11 @@ BEGIN
 
      IF vbIsInsert = TRUE
      THEN
-         inInvNumber := CAST (NEXTVAL ('Movement_OrderSale_seq') AS TVarChar);
+         ioInvNumber := CAST (NEXTVAL ('Movement_OrderSale_seq') AS TVarChar);
      END IF;
      
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_OrderSale(), inInvNumber, inOperDate, NULL, NULL);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_OrderSale(), ioInvNumber, inOperDate, NULL, NULL);
 
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Partner(), ioId, inPartnerId);
@@ -60,7 +60,7 @@ BEGIN
      END IF;
 
      -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
+     --PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);

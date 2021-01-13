@@ -1239,6 +1239,8 @@ type
     N233: TMenuItem;
     N234: TMenuItem;
     N235: TMenuItem;
+    actOrderSale: TdsdOpenForm;
+    miOrderSale: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

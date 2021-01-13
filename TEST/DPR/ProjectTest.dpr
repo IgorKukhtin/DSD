@@ -1224,7 +1224,8 @@ uses
   PromoContractBonus_Detail in '..\..\Forms\Guides\PromoContractBonus_Detail.pas' {PromoContractBonus_DetailForm: TParentForm},
   ReestrReturnOutUpdateMovement in '..\..\Forms\Document\ReestrReturnOutUpdateMovement.pas' {ReestrReturnOutUpdateMovementForm: TParentForm},
   ReestrReturnOutJournal in '..\..\Forms\Document\ReestrReturnOutJournal.pas' {ReestrReturnOutJournalForm: TParentForm},
-  ReestrReturnOutStartMovement in '..\..\Forms\Document\ReestrReturnOutStartMovement.pas' {ReestrReturnOutStartMovementForm: TParentForm};
+  ReestrReturnOutStartMovement in '..\..\Forms\Document\ReestrReturnOutStartMovement.pas' {ReestrReturnOutStartMovementForm: TParentForm},
+  OrderSaleJournal in '..\..\Forms\Document\OrderSaleJournal.pas' {OrderSaleJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

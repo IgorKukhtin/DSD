@@ -36,7 +36,7 @@ BEGIN
        SELECT
              Movement.Id                         AS Id
            , Movement.InvNumber                  AS InvNumber
-           , Movement.OperDate                   AS OperDate
+           , Movement.OperDate ::TDateTime  AS OperDate
            , Object_Status.ObjectCode            AS StatusCode
            , Object_Status.ValueData             AS StatusName
 
