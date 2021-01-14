@@ -213,11 +213,13 @@ BEGIN
          vbIsGoodsGroup:= TRUE;
          --
          INSERT INTO _tmpGoods_Complete_Inventory (GoodsId)
-            SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (1945) AS lfSelect -- —Œ-Œ¡Ÿ¿ﬂ
+            SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (1945)    AS lfSelect -- —Œ-Œ¡Ÿ¿ﬂ
            UNION
-            SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (1942) AS lfSelect -- —Œ-›Ã”À‹—»»
+            SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (1942)    AS lfSelect -- —Œ-›Ã”À‹—»»
            UNION
             SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (5064881) AS lfSelect -- —Œ-œŒ—ŒÀ
+           UNION
+            SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (1938)    AS lfSelect -- —-œ≈–≈–¿¡Œ“ ¿
            ;
 
      ELSE

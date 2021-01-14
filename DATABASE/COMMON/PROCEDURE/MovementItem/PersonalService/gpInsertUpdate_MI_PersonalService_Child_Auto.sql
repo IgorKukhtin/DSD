@@ -52,11 +52,11 @@ BEGIN
 
 
      -- врменно - пока не понятно зачем 0 в отчете
-     IF COALESCE (inAmount, 0) = 0
+     IF COALESCE (inAmount, 0) = 0 AND COALESCE (inWorkTimeHoursOne, 0) = 0
      THEN
          -- !!!ВЫХОД!!!
          RETURN;
-     END IF;
+     END IF;*/
 
 
      -- проверка

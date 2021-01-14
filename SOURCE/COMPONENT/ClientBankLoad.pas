@@ -1290,7 +1290,7 @@ end;
 function TRaiffeisenBankLoad.GetOperSumm: real;
 begin
   result := FDataSet.FieldByName('S').AsFloat;
-  if IsDebet then
+  if not IsDebet then
      result := - result;
 end;
 

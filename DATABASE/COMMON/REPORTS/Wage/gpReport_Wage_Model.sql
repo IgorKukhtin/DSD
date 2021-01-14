@@ -381,7 +381,7 @@ AS  (SELECT
                     ,DATE_PART ('ISODOW', MovementItemContainer.OperDate)  AS OperDate_num
                     ,MovementItemContainer.MovementDescId
                     ,MovementItemContainer.IsActive
-         
+
                     ,COALESCE (MLO_DocumentKind.ObjectId, 0)  AS DocumentKindId
                     ,COALESCE (MLO_PersonalGroup.ObjectId, 0) AS PersonalGroupId
 
@@ -393,7 +393,7 @@ AS  (SELECT
                                THEN MovementItemContainer.WhereObjectId_Analyzer
                           ELSE MovementItemContainer.ObjectExtId_Analyzer
                      END AS ToId
-         
+
                     ,CASE WHEN MovementItemContainer.IsActive = TRUE
                                THEN MovementItemContainer.ObjectId_Analyzer -- NULL::Integer
                           ELSE MovementItemContainer.ObjectId_Analyzer
@@ -402,31 +402,34 @@ AS  (SELECT
                                THEN MovementItemContainer.ObjectId_Analyzer
                           ELSE Container.ObjectId
                      END AS GoodsId_to
-         
+
                     ,SUM (CASE  WHEN MovementItemContainer.IsActive = TRUE
                                      THEN MovementItemContainer.Amount
                                 ELSE -1 * MovementItemContainer.Amount
                           END)::TFloat as Amount
-         
+
                     , MovementItemContainer.ObjectIntId_Analyzer AS GoodsKindId
-         
+
                     , CASE WHEN MovementItemContainer.IsActive = TRUE
                                 THEN MovementItemContainer.ObjectIntId_Analyzer -- NULL::Integer
                            ELSE MovementItemContainer.ObjectIntId_Analyzer
                       END AS GoodsKind_FromId
+
                     , CASE WHEN MovementItemContainer.IsActive = TRUE
                                 THEN OL_GoodsKindComplete_master.ChildObjectId -- NULL::Integer
                            ELSE OL_GoodsKindComplete_master.ChildObjectId
                       END AS GoodsKindComplete_FromId
+
                     , CASE WHEN MovementItemContainer.IsActive = TRUE
                                 THEN MovementItemContainer.ObjectIntId_Analyzer
                            ELSE CLO_GoodsKind.ObjectId
                       END AS GoodsKind_ToId
+
                     , CASE WHEN MovementItemContainer.IsActive = TRUE
                                 THEN OL_GoodsKindComplete_master.ChildObjectId
                            ELSE OL_GoodsKindComplete.ChildObjectId
                       END AS GoodsKindComplete_ToId
-         
+
                     , CASE WHEN MovementItemContainer.IsActive = FALSE
                                 THEN MILO_StorageLine.ObjectId
                            ELSE 0
@@ -435,7 +438,7 @@ AS  (SELECT
                                 THEN MILO_StorageLine.ObjectId
                            ELSE 0
                       END AS StorageLineId_To
-         
+
                  FROM (SELECT DISTINCT
                               Setting.MovementDescId
                        FROM Setting_Wage_1 as Setting
@@ -450,11 +453,12 @@ AS  (SELECT
                                                       AND MovementItemContainer.DescId         = zc_MIContainer_Count()
                                                       AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                       AND COALESCE (MovementItemContainer.AccountId, 0) <> zc_Enum_Account_110101()
+                                                    --AND (MovementItemContainer.MovementId = 15479819 OR inSession <> '5')
                       LEFT OUTER JOIN ContainerLinkObject AS CLO_PartionGoods_master ON CLO_PartionGoods_master.ContainerId = MovementItemContainer.ContainerId
                                                                                     AND CLO_PartionGoods_master.DescId      = zc_ContainerLinkObject_PartionGoods()
                       LEFT OUTER JOIN ObjectLink AS OL_GoodsKindComplete_master ON OL_GoodsKindComplete_master.ObjectId = CLO_PartionGoods_master.ObjectId
                                                                                AND OL_GoodsKindComplete_master.DescId   = zc_ObjectLink_PartionGoods_GoodsKindComplete()
-         
+
                       LEFT OUTER JOIN Container ON Container.Id = COALESCE (MovementItemContainer.ContainerIntId_Analyzer, MovementItemContainer.ContainerId_Analyzer)
                       LEFT OUTER JOIN ContainerLinkObject AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = Container.Id
                                                                           AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
@@ -502,7 +506,7 @@ AS  (SELECT
                              THEN MovementItemContainer.ObjectId_Analyzer
                      ELSE Container.ObjectId
                      END
-         
+
                     , CASE WHEN MovementItemContainer.IsActive = TRUE
                                 THEN MovementItemContainer.ObjectIntId_Analyzer -- NULL::Integer
                            ELSE MovementItemContainer.ObjectIntId_Analyzer
@@ -560,6 +564,7 @@ AS  (SELECT
                             , tmpMovement_all.GoodsKindComplete_ToId
                             , tmpMovement_all.StorageLineId_From
                             , tmpMovement_all.StorageLineId_To
+                            , CASE WHEN inSession = '5' THEN tmpMovement_all.MovementId ELSE 0 END AS MovementId
                          FROM tmpMovement_all
                               LEFT JOIN tmpGoodsMaster_out ON tmpGoodsMaster_out.MovementId = tmpMovement_all.MovementId
                                                           AND tmpMovement_all.IsActive      = TRUE
@@ -581,6 +586,7 @@ AS  (SELECT
                             , tmpMovement_all.GoodsKindComplete_ToId
                             , tmpMovement_all.StorageLineId_From
                             , tmpMovement_all.StorageLineId_To
+                            , CASE WHEN inSession = '5' THEN tmpMovement_all.MovementId ELSE 0 END
                         )
          -- Модели начисления + необходимые документы для расчета по Кол-во голов
        , tmpMovement_HeadCount AS
@@ -595,6 +601,7 @@ AS  (SELECT
                               , tmpMI.StorageLineId_From
                               , tmpMI.StorageLineId_To
                               , SUM (MIFloat_HeadCount.ValueData) AS Amount
+                 
                          FROM (SELECT DISTINCT MovementItemContainer.MovementItemId
                                  ,MovementItemContainer.OperDate
                                  ,MovementItemContainer.MovementDescId
@@ -615,8 +622,8 @@ AS  (SELECT
                                             THEN MovementItemContainer.ObjectId_Analyzer
                                        ELSE Container.ObjectId
                                   END AS GoodsId_to
-                                 ,MovementItemContainer.ObjectIntId_Analyzer AS GoodsKindId
-
+                                 , MovementItemContainer.ObjectIntId_Analyzer AS GoodsKindId
+                 
                                  , CASE WHEN MovementItemContainer.IsActive = FALSE
                                              THEN MILO_StorageLine.ObjectId
                                         ELSE 0
@@ -625,7 +632,7 @@ AS  (SELECT
                                              THEN MILO_StorageLine.ObjectId
                                         ELSE 0
                                    END AS StorageLineId_To
-
+                 
                               FROM (SELECT DISTINCT Setting.MovementDescId FROM Setting_Wage_1 AS Setting WHERE Setting.SelectKindId IN (zc_Enum_SelectKind_InHead(), zc_Enum_SelectKind_OutHead())) AS tmp  -- Кол-во голов приход + Кол-во голов расход
                                    INNER JOIN MovementItemContainer ON MovementItemContainer.MovementDescId = tmp.MovementDescId
                                                                    AND MovementItemContainer.DescId         = zc_MIContainer_Count()
@@ -639,12 +646,12 @@ AS  (SELECT
                                                                                              AND MILO_StorageLine.DescId     = zc_MILinkObject_StorageLine()
                               WHERE MovementBoolean_Peresort.MovementId IS NULL
                              ) AS tmpMI
-                              /*INNER JOIN MovementItem ON MovementItem.Id = tmpMI.MovementItemId
-                                                     AND MovementItem.isErased = FALSE
-                                                     AND MovementItem.Amount <> 0*/
-                              INNER JOIN MovementItemFloat AS MIFloat_HeadCount
-                                                           ON MIFloat_HeadCount.MovementItemId = tmpMI.MovementItemId
-                                                          AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                             /*INNER JOIN MovementItem ON MovementItem.Id = tmpMI.MovementItemId
+                                                    AND MovementItem.isErased = FALSE
+                                                    AND MovementItem.Amount <> 0*/
+                             INNER JOIN MovementItemFloat AS MIFloat_HeadCount
+                                                          ON MIFloat_HeadCount.MovementItemId = tmpMI.MovementItemId
+                                                         AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
                          GROUP BY tmpMI.OperDate
                                 , tmpMI.MovementDescId
                                 , tmpMI.IsActive
@@ -693,8 +700,10 @@ AS  (SELECT
            , SUM (CASE WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_SatSheetWorkTime() -- по субботам табель
                         AND tmpMovement.OperDate_num <> 6 -- суббота
                             THEN 0
+
                        WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InHead(), zc_Enum_SelectKind_OutHead()) -- Кол-во голов
                             THEN tmpMovement_HeadCount.Amount
+
                        WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() -- Кол-во упаковок приход (расчет)
                             THEN CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
                                            THEN CAST ((tmpMovement.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
@@ -702,6 +711,7 @@ AS  (SELECT
                                       ELSE 0
                                  END
                        ELSE tmpMovement.Amount
+
                   END) :: TFloat AS Gross
 
              -- Общая сумма, грн
@@ -721,7 +731,7 @@ AS  (SELECT
                   END)
            , 2) :: TFloat AS Amount
 
-           , 0 AS MovementId
+           , CASE WHEN inSession = '5' THEN tmpMovement.MovementId ELSE 0 END AS MovementId
 
         FROM Setting_Wage_1 AS Setting
              LEFT JOIN tmpMovement ON tmpMovement.MovementDescId = Setting.MovementDescId
@@ -773,6 +783,7 @@ AS  (SELECT
 
         GROUP BY
              Setting.StaffListId
+           , CASE WHEN inSession = '5' THEN tmpMovement.MovementId ELSE 0 END
            , Setting.UnitId
            , Setting.PositionId
            , Setting.PositionLevelId
@@ -787,8 +798,6 @@ AS  (SELECT
            , Setting.ModelServiceItemChild_ToId
            , COALESCE (tmpMovement.StorageLineId_From, COALESCE (tmpMovement_HeadCount.StorageLineId_From, Setting.StorageLineId_From))
            , COALESCE (tmpMovement.StorageLineId_To,   COALESCE (tmpMovement_HeadCount.StorageLineId_To,   Setting.StorageLineId_To))
-
-           , Setting.StorageLineId_To
            , Setting.GoodsKind_FromId
            , Setting.GoodsKindComplete_FromId
            , Setting.GoodsKind_ToId
@@ -838,7 +847,6 @@ AS  (SELECT
              LEFT JOIN ObjectFloat AS ObjectFloat_WorkTimeKind_Tax
                                    ON ObjectFloat_WorkTimeKind_Tax.ObjectId = MIObject_WorkTimeKind.ObjectId
                                   AND ObjectFloat_WorkTimeKind_Tax.DescId   = zc_ObjectFloat_WorkTimeKind_Tax()
-
              LEFT JOIN Object AS Object_Member ON Object_Member.Id = MI_SheetWorkTime.ObjectId
 
              LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PersonalGroup
@@ -908,8 +916,8 @@ AS  (SELECT
              , MI_SheetWorkTime.Amount_Trainee
              , MI_SheetWorkTime.Tax_Trainee
                -- SUM_MemberHours_Trainee
-             , SUM (MI_SheetWorkTime.Amount_Trainee) OVER (PARTITION BY                    MI_SheetWorkTime.Tax_Trainee, MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId, MI_SheetWorkTime.StorageLineId) AS SUM_MemberHours_Trainee
-               -- SUM_MemberHours
+             , SUM (MI_SheetWorkTime.Amount_Trainee)    OVER (PARTITION BY                            MI_SheetWorkTime.Tax_Trainee, MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId, MI_SheetWorkTime.StorageLineId) AS SUM_MemberHours_Trainee
+               -- SUM_MemberHours - итого часов всех сотрудников (с этой должностью+...)
              , SUM (MI_SheetWorkTime.Amount)            OVER (PARTITION BY                            MI_SheetWorkTime.Tax_Trainee, MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId, MI_SheetWorkTime.StorageLineId) AS SUM_MemberHours
              , SUM (MI_SheetWorkTime.Amount_andTrainee) OVER (PARTITION BY                                                          MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId, MI_SheetWorkTime.StorageLineId) AS SUM_MemberHours_andTrainee
                -- AmountInDay
@@ -964,7 +972,7 @@ AS  (SELECT
             , SUM (Movement_Sheet.Amount)            OVER (PARTITION BY Movement_Sheet.PositionId, Movement_Sheet.PositionLevelId, Movement_Sheet.StorageLineId) AS AmountInMonth
             , SUM (Movement_Sheet.Amount_andTrainee) OVER (PARTITION BY Movement_Sheet.PositionId, Movement_Sheet.PositionLevelId, Movement_Sheet.StorageLineId) AS AmountInMonth_andTrainee
               -- Count_Member
-            , COUNT(*)                    OVER (PARTITION BY Movement_Sheet.PositionId, Movement_Sheet.PositionLevelId, Movement_Sheet.StorageLineId) AS Count_Member
+            , COUNT(*)                               OVER (PARTITION BY Movement_Sheet.PositionId, Movement_Sheet.PositionLevelId, Movement_Sheet.StorageLineId) AS Count_Member
 
        FROM (SELECT Movement_Sheet.MemberId
                   , Movement_Sheet.MemberName
@@ -1022,7 +1030,6 @@ AS  (SELECT
                               AND Setting_Wage_1.UnitId > 0
                            )
   , tmpUnit_Reestr_from AS (SELECT DISTINCT Setting_Wage_1.UnitId, COALESCE (Setting_Wage_1.FromId, 0) AS FromId
-                                                              -- , 0 AS FromId
                             FROM Setting_Wage_1
                             WHERE Setting_Wage_1.SelectKindId IN (zc_Enum_SelectKind_MovementTransportHours(), zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc())
                               AND Setting_Wage_1.UnitId > 0
@@ -1169,6 +1176,7 @@ AS  (SELECT
              INNER JOIN Movement AS Movement_Sale
                                  ON Movement_Sale.Id       = MovementFloat_MovementItemId.MovementId
                                 AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
+
              LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                           ON MovementLinkObject_From.MovementId = Movement_Sale.Id
                                          AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
@@ -1244,6 +1252,7 @@ AS  (SELECT
        )
          -- Модели, для стажеров
        , tmpList_ModelService_Trainee AS (SELECT OB.ObjectId AS ModelServiceId FROM ObjectBoolean AS OB WHERE OB.DescId = zc_ObjectBoolean_ModelService_Trainee() AND OB.ValueData = TRUE)
+
          -- Данные - для стажеров
        , Movement_Sheet_Trainee AS
        (SELECT Movement_Sheet.PositionId
@@ -1260,14 +1269,14 @@ AS  (SELECT
 
         FROM Setting_Wage_1 AS Setting
              CROSS JOIN tmpOperDate
-             LEFT OUTER JOIN Movement_Sheet ON COALESCE (Movement_Sheet.PositionId, 0)      = COALESCE (Setting.PositionId, 0)
-                                           AND COALESCE (Movement_Sheet.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
-                                           AND (COALESCE (Movement_Sheet.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_From, 0)
-                                             OR COALESCE (Movement_Sheet.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_To, 0)
-                                             OR (COALESCE (Setting.StorageLineId_From, 0)   = 0
-                                             AND COALESCE (Setting.StorageLineId_To, 0)     = 0)
-                                               )
-                                           AND Movement_Sheet.OperDate                      = tmpOperDate.OperDate
+             LEFT JOIN Movement_Sheet ON COALESCE (Movement_Sheet.PositionId, 0)      = COALESCE (Setting.PositionId, 0)
+                                     AND COALESCE (Movement_Sheet.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
+                                     AND (COALESCE (Movement_Sheet.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_From, 0)
+                                       OR COALESCE (Movement_Sheet.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_To, 0)
+                                       OR (COALESCE (Setting.StorageLineId_From, 0)   = 0
+                                       AND COALESCE (Setting.StorageLineId_To, 0)     = 0)
+                                         )
+                                     AND Movement_Sheet.OperDate                      = tmpOperDate.OperDate
              LEFT JOIN tmpList_ModelService_Trainee ON tmpList_ModelService_Trainee.ModelServiceId = Setting.ServiceModelId
 
         WHERE Movement_Sheet.AmountInDay > 0
@@ -1277,6 +1286,7 @@ AS  (SELECT
           AND Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime()
           -- НЕ ДОПОЛНИТЕЛЬНО для стажеров
           AND tmpList_ModelService_Trainee.ModelServiceId IS NULL -- AND Setting.ServiceModelId <> 12387 -- деликатесы
+
        )
 
     -- Результат
@@ -1509,6 +1519,7 @@ AS  (SELECT
                                        -- Транспорт - Рабочее время из путевого листа + Транспорт - Кол-во вес (реестр) + Транспорт - Кол-во документов (реестр)
                                      , zc_Enum_SelectKind_MovementTransportHours(), zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc()
                                       )
+
    UNION ALL
     -- Кол-во вес по документам компл.  + Кол-во строк по документам компл. + Кол-во документов компл.
     SELECT
@@ -1649,8 +1660,8 @@ AS  (SELECT
        ,tmpMovement_Reestr.PersonalId   :: Integer   AS MemberId
        ,tmpMovement_Reestr.PersonalName :: TVarChar  AS MemberName
        ,tmpMovement_Reestr.OperDate     :: TDateTime AS SheetWorkTime_Date
-       ,0 :: TFloat  AS SUM_MemberHours
-       ,0 :: TFloat  AS SheetWorkTime_Amount
+       ,0 :: TFloat AS SUM_MemberHours
+       ,0 :: TFloat AS SheetWorkTime_Amount
        ,0 :: Integer AS Ord_SheetWorkTime
        ,Setting.ServiceModelId
        ,Setting.ServiceModelCode
@@ -1732,7 +1743,6 @@ AS  (SELECT
                              AND ObjectLink_Personal_PositionLevel.DescId        = zc_ObjectLink_Personal_PositionLevel()
          LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
          LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = ObjectLink_Personal_PositionLevel.ChildObjectId
-
     WHERE Setting.SelectKindId IN (zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc())
 
    UNION ALL
@@ -1758,8 +1768,8 @@ AS  (SELECT
        ,tmpMovement_PersonalComplete.PersonalId   :: Integer   AS MemberId
        ,tmpMovement_PersonalComplete.PersonalName :: TVarChar  AS MemberName
        ,tmpMovement_PersonalComplete.OperDate     :: TDateTime AS SheetWorkTime_Date
-       ,0 :: TFloat  AS SUM_MemberHours
-       ,0 :: TFloat  AS SheetWorkTime_Amount
+       ,0 :: TFloat AS SUM_MemberHours
+       ,0 :: TFloat AS SheetWorkTime_Amount
        ,0 :: Integer AS Ord_SheetWorkTime
        ,Setting.ServiceModelId
        ,Setting.ServiceModelCode
@@ -1796,8 +1806,8 @@ AS  (SELECT
        , tmpMovement_PersonalComplete.HoursWork :: TFloat AS GrossOnOneMember
        , (tmpMovement_PersonalComplete.HoursWork * Setting.Ratio * Setting.Price * tmpMovement_PersonalComplete.KoeffHoursWork_car) :: TFloat AS Amount
        , (tmpMovement_PersonalComplete.HoursWork * Setting.Ratio * Setting.Price * tmpMovement_PersonalComplete.KoeffHoursWork_car) :: TFloat AS AmountOnOneMember
-
-       , tmpMovement_PersonalComplete.KoeffHoursWork_car :: TFloat AS AmountOnOneMember
+       
+       , tmpMovement_PersonalComplete.KoeffHoursWork_car :: TFloat AS KoeffHoursWork_car
 
     FROM Setting_Wage_1 AS Setting
          INNER JOIN tmpMovement_Transport AS tmpMovement_PersonalComplete

@@ -176,12 +176,46 @@ BEGIN
      -- определили <документ>
      vbMovementId_PersonalServiceBN:= (SELECT DISTINCT _tmpItem_PersonalService.MovementId_serviceBN FROM _tmpItem_PersonalService);
 
-     -- проверка
-     IF NOT EXISTS (SELECT 1 FROM _tmpItem_PersonalService WHERE _tmpItem_PersonalService.SummCardRecalc <> 0)
+     IF vbIsOut = TRUE
      THEN
-         RAISE EXCEPTION 'Ошибка.Не найден документ начисления для <%> за <%>.', lfGet_Object_ValueData ((SELECT _tmpItem_PersonalService.PersonalServiceListId_from FROM _tmpItem_PersonalService))
-                                                                               , zfCalc_MonthYearName (vbServiceDate)
-                                                                                ;
+        -- проверка
+        IF NOT EXISTS (SELECT 1 FROM _tmpItem_PersonalService WHERE _tmpItem_PersonalService.SummCardRecalc <> 0)
+        THEN
+            RAISE EXCEPTION 'Ошибка.В документе начисления для <%> за <%> не найдены сотрудники с <Дата выплаты по банку> = %.'
+                           , lfGet_Object_ValueData_sh ((SELECT DISTINCT MILinkObject_MoneyPlace.ObjectId AS MoneyPlaceId
+                                                         FROM MovementItem
+                                                              INNER JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                                                                                ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                                                                               AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+                                                              INNER JOIN MovementDate AS MovementDate_ServiceDate
+                                                                                      ON MovementDate_ServiceDate.MovementId = inMovementId
+                                                                                     AND MovementDate_ServiceDate.DescId     = zc_MovementDate_ServiceDate()
+                                                         WHERE MovementItem.MovementId = inMovementId
+                                                           AND MovementItem.DescId     = zc_MI_Master()
+                                                        ))
+                          , zfCalc_MonthYearName (vbServiceDate)
+                          , zfConvert_DateToString (vbOperDate)
+                           ;
+        END IF;
+     ELSE
+        -- проверка
+        IF NOT EXISTS (SELECT 1 FROM _tmpItem_PersonalService WHERE _tmpItem_PersonalService.SummCardRecalc <> 0)
+        THEN
+            RAISE EXCEPTION 'Ошибка.Не найден документ начисления для <%> за <%>.'
+                           , lfGet_Object_ValueData_sh ((SELECT DISTINCT MILinkObject_MoneyPlace.ObjectId AS MoneyPlaceId
+                                                         FROM MovementItem
+                                                              INNER JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                                                                                ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                                                                               AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+                                                              INNER JOIN MovementDate AS MovementDate_ServiceDate
+                                                                                      ON MovementDate_ServiceDate.MovementId = inMovementId
+                                                                                     AND MovementDate_ServiceDate.DescId     = zc_MovementDate_ServiceDate()
+                                                         WHERE MovementItem.MovementId = inMovementId
+                                                           AND MovementItem.DescId     = zc_MI_Master()
+                                                        ))
+                          , zfCalc_MonthYearName (vbServiceDate)
+                           ;
+        END IF;
      END IF;
 
      -- проверка - суммы должны соответствовать

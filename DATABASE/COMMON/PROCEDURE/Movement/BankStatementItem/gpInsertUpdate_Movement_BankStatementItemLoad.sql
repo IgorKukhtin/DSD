@@ -308,7 +308,7 @@ BEGIN
         CREATE TEMP TABLE _tmpContract_find ON COMMIT DROP AS -- (SELECT * FROM Object_Contract_View WHERE Object_Contract_View.JuridicalId = vbJuridicalId);
               (SELECT Object_Contract.Id                                  AS ContractId
                     , Object_Contract.isErased                            AS isErased
-                    , ObjectLink_Contract_ContractStateKind.ChildObjectId AS ContractStateKindId
+                    , COALESCE (ObjectLink_Contract_ContractStateKind.ChildObjectId, 0) AS ContractStateKindId
                     , ObjectLink_Contract_PaidKind.ChildObjectId          AS PaidKindId
                     , ObjectLink_Contract_InfoMoney.ChildObjectId         AS InfoMoneyId
                     , ObjectLink_Contract_Juridical.ChildObjectId         AS JuridicalId
@@ -473,12 +473,27 @@ BEGIN
             -- Находим <Договор> у Юр. Лица !!!БЕЗ зависимоти от ...!!
             IF COALESCE (vbContractId, 0) = 0
             THEN
+                -- Внутренний оборот
                 SELECT MAX (View_Contract.ContractId) INTO vbContractId
                 FROM _tmpContract_find AS View_Contract
                 WHERE View_Contract.JuridicalId = vbJuridicalId
                   AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                   AND View_Contract.isErased = FALSE
-                  AND View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm();
+                  AND View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm()
+                  AND View_Contract.InfoMoneyId = zc_Enum_InfoMoney_40801() --Внутренний оборот
+                 ;
+            END IF;
+            -- Находим <Договор> у Юр. Лица !!!БЕЗ зависимоти от ...!!
+            IF COALESCE (vbContractId, 0) = 0
+            THEN
+                -- НЕ Внутренний оборот
+                SELECT MAX (View_Contract.ContractId) INTO vbContractId
+                FROM _tmpContract_find AS View_Contract
+                WHERE View_Contract.JuridicalId = vbJuridicalId
+                  AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                  AND View_Contract.isErased = FALSE
+                  AND View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm()
+                 ;
             END IF;
     
             -- Находим <УП статья назначения> !!!всегда!!! у Договора

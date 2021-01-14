@@ -153,8 +153,9 @@ BEGIN
                , MIObject_PersonalGroup.ObjectId                AS PersonalGroupId
                , MIObject_Position.ObjectId                     AS PositionId
                , COALESCE (MIObject_PositionLevel.ObjectId, 0)  AS PositionLevelId
-               , -- !!!может измениться!!!
-                 (CASE WHEN Object_WorkTimeKind.Tax > 0 THEN Object_WorkTimeKind.Tax / 100 ELSE 1 END * MI_SheetWorkTime.Amount) :: TFloat AS SheetWorkTime_Amount
+                 -- итого часов сотрудника !!!может измениться!!!
+               , (CASE WHEN Object_WorkTimeKind.Tax > 0 THEN Object_WorkTimeKind.Tax / 100 ELSE 1 END * MI_SheetWorkTime.Amount) :: TFloat AS SheetWorkTime_Amount
+                 -- Отраб. дн. 1 чел (инф.)
                , 1                                              AS Count_Day
                -- , COUNT(*) OVER (PARTITION BY MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) AS Count_Member
                -- , SUM (MI_SheetWorkTime.Amount) OVER (PARTITION BY MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) AS SUM_MemberHours
@@ -204,10 +205,15 @@ BEGIN
            , SheetWorkTime.PersonalGroupId
            , SheetWorkTime.PositionId
            , SheetWorkTime.PositionLevelId
+             -- итого часов всех сотрудников (с этой должностью+...)
            , SheetWorkTime.SUM_MemberHours              AS SUM_MemberHours
+             -- итого часов сотрудника
            , SUM (SheetWorkTime.SheetWorkTime_Amount)   AS SheetWorkTime_Amount
+             -- Отраб. дн. 1 чел (инф.)
            , SUM (SheetWorkTime.Count_Day)              AS Count_Day
+             --
            , SheetWorkTime.Count_MemberInDay            AS Count_MemberInDay
+             --
            , COUNT (*) OVER (PARTITION BY SheetWorkTime.PositionId, SheetWorkTime.PositionLevelId) AS Count_Member
            , SUM (SummaAdd)                             AS SummaADD
         FROM (SELECT MI_SheetWorkTime.MemberId
@@ -252,6 +258,7 @@ BEGIN
            , SheetWorkTime.Count_MemberInDay
            , SheetWorkTime.SUM_MemberHours
        )
+
    -- Результат
    SELECT 
         Setting.StaffListId

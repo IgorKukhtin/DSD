@@ -42,6 +42,7 @@ RETURNS TABLE (Invnumber TVarchar, OperDate TDatetime, MonthDate TDatetime
              )
 AS
 $BODY$
+  DECLARE vbIsDate Boolean;
 BEGIN
 
     -- Ограничения по товару
@@ -49,6 +50,11 @@ BEGIN
     CREATE TEMP TABLE _tmpChildGoods (ChildGoodsId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpFromGroup (FromId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpToGroup (ToId  Integer) ON COMMIT DROP;*/
+    
+    vbIsDate:= (inStartDate  + INTERVAL '2 MONTH' > inEndDate)
+            OR (inStartDate2 + INTERVAL '2 MONTH' > inEndDate2)
+           ;
+
   
     -- Результат
     RETURN QUERY
@@ -82,7 +88,7 @@ BEGIN
                           )
 
            -- данные первого периода
-         , tmpMI_ContainerIn1 AS (SELECT MIContainer.OperDate                                 AS OperDate
+         , tmpMI_ContainerIn1 AS (SELECT CASE WHEN vbIsDate = TRUE THEN MIContainer.OperDate ELSE DATE_TRUNC ('MONTH', MIContainer.OperDate) END AS OperDate
                                        , MIContainer.ObjectExtId_Analyzer                     AS FromId
                                        , MIContainer.WhereObjectId_Analyzer                   AS ToId
                                        , MIContainer.MovementId                               AS MovementId
@@ -122,7 +128,7 @@ BEGIN
                                          , MIContainer.ContainerId
                                          , MIContainer.ObjectId_Analyzer
                                          , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
-                                         , MIContainer.OperDate
+                                         , CASE WHEN vbIsDate = TRUE THEN MIContainer.OperDate ELSE DATE_TRUNC ('MONTH', MIContainer.OperDate) END
                                          , MIContainer.ObjectExtId_Analyzer
                                          , MIContainer.WhereObjectId_Analyzer
                                  )
@@ -196,7 +202,7 @@ BEGIN
                                                          AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
                                 )
 
-         , tmpOut1 AS (SELECT DATE_TRUNC ('Month', MIContainer.OperDate) AS OperDate
+         , tmpOut1 AS (SELECT DATE_TRUNC ('MONTH', MIContainer.OperDate) AS OperDate
                             , MIContainer.MovementId             AS MovementId
                             , MIContainer.MovementItemId         AS MovementItemId
                             , MovementItem.ParentId              AS MovementItemId_master
@@ -399,7 +405,7 @@ BEGIN
                                  , COALESCE (MIBoolean_WeightMain.ValueData, FALSE)
                          )
 
-         , tmpOperationGroup1 AS (SELECT DATE_TRUNC ('Month', tmpMI_ContainerIn.OperDate) AS OperDate
+         , tmpOperationGroup1 AS (SELECT DATE_TRUNC ('MONTH', tmpMI_ContainerIn.OperDate) AS OperDate
                                        , CASE WHEN inIsMovement = TRUE THEN tmpMI_ContainerIn.MovementId ELSE 0 END AS MovementId
                                        , tmpMI_ContainerIn.isPeresort
                                        , tmpMI_ContainerIn.DocumentKindId
@@ -449,7 +455,7 @@ BEGIN
                                          , tmpMI_ContainerIn.GoodsId       
                                          , tmpMI_ContainerIn.GoodsKindId 
                                          , tmpContainer_in.GoodsKindId_complete
-                                         , DATE_TRUNC ('Month', tmpMI_ContainerIn.OperDate)
+                                         , DATE_TRUNC ('MONTH', tmpMI_ContainerIn.OperDate)
                                   UNION 
                                   SELECT tmpMI_out.OperDate
                                        , CASE WHEN inIsMovement = TRUE THEN tmpMI_out.MovementId ELSE 0 END AS MovementId
@@ -681,7 +687,7 @@ BEGIN
                                                          AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
                                 )
 
-         , tmpOut2 AS (SELECT DATE_TRUNC ('Month', MIContainer.OperDate) AS OperDate
+         , tmpOut2 AS (SELECT DATE_TRUNC ('MONTH', MIContainer.OperDate) AS OperDate
                             , MIContainer.MovementId             AS MovementId
                             , MIContainer.MovementItemId         AS MovementItemId
                             , MovementItem.ParentId              AS MovementItemId_master
@@ -882,7 +888,7 @@ BEGIN
                                  , COALESCE (MIBoolean_TaxExit.ValueData, FALSE)
                                  , COALESCE (MIBoolean_WeightMain.ValueData, FALSE)
                          )
-         , tmpOperationGroup2 AS (SELECT DATE_TRUNC ('Month', tmpMI_ContainerIn.OperDate) AS OperDate
+         , tmpOperationGroup2 AS (SELECT DATE_TRUNC ('MONTH', tmpMI_ContainerIn.OperDate) AS OperDate
                                        , CASE WHEN inIsMovement = TRUE THEN tmpMI_ContainerIn.MovementId ELSE 0 END AS MovementId
                                        , tmpMI_ContainerIn.isPeresort
                                        , tmpMI_ContainerIn.DocumentKindId
@@ -932,7 +938,7 @@ BEGIN
                                          , tmpMI_ContainerIn.GoodsId       
                                          , tmpMI_ContainerIn.GoodsKindId 
                                          , tmpContainer_in.GoodsKindId_complete
-                                         , DATE_TRUNC ('Month', tmpMI_ContainerIn.OperDate)
+                                         , DATE_TRUNC ('MONTH', tmpMI_ContainerIn.OperDate)
                                   UNION 
                                   SELECT tmpMI_out.OperDate
                                        , CASE WHEN inIsMovement = TRUE THEN tmpMI_out.MovementId ELSE 0 END AS MovementId
@@ -1112,7 +1118,7 @@ BEGIN
       -- Результат 
       SELECT Movement.InvNumber
            , Movement.OperDate
-           , tmpOperationGroup.OperDate   :: TDateTime AS MonthDate
+           , tmpOperationGroup.OperDate   :: TDateTime AS MONTHDate
            , tmpOperationGroup.isPeresort :: Boolean AS isPeresort
            , Object_DocumentKind.ValueData    AS DocumentKindName
            , Object_Receipt.ValueData         AS ReceiptName

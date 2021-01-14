@@ -119,12 +119,19 @@ BEGIN
 
      -- проверка  если zc_ObjectBoolean_PersonalServiceList_BankOut - обязательно ввод даты, иначе сохранеям нулл
      vbisBankOut := COALESCE ((SELECT ObjectBoolean_BankOut.ValueData
-                               FROM ObjectBoolean AS ObjectBoolean_BankOut
-                               WHERE ObjectBoolean_BankOut.ObjectId = inPersonalServiceListId
-                                 AND ObjectBoolean_BankOut.DescId = zc_ObjectBoolean_PersonalServiceList_BankOut())
-                              , FALSE);
+                               FROM MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                    LEFT JOIN ObjectBoolean AS ObjectBoolean_BankOut
+                                                            ON ObjectBoolean_BankOut.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
+                                                           AND ObjectBoolean_BankOut.DescId   = zc_ObjectBoolean_PersonalServiceList_BankOut()
+                               WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
+                                 AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                              ), FALSE);
 
-     IF COALESCE (vbisBankOut,FALSE) = TRUE
+
+     RAISE EXCEPTION 'Ошибка. %   % .', vbisBankOut, lfGet_Object_ValueData_sh (inPersonalServiceListId);
+
+     --
+     IF COALESCE (vbisBankOut, FALSE) = TRUE
      THEN
          IF COALESCE (ioBankOutDate, zc_DateStart()) <> zc_DateStart()
          THEN

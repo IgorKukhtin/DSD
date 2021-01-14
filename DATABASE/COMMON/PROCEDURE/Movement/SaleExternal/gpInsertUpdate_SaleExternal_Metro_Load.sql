@@ -37,6 +37,12 @@ BEGIN
      -- проверка
      IF COALESCE (inAmount,0) = 0
      THEN
+         -- проверка
+         IF inSession = '5'
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не установлено кол-во.';
+         END IF;
+         --
          RETURN;
      END IF;
 

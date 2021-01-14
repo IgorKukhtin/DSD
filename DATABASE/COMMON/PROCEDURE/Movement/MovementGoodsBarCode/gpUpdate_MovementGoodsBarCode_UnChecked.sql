@@ -13,7 +13,8 @@ $BODY$
   DECLARE vbMemberId_user Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ReportCollation());
+     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ReportCollation());
+     vbUserId:= lpGetUserBySession (inSession);
 
      -- только в этом случае - ничего не делаем, 
      IF COALESCE (inId, 0) = 0
