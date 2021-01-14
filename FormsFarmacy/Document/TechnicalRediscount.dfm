@@ -590,6 +590,20 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1082#1086#1084#1077#1085#1090#1072#1088#1080#1081' '#1074' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1080' '#1057#1059#1053
       ImageIndex = 79
     end
+    object actUpdateRedCheck: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateRedCheck
+      StoredProcList = <
+        item
+          StoredProc = spUpdateRedCheck
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1050#1088#1072#1089#1085#1099#1081' '#1095#1077#1082'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1050#1088#1072#1089#1085#1099#1081' '#1095#1077#1082'"'
+      ImageIndex = 7
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1050#1088#1072#1089#1085#1099#1081' '#1095#1077#1082'"?'
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_TechnicalRediscount'
@@ -669,6 +683,10 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateRedCheck'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -703,6 +721,10 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
     end
     object dxBarButton4: TdxBarButton
       Action = actUpdateCommentSend
+      Category = 0
+    end
+    object bbUpdateRedCheck: TdxBarButton
+      Action = actUpdateRedCheck
       Category = 0
     end
   end
@@ -976,43 +998,11 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem_TechnicalRediscount'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 550
     Top = 224
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetUnErased_MovementItem_TechnicalRediscount'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 654
     Top = 248
   end
@@ -1184,7 +1174,7 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       end
       item
         Name = 'inAmount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1371,6 +1361,31 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       end>
     PackSize = 1
     Left = 678
+    Top = 312
+  end
+  object spUpdateRedCheck: TdsdStoredProc
+    StoredProcName = 'gpUpdate_TechnicalRediscount_RedCheck'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioisRedCheck'
+        Value = Null
+        Component = cbisRedCheck
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 806
     Top = 312
   end
 end

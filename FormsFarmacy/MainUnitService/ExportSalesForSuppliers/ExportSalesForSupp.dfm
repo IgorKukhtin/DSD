@@ -1863,7 +1863,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = DanhsonPharmaTotalAmount
+              Column = DanhsonPharmaAmount
             end
             item
               Format = ',0.####'
@@ -1876,7 +1876,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = DanhsonPharmaSummaWithVAT
+              Column = DanhsonPharmaSumm
             end
             item
               Format = ',0.####'
@@ -1894,7 +1894,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = DanhsonPharmaName
+              Column = DanhsonPharmaGoodsName
             end
             item
               Format = ',0.####'
@@ -1903,7 +1903,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = DanhsonPharmaTotalAmount
+              Column = DanhsonPharmaAmount
             end
             item
               Format = ',0.####'
@@ -1916,7 +1916,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = DanhsonPharmaSummaWithVAT
+              Column = DanhsonPharmaSumm
             end
             item
               Format = ',0.####'
@@ -1943,9 +1943,9 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
-          object DanhsonPharmaCode: TcxGridDBColumn
+          object DanhsonPharmaGoodscode: TcxGridDBColumn
             Caption = #1050#1086#1076
-            DataBinding.FieldName = 'Code'
+            DataBinding.FieldName = 'Goodscode'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -1959,9 +1959,9 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
             Options.Editing = False
             Width = 39
           end
-          object DanhsonPharmaName: TcxGridDBColumn
+          object DanhsonPharmaGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-            DataBinding.FieldName = 'Name'
+            DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1977,9 +1977,9 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
             Options.Editing = False
             Width = 38
           end
-          object DanhsonPharmaPriceWithVAT: TcxGridDBColumn
+          object DanhsonPharmaPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1053#1044#1057
-            DataBinding.FieldName = 'PriceWithVAT'
+            DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
@@ -1987,9 +1987,9 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
             Options.Editing = False
             Width = 66
           end
-          object DanhsonPharmaTotalAmount: TcxGridDBColumn
+          object DanhsonPharmaAmount: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'TotalAmount'
+            DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
@@ -1997,9 +1997,9 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
             Options.Editing = False
             Width = 71
           end
-          object DanhsonPharmaSummaWithVAT: TcxGridDBColumn
+          object DanhsonPharmaSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072', '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1053#1044#1057
-            DataBinding.FieldName = 'SummaWithVAT'
+            DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
@@ -2025,7 +2025,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
           end
           object DanhsonPharmaMainJuridicalName: TcxGridDBColumn
             Caption = #1053#1072#1096#1077' '#1102#1088'. '#1083#1080#1094#1086
-            DataBinding.FieldName = 'MainJuridicalName'
+            DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -2056,9 +2056,9 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
             Options.Editing = False
             Width = 74
           end
-          object DanhsonPharmaJuridicalName: TcxGridDBColumn
+          object DanhsonPharmaFromName: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
-            DataBinding.FieldName = 'JuridicalName'
+            DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -2549,13 +2549,22 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
   end
   object dsReport_Upload_DanhsonPharma: TDataSource
     DataSet = qryReport_Upload_DanhsonPharma
-    Left = 760
-    Top = 296
+    Left = 792
+    Top = 304
   end
   object qryReport_Upload_DanhsonPharma: TZQuery
     Connection = ZConnection1
     SQL.Strings = (
       'SELECT MovementCheck_Promo.*'
+      
+        '     , ObjectFloat_NDSKind_NDS.ValueData                        ' +
+        '    AS NDS'
+      
+        '     , '#39#1055#1088#1086#1074#1077#1076#1077#1085#39'                                               ' +
+        '                      AS StatusName'
+      
+        '     , CASE WHEN Movement.DescId = zc_Movement_Check() THEN '#39#1055#1088#1086 +
+        #1076#1072#1078#1080' '#1082#1072#1089#1089#39' ELSE '#39#1055#1088#1086#1076#1072#1078#1080' '#1073#1077#1079#1085#1072#1083#39' END AS ItemName'
       
         '     , Object_MedicForSale.ValueData                            ' +
         '    AS MedicForSaleName'
@@ -2566,15 +2575,31 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         '     , ObjectString_BuyerForSale_Phone.ValueData                ' +
         '    AS Phone'
       
-        'FROM gpReport_MovementCheck_Promo(15451717, :StartDate, :EndDate' +
-        ', '#39'3'#39') AS MovementCheck_Promo'
+        'FROM gpReport_Sale_PartialSale(:StartDate, :EndDate, 0, 9526799,' +
+        ' '#39'3'#39') AS MovementCheck_Promo'
+      ''
+      
+        '     LEFT JOIN Movement AS Movement ON Movement.Id =  MovementCh' +
+        'eck_Promo.Id'
+      ''
+      
+        '     LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Obj' +
+        'ect_Goods_Retail.Id = MovementCheck_Promo.GoodsId'
+      
+        '     LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_' +
+        'Goods_Main.Id = Object_Goods_Retail.GoodsMainId'
+      ''
+      '     LEFT OUTER JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS'
+      
+        '                                 ON ObjectFloat_NDSKind_NDS.Obje' +
+        'ctId = Object_Goods_Main.NDSKindId'
       ''
       
         '     LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicFor' +
         'Sale'
       
         '                                  ON MovementLinkObject_MedicFor' +
-        'Sale.MovementId =  MovementCheck_Promo.MovementId'
+        'Sale.MovementId =  MovementCheck_Promo.Id'
       
         '                                 AND MovementLinkObject_MedicFor' +
         'Sale.DescId = zc_MovementLinkObject_MedicForSale()'
@@ -2587,7 +2612,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         'Sale'
       
         '                                  ON MovementLinkObject_BuyerFor' +
-        'Sale.MovementId =  MovementCheck_Promo.MovementId'
+        'Sale.MovementId =  MovementCheck_Promo.Id'
       
         '                                 AND MovementLinkObject_BuyerFor' +
         'Sale.DescId = zc_MovementLinkObject_BuyerForSale()'
@@ -2614,8 +2639,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         Name = 'EndDate'
         ParamType = ptUnknown
       end>
-    Left = 756
-    Top = 216
+    Left = 788
+    Top = 224
     ParamData = <
       item
         DataType = ftUnknown

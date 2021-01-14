@@ -256,7 +256,7 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
     end
     object cxSplitter2: TcxSplitter
       Left = 1
-      Top = 668
+      Top = 257
       Width = 263
       Height = 8
       AlignSplitter = salTop
@@ -422,6 +422,9 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
           Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1085#1072' '#1082#1072#1089#1089#1072#1093
         end
         item
+          Caption = #1057#1087#1080#1089#1072#1085#1080#1077
+        end
+        item
           Caption = #1055#1088#1086#1076#1072#1078#1080' '#1087#1086' '#1073'/'#1085
         end
         item
@@ -429,9 +432,6 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         end
         item
           Caption = #1055#1077#1088#1077#1091#1095#1077#1090
-        end
-        item
-          Caption = #1057#1087#1080#1089#1072#1085#1080#1077
         end
         item
           Caption = #1055#1077#1088#1077#1084#1077#1096#1077#1085#1080#1077
@@ -634,7 +634,7 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
-        Position.BandIndex = 6
+        Position.BandIndex = 7
         Position.ColIndex = 0
         Position.RowIndex = 0
       end
@@ -646,7 +646,7 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
-        Position.BandIndex = 6
+        Position.BandIndex = 7
         Position.ColIndex = 1
         Position.RowIndex = 0
       end
@@ -658,7 +658,7 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
-        Position.BandIndex = 6
+        Position.BandIndex = 7
         Position.ColIndex = 2
         Position.RowIndex = 0
       end
@@ -672,7 +672,7 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
-        Position.BandIndex = 7
+        Position.BandIndex = 8
         Position.ColIndex = 0
         Position.RowIndex = 0
       end
@@ -685,7 +685,7 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
-        Position.BandIndex = 7
+        Position.BandIndex = 8
         Position.ColIndex = 1
         Position.RowIndex = 0
       end
@@ -698,7 +698,7 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
-        Position.BandIndex = 8
+        Position.BandIndex = 9
         Position.ColIndex = 0
         Position.RowIndex = 0
       end
@@ -710,7 +710,7 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
-        Position.BandIndex = 8
+        Position.BandIndex = 9
         Position.ColIndex = 1
         Position.RowIndex = 0
       end
@@ -723,7 +723,7 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
-        Position.BandIndex = 9
+        Position.BandIndex = 6
         Position.ColIndex = 0
         Position.RowIndex = 0
       end
@@ -735,7 +735,7 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
-        Position.BandIndex = 9
+        Position.BandIndex = 6
         Position.ColIndex = 1
         Position.RowIndex = 0
       end

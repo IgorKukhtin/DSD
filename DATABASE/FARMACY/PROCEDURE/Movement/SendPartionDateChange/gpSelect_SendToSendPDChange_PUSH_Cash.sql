@@ -84,7 +84,7 @@ BEGIN
                       FROM tmpMIAll AS MovementItem
                       GROUP BY MovementItem.ObjectId)
 
-    SELECT ('Для товар <'||Object_Goods.ValueData||'> из перемещения СУН с комментарием <'||SPLIT_PART (MovementItem.CommentSunName, ';', 1)||'> необходимо создать заявку на изменения срока годности.')::TBlob AS Message,
+    SELECT ('Для товар <'||Object_Goods.ObjectCode::TVarChar||'> <'||Object_Goods.ValueData||'> из перемещения СУН с комментарием <'||SPLIT_PART (MovementItem.CommentSunName, ';', 1)||'> необходимо создать заявку на изменения срока годности.')::TBlob AS Message,
            'TOverdueChangeCashPUSHSendForm'::TVarChar                           AS FormName,
            'Добавить товар в заявку'::TVarChar                                  AS Button,
            'GoodsId,GoodsCode,GoodsName,MISendId,Amount'::TVarChar              AS Params,

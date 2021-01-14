@@ -1,0 +1,140 @@
+package ProjectComponent_D27;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  vclimg,
+  vcl,
+  xmlrtl,
+  vclx,
+  soaprtl,
+  inet,
+  dsnap,
+  dbrtl,
+  VclSmp,
+  vcldb,
+  adortl,
+  IndyCore,
+  IndySystem,
+  IndyProtocols,
+  vclie,
+  DbxCommonDriver,
+  dxCoreRS27,
+  cxLibraryRS27,
+  dxGDIPlusRS27,
+  dxmdsRS27,
+  dxBarRS27,
+  dxComnRS27,
+  dxBarExtItemsRS27,
+  cxGridRS27,
+  cxExportRS27,
+  cxPivotGridRS27,
+  cxTreeListRS27,
+  cxVerticalGridRS27,
+  fs27,
+  frx27,
+  frxe27,
+  frxDB27,
+  ZLibEx,
+  GMLib_D_Sydney10,
+  GMLib_D_Sydney10_VCL,
+  cxSchedulerRS27,
+  dxSkinsCoreRS27;
+
+contains
+  dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
+  UtilConst in '..\SOURCE\UtilConst.pas',
+  CommonData in '..\SOURCE\CommonData.pas',
+  Authentication in '..\SOURCE\Authentication.pas',
+  dsdAction in '..\SOURCE\COMPONENT\dsdAction.pas',
+  dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
+  UtilConvert in '..\SOURCE\UtilConvert.pas',
+  ParentForm in '..\SOURCE\ParentForm.pas' {ParentForm},
+  dsdGuides in '..\SOURCE\COMPONENT\dsdGuides.pas',
+  FormStorage in '..\SOURCE\FormStorage.pas',
+  dsdAddOn in '..\SOURCE\COMPONENT\dsdAddOn.pas',
+  ChoicePeriod in '..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm},
+  Defaults in '..\SOURCE\COMPONENT\Defaults.pas',
+  UnilWin in '..\SOURCE\UnilWin.pas',
+  MessagesUnit in '..\SOURCE\MessagesUnit.pas' {MessagesForm},
+  ClientBankLoad in '..\SOURCE\COMPONENT\ClientBankLoad.pas',
+  Storage in '..\SOURCE\Storage.pas',
+  SimpleGauge in '..\SOURCE\SimpleGauge.pas' {SimpleGaugeForm},
+  Document in '..\SOURCE\COMPONENT\Document.pas',
+  ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas',
+  ExternalDocumentLoad in '..\SOURCE\COMPONENT\ExternalDocumentLoad.pas',
+  Log in '..\SOURCE\Log.pas',
+  ExternalData in '..\SOURCE\COMPONENT\ExternalData.pas',
+  ExternalSave in '..\SOURCE\COMPONENT\ExternalSave.pas',
+  ComDocXML in '..\SOURCE\EDI\ComDocXML.pas',
+  DeclarXML in '..\SOURCE\EDI\DeclarXML.pas',
+  DesadvXML in '..\SOURCE\EDI\DesadvXML.pas',
+  EDI in '..\SOURCE\EDI\EDI.pas',
+  OrderXML in '..\SOURCE\EDI\OrderXML.pas',
+  MeDocXML in '..\SOURCE\MeDOC\MeDocXML.pas',
+  cxGridAddOn in '..\SOURCE\DevAddOn\cxGridAddOn.pas',
+  VKDBFDataSet in '..\SOURCE\DBF\VKDBFDataSet.pas',
+  VKDBFPrx in '..\SOURCE\DBF\VKDBFPrx.pas',
+  VKDBFUtil in '..\SOURCE\DBF\VKDBFUtil.pas',
+  VKDBFMemMgr in '..\SOURCE\DBF\VKDBFMemMgr.pas',
+  VKDBFCrypt in '..\SOURCE\DBF\VKDBFCrypt.pas',
+  VKDBFGostCrypt in '..\SOURCE\DBF\VKDBFGostCrypt.pas',
+  VKDBFCDX in '..\SOURCE\DBF\VKDBFCDX.pas',
+  VKDBFIndex in '..\SOURCE\DBF\VKDBFIndex.pas',
+  VKDBFSorters in '..\SOURCE\DBF\VKDBFSorters.pas',
+  VKDBFCollate in '..\SOURCE\DBF\VKDBFCollate.pas',
+  VKDBFParser in '..\SOURCE\DBF\VKDBFParser.pas',
+  VKDBFNTX in '..\SOURCE\DBF\VKDBFNTX.pas',
+  VKDBFSortedList in '..\SOURCE\DBF\VKDBFSortedList.pas',
+  InvoiceXML in '..\SOURCE\EDI\InvoiceXML.pas',
+  OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas',
+  dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas',
+  Scales in '..\SOURCE\Scale\Scales.pas',
+  SysScalesLib_TLB in '..\Scale\Util\SysScalesLib_TLB.pas',
+  dsdXMLTransform in '..\SOURCE\COMPONENT\dsdXMLTransform.pas',
+  dsdDataSetDataLink in '..\SOURCE\COMPONENT\dsdDataSetDataLink.pas',
+  StatusXML in '..\SOURCE\EDI\StatusXML.pas',
+  MEDOC_TLB in '..\SOURCE\MeDOC\MEDOC_TLB.pas',
+  MeDocCOM in '..\SOURCE\MeDOC\MeDocCOM.pas',
+  dsdException in '..\SOURCE\dsdException.pas',
+  RecadvXML in '..\SOURCE\EDI\RecadvXML.pas',
+  IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas',
+  IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas',
+  dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas',
+  MeDOC in '..\SOURCE\MeDOC\MeDOC.pas',
+  Medoc_J1201010 in '..\SOURCE\MeDOC\Medoc_J1201010.pas',
+  Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas',
+  dsdExportToXMLAction in '..\SOURCE\COMPONENT\dsdExportToXMLAction.pas',
+  PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
+  DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas',
+  OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
+  IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
+  dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas';
+
+end.

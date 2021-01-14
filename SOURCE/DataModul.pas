@@ -17,8 +17,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue
-  {$IFDEF VER330} , cxImageList, frxExportBaseDialog, System.ImageList {$ENDIF}
-  {$IFDEF VER340} , cxImageList, frxExportBaseDialog, System.ImageList {$ENDIF};
+  {$IFDEF VER330} , cxImageList, System.ImageList {$ENDIF}
+  {$IFDEF VER340} , cxImageList, System.ImageList {$ENDIF};
 
 type
 

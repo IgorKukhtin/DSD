@@ -350,7 +350,7 @@
   {$DEFINE DELPHIX_TOKYO}
   {$DEFINE DELPHIX_RIO}
 {$ENDIF}
-{$IFDEF VER340}         { Delphi 10.4 / C++Builder 10.3 Rio (Delphi:Win32/Win64/OSX/iOS32/iOS64/Android/Linux) (C++Builder:Win32/Win64/OSX/iOS32/iOS64/Android/Linux) }
+{$IFDEF VER340}         { Delphi 10.4 Sydney / C++Builder 10.4 Sydney (Delphi:Win32/Win64/OSX/iOS32/iOS64/Android/Linux) (C++Builder:Win32/Win64/OSX/iOS32/iOS64/Android/Linux) }
   {$DEFINE DELPHI4}
   {$DEFINE DELPHI5}
   {$DEFINE DELPHI6}

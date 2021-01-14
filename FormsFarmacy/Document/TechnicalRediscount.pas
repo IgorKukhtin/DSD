@@ -62,6 +62,9 @@ type
     spUpdateCommentSend: TdsdStoredProc;
     actUpdateCommentSend: TdsdExecStoredProc;
     dxBarButton4: TdxBarButton;
+    actUpdateRedCheck: TdsdExecStoredProc;
+    spUpdateRedCheck: TdsdStoredProc;
+    bbUpdateRedCheck: TdxBarButton;
   private
     { Private declarations }
   public

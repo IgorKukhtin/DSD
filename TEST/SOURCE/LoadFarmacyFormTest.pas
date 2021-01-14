@@ -2770,6 +2770,10 @@ end;
 
 procedure TLoadFormTest.LoadSystemFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TClearDefaultUnitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TClearDefaultUnitForm');
+  Exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSummaDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSummaDialogForm');
   Exit;

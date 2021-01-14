@@ -761,6 +761,8 @@ type
     N268: TMenuItem;
     actReport_MovementCheckSite: TdsdOpenForm;
     N269: TMenuItem;
+    actClearDefaultUnit: TdsdOpenForm;
+    N270: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

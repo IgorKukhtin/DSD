@@ -983,7 +983,8 @@ uses
   CheckLiki24 in '..\..\FormsFarmacy\Document\CheckLiki24.pas' {CheckLiki24Form: TParentForm},
   CheckDelayLiki24 in '..\..\FormsFarmacy\Document\CheckDelayLiki24.pas' {CheckDelayLiki24Form: TParentForm},
   Report_MovementCheckSiteDialog in '..\..\FormsFarmacy\Report\Report_MovementCheckSiteDialog.pas' {Report_MovementCheckSiteDialogForm: TParentForm},
-  Report_MovementCheckSite in '..\..\FormsFarmacy\Report\Report_MovementCheckSite.pas' {Report_MovementCheckSiteForm: TParentForm};
+  Report_MovementCheckSite in '..\..\FormsFarmacy\Report\Report_MovementCheckSite.pas' {Report_MovementCheckSiteForm: TParentForm},
+  ClearDefaultUnit in '..\..\FormsFarmacy\System\ClearDefaultUnit.pas' {ClearDefaultUnitForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

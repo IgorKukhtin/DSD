@@ -4092,6 +4092,17 @@ inherited MainForm: TMainForm
         end>
       isShowModal = False
     end
+    object actClearDefaultUnit: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1054#1095#1080#1089#1090#1082#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1074' '#1074#1072#1096#1077#1084' '#1072#1082#1082#1072#1091#1085#1090#1077
+      FormName = 'TClearDefaultUnitForm'
+      FormNameParam.Value = 'TClearDefaultUnitForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5359,6 +5370,9 @@ inherited MainForm: TMainForm
       object N261: TMenuItem [41]
         Caption = #1055#1086#1080#1089#1082' '#1087#1086' '#1085#1072#1079#1074#1072#1085#1080#1103#1084' '#1074' '#1084#1077#1085#1102
         OnClick = N261Click
+      end
+      object N270: TMenuItem [42]
+        Action = actClearDefaultUnit
       end
     end
   end
