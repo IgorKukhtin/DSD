@@ -1,9 +1,9 @@
--- Function: gpSelect_Movement_ReestrIncome()
+-- Function: gpSelect_Movement_ReestrReturnOut()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_ReestrIncome_Print (Integer, Integer, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_ReestrIncome_Print (Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ReestrReturnOut_Print (Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ReestrReturnOut_Print (Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_ReestrIncome_Print(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_ReestrReturnOut_Print(
     IN inMovementId        Integer   ,
     IN inPersonalId        Integer   DEFAULT 0,
     IN inPersonalTradeId   Integer   DEFAULT 0,
@@ -21,6 +21,7 @@ $BODY$
 
    DECLARE vbMemberId      Integer;
    DECLARE vbMemberTradeId Integer;
+
    DECLARE vbMemberId_User  Integer;
    DECLARE vbMILinkObjectId Integer;
 
@@ -28,7 +29,7 @@ $BODY$
    DECLARE Cursor2 refcursor;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ReestrIncome());
+     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ReestrReturnOut());
      vbUserId:= lpGetUserBySession (inSession);
 
 
@@ -54,7 +55,7 @@ BEGIN
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()       THEN zc_MILinkObject_Buh()
                                  END AS MILinkObjectId
                       );
-                      
+
      -- Определяется
      SELECT Movement.DescId, Movement.StatusId
             INTO vbDescId, vbStatusId
@@ -135,7 +136,7 @@ BEGIN
                                         AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = MovementLinkObject_Member.ObjectId
     WHERE Movement.Id = inMovementId
-      AND Movement.DescId = zc_Movement_ReestrIncome()
+      AND Movement.DescId = zc_Movement_ReestrReturnOut()
      ;
     RETURN NEXT Cursor1;
 
@@ -144,7 +145,7 @@ BEGIN
        -- выбираем строки текущего реестра
        tmpMI_Main AS (SELECT MovementItem.Id                AS MovementItemId
                            , MovementItem.ObjectId          AS MemberId
-                           , MovementFloat_MovementItemId.MovementId AS MovementId_Income
+                           , MovementFloat_MovementItemId.MovementId AS MovementId_ReturnOut
                            , MovementLinkObject_From.ObjectId AS FromId
                            , 1 AS GroupNum
                       FROM MovementItem
@@ -169,7 +170,7 @@ BEGIN
          -- выбираем строки из других реестров, по клиентам текущего реестра
          , tmpMIList AS (SELECT MovementItem.Id         AS MovementItemId
                            , MovementItem.ObjectId      AS MemberId
-                           , MovementFloat_MovementItemId.MovementId AS MovementId_Income
+                           , MovementFloat_MovementItemId.MovementId AS MovementId_ReturnOut
                            , CASE WHEN MovementLinkObject_ReestrKind.ObjectId = zc_Enum_ReestrKind_PartnerOut() THEN 2 ELSE 3 END AS GroupNum
                          FROM  Movement
                            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
@@ -190,39 +191,39 @@ BEGIN
 
                            INNER JOIN tmpFrom ON tmpFrom.FromId  = MovementLinkObject_From.ObjectId
 
-                         WHERE Movement.DescId = zc_Movement_ReestrIncome() AND Movement.StatusId <> zc_Enum_Status_Erased()
+                         WHERE Movement.DescId = zc_Movement_ReestrReturnOut() AND Movement.StatusId <> zc_Enum_Status_Erased()
                            AND Movement.Id <> inMovementId
                            AND (inPersonalId <> 0 OR inPersonalTradeId <> 0 OR (inReestrKindId <> 0 AND inIsReestrKind = TRUE))
                          )
          -- все нужные строки реестров
         , tmpMI AS (SELECT tmpMI_Main.MovementItemId
                          , tmpMI_Main.MemberId
-                         , tmpMI_Main.MovementId_Income
+                         , tmpMI_Main.MovementId_ReturnOut
                          , tmpMI_Main.GroupNum
                     FROM tmpMI_Main
                   UNION
                     SELECT tmpMIList.MovementItemId
                          , tmpMIList.MemberId
-                         , tmpMIList.MovementId_Income
+                         , tmpMIList.MovementId_ReturnOut
                          , tmpMIList.GroupNum
                     FROM tmpMIList
                     )
 
         , tmpMovementDate_OperDatePartner AS (SELECT MovementDate.*
                                               FROM MovementDate
-                                              WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMI.MovementId_Income FROM tmpMI)
+                                              WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMI.MovementId_ReturnOut FROM tmpMI)
                                                 AND MovementDate.DescId = zc_MovementDate_OperDatePartner()
                                               )
-        , tmpMovementFloat_Income AS (SELECT MovementFloat.*
+        , tmpMovementFloat_ReturnOut AS (SELECT MovementFloat.*
                                     FROM MovementFloat
-                                    WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMI.MovementId_Income FROM tmpMI)
+                                    WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMI.MovementId_ReturnOut FROM tmpMI)
                                       AND MovementFloat.DescId IN (zc_MovementFloat_TotalCountPartner()
                                                                  , zc_MovementFloat_TotalSumm())
                                     )
 
-        , tmpMLO_Income AS (SELECT MovementLinkObject.*
+        , tmpMLO_ReturnOut AS (SELECT MovementLinkObject.*
                           FROM MovementLinkObject
-                          WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMI.MovementId_Income FROM tmpMI)
+                          WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMI.MovementId_ReturnOut FROM tmpMI)
                             AND MovementLinkObject.DescId IN (zc_MovementLinkObject_ReestrKind()
                                                             , zc_MovementLinkObject_From()
                                                             , zc_MovementLinkObject_PaidKind() )
@@ -256,8 +257,8 @@ BEGIN
                                       
 
        SELECT
-             Movement_Income.InvNumber                AS InvNumber_Income
-           , Movement_Income.OperDate                 AS OperDate_Income
+             Movement_ReturnOut.InvNumber                AS InvNumber_ReturnOut
+           , Movement_ReturnOut.OperDate                 AS OperDate_ReturnOut
            , MovementDate_OperDatePartner.ValueData   AS OperDatePartner
            , Object_From.ValueData                    AS FromName
            , CASE WHEN Object_Personal.Id <> Object_PersonalTrade.Id
@@ -364,46 +365,46 @@ BEGIN
             LEFT JOIN Object AS Object_SnabRe ON Object_SnabRe.Id = MILinkObject_SnabRe.ObjectId
 
             --
-            LEFT JOIN Movement AS Movement_Income ON Movement_Income.id = tmpMI.MovementId_Income
+            LEFT JOIN Movement AS Movement_ReturnOut ON Movement_ReturnOut.id = tmpMI.MovementId_ReturnOut
 
             LEFT JOIN tmpMovementDate_OperDatePartner AS MovementDate_OperDatePartner
-                                                      ON MovementDate_OperDatePartner.MovementId = Movement_Income.Id
+                                                      ON MovementDate_OperDatePartner.MovementId = Movement_ReturnOut.Id
                                                      AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
 
-            LEFT JOIN tmpMLO_Income AS MovementLinkObject_ReestrKind
-                                    ON MovementLinkObject_ReestrKind.MovementId = Movement_Income.Id
+            LEFT JOIN tmpMLO_ReturnOut AS MovementLinkObject_ReestrKind
+                                    ON MovementLinkObject_ReestrKind.MovementId = Movement_ReturnOut.Id
                                    AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
                                  --AND ((inIsReestrKind = TRUE AND MovementLinkObject_ReestrKind.ObjectId = inReestrKindId) OR inIsReestrKind = FALSE)
             LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
 
-            LEFT JOIN tmpMLO_Income AS MovementLinkObject_From
-                                    ON MovementLinkObject_From.MovementId = Movement_Income.Id
+            LEFT JOIN tmpMLO_ReturnOut AS MovementLinkObject_From
+                                    ON MovementLinkObject_From.MovementId = Movement_ReturnOut.Id
                                    AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TransportGoods
-                                           ON MovementLinkMovement_TransportGoods.MovementId = Movement_Income.Id
+                                           ON MovementLinkMovement_TransportGoods.MovementId = Movement_ReturnOut.Id
                                           AND MovementLinkMovement_TransportGoods.DescId = zc_MovementLinkMovement_TransportGoods()
             LEFT JOIN Movement AS Movement_TransportGoods ON Movement_TransportGoods.Id = MovementLinkMovement_TransportGoods.MovementChildId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
-                                           ON MovementLinkMovement_Order.MovementId = Movement_Income.Id
+                                           ON MovementLinkMovement_Order.MovementId = Movement_ReturnOut.Id
                                           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
             -- примечание из заявки
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = MovementLinkMovement_Order.MovementChildId   --- заявка
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
-            LEFT JOIN tmpMovementFloat_Income AS MovementFloat_TotalCountPartner
-                                              ON MovementFloat_TotalCountPartner.MovementId = Movement_Income.Id
+            LEFT JOIN tmpMovementFloat_ReturnOut AS MovementFloat_TotalCountPartner
+                                              ON MovementFloat_TotalCountPartner.MovementId = Movement_ReturnOut.Id
                                              AND MovementFloat_TotalCountPartner.DescId = zc_MovementFloat_TotalCountPartner()
 
-            LEFT JOIN tmpMovementFloat_Income AS MovementFloat_TotalSumm
-                                              ON MovementFloat_TotalSumm.MovementId = Movement_Income.Id
+            LEFT JOIN tmpMovementFloat_ReturnOut AS MovementFloat_TotalSumm
+                                              ON MovementFloat_TotalSumm.MovementId = Movement_ReturnOut.Id
                                              AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
-            LEFT JOIN tmpMLO_Income AS MovementLinkObject_PaidKind
-                                    ON MovementLinkObject_PaidKind.MovementId = Movement_Income.Id
+            LEFT JOIN tmpMLO_ReturnOut AS MovementLinkObject_PaidKind
+                                    ON MovementLinkObject_PaidKind.MovementId = Movement_ReturnOut.Id
                                    AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
@@ -422,18 +423,17 @@ BEGIN
                                  ON ObjectLink_PersonalTrade_Member.ObjectId = ObjectLink_Partner_PersonalTrade.ChildObjectId
                                 AND ObjectLink_PersonalTrade_Member.DescId = zc_ObjectLink_Personal_Member()
             LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = ObjectLink_PersonalTrade_Member.ChildObjectId -- ObjectLink_Partner_PersonalTrade.ChildObjectId
-            
+
             LEFT JOIN tmpMILO ON tmpMILO.MovementItemId = tmpMI.MovementItemId
-                             AND tmpMILO.DescId = vbMILinkObjectId          
+                             AND tmpMILO.DescId = vbMILinkObjectId 
 
        WHERE ((inIsReestrKind = TRUE AND MovementLinkObject_ReestrKind.ObjectId = inReestrKindId) 
           OR inIsReestrKind = FALSE
              )
          AND (Object_Personal.Id      = vbMemberId        OR vbMemberId        = 0)
-         
          AND (Object_PersonalTrade.Id = vbMemberTradeId   OR vbMemberTradeId   = 0)
-        
-         AND (tmpMILO.ObjectId = vbMemberId_User OR inisShowAll = True)
+
+         AND (tmpMILO.ObjectId = vbMemberId_User OR inisShowAll = True) -- по текущему пользователю или по всем
        ORDER BY tmpMI.GroupNum
               , Object_From.ValueData
               , MovementDate_OperDatePartner.ValueData
@@ -448,11 +448,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 18.11.20         *
- 22.07.20         *
- 19.01.18         *
- 25.10.16         *
+ 12.01.21         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ReestrIncome_Print(inMovementId := 4887960 , inPersonalId := 0 , inPersonalTradeId := 0 , inReestrKindId := 0 , inIsReestrKind := 'False' ,  inSession := '5');
+-- SELECT * FROM gpSelect_Movement_ReestrReturnOut_Print(inMovementId := 4887960 , inPersonalId := 0 , inPersonalTradeId := 0 , inReestrKindId := 0 , inIsReestrKind := 'False' ,  inSession := '5');

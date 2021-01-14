@@ -1221,7 +1221,11 @@ uses
   GoodsByGoodsKindQuality in '..\..\Forms\Guides\GoodsByGoodsKindQuality.pas' {GoodsByGoodsKindQualityForm: TParentForm},
   ProfitLossServiceJournal in '..\..\Forms\Document\ProfitLossServiceJournal.pas' {ProfitLossServiceJournalForm: TParentForm},
   ChangeInvnumberDialog in '..\..\Forms\Document\ChangeInvnumberDialog.pas' {ChangeInvNumberDialogForm: TParentForm},
-  PromoContractBonus_Detail in '..\..\Forms\Guides\PromoContractBonus_Detail.pas' {PromoContractBonus_DetailForm: TParentForm};
+  PromoContractBonus_Detail in '..\..\Forms\Guides\PromoContractBonus_Detail.pas' {PromoContractBonus_DetailForm: TParentForm},
+  ReestrReturnOutUpdateMovement in '..\..\Forms\Document\ReestrReturnOutUpdateMovement.pas' {ReestrReturnOutUpdateMovementForm: TParentForm},
+  ReestrReturnOutJournal in '..\..\Forms\Document\ReestrReturnOutJournal.pas' {ReestrReturnOutJournalForm: TParentForm},
+  ReestrReturnOutStartMovement in '..\..\Forms\Document\ReestrReturnOutStartMovement.pas' {ReestrReturnOutStartMovementForm: TParentForm},
+  OrderSaleJournal in '..\..\Forms\Document\OrderSaleJournal.pas' {OrderSaleJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

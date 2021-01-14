@@ -111,6 +111,7 @@ type
     procedure LoadMovementFormTest;
     procedure LoadOrderFinanceFormTest;
     procedure LoadOrderFinanceMovementFormTest;
+    procedure LoadOrderSaleFormTest;
     procedure LoadOrderIncomeFormTest;
     procedure LoadOrderInternalFormTest;
     procedure LoadOrderExternalFormTest;
@@ -149,6 +150,7 @@ type
     procedure LoadReestrKindFormTest;
     procedure LoadReportFormTest;
     procedure LoadReestrIncomeFormTest;
+    procedure LoadReestrReturnOutFormTest;
     procedure LoadReestrReturnFormTest;
     procedure LoadReestrTransportGoodsFormTest;
     procedure LoadReportAssetFormTest;
@@ -823,6 +825,12 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyPlace_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyPlace_ObjectForm');
+end;
+
+procedure TLoadFormTest.LoadOrderSaleFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderSaleJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderSaleJournalForm');
 end;
 
 procedure TLoadFormTest.LoadOrderFinanceMovementFormTest;
@@ -1831,6 +1839,18 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReestrIncomeUpdateMovementForm');
 end;
 
+    procedure TLoadFormTest.LoadReestrReturnOutFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrReturnOutJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReestrReturnOutJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrReturnOutStartMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReestrReturnOutStartMovementForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrReturnOutUpdateMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReestrReturnOutUpdateMovementForm');
+end;
+
 procedure TLoadFormTest.LoadReestrReturnFormTest;
 begin
 
@@ -2744,9 +2764,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceList_Unit_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceList_Unit_ObjectForm');
   exit;
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalRetailPartner_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalRetailPartner_ObjectForm');
   exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalUnitFounder_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalUnitFounder_ObjectForm');
 

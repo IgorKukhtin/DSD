@@ -1,5 +1,5 @@
-inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1077#1077#1089#1090#1088' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
+inherited ReestrReturnOutStartMovementForm: TReestrReturnOutStartMovementForm
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1077#1077#1089#1090#1088' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' <'#1042#1086#1079#1074#1088#1072#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1091'> ('#1074#1080#1079#1072')'
   ClientHeight = 385
   ClientWidth = 1008
   AddOnFormData.RefreshAction = actRefreshStart
@@ -1095,7 +1095,7 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
     Top = 328
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_MI_ReestrIncome'
+    StoredProcName = 'gpSelect_MI_ReestrReturnOut'
     Params = <
       item
         Name = 'inMovementId'
@@ -1150,14 +1150,6 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
         item
           Visible = True
           ItemName = 'bbUnErased'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExecuteDialog'
         end
         item
           Visible = True
@@ -1235,6 +1227,7 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
     object bbExecuteDialog: TdxBarButton
       Action = macUpdateMov
       Category = 0
+      UnclickAfterDoing = False
     end
     object bbPrintPeriod: TdxBarButton
       Action = macPrintPeriod
@@ -1356,7 +1349,7 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
     Top = 8
   end
   inherited spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_ReestrIncome'
+    StoredProcName = 'gpGet_Movement_ReestrReturnOut'
     Params = <
       item
         Name = 'inMovementId'
@@ -1430,7 +1423,7 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
     Top = 320
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_ReestrIncome'
+    StoredProcName = 'gpInsertUpdate_Movement_ReestrReturnOut'
     Params = <
       item
         Name = 'ioId'
@@ -1534,7 +1527,7 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
     Top = 320
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_ReestrIncomeStart'
+    StoredProcName = 'gpInsertUpdate_MI_ReestrReturnOutStart'
     Params = <
       item
         Name = 'ioMovementId'
@@ -1675,7 +1668,7 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
     Top = 124
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ReestrIncome_Print'
+    StoredProcName = 'gpSelect_Movement_ReestrReturnOut_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -1715,13 +1708,6 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
       item
         Name = 'inIsReestrKind'
         Value = False
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisShowAll'
-        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1845,7 +1831,7 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
     Top = 152
   end
   object spSelectPrintPeriod: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ReestrIncomeStartPeriod_Print'
+    StoredProcName = 'gpSelect_Movement_ReestrReturnOutStartPeriod_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -1973,7 +1959,7 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
     Top = 21
   end
   object spSelectPrintGroup: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ReestrIncome_Print'
+    StoredProcName = 'gpSelect_Movement_ReestrReturnOut_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -2020,20 +2006,13 @@ inherited ReestrIncomeStartMovementForm: TReestrIncomeStartMovementForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisShowAll'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 591
     Top = 32
   end
   object spSelectPrintPeriodGroup: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ReestrIncomeStartPeriod_Print'
+    StoredProcName = 'gpSelect_Movement_ReestrReturnOutStartPeriod_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

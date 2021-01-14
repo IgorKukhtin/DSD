@@ -1,5 +1,5 @@
-inherited ReestrIncomeJournalForm: TReestrIncomeJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1077#1077#1089#1090#1088' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082') ('#1074#1080#1079#1072')>'
+inherited ReestrReturnOutJournalForm: TReestrReturnOutJournalForm
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1077#1077#1089#1090#1088' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' ('#1074#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091') ('#1074#1080#1079#1072')>'
   ClientHeight = 421
   ClientWidth = 838
   AddOnFormData.RefreshAction = actRefreshStart
@@ -561,8 +561,8 @@ inherited ReestrIncomeJournalForm: TReestrIncomeJournalForm
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TReestrIncomeStartMovementForm'
-      FormNameParam.Value = 'TReestrIncomeStartMovementForm'
+      FormName = 'TReestrReturnOutStartMovementForm'
+      FormNameParam.Value = 'TReestrReturnOutStartMovementForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -721,7 +721,7 @@ inherited ReestrIncomeJournalForm: TReestrIncomeJournalForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ReestrIncome'
+    StoredProcName = 'gpSelect_Movement_ReestrReturnOut'
     Params = <
       item
         Name = 'instartdate'
@@ -887,7 +887,7 @@ inherited ReestrIncomeJournalForm: TReestrIncomeJournalForm
     Top = 152
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_ReestrIncome'
+    StoredProcName = 'gpComplete_Movement_ReestrReturnOut'
     Params = <
       item
         Name = 'inmovementid'
@@ -901,7 +901,7 @@ inherited ReestrIncomeJournalForm: TReestrIncomeJournalForm
     Top = 282
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_ReestrIncome'
+    StoredProcName = 'gpUnComplete_Movement_ReestrReturnOut'
     Params = <
       item
         Name = 'inmovementid'
@@ -915,7 +915,7 @@ inherited ReestrIncomeJournalForm: TReestrIncomeJournalForm
     Top = 322
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_ReestrIncome'
+    StoredProcName = 'gpSetErased_Movement_ReestrReturnOut'
     Params = <
       item
         Name = 'inmovementid'
@@ -989,7 +989,7 @@ inherited ReestrIncomeJournalForm: TReestrIncomeJournalForm
     Top = 200
   end
   inherited spMovementReComplete: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_ReestrIncome'
+    StoredProcName = 'gpReComplete_Movement_ReestrReturnOut'
     Left = 128
     Top = 288
   end
@@ -1074,7 +1074,7 @@ inherited ReestrIncomeJournalForm: TReestrIncomeJournalForm
     Top = 32
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ReestrIncome_Print'
+    StoredProcName = 'gpSelect_Movement_ReestrReturnOut_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -1114,13 +1114,6 @@ inherited ReestrIncomeJournalForm: TReestrIncomeJournalForm
       item
         Name = 'inIsReestrKind'
         Value = False
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisShowAll'
-        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
