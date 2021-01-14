@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_SaleExternal_Metro_Load()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_SaleExternal_Metro_Load (TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_SaleExternal_Metro_Load (TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_SaleExternal_Metro_Load(
@@ -10,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_SaleExternal_Metro_Load(
     IN inPartnerExternalName   TVarChar  , --
     IN inArticle               TVarChar  , --
     IN inGoodsName             TVarChar  , --
-    IN inAmount                TFloat    , -- количество
+    IN inAmount                TVarChar    , -- количество
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -24,6 +25,7 @@ $BODY$
    DECLARE vbGoodsKindId       Integer;
    DECLARE vbMovementId        Integer;
    DECLARE vbId                Integer;
+   DECLARE vbAmount            TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_SaleExternal());
@@ -34,8 +36,11 @@ BEGIN
          RETURN;
      END IF;
 
+     --преобразовываем inAmount в число
+     vbAmount := zfConvert_StringToFloat( REPLACE (REPLACE (inAmount, ' ','') , ',', '.')) ::TFloat;
+
      -- проверка
-     IF COALESCE (inAmount,0) = 0
+     IF COALESCE (vbAmount,0) = 0
      THEN
          -- проверка
          IF inSession = '5'
@@ -249,8 +254,8 @@ BEGIN
                                                      , inMovementId   := vbMovementId      ::Integer
                                                      , inGoodsId      := vbGoodsId         ::Integer
                                                      , inAmount       := CASE WHEN ObjectLink_Measure.ChildObjectId = zc_Measure_Sh()
-                                                                              THEN inAmount -- inAmount / CASE WHEN ObjectFloat_Weight.ValueData > 0 THEN ObjectFloat_Weight.ValueData ELSE 1 END
-                                                                              ELSE inAmount
+                                                                              THEN vbAmount -- vbAmount / CASE WHEN ObjectFloat_Weight.ValueData > 0 THEN ObjectFloat_Weight.ValueData ELSE 1 END
+                                                                              ELSE vbAmount
                                                                          END               ::TFloat
                                                      , inGoodsKindId  := vbGoodsKindId     ::Integer
                                                      , inUserId       := vbUserId          ::Integer
