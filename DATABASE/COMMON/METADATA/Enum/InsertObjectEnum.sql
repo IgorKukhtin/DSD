@@ -3416,7 +3416,7 @@ BEGIN
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
                                                                 inParamNumber   := 7, 
                                                                 inName          := 'inAmount', 
-                                                                inParamType     := 'ftFloat', 
+                                                                inParamType     := 'ftString', 
                                                                 inUserParamName := 'Количество', 
                                                                 inImportTypeId  := vbImportTypeId, 
                                                                 inSession       := vbUserId::TVarChar);
