@@ -81,7 +81,8 @@ uses
   DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas',
   IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
   OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
-  MainForm in '..\FormsBoutique\MainForm.pas' {MainForm};
+  MainForm in '..\FormsBoutique\MainForm.pas' {MainForm},
+  dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas';
 
 {$R *.res}
 

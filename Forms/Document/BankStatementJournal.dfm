@@ -169,7 +169,7 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     object RaiffeisenBankLoad: TClientBankLoadAction [4]
       Category = 'Load'
       MoveParams = <>
-      ClientBankType = cbProkreditBank
+      ClientBankType = cbRaiffeisenBank
       StartDateParam.Value = 43831d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
