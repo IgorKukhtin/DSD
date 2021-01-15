@@ -3,7 +3,7 @@ object Report_Check_QuantityComparisonDialogForm: TReport_Check_QuantityComparis
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1095#1077#1082#1086#1074' '#1079#1072' '#1087#1077#1088#1080#1086#1076'>'
-  ClientHeight = 209
+  ClientHeight = 241
   ClientWidth = 332
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -17,8 +17,8 @@ object Report_Check_QuantityComparisonDialogForm: TReport_Check_QuantityComparis
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 33
-    Top = 169
+    Left = 32
+    Top = 201
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -27,8 +27,8 @@ object Report_Check_QuantityComparisonDialogForm: TReport_Check_QuantityComparis
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 207
-    Top = 169
+    Left = 214
+    Top = 201
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -97,6 +97,20 @@ object Report_Check_QuantityComparisonDialogForm: TReport_Check_QuantityComparis
     Left = 8
     Top = 109
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+  end
+  object ceYearsAgo: TcxCurrencyEdit
+    Left = 197
+    Top = 165
+    EditValue = 1.000000000000000000
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 10
+    Width = 47
+  end
+  object cxLabel5: TcxLabel
+    Left = 10
+    Top = 166
+    Caption = #1057#1088#1072#1074#1085#1080#1090#1100' '#1089' '#1095#1077#1082#1072#1084#1080' '#1083#1077#1090' '#1085#1072#1079#1072#1076
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -216,6 +230,12 @@ object Report_Check_QuantityComparisonDialogForm: TReport_Check_QuantityComparis
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'YearsAgo'
+        Value = Null
+        Component = ceYearsAgo
         MultiSelectSeparator = ','
       end>
     Left = 30

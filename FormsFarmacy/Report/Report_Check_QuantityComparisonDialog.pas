@@ -31,6 +31,8 @@ type
     ceUnit: TcxButtonEdit;
     cxLabel1: TcxLabel;
     UnitGuides: TdsdGuides;
+    ceYearsAgo: TcxCurrencyEdit;
+    cxLabel5: TcxLabel;
   private
     { Private declarations }
   public

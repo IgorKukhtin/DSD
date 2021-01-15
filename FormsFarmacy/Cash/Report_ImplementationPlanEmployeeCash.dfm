@@ -372,7 +372,6 @@ object Report_ImplementationPlanEmployeeCashForm: TReport_ImplementationPlanEmpl
         Height = 137
         Align = alLeft
         TabOrder = 1
-        ExplicitLeft = 649
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = dsUnitCategory

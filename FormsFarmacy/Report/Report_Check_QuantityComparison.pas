@@ -32,7 +32,6 @@ type
     ceUnit: TcxButtonEdit;
     cxLabel4: TcxLabel;
     UnitGuides: TdsdGuides;
-    HeaderPrevCDS: TClientDataSet;
     HeaderCDS: TClientDataSet;
     cxGridDBBandedTableView1: TcxGridDBBandedTableView;
     UnitName: TcxGridDBBandedColumn;
@@ -40,6 +39,20 @@ type
     CountPrev: TcxGridDBBandedColumn;
     CrossDBViewAddOn: TCrossDBViewAddOn;
     CrossDBViewAddOnPrev: TCrossDBViewAddOn;
+    AverageCheck: TcxGridDBBandedColumn;
+    CountCash: TcxGridDBBandedColumn;
+    CountCashLess: TcxGridDBBandedColumn;
+    AverageCheckPrev: TcxGridDBBandedColumn;
+    CountCashPrev: TcxGridDBBandedColumn;
+    CountCashLessPrev: TcxGridDBBandedColumn;
+    CrossDBViewAddOn1: TCrossDBViewAddOn;
+    CrossDBViewAddOn2: TCrossDBViewAddOn;
+    CrossDBViewAddOn3: TCrossDBViewAddOn;
+    CrossDBViewAddOn4: TCrossDBViewAddOn;
+    CrossDBViewAddOn5: TCrossDBViewAddOn;
+    CrossDBViewAddOn6: TCrossDBViewAddOn;
+    ceYearsAgo: TcxCurrencyEdit;
+    cxLabel5: TcxLabel;
   private
     { Private declarations }
   public

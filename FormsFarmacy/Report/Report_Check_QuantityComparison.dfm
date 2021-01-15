@@ -68,6 +68,36 @@ inherited Report_Check_QuantityComparisonForm: TReport_Check_QuantityComparisonF
               Format = ',0;-,0; ;'
               Kind = skSum
               Column = CountPrev
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skAverage
+              Column = AverageCheck
+            end
+            item
+              Format = ',0;-,0; ;'
+              Kind = skSum
+              Column = CountCash
+            end
+            item
+              Format = ',0;-,0; ;'
+              Kind = skSum
+              Column = CountCashLess
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skAverage
+              Column = AverageCheckPrev
+            end
+            item
+              Format = ',0;-,0; ;'
+              Kind = skSum
+              Column = CountCashPrev
+            end
+            item
+              Format = ',0;-,0; ;'
+              Kind = skSum
+              Column = CountCashLessPrev
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsBehavior.GoToNextCellOnEnter = True
@@ -97,7 +127,7 @@ inherited Report_Check_QuantityComparisonForm: TReport_Check_QuantityComparisonF
             item
               Options.HoldOwnColumnsOnly = True
               Options.Moving = False
-              Width = 95
+              Width = 120
             end>
           object UnitName: TcxGridDBBandedColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -112,6 +142,7 @@ inherited Report_Check_QuantityComparisonForm: TReport_Check_QuantityComparisonF
             Position.RowIndex = 0
           end
           object Count: TcxGridDBBandedColumn
+            Caption = #1052#1077#1089#1103#1094
             DataBinding.FieldName = 'Count'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0
@@ -119,16 +150,65 @@ inherited Report_Check_QuantityComparisonForm: TReport_Check_QuantityComparisonF
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            MinWidth = 95
+            MinWidth = 60
             Options.Editing = False
             Options.Moving = False
             Options.VertSizing = False
-            Width = 95
+            Width = 60
             Position.BandIndex = 1
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
+          object AverageCheck: TcxGridDBBandedColumn
+            Caption = #1043#1086#1076
+            DataBinding.FieldName = 'AverageCheck'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            MinWidth = 60
+            Options.Editing = False
+            Width = 60
+            Position.BandIndex = 1
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object CountCash: TcxGridDBBandedColumn
+            Caption = '  '
+            DataBinding.FieldName = 'CountCash'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0;-,0; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            MinWidth = 60
+            Options.Editing = False
+            Width = 60
+            Position.BandIndex = 1
+            Position.ColIndex = 0
+            Position.RowIndex = 1
+          end
+          object CountCashLess: TcxGridDBBandedColumn
+            Caption = #1043#1086#1076
+            DataBinding.FieldName = 'CountCashLess'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0;-,0; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            MinWidth = 60
+            Options.Editing = False
+            Width = 60
+            Position.BandIndex = 1
+            Position.ColIndex = 1
+            Position.RowIndex = 1
+          end
           object CountPrev: TcxGridDBBandedColumn
+            Caption = #1063#1077#1082#1086#1074
             DataBinding.FieldName = 'CountPrev'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0
@@ -136,14 +216,66 @@ inherited Report_Check_QuantityComparisonForm: TReport_Check_QuantityComparisonF
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            MinWidth = 95
+            MinWidth = 60
             Options.Editing = False
             Options.Moving = False
             Options.VertSizing = False
-            Width = 95
+            Styles.Content = dmMain.cxRemainsContentStyle
+            Width = 60
             Position.BandIndex = 1
             Position.ColIndex = 0
-            Position.RowIndex = 1
+            Position.RowIndex = 2
+          end
+          object AverageCheckPrev: TcxGridDBBandedColumn
+            Caption = #1057#1088'. '#1095#1077#1082
+            DataBinding.FieldName = 'AverageCheckPrev'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            MinWidth = 60
+            Options.Editing = False
+            Styles.Content = dmMain.cxRemainsContentStyle
+            Width = 60
+            Position.BandIndex = 1
+            Position.ColIndex = 1
+            Position.RowIndex = 2
+          end
+          object CountCashPrev: TcxGridDBBandedColumn
+            Caption = #1053#1072#1083
+            DataBinding.FieldName = 'CountCashPrev'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0;-,0; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            MinWidth = 60
+            Options.Editing = False
+            Styles.Content = dmMain.cxRemainsContentStyle
+            Width = 60
+            Position.BandIndex = 1
+            Position.ColIndex = 0
+            Position.RowIndex = 3
+          end
+          object CountCashLessPrev: TcxGridDBBandedColumn
+            Caption = #1041#1077#1079#1085#1072#1083
+            DataBinding.FieldName = 'CountCashLessPrev'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0;-,0; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            MinWidth = 60
+            Options.Editing = False
+            Styles.Content = dmMain.cxRemainsContentStyle
+            Width = 60
+            Position.BandIndex = 1
+            Position.ColIndex = 1
+            Position.RowIndex = 3
           end
         end
         inherited cxGridLevel: TcxGridLevel
@@ -211,6 +343,20 @@ inherited Report_Check_QuantityComparisonForm: TReport_Check_QuantityComparisonF
       Left = 295
       Top = 29
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+    end
+    object ceYearsAgo: TcxCurrencyEdit
+      Left = 549
+      Top = 5
+      EditValue = 1.000000000000000000
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0'
+      TabOrder = 8
+      Width = 47
+    end
+    object cxLabel5: TcxLabel
+      Left = 389
+      Top = 6
+      Caption = #1057#1088#1072#1074#1085#1080#1090#1100' '#1089' '#1095#1077#1082#1072#1084#1080' '#1083#1077#1090' '#1085#1072#1079#1072#1076
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -299,6 +445,12 @@ inherited Report_Check_QuantityComparisonForm: TReport_Check_QuantityComparisonF
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'YearsAgo'
+          Value = Null
+          Component = ceYearsAgo
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -381,7 +533,7 @@ inherited Report_Check_QuantityComparisonForm: TReport_Check_QuantityComparisonF
   end
   inherited MasterDS: TDataSource
     Left = 344
-    Top = 232
+    Top = 184
   end
   inherited MasterCDS: TClientDataSet
     Left = 152
@@ -393,9 +545,6 @@ inherited Report_Check_QuantityComparisonForm: TReport_Check_QuantityComparisonF
     DataSets = <
       item
         DataSet = HeaderCDS
-      end
-      item
-        DataSet = HeaderPrevCDS
       end
       item
         DataSet = MasterCDS
@@ -431,6 +580,13 @@ inherited Report_Check_QuantityComparisonForm: TReport_Check_QuantityComparisonF
         Value = Null
         Component = UnitGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inYearsAgo'
+        Value = Null
+        Component = ceYearsAgo
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -494,8 +650,7 @@ inherited Report_Check_QuantityComparisonForm: TReport_Check_QuantityComparisonF
       item
         Action = mactOpenDocument
       end>
-    Left = 248
-    Top = 272
+    Left = 256
   end
   inherited PeriodChoice: TPeriodChoice
     Top = 128
@@ -581,12 +736,6 @@ inherited Report_Check_QuantityComparisonForm: TReport_Check_QuantityComparisonF
     Left = 464
     Top = 24
   end
-  object HeaderPrevCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 344
-    Top = 176
-  end
   object HeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
@@ -606,10 +755,10 @@ inherited Report_Check_QuantityComparisonForm: TReport_Check_QuantityComparisonF
     ShowFieldImageList = <>
     PropertiesCellList = <>
     HeaderDataSet = HeaderCDS
-    HeaderColumnName = 'ValueOperDate'
+    HeaderColumnName = 'ValueMonthName'
     TemplateColumn = Count
-    Left = 520
-    Top = 120
+    Left = 432
+    Top = 104
   end
   object CrossDBViewAddOnPrev: TCrossDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -623,10 +772,118 @@ inherited Report_Check_QuantityComparisonForm: TReport_Check_QuantityComparisonF
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    HeaderDataSet = HeaderPrevCDS
-    HeaderColumnName = 'ValueOperDatePrev'
+    HeaderDataSet = HeaderCDS
+    HeaderColumnName = 'ValueNameChecks'
     TemplateColumn = CountPrev
-    Left = 520
-    Top = 192
+    Left = 440
+    Top = 184
+  end
+  object CrossDBViewAddOn1: TCrossDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBBandedTableView1
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    HeaderDataSet = HeaderCDS
+    HeaderColumnName = 'ValueYearName'
+    TemplateColumn = AverageCheck
+    Left = 552
+    Top = 104
+  end
+  object CrossDBViewAddOn2: TCrossDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBBandedTableView1
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    HeaderDataSet = HeaderCDS
+    HeaderColumnName = 'ValueNameNull'
+    TemplateColumn = CountCash
+    Left = 680
+    Top = 104
+  end
+  object CrossDBViewAddOn3: TCrossDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBBandedTableView1
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    HeaderDataSet = HeaderCDS
+    HeaderColumnName = 'ValueYearNamePrev'
+    TemplateColumn = CountCashLess
+    Left = 800
+    Top = 104
+  end
+  object CrossDBViewAddOn4: TCrossDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBBandedTableView1
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    HeaderDataSet = HeaderCDS
+    HeaderColumnName = 'ValueNameCashLess'
+    TemplateColumn = CountCashLessPrev
+    Left = 800
+    Top = 184
+  end
+  object CrossDBViewAddOn5: TCrossDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBBandedTableView1
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    HeaderDataSet = HeaderCDS
+    HeaderColumnName = 'ValueNameCash'
+    TemplateColumn = CountCashPrev
+    Left = 680
+    Top = 184
+  end
+  object CrossDBViewAddOn6: TCrossDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBBandedTableView1
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    HeaderDataSet = HeaderCDS
+    HeaderColumnName = 'ValueNameAverageCheck'
+    TemplateColumn = AverageCheckPrev
+    Left = 560
+    Top = 184
   end
 end

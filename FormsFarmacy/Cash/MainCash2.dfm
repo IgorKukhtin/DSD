@@ -358,6 +358,7 @@ inherited MainCashForm2: TMainCashForm2
             end>
           Properties.ReadOnly = True
           Properties.ShowDescriptions = False
+          OnGetCellHint = Color_IPEGetCellHint
           HeaderAlignmentHorz = taCenter
           HeaderHint = #1062#1074#1077#1090#1085#1099#1077' '#1075#1072#1083#1086#1095#1082#1080' '#1087#1086' '#1087#1083#1072#1085#1091' '#1087#1088#1086#1076#1072#1078
           Options.Editing = False
@@ -8738,5 +8739,16 @@ inherited MainCashForm2: TMainCashForm2
     AutoWidth = True
     Left = 176
     Top = 216
+  end
+  object PlanEmployeeCDS: TClientDataSet
+    Aggregates = <>
+    Filtered = True
+    FieldDefs = <>
+    IndexDefs = <>
+    IndexFieldNames = 'GoodsCode'
+    Params = <>
+    StoreDefs = True
+    Left = 168
+    Top = 504
   end
 end
