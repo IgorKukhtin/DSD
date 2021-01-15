@@ -34,7 +34,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , TotalReturn_Summ  TFloat
              , TotalSale_Weight  TFloat
              , TotalReturn_Weight TFloat
-             , ContractId Integer
+             , ContractId Integer, ContractName TVarChar
               )
 AS
 $BODY$
@@ -339,18 +339,20 @@ BEGIN
            , tmpReport.Sale_Weight        :: TFloat
            , tmpReport.Return_Weight      :: TFloat
            
-             , COALESCE (tmpReport_rc.SaleReturn_Summ, tmpReport_ret.SaleReturn_Summ)     :: TFloat AS TotalSumm
-             , COALESCE (tmpReport_rc.SaleReturn_Weight, tmpReport_ret.SaleReturn_Weight) :: TFloat AS TotalWeight
-             , COALESCE (tmpReport_rc.Sale_Summ, tmpReport_ret.Sale_Summ)                 :: TFloat AS TotalSale_Summ
-             , COALESCE (tmpReport_rc.Return_Summ, tmpReport_ret.Return_Summ)             :: TFloat AS TotalReturn_Summ
-             , COALESCE (tmpReport_rc.Sale_Weight, tmpReport_ret.Sale_Weight)             :: TFloat AS TotalSale_Weight
-             , COALESCE (tmpReport_rc.Return_Weight, tmpReport_ret.Return_Weight)         :: TFloat AS TotalReturn_Weight
+           , COALESCE (tmpReport_rc.SaleReturn_Summ, tmpReport_ret.SaleReturn_Summ)     :: TFloat AS TotalSumm
+           , COALESCE (tmpReport_rc.SaleReturn_Weight, tmpReport_ret.SaleReturn_Weight) :: TFloat AS TotalWeight
+           , COALESCE (tmpReport_rc.Sale_Summ, tmpReport_ret.Sale_Summ)                 :: TFloat AS TotalSale_Summ
+           , COALESCE (tmpReport_rc.Return_Summ, tmpReport_ret.Return_Summ)             :: TFloat AS TotalReturn_Summ
+           , COALESCE (tmpReport_rc.Sale_Weight, tmpReport_ret.Sale_Weight)             :: TFloat AS TotalSale_Weight
+           , COALESCE (tmpReport_rc.Return_Weight, tmpReport_ret.Return_Weight)         :: TFloat AS TotalReturn_Weight
              
-             , COALESCE (tmpReport_rc.ContractId, tmpReport_ret.ContractId)  AS ContractId
+           , COALESCE (tmpReport_rc.ContractId, tmpReport_ret.ContractId)  AS ContractId
+           , Object_Contract.ValueData                                     AS ContractName
        FROM tmpData
             LEFT JOIN tmpReport_rc ON tmpReport_rc.PartnerRealId = tmpData.PartnerRealId
             LEFT JOIN tmpReport_2 AS tmpReport_ret ON tmpReport_ret.PartnerRealId = tmpData.PartnerRealId
             LEFT JOIN tmpReport_1 AS tmpReport ON tmpReport.PartnerId = tmpData.PartnerId_from
+            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = COALESCE (tmpReport_rc.ContractId, tmpReport_ret.ContractId)
             
       ;
 

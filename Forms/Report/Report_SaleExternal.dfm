@@ -14,17 +14,17 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
     Height = 425
     TabOrder = 3
     ExplicitTop = 58
-    ExplicitWidth = 1077
+    ExplicitWidth = 1218
     ExplicitHeight = 425
     ClientRectBottom = 425
     ClientRectRight = 1218
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1077
+      ExplicitWidth = 1218
       ExplicitHeight = 425
       inherited cxGrid: TcxGrid
         Width = 1218
         Height = 425
-        ExplicitWidth = 1077
+        ExplicitWidth = 1218
         ExplicitHeight = 425
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -413,6 +413,14 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object ContractName: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072
+            DataBinding.FieldName = 'ContractName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
         end
       end
     end
@@ -420,7 +428,7 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
   inherited Panel: TPanel
     Width = 1218
     Height = 32
-    ExplicitWidth = 1077
+    ExplicitWidth = 1218
     ExplicitHeight = 32
     inherited deStart: TcxDateEdit
       Left = 118

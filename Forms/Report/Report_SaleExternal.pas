@@ -51,6 +51,7 @@ type
     cxLabel5: TcxLabel;
     edJuridical: TcxButtonEdit;
     GuidesJuridical: TdsdGuides;
+    ContractName: TcxGridDBColumn;
   private
     { Private declarations }
   public
