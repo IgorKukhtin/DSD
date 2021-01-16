@@ -606,7 +606,16 @@ begin
             )
          or (ParamByName('MeasureId').AsInteger = zc_Measure_Sh)
          or (ParamByName('isEnterCount').AsBoolean = TRUE)
-        then ParamByName('OperCount').AsFloat:=calcOperCount
+
+        then // только дл€ —хема - втулки
+             if (SettingMain.isCalc_sht = TRUE)
+            and (ParamByName('isWeight_gd').AsBoolean = TRUE)
+             then ParamByName('OperCount').AsFloat:=calcOperCount
+                                                   -ParamByName('WeightTare').AsFloat
+                                                   -ParamByName('WeightOther').AsFloat
+                                                   -ParamByName('CountSkewer1').AsFloat * SettingMain.WeightSkewer1
+                                                   -ParamByName('CountSkewer2').AsFloat * SettingMain.WeightSkewer2
+             else ParamByName('OperCount').AsFloat:=calcOperCount
         else ParamByName('OperCount').AsFloat:=calcOperCount
                                               -ParamByName('WeightTare').AsFloat
                                               -ParamByName('WeightOther').AsFloat

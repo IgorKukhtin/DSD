@@ -93,7 +93,7 @@ BEGIN
                                                               AND MLO_From.ObjectId   = inUnitId
                                  INNER JOIN MovementLinkObject AS MLO_To
                                                                ON MLO_To.MovementId = Movement.Id
-                                                              AND MLO_To.DescId     = zc_MovementLinkObject_From()
+                                                              AND MLO_To.DescId     = zc_MovementLinkObject_To()
                                                               AND MLO_To.ObjectId   = inUnitId
                                  LEFT JOIN MovementLinkObject AS MLO_DocumentKind
                                                               ON MLO_DocumentKind.MovementId = Movement.Id

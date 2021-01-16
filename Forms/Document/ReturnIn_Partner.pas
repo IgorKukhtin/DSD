@@ -227,6 +227,7 @@ type
     actPrintAkt: TdsdPrintAction;
     mactPrintAkt: TMultiAction;
     bbPrintAkt: TdxBarButton;
+    Amount_find: TcxGridDBColumn;
   private
     { Private declarations }
   public

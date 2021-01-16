@@ -88,10 +88,10 @@ BEGIN
                    )
              THEN
                  -- мен€ем «начение - перевод из веса в метры или что-то еще ... и вычитаем втулки
-                 inOperCount:= ROUND (vbCountForWeight_goods * (inRealWeight - vbWeightTare_goods * inCount) / vbWeight_goods);
+                 inOperCount:= ROUND (vbCountForWeight_goods * (inRealWeight - inWeightTare - vbWeightTare_goods * inCount) / vbWeight_goods);
              ELSE
                  -- мен€ем «начение - перевод из веса в метры или что-то еще ... и вычитаем втулки
-                 inOperCount:= vbCountForWeight_goods * (inRealWeight - vbWeightTare_goods * inCount) / vbWeight_goods;
+                 inOperCount:= vbCountForWeight_goods * (inRealWeight - inWeightTare - vbWeightTare_goods * inCount) / vbWeight_goods;
              END IF;
 
              -- ѕроверка

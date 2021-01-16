@@ -2,6 +2,8 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
   ClientHeight = 648
   ClientWidth = 1252
+  ExplicitLeft = -479
+  ExplicitTop = -127
   ExplicitWidth = 1268
   ExplicitHeight = 683
   PixelsPerInch = 96
@@ -59,6 +61,11 @@ inherited ReturnInForm: TReturnInForm
               Kind = skSum
               Column = AmountChildDiff
               Sorted = True
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_find
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -103,6 +110,11 @@ inherited ReturnInForm: TReturnInForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_find
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -189,7 +201,19 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 45
           end
-          object Amount: TcxGridDBColumn [7]
+          object Amount_find: TcxGridDBColumn [7]
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083'.'#1086#1089#1085#1086#1074#1072#1085#1080#1077')'
+            DataBinding.FieldName = 'Amount_find'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076' '#1086#1089#1085#1086#1074#1072#1085#1080#1077' '#1074#1086#1079#1074#1088#1072#1090' '#1085#1072' '#1089#1082#1083#1072#1076')'
+            Options.Editing = False
+            Width = 60
+          end
+          object Amount: TcxGridDBColumn [8]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -199,7 +223,7 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object AmountPartner: TcxGridDBColumn [8]
+          object AmountPartner: TcxGridDBColumn [9]
             Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -209,7 +233,7 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object AmountChild: TcxGridDBColumn [9]
+          object AmountChild: TcxGridDBColumn [10]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1074#1103#1079#1082#1072')'
             DataBinding.FieldName = 'AmountChild'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -220,7 +244,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 73
           end
-          object AmountChildDiff: TcxGridDBColumn [10]
+          object AmountChildDiff: TcxGridDBColumn [11]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1079#1085#1080#1094#1072')'
             DataBinding.FieldName = 'AmountChildDiff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -231,7 +255,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 68
           end
-          object ChangePercent: TcxGridDBColumn [11]
+          object ChangePercent: TcxGridDBColumn [12]
             Caption = '(-)% '#1057#1082'. (+)% '#1053#1072#1094'.'
             DataBinding.FieldName = 'ChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -242,7 +266,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 70
           end
-          object CountForPrice: TcxGridDBColumn [12]
+          object CountForPrice: TcxGridDBColumn [13]
             Caption = #1050#1086#1083' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             Visible = False
@@ -250,7 +274,7 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object Price: TcxGridDBColumn [13]
+          object Price: TcxGridDBColumn [14]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -260,7 +284,7 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 63
           end
-          object PricePromo: TcxGridDBColumn [14]
+          object PricePromo: TcxGridDBColumn [15]
             Caption = #1062#1077#1085#1072' '#1072#1082#1094#1080#1103
             DataBinding.FieldName = 'PricePromo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -271,7 +295,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 70
           end
-          object Price_Pricelist: TcxGridDBColumn [15]
+          object Price_Pricelist: TcxGridDBColumn [16]
             Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price_Pricelist'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -282,7 +306,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 75
           end
-          object Price_Pricelist_vat: TcxGridDBColumn [16]
+          object Price_Pricelist_vat: TcxGridDBColumn [17]
             Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price_Pricelist_vat'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -293,7 +317,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 70
           end
-          object isCheck_Pricelist: TcxGridDBColumn [17]
+          object isCheck_Pricelist: TcxGridDBColumn [18]
             Caption = #1054#1096#1080#1073#1082#1072' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'isCheck_Pricelist'
             HeaderAlignmentHorz = taCenter
@@ -301,7 +325,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 59
           end
-          object AmountSumm: TcxGridDBColumn [18]
+          object AmountSumm: TcxGridDBColumn [19]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -311,7 +335,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 91
           end
-          object AmountSummVat: TcxGridDBColumn [19]
+          object AmountSummVat: TcxGridDBColumn [20]
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'AmountSummVat'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -321,7 +345,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 91
           end
-          object PartionMovementName: TcxGridDBColumn [20]
+          object PartionMovementName: TcxGridDBColumn [21]
             Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'PartionMovementName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -336,7 +360,7 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 145
           end
-          object MovementPromo: TcxGridDBColumn [21]
+          object MovementPromo: TcxGridDBColumn [22]
             Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1080
             DataBinding.FieldName = 'MovementPromo'
             HeaderAlignmentHorz = taCenter
@@ -1682,7 +1706,7 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = edOperDate
           DataType = ftDateTime
           ParamType = ptInput
@@ -1769,7 +1793,7 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = edOperDate
           DataType = ftDateTime
           ParamType = ptInput
@@ -1791,14 +1815,14 @@ inherited ReturnInForm: TReturnInForm
       GuiParams = <
         item
           Name = 'inStartDate'
-          Value = 'NULL'
+          Value = Null
           Component = edStartDateTax
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'inEndDate'
-          Value = 'NULL'
+          Value = Null
           Component = edOperDatePartner
           DataType = ftDateTime
           ParamType = ptInput
@@ -1874,7 +1898,7 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Name = 'inPrice'
-          Value = '0'
+          Value = 0.000000000000000000
           Component = MasterCDS
           ComponentItem = 'Price'
           DataType = ftFloat
@@ -1940,20 +1964,20 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Name = 'inmask'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = TaxCorrectiveCDS
           ComponentItem = 'OperDate_Child'
           DataType = ftDateTime
@@ -1985,14 +2009,14 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Name = 'inmask'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = TaxCorrectiveCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -2116,7 +2140,7 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Name = 'isAkt'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -2474,7 +2498,7 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Name = 'OperDate_Tax'
-          Value = 'NULL'
+          Value = Null
           Component = TaxCorrectiveCDS
           ComponentItem = 'OperDate_Child'
           DataType = ftDateTime
@@ -2875,7 +2899,7 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = DetailCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -3076,7 +3100,7 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Name = 'OperDatePartner'
-          Value = 'NULL'
+          Value = Null
           Component = DetailCDS
           ComponentItem = 'OperDatePartner'
           DataType = ftDateTime
@@ -3091,7 +3115,7 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Name = 'OperDate_Master'
-          Value = 'NULL'
+          Value = Null
           Component = DetailCDS
           ComponentItem = 'OperDate_Master'
           DataType = ftDateTime
@@ -3661,7 +3685,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'inStartDateSale'
-        Value = 'NULL'
+        Value = Null
         Component = edStartDateTax
         DataType = ftDateTime
         ParamType = ptInput
@@ -3705,7 +3729,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -3773,7 +3797,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -3897,7 +3921,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'Checked'
-        Value = 'False'
+        Value = False
         Component = edIsChecked
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -3970,7 +3994,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'StartDateTax'
-        Value = 'NULL'
+        Value = Null
         Component = edStartDateTax
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -4112,7 +4136,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'inChecked'
-        Value = 'False'
+        Value = False
         Component = edIsChecked
         DataType = ftBoolean
         ParamType = ptInput
@@ -4128,7 +4152,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'inPriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         ParamType = ptInput
@@ -4777,7 +4801,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
+        Value = Null
         Component = edStartDateTax
         DataType = ftDateTime
         ParamType = ptInput
@@ -4929,7 +4953,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
+        Value = Null
         Component = edStartDateTax
         DataType = ftDateTime
         ParamType = ptInput
@@ -5407,6 +5431,8 @@ inherited ReturnInForm: TReturnInForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 775
     Top = 388
   end
@@ -5548,7 +5574,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'OperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -5570,14 +5596,14 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -5737,7 +5763,9 @@ inherited ReturnInForm: TReturnInForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = -1
       end>
+    ShowFieldImageList = <>
     SearchAsFilter = False
+    PropertiesCellList = <>
     Left = 414
     Top = 569
   end
@@ -5951,7 +5979,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'outPrinted'
-        Value = 'False'
+        Value = False
         Component = cbPrinted
         DataType = ftBoolean
         MultiSelectSeparator = ','

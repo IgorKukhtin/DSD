@@ -17,7 +17,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ReturnIn(
 )
 RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar             
-             , Amount TFloat, AmountPartner TFloat
+             , Amount TFloat, AmountPartner TFloat, Amount_find TFloat
              , Price TFloat, CountForPrice TFloat, ChangePercent TFloat, Price_Pricelist TFloat, Price_Pricelist_vat TFloat, isCheck_Pricelist Boolean
              , HeadCount TFloat
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
@@ -218,8 +218,9 @@ BEGIN
 
    , tmpResult AS (SELECT tmpMI.MovementItemId
                         , COALESCE (tmpMI.GoodsId, tmpMI_parent_find.GoodsId)         AS GoodsId
-                        , CASE WHEN tmpMI.Amount <> 0 OR 1=1 THEN tmpMI.Amount ELSE tmpMI_parent_find.Amount END AS Amount
+                        , tmpMI.Amount
                         , tmpMI.AmountPartner
+                        , tmpMI_parent_find.Amount AS Amount_find
                         , COALESCE (tmpMI.GoodsKindId, tmpMI_parent_find.GoodsKindId) AS GoodsKindId
                         , COALESCE (tmpMI.Price, tmpMI_parent_find.Price)             AS Price
                         , COALESCE (tmpMI.CountForPrice, 1)                           AS CountForPrice
@@ -310,6 +311,7 @@ BEGIN
 
            , CAST (NULL AS TFloat)      AS Amount
            , CAST (NULL AS TFloat)      AS AmountPartner
+           , CAST (NULL AS TFloat)      AS Amount_find
 
            , CASE WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
                   WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
@@ -388,6 +390,7 @@ BEGIN
 
            , tmpResult.Amount        :: TFloat  AS Amount
            , tmpResult.AmountPartner :: TFloat  AS AmountPartner
+           , tmpResult.Amount_find   :: TFloat  AS Amount_find
            , tmpResult.Price         :: TFloat  AS Price
            , tmpResult.CountForPrice :: TFloat  AS CountForPrice
            , tmpResult.ChangePercent :: TFloat  AS ChangePercent
@@ -618,8 +621,9 @@ BEGIN
 
    , tmpResult AS (SELECT tmpMI.MovementItemId
                         , COALESCE (tmpMI.GoodsId, tmpMI_parent_find.GoodsId)         AS GoodsId
-                        , CASE WHEN tmpMI.Amount <> 0 OR 1=1 THEN tmpMI.Amount ELSE tmpMI_parent_find.Amount END AS Amount
+                        , tmpMI.Amount 
                         , tmpMI.AmountPartner
+                        , tmpMI_parent_find.Amount AS Amount_find
                         , COALESCE (tmpMI.GoodsKindId, tmpMI_parent_find.GoodsKindId) AS GoodsKindId
                         , COALESCE (tmpMI.Price, tmpMI_parent_find.Price)             AS Price
                         , COALESCE (tmpMI.CountForPrice, 1)                           AS CountForPrice
@@ -666,6 +670,8 @@ BEGIN
 
            , tmpResult.Amount        :: TFloat  AS Amount
            , tmpResult.AmountPartner :: TFloat  AS AmountPartner
+           , tmpResult.Amount_find   :: TFloat  AS Amount_find
+           
            , tmpResult.Price         :: TFloat  AS Price
            , tmpResult.CountForPrice :: TFloat  AS CountForPrice
            , tmpResult.ChangePercent :: TFloat  AS ChangePercent
