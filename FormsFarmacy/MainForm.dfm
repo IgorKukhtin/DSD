@@ -4103,6 +4103,34 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_QuantityComparison: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1095#1077#1082#1086#1074' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      FormName = 'TReport_Check_QuantityComparisonForm'
+      FormNameParam.Value = 'TReport_Check_QuantityComparisonForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'FormCaption'
+          Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' ('#1055#1088#1086#1084#1086' '#1074#1088#1072#1095#1080'  ('#1064#1077#1074#1095#1077#1085#1082#1086' 9))'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PromoCodeID'
+          Value = 21042082
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ChangePercent'
+          Value = 2.000000000000000000
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4755,6 +4783,9 @@ inherited MainForm: TMainForm
       end
       object N269: TMenuItem
         Action = actReport_MovementCheckSite
+      end
+      object N271: TMenuItem
+        Action = actReport_QuantityComparison
       end
       object N178: TMenuItem
         Caption = '-'

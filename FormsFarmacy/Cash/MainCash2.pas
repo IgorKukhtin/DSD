@@ -20,7 +20,8 @@ uses
   dxSkinsDefaultPainters, dxSkinscxPCPainter, LocalStorage, cxGridExportLink,
   cxButtonEdit, PosInterface, PosFactory, PayPosTermProcess,
   cxDataControllerConditionalFormattingRulesManagerDialog, System.Actions,
-  Vcl.ComCtrls, cxBlobEdit, cxMemo, cxRichEdit, cxEditRepositoryItems;
+  Vcl.ComCtrls, cxBlobEdit, cxMemo, cxRichEdit, cxEditRepositoryItems,
+  dxDateRanges;
 
 type
 
@@ -544,6 +545,7 @@ type
     actLoadLiki24: TMultiAction;
     actLoadLiki24_Search: TMultiAction;
     Color_IPE: TcxGridDBColumn;
+    PlanEmployeeCDS: TClientDataSet;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -685,6 +687,10 @@ type
     procedure ceVIPLoadKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure ceVIPLoadExit(Sender: TObject);
+    procedure Color_IPEGetCellHint(Sender: TcxCustomGridTableItem;
+      ARecord: TcxCustomGridRecord; ACellViewInfo: TcxGridTableDataCellViewInfo;
+      const AMousePos: TPoint; var AHintText: TCaption;
+      var AIsHintMultiLine: Boolean; var AHintTextRect: TRect);
   private
     isScaner: Boolean;
     FSoldRegim: Boolean;
@@ -6323,6 +6329,28 @@ begin
 
 end;
 
+procedure TMainCashForm2.Color_IPEGetCellHint(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; ACellViewInfo: TcxGridTableDataCellViewInfo;
+  const AMousePos: TPoint; var AHintText: TCaption;
+  var AIsHintMultiLine: Boolean; var AHintTextRect: TRect);
+begin
+  if not PlanEmployeeCDS.Active then Exit;
+
+  if ARecord.Values[Sender.Index] > 0 then
+  begin
+    if PlanEmployeeCDS.Locate('GoodsCode', ARecord.Values[MainColCode.Index], []) then
+    begin
+      if PlanEmployeeCDS.FieldByName('AmountPlan').AsCurrency > 0 then
+        AHintText := 'Для выполнения мин. плана - ' + PlanEmployeeCDS.FieldByName('AmountPlan').AsString + #13#10
+      else AHintText := 'Мин. план выполнен' + #13#10;
+      if PlanEmployeeCDS.FieldByName('AmountPlanAward').AsCurrency > 0 then
+        AHintText := AHintText + 'Для выполнения плана для премии - ' + PlanEmployeeCDS.FieldByName('AmountPlanAward').AsString
+      else AHintText := AHintText + 'План для премии выполнен';
+      AIsHintMultiLine := False;
+    end;
+  end;
+end;
+
 procedure TMainCashForm2.ConnectionModeChange(var Msg: TMessage);
 begin
   SetWorkMode(gc_User.Local);
@@ -10538,12 +10566,21 @@ begin
       fBanCash := False;
       Exit;
     end;
+
+    try
+      // Получили статус не отметился
+      spGet_BanCash.Execute;
+      fBanCash := spGet_BanCash.ParamByName('outBanCash').Value;
+      if not fBanCash then Exit;
+    except
+      fBanCash := True;
+    end;
+
   End else if gc_User.Session = '3' then
   begin
     fBanCash := False;
     Exit;
   end;
-
 
       // Получили статус не отметился
   if not FileExists(EmployeeSchedule_lcl) then
@@ -11488,7 +11525,6 @@ end;
 
 // Пропись выполнения плана по сотруднику
 procedure TMainCashForm2.UpdateImplementationPlanEmployee;
-var ds : TClientDataSet;
 begin
 
   // Очищаем данные по выполнению плана сотрудника
@@ -11508,28 +11544,32 @@ begin
   if FileExists(ImplementationPlanEmployee_lcl) then
   begin
     WaitForSingleObject(MutexDiffCDS, MutexImplementationPlanEmployee);
-    ds := TClientDataSet.Create(nil);
     try
       try
 
-        LoadLocalData(ds, ImplementationPlanEmployee_lcl);
-        if not ds.Active then ds.Open;
+        PlanEmployeeCDS.Close;
+        LoadLocalData(PlanEmployeeCDS, ImplementationPlanEmployee_lcl);
+        if not PlanEmployeeCDS.Active then PlanEmployeeCDS.Open;
 
-        ds.First;
-        if ds.IsEmpty then Exit
-        else if ds.FieldByName('UserId').AsString <> gc_User.Session then Exit;
+        PlanEmployeeCDS.First;
+        if PlanEmployeeCDS.IsEmpty then Exit
+        else if PlanEmployeeCDS.FieldByName('UserId').AsString <> gc_User.Session then
+        begin
+          PlanEmployeeCDS.Close;
+          Exit;
+        end;
 
-        while not ds.Eof do
+        while not PlanEmployeeCDS.Eof do
         begin
 
-          if RemainsCDS.Locate('GoodsCode', ds.FieldByName('GoodsCode').AsInteger, []) and
-             (RemainsCDS.FieldByName('Color_IPE').AsInteger <> ds.FieldByName('Color').AsInteger) then
+          if RemainsCDS.Locate('GoodsCode', PlanEmployeeCDS.FieldByName('GoodsCode').AsInteger, []) and
+             (RemainsCDS.FieldByName('Color_IPE').AsInteger <> PlanEmployeeCDS.FieldByName('Color').AsInteger) then
           begin
             RemainsCDS.Edit;
-            RemainsCDS.FieldByName('Color_IPE').AsInteger := ds.FieldByName('Color').AsInteger;
+            RemainsCDS.FieldByName('Color_IPE').AsInteger := PlanEmployeeCDS.FieldByName('Color').AsInteger;
             RemainsCDS.Post;
           end;
-          ds.Next;
+          PlanEmployeeCDS.Next;
         end;
 
       Except ON E:Exception do
@@ -11538,8 +11578,6 @@ begin
     finally
       Add_Log('End MutexImplementationPlanEmployee');
       ReleaseMutex(MutexImplementationPlanEmployee);
-      ds.Close;
-      ds.Free;
     end;
   end;
 

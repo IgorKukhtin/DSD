@@ -966,12 +966,17 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_QuantityComparisonForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_QuantityComparisonForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_QuantityComparisonDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_QuantityComparisonDialogForm');
+
+ {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckSiteDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckSiteDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckSiteForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckSiteForm');
-
- {
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceCheckForm');

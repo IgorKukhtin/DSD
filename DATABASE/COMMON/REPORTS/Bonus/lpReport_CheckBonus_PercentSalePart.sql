@@ -110,7 +110,7 @@ BEGIN
                                                                           )
                                      THEN ObjectLink_ContractCondition_ContractSend.ChildObjectId
                                      ELSE 0
-                                END AS ContractId_baza
+                                 END AS ContractId_baza
                                              
                          FROM tmpContract_full
                                      
@@ -336,7 +336,7 @@ BEGIN
                                      )
                           
       -- только бонусные договора
-    /*, tmpContract AS (SELECT tmpContractConditionKind.JuridicalId
+    , tmpContract AS (SELECT tmpContractConditionKind.JuridicalId
                            , tmpContractConditionKind.InvNumber_master
                            , tmpContractConditionKind.InvNumber_master  AS InvNumber_child
                            , tmpContractConditionKind.ContractId_master
@@ -356,9 +356,9 @@ BEGIN
                            , tmpContractConditionKind.ContractConditionId
                       FROM tmpContractConditionKind
                      )
-                     */
+                     
       -- дл€ всех юр лиц, у кого есть "Ѕонусы" формируетс€ список всех других договоров (по ним будем делать расчет "базы")
-    , tmpContract AS (SELECT tmpContractConditionKind.JuridicalId
+   /* , tmpContract AS (SELECT tmpContractConditionKind.JuridicalId
                            , tmpContractConditionKind.InvNumber_master
                            , tmpContractConditionKind.InvNumber_master  AS InvNumber_child
                            , tmpContractConditionKind.ContractId_master
@@ -444,6 +444,7 @@ BEGIN
                         -- Ќ≈ указано где вз€ть базу
                         AND tmpContractConditionKind.ContractId_baza = 0
                      )
+                     */
 
 
       -- группируем договора, т.к. "базу" будем формировать по 4-м ключам
@@ -529,7 +530,7 @@ BEGIN
                                  , tmpContract.BonusKindId
                             FROM tmpReport
                              INNER JOIN tmpContractPartner ON tmpContractPartner.PartnerId = tmpReport.PartnerId
-                                                          AND tmpContractPartner.ContractId_baza = tmpReport.ContractId
+                                                          AND (tmpContractPartner.ContractId_baza = tmpReport.ContractId OR COALESCE (tmpContractPartner.ContractId_baza,0) = 0)
                              LEFT JOIN (SELECT DISTINCT tmpContractGroup.ContractId_master
                                              , tmpContractGroup.ContractConditionId
                                              , tmpContractGroup.JuridicalId

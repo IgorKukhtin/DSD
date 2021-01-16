@@ -27,7 +27,8 @@ uses
   cxDBPivotGrid, cxLabel, ChoicePeriod, dxBarExtItems, cxCheckBox, cxSplitter,
   Vcl.StdCtrls, Vcl.Menus, cxButtons, cxExportPivotGridLink, dsdGuides,
   cxButtonEdit, cxGridBandedTableView, cxGridDBBandedTableView, cxNavigator,
-  cxDataControllerConditionalFormattingRulesManagerDialog, System.Actions;
+  cxDataControllerConditionalFormattingRulesManagerDialog, System.Actions,
+  dxDateRanges;
 
 type
   TReport_ImplementationPlanEmployeeCashForm = class(TForm)

@@ -763,6 +763,8 @@ type
     N269: TMenuItem;
     actClearDefaultUnit: TdsdOpenForm;
     N270: TMenuItem;
+    actReport_QuantityComparison: TdsdOpenForm;
+    N271: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
