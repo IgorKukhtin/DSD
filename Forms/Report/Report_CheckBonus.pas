@@ -95,6 +95,8 @@ type
     AmountKg: TcxGridDBColumn;
     AmountSh: TcxGridDBColumn;
     PartKg: TcxGridDBColumn;
+    ProtocolReportBonusForm: TdsdOpenForm;
+    bbProtocolReportBonusForm: TdxBarButton;
   private
     { Private declarations }
   public
