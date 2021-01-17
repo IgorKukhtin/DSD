@@ -255,6 +255,36 @@ type
     property Image: TcxImage read FImage write FImage;
   end;
 
+  // Кросс для нескольких полей
+  TTemplateColumn = class(TCollectionItem)
+  private
+    FTemplateColumn: TcxGridColumn;
+    FHeaderColumnName: String;
+  public
+    procedure Assign(Source: TPersistent); override;
+  published
+    function GetDisplayName: string; override;
+    // Поле в HeaderDataSet с названиями колонок кроса
+    property HeaderColumnName: String read FHeaderColumnName write FHeaderColumnName;
+    // Шаблон для Cross колонок
+    property TemplateColumn: TcxGridColumn read FTemplateColumn write FTemplateColumn;
+  end;
+
+  // Размножение колонок перед кросом
+  TMultiplyColumn = class(TCollectionItem)
+  private
+//    FTemplateColumn: TTemplateColumn;
+//    FHeaderColumnName: String;
+  public
+    procedure Assign(Source: TPersistent); override;
+  published
+    function GetDisplayName: string; override;
+//    // Поле в HeaderDataSet с названиями колонок кроса
+//    property HeaderColumnName: String read FHeaderColumnName write FHeaderColumnName;
+//    // Шаблон для Cross колонок
+//    property TemplateColumn: TcxGridColumn read FTemplateColumn write FTemplateColumn;
+  end;
+
   // Добавляет ряд функционала на GridView
   // 1. Быстрая установка фильтров
   // 2. Рисование иконок сортировки
@@ -406,6 +436,49 @@ type
     // Колонки цвета не размножать (один цвет на все колонки)
     property NoCrossColorColumn : boolean read FNoCrossColorColumn write FNoCrossColorColumn default False;
   end;
+
+  TCrossDBViewReportAddOn = class(TdsdDBViewAddOn)
+  private
+    FHeaderDataSet: TDataSet;
+    FMultiplyDataSet: TDataSet;
+    FBаndColumnName: String;
+    FBeforeOpen: TDataSetNotifyEvent;
+    FAfterClose: TDataSetNotifyEvent;
+    FEditing: TcxGridEditingEvent;
+    FFocusedItemChanged: TcxGridFocusedItemChangedEvent;
+    FDataSet: TDataSet;
+    FCreateColumnList: TList;
+    FCreateColorRuleList: TList;
+    FCreateBаndList: TList;
+    FNoCrossColorColumn : boolean;
+    FTemplateColumnList: TCollection;
+    FMultiplyColumnList: TCollection;
+    procedure onBeforeOpen(DataSet: TDataSet);
+    procedure onAfterClose(DataSet: TDataSet);
+    procedure SetView(const Value: TcxGridTableView); override;
+    procedure FocusedItemChanged(Sender: TcxCustomGridTableView;
+                                 APrevFocusedItem, AFocusedItem: TcxCustomGridTableItem);
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+  public
+    property DataSet: TDataSet read FDataSet;
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    // Размножение колонок перед кросом
+    property MultiplyColumnList: TCollection read FMultiplyColumnList write FMultiplyColumnList;
+    // Кросс для нескольких полей
+    property TemplateColumnList: TCollection read FTemplateColumnList write FTemplateColumnList;
+    // Дата сет с названием колонок и другой необходимой для работы информацией.
+    property HeaderDataSet: TDataSet read FHeaderDataSet write FHeaderDataSet;
+    // Дата сет с параметрамы для размножения столбиков.
+    property MultiplyDataSet: TDataSet read FMultiplyDataSet write FMultiplyDataSet;
+    // Поле в HeaderDataSet с названиями Band для TcxGridDBBandedTableView
+    property BаndColumnName: String read FBаndColumnName write FBаndColumnName;
+    // Колонки цвета не размножать (один цвет на все колонки)
+    property NoCrossColorColumn : boolean read FNoCrossColorColumn write FNoCrossColorColumn default False;
+  end;
+
 
   TPivotAddOn = class(TCustomDBControlAddOn)
   private
@@ -958,6 +1031,7 @@ procedure Register;
 begin
   RegisterComponents('DSDComponent', [
     TCrossDBViewAddOn,
+    TCrossDBViewReportAddOn,
     THeaderSaver,
     THeaderChanger,
     TdsdDBTreeAddOn,
@@ -4853,6 +4927,324 @@ begin
   begin
     if FEditRepository.Items[FIndexProperties - 1].Properties is TcxTextEditProperties  then
       (FComponent as TcxTextEdit).Properties.Assign(FEditRepository.Items[FIndexProperties - 1].Properties);
+  end;
+end;
+
+{ TTemplateColumn }
+
+procedure TTemplateColumn.Assign(Source: TPersistent);
+begin
+  if Source is TTemplateColumn then
+    with TTemplateColumn(Source) do
+    begin
+      Self.TemplateColumn := TemplateColumn;
+      Self.HeaderColumnName := HeaderColumnName;
+    end
+  else
+    inherited Assign(Source);
+end;
+
+function TTemplateColumn.GetDisplayName: string;
+begin
+  if Assigned(TemplateColumn) or (HeaderColumnName <> '') then
+  begin
+    Result := '?';
+    if TemplateColumn is TcxGridDBBandedColumn then
+      Result := TcxGridDBBandedColumn(TemplateColumn).Name;
+    if TemplateColumn is TcxGridDBColumn then
+      Result := TcxGridDBColumn(TemplateColumn).Name;
+    Result := Result + ' - ' + HeaderColumnName
+  end
+  else
+    Result := inherited GetDisplayName;
+end;
+
+{ TMultiplyColumn }
+
+procedure TMultiplyColumn.Assign(Source: TPersistent);
+begin
+  if Source is TTemplateColumn then
+    with TTemplateColumn(Source) do
+    begin
+//      Self.TemplateColumn := TemplateColumn;
+//      Self.HeaderColumnName := HeaderColumnName;
+    end
+  else
+    inherited Assign(Source);
+end;
+
+function TMultiplyColumn.GetDisplayName: string;
+begin
+//  if Assigned(TemplateColumn) or (HeaderColumnName <> '') then
+//  begin
+//    Result := '?';
+//    if TemplateColumn is TcxGridDBBandedColumn then
+//      Result := TcxGridDBBandedColumn(TemplateColumn).Name;
+//    if TemplateColumn is TcxGridDBColumn then
+//      Result := TcxGridDBColumn(TemplateColumn).Name;
+//    Result := Result + ' - ' + HeaderColumnName
+//  end
+//  else
+    Result := inherited GetDisplayName;
+end;
+
+{ TCrossDBViewReportAddOn }
+
+constructor TCrossDBViewReportAddOn.Create(AOwner: TComponent);
+begin
+  inherited;
+  FCreateColumnList := TList.Create;
+  FCreateColorRuleList := TList.Create;
+  FCreateBаndList := TList.Create;
+  FTemplateColumnList := TCollection.Create(TTemplateColumn);
+  FMultiplyColumnList := TCollection.Create(TMultiplyColumn);
+end;
+
+destructor TCrossDBViewReportAddOn.Destroy;
+begin
+  FreeAndNil(FMultiplyColumnList);
+  FreeAndNil(FTemplateColumnList);
+  FreeAndNil(FCreateColorRuleList);
+  FreeAndNil(FCreateColumnList);
+  FreeAndNil(FCreateBаndList);
+  inherited;
+end;
+
+procedure TCrossDBViewReportAddOn.FocusedItemChanged(Sender: TcxCustomGridTableView;
+  APrevFocusedItem, AFocusedItem: TcxCustomGridTableItem);
+begin
+  if Assigned(FFocusedItemChanged) then
+     FFocusedItemChanged(Sender, APrevFocusedItem, AFocusedItem);
+  if TcxDBDataController(FView.DataController).DataSource.State = dsEdit then begin
+     // Если ошибка, то вернем в прошлую ячейку
+     try
+       TcxDBDataController(FView.DataController).DataSource.DataSet.Post;
+     except
+       TcxDBDataController(FView.DataController).DataSource.DataSet.Cancel;
+       FView.Controller.FocusedItem := APrevFocusedItem;
+       raise;
+     end;
+  end;
+end;
+
+procedure TCrossDBViewReportAddOn.Notification(AComponent: TComponent;
+  Operation: TOperation);
+  var I : Integer;
+begin
+  inherited;
+  if csDestroying in ComponentState then
+     exit;
+
+  if csDesigning in ComponentState then
+     if Operation = opRemove then begin
+        if AComponent = HeaderDataSet then
+           HeaderDataSet := nil;
+        for I := 0 to TemplateColumnList.Count - 1 do
+          if TTemplateColumn(TemplateColumnList.Items[I]).FTemplateColumn = AComponent then
+             TTemplateColumn(TemplateColumnList.Items[I]).FTemplateColumn := nil;
+
+     end;
+end;
+
+procedure TCrossDBViewReportAddOn.onAfterClose(DataSet: TDataSet);
+var i: integer;
+begin
+  if Assigned(FAfterClose) then
+     FAfterClose(DataSet);
+
+  for i := 0 to FCreateColorRuleList.Count - 1 do
+    TColorRule(FCreateColorRuleList.Items[I]).Free;
+
+  FCreateColorRuleList.Clear;
+
+  for i := 0 to FCreateColumnList.Count - 1 do
+    View.Columns[View.ColumnCount - 1].Free;
+
+  FCreateColumnList.Clear;
+
+  for i := 0 to FCreateBаndList.Count - 1 do
+    TcxGridBand(FCreateBаndList.Items[I]).Free;
+
+  FCreateBаndList.Clear;
+end;
+
+procedure TCrossDBViewReportAddOn.onBeforeOpen(DataSet: TDataSet);
+var NewColumnIndex, I, J: integer;
+    Column: TcxGridColumn; Band: TcxGridBand;
+    TemplateColorRule, ColorRule: TColorRule;
+begin
+  if Assigned(FBeforeOpen) then
+     FBeforeOpen(DataSet);
+  View.BeginUpdate;
+
+  try
+      // Заполняем заголовки колонок
+
+    if Assigned(HeaderDataSet) and HeaderDataSet.Active then begin
+
+
+       // проверяем чтоб все было заполнено
+
+       if TemplateColumnList.Count = 0 then
+          raise Exception.Create('TemplateColumnList не установлены');
+
+       for J := 0 to TemplateColumnList.Count - 1 do
+       begin
+         if not Assigned(HeaderDataSet.Fields.FindField(TTemplateColumn(TemplateColumnList.Items[J]).HeaderColumnName)) then
+            raise Exception.Create('HeaderDataSet не имеет поля ' + TTemplateColumn(TemplateColumnList.Items[J]).HeaderColumnName);
+         if not Assigned(TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn) then
+            raise Exception.Create('TemplateColumn не установлен для TemplateColumnList ' + IntToStr(J));
+       end;
+
+       HeaderDataSet.First;
+       NewColumnIndex := 1;
+       while not HeaderDataSet.Eof do begin
+
+         Band := Nil;
+         for J := 0 to TemplateColumnList.Count - 1 do
+         begin
+
+           if not Assigned(HeaderDataSet.Fields.FindField(TTemplateColumn(TemplateColumnList.Items[J]).HeaderColumnName)) then Continue;
+           if not Assigned(TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn) then Continue;
+
+           if (View is TcxGridDBBandedTableView)
+              and (BаndColumnName <> '')
+              and Assigned(HeaderDataSet.Fields.FindField(BаndColumnName))
+              and not Assigned(Band) then
+           begin
+             Band := TcxGridDBBandedTableView(View).Bands.Add;
+             Band.Assign(TcxGridDBBandedColumn(TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn).Position.Band);
+             Band.Position.ColIndex := Band.Position.ColIndex + 1 + J;
+             Band.Caption := HeaderDataSet.FieldByName(BаndColumnName).AsString;
+             Band.Visible := true;
+             FCreateBаndList.Add(Band);
+           end;
+
+           TemplateColorRule := Nil;
+           for I := 0 to ColorRuleList.Count - 1 do
+             if TColorRule(ColorRuleList.Items[I]).ColorColumn = TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn then
+           begin
+             TemplateColorRule := TColorRule(ColorRuleList.Items[I]);
+             Break;
+           end;
+
+           Column := View.CreateColumn;
+           if TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn is TcxGridDBBandedColumn then
+             Column.Name:= View.Name + TcxGridDBBandedColumn(TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn).DataBinding.FieldName + IntToStr(Column.index);
+           if TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn is TcxGridDBColumn then
+             Column.Name:= View.Name + TcxGridDBColumn(TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn).DataBinding.FieldName + IntToStr(Column.index);
+           FCreateColumnList.Add(Column);
+           with Column do begin
+             Assign(TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn);
+             Visible := true;
+             Caption := HeaderDataSet.FieldByName(TTemplateColumn(TemplateColumnList.Items[J]).HeaderColumnName).AsString;
+             Width := TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn.Width;
+             if Column is TcxGridDBBandedColumn then
+             begin
+                TcxGridDBBandedColumn(Column).DataBinding.FieldName := TcxGridDBBandedColumn(TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+                if Assigned(Band) then
+                begin
+                  TcxGridDBBandedColumn(Column).Position.BandIndex := Band.Index;
+                  TcxGridDBBandedColumn(Column).Position.ColIndex := TcxGridDBBandedColumn(TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn).Position.ColIndex;
+                  TcxGridDBBandedColumn(Column).Position.RowIndex := TcxGridDBBandedColumn(TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn).Position.RowIndex;
+                end else TcxGridDBBandedColumn(Column).Position.ColIndex := TcxGridDBBandedColumn(Column).Position.Band.ColumnCount;
+             end;
+             if Column is TcxGridDBColumn then
+                TcxGridDBColumn(Column).DataBinding.FieldName := TcxGridDBColumn(TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+             if Caption = '' then Options.Editing := False;
+           end;
+
+           if Assigned(TemplateColorRule) then
+           begin
+             ColorRule:= TColorRule.Create(FColorRuleList);
+             ColorRule.Assign(TemplateColorRule);
+             ColorRule.ColorColumn := Column;
+             if not NoCrossColorColumn then
+             begin
+               if Assigned(TemplateColorRule.BackGroundValueColumn) then
+               begin
+                 Column := View.CreateColumn;
+                 if TemplateColorRule.BackGroundValueColumn is TcxGridDBBandedColumn then
+                   Column.Name:= View.Name + TcxGridDBBandedColumn(TemplateColorRule.BackGroundValueColumn).DataBinding.FieldName + IntToStr(Column.index);
+                 if TemplateColorRule.BackGroundValueColumn is TcxGridDBColumn then
+                   Column.Name:= View.Name + TcxGridDBColumn(TemplateColorRule.BackGroundValueColumn).DataBinding.FieldName + IntToStr(Column.index);
+                 FCreateColumnList.Add(Column);
+                 with Column do begin
+                   Assign(TemplateColorRule.BackGroundValueColumn);
+                   Visible := False;
+                   if (Column is TcxGridDBBandedColumn) and (TemplateColorRule.BackGroundValueColumn is TcxGridDBBandedColumn) then
+                      TcxGridDBBandedColumn(Column).DataBinding.FieldName := TcxGridDBBandedColumn(TemplateColorRule.BackGroundValueColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+                   if (Column is TcxGridDBColumn) and (TemplateColorRule.BackGroundValueColumn is TcxGridDBColumn) then
+                      TcxGridDBColumn(Column).DataBinding.FieldName := TcxGridDBColumn(TemplateColorRule.BackGroundValueColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+                 end;
+                 ColorRule.BackGroundValueColumn := Column;
+               end;
+               if Assigned(TemplateColorRule.ValueBoldColumn) then
+               begin
+                 Column := View.CreateColumn;
+                 if TemplateColorRule.ValueBoldColumn is TcxGridDBBandedColumn then
+                   Column.Name:= View.Name + TcxGridDBBandedColumn(TemplateColorRule.ValueBoldColumn).DataBinding.FieldName + IntToStr(Column.index);
+                 if TemplateColorRule.ValueBoldColumn is TcxGridDBColumn then
+                   Column.Name:= View.Name + TcxGridDBColumn(TemplateColorRule.ValueBoldColumn).DataBinding.FieldName + IntToStr(Column.index);
+                 FCreateColumnList.Add(Column);
+                 with Column do begin
+                   Assign(TemplateColorRule.ValueBoldColumn);
+                   Visible := False;
+                   if (Column is TcxGridDBBandedColumn) and (TemplateColorRule.ValueBoldColumn is TcxGridDBBandedColumn) then
+                      TcxGridDBBandedColumn(Column).DataBinding.FieldName := TcxGridDBBandedColumn(TemplateColorRule.ValueBoldColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+                   if (Column is TcxGridDBColumn) and (TemplateColorRule.ValueBoldColumn is TcxGridDBColumn) then
+                      TcxGridDBColumn(Column).DataBinding.FieldName := TcxGridDBColumn(TemplateColorRule.ValueBoldColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+                 end;
+                 ColorRule.ValueBoldColumn := Column;
+               end;
+               if Assigned(TemplateColorRule.ValueColumn) then
+               begin
+                 Column := View.CreateColumn;
+                 if TemplateColorRule.ValueColumn is TcxGridDBBandedColumn then
+                   Column.Name:= View.Name + TcxGridDBBandedColumn(TemplateColorRule.ValueColumn).DataBinding.FieldName + IntToStr(Column.index);
+                 if TemplateColorRule.ValueColumn is TcxGridDBColumn then
+                   Column.Name:= View.Name + TcxGridDBColumn(TemplateColorRule.ValueColumn).DataBinding.FieldName + IntToStr(Column.index);
+                 FCreateColumnList.Add(Column);
+                 with Column do begin
+                   Assign(TemplateColorRule.ValueColumn);
+                   Visible := False;
+                   if (Column is TcxGridDBBandedColumn) and (TemplateColorRule.ValueColumn is TcxGridDBBandedColumn) then
+                      TcxGridDBBandedColumn(Column).DataBinding.FieldName := TcxGridDBBandedColumn(TemplateColorRule.ValueColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+                   if (Column is TcxGridDBColumn) and (TemplateColorRule.ValueColumn is TcxGridDBColumn) then
+                      TcxGridDBColumn(Column).DataBinding.FieldName := TcxGridDBColumn(TemplateColorRule.ValueColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+                 end;
+                 ColorRule.ValueColumn := Column;
+               end;
+             end else
+             begin
+               ColorRule.BackGroundValueColumn := TemplateColorRule.BackGroundValueColumn;
+               ColorRule.ValueBoldColumn := TemplateColorRule.ValueBoldColumn;
+               ColorRule.ValueColumn := TemplateColorRule.ValueColumn;
+             end;
+             FCreateColorRuleList.Add(ColorRule);
+           end;
+         end;
+
+         inc(NewColumnIndex);
+         HeaderDataSet.Next;
+       end;
+    end;
+  finally
+    View.EndUpdate;
+  end;
+end;
+
+procedure TCrossDBViewReportAddOn.SetView(const Value: TcxGridTableView);
+begin
+  inherited;
+  if Value <> nil then begin
+     FDataSet := TcxDBDataController(Value.DataController).DataSet;
+     FBeforeOpen := FDataSet.BeforeOpen;
+     FDataSet.BeforeOpen := onBeforeOpen;
+     FAfterClose := FDataSet.AfterClose;
+     FDataSet.AfterClose := onAfterClose;
+     FFocusedItemChanged := Value.OnFocusedItemChanged;
+     Value.OnFocusedItemChanged := FocusedItemChanged;
   end;
 end;
 

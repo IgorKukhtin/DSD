@@ -10,7 +10,10 @@ uses
   Vcl.StdCtrls, cxButtons, cxTextEdit, Vcl.ExtCtrls, dsdGuides, dsdDB,
   cxMaskEdit, cxButtonEdit, AncestorBase, dxSkinsCore, dxSkinsDefaultPainters, Data.DB,
   System.Actions, Vcl.ComCtrls, dxCore, cxDateUtils, cxCheckBox, cxDropDownEdit,
-  cxLabel, cxCalendar;
+  cxLabel, cxCalendar, cxStyles, cxCustomData, cxFilter, cxData, cxDataStorage,
+  cxNavigator, dxDateRanges, cxDBData, cxGridLevel, cxGridCustomTableView,
+  cxGridTableView, cxGridBandedTableView, cxGridDBBandedTableView,
+  cxGridCustomView, cxGridDBTableView, cxGrid;
 
 type
   TEmployeeScheduleCashForm = class(TAncestorDialogForm)
@@ -26,6 +29,56 @@ type
     cxLabel7: TcxLabel;
     cbEndHour: TcxComboBox;
     cbServiceExit: TcxCheckBox;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    MasterCDS: TClientDataSet;
+    SubstitutionDS: TDataSource;
+    SubstitutionCDS: TClientDataSet;
+    HeaderUserCDS: TClientDataSet;
+    HeaderCDS: TClientDataSet;
+    spSelect: TdsdStoredProc;
+    MasterDS: TDataSource;
+    spGet: TdsdStoredProc;
+    cxGridSubstitution: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    cxGridDBBandedTableViewSubstitution: TcxGridDBBandedTableView;
+    Substitution_Note: TcxGridDBBandedColumn;
+    Substitution_UnitName: TcxGridDBBandedColumn;
+    Substitution_NoteStart: TcxGridDBBandedColumn;
+    Substitution_NoteEnd: TcxGridDBBandedColumn;
+    Substitution_NoteNext: TcxGridDBBandedColumn;
+    Substitution_Value: TcxGridDBBandedColumn;
+    Substitution_ValueEnd: TcxGridDBBandedColumn;
+    Substitution_ValueStart: TcxGridDBBandedColumn;
+    Substitution_ValueNext: TcxGridDBBandedColumn;
+    Substitution_Color_CalcFont: TcxGridDBBandedColumn;
+    Substitution_Nil1: TcxGridDBBandedColumn;
+    Substitution_Nil2: TcxGridDBBandedColumn;
+    Substitution_Nil3: TcxGridDBBandedColumn;
+    cxGridLevelSubstitution: TcxGridLevel;
+    cxGrid: TcxGrid;
+    cxGridDBTableView: TcxGridDBTableView;
+    cxGridDBBandedTableView1: TcxGridDBBandedTableView;
+    Note: TcxGridDBBandedColumn;
+    NoteStart: TcxGridDBBandedColumn;
+    NoteEnd: TcxGridDBBandedColumn;
+    NoteNext: TcxGridDBBandedColumn;
+    Value: TcxGridDBBandedColumn;
+    ValueStart: TcxGridDBBandedColumn;
+    ValueEnd: TcxGridDBBandedColumn;
+    ValueNext: TcxGridDBBandedColumn;
+    Color_Calc: TcxGridDBBandedColumn;
+    Color_CalcFont: TcxGridDBBandedColumn;
+    Color_CalcFontUser: TcxGridDBBandedColumn;
+    cxGridLevel: TcxGridLevel;
+    CrossDBViewAddOnSubstitutionNext: TCrossDBViewAddOn;
+    CrossDBViewAddOn: TCrossDBViewAddOn;
+    CrossDBViewStartAddOn: TCrossDBViewAddOn;
+    CrossDBViewEndAddOn: TCrossDBViewAddOn;
+    CrossDBViewNextAddOn: TCrossDBViewAddOn;
+    CrossDBViewAddOnSubstitution: TCrossDBViewAddOn;
+    CrossDBViewAddOnSubstitutionValueStart: TCrossDBViewAddOn;
+    CrossDBViewAddOnSubstitutionValueEnd: TCrossDBViewAddOn;
     procedure bbOkClick(Sender: TObject);
   private
     { Private declarations }
@@ -237,6 +290,18 @@ begin
   EmployeeScheduleCDS :=  TClientDataSet.Create(Nil);
   WaitForSingleObject(MutexEmployeeSchedule, INFINITE);
   try
+
+    if not gc_User.Local then
+    begin
+      spSelect.Execute;
+    end else
+    begin
+      Panel2.Visible := False;
+      Height := Panel1.Height + edOperDate.Height * 2;
+      Panel1.Align := alClient;
+    end;
+
+
     try
       LoadLocalData(EmployeeScheduleCDS, EmployeeSchedule_lcl);
       if not EmployeeScheduleCDS.Active then EmployeeScheduleCDS.Open;

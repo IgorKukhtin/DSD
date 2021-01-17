@@ -37,22 +37,15 @@ type
     UnitName: TcxGridDBBandedColumn;
     Count: TcxGridDBBandedColumn;
     CountPrev: TcxGridDBBandedColumn;
-    CrossDBViewAddOn: TCrossDBViewAddOn;
-    CrossDBViewAddOnPrev: TCrossDBViewAddOn;
     AverageCheck: TcxGridDBBandedColumn;
     CountCash: TcxGridDBBandedColumn;
     CountCashLess: TcxGridDBBandedColumn;
     AverageCheckPrev: TcxGridDBBandedColumn;
     CountCashPrev: TcxGridDBBandedColumn;
     CountCashLessPrev: TcxGridDBBandedColumn;
-    CrossDBViewAddOn1: TCrossDBViewAddOn;
-    CrossDBViewAddOn2: TCrossDBViewAddOn;
-    CrossDBViewAddOn3: TCrossDBViewAddOn;
-    CrossDBViewAddOn4: TCrossDBViewAddOn;
-    CrossDBViewAddOn5: TCrossDBViewAddOn;
-    CrossDBViewAddOn6: TCrossDBViewAddOn;
     ceYearsAgo: TcxCurrencyEdit;
     cxLabel5: TcxLabel;
+    CrossDBViewReportAddOn: TCrossDBViewReportAddOn;
   private
     { Private declarations }
   public
