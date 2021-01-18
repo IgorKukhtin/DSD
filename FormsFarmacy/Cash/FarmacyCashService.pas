@@ -286,7 +286,11 @@ begin
         2: actSetCashSessionId.Execute;    // обновление кеш сесии
 
         3: begin
-            if SetFarmacyNameByUser then SaveRealAll;    // попросили провести чеки
+            if SetFarmacyNameByUser then  // попросили провести чеки
+            begin
+              SaveRealAll;
+              SendEmployeeSchedule;  // Отправляем времени работы сотрудников
+            end;
             tiServise.Hint := '';
            end;
 
@@ -302,7 +306,11 @@ begin
 
         9: begin
   //           ShowMessage('запрос на выключение');
-             if SetFarmacyNameByUser then SendEmployeeWorkLog;
+             if SetFarmacyNameByUser then
+             begin
+               SendEmployeeWorkLog;
+               SendEmployeeSchedule;  // Отправляем времени работы сотрудников
+             end;
              MainCashForm2.Close;    // закрыть сервис
            end;
         10: begin    // остановить проведение чеков
@@ -325,6 +333,13 @@ begin
                actCashRemainsExecute(nil);
             end;
 
+        50: begin
+            if SetFarmacyNameByUser then
+            begin
+              SendEmployeeSchedule;  // Отправляем времени работы сотрудников
+            end;
+            tiServise.Hint := '';
+           end;
       end;
   except on E: Exception do
     Add_Log('AppMsgHandler Exception: ' + E.Message);
@@ -469,7 +484,6 @@ begin
       tiServise.BalloonHint:='Ошибка сохранения аптеки содруднику.';
     end;
   finally
-    tiServise.Hint := '';
     MainCashForm2.tiServise.IconIndex := GetTrayIcon;
     Application.ProcessMessages;
     TimerNeedRemainsDiff.Enabled := True;
@@ -560,7 +574,6 @@ begin   //yes
       end;
     End;
   finally
-    tiServise.Hint := '';
     if not bError then ChangeStatus('Сохранили');
     MainCashForm2.tiServise.IconIndex := GetTrayIcon;
     Application.ProcessMessages;
@@ -620,10 +633,10 @@ begin
     SendZReport;  // Отправляем Z отчеты
     SendEmployeeWorkLog;  // Отправляем лога работы сотрудников
     SendEmployeeSchedule;  // Отправляем времени работы сотрудников
-    tiServise.Hint := '';
   end;
   if not FHasError then
-    ChangeStatus('Получение остатков');
+    ChangeStatus('Получение остатков')
+  else tiServise.Hint := 'Ожидание задания.';
   FirstRemainsReceived := false;
   //PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 2); // запрос кеш сесии у приложения
   TimerGetRemains.Enabled := true;
@@ -748,6 +761,7 @@ begin
     RemainsCDS.EnableControls;
     Add_Log('End MutexRemains 390');
     ReleaseMutex(MutexRemains);
+    tiServise.Hint := 'Ожидание задания.';
   end;
 end;
 
@@ -835,6 +849,7 @@ begin
           ReleaseMutex(MutexDBFDiff);
         end;
       end;
+      tiServise.Hint := 'Ожидание задания.';
     except
       if gc_User.Local then
       begin
@@ -909,6 +924,7 @@ begin  //+
     end;
   finally
     freeAndNil(sp);
+    tiServise.Hint := 'Ожидание задания.';
   end;
 end;
 
@@ -987,6 +1003,7 @@ begin  //+
       ReleaseMutex(MutexDiffCDS);
     end;
   end;
+  tiServise.Hint := 'Ожидание задания.';
 end;
 
 procedure TMainCashForm2.SaveLocalDiffKind;
@@ -1022,6 +1039,7 @@ begin  //+
     end;
   finally
     freeAndNil(sp);
+    tiServise.Hint := 'Ожидание задания.';
   end;
 end;
 
@@ -1039,7 +1057,7 @@ begin
       SendEmployeeSchedule;
     end;
   finally
-    tiServise.Hint := '';
+    tiServise.Hint := 'Ожидание задания.';
     TimerSaveReal.Enabled := True;
   end;
 end;
@@ -1130,6 +1148,7 @@ begin
         end;
       end;
 
+      tiServise.Hint := 'Ожидание задания.';
     Except ON E:Exception do
       begin
         Add_Log('Ошибка сохранения аптеки содруднику:' + E.Message);
@@ -1936,7 +1955,7 @@ begin
 //        end;
 //      end;
     finally
-      tiServise.Hint := '';
+      tiServise.Hint := 'Ожидание задания.';
       Add_Log('End MutexAllowed 734');
       ReleaseMutex(MutexAllowedConduct);
       Add_Log('End MutexRefresh 732');
@@ -2031,6 +2050,7 @@ begin
     end;
   finally
     freeAndNil(sp);
+    tiServise.Hint := 'Ожидание задания.';
   end;
 end;
 
@@ -2073,6 +2093,7 @@ begin
     end;
   finally
     freeAndNil(sp);
+    tiServise.Hint := 'Ожидание задания.';
   end;
 end;
 
@@ -2113,6 +2134,7 @@ begin
     end;
   finally
     freeAndNil(sp);
+    tiServise.Hint := 'Ожидание задания.';
   end;
 end;
 
@@ -2153,6 +2175,7 @@ begin
     end;
   finally
     freeAndNil(sp);
+    tiServise.Hint := 'Ожидание задания.';
   end;
 end;
 
@@ -2196,6 +2219,7 @@ begin
     end;
   finally
     freeAndNil(sp);
+    tiServise.Hint := 'Ожидание задания.';
   end;
 end;
 
@@ -2241,6 +2265,7 @@ begin
     end;
   finally
     freeAndNil(sp);
+    tiServise.Hint := 'Ожидание задания.';
   end;
 end;
 
@@ -2282,6 +2307,7 @@ begin
     end;
   finally
     freeAndNil(sp);
+    tiServise.Hint := 'Ожидание задания.';
   end;
 end;
 
@@ -2323,6 +2349,7 @@ begin
     end;
   finally
     freeAndNil(sp);
+    tiServise.Hint := 'Ожидание задания.';
   end;
 end;
 
@@ -2369,6 +2396,7 @@ begin
     end;
   finally
     freeAndNil(sp);
+    tiServise.Hint := 'Ожидание задания.';
   end;
 end;
 
@@ -2481,88 +2509,92 @@ procedure TMainCashForm2.SendZReport;
 begin
 
   tiServise.Hint := 'Отправка Z отчетов';
-
   try
-    spLoadFTPParam.Execute;
-  except
-    on E: Exception do
+
+    try
+      spLoadFTPParam.Execute;
+    except
+      on E: Exception do
+      begin
+        Add_Log('spLoadFTPParam Exception: ' + E.Message);
+        Exit;
+      end;
+    end;
+
+    p := ExtractFilePath(Application.ExeName) + 'ZRepot\';
+
+    if not ForceDirectories(p + 'Send\') then
     begin
-      Add_Log('spLoadFTPParam Exception: ' + E.Message);
+      Add_Log('Error crete path: ' + p + 'Send\');
       Exit;
     end;
-  end;
 
-  p := ExtractFilePath(Application.ExeName) + 'ZRepot\';
+    sl := TStringList.Create;
+    for s in TDirectory.GetFiles(p, '*.txt') do sl.Add(TPath.GetFileName(s));
 
-  if not ForceDirectories(p + 'Send\') then
-  begin
-    Add_Log('Error crete path: ' + p + 'Send\');
-    Exit;
-  end;
+    if sl.Count = 0 then
+    begin
+      sl.Free;
+      Exit;
+    end;
 
-  sl := TStringList.Create;
-  for s in TDirectory.GetFiles(p, '*.txt') do sl.Add(TPath.GetFileName(s));
-
-  if sl.Count = 0 then
-  begin
-    sl.Free;
-    Exit;
-  end;
-
-  MainCashForm2.tiServise.IconIndex := 7;
-  Application.ProcessMessages;
-    // Отправка файла
-  IdFTP := Tidftp.Create(nil);
-  try
+    MainCashForm2.tiServise.IconIndex := 7;
+    Application.ProcessMessages;
+      // Отправка файла
+    IdFTP := Tidftp.Create(nil);
     try
-      IdFTP.Passive := True;
-      IdFTP.TransferType := ftBinary;
-      IdFTP.UseExtensionDataPort := True;
-
-      IdFTP.Host := spLoadFTPParam.ParamByName('outHost').Value;
-      IdFTP.Port := spLoadFTPParam.ParamByName('outPort').Value;
-      IdFTP.Username := spLoadFTPParam.ParamByName('outUsername').Value;
-      IdFTP.Password := spLoadFTPParam.ParamByName('outPassword').Value;
-//      IdFTP.IOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(IdFTP);
-//      IdFTP.UseTLS := utUseExplicitTLS;
-//      IdFTP.DataPortProtection := ftpdpsPrivate;
-//      TIdSSLIOHandlerSocketOpenSSL(IdFTP.IOHandler).SSLOptions.Method := sslvTLSv1;
-//      TIdSSLIOHandlerSocketOpenSSL(IdFTP.IOHandler).SSLOptions.Mode := sslmClient;
-//      TIdSSLIOHandlerSocketOpenSSL(IdFTP.IOHandler).SSLOptions.CipherList := 'ALL';
-      IdFTP.Connect;
-      if IdFTP.Connected then
       try
-        if Pos('/', iniLocalUnitNameGet) > 0 then
-        begin
-          if not ChangeDirFTP(GetFtpDIR + Copy(iniLocalUnitNameGet, 1, Pos('/', iniLocalUnitNameGet) - 1), True) then Exit;
-        end else if not ChangeDirFTP(GetFtpDIR + iniLocalUnitNameGet, True) then Exit;
-        for i := 0 to sl.Count - 1 do
-        begin
-          IdFTP.Put(p + sl.Strings[i], sl.Strings[i], False);
-          TFile.Copy(p + sl.Strings[i], p + 'Send\' + sl.Strings[i], true);
-          TFile.Delete(p + sl.Strings[i]);
+        IdFTP.Passive := True;
+        IdFTP.TransferType := ftBinary;
+        IdFTP.UseExtensionDataPort := True;
+
+        IdFTP.Host := spLoadFTPParam.ParamByName('outHost').Value;
+        IdFTP.Port := spLoadFTPParam.ParamByName('outPort').Value;
+        IdFTP.Username := spLoadFTPParam.ParamByName('outUsername').Value;
+        IdFTP.Password := spLoadFTPParam.ParamByName('outPassword').Value;
+  //      IdFTP.IOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(IdFTP);
+  //      IdFTP.UseTLS := utUseExplicitTLS;
+  //      IdFTP.DataPortProtection := ftpdpsPrivate;
+  //      TIdSSLIOHandlerSocketOpenSSL(IdFTP.IOHandler).SSLOptions.Method := sslvTLSv1;
+  //      TIdSSLIOHandlerSocketOpenSSL(IdFTP.IOHandler).SSLOptions.Mode := sslmClient;
+  //      TIdSSLIOHandlerSocketOpenSSL(IdFTP.IOHandler).SSLOptions.CipherList := 'ALL';
+        IdFTP.Connect;
+        if IdFTP.Connected then
+        try
+          if Pos('/', iniLocalUnitNameGet) > 0 then
+          begin
+            if not ChangeDirFTP(GetFtpDIR + Copy(iniLocalUnitNameGet, 1, Pos('/', iniLocalUnitNameGet) - 1), True) then Exit;
+          end else if not ChangeDirFTP(GetFtpDIR + iniLocalUnitNameGet, True) then Exit;
+          for i := 0 to sl.Count - 1 do
+          begin
+            IdFTP.Put(p + sl.Strings[i], sl.Strings[i], False);
+            TFile.Copy(p + sl.Strings[i], p + 'Send\' + sl.Strings[i], true);
+            TFile.Delete(p + sl.Strings[i]);
+          end;
+
+            // Удаление старых файлов
+  //        sl.Clear;
+  //        for s in TDirectory.GetFiles(p + 'Send\', '*.txt') do sl.Add(s);
+  //        for i := 0 to sl.Count - 1 do if TFile.GetCreationTime(sl.Strings[i]) <
+  //          IncDay(Date, - spLoadFTPParam.ParamByName('outPort').Value) then
+  //          TFile.Delete(sl.Strings[i]);
+
+          tiServise.BalloonHint := 'Z отчеты отправлены';
+          tiServise.ShowBalloonHint;
+        finally
+          IdFTP.Disconnect;
         end;
-
-          // Удаление старых файлов
-//        sl.Clear;
-//        for s in TDirectory.GetFiles(p + 'Send\', '*.txt') do sl.Add(s);
-//        for i := 0 to sl.Count - 1 do if TFile.GetCreationTime(sl.Strings[i]) <
-//          IncDay(Date, - spLoadFTPParam.ParamByName('outPort').Value) then
-//          TFile.Delete(sl.Strings[i]);
-
-        tiServise.BalloonHint := 'Z отчеты отправлены';
-        tiServise.ShowBalloonHint;
-      finally
-        IdFTP.Disconnect;
+      except
+        on E: Exception do Add_Log('Send from FTP file Exception: ' + E.Message);
       end;
-    except
-      on E: Exception do Add_Log('Send from FTP file Exception: ' + E.Message);
+    finally
+      IdFTP.Free;
+      sl.Free;
+      MainCashForm2.tiServise.IconIndex := GetTrayIcon;
+      Application.ProcessMessages;
     end;
   finally
-    IdFTP.Free;
-    sl.Free;
-    MainCashForm2.tiServise.IconIndex := GetTrayIcon;
-    Application.ProcessMessages;
+    tiServise.Hint := 'Ожидание задания.';
   end;
 end;
 
@@ -2640,6 +2672,7 @@ begin
       Add_Log('End MutexEmployeeWorkLog');
       ReleaseMutex(MutexEmployeeWorkLog);
       EmployeeWorkLogCDS.Close;
+      tiServise.Hint := 'Ожидание задания.';
     end;
   end;
 end;
@@ -2694,6 +2727,7 @@ begin
       Add_Log('End MutexEmployeeSchedule');
       ReleaseMutex(MutexEmployeeSchedule);
       EmployeeScheduleCDS.Close;
+      tiServise.Hint := 'Ожидание задания.';
     end;
   end;
 end;
@@ -2725,7 +2759,7 @@ begin
   except
     on E: Exception do Add_Log('SecureUpdateVersion Exception: ' + E.Message);
   end;
-
+  tiServise.Hint := 'Ожидание задания.';
 end;
 
 

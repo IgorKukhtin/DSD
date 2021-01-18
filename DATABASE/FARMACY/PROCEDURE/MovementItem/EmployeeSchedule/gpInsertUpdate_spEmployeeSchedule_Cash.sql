@@ -18,6 +18,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
    DECLARE vbUnitKey TVarChar;
+   DECLARE vbId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
@@ -83,7 +84,30 @@ BEGIN
                                                                  inDateEnd        := inDateEnd, -- Дата время конца счены
                                                                  inServiceExit    := inServiceExit,  -- Служебный выход
                                                                  inSession        := inSession);
+    ELSE
+    
+      SELECT MovementItem.id
+           , MIDate_Start.ValueData
+      INTO vbId, inDateStart
+      FROM MovementItem
+           LEFT JOIN MovementItemDate AS MIDate_Start
+                                      ON MIDate_Start.MovementItemId = MovementItem.Id
+                                     AND MIDate_Start.DescId = zc_MIDate_Start()
+      WHERE MovementItem.MovementId = vbMovementID
+        AND MovementItem.DescId = zc_MI_Child()
+        AND MovementItem.ParentId = vbMovementItemID
+        AND MovementItem.Amount = date_part('DAY', inOperDate)::Integer;
 
+      PERFORM gpInsertUpdate_MovementItem_EmployeeSchedule_Child(ioId             := vbId, -- Ключ объекта <Элемент документа>
+                                                                 inMovementId     := vbMovementID, -- ключ Документа
+                                                                 inParentId       := vbMovementItemID, -- элемент мастер
+                                                                 inUnitId         := vbUnitId, -- подразделение
+                                                                 inAmount         := date_part('DAY',  inOperDate)::Integer, -- День недели
+                                                                 inPayrollTypeID  := -1,
+                                                                 inDateStart      := inDateStart, -- Дата время начала смены
+                                                                 inDateEnd        := inDateEnd, -- Дата время конца счены
+                                                                 inServiceExit    := inServiceExit,  -- Служебный выход
+                                                                 inSession        := inSession);
     END IF;
 
 END;
