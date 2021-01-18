@@ -158,14 +158,17 @@ BEGIN
 
     -- возвращаем заголовки столбцов и даты
     OPEN cur1 FOR SELECT tmpOperDate.OperDate::TDateTime          AS OperDate
-                       , zfcalc_MonthName(tmpOperDate.OperDate)   AS ValueMonthName
-                       , EXTRACT (YEAR FROM tmpOperDate.OperDate)::TVarChar AS ValueYearName
-                       , EXTRACT (YEAR FROM (tmpOperDate.OperDate - (inYearsAgo::TVArChar||' YEAR')::INTERVAL))::TVarChar AS ValueYearNamePrev
+                       , zfcalc_MonthName(tmpOperDate.OperDate) || ' ' ||
+                         EXTRACT (YEAR FROM (tmpOperDate.OperDate - (inYearsAgo::TVArChar||' YEAR')::INTERVAL))::TVarChar || ' - ' ||
+                         EXTRACT (YEAR FROM tmpOperDate.OperDate)::TVarChar                                               AS ValueBandName
                        , 'Чеков'   AS ValueNameChecks
                        , 'Ср. чек' AS ValueNameAverageCheck
                        , 'Нал'     AS ValueNameCash
                        , 'Безнал'  AS ValueNameCashLess
-                       , ' '       AS ValueNameNull
+                       , '1'       AS ValueName1
+                       , '2'       AS ValueName2
+                       , '3'       AS ValueName3
+                       , '4'       AS ValueName4
                   FROM tmpOperDate
                   ORDER BY tmpOperDate.OperDate;
     RETURN NEXT cur1;

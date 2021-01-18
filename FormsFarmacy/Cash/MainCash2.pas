@@ -6638,6 +6638,9 @@ begin
   else
     UserSettingsStorageAddOn.LoadUserSettings;
 
+  // Временно переместим план в начало грида
+  Color_IPE.Index := 0;
+
   try
     ChangeStatus('Инициализация оборудования');
     Cash := TCashFactory.GetCash(iniCashType);
@@ -11543,7 +11546,7 @@ begin
   // Загрузка ImplementationPlanEmployee_lcl по выполнению плана сотрудника
   if FileExists(ImplementationPlanEmployee_lcl) then
   begin
-    WaitForSingleObject(MutexDiffCDS, MutexImplementationPlanEmployee);
+    WaitForSingleObject(MutexImplementationPlanEmployee, INFINITE);
     try
       try
 
@@ -11576,7 +11579,6 @@ begin
         Add_Log('Ошибка загрузки выполнения плана сотрудника:' + E.Message);
       end;
     finally
-      Add_Log('End MutexImplementationPlanEmployee');
       ReleaseMutex(MutexImplementationPlanEmployee);
     end;
   end;

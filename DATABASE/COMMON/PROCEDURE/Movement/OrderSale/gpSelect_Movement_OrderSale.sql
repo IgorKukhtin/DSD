@@ -12,6 +12,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderSale(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , PartnerId Integer, PartnerName TVarChar
+             , DescId Integer, DescName TVarChar
+             , JuridicalId Integer, JuridicalName TVarChar, RetailId Integer, RetailName TVarChar
              , TotalCountKg TFloat, TotalSumm TFloat
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
@@ -42,6 +44,13 @@ BEGIN
 
            , Object_Partner.Id                   AS PartnerId
            , Object_Partner.ValueData            AS PartnerName
+           , Object_Partner.DescId               AS DescId
+           , ObjectDesc_Partner.ItemName         AS DescName
+
+           , CASE WHEN Object_Juridical.DescId = zc_Object_Juridical() THEN Object_Juridical.Id        ELSE 0  END ::Integer  AS JuridicalId
+           , CASE WHEN Object_Juridical.DescId = zc_Object_Juridical() THEN Object_Juridical.ValueData ELSE '' END ::TVarChar AS JuridicalName
+           , CASE WHEN Object_Retail.DescId = zc_Object_Retail() THEN Object_Retail.Id        ELSE 0  END ::Integer  AS RetailId
+           , CASE WHEN Object_Retail.DescId = zc_Object_Retail() THEN Object_Retail.ValueData ELSE '' END ::TVarChar AS RetailName
 
            , MovementFloat_TotalCountKg.ValueData AS TotalCountKg
            , MovementFloat_TotalSumm.ValueData    AS TotalSumm
@@ -76,6 +85,19 @@ BEGIN
                                          ON MovementLinkObject_Partner.MovementId = Movement.Id
                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
+            LEFT JOIN ObjectDesc AS ObjectDesc_Partner ON ObjectDesc_Partner.Id = Object_Partner.DescId
+            
+            --юрлицо
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical
+                                 ON ObjectLink_Juridical.ObjectId = Object_Partner.Id
+                                AND ObjectLink_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (ObjectLink_Juridical.ChildObjectId, MovementLinkObject_Partner.ObjectId)  --если в документе выбрано ёр.лицо
+
+            --торгова€ сеть
+            LEFT JOIN ObjectLink AS ObjectLink_Retail
+                                 ON ObjectLink_Retail.ObjectId = Object_Juridical.Id
+                                AND ObjectLink_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = COALESCE (ObjectLink_Retail.ChildObjectId, Object_Juridical.Id)  --если в документе выбрано ёр.лицо
 
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id

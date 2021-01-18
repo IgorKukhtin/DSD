@@ -314,9 +314,6 @@ begin
     // Заполняет параметры формы переданными параметрами
     if Assigned(AddOnFormData.Params) then
        AddOnFormData.Params.Params.AssignParams(Params);
-    // Изменяем шапку формф если есть FormCaption
-    if Assigned(AddOnFormData.Params) and Assigned(AddOnFormData.Params.ParamByName('FormCaption')) then
-      Caption := AddOnFormData.Params.ParamByName('FormCaption').Value + ' <' + gc_User.Login + '>';
     // Если надо вызываем заполнение диалогом
     if Assigned(AddOnFormData.ExecuteDialogAction) and AddOnFormData.ExecuteDialogAction.OpenBeforeShow then begin
        AddOnFormData.ExecuteDialogAction.RefreshAllow := false; // Что бы не было двух перечитываний.
@@ -333,6 +330,9 @@ begin
            // Перечитываем запросы
            if Assigned(AddOnFormData.RefreshAction) then
               AddOnFormData.RefreshAction.Execute;
+           // Изменяем шапку формф если есть FormCaption
+           if Assigned(AddOnFormData.Params) and Assigned(AddOnFormData.Params.ParamByName('FormCaption')) then
+             Caption := AddOnFormData.Params.ParamByName('FormCaption').Value + ' <' + gc_User.Login + '>';
            // Выводим PUSH сообщение
            if Assigned(AddOnFormData.PUSHMessage) then
               AddOnFormData.PUSHMessage.Execute
@@ -651,6 +651,7 @@ initialization
   RegisterClass (TChangeStatus);
   RegisterClass (TChangeGuidesStatus);
   RegisterClass (TCrossDBViewAddOn);
+  RegisterClass (TCrossDBViewReportAddOn);
   RegisterClass (TCrossDBViewSetTypeId);
   RegisterClass (TdsdChangeMovementStatus);
   RegisterClass (TdsdChoiceGuides);
