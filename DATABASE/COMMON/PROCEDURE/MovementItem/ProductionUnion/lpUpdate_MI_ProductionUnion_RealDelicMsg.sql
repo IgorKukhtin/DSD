@@ -1,10 +1,11 @@
 -- Function: lpUpdate_MI_ProductionUnion_RealDelicMsg()
 
-DROP FUNCTION IF EXISTS lpUpdate_MI_ProductionUnion_RealDelicMsg  (Integer, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpUpdate_MI_ProductionUnion_RealDelicMsg  (Integer, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpUpdate_MI_ProductionUnion_RealDelicMsg(
     IN inId                     Integer   , -- Ключ объекта <Элемент документа>
     IN inAmount                 TFloat    , -- Количество 
+    IN inCount                  TFloat    , -- Количество батонов 
     IN inUserId                 Integer     -- пользователя
 )                              
 RETURNS Integer
@@ -19,6 +20,9 @@ BEGIN
 
    -- сохранили свойство <взвешивание п/ф факт после шприцевания>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RealWeightMsg(), inId, inAmount + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = inId AND MIF.DescId = zc_MIFloat_RealWeightMsg()), 0));
+
+   -- сохранили свойство <Количество батонов>
+   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Count(), inId, inCount + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = inId AND MIF.DescId = zc_MIFloat_Count()), 0));
 
    -- сохранили протокол
    PERFORM lpInsert_MovementItemProtocol (inId, inUserId, FALSE);

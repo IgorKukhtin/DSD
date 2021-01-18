@@ -105,7 +105,7 @@ BEGIN
                                                    , COALESCE (tmpMovementQualityParams_all.MovementId, tmpMovementQualityParams_all_two.MovementId) AS MovementId
                                                    , COALESCE (tmpMovementQualityParams_all.OperDate, tmpMovementQualityParams_all_two.OperDate)     AS OperDate
                                               FROM tmpQuality
-                                                   LEFT JOIN tmpRetail ON 1 = 1
+                                                   LEFT JOIN tmpRetail ON 1 = 0
                                                    LEFT JOIN tmpMovementQualityParams_all ON tmpMovementQualityParams_all.QualityId = tmpQuality.QualityId
                                                                                          AND tmpMovementQualityParams_all.RetailId = tmpRetail.RetailId
                                                    LEFT JOIN tmpMovementQualityParams_all AS tmpMovementQualityParams_all_two
