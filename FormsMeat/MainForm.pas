@@ -1241,6 +1241,8 @@ type
     N235: TMenuItem;
     actOrderSale: TdsdOpenForm;
     miOrderSale: TMenuItem;
+    actReport_SaleExternal_OrderSale: TdsdOpenForm;
+    N236: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

@@ -79,7 +79,9 @@ type
     CrossDBViewAddOnSubstitution: TCrossDBViewAddOn;
     CrossDBViewAddOnSubstitutionValueStart: TCrossDBViewAddOn;
     CrossDBViewAddOnSubstitutionValueEnd: TCrossDBViewAddOn;
+    cxButton1: TcxButton;
     procedure bbOkClick(Sender: TObject);
+    procedure cxButton1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -278,8 +280,14 @@ begin
   finally
     if EmployeeScheduleCDS.Active then EmployeeScheduleCDS.Close;
     EmployeeScheduleCDS.Free;
-    ReleaseMutex(MutexEmployeeWorkLog);
+    ReleaseMutex(MutexEmployeeSchedule);
+    PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 50);
   end;
+end;
+
+procedure TEmployeeScheduleCashForm.cxButton1Click(Sender: TObject);
+begin
+  PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 50);
 end;
 
 function TEmployeeScheduleCashForm.EmployeeScheduleCashExecute: boolean;
@@ -338,7 +346,7 @@ begin
   finally
     if EmployeeScheduleCDS.Active then EmployeeScheduleCDS.Close;
     EmployeeScheduleCDS.Free;
-    ReleaseMutex(MutexEmployeeWorkLog);
+    ReleaseMutex(MutexEmployeeSchedule);
   end;
 
   Result := ShowModal = mrOK;

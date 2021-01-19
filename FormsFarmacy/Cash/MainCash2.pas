@@ -10603,7 +10603,7 @@ begin
   finally
     if EmployeeScheduleCDS.Active then EmployeeScheduleCDS.Close;
     EmployeeScheduleCDS.Free;
-    ReleaseMutex(MutexEmployeeWorkLog);
+    ReleaseMutex(MutexEmployeeSchedule);
   end;
 
 end;

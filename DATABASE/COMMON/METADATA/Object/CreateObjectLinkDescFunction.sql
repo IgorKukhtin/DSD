@@ -1814,6 +1814,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ReportBonus_Contract() RETURNS Integer 
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_ReportBonus_Contract', 'Договор', zc_Object_ReportBonus(), zc_Object_Contract() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportBonus_Contract');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReportBonus_ContractMaster() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportBonus_ContractMaster'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ReportBonus_ContractMaster', 'Бонусный Договор', zc_Object_ReportBonus(), zc_Object_Contract() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportBonus_ContractMaster');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReportBonus_ContractChild() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportBonus_ContractChild'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ReportBonus_ContractChild', 'Договор база', zc_Object_ReportBonus(), zc_Object_Contract() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportBonus_ContractChild');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_MemberBranch_Branch() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberBranch_Branch'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
@@ -2465,6 +2473,8 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 18.01.21         * zc_ObjectLink_ReportBonus_ContractMaster
+                    zc_ObjectLink_ReportBonus_ContractChild
  05.01.21                                                                                      * zc_ObjectLink_Maker_Juridical
  10.12.20         * zc_ObjectLink_PartnerExternal_PartnerReal
  20.11.20                                                                                      * zc_ObjectLink_MedicSP_AmbulantClinicSP

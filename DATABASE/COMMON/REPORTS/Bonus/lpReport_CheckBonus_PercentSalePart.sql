@@ -1,6 +1,5 @@
 -- FunctiON: gpReport_CheckBonus_PersentSalePart ()
 
-DROP FUNCTION IF EXISTS gpReport_CheckBonus_PersentSalePart (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_CheckBonus_PersentSalePart (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_CheckBonus_PersentSalePart (
@@ -340,14 +339,14 @@ BEGIN
                            , tmpContractConditionKind.InvNumber_master
                            , tmpContractConditionKind.InvNumber_master  AS InvNumber_child
                            , tmpContractConditionKind.ContractId_master
-                           , tmpContractConditionKind.ContractId_master AS ContractId_child
+                           , tmpContractConditionKind.ContractId_baza AS ContractId_child
                            , tmpContractConditionKind.ContractTagName_master       AS ContractTagName_child
                            , tmpContractConditionKind.ContractStateKindCode_master AS ContractStateKindCode_child
                            , tmpContractConditionKind.InfoMoneyId_master
                            , tmpContractConditionKind.InfoMoneyId_child
                            , tmpContractConditionKind.InfoMoneyId_Condition
                            , tmpContractConditionKind.PaidKindId
-                           , tmpContractConditionKind.PaidKindId        AS PaidKindId_byBase
+                           , tmpContractConditionKind.PaidKindId_ContractCondition        AS PaidKindId_byBase
                            , tmpContractConditionKind.ContractConditionKindId
                            , tmpContractConditionKind.BonusKindId
                            , tmpContractConditionKind.Value
@@ -357,96 +356,6 @@ BEGIN
                       FROM tmpContractConditionKind
                      )
                      
-      -- для всех юр лиц, у кого есть "Бонусы" формируется список всех других договоров (по ним будем делать расчет "базы")
-   /* , tmpContract AS (SELECT tmpContractConditionKind.JuridicalId
-                           , tmpContractConditionKind.InvNumber_master
-                           , tmpContractConditionKind.InvNumber_master  AS InvNumber_child
-                           , tmpContractConditionKind.ContractId_master
-                           , tmpContractConditionKind.ContractId_master AS ContractId_child
-                           , tmpContractConditionKind.ContractTagName_master       AS ContractTagName_child
-                           , tmpContractConditionKind.ContractStateKindCode_master AS ContractStateKindCode_child
-                           , tmpContractConditionKind.InfoMoneyId_master
-                           , tmpContractConditionKind.InfoMoneyId_child
-                           , tmpContractConditionKind.InfoMoneyId_Condition
-                           , tmpContractConditionKind.PaidKindId
-                           , tmpContractConditionKind.PaidKindId        AS PaidKindId_byBase
-                           , tmpContractConditionKind.ContractConditionKindId
-                           , tmpContractConditionKind.BonusKindId
-                           , tmpContractConditionKind.Value
-                           , tmpContractConditionKind.PercentRetBonus
-                           , tmpContractConditionKind.Comment
-                           , tmpContractConditionKind.ContractConditionId
-                      FROM tmpContractConditionKind
-                      -- это будут не бонусные договора (но в них есть бонусы)
-                      WHERE tmpContractConditionKind.InfoMoneyId_master = tmpContractConditionKind.InfoMoneyId_child
-
-                    UNION ALL
-                      SELECT tmpContractConditionKind.JuridicalId
-                           , tmpContractConditionKind.InvNumber_master
-                             -- замена
-                           , View_Contract_child.InvNumber             AS InvNumber_child
-                             -- 
-                           , tmpContractConditionKind.ContractId_master
-                             -- замена
-                           , View_Contract_child.ContractId            AS ContractId_child
-                             -- замена
-                           , View_Contract_child.ContractTagName       AS ContractTagName_child
-                             -- замена
-                           , View_Contract_child.ContractStateKindCode AS ContractStateKindCode_child
-                             -- 
-                           , tmpContractConditionKind.InfoMoneyId_master
-                           , tmpContractConditionKind.InfoMoneyId_child
-                             -- 
-                           , tmpContractConditionKind.InfoMoneyId_Condition
-                           , tmpContractConditionKind.PaidKindId
-                           -- берем ФО из усл.договора для нач. базы если не пусто , если фо не выбрана берем из догоовра 
-                           --(т.е. договор по форме НАЛ, отчет по форме НАЛ, а базу надо будет вытянуть по форме БН)
-                           , CASE WHEN COALESCE (tmpContractConditionKind.PaidKindId_ContractCondition, 0) <> 0 THEN tmpContractConditionKind.PaidKindId_ContractCondition ELSE tmpContractConditionKind.PaidKindId END AS PaidKindId_byBase
-                           , tmpContractConditionKind.ContractConditionKindId
-                           , tmpContractConditionKind.BonusKindId
-                           , tmpContractConditionKind.Value
-                           , tmpContractConditionKind.PercentRetBonus
-                           , tmpContractConditionKind.Comment
-                           , tmpContractConditionKind.ContractConditionId
-                      FROM tmpContractConditionKind
-                           LEFT JOIN tmpContract_full AS View_Contract_child ON View_Contract_child.ContractId = tmpContractConditionKind.ContractId_baza
-                      WHERE tmpContractConditionKind.InfoMoneyId_master <> tmpContractConditionKind.InfoMoneyId_child
-                        -- в бонусном договоре точно указано где взять базу
-                        AND tmpContractConditionKind.ContractId_baza > 0
-
-                    UNION ALL
-                      SELECT tmpContractConditionKind.JuridicalId
-                           , tmpContractConditionKind.InvNumber_master
-                           , View_Contract_child.InvNumber             AS InvNumber_child
-                           , tmpContractConditionKind.ContractId_master
-                           , View_Contract_child.ContractId            AS ContractId_child
-                           , View_Contract_child.ContractTagName       AS ContractTagName_child
-                           , View_Contract_child.ContractStateKindCode AS ContractStateKindCode_child
-                           , tmpContractConditionKind.InfoMoneyId_master
-                           , tmpContractConditionKind.InfoMoneyId_child
-                           , tmpContractConditionKind.InfoMoneyId_Condition
-                           , tmpContractConditionKind.PaidKindId
-                           -- берем ФО из усл.договора для нач. базы если не пусто , если фо не выбрана берем из догоовра 
-                           --(т.е. договор по форме НАЛ, отчет по форме НАЛ, а базу надо будет вытянуть по форме БН)
-                           , CASE WHEN COALESCE (tmpContractConditionKind.PaidKindId_ContractCondition, 0) <> 0 THEN tmpContractConditionKind.PaidKindId_ContractCondition ELSE tmpContractConditionKind.PaidKindId END AS PaidKindId_byBase
-                           , tmpContractConditionKind.ContractConditionKindId
-                           , tmpContractConditionKind.BonusKindId
-                           , tmpContractConditionKind.Value
-                           , tmpContractConditionKind.PercentRetBonus
-                           , tmpContractConditionKind.Comment
-                           , tmpContractConditionKind.ContractConditionId
-                      FROM tmpContractConditionKind
-                           INNER JOIN tmpContract_full AS View_Contract_child
-                                                       ON View_Contract_child.JuridicalId = tmpContractConditionKind.JuridicalId
-                                                      AND View_Contract_child.InfoMoneyId = tmpContractConditionKind.InfoMoneyId_child
-                      -- это будут бонусные договора
-                      WHERE tmpContractConditionKind.InfoMoneyId_master <> tmpContractConditionKind.InfoMoneyId_child
-                        -- НЕ указано где взять базу
-                        AND tmpContractConditionKind.ContractId_baza = 0
-                     )
-                     */
-
-
       -- группируем договора, т.к. "базу" будем формировать по 4-м ключам
     , tmpContractGroup AS (SELECT tmpContract.JuridicalId
                                 , tmpContract.ContractId_master
@@ -481,27 +390,36 @@ BEGIN
      -- получаем расчетные данные из отчета по внешним продажам
     , tmpReport AS (SELECT tmpReport.PartnerId_from AS PartnerId
                          , tmpReport.ContractId
-                         , tmpReport.AmountKg                    -- Кол-во, кг - внешняя продажа
-                         , tmpReport.AmountSh                    -- кол-во, шт - внешняя продажа
-                         , tmpReport.PartKg                      -- Доля продаж в кг
+                         , (tmpReport.AmountKg) AS AmountKg                    -- Кол-во, кг - внешняя продажа
+                         , (tmpReport.AmountSh) AS AmountSh                    -- кол-во, шт - внешняя продажа
+                         , (tmpReport.PartKg) AS PartKg                      -- Доля продаж в кг
                          , tmpReport.PartnerRealId 
-                         , tmpReport.PartnerRealName
-                         , tmpReport.TotalSumm_calc              -- Расчетная сумма продаж, грн  БАЗА
-                         , tmpReport.TotalWeight_calc            -- Расчетная сумма продаж, кг
-                         , tmpReport.SaleReturn_Summ             -- Чистая продажа, грн
-                         , tmpReport.Sale_Summ                   -- Продажа, грн
-                         , tmpReport.Return_Summ                 -- Возврат, грн
-                         , tmpReport.SaleReturn_Weight           -- Чистая продажа, кг
-                         , tmpReport.Sale_Weight                 -- продажа, кг
-                         , tmpReport.Return_Weight               -- возврат , кг
+                         --, SUM(tmpReport.PartnerRealName) AS PartnerRealName
+                         , (tmpReport.TotalSumm_calc) AS TotalSumm_calc              -- Расчетная сумма продаж, грн  БАЗА
+                         , (tmpReport.TotalWeight_calc) AS TotalWeight_calc            -- Расчетная сумма продаж, кг
+                         , SUM(tmpReport.SaleReturn_Summ) AS SaleReturn_Summ             -- Чистая продажа, грн
+                         , SUM(tmpReport.Sale_Summ) AS Sale_Summ                   -- Продажа, грн
+                         , SUM(tmpReport.Return_Summ)AS Return_Summ                 -- Возврат, грн
+                         , SUM(tmpReport.SaleReturn_Weight) AS SaleReturn_Weight           -- Чистая продажа, кг
+                         , SUM(tmpReport.Sale_Weight) AS Sale_Weight                 -- продажа, кг
+                         , SUM(tmpReport.Return_Weight)  AS Return_Weight             -- возврат , кг
                     FROM (SELECT DISTINCT tmpRetail.RetailId FROM tmpRetail) AS tmp
                          LEFT JOIN gpReport_SaleExternal (inStartDate    := inStartDate    ::TDateTime 
                                                         , inEndDate      := inEndDate      ::TDateTime    
                                                         , inRetailId     := tmp.RetailId   ::Integer      
                                                         , inJuridicalId  := CASE WHEN tmp.RetailId = 310859 THEN 15196 ELSE 0 END ::Integer   -- для Новуса ограничиваем еще юрлицом
                                                         , inGoodsGroupId := 1832           ::Integer       --1832  Готовая продукция
+                                                        , inisContract   := true           ::Boolean       --разворачивать по договорам
                                                         , inSession      := inSession      ::TVarChar
                                                         ) AS tmpReport ON 1=1
+                    GROUP BY tmpReport.PartnerId_from 
+                           , tmpReport.ContractId
+                           , (tmpReport.AmountKg)
+                           , (tmpReport.AmountSh)
+                           , (tmpReport.PartKg)
+                           , tmpReport.PartnerRealId 
+                           , (tmpReport.TotalSumm_calc) 
+                           , (tmpReport.TotalWeight_calc) 
                    )
 
         --ограничиваем контрагентами и привязываем свойства договора
@@ -530,7 +448,7 @@ BEGIN
                                  , tmpContract.BonusKindId
                             FROM tmpReport
                              INNER JOIN tmpContractPartner ON tmpContractPartner.PartnerId = tmpReport.PartnerId
-                                                          AND (tmpContractPartner.ContractId_baza = tmpReport.ContractId OR COALESCE (tmpContractPartner.ContractId_baza,0) = 0)
+                                                          AND (tmpContractPartner.ContractId_baza = tmpReport.ContractId OR COALESCE (tmpContractPartner.ContractId_baza,0) = 0 OR COALESCE (tmpReport.ContractId,0) = 0 )
                              LEFT JOIN (SELECT DISTINCT tmpContractGroup.ContractId_master
                                              , tmpContractGroup.ContractConditionId
                                              , tmpContractGroup.JuridicalId
@@ -547,12 +465,12 @@ BEGIN
                                              , tmpContract.BonusKindId
                                         FROM tmpContract) AS tmpContract 
                                                           ON tmpContract.JuridicalId       = tmpContractGroup.JuridicalId
-                                                         AND tmpContract.PaidKindId_byBase = tmpContractGroup.PaidKindId_byBase
+                                                         AND (tmpContract.PaidKindId_byBase = tmpContractGroup.PaidKindId_byBase OR COALESCE (tmpContract.PaidKindId_byBase,0) = 0)
                                                          AND tmpContract.ContractConditionId = tmpContractGroup.ContractConditionId
                                                          AND tmpContract.ContractId_master = tmpContractGroup.ContractId_master
                             )
 
-       -- сгруппировываем данные и подвязываем вес
+       -- сгруппировываем данные 
       , tmpGroupMov AS (SELECT tmpGroup.JuridicalId
                              , tmpGroup.PartnerId
                              , tmpGroup.ContractId_master
@@ -688,7 +606,7 @@ BEGIN
                                   , tmpMovement.PartKg
                              FROM tmpContract
                                   INNER JOIN tmpMovement ON tmpMovement.JuridicalId       = tmpContract.JuridicalId
-                                                        AND tmpMovement.PaidKindId_byBase = tmpContract.PaidKindId_byBase
+                                                        AND (tmpMovement.PaidKindId_byBase = tmpContract.PaidKindId_byBase OR COALESCE (tmpContract.PaidKindId_byBase,0) = 0)
                                                         AND tmpMovement.ContractConditionId = tmpContract.ContractConditionId
                                                         AND tmpMovement.ContractId_master = tmpContract.ContractId_master
       
@@ -837,10 +755,7 @@ BEGIN
 
                          , MAX (tmpAll.Comment) :: TVarChar AS Comment
                     FROM tmpAll
-                 /*   WHERE tmpAll.Sum_CheckBonus <> 0
-                        OR tmpAll.Sum_Bonus <> 0
-                        OR tmpAll.Sum_BonusFact <> 0
-                    */GROUP BY  tmpAll.ContractId_master
+                    GROUP BY  tmpAll.ContractId_master
                             , tmpAll.ContractId_child
                             , tmpAll.ContractId_find
                             , tmpAll.InvNumber_master
@@ -867,6 +782,8 @@ BEGIN
 
     , tmpObjectBonus AS (SELECT ObjectLink_Juridical.ChildObjectId             AS JuridicalId
                               , COALESCE (ObjectLink_Partner.ChildObjectId, 0) AS PartnerId
+                              , COALESCE (ObjectLink_ContractMaster.ChildObjectId, 0) AS ContractId_master
+                              , COALESCE (ObjectLink_ContractChild.ChildObjectId, 0)  AS ContractId_child
                               , Object_ReportBonus.Id                          AS Id
                               , Object_ReportBonus.isErased
                          FROM Object AS Object_ReportBonus
@@ -880,6 +797,13 @@ BEGIN
                               LEFT JOIN ObjectLink AS ObjectLink_Partner
                                                    ON ObjectLink_Partner.ObjectId = Object_ReportBonus.Id
                                                   AND ObjectLink_Partner.DescId = zc_ObjectLink_ReportBonus_Partner()
+
+                              LEFT JOIN ObjectLink AS ObjectLink_ContractMaster
+                                                   ON ObjectLink_ContractMaster.ObjectId = Object_ReportBonus.Id
+                                                  AND ObjectLink_ContractMaster.DescId = zc_ObjectLink_ReportBonus_ContractMaster()
+                              LEFT JOIN ObjectLink AS ObjectLink_ContractChild
+                                                   ON ObjectLink_ContractChild.ObjectId = Object_ReportBonus.Id
+                                                  AND ObjectLink_ContractChild.DescId = zc_ObjectLink_ReportBonus_ContractChild()
                          WHERE Object_ReportBonus.DescId   = zc_Object_ReportBonus()
                          --AND inPaidKindId                = zc_Enum_PaidKind_SecondForm()
                          --AND Object_ReportBonus.isErased = TRUE
@@ -999,6 +923,8 @@ BEGIN
 
             LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = Object_Juridical.Id
                                     AND tmpObjectBonus.PartnerId   = COALESCE (Object_Partner.Id, 0)
+                                    AND (tmpObjectBonus.ContractId_master = COALESCE (tmpData.ContractId_master,0))
+                                    AND (tmpObjectBonus.ContractId_child  = COALESCE (tmpData.ContractId_child,0))
           ;
 
 END;
@@ -1011,5 +937,4 @@ $BODY$
  13.12.20         *
 */
 
---
---select * from gpReport_CheckBonus_PersentSalePart (inStartDate := ('01.12.2020')::TDateTime , inEndDate := ('30.12.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId := 862910  , inBranchId := 0 , inSession := '5');
+--select * from gpReport_CheckBonus_PersentSalePart (inStartDate := ('01.12.2020')::TDateTime , inEndDate := ('30.12.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId :=  15158 /*15158 / 862910*/  , inBranchId := 0 , inSession := '5');

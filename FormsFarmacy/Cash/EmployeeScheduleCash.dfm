@@ -154,6 +154,16 @@ inherited EmployeeScheduleCashForm: TEmployeeScheduleCashForm
       TabOrder = 11
       Width = 100
     end
+    object cxButton1: TcxButton
+      Left = 184
+      Top = 69
+      Width = 183
+      Height = 25
+      Cancel = True
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1074#1088#1077#1084#1103' '#1087#1088#1080#1093#1086#1076#1072' '#1091#1093#1086#1076#1072
+      TabOrder = 12
+      OnClick = cxButton1Click
+    end
   end
   object Panel2: TPanel [1]
     Left = 0
@@ -537,12 +547,12 @@ inherited EmployeeScheduleCashForm: TEmployeeScheduleCashForm
     ExplicitTop = 69
   end
   inherited bbOk: TcxButton [3]
-    Left = 104
+    Left = 79
     Top = 69
     ModalResult = 0
     TabOrder = 3
     OnClick = bbOkClick
-    ExplicitLeft = 104
+    ExplicitLeft = 79
     ExplicitTop = 69
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

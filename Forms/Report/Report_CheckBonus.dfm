@@ -4,7 +4,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
   ClientWidth = 1180
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1196
-  ExplicitHeight = 376
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -925,7 +925,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -936,7 +936,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1004,7 +1004,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1015,7 +1015,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1083,7 +1083,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1094,7 +1094,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1821,6 +1821,22 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inContractId_master'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractId_master'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId_child'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractId_child'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisSend'
         Value = False
         DataType = ftBoolean
@@ -1873,6 +1889,22 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PartnerId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId_master'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractId_master'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId_child'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractId_child'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1978,6 +2010,22 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PartnerId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId_master'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractId_master'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId_child'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractId_child'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

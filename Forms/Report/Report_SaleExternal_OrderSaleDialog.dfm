@@ -1,9 +1,9 @@
-object Report_SaleExternalDialogForm: TReport_SaleExternalDialogForm
+object Report_SaleExternal_OrderSaleDialogForm: TReport_SaleExternal_OrderSaleDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1042#1085#1077#1096#1085#1080#1077' '#1055#1088#1086#1076#1072#1078#1080'>'
-  ClientHeight = 282
+  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1089#1077#1090#1103#1084'>'
+  ClientHeight = 240
   ClientWidth = 336
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_SaleExternalDialogForm: TReport_SaleExternalDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 62
-    Top = 240
+    Top = 200
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_SaleExternalDialogForm: TReport_SaleExternalDialogForm
   end
   object cxButton2: TcxButton
     Left = 203
-    Top = 240
+    Top = 200
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -37,30 +37,34 @@ object Report_SaleExternalDialogForm: TReport_SaleExternalDialogForm
     TabOrder = 1
   end
   object deEnd: TcxDateEdit
-    Left = 216
-    Top = 21
+    Left = 280
+    Top = 8
     EditValue = 42005d
     Properties.ShowTime = False
     TabOrder = 2
+    Visible = False
     Width = 85
   end
   object deStart: TcxDateEdit
-    Left = 66
+    Left = 138
     Top = 21
     EditValue = 42005d
+    Properties.AssignedValues.EditFormat = True
+    Properties.DisplayFormat = 'mmmm YYYY'
     Properties.ShowTime = False
     TabOrder = 3
-    Width = 90
+    Width = 95
   end
   object cxLabel6: TcxLabel
     Left = 18
     Top = 22
-    Caption = #1044#1072#1090#1072' '#1089' :'
+    Caption = #1052#1077#1089#1103#1094' '#1087#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103':'
   end
   object cxLabel7: TcxLabel
-    Left = 164
-    Top = 22
+    Left = 228
+    Top = 9
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
+    Visible = False
   end
   object cxLabel13: TcxLabel
     Left = 11
@@ -111,13 +115,6 @@ object Report_SaleExternalDialogForm: TReport_SaleExternalDialogForm
     TabOrder = 11
     Width = 199
   end
-  object cbContract: TcxCheckBox
-    Left = 31
-    Top = 197
-    Caption = #1055#1086' '#1076#1086#1075#1086#1088#1072#1084' ('#1044#1072'/ '#1053#1077#1090')'
-    TabOrder = 12
-    Width = 145
-  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -125,8 +122,8 @@ object Report_SaleExternalDialogForm: TReport_SaleExternalDialogForm
     Top = 28
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 152
-    Top = 4
+    Left = 144
+    Top = 60
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -138,8 +135,8 @@ object Report_SaleExternalDialogForm: TReport_SaleExternalDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 16
-    Top = 8
+    Left = 32
+    Top = 48
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -207,14 +204,6 @@ object Report_SaleExternalDialogForm: TReport_SaleExternalDialogForm
         Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isContract'
-        Value = Null
-        Component = cbContract
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

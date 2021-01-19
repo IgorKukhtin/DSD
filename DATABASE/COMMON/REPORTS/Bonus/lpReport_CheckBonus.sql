@@ -1327,6 +1327,8 @@ BEGIN
 
     , tmpObjectBonus AS (SELECT ObjectLink_Juridical.ChildObjectId             AS JuridicalId
                               , COALESCE (ObjectLink_Partner.ChildObjectId, 0) AS PartnerId
+                              , COALESCE (ObjectLink_ContractMaster.ChildObjectId, 0) AS ContractId_master
+                              , COALESCE (ObjectLink_ContractChild.ChildObjectId, 0)  AS ContractId_child
                               , Object_ReportBonus.Id                          AS Id
                               , Object_ReportBonus.isErased
                          FROM Object AS Object_ReportBonus
@@ -1340,6 +1342,14 @@ BEGIN
                               LEFT JOIN ObjectLink AS ObjectLink_Partner
                                                    ON ObjectLink_Partner.ObjectId = Object_ReportBonus.Id
                                                   AND ObjectLink_Partner.DescId = zc_ObjectLink_ReportBonus_Partner()
+
+                              LEFT JOIN ObjectLink AS ObjectLink_ContractMaster
+                                                   ON ObjectLink_ContractMaster.ObjectId = Object_ReportBonus.Id
+                                                  AND ObjectLink_ContractMaster.DescId = zc_ObjectLink_ReportBonus_ContractMaster()
+                              LEFT JOIN ObjectLink AS ObjectLink_ContractChild
+                                                   ON ObjectLink_ContractChild.ObjectId = Object_ReportBonus.Id
+                                                  AND ObjectLink_ContractChild.DescId = zc_ObjectLink_ReportBonus_ContractChild()
+
                          WHERE Object_ReportBonus.DescId   = zc_Object_ReportBonus()
                            AND inPaidKindID                = zc_Enum_PaidKind_SecondForm()
                          --AND Object_ReportBonus.isErased = TRUE
@@ -1474,6 +1484,8 @@ BEGIN
 
             LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = Object_Juridical.Id
                                     AND tmpObjectBonus.PartnerId   = COALESCE (Object_Partner.Id, 0)
+                                    AND (tmpObjectBonus.ContractId_master = COALESCE (tmpData.ContractId_master,0))
+                                    AND (tmpObjectBonus.ContractId_child  = COALESCE (tmpData.ContractId_child,0) )
 
                     --
      UNION
@@ -1572,6 +1584,8 @@ BEGIN
 
             LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = tmpData.JuridicalId
                                     AND tmpObjectBonus.PartnerId   = COALESCE (tmpData.PartnerId, 0)
+                                    AND (tmpObjectBonus.ContractId_master = COALESCE (tmpData.ContractId_master,0))
+                                    AND (tmpObjectBonus.ContractId_child  = COALESCE (tmpData.ContractId_child,0))
           ;
 
 END;

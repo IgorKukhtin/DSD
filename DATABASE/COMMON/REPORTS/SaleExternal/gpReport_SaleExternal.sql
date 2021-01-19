@@ -1,7 +1,8 @@
 -- Function: gpReport_SaleExternal()
 
 --DROP FUNCTION IF EXISTS gpReport_SaleExternal (TDateTime, TDateTime, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_SaleExternal (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_SaleExternal (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_SaleExternal (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_SaleExternal(
     IN inStartDate          TDateTime , --
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpReport_SaleExternal(
     IN inRetailId           Integer   ,
     IN inJuridicalId        Integer   ,
     IN inGoodsGroupId       Integer   ,
+    IN inisContract         Boolean ,
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
@@ -195,12 +197,12 @@ BEGIN
    -- на РЦ и на контрагентов
      , tmpReport_1 AS (SELECT tmp.PartnerId
                             , tmp.ContractId
-                            , tmp.Sale_Summ
-                            , tmp.Return_Summ
-                            , (COALESCE (tmp.Sale_Summ,0) - COALESCE (tmp.Return_Summ,0) ) AS SaleReturn_Summ
-                            , tmp.Sale_Weight
-                            , tmp.Return_Weight
-                            , (COALESCE (tmp.Sale_Weight,0) - COALESCE (tmp.Return_Weight,0) ) AS SaleReturn_Weight
+                            , SUM (tmp.Sale_Summ)    AS Sale_Summ
+                            , SUM (tmp.Return_Summ)  AS Return_Summ
+                            , SUM (COALESCE (tmp.Sale_Summ,0) - COALESCE (tmp.Return_Summ,0) ) AS SaleReturn_Summ
+                            , SUM (tmp.Sale_Weight)               AS Sale_Weight
+                            , SUM (tmp.Return_Weight)             AS Return_Weight 
+                            , SUM (COALESCE (tmp.Sale_Weight,0) - COALESCE (tmp.Return_Weight,0) ) AS SaleReturn_Weight
 
                        FROM (SELECT tmp.PartnerId AS PartnerId
                                   , tmp.ContractId
@@ -222,24 +224,26 @@ BEGIN
                                                                , inIsTradeMark  := FALSE          ::Boolean      
                                                                , inIsGoods      := FALSE          ::Boolean      
                                                                , inIsGoodsKind  := FALSE          ::Boolean      
-                                                               , inIsContract   := TRUE          ::Boolean      
+                                                               , inIsContract   := inisContract          ::Boolean      
                                                                , inIsOLAP       := TRUE           ::Boolean      
                                                                , inSession      := inSession      ::TVarChar
                                                                ) AS tmp
                              --WHERE tmp.PartnerId IN (SELECT DISTINCT tmpMovementAll.PartnerRealId FROM tmpMovementAll WHERE tmpMovementAll.PartnerRealDescId = zc_Object_Partner())
                              GROUP BY tmp.PartnerId, tmp.ContractId
                             ) AS tmp
+                       GROUP BY tmp.PartnerId
+                              , tmp.ContractId
                       )
                   
       -- на торг.сеть - где нет РЦ
      , tmpReport_2 AS (SELECT tmp.PartnerRealId
                             , tmp.ContractId
-                            , tmp.Sale_Summ
-                            , tmp.Return_Summ
-                            , (COALESCE (tmp.Sale_Summ,0) - COALESCE (tmp.Return_Summ,0) ) AS SaleReturn_Summ
-                            , tmp.Sale_Weight
-                            , tmp.Return_Weight
-                            , (COALESCE (tmp.Sale_Weight,0) - COALESCE (tmp.Return_Weight,0) ) AS SaleReturn_Weight
+                            , SUM (tmp.Sale_Summ)      AS Sale_Summ
+                            , SUM (tmp.Return_Summ)    AS Return_Summ
+                            , SUM (COALESCE (tmp.Sale_Summ,0) - COALESCE (tmp.Return_Summ,0) ) AS SaleReturn_Summ
+                            , SUM (tmp.Sale_Weight)    AS Sale_Weight
+                            , SUM (tmp.Return_Weight)  AS Return_Weight
+                            , SUM (COALESCE (tmp.Sale_Weight,0) - COALESCE (tmp.Return_Weight,0) ) AS SaleReturn_Weight
 
                        FROM (SELECT ObjectLink_Juridical_Retail.ChildObjectId AS PartnerRealId
                                   , tmp.ContractId
@@ -262,7 +266,7 @@ BEGIN
                                                                            , inIsTradeMark  := FALSE          ::Boolean      
                                                                            , inIsGoods      := FALSE          ::Boolean      
                                                                            , inIsGoodsKind  := FALSE          ::Boolean      
-                                                                           , inIsContract   := TRUE          ::Boolean      
+                                                                           , inIsContract   := inisContract          ::Boolean      
                                                                            , inIsOLAP       := TRUE           ::Boolean      
                                                                            , inSession      := inSession      ::TVarChar
                                                                            ) AS tmp on 1=1
@@ -276,19 +280,23 @@ BEGIN
                              GROUP BY ObjectLink_Juridical_Retail.ChildObjectId
                                     , tmp.ContractId
                             ) AS tmp
+                       GROUP BY tmp.PartnerRealId
+                              , tmp.ContractId
                       )
 
      -- сгруппируем отдельно продажи по РЦ 
    , tmpReport_rc AS (SELECT tmp.PartnerId AS PartnerRealId
                            , tmp.ContractId
-                           , tmp.Sale_Summ
-                           , tmp.Return_Summ
-                           , tmp.SaleReturn_Summ
-                           , tmp.Sale_Weight
-                           , tmp.Return_Weight
-                           , tmp.SaleReturn_Weight
+                           , SUM (tmp.Sale_Summ)         AS Sale_Summ
+                           , SUM (tmp.Return_Summ)       AS Return_Summ
+                           , SUM (tmp.SaleReturn_Summ)   AS SaleReturn_Summ
+                           , SUM (tmp.Sale_Weight)       AS Sale_Weight
+                           , SUM (tmp.Return_Weight)     AS Return_Weight
+                           , SUM (tmp.SaleReturn_Weight) AS SaleReturn_Weight
                       FROM tmpReport_1 AS tmp
                       WHERE tmp.PartnerId IN (SELECT DISTINCT tmpMovementAll.PartnerRealId FROM tmpMovementAll WHERE tmpMovementAll.PartnerRealDescId = zc_Object_Partner())
+                      GROUP BY tmp.PartnerId
+                           , tmp.ContractId
                       )
 
      -- данные по внешним продажам 
@@ -350,9 +358,11 @@ BEGIN
            , Object_Contract.ValueData                                     AS ContractName
        FROM tmpData
             LEFT JOIN tmpReport_rc ON tmpReport_rc.PartnerRealId = tmpData.PartnerRealId
+                                  
             LEFT JOIN tmpReport_2 AS tmpReport_ret ON tmpReport_ret.PartnerRealId = tmpData.PartnerRealId
             LEFT JOIN tmpReport_1 AS tmpReport ON tmpReport.PartnerId = tmpData.PartnerId_from
-            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = COALESCE (tmpReport_rc.ContractId, tmpReport_ret.ContractId)
+                                            --  AND COALESCE (tmpReport.ContractId,0) = COALESCE (tmpReport_rc.ContractId, tmpReport_ret.ContractId,0)
+            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = COALESCE (tmpReport_rc.ContractId, tmpReport_ret.ContractId)-- and 1=0
             
       ;
 
@@ -367,4 +377,4 @@ $BODY$
 */
 
 -- тест
---  SELECT * FROM gpReport_SaleExternal (inStartDate:= '01.11.2020', inEndDate:= '30.11.2020', inRetailId := 310854 , inJuridicalId := 0, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin()) 
+--  SELECT * FROM gpReport_SaleExternal (inStartDate:= '01.11.2020', inEndDate:= '30.11.2020', inRetailId := 310854 , inJuridicalId := 0, inGoodsGroupId:= 0, inisContract:= False, inSession:= zfCalc_UserAdmin()) 

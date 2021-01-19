@@ -206,8 +206,10 @@ BEGIN
            , tmp.AmountSh  ::TFloat
            , tmp.PartKg    ::TFloat
            , tmp.Comment
-           , tmpObjectBonus.Id :: Integer AS ReportBonusId
-           , CASE WHEN tmpObjectBonus.Id IS NULL OR tmpObjectBonus.isErased = True THEN TRUE ELSE FALSE END :: Boolean AS isSend
+           --, tmpObjectBonus.Id :: Integer AS ReportBonusId
+           --, CASE WHEN tmpObjectBonus.Id IS NULL OR tmpObjectBonus.isErased = TRUE THEN TRUE ELSE FALSE END :: Boolean AS isSend
+           , tmp.ReportBonusId
+           , tmp.isSend
            , tmp.isSalePart
       FROM lpReport_CheckBonus (inStartDate           := inStartDate                                --gpReport_CheckBonusTest2_old
                               , inEndDate             := inEndDate
@@ -217,8 +219,9 @@ BEGIN
                               , inIsMovement          := inIsMovement
                               , inSession             := inSession
                                ) AS tmp
-           LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = tmp.JuridicalId
+          /* LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = tmp.JuridicalId
                                    AND tmpObjectBonus.PartnerId   = COALESCE (tmp.PartnerId, 0)
+                                   */
       WHERE (inPaidKindId = zc_Enum_PaidKind_FirstForm() OR COALESCE (inPaidKindId, 0) = 0)
         AND (tmp.BranchId = inBranchId OR inBranchId = 0)
 
@@ -265,8 +268,10 @@ BEGIN
            , tmp.PartKg    ::TFloat
             
            , tmp.Comment
-           , tmpObjectBonus.Id :: Integer AS ReportBonusId
-           , CASE WHEN tmpObjectBonus.Id IS NULL OR tmpObjectBonus.isErased = TRUE THEN TRUE ELSE FALSE END :: Boolean AS isSend
+           --, tmpObjectBonus.Id :: Integer AS ReportBonusId
+           --, CASE WHEN tmpObjectBonus.Id IS NULL OR tmpObjectBonus.isErased = TRUE THEN TRUE ELSE FALSE END :: Boolean AS isSend
+           , tmp.ReportBonusId
+           , tmp.isSend
            , tmp.isSalePart
       FROM lpReport_CheckBonus (inStartDate           := inStartDate                                --gpReport_CheckBonusTest2_old
                               , inEndDate             := inEndDate
@@ -276,8 +281,9 @@ BEGIN
                               , inIsMovement          := inIsMovement
                               , inSession             := inSession
                                ) AS tmp
-           LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = tmp.JuridicalId
+         /*  LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = tmp.JuridicalId
                                    AND tmpObjectBonus.PartnerId   = COALESCE (tmp.PartnerId, 0)
+                                   */
       WHERE (inPaidKindId = zc_Enum_PaidKind_SecondForm() OR COALESCE (inPaidKindId, 0) = 0)
         AND (tmp.BranchId = inBranchId OR inBranchId = 0)
       ;

@@ -2037,13 +2037,18 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleExternal_OrderSaleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleExternal_OrderSaleForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleExternal_OrderSaleDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleExternal_OrderSaleDialogForm');
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleExternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleExternalDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleExternalDialogForm');
-  exit;
-  {
+ { exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceNoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceNoForm');
   exit;
@@ -2382,12 +2387,12 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusForm');
-  exit;
-  {
+  //exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusDialogForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckContractInMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckContractInMovementForm');
    }
