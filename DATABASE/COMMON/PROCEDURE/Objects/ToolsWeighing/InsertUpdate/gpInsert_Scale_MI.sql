@@ -256,7 +256,9 @@ BEGIN
      ELSE
      -- определили !!!только для SPEC!!!
      IF vbMovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut())
-        AND inBranchCode BETWEEN 301 AND 310 -- Dnepr-SPEC-Zapch
+        AND (inBranchCode BETWEEN 301 AND 310 -- Dnepr-SPEC-Zapch
+          OR inBranchCode BETWEEN 201 AND 210 -- Dnepr-OBV
+            )
         AND inBoxCount > 0
      THEN
          -- !!!т.к. Криво - передаем цену через этот параметр!!!
@@ -468,7 +470,10 @@ BEGIN
                                                                                             THEN inPrice
 
                                                                                        -- цена для Специй
-                                                                                       WHEN inBranchCode BETWEEN 301 AND 310 AND vbPrice_301 > 0 AND vbMovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut())
+                                                                                       WHEN (inBranchCode BETWEEN 301 AND 310
+                                                                                          OR inBranchCode BETWEEN 201 AND 210
+                                                                                            )
+                                                                                        AND vbPrice_301 > 0 AND vbMovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut())
                                                                                             THEN vbPrice_301
                                                                                        -- в первую очередь - если Возврат + Акция
                                                                                        WHEN vbMovementDescId = zc_Movement_ReturnIn() AND inMovementId_Promo > 0
@@ -543,10 +548,11 @@ BEGIN
 
 
 -- !!! ВРЕМЕННО !!!
-IF inSession = '5' AND 1=0 AND inBranchCode < 1000 THEN
-    RAISE EXCEPTION 'Admin - Test = OK  Amount = <%> Price = <%>'
+IF inSession = '5' AND 1=1 AND inBranchCode < 1000 THEN
+    RAISE EXCEPTION 'Admin - Test = OK  Amount = <%> Price = <%> HeadCount = <%>'
                   , (SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = vbId)
                   , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = vbId AND MIF.DescId = zc_MIFloat_Price())
+                  , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = vbId AND MIF.DescId = zc_MIFloat_HeadCount())
                    ;
     -- RAISE EXCEPTION 'Повторите действие через 3 мин.';
 END IF;

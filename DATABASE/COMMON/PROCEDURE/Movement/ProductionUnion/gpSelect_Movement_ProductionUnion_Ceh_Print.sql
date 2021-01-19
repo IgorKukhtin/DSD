@@ -29,11 +29,13 @@ BEGIN
                               , Movement.DescId
                               , Movement.InvNumber
                               , Movement.OperDate
-                              , MD_StartWeighing.ValueData  AS StartWeighing
-                              , MD_EndWeighing.ValueData    AS EndWeighing
-                              , MLO_User.ObjectId           AS UserId
-                              , MLO_From.ObjectId           AS FromId
-                              , MLO_To.ObjectId             AS ToId
+                              , MD_StartWeighing.ValueData    AS StartWeighing
+                              , MD_EndWeighing.ValueData      AS EndWeighing
+                              , MLO_User.ObjectId             AS UserId
+                              , MLO_From.ObjectId             AS FromId
+                              , MLO_To.ObjectId               AS ToId
+                              , Object_DocumentKind.Id        AS DocumentKindId
+                              , Object_DocumentKind.ValueData AS DocumentKindName
                          FROM Movement
                                LEFT JOIN MovementLinkObject AS MLO_User
                                                             ON MLO_User.MovementId = Movement.Id
@@ -51,6 +53,11 @@ BEGIN
                                                             ON MLO_To.MovementId = Movement.Id
                                                            AND MLO_To.DescId     = zc_MovementLinkObject_To()
 
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentKind
+                                                            ON MovementLinkObject_DocumentKind.MovementId = Movement.Id
+                                                           AND MovementLinkObject_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
+                               LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = MovementLinkObject_DocumentKind.ObjectId
+
                          WHERE Movement.Id       IN (inMovementId, inMovementId_Weighing)
                            AND Movement.DescId   IN (zc_Movement_ProductionUnion(), zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction())
                         )
@@ -67,6 +74,10 @@ BEGIN
          , Object_To.ValueData       AS ToName
 
          , Object_User.ValueData      AS StoreKeeper -- кладовщик
+
+         , tmpMovement.DocumentKindId
+         , tmpMovement.DocumentKindName
+
      FROM tmpMovement
           LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
           LEFT JOIN Object AS Object_To   ON Object_To.Id   = tmpMovement.ToId

@@ -399,7 +399,7 @@ object UtilPrintForm: TUtilPrintForm
       end
       item
         Name = 'OperDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
@@ -535,7 +535,7 @@ object UtilPrintForm: TUtilPrintForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -563,7 +563,7 @@ object UtilPrintForm: TUtilPrintForm
       Params = <
         item
           Name = 'isPrintTermo'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1422,7 +1422,7 @@ object UtilPrintForm: TUtilPrintForm
         end
         item
           Name = 'PrintParam'
-          Value = '1'
+          Value = 1.000000000000000000
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>
@@ -1454,7 +1454,7 @@ object UtilPrintForm: TUtilPrintForm
       Params = <
         item
           Name = 'isPrintTermo'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1509,7 +1509,7 @@ object UtilPrintForm: TUtilPrintForm
         end
         item
           Name = 'PrintParam'
-          Value = '4'
+          Value = 4.000000000000000000
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>
@@ -1564,7 +1564,7 @@ object UtilPrintForm: TUtilPrintForm
         end
         item
           Name = 'PrintParam'
-          Value = '3'
+          Value = 3.000000000000000000
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>
@@ -2160,25 +2160,25 @@ object UtilPrintForm: TUtilPrintForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isInfoMoney'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -2344,7 +2344,7 @@ object UtilPrintForm: TUtilPrintForm
         end
         item
           Name = 'isAkt'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -2377,7 +2377,7 @@ object UtilPrintForm: TUtilPrintForm
       Params = <
         item
           Name = 'isPrintTermo'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -3208,21 +3208,21 @@ object UtilPrintForm: TUtilPrintForm
       end
       item
         Name = 'inIsInfoMoney'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inIsAllMO'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inIsAllAuto'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

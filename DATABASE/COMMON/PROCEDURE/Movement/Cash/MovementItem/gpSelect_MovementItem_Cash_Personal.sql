@@ -41,7 +41,9 @@ BEGIN
 
 
      -- Блокируем ему просмотр
-     IF vbUserId = 9457 -- Климентьев К.И.
+     IF vbUserId IN (9457    -- Климентьев К.И.
+                   , 6131893 -- Черняєва О.А.
+                    )
      THEN
          vbUserId:= NULL;
          RETURN;

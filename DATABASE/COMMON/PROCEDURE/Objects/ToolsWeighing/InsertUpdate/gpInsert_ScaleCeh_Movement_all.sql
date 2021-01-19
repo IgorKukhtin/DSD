@@ -800,10 +800,11 @@ BEGIN
                                                         , inUserId              := vbUserId
                                                          )
                        WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbDocumentKindId = zc_Enum_DocumentKind_RealDelicMsg()
-                                 -- <Приход с производства> - взвешивание п/ф факт после шприцевания
+                                 -- <Приход с производства> - взвешивание п/ф факт после мсж
                             THEN lpUpdate_MI_ProductionUnion_RealDelicMsg
                                                          (inId                  := tmp.MovementItemId_Partion
                                                         , inAmount              := tmp.Amount
+                                                        , inCount               := tmp.Count
                                                         , inUserId              := vbUserId
                                                          )
 

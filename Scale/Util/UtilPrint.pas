@@ -191,6 +191,8 @@ begin
 
   if  (UtilPrintForm.spGetMovement.ParamByName('outDocumentKindId').Value = zc_Enum_DocumentKind_CuterWeight)
    or (UtilPrintForm.spGetMovement.ParamByName('outDocumentKindId').Value = zc_Enum_DocumentKind_RealWeight)
+   or (UtilPrintForm.spGetMovement.ParamByName('outDocumentKindId').Value = zc_Enum_DocumentKind_RealDelicShp)
+   or (UtilPrintForm.spGetMovement.ParamByName('outDocumentKindId').Value = zc_Enum_DocumentKind_RealDelicMsg)
   then UtilPrintForm.actPrintCeh.Execute
   else UtilPrintForm.actPrint_Send.Execute;
 end;

@@ -18,7 +18,10 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_ZakazInternal());
 
        SELECT Movement.Id
-            , COALESCE (MovementLinkObject_DocumentKind.ObjectId, 0) AS DocumentKindId
+            , CASE WHEN MovementLinkObject_DocumentKind.ObjectId IN (zc_Enum_DocumentKind_RealDelicShp(), zc_Enum_DocumentKind_RealDelicMsg())
+                        THEN zc_Enum_DocumentKind_CuterWeight()
+                   ELSE COALESCE (MovementLinkObject_DocumentKind.ObjectId, 0)
+              END AS DocumentKindId
             , Movement.DescId
               INTO outMovementId, outDocumentKindId, outMovementDescId
        FROM Movement
