@@ -604,6 +604,23 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       ImageIndex = 7
       QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1050#1088#1072#1089#1085#1099#1081' '#1095#1077#1082'"?'
     end
+    object actComplete: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spMovementComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementComplete
+        end
+        item
+          StoredProc = spGet
+        end>
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1076#1085#1080#1084' '#1095#1080#1089#1083#1086#1084
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1076#1085#1080#1084' '#1095#1080#1089#1083#1086#1084
+      ImageIndex = 12
+      QuestionBeforeExecute = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1076#1085#1080#1084' '#1095#1080#1089#1083#1086#1084'?'
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_TechnicalRediscount'
@@ -640,6 +657,14 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
         item
           Visible = True
           ItemName = 'bbUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbComplete'
         end
         item
           Visible = True
@@ -725,6 +750,10 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
     end
     object bbUpdateRedCheck: TdxBarButton
       Action = actUpdateRedCheck
+      Category = 0
+    end
+    object bbComplete: TdxBarButton
+      Action = actComplete
       Category = 0
     end
   end
@@ -1387,5 +1416,36 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
     PackSize = 1
     Left = 806
     Top = 312
+  end
+  object spMovementComplete: TdsdStoredProc
+    StoredProcName = 'gpComplete_Movement_TechnicalRediscount'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inmovementid'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsCurrentData'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outOperDate'
+        Value = 42951d
+        Component = edOperDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 320
+    Top = 360
   end
 end

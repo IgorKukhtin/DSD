@@ -14,7 +14,8 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxButtonEdit, dsdGuides, dxBarBuiltInMenu, cxNavigator, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  cxCurrencyEdit, cxGridBandedTableView, cxGridDBBandedTableView;
+  cxCurrencyEdit, cxGridBandedTableView, cxGridDBBandedTableView, cxSplitter,
+  cxGridChartView, cxGridDBChartView;
 
 type
   TReport_Check_QuantityComparisonForm = class(TAncestorReportForm)
@@ -46,6 +47,18 @@ type
     ceYearsAgo: TcxCurrencyEdit;
     cxLabel5: TcxLabel;
     CrossDBViewReportAddOn: TCrossDBViewReportAddOn;
+    MultiplyCDS: TClientDataSet;
+    grChart: TcxGrid;
+    grChartDBChartView1: TcxGridDBChartView;
+    dgDateName: TcxGridDBChartDataGroup;
+    serSummaSale: TcxGridDBChartSeries;
+    grChartLevel1: TcxGridLevel;
+    cxSplitter1: TcxSplitter;
+    ChartCDS: TClientDataSet;
+    ChartDS: TDataSource;
+    ChartCDSId: TIntegerField;
+    ChartCDSDateName: TStringField;
+    ChartCDSCount: TIntegerField;
   private
     { Private declarations }
   public

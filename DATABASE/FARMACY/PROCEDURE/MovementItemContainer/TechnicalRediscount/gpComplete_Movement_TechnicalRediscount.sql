@@ -1,9 +1,10 @@
 -- Function: gpComplete_Movement_TechnicalRediscount()
 
-DROP FUNCTION IF EXISTS gpComplete_Movement_TechnicalRediscount (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_TechnicalRediscount (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_TechnicalRediscount(
     IN inMovementId        Integer               , -- ключ Документа
+    IN inIsCurrentData     Boolean               , -- дата документа текущая Да /Нет
    OUT outOperDate         TDateTime             ,  
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )                              
@@ -25,11 +26,20 @@ BEGIN
         vbInvNumber
     FROM Movement
     WHERE Movement.Id = inMovementId;
+    
+    
+    IF inIsCurrentData = TRUE
+    THEN
+      outOperDate:= CURRENT_DATE;
 
-    outOperDate:= CURRENT_DATE;
-
-    -- сохранили <Документ> c новой датой 
-    PERFORM lpInsertUpdate_Movement (inMovementId, zc_Movement_TechnicalRediscount(), vbInvNumber, outOperDate, NULL);
+      -- сохранили <Документ> c новой датой 
+      PERFORM lpInsertUpdate_Movement (inMovementId, zc_Movement_TechnicalRediscount(), vbInvNumber, outOperDate, NULL);
+    ELSE
+      IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+      THEN
+        RAISE EXCEPTION 'Проведение задним числом вам запрещено, обратитесь к системному администратору';
+      END IF;
+    END IF;
 
     -- собственно проводки
     PERFORM lpComplete_Movement_TechnicalRediscount(inMovementId, -- ключ Документа

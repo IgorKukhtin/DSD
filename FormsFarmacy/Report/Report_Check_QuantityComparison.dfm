@@ -1,31 +1,31 @@
 ﻿inherited Report_Check_QuantityComparisonForm: TReport_Check_QuantityComparisonForm
   Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1095#1077#1082#1086#1074' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-  ClientHeight = 567
+  ClientHeight = 678
   ClientWidth = 918
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 934
-  ExplicitHeight = 606
+  ExplicitHeight = 717
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
     Width = 918
-    Height = 484
+    Height = 595
     TabOrder = 3
     ExplicitTop = 83
     ExplicitWidth = 918
-    ExplicitHeight = 484
-    ClientRectBottom = 484
+    ExplicitHeight = 595
+    ClientRectBottom = 595
     ClientRectRight = 918
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 918
-      ExplicitHeight = 484
+      ExplicitHeight = 595
       inherited cxGrid: TcxGrid
         Width = 918
-        Height = 484
+        Height = 363
         ExplicitWidth = 918
-        ExplicitHeight = 484
+        ExplicitHeight = 363
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.DataSource = nil
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -281,6 +281,40 @@
         inherited cxGridLevel: TcxGridLevel
           GridView = cxGridDBBandedTableView1
         end
+      end
+      object grChart: TcxGrid
+        Left = 0
+        Top = 371
+        Width = 918
+        Height = 224
+        Align = alBottom
+        TabOrder = 1
+        object grChartDBChartView1: TcxGridDBChartView
+          DataController.DataSource = ChartDS
+          DiagramLine.Active = True
+          ToolBox.CustomizeButton = True
+          ToolBox.DiagramSelector = True
+          object dgDateName: TcxGridDBChartDataGroup
+            DataBinding.FieldName = 'DateName'
+            DisplayText = #1044#1072#1090#1072
+          end
+          object serSummaSale: TcxGridDBChartSeries
+            DataBinding.FieldName = 'Count'
+            DisplayText = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1095#1077#1082#1086#1074
+          end
+        end
+        object grChartLevel1: TcxGridLevel
+          GridView = grChartDBChartView1
+        end
+      end
+      object cxSplitter1: TcxSplitter
+        Left = 0
+        Top = 363
+        Width = 918
+        Height = 8
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salBottom
+        Control = grChart
       end
     end
   end
@@ -547,6 +581,9 @@
         DataSet = HeaderCDS
       end
       item
+        DataSet = MultiplyCDS
+      end
+      item
         DataSet = MasterCDS
       end>
     OutputType = otMultiDataSet
@@ -740,8 +777,8 @@
   object HeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 448
-    Top = 200
+    Left = 440
+    Top = 184
   end
   object CrossDBViewReportAddOn: TCrossDBViewReportAddOn
     ErasedFieldName = 'isErased'
@@ -755,6 +792,38 @@
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
+    FormationChartList = <
+      item
+        SeriesColumnList = <
+          item
+            SeriesFieldName = 'Count'
+            Column = Count
+          end>
+        DataGroupsFielddName = 'DateName'
+        HeaderFieldName = 'ValueChartName'
+        ChartDataSet = ChartCDS
+      end>
+    MultiplyColumnList = <
+      item
+        FieldName = 'FieldNameCount'
+        HeaderFieldName = 'HeaderFieldNameCount'
+        Column = CountPrev
+      end
+      item
+        FieldName = 'FieldNameAverageCheck'
+        HeaderFieldName = 'HeaderFieldNameAverageCheck'
+        Column = AverageCheckPrev
+      end
+      item
+        FieldName = 'FieldNameCountCash'
+        HeaderFieldName = 'HeaderFieldNameCountCash'
+        Column = CountCashPrev
+      end
+      item
+        FieldName = 'FieldNameCountCashLess'
+        HeaderFieldName = 'HeaderFieldNameCountCashLess'
+        Column = CountCashLessPrev
+      end>
     TemplateColumnList = <
       item
         HeaderColumnName = 'ValueNameChecks'
@@ -789,8 +858,55 @@
         TemplateColumn = CountCashLess
       end>
     HeaderDataSet = HeaderCDS
+    MultiplyDataSet = MultiplyCDS
     BаndColumnName = 'ValueBandName'
     Left = 568
-    Top = 200
+    Top = 192
+  end
+  object MultiplyCDS: TClientDataSet
+    Aggregates = <>
+    IndexFieldNames = 'Id'
+    Params = <>
+    Left = 440
+    Top = 256
+  end
+  object ChartCDS: TClientDataSet
+    Aggregates = <>
+    FieldDefs = <
+      item
+        Name = 'DateName'
+        DataType = ftString
+        Size = 40
+      end
+      item
+        Name = 'Count'
+        DataType = ftInteger
+      end>
+    IndexDefs = <
+      item
+        Name = 'DEFAULT_ORDER'
+      end
+      item
+        Name = 'CHANGEINDEX'
+      end>
+    Params = <>
+    StoreDefs = True
+    Left = 440
+    Top = 328
+    object ChartCDSId: TIntegerField
+      FieldName = 'Id'
+    end
+    object ChartCDSDateName: TStringField
+      FieldName = 'DateName'
+      Size = 40
+    end
+    object ChartCDSCount: TIntegerField
+      FieldName = 'Count'
+    end
+  end
+  object ChartDS: TDataSource
+    DataSet = ChartCDS
+    Left = 344
+    Top = 328
   end
 end

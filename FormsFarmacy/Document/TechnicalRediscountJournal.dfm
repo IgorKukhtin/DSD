@@ -276,7 +276,7 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
       GuiParams = <
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -355,7 +355,7 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -576,9 +576,10 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inIsCurrentData'
         Value = True
         DataType = ftBoolean
-        ParamType = ptUnknown
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 80

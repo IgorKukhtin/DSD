@@ -65,6 +65,9 @@ type
     actUpdateRedCheck: TdsdExecStoredProc;
     spUpdateRedCheck: TdsdStoredProc;
     bbUpdateRedCheck: TdxBarButton;
+    actComplete: TdsdExecStoredProc;
+    spMovementComplete: TdsdStoredProc;
+    bbComplete: TdxBarButton;
   private
     { Private declarations }
   public

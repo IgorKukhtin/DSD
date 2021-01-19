@@ -14,12 +14,15 @@ RETURNS SETOF refcursor
 AS
 $BODY$
    DECLARE vbUserId      Integer;
-   DECLARE cur1 refcursor;
-   DECLARE cur2 refcursor;
-   DECLARE vbOperDate TDateTime;
-   DECLARE vbQueryText Text;
-   DECLARE vbIndex Integer;
-   DECLARE curOperDate refcursor;
+   DECLARE cur1          refcursor;
+   DECLARE cur2          refcursor;
+   DECLARE cur3          refcursor;
+   DECLARE vbOperDate    TDateTime;
+   DECLARE vbQueryText   Text;
+   DECLARE vbIndex       Integer;
+   DECLARE vbYear        Integer;
+   DECLARE vbInc         Integer;
+   DECLARE curOperDate   refcursor;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
@@ -27,7 +30,6 @@ BEGIN
 
     CREATE TEMP TABLE tmpOperDate ON COMMIT DROP AS
       SELECT GENERATE_SERIES (DATE_TRUNC ('MONTH', inDateStart), DATE_TRUNC ('MONTH', inDateFinal), '1 MONTH' :: INTERVAL) AS OperDate;
-
 
     CREATE TEMP TABLE tmpData ON COMMIT DROP AS
        (WITH tmpUnit AS (SELECT Objectt_Unit.ID AS UnitId
@@ -47,10 +49,8 @@ BEGIN
              tmpMovementAll AS (SELECT Movement.ID
                                      , DATE_TRUNC ('MONTH', Movement.OperDate) AS OperDate
                                 FROM Movement
-                                WHERE (Movement.OperDate >= DATE_TRUNC ('MONTH', inDateStart)
+                                WHERE Movement.OperDate >= DATE_TRUNC ('MONTH', inDateStart) - (inYearsAgo::TVArChar||' YEAR')::INTERVAL
                                   AND Movement.OperDate <  DATE_TRUNC ('MONTH', inDateFinal) + INTERVAL '1 MONTH'
-                                   OR Movement.OperDate >= DATE_TRUNC ('MONTH', inDateStart) - (inYearsAgo::TVArChar||' YEAR')::INTERVAL
-                                  AND Movement.OperDate <  DATE_TRUNC ('MONTH', inDateFinal) - (inYearsAgo::TVArChar||' YEAR')::INTERVAL  + INTERVAL '1 MONTH')
                                   AND Movement.DescId = zc_Movement_Check()
                                   AND Movement.StatusId = zc_Enum_Status_Complete()),
              tmpMovement AS (SELECT Movement.ID
@@ -92,9 +92,9 @@ BEGIN
         FROM tmpMovementSum as Movement);
 
     CREATE TEMP TABLE tmpResult (
-            UnitId    Integer,
-            UnitCode  Integer,
-            UnitName  TVarChar
+            UnitId          Integer,
+            UnitCode        Integer,
+            UnitName        TVarChar
     ) ON COMMIT DROP;
 
     INSERT INTO tmpResult
@@ -107,6 +107,40 @@ BEGIN
           INNER JOIN Object AS Objectt_Unit ON Objectt_Unit.ID = tmpUnit.UnitId
 
     );
+
+    CREATE TEMP TABLE tmpMultiply (
+            Id                                Integer,
+            FieldNameCount                    TVarChar,
+            HeaderFieldNameCount              TVarChar,
+            FieldNameAverageCheck             TVarChar,
+            HeaderFieldNameAverageCheck       TVarChar,
+            FieldNameCountCash                TVarChar,
+            HeaderFieldNameCountCash          TVarChar,
+            FieldNameCountCashLess            TVarChar,
+            HeaderFieldNameCountCashLess      TVarChar
+    ) ON COMMIT DROP;
+
+
+    -- Данные для размножения
+    vbYear := EXTRACT (YEAR FROM (DATE_TRUNC ('MONTH', inDateStart) - ((inYearsAgo - 1)::TVArChar||' YEAR')::INTERVAL));
+    WHILE vbYear < EXTRACT (YEAR FROM DATE_TRUNC ('MONTH', inDateStart)) LOOP
+
+        -- добавляем то что нашли
+        INSERT INTO tmpMultiply
+        SELECT vbYear
+             , 'Count'||vbYear::TVarChar
+             , 'ValueName1'
+             , 'AverageCheck'||vbYear::TVarChar
+             , 'ValueName2'
+             , 'CountCash'||vbYear::TVarChar
+             , 'ValueName3'
+             , 'CountCashLess'||vbYear::TVarChar
+             , 'ValueName4'
+          ;
+
+        -- теперь следуюющий год
+        vbYear := vbYear + 1;
+    END LOOP;
 
 
     -- Заполняем данными
@@ -150,6 +184,32 @@ BEGIN
                        ' WHERE tmpResult.UnitId = T1.UnitId';
         EXECUTE vbQueryText;
 
+        -- Данные для размножения
+        vbYear := EXTRACT (YEAR FROM (DATE_TRUNC ('MONTH', inDateStart) - ((inYearsAgo - 1)::TVArChar||' YEAR')::INTERVAL));
+        vbInc := 1;
+        WHILE vbYear < EXTRACT (YEAR FROM DATE_TRUNC ('MONTH', inDateStart)) LOOP
+
+            vbQueryText := 'ALTER TABLE tmpResult ADD COLUMN Count'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' Integer NOT NULL DEFAULT 0 ' ||
+                           ' , ADD COLUMN AverageCheck'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' TFloat NOT NULL DEFAULT 0 ' ||
+                           ' , ADD COLUMN CountCash'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' Integer NOT NULL DEFAULT 0 ' ||
+                           ' , ADD COLUMN CountCashLess'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' Integer NOT NULL DEFAULT 0 ';
+            EXECUTE vbQueryText;
+
+            vbQueryText := 'UPDATE tmpResult SET Count'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' = COALESCE (T1.CountChecks, 0) ' ||
+                                              ', AverageCheck'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' = COALESCE (T1.AverageCheck, 0) ' ||
+                                              ', CountCash'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' = COALESCE (T1.CountCash, 0) ' ||
+                                              ', CountCashLess'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' = COALESCE (T1.CountCashLess, 0) ' ||
+                           ' FROM (SELECT tmpData.* FROM tmpData WHERE tmpData.OperDate = '''|| zfConvert_DateShortToString(vbOperDate - ((inYearsAgo - vbInc)::TVArChar||' YEAR')::INTERVAL ) ||''') AS T1'||
+                           ' WHERE tmpResult.UnitId = T1.UnitId';
+            EXECUTE vbQueryText;
+
+            -- теперь следуюющий год
+            vbYear := vbYear + 1;
+            vbInc := vbInc + 1;
+        END LOOP;
+
+
+
         vbIndex := vbIndex + 1;
     END LOOP; -- финиш цикла по курсору1
     CLOSE curOperDate; -- закрыли курсор1
@@ -159,7 +219,7 @@ BEGIN
     -- возвращаем заголовки столбцов и даты
     OPEN cur1 FOR SELECT tmpOperDate.OperDate::TDateTime          AS OperDate
                        , zfcalc_MonthName(tmpOperDate.OperDate) || ' ' ||
-                         EXTRACT (YEAR FROM (tmpOperDate.OperDate - (inYearsAgo::TVArChar||' YEAR')::INTERVAL))::TVarChar || ' - ' ||
+                         EXTRACT (YEAR FROM (tmpOperDate.OperDate - (inYearsAgo::TVArChar||' YEAR')::INTERVAL))::TVarChar || ' ... ' ||
                          EXTRACT (YEAR FROM tmpOperDate.OperDate)::TVarChar                                               AS ValueBandName
                        , 'Чеков'   AS ValueNameChecks
                        , 'Ср. чек' AS ValueNameAverageCheck
@@ -169,15 +229,23 @@ BEGIN
                        , '2'       AS ValueName2
                        , '3'       AS ValueName3
                        , '4'       AS ValueName4
+                       , zfcalc_MonthYearName(tmpOperDate.OperDate) AS ValueChartName
                   FROM tmpOperDate
                   ORDER BY tmpOperDate.OperDate;
     RETURN NEXT cur1;
 
-    -- Результат
+    -- Размножение колонок
     OPEN cur2 FOR SELECT *
+                  FROM tmpMultiply
+                  ORDER BY tmpMultiply.Id;
+    RETURN NEXT cur2;
+
+    -- Результат
+    OPEN cur3 FOR SELECT *
                   FROM tmpResult
                   ORDER BY tmpResult.UnitName;
-    RETURN NEXT cur2;
+    RETURN NEXT cur3;
+
 
 END;
 $BODY$
@@ -191,5 +259,4 @@ $BODY$
 
 -- тест
 --
---
-select * from gpReport_Check_QuantityComparison(inDateStart := ('01.12.2020')::TDateTime , inDateFinal := ('29.12.2020')::TDateTime , inRetailId := 4 , inYearsAgo := 1 , inUnitId := 183292 ,  inSession := '3');
+-- select * from gpReport_Check_QuantityComparison(inDateStart := ('01.11.2020')::TDateTime , inDateFinal := ('31.12.2020')::TDateTime , inRetailId := 4 , inUnitId := 183292 , inYearsAgo := 2 ,  inSession := '3');
