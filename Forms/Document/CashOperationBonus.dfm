@@ -1483,8 +1483,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 389
-    Top = 64
+    Left = 365
+    Top = 48
   end
   object GuidesSaleChoice: TdsdGuides
     KeyField = 'Id'
@@ -1529,8 +1529,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 100
-    Top = 200
+    Left = 76
+    Top = 224
   end
   object GuidesInvoice: TdsdGuides
     KeyField = 'Id'

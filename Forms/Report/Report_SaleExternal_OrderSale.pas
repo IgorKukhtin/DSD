@@ -1,4 +1,4 @@
-unit Report_SaleExternal;
+unit Report_SaleExternal_OrderSale;
 
 interface
 
@@ -27,17 +27,13 @@ uses
   dxSkinXmas2008Blue;
 
 type
-  TReport_SaleExternalForm = class(TAncestorReportForm)
-    GoodsGroupName: TcxGridDBColumn;
-    OperDate: TcxGridDBColumn;
-    StatusCode: TcxGridDBColumn;
+  TReport_SaleExternal_OrderSaleForm = class(TAncestorReportForm)
     FormParams: TdsdFormParams;
-    InvNumber: TcxGridDBColumn;
     bbPrint_byType: TdxBarButton;
     HeaderCDS: TClientDataSet;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    AmountSh: TcxGridDBColumn;
+    AmountKg_1: TcxGridDBColumn;
     actisDataAll: TdsdDataSetRefresh;
     edRetail: TcxButtonEdit;
     cxLabel3: TcxLabel;
@@ -51,8 +47,6 @@ type
     cxLabel5: TcxLabel;
     edJuridical: TcxButtonEdit;
     GuidesJuridical: TdsdGuides;
-    ContractName: TcxGridDBColumn;
-    cbContract: TcxCheckBox;
     actRefreshContract: TdsdDataSetRefresh;
   private
     { Private declarations }
@@ -64,6 +58,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TReport_SaleExternalForm);
+  RegisterClass(TReport_SaleExternal_OrderSaleForm);
 
 end.

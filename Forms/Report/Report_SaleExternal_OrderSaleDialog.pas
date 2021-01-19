@@ -1,4 +1,4 @@
-unit Report_SaleExternalDialog;
+unit Report_SaleExternal_OrderSaleDialog;
 
 interface
 
@@ -12,7 +12,7 @@ uses
   dxSkinsDefaultPainters, cxCheckBox;
 
 type
-  TReport_SaleExternalDialogForm = class(TParentForm)
+  TReport_SaleExternal_OrderSaleDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     deEnd: TcxDateEdit;
@@ -32,7 +32,6 @@ type
     cxLabel5: TcxLabel;
     edJuridical: TcxButtonEdit;
     GuidesJuridical: TdsdGuides;
-    cbContract: TcxCheckBox;
   private
     { Private declarations }
   public
@@ -44,6 +43,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_SaleExternalDialogForm);
+  RegisterClass(TReport_SaleExternal_OrderSaleDialogForm);
 
 end.
