@@ -2,8 +2,8 @@ object AssetGoodsPlaceForm: TAssetGoodsPlaceForm
   Left = 0
   Top = 0
   Caption = #1054#1089#1085#1086#1074#1085#1099#1077' '#1089#1088#1077#1076#1089#1090#1074#1072' / '#1058#1086#1074#1072#1088#1099
-  ClientHeight = 346
-  ClientWidth = 895
+  ClientHeight = 360
+  ClientWidth = 887
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,18 +15,18 @@ object AssetGoodsPlaceForm: TAssetGoodsPlaceForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 895
-    Height = 320
+    Width = 887
+    Height = 334
     Align = alClient
     TabOrder = 0
-    LookAndFeel.Kind = lfStandard
-    LookAndFeel.NativeStyle = False
-    LookAndFeel.SkinName = ''
+    ExplicitWidth = 368
+    ExplicitHeight = 382
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -38,7 +38,6 @@ object AssetGoodsPlaceForm: TAssetGoodsPlaceForm
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
       OptionsBehavior.IncSearchItem = Name
-      OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
@@ -54,26 +53,26 @@ object AssetGoodsPlaceForm: TAssetGoodsPlaceForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 50
+        Width = 52
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 96
+        Width = 108
       end
       object InvNumber: TcxGridDBColumn
         Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1085#1099#1081' '#1085#1086#1084#1077#1088
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentVert = vaCenter
-        Width = 124
+        Width = 120
       end
       object SerialNumber: TcxGridDBColumn
         Caption = #1047#1072#1074#1086#1076#1089#1082#1086#1081' '#1085#1086#1084#1077#1088
         DataBinding.FieldName = 'SerialNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 68
+        Width = 66
       end
       object PassportNumber: TcxGridDBColumn
         Caption = #1053#1086#1084#1077#1088' '#1087#1072#1089#1087#1086#1088#1090#1072
@@ -87,21 +86,21 @@ object AssetGoodsPlaceForm: TAssetGoodsPlaceForm
         DataBinding.FieldName = 'Release'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 57
+        Width = 55
       end
       object AssetGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'AssetGroupName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 122
+        Width = 118
       end
       object MakerName: TcxGridDBColumn
         Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
         DataBinding.FieldName = 'MakerName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 135
+        Width = 131
       end
       object PeriodUse: TcxGridDBColumn
         Caption = #1055#1077#1088#1080#1086#1076' '#1101#1082#1089#1087'. ('#1083#1077#1090')'
@@ -109,14 +108,14 @@ object AssetGoodsPlaceForm: TAssetGoodsPlaceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1055#1077#1088#1080#1086#1076' '#1101#1082#1089#1087#1083#1091#1072#1090#1072#1094#1080#1080' ('#1083#1077#1090')'
-        Width = 68
+        Width = 67
       end
       object MeasureName: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'.'
         DataBinding.FieldName = 'MeasureName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 37
+        Width = 35
       end
       object DescName: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090
@@ -124,16 +123,14 @@ object AssetGoodsPlaceForm: TAssetGoodsPlaceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 66
+        Width = 65
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
         Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 28
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -142,14 +139,14 @@ object AssetGoodsPlaceForm: TAssetGoodsPlaceForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 48
-    Top = 96
+    Left = 32
+    Top = 136
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 40
-    Top = 152
+    Left = 24
+    Top = 208
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -163,8 +160,8 @@ object AssetGoodsPlaceForm: TAssetGoodsPlaceForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 328
-    Top = 96
+    Left = 288
+    Top = 72
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -183,8 +180,8 @@ object AssetGoodsPlaceForm: TAssetGoodsPlaceForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 160
-    Top = 96
+    Left = 168
+    Top = 192
     DockControlHeights = (
       0
       0
@@ -212,7 +209,11 @@ object AssetGoodsPlaceForm: TAssetGoodsPlaceForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoiceGuide'
         end
         item
           Visible = True
@@ -220,7 +221,11 @@ object AssetGoodsPlaceForm: TAssetGoodsPlaceForm
         end
         item
           Visible = True
-          ItemName = 'bbChoiceGuides'
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -232,131 +237,38 @@ object AssetGoodsPlaceForm: TAssetGoodsPlaceForm
       Action = actRefresh
       Category = 0
     end
-    object bbInsert: TdxBarButton
-      Action = actInsert
+    object dxBarStatic: TdxBarStatic
+      Caption = '      '
       Category = 0
-    end
-    object bbEdit: TdxBarButton
-      Action = actUpdate
-      Category = 0
-    end
-    object bbErased: TdxBarButton
-      Action = dsdSetErased
-      Category = 0
-    end
-    object bbUnErased: TdxBarButton
-      Action = dsdSetUnErased
-      Category = 0
+      Hint = '      '
+      Visible = ivAlways
     end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
       Category = 0
     end
-    object dxBarStatic: TdxBarStatic
-      Caption = '     '
-      Category = 0
-      Hint = '     '
-      Visible = ivAlways
-    end
-    object bbChoiceGuides: TdxBarButton
+    object bbChoiceGuide: TdxBarButton
       Action = dsdChoiceGuides
       Category = 0
     end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 280
-    Top = 152
+    Left = 264
+    Top = 120
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
-    end
-    object actInsert: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
-      ImageIndex = 0
-      FormName = 'TAssetEditForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
-    object actUpdate: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      ShortCut = 115
-      ImageIndex = 1
-      FormName = 'TAssetEditForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      ActionType = acUpdate
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
-    object dsdSetErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 2
-      ShortCut = 46
-      ErasedFieldName = 'isErased'
-      DataSource = DataSource
-    end
-    object dsdSetUnErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 32776
-      ErasedFieldName = 'isErased'
-      isSetErased = False
-      DataSource = DataSource
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -379,7 +291,6 @@ object AssetGoodsPlaceForm: TAssetGoodsPlaceForm
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
       ImageIndex = 7
     end
     object dsdGridToExcel: TdsdGridToExcel
@@ -392,7 +303,7 @@ object AssetGoodsPlaceForm: TAssetGoodsPlaceForm
       ShortCut = 16472
     end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_AssetGoodsPlace'
     DataSet = ClientDataSet
     DataSets = <
@@ -401,29 +312,12 @@ object AssetGoodsPlaceForm: TAssetGoodsPlaceForm
       end>
     Params = <>
     PackSize = 1
-    Left = 56
-    Top = 208
-  end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 160
+    Left = 112
     Top = 152
   end
-  object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inObjectId'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 288
-    Top = 208
+    Top = 160
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -431,6 +325,8 @@ object AssetGoodsPlaceForm: TAssetGoodsPlaceForm
     OnDblClickActionList = <
       item
         Action = dsdChoiceGuides
+      end
+      item
       end>
     ActionItemList = <
       item
@@ -438,7 +334,6 @@ object AssetGoodsPlaceForm: TAssetGoodsPlaceForm
         ShortCut = 13
       end
       item
-        Action = actUpdate
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
@@ -447,7 +342,20 @@ object AssetGoodsPlaceForm: TAssetGoodsPlaceForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 440
-    Top = 112
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    Left = 168
+    Top = 240
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'inDescCode'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 56
+    Top = 72
   end
 end

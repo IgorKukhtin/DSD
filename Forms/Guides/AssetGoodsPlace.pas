@@ -35,32 +35,18 @@ type
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
     bbRefresh: TdxBarButton;
-    bbInsert: TdxBarButton;
-    bbEdit: TdxBarButton;
-    bbErased: TdxBarButton;
-    bbUnErased: TdxBarButton;
-    bbGridToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
-    bbChoiceGuides: TdxBarButton;
+    bbGridToExcel: TdxBarButton;
+    bbChoiceGuide: TdxBarButton;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
-    actUpdate: TdsdInsertUpdateAction;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    InvNumber: TcxGridDBColumn;
-    AssetGroupName: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     isErased: TcxGridDBColumn;
-    spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    SerialNumber: TcxGridDBColumn;
-    PassportNumber: TcxGridDBColumn;
-    Release: TcxGridDBColumn;
-    MakerName: TcxGridDBColumn;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public
@@ -68,9 +54,10 @@ type
   end;
 
 
+
 implementation
 
 {$R *.dfm}
-initialization
+ initialization
   RegisterClass(TAssetGoodsPlaceForm);
 end.
