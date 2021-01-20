@@ -425,7 +425,7 @@ BEGIN
         --ограничиваем контрагентами и привязываем свойства договора
       , tmpMovementCont AS (SELECT tmpContractGroup.JuridicalId
                                  , tmpContractGroup.ContractId_master
-                                 , tmpContractPartner.ContractId_baza AS ContractId_child  --tmpContractGroup.ContractId_child
+                                 , tmpContractGroup.ContractId_child AS ContractId_child  --tmpContractGroup.ContractId_child   --tmpContractPartner.ContractId_baza
                                  , 0 AS InfoMoneyId_child --tmpContractGroup.InfoMoneyId_child
                                  , tmpContractPartner.PaidKindId_byBase --tmpContractGroup.PaidKindId_byBase
                                  , tmpContractGroup.ContractConditionId
@@ -611,6 +611,7 @@ BEGIN
                                                         AND tmpMovement.ContractId_master = tmpContract.ContractId_master
       
                              ) AS tmp
+                     
                      UNION ALL 
                        SELECT View_Contract_InvNumber_master.InvNumber AS InvNumber_master
                             , View_Contract_InvNumber_child.InvNumber  AS InvNumber_child
@@ -714,6 +715,7 @@ BEGIN
                          AND (Object_Juridical.Id = inJuridicalId OR inJuridicalId = 0)
                          AND (COALESCE (MILinkObject_Branch.ObjectId,0) = inBranchId OR inBranchId = 0)
                          AND MILinkObject_ContractConditionKind.ObjectId = zc_Enum_ContractConditionKind_BonusPercentSalePart()
+                         
                        )
 
       , tmpData AS (SELECT tmpAll.ContractId_master
@@ -780,10 +782,11 @@ BEGIN
                     )
 
 
-    , tmpObjectBonus AS (SELECT ObjectLink_Juridical.ChildObjectId             AS JuridicalId
+    , tmpObjectBonus AS (SELECT DISTINCT
+                                ObjectLink_Juridical.ChildObjectId             AS JuridicalId
                               , COALESCE (ObjectLink_Partner.ChildObjectId, 0) AS PartnerId
-                              , COALESCE (ObjectLink_ContractMaster.ChildObjectId, 0) AS ContractId_master
-                              , COALESCE (ObjectLink_ContractChild.ChildObjectId, 0)  AS ContractId_child
+                              , ObjectLink_ContractMaster.ChildObjectId        AS ContractId_master
+                              , ObjectLink_ContractChild.ChildObjectId         AS ContractId_child
                               , Object_ReportBonus.Id                          AS Id
                               , Object_ReportBonus.isErased
                          FROM Object AS Object_ReportBonus
@@ -923,8 +926,8 @@ BEGIN
 
             LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = Object_Juridical.Id
                                     AND tmpObjectBonus.PartnerId   = COALESCE (Object_Partner.Id, 0)
-                                    AND (tmpObjectBonus.ContractId_master = COALESCE (tmpData.ContractId_master,0))
-                                    AND (tmpObjectBonus.ContractId_child  = COALESCE (tmpData.ContractId_child,0))
+                                    AND tmpObjectBonus.ContractId_master = tmpData.ContractId_master
+                                    AND tmpObjectBonus.ContractId_child  = tmpData.ContractId_child
           ;
 
 END;

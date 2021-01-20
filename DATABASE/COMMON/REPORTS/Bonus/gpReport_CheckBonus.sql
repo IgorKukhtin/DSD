@@ -148,26 +148,37 @@ BEGIN
     --правильный расчет в процке gpReport_CheckBonusTest3
     --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     
+     /* -- расче в  lpReport_CheckBonus  - 
       WITH 
-      tmpObjectBonus AS (SELECT ObjectLink_Juridical.ChildObjectId             AS JuridicalId
+      tmpObjectBonus AS (SELECT DISTINCT
+                                ObjectLink_Juridical.ChildObjectId             AS JuridicalId
                               , COALESCE (ObjectLink_Partner.ChildObjectId, 0) AS PartnerId
+                              , ObjectLink_ContractMaster.ChildObjectId        AS ContractId_master
+                              , ObjectLink_ContractChild.ChildObjectId         AS ContractId_child
                               , Object_ReportBonus.Id                          AS Id
                               , Object_ReportBonus.isErased
                          FROM Object AS Object_ReportBonus
                               INNER JOIN ObjectDate AS ObjectDate_Month
-                                                   ON ObjectDate_Month.ObjectId = Object_ReportBonus.Id
-                                                  AND ObjectDate_Month.DescId = zc_Object_ReportBonus_Month()
-                                                  AND ObjectDate_Month.ValueData =  DATE_TRUNC ('MONTH', inEndDate)
+                                                    ON ObjectDate_Month.ObjectId = Object_ReportBonus.Id
+                                                   AND ObjectDate_Month.DescId = zc_Object_ReportBonus_Month()
+                                                   AND ObjectDate_Month.ValueData =  DATE_TRUNC ('MONTH', inEndDate)
                               LEFT JOIN ObjectLink AS ObjectLink_Juridical
                                                    ON ObjectLink_Juridical.ObjectId = Object_ReportBonus.Id
                                                   AND ObjectLink_Juridical.DescId = zc_ObjectLink_ReportBonus_Juridical()
                               LEFT JOIN ObjectLink AS ObjectLink_Partner
                                                    ON ObjectLink_Partner.ObjectId = Object_ReportBonus.Id
                                                   AND ObjectLink_Partner.DescId = zc_ObjectLink_ReportBonus_Partner()
+                              LEFT JOIN ObjectLink AS ObjectLink_ContractMaster
+                                                   ON ObjectLink_ContractMaster.ObjectId = Object_ReportBonus.Id
+                                                  AND ObjectLink_ContractMaster.DescId = zc_ObjectLink_ReportBonus_ContractMaster()
+                              LEFT JOIN ObjectLink AS ObjectLink_ContractChild
+                                                   ON ObjectLink_ContractChild.ObjectId = Object_ReportBonus.Id
+                                                  AND ObjectLink_ContractChild.DescId = zc_ObjectLink_ReportBonus_ContractChild()
                          WHERE Object_ReportBonus.DescId   = zc_Object_ReportBonus()
                            AND inPaidKindID                = zc_Enum_PaidKind_SecondForm()
                          --AND Object_ReportBonus.isErased = TRUE
                         )
+      */ 
       -- Результат
       SELECT tmp.OperDate_Movement, tmp.OperDatePartner, tmp.InvNumber_Movement, tmp.DescName_Movement
            , tmp.ContractId_master, tmp.ContractId_child, tmp.ContractId_find, tmp.InvNumber_master, tmp.InvNumber_child, tmp.InvNumber_find

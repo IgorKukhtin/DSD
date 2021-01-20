@@ -1221,10 +1221,11 @@ BEGIN
                               WHERE inisMovement = TRUE
                               )
 
-    , tmpObjectBonus AS (SELECT ObjectLink_Juridical.ChildObjectId             AS JuridicalId
+    , tmpObjectBonus AS (SELECT DISTINCT
+                                ObjectLink_Juridical.ChildObjectId             AS JuridicalId
                               , COALESCE (ObjectLink_Partner.ChildObjectId, 0) AS PartnerId
-                              , COALESCE (ObjectLink_ContractMaster.ChildObjectId, 0) AS ContractId_master
-                              , COALESCE (ObjectLink_ContractChild.ChildObjectId, 0)  AS ContractId_child
+                              , ObjectLink_ContractMaster.ChildObjectId        AS ContractId_master
+                              , ObjectLink_ContractChild.ChildObjectId         AS ContractId_child
                               , Object_ReportBonus.Id                          AS Id
                               , Object_ReportBonus.isErased
                          FROM Object AS Object_ReportBonus
@@ -1375,9 +1376,8 @@ BEGIN
 
             LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = Object_Juridical.Id
                                     AND tmpObjectBonus.PartnerId   = COALESCE (Object_Partner.Id, 0)
-                                    AND tmpObjectBonus.PartnerId   = COALESCE (Object_Partner.Id, 0)
-                                    AND (tmpObjectBonus.ContractId_master = COALESCE (tmpData.ContractId_master,0))
-                                    AND (tmpObjectBonus.ContractId_child  = COALESCE (tmpData.ContractId_child,0))
+                                    AND tmpObjectBonus.ContractId_master = tmpData.ContractId_master
+                                    AND tmpObjectBonus.ContractId_child  = tmpData.ContractId_child
                     --
      UNION
        SELECT NULL :: TDateTime AS OperDate_Movement
@@ -1469,10 +1469,9 @@ BEGIN
                                                 ) AS tmpData
 
             LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = tmpData.JuridicalId
-                                    AND tmpObjectBonus.PartnerId   = COALESCE (tmpData.PartnerId, 0)
                                     AND tmpObjectBonus.PartnerId   = COALESCE (Object_Partner.Id, 0)
-                                    AND (tmpObjectBonus.ContractId_master = COALESCE (tmpData.ContractId_master,0))
-                                    AND (tmpObjectBonus.ContractId_child  = COALESCE (tmpData.ContractId_child,0))
+                                    AND tmpObjectBonus.ContractId_master = tmpData.ContractId_master
+                                    AND tmpObjectBonus.ContractId_child  = tmpData.ContractId_child
       ;
 
 END;
