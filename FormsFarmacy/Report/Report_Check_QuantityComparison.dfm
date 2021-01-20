@@ -893,16 +893,6 @@
     StoreDefs = True
     Left = 440
     Top = 328
-    object ChartCDSId: TIntegerField
-      FieldName = 'Id'
-    end
-    object ChartCDSDateName: TStringField
-      FieldName = 'DateName'
-      Size = 40
-    end
-    object ChartCDSCount: TIntegerField
-      FieldName = 'Count'
-    end
   end
   object ChartDS: TDataSource
     DataSet = ChartCDS

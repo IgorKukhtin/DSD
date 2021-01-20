@@ -298,7 +298,7 @@ type
                                 AEdit: TcxCustomEdit; var Key: Word; Shift: TShiftState);
     procedure OnKeyPress(Sender: TObject; var Key: Char);
     procedure OnKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState); override;
-    procedure OnAfterScroll(DataSet: TDataSet);
+    procedure OnAfterScroll(DataSet: TDataSet); virtual;
     procedure SetView(const Value: TcxGridTableView); virtual;
     procedure SetDateEdit(const Value: TcxDateEdit); virtual;
     procedure edFilterExit(Sender: TObject);
@@ -503,6 +503,7 @@ type
     procedure SetView(const Value: TcxGridTableView); override;
     procedure FocusedItemChanged(Sender: TcxCustomGridTableView;
                                  APrevFocusedItem, AFocusedItem: TcxCustomGridTableItem);
+    procedure OnAfterScroll(DataSet: TDataSet); override;
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
@@ -5206,9 +5207,6 @@ begin
     FTemplateColumnList.Delete(TTemplateColumn(FCreateTemplateColumn.Items[I]).Index);
   FCreateTemplateColumn.Clear;
 
-  for i := 0 to FFormationChartList.Count - 1 do
-    if Assigned(TFormationChart(FFormationChartList.Items[I]).FChartDataSet) then TFormationChart(FFormationChartList.Items[I]).FChartDataSet.Close;
-
 end;
 
 procedure TCrossDBViewReportAddOn.onBeforeOpen(DataSet: TDataSet);
@@ -5448,7 +5446,6 @@ begin
            if Assigned(TFormationChart(FFormationChartList.Items[I]).FChartDataSet) then
            with TFormationChart(FFormationChartList.Items[I]) do
            begin
-             if not FChartDataSet.Active then FChartDataSet.Open;
              if Assigned(HeaderDataSet.Fields.FindField(HeaderFieldName)) then
              begin
                FChartDataSet.Last;
@@ -5481,5 +5478,52 @@ begin
      Value.OnFocusedItemChanged := FocusedItemChanged;
   end;
 end;
+
+procedure TCrossDBViewReportAddOn.OnAfterScroll(DataSet: TDataSet);
+  var I, J : Integer;
+      FieldName : String;
+begin
+  inherited OnAfterScroll(DataSet);
+
+  for i := 0 to FFormationChartList.Count - 1 do
+    if Assigned(TFormationChart(FFormationChartList.Items[I]).FChartDataSet) then
+  with TFormationChart(FFormationChartList.Items[I]) do
+  begin
+
+    FChartDataSet.DisableControls;
+    try
+      FChartDataSet.First;
+      while not FChartDataSet.Eof do
+      begin
+        FChartDataSet.Edit;
+
+        for J := 0 to FSeriesColumnList.Count - 1 do
+        begin
+          if Assigned(FChartDataSet.FindField(TSeriesColumn(FSeriesColumnList.Items[J]).SeriesFieldName)) then
+          begin
+
+            if TSeriesColumn(FSeriesColumnList.Items[J]).Column is TcxGridDBBandedColumn then
+               FieldName := TcxGridDBBandedColumn(TSeriesColumn(FSeriesColumnList.Items[J]).Column).DataBinding.FieldName;
+            if TSeriesColumn(FSeriesColumnList.Items[J]).Column is TcxGridDBColumn then
+               FieldName := TcxGridDBColumn(TSeriesColumn(FSeriesColumnList.Items[J]).Column).DataBinding.FieldName;
+            FieldName := FieldName + IntToStr(FChartDataSet.RecNo);
+
+            if Assigned(DataSet) and Assigned(DataSet.FindField(FieldName)) then
+              FChartDataSet.FindField(TSeriesColumn(FSeriesColumnList.Items[J]).SeriesFieldName).AsVariant := DataSet.FieldByName(FieldName).AsVariant
+            else FChartDataSet.FindField(TSeriesColumn(FSeriesColumnList.Items[J]).SeriesFieldName).AsVariant := 0;
+          end;
+        end;
+
+        FChartDataSet.Post;
+        FChartDataSet.Next;
+      end;
+    finally
+      FChartDataSet.EnableControls;
+    end;
+  end;
+
+
+end;
+
 
 end.

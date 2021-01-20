@@ -56,9 +56,6 @@ type
     cxSplitter1: TcxSplitter;
     ChartCDS: TClientDataSet;
     ChartDS: TDataSource;
-    ChartCDSId: TIntegerField;
-    ChartCDSDateName: TStringField;
-    ChartCDSCount: TIntegerField;
   private
     { Private declarations }
   public
