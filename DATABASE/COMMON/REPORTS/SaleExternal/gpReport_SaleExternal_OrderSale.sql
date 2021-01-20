@@ -14,7 +14,8 @@ RETURNS TABLE (FromName TVarChar
              , PartnerRealId Integer, PartnerRealName TVarChar
              , GoodsPropertyName TVarChar
              , AmountKg TFloat, AmountKg_1 TFloat, AmountKg_2 TFloat, AmountKg_3 TFloat, AmountKg_avg TFloat
-             , PartKg TFloat
+             , SummWithVAT TFloat, SummWithVAT_1 TFloat, SummWithVAT_2 TFloat, SummWithVAT_3 TFloat, SummWithVAT_avg TFloat
+             , PartKg TFloat, PartSum TFloat
              , TotalSumm_calc TFloat
              , TotalWeight_calc TFloat
              
@@ -29,6 +30,10 @@ $BODY$
    DECLARE vbEndDate TDateTime;
    DECLARE vbStartDate_2 TDateTime;
    DECLARE vbStartDate_3 TDateTime;
+   
+   DECLARE vbPriceListId  Integer;
+   DECLARE vbPriceWithVAT Boolean;
+   DECLARE vbVATPercent   TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
@@ -54,6 +59,26 @@ BEGIN
                            WHERE ObjectLink_Retail_GoodsProperty.ObjectId = inRetailId --310854 --inRetailId
                              AND ObjectLink_Retail_GoodsProperty.DescId = zc_ObjectLink_Retail_GoodsProperty()
                            );
+     -- определяем прайс юр.лица по сети
+     vbPriceListId := COALESCE((SELECT MAX (ObjectLink_Juridical_PriceList.ChildObjectId) AS PriceList
+                                FROM ObjectLink AS ObjectLink_Juridical_Retail
+                                     INNER JOIN ObjectLink AS ObjectLink_Juridical_PriceList
+                                                          ON ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
+                                                         AND ObjectLink_Juridical_PriceList.ObjectId = ObjectLink_Juridical_Retail.ObjectId
+                                                         AND COALESCE (ObjectLink_Juridical_PriceList.ChildObjectId,0) <> 0
+                                WHERE ObjectLink_Juridical_Retail.ChildObjectId = inRetailId -- 310854--
+                                  AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail())
+                              , zc_PriceList_Basis() );
+
+     SELECT ObjectBoolean_PriceWithVAT.ValueData AS PriceWithVAT
+          , ObjectFloat_VATPercent.ValueData     AS VATPercent
+    INTO vbPriceWithVAT, vbVATPercent
+     FROM ObjectBoolean AS ObjectBoolean_PriceWithVAT
+          LEFT JOIN ObjectFloat AS ObjectFloat_VATPercent
+                                ON ObjectFloat_VATPercent.DescId = zc_ObjectFloat_PriceList_VATPercent()
+                               AND ObjectFloat_VATPercent.ObjectId = ObjectBoolean_PriceWithVAT.ObjectId
+     WHERE ObjectBoolean_PriceWithVAT.ObjectId = vbPriceListId
+       AND ObjectBoolean_PriceWithVAT.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT();
 
      RETURN QUERY
      WITH
@@ -97,6 +122,16 @@ BEGIN
                           WHERE COALESCE (vbGoodsPropertyId,0) = 0
                           )
 
+        -- Цены из прайса
+      , tmpPriceList AS (SELECT lfSelect.GoodsId     AS GoodsId
+                              , lfSelect.GoodsKindId AS GoodsKindId
+                              , lfSelect.ValuePrice  AS Price
+                         FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId
+                                                                  , inOperDate   := inOperDate
+                                                                   ) AS lfSelect
+                         WHERE lfSelect.ValuePrice <> 0
+                        )
+
    --Данные из документов  OrderSale
    , tmpMovement_OS AS (SELECT tmp.*
                         FROM gpSelect_Movement_OrderSale (inOperDate, inOperDate + INTERVAL '1 MONTH' - INTERVAL '1 DAY', 0, False, inSession) AS tmp
@@ -116,37 +151,37 @@ BEGIN
                         )
 
    , tmpMovementAll_SE AS (SELECT tmpMovement.*
-                             , Object_From.Id                 AS FromId
-                             , Object_From.ValueData          AS FromName
-                             , Object_PartnerFrom.Id          AS PartnerId_from
-                             , Object_PartnerFrom.ValueData   AS PartnerName_from
-                             , Object_GoodsProperty.ValueData AS GoodsPropertyName
-                             , Object_PartnerReal.Id          AS PartnerRealId 
-                             , Object_PartnerReal.ValueData   AS PartnerRealName
-                             , Object_PartnerReal.DescId      AS PartnerRealDescId
-                        FROM tmpMovement_SE AS tmpMovement
-                             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                          ON MovementLinkObject_From.MovementId = tmpMovement.Id
-                                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-
-                             LEFT JOIN ObjectLink AS ObjectLink_PartnerExternal_Partner
-                                                  ON ObjectLink_PartnerExternal_Partner.ObjectId = Object_From.Id
-                                                 AND ObjectLink_PartnerExternal_Partner.DescId = zc_ObjectLink_PartnerExternal_Partner()
-                             LEFT JOIN Object AS Object_PartnerFrom ON Object_PartnerFrom.Id = ObjectLink_PartnerExternal_Partner.ChildObjectId
-
-                             LEFT JOIN ObjectLink AS ObjectLink_PartnerReal
-                                                  ON ObjectLink_PartnerReal.ObjectId = Object_From.Id 
-                                                 AND ObjectLink_PartnerReal.DescId = zc_ObjectLink_PartnerExternal_PartnerReal()
-
-                             LEFT JOIN ObjectLink AS ObjectLink_Retail
-                                                  ON ObjectLink_Retail.ObjectId = Object_From.Id
-                                                 AND ObjectLink_Retail.DescId = zc_ObjectLink_PartnerExternal_Retail()
-                             --если не указано РЦ считаем и группируем по Торг. сети
-                             LEFT JOIN Object AS Object_PartnerReal ON Object_PartnerReal.Id = COALESCE (ObjectLink_PartnerReal.ChildObjectId, ObjectLink_Retail.ChildObjectId)
-
-                             LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = tmpMovement.GoodsPropertyId
-                       )
+                                , Object_From.Id                 AS FromId
+                                , Object_From.ValueData          AS FromName
+                                , Object_PartnerFrom.Id          AS PartnerId_from
+                                , Object_PartnerFrom.ValueData   AS PartnerName_from
+                                , Object_GoodsProperty.ValueData AS GoodsPropertyName
+                                , Object_PartnerReal.Id          AS PartnerRealId 
+                                , Object_PartnerReal.ValueData   AS PartnerRealName
+                                , Object_PartnerReal.DescId      AS PartnerRealDescId
+                           FROM tmpMovement_SE AS tmpMovement
+                                LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                             ON MovementLinkObject_From.MovementId = tmpMovement.Id
+                                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+   
+                                LEFT JOIN ObjectLink AS ObjectLink_PartnerExternal_Partner
+                                                     ON ObjectLink_PartnerExternal_Partner.ObjectId = Object_From.Id
+                                                    AND ObjectLink_PartnerExternal_Partner.DescId = zc_ObjectLink_PartnerExternal_Partner()
+                                LEFT JOIN Object AS Object_PartnerFrom ON Object_PartnerFrom.Id = ObjectLink_PartnerExternal_Partner.ChildObjectId
+   
+                                LEFT JOIN ObjectLink AS ObjectLink_PartnerReal
+                                                     ON ObjectLink_PartnerReal.ObjectId = Object_From.Id 
+                                                    AND ObjectLink_PartnerReal.DescId = zc_ObjectLink_PartnerExternal_PartnerReal()
+   
+                                LEFT JOIN ObjectLink AS ObjectLink_Retail
+                                                     ON ObjectLink_Retail.ObjectId = Object_From.Id
+                                                    AND ObjectLink_Retail.DescId = zc_ObjectLink_PartnerExternal_Retail()
+                                --если не указано РЦ считаем и группируем по Торг. сети
+                                LEFT JOIN Object AS Object_PartnerReal ON Object_PartnerReal.Id = COALESCE (ObjectLink_PartnerReal.ChildObjectId, ObjectLink_Retail.ChildObjectId)
+   
+                                LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = tmpMovement.GoodsPropertyId
+                          )
    
    , tmpGoods AS (SELECT lfSelect.GoodsId AS GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect
                   WHERE inGoodsGroupId <> 0
@@ -155,12 +190,26 @@ BEGIN
                   WHERE Object.DescId = zc_Object_Goods() AND Object.IsErased = FALSE
                     AND COALESCE (inGoodsGroupId, 0) = 0
                   )
+   , tmpMI_All AS (SELECT MovementItem.*
+                   FROM tmpMovementAll_SE AS tmpMovementAll
+                         INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovementAll.Id
+                                                AND MovementItem.DescId     = zc_MI_Master()
+                                                AND MovementItem.isErased   = FALSE
+                   )
 
+   , tmpMILinkObject_GoodsKind AS (SELECT MILinkObject_GoodsKind.*
+                                   FROM MovementItemLinkObject AS MILinkObject_GoodsKind
+                                   WHERE MILinkObject_GoodsKind.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
+                                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                   )
    , tmpMI AS (SELECT tmp.MovementId
                     , tmp.AmountKg
                     , tmp.AmountSh
                     , tmp.TotalAmountKg
+                    , tmp.SummWithVAT
+                    , tmp.TotalSummWithVAT
                     , CASE WHEN COALESCE (tmp.TotalAmountKg,0) <> 0 THEN tmp.AmountKg / tmp.TotalAmountKg *100 ELSE 0 END  AS PartKg
+                    , CASE WHEN COALESCE (tmp.TotalSummWithVAT,0) <> 0 THEN tmp.SummWithVAT / tmp.TotalSummWithVAT *100 ELSE 0 END  AS PartSum
                FROM (
                      SELECT tmpMovementAll.Id                                AS MovementId
       
@@ -177,12 +226,36 @@ BEGIN
                                           THEN MovementItem.Amount * COALESCE (ObjectFloat_Weight.ValueData,1)
                                           ELSE MovementItem.Amount
                                      END)) OVER (PARTITION BY tmpMovementAll.PartnerRealId) AS TotalAmountKg
+                          --
+                          , SUM (MovementItem.Amount
+                                * CASE WHEN vbPriceWithVAT = TRUE OR vbVATPercent = 0                                       -- если цены с НДС
+                                       THEN COALESCE (tmpPriceList_kind.Price, tmpPriceList.Price,0)
+                                       WHEN vbVATPercent > 0                                                                -- если цены без НДС
+                                       THEN CAST ( (1 + vbVATPercent / 100) * (COALESCE (tmpPriceList_kind.Price, tmpPriceList.Price,0)) AS NUMERIC (16, 2))
+                                  END) AS SummWithVAT
+
+                          , SUM (SUM (MovementItem.Amount
+                                    * CASE WHEN vbPriceWithVAT = TRUE OR vbVATPercent = 0                                       -- если цены с НДС
+                                           THEN COALESCE (tmpPriceList_kind.Price, tmpPriceList.Price,0)
+                                           WHEN vbVATPercent > 0                                                                -- если цены без НДС
+                                           THEN CAST ( (1 + vbVATPercent / 100) * (COALESCE (tmpPriceList_kind.Price, tmpPriceList.Price,0)) AS NUMERIC (16, 2))
+                                      END)) OVER (PARTITION BY tmpMovementAll.PartnerRealId) AS TotalSummWithVAT
+               
                      FROM tmpMovementAll_SE AS tmpMovementAll
-                         INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovementAll.Id
-                                                AND MovementItem.DescId     = zc_MI_Master()
-                                                AND MovementItem.isErased   = FALSE
-                         INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
-      
+                         INNER JOIN tmpMI_All AS MovementItem ON MovementItem.MovementId = tmpMovementAll.Id
+
+                         ---INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
+                         LEFT JOIN tmpMILinkObject_GoodsKind AS MILinkObject_GoodsKind
+                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+                         -- 2 раза по виду товара и без
+                         LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = MovementItem.ObjectId
+                                               ANd tmpPriceList.GoodsKindId IS NULL
+                         LEFT JOIN tmpPriceList AS tmpPriceList_kind
+                                                ON tmpPriceList_kind.GoodsId = MovementItem.ObjectId
+                                               ANd COALESCE (tmpPriceList_kind.GoodsKindId,0) = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+
                          LEFT JOIN ObjectLink AS ObjectLink_Measure
                                               ON ObjectLink_Measure.ObjectId = MovementItem.ObjectId
                                              AND ObjectLink_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -224,6 +297,13 @@ BEGIN
                       , tmp.AmountKg                  --- Итого
                       , tmp.AmountKg_avg              --ср в месяц, кг
                       , CASE WHEN COALESCE (tmp.TotalAmountKg_avg,0) <> 0 THEN tmp.AmountKg_avg / tmp.TotalAmountKg_avg *100 ELSE 0 END  AS PartKg -- расчет от среднего
+                      --
+                      , tmp.SummWithVAT_1
+                      , tmp.SummWithVAT_2
+                      , tmp.SummWithVAT_3
+                      , tmp.SummWithVAT                  --- Итого
+                      , tmp.SummWithVAT_avg              --ср в месяц, кг
+                      , CASE WHEN COALESCE (tmp.TotalSummWithVAT_avg,0) <> 0 THEN tmp.SummWithVAT_avg / tmp.TotalSummWithVAT_avg *100 ELSE 0 END  AS PartSum -- расчет от среднего
                  FROM (SELECT Movement.FromName
                             , Movement.PartnerId_from
                             , Movement.PartnerName_from
@@ -236,6 +316,13 @@ BEGIN
                             , SUM (tmpMI.AmountKg)    AS AmountKg
                             , SUM (tmpMI.AmountKg)/3  AS AmountKg_avg
                             , SUM ((SUM(tmpMI.AmountKg)/3)) OVER (PARTITION BY Movement.PartnerRealId) AS TotalAmountKg_avg
+                            -- для сумм
+                            , SUM (CASE WHEN Movement.OperDate BETWEEN vbStartDate   AND vbStartDate_2 - INTERVAL '1 DAY' THEN tmpMI.SummWithVAT END) AS SummWithVAT_1
+                            , SUM (CASE WHEN Movement.OperDate BETWEEN vbStartDate_2 AND vbStartDate_3 - INTERVAL '1 DAY' THEN tmpMI.SummWithVAT END) AS SummWithVAT_2
+                            , SUM (CASE WHEN Movement.OperDate BETWEEN vbStartDate_3 AND vbEndDate                        THEN tmpMI.SummWithVAT END) AS SummWithVAT_3
+                            , SUM (tmpMI.SummWithVAT)    AS SummWithVAT
+                            , SUM (tmpMI.SummWithVAT)/3  AS SummWithVAT_avg
+                            , SUM ((SUM(tmpMI.SummWithVAT)/3)) OVER (PARTITION BY Movement.PartnerRealId) AS TotalSummWithVAT_avg
                        FROM tmpMovementAll_SE AS Movement
                             INNER JOIN tmpMI ON tmpMI.MovementId = Movement.Id
                        GROUP BY Movement.FromName
@@ -262,11 +349,18 @@ BEGIN
            , tmpData.AmountKg_2   :: TFloat
            , tmpData.AmountKg_3   :: TFloat
            , tmpData.AmountKg_avg :: TFloat
-           
-           , tmpData.PartKg     :: TFloat
-           
-           , (COALESCE (tmpReport.Sale_Summ, tmpReport_ret.Sale_Summ)     * tmpData.PartKg/100) :: TFloat AS TotalSumm_calc               -- Расчетная сумма продаж, грн (от факта)
-           , (COALESCE (tmpReport.Sale_Weight, tmpReport_ret.Sale_Weight) * tmpData.PartKg/100) :: TFloat AS TotalWeight_calc             -- Раасчетная сумма продаж, кг (от факта)
+
+           , tmpData.SummWithVAT     :: TFloat
+           , tmpData.SummWithVAT_1   :: TFloat
+           , tmpData.SummWithVAT_2   :: TFloat
+           , tmpData.SummWithVAT_3   :: TFloat
+           , tmpData.SummWithVAT_avg :: TFloat
+                      
+           , tmpData.PartKg      :: TFloat
+           , tmpData.PartSum     :: TFloat
+
+           , (COALESCE (tmpReport.Sale_Summ, tmpReport_ret.Sale_Summ)     * tmpData.PartSum/100) :: TFloat AS TotalSumm_calc               -- Расчетная сумма продаж, грн (от факта)
+           , (COALESCE (tmpReport.Sale_Weight, tmpReport_ret.Sale_Weight) * tmpData.PartKg /100) :: TFloat AS TotalWeight_calc             -- Раасчетная сумма продаж, кг (от факта)
            
            , COALESCE (tmpReport.Sale_Summ, tmpReport_ret.Sale_Summ)     :: TFloat AS TotalSumm
            , COALESCE (tmpReport.Sale_Weight, tmpReport_ret.Sale_Weight) :: TFloat AS TotalWeight

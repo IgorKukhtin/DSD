@@ -102,6 +102,36 @@ inherited Report_SaleExternal_OrderSaleForm: TReport_SaleExternal_OrderSaleForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountKg_3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummWithVAT_1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummWithVAT_2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummWithVAT_3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummWithVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummWithVAT_avg
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = PartSum
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -182,6 +212,36 @@ inherited Report_SaleExternal_OrderSaleForm: TReport_SaleExternal_OrderSaleForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountKg_3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummWithVAT_1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummWithVAT_2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummWithVAT_3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummWithVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummWithVAT_avg
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = PartSum
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -231,9 +291,29 @@ inherited Report_SaleExternal_OrderSaleForm: TReport_SaleExternal_OrderSaleForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object SummWithVAT_1: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086', '#1075#1088#1085' (1 '#1084#1077#1089'.)'
+            DataBinding.FieldName = 'SummWithVAT_1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object AmountKg_2: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086', '#1082#1075' (2 '#1084#1077#1089'.)'
             DataBinding.FieldName = 'AmountKg_2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object SummWithVAT_2: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086', '#1075#1088#1085' (2 '#1084#1077#1089'.)'
+            DataBinding.FieldName = 'SummWithVAT_2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -251,9 +331,29 @@ inherited Report_SaleExternal_OrderSaleForm: TReport_SaleExternal_OrderSaleForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object SummWithVAT_3: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086', '#1075#1088#1085' (3 '#1084#1077#1089'.)'
+            DataBinding.FieldName = 'SummWithVAT_3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object AmountKg: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086', '#1082#1075
             DataBinding.FieldName = 'AmountKg'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object SummWithVAT: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086', '#1075#1088#1085
+            DataBinding.FieldName = 'SummWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -271,9 +371,29 @@ inherited Report_SaleExternal_OrderSaleForm: TReport_SaleExternal_OrderSaleForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object SummWithVAT_avg: TcxGridDBColumn
+            Caption = #1057#1088'. '#1074' '#1084#1077#1089#1103#1094', '#1075#1088#1085
+            DataBinding.FieldName = 'SummWithVAT_avg'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object PartKg: TcxGridDBColumn
             Caption = #1044#1086#1083#1103' '#1087#1088#1086#1076#1072#1078' '#1074' '#1082#1075
             DataBinding.FieldName = 'PartKg'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object PartSum: TcxGridDBColumn
+            Caption = #1044#1086#1083#1103' '#1087#1088#1086#1076#1072#1078' '#1074' '#1075#1088#1085
+            DataBinding.FieldName = 'PartSum'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
