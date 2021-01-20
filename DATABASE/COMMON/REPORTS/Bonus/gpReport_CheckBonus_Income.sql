@@ -191,6 +191,7 @@ BEGIN
                 WHERE ObjectLink_ContractConditionKind.ChildObjectId IN (zc_Enum_ContractConditionKind_BonusPercentAccount()
                                                                        , zc_Enum_ContractConditionKind_BonusPercentIncome()
                                                                        , zc_Enum_ContractConditionKind_BonusPercentIncomeReturn()
+                                                                       , zc_Enum_ContractConditionKind_BonusPercentIncomeReturnS()
                                                                         )
                   AND ObjectLink_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
                 );
@@ -592,14 +593,16 @@ BEGIN
                              , CAST (CASE WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentIncome() THEN COALESCE (tmpMovement.Amount_in,0)                     --  база приход кг -tmpMovement.Sum_Income
                                           WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentIncomeReturn() THEN  (COALESCE (tmpMovement.Amount_in,0) - COALESCE (tmpMovement.Amount_out,0)) --база приход-возврат кг  --  tmpMovement.Sum_IncomeReturnOut
                                           WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccount() THEN tmpMovement.Sum_Account
+                                          WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentIncomeReturnS() THEN COALESCE (Sum_IncomeReturnOut,0)
                                      ELSE 0 END  AS TFloat) AS Sum_CheckBonus
       
                              --когда % возврата факт превышает % возврата план, бонус не начисляется
                              , CAST (CASE WHEN (COALESCE (tmpContract.PercentRetBonus,0) <> 0 AND tmpMovement.PercentRetBonus_fact > tmpContract.PercentRetBonus) THEN 0
                                           ELSE
-                                             CASE WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentIncome() THEN COALESCE (tmpMovement.Amount_in,0) * tmpContract.Value                                                ----(tmpMovement.Sum_Income/100 * tmpContract.Value)
-                                                  WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentIncomeReturn() THEN  (COALESCE (tmpMovement.Amount_in,0) - COALESCE (tmpMovement.Amount_out,0)) * tmpContract.Value ----(tmpMovement.Sum_IncomeReturnOut/100 * tmpContract.Value)
-                                                  WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccount() THEN (tmpMovement.Sum_Account/100 * tmpContract.Value)
+                                             CASE WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentIncome()        THEN COALESCE (tmpMovement.Amount_in,0) * tmpContract.Value                                                ----(tmpMovement.Sum_Income/100 * tmpContract.Value)
+                                                  WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentIncomeReturn()  THEN (COALESCE (tmpMovement.Amount_in,0) - COALESCE (tmpMovement.Amount_out,0)) * tmpContract.Value        ----(tmpMovement.Sum_IncomeReturnOut/100 * tmpContract.Value)
+                                                  WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccount()       THEN (tmpMovement.Sum_Account/100 * tmpContract.Value)
+                                                  WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentIncomeReturnS() THEN COALESCE (tmpMovement.Sum_IncomeReturnOut,0) / 100 * tmpContract.Value 
                                              ELSE 0 END
                                      END  AS NUMERIC (16, 2)) AS Sum_Bonus
       
