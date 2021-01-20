@@ -425,7 +425,7 @@ BEGIN
         --ограничиваем контрагентами и привязываем свойства договора
       , tmpMovementCont AS (SELECT tmpContractGroup.JuridicalId
                                  , tmpContractGroup.ContractId_master
-                                 , tmpContractGroup.ContractId_child AS ContractId_child  --tmpContractGroup.ContractId_child   --tmpContractPartner.ContractId_baza
+                                 , tmpContractPartner.ContractId_baza AS ContractId_child  --tmpContractGroup.ContractId_child
                                  , 0 AS InfoMoneyId_child --tmpContractGroup.InfoMoneyId_child
                                  , tmpContractPartner.PaidKindId_byBase --tmpContractGroup.PaidKindId_byBase
                                  , tmpContractGroup.ContractConditionId
