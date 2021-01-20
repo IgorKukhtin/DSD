@@ -14,7 +14,10 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, Code 
               )
 AS
 $BODY$
+  DECLARE vbIsSale Boolean;
+  DECLARE vbIsReturnIn Boolean;
 BEGIN
+
 
 IF inIsBefoHistoryCost = TRUE
 THEN
@@ -26,7 +29,25 @@ THEN
 --  inGroupId:=  2; -- остальные филиалы
 END IF;
 
+
 -- inIsBefoHistoryCost:= TRUE;
+
+
+     -- !!!НУЖНЫ ли ПРОДАЖИ!!!
+     vbIsSale:= -- если последний 1 день месяца
+                (DATE_TRUNC ('MONTH', CURRENT_DATE) + INTERVAL '1 DAY')  > (DATE_TRUNC ('MONTH', CURRENT_DATE))
+                -- или ПЕРВЫЕ 12 дней месяца
+             OR (DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '12 DAY') < (DATE_TRUNC ('MONTH', CURRENT_DATE))
+                -- или ПЕРВЫЕ 5 дней месяца
+           --OR (DATE_TRUNC ('MONTH', CURRENT_DATE) + INTERVAL '5 DAY')  < (DATE_TRUNC ('MONTH', CURRENT_DATE))
+                ;
+     -- !!!НУЖНЫ ли ВОЗВРАТЫ!!!
+     vbIsReturnIn:= -- если последние 3 дня месяца
+                (DATE_TRUNC ('MONTH', CURRENT_DATE) + INTERVAL '3 DAY')  > (DATE_TRUNC ('MONTH', CURRENT_DATE))
+                -- или vbIsSale
+             OR vbIsSale = TRUE
+                ;
+
 
      -- !!!ВРЕМЕННО!!!
      /*IF inStartDate >= '01.02.2018' THEN
@@ -185,6 +206,8 @@ END IF;
        --OR tmpUnit_To.UnitId > 0
            )
        AND inGroupId <= 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
+       -- !!!НУЖНЫ ли ПРОДАЖИ!!!
+       AND (vbIsSale = TRUE OR Movement.DescId = zc_Movement_SaleAsset())
 
     UNION
      -- 1.2. From: Loss
@@ -236,6 +259,8 @@ END IF;
        AND inIsBefoHistoryCost = FALSE
        AND (tmpUnit_To.UnitId > 0)
        AND inGroupId <= 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
+       -- !!!НУЖНЫ ли ВОЗВРАТЫ!!!
+       AND vbIsReturnIn = TRUE
 
     UNION
      -- 1.4. From: ReturnOut
@@ -396,6 +421,8 @@ END IF;
        AND inIsBefoHistoryCost = FALSE
        --*** AND (inIsSale           = TRUE OR Movement.DescId = zc_Movement_SendOnPrice())
        AND inGroupId <> 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
+       -- !!!НУЖНЫ ли ПРОДАЖИ!!!
+       AND (vbIsSale = TRUE OR Movement.DescId = zc_Movement_SendOnPrice())
 
     UNION
      -- 4.2. From: Loss
@@ -440,6 +467,8 @@ END IF;
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = FALSE -- *****?????
        AND inGroupId <> 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
+       -- !!!НУЖНЫ ли ВОЗВРАТЫ!!!
+       AND vbIsReturnIn = TRUE
 
     UNION
      -- 4.4. To: Peresort
