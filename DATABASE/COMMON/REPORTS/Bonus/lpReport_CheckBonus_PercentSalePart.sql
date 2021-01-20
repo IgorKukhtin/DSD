@@ -337,7 +337,7 @@ BEGIN
       -- только бонусные договора
     , tmpContract AS (SELECT tmpContractConditionKind.JuridicalId
                            , tmpContractConditionKind.InvNumber_master
-                           , tmpContractConditionKind.InvNumber_master  AS InvNumber_child
+                           , Object_Contract.ValueData                AS InvNumber_child
                            , tmpContractConditionKind.ContractId_master
                            , tmpContractConditionKind.ContractId_baza AS ContractId_child
                            , tmpContractConditionKind.ContractTagName_master       AS ContractTagName_child
@@ -354,6 +354,7 @@ BEGIN
                            , tmpContractConditionKind.Comment
                            , tmpContractConditionKind.ContractConditionId
                       FROM tmpContractConditionKind
+                           LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpContractConditionKind.ContractId_baza
                      )
                      
       -- группируем договора, т.к. "базу" будем формировать по 4-м ключам
@@ -388,13 +389,13 @@ BEGIN
                     )
 
      -- получаем расчетные данные из отчета по внешним продажам
-    , tmpReport AS (SELECT tmpReport.PartnerId_from AS PartnerId
+    , tmpReport AS (--Готовая продукция
+                    SELECT tmpReport.PartnerId_from AS PartnerId
                          , tmpReport.ContractId
                          , (tmpReport.AmountKg) AS AmountKg                    -- Кол-во, кг - внешняя продажа
                          , (tmpReport.AmountSh) AS AmountSh                    -- кол-во, шт - внешняя продажа
                          , (tmpReport.PartKg) AS PartKg                      -- Доля продаж в кг
                          , tmpReport.PartnerRealId 
-                         --, SUM(tmpReport.PartnerRealName) AS PartnerRealName
                          , (tmpReport.TotalSumm_calc) AS TotalSumm_calc              -- Расчетная сумма продаж, грн  БАЗА
                          , (tmpReport.TotalWeight_calc) AS TotalWeight_calc            -- Расчетная сумма продаж, кг
                          , SUM(tmpReport.SaleReturn_Summ) AS SaleReturn_Summ             -- Чистая продажа, грн
@@ -408,7 +409,7 @@ BEGIN
                                                         , inEndDate      := inEndDate      ::TDateTime    
                                                         , inRetailId     := tmp.RetailId   ::Integer      
                                                         , inJuridicalId  := CASE WHEN tmp.RetailId = 310859 THEN 15196 ELSE 0 END ::Integer   -- для Новуса ограничиваем еще юрлицом
-                                                        , inGoodsGroupId := 1832           ::Integer       --1832  Готовая продукция
+                                                        , inGoodsGroupId :=  1832           ::Integer       --1832  Готовая продукция
                                                         , inisContract   := true           ::Boolean       --разворачивать по договорам
                                                         , inSession      := inSession      ::TVarChar
                                                         ) AS tmpReport ON 1=1
@@ -419,7 +420,40 @@ BEGIN
                            , (tmpReport.PartKg)
                            , tmpReport.PartnerRealId 
                            , (tmpReport.TotalSumm_calc) 
-                           , (tmpReport.TotalWeight_calc) 
+                           , (tmpReport.TotalWeight_calc)
+                   UNION
+                    -- + Тушенка       
+                    SELECT tmpReport.PartnerId_from AS PartnerId
+                         , tmpReport.ContractId
+                         , (tmpReport.AmountKg) AS AmountKg                    -- Кол-во, кг - внешняя продажа
+                         , (tmpReport.AmountSh) AS AmountSh                    -- кол-во, шт - внешняя продажа
+                         , (tmpReport.PartKg) AS PartKg                      -- Доля продаж в кг
+                         , tmpReport.PartnerRealId 
+                         , (tmpReport.TotalSumm_calc) AS TotalSumm_calc              -- Расчетная сумма продаж, грн  БАЗА
+                         , (tmpReport.TotalWeight_calc) AS TotalWeight_calc            -- Расчетная сумма продаж, кг
+                         , SUM(tmpReport.SaleReturn_Summ) AS SaleReturn_Summ             -- Чистая продажа, грн
+                         , SUM(tmpReport.Sale_Summ) AS Sale_Summ                   -- Продажа, грн
+                         , SUM(tmpReport.Return_Summ)AS Return_Summ                 -- Возврат, грн
+                         , SUM(tmpReport.SaleReturn_Weight) AS SaleReturn_Weight           -- Чистая продажа, кг
+                         , SUM(tmpReport.Sale_Weight) AS Sale_Weight                 -- продажа, кг
+                         , SUM(tmpReport.Return_Weight)  AS Return_Weight             -- возврат , кг
+                    FROM (SELECT DISTINCT tmpRetail.RetailId FROM tmpRetail) AS tmp
+                         LEFT JOIN gpReport_SaleExternal (inStartDate    := inStartDate    ::TDateTime 
+                                                        , inEndDate      := inEndDate      ::TDateTime    
+                                                        , inRetailId     := tmp.RetailId   ::Integer      
+                                                        , inJuridicalId  := CASE WHEN tmp.RetailId = 310859 THEN 15196 ELSE 0 END ::Integer   -- для Новуса ограничиваем еще юрлицом
+                                                        , inGoodsGroupId :=  1979           ::Integer       --1979 Тущенка
+                                                        , inisContract   := true           ::Boolean       --разворачивать по договорам
+                                                        , inSession      := inSession      ::TVarChar
+                                                        ) AS tmpReport ON 1=1
+                    GROUP BY tmpReport.PartnerId_from 
+                           , tmpReport.ContractId
+                           , (tmpReport.AmountKg)
+                           , (tmpReport.AmountSh)
+                           , (tmpReport.PartKg)
+                           , tmpReport.PartnerRealId 
+                           , (tmpReport.TotalSumm_calc) 
+                           , (tmpReport.TotalWeight_calc)                   
                    )
 
         --ограничиваем контрагентами и привязываем свойства договора

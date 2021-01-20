@@ -178,7 +178,7 @@ BEGIN
                          INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovementAll.Id
                                                 AND MovementItem.DescId     = zc_MI_Master()
                                                 AND MovementItem.isErased   = FALSE
-                         INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
+                         --INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
       
                          LEFT JOIN ObjectLink AS ObjectLink_Measure
                                               ON ObjectLink_Measure.ObjectId = MovementItem.ObjectId
@@ -211,7 +211,7 @@ BEGIN
                                   , SUM (COALESCE (tmp.Sale_Summ,0) - COALESCE (tmp.Return_Summ,0))      AS SaleReturn_Summ
                                   , SUM (COALESCE (tmp.Sale_AmountPartner_Weight,0))   AS Sale_Weight
                                   , SUM (COALESCE (tmp.Return_AmountPartner_Weight,0)) AS Return_Weight
-                                 , SUM (COALESCE (tmp.Sale_AmountPartner_Weight,0) - COALESCE (tmp.Return_AmountPartner_Weight,0))   AS SaleReturn_Weight
+                                  , SUM (COALESCE (tmp.Sale_AmountPartner_Weight,0) - COALESCE (tmp.Return_AmountPartner_Weight,0))   AS SaleReturn_Weight
                              FROM gpReport_GoodsMI_SaleReturnIn (inStartDate    := inStartDate    ::TDateTime 
                                                                , inEndDate      := inEndDate      ::TDateTime    
                                                                , inBranchId     := 0              ::Integer      
@@ -364,8 +364,7 @@ BEGIN
             LEFT JOIN tmpReport_2 AS tmpReport_ret ON tmpReport_ret.PartnerRealId = tmpData.PartnerRealId  --and 1=0
             LEFT JOIN tmpReport_1 AS tmpReport ON tmpReport.PartnerId = tmpData.PartnerId_from --  and 1=0
                                               AND ( COALESCE (tmpReport.ContractId,0) = COALESCE (tmpReport_rc.ContractId, tmpReport_ret.ContractId,0) )
-            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = COALESCE (tmpReport_rc.ContractId, tmpReport_ret.ContractId)  --and 1=0   
-            
+            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = COALESCE (tmpReport_rc.ContractId, tmpReport_ret.ContractId)  --and 1=0
       ;
 
 END;
