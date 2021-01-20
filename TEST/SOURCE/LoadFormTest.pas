@@ -3038,7 +3038,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAsset_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAsset_ObjectForm');
   //exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetEditForm'));
@@ -3049,7 +3049,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetTypeEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetTypeEditForm');
 
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetGroupForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetGroupEditForm'));
@@ -3064,9 +3064,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMakerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMakerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMakerEditForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetGoodsPlaceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetGoodsPlaceForm');
+  {
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetToPlaceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetToPlaceForm');
