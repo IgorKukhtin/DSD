@@ -67,6 +67,9 @@ type
     bbOpenForm_51201: TdxBarButton;
     ContractTagName_master: TcxGridDBColumn;
     ContractTagName_child: TcxGridDBColumn;
+    actPrint: TdsdPrintAction;
+    bbactPrint: TdxBarButton;
+    PersonalName: TcxGridDBColumn;
   private
     { Private declarations }
   public

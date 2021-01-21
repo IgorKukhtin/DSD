@@ -34,6 +34,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_full TVarChar, OperDate
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar
              , BonusKindId Integer, BonusKindName TVarChar
              , BranchId Integer, BranchName TVarChar
+             , PersonalName TVarChar
              , isLoad Boolean
                )
 AS
@@ -138,6 +139,7 @@ BEGIN
            
            , Object_Branch.Id                               AS BranchId
            , Object_Branch.ValueData                        AS BranchName
+           , Object_Personal_View.PersonalName              AS PersonalName
 
            , COALESCE (MovementBoolean_isLoad.ValueData, FALSE) AS isLoad
 
@@ -236,6 +238,21 @@ BEGIN
                                      AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
 
             LEFT JOIN tmpMI_Child ON tmpMI_Child.MovementId = Movement.Id
+
+            --для бн берем из договора
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalTrade
+                                 ON ObjectLink_Contract_PersonalTrade.ObjectId = MILinkObject_ContractMaster.ObjectId
+                                AND ObjectLink_Contract_PersonalTrade.DescId = zc_ObjectLink_Contract_PersonalTrade()
+            --для нал берем из контрагента          
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                 ON ObjectLink_Partner_PersonalTrade.ObjectId = ObjectLink_Partner_Juridical.ObjectId
+                                AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                AND (COALESCE (MILinkObject_PaidKind.ObjectId, 0) = zc_Enum_PaidKind_SecondForm()
+                                   OR COALESCE (ObjectLink_Contract_PersonalTrade.ChildObjectId,0) = 0
+                                     )
+            LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = COALESCE (ObjectLink_Partner_PersonalTrade.ChildObjectId, ObjectLink_Contract_PersonalTrade.ChildObjectId)
+
+
        WHERE ( COALESCE (MILinkObject_PaidKind.ObjectId, 0) = inPaidKindId OR inPaidKindId = 0)
          AND ( COALESCE (MILinkObject_Branch.ObjectId, 0) = inBranchId OR inBranchId = 0)
       ;
