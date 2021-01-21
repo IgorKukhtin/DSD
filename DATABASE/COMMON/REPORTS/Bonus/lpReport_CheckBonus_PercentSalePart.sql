@@ -459,7 +459,7 @@ BEGIN
         --ограничиваем контрагентами и прив€зываем свойства договора
       , tmpMovementCont AS (SELECT tmpContractGroup.JuridicalId
                                  , tmpContractGroup.ContractId_master
-                                 , tmpContractPartner.ContractId_baza AS ContractId_child  --tmpContractGroup.ContractId_child
+                                 , COALESCE (tmpContractPartner.ContractId_baza, tmpContractGroup.ContractId_master) AS ContractId_child  --tmpContractGroup.ContractId_child
                                  , 0 AS InfoMoneyId_child --tmpContractGroup.InfoMoneyId_child
                                  , tmpContractPartner.PaidKindId_byBase --tmpContractGroup.PaidKindId_byBase
                                  , tmpContractGroup.ContractConditionId
@@ -589,14 +589,14 @@ BEGIN
 
            , tmpAll as(SELECT tmp.*
                        FROM (SELECT tmpContract.InvNumber_master
-                                  , tmpContract.InvNumber_child
+                                  , CASE WHEN COALESCE(tmpContract.ContractId_child,0) <> 0 THEN tmpContract.InvNumber_child ELSE tmpContract.InvNumber_master END AS InvNumber_child 
                                   , tmpContract.InvNumber_master AS InvNumber_find
       
                                   , tmpContract.ContractTagName_child
                                   , tmpContract.ContractStateKindCode_child
       
                                   , tmpContract.ContractId_master
-                                  , tmpContract.ContractId_child 
+                                  , CASE WHEN COALESCE(tmpContract.ContractId_child,0) <> 0 THEN tmpContract.ContractId_child ELSE tmpContract.ContractId_master END AS ContractId_child 
                                   , tmpContract.ContractId_master AS ContractId_find
       
                                   , tmpContract.InfoMoneyId_master
@@ -748,7 +748,7 @@ BEGIN
                                                                , zc_Enum_InfoMoney_21502()) -- ћаркетинг + Ѕонусы за м€сное сырье
                          AND (Object_Juridical.Id = inJuridicalId OR inJuridicalId = 0)
                          AND (COALESCE (MILinkObject_Branch.ObjectId,0) = inBranchId OR inBranchId = 0)
-                         AND MILinkObject_ContractConditionKind.ObjectId = zc_Enum_ContractConditionKind_BonusPercentSalePart()
+                         AND COALESCE (MILinkObject_ContractConditionKind.ObjectId,0) = zc_Enum_ContractConditionKind_BonusPercentSalePart()
                        )
 
       , tmpData AS (SELECT tmpAll.ContractId_master
