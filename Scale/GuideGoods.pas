@@ -792,7 +792,7 @@ begin
             except
                   ParamsMI.ParamByName('BoxCount').AsFloat:= 0;
             end;
-            if ParamsMI.ParamByName('BoxCount').AsFloat <=0
+            if (ParamsMI.ParamByName('BoxCount').AsFloat <=0) and (CDS.FieldByName('isNotPriceIncome').AsBoolean = FALSE)
             then begin
                      ShowMessage('Ошибка.ЦЕНА не может быть <= 0.');
                      exit;
@@ -1017,7 +1017,7 @@ begin
                       exit;
                end;
                //
-               if StrToFloat(EditPrice.Text) <= 0
+               if (StrToFloat(EditPrice.Text) <= 0) and (CDS.FieldByName('isNotPriceIncome').AsBoolean = FALSE)
                then ActiveControl:=EditPrice
      end;
 

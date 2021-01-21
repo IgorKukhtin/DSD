@@ -418,7 +418,6 @@ object GuideGoodsForm: TGuideGoodsForm
         ParentFont = False
         TabOrder = 2
         OnClick = rgTareWeightClick
-        ExplicitTop = 104
       end
       object PanelTare: TPanel
         Left = 0
@@ -1426,6 +1425,8 @@ object GuideGoodsForm: TGuideGoodsForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 408
     Top = 392
   end

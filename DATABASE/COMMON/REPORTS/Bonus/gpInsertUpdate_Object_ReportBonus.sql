@@ -23,8 +23,21 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
 
     outIsSend := inIsSend;
-    
-    --пробуем найти, вдруг уже есть элемент
+
+
+     -- Проверка
+     IF COALESCE (inContractId_master, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлен договор <База>';
+     END IF;
+     -- Проверка
+     IF COALESCE (inContractId_child, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлен договор <Маркетинг>';
+     END IF;
+
+
+    -- пробуем найти, вдруг уже есть элемент
     IF COALESCE (ioId,0) = 0
     THEN
         IF COALESCE (inPartnerId, 0) = 0
@@ -84,16 +97,16 @@ BEGIN
                     );
         END IF;
     END IF;
-    
+
     -- Если isSend = TRUE, удалеяем из списка тех, кого переносить НЕ надо, т.е. будет isErased = TRUE
     IF COALESCE (ioId, 0) <> 0 AND inIsSend = TRUE
-    THEN 
+    THEN
         UPDATE Object SET isErased = TRUE WHERE Object.Id = ioId AND Object.DescId = zc_Object_ReportBonus();
     END IF;
 
     -- Если isSend = FALSE и такой элемент есть, восстанавливаем в списке тех, кого переносить НЕ надо, т.е. будет isErased = FALSE
     IF COALESCE (ioId,0) <> 0 AND inIsSend = FALSE
-    THEN 
+    THEN
         UPDATE Object SET isErased = FALSE WHERE Object.Id = ioId AND Object.DescId = zc_Object_ReportBonus();
         -- обновляем новые свойства -- 18,01,2021
           -- сохранили связь с <>
@@ -101,13 +114,13 @@ BEGIN
          -- сохранили связь с <>
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReportBonus_ContractChild(), ioId, inContractId_child);
     END IF;
-    
+
     -- если isSend = FALSE - и это новый элемент, сохраняем в списке тех, кого переносить НЕ надо
     IF COALESCE (ioId, 0) = 0 AND inIsSend = FALSE
     THEN
          -- сохранили <Объект>
          ioId := lpInsertUpdate_Object (ioId, zc_Object_ReportBonus(), 0, '');
-         
+
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_ObjectDate (zc_Object_ReportBonus_Month(), ioId, DATE_TRUNC ('MONTH', inMonth));
 
@@ -120,7 +133,7 @@ BEGIN
          -- сохранили связь с <>
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReportBonus_ContractChild(), ioId, inContractId_child);
     END IF;
-    
+
 
     IF ioId > 0
     THEN
@@ -128,7 +141,7 @@ BEGIN
         PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
     END IF;
 
-  
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -136,7 +149,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 25.09.20         * 
+ 25.09.20         *
 */
 
 

@@ -39,6 +39,7 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
              , MovementId_Promo      Integer
              , isPromo               Boolean
              , isTare                Boolean
+             , isNotPriceIncome      Boolean
              , tmpDate               TDateTime
              , Weight TFloat, WeightTare TFloat, CountForWeight TFloat
               )
@@ -466,6 +467,8 @@ BEGIN
                  , CASE WHEN tmpMI.MovementId_Promo > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPromo
                  , CASE WHEN tmpMI.isTare_calc = 1 THEN TRUE ELSE FALSE END :: Boolean AS isTare
 
+                 , CASE WHEN View_InfoMoney.InfoMoneyId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isNotPriceIncome
+
                  , CURRENT_DATE :: TDateTime AS tmpDate
 
                  , ObjectFloat_Weight.ValueData         AS Weight
@@ -513,6 +516,12 @@ BEGIN
                                      AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                  LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+                 LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                      ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
+                                     AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                 LEFT JOIN Object_InfoMoney_View AS View_InfoMoney
+                                                 ON View_InfoMoney.InfoMoneyId            = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500()) -- Оборотная тара
             ORDER BY Object_Goods.ValueData
                    , Object_GoodsKind.ValueData
                    -- , ObjectString_Goods_GoodsGroupFull.ValueData
@@ -977,6 +986,8 @@ BEGIN
                 , FALSE                       AS isPromo
                 , FALSE                       AS isTare
     
+                , CASE WHEN View_InfoMoney.InfoMoneyId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isNotPriceIncome
+
                 , CURRENT_DATE :: TDateTime   AS tmpDate
     
                 , ObjectFloat_Weight.ValueData         AS Weight
@@ -1010,6 +1021,13 @@ BEGIN
                 LEFT JOIN tmpPrice1 AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
                 LEFT JOIN tmpPrice2 AS lfObjectHistory_PriceListItem_Return ON lfObjectHistory_PriceListItem_Return.GoodsId = tmpGoods.GoodsId
     
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                     ON ObjectLink_Goods_InfoMoney.ObjectId = tmpGoods.GoodsId
+                                    AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                LEFT JOIN Object_InfoMoney_View AS View_InfoMoney
+                                                ON View_InfoMoney.InfoMoneyId            = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                               AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500()) -- Оборотная тара
+
            ORDER BY tmpGoods.GoodsName
                   -- , ObjectString_Goods_GoodsGroupFull.ValueData
           ;
