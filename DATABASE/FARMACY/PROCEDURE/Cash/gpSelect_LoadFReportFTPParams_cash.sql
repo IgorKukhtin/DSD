@@ -13,12 +13,22 @@ CREATE OR REPLACE FUNCTION gpSelect_LoadFReportFTPParams_cash(
 RETURNS RECORD 
 AS
 $BODY$
+   DECLARE vbUserId Integer;
+   DECLARE vbUnitId Integer;
+   DECLARE vbUnitKey TVarChar;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_DiffKind());
+    vbUserId:= lpGetUserBySession (inSession);
+    vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+    IF vbUnitKey = '' THEN
+       vbUnitKey := '0';
+    END IF;
+    vbUnitId := vbUnitKey::Integer;
 
-    outHost := 'ftp.neboley.dp.ua'; --'134.249.138.177';
+
+    outHost := CASE WHEN vbUnitId = 11152911 THEN '134.249.189.115' ELSE 'ftp.neboley.dp.ua' END; --'134.249.138.177';
     outPort := 12021;
     outUsername := 'zreport';
     outPassword := 'ZAaYuMuDg3bv9ZHF';
@@ -37,4 +47,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_LoadFReportFTPParams_cash('3')
+-- SELECT * FROM gpSelect_LoadFReportFTPParams_cash('4074345')

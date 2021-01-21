@@ -65,6 +65,8 @@ begin
    RegisterPropertyEditor(TypeInfo(TComponent), TdsdProperties—hange, 'Component',     TdsdProperties—hangeComponentProperty);
 
    RegisterPropertyEditor(TypeInfo(TShortCut),  TShortCutActionItem,  'ShortCut',      TShortCutProperty);
+
+   RegisterPropertyEditor(TypeInfo(TFieldType), TFormationChart,      'DataType',      TDataTypeProperty);
 end;
 
 

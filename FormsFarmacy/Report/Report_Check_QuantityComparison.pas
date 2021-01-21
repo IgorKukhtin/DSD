@@ -37,25 +37,21 @@ type
     cxGridDBBandedTableView1: TcxGridDBBandedTableView;
     UnitName: TcxGridDBBandedColumn;
     Count: TcxGridDBBandedColumn;
-    CountPrev: TcxGridDBBandedColumn;
     AverageCheck: TcxGridDBBandedColumn;
     CountCash: TcxGridDBBandedColumn;
     CountCashLess: TcxGridDBBandedColumn;
-    AverageCheckPrev: TcxGridDBBandedColumn;
-    CountCashPrev: TcxGridDBBandedColumn;
-    CountCashLessPrev: TcxGridDBBandedColumn;
     ceYearsAgo: TcxCurrencyEdit;
     cxLabel5: TcxLabel;
     CrossDBViewReportAddOn: TCrossDBViewReportAddOn;
     MultiplyCDS: TClientDataSet;
     grChart: TcxGrid;
     grChartDBChartView1: TcxGridDBChartView;
-    dgDateName: TcxGridDBChartDataGroup;
-    serSummaSale: TcxGridDBChartSeries;
     grChartLevel1: TcxGridLevel;
     cxSplitter1: TcxSplitter;
     ChartCDS: TClientDataSet;
-    ChartDS: TDataSource;
+    Color_calc: TcxGridDBBandedColumn;
+    bbExpand: TdxBarButton;
+    actExpand: TBooleanStoredProcAction;
   private
     { Private declarations }
   public

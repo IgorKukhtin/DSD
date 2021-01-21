@@ -56,7 +56,12 @@ BEGIN
 
      -- проверка <inName>
      IF TRIM (COALESCE (inName, '')) = '' THEN
-        RAISE EXCEPTION 'Ошибка.Значение <Название> должно быть установлено.';
+        RAISE EXCEPTION 'Ошибка.Значение <Название (на рус. языке)> должно быть установлено.';
+     END IF;
+     
+     -- проверка <inNameUkr>
+     IF TRIM (COALESCE (inNameUkr, '')) = '' THEN
+        RAISE EXCEPTION 'Ошибка.Значение <Название(на укр. языке)> должно быть установлено.';
      END IF;
 
      -- проверка <Торговой сети> - !!!только для Insert!!!
