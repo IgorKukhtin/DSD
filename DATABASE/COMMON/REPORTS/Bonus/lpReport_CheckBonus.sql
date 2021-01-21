@@ -1052,7 +1052,7 @@ BEGIN
                                                                , zc_Enum_InfoMoney_21502()) -- Маркетинг + Бонусы за мясное сырье
                          AND (Object_Juridical.Id = inJuridicalId OR inJuridicalId = 0)
                          AND (COALESCE (MILinkObject_Branch.ObjectId,0) = inBranchId OR inBranchId = 0)
-                         -- AND MILinkObject_ContractConditionKind.ObjectId IN (zc_Enum_ContractConditionKind_BonusPercentAccount(), zc_Enum_ContractConditionKind_BonusPercentSaleReturn(), zc_Enum_ContractConditionKind_BonusPercentSale())
+                         AND MILinkObject_ContractConditionKind.ObjectId <> zc_Enum_ContractConditionKind_BonusPercentSalePart()  -- оплата по долевым в процке gpReport_CheckBonus_PersentSalePart
                          
                       UNION ALL
                        -- бонус - ежемесячный платеж

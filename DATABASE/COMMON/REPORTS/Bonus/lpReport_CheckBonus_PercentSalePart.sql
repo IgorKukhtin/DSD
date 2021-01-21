@@ -646,7 +646,6 @@ BEGIN
       
                              ) AS tmp
                      
-               /* --оплаты выбираются в основном запросе
                     UNION ALL 
                        SELECT View_Contract_InvNumber_master.InvNumber AS InvNumber_master
                             , View_Contract_InvNumber_child.InvNumber  AS InvNumber_child
@@ -750,7 +749,6 @@ BEGIN
                          AND (Object_Juridical.Id = inJuridicalId OR inJuridicalId = 0)
                          AND (COALESCE (MILinkObject_Branch.ObjectId,0) = inBranchId OR inBranchId = 0)
                          AND MILinkObject_ContractConditionKind.ObjectId = zc_Enum_ContractConditionKind_BonusPercentSalePart()
-                       */  
                        )
 
       , tmpData AS (SELECT tmpAll.ContractId_master
