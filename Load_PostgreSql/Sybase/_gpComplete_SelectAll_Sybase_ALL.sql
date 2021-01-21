@@ -35,18 +35,18 @@ END IF;
 
      -- !!!НУЖНЫ ли ПРОДАЖИ!!!
      vbIsSale:= -- если последний 1 день месяца
-                (DATE_TRUNC ('MONTH', CURRENT_DATE) + INTERVAL '1 DAY')  > (DATE_TRUNC ('MONTH', CURRENT_DATE))
+                DATE_TRUNC ('MONTH', CURRENT_DATE + INTERVAL '1 DAY')  > (DATE_TRUNC ('MONTH', CURRENT_DATE))
                 -- или ПЕРВЫЕ 12 дней месяца
-             OR (DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '12 DAY') < (DATE_TRUNC ('MONTH', CURRENT_DATE))
+             OR DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '12 DAY') < (DATE_TRUNC ('MONTH', CURRENT_DATE))
                 -- или ПЕРВЫЕ 5 дней месяца
-           --OR (DATE_TRUNC ('MONTH', CURRENT_DATE) + INTERVAL '5 DAY')  < (DATE_TRUNC ('MONTH', CURRENT_DATE))
+           --OR DATE_TRUNC ('MONTH', CURRENT_DATE + INTERVAL '5 DAY')  < (DATE_TRUNC ('MONTH', CURRENT_DATE))
                 ;
      -- !!!НУЖНЫ ли ВОЗВРАТЫ!!!
      vbIsReturnIn:= -- если последние 3 дня месяца
-                (DATE_TRUNC ('MONTH', CURRENT_DATE) + INTERVAL '3 DAY')  > (DATE_TRUNC ('MONTH', CURRENT_DATE))
-                -- или vbIsSale
-             OR vbIsSale = TRUE
-                ;
+                    DATE_TRUNC ('MONTH', CURRENT_DATE + INTERVAL '3 DAY')  > (DATE_TRUNC ('MONTH', CURRENT_DATE))
+                    -- или vbIsSale
+                 OR vbIsSale = TRUE
+                   ;
 
 
      -- !!!ВРЕМЕННО!!!

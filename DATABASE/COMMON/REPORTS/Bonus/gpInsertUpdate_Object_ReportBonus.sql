@@ -28,12 +28,12 @@ BEGIN
      -- Проверка
      IF COALESCE (inContractId_master, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Не установлен договор <База>';
+         RAISE EXCEPTION 'Ошибка.Не установлен договор <Маркетинг>';
      END IF;
      -- Проверка
      IF COALESCE (inContractId_child, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Не установлен договор <Маркетинг>';
+         RAISE EXCEPTION 'Ошибка.Не установлен договор <База>';
      END IF;
 
 
