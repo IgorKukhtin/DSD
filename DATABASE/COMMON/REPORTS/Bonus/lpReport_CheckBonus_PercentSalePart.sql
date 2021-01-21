@@ -646,7 +646,7 @@ BEGIN
       
                              ) AS tmp
                      
-                     UNION ALL 
+                    UNION ALL 
                        SELECT View_Contract_InvNumber_master.InvNumber AS InvNumber_master
                             , View_Contract_InvNumber_child.InvNumber  AS InvNumber_child
                             , View_Contract_InvNumber_find.InvNumber   AS InvNumber_find
@@ -749,7 +749,6 @@ BEGIN
                          AND (Object_Juridical.Id = inJuridicalId OR inJuridicalId = 0)
                          AND (COALESCE (MILinkObject_Branch.ObjectId,0) = inBranchId OR inBranchId = 0)
                          AND MILinkObject_ContractConditionKind.ObjectId = zc_Enum_ContractConditionKind_BonusPercentSalePart()
-                         
                        )
 
       , tmpData AS (SELECT tmpAll.ContractId_master
