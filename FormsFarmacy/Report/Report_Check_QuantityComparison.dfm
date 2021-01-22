@@ -228,6 +228,10 @@
           DiagramLine.Values.LineWidth = 3
           ToolBox.CustomizeButton = True
           ToolBox.DiagramSelector = True
+          object grChartDBChartView1DataGroup1: TcxGridDBChartDataGroup
+          end
+          object grChartDBChartView1Series1: TcxGridDBChartSeries
+          end
         end
         object grChartLevel1: TcxGridLevel
           GridView = grChartDBChartView1
@@ -318,6 +322,18 @@
       Top = 6
       Caption = #1057#1088#1072#1074#1085#1080#1090#1100' '#1089' '#1095#1077#1082#1072#1084#1080' '#1083#1077#1090' '#1085#1072#1079#1072#1076
     end
+  end
+  object cbChartData: TcxComboBox [2]
+    Left = 744
+    Top = 120
+    Properties.ReadOnly = True
+    TabOrder = 6
+    Width = 166
+  end
+  object lblChartData: TcxLabel [3]
+    Left = 616
+    Top = 121
+    Caption = #1044#1080#1072#1075#1088#1072#1084#1084#1072' '#1087#1086':'
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -639,6 +655,18 @@
         item
           Visible = True
           ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem2'
         end>
     end
     object bbExecuteDialog: TdxBarButton
@@ -652,6 +680,26 @@
     object bbExpand: TdxBarButton
       Action = actExpand
       Category = 0
+    end
+    object dxBarContainerItem1: TdxBarContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <>
+    end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = lblChartData
+    end
+    object dxBarControlContainerItem2: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cbChartData
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -794,6 +842,9 @@
         ChartDataSet = ChartCDS
         SeriesName = 'SeriesName'
         SeriesFieldName = 'FieldName'
+        DisplayedDataComboBox = cbChartData
+        OrderDisplayedDataFieldName = 'OrderDisplayName'
+        NameDisplayedDataFieldName = 'DisplayName'
       end>
     MultiplyColumnList = <
       item

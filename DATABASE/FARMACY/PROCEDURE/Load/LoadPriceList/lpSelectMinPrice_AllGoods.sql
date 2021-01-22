@@ -335,6 +335,7 @@ BEGIN
                                              AND MILinkObject_Goods.ObjectId = _tmpMinPrice_RemainsList.GoodsId  -- товар "поставщика"
              -- Прайс-лист (поставщика) - MovementItem
             JOIN MovementItem AS PriceList ON PriceList.Id = MILinkObject_Goods.MovementItemId
+                                          AND PriceList.isErased = False 
              -- Прайс-лист (поставщика) - Movement
             JOIN LastPriceList_find_View ON LastPriceList_find_View.MovementId = PriceList.MovementId
 
