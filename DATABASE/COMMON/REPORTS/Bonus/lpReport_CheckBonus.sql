@@ -953,7 +953,7 @@ BEGIN
                             , View_Contract_InvNumber_child.ContractStateKindCode AS ContractStateKindCode_child
 
                             , COALESCE (MILinkObject_ContractMaster.ObjectId, MILinkObject_Contract.ObjectId, MILinkObject_ContractChild.ObjectId) AS ContractId_master  
-                            , COALESCE (MILinkObject_ContractChild.ObjectId, MILinkObject_ContractMaster.ObjectId) AS ContractId_child            
+                            , COALESCE (MILinkObject_ContractChild.ObjectId, MILinkObject_ContractMaster.ObjectId, MILinkObject_Contract.ObjectId) AS ContractId_child            
                             , MILinkObject_Contract.ObjectId                 AS ContractId_find
 
                             , View_Contract_InvNumber_master.InfoMoneyId     AS InfoMoneyId_master
@@ -1042,7 +1042,7 @@ BEGIN
 
                             LEFT JOIN tmpContract_all  AS View_Contract_InvNumber_find   ON View_Contract_InvNumber_find.ContractId   = MILinkObject_Contract.ObjectId
                             LEFT JOIN tmpContract_all  AS View_Contract_InvNumber_master ON View_Contract_InvNumber_master.ContractId = COALESCE (MILinkObject_ContractMaster.ObjectId, MILinkObject_Contract.ObjectId, MILinkObject_ContractChild.ObjectId)
-                            LEFT JOIN tmpContract_full AS View_Contract_InvNumber_child  ON View_Contract_InvNumber_child.ContractId  = COALESCE (MILinkObject_ContractChild.ObjectId, MILinkObject_ContractMaster.ObjectId)
+                            LEFT JOIN tmpContract_full AS View_Contract_InvNumber_child  ON View_Contract_InvNumber_child.ContractId  = COALESCE (MILinkObject_ContractChild.ObjectId, MILinkObject_ContractMaster.ObjectId, MILinkObject_Contract.ObjectId)
            
                             --LEFT JOIN (SELECT tmpMovement.JuridicalId, MAX (tmpMovement.PartnerId) AS PartnerId FROM tmpMovement GROUP BY tmpMovement.JuridicalId) tmpInf ON tmpInf.JuridicalId = MovementItem.ObjectId 
                        WHERE Movement.DescId = zc_Movement_ProfitLossService()
