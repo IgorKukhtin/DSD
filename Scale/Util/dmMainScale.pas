@@ -1383,6 +1383,14 @@ begin
          Params.ParamByName('inSqlText').Value:='SELECT zc_Enum_DocumentKind_RealWeight() :: TVarChar';
          Execute;
          zc_Enum_DocumentKind_RealWeight:=DataSet.FieldByName('Value').asInteger;
+         // DocumentKind - взвешивание п/ф факт после шприцевания
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Enum_DocumentKind_RealDelicShp() :: TVarChar';
+         Execute;
+         zc_Enum_DocumentKind_RealDelicShp:=DataSet.FieldByName('Value').asInteger;
+         // DocumentKind - взвешивание п/ф факт после массажера
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Enum_DocumentKind_RealDelicMsg() :: TVarChar';
+         Execute;
+         zc_Enum_DocumentKind_RealDelicMsg:=DataSet.FieldByName('Value').asInteger;
 
          // InfoMoney
          // 30201 Доходы + Мясное сырье + Мясное сырье
