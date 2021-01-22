@@ -11,7 +11,7 @@ uses Windows, Winapi.Messages, Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTable
      VCL.ActnList, cxCustomPivotGrid, cxDBPivotGrid, cxEdit, cxCustomData, cxPC,
      GMClasses, GMMap, GMMapVCL, GMGeoCode, GMConstants, GMMarkerVCL, SHDocVw, ExtCtrls,
      Winapi.ShellAPI, System.StrUtils, GMDirection, GMDirectionVCL, cxCheckBox, cxImage,
-     cxGridChartView, cxGridDBChartView
+     cxGridChartView, cxGridDBChartView, cxDropDownEdit
      {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
 
 const
@@ -457,15 +457,21 @@ type
   private
     FChartView: TcxGridDBChartView;
     FChartDataSet: TDataSet;
+    FDisplayedDataComboBox : TcxComboBox;
     FDataGroupsFielddName: String;
     FHeaderName: String;
     FHeaderFieldName: String;
     FSeriesName: String;
     FSeriesFieldName: String;
+    FNameDisplayedDataFieldName: String;
     FDataType: TFieldType;
+
+    FOrderDisplayedData : Integer;
+    FOrderDisplayedDataFieldName: String;
 
     FChartCDS : TClientDataSet;
     FChartDS: TDataSource;
+    FCurrDisplayedDataName : String;
   public
     constructor Create(Collection: TCollection); override;
     destructor Destroy; override;
@@ -488,6 +494,14 @@ type
     property SeriesFieldName: String read FSeriesFieldName write FSeriesFieldName;
     // Тип данных полей Series
     property DataType: TFieldType read FDataType write FDataType default ftInteger;
+    // ComboBox c выбором набора отображаемых данных
+    property DisplayedDataComboBox : TcxComboBox read FDisplayedDataComboBox write FDisplayedDataComboBox;
+    // Номер набора отображаемых данных
+    property OrderDisplayedData : Integer read FOrderDisplayedData write FOrderDisplayedData default 0;
+    // Номер набора отображаемых данных в ChartDataSet
+    property OrderDisplayedDataFieldName: String read FOrderDisplayedDataFieldName write FOrderDisplayedDataFieldName;
+    // Номер набора отображаемых данных в ChartDataSet
+    property NameDisplayedDataFieldName: String read FNameDisplayedDataFieldName write FNameDisplayedDataFieldName;
   end;
 
   // Кросс для отчетов
@@ -1090,7 +1104,7 @@ uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf,
      cxGeometry, dxBar, cxButtonEdit, cxDBEdit, cxCurrencyEdit,
      VCL.Menus, ParentForm, ChoicePeriod, cxGrid, cxDBData, Variants,
      cxGridDBBandedTableView, cxGridDBDataDefinitions,cxGridBandedTableView,
-     cxDropDownEdit, cxMemo, cxMaskEdit, dsdException, Soap.EncdDecd;
+     cxMemo, cxMaskEdit, dsdException, Soap.EncdDecd;
 
 type
 
@@ -5074,6 +5088,7 @@ begin
   FChartCDS := TClientDataSet.Create(Nil);
   FChartDS := TDataSource.Create(Nil);
   FChartDS.DataSet := FChartCDS;
+  FOrderDisplayedData := 0
 end;
 
 destructor TFormationChart.Destroy;
