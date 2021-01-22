@@ -946,7 +946,7 @@ BEGIN
                      UNION ALL 
                        -- бонус в документах факт - zc_Movement_ProfitLossService
                        SELECT View_Contract_InvNumber_master.InvNumber AS InvNumber_master
-                            , View_Contract_InvNumber_child.InvNumber  AS InvNumber_child
+                            , CASE WHEN COALESCE (MILinkObject_ContractChild.ObjectId,0) <> 0 THEN View_Contract_InvNumber_child.InvNumber ELSE View_Contract_InvNumber_master.InvNumber END AS InvNumber_child
                             , View_Contract_InvNumber_find.InvNumber   AS InvNumber_find
 
                             , View_Contract_InvNumber_child.ContractTagName  AS ContractTagName_child
