@@ -618,7 +618,7 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_GoodsPairSun_EditForm'));
+{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_GoodsPairSun_EditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoods_GoodsPairSun_EditForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_LimitSUN_T_EditForm'));
@@ -626,7 +626,7 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_KoeffSUN_EditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoods_KoeffSUN_EditForm');
-   {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsRetailTab_ErrorForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsRetailTab_ErrorForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsMainTab_ErrorForm'));
@@ -663,17 +663,18 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeMasterForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeMasterForm');
-  }
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_NDS_diffForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoods_NDS_diffForm');
+  }
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
-     exit;
-    {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
+     exit;
+    {
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTopDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsTopDialogForm');

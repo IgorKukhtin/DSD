@@ -9,11 +9,11 @@ CREATE OR REPLACE FUNCTION gpSelect_Goods_ForSite(
 RETURNS TABLE (Id               Integer    -- Id Товара
              , Article          Integer    -- Код товара
              , Id_Site          Integer    -- Id на сайте
-             , Name_Site        TBlob      -- Название на сайте 
+             , Name_Site        TVarChar   -- Название на сайте 
              , Name             TVarChar   -- Название
              , Foto             TVarChar   -- Фото товара
              , Thumb            TVarChar   -- путь к мелким фото
-             , Description   	TBlob      -- Описание товара на сайте
+--             , Description   	TBlob      -- Описание товара на сайте
              , Manufacturer     TVarChar   -- Производитель
              , Appointmentid    Integer    -- Id назначение препарата
              , GroupId          Integer    -- Id Группы товаров
@@ -54,11 +54,11 @@ BEGIN
        tmpGoods.Id                                             as Id
      , tmpGoods.article                                        as Article
      , ObjectFloat_Goods_Site.ValueData :: Integer             as Id_Site
-     , tmpGoods.Name_Site                                      as Name_Site
+     , tmpGoods.Name_Site::TVarChar                            as Name_Site
      , tmpGoods.name                                           as Name
      , ObjectString_Foto.ValueData                             as Foto
      , ObjectString_Thumb.ValueData                            as Thumb
-     , ObjectBlob_Description.ValueData                        as Description
+--     , ObjectBlob_Description.ValueData                        as Description
      , ObjectString_Goods_Maker.ValueData                      as Manufacturer
      , ObjectLink_Goods_Appointment.ChildObjectId              as Appointmentid
      , Object_GoodsGroup.Id                                    as GroupId
@@ -84,9 +84,10 @@ BEGIN
       LEFT OUTER JOIN ObjectString AS ObjectString_Thumb
                                    ON ObjectString_Thumb.ObjectId = tmpGoods.Id
                                   AND ObjectString_Thumb.DescId = zc_ObjectString_Goods_Thumb()
-      LEFT OUTER JOIN ObjectBlob AS ObjectBlob_Description
+/*      LEFT OUTER JOIN ObjectBlob AS ObjectBlob_Description
                                  ON ObjectBlob_Description.ObjectId = tmpGoods.Id
                                 AND ObjectBlob_Description.DescId = zc_objectBlob_Goods_Description()
+*/
       LEFT OUTER JOIN ObjectLink AS ObjectLink_Goods_Appointment
                                  ON ObjectLink_Goods_Appointment.ObjectId = tmpGoods.Id
                                 AND ObjectLink_Goods_Appointment.DescId = zc_ObjectLink_Goods_Appointment()

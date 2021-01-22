@@ -10,7 +10,8 @@ uses Windows, Winapi.Messages, Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTable
      SysUtils, dsdDB, Contnrs, cxGridCustomView, cxGridCustomTableView, dsdGuides,
      VCL.ActnList, cxCustomPivotGrid, cxDBPivotGrid, cxEdit, cxCustomData, cxPC,
      GMClasses, GMMap, GMMapVCL, GMGeoCode, GMConstants, GMMarkerVCL, SHDocVw, ExtCtrls,
-     Winapi.ShellAPI, System.StrUtils, GMDirection, GMDirectionVCL, cxCheckBox, cxImage
+     Winapi.ShellAPI, System.StrUtils, GMDirection, GMDirectionVCL, cxCheckBox, cxImage,
+     cxGridChartView, cxGridDBChartView
      {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
 
 const
@@ -18,6 +19,9 @@ const
   WM_SETFLAGHeaderSaver = WM_USER + 3;
 
 type
+  TMultiplyType = (mtRight, mtBottom, mtLeft, mtTop);
+
+
   // 1. Обработка признака isErased
   TCustomDBControlAddOn = class(TComponent)
   private
@@ -412,6 +416,8 @@ type
   private
     FTemplateColumn: TcxGridColumn;
     FHeaderColumnName: String;
+    FColIndex : Integer;
+    FRowIndex : Integer;
   public
     procedure Assign(Source: TPersistent); override;
   published
@@ -428,6 +434,8 @@ type
     FColumn: TcxGridColumn;
     FFieldName: String;
     FHeaderFieldName: String;
+    FColorColumnName: String;
+    FBackGroundColumnName: String;
   public
     procedure Assign(Source: TPersistent); override;
   published
@@ -438,44 +446,48 @@ type
     property HeaderFieldName: String read FHeaderFieldName write FHeaderFieldName;
     // Шаблон для Cross колонок
     property Column: TcxGridColumn read FColumn write FColumn;
-  end;
-
-    // Поля для построения графика
-  TSeriesColumn = class(TCollectionItem)
-  private
-    FColumn: TcxGridColumn;
-    FSeriesFieldName: String;
-  public
-    procedure Assign(Source: TPersistent); override;
-  published
-    function GetDisplayName: string; override;
-    // Поле для отображения в FChartDataSet
-    property SeriesFieldName: String read FSeriesFieldName write FSeriesFieldName;
-    // Поле в получения данных
-    property Column: TcxGridColumn read FColumn write FColumn;
+    // Цвет шрифта колонки
+    property ColorColumnName: String read FColorColumnName write FColorColumnName;
+    // Цвет фона колонки
+    property BackGroundColumnName: String read FBackGroundColumnName write FBackGroundColumnName;
   end;
 
   // Формирование графика
   TFormationChart = class(TCollectionItem)
   private
+    FChartView: TcxGridDBChartView;
     FChartDataSet: TDataSet;
     FDataGroupsFielddName: String;
+    FHeaderName: String;
     FHeaderFieldName: String;
-    FSeriesColumnList: TCollection;
+    FSeriesName: String;
+    FSeriesFieldName: String;
+    FDataType: TFieldType;
+
+    FChartCDS : TClientDataSet;
+    FChartDS: TDataSource;
   public
     constructor Create(Collection: TCollection); override;
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
   published
     function GetDisplayName: string; override;
-    // Данные для графика
-    property SeriesColumnList: TCollection read FSeriesColumnList write FSeriesColumnList;
+    // ChartView графика
+    property ChartView: TcxGridDBChartView read FChartView write FChartView;
     // Поле в FChartDataSet с названиями колонок DataGroups
     property DataGroupsFielddName: String read FDataGroupsFielddName write FDataGroupsFielddName;
+    // Название колонок DataGroups
+    property HeaderName: String read FHeaderName write FHeaderName;
     // Поле в HeaderDataSet с названиями колонок DataGroups
     property HeaderFieldName: String read FHeaderFieldName write FHeaderFieldName;
-    // Дата сет для отображения на графике.
+    // Дата сет c данными для формирования графика.
     property ChartDataSet: TDataSet read FChartDataSet write FChartDataSet;
+    // Поле в FChartDataSet с названиями колонок Series
+    property SeriesName: String read FSeriesName write FSeriesName;
+    // Поле в FChartDataSet с названиями колонок в данных для отображения
+    property SeriesFieldName: String read FSeriesFieldName write FSeriesFieldName;
+    // Тип данных полей Series
+    property DataType: TFieldType read FDataType write FDataType default ftInteger;
   end;
 
   // Кросс для отчетов
@@ -498,6 +510,9 @@ type
     FTemplateColumnList: TCollection;
     FMultiplyColumnList: TCollection;
     FFormationChartList: TOwnedCollection;
+    FActionExpand: TBooleanStoredProcAction;
+    FMultiplyType : TMultiplyType;
+    isExpand : boolean;
     procedure onBeforeOpen(DataSet: TDataSet);
     procedure onAfterClose(DataSet: TDataSet);
     procedure SetView(const Value: TcxGridTableView); override;
@@ -506,6 +521,8 @@ type
     procedure OnAfterScroll(DataSet: TDataSet); override;
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    procedure ChangingTheSequence;
+    procedure ExpandExecute;
   public
     property DataSet: TDataSet read FDataSet;
     constructor Create(AOwner: TComponent); override;
@@ -515,6 +532,8 @@ type
     property FormationChartList: TOwnedCollection read FFormationChartList write FFormationChartList;
     // Размножение колонок перед кросом
     property MultiplyColumnList: TCollection read FMultiplyColumnList write FMultiplyColumnList;
+    // Как размножать колонки
+    property MultiplyType : TMultiplyType read FMultiplyType write FMultiplyType default mtRight;
     // Кросс для нескольких полей
     property TemplateColumnList: TCollection read FTemplateColumnList write FTemplateColumnList;
     // Дата сет с названием колонок и другой необходимой для работы информацией.
@@ -525,6 +544,8 @@ type
     property BаndColumnName: String read FBаndColumnName write FBаndColumnName;
     // Колонки цвета не размножать (один цвет на все колонки)
     property NoCrossColorColumn : boolean read FNoCrossColorColumn write FNoCrossColorColumn default False;
+    // CheckBox для разворота блока данных для TcxGridDBBandedTableView
+    property ActionExpand: TBooleanStoredProcAction read FActionExpand write FActionExpand;
   end;
 
 
@@ -5044,46 +5065,21 @@ begin
     Result := inherited GetDisplayName;
 end;
 
-{ TSeriesColumn }
-
-procedure TSeriesColumn.Assign(Source: TPersistent);
-begin
-  if Source is TSeriesColumn then
-    with TSeriesColumn(Source) do
-    begin
-      Self.Column := Column;
-      Self.SeriesFieldName := SeriesFieldName;
-    end
-  else
-    inherited Assign(Source);
-end;
-
-function TSeriesColumn.GetDisplayName: string;
-begin
-  if Assigned(Column) or (SeriesFieldName <> '') then
-  begin
-    Result := '?';
-    if Column is TcxGridDBBandedColumn then
-      Result := TcxGridDBBandedColumn(Column).Name;
-    if Column is TcxGridDBColumn then
-      Result := TcxGridDBColumn(Column).Name;
-    Result := Result + ' - ' + SeriesFieldName
-  end
-  else
-    Result := inherited GetDisplayName;
-end;
-
 { TFormationChart }
 
 constructor TFormationChart.Create(Collection: TCollection);
 begin
   inherited Create(Collection);
-  FSeriesColumnList := TCollection.Create(TSeriesColumn);
+  FDataType := ftInteger;
+  FChartCDS := TClientDataSet.Create(Nil);
+  FChartDS := TDataSource.Create(Nil);
+  FChartDS.DataSet := FChartCDS;
 end;
 
 destructor TFormationChart.Destroy;
 begin
-  FreeAndNil(FSeriesColumnList);
+  FreeAndNil(FChartDS);
+  FreeAndNil(FChartCDS);
   inherited;
 end;
 
@@ -5092,10 +5088,11 @@ begin
   if Source is TFormationChart then
     with TFormationChart(Source) do
     begin
+      Self.ChartView := ChartView;
       Self.ChartDataSet := ChartDataSet;
       Self.DataGroupsFielddName := DataGroupsFielddName;
+      Self.HeaderName := HeaderName;
       Self.HeaderFieldName := HeaderFieldName;
-      Self.SeriesColumnList.Assign(SeriesColumnList);
     end
   else
     inherited Assign(Source);
@@ -5124,6 +5121,7 @@ begin
   FTemplateColumnList := TCollection.Create(TTemplateColumn);
   FMultiplyColumnList := TCollection.Create(TMultiplyColumn);
   FFormationChartList := TOwnedCollection.Create(Self, TFormationChart);
+  isExpand := False;
 end;
 
 destructor TCrossDBViewReportAddOn.Destroy;
@@ -5167,6 +5165,8 @@ begin
      if Operation = opRemove then begin
         if AComponent = HeaderDataSet then
            HeaderDataSet := nil;
+        if AComponent = FActionExpand then
+           FActionExpand := nil;
         for I := 0 to TemplateColumnList.Count - 1 do
           if TTemplateColumn(TemplateColumnList.Items[I]).FTemplateColumn = AComponent then
              TTemplateColumn(TemplateColumnList.Items[I]).FTemplateColumn := nil;
@@ -5175,14 +5175,37 @@ begin
              TMultiplyColumn(MultiplyColumnList.Items[I]).FColumn := nil;
         for I := 0 to FFormationChartList.Count - 1 do
         begin
+          if TFormationChart(FFormationChartList.Items[I]).FChartView = AComponent then
+             TFormationChart(FFormationChartList.Items[I]).FChartView := nil;
           if TFormationChart(FFormationChartList.Items[I]).FChartDataSet = AComponent then
              TFormationChart(FFormationChartList.Items[I]).FChartDataSet := nil;
-          for J := 0 to TFormationChart(FFormationChartList.Items[I]).FSeriesColumnList.Count - 1 do
-            if TSeriesColumn(TFormationChart(FFormationChartList.Items[I]).FSeriesColumnList.Items[J]).FColumn = AComponent then
-               TSeriesColumn(TFormationChart(FFormationChartList.Items[I]).FSeriesColumnList.Items[J]).FColumn := nil;
-
         end;
      end;
+end;
+
+// Правим последовательность чтоб не перекасило отображение
+procedure TCrossDBViewReportAddOn.ChangingTheSequence;
+  var I : integer;
+begin
+   if View is TcxGridDBBandedTableView then
+   begin
+     i := 0;
+     while I < FTemplateColumnList.Count - 1 do
+     begin
+       if (TcxGridDBBandedColumn(TTemplateColumn(FTemplateColumnList.Items[I]).FTemplateColumn).Position.ColIndex +
+          (TcxGridDBBandedColumn(TTemplateColumn(FTemplateColumnList.Items[I]).FTemplateColumn).Position.RowIndex + 1) *
+          TcxGridDBBandedColumn(TTemplateColumn(FTemplateColumnList.Items[I]).FTemplateColumn).Position.Band.ColumnCount) >
+         (TcxGridDBBandedColumn(TTemplateColumn(FTemplateColumnList.Items[I + 1]).FTemplateColumn).Position.ColIndex +
+          (TcxGridDBBandedColumn(TTemplateColumn(FTemplateColumnList.Items[I + 1]).FTemplateColumn).Position.RowIndex + 1) *
+          TcxGridDBBandedColumn(TTemplateColumn(FTemplateColumnList.Items[I + 1]).FTemplateColumn).Position.Band.ColumnCount)  then
+       begin
+         FTemplateColumnList.Items[I + 1].Index := FTemplateColumnList.Items[I + 1].Index - 1;
+         i := 0;
+         Continue;
+       end;
+       Inc(I);
+     end;
+   end;
 end;
 
 procedure TCrossDBViewReportAddOn.onAfterClose(DataSet: TDataSet);
@@ -5200,17 +5223,99 @@ begin
   FCreateColumnList.Clear;
 
   for i := 0 to FCreateBаndList.Count - 1 do
-    TcxGridBand(FCreateBаndList.Items[I]).Free;
+    TcxGridDBBandedTableView(View).Bands.Delete(TcxGridBand(FCreateBаndList.Items[I]).Index);
   FCreateBаndList.Clear;
 
   for i := 0 to FCreateTemplateColumn.Count - 1 do
     FTemplateColumnList.Delete(TTemplateColumn(FCreateTemplateColumn.Items[I]).Index);
   FCreateTemplateColumn.Clear;
 
+  for i := 0 to FFormationChartList.Count - 1 do
+    if Assigned(TFormationChart(FFormationChartList.Items[I]).FChartView) and
+       (TFormationChart(FFormationChartList.Items[I]).FChartView.DataController.DataSource = TFormationChart(FFormationChartList.Items[I]).FChartDS) then
+         TFormationChart(FFormationChartList.Items[I]).FChartView.DataController.DataSource := Nil;
+
+  // Перестраиваем назад если надо
+  if (View is TcxGridDBBandedTableView) and isExpand then
+  begin
+    // Правим последовательность чтоб не перекасило отображение
+    ChangingTheSequence;
+
+    for I := 0 to FTemplateColumnList.Count - 1 do
+    begin
+      TcxGridDBBandedColumn(TTemplateColumn(TemplateColumnList.Items[I]).TemplateColumn).Position.RowIndex := TTemplateColumn(TemplateColumnList.Items[I]).FRowIndex;
+      TcxGridDBBandedColumn(TTemplateColumn(TemplateColumnList.Items[I]).TemplateColumn).Position.ColIndex := TTemplateColumn(TemplateColumnList.Items[I]).FColIndex;
+    end;
+
+    case FMultiplyType of
+      mtRight : FMultiplyType := mtTop;
+      mtBottom : FMultiplyType := mtLeft;
+      mtLeft : FMultiplyType := mtBottom;
+      mtTop : FMultiplyType := mtRight;
+    end;
+
+    isExpand := False;
+  end;
+
+end;
+
+procedure TCrossDBViewReportAddOn.ExpandExecute;
+  var I, Col, Row: integer;
+begin
+   // Правим последовательность чтоб не перекасило отображение
+   ChangingTheSequence;
+
+   // Перестраиваем
+   if (View is TcxGridDBBandedTableView) then
+   begin
+
+      // Проверяем линейность
+      Col := 0; Row := 0;
+      for I := 0 to FTemplateColumnList.Count - 1 do
+      begin
+        TTemplateColumn(TemplateColumnList.Items[I]).FColIndex := TcxGridDBBandedColumn(TTemplateColumn(TemplateColumnList.Items[I]).TemplateColumn).Position.ColIndex;
+        TTemplateColumn(TemplateColumnList.Items[I]).FRowIndex := TcxGridDBBandedColumn(TTemplateColumn(TemplateColumnList.Items[I]).TemplateColumn).Position.RowIndex;
+        if Col < TcxGridDBBandedColumn(TTemplateColumn(TemplateColumnList.Items[I]).TemplateColumn).Position.ColIndex then
+          Col := TcxGridDBBandedColumn(TTemplateColumn(TemplateColumnList.Items[I]).TemplateColumn).Position.ColIndex;
+        if Row < TcxGridDBBandedColumn(TTemplateColumn(TemplateColumnList.Items[I]).TemplateColumn).Position.RowIndex then
+          Row := TcxGridDBBandedColumn(TTemplateColumn(TemplateColumnList.Items[I]).TemplateColumn).Position.RowIndex;
+      end;
+
+      if Assigned(FActionExpand) and FActionExpand.Value then
+      begin
+
+        if (Col = 0) and (Row > 0) or (Col > 0) and (Row = 0) then
+        begin
+
+          if Col > 0 then
+          begin
+            for I := 1 to FTemplateColumnList.Count - 1 do
+            begin
+              TcxGridDBBandedColumn(TTemplateColumn(FTemplateColumnList.Items[I]).FTemplateColumn).Position.RowIndex := I;
+            end;
+          end else
+          begin
+            for I := 1 to FTemplateColumnList.Count - 1 do
+            begin
+              TcxGridDBBandedColumn(TTemplateColumn(FTemplateColumnList.Items[I]).FTemplateColumn).Position.RowIndex := 0;
+            end;
+          end;
+
+          case FMultiplyType of
+            mtRight : FMultiplyType := mtTop;
+            mtBottom : FMultiplyType := mtLeft;
+            mtLeft : FMultiplyType := mtBottom;
+            mtTop : FMultiplyType := mtRight;
+          end;
+
+          isExpand := True;
+        end else FActionExpand.Value := False;
+      end;
+   end else if Assigned(FActionExpand) and FActionExpand.Value then FActionExpand.Value := False;
 end;
 
 procedure TCrossDBViewReportAddOn.onBeforeOpen(DataSet: TDataSet);
-var NewColumnIndex, I, J, tclc: integer;
+var NewColumnIndex, StartColumnIndex, Row, MaxRow, I, J, tCol, tRow: integer;
     Column: TcxGridColumn; Band: TcxGridBand;
     TemplateColorRule, ColorRule: TColorRule;
     TemplateColumn : TTemplateColumn;
@@ -5222,7 +5327,8 @@ begin
   try
       // Заполняем заголовки колонок
 
-    if Assigned(HeaderDataSet) and HeaderDataSet.Active then begin
+    if Assigned(HeaderDataSet) and HeaderDataSet.Active then
+    begin
 
        // проверяем чтоб все было заполнено
 
@@ -5235,38 +5341,98 @@ begin
             raise Exception.Create('HeaderDataSet не имеет поля ' + TTemplateColumn(TemplateColumnList.Items[J]).HeaderColumnName);
          if not Assigned(TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn) then
             raise Exception.Create('TemplateColumn не установлен для TemplateColumnList ' + IntToStr(J));
+
+       end;
+
+       // Перестраиваем если надо
+       ExpandExecute;
+
+       // Пересоздаем диаграммы диаграммы
+       for i := 0 to FFormationChartList.Count - 1 do
+       begin
+         if Assigned(TFormationChart(FFormationChartList.Items[I]).FChartView) then
+         with TFormationChart(FFormationChartList.Items[I]) do
+         begin
+           FChartView.DataController.DataSource := Nil;
+           FChartView.ClearSeries;
+           FChartView.ClearDataGroups;
+           if FChartCDS.Active then FChartCDS.Close;
+           FChartCDS.FieldDefs.Clear;
+
+           if Assigned(ChartDataSet) and ChartDataSet.Active and not ChartDataSet.IsEmpty and
+              Assigned(ChartDataSet.FindField(SeriesName)) and
+              Assigned(ChartDataSet.FindField(SeriesFieldName))and
+              (DataGroupsFielddName <> '') then
+           begin
+
+             FChartCDS.FieldDefs.Add(DataGroupsFielddName,      ftString, 20);
+
+             ChartDataSet.First;
+             while not ChartDataSet.Eof do
+             begin
+               FChartCDS.FieldDefs.Add(ChartDataSet.FieldByName(SeriesFieldName).AsString, DataType, 0);
+               ChartDataSet.Next;
+             end;
+
+             if FChartCDS.FieldDefs.Count > 1 then FChartCDS.CreateDataSet;
+           end;
+
+         end;
        end;
 
        // размножаем колонки
        if Assigned(MultiplyDataSet) and MultiplyDataSet.Active and not MultiplyDataSet.IsEmpty then
        begin
+
+         Row := 0;
+         if View is TcxGridDBBandedTableView then
+         begin
+           for J := 0 to MultiplyColumnList.Count - 1 do
+           begin
+             if TcxGridDBBandedColumn(TMultiplyColumn(MultiplyColumnList.Items[J]).Column).Position.RowIndex > Row then
+               Row := TcxGridDBBandedColumn(TMultiplyColumn(MultiplyColumnList.Items[J]).Column).Position.RowIndex;
+             TcxGridDBBandedColumn(TMultiplyColumn(MultiplyColumnList.Items[J]).Column).Tag :=
+               TcxGridDBBandedColumn(TMultiplyColumn(MultiplyColumnList.Items[J]).Column).Position.RowIndex;
+           end;
+           Inc(Row);
+         end;
+
          MultiplyDataSet.First;
          NewColumnIndex := 1;
-         tclc := TemplateColumnList.Count;
          while not MultiplyDataSet.Eof do
          begin
 
-           for J := 0 to FMultiplyColumnList.Count - 1 do
+           for J := 0 to MultiplyColumnList.Count - 1 do
            begin
              Column := View.CreateColumn;
              Column.Name:= 'MultiplyAdd' + MultiplyDataSet.FieldByName(TMultiplyColumn(MultiplyColumnList.Items[J]).FieldName).AsString;
 
              FCreateColumnList.Add(Column);
-             with Column do begin
+             with Column do
+             begin
                Assign(TMultiplyColumn(MultiplyColumnList.Items[J]).Column);
+               TMultiplyColumn(MultiplyColumnList.Items[J]).Column.Tag := 0;
 
                Caption := Column.Name;
                Width := TMultiplyColumn(MultiplyColumnList.Items[J]).Column.Width;
+               Tag := NewColumnIndex * Row + TMultiplyColumn(MultiplyColumnList.Items[J]).Column.Tag;
+               Options.Editing := False;
+
                if Column is TcxGridDBBandedColumn then
                begin
-                  TcxGridDBBandedColumn(Column).DataBinding.FieldName := MultiplyDataSet.FieldByName(TMultiplyColumn(MultiplyColumnList.Items[J]).FieldName).AsString;
-                  TcxGridDBBandedColumn(Column).Position.BandIndex := TcxGridDBBandedColumn(TMultiplyColumn(MultiplyColumnList.Items[J]).Column).Position.BandIndex;
-                  TcxGridDBBandedColumn(Column).Position.RowIndex := TcxGridDBBandedColumn(TMultiplyColumn(MultiplyColumnList.Items[J]).Column).Position.RowIndex + NewColumnIndex;
-                  TcxGridDBBandedColumn(Column).Position.ColIndex := TcxGridDBBandedColumn(TMultiplyColumn(MultiplyColumnList.Items[J]).Column).Position.ColIndex;
-               end;
-               if Column is TcxGridDBColumn then
+                 TcxGridDBBandedColumn(Column).DataBinding.FieldName := MultiplyDataSet.FieldByName(TMultiplyColumn(MultiplyColumnList.Items[J]).FieldName).AsString;
+                 TcxGridDBBandedColumn(Column).Position.BandIndex := TcxGridDBBandedColumn(TMultiplyColumn(MultiplyColumnList.Items[J]).Column).Position.BandIndex;
+                 TcxGridDBBandedColumn(Column).Position.ColIndex := TcxGridDBBandedColumn(Column).Position.Band.ColumnCount;
+               end else if Column is TcxGridDBColumn then
+               begin
                   TcxGridDBColumn(Column).DataBinding.FieldName := MultiplyDataSet.FieldByName(TMultiplyColumn(MultiplyColumnList.Items[J]).FieldName).AsString;
-               Options.Editing := False;
+                  if FMultiplyType in [mtLeft, mtTop] then
+                  begin
+                    if NewColumnIndex = 1 then
+                      StartColumnIndex := TcxGridDBColumn(TMultiplyColumn(MultiplyColumnList.Items[J]).Column).Index;
+                    TcxGridDBColumn(Column).Index := StartColumnIndex + NewColumnIndex - 1;
+                  end;
+               end;
              end;
 
              TemplateColumn := TTemplateColumn(FTemplateColumnList.Add);
@@ -5275,38 +5441,61 @@ begin
              FCreateTemplateColumn.Add(TemplateColumn);
            end;
 
-           // сдвигаем дальние
-           if Column is TcxGridDBBandedColumn then
-           begin
-             for I := 0 to tclc - 1 do
-               if TcxGridDBBandedColumn(TTemplateColumn(FTemplateColumnList.Items[I]).FTemplateColumn).Position.RowIndex >= TcxGridDBBandedColumn(Column).Position.RowIndex then
-                 TcxGridDBBandedColumn(TTemplateColumn(FTemplateColumnList.Items[I]).FTemplateColumn).Position.RowIndex := TcxGridDBBandedColumn(TTemplateColumn(FTemplateColumnList.Items[I]).FTemplateColumn).Position.RowIndex + 1;
-           end;
-
            MultiplyDataSet.Next;
            Inc(NewColumnIndex);
          end;
 
-         // Правим последовательность чтоб не перекасило отображение
-         if View is TcxGridDBBandedTableView then
+           // Построили схему
+         if Column is TcxGridDBBandedColumn then
          begin
-           i := 0;
-           while I < FTemplateColumnList.Count - 1 do
-           begin
-             if (TcxGridDBBandedColumn(TTemplateColumn(FTemplateColumnList.Items[I]).FTemplateColumn).Position.ColIndex +
-                (TcxGridDBBandedColumn(TTemplateColumn(FTemplateColumnList.Items[I]).FTemplateColumn).Position.RowIndex + 1) *
-                TcxGridDBBandedColumn(TTemplateColumn(FTemplateColumnList.Items[I]).FTemplateColumn).Position.Band.ColumnCount) >
-               (TcxGridDBBandedColumn(TTemplateColumn(FTemplateColumnList.Items[I + 1]).FTemplateColumn).Position.ColIndex +
-                (TcxGridDBBandedColumn(TTemplateColumn(FTemplateColumnList.Items[I + 1]).FTemplateColumn).Position.RowIndex + 1) *
-                TcxGridDBBandedColumn(TTemplateColumn(FTemplateColumnList.Items[I + 1]).FTemplateColumn).Position.Band.ColumnCount)  then
-             begin
-               FTemplateColumnList.Items[I + 1].Index := FTemplateColumnList.Items[I + 1].Index - 1;
-               i := 0;
-               Continue;
-             end;
-             Inc(I);
-           end;
+
+            for J := 0 to TemplateColumnList.Count - 1 do
+            begin
+              if TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn.Tag > MaxRow then
+                 MaxRow := TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn.Tag;
+            end;
+
+            if FMultiplyType = mtRight then
+            begin
+              for I := Row to MaxRow do
+                for J := TemplateColumnList.Count - 1 downto 0 do
+              begin
+                if (TcxGridDBBandedColumn(TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn).Tag = I) then
+                  TcxGridDBBandedColumn(TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn).Position.ColIndex  := 0;
+              end;
+            end;
+            if FMultiplyType = mtLeft then
+            begin
+              // Само так получаеться
+            end;
+            if FMultiplyType = mtTop then
+            begin
+              for I := MaxRow downto 0 do
+                for J := 0 to TemplateColumnList.Count - 1 do
+              begin
+                if (TcxGridDBBandedColumn(TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn).Tag = I) and
+                   (TcxGridDBBandedColumn(TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn).Position.RowIndex <>
+                   (MaxRow - TcxGridDBBandedColumn(TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn).Tag)) then
+                  TcxGridDBBandedColumn(TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn).Position.RowIndex  :=
+                    MaxRow - TcxGridDBBandedColumn(TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn).Tag;
+              end;
+            end;
+            if FMultiplyType = mtBottom then
+            begin
+              for I := 0 to MaxRow do
+                for J := 0 to TemplateColumnList.Count - 1 do
+              begin
+                if (TcxGridDBBandedColumn(TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn).Tag = I) and
+                   (TcxGridDBBandedColumn(TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn).Position.RowIndex <>
+                    TcxGridDBBandedColumn(TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn).Tag) then
+                  TcxGridDBBandedColumn(TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn).Position.RowIndex  :=
+                    TcxGridDBBandedColumn(TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn).Tag;
+              end;
+            end;
          end;
+
+         // Правим последовательность чтоб не перекасило отображение
+         ChangingTheSequence;
 
        end;
 
@@ -5440,25 +5629,58 @@ begin
            end;
          end;
 
-         // Готовим диаграмы
+         // Строки в диаграмму
          for i := 0 to FFormationChartList.Count - 1 do
          begin
-           if Assigned(TFormationChart(FFormationChartList.Items[I]).FChartDataSet) then
            with TFormationChart(FFormationChartList.Items[I]) do
            begin
-             if Assigned(HeaderDataSet.Fields.FindField(HeaderFieldName)) then
-             begin
-               FChartDataSet.Last;
-               FChartDataSet.Append;
-               FChartDataSet.FieldByName(DataGroupsFielddName).AsString := HeaderDataSet.FieldByName(HeaderFieldName).AsString;
-               FChartDataSet.Post;
-             end;
+             if FChartCDS.Active then
+               if Assigned(HeaderDataSet.Fields.FindField(HeaderFieldName)) then
+               begin
+                 FChartCDS.Last;
+                 FChartCDS.Append;
+                 FChartCDS.FieldByName(DataGroupsFielddName).AsString := HeaderDataSet.FieldByName(HeaderFieldName).AsString;
+                 FChartCDS.Post;
+               end;
            end;
          end;
 
          inc(NewColumnIndex);
          HeaderDataSet.Next;
        end;
+
+         // Готовим диаграмы
+       for i := 0 to FFormationChartList.Count - 1 do
+       begin
+         if Assigned(TFormationChart(FFormationChartList.Items[I]).FChartView) then
+         with TFormationChart(FFormationChartList.Items[I]) do
+         begin
+           if not FChartCDS.IsEmpty then
+           begin
+
+             with FChartView.CreateDataGroup do
+             begin
+               DisplayText := HeaderName;
+               DataBinding.FieldName := DataGroupsFielddName;
+               SortOrder := soNone;
+             end;
+
+             ChartDataSet.First;
+             while not ChartDataSet.Eof do
+             begin
+               with FChartView.CreateSeries do
+               begin
+                 DisplayText := ChartDataSet.FieldByName(SeriesName).AsString;
+                 DataBinding.FieldName := ChartDataSet.FieldByName(SeriesFieldName).AsString;
+               end;
+               ChartDataSet.Next;
+             end;
+
+           end;
+        end;
+
+       end;
+
     end;
   finally
     View.EndUpdate;
@@ -5480,46 +5702,44 @@ begin
 end;
 
 procedure TCrossDBViewReportAddOn.OnAfterScroll(DataSet: TDataSet);
-  var I, J : Integer;
-      FieldName : String;
+  var I, J : Integer; FieldName : String;
 begin
   inherited OnAfterScroll(DataSet);
 
+  if not Assigned(DataSet) then Exit;
+  if not DataSet.Active then Exit;
+
   for i := 0 to FFormationChartList.Count - 1 do
-    if Assigned(TFormationChart(FFormationChartList.Items[I]).FChartDataSet) then
+    if TFormationChart(FFormationChartList.Items[I]).FChartCDS.Active then
   with TFormationChart(FFormationChartList.Items[I]) do
   begin
 
-    FChartDataSet.DisableControls;
+    FChartView.DataController.DataSource := Nil;
+
+    FChartCDS.DisableControls;
     try
-      FChartDataSet.First;
-      while not FChartDataSet.Eof do
+      FChartCDS.First;
+      while not FChartCDS.Eof do
       begin
-        FChartDataSet.Edit;
+        FChartCDS.Edit;
 
-        for J := 0 to FSeriesColumnList.Count - 1 do
+        for J := 1 to FChartCDS.FieldCount - 1 do
         begin
-          if Assigned(FChartDataSet.FindField(TSeriesColumn(FSeriesColumnList.Items[J]).SeriesFieldName)) then
-          begin
+          FieldName := FChartCDS.Fields.Fields[J].FieldName + IntToStr(FChartCDS.RecNo);
 
-            if TSeriesColumn(FSeriesColumnList.Items[J]).Column is TcxGridDBBandedColumn then
-               FieldName := TcxGridDBBandedColumn(TSeriesColumn(FSeriesColumnList.Items[J]).Column).DataBinding.FieldName;
-            if TSeriesColumn(FSeriesColumnList.Items[J]).Column is TcxGridDBColumn then
-               FieldName := TcxGridDBColumn(TSeriesColumn(FSeriesColumnList.Items[J]).Column).DataBinding.FieldName;
-            FieldName := FieldName + IntToStr(FChartDataSet.RecNo);
-
-            if Assigned(DataSet) and Assigned(DataSet.FindField(FieldName)) then
-              FChartDataSet.FindField(TSeriesColumn(FSeriesColumnList.Items[J]).SeriesFieldName).AsVariant := DataSet.FieldByName(FieldName).AsVariant
-            else FChartDataSet.FindField(TSeriesColumn(FSeriesColumnList.Items[J]).SeriesFieldName).AsVariant := 0;
-          end;
+          if Assigned(DataSet) and Assigned(DataSet.FindField(FieldName)) then
+            FChartCDS.FindField(FChartCDS.Fields.Fields[J].FieldName).AsVariant := DataSet.FieldByName(FieldName).AsVariant
+          else FChartCDS.FindField(FChartCDS.Fields.Fields[J].FieldName).AsVariant := 0;
         end;
 
-        FChartDataSet.Post;
-        FChartDataSet.Next;
+        FChartCDS.Post;
+        FChartCDS.Next;
       end;
     finally
-      FChartDataSet.EnableControls;
+      FChartCDS.EnableControls;
     end;
+
+    FChartView.DataController.DataSource := FChartDS;
   end;
 
 

@@ -67,7 +67,6 @@
             item
               Format = ',0;-,0; ;'
               Kind = skSum
-              Column = CountPrev
             end
             item
               Format = ',0.00;-,0.00; ;'
@@ -87,17 +86,14 @@
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skAverage
-              Column = AverageCheckPrev
             end
             item
               Format = ',0;-,0; ;'
               Kind = skSum
-              Column = CountCashPrev
             end
             item
               Format = ',0;-,0; ;'
               Kind = skSum
-              Column = CountCashLessPrev
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsBehavior.GoToNextCellOnEnter = True
@@ -141,70 +137,12 @@
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
-          object CountPrev: TcxGridDBBandedColumn
-            Caption = #1063#1077#1082#1086#1074
-            DataBinding.FieldName = 'CountPrev'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = ',0;-,0; ;'
+          object Color_calc: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_calc'
             Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            MinWidth = 60
-            Options.Editing = False
-            Options.Moving = False
-            Options.VertSizing = False
-            Width = 60
-            Position.BandIndex = 1
-            Position.ColIndex = 0
-            Position.RowIndex = 0
-          end
-          object AverageCheckPrev: TcxGridDBBandedColumn
-            Caption = #1057#1088'. '#1095#1077#1082
-            DataBinding.FieldName = 'AverageCheckPrev'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            MinWidth = 60
-            Options.Editing = False
-            Width = 60
-            Position.BandIndex = 1
+            VisibleForCustomization = False
+            Position.BandIndex = 0
             Position.ColIndex = 1
-            Position.RowIndex = 0
-          end
-          object CountCashPrev: TcxGridDBBandedColumn
-            Caption = #1053#1072#1083
-            DataBinding.FieldName = 'CountCashPrev'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = ',0;-,0; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            MinWidth = 60
-            Options.Editing = False
-            Width = 60
-            Position.BandIndex = 1
-            Position.ColIndex = 2
-            Position.RowIndex = 0
-          end
-          object CountCashLessPrev: TcxGridDBBandedColumn
-            Caption = #1041#1077#1079#1085#1072#1083
-            DataBinding.FieldName = 'CountCashLessPrev'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = ',0;-,0; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            MinWidth = 60
-            Options.Editing = False
-            Width = 60
-            Position.BandIndex = 1
-            Position.ColIndex = 3
             Position.RowIndex = 0
           end
           object Count: TcxGridDBBandedColumn
@@ -220,11 +158,10 @@
             Options.Editing = False
             Options.Moving = False
             Options.VertSizing = False
-            Styles.Content = dmMain.cxRemainsContentStyle
             Width = 60
             Position.BandIndex = 1
             Position.ColIndex = 0
-            Position.RowIndex = 1
+            Position.RowIndex = 0
           end
           object AverageCheck: TcxGridDBBandedColumn
             Caption = '2'
@@ -237,11 +174,10 @@
             HeaderAlignmentVert = vaCenter
             MinWidth = 60
             Options.Editing = False
-            Styles.Content = dmMain.cxRemainsContentStyle
             Width = 60
             Position.BandIndex = 1
             Position.ColIndex = 1
-            Position.RowIndex = 1
+            Position.RowIndex = 0
           end
           object CountCash: TcxGridDBBandedColumn
             Caption = '3'
@@ -254,11 +190,10 @@
             HeaderAlignmentVert = vaCenter
             MinWidth = 60
             Options.Editing = False
-            Styles.Content = dmMain.cxRemainsContentStyle
             Width = 60
             Position.BandIndex = 1
             Position.ColIndex = 2
-            Position.RowIndex = 1
+            Position.RowIndex = 0
           end
           object CountCashLess: TcxGridDBBandedColumn
             Caption = '4'
@@ -271,11 +206,10 @@
             HeaderAlignmentVert = vaCenter
             MinWidth = 60
             Options.Editing = False
-            Styles.Content = dmMain.cxRemainsContentStyle
             Width = 60
             Position.BandIndex = 1
             Position.ColIndex = 3
-            Position.RowIndex = 1
+            Position.RowIndex = 0
           end
         end
         inherited cxGridLevel: TcxGridLevel
@@ -290,18 +224,10 @@
         Align = alBottom
         TabOrder = 1
         object grChartDBChartView1: TcxGridDBChartView
-          DataController.DataSource = ChartDS
           DiagramLine.Active = True
+          DiagramLine.Values.LineWidth = 3
           ToolBox.CustomizeButton = True
           ToolBox.DiagramSelector = True
-          object dgDateName: TcxGridDBChartDataGroup
-            DataBinding.FieldName = 'DateName'
-            DisplayText = #1044#1072#1090#1072
-          end
-          object serSummaSale: TcxGridDBChartSeries
-            DataBinding.FieldName = 'Count'
-            DisplayText = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1095#1077#1082#1086#1074
-          end
         end
         object grChartLevel1: TcxGridLevel
           GridView = grChartDBChartView1
@@ -396,6 +322,14 @@
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end
+      item
         Component = deEnd
         Properties.Strings = (
           'Date')
@@ -416,6 +350,11 @@
         Properties.Strings = (
           'Key'
           'TextValue')
+      end
+      item
+        Component = actExpand
+        Properties.Strings = (
+          'Value')
       end>
   end
   inherited ActionList: TActionList
@@ -564,6 +503,25 @@
         end>
       isShowModal = False
     end
+    object actExpand: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1088#1077#1079#1091#1083#1100#1090#1072#1090' '#1089#1090#1086#1083#1073#1080#1082#1086#1084
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1088#1077#1079#1091#1083#1100#1090#1072#1090' '#1089#1090#1086#1083#1073#1080#1082#1086#1084
+      ImageIndex = 11
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1088#1077#1079#1091#1083#1100#1090#1072#1090' '#1089#1090#1088#1086#1082#1072#1084#1080
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1088#1077#1079#1091#1083#1100#1090#1072#1090' '#1089#1090#1086#1083#1073#1080#1082#1086#1084
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1088#1077#1079#1091#1083#1100#1090#1072#1090' '#1089#1090#1088#1086#1082#1072#1084#1080
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1088#1077#1079#1091#1083#1100#1090#1072#1090' '#1089#1090#1086#1083#1073#1080#1082#1086#1084
+      ImageIndexTrue = 12
+      ImageIndexFalse = 11
+    end
   end
   inherited MasterDS: TDataSource
     Left = 344
@@ -582,6 +540,9 @@
       end
       item
         DataSet = MultiplyCDS
+      end
+      item
+        DataSet = ChartCDS
       end
       item
         DataSet = MasterCDS
@@ -669,6 +630,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbExpand'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton1'
         end>
     end
@@ -678,6 +647,10 @@
     end
     object dxBarButton1: TdxBarButton
       Action = MovementProtocolOpenForm
+      Category = 0
+    end
+    object bbExpand: TdxBarButton
+      Action = actExpand
       Category = 0
     end
   end
@@ -786,7 +759,27 @@
     OnDblClickActionList = <>
     ActionItemList = <>
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = Count
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AverageCheck
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = CountCash
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = CountCashLess
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
@@ -794,53 +787,37 @@
     PropertiesCellList = <>
     FormationChartList = <
       item
-        SeriesColumnList = <
-          item
-            SeriesFieldName = 'Count'
-            Column = Count
-          end>
+        ChartView = grChartDBChartView1
         DataGroupsFielddName = 'DateName'
+        HeaderName = #1052#1077#1089#1103#1094
         HeaderFieldName = 'ValueChartName'
         ChartDataSet = ChartCDS
+        SeriesName = 'SeriesName'
+        SeriesFieldName = 'FieldName'
       end>
     MultiplyColumnList = <
       item
         FieldName = 'FieldNameCount'
         HeaderFieldName = 'HeaderFieldNameCount'
-        Column = CountPrev
+        Column = Count
       end
       item
         FieldName = 'FieldNameAverageCheck'
         HeaderFieldName = 'HeaderFieldNameAverageCheck'
-        Column = AverageCheckPrev
+        Column = AverageCheck
       end
       item
         FieldName = 'FieldNameCountCash'
         HeaderFieldName = 'HeaderFieldNameCountCash'
-        Column = CountCashPrev
+        Column = CountCash
       end
       item
         FieldName = 'FieldNameCountCashLess'
         HeaderFieldName = 'HeaderFieldNameCountCashLess'
-        Column = CountCashLessPrev
+        Column = CountCashLess
       end>
+    MultiplyType = mtTop
     TemplateColumnList = <
-      item
-        HeaderColumnName = 'ValueNameChecks'
-        TemplateColumn = CountPrev
-      end
-      item
-        HeaderColumnName = 'ValueNameAverageCheck'
-        TemplateColumn = AverageCheckPrev
-      end
-      item
-        HeaderColumnName = 'ValueNameCash'
-        TemplateColumn = CountCashPrev
-      end
-      item
-        HeaderColumnName = 'ValueNameCashLess'
-        TemplateColumn = CountCashLessPrev
-      end
       item
         HeaderColumnName = 'ValueName1'
         TemplateColumn = Count
@@ -860,6 +837,8 @@
     HeaderDataSet = HeaderCDS
     MultiplyDataSet = MultiplyCDS
     BаndColumnName = 'ValueBandName'
+    NoCrossColorColumn = True
+    ActionExpand = actExpand
     Left = 568
     Top = 192
   end
@@ -872,16 +851,7 @@
   end
   object ChartCDS: TClientDataSet
     Aggregates = <>
-    FieldDefs = <
-      item
-        Name = 'DateName'
-        DataType = ftString
-        Size = 40
-      end
-      item
-        Name = 'Count'
-        DataType = ftInteger
-      end>
+    FieldDefs = <>
     IndexDefs = <
       item
         Name = 'DEFAULT_ORDER'
@@ -892,11 +862,6 @@
     Params = <>
     StoreDefs = True
     Left = 440
-    Top = 328
-  end
-  object ChartDS: TDataSource
-    DataSet = ChartCDS
-    Left = 344
     Top = 328
   end
 end

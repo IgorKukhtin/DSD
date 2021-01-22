@@ -130,6 +130,8 @@ type
     Ord: TcxDBPivotGridField;
     cxDBPivotGrid1Field1: TcxDBPivotGridField;
     cxDBPivotGrid1Field2: TcxDBPivotGridField;
+    cxDBPivotGrid1Field3: TcxDBPivotGridField;
+    cxDBPivotGrid1Field4: TcxDBPivotGridField;
     procedure actSetGoodsExecute(Sender: TObject);
     procedure actSetPromoExecute(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

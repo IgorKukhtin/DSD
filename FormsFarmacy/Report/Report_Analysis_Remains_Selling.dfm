@@ -470,11 +470,31 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
       AreaIndex = 0
       AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
-      Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103
+      Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1082#1072#1089#1089
       DataBinding.FieldName = 'Amount'
-      DisplayFormat = '0.000'
+      DisplayFormat = '0.000;-0.000; ;'
       Visible = True
       UniqueName = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103
+    end
+    object cxDBPivotGrid1Field3: TcxDBPivotGridField
+      AreaIndex = 14
+      AllowedAreas = [faFilter, faData]
+      IsCaptionAssigned = True
+      Caption = #1055#1088#1086#1076#1072#1078#1080' '#1073#1072#1079#1085#1072#1083
+      DataBinding.FieldName = 'AmountSale'
+      DisplayFormat = '0.000;-0.000; ;'
+      Visible = True
+      UniqueName = #1055#1088#1086#1076#1072#1078#1080' '#1073#1072#1079#1085#1072#1083
+    end
+    object cxDBPivotGrid1Field4: TcxDBPivotGridField
+      AreaIndex = 15
+      AllowedAreas = [faFilter, faData]
+      IsCaptionAssigned = True
+      Caption = #1057#1087#1080#1089#1072#1085#1080#1103
+      DataBinding.FieldName = 'AmountLoss'
+      DisplayFormat = '0.000;-0.000; ;'
+      Visible = True
+      UniqueName = #1057#1087#1080#1089#1072#1085#1080#1103
     end
     object cxDBPivotGridField6: TcxDBPivotGridField
       Area = faData
@@ -483,7 +503,7 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
       IsCaptionAssigned = True
       Caption = #1054#1089#1090#1072#1090#1086#1082
       DataBinding.FieldName = 'OutSaldo'
-      DisplayFormat = '0.000'
+      DisplayFormat = '0.000;-0.000; ;'
       Visible = True
       UniqueName = #1054#1089#1090#1072#1090#1086#1082
     end
@@ -613,7 +633,7 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 112
+    Left = 144
     Top = 264
   end
   object ClientDataSet: TClientDataSet

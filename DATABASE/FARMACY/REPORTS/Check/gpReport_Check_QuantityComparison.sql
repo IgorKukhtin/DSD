@@ -17,6 +17,7 @@ $BODY$
    DECLARE cur1          refcursor;
    DECLARE cur2          refcursor;
    DECLARE cur3          refcursor;
+   DECLARE cur4          refcursor;
    DECLARE vbOperDate    TDateTime;
    DECLARE vbQueryText   Text;
    DECLARE vbIndex       Integer;
@@ -94,7 +95,8 @@ BEGIN
     CREATE TEMP TABLE tmpResult (
             UnitId          Integer,
             UnitCode        Integer,
-            UnitName        TVarChar
+            UnitName        TVarChar,
+            Color_calc      Integer
     ) ON COMMIT DROP;
 
     INSERT INTO tmpResult
@@ -103,43 +105,66 @@ BEGIN
      SELECT Objectt_Unit.Id
           , Objectt_Unit.ObjectCode
           , Objectt_Unit.ValueData
+          , zfCalc_Color(64, 224, 208)
      FROM tmpUnit
           INNER JOIN Object AS Objectt_Unit ON Objectt_Unit.ID = tmpUnit.UnitId
 
     );
 
     CREATE TEMP TABLE tmpMultiply (
-            Id                                Integer,
-            FieldNameCount                    TVarChar,
-            HeaderFieldNameCount              TVarChar,
-            FieldNameAverageCheck             TVarChar,
-            HeaderFieldNameAverageCheck       TVarChar,
-            FieldNameCountCash                TVarChar,
-            HeaderFieldNameCountCash          TVarChar,
-            FieldNameCountCashLess            TVarChar,
-            HeaderFieldNameCountCashLess      TVarChar
+            Id                                 Integer,
+            FieldNameCount                     TVarChar,
+            HeaderFieldNameCount               TVarChar,
+            BackGroundColumnNameCount          TVarChar,
+            FieldNameAverageCheck              TVarChar,
+            HeaderFieldNameAverageCheck        TVarChar,
+            BackGroundColumnNameAverageCheck   TVarChar,
+            FieldNameCountCash                 TVarChar,
+            HeaderFieldNameCountCash           TVarChar,
+            BackGroundColumnNameCountCash      TVarChar,
+            FieldNameCountCashLess             TVarChar,
+            HeaderFieldNameCountCashLess       TVarChar,
+            BackGroundColumnNameCountCashLess  TVarChar
     ) ON COMMIT DROP;
 
+    CREATE TEMP TABLE tmpChart (
+            Id                                Integer,
+            SeriesName                        TVarChar,
+            FieldName                         TVarChar
+    ) ON COMMIT DROP;
+
+    INSERT INTO tmpChart
+    VALUES (1, 'Количество чеков с '||zfcalc_MonthYearName(inDateStart), 'Count');
 
     -- Данные для размножения
-    vbYear := EXTRACT (YEAR FROM (DATE_TRUNC ('MONTH', inDateStart) - ((inYearsAgo - 1)::TVArChar||' YEAR')::INTERVAL));
-    WHILE vbYear < EXTRACT (YEAR FROM DATE_TRUNC ('MONTH', inDateStart)) LOOP
+    vbInc := 1;
+    WHILE vbInc <= inYearsAgo LOOP
 
-        -- добавляем то что нашли
+        vbYear := EXTRACT (YEAR FROM (DATE_TRUNC ('MONTH', inDateStart) - (vbInc::TVArChar||' YEAR')::INTERVAL));
+
+        -- добавляем для размножения
         INSERT INTO tmpMultiply
-        SELECT vbYear
+        SELECT vbInc
              , 'Count'||vbYear::TVarChar
-             , 'ValueName1'
+             , CASE WHEN vbInc < inYearsAgo THEN 'ValueName1' ELSE 'ValueNameChecks' END
+             , 'Color_calc'||vbYear::TVarChar
              , 'AverageCheck'||vbYear::TVarChar
-             , 'ValueName2'
+             , CASE WHEN vbInc < inYearsAgo THEN 'ValueName2' ELSE 'ValueNameAverageCheck' END
+             , 'Color_calc'||vbYear::TVarChar
              , 'CountCash'||vbYear::TVarChar
-             , 'ValueName3'
+             , CASE WHEN vbInc < inYearsAgo THEN 'ValueName3' ELSE 'ValueNameCash' END
+             , 'Color_calc'||vbYear::TVarChar
              , 'CountCashLess'||vbYear::TVarChar
-             , 'ValueName4'
+             , CASE WHEN vbInc < inYearsAgo THEN 'ValueName4' ELSE 'ValueNameCashLess' END
+             , 'Color_calc'||vbYear::TVarChar
           ;
 
+        INSERT INTO tmpChart
+        VALUES (1, 'Количество чеков с '||zfcalc_MonthYearName(inDateStart - (vbInc::TVArChar||' YEAR')::INTERVAL), 'Count'||vbYear::TVarChar);
+
+
         -- теперь следуюющий год
-        vbYear := vbYear + 1;
+        vbInc := vbInc + 1;
     END LOOP;
 
 
@@ -161,11 +186,7 @@ BEGIN
         vbQueryText := 'ALTER TABLE tmpResult ADD COLUMN Count' || COALESCE (vbIndex, 0)::Text || ' Integer NOT NULL DEFAULT 0 ' ||
                        ' , ADD COLUMN AverageCheck' || COALESCE (vbIndex, 0)::Text || ' TFloat NOT NULL DEFAULT 0 ' ||
                        ' , ADD COLUMN CountCash' || COALESCE (vbIndex, 0)::Text || ' Integer NOT NULL DEFAULT 0 ' ||
-                       ' , ADD COLUMN CountCashLess' || COALESCE (vbIndex, 0)::Text || ' Integer NOT NULL DEFAULT 0 ' ||
-                       ' , ADD COLUMN CountPrev' || COALESCE (vbIndex, 0)::Text || ' Integer NOT NULL DEFAULT 0 ' ||
-                       ' , ADD COLUMN AverageCheckPrev' || COALESCE (vbIndex, 0)::Text || ' TFloat NOT NULL DEFAULT 0 ' ||
-                       ' , ADD COLUMN CountCashPrev' || COALESCE (vbIndex, 0)::Text || ' Integer NOT NULL DEFAULT 0 ' ||
-                       ' , ADD COLUMN CountCashLessPrev' || COALESCE (vbIndex, 0)::Text || ' Integer NOT NULL DEFAULT 0 ';
+                       ' , ADD COLUMN CountCashLess' || COALESCE (vbIndex, 0)::Text || ' Integer NOT NULL DEFAULT 0 ';
         EXECUTE vbQueryText;
 
         vbQueryText := 'UPDATE tmpResult SET Count' || COALESCE (vbIndex, 0)::Text || ' = COALESCE (T1.CountChecks, 0) ' ||
@@ -176,18 +197,20 @@ BEGIN
                        ' WHERE tmpResult.UnitId = T1.UnitId';
         EXECUTE vbQueryText;
 
-        vbQueryText := 'UPDATE tmpResult SET CountPrev' || COALESCE (vbIndex, 0)::Text || ' = COALESCE (T1.CountChecks, 0) ' ||
-                                          ', AverageCheckPrev' || COALESCE (vbIndex, 0)::Text || ' = COALESCE (T1.AverageCheck, 0) ' ||
-                                          ', CountCashPrev' || COALESCE (vbIndex, 0)::Text || ' = COALESCE (T1.CountCash, 0) ' ||
-                                          ', CountCashLessPrev' || COALESCE (vbIndex, 0)::Text || ' = COALESCE (T1.CountCashLess, 0) ' ||
-                       ' FROM (SELECT tmpData.* FROM tmpData WHERE tmpData.OperDate = '''|| zfConvert_DateShortToString(vbOperDate - (inYearsAgo::TVArChar||' YEAR')::INTERVAL ) ||''') AS T1'||
-                       ' WHERE tmpResult.UnitId = T1.UnitId';
-        EXECUTE vbQueryText;
-
         -- Данные для размножения
-        vbYear := EXTRACT (YEAR FROM (DATE_TRUNC ('MONTH', inDateStart) - ((inYearsAgo - 1)::TVArChar||' YEAR')::INTERVAL));
         vbInc := 1;
-        WHILE vbYear < EXTRACT (YEAR FROM DATE_TRUNC ('MONTH', inDateStart)) LOOP
+        WHILE vbInc <= inYearsAgo LOOP
+
+            vbYear := EXTRACT (YEAR FROM (DATE_TRUNC ('MONTH', inDateStart) - (vbInc::TVArChar||' YEAR')::INTERVAL));
+
+            IF vbIndex = 1
+            THEN
+              vbQueryText := 'ALTER TABLE tmpResult ADD COLUMN Color_calc'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' Integer';
+              EXECUTE vbQueryText;
+
+              vbQueryText := 'UPDATE tmpResult SET Color_calc'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' = '|| zfCalc_Color(64, 224, 208, 100 * vbInc / (inYearsAgo + 1))::Text;
+              EXECUTE vbQueryText;
+            END IF;
 
             vbQueryText := 'ALTER TABLE tmpResult ADD COLUMN Count'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' Integer NOT NULL DEFAULT 0 ' ||
                            ' , ADD COLUMN AverageCheck'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' TFloat NOT NULL DEFAULT 0 ' ||
@@ -199,12 +222,11 @@ BEGIN
                                               ', AverageCheck'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' = COALESCE (T1.AverageCheck, 0) ' ||
                                               ', CountCash'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' = COALESCE (T1.CountCash, 0) ' ||
                                               ', CountCashLess'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' = COALESCE (T1.CountCashLess, 0) ' ||
-                           ' FROM (SELECT tmpData.* FROM tmpData WHERE tmpData.OperDate = '''|| zfConvert_DateShortToString(vbOperDate - ((inYearsAgo - vbInc)::TVArChar||' YEAR')::INTERVAL ) ||''') AS T1'||
+                           ' FROM (SELECT tmpData.* FROM tmpData WHERE tmpData.OperDate = '''|| zfConvert_DateShortToString(vbOperDate - (vbInc::TVArChar||' YEAR')::INTERVAL ) ||''') AS T1'||
                            ' WHERE tmpResult.UnitId = T1.UnitId';
             EXECUTE vbQueryText;
 
             -- теперь следуюющий год
-            vbYear := vbYear + 1;
             vbInc := vbInc + 1;
         END LOOP;
 
@@ -225,11 +247,11 @@ BEGIN
                        , 'Ср. чек' AS ValueNameAverageCheck
                        , 'Нал'     AS ValueNameCash
                        , 'Безнал'  AS ValueNameCashLess
-                       , '1'       AS ValueName1
-                       , '2'       AS ValueName2
-                       , '3'       AS ValueName3
-                       , '4'       AS ValueName4
-                       , zfcalc_MonthYearName(tmpOperDate.OperDate) AS ValueChartName
+                       , CASE WHEN inYearsAgo <= 0 THEN 'Чеков'    ELSE '1' END      AS ValueName1
+                       , CASE WHEN inYearsAgo <= 0 THEN 'Ср. чек'  ELSE '2' END      AS ValueName2
+                       , CASE WHEN inYearsAgo <= 0 THEN 'Нал'      ELSE '3' END      AS ValueName3
+                       , CASE WHEN inYearsAgo <= 0 THEN 'Безнал'   ELSE '4' END      AS ValueName4
+                       , zfConvert_IntToString((row_number()OVER(ORDER BY tmpOperDate.OperDate))::Integer, 2) ||'. ' ||zfcalc_MonthYearName(tmpOperDate.OperDate) AS ValueChartName
                   FROM tmpOperDate
                   ORDER BY tmpOperDate.OperDate;
     RETURN NEXT cur1;
@@ -240,11 +262,18 @@ BEGIN
                   ORDER BY tmpMultiply.Id;
     RETURN NEXT cur2;
 
-    -- Результат
+
+    -- Строки для графика
     OPEN cur3 FOR SELECT *
+                  FROM tmpChart
+                  ORDER BY tmpChart.Id;
+    RETURN NEXT cur3;
+
+    -- Результат
+    OPEN cur4 FOR SELECT *
                   FROM tmpResult
                   ORDER BY tmpResult.UnitName;
-    RETURN NEXT cur3;
+    RETURN NEXT cur4;
 
 
 END;
@@ -259,4 +288,4 @@ $BODY$
 
 -- тест
 --
--- select * from gpReport_Check_QuantityComparison(inDateStart := ('01.11.2020')::TDateTime , inDateFinal := ('31.12.2020')::TDateTime , inRetailId := 4 , inUnitId := 183292 , inYearsAgo := 2 ,  inSession := '3');
+-- select * from gpReport_Check_QuantityComparison(inDateStart := ('01.11.2020')::TDateTime , inDateFinal := ('31.12.2020')::TDateTime , inRetailId := 4 , inUnitId := 183292 , inYearsAgo := 1 ,  inSession := '3');
