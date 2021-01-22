@@ -606,8 +606,13 @@ BEGIN
                                   , tmpContract.JuridicalId AS JuridicalId
                                   , tmpMovement.PartnerId
                                   -- подменяем обратно ФО bз усл.договора на ФО из договора
-                                  , tmpContract.PaidKindId                                 --tmpMovement.PaidKindId AS PaidKindId
-                                  , tmpContract.PaidKindId_byBase  AS PaidKindId_child     -- ФО договора базы
+                                  , tmpContract.PaidKindId -- tmpMovement.PaidKindId AS PaidKindId
+                                    -- ФО договора базы
+                                  , CASE WHEN COALESCE (tmpContract.PaidKindId_byBase, 0) = 0
+                                              -- что б не разъехались строки расчет и факт - замена
+                                              THEN tmpContract.PaidKindId
+                                         ELSE tmpContract.PaidKindId_byBase
+                                    END AS PaidKindId_child
                                   , tmpContract.ContractConditionKindId
                                   , tmpMovement.BonusKindId
                                   , COALESCE (tmpContract.Value,0) AS Value
@@ -654,8 +659,8 @@ BEGIN
                             , View_Contract_InvNumber_child.ContractTagName  AS ContractTagName_child
                             , View_Contract_InvNumber_child.ContractStateKindCode AS ContractStateKindCode_child
 
-                            , MILinkObject_ContractMaster.ObjectId           AS ContractId_master  
-                            , MILinkObject_ContractChild.ObjectId            AS ContractId_child            
+                            , COALESCE (MILinkObject_ContractMaster.ObjectId, MILinkObject_Contract.ObjectId, MILinkObject_ContractChild.ObjectId) AS ContractId_master  
+                            , COALESCE (MILinkObject_ContractChild.ObjectId, MILinkObject_ContractMaster.ObjectId)  AS ContractId_child            
                             , MILinkObject_Contract.ObjectId                 AS ContractId_find
 
                             , View_Contract_InvNumber_master.InfoMoneyId     AS InfoMoneyId_master
@@ -738,8 +743,8 @@ BEGIN
                                                             AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
 
                             LEFT JOIN tmpContract_all  AS View_Contract_InvNumber_find   ON View_Contract_InvNumber_find.ContractId   = MILinkObject_Contract.ObjectId
-                            LEFT JOIN tmpContract_all  AS View_Contract_InvNumber_master ON View_Contract_InvNumber_master.ContractId = MILinkObject_ContractMaster.ObjectId
-                            LEFT JOIN tmpContract_full AS View_Contract_InvNumber_child  ON View_Contract_InvNumber_child.ContractId  = MILinkObject_ContractChild.ObjectId
+                            LEFT JOIN tmpContract_all  AS View_Contract_InvNumber_master ON View_Contract_InvNumber_master.ContractId = COALESCE (MILinkObject_ContractMaster.ObjectId, MILinkObject_Contract.ObjectId, MILinkObject_ContractChild.ObjectId)
+                            LEFT JOIN tmpContract_full AS View_Contract_InvNumber_child  ON View_Contract_InvNumber_child.ContractId  = COALESCE (MILinkObject_ContractChild.ObjectId, MILinkObject_ContractMaster.ObjectId)
 
                        WHERE Movement.DescId = zc_Movement_ProfitLossService()
                          AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -748,7 +753,7 @@ BEGIN
                                                                , zc_Enum_InfoMoney_21502()) -- Маркетинг + Бонусы за мясное сырье
                          AND (Object_Juridical.Id = inJuridicalId OR inJuridicalId = 0)
                          AND (COALESCE (MILinkObject_Branch.ObjectId,0) = inBranchId OR inBranchId = 0)
-                         AND COALESCE (MILinkObject_ContractConditionKind.ObjectId,0) = zc_Enum_ContractConditionKind_BonusPercentSalePart()
+                         AND MILinkObject_ContractConditionKind.ObjectId = zc_Enum_ContractConditionKind_BonusPercentSalePart()
                        )
 
       , tmpData AS (SELECT tmpAll.ContractId_master
@@ -760,7 +765,9 @@ BEGIN
                          , tmpAll.ContractTagName_child
                          , tmpAll.ContractStateKindCode_child
                          , tmpAll.InfoMoneyId_master
-                         , tmpAll.InfoMoneyId_child
+                           -- если была замена ContractId_child, меняем и Статью
+                         , CASE WHEN tmpAll.ContractId_master = tmpAll.ContractId_child THEN tmpAll.InfoMoneyId_master ELSE tmpAll.InfoMoneyId_child END AS InfoMoneyId_child
+                           --
                          , tmpAll.InfoMoneyId_find
                          , tmpAll.JuridicalId
                          , tmpAll.PartnerId
@@ -799,7 +806,7 @@ BEGIN
                             , tmpAll.ContractTagName_child
                             , tmpAll.ContractStateKindCode_child
                             , tmpAll.InfoMoneyId_master
-                            , tmpAll.InfoMoneyId_child
+                            , CASE WHEN tmpAll.ContractId_master = tmpAll.ContractId_child THEN tmpAll.InfoMoneyId_master ELSE tmpAll.InfoMoneyId_child END
                             , tmpAll.InfoMoneyId_find
                             , tmpAll.JuridicalId
                             , tmpAll.PartnerId
@@ -820,7 +827,8 @@ BEGIN
                               , COALESCE (ObjectLink_Partner.ChildObjectId, 0) AS PartnerId
                               , ObjectLink_ContractMaster.ChildObjectId        AS ContractId_master
                               , ObjectLink_ContractChild.ChildObjectId         AS ContractId_child
-                              , Object_ReportBonus.Id                          AS Id
+                                -- на всякий случай
+                              , MAX (Object_ReportBonus.Id)                    AS Id
                               , Object_ReportBonus.isErased
                          FROM Object AS Object_ReportBonus
                               INNER JOIN ObjectDate AS ObjectDate_Month
@@ -842,7 +850,14 @@ BEGIN
                                                   AND ObjectLink_ContractChild.DescId = zc_ObjectLink_ReportBonus_ContractChild()
                          WHERE Object_ReportBonus.DescId   = zc_Object_ReportBonus()
                          --AND inPaidKindId                = zc_Enum_PaidKind_SecondForm()
-                         --AND Object_ReportBonus.isErased = TRUE
+                           -- если НЕ удален, переносить НЕ надо
+                           AND Object_ReportBonus.isErased = FALSE
+                         --AND 1=0
+                         GROUP BY ObjectLink_Juridical.ChildObjectId
+                                , COALESCE (ObjectLink_Partner.ChildObjectId, 0)
+                                , ObjectLink_ContractMaster.ChildObjectId
+                                , ObjectLink_ContractChild.ChildObjectId
+                                , Object_ReportBonus.isErased
                          )
       -- Результат
       SELECT  tmpData.ContractId_master
@@ -912,7 +927,7 @@ BEGIN
             , tmpData.Comment :: TVarChar                 AS Comment
             
             , tmpObjectBonus.Id :: Integer AS ReportBonusId
-            , CASE WHEN tmpObjectBonus.Id IS NULL OR tmpObjectBonus.isErased = True THEN TRUE ELSE FALSE END :: Boolean AS isSend
+            , CASE WHEN tmpObjectBonus.isErased = FALSE THEN FALSE ELSE TRUE END :: Boolean AS isSend
 
             , tmpData.AmountKg  :: TFloat
             , tmpData.AmountSh  :: TFloat
@@ -973,4 +988,4 @@ $BODY$
  13.12.20         *
 */
 
---select * from gpReport_CheckBonus_PersentSalePart (inStartDate := ('01.12.2020')::TDateTime , inEndDate := ('30.12.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId :=  15158 /*15158 / 862910*/  , inBranchId := 0 , inSession := '5');
+-- select * from gpReport_CheckBonus_PersentSalePart (inStartDate := ('01.12.2020')::TDateTime , inEndDate := ('30.12.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId :=  15158 /*15158 / 862910*/  , inBranchId := 0 , inSession := '5');
