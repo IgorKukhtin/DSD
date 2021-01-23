@@ -57,8 +57,6 @@ type
     dxBarControlContainerItem2: TdxBarControlContainerItem;
     lblChartData: TcxLabel;
     cbChartData: TcxComboBox;
-    grChartDBChartView1DataGroup1: TcxGridDBChartDataGroup;
-    grChartDBChartView1Series1: TcxGridDBChartSeries;
   private
     { Private declarations }
   public

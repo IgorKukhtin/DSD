@@ -47,8 +47,8 @@ BEGIN
      -- проверяем регион пользователя
      vbAreaId:= (SELECT outAreaId FROM gpGet_Area_byUser(inSession));
      
-     inGoodsSearch := '%' || zfCalc_TVarChar_Upper(inGoodsSearch) || '%';
-     inProducerSearch := '%' || zfCalc_TVarChar_Upper(inProducerSearch) || '%';
+     inGoodsSearch := zfCalc_TVarChar_Upper(inGoodsSearch);
+     inProducerSearch := zfCalc_TVarChar_Upper(inProducerSearch);
      
 
      if COALESCE (vbAreaId, 0) = 0
@@ -192,9 +192,9 @@ BEGIN
             LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = LinkGoodsObject.GoodsId
 
       WHERE
-        LoadPriceListItem.GoodsNameUpper ILIKE inGoodsSearch
+        LoadPriceListItem.GoodsNameUpper ILIKE ('%' || inGoodsSearch || '%')
         AND
-        LoadPriceListItem.ProducerNameUpper ILIKE  inProducerSearch
+        LoadPriceListItem.ProducerNameUpper ILIKE  ('%' || inProducerSearch || '%')
         AND
         CAST (COALESCE (Object_Goods.GoodsCode, 0) AS TVarChar) ILIKE ('%' || inCodeSearch || '%')
         AND
@@ -229,4 +229,4 @@ $BODY$
 -- тест
 -- select * from gpSelect_GoodsSearch(inAreaId := 5803492, inGoodsSearch := '111' , inProducerSearch := '' , inCodeSearch := '' ,  inSession := '3990942 ');
 
-select * from gpSelect_GoodsSearch(inAreaId := 0 , inGoodsSearch := 'детралекс%1000' , inProducerSearch := '' , inCodeSearch := '' ,  inSession := '3');
+--select * from gpSelect_GoodsSearch(inAreaId := 0 , inGoodsSearch := 'детралекс%1000' , inProducerSearch := '' , inCodeSearch := '' ,  inSession := '3');

@@ -228,10 +228,6 @@
           DiagramLine.Values.LineWidth = 3
           ToolBox.CustomizeButton = True
           ToolBox.DiagramSelector = True
-          object grChartDBChartView1DataGroup1: TcxGridDBChartDataGroup
-          end
-          object grChartDBChartView1Series1: TcxGridDBChartSeries
-          end
         end
         object grChartLevel1: TcxGridLevel
           GridView = grChartDBChartView1
@@ -326,7 +322,7 @@
   object cbChartData: TcxComboBox [2]
     Left = 744
     Top = 120
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
     TabOrder = 6
     Width = 166
   end
@@ -833,7 +829,7 @@
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    FormationChartList = <
+    ChartList = <
       item
         ChartView = grChartDBChartView1
         DataGroupsFielddName = 'DateName'
@@ -843,8 +839,7 @@
         SeriesName = 'SeriesName'
         SeriesFieldName = 'FieldName'
         DisplayedDataComboBox = cbChartData
-        OrderDisplayedDataFieldName = 'OrderDisplayName'
-        NameDisplayedDataFieldName = 'DisplayName'
+        NameDisplayedDataFieldName = 'DisplayedDataName'
       end>
     MultiplyColumnList = <
       item
