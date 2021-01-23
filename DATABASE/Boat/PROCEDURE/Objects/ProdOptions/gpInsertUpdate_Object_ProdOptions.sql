@@ -37,7 +37,7 @@ BEGIN
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_ProdOptions(), inName, vbUserId);
 
    -- проверка - у таких опций здесь нельзя установить значение <Комплектующие>
-   IF inGoodsId >0
+   IF inGoodsId > 0
       AND EXISTS (SELECT 1 FROM ObjectLink AS ObjectLink_ProdColorPattern_ProdOptions
                   WHERE ObjectLink_ProdColorPattern_ProdOptions.ChildObjectId = ioId
                     AND ObjectLink_ProdColorPattern_ProdOptions.DescId        = zc_ObjectLink_ProdColorPattern_ProdOptions()
@@ -55,8 +55,15 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ProdOptions_Comment(), ioId, inComment);
 
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptions_SalePrice(), ioId, inSalePrice);
+   -- у таких опций здесь цена = 0
+   IF inGoodsId > 0
+   THEN
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptions_SalePrice(), ioId, 0);
+   ELSE
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptions_SalePrice(), ioId, inSalePrice);
+   END IF;
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptions_TaxKind(), ioId, inTaxKindId);

@@ -1,11 +1,12 @@
 -- Function: _replica.gpSelect_Table_ddl()
 
 DROP FUNCTION IF EXISTS _replica.gpSelect_Table_ddl (Integer);
+DROP FUNCTION IF EXISTS _replica.gpSelect_Table_ddl (BigInt);
 
 CREATE OR REPLACE FUNCTION _replica.gpSelect_Table_ddl (
-    IN inStartId Integer  -- значение _replica.table_ddl.Id, начиная с которого выбираем записи
+    IN inStartId BigInt  -- значение _replica.table_ddl.Id, начиная с которого выбираем записи
 )
-RETURNS TABLE (Id            Integer, 
+RETURNS TABLE (Id            BigInt, 
                Query         Text,
                Last_modified timestamp
 )    

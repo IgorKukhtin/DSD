@@ -17,7 +17,9 @@ RETURNS TABLE (Id Integer, ReceiptGoodsId Integer
 
              , ProdColorPatternId Integer, ProdColorPatternCode Integer, ProdColorPatternName TVarChar
              , ProdColorGroupId Integer, ProdColorGroupName TVarChar
+               -- ÷вет /либо Comment из Boat Structure
              , ColorPatternId Integer, ColorPatternName TVarChar
+               --
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar
              , GoodsGroupName TVarChar

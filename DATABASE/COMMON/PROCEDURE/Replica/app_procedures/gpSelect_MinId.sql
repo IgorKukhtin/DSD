@@ -4,10 +4,10 @@ DROP FUNCTION IF EXISTS _replica.gpSelect_MinId ();
 
 CREATE OR REPLACE FUNCTION _replica.gpSelect_MinId (
 )
-RETURNS Integer   
+RETURNS BigInt
 AS
 $BODY$      
-    DECLARE vbMinId Integer;     
+    DECLARE vbMinId BigInt;     
 BEGIN
     vbMinId:= (SELECT Min(id) AS Min_Id FROM _replica.table_update_data);
                      

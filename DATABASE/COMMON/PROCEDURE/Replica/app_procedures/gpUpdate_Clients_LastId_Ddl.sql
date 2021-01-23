@@ -1,10 +1,11 @@
 -- Function: _replica.gpUpdate_Clients_LastId_Ddl()
 
 DROP FUNCTION IF EXISTS _replica.gpUpdate_Clients_LastId_Ddl (Bigint, Integer);
+DROP FUNCTION IF EXISTS _replica.gpUpdate_Clients_LastId_Ddl (Bigint, Bigint);
 
 CREATE OR REPLACE FUNCTION _replica.gpUpdate_Clients_LastId_Ddl (
     IN inClient_Id    Bigint,  -- Master._replica.Clients.Client_Id  
-    IN inLast_Id_DDL  Integer -- Id последней успешной команды DDL
+    IN inLast_Id_DDL  BigInt  -- Id последней успешной команды DDL
 )
 RETURNS VOID 
 AS

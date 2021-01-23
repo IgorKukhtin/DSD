@@ -11,7 +11,7 @@ CREATE SCHEMA _replica;
 */
 --DROP TABLE IF EXISTS _replica.table_ddl;
 CREATE TABLE IF NOT EXISTS _replica.table_ddl(
-  id SERIAL       PRIMARY KEY,
+  id BIGSERIAL       PRIMARY KEY,
   query           TEXT,
   last_modified   TIMESTAMP WITHOUT TIME ZONE DEFAULT 
                             timezone('utc'::text, now())::timestamp
@@ -28,14 +28,14 @@ CREATE TABLE IF NOT EXISTS _replica.table_ddl(
 --DROP TABLE IF EXISTS _replica.clients;
 CREATE TABLE IF NOT EXISTS _replica.clients (
   ID                  SERIAL PRIMARY KEY,
-  PID                 INTEGER,
+  PID                 BIGINT,
   client_id           BIGINT UNIQUE,
   client_name         TEXT,
   application_name    TEXT,
   first_visit         TIMESTAMP WITHOUT TIME ZONE,
   last_visit          TIMESTAMP WITHOUT TIME ZONE,-- DEFAULT timezone('utc'::text, now())::timestamp
-  last_id             INTEGER,
-  last_id_ddl         INTEGER,
+  last_id             BIGINT,
+  last_id_ddl         BIGINT,
   digit_for_increment INTEGER
 );
 

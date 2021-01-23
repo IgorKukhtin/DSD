@@ -5,8 +5,8 @@ DROP FUNCTION IF EXISTS _replica.gpSelect_Errors ();
 CREATE OR REPLACE FUNCTION _replica.gpSelect_Errors (
 )
 RETURNS TABLE (Step           Integer, -- шаг, на котором возникла ошибка (1,2 или 3) 
-               Start_Id       Integer, -- начальный ID пакета
-               Last_Id        Integer, -- конечный ID пакета
+               Start_Id       Bigint, -- начальный ID пакета
+               Last_Id        Bigint, -- конечный ID пакета
                Client_Id      Bigint , -- slave._replica.Settings.Client_Id
                Description    Text     -- текст ошибки
 )    

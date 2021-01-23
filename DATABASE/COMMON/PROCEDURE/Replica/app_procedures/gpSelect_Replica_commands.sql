@@ -1,16 +1,17 @@
 -- Function: _replica.gpSelect_Replica_commands()
 
 DROP FUNCTION IF EXISTS _replica.gpSelect_Replica_commands (Integer, Integer);
+DROP FUNCTION IF EXISTS _replica.gpSelect_Replica_commands (BigInt, BigInt);
 
 CREATE OR REPLACE FUNCTION _replica.gpSelect_Replica_commands (
-    IN inId_start     Integer, -- значение table_update_data.Id, начиная с которого будем реплицировать данные
-    IN inRec_count    Integer  -- количество записей из table_update_data, которое предполагается реплицировать
+    IN inId_start     BigInt, -- значение table_update_data.Id, начиная с которого будем реплицировать данные
+    IN inRec_count    BigInt  -- количество записей из table_update_data, которое предполагается реплицировать
 )
 RETURNS TABLE (Value Text
 )    
 AS
 $BODY$      
-    DECLARE vbId_End    Integer;
+    DECLARE vbId_End    BigInt;
 BEGIN
     -- Нужно передать в gpSelect_Replica_union значения Id из _replica.table_update_data в диапазоне "inId_start..(inId_start + inRec_count)"
     -- и при этом соблюсти условие - "все соответствующие transaction_id находятся в передаваемом диапазоне".

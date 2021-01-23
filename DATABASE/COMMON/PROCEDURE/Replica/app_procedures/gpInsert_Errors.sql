@@ -1,11 +1,12 @@
 -- Function: _replica.gpInsert_Errors()
 
 DROP FUNCTION IF EXISTS _replica.gpInsert_Errors (Integer, Integer, Integer, Bigint, Text);
+DROP FUNCTION IF EXISTS _replica.gpInsert_Errors (Integer, Bigint, Bigint, Bigint, Text);
 
 CREATE OR REPLACE FUNCTION _replica.gpInsert_Errors (
     IN inStep            Integer, -- шаг, на котором возникла ошибка (1,2 или 3)
-    IN inStart_Id        Integer, -- начальный ID пакета
-    IN inLast_Id         Integer, -- конечный ID пакета
+    IN inStart_Id        Bigint, -- начальный ID пакета
+    IN inLast_Id         Bigint, -- конечный ID пакета
     IN inClient_Id       Bigint,  -- slave._replica.Settings.Client_Id
     IN inErrDescription  Text     -- текст ошибки
 )

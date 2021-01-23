@@ -224,7 +224,8 @@ end;
 
 function TCommandData.GetMaxId(const AId: Int64; const ARange: Integer): Int64;
 var
-  iId, iPos, iRange: Integer;
+  iId: Int64;
+  iPos, iRange: Integer;
 begin
   // BuildData не сохран€ет дубликаты команд, поэтому реальный размер нового пакета может быть меньше ARange
   // Ќужно скоректировать размер
@@ -376,7 +377,8 @@ end;
 
 function TCommandData.ValidId(const AId: Int64): Int64;
 var
-  iId, iPos: Integer;
+  iId: Int64;
+  iPos: Integer;
 begin
   Result := AId;
 

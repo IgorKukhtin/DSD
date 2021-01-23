@@ -2,16 +2,16 @@
 <BorlandProject>
 	<Transactions>
     <Transaction>1899.12.30 00:00:00.000.329,=C:\Users\sergey\Documents\Works\Replicator\src\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.258,=C:\Users\sergey\Documents\Works\Replicator\src\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.912,=C:\Users\sergey\Documents\Works\Replicator\src\Unit1.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.401,C:\Users\sergey\Documents\Works\Replicator\src\Unit1.pas=C:\Users\sergey\Documents\Works\Replicator\src\UDefinitions.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.535,C:\Users\sergey\Documents\Works\Replicator\src\Unit1.pas=C:\Users\sergey\Documents\Works\Replicator\src\UScriptFiles.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.510,=C:\Users\sergey\Documents\Works\Replicator\src\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.391,=C:\Users\sergey\Documents\Works\Replicator\src\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.009,=C:\Users\sergey\Documents\Works\Replicator\src\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.980,=C:\Users\sergey\Documents\Works\Replicator\src\Unit1.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.247,=C:\Users\sergey\Documents\Works\Replicator\src\UFileVersion.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.779,C:\Users\sergey\Documents\Works\Replicator\src\UData.dfm=C:\Users\sergey\Documents\Works\Replicator\src\Unit1.dfm</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.912,=C:\Users\sergey\Documents\Works\Replicator\src\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.980,=C:\Users\sergey\Documents\Works\Replicator\src\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.009,=C:\Users\sergey\Documents\Works\Replicator\src\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.510,=C:\Users\sergey\Documents\Works\Replicator\src\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.391,=C:\Users\sergey\Documents\Works\Replicator\src\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.258,=C:\Users\sergey\Documents\Works\Replicator\src\Unit1.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.404,C:\Users\sergey\Documents\Works\Replicator\src\Unit1.pas=C:\Users\sergey\Documents\Works\Replicator\src\UCommon.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.020,=C:\Users\sergey\Documents\Works\Replicator\src\ULog.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.588,C:\Users\sergey\Documents\Works\Replicator\src\UMain.dfm=C:\Users\sergey\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>

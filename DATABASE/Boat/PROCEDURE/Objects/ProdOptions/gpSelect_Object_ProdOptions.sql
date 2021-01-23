@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ModelId Integer, ModelCode Integer, ModelName TVarChar
              , BrandId Integer, BrandName TVarChar
              , ProdEngineId Integer, ProdEngineName TVarChar
+             , ProdColorPatternId Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar, TaxKind_Value TFloat
              , EKPrice TFloat, EKPriceWVAT TFloat
@@ -45,8 +46,9 @@ BEGIN
                             FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
                                                                      , inOperDate   := CURRENT_DATE) AS tmp
                            )
-            -- Опции, которые определены как Boat Structure
-        , tmpProdColorPattern AS (SELECT Object_ProdOptions.Id AS ProdOptionsId
+          -- Опции, которые определены как Boat Structure
+        , tmpProdColorPattern AS (SELECT ObjectLink_ProdOptions.ObjectId      AS ProdColorPatternId
+                                       , ObjectLink_ProdOptions.ChildObjectId AS ProdOptionsId
 
                                        , Object_Goods.Id                    ::Integer  AS GoodsId
                                        , Object_Goods.ObjectCode            ::Integer  AS GoodsCode
@@ -150,6 +152,8 @@ BEGIN
          , Object_ProdEngine.Id               AS ProdEngineId
          , Object_ProdEngine.ValueData        AS ProdEngineName
 
+         , COALESCE (tmpProdColorPattern.ProdColorPatternId, 0) :: Integer  AS ProdColorPatternId
+
          , Object_Goods.Id                                                   :: Integer  AS GoodsId
          , COALESCE (tmpProdColorPattern.GoodsCode, Object_Goods.ObjectCode) :: Integer  AS GoodsCode
          , COALESCE (tmpProdColorPattern.GoodsName, Object_Goods.ValueData)  :: TVarChar AS GoodsName
@@ -179,13 +183,27 @@ BEGIN
                 ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
            END) :: TFloat  AS BasisPriceWVAT
 
-           -- цена продажи  если товар указан то берем цену товара, только если нет товара берем SalePrice
+           -- цена продажи без НДС - если товар указан то берем цену товара, иначе это Boat Structure тогда берем SalePrice
+         , CASE WHEN ObjectLink_Goods.ChildObjectId > 0
+                     THEN CASE WHEN vbPriceWithVAT = FALSE
+                               THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
+                               ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value_goods.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                          END
+                ELSE -- опция - Цена продажи без НДС
+                     ObjectFloat_SalePrice.ValueData
 
-           -- опция - Цена продажи без НДС
-         , ObjectFloat_SalePrice.ValueData AS SalePrice
-           -- опция - Цена продажи с НДС
-         , CAST (COALESCE (ObjectFloat_SalePrice.ValueData, 0)
-              * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS SalePriceWVAT
+           END :: TFloat AS SalePrice
+
+           -- цена продажи с НДС - если товар указан то берем цену товара, иначе это Boat Structure тогда берем SalePrice
+         , CASE WHEN ObjectLink_Goods.ChildObjectId > 0
+                     THEN CASE WHEN vbPriceWithVAT = FALSE
+                               THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value_goods.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                               ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
+                          END
+                ELSE -- опция - Цена продажи с НДС
+                     CAST (COALESCE (ObjectFloat_SalePrice.ValueData, 0)
+                        * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))
+           END :: TFloat AS SalePriceWVAT
 
          , ObjectString_Comment.ValueData  AS Comment
 

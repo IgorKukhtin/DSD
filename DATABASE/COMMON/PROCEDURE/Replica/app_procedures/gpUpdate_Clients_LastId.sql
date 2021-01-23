@@ -1,10 +1,11 @@
 -- Function: _replica.gpUpdate_Clients_LastId()
 
 DROP FUNCTION IF EXISTS _replica.gpUpdate_Clients_LastId (Bigint, Integer);
+DROP FUNCTION IF EXISTS _replica.gpUpdate_Clients_LastId (Bigint, Bigint);
 
 CREATE OR REPLACE FUNCTION _replica.gpUpdate_Clients_LastId (
     IN inClient_Id   Bigint,  -- Master._replica.Clients.Client_Id  
-    IN inLast_Id     Integer -- Id последней успешной команды репликации
+    IN inLast_Id     BigInt   -- Id последней успешной команды репликации
 )
 RETURNS VOID 
 AS
@@ -17,7 +18,7 @@ BEGIN
         SET    Last_Id = inLast_Id
         WHERE  Client_Id = inClient_Id;
     ELSE
-        RAISE EXCEPTION 'Значение Client_Id = <%>  не найдено в таблице _replica.Clients', inClient_Id;
+        RAISE EXCEPTION 'Value Client_Id = <%>  not find in table  _replica.Clients', inClient_Id;
     END IF;    
         
 END;

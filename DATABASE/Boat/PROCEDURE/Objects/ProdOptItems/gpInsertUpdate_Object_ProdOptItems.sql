@@ -5,24 +5,23 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Int
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptItems(
- INOUT ioId               Integer   ,    -- ключ объекта <>
-    IN inCode             Integer   ,    -- Код объекта
-    --IN inName             TVarChar  ,    -- Название объекта
-    IN inProductId        Integer   ,
-    IN inProdOptionsId    Integer   ,
-    IN inProdOptPatternId Integer   ,
- INOUT ioGoodsId          Integer   ,
-   OUT outGoodsName       TVarChar  ,
-    IN inPriceIn          TFloat    ,
-    IN inPriceOut         TFloat    ,
-    IN inDiscountTax      TFloat    ,
-    IN inPartNumber       TVarChar  ,
-    IN inComment          TVarChar  ,
-    IN inProdColorPatternId Integer,
-    IN inSession          TVarChar   
-        -- сессия пользователя
+ INOUT ioId                   Integer   , -- Ключ
+    IN inCode                 Integer   , -- Код
+    IN inProductId            Integer   ,
+    IN inProdOptionsId        Integer   ,
+    IN inProdOptPatternId     Integer   ,
+    IN inProdColorPatternId   Integer   ,
+ INOUT ioGoodsId              Integer   ,
+   OUT outGoodsName           TVarChar  ,
+    IN inPriceIn              TFloat    ,
+    IN inPriceOut             TFloat    ,
+    IN inDiscountTax          TFloat    ,
+    IN inPartNumber           TVarChar  ,
+    IN inComment              TVarChar  ,
+    IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
 AS
@@ -44,15 +43,18 @@ BEGIN
                                              , inUserId        := vbUserId
                                               );
    END IF;
-   -- Проверка
+   -- Проверка/Поиск
    IF COALESCE (inProdOptPatternId, 0) = 0
    THEN
+       -- найдем "свободный"
        inProdOptPatternId:= (SELECT MIN (Object.Id) FROM Object WHERE Object.DescId = zc_Object_ProdOptPattern() AND Object.isErased = FALSE
-                             AND Object.Id NOT IN (SELECT ObjectLink_ProdOptPattern.ChildObjectId
+                             AND Object.Id NOT IN (-- если нет среди существующих
+                                                   SELECT ObjectLink_ProdOptPattern.ChildObjectId
                                                    FROM Object AS Object_ProdOptItems
                                                         INNER JOIN ObjectLink AS ObjectLink_Product
                                                                              ON ObjectLink_Product.ObjectId      = Object_ProdOptItems.Id
                                                                             AND ObjectLink_Product.DescId        = zc_ObjectLink_ProdOptItems_Product()
+                                                                            -- для єтой лодки
                                                                             AND ObjectLink_Product.ChildObjectId = inProductId
 
                                                         INNER JOIN ObjectLink AS ObjectLink_ProdOptPattern
@@ -61,18 +63,35 @@ BEGIN
                                                    WHERE Object_ProdOptItems.DescId = zc_Object_ProdOptItems()
                                                      AND Object_ProdOptItems.isErased = FALSE
                                                   ));
-     /*RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Элемент не установлен.'
-                                             , inProcedureName := 'gpInsertUpdate_Object_ProdOptItems'
-                                             , inUserId        := vbUserId
-                                              );*/
+     --RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Элемент не установлен.'
+     --                                      , inProcedureName := 'gpInsertUpdate_Object_ProdOptItems'
+     --                                      , inUserId        := vbUserId
+     --                                       );
    END IF;
 
 
-
+   -- если эта опция из Boat Structure или есть inProdColorPatternId
    IF EXISTS (SELECT 1 FROM ObjectLink WHERE ObjectLink.DescId = zc_ObjectLink_ProdColorPattern_ProdOptions() AND ObjectLink.ChildObjectId = inProdOptionsId)
-   OR inProdColorPatternId > 0
+      OR inProdColorPatternId > 0
    THEN
-   
+        -- Проверка inProdColorPatternId - заполнен
+        IF COALESCE (inProdColorPatternId, 0) = 0
+        THEN
+            RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.inProdColorPatternId не установлен.'
+                                                  , inProcedureName := 'gpInsertUpdate_Object_ProdOptItems'
+                                                  , inUserId        := vbUserId
+                                                   );
+        END IF;
+        -- Проверка inProdOptionsId - из Boat Structure
+        IF NOT EXISTS (SELECT 1 FROM ObjectLink WHERE ObjectLink.DescId = zc_ObjectLink_ProdColorPattern_ProdOptions() AND ObjectLink.ChildObjectId = inProdOptionsId)
+        THEN
+            RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.inProdColorPatternId не установлен.'
+                                                  , inProcedureName := 'gpInsertUpdate_Object_ProdOptItems'
+                                                  , inUserId        := vbUserId
+                                                   );
+        END IF;
+
+        -- сохраняем в Items Boat Structure
         PERFORM gpInsertUpdate_Object_ProdColorItems(ioId                  := tmp.Id
                                                    , inCode                := tmp.Code
                                                    , inProductId           := inProductId
@@ -84,16 +103,14 @@ BEGIN
                                                    , inSession             := inSession
                                                    )
                                                    
-        FROM gpSelect_Object_ProdColorItems (false,false,false, zfCalc_UserAdmin()) as tmp
+        FROM gpSelect_Object_ProdColorItems (FALSE,FALSE,FALSE, zfCalc_UserAdmin()) as tmp
         WHERE tmp.ProductId = inProductId
-        AND tmp.ProdColorPatternId = inProdColorPatternId
+          AND tmp.ProdColorPatternId = inProdColorPatternId
         ;
    
-        --    
-        RETURN;
+        -- !!! ВЫХОД !!!
+        -- RETURN;
         
-   -- ELSE 
-     --  RAISE EXCEPTION 'Ошибка.OK';
     END IF;
 
 
@@ -126,10 +143,10 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ProdOptItems_Comment(), ioId, inComment);
 
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_PriceIn(), ioId, inPriceIn);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_PriceOut(), ioId, inPriceOut);
+   -- сохранили свойство <PriceIn> - временно убрал, может потом понадобится
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_PriceIn(), ioId, 0);
+   -- сохранили свойство <PriceOut> - временно убрал, может потом понадобится
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_PriceOut(), ioId, 0);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_DiscountTax(), ioId, inDiscountTax);

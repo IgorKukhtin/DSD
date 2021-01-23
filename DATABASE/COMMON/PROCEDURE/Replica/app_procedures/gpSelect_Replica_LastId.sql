@@ -1,15 +1,16 @@
 -- Function: _replica.gpSelect_Replica_LastId()
 
 DROP FUNCTION IF EXISTS _replica.gpSelect_Replica_LastId (Integer, Integer);
+DROP FUNCTION IF EXISTS _replica.gpSelect_Replica_LastId (BigInt, BigInt);
 
 CREATE OR REPLACE FUNCTION _replica.gpSelect_Replica_LastId (
-    IN inId_start     Integer, -- значение table_update_data.Id, начиная с которого будем реплицировать данные
-    IN inRec_count    Integer  -- количество записей из table_update_data, которое предполагается реплицировать
+    IN inId_start     BigInt, -- значение table_update_data.Id, начиная с которого будем реплицировать данные
+    IN inRec_count    BigInt  -- количество записей из table_update_data, которое предполагается реплицировать
 )
-RETURNS Integer
+RETURNS BigInt
 AS
 $BODY$
-    DECLARE vbId_End    Integer;
+    DECLARE vbId_End    BigInt;
     DECLARE vbLast_modified TDateTime;
 BEGIN
     -- Нужно передать в gpSelect_Replica_union значения Id из _replica.table_update_data в диапазоне "inId_start..(inId_start + inRec_count)"
@@ -112,6 +113,7 @@ $BODY$
 -- тест
 -- SELECT * FROM ResourseItemProtocol ORDER BY Id DESC LIMIT 100
 -- SELECT _replica.gpSelect_Replica_LastId (1294818468, 200000)
+/*
  WITH tmpParams2 AS (SELECT 789863512 AS Id_start, 200000 AS Rec_count, 0 AS Rec_count_diff)
 -- WITH tmpParams2 AS (SELECT 651426894 AS Id_start, 200000 AS Rec_count, 80000 AS Rec_count_diff)
     , tmpParams AS (SELECT COALESCE ((SELECT MAX (Id) FROM _replica.table_update_data WHERE (SELECT Rec_count_diff FROM tmpParams2) > 0) - (SELECT Rec_count_diff FROM tmpParams2 WHERE Rec_count_diff > 0)
@@ -125,3 +127,4 @@ $BODY$
          , (SELECT Rec_count_real FROM tmpCount)  AS Rec_count_real
          , (SELECT Id_end FROM tmpRes) - (SELECT Id_start FROM tmpParams) + 1 AS Rec_count_calc
          , (SELECT Rec_count      FROM tmpParams) AS Rec_count
+*/

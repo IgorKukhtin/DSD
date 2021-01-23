@@ -4,10 +4,10 @@ DROP FUNCTION IF EXISTS _replica.gpSelect_MaxId ();
 
 CREATE OR REPLACE FUNCTION _replica.gpSelect_MaxId (
 )
-RETURNS Integer   
+RETURNS BigInt   
 AS
 $BODY$      
-    DECLARE vbMaxId Integer;     
+    DECLARE vbMaxId BigInt;     
 BEGIN
     vbMaxId:= (SELECT Max(id) AS Max_Id FROM _replica.table_update_data);
                      

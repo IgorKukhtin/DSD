@@ -6,8 +6,8 @@ CREATE OR REPLACE FUNCTION _replica.gpSelect_Clients (
     IN inClientId  Bigint -- _replica.Clients.Client_Id
 )
 RETURNS TABLE (Id          Integer,
-               Last_Id     Integer,
-               Last_Id_DDL Integer
+               Last_Id     BigInt,
+               Last_Id_DDL BigInt
 )    
 AS
 $BODY$      

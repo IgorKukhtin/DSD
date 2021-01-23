@@ -1,4 +1,4 @@
--- FunctiON: lpReport_CheckBonus ()
+ -- FunctiON: lpReport_CheckBonus ()
 
 DROP FUNCTION IF EXISTS lpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 

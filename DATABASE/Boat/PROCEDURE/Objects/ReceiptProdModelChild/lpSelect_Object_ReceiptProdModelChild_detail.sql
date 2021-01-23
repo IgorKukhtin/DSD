@@ -9,7 +9,9 @@ RETURNS TABLE (ModelId Integer, ModelName TVarChar
                --
              , isMain Boolean
              , ReceiptProdModelId Integer, ReceiptProdModelChildId Integer
+               -- элемент который раскладывали
              , ObjectId_parent Integer, ObjectCode_parent Integer, ObjectName_parent TVarChar, DescName_parent TVarChar
+               -- на что разложили /либо Goods "такой" как в Boat Structure /либо другой Goods, не такой как в Boat Structure
              , ObjectId Integer, ObjectCode Integer, ObjectName TVarChar, ObjectDescId Integer, DescName TVarChar
                -- значение
              , Value TFloat
@@ -18,6 +20,7 @@ RETURNS TABLE (ModelId Integer, ModelName TVarChar
                -- Boat Structure
              , ProdColorGroupId Integer, ProdColorGroupName TVarChar
              , ProdColorPatternId Integer, ProdColorPatternName TVarChar
+               -- ÷вет /либо Comment из Boat Structure
              , ProdColorId Integer, ProdColorName TVarChar
                -- если это Boat Structure и этот элемент может идти как опци€
              , ProdOptionsId Integer, ProdOptionsCode Integer, ProdOptionsName TVarChar
