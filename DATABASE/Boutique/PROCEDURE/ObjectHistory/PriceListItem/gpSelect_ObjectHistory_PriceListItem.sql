@@ -167,7 +167,7 @@ BEGIN
                         , tmpPartionGoods.UnitId 
                    --   , COALESCE (tmpContainer.UnitId, tmpPartionGoods.UnitId) AS UnitId
                         , tmpContainer.UnitId AS UnitId_Container
-                        , tmpPartionGoods.OperDate
+                   --     , tmpPartionGoods.OperDate  --
                         , tmpPartionGoods.GoodsId
                         , tmpPartionGoods.CurrencyId
                         , tmpPartionGoods.OperPrice
@@ -196,7 +196,7 @@ BEGIN
                           , tmpPartionGoods.UnitId
                           , tmpContainer.UnitId
                        -- , COALESCE (tmpContainer.UnitId, tmpPartionGoods.UnitId)
-                          , tmpPartionGoods.OperDate
+                       --   , tmpPartionGoods.OperDate  --
                           , tmpPartionGoods.GoodsId
                           , tmpPartionGoods.CurrencyId
                           , tmpPartionGoods.OperPrice
