@@ -252,7 +252,7 @@ BEGIN
                                                                         ) AS lfSelect
                       WHERE Object.DescId = zc_Object_Currency()
                         AND Object.Id     <> zc_Currency_Basis()
-                        AND zc_Enum_GlobalConst_isTerry() = TRUE
+                    ---    AND zc_Enum_GlobalConst_isTerry() = TRUE
                      )
 
        SELECT
