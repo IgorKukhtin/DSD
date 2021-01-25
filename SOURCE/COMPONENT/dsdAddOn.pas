@@ -464,6 +464,7 @@ type
     FSeriesName: String;
     FSeriesFieldName: String;
     FNameDisplayedDataFieldName: String;
+    FisShowTitle: boolean;
 
     FChartCDS : TClientDataSet;
     FChartDS: TDataSource;
@@ -496,6 +497,8 @@ type
     property DisplayedDataComboBox : TcxComboBox read FDisplayedDataComboBox write SetDisplayedDataComboBox;
     // Номер набора отображаемых данных в ChartDataSet
     property NameDisplayedDataFieldName: String read FNameDisplayedDataFieldName write FNameDisplayedDataFieldName;
+    // Скрыть заголовок диаграммы
+    property isShowTitle: boolean read FisShowTitle write FisShowTitle default True;
   end;
 
   // Кросс для отчетов
@@ -5087,6 +5090,7 @@ begin
   FChartDS := TDataSource.Create(Nil);
   FChartDS.DataSet := FChartCDS;
   FDisplayedDataName := '';
+  FisShowTitle := True;
 end;
 
 destructor TChart.Destroy;
@@ -5465,7 +5469,8 @@ begin
                  FDisplayedDataName := DisplayedDataComboBox.Text;
                end;
 
-               FChartView.Title.Text := FDisplayedDataName;
+               if FisShowTitle then FChartView.Title.Text := FDisplayedDataName
+               else FChartView.Title.Text := '';
              finally
                FDisplayedDataComboBox.Properties.OnChange := OnChangeDisplayedData;
              end;
@@ -5484,9 +5489,9 @@ begin
                begin
                  case DataSet.FindField(ChartDataSet.FieldByName(SeriesFieldName).AsString + '1').DataType of
                    ftInteger : FChartCDS.FieldDefs.Add(ChartDataSet.FieldByName(SeriesFieldName).AsString, ftInteger, 0);
-                   else FChartCDS.FieldDefs.Add(ChartDataSet.FieldByName(SeriesFieldName).AsString, ftCurrency, 0);
+                   else FChartCDS.FieldDefs.Add(ChartDataSet.FieldByName(SeriesFieldName).AsString, ftFloat, 0);
                  end;
-               end else FChartCDS.FieldDefs.Add(ChartDataSet.FieldByName(SeriesFieldName).AsString, ftCurrency, 0);
+               end else FChartCDS.FieldDefs.Add(ChartDataSet.FieldByName(SeriesFieldName).AsString, ftFloat, 0);
 
              end;
              ChartDataSet.Next;

@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION  gpReport_Sale_SP(
     IN inGroupMemberSPId  Integer  ,  -- Категория пациента
     IN inPercentSP        TFloat   ,  -- % скидки
     IN inisGroupMemberSP  Boolean  ,  -- кроме выбранной категории пациента
+    IN inNDSKindId        Integer  ,  -- Ндс
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId     Integer
@@ -49,6 +50,7 @@ RETURNS TABLE (MovementId     Integer
              , SummaSP        TFloat
              , SummOriginal   TFloat
              , SummaComp      TFloat
+             , SummaCompWithOutVat TFloat
              , NumLine        Integer
              , CountSP        Integer
 
@@ -602,6 +604,7 @@ BEGIN
                            , MAX (ObjectFloat_NDSKind_NDS.ValueData)     AS NDS
                            , STRING_AGG (DISTINCT Object_From.ValueData, ';') AS JuridicalName_in
                            , STRING_AGG (DISTINCT '№ '||Movement_Income.InvNumber||' от '||Movement_Income.OperDate::Date , ';') AS InvNumber_in
+                           , MAX (MovementLinkObject_NDSKind.ObjectId)                                                           AS NDSKindId
                       FROM tmpMIC
                            LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
                                                                ON CLI_MI.ContainerId = tmpMIC.ContainerId
@@ -667,6 +670,7 @@ BEGIN
                                , tmpMIC_Info.NDS
                                , tmpMIC_Info.InvNumber_in
                                , CASE WHEN tmpMIC_Info.Amount <> 0 AND COALESCE (tmpMIC_Info.SumWithVAT,0) <> 0 THEN (tmpPrice.Price - (tmpMIC_Info.SumWithVAT/tmpMIC_Info.Amount) ) *100 / (tmpMIC_Info.SumWithVAT/tmpMIC_Info.Amount) ELSE 0 END :: TFloat AS ChargePersent
+                               , tmpMIC_Info.NDSKindId
                           FROM tmpMIC_Info
                                 JOIN tmpPrice ON tmpPrice.GoodsId = tmpMIC_Info.GoodsId
                                                  AND tmpPrice.UnitId = tmpMIC_Info.UnitId
@@ -715,6 +719,7 @@ BEGIN
              , tmpData.SummSale                                                    :: TFloat  AS SummaSP
              , CAST (tmpData.SummOriginal AS NUMERIC (16,2))                       :: TFloat  AS SummOriginal
              , CAST ((tmpData.SummOriginal - tmpData.SummSale) AS NUMERIC (16,2))  :: TFloat  AS SummaComp
+             , CAST ((tmpData.SummOriginal - tmpData.SummSale) / (1 + COALESCE(tmpPartionParam.NDS, ObjectFloat_NDSKind_NDS.ValueData, 7) / 100) AS NUMERIC (16,2))  :: TFloat  AS SummaCompWithOutVat
 
              , CAST (ROW_NUMBER() OVER (PARTITION BY Object_PartnerMedical.ValueData, Object_Contract.Id   ORDER BY tmpData.OperDate, Object_Goods.ValueData ) AS Integer) AS NumLine
              , CAST (tmpCountR.CountSP AS Integer) AS CountSP
@@ -758,7 +763,7 @@ BEGIN
            
            , tmpPartionParam.InvNumber_in     ::TVarChar  AS InvNumber_in
            , tmpPartionParam.JuridicalName_in ::TVarChar  AS JuridicalName_in
-           , tmpPartionParam.NDS              ::TFloat    AS NDS_in
+           , COALESCE(tmpPartionParam.NDS, ObjectFloat_NDSKind_NDS.ValueData)::TFloat    AS NDS_in
            , tmpPartionParam.PriceWithOutVAT  ::TFloat    AS PriceWithOutVAT_in
            , (tmpPartionParam.PriceWithOutVAT * tmpData.Amount) ::TFloat AS SummWithOutVAT_in
            , tmpPartionParam.ChargePersent    ::TFloat    AS ChargePersent_in
@@ -782,6 +787,14 @@ BEGIN
                                   ON ObjectLink_Goods_Measure.ObjectId = tmpData.GoodsId
                                  AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
              LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
+                                  ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
+             LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
+             LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                   ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
+                                  AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+
 
              LEFT JOIN tmpCountR ON tmpCountR.JuridicalId = tmpData.JuridicalId
                                 AND tmpCountR.HospitalId = tmpData.HospitalId
@@ -801,6 +814,7 @@ BEGIN
                                       AND tmpPartionParam.GoodsId = tmpData.GoodsId
              
              LEFT JOIN tmpGoodsMain ON tmpGoodsMain.GoodsId = tmpData.GoodsId
+        WHERE COALESCE(inNDSKindId, 0) = 0 OR COALESCE(tmpPartionParam.NDSKindId, ObjectLink_Goods_NDSKind.ChildObjectId) = inNDSKindId
          ORDER BY Object_Unit.ValueData 
                 , Object_PartnerMedical.ValueData
                 , ContractName
@@ -813,7 +827,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.   Шаблий О.В.
+ 25.01.21                                                                        *
  26.11.19         *
  11.01.19         *
  05.06.18         *
@@ -824,3 +839,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_Sale_SP (inStartDate:= '01.09.2019', inEndDate:= '05.09.2019', inJuridicalId:= 0, inUnitId:= 0, inHospitalId:= 0, inGroupMemberSPId:= 0, inPercentSP:= 0, inisGroupMemberSP:= TRUE, inSession:= zfCalc_UserAdmin());
+
+select * from gpReport_Sale_SP(inStartDate := ('21.12.2020')::TDateTime , inEndDate := ('21.12.2020')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 0, inSession := '3');

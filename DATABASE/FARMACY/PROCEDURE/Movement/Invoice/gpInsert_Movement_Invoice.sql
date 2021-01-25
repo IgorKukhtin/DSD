@@ -1,6 +1,6 @@
 -- Function: gpInsert_Movement_Invoice()
 
-DROP FUNCTION IF EXISTS gpInsert_Movement_Invoice (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TFloat, Boolean, TDateTime,  TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Movement_Invoice (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TFloat, Boolean, TFloat, TDateTime,  TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Movement_Invoice(
     IN inStartDate        TDateTime,  -- Дата начала
@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsert_Movement_Invoice(
     IN inGroupMemberSPId  Integer  ,  -- Категория пациента
     IN inPercentSP        TFloat   ,  -- % скидки
     IN inisGroupMemberSP  Boolean  ,  -- кроме выбранной категории пациента
+    IN inNDSKindId        Integer  ,  -- Ндс
 
     IN inDateInvoice      TDateTime  , -- дата счета
     IN inInvoice          TVarChar   , -- счет
@@ -40,12 +41,12 @@ BEGIN
      INSERT INTO tmpReport (MovementId_Sale, JuridicalId, PartnerMedicalId, ContractId, SummaComp, CountSP)
        SELECT  tmp.MovementId
              , tmp.JuridicalId
-             , CASE WHEN inPartnerMedicalId tmp.HospitalId
+             , tmp.HospitalId
              , tmp.ContractId
              , SUM (tmp.SummaComp) AS SummaComp
              , MAX (CountSP)       AS CountSP
        FROM gpReport_Sale_SP(inStartDate := inStartDate, inEndDate := inEndDate, inJuridicalId :=inJuridicalId, inUnitId := inUnitId, inHospitalId := inPartnerMedicalId
-                           , inGroupMemberSPId := inGroupMemberSPId, inPercentSP := inPercentSP, inisGroupMemberSP := inisGroupMemberSP, inSession := inSession) AS tmp
+                           , inGroupMemberSPId := inGroupMemberSPId, inPercentSP := inPercentSP, inisGroupMemberSP := inisGroupMemberSP, inNDSKindId := inNDSKindId, inSession := inSession) AS tmp
        GROUP BY tmp.MovementId
               , tmp.JuridicalId
               , tmp.HospitalId
@@ -168,7 +169,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 25.01.21                                                                                   *
  14.02.19         *
  13.05.17         * add inValueSP
  22.03.17         *

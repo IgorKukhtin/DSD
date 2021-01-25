@@ -57,6 +57,7 @@ type
     dxBarControlContainerItem2: TdxBarControlContainerItem;
     lblChartData: TcxLabel;
     cbChartData: TcxComboBox;
+    PercentChange: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

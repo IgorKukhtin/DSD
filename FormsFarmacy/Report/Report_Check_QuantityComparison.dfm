@@ -174,6 +174,8 @@
             HeaderAlignmentVert = vaCenter
             MinWidth = 60
             Options.Editing = False
+            Options.Moving = False
+            Options.VertSizing = False
             Width = 60
             Position.BandIndex = 1
             Position.ColIndex = 1
@@ -190,6 +192,8 @@
             HeaderAlignmentVert = vaCenter
             MinWidth = 60
             Options.Editing = False
+            Options.Moving = False
+            Options.VertSizing = False
             Width = 60
             Position.BandIndex = 1
             Position.ColIndex = 2
@@ -206,9 +210,28 @@
             HeaderAlignmentVert = vaCenter
             MinWidth = 60
             Options.Editing = False
+            Options.Moving = False
+            Options.VertSizing = False
             Width = 60
             Position.BandIndex = 1
             Position.ColIndex = 3
+            Position.RowIndex = 0
+          end
+          object PercentChange: TcxGridDBBandedColumn
+            Caption = '5'
+            DataBinding.FieldName = 'PercentChange'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            MinWidth = 60
+            Options.Editing = False
+            Options.Moving = False
+            Options.VertSizing = False
+            Width = 60
+            Position.BandIndex = 1
+            Position.ColIndex = 4
             Position.RowIndex = 0
           end
         end
@@ -823,6 +846,11 @@
         ColorColumn = CountCashLess
         BackGroundValueColumn = Color_calc
         ColorValueList = <>
+      end
+      item
+        ColorColumn = PercentChange
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
       end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -861,6 +889,11 @@
         FieldName = 'FieldNameCountCashLess'
         HeaderFieldName = 'HeaderFieldNameCountCashLess'
         Column = CountCashLess
+      end
+      item
+        FieldName = 'FieldNamePercentChange'
+        HeaderFieldName = 'HeaderFieldNamePercentChange'
+        Column = PercentChange
       end>
     MultiplyType = mtTop
     TemplateColumnList = <
@@ -879,6 +912,10 @@
       item
         HeaderColumnName = 'ValueName4'
         TemplateColumn = CountCashLess
+      end
+      item
+        HeaderColumnName = 'ValueName5'
+        TemplateColumn = PercentChange
       end>
     HeaderDataSet = HeaderCDS
     MultiplyDataSet = MultiplyCDS

@@ -3,7 +3,7 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303>'
-  ClientHeight = 264
+  ClientHeight = 301
   ClientWidth = 376
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 77
-    Top = 226
+    Top = 258
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
   end
   object cxButton2: TcxButton
     Left = 251
-    Top = 226
+    Top = 258
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -135,7 +135,7 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
   end
   object cbGroupMemberSP: TcxCheckBox
     Left = 141
-    Top = 189
+    Top = 221
     Caption = #1082#1088#1086#1084#1077' '#1074#1099#1073#1088#1072#1085#1085#1086#1081' '#1082#1072#1090#1077#1075#1086#1088#1080#1080
     TabOrder = 14
     Width = 172
@@ -152,6 +152,23 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
     TabOrder = 16
     Width = 105
   end
+  object edNDSKind: TcxButtonEdit
+    Left = 118
+    Top = 195
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 17
+    Width = 230
+  end
+  object cxLabel3: TcxLabel
+    Left = 26
+    Top = 196
+    Caption = #1053#1044#1057':'
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -160,7 +177,7 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 330
-    Top = 166
+    Top = 158
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -172,8 +189,8 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 169
-    Top = 204
+    Left = 177
+    Top = 244
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -275,6 +292,21 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
         Component = cePercentSP
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'NDSKindId'
+        Value = Null
+        Component = GuidesNDSKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'NDSKindName'
+        Value = Null
+        Component = GuidesNDSKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 26
@@ -395,5 +427,34 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
       end>
     Left = 240
     Top = 136
+  end
+  object GuidesNDSKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edNDSKind
+    FormNameParam.Value = 'TNDSKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TNDSKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesNDSKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesNDSKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 243
+    Top = 187
   end
 end
