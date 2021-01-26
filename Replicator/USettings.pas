@@ -52,8 +52,8 @@ type
     class procedure SetReplicaSelectRange(const AValue: Integer); static;
     class function GetReplicaPacketRange: Integer; static;
     class procedure SetReplicaPacketRange(const AValue: Integer); static;
-    class function GetReplicaLastId: Integer; static;
-    class procedure SetReplicaLastId(const AValue: Integer); static;
+    class function GetReplicaLastId: string; static;
+    class procedure SetReplicaLastId(const AValue: string); static;
     class function GetLibLocation: string; static;
     class procedure SetLibLocation(const AValue: string); static;
     class function GetMasterDriverID: string; static;
@@ -115,7 +115,7 @@ type
     class property SlavePassword: string read GetSlavePassword write SetSlavePassword;
     class property ReplicaSelectRange: Integer read GetReplicaSelectRange write SetReplicaSelectRange;
     class property ReplicaPacketRange: Integer read GetReplicaPacketRange write SetReplicaPacketRange;
-    class property ReplicaLastId: Integer read GetReplicaLastId write SetReplicaLastId;
+    class property ReplicaLastId: string read GetReplicaLastId write SetReplicaLastId;
     class property LibLocation: string read GetLibLocation write SetLibLocation;
     class property MasterDriverID: string read GetMasterDriverID write SetMasterDriverID;
     class property SlaveDriverID: string read GetSlaveDriverID write SetSlaveDriverID;
@@ -217,7 +217,7 @@ const
   cDefDriverID = 'PG';
   cDefReplicaSelectRange = 10000;
   cDefReplicaPacketRange = 1000;
-  cDefReplicaLastId = 0;
+  cDefReplicaLastId = '0';
   cDefReconnectTimeoutMinute = 15;
   cDefScriptFilesPath = '..\scripts';
   cDefDDLLastId = 0;
@@ -469,9 +469,9 @@ begin
   Result := GetIntValue(cReplicaSection, cReplicaSelectRangeParam, cDefReplicaSelectRange);
 end;
 
-class function TSettings.GetReplicaLastId: Integer;
+class function TSettings.GetReplicaLastId: string;
 begin
-  Result := GetIntValue(cReplicaSection, cReplicaLastIdParam, cDefReplicaLastId);
+  Result := GetStrValue(cReplicaSection, cReplicaLastIdParam, cDefReplicaLastId);
 end;
 
 class function TSettings.GetSaveErrStep1InDB: Boolean;
@@ -698,9 +698,9 @@ begin
   SetIntValue(cReplicaSection, cReplicaSelectRangeParam, AValue);
 end;
 
-class procedure TSettings.SetReplicaLastId(const AValue: Integer);
+class procedure TSettings.SetReplicaLastId(const AValue: string);
 begin
-  SetIntValue(cReplicaSection, cReplicaLastIdParam, AValue);
+  SetStrValue(cReplicaSection, cReplicaLastIdParam, AValue);
 end;
 
 class procedure TSettings.SetSaveErrStep1InDB(const AValue: Boolean);

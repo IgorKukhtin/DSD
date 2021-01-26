@@ -712,7 +712,7 @@ begin
     end;      
     
   finally
-    TSettings.ReplicaLastId := iLastId;// сохраняем в INI-файл значение Id последней успешной команды
+    TSettings.ReplicaLastId := IntToStr(iLastId);// сохраняем в INI-файл значение Id последней успешной команды
     // В конце сессии нужно сохранить значение LastId на Master и Slave.
     // На Master сохраняем реже, после cSaveInMasterAfterNSessions сессий
     if FCommandData.EOF then
@@ -900,10 +900,7 @@ begin
         // сначала перемещаемся на правую границу диапазона
         FCommandData.MoveToId(iMaxId);
         iLastId := FCommandData.Data.Id;
-        if iLastId <= High(Integer) then
-          TSettings.ReplicaLastId := iLastId// сохраняем в INI-файл значение Id последней успешной команды
-        else
-          TSettings.ReplicaLastId := -1;
+        TSettings.ReplicaLastId := IntToStr(iLastId);// сохраняем в INI-файл значение Id последней успешной команды
 
         // последовательность Id может иметь разрывы, например 48256, 48257, 48351, 48352
         // поэтому вместо iMaxId + 1 используем Next
