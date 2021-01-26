@@ -23,8 +23,6 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       inherited cxGrid: TcxGrid
         Width = 1077
         Height = 389
-        ExplicitLeft = 144
-        ExplicitTop = 13
         ExplicitWidth = 1077
         ExplicitHeight = 389
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -77,6 +75,11 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
               Format = ',0.####'
               Kind = skSum
               Column = SummWithOutVAT_in
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaCompWithOutVat
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -137,6 +140,11 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
               Format = ',0.####'
               Kind = skSum
               Column = SummWithOutVAT_in
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaCompWithOutVat
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -707,6 +715,15 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Options.Editing = False
             Width = 103
           end
+          object SummaCompWithOutVat: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1073#1077#1079' '#1053#1044#1057', '#1075#1088#1085
+            DataBinding.FieldName = 'SummaCompWithOutVat'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
           object CountSP: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1088#1077#1094#1077#1087#1090#1086#1074
             DataBinding.FieldName = 'CountSP'
@@ -819,12 +836,12 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       ExplicitWidth = 20
     end
     object cxLabel3: TcxLabel
-      Left = 390
+      Left = 366
       Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object ceUnit: TcxButtonEdit
-      Left = 477
+      Left = 453
       Top = 5
       Properties.Buttons = <
         item
@@ -836,7 +853,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       Properties.UseNullString = True
       TabOrder = 5
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
-      Width = 225
+      Width = 205
     end
     object cxLabel4: TcxLabel
       Left = 106
@@ -853,7 +870,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 186
+      Width = 163
     end
     object cbGroupMemberSP: TcxCheckBox
       Left = 705
@@ -887,16 +904,33 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       Width = 79
     end
     object cxLabel11: TcxLabel
-      Left = 705
+      Left = 665
       Top = 6
       Caption = '% '#1089#1082#1080#1076#1082#1080':'
     end
     object cePercentSP: TcxCurrencyEdit
-      Left = 763
+      Left = 723
       Top = 5
       Properties.DisplayFormat = ',0.##'
       TabOrder = 14
-      Width = 111
+      Width = 46
+    end
+    object edNDSKind: TcxButtonEdit
+      Left = 805
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 15
+      Width = 67
+    end
+    object cxLabel9: TcxLabel
+      Left = 773
+      Top = 6
+      Caption = #1053#1044#1057':'
     end
   end
   object cxLabel5: TcxLabel [2]
@@ -914,7 +948,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 186
+    Width = 163
   end
   object cxLabel6: TcxLabel [4]
     Left = 390
@@ -931,7 +965,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 197
+    Width = 180
   end
   inherited ActionList: TActionList
     object actRefresh1: TdsdDataSetRefresh [0]
@@ -1107,6 +1141,27 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
           DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'NDSKindId'
+          Value = Null
+          Component = GuidesNDSKind
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'NDSKindName'
+          Value = Null
+          Component = GuidesNDSKind
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'NDS'
+          Value = Null
+          DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1180,6 +1235,14 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
           Component = edDateInvoice
           DataType = ftDateTime
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'NDS'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'NDS'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       ReportName = #1057#1095#1077#1090' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 1303'
       ReportNameParam.Value = #1057#1095#1077#1090' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 1303'
@@ -1192,6 +1255,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
     object actPrintInvoice2: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
+      BeforeAction = actGetNDS
       StoredProcList = <>
       Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090' - '#1092#1072#1082#1090#1091#1088#1072
       Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090' - '#1092#1072#1082#1090#1091#1088#1072
@@ -1250,9 +1314,17 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         end
         item
           Name = 'DateInvoice'
-          Value = 'NULL'
+          Value = Null
           Component = edDateInvoice
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'NDS'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'NDS'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       ReportName = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303('#1089#1095#1077#1090')'
@@ -1266,6 +1338,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
     object actPrintBill: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
+      BeforeAction = actGetNDS
       StoredProcList = <>
       Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -1324,9 +1397,16 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         end
         item
           Name = 'DateInvoice'
-          Value = 'NULL'
+          Value = Null
           Component = edDateInvoice
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'NDS'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'NDS'
           MultiSelectSeparator = ','
         end>
       ReportName = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303('#1085#1072#1082#1083#1072#1076#1085#1072#1103')'
@@ -1340,6 +1420,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
+      BeforeAction = actGetNDS
       StoredProcList = <>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303'
@@ -1396,6 +1477,14 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
           Component = cePercentSP
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'NDS'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'NDS'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       ReportName = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303'
       ReportNameParam.Value = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303'
@@ -1409,6 +1498,9 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
+        item
+          Action = actGetNDS
+        end
         item
           Action = actSaveMovement
         end
@@ -1429,6 +1521,17 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
           StoredProc = spSavePrintMovement
         end>
       Caption = 'actSPSavePrintState'
+    end
+    object actGetNDS: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetNDS
+      StoredProcList = <
+        item
+          StoredProc = spGetNDS
+        end>
+      Caption = 'actGetNDS'
     end
   end
   inherited MasterDS: TDataSource
@@ -1503,6 +1606,14 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         Value = Null
         Component = cbGroupMemberSP
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNDSKindId'
+        Value = Null
+        Component = GuidesNDSKind
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1642,6 +1753,9 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       end
       item
         Component = cePercentSP
+      end
+      item
+        Component = GuidesNDSKind
       end>
     Left = 304
     Top = 168
@@ -1830,8 +1944,16 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inNDSKindId'
+        Value = Null
+        Component = GuidesNDSKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inDateInvoice'
-        Value = ''
+        Value = Null
         Component = edDateInvoice
         ComponentItem = 'Key'
         DataType = ftDateTime
@@ -1883,5 +2005,70 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
     PackSize = 1
     Left = 208
     Top = 256
+  end
+  object GuidesNDSKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edNDSKind
+    FormNameParam.Value = 'TNDSKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TNDSKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesNDSKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesNDSKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 819
+    Top = 3
+  end
+  object spGetNDS: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_NDS'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inNDSKindId'
+        Value = Null
+        Component = GuidesNDSKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outNDS'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'NDS'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 200
+    Top = 336
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'NDS'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    Left = 136
+    Top = 336
   end
 end

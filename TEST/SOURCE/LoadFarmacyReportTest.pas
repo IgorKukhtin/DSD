@@ -100,14 +100,12 @@ begin
 
   LoadReportFromFile('Реестр лекарственных препаратов', ReportPath + '\Реестр лекарственных препаратов.fr3');
 
+  }
   LoadReportFromFile('Счет постановление 1303', ReportPath + '\Счет постановление 1303.fr3');
-  exit;
-
   LoadReportFromFile('Pеестр по постановлению 1303', ReportPath + '\Pеестр по постановлению 1303.fr3');
-  exit;
-
   LoadReportFromFile('Pеестр по постановлению 1303(счет)', ReportPath + '\Pеестр по постановлению 1303(счет).fr3');
   LoadReportFromFile('Pеестр по постановлению 1303(накладная)', ReportPath + '\Pеестр по постановлению 1303(накладная).fr3');
+  {
   exit;
 
   LoadReportFromFile('Отчет по продажам Соц.проекта', ReportPath + '\Отчет по продажам Соц.проекта.fr3');
@@ -133,10 +131,10 @@ begin
 
   LoadReportFromFile('Продажа', ReportPath + '\Продажа.fr3');
   LoadReportFromFile('Оплаты', ReportPath + '\Оплаты.fr3');
-  }
+
   LoadReportFromFile('Возвратная_накладная(Оптима)', ReportPath + '\Возвратная_накладная(Оптима).fr3');
   LoadReportFromFile('Возвратная_накладная', ReportPath + '\Возвратная_накладная.fr3');
-  {LoadReportFromFile('Отчет по продажам на кассах', ReportPath + '\Отчет по продажам на кассах.fr3');
+  LoadReportFromFile('Отчет по продажам на кассах', ReportPath + '\Отчет по продажам на кассах.fr3');
   LoadReportFromFile('Отчет Доходности', ReportPath + '\Отчет Доходности.fr3');
    }
 end;

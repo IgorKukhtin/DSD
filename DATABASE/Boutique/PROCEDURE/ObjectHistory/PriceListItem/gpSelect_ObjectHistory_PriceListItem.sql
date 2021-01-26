@@ -167,7 +167,7 @@ BEGIN
                         , tmpPartionGoods.UnitId 
                    --   , COALESCE (tmpContainer.UnitId, tmpPartionGoods.UnitId) AS UnitId
                         , tmpContainer.UnitId AS UnitId_Container
-                        , tmpPartionGoods.OperDate
+                   --     , tmpPartionGoods.OperDate  --
                         , tmpPartionGoods.GoodsId
                         , tmpPartionGoods.CurrencyId
                         , tmpPartionGoods.OperPrice
@@ -196,7 +196,7 @@ BEGIN
                           , tmpPartionGoods.UnitId
                           , tmpContainer.UnitId
                        -- , COALESCE (tmpContainer.UnitId, tmpPartionGoods.UnitId)
-                          , tmpPartionGoods.OperDate
+                       --   , tmpPartionGoods.OperDate  --
                           , tmpPartionGoods.GoodsId
                           , tmpPartionGoods.CurrencyId
                           , tmpPartionGoods.OperPrice
@@ -252,7 +252,7 @@ BEGIN
                                                                         ) AS lfSelect
                       WHERE Object.DescId = zc_Object_Currency()
                         AND Object.Id     <> zc_Currency_Basis()
-                        AND zc_Enum_GlobalConst_isTerry() = TRUE
+                    ---    AND zc_Enum_GlobalConst_isTerry() = TRUE
                      )
 
        SELECT

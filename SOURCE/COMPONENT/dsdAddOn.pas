@@ -453,7 +453,7 @@ type
   end;
 
   // Формирование графика
-  TFormationChart = class(TCollectionItem)
+  TChart = class(TCollectionItem)
   private
     FChartView: TcxGridDBChartView;
     FChartDataSet: TDataSet;
@@ -464,14 +464,15 @@ type
     FSeriesName: String;
     FSeriesFieldName: String;
     FNameDisplayedDataFieldName: String;
-    FDataType: TFieldType;
-
-    FOrderDisplayedData : Integer;
-    FOrderDisplayedDataFieldName: String;
+    FisShowTitle: boolean;
 
     FChartCDS : TClientDataSet;
     FChartDS: TDataSource;
-    FCurrDisplayedDataName : String;
+    FDisplayedDataName : String;
+
+    FOnChange: TNotifyEvent;
+    procedure SetDisplayedDataComboBox(Value : TcxComboBox);
+    procedure OnChangeDisplayedData(Sender: TObject);
   public
     constructor Create(Collection: TCollection); override;
     destructor Destroy; override;
@@ -492,16 +493,12 @@ type
     property SeriesName: String read FSeriesName write FSeriesName;
     // Поле в FChartDataSet с названиями колонок в данных для отображения
     property SeriesFieldName: String read FSeriesFieldName write FSeriesFieldName;
-    // Тип данных полей Series
-    property DataType: TFieldType read FDataType write FDataType default ftInteger;
     // ComboBox c выбором набора отображаемых данных
-    property DisplayedDataComboBox : TcxComboBox read FDisplayedDataComboBox write FDisplayedDataComboBox;
-    // Номер набора отображаемых данных
-    property OrderDisplayedData : Integer read FOrderDisplayedData write FOrderDisplayedData default 0;
-    // Номер набора отображаемых данных в ChartDataSet
-    property OrderDisplayedDataFieldName: String read FOrderDisplayedDataFieldName write FOrderDisplayedDataFieldName;
+    property DisplayedDataComboBox : TcxComboBox read FDisplayedDataComboBox write SetDisplayedDataComboBox;
     // Номер набора отображаемых данных в ChartDataSet
     property NameDisplayedDataFieldName: String read FNameDisplayedDataFieldName write FNameDisplayedDataFieldName;
+    // Скрыть заголовок диаграммы
+    property isShowTitle: boolean read FisShowTitle write FisShowTitle default True;
   end;
 
   // Кросс для отчетов
@@ -513,6 +510,7 @@ type
     FBаndColumnName: String;
     FBeforeOpen: TDataSetNotifyEvent;
     FAfterClose: TDataSetNotifyEvent;
+    FAfterOpen: TDataSetNotifyEvent;
     FEditing: TcxGridEditingEvent;
     FFocusedItemChanged: TcxGridFocusedItemChangedEvent;
     FDataSet: TDataSet;
@@ -523,11 +521,12 @@ type
     FNoCrossColorColumn : boolean;
     FTemplateColumnList: TCollection;
     FMultiplyColumnList: TCollection;
-    FFormationChartList: TOwnedCollection;
+    FChartList: TOwnedCollection;
     FActionExpand: TBooleanStoredProcAction;
     FMultiplyType : TMultiplyType;
     isExpand : boolean;
     procedure onBeforeOpen(DataSet: TDataSet);
+    procedure onAfterOpen(DataSet: TDataSet);
     procedure onAfterClose(DataSet: TDataSet);
     procedure SetView(const Value: TcxGridTableView); override;
     procedure FocusedItemChanged(Sender: TcxCustomGridTableView;
@@ -543,7 +542,7 @@ type
     destructor Destroy; override;
   published
     // Данные для построения графиков
-    property FormationChartList: TOwnedCollection read FFormationChartList write FFormationChartList;
+    property ChartList: TOwnedCollection read FChartList write FChartList;
     // Размножение колонок перед кросом
     property MultiplyColumnList: TCollection read FMultiplyColumnList write FMultiplyColumnList;
     // Как размножать колонки
@@ -3108,10 +3107,13 @@ begin
   inherited;
   if Value <> nil then begin
      FDataSet := TcxDBDataController(Value.DataController).DataSet;
-     FBeforeOpen := FDataSet.BeforeOpen;
-     FDataSet.BeforeOpen := onBeforeOpen;
-     FAfterClose := FDataSet.AfterClose;
-     FDataSet.AfterClose := onAfterClose;
+     if Assigned(FDataSet) then
+     begin
+       FBeforeOpen := FDataSet.BeforeOpen;
+       FDataSet.BeforeOpen := onBeforeOpen;
+       FAfterClose := FDataSet.AfterClose;
+       FDataSet.AfterClose := onAfterClose;
+     end;
      FEditing := Value.OnEditing;
      Value.OnEditing := Nil;
      Value.OnEditing := onEditing;
@@ -5079,41 +5081,42 @@ begin
     Result := inherited GetDisplayName;
 end;
 
-{ TFormationChart }
+{ TChart }
 
-constructor TFormationChart.Create(Collection: TCollection);
+constructor TChart.Create(Collection: TCollection);
 begin
   inherited Create(Collection);
-  FDataType := ftInteger;
   FChartCDS := TClientDataSet.Create(Nil);
   FChartDS := TDataSource.Create(Nil);
   FChartDS.DataSet := FChartCDS;
-  FOrderDisplayedData := 0
+  FDisplayedDataName := '';
+  FisShowTitle := True;
 end;
 
-destructor TFormationChart.Destroy;
+destructor TChart.Destroy;
 begin
   FreeAndNil(FChartDS);
   FreeAndNil(FChartCDS);
   inherited;
 end;
 
-procedure TFormationChart.Assign(Source: TPersistent);
+procedure TChart.Assign(Source: TPersistent);
 begin
-  if Source is TFormationChart then
-    with TFormationChart(Source) do
+  if Source is TChart then
+    with TChart(Source) do
     begin
       Self.ChartView := ChartView;
       Self.ChartDataSet := ChartDataSet;
       Self.DataGroupsFielddName := DataGroupsFielddName;
       Self.HeaderName := HeaderName;
       Self.HeaderFieldName := HeaderFieldName;
+      Self.DisplayedDataComboBox := DisplayedDataComboBox;
     end
   else
     inherited Assign(Source);
 end;
 
-function TFormationChart.GetDisplayName: string;
+function TChart.GetDisplayName: string;
 begin
   if (DataGroupsFielddName <> '') then
   begin
@@ -5123,6 +5126,37 @@ begin
     Result := inherited GetDisplayName;
 end;
 
+procedure TChart.SetDisplayedDataComboBox(Value : TcxComboBox);
+begin
+  if Assigned(DisplayedDataComboBox) then DisplayedDataComboBox.Properties.OnChange := FOnChange;
+
+  FDisplayedDataComboBox := Value;
+  if Assigned(DisplayedDataComboBox) then
+  begin
+    FOnChange := FDisplayedDataComboBox.Properties.OnChange;
+    FDisplayedDataComboBox.Properties.OnChange := OnChangeDisplayedData;
+  end;
+
+end;
+
+procedure TChart.OnChangeDisplayedData(Sender: TObject);
+begin
+   if Assigned(DisplayedDataComboBox) then
+   begin
+     if DisplayedDataComboBox.ItemIndex >= 0 then
+     begin
+       FDisplayedDataName := DisplayedDataComboBox.Properties.Items.Strings[DisplayedDataComboBox.ItemIndex];
+       try
+         DisplayedDataComboBox.Properties.OnChange := Nil;
+         if Collection.Owner is TCrossDBViewReportAddOn then
+           TCrossDBViewReportAddOn(Collection.Owner).onAfterOpen(TCrossDBViewReportAddOn(Collection.Owner).FDataSet);
+       finally
+         FDisplayedDataComboBox.Properties.OnChange := OnChangeDisplayedData;
+       end;
+     end;
+     TCrossDBViewReportAddOn(Collection.Owner).View.Control.SetFocus;
+   end;
+end;
 
 { TCrossDBViewReportAddOn }
 
@@ -5135,13 +5169,13 @@ begin
   FCreateTemplateColumn := TList.Create;
   FTemplateColumnList := TCollection.Create(TTemplateColumn);
   FMultiplyColumnList := TCollection.Create(TMultiplyColumn);
-  FFormationChartList := TOwnedCollection.Create(Self, TFormationChart);
+  FChartList := TOwnedCollection.Create(Self, TChart);
   isExpand := False;
 end;
 
 destructor TCrossDBViewReportAddOn.Destroy;
 begin
-  FreeAndNil(FFormationChartList);
+  FreeAndNil(FChartList);
   FreeAndNil(FMultiplyColumnList);
   FreeAndNil(FTemplateColumnList);
   FreeAndNil(FCreateTemplateColumn);
@@ -5188,12 +5222,12 @@ begin
         for I := 0 to MultiplyColumnList.Count - 1 do
           if TMultiplyColumn(MultiplyColumnList.Items[I]).FColumn = AComponent then
              TMultiplyColumn(MultiplyColumnList.Items[I]).FColumn := nil;
-        for I := 0 to FFormationChartList.Count - 1 do
+        for I := 0 to FChartList.Count - 1 do
         begin
-          if TFormationChart(FFormationChartList.Items[I]).FChartView = AComponent then
-             TFormationChart(FFormationChartList.Items[I]).FChartView := nil;
-          if TFormationChart(FFormationChartList.Items[I]).FChartDataSet = AComponent then
-             TFormationChart(FFormationChartList.Items[I]).FChartDataSet := nil;
+          if TChart(FChartList.Items[I]).FChartView = AComponent then
+             TChart(FChartList.Items[I]).FChartView := nil;
+          if TChart(FChartList.Items[I]).FChartDataSet = AComponent then
+             TChart(FChartList.Items[I]).FChartDataSet := nil;
         end;
      end;
 end;
@@ -5245,10 +5279,10 @@ begin
     FTemplateColumnList.Delete(TTemplateColumn(FCreateTemplateColumn.Items[I]).Index);
   FCreateTemplateColumn.Clear;
 
-  for i := 0 to FFormationChartList.Count - 1 do
-    if Assigned(TFormationChart(FFormationChartList.Items[I]).FChartView) and
-       (TFormationChart(FFormationChartList.Items[I]).FChartView.DataController.DataSource = TFormationChart(FFormationChartList.Items[I]).FChartDS) then
-         TFormationChart(FFormationChartList.Items[I]).FChartView.DataController.DataSource := Nil;
+  for i := 0 to FChartList.Count - 1 do
+    if Assigned(TChart(FChartList.Items[I]).FChartView) and
+       (TChart(FChartList.Items[I]).FChartView.DataController.DataSource = TChart(FChartList.Items[I]).FChartDS) then
+         TChart(FChartList.Items[I]).FChartView.DataController.DataSource := Nil;
 
   // Перестраиваем назад если надо
   if (View is TcxGridDBBandedTableView) and isExpand then
@@ -5271,6 +5305,30 @@ begin
 
     isExpand := False;
   end;
+
+   // Очищаем диаграмы
+   for i := 0 to FChartList.Count - 1 do
+   begin
+     if Assigned(TChart(FChartList.Items[I]).FChartView) then
+     with TChart(FChartList.Items[I]) do
+     begin
+       FChartView.DataController.DataSource := Nil;
+       FChartView.ClearSeries;
+       FChartView.ClearDataGroups;
+       if FChartCDS.Active then FChartCDS.Close;
+       FChartCDS.FieldDefs.Clear;
+       if Assigned(FDisplayedDataComboBox) then
+       begin
+         try
+           DisplayedDataComboBox.Properties.OnChange := Nil;
+           FDisplayedDataComboBox.Properties.Items.Clear;
+           FDisplayedDataComboBox.Text := '';
+         finally
+           FDisplayedDataComboBox.Properties.OnChange := OnChangeDisplayedData;
+         end;
+       end;
+     end;
+   end;
 
 end;
 
@@ -5329,6 +5387,145 @@ begin
    end else if Assigned(FActionExpand) and FActionExpand.Value then FActionExpand.Value := False;
 end;
 
+
+procedure TCrossDBViewReportAddOn.onAfterOpen(DataSet: TDataSet);
+  var I : Integer;
+begin
+   if Assigned(FAfterOpen) then
+      FAfterOpen(DataSet);
+
+   // Пересоздаем диаграммы диаграммы
+   for i := 0 to FChartList.Count - 1 do
+   begin
+     if Assigned(TChart(FChartList.Items[I]).FChartView) then
+     with TChart(FChartList.Items[I]) do
+     begin
+
+       FChartView.BeginUpdate;
+
+       //  Очтстием перед перестроеемем
+       if FChartCDS.Active then
+       begin
+         FChartView.DataController.DataSource := Nil;
+         FChartView.ClearSeries;
+         FChartView.ClearDataGroups;
+         if FChartCDS.Active then FChartCDS.Close;
+         FChartCDS.FieldDefs.Clear;
+         if Assigned(FDisplayedDataComboBox) then
+         begin
+           try
+             DisplayedDataComboBox.Properties.OnChange := Nil;
+             FDisplayedDataComboBox.Properties.Items.Clear;
+             FDisplayedDataComboBox.Text := '';
+           finally
+             FDisplayedDataComboBox.Properties.OnChange := OnChangeDisplayedData;
+           end;
+         end;
+       end;
+
+       FChartView.DataController.DataSource := FChartDS;
+       try
+         // Добавляем поля
+         if Assigned(ChartDataSet) and ChartDataSet.Active and not ChartDataSet.IsEmpty and
+            Assigned(ChartDataSet.FindField(SeriesName)) and
+            Assigned(ChartDataSet.FindField(SeriesFieldName))and
+            (DataGroupsFielddName <> '') then
+         begin
+
+           FChartCDS.FieldDefs.Add(DataGroupsFielddName,      ftString, 20);
+
+           // Строим диограмму
+
+           with FChartView.CreateDataGroup do
+           begin
+             DisplayText := HeaderName;
+             DataBinding.FieldName := DataGroupsFielddName;
+           end;
+
+           if Assigned(DisplayedDataComboBox) and (NameDisplayedDataFieldName <> '') then
+           begin
+             try
+               DisplayedDataComboBox.Properties.OnChange := Nil;
+
+               ChartDataSet.First;
+               while not ChartDataSet.Eof do
+               begin
+                 if DisplayedDataComboBox.Properties.Items.IndexOf(ChartDataSet.FieldByName(NameDisplayedDataFieldName).AsString) < 0 then
+                   DisplayedDataComboBox.Properties.Items.Add(ChartDataSet.FieldByName(NameDisplayedDataFieldName).AsString);
+                 ChartDataSet.Next;
+               end;
+
+               if FDisplayedDataName <> '' then
+               begin
+                 if (DisplayedDataComboBox.Properties.Items.IndexOf(FDisplayedDataName) >= 0) then
+                 begin
+                   DisplayedDataComboBox.ItemIndex := DisplayedDataComboBox.Properties.Items.IndexOf(FDisplayedDataName);
+                 end else FDisplayedDataName := '';
+               end;
+
+               if (FDisplayedDataName = '') and (DisplayedDataComboBox.Properties.Items.Count > 0) then
+               begin
+                 DisplayedDataComboBox.ItemIndex := 0;
+                 FDisplayedDataName := DisplayedDataComboBox.Text;
+               end;
+
+               if FisShowTitle then FChartView.Title.Text := FDisplayedDataName
+               else FChartView.Title.Text := '';
+             finally
+               FDisplayedDataComboBox.Properties.OnChange := OnChangeDisplayedData;
+             end;
+           end;
+
+           ChartDataSet.First;
+           while not ChartDataSet.Eof do
+           begin
+             if (FDisplayedDataName = '') or (ChartDataSet.FieldByName(NameDisplayedDataFieldName).AsString = FDisplayedDataName) then
+             with FChartView.CreateSeries do
+             begin
+               DisplayText := ChartDataSet.FieldByName(SeriesName).AsString;
+               DataBinding.FieldName := ChartDataSet.FieldByName(SeriesFieldName).AsString;
+
+               if Assigned(DataSet.FindField(ChartDataSet.FieldByName(SeriesFieldName).AsString + '1')) then
+               begin
+                 case DataSet.FindField(ChartDataSet.FieldByName(SeriesFieldName).AsString + '1').DataType of
+                   ftInteger : FChartCDS.FieldDefs.Add(ChartDataSet.FieldByName(SeriesFieldName).AsString, ftInteger, 0);
+                   else FChartCDS.FieldDefs.Add(ChartDataSet.FieldByName(SeriesFieldName).AsString, ftFloat, 0);
+                 end;
+               end else FChartCDS.FieldDefs.Add(ChartDataSet.FieldByName(SeriesFieldName).AsString, ftFloat, 0);
+
+             end;
+             ChartDataSet.Next;
+           end;
+
+           if FChartCDS.FieldDefs.Count > 1 then FChartCDS.CreateDataSet;
+
+           // Строки в FChartCDS диаграмму
+           if FChartCDS.Active then
+           begin
+
+             HeaderDataSet.First;
+             while not HeaderDataSet.Eof do
+             begin
+               if Assigned(HeaderDataSet.Fields.FindField(HeaderFieldName)) then
+               begin
+                 FChartCDS.Last;
+                 FChartCDS.Append;
+                 FChartCDS.FieldByName(DataGroupsFielddName).AsString := HeaderDataSet.FieldByName(HeaderFieldName).AsString;
+                 FChartCDS.Post;
+               end;
+               HeaderDataSet.Next;
+             end;
+           end;
+         end;
+       finally
+         FChartView.EndUpdate;
+       end;
+     end;
+   end;
+
+   if FChartList.Count > 0 then OnAfterScroll(FDataSet);
+end;
+
 procedure TCrossDBViewReportAddOn.onBeforeOpen(DataSet: TDataSet);
 var NewColumnIndex, StartColumnIndex, Row, MaxRow, I, J, tCol, tRow: integer;
     Column: TcxGridColumn; Band: TcxGridBand;
@@ -5361,39 +5558,6 @@ begin
 
        // Перестраиваем если надо
        ExpandExecute;
-
-       // Пересоздаем диаграммы диаграммы
-       for i := 0 to FFormationChartList.Count - 1 do
-       begin
-         if Assigned(TFormationChart(FFormationChartList.Items[I]).FChartView) then
-         with TFormationChart(FFormationChartList.Items[I]) do
-         begin
-           FChartView.DataController.DataSource := Nil;
-           FChartView.ClearSeries;
-           FChartView.ClearDataGroups;
-           if FChartCDS.Active then FChartCDS.Close;
-           FChartCDS.FieldDefs.Clear;
-
-           if Assigned(ChartDataSet) and ChartDataSet.Active and not ChartDataSet.IsEmpty and
-              Assigned(ChartDataSet.FindField(SeriesName)) and
-              Assigned(ChartDataSet.FindField(SeriesFieldName))and
-              (DataGroupsFielddName <> '') then
-           begin
-
-             FChartCDS.FieldDefs.Add(DataGroupsFielddName,      ftString, 20);
-
-             ChartDataSet.First;
-             while not ChartDataSet.Eof do
-             begin
-               FChartCDS.FieldDefs.Add(ChartDataSet.FieldByName(SeriesFieldName).AsString, DataType, 0);
-               ChartDataSet.Next;
-             end;
-
-             if FChartCDS.FieldDefs.Count > 1 then FChartCDS.CreateDataSet;
-           end;
-
-         end;
-       end;
 
        // размножаем колонки
        if Assigned(MultiplyDataSet) and MultiplyDataSet.Active and not MultiplyDataSet.IsEmpty then
@@ -5644,58 +5808,9 @@ begin
            end;
          end;
 
-         // Строки в диаграмму
-         for i := 0 to FFormationChartList.Count - 1 do
-         begin
-           with TFormationChart(FFormationChartList.Items[I]) do
-           begin
-             if FChartCDS.Active then
-               if Assigned(HeaderDataSet.Fields.FindField(HeaderFieldName)) then
-               begin
-                 FChartCDS.Last;
-                 FChartCDS.Append;
-                 FChartCDS.FieldByName(DataGroupsFielddName).AsString := HeaderDataSet.FieldByName(HeaderFieldName).AsString;
-                 FChartCDS.Post;
-               end;
-           end;
-         end;
-
          inc(NewColumnIndex);
          HeaderDataSet.Next;
        end;
-
-         // Готовим диаграмы
-       for i := 0 to FFormationChartList.Count - 1 do
-       begin
-         if Assigned(TFormationChart(FFormationChartList.Items[I]).FChartView) then
-         with TFormationChart(FFormationChartList.Items[I]) do
-         begin
-           if not FChartCDS.IsEmpty then
-           begin
-
-             with FChartView.CreateDataGroup do
-             begin
-               DisplayText := HeaderName;
-               DataBinding.FieldName := DataGroupsFielddName;
-               SortOrder := soNone;
-             end;
-
-             ChartDataSet.First;
-             while not ChartDataSet.Eof do
-             begin
-               with FChartView.CreateSeries do
-               begin
-                 DisplayText := ChartDataSet.FieldByName(SeriesName).AsString;
-                 DataBinding.FieldName := ChartDataSet.FieldByName(SeriesFieldName).AsString;
-               end;
-               ChartDataSet.Next;
-             end;
-
-           end;
-        end;
-
-       end;
-
     end;
   finally
     View.EndUpdate;
@@ -5705,12 +5820,18 @@ end;
 procedure TCrossDBViewReportAddOn.SetView(const Value: TcxGridTableView);
 begin
   inherited;
-  if Value <> nil then begin
+  if Value <> nil then
+  begin
      FDataSet := TcxDBDataController(Value.DataController).DataSet;
-     FBeforeOpen := FDataSet.BeforeOpen;
-     FDataSet.BeforeOpen := onBeforeOpen;
-     FAfterClose := FDataSet.AfterClose;
-     FDataSet.AfterClose := onAfterClose;
+     if Assigned(FDataSet) then
+     begin
+       FBeforeOpen := FDataSet.BeforeOpen;
+       FDataSet.BeforeOpen := onBeforeOpen;
+       FAfterClose := FDataSet.AfterClose;
+       FDataSet.AfterClose := onAfterClose;
+       FAfterOpen := FDataSet.AfterOpen;
+       FDataSet.AfterOpen :=  onAfterOpen;
+     end;
      FFocusedItemChanged := Value.OnFocusedItemChanged;
      Value.OnFocusedItemChanged := FocusedItemChanged;
   end;
@@ -5724,14 +5845,12 @@ begin
   if not Assigned(DataSet) then Exit;
   if not DataSet.Active then Exit;
 
-  for i := 0 to FFormationChartList.Count - 1 do
-    if TFormationChart(FFormationChartList.Items[I]).FChartCDS.Active then
-  with TFormationChart(FFormationChartList.Items[I]) do
+  for i := 0 to FChartList.Count - 1 do
+    if TChart(FChartList.Items[I]).FChartCDS.Active then
+  with TChart(FChartList.Items[I]) do
   begin
 
-    FChartView.DataController.DataSource := Nil;
-
-    FChartCDS.DisableControls;
+    FChartView.BeginUpdate;
     try
       FChartCDS.First;
       while not FChartCDS.Eof do
@@ -5751,10 +5870,8 @@ begin
         FChartCDS.Next;
       end;
     finally
-      FChartCDS.EnableControls;
+      FChartView.EndUpdate;
     end;
-
-    FChartView.DataController.DataSource := FChartDS;
   end;
 
 

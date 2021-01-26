@@ -60,9 +60,9 @@ BEGIN
      END IF;
      
      -- проверка <inNameUkr>
-     IF TRIM (COALESCE (inNameUkr, '')) = '' THEN
-        RAISE EXCEPTION 'Ошибка.Значение <Название(на укр. языке)> должно быть установлено.';
-     END IF;
+--     IF TRIM (COALESCE (inNameUkr, '')) = '' THEN
+--        RAISE EXCEPTION 'Ошибка.Значение <Название(на укр. языке)> должно быть установлено.';
+--     END IF;
 
      -- проверка <Торговой сети> - !!!только для Insert!!!
      IF COALESCE (vbObjectId, 0) <= 0 AND COALESCE (ioId, 0) = 0 THEN

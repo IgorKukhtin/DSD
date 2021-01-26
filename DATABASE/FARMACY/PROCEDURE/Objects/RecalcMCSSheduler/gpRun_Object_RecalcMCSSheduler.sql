@@ -21,11 +21,11 @@ BEGIN
     RAISE EXCEPTION 'Ошибка. Выполнение полного пересчета вам запрещено.';
   END IF;
   
-  IF date_part('HOUR',  CURRENT_TIME)::Integer >= 11
+/*  IF date_part('HOUR',  CURRENT_TIME)::Integer >= 11
   THEN
     RETURN;
   END IF;
-   
+*/   
   IF EXISTS(SELECT
                  TRUE       AS Holidays
             FROM

@@ -174,6 +174,8 @@
             HeaderAlignmentVert = vaCenter
             MinWidth = 60
             Options.Editing = False
+            Options.Moving = False
+            Options.VertSizing = False
             Width = 60
             Position.BandIndex = 1
             Position.ColIndex = 1
@@ -190,6 +192,8 @@
             HeaderAlignmentVert = vaCenter
             MinWidth = 60
             Options.Editing = False
+            Options.Moving = False
+            Options.VertSizing = False
             Width = 60
             Position.BandIndex = 1
             Position.ColIndex = 2
@@ -206,9 +210,28 @@
             HeaderAlignmentVert = vaCenter
             MinWidth = 60
             Options.Editing = False
+            Options.Moving = False
+            Options.VertSizing = False
             Width = 60
             Position.BandIndex = 1
             Position.ColIndex = 3
+            Position.RowIndex = 0
+          end
+          object PercentChange: TcxGridDBBandedColumn
+            Caption = '5'
+            DataBinding.FieldName = 'PercentChange'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            MinWidth = 60
+            Options.Editing = False
+            Options.Moving = False
+            Options.VertSizing = False
+            Width = 60
+            Position.BandIndex = 1
+            Position.ColIndex = 4
             Position.RowIndex = 0
           end
         end
@@ -228,10 +251,6 @@
           DiagramLine.Values.LineWidth = 3
           ToolBox.CustomizeButton = True
           ToolBox.DiagramSelector = True
-          object grChartDBChartView1DataGroup1: TcxGridDBChartDataGroup
-          end
-          object grChartDBChartView1Series1: TcxGridDBChartSeries
-          end
         end
         object grChartLevel1: TcxGridLevel
           GridView = grChartDBChartView1
@@ -326,7 +345,7 @@
   object cbChartData: TcxComboBox [2]
     Left = 744
     Top = 120
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
     TabOrder = 6
     Width = 166
   end
@@ -827,13 +846,18 @@
         ColorColumn = CountCashLess
         BackGroundValueColumn = Color_calc
         ColorValueList = <>
+      end
+      item
+        ColorColumn = PercentChange
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
       end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    FormationChartList = <
+    ChartList = <
       item
         ChartView = grChartDBChartView1
         DataGroupsFielddName = 'DateName'
@@ -843,8 +867,7 @@
         SeriesName = 'SeriesName'
         SeriesFieldName = 'FieldName'
         DisplayedDataComboBox = cbChartData
-        OrderDisplayedDataFieldName = 'OrderDisplayName'
-        NameDisplayedDataFieldName = 'DisplayName'
+        NameDisplayedDataFieldName = 'DisplayedDataName'
       end>
     MultiplyColumnList = <
       item
@@ -866,6 +889,11 @@
         FieldName = 'FieldNameCountCashLess'
         HeaderFieldName = 'HeaderFieldNameCountCashLess'
         Column = CountCashLess
+      end
+      item
+        FieldName = 'FieldNamePercentChange'
+        HeaderFieldName = 'HeaderFieldNamePercentChange'
+        Column = PercentChange
       end>
     MultiplyType = mtTop
     TemplateColumnList = <
@@ -884,6 +912,10 @@
       item
         HeaderColumnName = 'ValueName4'
         TemplateColumn = CountCashLess
+      end
+      item
+        HeaderColumnName = 'ValueName5'
+        TemplateColumn = PercentChange
       end>
     HeaderDataSet = HeaderCDS
     MultiplyDataSet = MultiplyCDS

@@ -19,7 +19,7 @@ BEGIN
     vbUserId := lpGetUserBySession (inSession);
 
     IF 3 <> inSession::Integer AND 375661 <> inSession::Integer AND 4183126 <> inSession::Integer AND 
-      8001630 <> inSession::Integer AND 9560329 <> inSession::Integer
+      8001630 <> inSession::Integer AND 9560329 <> inSession::Integer AND zfCalc_UserSite() <> inSession::Integer 
     THEN
       RAISE EXCEPTION 'Изменение <Количества> вам запрещено.';
     END IF;

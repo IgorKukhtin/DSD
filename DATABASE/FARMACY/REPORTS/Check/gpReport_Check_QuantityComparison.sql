@@ -50,7 +50,7 @@ BEGIN
              tmpMovementAll AS (SELECT Movement.ID
                                      , DATE_TRUNC ('MONTH', Movement.OperDate) AS OperDate
                                 FROM Movement
-                                WHERE Movement.OperDate >= DATE_TRUNC ('MONTH', inDateStart) - (inYearsAgo::TVArChar||' YEAR')::INTERVAL
+                                WHERE Movement.OperDate >= DATE_TRUNC ('MONTH', inDateStart) - (inYearsAgo::TVArChar||' YEAR')::INTERVAL - INTERVAL '1 MONTH'
                                   AND Movement.OperDate <  DATE_TRUNC ('MONTH', inDateFinal) + INTERVAL '1 MONTH'
                                   AND Movement.DescId = zc_Movement_Check()
                                   AND Movement.StatusId = zc_Enum_Status_Complete()),
@@ -124,17 +124,27 @@ BEGIN
             BackGroundColumnNameCountCash      TVarChar,
             FieldNameCountCashLess             TVarChar,
             HeaderFieldNameCountCashLess       TVarChar,
-            BackGroundColumnNameCountCashLess  TVarChar
+            BackGroundColumnNameCountCashLess  TVarChar,
+            FieldNamePercentChange             TVarChar,
+            HeaderFieldNamePercentChange       TVarChar,
+            BackGroundColumnNamePercentChange  TVarChar
     ) ON COMMIT DROP;
 
     CREATE TEMP TABLE tmpChart (
             Id                                Integer,
+            DisplayedDataName                 TVarChar,
             SeriesName                        TVarChar,
             FieldName                         TVarChar
     ) ON COMMIT DROP;
 
     INSERT INTO tmpChart
-    VALUES (1, 'Количество чеков с '||zfcalc_MonthYearName(inDateStart), 'Count');
+    VALUES (1, 'Количество чеков', 'Количество чеков '||EXTRACT (YEAR FROM inDateStart)::TVarChar, 'Count');
+    INSERT INTO tmpChart
+    VALUES (100, 'Срредний чек', 'Срредний чек '||EXTRACT (YEAR FROM inDateStart)::TVarChar, 'AverageCheck');
+    INSERT INTO tmpChart
+    VALUES (200, 'Чеков нал. расчет', 'Hал. расчет '||EXTRACT (YEAR FROM inDateStart)::TVarChar, 'CountCash');
+    INSERT INTO tmpChart
+    VALUES (300, 'Чеков безнал. расчет', 'Безнал. расчет '||EXTRACT (YEAR FROM inDateStart)::TVarChar, 'CountCashLess');
 
     -- Данные для размножения
     vbInc := 1;
@@ -157,11 +167,19 @@ BEGIN
              , 'CountCashLess'||vbYear::TVarChar
              , CASE WHEN vbInc < inYearsAgo THEN 'ValueName4' ELSE 'ValueNameCashLess' END
              , 'Color_calc'||vbYear::TVarChar
+             , 'PercentChange'||vbYear::TVarChar
+             , CASE WHEN vbInc < inYearsAgo THEN 'ValueName5' ELSE 'ValueNamePercentChange' END
+             , 'Color_calc'||vbYear::TVarChar
           ;
 
         INSERT INTO tmpChart
-        VALUES (1, 'Количество чеков с '||zfcalc_MonthYearName(inDateStart - (vbInc::TVArChar||' YEAR')::INTERVAL), 'Count'||vbYear::TVarChar);
-
+        VALUES (1 + vbInc, 'Количество чеков', 'Количество чеков '||EXTRACT (YEAR FROM (inDateStart - (vbInc::TVArChar||' YEAR')::INTERVAL))::TVarChar, 'Count'||vbYear::TVarChar);
+        INSERT INTO tmpChart
+        VALUES (101 + vbInc, 'Срредний чек', 'Срредний чек '||EXTRACT (YEAR FROM (inDateStart - (vbInc::TVArChar||' YEAR')::INTERVAL))::TVarChar, 'AverageCheck'||vbYear::TVarChar);
+        INSERT INTO tmpChart
+        VALUES (201 + vbInc, 'Чеков нал. расчет', 'Hал. расчет '||EXTRACT (YEAR FROM (inDateStart - (vbInc::TVArChar||' YEAR')::INTERVAL))::TVarChar, 'CountCash'||vbYear::TVarChar);
+        INSERT INTO tmpChart
+        VALUES (301 + vbInc, 'Чеков безнал. расчет', 'Безнал. расчет '||EXTRACT (YEAR FROM (inDateStart - (vbInc::TVArChar||' YEAR')::INTERVAL))::TVarChar, 'CountCashLess'||vbYear::TVarChar);
 
         -- теперь следуюющий год
         vbInc := vbInc + 1;
@@ -186,7 +204,8 @@ BEGIN
         vbQueryText := 'ALTER TABLE tmpResult ADD COLUMN Count' || COALESCE (vbIndex, 0)::Text || ' Integer NOT NULL DEFAULT 0 ' ||
                        ' , ADD COLUMN AverageCheck' || COALESCE (vbIndex, 0)::Text || ' TFloat NOT NULL DEFAULT 0 ' ||
                        ' , ADD COLUMN CountCash' || COALESCE (vbIndex, 0)::Text || ' Integer NOT NULL DEFAULT 0 ' ||
-                       ' , ADD COLUMN CountCashLess' || COALESCE (vbIndex, 0)::Text || ' Integer NOT NULL DEFAULT 0 ';
+                       ' , ADD COLUMN CountCashLess' || COALESCE (vbIndex, 0)::Text || ' Integer NOT NULL DEFAULT 0 ' ||
+                       ' , ADD COLUMN PercentChange' || COALESCE (vbIndex, 0)::Text || ' TFloat NOT NULL DEFAULT 0 ';
         EXECUTE vbQueryText;
 
         vbQueryText := 'UPDATE tmpResult SET Count' || COALESCE (vbIndex, 0)::Text || ' = COALESCE (T1.CountChecks, 0) ' ||
@@ -194,6 +213,13 @@ BEGIN
                                           ', CountCash' || COALESCE (vbIndex, 0)::Text || ' = COALESCE (T1.CountCash, 0) ' ||
                                           ', CountCashLess' || COALESCE (vbIndex, 0)::Text || ' = COALESCE (T1.CountCashLess, 0) ' ||
                        ' FROM (SELECT tmpData.* FROM tmpData WHERE tmpData.OperDate = '''|| zfConvert_DateShortToString(vbOperDate) ||''') AS T1'||
+                       ' WHERE tmpResult.UnitId = T1.UnitId';
+        EXECUTE vbQueryText;
+
+        vbQueryText := 'UPDATE tmpResult SET PercentChange' || COALESCE (vbIndex, 0)::Text ||
+                       ' = CASE WHEN COALESCE (T1.CountChecks, 0) > 0 THEN 1.0 * Count' || COALESCE (vbIndex, 0)::Text ||
+                       ' * 100 / COALESCE (T1.CountChecks, 0) ELSE 0 END ' ||
+                       ' FROM (SELECT tmpData.* FROM tmpData WHERE tmpData.OperDate = '''|| zfConvert_DateShortToString(vbOperDate - INTERVAL '1 MONTH') ||''') AS T1'||
                        ' WHERE tmpResult.UnitId = T1.UnitId';
         EXECUTE vbQueryText;
 
@@ -215,7 +241,8 @@ BEGIN
             vbQueryText := 'ALTER TABLE tmpResult ADD COLUMN Count'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' Integer NOT NULL DEFAULT 0 ' ||
                            ' , ADD COLUMN AverageCheck'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' TFloat NOT NULL DEFAULT 0 ' ||
                            ' , ADD COLUMN CountCash'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' Integer NOT NULL DEFAULT 0 ' ||
-                           ' , ADD COLUMN CountCashLess'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' Integer NOT NULL DEFAULT 0 ';
+                           ' , ADD COLUMN CountCashLess'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' Integer NOT NULL DEFAULT 0 ' ||
+                           ' , ADD COLUMN PercentChange'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' TFloat NOT NULL DEFAULT 0 ';
             EXECUTE vbQueryText;
 
             vbQueryText := 'UPDATE tmpResult SET Count'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' = COALESCE (T1.CountChecks, 0) ' ||
@@ -223,6 +250,13 @@ BEGIN
                                               ', CountCash'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' = COALESCE (T1.CountCash, 0) ' ||
                                               ', CountCashLess'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' = COALESCE (T1.CountCashLess, 0) ' ||
                            ' FROM (SELECT tmpData.* FROM tmpData WHERE tmpData.OperDate = '''|| zfConvert_DateShortToString(vbOperDate - (vbInc::TVArChar||' YEAR')::INTERVAL ) ||''') AS T1'||
+                           ' WHERE tmpResult.UnitId = T1.UnitId';
+            EXECUTE vbQueryText;
+
+            vbQueryText := 'UPDATE tmpResult SET PercentChange'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text ||
+                           ' = CASE WHEN COALESCE (T1.CountChecks, 0) > 0 THEN 1.0 * Count'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text ||
+                           ' * 100 / COALESCE (T1.CountChecks, 0) ELSE 0 END ' ||
+                           ' FROM (SELECT tmpData.* FROM tmpData WHERE tmpData.OperDate = '''|| zfConvert_DateShortToString(vbOperDate  - INTERVAL '1 MONTH' - (vbInc::TVArChar||' YEAR')::INTERVAL ) ||''') AS T1'||
                            ' WHERE tmpResult.UnitId = T1.UnitId';
             EXECUTE vbQueryText;
 
@@ -243,15 +277,17 @@ BEGIN
                        , zfcalc_MonthName(tmpOperDate.OperDate) || ' ' ||
                          EXTRACT (YEAR FROM (tmpOperDate.OperDate - (inYearsAgo::TVArChar||' YEAR')::INTERVAL))::TVarChar || ' ... ' ||
                          EXTRACT (YEAR FROM tmpOperDate.OperDate)::TVarChar                                               AS ValueBandName
-                       , 'Чеков'   AS ValueNameChecks
-                       , 'Ср. чек' AS ValueNameAverageCheck
-                       , 'Нал'     AS ValueNameCash
-                       , 'Безнал'  AS ValueNameCashLess
+                       , 'Чеков'     AS ValueNameChecks
+                       , 'Ср. чек'   AS ValueNameAverageCheck
+                       , 'Нал'       AS ValueNameCash
+                       , 'Безнал'    AS ValueNameCashLess
+                       , '% измен.'  AS ValueNamePercentChange
                        , CASE WHEN inYearsAgo <= 0 THEN 'Чеков'    ELSE '1' END      AS ValueName1
                        , CASE WHEN inYearsAgo <= 0 THEN 'Ср. чек'  ELSE '2' END      AS ValueName2
                        , CASE WHEN inYearsAgo <= 0 THEN 'Нал'      ELSE '3' END      AS ValueName3
                        , CASE WHEN inYearsAgo <= 0 THEN 'Безнал'   ELSE '4' END      AS ValueName4
-                       , zfConvert_IntToString((row_number()OVER(ORDER BY tmpOperDate.OperDate))::Integer, 2) ||'. ' ||zfcalc_MonthYearName(tmpOperDate.OperDate) AS ValueChartName
+                       , CASE WHEN inYearsAgo <= 0 THEN '% измен.' ELSE '5' END      AS ValueName5
+                       , zfConvert_IntToString((row_number()OVER(ORDER BY tmpOperDate.OperDate))::Integer, 2) ||'. ' ||zfcalc_MonthName(tmpOperDate.OperDate) AS ValueChartName
                   FROM tmpOperDate
                   ORDER BY tmpOperDate.OperDate;
     RETURN NEXT cur1;
@@ -288,4 +324,4 @@ $BODY$
 
 -- тест
 --
--- select * from gpReport_Check_QuantityComparison(inDateStart := ('01.11.2020')::TDateTime , inDateFinal := ('31.12.2020')::TDateTime , inRetailId := 4 , inUnitId := 183292 , inYearsAgo := 1 ,  inSession := '3');
+ select * from gpReport_Check_QuantityComparison(inDateStart := ('01.11.2020')::TDateTime , inDateFinal := ('31.12.2020')::TDateTime , inRetailId := 4 , inUnitId := 183292 , inYearsAgo := 1 ,  inSession := '3');

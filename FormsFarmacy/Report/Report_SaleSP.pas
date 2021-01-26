@@ -89,6 +89,13 @@ type
     actPrintInvoice2: TdsdPrintAction;
     bbPrintBill: TdxBarButton;
     AmbulantClinicSP: TcxGridDBColumn;
+    SummaCompWithOutVat: TcxGridDBColumn;
+    edNDSKind: TcxButtonEdit;
+    cxLabel9: TcxLabel;
+    GuidesNDSKind: TdsdGuides;
+    spGetNDS: TdsdStoredProc;
+    FormParams: TdsdFormParams;
+    actGetNDS: TdsdExecStoredProc;
   private
     { Private declarations }
   public

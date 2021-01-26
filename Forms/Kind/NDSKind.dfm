@@ -1,5 +1,5 @@
 inherited NDSKindForm: TNDSKindForm
-  Caption = #1042#1080#1076#1099' '#1053#1044#1057
+  Caption = 'TNDSKindForm'
   ClientWidth = 261
   ExplicitWidth = 277
   ExplicitHeight = 347

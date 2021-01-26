@@ -38,6 +38,9 @@ type
     GroupMemberSPGuides: TdsdGuides;
     cxLabel11: TcxLabel;
     cePercentSP: TcxCurrencyEdit;
+    edNDSKind: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    GuidesNDSKind: TdsdGuides;
   private
     { Private declarations }
   public

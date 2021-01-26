@@ -59,6 +59,7 @@ BEGIN
 
     -- проверка ЗАПРЕТ на отпуск препаратов у которых ндс 20%, для пост. 1303
     IF vbSPKindId = zc_Enum_SPKind_1303() AND vbUserId <> 235009    --  Колеуш И. И.
+       AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
             -- проверка ЗАПРЕТ на отпуск препаратов у которых ндс 20%, для пост. 1303
        THEN
             --
@@ -146,7 +147,7 @@ BEGIN
     END IF;
 
     IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
-       AND vbUserId <> 235009
+       AND vbUserId <> 235009 AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
        AND EXISTS(SELECT 1 FROM MovementLinkMovement AS MLM_Child
                       INNER JOIN MovementLinkObject AS MovementLinkObject_SPKind
                                                     ON MovementLinkObject_SPKind.MovementId = MLM_Child.MovementId
