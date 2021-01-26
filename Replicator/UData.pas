@@ -144,10 +144,9 @@ type
     procedure InnerNewSession(const AStart: TDateTime; const AMinId, AMaxId: Int64; const ARecCount, ASessionNumber: Integer);
     procedure InnerEndSession(Sender: TObject);
     procedure InnerNeedRestart(Sender: TObject);
-  strict private
-    function GetReturnValue: Int64;
   protected
-    FReturnValue_my: Int64;
+    FReturnValue: Int64;
+  protected
     procedure InnerMsgProc(const AMsg, AFileName: string; const aUID: Cardinal; AMsgType: TLogMessageType);
     procedure MySleep(const AInterval: Cardinal);
     property Data: TdmData read FData;
@@ -161,7 +160,7 @@ type
     property OnNewSession: TOnNewSession read FOnNewSession write FOnNewSession;
     property OnEndSession: TNotifyEvent read FOnEndSession write FOnEndSession;
     property OnNeedRestart: TNotifyEvent read FOnNeedRestart write FOnNeedRestart;
-    property MyReturnValue: Int64 read GetReturnValue;
+    property MyReturnValue: Int64 read FReturnValue;
   end;
 
   TSinglePacket = class(TWorkerThread)
@@ -2155,10 +2154,10 @@ begin
   inherited;
 end;
 
-function TWorkerThread.GetReturnValue: Int64;
-begin
-  Result := ReturnValue;
-end;
+//function TWorkerThread.GetReturnValue: Int64;
+//begin
+//  Result := ReturnValue;
+//end;
 
 procedure TWorkerThread.InnerChangeStartId(const ANewStartId: Int64);
 begin
@@ -2230,7 +2229,7 @@ procedure TReplicaThread.Execute;
 begin
   inherited;
   Data.StartReplica;
-  ReturnValue := Ord(Data.ReplicaFinished);
+  FReturnValue := Ord(Data.ReplicaFinished);
   Terminate;
 end;
 
@@ -2248,7 +2247,7 @@ begin
   P^.MinId := tmpMinMax.MinId;
   P^.MaxId := tmpMinMax.MaxId;
   P^.RecCount := tmpMinMax.RecCount;
-  ReturnValue := LongWord(P);
+  FReturnValue := LongWord(P);
   Terminate;
 end;
 
@@ -2273,7 +2272,7 @@ begin
 
   New(P);
   P^.ResultSQL := sSQL;
-  ReturnValue := LongWord(P);
+  FReturnValue := LongWord(P);
   Terminate;
 end;
 
@@ -2304,7 +2303,7 @@ begin
 
   New(P);
   P^.ResultSQL := sSQL;
-  ReturnValue := LongWord(P);
+  FReturnValue := LongWord(P);
   Terminate;
 end;
 
@@ -2332,7 +2331,7 @@ end;
 procedure TApplyScriptThread.Execute;
 begin
   inherited;
-  ReturnValue := Ord(Data.ApplyScripts(FScriptsContent, FScriptNames));
+  FReturnValue := Ord(Data.ApplyScripts(FScriptsContent, FScriptNames));
   Terminate;
 end;
 
@@ -2350,7 +2349,7 @@ end;
 procedure TLastIdThread.Execute;
 begin
   inherited;
-  ReturnValue := Data.LastId;
+  FReturnValue := Data.LastId;
   Terminate;
 end;
 
