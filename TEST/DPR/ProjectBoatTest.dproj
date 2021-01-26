@@ -346,8 +346,8 @@
 				<Form>ProdOptionsEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ProdColor.pas">
-				<Form>ProdColorForm</Form>
+			<DCCReference Include="..\..\FormsBoat\Guides\ProdColor_goods.pas">
+				<Form>ProdColor_goodsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Guides\ProdColorEdit.pas">
@@ -669,6 +669,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Guides\TranslateMessage.pas">
 				<Form>TranslateMessageForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\ProdColor.pas">
+				<Form>ProdColorForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

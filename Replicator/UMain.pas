@@ -1626,7 +1626,7 @@ end;
 procedure TfrmMain.OnTerminateMinMaxId(Sender: TObject);
 var
   P: PMinMaxId;
-  iStart: Integer;
+  iStart: Int64;
   lwResult: LongWord;
   tmpThread: TWorkerThread;
 begin

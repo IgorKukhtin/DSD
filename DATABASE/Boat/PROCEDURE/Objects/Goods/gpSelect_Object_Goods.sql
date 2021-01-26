@@ -34,7 +34,6 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
 AS
 $BODY$
   DECLARE vbUserId Integer;
-  DECLARE vbAccessKeyRight Boolean;
   DECLARE vbPriceWithVAT Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -91,25 +90,29 @@ BEGIN
             , ObjectFloat_Min.ValueData          AS AmountMin
             , ObjectFloat_Refer.ValueData        AS AmountRefer
 
+              -- Цена вх. без НДС
             , ObjectFloat_EKPrice.ValueData   ::TFloat   AS EKPrice
+              -- Цена вх. с НДС
             , CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
-                 * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS EKPriceWVAT-- расчет входной цены с НДС, до 4 знаков
-                 
+                 * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS EKPriceWVAT
+
+              -- Рекомендованная цена без НДС
             , ObjectFloat_EmpfPrice.ValueData ::TFloat   AS EmpfPrice
+              -- Рекомендованная цена с НДС
             , CAST (COALESCE (ObjectFloat_EmpfPrice.ValueData, 0)
-                 * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100) ) AS NUMERIC (16, 2)) ::TFloat AS EmpfPriceWVAT-- расчет рекомендованной цены с НДС, до 4 знаков
+                 * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100) ) AS NUMERIC (16, 2)) ::TFloat AS EmpfPriceWVAT
 
-             -- расчет базовой цены без НДС, до 2 знаков
-           , CASE WHEN vbPriceWithVAT = FALSE
-                  THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
-                  ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
-             END ::TFloat  AS BasisPrice   -- сохраненная цена - цена без НДС
+              -- Цена продажи без НДС
+            , CASE WHEN vbPriceWithVAT = FALSE
+                   THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
+                   ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+              END ::TFloat  AS BasisPrice
 
-             -- расчет базовой цены с НДС, до 2 знаков
-           , CASE WHEN vbPriceWithVAT = FALSE
-                  THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
-                  ELSE COALESCE (tmpPriceBasis.ValuePrice, 0) 
-             END ::TFloat  AS BasisPriceWVAT
+              -- Цена продажи с НДС
+            , CASE WHEN vbPriceWithVAT = FALSE
+                   THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                   ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
+              END ::TFloat  AS BasisPriceWVAT
 
             , Object_GoodsGroup.Id               AS GoodsGroupId
             , Object_GoodsGroup.ValueData        AS GoodsGroupName

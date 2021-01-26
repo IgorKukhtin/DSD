@@ -145,8 +145,9 @@ type
     procedure InnerEndSession(Sender: TObject);
     procedure InnerNeedRestart(Sender: TObject);
   strict private
-    function GetReturnValue: Integer;
+    function GetReturnValue: Int64;
   protected
+    FReturnValue_my: Int64;
     procedure InnerMsgProc(const AMsg, AFileName: string; const aUID: Cardinal; AMsgType: TLogMessageType);
     procedure MySleep(const AInterval: Cardinal);
     property Data: TdmData read FData;
@@ -160,7 +161,7 @@ type
     property OnNewSession: TOnNewSession read FOnNewSession write FOnNewSession;
     property OnEndSession: TNotifyEvent read FOnEndSession write FOnEndSession;
     property OnNeedRestart: TNotifyEvent read FOnNeedRestart write FOnNeedRestart;
-    property MyReturnValue: Integer read GetReturnValue;
+    property MyReturnValue: Int64 read GetReturnValue;
   end;
 
   TSinglePacket = class(TWorkerThread)
@@ -2154,7 +2155,7 @@ begin
   inherited;
 end;
 
-function TWorkerThread.GetReturnValue: Integer;
+function TWorkerThread.GetReturnValue: Int64;
 begin
   Result := ReturnValue;
 end;

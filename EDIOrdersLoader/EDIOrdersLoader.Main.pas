@@ -8,7 +8,10 @@ uses
   dsdAction, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit,
   Vcl.ComCtrls, dxCore, cxDateUtils, dxSkinsCore, dxSkinsDefaultPainters, Vcl.Menus, cxButtons,
   cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, System.IniFiles,
-  Data.DB, Datasnap.DBClient;
+  Data.DB, Datasnap.DBClient, cxStyles, dxSkinscxPCPainter, cxCustomData,
+  cxFilter, cxData, cxDataStorage, cxDBData, dsdInternetAction, cxGridLevel,
+  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxClasses,
+  cxGridCustomView, cxGrid;
 
 type
   TMainForm = class(TForm)
@@ -59,6 +62,28 @@ type
     cbLoad: TCheckBox;
     cbSend: TCheckBox;
     actAfterInvoice: TAction;
+    ExportEmailCDS: TClientDataSet;
+    ExportEmailDS: TDataSource;
+    ExportCDS: TClientDataSet;
+    ExportDS: TDataSource;
+    ExportXmlGrid: TcxGrid;
+    ExportXmlGridDBTableView: TcxGridDBTableView;
+    RowData: TcxGridDBColumn;
+    ExportXmlGridLevel: TcxGridLevel;
+    spGet_Export_Email: TdsdStoredProc;
+    spGet_Export_FileName: TdsdStoredProc;
+    spSelect_Export: TdsdStoredProc;
+    spUpdate_isMail: TdsdStoredProc;
+    actGet_Export_Email: TdsdExecStoredProc;
+    actGet_Export_FileName: TdsdExecStoredProc;
+    actSelect_Export: TdsdExecStoredProc;
+    actExport_Grid: TExportGrid;
+    actSMTPFile: TdsdSMTPFileAction;
+    actUpdate_isMail: TdsdExecStoredProc;
+    mactExport: TMultiAction;
+    cbEmail: TCheckBox;
+    Send_EmailCDS: TClientDataSet;
+    spSelectSend_Email: TdsdStoredProc;
     procedure TrayIconClick(Sender: TObject);
     procedure AppMinimize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -74,21 +99,26 @@ type
     { Private declarations }
     FIntervalVal: Integer;
     FProccessing: Boolean;
+    FProccessingEmail: Boolean;
     isPrevDay_begin: Boolean;
     gErr: Boolean;
     Hour_onDel: Integer;
+    Hour_onSendEmail: Integer;
     fStartTime: TDateTime;
     procedure AddToLog(S: string);
     procedure StartEDI;
     procedure StopEDI;
     procedure ProccessEDI;
+    procedure ProccessEmail;
     function fGet_Movement_Edi_stat : Integer;
     function fEdi_LoadData_from : Boolean;
     function fEdi_SendData_to : Boolean;
+    function fSale_SendEmail : Boolean;
   public
     { Public declarations }
     property IntervalVal: Integer read FIntervalVal;
     property Proccessing: Boolean read FProccessing write FProccessing;
+    property ProccessingEmail: Boolean read FProccessingEmail write FProccessingEmail;
   end;
 
 var
@@ -114,7 +144,13 @@ end;
 
 procedure TMainForm.actStartEDIExecute(Sender: TObject);
 begin
-  StartEDI;
+      try StartEDI;
+          //
+          Hour_onSendEmail:=-1;
+          ProccessEmail;
+      finally
+          Timer.Enabled:=True;
+      end;
 end;
 
 procedure TMainForm.actStartEDIUpdate(Sender: TObject);
@@ -172,10 +208,13 @@ begin
   Application.OnMinimize := AppMinimize;
   Timer.Enabled := False;
   Proccessing := False;
+  ProccessingEmail := False;
   Hour_onDel := -1;
+  Hour_onSendEmail:= -1;
 
   cbLoad.Checked:= TRUE;
   cbSend.Checked:= TRUE;
+  cbEmail.Checked:= TRUE;
 
   // При запуске считаем что пред день НЕ надо, т.е. он уже обработан
   isPrevDay_begin:= True;
@@ -205,7 +244,11 @@ end;
 procedure TMainForm.FormShow(Sender: TObject);
 begin
       ActiveControl:= cbPrevDay;
-      if not Timer.Enabled then MainForm.StartEDI;
+      if not Timer.Enabled then
+      try MainForm.StartEDI;
+      finally
+          Timer.Enabled:=True;
+      end;
 end;
 
 function TMainForm.fGet_Movement_Edi_stat : Integer;
@@ -367,6 +410,68 @@ begin
 
 end;
 
+function TMainForm.fSale_SendEmail : Boolean;
+var Err_str: String;
+    i : Integer;
+begin
+     if cbEmail.Checked = FALSE then
+     begin
+          AddToLog('.....');
+          AddToLog('ОТКЛЮЧИЛИ отправку Email');
+          Result:= true;
+          exit
+     end;
+
+     Result:= false;
+
+     spSelectSend_Email.Execute;
+     Send_EmailCDS.First;
+     if Send_EmailCDS.RecordCount = 0 then
+     begin
+          AddToLog('.....');
+          AddToLog('Нет отправки Email <' + IntToStr(Send_EmailCDS.RecordCount) + '>');
+
+          Result:= true;
+          exit
+     end;
+
+     AddToLog('.....');
+     AddToLog('Началась отправка Email итого : <' + IntToStr(Send_EmailCDS.RecordCount) + '>');
+     i:= 1;
+
+     with Send_EmailCDS do
+     while (not EOF) and ((gErr=FALSE) or (i<5)) do
+     begin
+          Application.ProcessMessages;
+          FormParams.ParamByName('MovementId_sendEmail').Value := FieldByName('MovementId').AsInteger;
+          Application.ProcessMessages;
+          // Попробовали отправить
+          try
+              mactExport.Execute;
+              //
+              Application.ProcessMessages;
+              // Сохранили что отправка прошла
+              AddToLog('отправилось без ошибки № : <' + IntToStr(i) + '> <' + FieldByName('MovementId').AsString + '> <' + FieldByName('InvNumber').AsString + '> <' + FieldByName('OperDatePartner').AsString + '>' + '> <' + FieldByName('OperDate_protocol').AsString + '>');
+          except
+              // FormParams.ParamByName('Err_str_Email').Value := 'Ошибка при отправке';
+              AddToLog('Ошибка при отправке № : <' + IntToStr(i) + '> <' + FieldByName('MovementId').AsString + '>');
+              //
+              Application.ProcessMessages;
+              // Сохранили что ошибка
+              //actUpdate_Email_Send_err.Execute;
+          end;
+          //
+          //AddToLog('завершен № : <' + IntToStr(i) + '> из <' + IntToStr(RecordCount) + '>');
+          //
+          Next;
+          i:= i+1;
+     end;
+
+     AddToLog('Завершилась отправка Email : <' + IntToStr(i-1) + '> из <' + IntToStr(Send_EmailCDS.RecordCount) + '>');
+     AddToLog('.....');
+
+end;
+
 procedure TMainForm.ProccessEDI;
 var Present: TDateTime;
     Hour, Min, Sec, MSec: Word;
@@ -377,10 +482,12 @@ begin
   Present:=Now;
   DecodeTime(Present, Hour, Min, Sec, MSec);
 
+  //если уже работает, повторно НЕ запускаем
   if Proccessing then
     Exit;
 
-  Timer.Enabled:=False;
+try
+//  Timer.Enabled:=False;
   Proccessing := True;
 
   if ((Hour>=0) and (Hour<7)) or (Hour>=23)
@@ -392,7 +499,7 @@ begin
        //
        AddToLog('..... Нет Загрузки .....');
        Proccessing := False;
-       Timer.Enabled:=True;
+       //Timer.Enabled:=True;
        isPrevDay_begin := false;
        exit;
   end;
@@ -441,8 +548,47 @@ begin
     else
        Timer.Interval := (3 * 1)  * 1 * 1000;
 
+finally
   Proccessing := False;
-  Timer.Enabled:=True;
+//  Timer.Enabled:=True;
+end;
+
+end;
+
+procedure TMainForm.ProccessEmail;
+var Present: TDateTime;
+    Hour, Min, Sec, MSec: Word;
+    IntervalStr: string;
+begin
+  ActiveControl:= cbPrevDay;
+
+  Present:=Now;
+  DecodeTime(Present, Hour, Min, Sec, MSec);
+
+  //если уже работает, повторно НЕ запускаем
+  if ProccessingEmail then
+    Exit;
+
+  //если уже сделали отправку Email, тогда не надо (отправляем каждые 2 часа)
+  if (Hour_onSendEmail + 2 >= Hour) and (Hour_onSendEmail >= 0) then
+    Exit;
+
+try
+  ProccessingEmail := True;
+  //
+  // !!! Только Отправка !!!
+  try fSale_SendEmail;
+      //запомнили текущий Hour кода сделали отправку Email
+      Hour_onSendEmail:= Hour;
+  except
+        on E: Exception do begin
+           AddToLog('**** Ошибка *** SendEmail *** : ' + E.Message);
+        end;
+  end;
+
+finally
+  ProccessingEmail := False;
+end;
 
 end;
 
@@ -479,7 +625,16 @@ end;
 
 procedure TMainForm.TimerTimer(Sender: TObject);
 begin
-  ProccessEDI;
+  try
+    Timer.Enabled:= false;
+    //
+    ProccessEDI;
+    //
+    ProccessEmail;
+
+  finally
+    Timer.Enabled:= true;
+  end;
 end;
 
 procedure TMainForm.TrayIconClick(Sender: TObject);

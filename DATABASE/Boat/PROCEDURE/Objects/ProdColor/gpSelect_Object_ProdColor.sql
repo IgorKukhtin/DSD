@@ -1,23 +1,24 @@
-﻿-- Торговая марка
+﻿-- Function: gpSelect_Object_ProdColor()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ProdColor (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ProdColor(
-    IN inIsShowAll   Boolean,            -- признак показать удаленные да / нет 
+    IN inIsShowAll   Boolean,            -- признак показать удаленные да / нет
     IN inSession     TVarChar            -- сессия пользователя
-   
+
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Comment TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
-             , isErased Boolean)
+             , isErased Boolean
+              )
 AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_ProdColor());
+   -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_ProdColor());
    vbUserId:= lpGetUserBySession (inSession);
 
 
@@ -36,12 +37,12 @@ BEGIN
        FROM Object AS Object_ProdColor
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_ProdColor.Id
-                                AND ObjectString_Comment.DescId = zc_ObjectString_ProdColor_Comment()  
+                                AND ObjectString_Comment.DescId = zc_ObjectString_ProdColor_Comment()
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_ProdColor.Id
                               AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
-          LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId 
+          LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId
 
           LEFT JOIN ObjectDate AS ObjectDate_Insert
                                ON ObjectDate_Insert.ObjectId = Object_ProdColor.Id

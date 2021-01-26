@@ -2,7 +2,7 @@ object MainForm: TMainForm
   Left = 0
   Top = 0
   Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1079#1072#1082#1072#1079#1086#1074' EDI'
-  ClientHeight = 441
+  ClientHeight = 463
   ClientWidth = 722
   Color = clBtnFace
   Constraints.MinHeight = 400
@@ -41,7 +41,7 @@ object MainForm: TMainForm
     Left = 0
     Top = 126
     Width = 722
-    Height = 315
+    Height = 252
     Align = alClient
     Color = clBlack
     Font.Charset = DEFAULT_CHARSET
@@ -56,6 +56,7 @@ object MainForm: TMainForm
     ScrollBars = ssVertical
     TabOrder = 2
     WordWrap = False
+    ExplicitHeight = 315
   end
   object Panel: TPanel
     Left = 0
@@ -69,18 +70,18 @@ object MainForm: TMainForm
       722
       31)
     object deStart: TcxDateEdit
-      Left = 107
+      Left = 65
       Top = 5
-      EditValue = 42125d
+      EditValue = 44197d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 2
       Width = 85
     end
     object deEnd: TcxDateEdit
-      Left = 310
+      Left = 224
       Top = 5
-      EditValue = 42125d
+      EditValue = 44197d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 3
@@ -88,13 +89,13 @@ object MainForm: TMainForm
     end
     object cxLabel1: TcxLabel
       Left = 10
-      Top = 6
-      Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
+      Top = 7
+      Caption = #1055#1077#1088#1080#1086#1076' '#1089':'
     end
     object cxLabel2: TcxLabel
-      Left = 200
+      Left = 155
       Top = 6
-      Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
+      Caption = #1055#1077#1088#1080#1086#1076#1072' '#1087#1086':'
     end
     object StartButton: TcxButton
       Left = 594
@@ -117,8 +118,8 @@ object MainForm: TMainForm
       OnClick = actStopEDIExecute
     end
     object cbPrevDay: TCheckBox
-      Left = 403
-      Top = 8
+      Left = 315
+      Top = 15
       Width = 62
       Height = 17
       Caption = #1079#1072' '#1074#1095#1077#1088#1072
@@ -139,6 +140,51 @@ object MainForm: TMainForm
       Height = 17
       Caption = #1090#1086#1083#1100#1082#1086' Send'
       TabOrder = 8
+    end
+    object cbEmail: TCheckBox
+      Left = 393
+      Top = 0
+      Width = 84
+      Height = 17
+      Caption = #1090#1086#1083#1100#1082#1086' Email'
+      TabOrder = 9
+    end
+  end
+  object ExportXmlGrid: TcxGrid
+    Left = 0
+    Top = 378
+    Width = 722
+    Height = 85
+    Align = alBottom
+    TabOrder = 3
+    Visible = False
+    ExplicitLeft = -644
+    ExplicitTop = 356
+    ExplicitWidth = 1366
+    object ExportXmlGridDBTableView: TcxGridDBTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = ExportDS
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.SummaryGroups = <>
+      OptionsBehavior.IncSearch = True
+      OptionsData.CancelOnExit = False
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Inserting = False
+      OptionsView.CellAutoHeight = True
+      OptionsView.ColumnAutoWidth = True
+      OptionsView.GroupByBox = False
+      OptionsView.Header = False
+      object RowData: TcxGridDBColumn
+        DataBinding.FieldName = 'RowData'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
+    end
+    object ExportXmlGridLevel: TcxGridLevel
+      GridView = ExportXmlGridDBTableView
     end
   end
   object TrayIcon: TTrayIcon
@@ -10391,6 +10437,11 @@ object MainForm: TMainForm
         Name = 'MovementId_sendEDI'
         Value = Null
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_sendEmail'
+        Value = Null
+        MultiSelectSeparator = ','
       end>
     Left = 108
     Top = 180
@@ -10661,6 +10712,130 @@ object MainForm: TMainForm
       Caption = 'actAfterInvoice'
       OnExecute = actAfterInvoiceExecute
     end
+    object actGet_Export_Email: TdsdExecStoredProc
+      Category = 'Export_Email'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_Email
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_Email
+        end>
+      Caption = 'actGet_Export_Email'
+    end
+    object actGet_Export_FileName: TdsdExecStoredProc
+      Category = 'Export_Email'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_FileName
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_FileName
+        end>
+      Caption = 'actGet_Export_FileName'
+    end
+    object actSelect_Export: TdsdExecStoredProc
+      Category = 'Export_Email'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelect_Export
+      StoredProcList = <
+        item
+          StoredProc = spSelect_Export
+        end>
+      Caption = 'actSelect_Export'
+    end
+    object actExport_Grid: TExportGrid
+      Category = 'Export_Email'
+      MoveParams = <>
+      ExportType = cxegExportToText
+      Grid = ExportXmlGrid
+      Caption = 'actExport_Grid'
+      OpenAfterCreate = False
+      DefaultFileName = 'Report_'
+      DefaultFileExt = 'XML'
+    end
+    object actSMTPFile: TdsdSMTPFileAction
+      Category = 'Export_Email'
+      MoveParams = <>
+      Host.Value = Null
+      Host.Component = ExportEmailCDS
+      Host.ComponentItem = 'Host'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Port.Value = 25
+      Port.Component = ExportEmailCDS
+      Port.ComponentItem = 'Port'
+      Port.DataType = ftString
+      Port.MultiSelectSeparator = ','
+      UserName.Value = Null
+      UserName.Component = ExportEmailCDS
+      UserName.ComponentItem = 'UserName'
+      UserName.DataType = ftString
+      UserName.MultiSelectSeparator = ','
+      Password.Value = Null
+      Password.Component = ExportEmailCDS
+      Password.ComponentItem = 'Password'
+      Password.DataType = ftString
+      Password.MultiSelectSeparator = ','
+      Body.Value = Null
+      Body.Component = ExportEmailCDS
+      Body.ComponentItem = 'Body'
+      Body.DataType = ftString
+      Body.MultiSelectSeparator = ','
+      Subject.Value = Null
+      Subject.Component = ExportEmailCDS
+      Subject.ComponentItem = 'Subject'
+      Subject.DataType = ftString
+      Subject.MultiSelectSeparator = ','
+      FromAddress.Value = Null
+      FromAddress.Component = ExportEmailCDS
+      FromAddress.ComponentItem = 'AddressFrom'
+      FromAddress.DataType = ftString
+      FromAddress.MultiSelectSeparator = ','
+      ToAddress.Value = Null
+      ToAddress.Component = ExportEmailCDS
+      ToAddress.ComponentItem = 'AddressTo'
+      ToAddress.DataType = ftString
+      ToAddress.MultiSelectSeparator = ','
+    end
+    object actUpdate_isMail: TdsdExecStoredProc
+      Category = 'Export_Email'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isMail
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isMail
+        end>
+      Caption = 'actUpdate_isMail'
+    end
+    object mactExport: TMultiAction
+      Category = 'Export_Email'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Export_Email
+        end
+        item
+          Action = actGet_Export_FileName
+        end
+        item
+          Action = actSelect_Export
+        end
+        item
+          Action = actExport_Grid
+        end
+        item
+          Action = actSMTPFile
+        end
+        item
+          Action = actUpdate_isMail
+        end>
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
+      ImageIndex = 53
+    end
   end
   object spHeaderOrder: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_EDIOrder'
@@ -10676,7 +10851,7 @@ object MainForm: TMainForm
       end
       item
         Name = 'inOrderOperDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -10780,7 +10955,7 @@ object MainForm: TMainForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -10788,7 +10963,7 @@ object MainForm: TMainForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -10953,6 +11128,162 @@ object MainForm: TMainForm
       end>
     PackSize = 1
     Left = 608
-    Top = 88
+    Top = 104
+  end
+  object ExportEmailCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 40
+    Top = 356
+  end
+  object ExportEmailDS: TDataSource
+    DataSet = ExportEmailCDS
+    Left = 80
+    Top = 357
+  end
+  object ExportCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 48
+    Top = 404
+  end
+  object ExportDS: TDataSource
+    DataSet = ExportCDS
+    Left = 80
+    Top = 404
+  end
+  object spGet_Export_Email: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Email_Send'
+    DataSet = ExportEmailCDS
+    DataSets = <
+      item
+        DataSet = ExportEmailCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_sendEmail'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 192
+    Top = 418
+  end
+  object spGet_Export_FileName: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Email_FileName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_sendEmail'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = actExport_Grid
+        ComponentItem = 'DefaultFileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDefaultFileExt'
+        Value = Null
+        Component = actExport_Grid
+        ComponentItem = 'DefaultFileExt'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEncodingANSI'
+        Value = Null
+        Component = actExport_Grid
+        ComponentItem = 'EncodingANSI'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = actSMTPFile
+        ComponentItem = 'FileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outExportType'
+        Value = Null
+        Component = actExport_Grid
+        ComponentItem = 'ExportType'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 168
+    Top = 370
+  end
+  object spSelect_Export: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Email_Send'
+    DataSet = ExportCDS
+    DataSets = <
+      item
+        DataSet = ExportCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_sendEmail'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 440
+    Top = 394
+  end
+  object spUpdate_isMail: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_isMail'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_sendEmail'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 256
+    Top = 386
+  end
+  object Send_EmailCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 316
+    Top = 414
+  end
+  object spSelectSend_Email: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Email_list'
+    DataSet = Send_EmailCDS
+    DataSets = <
+      item
+        DataSet = Send_EmailCDS
+      end>
+    Params = <>
+    PackSize = 1
+    Left = 352
+    Top = 384
   end
 end

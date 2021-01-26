@@ -1,6 +1,6 @@
 -- Function: gpSelect_Movement_Email_Send(Integer, tvarchar)
 
--- DROP FUNCTION gpSelect_Movement_Email_Send (Integer, tvarchar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Email_Send (Integer, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Email_Send(
     IN inMovementId           Integer   ,

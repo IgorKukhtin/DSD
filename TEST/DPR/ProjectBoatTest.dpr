@@ -127,7 +127,7 @@ uses
   ProdOptions in '..\..\FormsBoat\Guides\ProdOptions.pas' {ProdOptionsForm: TParentForm},
   ProdColorGroupEdit in '..\..\FormsBoat\Guides\ProdColorGroupEdit.pas' {ProdColorGroupEditForm: TParentForm},
   ProdOptionsEdit in '..\..\FormsBoat\Guides\ProdOptionsEdit.pas' {ProdOptionsEditForm: TParentForm},
-  ProdColor in '..\..\FormsBoat\Guides\ProdColor.pas' {ProdColorForm: TParentForm},
+  ProdColor_goods in '..\..\FormsBoat\Guides\ProdColor_goods.pas' {ProdColor_goodsForm: TParentForm},
   ProdColorEdit in '..\..\FormsBoat\Guides\ProdColorEdit.pas' {ProdColorEditForm: TParentForm},
   Product in '..\..\FormsBoat\Guides\Product.pas' {ProductForm: TParentForm},
   ProductEdit in '..\..\FormsBoat\Guides\ProductEdit.pas' {ProductEditForm: TParentForm},
@@ -208,7 +208,8 @@ uses
   ReceiptServiceEdit in '..\..\FormsBoat\Guides\ReceiptServiceEdit.pas' {ReceiptServiceEditForm: TParentForm},
   Union_Goods_ReceiptService in '..\..\FormsBoat\Guides\Union_Goods_ReceiptService.pas' {Union_Goods_ReceiptServiceForm: TParentForm},
   ReceiptProdModel in '..\..\FormsBoat\Guides\ReceiptProdModel.pas' {ReceiptProdModelForm: TParentForm},
-  TranslateMessage in '..\..\FormsBoat\Guides\TranslateMessage.pas' {TranslateMessageForm: TParentForm};
+  TranslateMessage in '..\..\FormsBoat\Guides\TranslateMessage.pas' {TranslateMessageForm: TParentForm},
+  ProdColor in '..\..\FormsBoat\Guides\ProdColor.pas' {ProdColorForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

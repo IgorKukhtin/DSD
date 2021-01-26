@@ -1610,7 +1610,8 @@ begin
      then
        with ZConnection_test do begin
           Connected:=false;
-          HostName:='integer-srv.alan.dp.ua';
+        //HostName:='integer-srv.alan.dp.ua';
+          HostName:='192.168.0.219';
           User:='admin';
           Password:='vas6ok';
           Database:='project';

@@ -29,6 +29,12 @@ BEGIN
    END IF; 
 
    -- проверка уникальности для свойства <Наименование Бренда>
+   IF TRIM (COALESCE (inName, '')) = ''
+   THEN
+       RAISE EXCEPTION 'Ошибка.Значение не может быть пустым.';
+   END IF; 
+
+   -- проверка уникальности для свойства <Наименование Бренда>
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Brand(), inName); 
 
    -- сохранили <Объект>

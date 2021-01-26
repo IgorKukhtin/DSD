@@ -345,6 +345,10 @@ procedure TLoadFormTest.LoadProdColorFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdColorForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProdColorForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdColor_goodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProdColor_goodsForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdColorEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProdColorEditForm');
 end;
