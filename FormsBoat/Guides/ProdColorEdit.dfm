@@ -1,7 +1,7 @@
 object ProdColorEditForm: TProdColorEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1062#1074#1077#1090#1072'>'
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <Farbe>'
   ClientHeight = 200
   ClientWidth = 295
   Color = clBtnFace
@@ -25,7 +25,7 @@ object ProdColorEditForm: TProdColorEditForm
   object cxLabel1: TcxLabel
     Left = 10
     Top = 54
-    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+    Caption = 'Farbe'
   end
   object cxButton1: TcxButton
     Left = 41

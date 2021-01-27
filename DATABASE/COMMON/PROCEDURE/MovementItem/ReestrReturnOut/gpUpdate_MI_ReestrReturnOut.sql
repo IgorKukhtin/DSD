@@ -3,11 +3,11 @@
 DROP FUNCTION IF EXISTS gpUpdate_MI_ReestrReturnOut (TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_ReestrReturnOut(
-    IN inBarCode              TVarChar  , -- штрихкод документа продажи 
+    IN inBarCode              TVarChar  , -- штрихкод документа продажи
     IN inReestrKindId         Integer   , -- Тип состояния по реестру
     --IN inMemberId             Integer   , -- Физические лица(водитель/экспедитор) кто сдал документ для визы
     IN inSession              TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS VOID
 AS
 $BODY$
@@ -20,7 +20,7 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ReestrReturnOut());
-     
+
 
      -- только в этом случае - ничего не делаем, т.к. из дельфи вызывается "лишний" раз
      IF COALESCE (TRIM (inBarCode), '') = ''
@@ -29,7 +29,7 @@ BEGIN
      END IF;
 
 
-     -- если 
+     -- если
      IF NOT EXISTS (SELECT 1 FROM Object WHERE Object.Id = inReestrKindId AND Object.DescId = zc_Object_ReestrKind())
      THEN
           RAISE EXCEPTION 'Ошибка.zc_Object_ReestrKind = <%> не определно значение.', lfGet_Object_ValueData (inReestrKindId);
@@ -46,7 +46,7 @@ BEGIN
                       ;
      -- Проверка
      IF COALESCE (vbMemberId_user, 0) = 0
-     THEN 
+     THEN
           RAISE EXCEPTION 'Ошибка.У пользователя <%> не определно значение <Физ.лицо>.', lfGet_Object_ValueData (vbUserId);
      END IF;
 
@@ -92,7 +92,7 @@ BEGIN
 
      -- найдем элемент
      vbId_mi:= (SELECT MF_MovementItemId.ValueData ::Integer AS Id
-                FROM MovementFloat AS MF_MovementItemId 
+                FROM MovementFloat AS MF_MovementItemId
                 WHERE MF_MovementItemId.MovementId = vbMovementId_ReturnOut
                   AND MF_MovementItemId.DescId     = zc_MovementFloat_MovementItemId()
                );
@@ -103,16 +103,33 @@ BEGIN
          --
          -- Попробуем найти "пустышку"
          vbMovementId_ReestrReturnOut:= (SELECT Movement.Id
-                                      FROM Movement
-                                           LEFT JOIN MovementLinkMovement AS MLM_Transport
-                                                                          ON MLM_Transport.MovementId = Movement.Id
-                                                                         AND MLM_Transport.DescId = zc_MovementLinkMovement_Transport()
-                                      WHERE Movement.OperDate = CURRENT_DATE
-                                        AND Movement.DescId = zc_Movement_ReestrReturnOut()
-                                        AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                        AND MLM_Transport.MovementId IS NULL
-                                      LIMIT 1 -- Прийдется так "криво" обойти вариант если вдруг парраллельно создадут новый док.
-                                     );
+                                         FROM Movement
+                                              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                                     AND MovementItem.DescId     = zc_MI_Master()
+                                                                     AND MovementItem.isErased   = FALSE
+                                              INNER JOIN MovementItemLinkObject AS MILO_User
+                                                                                ON MILO_User.MovementItemId = MovementItem.Id
+                                                                               AND MILO_User.DescId IN (zc_MILinkObject_EconomIn()
+                                                                                                      , zc_MILinkObject_EconomOut()
+                                                                                                      , zc_MILinkObject_Snab()
+                                                                                                      , zc_MILinkObject_Remake() -- <Документ исправлен>
+                                                                                                      , zc_MILinkObject_Econom()
+                                                                                                      , zc_MILinkObject_Buh()
+                                                                                                       )
+                                         WHERE Movement.OperDate = CURRENT_DATE
+                                           AND Movement.DescId = zc_Movement_ReestrReturnOut()
+                                           AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                         ORDER BY CASE MILO_User.DescId WHEN zc_MILinkObject_EconomIn()  THEN 1
+                                                                        WHEN zc_MILinkObject_EconomOut() THEN 2
+                                                                        WHEN zc_MILinkObject_Snab()      THEN 3
+                                                                        WHEN zc_MILinkObject_Remake()    THEN 4
+                                                                        WHEN zc_MILinkObject_Econom()    THEN 5
+                                                                        WHEN zc_MILinkObject_Buh()       THEN 6
+                                                       ELSE 101
+                                                  END
+                                                , Movement.Id
+                                         LIMIT 1 -- Прийдется так "криво" обойти вариант если вдруг парраллельно создадут новый док.
+                                        );
 
          -- Если не нашли "пустышку"
          IF COALESCE (vbMovementId_ReestrReturnOut, 0) = 0
@@ -141,7 +158,7 @@ BEGIN
 
     -- <Получено от клиента>
     IF inReestrKindId = zc_Enum_ReestrKind_PartnerIn()
-    THEN 
+    THEN
        -- сохранили <когда сформирована виза>
        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartnerIn(), vbId_mi, CURRENT_TIMESTAMP);
        -- сохранили связь с <кто сформировал визу>
@@ -149,21 +166,21 @@ BEGIN
        -- сохранили связь с <кто сдал документ для визы "Получено от клиента">
        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartnerInFrom(), vbId_mi, NULL);
     END IF;
- 
+
 
     -- <"Экономисты(в работе)>
     IF inReestrKindId = zc_Enum_ReestrKind_EconomIn()
-    THEN 
+    THEN
        -- сохранили <когда сформирована виза>
        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_EconomIn(), vbId_mi, CURRENT_TIMESTAMP);
        -- сохранили связь с <кто сформировал визу>
        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_EconomIn(), vbId_mi, vbMemberId_user);
     END IF;
-    
+
 
     -- <Экономисты(для снабжения)>
     IF inReestrKindId = zc_Enum_ReestrKind_EconomOut()
-    THEN 
+    THEN
        -- сохранили <когда сформирована виза>
        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_EconomOut(), vbId_mi, CURRENT_TIMESTAMP);
        -- сохранили связь с <кто сформировал визу>
@@ -172,7 +189,7 @@ BEGIN
 
     -- <Документ исправлен>
     IF inReestrKindId = zc_Enum_ReestrKind_Remake()
-    THEN 
+    THEN
        -- сохранили <когда сформирована виза>
        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Remake(), vbId_mi, CURRENT_TIMESTAMP);
        -- сохранили связь с <кто сформировал визу>
@@ -181,7 +198,7 @@ BEGIN
 
     -- <Экономисты>
     IF inReestrKindId = zc_Enum_ReestrKind_Econom()
-    THEN 
+    THEN
        -- сохранили <когда сформирована виза>
        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Econom(), vbId_mi, CURRENT_TIMESTAMP);
        -- сохранили связь с <кто сформировал визу>
@@ -190,7 +207,7 @@ BEGIN
 
     -- <Бухгалтерия>
     IF inReestrKindId = zc_Enum_ReestrKind_Buh()
-    THEN 
+    THEN
        -- сохранили <когда сформирована виза>
        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Buh(), vbId_mi, CURRENT_TIMESTAMP);
        -- сохранили связь с <кто сформировал визу>
@@ -199,7 +216,7 @@ BEGIN
 
     -- <Снабжение (в работе)>
     IF inReestrKindId = zc_Enum_ReestrKind_Snab()
-    THEN 
+    THEN
        -- сохранили <когда сформирована виза>
        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Snab(), vbId_mi, CURRENT_TIMESTAMP);
        -- сохранили связь с <кто сформировал визу>
@@ -208,7 +225,7 @@ BEGIN
 
     -- <Снабжение (для переделки)>
     IF inReestrKindId = zc_Enum_ReestrKind_SnabRe()
-    THEN 
+    THEN
        -- сохранили <когда сформирована виза>
        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_SnabRe(), vbId_mi, CURRENT_TIMESTAMP);
        -- сохранили связь с <кто сформировал визу>
@@ -239,4 +256,4 @@ $BODY$
 */
 
 -- тест
--- 
+--

@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , BrandId Integer, BrandName TVarChar
              , ProdEngineId Integer, ProdEngineName TVarChar
              , ProdColorPatternId Integer
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsId Integer, GoodsId_choice Integer, GoodsCode Integer, GoodsName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar, TaxKind_Value TFloat
              , EKPrice TFloat, EKPriceWVAT TFloat
              , BasisPrice TFloat, BasisPriceWVAT TFloat
@@ -155,6 +155,7 @@ BEGIN
          , COALESCE (tmpProdColorPattern.ProdColorPatternId, 0) :: Integer  AS ProdColorPatternId
 
          , Object_Goods.Id                                                   :: Integer  AS GoodsId
+         , COALESCE (tmpProdColorPattern.GoodsId, Object_Goods.Id)           :: Integer  AS GoodsId_choice
          , COALESCE (tmpProdColorPattern.GoodsCode, Object_Goods.ObjectCode) :: Integer  AS GoodsCode
          , COALESCE (tmpProdColorPattern.GoodsName, Object_Goods.ValueData)  :: TVarChar AS GoodsName
 

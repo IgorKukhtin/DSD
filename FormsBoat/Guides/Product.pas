@@ -110,7 +110,7 @@ type
     bbSetUnErasedColor: TdxBarButton;
     bbSetErasedOpt: TdxBarButton;
     bbSetUnErasedOpt: TdxBarButton;
-    actChoiceFormProdColor: TOpenChoiceForm;
+    actChoiceFormProdColor_goods: TOpenChoiceForm;
     FormParams: TdsdFormParams;
     spGetImportSettingId: TdsdStoredProc;
     actGetImportSetting: TdsdExecStoredProc;

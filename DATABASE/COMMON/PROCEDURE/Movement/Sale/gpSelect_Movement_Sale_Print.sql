@@ -48,6 +48,8 @@ $BODY$
     DECLARE vbIsInfoMoney_30200 Boolean;
 
     DECLARE vbIsKiev Boolean;
+    
+    DECLARE vbIsPrice_Pledge_25 Boolean;
 
     DECLARE vbIsLongUKTZED Boolean;
 
@@ -114,7 +116,7 @@ BEGIN
                           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-     
+
                           INNER JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
                                                                                ON OH_JuridicalDetails_To.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId)
                                                                               AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_To.StartDate
@@ -124,6 +126,27 @@ BEGIN
                      WHERE Movement.Id     = inMovementId
                        AND Movement.DescId = zc_Movement_Sale()
                     );
+     -- isPrice_Pledge_25
+     vbIsPrice_Pledge_25:= EXISTS (SELECT 1
+                                   FROM Movement
+                                        LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                                               ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                                              AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                                        LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                     ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                    AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                        LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                             ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                                            AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                        INNER JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
+                                                                                             ON OH_JuridicalDetails_To.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId)
+                                                                                            AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_To.StartDate
+                                                                                            AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_To.EndDate
+                                                                                            -- ÒÎÂÀÐÈÑÒÂÎ Ç ÎÁÌÅÆÅÍÎÞ Â²ÄÏÎÂ²ÄÀËÜÍ²ÑÒÞ "ÔÓÄÊÎÌ"
+                                                                                            AND OH_JuridicalDetails_To.OKPO = '40982829'
+                                   WHERE Movement.Id     = inMovementId
+                                     AND Movement.DescId = zc_Movement_Sale()
+                                  );
 
 
      -- ïàðàìåòðû èç äîêóìåíòà
@@ -1505,7 +1528,8 @@ BEGIN
               END :: TVarChar AS GoodsCodeUKTZED
 
               -- Çàëîãîâàÿ öåíà áåç ÍÄÑ, ãðí
-            , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_20501() AND COALESCE (tmpPriceList_kind.Price_basis, tmpPriceList.Price_basis,0) > 0 THEN COALESCE (tmpPriceList_kind.Price_basis, tmpPriceList.Price_basis)
+            , CASE WHEN vbIsPrice_Pledge_25 = TRUE AND ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_20501() THEN 25
+                   WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_20501() AND COALESCE (tmpPriceList_kind.Price_basis, tmpPriceList.Price_basis,0) > 0 THEN COALESCE (tmpPriceList_kind.Price_basis, tmpPriceList.Price_basis)
                    WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_20501() THEN 60
                    ELSE 0
               END :: TFloat AS Price_Pledge

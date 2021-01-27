@@ -63,7 +63,8 @@ BEGIN
                                                                 , inOperDate   := CURRENT_DATE) AS tmp
                       )
           -- элементы ReceiptProdModelChild
-        , tmpReceiptProdModelChild AS(SELECT Object_ReceiptProdModel.Id                      AS ReceiptProdModelId
+        , tmpReceiptProdModelChild AS(SELECT ObjectLink_ReceiptProdModel_master.ObjectId     AS ProductId
+                                           , Object_ReceiptProdModel.Id                      AS ReceiptProdModelId
                                            , Object_ReceiptProdModelChild.Id                 AS ReceiptProdModelChildId
                                              -- Модель лодки у шаблона ProdModel
                                            , ObjectLink_Model.ChildObjectId                  AS ModelId
@@ -72,12 +73,16 @@ BEGIN
                                              -- значение                                     
                                            , ObjectFloat_Value.ValueData                     AS Value
 
-                                      FROM Object AS Object_ReceiptProdModel
+                                      FROM ObjectLink AS ObjectLink_ReceiptProdModel_master
+                                      
+                                           INNER JOIN Object AS Object_ReceiptProdModel ON Object_ReceiptProdModel.Id       = ObjectLink_ReceiptProdModel_master.ChildObjectId
+                                                                                    -- !!!ВСЕ!!!
+                                                                                    -- AND Object_ReceiptProdModel.isErased = FALSE
                                            -- это главный шаблон ProdModel
-                                           INNER JOIN ObjectBoolean AS ObjectBoolean_Main
-                                                                    ON ObjectBoolean_Main.ObjectId  = Object_ReceiptProdModel.Id
-                                                                   AND ObjectBoolean_Main.DescId    = zc_ObjectBoolean_ReceiptProdModel_Main()
-                                                                   AND ObjectBoolean_Main.ValueData = TRUE
+                                         --INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                         --                         ON ObjectBoolean_Main.ObjectId  = Object_ReceiptProdModel.Id
+                                         --                        AND ObjectBoolean_Main.DescId    = zc_ObjectBoolean_ReceiptProdModel_Main()
+                                         --                        AND ObjectBoolean_Main.ValueData = TRUE
                                            -- Модель лодки у шаблона ProdModel
                                            LEFT JOIN ObjectLink AS ObjectLink_Model
                                                                 ON ObjectLink_Model.ObjectId = Object_ReceiptProdModel.Id
@@ -98,11 +103,11 @@ BEGIN
                                                                  ON ObjectFloat_Value.ObjectId = Object_ReceiptProdModelChild.Id
                                                                 AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ReceiptProdModelChild_Value()
 
-                                      WHERE Object_ReceiptProdModel.DescId   = zc_Object_ReceiptProdModel()
-                                        AND Object_ReceiptProdModel.isErased = FALSE
+                                      WHERE ObjectLink_ReceiptProdModel_master.DescId = zc_ObjectLink_Product_ReceiptProdModel()
                                      )
           -- раскладываем ReceiptProdModelChild - для каждой ModelId
-        , tmpProdColorPattern AS (SELECT tmpReceiptProdModelChild.ModelId                  AS ModelId
+        , tmpProdColorPattern AS (SELECT tmpReceiptProdModelChild.ProductId                AS ProductId
+                                       , tmpReceiptProdModelChild.ModelId                  AS ModelId
                                        , tmpReceiptProdModelChild.ReceiptProdModelId       AS ReceiptProdModelId
                                        , tmpReceiptProdModelChild.ReceiptProdModelChildId  AS ReceiptProdModelChildId
                                        , Object_ReceiptGoodsChild.Id                       AS ReceiptGoodsChildId
@@ -212,10 +217,11 @@ BEGIN
                          , tmpProdColorPattern.GoodsId AS GoodsId_Receipt
                      FROM tmpRes_all
                           LEFT JOIN tmpProduct ON tmpProduct.Id = tmpRes_all.ProductId
-                                              AND tmpProduct.ReceiptProdModelId = tmpRes_all.ReceiptProdModelId
-                          LEFT JOIN tmpProdColorPattern ON tmpProdColorPattern.ModelId            = tmpProduct.ModelId
+                                            --AND tmpProduct.ReceiptProdModelId = tmpRes_all.ReceiptProdModelId
+                          LEFT JOIN tmpProdColorPattern ON tmpProdColorPattern.ProductId          = tmpRes_all.ProductId
                                                        AND tmpProdColorPattern.ProdColorPatternId = tmpRes_all.ProdColorPatternId
-                                                       AND tmpProdColorPattern.ReceiptProdModelId = tmpRes_all.ReceiptProdModelId
+                                                     --AND tmpProdColorPattern.ModelId            = tmpProduct.ModelId
+                                                     --AND tmpProdColorPattern.ReceiptProdModelId = tmpRes_all.ReceiptProdModelId
 
                    UNION ALL
                     SELECT
@@ -232,11 +238,12 @@ BEGIN
                          , tmpProdColorPattern.ProdColorPatternId
                          , tmpProdColorPattern.GoodsId AS GoodsId_Receipt
                     FROM tmpProdColorPattern
-                         JOIN tmpProduct ON tmpProduct.ModelId = tmpProdColorPattern.ModelId
-                                        AND tmpProduct.ReceiptProdModelId = tmpProdColorPattern.ReceiptProdModelId
+                         JOIN tmpProduct ON tmpProduct.Id = tmpProdColorPattern.ProductId
+                                      --AND tmpProduct.ModelId = tmpProdColorPattern.ModelId
+                                      --AND tmpProduct.ReceiptProdModelId = tmpProdColorPattern.ReceiptProdModelId
                          LEFT JOIN tmpRes_all ON tmpRes_all.ProductId          = tmpProduct.Id
                                              AND tmpRes_all.ProdColorPatternId = tmpProdColorPattern.ProdColorPatternId
-                                             AND tmpRes_all.ReceiptProdModelId = tmpProdColorPattern.ReceiptProdModelId
+                                           --AND tmpRes_all.ReceiptProdModelId = tmpProdColorPattern.ReceiptProdModelId
                     WHERE tmpRes_all.ProductId IS NULL
                       AND inIsShowAll          = TRUE
                    )

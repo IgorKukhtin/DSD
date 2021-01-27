@@ -66,8 +66,8 @@ BEGIN
                            FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
                                                                     , inOperDate   := CURRENT_DATE) AS tmp
                           )
-      -- все Элементы сборки Модели - берем только Boat Structure
-    , tmpProdColorPattern AS (SELECT lpSelect.ModelId
+  -- все Элементы сборки Модели - берем только Boat Structure
+, tmpProdColorPattern_all AS (SELECT lpSelect.ModelId, lpSelect.ReceiptProdModelId
                                      -- либо Goods "такой" как в Boat Structure /либо другой Goods, не такой как в Boat Structure /либо ПУСТО
                                    , lpSelect.ObjectId
                                      -- значение
@@ -80,19 +80,50 @@ BEGIN
 
                                    , lpSelect.EKPrice, lpSelect.EKPriceWVAT
 
+                                   , lpSelect.isMain
+
                               FROM lpSelect_Object_ReceiptProdModelChild_detail (vbUserId) AS lpSelect
-                              WHERE lpSelect.isMain = TRUE
-                                -- с такой строктурой
-                                AND lpSelect.ProdColorPatternId > 0
+                              -- с такой строктурой
+                              WHERE lpSelect.ProdColorPatternId > 0
+                              -- ВСЕ шаблоны
+                              --AND lpSelect.isMain = TRUE
+                             )
+      -- все Элементы сборки Модели - для Лодки + с учетом ReceiptProdModel
+    , tmpProdColorPattern AS (SELECT ObjectLink_ReceiptProdModel_master.ObjectId      AS ProductId
+                                   , ObjectLink_ReceiptProdModel_master.ChildObjectId AS ReceiptProdModelId
+                                   , tmpProdColorPattern_all.ModelId
+                                     -- либо Goods "такой" как в Boat Structure /либо другой Goods, не такой как в Boat Structure /либо ПУСТО
+                                   , tmpProdColorPattern_all.ObjectId
+                                     -- значение
+                                   , tmpProdColorPattern_all.Value
+                                     --
+                                   , tmpProdColorPattern_all.ProdColorPatternId
+                                   , tmpProdColorPattern_all.ProdOptionsId, tmpProdColorPattern_all.ProdOptionsCode, tmpProdColorPattern_all.ProdOptionsName
+                                     -- Цвет /либо Comment из Boat Structure
+                                   , tmpProdColorPattern_all.ProdColorId, tmpProdColorPattern_all.ProdColorName
+
+                                   , tmpProdColorPattern_all.EKPrice, tmpProdColorPattern_all.EKPriceWVAT
+
+                              FROM ObjectLink AS ObjectLink_ReceiptProdModel_master
+                              
+                                   INNER JOIN Object AS Object_ReceiptProdModel ON Object_ReceiptProdModel.Id       = ObjectLink_ReceiptProdModel_master.ChildObjectId
+                                                                            -- !!!ВСЕ!!!
+                                                                            -- AND Object_ReceiptProdModel.isErased = FALSE
+                                   INNER JOIN tmpProdColorPattern_all ON tmpProdColorPattern_all.ReceiptProdModelId = ObjectLink_ReceiptProdModel_master.ChildObjectId
+                              -- установленный Шаблон у Лодки
+                              WHERE ObjectLink_ReceiptProdModel_master.DescId = zc_ObjectLink_Product_ReceiptProdModel()
                              )
            -- все Опции по моделям
          , tmpProdOptions AS (SELECT Object_ProdOptions.Id, Object_ProdOptions.ObjectCode, Object_ProdOptions.ValueData
+                                     -- здесь нет значений, т.к. эти Опции для "всех" Лодок
+                                   , 0 AS ProductId
+                                   , 0 AS ReceiptProdModelId
                                      -- как правило не установлена
                                    , COALESCE (ObjectLink_Model.ChildObjectId, 0) AS ModelId
                                    , ObjectLink_Goods.ChildObjectId AS GoodsId
                                    , Object_ProdColor.Id            AS ProdColorId
                                    , Object_ProdColor.ValueData     AS ProdColorName
-                                   , 0 AS ProdColorPatternId
+                                   , 0                              AS ProdColorPatternId
                                      -- у Goods
                                    , ObjectLink_Goods_TaxKind.ChildObjectId AS TaxKindId
 
@@ -153,6 +184,9 @@ BEGIN
                              UNION ALL
                               -- для этой структуры
                               SELECT Object_ProdOptions.Id, Object_ProdOptions.ObjectCode, Object_ProdOptions.ValueData
+                                     -- всегда установлено
+                                   , tmpProdColorPattern.ProductId
+                                   , tmpProdColorPattern.ReceiptProdModelId
                                      -- всегда установлена
                                    , tmpProdColorPattern.ModelId
                                      -- либо Goods "такой" как в Boat Structure /либо другой Goods, не такой как в Boat Structure /либо ПУСТО
@@ -217,23 +251,58 @@ BEGIN
 
                                , ObjectLink_ProdOptions.ChildObjectId    AS ProdOptionsId
                                , ObjectLink_Product.ChildObjectId        AS ProductId
+                                 -- факт
                                , ObjectLink_Goods.ChildObjectId          AS GoodsId
+                                 --
                                , ObjectLink_ProdOptPattern.ChildObjectId AS ProdOptPatternId
 
-                               , tmpProdOptions.ProdColorPatternId
-                               , tmpProdOptions.ProdColorId
-                               , tmpProdOptions.ProdColorName
-                               , tmpProdOptions.TaxKindId
+                               , Object_ProdColor.Id        AS ProdColorId
+                               , Object_ProdColor.ValueData AS ProdColorName
 
                                  -- % скидки
                                , COALESCE (ObjectFloat_DiscountTax.ValueData,0) AS DiscountTax
 
-                                 -- Цена вх. без НДС
-                               , tmpProdOptions.EKPrice
-                               , tmpProdOptions.EKPriceWVAT
-                                 -- Цена продажи без НДС
-                               , tmpProdOptions.SalePrice
-                               , tmpProdOptions.SalePriceWVAT
+                                 -- Цена вх. без НДС - Комплектующие - факт
+                               , ObjectFloat_EKPrice.ValueData AS EKPrice
+                                 -- Цена вх. с НДС - Комплектующие - факт
+                               , CAST (ObjectFloat_EKPrice.ValueData
+                                      * (1 + (COALESCE (ObjectFloat_TaxKind_Value_goods.ValueData, 0) / 100)) AS NUMERIC (16, 2)) :: TFloat AS EKPriceWVAT
+
+                               , tmpProdOptions.ProdColorPatternId
+
+                                 -- для этой структуры
+                               , CASE WHEN tmpProdOptions.ProdColorPatternId > 0
+                                           THEN -- Опция
+                                                tmpProdOptions.TaxKindId
+
+                                      ELSE -- Комплектующие - факт
+                                           ObjectLink_Goods_TaxKind.ChildObjectId
+
+                                 END AS TaxKindId
+
+                                 -- для этой структуры
+                               , CASE WHEN tmpProdOptions.ProdColorPatternId > 0
+                                           THEN -- Цена продажи без НДС - Опция
+                                                tmpProdOptions.SalePrice
+
+                                      ELSE -- Цена продажи без НДС - Комплектующие - факт
+                                           CASE WHEN vbPriceWithVAT = FALSE
+                                                THEN tmpPriceBasis.ValuePrice
+                                                ELSE CAST (tmpPriceBasis.ValuePrice * ( 1 - COALESCE (ObjectFloat_TaxKind_Value_goods.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                                           END
+                                 END AS SalePrice
+
+                                 -- для этой структуры
+                               , CASE WHEN tmpProdOptions.ProdColorPatternId > 0
+                                           THEN -- Цена продажи с НДС - Опция
+                                                tmpProdOptions.SalePriceWVAT
+
+                                      ELSE -- Цена продажи с НДС - Комплектующие - факт
+                                           CASE WHEN vbPriceWithVAT = FALSE
+                                                THEN CAST (tmpPriceBasis.ValuePrice * ( 1 + COALESCE (ObjectFloat_TaxKind_Value_goods.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                                                ELSE tmpPriceBasis.ValuePrice
+                                           END
+                                 END AS SalePriceWVAT
 
                           FROM Object AS Object_ProdOptItems
                                -- Лодка
@@ -250,13 +319,31 @@ BEGIN
                                LEFT JOIN ObjectLink AS ObjectLink_Goods
                                                     ON ObjectLink_Goods.ObjectId = Object_ProdOptItems.Id
                                                    AND ObjectLink_Goods.DescId   = zc_ObjectLink_ProdOptItems_Goods()
+                               LEFT JOIN ObjectLink AS ObjectLink_Goods_ProdColor
+                                                    ON ObjectLink_Goods_ProdColor.ObjectId = ObjectLink_Goods.ChildObjectId
+                                                   AND ObjectLink_Goods_ProdColor.DescId   = zc_ObjectLink_Goods_ProdColor()
+                               LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
+
+                               LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
+                                                     ON ObjectFloat_EKPrice.ObjectId = ObjectLink_Goods.ChildObjectId
+                                                    AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
+
+                               LEFT JOIN ObjectLink AS ObjectLink_Goods_TaxKind
+                                                    ON ObjectLink_Goods_TaxKind.ObjectId = ObjectLink_Goods.ChildObjectId
+                                                   AND ObjectLink_Goods_TaxKind.DescId   = zc_ObjectLink_Goods_TaxKind()
+                               LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value_goods
+                                                     ON ObjectFloat_TaxKind_Value_goods.ObjectId = ObjectLink_Goods_TaxKind.ChildObjectId
+                                                    AND ObjectFloat_TaxKind_Value_goods.DescId   = zc_ObjectFloat_TaxKind_Value()
+                               LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = ObjectLink_Goods.ChildObjectId
+
                                -- Опции
                                LEFT JOIN ObjectLink AS ObjectLink_ProdOptions
                                                     ON ObjectLink_ProdOptions.ObjectId = Object_ProdOptItems.Id
                                                    AND ObjectLink_ProdOptions.DescId = zc_ObjectLink_ProdOptItems_ProdOptions()
                                -- возьмем из "все Опции" (сборка Модели) - хотя можно было совсем отдельным запросом
-                               LEFT JOIN tmpProdOptions ON tmpProdOptions.Id       = ObjectLink_ProdOptions.ChildObjectId
-                                                       AND (tmpProdOptions.ModelId = tmpProduct.ModelId OR tmpProdOptions.ModelId = 0)
+                               LEFT JOIN tmpProdOptions ON tmpProdOptions.Id         = ObjectLink_ProdOptions.ChildObjectId
+                                                       AND (tmpProdOptions.ModelId   = tmpProduct.ModelId OR tmpProdOptions.ModelId   = 0)
+                                                       AND (tmpProdOptions.ProductId = tmpProduct.Id      OR tmpProdOptions.ProductId = 0)
 
                                LEFT JOIN ObjectFloat AS ObjectFloat_DiscountTax
                                                      ON ObjectFloat_DiscountTax.ObjectId = Object_ProdOptItems.Id
@@ -325,7 +412,8 @@ BEGIN
                          , tmpProdOptions.SalePriceWVAT
 
                     FROM tmpProdOptions
-                         LEFT JOIN tmpProduct ON tmpProduct.ModelId = tmpProdOptions.ModelId OR tmpProdOptions.ModelId = 0
+                         LEFT JOIN tmpProduct ON (tmpProduct.ModelId = tmpProdOptions.ModelId   OR tmpProdOptions.ModelId   = 0)
+                                             AND (tmpProduct.Id      = tmpProdOptions.ProductId OR tmpProdOptions.ProductId = 0)
                          LEFT JOIN tmpProdOptItems ON tmpProdOptItems.ProductId     = tmpProduct.Id
                                                   AND tmpProdOptItems.ProdOptionsId = tmpProdOptions.Id
                     -- если не найден в существующих + надо показать все варианты

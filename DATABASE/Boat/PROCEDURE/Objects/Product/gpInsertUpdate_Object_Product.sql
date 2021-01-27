@@ -50,7 +50,8 @@ BEGIN
    vbIsInsert:= COALESCE (ioId, 0) = 0;
 
    -- !!! временно !!!
-   IF CEIL (inCode / 2) * 2 = inCode THEN inDateSale:= NULL; END IF;
+   -- IF CEIL (inCode / 2) * 2 = inCode THEN inDateSale:= NULL; END IF;
+   inDateSale:= NULL;
 
 
    -- 

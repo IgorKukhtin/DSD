@@ -105,13 +105,30 @@ BEGIN
          -- Попробуем найти "пустышку"
          vbMovementId_ReestrIncome:= (SELECT Movement.Id
                                       FROM Movement
-                                           LEFT JOIN MovementLinkMovement AS MLM_Transport
-                                                                          ON MLM_Transport.MovementId = Movement.Id
-                                                                         AND MLM_Transport.DescId = zc_MovementLinkMovement_Transport()
+                                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                                  AND MovementItem.DescId     = zc_MI_Master()
+                                                                  AND MovementItem.isErased   = FALSE
+                                           INNER JOIN MovementItemLinkObject AS MILO_User
+                                                                             ON MILO_User.MovementItemId = MovementItem.Id
+                                                                            AND MILO_User.DescId IN (zc_MILinkObject_EconomIn()
+                                                                                                   , zc_MILinkObject_EconomOut()
+                                                                                                   , zc_MILinkObject_Snab()
+                                                                                                   , zc_MILinkObject_Remake() -- <Документ исправлен>
+                                                                                                   , zc_MILinkObject_Econom()
+                                                                                                   , zc_MILinkObject_Buh()
+                                                                                                    )
                                       WHERE Movement.OperDate = CURRENT_DATE
                                         AND Movement.DescId = zc_Movement_ReestrIncome()
                                         AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                        AND MLM_Transport.MovementId IS NULL
+                                      ORDER BY CASE MILO_User.DescId WHEN zc_MILinkObject_EconomIn()  THEN 1
+                                                                     WHEN zc_MILinkObject_EconomOut() THEN 2
+                                                                     WHEN zc_MILinkObject_Snab()      THEN 3
+                                                                     WHEN zc_MILinkObject_Remake()    THEN 4
+                                                                     WHEN zc_MILinkObject_Econom()    THEN 5
+                                                                     WHEN zc_MILinkObject_Buh()       THEN 6
+                                                    ELSE 101
+                                               END
+                                             , Movement.Id
                                       LIMIT 1 -- Прийдется так "криво" обойти вариант если вдруг парраллельно создадут новый док.
                                      );
 

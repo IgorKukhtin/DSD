@@ -27,7 +27,8 @@ BEGIN
                                                       OR tmp.COLUMN_TYPENAME ILIKE 'TBlob'
                                                       THEN  '''''|| quote_literal(' || tmp.TABLE_NAME ||'.'||tmp.COLUMN_NAME || ') ||'''''
                                                     WHEN tmp.COLUMN_TYPENAME ILIKE 'TDateTime'                                                        
-                                                      or tmp.COLUMN_TYPENAME ILIKE 'interval' 
+                                                      OR tmp.COLUMN_TYPENAME ILIKE 'interval' 
+                                                      OR tmp.COLUMN_TYPENAME ILIKE 'Timestamp'
                                                       THEN  '''''''''||' || tmp.TABLE_NAME ||'.'||tmp.COLUMN_NAME || '||'''''''''
                                                     ELSE tmp.TABLE_NAME ||'.'||tmp.COLUMN_NAME
                                                  END || '  AS Text)'

@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdColorItems(
     IN inProdColorPatternId  Integer   ,
     IN inComment             TVarChar  ,
     IN inIsEnabled           Boolean   , 
- INOUT ioIsProdOptions       Boolean   ,
+ INOUT ioIsProdOptions       Boolean   ,    -- добавить как опцию
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS RECORD

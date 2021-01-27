@@ -85,7 +85,7 @@ BEGIN
         -- Проверка inProdOptionsId - из Boat Structure
         IF NOT EXISTS (SELECT 1 FROM ObjectLink WHERE ObjectLink.DescId = zc_ObjectLink_ProdColorPattern_ProdOptions() AND ObjectLink.ChildObjectId = inProdOptionsId)
         THEN
-            RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.inProdColorPatternId не установлен.'
+            RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Не найден inProdOptionsId.'
                                                   , inProcedureName := 'gpInsertUpdate_Object_ProdOptItems'
                                                   , inUserId        := vbUserId
                                                    );
@@ -96,14 +96,14 @@ BEGIN
                                                    , inCode                := tmp.Code
                                                    , inProductId           := inProductId
                                                    , inGoodsId             := ioGoodsId
-                                                   , inProdColorPatternId  := inProdColorPatternId
+                                                   , inProdColorPatternId  := tmp.ProdColorPatternId
                                                    , inComment             := '' :: TVarChar
                                                    , inIsEnabled           := TRUE :: Boolean
-                                                   , ioIsProdOptions       := TRUE  :: Boolean
+                                                   , ioIsProdOptions       := CASE WHEN tmp.GoodsId_Receipt <> ioGoodsId THEN TRUE ELSE FALSE END
                                                    , inSession             := inSession
                                                    )
                                                    
-        FROM gpSelect_Object_ProdColorItems (FALSE,FALSE,FALSE, zfCalc_UserAdmin()) as tmp
+        FROM gpSelect_Object_ProdColorItems (FALSE,FALSE,FALSE, inSession) as tmp
         WHERE tmp.ProductId = inProductId
           AND tmp.ProdColorPatternId = inProdColorPatternId
         ;

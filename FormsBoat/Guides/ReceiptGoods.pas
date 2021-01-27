@@ -168,6 +168,7 @@ type
     isEnabled_ch2: TcxGridDBColumn;
     Color_value_ch1: TcxGridDBColumn;
     Color_Level_ch1: TcxGridDBColumn;
+    actChoiceFormProdColor_goods: TOpenChoiceForm;
   private
     { Private declarations }
   public

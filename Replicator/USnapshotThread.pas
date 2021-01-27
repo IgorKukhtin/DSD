@@ -159,6 +159,7 @@ begin
       CheckPaused;
       UpdateStatus('Получение данных от мастера ..');
       QSrc.Close;
+
       if FIsCompositeKey then
         QSrc.SQL.Text :=
           FInsertQuery + sLineBreak +
@@ -171,8 +172,8 @@ begin
           'WHERE '+ FRealKeyField + ' > :LastId '+ sLineBreak +
           'ORDER BY '+ FKeyFields + sLineBreak +
           'LIMIT '+ IntToStr(GetSelectCount);
+      //
       QSrc.ParamByName('LastId').Value := LastId;
-
       //
       tmpDate:=NOw;
       //
@@ -302,11 +303,17 @@ begin
       Exit;
     end;
     LastId := 0;
+
+//if AnsiUpperCase(FCurrTable) = AnsiUpperCase('movementitemcontainer')
+//then
+//    LastId := 21979412035;
+
     while not Terminated do
     begin
       CheckPaused;
       UpdateStatus('Получение данных от мастера ..');
       QSrc.Close;
+
       if FIsCompositeKey then
         QSrc.SQL.Text :=
           FValuesPart + ', ' + FRealKeyField + sLineBreak +
@@ -327,6 +334,7 @@ begin
       tmpDate:=NOw;
       //
       QSrc.Open;
+      //
       //
       DecodeTime(now-tmpDate, Hour, Min, Sec, MSec);
       StrTime:=IntToStr(Min)+':'+IntToStr(Sec)+':'+IntToStr(MSec);

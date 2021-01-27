@@ -77,6 +77,37 @@ BEGIN
       and T.table_name NOT ILIKE 'containerdesc'
       and T.table_name NOT ILIKE 'historycost'
       and T.table_name NOT ILIKE 'movementdesc'*/
+/*      
+where T.table_name ILIKE 'movementitemstring'
+   OR T.table_name ILIKE 'movementstringdesc'
+   OR T.table_name ILIKE 'periodclose'
+   OR T.table_name ILIKE 'movementlinkmovementdesc'
+   OR T.table_name ILIKE 'movementstring'
+   OR T.table_name ILIKE 'wms_message'
+   OR T.table_name ILIKE 'movementitemprotocol_arc'
+   OR T.table_name ILIKE 'objecthistorydatedesc'
+   OR T.table_name ILIKE 'movementitemreport'
+   OR T.table_name ILIKE 'movementlinkobjectdesc'
+   OR T.table_name ILIKE 'objectstring'
+   OR T.table_name ILIKE 'wms_object_pack'
+   OR T.table_name ILIKE 'movementfloat'
+   OR T.table_name ILIKE 'movementblob'
+   OR T.table_name ILIKE 'movementblobdesc'
+   OR T.table_name ILIKE 'objectlinkdesc'
+   OR T.table_name ILIKE 'remainsolaptable'
+   OR T.table_name ILIKE 'lockprotocol'
+   OR T.table_name ILIKE 'objectfloatdesc'
+   OR T.table_name ILIKE 'movement'
+   OR T.table_name ILIKE 'movementitembooleandesc'
+   OR T.table_name ILIKE 'movementbooleandesc'
+   OR T.table_name ILIKE 'objectblobdesc'
+   OR T.table_name ILIKE 'reportprotocol'
+   OR T.table_name ILIKE 'objectprotocol'
+   OR T.table_name ILIKE 'wms_tohostheader'
+where T.table_name ILIKE 'movementitemcontainer'
+   OR T.table_name ILIKE 'soldtable'
+   OR T.table_name ILIKE 'resourseitemprotocol'*/
+
 
     group by T.table_name, B.table_name
   order by case when T.table_name ilike 'resourseitemprotocol' then 102 
@@ -84,6 +115,7 @@ BEGIN
                 when T.table_name ilike 'movementitemfloat' then 1
                 when T.table_name ilike 'ObjectBlob' then 2
                 else 100 end
+           , T.table_name
     ; 
     
 END;
