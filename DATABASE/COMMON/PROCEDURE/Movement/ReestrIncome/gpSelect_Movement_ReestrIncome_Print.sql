@@ -435,7 +435,7 @@ BEGIN
         
          AND ( (tmpMILO.ObjectId = vbMemberId_User OR inisShowAll = True)
 
-              OR (inIsReestrKind = FALSE AND inisShowAll = FALSE AND (MILinkObject_Remake.ObjectId = vbMemberId_User
+              OR (inIsReestrKind = FALSE AND inisShowAll = FALSE AND (MILinkObject_Remake.ObjectId = vbMemberId_User          -- ѕечать из журнала по всем визам дл€ тек. пользовател€
                                                                    OR MILinkObject_Econom.ObjectId = vbMemberId_User
                                                                    OR MILinkObject_Buh.ObjectId = vbMemberId_User
                                                                    OR MILinkObject_EconomIn.ObjectId = vbMemberId_User
