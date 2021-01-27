@@ -1,34 +1,34 @@
 ﻿inherited HardwareEditForm: THardwareEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1040#1087#1087#1072#1088#1072#1090#1085#1091#1102' '#1095#1072#1089#1090#1100' >'
-  ClientHeight = 439
+  ClientHeight = 446
   ClientWidth = 467
   ExplicitWidth = 473
-  ExplicitHeight = 468
+  ExplicitHeight = 475
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 97
-    Top = 399
+    Top = 405
     TabOrder = 2
     ExplicitLeft = 97
-    ExplicitTop = 399
+    ExplicitTop = 405
   end
   inherited bbCancel: TcxButton
     Left = 270
-    Top = 399
+    Top = 405
     TabOrder = 3
     ExplicitLeft = 270
-    ExplicitTop = 399
+    ExplicitTop = 405
   end
-  object edName: TcxTextEdit [2]
+  object edComputerName: TcxTextEdit [2]
     Left = 7
-    Top = 66
+    Top = 108
     TabOrder = 1
     Width = 273
   end
   object cxLabel1: TcxLabel [3]
     Left = 7
-    Top = 50
+    Top = 92
     Caption = #1048#1084#1103' '#1082#1086#1084#1087#1102#1090#1077#1088#1072' '
   end
   object Код: TcxLabel [4]
@@ -46,12 +46,12 @@
   end
   object cxLabel7: TcxLabel [6]
     Left = 8
-    Top = 93
+    Top = 135
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object ceUnit: TcxButtonEdit [7]
     Left = 8
-    Top = 110
+    Top = 152
     Properties.Buttons = <
       item
         Default = True
@@ -63,51 +63,51 @@
   end
   object edBaseBoardProduct: TcxTextEdit [8]
     Left = 8
-    Top = 153
+    Top = 195
     TabOrder = 8
     Width = 441
   end
   object cxLabel2: TcxLabel [9]
     Left = 8
-    Top = 137
+    Top = 179
     Caption = #1052#1072#1090#1077#1088#1080#1085#1089#1082#1072#1103' '#1087#1083#1072#1090#1072
   end
   object edProcessorName: TcxTextEdit [10]
     Left = 8
-    Top = 196
+    Top = 238
     TabOrder = 10
     Width = 441
   end
   object cxLabel3: TcxLabel [11]
     Left = 8
-    Top = 180
+    Top = 222
     Caption = #1055#1088#1086#1094#1077#1089#1089#1086#1088
   end
   object edDiskDriveModel: TcxTextEdit [12]
     Left = 8
-    Top = 238
+    Top = 280
     TabOrder = 12
     Width = 441
   end
   object cxLabel4: TcxLabel [13]
     Left = 8
-    Top = 222
+    Top = 264
     Caption = #1046#1077#1089#1090#1082#1080#1081' '#1044#1080#1089#1082
   end
   object edPhysicalMemory: TcxTextEdit [14]
     Left = 8
-    Top = 281
+    Top = 323
     TabOrder = 14
     Width = 441
   end
   object cxLabel5: TcxLabel [15]
     Left = 8
-    Top = 265
+    Top = 307
     Caption = #1054#1087#1077#1088#1072#1090#1080#1074#1085#1072#1103' '#1087#1072#1084#1103#1090#1100
   end
   object ceCashRegister: TcxButtonEdit [16]
     Left = 301
-    Top = 110
+    Top = 152
     Properties.Buttons = <
       item
         Default = True
@@ -119,43 +119,50 @@
   end
   object cxLabel6: TcxLabel [17]
     Left = 301
-    Top = 93
+    Top = 135
     Caption = #1050#1072#1089#1089#1086#1074#1099#1081' '#1072#1087#1087#1072#1088#1072#1090
   end
   object edComment: TcxTextEdit [18]
     Left = 8
-    Top = 364
+    Top = 370
     TabOrder = 18
     Width = 441
   end
   object cxLabel8: TcxLabel [19]
     Left = 8
-    Top = 348
+    Top = 354
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edIdentifier: TcxTextEdit [20]
     Left = 8
-    Top = 321
+    Top = 67
     TabOrder = 20
-    Width = 441
+    Width = 272
   end
   object cxLabel9: TcxLabel [21]
     Left = 8
-    Top = 305
+    Top = 49
     Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088
+  end
+  object cxLicense: TcxCheckBox [22]
+    Left = 301
+    Top = 67
+    Caption = #1051#1080#1094#1077#1085#1079#1080#1103' '#1085#1072' '#1055#1050
+    TabOrder = 22
+    Width = 121
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
-    Top = 176
+    Top = 218
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 400
-    Top = 32
+    Top = 74
   end
   inherited ActionList: TActionList
     Images = dmMain.ImageList
     Left = 207
-    Top = 191
+    Top = 233
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -175,7 +182,7 @@
   end
   inherited FormParams: TdsdFormParams
     Left = 328
-    Top = 168
+    Top = 210
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Hardware'
@@ -196,9 +203,25 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inName'
+        Name = 'inIdentifier'
+        Value = Null
+        Component = edIdentifier
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisLicense'
+        Value = Null
+        Component = cxLicense
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComputerName'
         Value = ''
-        Component = edName
+        Component = edComputerName
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -252,14 +275,6 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIdentifier'
-        Value = Null
-        Component = edIdentifier
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inComment'
         Value = Null
         Component = edComment
@@ -268,7 +283,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 328
-    Top = 32
+    Top = 74
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Hardware'
@@ -288,9 +303,23 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Name'
+        Name = 'Identifier'
+        Value = Null
+        Component = edIdentifier
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isLicense'
+        Value = Null
+        Component = cxLicense
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ComputerName'
         Value = ''
-        Component = edName
+        Component = edComputerName
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -353,13 +382,6 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Identifier'
-        Value = Null
-        Component = edIdentifier
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'Comment'
         Value = Null
         Component = edComment
@@ -367,7 +389,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 328
-    Top = 96
+    Top = 138
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -397,7 +419,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 176
-    Top = 96
+    Top = 138
   end
   object GuidesCashRegister: TdsdGuides
     KeyField = 'Id'
@@ -427,6 +449,12 @@
         MultiSelectSeparator = ','
       end>
     Left = 392
-    Top = 104
+    Top = 146
+  end
+  object cxPropertiesStore1: TcxPropertiesStore
+    Components = <>
+    StorageName = 'cxPropertiesStore1'
+    Left = 304
+    Top = 312
   end
 end

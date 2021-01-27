@@ -1,19 +1,20 @@
--- Function: gpInsertUpdate_Object_City()
+-- Function: gpInsertUpdate_Object_Hardware()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Hardware (Integer, Integer, TVarChar, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Hardware (Integer, Integer, TVarChar, Boolean, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Hardware(
  INOUT ioId                     Integer   ,     -- ключ объекта <Город>
     IN inCode                   Integer   ,     -- Код объекта
-    IN inName                   TVarChar  ,     -- Название объекта
+    IN inIdentifier             TVarChar  ,     -- Идентификатор
+    IN inisLicense              Boolean   ,     -- Лицензия на ПК
     IN inUnitId                 Integer   ,     -- Подразделение
     IN inCashRegisterID         Integer   ,     -- Подразделение
-    IN inBaseBoardProduct       TVarChar ,      -- Материнская плата
-    IN inProcessorName          TVarChar ,      -- Процессор
-    IN inDiskDriveModel         TVarChar ,      -- Жесткий Диск
-    IN inPhysicalMemory         TVarChar ,      -- Оперативная память
-    IN inIdentifier             TVarChar ,      -- Идентификатор
-    IN inComment                TVarChar ,      -- Примечание
+    IN inComputerName           TVarChar  ,     -- Имя компютера
+    IN inBaseBoardProduct       TVarChar  ,     -- Материнская плата
+    IN inProcessorName          TVarChar  ,     -- Процессор
+    IN inDiskDriveModel         TVarChar  ,     -- Жесткий Диск
+    IN inPhysicalMemory         TVarChar  ,     -- Оперативная память
+    IN inComment                TVarChar  ,     -- Примечание
     IN inSession                TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -31,7 +32,12 @@ BEGIN
       RAISE EXCEPTION 'Ошибка. Не установлено подразделение...';
    END IF;
 
-   IF COALESCE (inName, '') = ''
+   IF COALESCE (TRIM(inIdentifier), '') = ''
+   THEN
+      RAISE EXCEPTION 'Ошибка. Не заполнено <Идентификатор>...';
+   END IF;
+
+   IF COALESCE (inComputerName, '') = ''
    THEN
       RAISE EXCEPTION 'Ошибка. Не заполнено <Имя компютера>...';
    END IF;
@@ -48,13 +54,16 @@ BEGIN
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Hardware(), vbCode_calc);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Hardware(), vbCode_calc, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Hardware(), vbCode_calc, inIdentifier);
 
   -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Hardware_Unit(), ioId, inUnitId);
   -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Hardware_CashRegister(), ioId, inCashRegisterID);
    
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Hardware_ComputerName(), outId, inComputerName);
+
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Hardware_BaseBoardProduct(), ioId, inBaseBoardProduct);
 
@@ -68,22 +77,24 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Hardware_PhysicalMemory(), ioId, inPhysicalMemory);
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Hardware_Identifier(), ioId, inIdentifier);
-   -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Hardware_Comment(), ioId, inComment);
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Hardware_License(), outId, inisLicense);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Hardware (Integer, Integer, TVarChar, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Hardware (Integer, Integer, TVarChar, Boolean, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
 
 
 -------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Манько Д.А.   Шаблий О.В.
+ 27.01.21                                                                      *  
  12.04.20                                                                      *  
 */
 

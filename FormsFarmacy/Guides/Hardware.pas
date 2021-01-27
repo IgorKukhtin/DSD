@@ -29,6 +29,7 @@ type
     dxBarButton3: TdxBarButton;
     Identifier: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
+    isLicense: TcxGridDBColumn;
   private
     { Private declarations }
   public

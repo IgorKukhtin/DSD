@@ -133,7 +133,8 @@ uses
   ChoosingPresent in '..\FormsFarmacy\Cash\ChoosingPresent.pas' {ChoosingPresentForm: TParentForm},
   SelectionFromDirectory in '..\FormsFarmacy\Cash\SelectionFromDirectory.pas' {SelectionFromDirectoryForm: TParentForm},
   ChoosingRelatedProduct in '..\FormsFarmacy\Cash\ChoosingRelatedProduct.pas' {ChoosingRelatedProductForm},
-  EditFromDirectory in '..\FormsFarmacy\Cash\EditFromDirectory.pas' {EditFromDirectoryForm: TParentForm};
+  EditFromDirectory in '..\FormsFarmacy\Cash\EditFromDirectory.pas' {EditFromDirectoryForm: TParentForm},
+  HardwareDialog in '..\FormsFarmacy\Cash\HardwareDialog.pas' {HardwareDialogForm};
 
 {$R *.res}
 

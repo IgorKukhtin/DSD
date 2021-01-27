@@ -6,11 +6,11 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Hardware(
     IN inId            Integer,       -- ключ объекта <Города>
     IN inSession       TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Identifier TVarChar
              , UnitId Integer, UnitName TVarChar
-             , CashRegisterID Integer, CashRegisterName TVarChar
+             , CashRegisterID Integer, CashRegisterName TVarChar, isLicense Boolean, ComputerName TVarChar
              , BaseBoardProduct TVarChar, ProcessorName TVarChar, DiskDriveModel TVarChar, PhysicalMemory TVarChar
-             , Identifier TVarChar, Comment TVarChar
+             , Comment TVarChar
 ) AS
 $BODY$
 BEGIN
@@ -24,27 +24,31 @@ BEGIN
        SELECT
              CAST (0 as Integer)       AS Id
            , lfGet_ObjectCode(0, zc_Object_Hardware()) AS Code
-           , CAST ('' as TVarChar)     AS Name
+           , CAST ('' as TVarChar)     AS Identifier
 
            , CAST (0 as Integer)       AS UnitId
-           , CAST ('' as TVarChar)     AS CashRegisterName
-
-           , CAST (0 as Integer)       AS CashRegisterID
            , CAST ('' as TVarChar)     AS UnitName
 
+           , CAST (0 as Integer)       AS CashRegisterID
+           , CAST ('' as TVarChar)     AS CashRegisterName
+
+           , False                     AS isLicense
+           , CAST ('' as TVarChar)     AS ComputerName
            , CAST ('' as TVarChar)     AS BaseBoardProduct
+
            , CAST ('' as TVarChar)     AS ProcessorName
            , CAST ('' as TVarChar)     AS DiskDriveModel
            , CAST ('' as TVarChar)     AS PhysicalMemory
 
-           , CAST ('' as TVarChar)     AS Identifier
            , CAST ('' as TVarChar)     AS Comment;
    ELSE
        RETURN QUERY
        SELECT
              Object_Hardware.Id         AS Id
            , Object_Hardware.ObjectCode AS Code
-           , Object_Hardware.ValueData  AS Name
+           , CASE WHEN COALESCE(ObjectString_ComputerName.ValueData, '') = '' 
+               THEN ''
+               ELSE Object_Hardware.ValueData END::TVarChar                            AS Identifier
 
            , Object_Unit.Id            AS UnitId
            , Object_Unit.ValueData     AS UnitName
@@ -52,12 +56,14 @@ BEGIN
            , Object_CashRegister.Id             AS CashRegisterID
            , Object_CashRegister.ValueData      AS CashRegisterName
 
+           , COALESCE(ObjectBoolean_License.ValueData, False)                          AS isLicense
+
+           , COALESCE(ObjectString_ComputerName.ValueData, Object_Hardware.ValueData)  AS ComputerName
            , ObjectString_BaseBoardProduct.ValueData                   AS BaseBoardProduct
            , ObjectString_ProcessorName.ValueData                      AS ProcessorName
            , ObjectString_DiskDriveModel.ValueData                     AS DiskDriveModel
            , ObjectString_PhysicalMemory.ValueData                     AS PhysicalMemory
 
-           , ObjectString_Identifier.ValueData                         AS Identifier
            , ObjectString_Comment.ValueData                            AS Comment
 
        FROM Object AS Object_Hardware
@@ -70,6 +76,10 @@ BEGIN
                                  ON ObjectLink_Hardware_CashRegister.ObjectId = Object_Hardware.Id
                                 AND ObjectLink_Hardware_CashRegister.DescId = zc_ObjectLink_Hardware_CashRegister()
             LEFT JOIN Object AS Object_CashRegister ON Object_CashRegister.Id = ObjectLink_Hardware_CashRegister.ChildObjectId
+
+            LEFT JOIN ObjectString AS ObjectString_ComputerName 
+                                   ON ObjectString_ComputerName.ObjectId = Object_Hardware.Id
+                                  AND ObjectString_ComputerName.DescId = zc_ObjectString_Hardware_ComputerName()
 
             LEFT JOIN ObjectString AS ObjectString_BaseBoardProduct 
                                    ON ObjectString_BaseBoardProduct.ObjectId = Object_Hardware.Id
@@ -84,9 +94,10 @@ BEGIN
                                   ON ObjectString_PhysicalMemory.ObjectId = Object_Hardware.Id
                                  AND ObjectString_PhysicalMemory.DescId = zc_ObjectString_Hardware_PhysicalMemory()
 
-            LEFT JOIN ObjectString AS ObjectString_Identifier
-                                  ON ObjectString_Identifier.ObjectId = Object_Hardware.Id
-                                 AND ObjectString_Identifier.DescId = zc_ObjectString_Hardware_Identifier()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_License
+                                    ON ObjectBoolean_License.ObjectId = Object_Hardware.Id
+                                   AND ObjectBoolean_License.DescId = zc_ObjectBoolean_Hardware_License()
+
             LEFT JOIN ObjectString AS ObjectString_Comment
                                   ON ObjectString_Comment.ObjectId = Object_Hardware.Id
                                  AND ObjectString_Comment.DescId = zc_ObjectString_Hardware_Comment()
@@ -103,6 +114,7 @@ ALTER FUNCTION gpGet_Object_Hardware(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 27.01.21                                                                      *  
  12.04.20                                                                      *  
 */
 
