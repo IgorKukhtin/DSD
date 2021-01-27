@@ -54,6 +54,9 @@ type
     TotalCountPartner: TcxGridDBColumn;
     actPrintForDriver: TdsdPrintAction;
     bbPrintForDriver: TdxBarButton;
+    spSelectPrint_User: TdsdStoredProc;
+    actPrint_User: TdsdPrintAction;
+    bbPrint_User: TdxBarButton;
   private
     { Private declarations }
   public

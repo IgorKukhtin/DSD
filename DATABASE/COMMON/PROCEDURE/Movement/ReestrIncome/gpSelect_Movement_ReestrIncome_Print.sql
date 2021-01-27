@@ -424,7 +424,7 @@ BEGIN
             LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = ObjectLink_PersonalTrade_Member.ChildObjectId -- ObjectLink_Partner_PersonalTrade.ChildObjectId
             
             LEFT JOIN tmpMILO ON tmpMILO.MovementItemId = tmpMI.MovementItemId
-                             AND tmpMILO.DescId = vbMILinkObjectId          
+                             AND (tmpMILO.DescId = vbMILinkObjectId OR COALESCE (vbMILinkObjectId,0) = 0)
 
        WHERE ((inIsReestrKind = TRUE AND MovementLinkObject_ReestrKind.ObjectId = inReestrKindId) 
           OR inIsReestrKind = FALSE

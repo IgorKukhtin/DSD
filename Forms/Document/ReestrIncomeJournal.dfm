@@ -617,6 +617,49 @@ inherited ReestrIncomeJournalForm: TReestrIncomeJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrint_User: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint_User
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_User
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1102' <'#1056#1077#1077#1089#1090#1088' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082' '#1074#1080#1079#1072')>'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1102' <'#1056#1077#1077#1089#1090#1088' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082' '#1074#1080#1079#1072')>'
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGroup'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_ReestrIncome'
+      ReportNameParam.Name = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1056#1077#1077#1089#1090#1088#1072
+      ReportNameParam.Value = 'PrintMovement_ReestrIncome'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -625,8 +668,8 @@ inherited ReestrIncomeJournalForm: TReestrIncomeJournalForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1056#1077#1077#1089#1090#1088' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
-      Hint = #1056#1077#1077#1089#1090#1088' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
+      Caption = #1055#1077#1095#1072#1090#1100' <'#1056#1077#1077#1089#1090#1088' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082' '#1074#1080#1079#1072')>'
+      Hint = #1055#1077#1095#1072#1090#1100' <'#1056#1077#1077#1089#1090#1088' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082' '#1074#1080#1079#1072')>'
       ShortCut = 16464
       DataSets = <
         item
@@ -812,6 +855,14 @@ inherited ReestrIncomeJournalForm: TReestrIncomeJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_User'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintForDriver'
         end
         item
@@ -843,6 +894,11 @@ inherited ReestrIncomeJournalForm: TReestrIncomeJournalForm
     object bbPrintForDriver: TdxBarButton
       Action = actPrintForDriver
       Category = 0
+    end
+    object bbPrint_User: TdxBarButton
+      Action = actPrint_User
+      Category = 0
+      ImageIndex = 15
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1126,7 +1182,63 @@ inherited ReestrIncomeJournalForm: TReestrIncomeJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 511
+    Left = 519
+    Top = 264
+  end
+  object spSelectPrint_User: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_ReestrIncome_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalTradeId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReestrKindId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsReestrKind'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisShowAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 527
     Top = 312
   end
 end
