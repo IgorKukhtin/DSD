@@ -424,7 +424,7 @@ BEGIN
             LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = ObjectLink_PersonalTrade_Member.ChildObjectId -- ObjectLink_Partner_PersonalTrade.ChildObjectId
             
             LEFT JOIN tmpMILO ON tmpMILO.MovementItemId = tmpMI.MovementItemId
-                             AND tmpMILO.DescId = vbMILinkObjectId          
+                             AND (tmpMILO.DescId = vbMILinkObjectId /*OR COALESCE (vbMILinkObjectId,0) = 0*/)
 
        WHERE ((inIsReestrKind = TRUE AND MovementLinkObject_ReestrKind.ObjectId = inReestrKindId) 
           OR inIsReestrKind = FALSE
@@ -433,7 +433,19 @@ BEGIN
          
          AND (Object_PersonalTrade.Id = vbMemberTradeId   OR vbMemberTradeId   = 0)
         
-         AND (tmpMILO.ObjectId = vbMemberId_User OR inisShowAll = True)
+         AND ( (tmpMILO.ObjectId = vbMemberId_User OR inisShowAll = True)
+
+              OR (inIsReestrKind = FALSE AND inisShowAll = FALSE AND (MILinkObject_Remake.ObjectId = vbMemberId_User          -- ѕечать из журнала по всем визам дл€ тек. пользовател€
+                                                                   OR MILinkObject_Econom.ObjectId = vbMemberId_User
+                                                                   OR MILinkObject_Buh.ObjectId = vbMemberId_User
+                                                                   OR MILinkObject_EconomIn.ObjectId = vbMemberId_User
+                                                                   OR MILinkObject_EconomOut.ObjectId = vbMemberId_User
+                                                                   OR MILinkObject_Snab.ObjectId = vbMemberId_User
+                                                                   OR MILinkObject_SnabRe.ObjectId = vbMemberId_User)
+
+                  )
+              )
+         
        ORDER BY tmpMI.GroupNum
               , Object_From.ValueData
               , MovementDate_OperDatePartner.ValueData

@@ -114,27 +114,33 @@ BEGIN
                                                     AND Container.ID = MIC.ContainerId
                            ),
         tmpContainerRemainsAll AS ( --Остатки по приходу
+
                              SELECT tmpIncomeList.MovementId                                          AS MovementId
                                   , tmpIncomeList.MovementItemId                                      AS MovementItemId
                                   , tmpIncomeList.Price                                               AS Price
                                   , Container.ID
                                   , Container.Amount - COALESCE(SUM(MovementItemContainer.Amount), 0) AS Remains
-                             FROM tmpIncomeList
+                             FROM Object AS Object_PartionMovementItem
 
-                                  LEFT JOIN MovementItemContainer AS MIC 
-                                                                  ON MIC.MovementItemId = tmpIncomeList.MovementItemId
-                                                                 AND MIC.DescId         = zc_MIContainer_Count()
-                                                                 
-                                  LEFT JOIN Container ON Container.DescId = zc_Container_Count()
-                                                     AND Container.ID = MIC.ContainerId
+                                       INNER JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                                     ON ContainerLinkObject_MovementItem.ObjectId = Object_PartionMovementItem.Id
+                                                                    AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
 
-                                 LEFT JOIN MovementItemContainer ON MovementItemContainer.ContainerID = Container.ID
-                                                                AND MovementItemContainer.OperDate >= inOperDate
+                                       INNER JOIN Container ON Container.ID = ContainerLinkObject_MovementItem.ContainerId
+                                                           AND Container.DescId = zc_Container_Count()
+                                                           
+                                       INNER JOIN tmpIncomeList ON tmpIncomeList.MovementItemId = Object_PartionMovementItem.ObjectCode
+
+                                       LEFT JOIN MovementItemContainer ON MovementItemContainer.ContainerID = Container.ID
+                                                                      AND MovementItemContainer.OperDate >= inOperDate
+
+                             WHERE Object_PartionMovementItem.ObjectCode IN (SELECT DISTINCT tmpIncomeList.MovementItemId FROM tmpIncomeList)
+                               AND Object_PartionMovementItem.DescId = zc_object_PartionMovementItem()
                              GROUP BY tmpIncomeList.MovementId
                                     , tmpIncomeList.MovementItemId 
                                     , tmpIncomeList.Price
                                     , Container.ID
-                                    , Container.Amount 
+                                    , Container.Amount
                              ),
         tmpContainerRemains AS ( --Остатки по приходу
                              SELECT tmpContainerRemainsAll.MovementId                                            AS MovementId
@@ -178,4 +184,6 @@ $BODY$
 -- тест
 -- 
                               
-select * from gpReport_Income_PartialSale(inOperDate := ('28.12.2020')::TDateTime, inJuridicalId := 13310756 , inFromId := 9526799, inSession := '3');
+--select * from gpReport_Income_PartialSale(inOperDate := ('28.12.2020')::TDateTime, inJuridicalId := 13310756 , inFromId := 9526799, inSession := '3');
+
+select * from gpReport_Income_PartialSale(inOperDate := ('26.01.2021')::TDateTime , inJuridicalId := 723462 , inFromId := 15702720 ,  inSession := '3');

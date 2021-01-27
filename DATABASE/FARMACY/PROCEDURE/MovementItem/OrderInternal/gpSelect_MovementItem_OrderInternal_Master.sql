@@ -102,6 +102,8 @@ RETURNS TABLE (Id                    Integer
              , AVGPriceWarning       TFloat
 
              , isDefault             Boolean
+             
+             , DiscountName          TVarChar
              )
 AS
 $BODY$
@@ -403,6 +405,29 @@ BEGIN
                                                     AND MIFloat_PriceOptSP.DescId = zc_MIFloat_PriceOptSP()
                        )
 
+     -- Товары дисконтной программы
+     , tmpGoodsDiscount AS (SELECT 
+                                   Object_Goods_Retail.GoodsMainId
+                                           
+                                 , Object_Object.Id                AS ObjectId
+                                 , Object_Object.ValueData         AS DiscountName 
+                                 
+                             FROM Object AS Object_BarCode
+                                 LEFT JOIN ObjectLink AS ObjectLink_BarCode_Goods
+                                                      ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
+                                                     AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
+                                 LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = ObjectLink_BarCode_Goods.ChildObjectId
+                                 
+                                 LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
+                                                      ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
+                                                     AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
+                                 LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId           
+
+
+                             WHERE Object_BarCode.DescId = zc_Object_BarCode()
+                               AND Object_BarCode.isErased = False
+                               AND Object_Object.isErased = False
+                      )
 
       , tmpGoodsMain AS (SELECT tmpMI.GoodsId
                               , COALESCE (tmpGoodsSP.isSP, False)           ::Boolean AS isSP
@@ -411,6 +436,7 @@ BEGIN
                               , CASE WHEN DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData) = vbOperDate THEN TRUE ELSE FALSE END  AS isMarketToday
                               , DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData)                   ::TDateTime  AS LastPriceDate
                               , COALESCE (ObjectFloat_CountPrice.ValueData,0) ::TFloat AS CountPrice
+                              , tmpGoodsDiscount.DiscountName
                          FROM  _tmpOrderInternal_MI AS tmpMI
                                 -- получаем GoodsMainId
                                 LEFT JOIN  ObjectLink AS ObjectLink_Child
@@ -431,6 +457,8 @@ BEGIN
                                                        AND ObjectBoolean_Resolution_224.DescId = zc_ObjectBoolean_Goods_Resolution_224()
 
                                 LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = ObjectLink_Main.ChildObjectId
+                                
+                                LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsMainId = ObjectLink_Main.ChildObjectId
                          )
 
       , tmpMI AS (SELECT tmpMI.*
@@ -451,6 +479,7 @@ BEGIN
                        , tmpGoodsMain.isMarketToday       -- CURRENT_DATE
                        , tmpGoodsMain.LastPriceDate
                        , tmpGoodsMain.CountPrice
+                       , tmpGoodsMain.DiscountName
 
                   FROM  _tmpOrderInternal_MI AS tmpMI
 
@@ -897,6 +926,7 @@ BEGIN
 
            , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean        AS isDefault
 
+           , tmpMI.DiscountName
        FROM tmpMI        --_tmpOrderInternal_MI AS
             LEFT JOIN tmpOneJuridical ON tmpOneJuridical.MIMasterId = tmpMI.MovementItemId
 
@@ -1993,6 +2023,29 @@ BEGIN
                                                     AND MIFloat_PriceOptSP.DescId = zc_MIFloat_PriceOptSP()
                        )
 
+       -- Товары дисконтной программы
+       , tmpGoodsDiscount AS (SELECT 
+                                     Object_Goods_Retail.GoodsMainId
+                                             
+                                   , Object_Object.Id                AS ObjectId
+                                   , Object_Object.ValueData         AS DiscountName 
+                                   
+                               FROM Object AS Object_BarCode
+                                   LEFT JOIN ObjectLink AS ObjectLink_BarCode_Goods
+                                                        ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
+                                                       AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
+                                   LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = ObjectLink_BarCode_Goods.ChildObjectId
+                                   
+                                   LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
+                                                        ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
+                                                       AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
+                                   LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId           
+
+
+                               WHERE Object_BarCode.DescId = zc_Object_BarCode()
+                                 AND Object_BarCode.isErased = False
+                                 AND Object_Object.isErased = False
+                        )
       , tmpGoodsMain AS (SELECT tmpMI.GoodsId                                                           AS GoodsId
                               , COALESCE (tmpGoodsSP.isSP, False)                             ::Boolean AS isSP
                               , COALESCE (ObjectBoolean_Resolution_224.ValueData, False)      ::Boolean AS isResolution_224
@@ -2000,6 +2053,7 @@ BEGIN
                               , CASE WHEN DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData) = vbOperDate THEN TRUE ELSE FALSE END  AS isMarketToday
                               , DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData)          ::TDateTime AS LastPriceDate
                               , COALESCE (ObjectFloat_CountPrice.ValueData,0)               ::TFloat    AS CountPrice
+                              , tmpGoodsDiscount.DiscountName
                          FROM tmpGoodsId AS tmpMI
                                 -- получаем GoodsMainId
                                 LEFT JOIN ObjectLink AS ObjectLink_Child
@@ -2022,6 +2076,8 @@ BEGIN
                                                        AND ObjectBoolean_Resolution_224.DescId = zc_ObjectBoolean_Goods_Resolution_224()
 
                                 LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = ObjectLink_Main.ChildObjectId
+
+                                LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsMainId = ObjectLink_Main.ChildObjectId
                          )
 
       -- условия хранения
@@ -2456,6 +2512,8 @@ BEGIN
            -- , Object_Area.ValueData                         :: TVarChar    AS AreaName_Goods
 
            , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean     AS isDefault
+
+           , tmpGoodsMain.DiscountName
        FROM tmpData AS tmpMI
             LEFT JOIN tmpPriceView AS Object_Price_View ON tmpMI.GoodsId                    = Object_Price_View.GoodsId
             LEFT JOIN tmpRemains   AS Remains           ON Remains.ObjectId                 = tmpMI.GoodsId
@@ -3514,6 +3572,30 @@ BEGIN
                                                     AND MIFloat_PriceOptSP.DescId = zc_MIFloat_PriceOptSP()
                        )
 
+     -- Товары дисконтной программы
+     , tmpGoodsDiscount AS (SELECT 
+                                   Object_Goods_Retail.GoodsMainId
+                                           
+                                 , Object_Object.Id                AS ObjectId
+                                 , Object_Object.ValueData         AS DiscountName 
+                                 
+                             FROM Object AS Object_BarCode
+                                 LEFT JOIN ObjectLink AS ObjectLink_BarCode_Goods
+                                                      ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
+                                                     AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
+                                 LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = ObjectLink_BarCode_Goods.ChildObjectId
+                                 
+                                 LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
+                                                      ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
+                                                     AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
+                                 LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId           
+
+
+                             WHERE Object_BarCode.DescId = zc_Object_BarCode()
+                               AND Object_BarCode.isErased = False
+                               AND Object_Object.isErased = False
+                      )
+
       , tmpGoodsMain AS (SELECT tmpMI.GoodsId                                                           AS GoodsId
                               , COALESCE (tmpGoodsSP.isSP, False)                             ::Boolean AS isSP
                               , COALESCE (ObjectBoolean_Resolution_224.ValueData, False)      ::Boolean AS isResolution_224 
@@ -3521,6 +3603,7 @@ BEGIN
                               , CASE WHEN DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData) = vbOperDate THEN TRUE ELSE FALSE END  AS isMarketToday
                               , DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData)          ::TDateTime AS LastPriceDate
                               , COALESCE (ObjectFloat_CountPrice.ValueData,0)               ::TFloat    AS CountPrice
+                              , tmpGoodsDiscount.DiscountName
                          FROM tmpGoodsId AS tmpMI
                                 -- получаем GoodsMainId
                                 LEFT JOIN ObjectLink AS ObjectLink_Child
@@ -3543,6 +3626,8 @@ BEGIN
                                                        AND ObjectBoolean_Resolution_224.DescId = zc_ObjectBoolean_Goods_Resolution_224()
 
                                 LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = ObjectLink_Main.ChildObjectId
+
+                                LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsMainId = ObjectLink_Main.ChildObjectId
                          )
 
       -- условия хранения
@@ -3977,6 +4062,8 @@ BEGIN
            -- , Object_Area.ValueData                         :: TVarChar    AS AreaName_Goods
 
            , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean     AS isDefault
+           
+           , tmpGoodsMain.DiscountName
        FROM tmpData AS tmpMI
             LEFT JOIN tmpPriceView AS Object_Price_View ON tmpMI.GoodsId                    = Object_Price_View.GoodsId
             LEFT JOIN tmpRemains   AS Remains           ON Remains.ObjectId                 = tmpMI.GoodsId
@@ -3990,7 +4077,7 @@ BEGIN
             LEFT JOIN tmpSendSun                        ON tmpSendSun.GoodsId               = tmpMI.GoodsId
             LEFT JOIN tmpDeferred                       ON tmpDeferred.GoodsId              = tmpMI.GoodsId
             LEFT JOIN tmpReserve                        ON tmpReserve.GoodsId               = tmpMI.GoodsId
-            LEFT JOIN SelectMinPrice_AllGoods ON SelectMinPrice_AllGoods.MovementItemId = tmpMI.Id
+            LEFT JOIN SelectMinPrice_AllGoods ON SelectMinPrice_AllGoods.MovementItemId     = tmpMI.Id
 
             LEFT JOIN GoodsPromo ON GoodsPromo.JuridicalId = tmpMI.JuridicalId
                                 AND GoodsPromo.GoodsId     = tmpMI.GoodsId
@@ -4033,6 +4120,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 26.01.21                                                                    * Дисконтная программа
  12.05.20         *
  20.09.19                                                                    * Разбил на две процедуры
  24.04.19         *
@@ -4097,3 +4185,5 @@ where Movement.DescId = zc_Movement_OrderInternal()
 */
 
 -- тест select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 18820132 , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'FALSE' ,  inSession := '7564573');
+
+select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 21918961  , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');

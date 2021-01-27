@@ -221,7 +221,8 @@
             Caption = '5'
             DataBinding.FieldName = 'PercentChange'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00-,0.00; ;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '+ ,0.##;- ,0.##; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

@@ -143,6 +143,7 @@ type
     bbReportSendDefSUN: TdxBarButton;
     spSelectChild: TdsdStoredProc;
     spPUSHEVip: TdsdStoredProc;
+    DiscountName: TcxGridDBColumn;
   private
     { Private declarations }
   public

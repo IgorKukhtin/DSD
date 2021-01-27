@@ -532,12 +532,13 @@ procedure TfrmMain.StartReplica;
 const
   cStartPerlica = '—тарт репликации: StartId = %d    select %d    в пакете %d    верси€ %s';
 var
-  iStartId, iSelectRange, iPacketRange: Integer;
+  iStartId: Int64;
+  iSelectRange, iPacketRange: Integer;
 begin
-  FStartTimeReplica := Now;
+  FStartTimeReplica  := Now;
   lbAllStart.Caption := Format(cStartPointReplica, [FormatDateTime(cTimeStrShort, Now)]);
 
-  iStartId     := StrToIntDef(edtSsnMinId.Text, 0);
+  iStartId     := StrToInt64Def(edtSsnMinId.Text, 0);
   iSelectRange := seSelectRange.Value;
   iPacketRange := sePacketRange.Value;
 
@@ -1038,7 +1039,7 @@ end;
 procedure TfrmMain.btnUseMinIdClick(Sender: TObject);
 begin
   edtSsnMinId.Text   := IntToStr(FData.MinId);
-  TSettings.ReplicaLastId := 0;
+  TSettings.ReplicaLastId := '0';
 end;
 
 procedure TfrmMain.CheckReplicaMaxMin;
@@ -1251,7 +1252,7 @@ end;
 
 procedure TfrmMain.edtStartReplicaExit(Sender: TObject);
 begin
-  TSettings.ReplicaLastId := StrToIntDef(edtSsnMinId.Text, 1) - 1;
+  TSettings.ReplicaLastId := IntToStr(StrToInt64Def(edtSsnMinId.Text, 1) - 1);
 end;
 
 procedure TfrmMain.grdDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
@@ -1519,18 +1520,18 @@ end;
 procedure TfrmMain.OnTerminateCompareRecCountMS(Sender: TObject);
 var
   P: PCompareMasterSlave;
-  lwResult: LongWord;
+  iResult: Int64;
   sSQL: string;
   tmpThread: TWorkerThread;
 begin
   tmpThread := Sender as TWorkerThread;
-  lwResult := tmpThread.MyReturnValue;
+  iResult := tmpThread.MyReturnValue;
 
   dsCompareRecCount.DataSet := nil;
 
-  if lwResult > 0 then
+  if iResult > 0 then
   begin
-    P := PCompareMasterSlave(lwResult);
+    P := PCompareMasterSlave(iResult);
     try
       sSQL := P^.ResultSQL;
     finally
@@ -1563,18 +1564,18 @@ end;
 procedure TfrmMain.OnTerminateCompareSeqMS(Sender: TObject);
 var
   P: PCompareMasterSlave;
-  lwResult: LongWord;
+  iResult: Int64;
   sSQL: string;
   tmpThread: TWorkerThread;
 begin
   tmpThread := Sender as TWorkerThread;
-  lwResult := tmpThread.MyReturnValue;
+  iResult := tmpThread.MyReturnValue;
 
   dsCompareSeq.DataSet := nil;
 
-  if lwResult > 0 then
+  if iResult > 0 then
   begin
-    P := PCompareMasterSlave(lwResult);
+    P := PCompareMasterSlave(iResult);
     try
       sSQL := P^.ResultSQL;
     finally
@@ -1606,13 +1607,13 @@ end;
 
 procedure TfrmMain.OnTerminateLastId(Sender: TObject);
 var
-  lwResult: LongWord;
+  iResult: Int64;
   tmpThread: TWorkerThread;
 begin
   tmpThread := Sender as TWorkerThread;
-  lwResult := tmpThread.MyReturnValue;
+  iResult := tmpThread.MyReturnValue;
 
-  edtSsnMinId.Text := IntToStr(lwResult + 1); // стартовый Id реплики
+  edtSsnMinId.Text := IntToStr(iResult + 1); // стартовый Id реплики
 
   btnStartReplication.Enabled         := True;
   btnMoveProcsToSlave.Enabled         := True;
@@ -1627,15 +1628,15 @@ procedure TfrmMain.OnTerminateMinMaxId(Sender: TObject);
 var
   P: PMinMaxId;
   iStart: Int64;
-  lwResult: LongWord;
+  iResult: Int64;
   tmpThread: TWorkerThread;
 begin
   tmpThread := Sender as TWorkerThread;
-  lwResult := tmpThread.MyReturnValue;
+  iResult := tmpThread.MyReturnValue;
 
-  if lwResult > 0 then
+  if iResult > 0 then
   begin
-    P := PMinMaxId(lwResult);
+    P := PMinMaxId(iResult);
     try
       edtAllMinId.Text    := IntToStr(P^.MinId);
       edtAllMaxId.Text    := IntToStr(P^.MaxId);
@@ -1691,7 +1692,7 @@ begin
   lbAllElapsed.Caption := Format(cElapsedReplica, [Elapsed(FStartTimeReplica)]);
 
   // нужно сохранить в Ѕƒ значение LastId
-  FData.LastId := TSettings.ReplicaLastId;
+  FData.LastId := StrToInt64Def(TSettings.ReplicaLastId, 0);
 
   // старт новой репликации после успешного завершени€ текущей
   if (replicaFinish = rfComplete) and chkStartNewReplica.Checked then
@@ -1707,7 +1708,7 @@ end;
 procedure TfrmMain.OnTerminateSinglePacket(Sender: TObject);
 var
   tmpWorker: TWorkerThread;
-  iCount: Integer;
+  iCount: Int64;
 const
   cEnd = 'ќкончание выгрузки одного пакета. ¬ыполнено %d команд';
 begin

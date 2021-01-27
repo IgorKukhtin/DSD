@@ -144,10 +144,9 @@ type
     procedure InnerNewSession(const AStart: TDateTime; const AMinId, AMaxId: Int64; const ARecCount, ASessionNumber: Integer);
     procedure InnerEndSession(Sender: TObject);
     procedure InnerNeedRestart(Sender: TObject);
-  strict private
-    function GetReturnValue: Int64;
   protected
-    FReturnValue_my: Int64;
+    FReturnValue: Int64;
+  protected
     procedure InnerMsgProc(const AMsg, AFileName: string; const aUID: Cardinal; AMsgType: TLogMessageType);
     procedure MySleep(const AInterval: Cardinal);
     property Data: TdmData read FData;
@@ -161,7 +160,7 @@ type
     property OnNewSession: TOnNewSession read FOnNewSession write FOnNewSession;
     property OnEndSession: TNotifyEvent read FOnEndSession write FOnEndSession;
     property OnNeedRestart: TNotifyEvent read FOnNeedRestart write FOnNeedRestart;
-    property MyReturnValue: Int64 read GetReturnValue;
+    property MyReturnValue: Int64 read FReturnValue;
   end;
 
   TSinglePacket = class(TWorkerThread)
@@ -713,7 +712,7 @@ begin
     end;      
     
   finally
-    TSettings.ReplicaLastId := iLastId;// сохраняем в INI-файл значение Id последней успешной команды
+    TSettings.ReplicaLastId := IntToStr(iLastId);// сохраняем в INI-файл значение Id последней успешной команды
     // В конце сессии нужно сохранить значение LastId на Master и Slave.
     // На Master сохраняем реже, после cSaveInMasterAfterNSessions сессий
     if FCommandData.EOF then
@@ -901,10 +900,7 @@ begin
         // сначала перемещаемся на правую границу диапазона
         FCommandData.MoveToId(iMaxId);
         iLastId := FCommandData.Data.Id;
-        if iLastId <= High(Integer) then
-          TSettings.ReplicaLastId := iLastId// сохраняем в INI-файл значение Id последней успешной команды
-        else
-          TSettings.ReplicaLastId := -1;
+        TSettings.ReplicaLastId := IntToStr(iLastId);// сохраняем в INI-файл значение Id последней успешной команды
 
         // последовательность Id может иметь разрывы, например 48256, 48257, 48351, 48352
         // поэтому вместо iMaxId + 1 используем Next
@@ -2155,10 +2151,10 @@ begin
   inherited;
 end;
 
-function TWorkerThread.GetReturnValue: Int64;
-begin
-  Result := ReturnValue;
-end;
+//function TWorkerThread.GetReturnValue: Int64;
+//begin
+//  Result := ReturnValue;
+//end;
 
 procedure TWorkerThread.InnerChangeStartId(const ANewStartId: Int64);
 begin
@@ -2230,7 +2226,7 @@ procedure TReplicaThread.Execute;
 begin
   inherited;
   Data.StartReplica;
-  ReturnValue := Ord(Data.ReplicaFinished);
+  FReturnValue := Ord(Data.ReplicaFinished);
   Terminate;
 end;
 
@@ -2248,7 +2244,7 @@ begin
   P^.MinId := tmpMinMax.MinId;
   P^.MaxId := tmpMinMax.MaxId;
   P^.RecCount := tmpMinMax.RecCount;
-  ReturnValue := LongWord(P);
+  FReturnValue := LongWord(P);
   Terminate;
 end;
 
@@ -2273,7 +2269,7 @@ begin
 
   New(P);
   P^.ResultSQL := sSQL;
-  ReturnValue := LongWord(P);
+  FReturnValue := LongWord(P);
   Terminate;
 end;
 
@@ -2304,7 +2300,7 @@ begin
 
   New(P);
   P^.ResultSQL := sSQL;
-  ReturnValue := LongWord(P);
+  FReturnValue := LongWord(P);
   Terminate;
 end;
 
@@ -2332,7 +2328,7 @@ end;
 procedure TApplyScriptThread.Execute;
 begin
   inherited;
-  ReturnValue := Ord(Data.ApplyScripts(FScriptsContent, FScriptNames));
+  FReturnValue := Ord(Data.ApplyScripts(FScriptsContent, FScriptNames));
   Terminate;
 end;
 
@@ -2350,7 +2346,7 @@ end;
 procedure TLastIdThread.Execute;
 begin
   inherited;
-  ReturnValue := Data.LastId;
+  FReturnValue := Data.LastId;
   Terminate;
 end;
 

@@ -4,7 +4,7 @@ inherited OrderInternalForm: TOrderInternalForm
   ClientWidth = 1229
   AddOnFormData.PUSHMessage = actPUSHInfo
   ExplicitWidth = 1245
-  ExplicitHeight = 567
+  ExplicitHeight = 568
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -838,6 +838,14 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 50
           end
+          object DiscountName: TcxGridDBColumn
+            Caption = #1044#1080#1089#1082#1086#1085#1090#1085#1072#1103' '#1087#1088#1086#1075#1088#1072#1084#1084#1072
+            DataBinding.FieldName = 'DiscountName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 88
+          end
         end
       end
       object cxGrid1: TcxGrid
@@ -1303,7 +1311,7 @@ inherited OrderInternalForm: TOrderInternalForm
         end
         item
           Name = 'isSendDefSUN'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1565,7 +1573,7 @@ inherited OrderInternalForm: TOrderInternalForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = Null
           Component = edOperDate
           DataType = ftDateTime
           ParamType = ptInput
@@ -1573,7 +1581,7 @@ inherited OrderInternalForm: TOrderInternalForm
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = edOperDate
           DataType = ftDateTime
           ParamType = ptInput
@@ -1753,7 +1761,7 @@ inherited OrderInternalForm: TOrderInternalForm
         end
         item
           Name = 'IsDetail'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1815,7 +1823,7 @@ inherited OrderInternalForm: TOrderInternalForm
       end
       item
         Name = 'inIsLink'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2497,7 +2505,7 @@ inherited OrderInternalForm: TOrderInternalForm
       end
       item
         Name = 'outPartionGoodsDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime
@@ -2642,7 +2650,9 @@ inherited OrderInternalForm: TOrderInternalForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 5
       end>
+    ShowFieldImageList = <>
     SearchAsFilter = False
+    PropertiesCellList = <>
     Left = 926
     Top = 145
   end
@@ -2890,7 +2900,7 @@ inherited OrderInternalForm: TOrderInternalForm
       end
       item
         Name = 'inIsLink'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3046,7 +3056,7 @@ inherited OrderInternalForm: TOrderInternalForm
       end
       item
         Name = 'inIsLink'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

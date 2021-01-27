@@ -96,7 +96,8 @@ BEGIN
             UnitId          Integer,
             UnitCode        Integer,
             UnitName        TVarChar,
-            Color_calc      Integer
+            Color_calc      Integer,
+            Sort            TFloat    NOT NULL DEFAULT 0
     ) ON COMMIT DROP;
 
     INSERT INTO tmpResult
@@ -216,12 +217,27 @@ BEGIN
                        ' WHERE tmpResult.UnitId = T1.UnitId';
         EXECUTE vbQueryText;
 
-        vbQueryText := 'UPDATE tmpResult SET PercentChange' || COALESCE (vbIndex, 0)::Text ||
-                       ' = CASE WHEN COALESCE (T1.CountChecks, 0) > 0 THEN 1.0 * Count' || COALESCE (vbIndex, 0)::Text ||
-                       ' * 100 / COALESCE (T1.CountChecks, 0) ELSE 0 END ' ||
-                       ' FROM (SELECT tmpData.* FROM tmpData WHERE tmpData.OperDate = '''|| zfConvert_DateShortToString(vbOperDate - INTERVAL '1 MONTH') ||''') AS T1'||
-                       ' WHERE tmpResult.UnitId = T1.UnitId';
-        EXECUTE vbQueryText;
+--        IF vbOperDate > DATE_TRUNC ('MONTH', inDateStart)
+--        THEN
+          IF vbOperDate = DATE_TRUNC ('MONTH', inDateFinal)
+          THEN
+            vbQueryText := 'UPDATE tmpResult SET PercentChange' || COALESCE (vbIndex, 0)::Text ||
+                           ' = CASE WHEN COALESCE (Count' || COALESCE (vbIndex, 0)::Text ||', 0) > 0 THEN 1.0 * (Count' || COALESCE (vbIndex, 0)::Text ||
+                           ' - COALESCE (T1.CountChecks, 0)) * 100.0 / Count' || COALESCE (vbIndex, 0)::Text || ' ELSE 0 END, ' ||
+                           ' Sort = CASE WHEN COALESCE (Count' || COALESCE (vbIndex, 0)::Text ||', 0) > 0 THEN 1.0 * (Count' || COALESCE (vbIndex, 0)::Text ||
+                           ' - COALESCE (T1.CountChecks, 0)) * 100.0 / Count' || COALESCE (vbIndex, 0)::Text || ' ELSE 0 END ' ||
+                           ' FROM (SELECT tmpData.* FROM tmpData WHERE tmpData.OperDate = '''|| zfConvert_DateShortToString(vbOperDate - INTERVAL '1 MONTH') ||''') AS T1'||
+                           ' WHERE tmpResult.UnitId = T1.UnitId';
+
+          ELSE
+            vbQueryText := 'UPDATE tmpResult SET PercentChange' || COALESCE (vbIndex, 0)::Text ||
+                           ' = CASE WHEN COALESCE (Count' || COALESCE (vbIndex, 0)::Text ||', 0) > 0 THEN 1.0 * (Count' || COALESCE (vbIndex, 0)::Text ||
+                           ' - COALESCE (T1.CountChecks, 0)) * 100.0 / Count' || COALESCE (vbIndex, 0)::Text || ' ELSE 0 END ' ||
+                           ' FROM (SELECT tmpData.* FROM tmpData WHERE tmpData.OperDate = '''|| zfConvert_DateShortToString(vbOperDate - INTERVAL '1 MONTH') ||''') AS T1'||
+                           ' WHERE tmpResult.UnitId = T1.UnitId';
+          END IF;
+          EXECUTE vbQueryText;
+--        END IF;
 
         -- Данные для размножения
         vbInc := 1;
@@ -253,18 +269,19 @@ BEGIN
                            ' WHERE tmpResult.UnitId = T1.UnitId';
             EXECUTE vbQueryText;
 
-            vbQueryText := 'UPDATE tmpResult SET PercentChange'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text ||
-                           ' = CASE WHEN COALESCE (T1.CountChecks, 0) > 0 THEN 1.0 * Count'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text ||
-                           ' * 100 / COALESCE (T1.CountChecks, 0) ELSE 0 END ' ||
-                           ' FROM (SELECT tmpData.* FROM tmpData WHERE tmpData.OperDate = '''|| zfConvert_DateShortToString(vbOperDate  - INTERVAL '1 MONTH' - (vbInc::TVArChar||' YEAR')::INTERVAL ) ||''') AS T1'||
-                           ' WHERE tmpResult.UnitId = T1.UnitId';
-            EXECUTE vbQueryText;
+--            IF vbOperDate > DATE_TRUNC ('MONTH', inDateStart)
+--            THEN
+              vbQueryText := 'UPDATE tmpResult SET PercentChange'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text ||
+                             ' = CASE WHEN Count'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text ||' > 0 THEN 1.0 * (Count'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text ||
+                             ' - COALESCE (T1.CountChecks, 0)) * 100.0 / Count'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text ||' ELSE 0 END ' ||
+                             ' FROM (SELECT tmpData.* FROM tmpData WHERE tmpData.OperDate = '''|| zfConvert_DateShortToString(vbOperDate  - INTERVAL '1 MONTH' - (vbInc::TVArChar||' YEAR')::INTERVAL ) ||''') AS T1'||
+                             ' WHERE tmpResult.UnitId = T1.UnitId';
+              EXECUTE vbQueryText;
+--            END IF;
 
             -- теперь следуюющий год
             vbInc := vbInc + 1;
         END LOOP;
-
-
 
         vbIndex := vbIndex + 1;
     END LOOP; -- финиш цикла по курсору1
@@ -308,7 +325,7 @@ BEGIN
     -- Результат
     OPEN cur4 FOR SELECT *
                   FROM tmpResult
-                  ORDER BY tmpResult.UnitName;
+                  ORDER BY Sort, tmpResult.UnitName;
     RETURN NEXT cur4;
 
 
