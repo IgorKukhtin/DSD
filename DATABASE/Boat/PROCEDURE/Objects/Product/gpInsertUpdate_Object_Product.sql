@@ -35,9 +35,10 @@ $BODY$
    DECLARE vbUserId Integer;
  --DECLARE vbCode_calc Integer;
    DECLARE vbIsInsert Boolean;
-   DECLARE vbDateStart TDateTime;
+   /*DECLARE vbDateStart TDateTime;
    DECLARE vbModelId Integer;
    DECLARE vbModelNom TVarChar;
+   */
 BEGIN
    -- проверка прав пользовател€ на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Product());
@@ -54,9 +55,9 @@ BEGIN
    inDateSale:= NULL;
 
 
-   -- 
+   -- формируетс€ в gpGet_Object_Product_CIN
    --находим сохраненную дату производства и модель, если изменили то нужно измен€ть CIN, 
-   vbDateStart := (SELECT ObjectDate_DateStart.ValueData
+   /*vbDateStart := (SELECT ObjectDate_DateStart.ValueData
                    FROM ObjectDate AS ObjectDate_DateStart
                    WHERE ObjectDate_DateStart.ObjectId = ioId
                      AND ObjectDate_DateStart.DescId = zc_ObjectDate_Product_DateStart()
@@ -68,7 +69,7 @@ BEGIN
                  );
 
 
-   IF (vbDateStart <> inDateStart) OR (vbModelId <> inModelId)
+   IF (COALESCE (vbDateStart, zc_DateStart()) <> inDateStart) OR (COALESCE (vbModelId,0) <> inModelId)
    THEN
        -- находим последний номер конкретной модели + 1
        vbModelNom := COALESCE ((SELECT LPAD ( (1 + MAX (SUBSTRING (ObjectString_CIN.ValueData, 8, 4)) :: Integer) :: TVarChar, 4, '0')
@@ -98,7 +99,7 @@ BEGIN
                    AND ObjectString_PatternCIN.DescId = zc_ObjectString_ProdModel_PatternCIN()
                  );
    END IF;
-
+   */
    -- проверка - должен быть  од
    IF COALESCE (inCode, 0) = 0 THEN
       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'ќшибка.ƒолжен быть определен <Interne Nr.>' :: TVarChar
@@ -113,6 +114,7 @@ BEGIN
                                             , inUserId        := vbUserId
                                              );
    END IF;
+     
    -- ѕроверка
    IF COALESCE (inModelId, 0) = 0
    THEN

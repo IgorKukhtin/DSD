@@ -3,7 +3,7 @@ object ProductEditForm: TProductEditForm
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1080'>'
   ClientHeight = 605
-  ClientWidth = 295
+  ClientWidth = 299
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -321,6 +321,19 @@ object ProductEditForm: TProductEditForm
     object actFormClose: TdsdFormClose
       MoveParams = <>
       PostDataSetBeforeExecute = False
+    end
+    object actGetCIN: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGetCIN
+      StoredProcList = <
+        item
+          StoredProc = spGetCIN
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -957,5 +970,60 @@ object ProductEditForm: TProductEditForm
       end>
     Left = 128
     Top = 339
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actGetCIN
+    ComponentList = <
+      item
+        Component = GuidesModel
+      end
+      item
+        Component = edDateStart
+      end>
+    Left = 248
+    Top = 8
+  end
+  object spGetCIN: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_Product_CIN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inModelId'
+        Value = ''
+        Component = GuidesModel
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateStart'
+        Value = 42160d
+        Component = edDateStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioCIN'
+        Value = ''
+        Component = edCIN
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 256
+    Top = 72
   end
 end

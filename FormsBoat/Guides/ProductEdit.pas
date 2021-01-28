@@ -74,6 +74,9 @@ type
     edClient: TcxButtonEdit;
     GuidesClient: TdsdGuides;
     edDiscountTax: TcxCurrencyEdit;
+    RefreshDispatcher: TRefreshDispatcher;
+    spGetCIN: TdsdStoredProc;
+    actGetCIN: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

@@ -98,6 +98,7 @@ type
     Diff_M: TcxGridDBColumn;
     InvNumber_Order: TcxGridDBColumn;
     cxGridDBTableViewColumn1: TcxGridDBColumn;
+    bbPrintNew: TdxBarButton;
   private
     { Private declarations }
   public
@@ -108,6 +109,5 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TReport_GoodsMI_OrderExternal_SaleForm);
-
+    RegisterClass(TReport_GoodsMI_OrderExternal_SaleForm);
 end.
