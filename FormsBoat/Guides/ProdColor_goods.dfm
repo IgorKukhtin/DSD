@@ -1,4 +1,4 @@
-object ProdColor_goodsForm: TProdColor_goodsForm
+ object ProdColor_goodsForm: TProdColor_goodsForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <Farbe+Article>'

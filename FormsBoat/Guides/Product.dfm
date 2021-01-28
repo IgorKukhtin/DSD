@@ -50,30 +50,6 @@ object ProductForm: TProductForm
           item
             Format = ',0.00'
             Kind = skSum
-          end
-          item
-            Format = ',0.00'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00'
-            Kind = skSum
             Column = EKPrice_summ
           end
           item
@@ -141,30 +117,6 @@ object ProductForm: TProductForm
             Format = ',0.####'
             Kind = skSum
             Column = Hours
-          end
-          item
-            Format = ',0.00'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00'
-            Kind = skSum
-          end
-          item
-            Format = ',0.00'
-            Kind = skSum
           end
           item
             Format = ',0.00'
@@ -1376,7 +1328,6 @@ object ProductForm: TProductForm
     Width = 8
     Height = 195
     Control = PanelProdColorItems
-    ExplicitLeft = 1188
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
