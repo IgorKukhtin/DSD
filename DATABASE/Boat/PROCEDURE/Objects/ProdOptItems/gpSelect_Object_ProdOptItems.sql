@@ -511,8 +511,8 @@ BEGIN
            -- Цена продажи
          , tmpRes.SalePrice                      :: TFloat AS SalePrice
          , tmpRes.SalePriceWVAT                  :: TFloat AS SalePriceWVAT
-         , (tmpRes.SalePrice     * tmpRes.Value) :: TFloat AS Sale_summ
-         , (tmpRes.SalePriceWVAT * tmpRes.Value) :: TFloat AS SaleWVAT_summ
+         , (tmpRes.SalePrice     * CASE WHEN tmpRes.ProdColorPatternId > 0 THEN 1 ELSE tmpRes.Value END) :: TFloat AS Sale_summ
+         , (tmpRes.SalePriceWVAT * CASE WHEN tmpRes.ProdColorPatternId > 0 THEN 1 ELSE tmpRes.Value END) :: TFloat AS SaleWVAT_summ
 
          , Object_Insert.ValueData            ::TVarChar  AS InsertName
          , ObjectDate_Insert.ValueData        ::TDateTime AS InsertDate

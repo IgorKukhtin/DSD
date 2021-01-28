@@ -55,6 +55,22 @@ BEGIN
    inDateSale:= NULL;
 
 
+   -- нельзя менять модель
+   IF vbIsInsert = FALSE AND inModelId <> (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = ioId AND OL.DescId = zc_ObjectLink_Product_Model())
+      AND EXISTS (SELECT 1 FROM ObjectLink AS ObjectLink_Product
+                             JOIN Object AS Object_ProdColorItems ON Object_ProdColorItems.Id       = ObjectLink_Product.ObjectId
+                                                                 AND Object_ProdColorItems.isErased = FALSE
+                  WHERE ObjectLink_Product.ChildObjectId = ioId
+                    AND ObjectLink_Product.DescId        = zc_ObjectLink_ProdColorItems_Product()
+                 )
+   THEN
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Заполнен <Items Boat Structure>.Нельзя менять Model.' :: TVarChar
+                                             , inProcedureName := 'gpInsertUpdate_Object_Product'    :: TVarChar
+                                             , inUserId        := vbUserId
+                                              );
+   END IF;
+
+
    -- формируется в gpGet_Object_Product_CIN
    --находим сохраненную дату производства и модель, если изменили то нужно изменять CIN, 
    /*vbDateStart := (SELECT ObjectDate_DateStart.ValueData

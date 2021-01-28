@@ -59,6 +59,21 @@ BEGIN
          -- удаление
          outIsErased:= lpSetErased_MovementItem (inMovementItemId:= inMovementItemId, inUserId:= vbUserId);
 
+                                                
+         -- Проверка, если после удаления такое состояние
+         IF zc_Enum_PromoStateKind_Main() = (SELECT MI.ObjectId
+                                             FROM MovementItem AS MI
+                                                  JOIN Object ON Object.Id = MI.ObjectId AND Object.DescId = zc_Object_PromoStateKind()
+                                             WHERE MI.MovementId = vbMovementId
+                                               AND MI.DescId     = zc_MI_Message()
+                                               AND MI.isErased   = FALSE
+                                             ORDER BY MI.Id DESC
+                                             LIMIT 1
+                                            )
+         THEN
+             RAISE EXCEPTION 'Ошибка.Документ нельзя вернуть состояние <%>.', lfGet_Object_ValueData_sh (zc_Enum_PromoStateKind_Main());
+         END IF;
+
 
          -- если надо убрать подпись
          IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.Id = inMovementItemId AND MI.ObjectId IN (zc_Enum_PromoStateKind_Complete()))

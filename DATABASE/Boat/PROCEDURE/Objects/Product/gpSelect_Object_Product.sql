@@ -257,6 +257,7 @@ BEGIN
                              FROM tmpReceiptProdModelChild_all AS lpSelect
                                   LEFT JOIN tmpProdOptItems ON tmpProdOptItems.ProductId          = lpSelect.ProductId
                                                            AND tmpProdOptItems.ProdColorPatternId = lpSelect.ProdColorPatternId
+                                                           AND tmpProdOptItems.ProdColorPatternId > 0
 
                              WHERE -- !!!если учитываем в стоимости ВСЮ БАЗОВУЮ конфигурацию!!
                                    lpSelect.isBasicConf = TRUE
@@ -285,6 +286,7 @@ BEGIN
                              FROM tmpReceiptProdModelChild_all AS lpSelect
                                   LEFT JOIN tmpProdOptItems ON tmpProdOptItems.ProductId          = lpSelect.ProductId
                                                            AND tmpProdOptItems.ProdColorPatternId = lpSelect.ProdColorPatternId
+                                                           AND tmpProdOptItems.ProdColorPatternId > 0
                                   -- если есть такой
                                   JOIN (SELECT DISTINCT
                                                tmpProdColorItems.ProductId
@@ -320,6 +322,7 @@ BEGIN
                              FROM tmpProdOptItems AS lpSelect
                                   LEFT JOIN tmpReceiptProdModelChild_all ON tmpReceiptProdModelChild_all.ProductId          = lpSelect.ProductId
                                                                         AND tmpReceiptProdModelChild_all.ProdColorPatternId = lpSelect.ProdColorPatternId
+                                                                        AND tmpReceiptProdModelChild_all.ProdColorPatternId > 0
 
                              GROUP BY lpSelect.ProductId
                             )

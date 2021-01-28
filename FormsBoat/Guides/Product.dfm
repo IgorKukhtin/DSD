@@ -450,6 +450,54 @@ object ProductForm: TProductForm
           Options.Editing = False
           Width = 70
         end
+        object SummDiscount_total: TcxGridDBColumn
+          Caption = #1057#1091#1084#1084#1072' '#1089#1082'. ('#1080#1090#1086#1075#1086')'
+          DataBinding.FieldName = 'SummDiscount_total'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1048#1090#1086#1075#1086#1074#1072#1103' '#1089#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1074#1089#1077#1084' % '#1089#1082#1080#1076#1082#1080
+          Options.Editing = False
+          Width = 75
+        end
+        object SummDiscount1: TcxGridDBColumn
+          Caption = #1057#1091#1084#1084#1072' '#1089#1082'. (% '#1086#1089#1085'.)'
+          DataBinding.FieldName = 'SummDiscount1'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1086#1089#1085#1086#1074#1085#1086#1084#1091' % '#1089#1082#1080#1076#1082#1080
+          Options.Editing = False
+          Width = 75
+        end
+        object SummDiscount2: TcxGridDBColumn
+          Caption = #1057#1091#1084#1084#1072' '#1089#1082'. (% '#1076#1086#1087'.)'
+          DataBinding.FieldName = 'SummDiscount2'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1084#1091' % '#1089#1082#1080#1076#1082#1080
+          Options.Editing = False
+          Width = 75
+        end
+        object SummDiscount3: TcxGridDBColumn
+          Caption = #1057#1091#1084#1084#1072' '#1089#1082'. (% '#1086#1087#1094'.)'
+          DataBinding.FieldName = 'SummDiscount3'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1087#1086' % '#1089#1082#1080#1076#1082#1080' '#1074' '#1054#1087#1094#1080#1103#1093
+          Options.Editing = False
+          Width = 75
+        end
         object Hours: TcxGridDBColumn
           Caption = #1042#1088#1077#1084#1103' '#1086#1073#1089#1083#1091#1078'., '#1095'.'
           DataBinding.FieldName = 'Hours'
@@ -1052,6 +1100,8 @@ object ProductForm: TProductForm
       Color = clAqua
       ParentBackground = False
       TabOrder = 1
+      ExplicitLeft = 6
+      ExplicitTop = 1
     end
   end
   object PanelProdColorItems: TPanel

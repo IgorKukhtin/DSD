@@ -172,6 +172,10 @@ type
     EKPriceWVAT_summ_ch2: TcxGridDBColumn;
     Sale_summ_ch2: TcxGridDBColumn;
     SaleWVAT_summ_ch2: TcxGridDBColumn;
+    SummDiscount1: TcxGridDBColumn;
+    SummDiscount2: TcxGridDBColumn;
+    SummDiscount3: TcxGridDBColumn;
+    SummDiscount_total: TcxGridDBColumn;
   private
     { Private declarations }
   public

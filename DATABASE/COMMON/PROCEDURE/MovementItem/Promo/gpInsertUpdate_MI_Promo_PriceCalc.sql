@@ -192,17 +192,42 @@ BEGIN
                   AND MovementItem.DescId     = zc_MI_Master()
                   AND MovementItem.isErased   = FALSE
                )
-      -- Товары в договорах(Спецификация)
-    , tmpContractGoods AS (SELECT DISTINCT
+  -- Товары в договорах(Спецификация)
+, tmpContractGoods_all AS (SELECT DISTINCT
                                   tmpContractList.ContractId
                            FROM tmpContractList
                                 INNER JOIN ObjectLink AS ObjectLink_ContractGoods_Contract
                                                       ON ObjectLink_ContractGoods_Contract.ChildObjectId = tmpContractList.ContractId
                                                      AND ObjectLink_ContractGoods_Contract.DescId        = zc_ObjectLink_ContractGoods_Contract()
+                                INNER JOIN Object AS Object_ContractGoods ON Object_ContractGoods.Id       = ObjectLink_ContractGoods_Contract.ObjectId
+                                                                         AND Object_ContractGoods.isErased = FALSE
                                 INNER JOIN ObjectLink AS ObjectLink_ContractGoods_Goods
                                                       ON ObjectLink_ContractGoods_Goods.ObjectId = ObjectLink_ContractGoods_Contract.ObjectId
                                                      AND ObjectLink_ContractGoods_Goods.DescId   = zc_ObjectLink_ContractGoods_Goods()
                                 INNER JOIN tmpMI ON tmpMI.ObjectId = ObjectLink_ContractGoods_Goods.ChildObjectId
+                          )
+      -- договора(Спецификации) + договора(без Спецификации), если надо
+    , tmpContractGoods AS (SELECT DISTINCT
+                                  tmpContractList.ContractId
+                           FROM tmpContractList
+                                LEFT JOIN ObjectLink AS ObjectLink_ContractGoods_Contract
+                                                     ON ObjectLink_ContractGoods_Contract.ChildObjectId = tmpContractList.ContractId
+                                                    AND ObjectLink_ContractGoods_Contract.DescId        = zc_ObjectLink_ContractGoods_Contract()
+                                LEFT JOIN Object AS Object_ContractGoods ON Object_ContractGoods.Id       = ObjectLink_ContractGoods_Contract.ObjectId
+                                                                        AND Object_ContractGoods.isErased = FALSE
+                                LEFT JOIN ObjectLink AS ObjectLink_ContractGoods_Goods
+                                                     ON ObjectLink_ContractGoods_Goods.ObjectId = Object_ContractGoods.Id
+                                                    AND ObjectLink_ContractGoods_Goods.DescId   = zc_ObjectLink_ContractGoods_Goods()
+                                LEFT JOIN tmpMI ON tmpMI.ObjectId = ObjectLink_ContractGoods_Goods.ChildObjectId
+                                LEFT JOIN tmpContractGoods_all ON 1=1
+                           -- берем договора, у которых нет ограничений по товарам
+                           WHERE tmpMI.ObjectId IS NULL
+                             -- если не нашли среди тех где есть ограничение по товарам
+                             AND tmpContractGoods_all.ContractId IS NULL
+                          UNION
+                           -- если нашли среди тех где есть ограничение по товарам
+                           SELECT tmpContractGoods_all.ContractId
+                           FROM tmpContractGoods_all
                           )
     , tmpContract_res AS (SELECT DISTINCT
                                  tmpContractGroup.ContractId_master

@@ -675,7 +675,7 @@ BEGIN
                   WHEN tmpMI.MovementId_Promo <> COALESCE (tmpPromo.MovementId, 0) AND tmpMI.MovementId_Promo <> 0
                        THEN 'Œÿ»¡ ¿ ' || zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndSale)
                   WHEN COALESCE (tmpMI.MovementId_Promo, 0) <> tmpPromo.MovementId
-                       THEN 'Œÿ»¡ ¿ ' || tmpPromo.MovementPromo
+                       THEN 'Œÿ»¡ ¿ ' || tmpPromo.MovementPromo 
                   ELSE ''
               END) :: TVarChar AS MovementPromo
 
@@ -1104,9 +1104,11 @@ BEGIN
            || CASE WHEN tmpMI.MovementId_Promo = tmpPromo.MovementId
                        THEN tmpPromo.MovementPromo
                   WHEN tmpMI.MovementId_Promo <> COALESCE (tmpPromo.MovementId, 0) AND tmpMI.MovementId_Promo <> 0
-                       THEN 'Œÿ»¡ ¿ ' || zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndSale)
+                       THEN 'Œÿ»¡ ¿ (1)' || zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndSale)
+                             || '   (2)' || zfCalc_PromoMovementName (NULL, Movement_Promo_View_2.InvNumber :: TVarChar, Movement_Promo_View_2.OperDate, Movement_Promo_View_2.StartSale, Movement_Promo_View_2.EndSale)
                   WHEN COALESCE (tmpMI.MovementId_Promo, 0) <> tmpPromo.MovementId
                        THEN 'Œÿ»¡ ¿ ' || tmpPromo.MovementPromo
+                       
                   ELSE ''
               END) :: TVarChar AS MovementPromo
 
@@ -1151,6 +1153,9 @@ BEGIN
                                            AND tmpGoodsPropertyValue.GoodsKindId = tmpMI.GoodsKindId
 
             LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = tmpMI.MovementId_Promo
+            LEFT JOIN Movement_Promo_View AS Movement_Promo_View_2
+                                          ON Movement_Promo_View_2.Id = tmpPromo.MovementId
+                                         AND tmpMI.MovementId_Promo <> COALESCE (tmpPromo.MovementId, 0) AND tmpMI.MovementId_Promo <> 0
        ;
 
      END IF;
