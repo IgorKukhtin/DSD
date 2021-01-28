@@ -4,7 +4,7 @@ interface
 
 uses
   DataModul, Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
-  System.Classes, System.StrUtils,
+  System.Classes, System.StrUtils, System.IOUtils,
   Vcl.Graphics, System.DateUtils,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorBase, Vcl.ActnList, dsdAction,
   cxPropertiesStore, dsdAddOn, cxGraphics, cxControls, cxLookAndFeels,
@@ -844,7 +844,7 @@ type
     procedure Check_LoyaltySM(ASumma: Currency);
     function CheckShareFromPrice(Amount, Price: Currency; GoodsCode: Integer;
       GoodsName: string): Boolean;
-    procedure SaveHardwareData;
+    procedure SaveHardwareData(IsShowInputHardware : boolean = False);
     // Установить дисконтную программу
     procedure SetDiscountExternal(ACode : Integer = 0; ADiscountCard : String = '');
 
@@ -2214,21 +2214,48 @@ begin
   end;
 end;
 
-procedure TMainCashForm2.SaveHardwareData;
-  var Identifier : string; License : boolean;
+procedure TMainCashForm2.SaveHardwareData(IsShowInputHardware : boolean = False);
+  var Identifier : string; License : boolean; Ini: TIniFile;
 begin
 
   if gc_User.Local or (gc_User.Session = '3') then exit;
 
-  Identifier := '';
-  License := False;
-  if not InputHardwareDialog(Identifier, License) then
-    exit;
-
-  if (Trim(Identifier) = '') or (Length(Trim(Identifier)) <> 4) then
+  if FileExists(TPath.GetSharedDocumentsPath + '\FarmacyCash\HardwareData.ini') then
   begin
-    ShowMessage('Не заполнен идентификатор.');
-    Exit;
+    Ini := TIniFile.Create(TPath.GetSharedDocumentsPath + '\FarmacyCash\HardwareData.ini');
+    try
+      Identifier := Ini.ReadString('HardwareData', 'Identifier', '');
+      License := Ini.ReadBool('HardwareData', 'License', False);
+    finally
+      Ini.free;
+    end;
+
+  end else
+  begin
+    Identifier := '';
+    License := False;
+  end;
+
+  if IsShowInputHardware or (Length(Trim(Identifier)) <> 4) then
+  begin
+    if not InputHardwareDialog(Identifier, License) then
+      exit;
+
+    if (Trim(Identifier) = '') or (Length(Trim(Identifier)) <> 4) then
+    begin
+      ShowMessage('Не заполнен идентификатор.');
+      Exit;
+    end;
+
+    if not TDirectory.Exists(TPath.GetSharedDocumentsPath + '\FarmacyCash') then
+      TDirectory.CreateDirectory(TPath.GetSharedDocumentsPath + '\FarmacyCash');
+    Ini := TIniFile.Create(TPath.GetSharedDocumentsPath + '\FarmacyCash\HardwareData.ini');
+    try
+      Ini.WriteString('HardwareData', 'Identifier', Identifier);
+      Ini.WriteBool('HardwareData', 'License', License);
+    finally
+      Ini.free;
+    end;
   end;
 
   try
@@ -2411,7 +2438,7 @@ begin
           ShowPUSHMessageCash('Коллеги, обновите FCash, доступно новое обновление (Ctrl+U)!', cResult);
         end;
 
-        if UnitConfigCDS.FindField('isGetHardwareData').AsBoolean then
+        if UnitConfigCDS.FindField('isGetHardwareData').AsBoolean and (HourOf(Now) < 15) then
           SaveHardwareData;
       end;
       Inc(FUpdatePUSH);
@@ -3506,7 +3533,7 @@ end;
 
 procedure TMainCashForm2.actSaveHardwareDataExecute(Sender: TObject);
 begin
-  SaveHardwareData;
+  SaveHardwareData(True);
 end;
 
 procedure TMainCashForm2.actSelectLocalVIPCheckExecute(Sender: TObject);

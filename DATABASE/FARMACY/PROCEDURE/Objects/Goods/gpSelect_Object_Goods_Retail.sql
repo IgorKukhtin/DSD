@@ -46,6 +46,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , isExceptionUKTZED boolean
              , isPresent boolean
              , SummaWages TFloat, PercentWages TFloat, SummaWagesStore TFloat, PercentWagesStore TFloat
+             , UnitSupplementSUN1OutId Integer, UnitSupplementSUN1OutName TVarChar
               ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -344,6 +345,8 @@ BEGIN
            , Object_Goods_Retail.PercentWages                                    AS PercentWages
            , Object_Goods_Retail.SummaWagesStore                                 AS SummaWagesStore
            , Object_Goods_Retail.PercentWagesStore                               AS PercentWagesStore
+           , Object_Goods_Main.UnitSupplementSUN1OutId 
+           , Object_UnitSupplementSUN1Out.ValueData                              AS UnitSupplementSUN1OutName
 
       FROM Object_Goods_Retail
 
@@ -354,7 +357,8 @@ BEGIN
            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = Object_Goods_Main.MeasureId
            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = Object_Goods_Retail.UserInsertId
            LEFT JOIN Object AS Object_Update ON Object_Update.Id = Object_Goods_Retail.UserUpdateId
-
+           LEFT JOIN Object AS Object_UnitSupplementSUN1Out ON Object_UnitSupplementSUN1Out.Id = Object_Goods_Main.UnitSupplementSUN1OutId
+           
            LEFT JOIN tmpNDS ON tmpNDS.Id = Object_Goods_Main.NDSKindId
            LEFT JOIN Object AS Object_GoodsPairSun ON Object_GoodsPairSun.Id = Object_Goods_Retail.GoodsPairSunId
 

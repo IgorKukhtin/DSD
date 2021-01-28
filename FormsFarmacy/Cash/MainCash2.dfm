@@ -3967,6 +3967,7 @@ inherited MainCashForm2: TMainCashForm2
     object actSaveHardwareData: TAction
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1072#1087#1087#1072#1088#1072#1090#1085#1091#1102' '#1095#1072#1089#1090#1100' '
       Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1072#1087#1087#1072#1088#1072#1090#1085#1091#1102' '#1095#1072#1089#1090#1100' '
+      ShortCut = 16456
       OnExecute = actSaveHardwareDataExecute
     end
     object actUpdateProgram: TAction

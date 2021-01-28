@@ -65,7 +65,7 @@ BEGIN
      -- все Товары для схемы SUN Supplement
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpGoods_SUN_Supplement'))
      THEN
-       CREATE TEMP TABLE _tmpGoods_SUN_Supplement   (GoodsId Integer, KoeffSUN TFloat) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpGoods_SUN_Supplement   (GoodsId Integer, KoeffSUN TFloat, UnitOutId Integer) ON COMMIT DROP;
      END IF;
 
      -- все Подразделения для схемы SUN Supplement
@@ -217,8 +217,10 @@ BEGIN
      ;
 
      -- все Товары для схемы SUN Supplement
-     INSERT INTO _tmpGoods_SUN_Supplement (GoodsId, KoeffSUN)
-        SELECT Object_Goods_Retail.ID, Object_Goods_Retail.KoeffSUN_Supplementv1
+     INSERT INTO _tmpGoods_SUN_Supplement (GoodsId, KoeffSUN, UnitOutId)
+        SELECT Object_Goods_Retail.ID
+             , Object_Goods_Retail.KoeffSUN_Supplementv1
+             , Object_Goods_Main.UnitSupplementSUN1OutId
         FROM Object_Goods_Retail
              INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
                                          AND Object_Goods_Main.isSupplementSUN1 = TRUE
@@ -482,6 +484,7 @@ BEGIN
                              END / COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)) * COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
                  END < 0
          AND _tmpUnit_SUN_Supplement.isSUN_Supplement_out = True
+         AND (COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0) = 0 OR COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0) = _tmpRemains_all_Supplement.UnitId)
        ORDER BY CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
                       THEN - _tmpRemains_all_Supplement.AmountRemains
                       ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
@@ -531,6 +534,7 @@ BEGIN
                     END) > 0
                AND _tmpRemains_all_Supplement.GoodsId = vbGoodsId
                AND _tmpUnit_SUN_Supplement.isSUN_Supplement_in = True
+               AND (COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0) = 0 OR COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0) <> _tmpRemains_all_Supplement.UnitId)
              ORDER BY (CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
                             THEN - _tmpRemains_all_Supplement.AmountRemains
                             ELSE (_tmpRemains_all_Supplement.Need  -_tmpRemains_all_Supplement.AmountRemains)::Integer
@@ -647,4 +651,4 @@ $BODY$
 
 -- SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '0 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 
-select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('28.12.2020')::TDateTime ,  inSession := '3');
+-- select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('28.12.2020')::TDateTime ,  inSession := '3');

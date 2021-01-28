@@ -219,14 +219,6 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inComputerName'
-        Value = ''
-        Component = edComputerName
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inUnitId'
         Value = Null
         Component = GuidesUnit
@@ -239,6 +231,14 @@
         Value = Null
         Component = GuidesCashRegister
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComputerName'
+        Value = ''
+        Component = edComputerName
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

@@ -259,6 +259,16 @@ type
     spUpdate_SummaWagesStore: TdsdStoredProc;
     dxBarButton6: TdxBarButton;
     dxBarButton7: TdxBarButton;
+    UnitSupplementSUN1OutName: TcxGridDBColumn;
+    actSetUnitSupplementSUN1Out: TMultiAction;
+    actClearUnitSupplementSUN1Out: TMultiAction;
+    actChoiceUnitSupplementSUN1Out: TOpenChoiceForm;
+    actExecSetUnitSupplementSUN1Out: TdsdExecStoredProc;
+    actExecClearUnitSupplementSUN1Out: TdsdExecStoredProc;
+    dxBarButton8: TdxBarButton;
+    dxBarButton9: TdxBarButton;
+    spSetUnitSupplementSUN1Out: TdsdStoredProc;
+    spClearUnitSupplementSUN1Out: TdsdStoredProc;
   private
     { Private declarations }
   public

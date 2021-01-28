@@ -36,6 +36,8 @@ begin
   LoadKeyboardLayout('00000409', KLF_ACTIVATE);
   HardwareDialogForm := THardwareDialogForm.Create(Screen.ActiveControl);
   try
+    HardwareDialogForm.edMaskIdentifier.Text := AIdentifier;
+    HardwareDialogForm.cbLicense.Checked := ALicense;
     Result := HardwareDialogForm.ShowModal = mrOk;
     AIdentifier := HardwareDialogForm.edMaskIdentifier.Text;
     ALicense := HardwareDialogForm.cbLicense.Checked;
