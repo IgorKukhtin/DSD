@@ -1,9 +1,12 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashRegister_HardwareData(TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashRegister_HardwareData(TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashRegister_HardwareData(TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashRegister_HardwareData(TVarChar, TVarChar, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashRegister_HardwareData(
     IN inSerial                  TVarChar,      -- Серийный номер аппарата
     IN inTaxRate                 TVarChar,      -- Налоговые ставки
+    IN inIdentifier              TVarChar,      -- Идентификатор
+    IN inisLicense               Boolean,       -- Лицензия на ПК
     IN inComputerName            TVarChar,      -- Имя компютера
     IN inBaseBoardProduct        TVarChar,      -- Материнская плата
     IN inProcessorName           TVarChar,      -- Процессор
@@ -44,7 +47,9 @@ BEGIN
     
   -- Сохранили в отчет аппаратной части
   
-  vbHardware := gpInsertUpdate_Object_Hardware_HardwareData(inComputerName      := inComputerName,
+  vbHardware := gpInsertUpdate_Object_Hardware_HardwareData(inIdentifier        := inIdentifier,
+                                                            inisLicense         := inisLicense,
+                                                            inComputerName      := inComputerName,
                                                             inBaseBoardProduct  := inBaseBoardProduct,
                                                             inProcessorName     := inProcessorName,
                                                             inDiskDriveModel    := inDiskDriveModel,
@@ -53,40 +58,42 @@ BEGIN
 
   IF COALESCE(vbId, 0) <> 0 AND
      NOT EXISTS(SELECT
-                   ObjectString_BaseBoardProduct.ValueData                   AS BaseBoardProduct
-                 , ObjectString_ProcessorName.ValueData                      AS ProcessorName
-                 , ObjectString_DiskDriveModel.ValueData                     AS DiskDriveModel
-                 , ObjectString_PhysicalMemory.ValueData                     AS PhysicalMemory
+                       ObjectString_ComputerName.ValueData                       AS ComputerName 
+                     , ObjectString_BaseBoardProduct.ValueData                   AS BaseBoardProduct
+                     , ObjectString_ProcessorName.ValueData                      AS ProcessorName
+                     , ObjectString_DiskDriveModel.ValueData                     AS DiskDriveModel
+                     , ObjectString_PhysicalMemory.ValueData                     AS PhysicalMemory
+                     , ObjectBoolean_License.ValueData                           AS isLicense
 
-             FROM Object AS Object_CashRegister
-                  
-                  LEFT JOIN ObjectString AS ObjectString_TaxRate 
-                                         ON ObjectString_TaxRate.ObjectId = Object_CashRegister.Id
-                                        AND ObjectString_TaxRate.DescId = zc_ObjectString_CashRegister_TaxRate()
+                 FROM Object AS Object_Hardware
+                      
+                      LEFT JOIN ObjectString AS ObjectString_ComputerName 
+                                             ON ObjectString_ComputerName.ObjectId = Object_Hardware.Id
+                                            AND ObjectString_ComputerName.DescId = zc_ObjectString_Hardware_ComputerName()
+                      LEFT JOIN ObjectString AS ObjectString_BaseBoardProduct 
+                                             ON ObjectString_BaseBoardProduct.ObjectId = Object_Hardware.Id
+                                            AND ObjectString_BaseBoardProduct.DescId = zc_ObjectString_Hardware_BaseBoardProduct()
+                      LEFT JOIN ObjectString AS ObjectString_ProcessorName 
+                                             ON ObjectString_ProcessorName.ObjectId = Object_Hardware.Id
+                                            AND ObjectString_ProcessorName.DescId = zc_ObjectString_Hardware_ProcessorName()
+                      LEFT JOIN ObjectString AS ObjectString_DiskDriveModel 
+                                             ON ObjectString_DiskDriveModel.ObjectId = Object_Hardware.Id
+                                            AND ObjectString_DiskDriveModel.DescId = zc_ObjectString_Hardware_DiskDriveModel()
 
-                  LEFT JOIN ObjectString AS ObjectString_ComputerName
-                                         ON ObjectString_ComputerName.ObjectId = Object_CashRegister.Id
-                                        AND ObjectString_ComputerName.DescId = zc_ObjectString_CashRegister_ComputerName()
-                  LEFT JOIN ObjectString AS ObjectString_BaseBoardProduct 
-                                         ON ObjectString_BaseBoardProduct.ObjectId = Object_CashRegister.Id
-                                        AND ObjectString_BaseBoardProduct.DescId = zc_ObjectString_CashRegister_BaseBoardProduct()
-                  LEFT JOIN ObjectString AS ObjectString_ProcessorName 
-                                         ON ObjectString_ProcessorName.ObjectId = Object_CashRegister.Id
-                                        AND ObjectString_ProcessorName.DescId = zc_ObjectString_CashRegister_ProcessorName()
-                  LEFT JOIN ObjectString AS ObjectString_DiskDriveModel 
-                                         ON ObjectString_DiskDriveModel.ObjectId = Object_CashRegister.Id
-                                        AND ObjectString_DiskDriveModel.DescId = zc_ObjectString_CashRegister_DiskDriveModel()
+                      LEFT JOIN ObjectString AS ObjectString_PhysicalMemory
+                                            ON ObjectString_PhysicalMemory.ObjectId = Object_Hardware.Id
+                                           AND ObjectString_PhysicalMemory.DescId = zc_ObjectString_Hardware_PhysicalMemory()
 
-                  LEFT JOIN ObjectString AS ObjectString_PhysicalMemory
-                                        ON ObjectString_PhysicalMemory.ObjectId = Object_CashRegister.Id
-                                       AND ObjectString_PhysicalMemory.DescId = zc_ObjectString_CashRegister_PhysicalMemory()
-                                       
-             WHERE Object_CashRegister.Id = vbId 
-               AND ((COALESCE(ObjectString_TaxRate.ValueData, '') <> COALESCE(inTaxRate, '')) OR
-                    (COALESCE(ObjectString_ComputerName.ValueData, '') <> COALESCE(inComputerName, '')) OR
-                    (COALESCE(ObjectString_ProcessorName.ValueData, '') <> COALESCE(inProcessorName, '')) OR
-                    (COALESCE(ObjectString_DiskDriveModel.ValueData , '') <> COALESCE(inDiskDriveModel, '')) OR
-                    (COALESCE(ObjectString_PhysicalMemory.ValueData , '') <> COALESCE(inPhysicalMemory, ''))))
+                      LEFT JOIN ObjectBoolean AS ObjectBoolean_License
+                                              ON ObjectBoolean_License.ObjectId = Object_Hardware.Id
+                                             AND ObjectBoolean_License.DescId = zc_ObjectBoolean_Hardware_License()
+                 WHERE Object_Hardware.Id = vbHardware 
+                   AND ((COALESCE(ObjectString_ComputerName.ValueData, '')     <> COALESCE(inComputerName, '')) OR
+                        (COALESCE(ObjectString_BaseBoardProduct.ValueData, '') <> COALESCE(inBaseBoardProduct, '')) OR
+                        (COALESCE(ObjectString_ProcessorName.ValueData, '')    <> COALESCE(inProcessorName, '')) OR
+                        (COALESCE(ObjectString_DiskDriveModel.ValueData , '')  <> COALESCE(inDiskDriveModel, '')) OR
+                        (COALESCE(ObjectString_PhysicalMemory.ValueData , '')  <> COALESCE(inPhysicalMemory, '')) OR
+                        (COALESCE(ObjectBoolean_License.ValueData , False)     <> COALESCE(inisLicense, False))))
   THEN
   
     -- сохранили связь с <Аппаратная часть с кассой>
@@ -136,13 +143,14 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_CashRegister_HardwareData(TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_CashRegister_HardwareData(TVarChar, TVarChar, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
-08.04.20                                                                      *
+ 27.01.21                                                                     *  
+ 08.04.20                                                                     *
 */
 
 -- тест

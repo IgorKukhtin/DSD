@@ -827,9 +827,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Maker_Report7() RETURNS Integer AS $
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Maker(), 'zc_ObjectBoolean_Maker_Report7', 'отправлять "отчет по оплате приходов"' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Maker_Report7');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Hardware_License() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Hardware_License'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Hardware(), 'zc_ObjectBoolean_Hardware_License', 'Лицензия на ПК' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Hardware_License');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 27.01.21                                                                                                          * zc_ObjectBoolean_Hardware_License
  04.01.21                                                                                                          * zc_ObjectBoolean_Maker_Report7
  25.12.20                                                                                                          * zc_ObjectBoolean_Unit_SUN_Supplement_in _out
  09.12.20                                                                                                          * zc_ObjectBoolean_Unit_ShareFromPrice 

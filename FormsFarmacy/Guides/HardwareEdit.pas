@@ -13,7 +13,7 @@ uses
 
 type
   THardwareEditForm = class(TAncestorEditDialogForm)
-    edName: TcxTextEdit;
+    edComputerName: TcxTextEdit;
     cxLabel1: TcxLabel;
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
@@ -35,6 +35,8 @@ type
     cxLabel8: TcxLabel;
     edIdentifier: TcxTextEdit;
     cxLabel9: TcxLabel;
+    cxPropertiesStore1: TcxPropertiesStore;
+    cxLicense: TcxCheckBox;
   private
     { Private declarations }
   public

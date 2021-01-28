@@ -8383,6 +8383,20 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inIdentifier'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisLicense'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComputerName'
         Value = Null
         DataType = ftString
@@ -8430,6 +8444,20 @@ inherited MainCashForm2: TMainCashForm2
       end>
     OutputType = otResult
     Params = <
+      item
+        Name = 'inIdentifier'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisLicense'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inComputerName'
         Value = Null

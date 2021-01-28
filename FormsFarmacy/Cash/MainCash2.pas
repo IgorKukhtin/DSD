@@ -899,7 +899,7 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog,
   LocalWorkUnit, Splash, DiscountService, UnilWin, ListDiff, ListGoods,
   PromoCodeDialog, ListDiffAddGoods, TlHelp32, EmployeeWorkLog,
   GoodsToExpirationDate, ChoiceGoodsAnalog, Helsi, RegularExpressions,
-  PUSHMessageCash, PUSHMessage, Updater,
+  PUSHMessageCash, PUSHMessage, Updater, HardwareDialog,
   EnterRecipeNumber, CheckHelsiSign, CheckHelsiSignAllUnit,
   EmployeeScheduleCash, SelectionFromDirectory,
   EnterLoyaltyNumber, Report_ImplementationPlanEmployeeCash,
@@ -2215,12 +2215,29 @@ begin
 end;
 
 procedure TMainCashForm2.SaveHardwareData;
+  var Identifier : string; License : boolean;
 begin
-  if gc_User.Local or (gc_User.Session = '3') then
+
+  if gc_User.Local or (gc_User.Session = '3') then exit;
+
+  Identifier := '';
+  License := False;
+  if not InputHardwareDialog(Identifier, License) then
     exit;
+
+  if (Trim(Identifier) = '') or (Length(Trim(Identifier)) <> 4) then
+  begin
+    ShowMessage('Не заполнен идентификатор.');
+    Exit;
+  end;
+
   try
     if Assigned(Cash) then
     begin
+      spUpdateHardwareDataCash.ParamByName('inIdentifier').Value :=
+        Identifier;
+      spUpdateHardwareDataCash.ParamByName('inisLicense').Value :=
+        License;
       spUpdateHardwareDataCash.ParamByName('inSerial').Value :=
         Cash.FiscalNumber;
       spUpdateHardwareDataCash.ParamByName('inTaxRate').Value :=
@@ -2239,6 +2256,10 @@ begin
     end
     else
     begin
+      spUpdateHardwareData.ParamByName('inIdentifier').Value :=
+        Identifier;
+      spUpdateHardwareData.ParamByName('inisLicense').Value :=
+        License;
       spUpdateHardwareData.ParamByName('inComputerName').Value :=
         GetComputerName;
       spUpdateHardwareData.ParamByName('inBaseBoardProduct').Value :=

@@ -42,9 +42,24 @@ inherited HardwareForm: THardwareForm
             Options.Editing = False
             Width = 50
           end
-          object clName: TcxGridDBColumn
+          object Identifier: TcxGridDBColumn
+            Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088
+            DataBinding.FieldName = 'Identifier'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 103
+          end
+          object isLicense: TcxGridDBColumn
+            Caption = #1051#1080#1094#1077#1085#1079#1080#1103' '#1085#1072' '#1055#1050
+            DataBinding.FieldName = 'isLicense'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
+          object ComputerName: TcxGridDBColumn
             Caption = ' '#1048#1084#1103' '#1082#1086#1084#1087#1102#1090#1077#1088#1072
-            DataBinding.FieldName = 'Name'
+            DataBinding.FieldName = 'ComputerName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -97,13 +112,6 @@ inherited HardwareForm: THardwareForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 90
-          end
-          object Identifier: TcxGridDBColumn
-            Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088
-            DataBinding.FieldName = 'Identifier'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 103
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
