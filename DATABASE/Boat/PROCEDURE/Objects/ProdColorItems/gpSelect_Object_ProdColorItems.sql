@@ -38,8 +38,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Article TVarChar
              , ProdColorName TVarChar
              , MeasureName TVarChar
-             , EKPrice TFloat, EKPriceWVAT TFloat
-             , BasisPrice TFloat, BasisPriceWVAT TFloat
+             , EKPrice TFloat, EKPriceWVAT TFloat, EKPrice_summ TFloat, EKPriceWVAT_summ TFloat
+             , BasisPrice TFloat, BasisPriceWVAT TFloat, Basis_summ TFloat, BasisWVAT_summ TFloat
               )
 AS
 $BODY$
@@ -219,6 +219,7 @@ BEGIN
                          , tmpRes_all.GoodsId
                          , tmpRes_all.ProdColorPatternId
                          , tmpProdColorPattern.GoodsId AS GoodsId_Receipt
+                         , tmpProdColorPattern.Value   AS Value_Receipt
                      FROM tmpRes_all
                           LEFT JOIN tmpProduct ON tmpProduct.Id = tmpRes_all.ProductId
                                             --AND tmpProduct.ReceiptProdModelId = tmpRes_all.ReceiptProdModelId
@@ -243,6 +244,7 @@ BEGIN
                          , tmpProdColorPattern.GoodsId
                          , tmpProdColorPattern.ProdColorPatternId
                          , tmpProdColorPattern.GoodsId AS GoodsId_Receipt
+                         , tmpProdColorPattern.Value   AS Value_Receipt
 
                     FROM tmpProdColorPattern
                          JOIN tmpProduct ON tmpProduct.Id = tmpProdColorPattern.ProductId
@@ -306,23 +308,45 @@ BEGIN
          , CASE WHEN Object_ProdColorItems.GoodsId IS NULL THEN ObjectString_ProdColorPattern_Comment.ValueData ELSE Object_ProdColor.ValueData END :: TVarChar AS ProdColorName
          , Object_Measure.ValueData                   AS MeasureName
 
-          -- Цена вх. без НДС
+           -- Цена вх. без НДС
          , ObjectFloat_EKPrice.ValueData   ::TFloat   AS EKPrice
            -- Цена вх. с НДС                
          , CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
               * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS EKPriceWVAT-- расчет входной цены с НДС, до 4 знаков
 
+           -- Сумма вх. без НДС
+         , (Object_ProdColorItems.Value_Receipt * ObjectFloat_EKPrice.ValueData)   ::TFloat   AS EKPrice_summ
+           -- Сумма вх. с НДС                
+         , (Object_ProdColorItems.Value_Receipt
+         * CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
+              * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2)))  ::TFloat AS EKPriceWVAT_summ-- расчет входной цены с НДС, до 4 знаков
+
+
           -- Цена продажи без ндс          
         , CASE WHEN vbPriceWithVAT = FALSE
                THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
                ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
-          END ::TFloat  AS BasisPrice   -- сохраненная цена - цена без НДС
+          END ::TFloat  AS BasisPrice
 
           -- Цена продажи с ндс
         , CASE WHEN vbPriceWithVAT = FALSE
                THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
                ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
           END ::TFloat  AS BasisPriceWVAT
+
+          -- Сумма продажи без ндс          
+        , (Object_ProdColorItems.Value_Receipt
+        * CASE WHEN vbPriceWithVAT = FALSE
+               THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
+               ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+          END) ::TFloat  AS Basis_summ
+
+          -- Сумма продажи с ндс
+        , (Object_ProdColorItems.Value_Receipt
+        * CASE WHEN vbPriceWithVAT = FALSE
+               THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+               ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
+          END) ::TFloat  AS BasisWVAT_summ
 
      FROM tmpRes AS Object_ProdColorItems
           LEFT JOIN ObjectString AS ObjectString_Comment
@@ -381,11 +405,11 @@ BEGIN
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
           LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
-                                ON ObjectFloat_EKPrice.ObjectId = Object_Goods.Id
+                                ON ObjectFloat_EKPrice.ObjectId = Object_ProdColorItems.GoodsId_Receipt -- Object_Goods.Id
                                AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_TaxKind
-                               ON ObjectLink_Goods_TaxKind.ObjectId = Object_Goods.Id
+                               ON ObjectLink_Goods_TaxKind.ObjectId = Object_ProdColorItems.GoodsId_Receipt -- Object_Goods.Id
                               AND ObjectLink_Goods_TaxKind.DescId = zc_ObjectLink_Goods_TaxKind()
           LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_Goods_TaxKind.ChildObjectId
 
@@ -393,7 +417,7 @@ BEGIN
                                 ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
                                AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
 
-          LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
+          LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_ProdColorItems.GoodsId_Receipt -- Object_Goods.Id
        ;
 
 END;

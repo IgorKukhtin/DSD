@@ -164,6 +164,14 @@ type
     isEnabled_ch2: TcxGridDBColumn;
     ReceiptProdModelName: TcxGridDBColumn;
     DiscountTax_ch2: TcxGridDBColumn;
+    EKPrice_summ_ch1: TcxGridDBColumn;
+    EKPriceWVAT_summ_ch1: TcxGridDBColumn;
+    Basis_summ_ch1: TcxGridDBColumn;
+    BasisWVAT_summ_ch1: TcxGridDBColumn;
+    EKPrice_summ_ch2: TcxGridDBColumn;
+    EKPriceWVAT_summ_ch2: TcxGridDBColumn;
+    Sale_summ_ch2: TcxGridDBColumn;
+    SaleWVAT_summ_ch2: TcxGridDBColumn;
   private
     { Private declarations }
   public

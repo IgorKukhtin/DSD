@@ -34,10 +34,14 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , EKPrice        TFloat
                -- Цена вх. с НДС
              , EKPriceWVAT    TFloat
+               --
+             , EKPrice_summ TFloat, EKPriceWVAT_summ TFloat
                -- Цена продажи без НДС
              , SalePrice      TFloat
                -- Цена продажи с НДС
              , SalePriceWVAT  TFloat
+               --
+             , Sale_summ TFloat, SaleWVAT_summ TFloat
 
              , InsertName TVarChar
              , InsertDate TDateTime
@@ -127,6 +131,8 @@ BEGIN
                                      -- у Goods
                                    , ObjectLink_Goods_TaxKind.ChildObjectId AS TaxKindId
 
+                                     -- Кол-во
+                                   , 1                             AS Value
                                      -- Цена вх. без НДС - Комплектующие
                                    , ObjectFloat_EKPrice.ValueData AS EKPrice
                                      -- Цена вх. с НДС - Комплектующие
@@ -198,6 +204,8 @@ BEGIN
                                      -- у опции, т.к. по нему формируется Цена продажи....
                                    , ObjectLink_TaxKind.ChildObjectId AS TaxKindId
 
+                                     -- Кол-во
+                                   , tmpProdColorPattern.Value
                                      -- Цена вх. без НДС - Комплектующие (если есть)
                                    , tmpProdColorPattern.EKPrice
                                      -- Цена вх. с НДС - Комплектующие (если есть)
@@ -261,6 +269,9 @@ BEGIN
 
                                  -- % скидки
                                , COALESCE (ObjectFloat_DiscountTax.ValueData,0) AS DiscountTax
+
+                                 -- Кол-во
+                               , COALESCE (tmpProdOptions.Value, 1) AS Value
 
                                  -- Цена вх. без НДС - Комплектующие - факт
                                , ObjectFloat_EKPrice.ValueData AS EKPrice
@@ -373,6 +384,7 @@ BEGIN
                            -- % скидки
                          , tmpProdOptItems.DiscountTax
 
+                         , tmpProdOptItems.Value
                          , tmpProdOptItems.EKPrice
                          , tmpProdOptItems.EKPriceWVAT
                          , tmpProdOptItems.SalePrice
@@ -400,6 +412,9 @@ BEGIN
 
                            -- % скидки
                          , 0     :: TFloat   AS DiscountTax
+
+                           -- Кол-во
+                         , 0     :: TFloat   AS Value
 
                            -- Цена вх. без НДС
                          , tmpProdOptions.EKPrice
@@ -489,11 +504,15 @@ BEGIN
          , tmpRes.DiscountTax    ::TFloat    AS DiscountTax
 
            -- Цена вх.
-         , tmpRes.EKPrice                  ::TFloat    AS EKPrice
-         , tmpRes.EKPriceWVAT              ::TFloat    AS EKPriceWVAT
+         , tmpRes.EKPrice                        :: TFloat AS EKPrice
+         , tmpRes.EKPriceWVAT                    :: TFloat AS EKPriceWVAT
+         , (tmpRes.EKPrice     * tmpRes.Value)   :: TFloat AS EKPrice_summ
+         , (tmpRes.EKPriceWVAT * tmpRes.Value)   :: TFloat AS EKPriceWVAT_summ
            -- Цена продажи
-         , tmpRes.SalePrice      ::TFloat    AS SalePrice
-         , tmpRes.SalePriceWVAT  ::TFloat    AS SalePriceWVAT
+         , tmpRes.SalePrice                      :: TFloat AS SalePrice
+         , tmpRes.SalePriceWVAT                  :: TFloat AS SalePriceWVAT
+         , (tmpRes.SalePrice     * tmpRes.Value) :: TFloat AS Sale_summ
+         , (tmpRes.SalePriceWVAT * tmpRes.Value) :: TFloat AS SaleWVAT_summ
 
          , Object_Insert.ValueData            ::TVarChar  AS InsertName
          , ObjectDate_Insert.ValueData        ::TDateTime AS InsertDate

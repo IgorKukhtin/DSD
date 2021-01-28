@@ -1,4 +1,4 @@
--- Function: gpSelect_Object_ReceiptProdModelChild()
+ -- Function: gpSelect_Object_ReceiptProdModelChild()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptProdModelChild (Boolean, TVarChar);
 
