@@ -435,7 +435,7 @@ BEGIN
            , tmpMI_Goods.Amount                 AS Amount
            , tmpMI_Goods.Count                  AS Count
            , tmpMI_Goods.HeadCount              AS HeadCount
-           , Object_PartionGoods.Id             AS PartionGoodsId
+           , COALESCE (tmpMIContainer.PartionGoodsId, Object_PartionGoods.Id ) AS PartionGoodsId
            , COALESCE (tmpMIContainer.PartionGoods, Object_PartionGoods.ValueData, tmpMI_Goods.PartionGoods)    :: TVarChar  AS PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
