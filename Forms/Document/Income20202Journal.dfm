@@ -1,7 +1,7 @@
-object IncomeJournalForm: TIncomeJournalForm
+object Income20202JournalForm: TIncome20202JournalForm
   Left = 0
   Top = 0
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1089#1087#1077#1094#1086#1076#1077#1078#1076#1072')>'
   ClientHeight = 492
   ClientWidth = 1240
   Color = clBtnFace
@@ -914,8 +914,8 @@ object IncomeJournalForm: TIncomeJournalForm
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
-      FormName = 'TIncomeForm'
-      FormNameParam.Value = ''
+      FormName = 'TIncome20202Form'
+      FormNameParam.Value = 'TIncome20202Form'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -977,8 +977,8 @@ object IncomeJournalForm: TIncomeJournalForm
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'TIncomeForm'
-      FormNameParam.Value = ''
+      FormName = 'TIncome20202Form'
+      FormNameParam.Value = 'TIncome20202Form'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1398,7 +1398,7 @@ object IncomeJournalForm: TIncomeJournalForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Income'
+    StoredProcName = 'gpSelect_Movement_Income20202'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -1614,7 +1614,7 @@ object IncomeJournalForm: TIncomeJournalForm
     Top = 288
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Income_Print'
+    StoredProcName = 'gpSelect_Movement_Income20202_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

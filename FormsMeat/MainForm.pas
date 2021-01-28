@@ -1243,6 +1243,8 @@ type
     miOrderSale: TMenuItem;
     actReport_SaleExternal_OrderSale: TdsdOpenForm;
     N236: TMenuItem;
+    actIncome20202: TdsdOpenForm;
+    miIncome20202: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

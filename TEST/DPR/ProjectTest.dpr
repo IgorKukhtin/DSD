@@ -1227,7 +1227,9 @@ uses
   ReestrReturnOutStartMovement in '..\..\Forms\Document\ReestrReturnOutStartMovement.pas' {ReestrReturnOutStartMovementForm: TParentForm},
   OrderSaleJournal in '..\..\Forms\Document\OrderSaleJournal.pas' {OrderSaleJournalForm: TParentForm},
   Report_SaleExternal_OrderSale in '..\..\Forms\Report\Report_SaleExternal_OrderSale.pas' {Report_SaleExternal_OrderSaleForm: TParentForm},
-  Report_SaleExternal_OrderSaleDialog in '..\..\Forms\Report\Report_SaleExternal_OrderSaleDialog.pas' {Report_SaleExternal_OrderSaleDialogForm: TParentForm};
+  Report_SaleExternal_OrderSaleDialog in '..\..\Forms\Report\Report_SaleExternal_OrderSaleDialog.pas' {Report_SaleExternal_OrderSaleDialogForm: TParentForm},
+  Income20202Journal in '..\..\Forms\Document\Income20202Journal.pas' {Income20202JournalForm: TParentForm},
+  Income20202 in '..\..\Forms\Document\Income20202.pas' {Income20202Form: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
