@@ -27,7 +27,7 @@ uses
   cxImageComboBox;
 
 type
-  TIncomeForm = class(TParentForm)
+  TIncome20202Form = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -65,11 +65,10 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     AmountPartner: TcxGridDBColumn;
-    AmountPacker: TcxGridDBColumn;
     CountForPrice: TcxGridDBColumn;
-    HeadCount: TcxGridDBColumn;
+    PartionNumEnd: TcxGridDBColumn;
     PartionGoods: TcxGridDBColumn;
-    LiveWeight: TcxGridDBColumn;
+    PartionNumStart: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
     AssetName: TcxGridDBColumn;
     bbShowAll: TdxBarButton;
@@ -99,11 +98,8 @@ type
     edContract: TcxButtonEdit;
     cxLabel10: TcxLabel;
     edPaidKind: TcxButtonEdit;
-    ContractGuides: TdsdGuides;
-    PaidKindGuides: TdsdGuides;
-    cxLabel13: TcxLabel;
-    edPacker: TcxButtonEdit;
-    PackerGuides: TdsdGuides;
+    GuidesContract: TdsdGuides;
+    GuidesPaidKind: TdsdGuides;
     SetErased: TdsdUpdateErased;
     SetUnErased: TdsdUpdateErased;
     actShowErased: TBooleanStoredProcAction;
@@ -114,7 +110,7 @@ type
     spErasedMIMaster: TdsdStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;
     IsErased: TcxGridDBColumn;
-    StatusGuides: TdsdGuides;
+    GuidesStatus: TdsdGuides;
     spChangeStatus: TdsdStoredProc;
     UnCompleteMovement: TChangeGuidesStatus;
     CompleteMovement: TChangeGuidesStatus;
@@ -131,10 +127,10 @@ type
     edCurrencyValue: TcxCurrencyEdit;
     cxLabel14: TcxLabel;
     edCurrencyDocument: TcxButtonEdit;
-    CurrencyDocumentGuides: TdsdGuides;
+    GuidesCurrencyDocument: TdsdGuides;
     cxLabel15: TcxLabel;
     edCurrencyPartner: TcxButtonEdit;
-    CurrencyPartnerGuides: TdsdGuides;
+    GuidesCurrencyPartner: TdsdGuides;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
     MovementItemProtocolOpenForm: TdsdOpenForm;
@@ -154,11 +150,9 @@ type
     AmountRemains: TcxGridDBColumn;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
-    Amount_unit: TcxGridDBColumn;
-    Amount_diff: TcxGridDBColumn;
     cxLabel25: TcxLabel;
     edInvNumberTransport: TcxButtonEdit;
-    TransportChoiceGuides: TdsdGuides;
+    GuidesTransportChoice: TdsdGuides;
     HeaderSaver2: THeaderSaver;
     spInsertUpdateMovement_Params: TdsdStoredProc;
     cxTabSheetCost: TcxTabSheet;
@@ -192,14 +186,14 @@ type
     actInvoiceJournalDetailChoiceForm: TOpenChoiceForm;
     cxLabel19: TcxLabel;
     edInvNumberInvoice: TcxButtonEdit;
-    InvoiceGuides: TdsdGuides;
+    GuidesInvoice: TdsdGuides;
     spUpdateOrder: TdsdStoredProc;
     HeaderSaver3: THeaderSaver;
     cxLabel17: TcxLabel;
     edInvNumberOrder: TcxButtonEdit;
-    OrderGuides: TdsdGuides;
+    GuidesOrder: TdsdGuides;
     edJuridicalFrom: TcxButtonEdit;
-    JuridicalFromGuides: TdsdGuides;
+    GuidesJuridicalFrom: TdsdGuides;
     InsertRecordGoods: TInsertRecord;
     bbInsertRecordGoods: TdxBarButton;
     spSelectPrintSticker: TdsdStoredProc;
@@ -223,6 +217,7 @@ type
     macOpenFormTransport: TMultiAction;
     bbOpenFormTransport: TdxBarButton;
     bbOpenFormService: TdxBarButton;
+    cbis20202: TcxCheckBox;
   private
   public
   end;
@@ -232,6 +227,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TIncomeForm);
+  RegisterClass(TIncome20202Form);
 
 end.

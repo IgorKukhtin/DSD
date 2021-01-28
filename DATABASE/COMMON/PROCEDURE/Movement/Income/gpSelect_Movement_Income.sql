@@ -130,6 +130,10 @@ BEGIN
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Income() AND Movement.StatusId = tmpStatus.StatusId
                   JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
+                  LEFT JOIN MovementBoolean AS MovementBoolean_is20202
+                                            ON MovementBoolean_is20202.MovementId = Movement.Id
+                                           AND MovementBoolean_is20202.DescId = zc_MovementBoolean_is20202()
+             WHERE COALESCE (MovementBoolean_is20202.ValueData, FALSE) = FALSE
              ) AS tmpMovement
 
             LEFT JOIN Movement ON Movement.id = tmpMovement.id

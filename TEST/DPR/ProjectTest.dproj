@@ -4216,6 +4216,18 @@
 				<Form>Report_SaleExternal_OrderSaleDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Income20202Journal.pas">
+				<Form>Income20202JournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Income20202.pas">
+				<Form>Income20202Form</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\PartionGoodsRemainsChoice.pas">
+				<Form>PartionGoodsRemainsChoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

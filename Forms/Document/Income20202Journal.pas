@@ -28,7 +28,7 @@ uses
   dsdGuides, cxButtonEdit;
 
 type
-  TIncomeJournalForm = class(TParentForm)
+  TIncome20202JournalForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -145,6 +145,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TIncomeJournalForm);
+  RegisterClass(TIncome20202JournalForm);
 
 end.

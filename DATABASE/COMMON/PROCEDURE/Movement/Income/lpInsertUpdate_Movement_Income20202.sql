@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_Movement_Income20202()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income20202 (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income20202 (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income20202(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -19,7 +19,6 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income20202(
     IN inToId                Integer   , -- Кому (в документе)
     IN inPaidKindId          Integer   , -- Виды форм оплаты 
     IN inContractId          Integer   , -- Договора
-    IN inPersonalPackerId    Integer   , -- Сотрудник (заготовитель)
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
     IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
  INOUT ioCurrencyValue       TFloat    , -- курс валюты
@@ -135,9 +134,6 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
      -- сохранили связь с <Договора>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
-
-     -- сохранили связь с <Сотрудник (заготовитель)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalPacker(), ioId, inPersonalPackerId);
 
      -- сохранили связь с <Валюта (документа)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CurrencyDocument(), ioId, inCurrencyDocumentId);

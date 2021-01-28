@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_Income20202()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income20202 (Integer, Integer, Integer, TFloat, TFloat, TFloat, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income20202 (Integer, Integer, Integer, TFloat, TFloat, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income20202(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -8,7 +8,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income20202(
     IN inGoodsId             Integer   , -- Товары
  INOUT ioAmount              TFloat    , -- Количество
  INOUT ioAmountPartner       TFloat    , -- Количество у контрагента
-    IN inAmountPacker        TFloat    , -- Количество у заготовителя                                   ---??????
     IN inIsCalcAmountPartner Boolean   , -- Признак - будет ли расчитано <Количество у контрагента>
     IN inPrice               TFloat    , -- Цена
     IN inMIId_Invoice        TFloat    , -- элемент документа Cчет               
@@ -44,7 +43,6 @@ BEGIN
                                                    , inGoodsId            := inGoodsId
                                                    , inAmount             := ioAmount
                                                    , inAmountPartner      := ioAmountPartner
-                                                   , inAmountPacker       := inAmountPacker
                                                    , inPrice              := inPrice
                                                    , inCountForPrice      := ioCountForPrice
                                                    , inPartionNumStart    := inPartionNumStart
@@ -64,9 +62,6 @@ BEGIN
                            ELSE CAST (ioAmountPartner * inPrice AS NUMERIC (16, 2))
                       END;
                       
-                      
-zc_MIFloat_PartionNumStart 
-
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

@@ -56,14 +56,14 @@ object PartionRemainsForm: TPartionRemainsForm
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 372
+        Width = 300
       end
       object PartionGoodsName: TcxGridDBColumn
         Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1086#1074
         DataBinding.FieldName = 'PartionGoodsName'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 256
+        Width = 328
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -271,6 +271,8 @@ object PartionRemainsForm: TPartionRemainsForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 216
     Top = 240
   end

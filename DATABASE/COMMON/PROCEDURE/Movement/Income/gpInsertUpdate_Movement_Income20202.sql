@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_Income20202()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income20202 (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income20202 (Integer, TVarChar, TDateTime, TDateTime, TVarChar, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income20202(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -19,7 +19,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income20202(
     IN inToId                Integer   , -- Кому (в документе)
     IN inPaidKindId          Integer   , -- Виды форм оплаты 
     IN inContractId          Integer   , -- Договора
-    IN inPersonalPackerId    Integer   , -- Сотрудник (заготовитель)
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
     IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
  INOUT ioCurrencyValue       TFloat    , -- курс валюты
@@ -46,6 +45,7 @@ BEGIN
                                              , inOperDate          := inOperDate
                                              , inOperDatePartner   := inOperDatePartner
                                              , inInvNumberPartner  := inInvNumberPartner
+                                             , inis20202           := inis20202
                                              , inPriceWithVAT      := inPriceWithVAT
                                              , inVATPercent        := inVATPercent
                                              , inChangePercent     := inChangePercent
@@ -53,7 +53,6 @@ BEGIN
                                              , inToId              := inToId
                                              , inPaidKindId        := inPaidKindId
                                              , inContractId        := inContractId
-                                             , inPersonalPackerId  := inPersonalPackerId
                                              , inCurrencyDocumentId:= inCurrencyDocumentId
                                              , inCurrencyPartnerId := inCurrencyPartnerId
                                              , ioCurrencyValue     := ioCurrencyValue

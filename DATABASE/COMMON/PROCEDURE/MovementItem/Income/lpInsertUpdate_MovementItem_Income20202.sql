@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_MovementItem_Income20202()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Income20202 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Income20202 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Income20202(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -8,7 +8,6 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Income20202(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inAmountPartner       TFloat    , -- Количество у контрагента
-    IN inAmountPacker        TFloat    , -- Количество у заготовителя
     IN inPrice               TFloat    , -- Цена
     IN inCountForPrice       TFloat    , -- Цена за количество
     IN inPartionNumStart     TFloat    , -- Начальный № для Партии товара
@@ -35,8 +34,6 @@ BEGIN
    
      -- сохранили свойство <Количество у контрагента>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), ioId, inAmountPartner);
-     -- сохранили свойство <Количество у заготовителя>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPacker(), ioId, inAmountPacker);
 
      -- сохранили свойство <Цена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);

@@ -29,15 +29,17 @@ BEGIN
                    AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model()
                  );
 
-
    IF (COALESCE (vbDateStart, zc_DateStart()) <> inDateStart) OR (COALESCE (vbModelId,0) <> inModelId)
    THEN
        -- находим последний номер конкретной модели + 1
-       vbModelNom := COALESCE ((SELECT LPAD ( (1 + MAX (SUBSTRING (ObjectString_CIN.ValueData, 8, 4)) :: Integer) :: TVarChar, 4, '0')
+       vbModelNom := COALESCE ((SELECT LPAD ( (1 + MAX ((SUBSTRING (ObjectString_CIN.ValueData, 8, 4)) :: Integer)) :: TVarChar, 4, '0')
                                 FROM ObjectLink AS ObjectLink_Model
                                      LEFT JOIN ObjectString AS ObjectString_CIN
                                                             ON ObjectString_CIN.ObjectId = ObjectLink_Model.ObjectId
                                                            AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
+                                     INNER JOIN Object AS Object_Product
+                                                       ON Object_Product.Id = ObjectLink_Model.ObjectId
+                                                      AND Object_Product.isErased = FALSE
                                 WHERE ObjectLink_Model.ChildObjectId = inModelId
                                   AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model())
                                 , '0001'
@@ -61,6 +63,14 @@ BEGIN
                  );
    END IF;
 
+   -- сохраняем модель и дату производства , что б при изменениее понимать к какому расчитан СIN
+   IF COALESCE (inId,0) <> 0
+   THEN
+      -- сохранили свойство <>
+      PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Product_Model(), inId, inModelId);
+      -- сохранили свойство <>
+      PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Product_DateStart(), inId, inDateStart);
+   END IF;
 
 END;
 $BODY$

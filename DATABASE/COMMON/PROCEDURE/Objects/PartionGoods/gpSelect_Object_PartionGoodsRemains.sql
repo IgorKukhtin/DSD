@@ -1,9 +1,9 @@
--- Function: gpSelect_Object_PartionGoods()
+-- Function: gpSelect_Object_PartionGoodsRemains()
 
 
-DROP FUNCTION IF EXISTS gpSelect_Object_PartionGoods (Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_PartionGoodsRemains (Integer, Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_PartionGoods(
+CREATE OR REPLACE FUNCTION gpSelect_Object_PartionGoodsRemains(
     IN inGoodsId      Integer   ,
     IN inUnitId       Integer   ,    
     IN inShowAll      Boolean,     
@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PartionGoods(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar 
              , OperDate TDateTime, Price TFloat
-             , GoodsId Integer, GoodsName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , StorageId Integer, StorageName TVarChar
              , UnitId Integer, UnitName TVarChar
              , Amount TFloat
@@ -52,6 +52,7 @@ BEGIN
            , ObjectFloat_Price.ValueData     AS Price
            
            , Object_Goods.Id                 AS GoodsId
+           , Object_Goods.ObjectCode         AS GoodsCode
            , Object_Goods.ValueData          AS GoodsName
 
            , Object_Storage.Id               AS StorageId
@@ -102,5 +103,5 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_Object_PartionGoods(inGoodsId := 18385 , inUnitId := 13103, inShowAll := 'True' ,  inSession := '5');
--- select * from gpSelect_Object_PartionGoods(inGoodsId := 18385 , inUnitId := 13103, inShowAll := 'False',  inSession := '5');
+-- select * from gpSelect_Object_PartionGoodsRemains(inGoodsId := 18385 , inUnitId := 13103, inShowAll := 'True' ,  inSession := '5');
+-- select * from gpSelect_Object_PartionGoodsRemains(inGoodsId := 18385 , inUnitId := 13103, inShowAll := 'False',  inSession := '5');
