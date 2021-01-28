@@ -190,11 +190,11 @@ BEGIN
 
 
    -- только при создании
-   IF inIsProdColorPattern = TRUE AND (vbIsInsert = TRUE OR NOT EXISTS (SELECT 1
-                                                                        FROM gpSelect_Object_ProdColorItems (inIsShowAll:= FALSE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
-                                                                        WHERE tmp.ProductId = ioId
-                                                                          AND tmp.ReceiptProdModelId = inReceiptProdModelId)
-                                                                        )
+   IF inIsProdColorPattern = TRUE AND (vbIsInsert = TRUE OR EXISTS (SELECT 1
+                                                                    FROM gpSelect_Object_ProdColorItems (inIsShowAll:= TRUE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
+                                                                    WHERE tmp.ProductId = ioId
+                                                                      AND COALESCE (tmp.Id, 0) = 0
+                                                                   ))
 
                                                                        /*(SELECT 1
                                                                         FROM ObjectLink AS ObjectLink_Product
@@ -218,7 +218,9 @@ BEGIN
                                                     ) 
        FROM gpSelect_Object_ProdColorItems (inIsShowAll:= TRUE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
        WHERE tmp.ProductId = ioId
-         AND tmp.ReceiptProdModelId = inReceiptProdModelId;
+         AND tmp.ReceiptProdModelId = inReceiptProdModelId
+         AND COALESCE (tmp.Id, 0) = 0
+        ;
 
    END IF;
 

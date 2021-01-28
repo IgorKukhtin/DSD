@@ -31,9 +31,13 @@ RETURNS TABLE (ModelId Integer, ModelName TVarChar
              , EKPrice_parent TFloat, EKPriceWVAT_parent TFloat
              , BasisPrice_parent TFloat, BasisPriceWVAT_parent TFloat
                --
-             , TaxKindId Integer, TaxKindValue  TFloat
+             , TaxKindId Integer, TaxKindId_opt Integer
+             , TaxKindValue TFloat, TaxKindValue_opt TFloat
+               --
              , EKPrice TFloat, EKPriceWVAT TFloat
              , BasisPrice TFloat, BasisPriceWVAT TFloat
+
+             , SalePrice_opt TFloat, SalePriceWVAT_opt TFloat
               )
 AS
 $BODY$
@@ -235,9 +239,11 @@ BEGIN
 
 
              -- Тип НДС - !!!ReceiptGooldsChild!!!
-            , COALESCE (ObjectLink_ProdOptions_TaxKind.ChildObjectId, ObjectLink_Goods_TaxKind.ChildObjectId, ObjectLink_ReceiptService_TaxKind.ChildObjectId) AS TaxKindId
+            , COALESCE (ObjectLink_Goods_TaxKind.ChildObjectId, ObjectLink_ReceiptService_TaxKind.ChildObjectId) AS TaxKindId
+            , ObjectLink_ProdOptions_TaxKind_opt.ChildObjectId                                                   AS TaxKindId_opt
              -- % НДС
-            , ObjectFloat_TaxKind_Value.ValueData AS TaxKindValue
+            , ObjectFloat_TaxKind_Value.ValueData     AS TaxKindValue
+            , ObjectFloat_TaxKind_Value_opt.ValueData AS TaxKindValue_opt
 
              -- Цена вх. без НДС
             , COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0) :: TFloat AS EKPrice
@@ -247,15 +253,27 @@ BEGIN
 
              -- Цена продажи без ндс
            , CASE WHEN vbPriceWithVAT = FALSE
-                   THEN COALESCE (ObjectFloat_SalePrice.ValueData, tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0)
-                   ELSE CAST (COALESCE (ObjectFloat_SalePrice.ValueData, tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                   THEN COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0)
+                   ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
              END ::TFloat  AS BasisPrice
 
              -- Цена продажи с ндс
            , CASE WHEN vbPriceWithVAT = FALSE
-                   THEN CAST ( COALESCE (ObjectFloat_SalePrice.ValueData, tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
-                   ELSE COALESCE (ObjectFloat_SalePrice.ValueData, tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0)
+                   THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                   ELSE COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0)
              END ::TFloat  AS BasisPriceWVAT
+
+             -- Цена продажи без ндс - ОПЦИЯ
+           , CASE WHEN vbPriceWithVAT = FALSE
+                   THEN ObjectFloat_SalePrice_opt.ValueData
+                   ELSE CAST (ObjectFloat_SalePrice_opt.ValueData * ( 1 - COALESCE (ObjectFloat_TaxKind_Value_opt.ValueData,0) / 100)  AS NUMERIC (16, 2))
+             END ::TFloat  AS SalePrice_opt
+
+             -- Цена продажи с ндс - ОПЦИЯ
+           , CASE WHEN vbPriceWithVAT = FALSE
+                   THEN CAST (ObjectFloat_SalePrice_opt.ValueData * ( 1 + COALESCE (ObjectFloat_TaxKind_Value_opt.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                   ELSE ObjectFloat_SalePrice_opt.ValueData
+             END ::TFloat  AS SalePriceWVAT_opt
 
        FROM tmpRes
             -- Boat Structure
@@ -299,12 +317,15 @@ BEGIN
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object.DescId
 
             -- Options
-            LEFT JOIN ObjectFloat AS ObjectFloat_SalePrice
-                                  ON ObjectFloat_SalePrice.ObjectId = Object_ProdOptions.Id
-                                 AND ObjectFloat_SalePrice.DescId   = zc_ObjectFloat_ProdOptions_SalePrice()
-            LEFT JOIN ObjectLink AS ObjectLink_ProdOptions_TaxKind
-                                 ON ObjectLink_ProdOptions_TaxKind.ObjectId = Object_ProdOptions.Id
-                                AND ObjectLink_ProdOptions_TaxKind.DescId   = zc_ObjectLink_ProdOptions_TaxKind()
+            LEFT JOIN ObjectFloat AS ObjectFloat_SalePrice_opt
+                                  ON ObjectFloat_SalePrice_opt.ObjectId = Object_ProdOptions.Id
+                                 AND ObjectFloat_SalePrice_opt.DescId   = zc_ObjectFloat_ProdOptions_SalePrice()
+            LEFT JOIN ObjectLink AS ObjectLink_ProdOptions_TaxKind_opt
+                                 ON ObjectLink_ProdOptions_TaxKind_opt.ObjectId = Object_ProdOptions.Id
+                                AND ObjectLink_ProdOptions_TaxKind_opt.DescId   = zc_ObjectLink_ProdOptions_TaxKind()
+            LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value_opt
+                                  ON ObjectFloat_TaxKind_Value_opt.ObjectId = ObjectLink_ProdOptions_TaxKind_opt.ChildObjectId
+                                 AND ObjectFloat_TaxKind_Value_opt.DescId   = zc_ObjectFloat_TaxKind_Value()
 
             -- цены для Работы/Услуги вход. без ндс
             LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptService_EKPrice_parent
@@ -346,7 +367,7 @@ BEGIN
                                   ON ObjectFloat_TaxKind_Value_parent.ObjectId = COALESCE (ObjectLink_Goods_TaxKind_parent.ChildObjectId, ObjectLink_ReceiptService_TaxKind_parent.ChildObjectId)
                                  AND ObjectFloat_TaxKind_Value_parent.DescId   = zc_ObjectFloat_TaxKind_Value()
             LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                  ON ObjectFloat_TaxKind_Value.ObjectId = COALESCE (ObjectLink_ProdOptions_TaxKind.ChildObjectId, ObjectLink_Goods_TaxKind.ChildObjectId, ObjectLink_ReceiptService_TaxKind.ChildObjectId)
+                                  ON ObjectFloat_TaxKind_Value.ObjectId = COALESCE (ObjectLink_Goods_TaxKind.ChildObjectId, ObjectLink_ReceiptService_TaxKind.ChildObjectId)
                                  AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()
 
             LEFT JOIN tmpPriceBasis AS tmpPriceBasis_parent ON tmpPriceBasis_parent.GoodsId = tmpRes.ObjectId_parent

@@ -14,8 +14,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , NPP Integer
              , Comment TVarChar
 
-             , ProductId Integer, ProductName TVarChar
+             , ProductId Integer, ProductCode Integer, ProductName TVarChar
              , ReceiptProdModelId Integer, ReceiptProdModelName TVarChar
+             , ReceiptProdModelChildId Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsId_Receipt Integer
              , ProdColorPatternId Integer, ProdColorPatternName TVarChar
@@ -210,8 +211,11 @@ BEGIN
                            END  :: Boolean AS isDiff
                          , TRUE :: Boolean AS isEnabled
                          , tmpRes_all.isErased
-                         , tmpRes_all.ProductId
-                         , tmpRes_all.ReceiptProdModelId
+
+                         , tmpRes_all.ProductId                        AS ProductId
+                         , tmpRes_all.ReceiptProdModelId               AS ReceiptProdModelId
+                         , tmpProdColorPattern.ReceiptProdModelChildId AS ReceiptProdModelChildId
+
                          , tmpRes_all.GoodsId
                          , tmpRes_all.ProdColorPatternId
                          , tmpProdColorPattern.GoodsId AS GoodsId_Receipt
@@ -232,11 +236,14 @@ BEGIN
                          , FALSE :: Boolean  AS isEnabled
                          , FALSE :: Boolean  AS isErased
  
-                         , tmpProduct.Id     AS ProductId
-                         , tmpProduct.ReceiptProdModelId
+                         , tmpProduct.Id                               AS ProductId
+                         , tmpProduct.ReceiptProdModelId               AS ReceiptProdModelId
+                         , tmpProdColorPattern.ReceiptProdModelChildId AS ReceiptProdModelChildId
+
                          , tmpProdColorPattern.GoodsId
                          , tmpProdColorPattern.ProdColorPatternId
                          , tmpProdColorPattern.GoodsId AS GoodsId_Receipt
+
                     FROM tmpProdColorPattern
                          JOIN tmpProduct ON tmpProduct.Id = tmpProdColorPattern.ProductId
                                       --AND tmpProduct.ModelId = tmpProdColorPattern.ModelId
@@ -258,10 +265,12 @@ BEGIN
          , ObjectString_Comment.ValueData     ::TVarChar  AS Comment
 
          , Object_Product.Id                  ::Integer   AS ProductId
+         , Object_Product.ObjectCode          ::Integer   AS ProductCode
          , Object_Product.ValueData           ::TVarChar  AS ProductName
 
-         , Object_ReceiptProdModel.Id         ::Integer   AS ReceiptProdModelId
-         , Object_ReceiptProdModel.ValueData  ::TVarChar  AS ReceiptProdModelName
+         , Object_ReceiptProdModel.Id                    :: Integer  AS ReceiptProdModelId
+         , Object_ReceiptProdModel.ValueData             :: TVarChar AS ReceiptProdModelName
+         , Object_ProdColorItems.ReceiptProdModelChildId :: Integer  AS ReceiptProdModelChildId
 
          , Object_Goods.Id           ::Integer   AS GoodsId
          , Object_Goods.ObjectCode   ::Integer   AS GoodsCode
@@ -398,4 +407,4 @@ $BODY$
 */
 
 -- тест
---  SELECT * FROM gpSelect_Object_ProdColorItems (false,false,false, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ProdColorItems (false,false,false, zfCalc_UserAdmin())
