@@ -701,6 +701,46 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             HeaderHint = #1052#1077#1085#1100#1096#1077' '#1079#1072#1103#1074#1082#1080' ('#1082#1075')'
             Width = 60
           end
+          object TotalCountDiff_B: TcxGridDBColumn
+            Caption = '> '#1079#1072#1103#1074#1082#1080' ('#1096#1090') ('#1080#1090#1086#1075#1086')'
+            DataBinding.FieldName = 'TotalCountDiff_B'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1041#1086#1083#1100#1096#1077' '#1079#1072#1103#1074#1082#1080' ('#1080#1090#1086#1075#1086')'
+            Width = 60
+          end
+          object TotalCountDiff_M: TcxGridDBColumn
+            Caption = '< '#1079#1072#1103#1074#1082#1080' ('#1096#1090') ('#1080#1090#1086#1075#1086')'
+            DataBinding.FieldName = 'TotalCountDiff_M'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1052#1077#1085#1100#1096#1077' '#1079#1072#1103#1074#1082#1080' ('#1080#1090#1086#1075#1086')'
+            Width = 60
+          end
+          object TotalWeightDiff_B: TcxGridDBColumn
+            Caption = '> '#1079#1072#1103#1074#1082#1080' ('#1082#1075') ('#1080#1090#1086#1075#1086')'
+            DataBinding.FieldName = 'TotalWeightDiff_B'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = '> '#1079#1072#1103#1074#1082#1080' ('#1082#1075') ('#1080#1090#1086#1075#1086')'
+            Width = 60
+          end
+          object TotalWeightDiff_M: TcxGridDBColumn
+            Caption = '< '#1079#1072#1103#1074#1082#1080' ('#1082#1075') ('#1080#1090#1086#1075#1086')'
+            DataBinding.FieldName = 'TotalWeightDiff_M'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1052#1077#1085#1100#1096#1077' '#1079#1072#1103#1074#1082#1080' ('#1082#1075') ('#1080#1090#1086#1075#1086')'
+            Width = 60
+          end
           object Amount_Dozakaz: TcxGridDBColumn
             DataBinding.FieldName = 'Amount_Dozakaz'
             Visible = False
@@ -714,6 +754,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             Width = 60
           end
           object AmountTax: TcxGridDBColumn
+            Caption = '% '#1086#1090#1082#1083
             DataBinding.FieldName = 'AmountTax'
             Visible = False
             VisibleForCustomization = False
@@ -1291,7 +1332,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
         end
         item
           Name = 'inIsByDoc'
-          Value = 'False'
+          Value = False
           Component = cbByDoc
           DataType = ftBoolean
           ParamType = ptInput
@@ -1471,7 +1512,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
       end
       item
         Name = 'inIsByDoc'
-        Value = 'False'
+        Value = False
         Component = cbByDoc
         DataType = ftBoolean
         ParamType = ptInput
@@ -1512,7 +1553,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbPrintNew'
         end
         item
           Visible = True
@@ -1562,6 +1603,10 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
       Category = 0
     end
     object bbPrint: TdxBarButton
+      Action = actPrint
+      Category = 0
+    end
+    object bbPrintNew: TdxBarButton
       Action = actPrint
       Category = 0
     end
