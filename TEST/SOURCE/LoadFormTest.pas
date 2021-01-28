@@ -1988,6 +1988,9 @@ end;
 
 procedure TLoadFormTest.LoadPartionGoodsChoiceFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsRemainsChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartionGoodsRemainsChoiceForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionGoodsChoiceForm');
 end;

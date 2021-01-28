@@ -94,8 +94,9 @@ BEGIN
      -- PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
      -- сохранили связь с <Место хранения> - для партии прихода на МО
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Storage(), ioId, inStorageId);
+     
      -- сохранили связь с <Партии товаров (для партии расхода если с МО)> - пока НЕ надо
-     -- PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionGoods(), ioId, inPartionGoodsId);
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionGoods(), ioId, inPartionGoodsId);
 
 
      IF inGoodsId <> 0 AND inGoodsKindId <> 0

@@ -21,7 +21,6 @@ inherited SendForm: TSendForm
       inherited cxGrid: TcxGrid
         Width = 1172
         Height = 452
-        ExplicitTop = 344
         ExplicitWidth = 1172
         ExplicitHeight = 452
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -194,6 +193,13 @@ inherited SendForm: TSendForm
           object PartionGoods: TcxGridDBColumn [6]
             Caption = #1055#1072#1088#1090#1080#1103' / '#1048#1085#1074#1077#1085#1090'.'#8470
             DataBinding.FieldName = 'PartionGoods'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPartionGoodsChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
@@ -806,8 +812,8 @@ inherited SendForm: TSendForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'PartionGoodsForm'
-      FormName = 'TPartionGoodsChoiceForm'
-      FormNameParam.Value = 'TPartionGoodsChoiceForm'
+      FormName = 'TPartionGoodsRemainsChoiceForm'
+      FormNameParam.Value = 'TPartionGoodsRemainsChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -853,7 +859,7 @@ inherited SendForm: TSendForm
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PartionGoodsName'
+          ComponentItem = 'PartionGoods'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -868,20 +874,37 @@ inherited SendForm: TSendForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'StorageName'
-          Value = Null
+          Name = 'OperDatePartion'
+          Value = 'NULL'
           Component = MasterCDS
-          ComponentItem = 'StorageName_Partion'
-          DataType = ftString
+          ComponentItem = 'PartionGoodsDate'
+          DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'OperDatePartion'
-          Value = 'NULL'
+          Name = 'Amount'
+          Value = Null
           Component = MasterCDS
-          ComponentItem = 'PartionGoodsOperDate'
-          DataType = ftDateTime
+          ComponentItem = 'AmountRemains'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -1781,6 +1804,8 @@ inherited SendForm: TSendForm
       item
         Name = 'inPartionGoodsId'
         Value = 0
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -2338,8 +2363,8 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 266
-    Top = 312
+    Left = 290
+    Top = 344
   end
   object HeaderSaver1: THeaderSaver
     IdParam.Value = Null
