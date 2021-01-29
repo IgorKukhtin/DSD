@@ -51,6 +51,8 @@ $BODY$
     
     DECLARE vbIsPrice_Pledge_25 Boolean;
 
+    DECLARE vbIsOKPO_04544524 Boolean;
+
     DECLARE vbIsLongUKTZED Boolean;
 
     DECLARE vbOperDate_Begin1 TDateTime;
@@ -104,50 +106,45 @@ BEGIN
      END IF;
 
 
-     -- isGoodsCode
-     vbIsGoodsCode:=(SELECT 1
-                     FROM Movement
-                          LEFT JOIN MovementDate AS MovementDate_OperDatePartner
-                                                 ON MovementDate_OperDatePartner.MovementId = Movement.Id
-                                                AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-                          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                       ON MovementLinkObject_To.MovementId = Movement.Id
-                                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                               ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
-                                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+     -- Ïàðàìåòðû - çàõàðäêîäèëè
+     SELECT -- ÒÎÂÀÐÈÑÒÂÎ Ç ÎÁÌÅÆÅÍÎÞ Â²ÄÏÎÂ²ÄÀËÜÍ²ÑÒÞ"ÀÐ²ÒÅÉË"
+            CASE WHEN OH_JuridicalDetails_To.OKPO = '41135005'
+                      THEN TRUE
+                      ELSE FALSE
+            END AS isGoodsCode
 
-                          INNER JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
-                                                                               ON OH_JuridicalDetails_To.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId)
-                                                                              AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_To.StartDate
-                                                                              AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_To.EndDate
-                                                                              -- ÒÎÂÀÐÈÑÒÂÎ Ç ÎÁÌÅÆÅÍÎÞ Â²ÄÏÎÂ²ÄÀËÜÍ²ÑÒÞ"ÀÐ²ÒÅÉË"
-                                                                              AND OH_JuridicalDetails_To.OKPO = '41135005'
-                     WHERE Movement.Id     = inMovementId
-                       AND Movement.DescId = zc_Movement_Sale()
-                    );
-     -- isPrice_Pledge_25
-     vbIsPrice_Pledge_25:= EXISTS (SELECT 1
-                                   FROM Movement
-                                        LEFT JOIN MovementDate AS MovementDate_OperDatePartner
-                                                               ON MovementDate_OperDatePartner.MovementId = Movement.Id
-                                                              AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-                                        LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                                     ON MovementLinkObject_To.MovementId = Movement.Id
-                                                                    AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                        LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                             ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
-                                                            AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                        INNER JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
-                                                                                             ON OH_JuridicalDetails_To.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId)
-                                                                                            AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_To.StartDate
-                                                                                            AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_To.EndDate
-                                                                                            -- ÒÎÂÀÐÈÑÒÂÎ Ç ÎÁÌÅÆÅÍÎÞ Â²ÄÏÎÂ²ÄÀËÜÍ²ÑÒÞ "ÔÓÄÊÎÌ"
-                                                                                            AND OH_JuridicalDetails_To.OKPO = '40982829'
-                                   WHERE Movement.Id     = inMovementId
-                                     AND Movement.DescId = zc_Movement_Sale()
-                                  );
+            -- ÒÎÂÀÐÈÑÒÂÎ Ç ÎÁÌÅÆÅÍÎÞ Â²ÄÏÎÂ²ÄÀËÜÍ²ÑÒÞ "ÔÓÄÊÎÌ"
+          , CASE WHEN OH_JuridicalDetails_To.OKPO = '40982829'
+                      THEN TRUE
+                      ELSE FALSE
+            END AS isPrice_Pledge_25
 
+            -- ÊÇ "ÄÔÊÑ "ÄÎÐ"
+          , CASE WHEN OH_JuridicalDetails_To.OKPO = '04544524'
+                      THEN TRUE
+                      ELSE FALSE
+            END AS isOKPO_04544524
+
+            INTO vbIsGoodsCode, vbIsPrice_Pledge_25, vbIsOKPO_04544524
+
+     FROM Movement
+          LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                 ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                       ON MovementLinkObject_To.MovementId = Movement.Id
+                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                               ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+
+          LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
+                                                              ON OH_JuridicalDetails_To.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId)
+                                                             AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_To.StartDate
+                                                             AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_To.EndDate
+     WHERE Movement.Id     = inMovementId
+       AND Movement.DescId = zc_Movement_Sale()
+     ;
 
      -- ïàðàìåòðû èç äîêóìåíòà
      SELECT Movement.OperDate
@@ -816,6 +813,9 @@ BEGIN
            , 'ì.Äí³ïðî' :: TVarChar AS CityOf                             -- Ìiñöå ñêëàäàííÿ
 
            , CASE WHEN vbContractId = 4440485 THEN TRUE ELSE FALSE END :: Boolean AS isFozzyPage2  -- äëÿ äîãîâîðà Id = 4440485(¹7183Ð(14781)) + äîï ñòðàíè÷êà
+           
+             -- ýòîìó Þð Ëèöó ïå÷àòàåòñÿ "Çà äîâ³ðåíí³ñòþ ...."
+           , vbIsOKPO_04544524 :: Boolean AS isOKPO_04544524
 
        FROM tmpMovement AS Movement
             LEFT JOIN tmpMovementLinkMovement AS MovementLinkMovement_Sale

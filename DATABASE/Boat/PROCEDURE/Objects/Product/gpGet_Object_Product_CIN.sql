@@ -64,13 +64,13 @@ BEGIN
    END IF;
 
    -- сохран€ем модель и дату производства , что б при изменениее понимать к какому расчитан —IN
-   IF COALESCE (inId,0) <> 0
+   /*IF COALESCE (inId,0) <> 0
    THEN
       -- сохранили свойство <>
       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Product_Model(), inId, inModelId);
       -- сохранили свойство <>
       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Product_DateStart(), inId, inDateStart);
-   END IF;
+   END IF;*/
 
 END;
 $BODY$
