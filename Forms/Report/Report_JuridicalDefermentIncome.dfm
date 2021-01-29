@@ -4,9 +4,8 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
   ClientWidth = 1115
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -452
   ExplicitWidth = 1131
-  ExplicitHeight = 433
+  ExplicitHeight = 432
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -308,6 +307,27 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086
+            Options.Editing = False
+            Width = 60
+          end
+          object EndDate_real: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'EndDate_real'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086' ('#1080#1085#1092'.)'
+            Options.Editing = False
+            Width = 60
+          end
+          object EndDate_term: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086' ('#1089' '#1087#1088#1086#1083#1086#1085#1075#1072#1094#1080#1077#1081')'
+            DataBinding.FieldName = 'EndDate_term'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086' ('#1089' '#1087#1088#1086#1083#1086#1085#1075#1072#1094#1080#1077#1081')'
             Options.Editing = False
             Width = 60
           end
@@ -731,6 +751,9 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintTwoWeek: TdsdPrintAction
       Category = 'DSDLib'
@@ -835,6 +858,9 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintThreeWeek: TdsdPrintAction
       Category = 'DSDLib'
@@ -939,6 +965,9 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintFourWeek: TdsdPrintAction
       Category = 'DSDLib'
@@ -1043,6 +1072,9 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintOther: TdsdPrintAction
       Category = 'DSDLib'
@@ -1147,6 +1179,9 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -1238,6 +1273,9 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081')'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -1415,6 +1453,9 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103')'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource

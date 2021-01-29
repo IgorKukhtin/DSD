@@ -1230,7 +1230,7 @@ uses
   Report_SaleExternal_OrderSaleDialog in '..\..\Forms\Report\Report_SaleExternal_OrderSaleDialog.pas' {Report_SaleExternal_OrderSaleDialogForm: TParentForm},
   Income20202Journal in '..\..\Forms\Document\Income20202Journal.pas' {Income20202JournalForm: TParentForm},
   Income20202 in '..\..\Forms\Document\Income20202.pas' {Income20202Form: TParentForm},
-  PartionGoodsRemainsChoice in '..\..\Forms\Guides\PartionGoodsRemainsChoice.pas' {PartionGoodsRemainsChoiceForm: TParentForm};
+  PartionGoods20202Choice in '..\..\Forms\Guides\PartionGoods20202Choice.pas' {PartionGoods20202ChoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

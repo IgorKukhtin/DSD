@@ -99,6 +99,9 @@ type
     bbPersonalGroupChoiceForm: TdxBarButton;
     actUpdatePersonalGroup: TdsdExecStoredProc;
     macUpdatePersonalGroup: TMultiAction;
+    actPartionGoods20202ChoiceForm: TOpenChoiceForm;
+    InsertRecord20202: TInsertRecord;
+    bbInsertRecord20202: TdxBarButton;
   private
     { Private declarations }
   public

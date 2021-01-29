@@ -6,7 +6,14 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
        , Object_Contract_InvNumber_View.InvNumber
        , Object_Contract_InvNumber_View.isErased
        , ObjectDate_Start.ValueData                  AS StartDate
-       , ObjectDate_End.ValueData                    AS EndDate
+       
+       , CASE WHEN ObjectLink_Contract_ContractTermKind.ChildObjectId = zc_Enum_ContractTermKind_Long()
+                   THEN zc_DateEnd()
+              WHEN ObjectLink_Contract_ContractTermKind.ChildObjectId = zc_Enum_ContractTermKind_Month() AND ObjectFloat_Term.ValueData > 0
+                   THEN ObjectDate_End.ValueData + ((ObjectFloat_Term.ValueData :: Integer) :: TVarChar || ' MONTH') :: INTERVAL
+              ELSE ObjectDate_End.ValueData
+         END :: TDateTime AS EndDate
+
        , CASE WHEN ObjectLink_Contract_ContractTermKind.ChildObjectId = zc_Enum_ContractTermKind_Long()
                    THEN zc_DateEnd()
               WHEN ObjectLink_Contract_ContractTermKind.ChildObjectId = zc_Enum_ContractTermKind_Month() AND ObjectFloat_Term.ValueData > 0
@@ -52,6 +59,7 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
        , COALESCE (View_ContractCondition_Value.StartDate, zc_DateStart()) AS StartDate_condition
        , COALESCE (View_ContractCondition_Value.EndDate, zc_DateEnd())     AS EndDate_condition
 
+       , ObjectDate_End.ValueData                    AS EndDate_real
   FROM Object_Contract_InvNumber_View
        LEFT JOIN Object_ContractCondition_ValueView AS View_ContractCondition_Value ON View_ContractCondition_Value.ContractId = Object_Contract_InvNumber_View.ContractId
 
@@ -104,6 +112,7 @@ ALTER TABLE Object_Contract_View  OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.01.21         * add EndDate_real
  20.05.14                                        * add InvNumber <> '-'
  20.05.14                                        * add ContractKind...
  26.04.14                                        * del ContractKeyId

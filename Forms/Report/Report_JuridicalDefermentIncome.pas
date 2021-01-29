@@ -67,7 +67,7 @@ type
     PaidKindName: TcxGridDBColumn;
     AreaName: TcxGridDBColumn;
     StartDate: TcxGridDBColumn;
-    EndDate: TcxGridDBColumn;
+    EndDate_real: TcxGridDBColumn;
     actPrintIncome: TdsdPrintAction;
     spReport_JuridicalSaleDocument: TdsdStoredProc;
     bbIncome: TdxBarButton;

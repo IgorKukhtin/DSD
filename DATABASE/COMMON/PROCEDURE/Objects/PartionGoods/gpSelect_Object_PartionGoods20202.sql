@@ -1,9 +1,10 @@
--- Function: gpSelect_Object_PartionGoodsRemains()
+-- Function: gpSelect_Object_PartionGoods20202()
 
 
 DROP FUNCTION IF EXISTS gpSelect_Object_PartionGoodsRemains (Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_PartionGoods20202 (Integer, Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_PartionGoodsRemains(
+CREATE OR REPLACE FUNCTION gpSelect_Object_PartionGoods20202(
     IN inGoodsId      Integer   ,
     IN inUnitId       Integer   ,    
     IN inShowAll      Boolean,     
@@ -24,10 +25,17 @@ BEGIN
 
      RETURN QUERY 
   
-  WITH tmpContainer_Count AS (SELECT Container.ObjectId AS GoodsId
+  WITH
+       tmpGoods AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
+                    FROM ObjectLink AS ObjectLink_Goods_InfoMoney
+                    WHERE ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                      AND ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_20202() --Спецодежда
+                    ) 
+     , tmpContainer_Count AS (SELECT Container.ObjectId AS GoodsId
                                    , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
                                    , Container.Amount
-                              FROM Container 
+                              FROM Container
+                                   INNER JOIN tmpGoods ON tmpGoods.GoodsId = Container.ObjectId
                                    LEFT JOIN ContainerLinkObject AS CLO_Unit ON CLO_Unit.ContainerId = Container.Id
                                                                             AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                                                                            -- AND CLO_Unit.ObjectId > 0
@@ -39,7 +47,7 @@ BEGIN
                                    LEFT JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = Container.Id
                                                                                     AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
                                 
-                             WHERE  (Container.ObjectId = inGoodsId OR (inGoodsId = 0 AND inUnitId > 0))
+                              WHERE (Container.ObjectId = inGoodsId OR inGoodsId = 0)
                                 AND Container.DescId = zc_Container_Count()
                                 AND ((CLO_Unit.ObjectId = inUnitId) OR (CLO_Member.ObjectId = inUnitId) OR inUnitId = 0)
                                 AND (Container.Amount > 0 OR inShowAll = False)
@@ -103,5 +111,5 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_Object_PartionGoodsRemains(inGoodsId := 18385 , inUnitId := 13103, inShowAll := 'True' ,  inSession := '5');
--- select * from gpSelect_Object_PartionGoodsRemains(inGoodsId := 18385 , inUnitId := 13103, inShowAll := 'False',  inSession := '5');
+-- select * from gpSelect_Object_PartionGoods20202(inGoodsId := 18385 , inUnitId := 13103, inShowAll := 'True' ,  inSession := '5');
+-- select * from gpSelect_Object_PartionGoods20202(inGoodsId := 18385 , inUnitId := 13103, inShowAll := 'False',  inSession := '5');

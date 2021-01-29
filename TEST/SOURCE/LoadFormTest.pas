@@ -1988,8 +1988,8 @@ end;
 
 procedure TLoadFormTest.LoadPartionGoodsChoiceFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsRemainsChoiceForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TPartionGoodsRemainsChoiceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoods20202ChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartionGoods20202ChoiceForm');
   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionGoodsChoiceForm');
@@ -2362,12 +2362,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentPaymentForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentPaymentDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentPaymentDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentIncomeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentIncomeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentIncomeDialogForm');
-
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckTaxDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckTaxDialogForm');
 

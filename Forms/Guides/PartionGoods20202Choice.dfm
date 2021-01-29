@@ -1,5 +1,5 @@
-inherited PartionGoodsRemainsChoiceForm: TPartionGoodsRemainsChoiceForm
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1086#1074' ('#1086#1089#1090#1072#1090#1082#1080')>'
+inherited PartionGoods20202ChoiceForm: TPartionGoods20202ChoiceForm
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1086#1074' ('#1089#1087#1077#1094#1086#1076#1077#1078#1076#1072')>'
   ClientHeight = 399
   ClientWidth = 853
   AddOnFormData.isAlwaysRefresh = True
@@ -318,7 +318,7 @@ inherited PartionGoodsRemainsChoiceForm: TPartionGoodsRemainsChoiceForm
     Top = 82
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_PartionGoodsRemains'
+    StoredProcName = 'gpSelect_Object_PartionGoods20202'
     Params = <
       item
         Name = 'inGoodsId'
