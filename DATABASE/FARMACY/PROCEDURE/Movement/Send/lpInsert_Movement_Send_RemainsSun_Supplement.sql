@@ -213,8 +213,33 @@ BEGIN
      -- Результат-1
      INSERT INTO _tmpGoods_Sun_exception (UnitId, GoodsId, Amount)
         SELECT tmpSUN.UnitId, tmpSUN.GoodsId, tmpSUN.Amount
-        FROM tmpSUN
-     ;
+        FROM tmpSUN;
+     
+     -- Товар из перемещения
+     IF inOperDate >= '01.02.2021'
+     THEN
+     
+       INSERT INTO _tmpGoods_SUN_Supplement (GoodsId, KoeffSUN, UnitOutId)
+       SELECT MovementItem.ObjectId
+            , Object_Goods_Retail.KoeffSUN_Supplementv1
+            , MovementLinkObject_To.ObjectId
+       FROM Movement
+
+            INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                          ON MovementLinkObject_To.MovementId = Movement.Id
+                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+
+            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                   AND MovementItem.Amount > 0
+                                   AND MovementItem.isErased = False
+                                     
+            INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItem.ObjectId
+
+       WHERE Movement.DescId = zc_Movement_Send()
+         AND Movement.InvNumber = '110120'
+         AND Movement.StatusId = zc_Enum_Status_Complete();
+       
+     END IF;
 
      -- все Товары для схемы SUN Supplement
      INSERT INTO _tmpGoods_SUN_Supplement (GoodsId, KoeffSUN, UnitOutId)
@@ -224,7 +249,9 @@ BEGIN
         FROM Object_Goods_Retail
              INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
                                          AND Object_Goods_Main.isSupplementSUN1 = TRUE
-        WHERE Object_Goods_Retail.RetailID = vbObjectId;
+             LEFT JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsId = Object_Goods_Retail.ID
+        WHERE Object_Goods_Retail.RetailID = vbObjectId
+          AND COALESCE(_tmpGoods_SUN_Supplement.GoodsId, 0) = 0;
 
      -- 1. все остатки
      --

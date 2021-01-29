@@ -63,7 +63,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , DateCheck TDateTime
              , LayoutId  Integer, LayoutName TVarChar
              , TypeSAUA TVarChar, MasterSAUA TVarChar, PercentSAUA TFloat, isSUA Boolean
-             , isShareFromPrice Boolean
+             , isShareFromPrice Boolean, isOutUKTZED_SUN1 Boolean
 ) AS
 $BODY$
 BEGIN
@@ -242,6 +242,7 @@ BEGIN
       , COALESCE (ObjectBoolean_SUA.ValueData, FALSE)     :: Boolean                     AS isSUA
 
       , COALESCE (ObjectBoolean_ShareFromPrice.ValueData, FALSE)     :: Boolean          AS isShareFromPrice
+      , COALESCE (ObjectBoolean_OutUKTZED_SUN1.ValueData, FALSE)     :: Boolean          AS isOutUKTZED_SUN1
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -550,6 +551,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_ShareFromPrice
                                 ON ObjectBoolean_ShareFromPrice.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_ShareFromPrice.DescId = zc_ObjectBoolean_Unit_ShareFromPrice()
+                               
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_OutUKTZED_SUN1
+                                ON ObjectBoolean_OutUKTZED_SUN1.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_OutUKTZED_SUN1.DescId = zc_ObjectBoolean_Unit_OutUKTZED_SUN1()
 
         LEFT JOIN ObjectDate AS ObjectDate_StartServiceNigth
                              ON ObjectDate_StartServiceNigth.ObjectId = Object_Unit.Id

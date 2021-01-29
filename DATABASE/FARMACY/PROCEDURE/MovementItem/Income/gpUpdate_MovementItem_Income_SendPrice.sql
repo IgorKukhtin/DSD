@@ -63,7 +63,8 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-       WHERE MovementLinkObject_To.ObjectId = Object_MarginCategoryLink.UnitId OR COALESCE (Object_MarginCategoryLink.UnitId, 0) = 0;
+       WHERE MovementLinkObject_To.ObjectId = Object_MarginCategoryLink.UnitId OR COALESCE (Object_MarginCategoryLink.UnitId, 0) = 0
+         AND Object_MarginCategoryLink.isErased = False;
             
      --
      SELECT CASE WHEN COALESCE (ObjectFloat_Contract_Percent.ValueData,0) <> 0 
