@@ -359,6 +359,15 @@ type
     actOpenChoiceUnitTree: TOpenChoiceForm;
     actUpdate_SunAllParam: TdsdExecStoredProc;
     dxBarButton11: TdxBarButton;
+    isOutUKTZED_SUN1: TcxGridDBColumn;
+    spUpdate_isOutUKTZED_SUN1_Yes: TdsdStoredProc;
+    spUpdate_isOutUKTZED_SUN1_No: TdsdStoredProc;
+    actUpdate_isOutUKTZED_SUN1_No: TdsdExecStoredProc;
+    actUpdate_isOutUKTZED_SUN1_Yes: TdsdExecStoredProc;
+    macUpdate_isOutUKTZED_SUN1_No: TMultiAction;
+    macUpdate_isOutUKTZED_SUN1_Yes: TMultiAction;
+    dxBarButton12: TdxBarButton;
+    dxBarButton13: TdxBarButton;
   private
     { Private declarations }
   public
