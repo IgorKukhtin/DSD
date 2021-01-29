@@ -9,7 +9,10 @@ uses
   cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Menus,
   Vcl.StdCtrls, cxButtons, cxTextEdit, Vcl.ExtCtrls, dsdGuides, dsdDB,
   cxMaskEdit, cxButtonEdit, AncestorBase, dxSkinsCore, dxSkinsDefaultPainters,
-  System.Actions;
+  System.Actions, cxStyles, cxCustomData, cxFilter, cxData, cxDataStorage,
+  cxNavigator, dxDateRanges, Data.DB, cxDBData, cxCurrencyEdit, cxGridLevel,
+  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
+  cxGrid, Datasnap.DBClient;
 
 type
   TDiscountDialogForm = class(TAncestorDialogForm)
@@ -19,6 +22,16 @@ type
     edCardNumber: TcxTextEdit;
     Label2: TLabel;
     spDiscountExternal_Search: TdsdStoredProc;
+    ListGoodsGrid: TcxGrid;
+    ListGoodsGridDBTableView: TcxGridDBTableView;
+    colGoodsCode: TcxGridDBColumn;
+    colGoodsName: TcxGridDBColumn;
+    colPrice: TcxGridDBColumn;
+    colAmount: TcxGridDBColumn;
+    ListGoodsGridLevel: TcxGridLevel;
+    spLoadRemainsDiscount: TdsdStoredProc;
+    RemainsDiscountDS: TDataSource;
+    RemainsDiscountCDS: TClientDataSet;
     procedure bbOkClick(Sender: TObject);
     procedure DiscountExternalGuidesAfterChoice(Sender: TObject);
   private
@@ -31,7 +44,7 @@ type
 
 implementation
 {$R *.dfm}
-uses DiscountService;
+uses DiscountService, CommonData;
 
 procedure TDiscountDialogForm.bbOkClick(Sender: TObject);
 var Key :Integer;
@@ -101,7 +114,15 @@ Begin
         begin
           ShowMessage ('Ошибка. По карте № <' + ADiscountCard + '> не найден проект.');
         end;
-      end else Result := ShowModal = mrOK;
+      end else
+      begin
+        if gc_User.Local then
+        begin
+          Height := Height -ListGoodsGrid.Height;
+          ListGoodsGrid.Visible := False;
+        end else spLoadRemainsDiscount.Execute;
+        Result := ShowModal = mrOK;
+      end;
 
       if Result then
       begin
@@ -122,8 +143,19 @@ end;
 
 procedure TDiscountDialogForm.DiscountExternalGuidesAfterChoice(Sender: TObject);
 begin
-  ActiveControl:= edCardNumber;
-  inherited;
+  if Sender is TForm then TForm(Sender).Close;
+  if RemainsDiscountCDS.Active then
+  begin
+    RemainsDiscountCDS.DisableControls;
+    try
+      RemainsDiscountCDS.Filtered := False;
+      RemainsDiscountCDS.Filter := 'ObjectId = ' + IntToStr(DiscountExternalGuides.Params.ParamByName('Key').Value);
+      RemainsDiscountCDS.Filtered := True;
+    finally
+      RemainsDiscountCDS.EnableControls
+    end;
+  end;
+  edCardNumber.SetFocus;
 end;
 
 End.
