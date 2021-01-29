@@ -54,7 +54,7 @@ BEGIN
 
        ioCIN := (SELECT ObjectString_PatternCIN.ValueData
                       || vbModelNom
-                      || COALESCE (LEFT (zfCalc_MonthName_English( inDateStart), 1), '')
+                      || COALESCE (LEFT (zfCalc_MonthName_ABC( inDateStart), 1), '')
                       || '0'
                       || COALESCE (RIGHT ( (EXTRACT (YEAR FROM inDateStart) ::TVarChar), 2), '')
                  FROM ObjectString AS ObjectString_PatternCIN

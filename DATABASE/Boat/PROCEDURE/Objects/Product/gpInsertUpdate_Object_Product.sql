@@ -70,10 +70,11 @@ BEGIN
                                               );
    END IF;
 
-
+/*
    -- формируетс€ в gpGet_Object_Product_CIN
    --находим сохраненную дату производства и модель, если изменили то нужно измен€ть CIN, 
-   /*vbDateStart := (SELECT ObjectDate_DateStart.ValueData
+   
+   vbDateStart := (SELECT ObjectDate_DateStart.ValueData
                    FROM ObjectDate AS ObjectDate_DateStart
                    WHERE ObjectDate_DateStart.ObjectId = ioId
                      AND ObjectDate_DateStart.DescId = zc_ObjectDate_Product_DateStart()
@@ -107,7 +108,7 @@ BEGIN
 
        inCIN := (SELECT ObjectString_PatternCIN.ValueData
                       || vbModelNom
-                      || LEFT (zfCalc_MonthName_English( inDateStart), 1)
+                      || LEFT (zfCalc_MonthName_ABC( inDateStart), 1)
                       || '0'
                       || RIGHT ( (EXTRACT (YEAR FROM inDateStart) ::TVarChar), 2)
                  FROM ObjectString AS ObjectString_PatternCIN
@@ -115,7 +116,8 @@ BEGIN
                    AND ObjectString_PatternCIN.DescId = zc_ObjectString_ProdModel_PatternCIN()
                  );
    END IF;
-   */
+*/
+   
    -- проверка - должен быть  од
    IF COALESCE (inCode, 0) = 0 THEN
       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'ќшибка.ƒолжен быть определен <Interne Nr.>' :: TVarChar
