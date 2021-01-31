@@ -20,7 +20,7 @@ RETURNS TABLE (AccountId Integer, AccountName TVarChar, JuridicalId Integer, Jur
              , PersonalName TVarChar
              , PersonalTradeName TVarChar
              , PersonalCollationName TVarChar
-             , StartDate TDateTime, EndDate TDateTime
+             , StartDate TDateTime, EndDate_real TDateTime, EndDate_term TDateTime, EndDate TVarChar
              , DebetRemains TFloat, KreditRemains TFloat
              , SaleSumm TFloat, DefermentPaymentRemains TFloat
              , SaleSumm1 TFloat, SaleSumm2 TFloat, SaleSumm3 TFloat, SaleSumm4 TFloat, SaleSumm5 TFloat
@@ -91,7 +91,7 @@ BEGIN
           , a.PersonalName
           , a.PersonalTradeName
           , a.PersonalCollationName
-          , a.StartDate, a.EndDate
+          , a.StartDate, a.EndDate_real, a.EndDate_term, a.EndDate
           , a.DebetRemains, a.KreditRemains
           , a.SaleSumm, a.DefermentPaymentRemains
           , a.SaleSumm1, a.SaleSumm2, a.SaleSumm3, a.SaleSumm4, a.SaleSumm5
@@ -127,8 +127,11 @@ BEGIN
                 , Object_PersonalTrade.PersonalName      AS PersonalTradeName
                 , Object_PersonalCollation.PersonalName  AS PersonalCollationName
                 , View_Contract.StartDate
-                , View_Contract.EndDate
-             
+                , View_Contract.EndDate_real
+                , View_Contract.EndDate_term
+                , (''|| (LPAD (EXTRACT (Day FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||LPAD (EXTRACT (Month FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||EXTRACT (YEAR FROM View_Contract.EndDate_term) :: TVarChar)
+                     || CASE WHEN View_Contract.ContractTermKindId = zc_Enum_ContractTermKind_Long() THEN '*' ELSE '' END) ::TVarChar AS EndDate
+
                 , (CASE WHEN -1 * RESULT.Remains > 0 THEN -1 * RESULT.Remains ELSE 0 END) :: TFloat AS DebetRemains
                 , (CASE WHEN -1 * RESULT.Remains > 0 THEN 0 ELSE 1 * RESULT.Remains END) :: TFloat AS KreditRemains
                 , RESULT.SaleSumm :: TFloat AS SaleSumm
@@ -389,6 +392,7 @@ ALTER FUNCTION gpReport_JuridicalDefermentIncome (TDateTime, TDateTime, Integer,
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.01.21         *
  13.09.14                                        * add inJuridicalGroupId
  07.09.14                                        * add Branch...
  24.08.14                                        * add Partner...

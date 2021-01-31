@@ -302,6 +302,13 @@ BEGIN
    -- сохранили свойство <Код поставщика>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_PartnerCode(), ioId, inPartnerCode);
 
+
+   --если не указали значение а тип пролонгации  = бессрочный ставим значение 36
+   IF inContractTermKindId =  zc_Enum_ContractTermKind_Long() AND COALESCE (inTerm,0) = 0
+   THEN
+       inTerm := 36;
+   END IF;
+   
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Contract_Term(), ioId, inTerm);
    -- сохранили свойство <>

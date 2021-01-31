@@ -4224,8 +4224,8 @@
 				<Form>Income20202Form</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\PartionGoodsRemainsChoice.pas">
-				<Form>PartionGoodsRemainsChoiceForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\PartionGoods20202Choice.pas">
+				<Form>PartionGoods20202ChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

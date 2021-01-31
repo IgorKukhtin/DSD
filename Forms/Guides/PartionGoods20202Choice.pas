@@ -1,4 +1,4 @@
-unit PartionGoodsRemainsChoice;
+unit PartionGoods20202Choice;
 
 interface
 
@@ -25,7 +25,7 @@ uses
   cxTextEdit, cxMaskEdit, cxButtonEdit, Vcl.ExtCtrls;
 
 type
-  TPartionGoodsRemainsChoiceForm = class(TAncestorEnumForm)
+  TPartionGoods20202ChoiceForm = class(TAncestorEnumForm)
     OperDate: TcxGridDBColumn;
     lPrice: TcxGridDBColumn;
     isErased: TcxGridDBColumn;
@@ -57,6 +57,6 @@ implementation
 
 initialization
 
-registerClass(TPartionGoodsRemainsChoiceForm);
+registerClass(TPartionGoods20202ChoiceForm);
 
 end.
