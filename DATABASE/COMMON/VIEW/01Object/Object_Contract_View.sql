@@ -8,18 +8,20 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
        , ObjectDate_Start.ValueData                  AS StartDate
        
        , CASE WHEN ObjectLink_Contract_ContractTermKind.ChildObjectId = zc_Enum_ContractTermKind_Long()
-                   THEN zc_DateEnd()
+                   THEN ObjectDate_End.ValueData + ((ObjectFloat_Term.ValueData :: Integer) :: TVarChar || ' MONTH') :: INTERVAL
               WHEN ObjectLink_Contract_ContractTermKind.ChildObjectId = zc_Enum_ContractTermKind_Month() AND ObjectFloat_Term.ValueData > 0
                    THEN ObjectDate_End.ValueData + ((ObjectFloat_Term.ValueData :: Integer) :: TVarChar || ' MONTH') :: INTERVAL
               ELSE ObjectDate_End.ValueData
          END :: TDateTime AS EndDate
 
        , CASE WHEN ObjectLink_Contract_ContractTermKind.ChildObjectId = zc_Enum_ContractTermKind_Long()
-                   THEN zc_DateEnd()
+                   THEN ObjectDate_End.ValueData + ((ObjectFloat_Term.ValueData :: Integer) :: TVarChar || ' MONTH') :: INTERVAL
               WHEN ObjectLink_Contract_ContractTermKind.ChildObjectId = zc_Enum_ContractTermKind_Month() AND ObjectFloat_Term.ValueData > 0
                    THEN ObjectDate_End.ValueData + ((ObjectFloat_Term.ValueData :: Integer) :: TVarChar || ' MONTH') :: INTERVAL
               ELSE ObjectDate_End.ValueData
          END :: TDateTime AS EndDate_Term
+
+       , ObjectDate_End.ValueData                    AS EndDate_real
 
        , ObjectLink_Contract_Juridical.ChildObjectId         AS JuridicalId
        , ObjectLink_Contract_JuridicalBasis.ChildObjectId    AS JuridicalBasisId
@@ -59,7 +61,6 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
        , COALESCE (View_ContractCondition_Value.StartDate, zc_DateStart()) AS StartDate_condition
        , COALESCE (View_ContractCondition_Value.EndDate, zc_DateEnd())     AS EndDate_condition
 
-       , ObjectDate_End.ValueData                    AS EndDate_real
   FROM Object_Contract_InvNumber_View
        LEFT JOIN Object_ContractCondition_ValueView AS View_ContractCondition_Value ON View_ContractCondition_Value.ContractId = Object_Contract_InvNumber_View.ContractId
 
