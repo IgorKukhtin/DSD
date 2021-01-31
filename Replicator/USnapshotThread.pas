@@ -424,6 +424,11 @@ var LastId: integer;
     A: TArray<string>;
     I: integer;
     cSQL: string;
+var tmpDate:TDateTime;
+    Hour, Min, Sec, MSec: Word;
+    StrTime:String;
+    tmpBatchTime: TDateTime;
+    FInsertPart, FValuesPart: string;
 begin
   FHadValues := false;
   QSrc := TZQuery.Create(nil);
@@ -454,6 +459,7 @@ begin
       if FIsCompositeKey then
         QSrc.SQL.Text :=
           'SELECT * FROM '+ FCurrTable + sLineBreak +
+        //' where ObjectId > ' +
           'ORDER BY '+ FKeyFields + sLineBreak +
           'LIMIT '+ IntToStr(FSnapshotBlobSelectCount) + ' OFFSET '+ IntToStr(FProcessedCount)
       else
@@ -465,7 +471,20 @@ begin
           'LIMIT '+ IntToStr(FSnapshotBlobSelectCount);
         QSrc.ParamByName('LastId').Value := LastId;
       end;
+
+      //
+      tmpDate:=NOw;
+      //
       QSrc.Open;
+      //
+      //
+      DecodeTime(now-tmpDate, Hour, Min, Sec, MSec);
+      StrTime:=IntToStr(Min)+':'+IntToStr(Sec)+':'+IntToStr(MSec);
+      DecodeTime(now, Hour, Min, Sec, MSec);
+      ProcessMessage('--- open');
+      ProcessMessage(IntToStr(Hour) + ':' + IntToStr(Min) + ':' + IntToStr(Sec) + ':' + IntToStr(MSec) + ' - open master time : ' + StrTime);
+      //
+
       if (QSrc.RecordCount = 0) then
       begin
         if FHadValues then
@@ -478,8 +497,11 @@ begin
       CheckPaused;
 
       UpdateStatus('Добавление записей на slave ..');
+
       while not Terminated and not QSrc.Eof do
       begin
+        tmpDate:=NOw;
+        //
         QDst.Close;
         for I := 0 to QDst.Params.Count - 1 do
           QDst.Params.Items[I].Value := QSrc.FieldByName(QDst.Params.Items[I].Name).Value;
@@ -491,13 +513,20 @@ begin
             QDst.FieldByName(QSrc.Fields.Fields[I].FieldName).Value := QSrc.Fields.Fields[I].Value;
           try
             QDst.Post;
+            ProcessMessage('Post');
           except on E: Exception do
             begin
               ProcessError(E.Message);
             end;
           end;
+          //
         end;
-
+        //
+        DecodeTime(now-tmpDate, Hour, Min, Sec, MSec);
+        StrTime:=IntToStr(Min)+':'+IntToStr(Sec)+':'+IntToStr(MSec);
+        DecodeTime(now, Hour, Min, Sec, MSec);
+        ProcessMessage(IntToStr(Hour) + ':' + IntToStr(Min) + ':' + IntToStr(Sec) + ':' + IntToStr(MSec) + ' - insert slave time : ' + '(' + IntToStr (FProcessedCount)+ ') : ' + StrTime);
+        //
         FProcessedCount := FProcessedCount + 1;
         UpdateProcessedCount;
 

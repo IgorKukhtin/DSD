@@ -117,8 +117,13 @@ BEGIN
                             , tmpMI_WorkProgress_in_group.GoodsId
                             , tmpMI_WorkProgress_in_group.PartionGoodsId
                      )
-         -- подразделения из группы "Участок мясного сырья", но - !!!захардкодил!!!
-       , tmpUnit_oth AS (SELECT tmpSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8439) AS tmpSelect WHERE inFromId NOT IN (951601, 981821)) -- ЦЕХ упаковки мясо + ЦЕХ шприц. мясо
+         -- подразделения из группы 
+       , tmpUnit_oth AS (-- "Участок мясного сырья", но исключения - !!!захардкодил!!!
+                         SELECT tmpSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8439) AS tmpSelect WHERE inFromId NOT IN (951601, 981821) -- ЦЕХ упаковки мясо + ЦЕХ шприц. мясо
+                        UNION
+                         -- "ЦЕХ колбаса+дел-сы"
+                         SELECT tmpSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS tmpSelect
+                         )
          -- расходы п/ф ГП в разрезе ParentId - если они ушли на "переработку"
        , tmpMI_WorkProgress_oth AS
                      (SELECT tmpMI_WorkProgress_out.ContainerId
