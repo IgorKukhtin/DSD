@@ -84,9 +84,7 @@ BEGIN
                                  WHERE ObjectDate_End.ValueData BETWEEN vbOperDate_Contract_start AND vbOperDate_Contract
                                    AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End()
                                    AND (ObjectLink_Contract_ContractTermKind.ChildObjectId IS NULL
-                                     OR (ObjectFloat_Term.ObjectId IS NULL
-                                     AND ObjectLink_Contract_ContractTermKind.ChildObjectId <> zc_Enum_ContractTermKind_Long()
-                                        )
+                                     OR ObjectFloat_Term.ObjectId IS NULL
                                        )
                                 ), 0)
 
@@ -109,9 +107,18 @@ BEGIN
                                                             ON ObjectDate_End.ObjectId = Object_Contract.Id
                                                            AND ObjectDate_End.DescId   = zc_ObjectDate_Contract_End()
                                                            AND ObjectDate_End.ValueData + ((ObjectFloat_Term.ValueData :: Integer) :: TVarChar || ' MONTH') :: INTERVAL BETWEEN vbOperDate_Contract_start AND vbOperDate_Contract
-                                 WHERE ObjectLink_Contract_ContractTermKind.ChildObjectId = zc_Enum_ContractTermKind_Month()
+                                 WHERE ObjectLink_Contract_ContractTermKind.ChildObjectId IN (zc_Enum_ContractTermKind_Month(), zc_Enum_ContractTermKind_Long())
                                    AND ObjectLink_Contract_ContractTermKind.DescId        = zc_ObjectLink_Contract_ContractTermKind()
-                                ), 0);
+                                )
+
+       , CASE WHEN ObjectLink_Contract_ContractTermKind.ChildObjectId = zc_Enum_ContractTermKind_Long()
+                   THEN ObjectDate_End.ValueData + ((ObjectFloat_Term.ValueData :: Integer) :: TVarChar || ' MONTH') :: INTERVAL
+              WHEN ObjectLink_Contract_ContractTermKind.ChildObjectId = zc_Enum_ContractTermKind_Month() AND ObjectFloat_Term.ValueData > 0
+                   THEN ObjectDate_End.ValueData + ((ObjectFloat_Term.ValueData :: Integer) :: TVarChar || ' MONTH') :: INTERVAL
+              ELSE ObjectDate_End.ValueData
+         END :: TDateTime AS EndDate_Term
+
+                                , 0);
          END IF;
      END IF;
 
