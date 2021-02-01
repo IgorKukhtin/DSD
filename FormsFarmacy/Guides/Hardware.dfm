@@ -137,6 +137,26 @@ inherited HardwareForm: THardwareForm
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'THardwareEditForm'
     end
+    inherited ProtocolOpenForm: TdsdOpenForm
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Identifier'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>

@@ -368,6 +368,11 @@ type
     macUpdate_isOutUKTZED_SUN1_Yes: TMultiAction;
     dxBarButton12: TdxBarButton;
     dxBarButton13: TdxBarButton;
+    isCheckUKTZED: TcxGridDBColumn;
+    macExecUpdate_isCheckUKTZED: TMultiAction;
+    actExecUpdate_isCheckUKTZED: TdsdExecStoredProc;
+    dxBarButton14: TdxBarButton;
+    apUpdate_isCheckUKTZED: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -835,9 +835,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_OutUKTZED_SUN1() RETURNS Intege
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_OutUKTZED_SUN1', 'Отдача УКТВЭД в СУН1' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_OutUKTZED_SUN1');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_CheckUKTZED() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_CheckUKTZED'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_CheckUKTZED', 'Запрет на печать чека, если есть позиция по УКТВЭД' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_CheckUKTZED');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 31.01.21                                                                                                          * zc_ObjectBoolean_Unit_CheckUKTZED
  29.01.21                                                                                                          * zc_ObjectBoolean_Unit_OutUKTZED_SUN1
  27.01.21                                                                                                          * zc_ObjectBoolean_Hardware_License
  04.01.21                                                                                                          * zc_ObjectBoolean_Maker_Report7

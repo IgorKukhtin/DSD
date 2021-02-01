@@ -23,7 +23,8 @@ uses
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, cxCustomPivotGrid,
-  cxDBPivotGrid, cxLabel, ChoicePeriod, dxBarExtItems, cxCheckBox, dsdPivotGrid;
+  cxDBPivotGrid, cxLabel, ChoicePeriod, dxBarExtItems, cxCheckBox, dsdPivotGrid,
+  cxDBEdit;
 
 type
   TReport_CommentSendSUNForm = class(TParentForm)
@@ -74,6 +75,9 @@ type
     bbUpdate: TdxBarButton;
     CommentSendName: TcxGridDBColumn;
     TypeSUN: TcxGridDBColumn;
+    PercentZeroing: TcxGridDBColumn;
+    edPercentZeroing: TcxDBTextEdit;
+    cxLabel3: TcxLabel;
   private
   public
   end;

@@ -910,6 +910,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 66
           end
+          object isCheckUKTZED: TcxGridDBColumn
+            Caption = #1047#1072#1087#1088#1077#1090' '#1085#1072' '#1087#1077#1095#1072#1090#1100' '#1095#1077#1082#1072' '#1087#1086' '#1059#1050#1058#1042#1069#1044
+            DataBinding.FieldName = 'isCheckUKTZED'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1087#1088#1077#1090' '#1085#1072' '#1087#1077#1095#1072#1090#1100' '#1095#1077#1082#1072', '#1077#1089#1083#1080' '#1077#1089#1090#1100' '#1087#1086#1079#1080#1094#1080#1103' '#1087#1086' '#1059#1050#1058#1042#1069#1044' '
+            Width = 83
+          end
         end
       end
     end
@@ -3339,6 +3347,37 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1054#1090#1076#1072#1095#1072' '#1059#1050#1058#1042#1069#1044' '#1074' '#1057#1059#1053' (V1) - '#1044#1072
       ImageIndex = 48
     end
+    object macExecUpdate_isCheckUKTZED: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actExecUpdate_isCheckUKTZED
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1047#1072#1087#1088#1077#1090' '#1085#1072' '#1087#1077#1095#1072#1090#1100' '#1095#1077#1082#1072', '#1077#1089#1083#1080' '#1077#1089#1090#1100' '#1087#1086#1079#1080#1094#1080#1103' '#1087#1086' '#1059#1050 +
+        #1058#1042#1069#1044'"?'
+      Caption = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1047#1072#1087#1088#1077#1090' '#1085#1072' '#1087#1077#1095#1072#1090#1100' '#1095#1077#1082#1072', '#1077#1089#1083#1080' '#1077#1089#1090#1100' '#1087#1086#1079#1080#1094#1080#1103' '#1087#1086' '#1059#1050 +
+        #1058#1042#1069#1044'"'
+      Hint = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1047#1072#1087#1088#1077#1090' '#1085#1072' '#1087#1077#1095#1072#1090#1100' '#1095#1077#1082#1072', '#1077#1089#1083#1080' '#1077#1089#1090#1100' '#1087#1086#1079#1080#1094#1080#1103' '#1087#1086' '#1059#1050 +
+        #1058#1042#1069#1044'"'
+      ImageIndex = 79
+    end
+    object actExecUpdate_isCheckUKTZED: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = apUpdate_isCheckUKTZED
+      StoredProcList = <
+        item
+          StoredProc = apUpdate_isCheckUKTZED
+        end>
+      Caption = 'actExecUpdate_isCheckUKTZED'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -4038,6 +4077,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton14'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton11'
         end>
     end
@@ -4105,6 +4148,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object dxBarButton13: TdxBarButton
       Action = macUpdate_isOutUKTZED_SUN1_Yes
+      Category = 0
+    end
+    object dxBarButton14: TdxBarButton
+      Action = macExecUpdate_isCheckUKTZED
       Category = 0
     end
   end
@@ -6674,5 +6721,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 416
     Top = 283
+  end
+  object apUpdate_isCheckUKTZED: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isCheckUKTZED'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisCheckUKTZED'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isCheckUKTZED'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1200
+    Top = 115
   end
 end
