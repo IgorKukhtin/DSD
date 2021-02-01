@@ -765,6 +765,8 @@ type
     N270: TMenuItem;
     actReport_QuantityComparison: TdsdOpenForm;
     N271: TMenuItem;
+    actReport_RemainsSun_UKTZED: TdsdOpenForm;
+    N272: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

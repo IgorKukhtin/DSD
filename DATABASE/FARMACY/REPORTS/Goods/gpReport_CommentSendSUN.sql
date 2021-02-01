@@ -11,7 +11,8 @@ RETURNS TABLE (Id Integer, UnitCode Integer, UnitName TVarChar
              , InvNumber TVarChar, OperDate TDateTime
              , CommentSendCode Integer, CommentSendName TVarChar
              , GoodsCode Integer, GoodsName TVarChar
-             , Price TFloat, Amount TFloat, Summa TFloat
+             , Price TFloat, Amount TFloat, Summa TFloat, Formed TFloat, PercentZeroing TFloat
+             , PercentZeroingRange TFloat
               )
 
 AS
@@ -66,19 +67,44 @@ BEGIN
                                                            AND MIFloat_PriceFrom.DescId = zc_MIFloat_PriceFrom()
                      WHERE COALESCE (MILinkObject_CommentSend.ObjectId , 0) <> 0
                      )
-     , tmpProtocolAll AS (SELECT MovementItem.MovementItemId
-                               , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
-                               , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
-                          FROM tmpResult AS MovementItem
+     , tmpProtocolUnion AS (SELECT  MovementItemProtocol.Id
+                                  , MovementItemProtocol.MovementItemId
+                                  , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
+                             FROM tmpResult AS MovementItem
 
-                               INNER JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.MovementItemId
+                                  INNER JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.MovementItemId
                                                               AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
                                                               AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
-                          )
+                             UNION ALL
+                             SELECT MovementItemProtocol.Id
+                                  , MovementItemProtocol.MovementItemId
+                                  , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
+                             FROM tmpResult AS MovementItem
+
+                                  INNER JOIN MovementItemProtocol_old AS MovementItemProtocol
+                                                                      ON MovementItemProtocol.MovementItemId = MovementItem.MovementItemId
+                                                                     AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
+                                                                     AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
+                            )
+      , tmpProtocolAll AS (SELECT MovementItemProtocol.MovementItemId
+                                , MovementItemProtocol.ProtocolData
+                                , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
+                           FROM tmpProtocolUnion AS MovementItemProtocol
+                           )
      , tmpProtocol AS (SELECT tmpProtocolAll.MovementItemId
                             , SUBSTRING(tmpProtocolAll.ProtocolData, 1, POSITION('"' IN tmpProtocolAll.ProtocolData) - 1)::TFloat AS AmountAuto
                        FROM tmpProtocolAll
                        WHERE tmpProtocolAll.Ord = 1)
+     , tmpResulAll AS (SELECT Sum(tmpProtocol.AmountAuto)                                                 AS AmountZeroing
+                            , Sum(COALESCE( tmpProtocol.AmountAuto, MovementItem.Amount))                 AS AmountAuto
+                       FROM tmpMovement AS Movement
+
+                            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                  AND MovementItem.DescId = zc_MI_Master()
+                                                  AND MovementItem.isErased = FALSE
+                            LEFT JOIN tmpProtocol ON tmpProtocol.MovementItemId = MovementItem.Id
+                     --  WHERE Movement.StatusId = zc_Enum_Status_Complete() 
+                     )
 
   SELECT tmpResult.Id
        , Object_From.ObjectCode                                                           AS UnitCode
@@ -93,11 +119,17 @@ BEGIN
        , (COALESCE(tmpProtocol.AmountAuto, tmpResult.Amount ) - tmpResult.Amount)::TFloat AS Amount
        , ROUND(tmpResult.Price * (COALESCE(tmpProtocol.AmountAuto, tmpResult.Amount ) -
                                 tmpResult.Amount), 2)::TFloat                             AS Summa
+       , COALESCE(tmpProtocol.AmountAuto, tmpResult.Amount )::TFloat                      AS Formed
+       , CASE WHEN COALESCE(tmpProtocol.AmountAuto, tmpResult.Amount ) = 0 THEN 0
+              ELSE ROUND((1 - tmpResult.Amount / COALESCE(tmpProtocol.AmountAuto, tmpResult.Amount)) * 100, 2) END::TFloat AS PercentZeroing
+       , CASE WHEN tmpResulAll.AmountAuto > 0 
+              THEN ROUND(tmpResulAll.AmountZeroing / tmpResulAll.AmountAuto * 100, 2) ELSE 0 END::TFloat                   AS PercentZeroingRange
   FROM tmpResult
        LEFT JOIN Object AS Object_From ON Object_From.Id = tmpResult.UnitId
        LEFT JOIN Object AS Object_CommentSend ON Object_CommentSend.Id = tmpResult.CommentSendID
        LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpResult.GoodsID
        LEFT JOIN tmpProtocol ON tmpProtocol.MovementItemId = tmpResult.MovementItemId
+       LEFT JOIN tmpResulAll ON 1 = 1
   ORDER BY Object_From.ValueData, tmpResult.Id;
 
 END;
@@ -114,3 +146,6 @@ ALTER FUNCTION gpReport_PercentageOverdueSUN (TDateTime, TDateTime, TVarChar) OW
 
 -- тест
 -- SELECT * FROM gpReport_CommentSendSUN (inStartDate:= '25.08.2020', inEndDate:= '25.08.2020', inSession:= '3')
+
+
+select * from gpReport_CommentSendSUN(inStartDate := ('11.01.2021')::TDateTime , inEndDate := ('17.01.2021')::TDateTime ,  inSession := '3');

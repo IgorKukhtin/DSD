@@ -3,7 +3,7 @@ object Report_CommentSendSUNForm: TReport_CommentSendSUNForm
   Top = 0
   Caption = #1055#1088#1080#1095#1080#1085#1099' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1085#1080#1103' '#1057#1059#1053
   ClientHeight = 440
-  ClientWidth = 931
+  ClientWidth = 1086
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object Report_CommentSendSUNForm: TReport_CommentSendSUNForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 931
+    Width = 1086
     Height = 31
     Align = alTop
     TabOrder = 0
@@ -53,11 +53,25 @@ object Report_CommentSendSUNForm: TReport_CommentSendSUNForm
       Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
+    object edPercentZeroing: TcxDBTextEdit
+      Left = 568
+      Top = 5
+      DataBinding.DataField = 'PercentZeroingRange'
+      DataBinding.DataSource = DataSource
+      Properties.ReadOnly = True
+      TabOrder = 4
+      Width = 121
+    end
+    object cxLabel3: TcxLabel
+      Left = 401
+      Top = 6
+      Caption = #1055#1088#1086#1094#1077#1085#1090' '#1079#1072#1085#1091#1083#1077#1085#1080#1103' '#1079#1072' '#1087#1077#1088#1080#1086#1076':'
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 931
+    Width = 1086
     Height = 383
     Align = alClient
     TabOrder = 5
@@ -304,6 +318,16 @@ object Report_CommentSendSUNForm: TReport_CommentSendSUNForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
+      end
+      object PercentZeroing: TcxGridDBColumn
+        Caption = #1055#1088#1086#1094#1077#1085#1090' '#1079#1072#1085#1091#1083#1077#1085#1080#1103
+        DataBinding.FieldName = 'PercentZeroing'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -855,6 +879,7 @@ object Report_CommentSendSUNForm: TReport_CommentSendSUNForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 392
     Top = 304

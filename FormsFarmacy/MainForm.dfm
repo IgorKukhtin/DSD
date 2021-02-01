@@ -4097,6 +4097,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_RemainsSun_UKTZED: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1057#1059#1053' '#1087#1086' '#1059#1050#1058#1042#1069#1044' ('#1086#1090#1087#1088#1072#1074#1082#1072')'
+      FormName = 'TReport_Movement_Send_RemainsSun_UKTZEDForm'
+      FormNameParam.Value = 'TReport_Movement_Send_RemainsSun_UKTZEDForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4821,6 +4832,9 @@ inherited MainForm: TMainForm
       end
       object v11: TMenuItem
         Action = actReport_Sun_Supplement
+      end
+      object N272: TMenuItem
+        Action = actReport_RemainsSun_UKTZED
       end
       object N202: TMenuItem
         Caption = '-'

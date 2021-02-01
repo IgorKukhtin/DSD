@@ -986,7 +986,8 @@ uses
   Report_MovementCheckSite in '..\..\FormsFarmacy\Report\Report_MovementCheckSite.pas' {Report_MovementCheckSiteForm: TParentForm},
   ClearDefaultUnit in '..\..\FormsFarmacy\System\ClearDefaultUnit.pas' {ClearDefaultUnitForm: TParentForm},
   Report_Check_QuantityComparison in '..\..\FormsFarmacy\Report\Report_Check_QuantityComparison.pas' {Report_Check_QuantityComparisonForm: TParentForm},
-  Report_Check_QuantityComparisonDialog in '..\..\FormsFarmacy\Report\Report_Check_QuantityComparisonDialog.pas' {Report_Check_QuantityComparisonDialogForm: TParentForm};
+  Report_Check_QuantityComparisonDialog in '..\..\FormsFarmacy\Report\Report_Check_QuantityComparisonDialog.pas' {Report_Check_QuantityComparisonDialogForm: TParentForm},
+  Report_Movement_Send_RemainsSun_UKTZED in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun_UKTZED.pas' {Report_Movement_Send_RemainsSun_UKTZEDForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
