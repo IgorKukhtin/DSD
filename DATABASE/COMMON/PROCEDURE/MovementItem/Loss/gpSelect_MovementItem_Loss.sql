@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Loss(
 RETURNS TABLE (Id Integer, ContainerId Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , Amount TFloat, AmountRemains TFloat, Count TFloat, HeadCount TFloat
-             , PartionGoodsDate TDateTime, PartionGoods TVarChar
+             , PartionGoodsDate TDateTime
+             , PartionGoodsId Integer, PartionGoods TVarChar
              , GoodsKindId Integer, GoodsKindName  TVarChar
              , GoodsKindId_Complete Integer, GoodsKindName_Complete  TVarChar
              , InDate TDateTime, PartnerInName TVarChar
@@ -56,6 +57,7 @@ BEGIN
                            , MIFloat_HeadCount.ValueData        AS HeadCount
                            , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
                            , MIString_PartionGoods.ValueData    AS PartionGoods
+                           , COALESCE (MILinkObject_PartionGoods.ObjectId,0) AS PartionGoodsId
 
                            , MILinkObject_Asset.ObjectId        AS AssetId
 
@@ -87,15 +89,19 @@ BEGIN
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                                             ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
+                                                            ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
                      )
-            -- Ограничение для ГП - какие товары показать
-          , tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
-                                         , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId
-                                    FROM ObjectBoolean AS ObjectBoolean_Order
-                                         LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean_Order.ObjectId
-                                    WHERE ObjectBoolean_Order.ValueData = TRUE
-                                      AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
-                                   )
+        -- Ограничение для ГП - какие товары показать
+      , tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
+                                     , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId
+                                FROM ObjectBoolean AS ObjectBoolean_Order
+                                     LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean_Order.ObjectId
+                                WHERE ObjectBoolean_Order.ValueData = TRUE
+                                  AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                               )
       , tmpGoods AS (SELECT Object_Goods.Id                                                   AS GoodsId
                           , Object_Goods.ObjectCode                                           AS GoodsCode
                           , Object_Goods.ValueData                                            AS GoodsName
@@ -143,6 +149,7 @@ BEGIN
                                             THEN zc_DateEnd()
                                        ELSE COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd())
                                   END AS PartionDate
+                                , CLO_PartionGoods.ObjectId AS PartionGoodsId
                            FROM tmpDescWhereObject
                                 INNER JOIN ContainerLinkObject AS CLO_Unit
                                                                ON CLO_Unit.ObjectId = vbUnitId
@@ -181,6 +188,7 @@ BEGIN
                                               THEN zc_DateEnd()
                                          ELSE COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd())
                                     END
+                                  , CLO_PartionGoods.ObjectId
                           )
        -- Результат
        SELECT
@@ -197,6 +205,7 @@ BEGIN
            , CAST (NULL AS TFloat)      AS Count
            , CAST (NULL AS TFloat)      AS HeadCount
            , CAST (NULL AS TDateTime)   AS PartionGoodsDate
+           , CAST (NULL AS Integer)     AS PartionGoodsId
            , CAST (NULL AS TVarChar)    AS PartionGoods
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
@@ -269,6 +278,7 @@ BEGIN
            , tmpMI.Count
            , tmpMI.HeadCount
            , tmpMI.PartionGoodsDate
+           , tmpMI.PartionGoodsId
            , tmpMI.PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
@@ -355,6 +365,7 @@ BEGIN
                                             THEN zc_DateEnd()
                                        ELSE COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd())
                                   END AS PartionDate
+                                , CLO_PartionGoods.ObjectId AS PartionGoodsId
                            FROM tmpDescWhereObject
                                 INNER JOIN ContainerLinkObject AS CLO_Unit
                                                                ON CLO_Unit.ObjectId = vbUnitId
@@ -393,6 +404,7 @@ BEGIN
                                               THEN zc_DateEnd()
                                          ELSE COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd())
                                     END
+                                  , CLO_PartionGoods.ObjectId
                           )
        -- Результат
        SELECT
@@ -409,7 +421,8 @@ BEGIN
            , MIFloat_Count.ValueData            AS Count
            , MIFloat_HeadCount.ValueData        AS HeadCount
            , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
-           , MIString_PartionGoods.ValueData    AS PartionGoods
+           , COALESCE (tmpRemains.PartionGoodsId, Object_PartionGoods.Id )             :: Integer AS PartionGoodsId
+           , COALESCE (Object_PartionGoods.ValueData, MIString_PartionGoods.ValueData) ::TVarChar AS PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
            , Object_GoodsKindComplete.Id           AS GoodsKindId_Complete
@@ -463,6 +476,11 @@ BEGIN
                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
+                                             ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
+            LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = MILinkObject_PartionGoods.ObjectId
+
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
@@ -512,6 +530,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 01.02.21         *
  19.10.18         *
  28.07.16         *
  31.03.15         * add GoodsGroupNameFull, MeasureName

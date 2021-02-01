@@ -121,6 +121,13 @@ inherited LossForm: TLossForm
           object PartionGoods: TcxGridDBColumn [5]
             Caption = #1055#1072#1088#1090#1080#1103
             DataBinding.FieldName = 'PartionGoods'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPartionGoods20202ChoiceFormGrid
+                Default = True
+                Kind = bkEllipsis
+              end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -505,6 +512,87 @@ inherited LossForm: TLossForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPartionGoods20202ChoiceForm: TOpenChoiceForm [11]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PartionGoods20202'
+      FormName = 'TPartionGoods20202ChoiceForm'
+      FormNameParam.Value = 'TPartionGoods20202ChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inGoodsId'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsName'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionGoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionGoods'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Amount'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AmountRemains'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint_Loss
       StoredProcList = <
@@ -548,7 +636,7 @@ inherited LossForm: TLossForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [16]
+    object actGoodsKindChoice: TOpenChoiceForm [17]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -600,6 +688,102 @@ inherited LossForm: TLossForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 58
+    end
+    object actPartionGoods20202ChoiceFormGrid: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PartionGoodsForm'
+      FormName = 'TPartionGoods20202ChoiceForm'
+      FormNameParam.Value = 'TPartionGoods20202ChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inGoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionGoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionGoods'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Amount'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AmountRemains'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object InsertRecord20202: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView
+      Action = actPartionGoods20202ChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' '#1057#1087#1077#1094#1086#1076#1077#1078#1076#1099
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' '#1057#1087#1077#1094#1086#1076#1077#1078#1076#1099
+      ImageIndex = 0
     end
     object actGoodsKindCompleteChoice: TOpenChoiceForm
       Category = 'DSDLib'
@@ -698,6 +882,19 @@ inherited LossForm: TLossForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1090#1088#1086#1082#1080' '#1080#1079' '#1055#1088#1080#1093#1086#1076#1072' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1090#1088#1086#1082#1080' '#1080#1079' '#1055#1088#1080#1093#1086#1076#1072' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
     end
+    object macInsertRecord20202: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = InsertRecord20202
+        end
+        item
+          Action = actRefreshPrice
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' '#1057#1087#1077#1094#1086#1076#1077#1078#1076#1099
+      ImageIndex = 0
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -786,6 +983,14 @@ inherited LossForm: TLossForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertRecord20202'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -814,7 +1019,7 @@ inherited LossForm: TLossForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbcInsertMI_byIncome'
         end
         item
           Visible = True
@@ -869,10 +1074,14 @@ inherited LossForm: TLossForm
       Action = actChecked
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbcInsertMI_byIncome: TdxBarButton
       Action = macInsertMI_byIncome
       Category = 0
       ImageIndex = 27
+    end
+    object bbInsertRecord20202: TdxBarButton
+      Action = macInsertRecord20202
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1057,7 +1266,7 @@ inherited LossForm: TLossForm
       end
       item
         Name = 'Checked'
-        Value = 0.000000000000000000
+        Value = False
         Component = edIsChecked
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -1178,11 +1387,43 @@ inherited LossForm: TLossForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Loss_SetErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 718
     Top = 512
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Loss_SetUnErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 718
     Top = 464
   end
@@ -1285,6 +1526,8 @@ inherited LossForm: TLossForm
       item
         Name = 'inPartionGoodsId'
         Value = 0
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

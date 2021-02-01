@@ -65,7 +65,12 @@ type
     actOpenIncomeJournalChoice: TOpenChoiceForm;
     actInsertMIMaster_byIncome: TdsdExecStoredProc;
     macInsertMI_byIncome: TMultiAction;
-    bb: TdxBarButton;
+    bbcInsertMI_byIncome: TdxBarButton;
+    actPartionGoods20202ChoiceForm: TOpenChoiceForm;
+    actPartionGoods20202ChoiceFormGrid: TOpenChoiceForm;
+    InsertRecord20202: TInsertRecord;
+    macInsertRecord20202: TMultiAction;
+    bbInsertRecord20202: TdxBarButton;
   private
     { Private declarations }
   public

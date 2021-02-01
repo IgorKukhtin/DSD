@@ -964,15 +964,6 @@ inherited SendForm: TSendForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'OperDatePartion'
-          Value = 'NULL'
-          Component = MasterCDS
-          ComponentItem = 'PartionGoodsDate'
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'Amount'
           Value = Null
           Component = MasterCDS

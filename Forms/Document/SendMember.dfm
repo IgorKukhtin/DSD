@@ -21,6 +21,8 @@ inherited SendMemberForm: TSendMemberForm
       inherited cxGrid: TcxGrid
         Width = 1013
         Height = 452
+        ExplicitLeft = 1
+        ExplicitTop = -3
         ExplicitWidth = 1013
         ExplicitHeight = 452
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -192,6 +194,13 @@ inherited SendMemberForm: TSendMemberForm
           object PartionGoods: TcxGridDBColumn [6]
             Caption = #1055#1072#1088#1090#1080#1103' / '#1048#1085#1074#1077#1085#1090'.'#8470
             DataBinding.FieldName = 'PartionGoods'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPartionGoods20202ChoiceFormGrid
+                Default = True
+                Kind = bkEllipsis
+              end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
@@ -828,6 +837,214 @@ inherited SendMemberForm: TSendMemberForm
         end>
       isShowModal = True
     end
+    object actPartionGoods20202ChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PartionGoods20202'
+      FormName = 'TPartionGoods20202ChoiceForm'
+      FormNameParam.Value = 'TPartionGoods20202ChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inGoodsId'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsName'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionGoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionGoods'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Price'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Price'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Amount'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AmountRemains'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actPartionGoods20202ChoiceFormGrid: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PartionGoodsForm'
+      FormName = 'TPartionGoods20202ChoiceForm'
+      FormNameParam.Value = 'TPartionGoods20202ChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inGoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionGoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionGoods'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Price'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Price'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Amount'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AmountRemains'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object InsertRecord20202: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView
+      Action = actPartionGoods20202ChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' '#1057#1087#1077#1094#1086#1076#1077#1078#1076#1099
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' '#1057#1087#1077#1094#1086#1076#1077#1078#1076#1099
+      ImageIndex = 0
+    end
+    object macInsertRecord20202: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = InsertRecord20202
+        end
+        item
+          Action = actRefreshPrice
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' '#1057#1087#1077#1094#1086#1076#1077#1078#1076#1099
+      ImageIndex = 0
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -916,6 +1133,14 @@ inherited SendMemberForm: TSendMemberForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertRecord20202'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -977,6 +1202,10 @@ inherited SendMemberForm: TSendMemberForm
     end
     object bbPrintNoGroup: TdxBarButton
       Action = actPrintNoGroup
+      Category = 0
+    end
+    object bbInsertRecord20202: TdxBarButton
+      Action = macInsertRecord20202
       Category = 0
     end
   end
@@ -1056,8 +1285,8 @@ inherited SendMemberForm: TSendMemberForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Send'
-    Left = 128
-    Top = 64
+    Left = 144
+    Top = 32
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Send'
@@ -1155,7 +1384,7 @@ inherited SendMemberForm: TSendMemberForm
       end
       item
         Name = 'isAuto'
-        Value = 0.000000000000000000
+        Value = False
         Component = edIsAuto
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -1331,11 +1560,43 @@ inherited SendMemberForm: TSendMemberForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 718
     Top = 512
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetUnErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 718
     Top = 464
   end
@@ -1448,6 +1709,8 @@ inherited SendMemberForm: TSendMemberForm
       item
         Name = 'inPartionGoodsId'
         Value = 0
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1613,7 +1876,7 @@ inherited SendMemberForm: TSendMemberForm
       end
       item
         Name = 'inisItem'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1737,7 +2000,7 @@ inherited SendMemberForm: TSendMemberForm
       end
       item
         Name = 'inisItem'
-        Value = 'true'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
