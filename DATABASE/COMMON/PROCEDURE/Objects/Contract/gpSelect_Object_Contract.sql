@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , Comment TVarChar, BankAccountExternal TVarChar, BankAccountPartner TVarChar
              , GLNCode TVarChar, PartnerCode TVarChar
              , Term TFloat, EndDate_Term TDateTime
-             , SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime
+             , SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime, EndDate_real TDateTime
                          
              , ContractKindId Integer, ContractKindName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar
@@ -147,6 +147,7 @@ BEGIN
        , ObjectDate_Signing.ValueData AS SigningDate
        , Object_Contract_View.StartDate
        , Object_Contract_View.EndDate
+       , Object_Contract_View.EndDate_real
        
        , Object_ContractKind.Id          AS ContractKindId
        , Object_ContractKind.ValueData   AS ContractKindName

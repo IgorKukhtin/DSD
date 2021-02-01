@@ -238,6 +238,7 @@ inherited PartionGoods20202ChoiceForm: TPartionGoods20202ChoiceForm
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
+          ParamType = ptUnknown
           MultiSelectSeparator = ','
         end
         item
