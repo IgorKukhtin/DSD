@@ -1,7 +1,7 @@
 object Income20202Form: TIncome20202Form
   Left = 0
   Top = 0
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1089#1087#1077#1094#1086#1076#1077#1078#1076#1072')>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1057#1087#1077#1094#1086#1076#1077#1078#1076#1072')>'
   ClientHeight = 480
   ClientWidth = 1056
   Color = clBtnFace
@@ -463,16 +463,40 @@ object Income20202Form: TIncome20202Form
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
           object PartionGoods: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103
+            Caption = #1064#1072#1073#1083#1086#1085' '#1076#1083#1103' '#1087#1072#1088#1090#1080#1080
             DataBinding.FieldName = 'PartionGoods'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Width = 80
+          end
+          object PartionNumStart: TcxGridDBColumn
+            Caption = #8470' '#1055#1072#1088#1090#1080#1080' '#1089' ...'
+            DataBinding.FieldName = 'PartionNumStart'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1072#1095#1072#1083#1100#1085#1099#1081' '#8470' '#1076#1083#1103' '#1055#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1072
+            Width = 55
+          end
+          object PartionNumEnd: TcxGridDBColumn
+            Caption = #8470' '#1055#1072#1088#1090#1080#1080' '#1087#1086' ...'
+            DataBinding.FieldName = 'PartionNumEnd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1089#1083#1077#1076#1085#1080#1081' '#8470' '#1076#1083#1103' '#1055#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1072
+            Options.Editing = False
+            Width = 55
           end
           object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -511,6 +535,7 @@ object Income20202Form: TIncome20202Form
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object Price: TcxGridDBColumn
@@ -545,28 +570,6 @@ object Income20202Form: TIncome20202Form
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 91
-          end
-          object PartionNumStart: TcxGridDBColumn
-            Caption = #1053#1072#1095'. '#8470' '#1076#1083#1103' '#1055#1072#1088#1090#1080#1080
-            DataBinding.FieldName = 'PartionNumStart'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1053#1072#1095#1072#1083#1100#1085#1099#1081' '#8470' '#1076#1083#1103' '#1055#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1072
-            Width = 60
-          end
-          object PartionNumEnd: TcxGridDBColumn
-            Caption = #1055#1086#1089#1083'. '#8470' '#1076#1083#1103' '#1055#1072#1088#1090#1080#1080
-            DataBinding.FieldName = 'PartionNumEnd'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1086#1089#1083#1077#1076#1085#1080#1081' '#8470' '#1076#1083#1103' '#1055#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1072
-            Width = 55
           end
           object AssetName: TcxGridDBColumn
             Caption = #1076#1083#1103' '#1054'C / '#1052#1053#1052#1040
@@ -952,7 +955,7 @@ object Income20202Form: TIncome20202Form
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 11
+    TabOrder = 9
     Visible = False
     Width = 64
   end
@@ -1753,7 +1756,7 @@ object Income20202Form: TIncome20202Form
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = CostCDS
           ComponentItem = 'MasterOperDate'
           DataType = ftDateTime
@@ -2077,7 +2080,7 @@ object Income20202Form: TIncome20202Form
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = CostCDS
           ComponentItem = 'MasterOperDate'
           DataType = ftDateTime
@@ -2112,7 +2115,7 @@ object Income20202Form: TIncome20202Form
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = CostCDS
           ComponentItem = 'MasterOperDate'
           DataType = ftDateTime
@@ -2301,12 +2304,12 @@ object Income20202Form: TIncome20202Form
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPartionNumEnd'
+        Name = 'ioPartionNumEnd'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionNumEnd'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -2599,7 +2602,7 @@ object Income20202Form: TIncome20202Form
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -3240,7 +3243,7 @@ object Income20202Form: TIncome20202Form
     Top = 208
   end
   object spInsertMaskMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Income'
+    StoredProcName = 'gpInsertUpdate_MovementItem_Income20202'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -3270,25 +3273,19 @@ object Income20202Form: TIncome20202Form
         Name = 'ioAmount'
         Value = 0.000000000000000000
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
         Name = 'ioAmountPartner'
         Value = 0.000000000000000000
         DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountPacker'
-        Value = 0.000000000000000000
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inIsCalcAmountPartner'
-        Value = True
+        Value = Null
         Component = cbCalcAmountPartner
         DataType = ftBoolean
         ParamType = ptInput
@@ -3318,7 +3315,7 @@ object Income20202Form: TIncome20202Form
         Component = MasterCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -3330,17 +3327,21 @@ object Income20202Form: TIncome20202Form
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inLiveWeight'
-        Value = 0.000000000000000000
+        Name = 'inPartionNumStart'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionNumStart'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inHeadCount'
-        Value = 0.000000000000000000
+        Name = 'ioPartionNumEnd'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionNumEnd'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

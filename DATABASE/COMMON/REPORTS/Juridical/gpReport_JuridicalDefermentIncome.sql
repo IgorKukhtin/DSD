@@ -129,8 +129,9 @@ BEGIN
                 , View_Contract.StartDate
                 , View_Contract.EndDate_real
                 , View_Contract.EndDate_term
-                , (''|| (LPAD (EXTRACT (Day FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||LPAD (EXTRACT (Month FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||EXTRACT (YEAR FROM View_Contract.EndDate_term) :: TVarChar)
-                     || CASE WHEN View_Contract.ContractTermKindId = zc_Enum_ContractTermKind_Long() THEN '*' ELSE '' END) ::TVarChar AS EndDate
+                , (''|| CASE WHEN View_Contract.ContractTermKindId = zc_Enum_ContractTermKind_Long() THEN '* ' ELSE '' END
+                     || (LPAD (EXTRACT (Day FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||LPAD (EXTRACT (Month FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||EXTRACT (YEAR FROM View_Contract.EndDate_term) :: TVarChar)
+                  ) ::TVarChar AS EndDate
 
                 , (CASE WHEN -1 * RESULT.Remains > 0 THEN -1 * RESULT.Remains ELSE 0 END) :: TFloat AS DebetRemains
                 , (CASE WHEN -1 * RESULT.Remains > 0 THEN 0 ELSE 1 * RESULT.Remains END) :: TFloat AS KreditRemains

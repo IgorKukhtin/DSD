@@ -102,6 +102,8 @@ BEGIN
      DELETE FROM _tmpItem_SummDriver;
      -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      DELETE FROM _tmpItem;
+     -- !!!обязательно!!! очистили таблицу - партии Спецодежда
+     DELETE FROM _tmpItemPartion_20202;
 
 
      -- формируются Партии для Сырья
@@ -124,6 +126,7 @@ BEGIN
      WHERE MovementItem.MovementId = inMovementId
        AND View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье
      ;
+     
 
      -- Эти параметры нужны для расчета конечных сумм по Контрагенту и Сотруднику (заготовитель) и для формирования Аналитик в проводках
      SELECT _tmp.PriceWithVAT, _tmp.VATPercent, _tmp.DiscountPercent, _tmp.ExtraChargesPercent, _tmp.ChangePrice
@@ -1272,6 +1275,142 @@ BEGIN
         OR vbMovementDescId = zc_Movement_IncomeAsset()
      ;
 
+
+     -- формируются для Партий Спецодежда
+     INSERT INTO _tmpItemPartion_20202 (MovementItemId, PartionGoodsId, ContainerId_Goods, ContainerId_Summ, PartionGoods, OperCount, OperSumm)
+        WITH tmpList AS (SELECT GENERATE_SERIES (1, 10000) AS Num)
+        SELECT _tmpItem.MovementItemId
+              , 0 AS PartionGoodsId
+              , 0 AS ContainerId_Goods
+              , 0 AS ContainerId_Summ
+              , _tmpItem.PartionGoods || '-' || (MIFloat_PartionNumStart.ValueData :: Integer  + tmpList.Num - 1) :: TVarChar || '-' || zfConvert_DateToString (vbOperDate)
+              , 1 AS OperCount
+                -- разбили сумму по партиям
+              , CASE WHEN _tmpItem.OperCount > 0 THEN _tmpItem.OperSumm / _tmpItem.OperCount ELSE 0 END AS OperSumm
+        FROM _tmpItem
+             LEFT JOIN tmpList ON tmpList.Num <= _tmpItem.OperCount
+             LEFT JOIN MovementItemFloat AS MIFloat_PartionNumStart
+                                         ON MIFloat_PartionNumStart.MovementItemId = _tmpItem.MovementItemId
+                                        AND MIFloat_PartionNumStart.DescId = zc_MIFloat_PartionNumStart()
+        WHERE _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_20202()
+          AND vbOperDate >= '01.02.2021'
+        ;
+
+     -- корректируем "копейки"
+     UPDATE _tmpItemPartion_20202 SET OperSumm = _tmpItemPartion_20202.OperSumm - (tmpSumm.OperSumm - _tmpItem.OperSumm)
+     FROM -- нашли первый, который надо скорректировать, с максимальной суммой
+          (SELECT _tmpItemPartion_20202.MovementItemId, _tmpItemPartion_20202.PartionGoodsId
+                , ROW_NUMBER() OVER (PARTITION BY _tmpItemPartion_20202.MovementItemId ORDER BY _tmpItemPartion_20202.OperSumm DESC) AS Ord
+           FROM _tmpItemPartion_20202
+          ) AS tmpItemPartion_one
+          -- итого сумма в партиях
+          JOIN (SELECT _tmpItemPartion_20202.MovementItemId, SUM (_tmpItemPartion_20202.OperSumm) AS OperSumm FROM _tmpItemPartion_20202 GROUP BY _tmpItemPartion_20202.MovementItemId
+               ) AS tmpSumm ON tmpSumm.MovementItemId = tmpItemPartion_one.MovementItemId
+          -- текущие Элементы, если суммы не равны
+          JOIN _tmpItem ON _tmpItem.MovementItemId =  tmpSumm.MovementItemId
+                       AND _tmpItem.OperSumm       <> tmpSumm.OperSumm
+
+     WHERE _tmpItemPartion_20202.MovementItemId = tmpItemPartion_one.MovementItemId
+       AND _tmpItemPartion_20202.PartionGoodsId = tmpItemPartion_one.PartionGoodsId
+       AND tmpItemPartion_one.Ord = 1
+      ;
+
+     -- проверка - для кол-во
+     IF EXISTS (SELECT 1
+                FROM -- итого сумма в партиях
+                     (SELECT _tmpItemPartion_20202.MovementItemId, SUM (_tmpItemPartion_20202.OperCount) AS OperCount FROM _tmpItemPartion_20202 GROUP BY _tmpItemPartion_20202.MovementItemId
+                     ) AS tmpSumm
+                     -- текущие Элементы, если суммы не равны
+                     JOIN _tmpItem ON _tmpItem.MovementItemId =  tmpSumm.MovementItemId
+                                  AND _tmpItem.OperCount      <> tmpSumm.OperCount
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Для товара <%> распределенная сумма в партиях <%> не равна сумме в документе <%>.'
+                       , (SELECT lfGet_Object_ValueData (_tmpItem.GoodsId)
+                          FROM -- итого сумма в партиях
+                               (SELECT _tmpItemPartion_20202.MovementItemId, SUM (_tmpItemPartion_20202.OperCount) AS OperCount FROM _tmpItemPartion_20202 GROUP BY _tmpItemPartion_20202.MovementItemId
+                               ) AS tmpSumm
+                               -- текущие Элементы, если суммы не равны
+                               JOIN _tmpItem ON _tmpItem.MovementItemId =  tmpSumm.MovementItemId
+                                            AND _tmpItem.OperCount      <> tmpSumm.OperCount
+                          ORDER BY _tmpItem.MovementItemId
+                          LIMIT 1
+                         )
+                       , (SELECT zfConvert_FloatToString (tmpSumm.OperSumm)
+                          FROM -- итого сумма в партиях
+                               (SELECT _tmpItemPartion_20202.MovementItemId, SUM (_tmpItemPartion_20202.OperCount) AS OperCount FROM _tmpItemPartion_20202 GROUP BY _tmpItemPartion_20202.MovementItemId
+                               ) AS tmpSumm
+                               -- текущие Элементы, если суммы не равны
+                               JOIN _tmpItem ON _tmpItem.MovementItemId =  tmpSumm.MovementItemId
+                                            AND _tmpItem.OperCount      <> tmpSumm.OperCount
+                          ORDER BY _tmpItem.MovementItemId
+                          LIMIT 1
+                         )
+                       , (SELECT zfConvert_FloatToString (_tmpItem.OperSumm)
+                          FROM -- итого сумма в партиях
+                               (SELECT _tmpItemPartion_20202.MovementItemId, SUM (_tmpItemPartion_20202.OperCount) AS OperCount FROM _tmpItemPartion_20202 GROUP BY _tmpItemPartion_20202.MovementItemId
+                               ) AS tmpSumm
+                               -- текущие Элементы, если суммы не равны
+                               JOIN _tmpItem ON _tmpItem.MovementItemId =  tmpSumm.MovementItemId
+                                            AND _tmpItem.OperCount      <> tmpSumm.OperCount
+                          ORDER BY _tmpItem.MovementItemId
+                          LIMIT 1
+                         )
+                        ;
+     END IF;
+
+     -- проверка - для суммы
+     IF EXISTS (SELECT 1
+                FROM -- итого сумма в партиях
+                     (SELECT _tmpItemPartion_20202.MovementItemId, SUM (_tmpItemPartion_20202.OperSumm) AS OperSumm FROM _tmpItemPartion_20202 GROUP BY _tmpItemPartion_20202.MovementItemId
+                     ) AS tmpSumm
+                     -- текущие Элементы, если суммы не равны
+                     JOIN _tmpItem ON _tmpItem.MovementItemId =  tmpSumm.MovementItemId
+                                  AND _tmpItem.OperSumm       <> tmpSumm.OperSumm
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Для товара <%> распределенная сумма в партиях <%> не равна сумме в документе <%>.'
+                       , (SELECT lfGet_Object_ValueData (_tmpItem.GoodsId)
+                          FROM -- итого сумма в партиях
+                               (SELECT _tmpItemPartion_20202.MovementItemId, SUM (_tmpItemPartion_20202.OperSumm) AS OperSumm FROM _tmpItemPartion_20202 GROUP BY _tmpItemPartion_20202.MovementItemId
+                               ) AS tmpSumm
+                               -- текущие Элементы, если суммы не равны
+                               JOIN _tmpItem ON _tmpItem.MovementItemId =  tmpSumm.MovementItemId
+                                            AND _tmpItem.OperSumm       <> tmpSumm.OperSumm
+                          ORDER BY _tmpItem.MovementItemId
+                          LIMIT 1
+                         )
+                       , (SELECT zfConvert_FloatToString (tmpSumm.OperSumm)
+                          FROM -- итого сумма в партиях
+                               (SELECT _tmpItemPartion_20202.MovementItemId, SUM (_tmpItemPartion_20202.OperSumm) AS OperSumm FROM _tmpItemPartion_20202 GROUP BY _tmpItemPartion_20202.MovementItemId
+                               ) AS tmpSumm
+                               -- текущие Элементы, если суммы не равны
+                               JOIN _tmpItem ON _tmpItem.MovementItemId =  tmpSumm.MovementItemId
+                                            AND _tmpItem.OperSumm       <> tmpSumm.OperSumm
+                          ORDER BY _tmpItem.MovementItemId
+                          LIMIT 1
+                         )
+                       , (SELECT zfConvert_FloatToString (_tmpItem.OperSumm)
+                          FROM -- итого сумма в партиях
+                               (SELECT _tmpItemPartion_20202.MovementItemId, SUM (_tmpItemPartion_20202.OperSumm) AS OperSumm FROM _tmpItemPartion_20202 GROUP BY _tmpItemPartion_20202.MovementItemId
+                               ) AS tmpSumm
+                               -- текущие Элементы, если суммы не равны
+                               JOIN _tmpItem ON _tmpItem.MovementItemId =  tmpSumm.MovementItemId
+                                            AND _tmpItem.OperSumm       <> tmpSumm.OperSumm
+                          ORDER BY _tmpItem.MovementItemId
+                          LIMIT 1
+                         )
+                        ;
+     END IF;
+
+
+     -- формируются для Партий Спецодежда
+     UPDATE _tmpItemPartion_20202 SET PartionGoodsId = lpInsertFind_Object_PartionGoods (inValue       := PartionGoods
+                                                                                       , inOperDate    := vbOperDate
+                                                                                       , inInfoMoneyId := zc_Enum_InfoMoney_20202()
+                                                                                        );
+
+
      -- заполняем таблицу - элементы по контрагенту, со всеми свойствами для формирования Аналитик в проводках, здесь по !!!InfoMoneyId_Detail!!!
      -- !!!только если не талон!!!
      INSERT INTO _tmpItem_SummPartner (MovementItemId, ContainerId, ContainerId_Currency, ContainerId_re, ContainerId_Currency_re, AccountId, ContainerId_Transit, AccountId_Transit, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId, BusinessId, UnitId_Asset, GoodsId, GoodsKindId, OperSumm_Partner, OperSumm_Partner_Currency)
@@ -2399,7 +2538,7 @@ END IF;
        WHERE _tmpItem.isTareReturning = TRUE AND _tmpItem.OperCount <> 0;
 
 
-     -- 1.2.1. определяется ContainerId_Goods для проводок по количественному учету
+     -- 1.2.1.1. определяется ContainerId_Goods для проводок по количественному учету - если НЕ спецодежда
      UPDATE _tmpItem SET ContainerId_Goods = CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
                                              THEN
                                              lpInsertUpdate_ContainerCount_Asset (inOperDate               := vbOperDate
@@ -2430,7 +2569,31 @@ END IF;
                                                                                 , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                  )
                                              END
-     WHERE vbPartnerId_To = 0;
+     WHERE vbPartnerId_To = 0
+       -- если НЕ спецодежда
+       AND _tmpItem.MovementItemId NOT IN (SELECT _tmpItemPartion_20202.MovementItemId FROM _tmpItemPartion_20202)
+     ;
+
+     -- 1.2.1.2. определяется ContainerId_Goods для проводок по количественному учету - если спецодежда
+     UPDATE _tmpItemPartion_20202 SET ContainerId_Goods = 
+                                             lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
+                                                                                , inUnitId                 := vbUnitId
+                                                                                , inCarId                  := vbCarId
+                                                                                , inMemberId               := vbMemberId_To
+                                                                                , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
+                                                                                , inGoodsId                := _tmpItem.GoodsId
+                                                                                , inGoodsKindId            := _tmpItem.GoodsKindId
+                                                                                , inIsPartionCount         := _tmpItem.isPartionCount
+                                                                                , inPartionGoodsId         := _tmpItemPartion_20202.PartionGoodsId
+                                                                                , inAssetId                := _tmpItem.AssetId
+                                                                                , inBranchId               := NULL -- эта аналитика нужна для филиала
+                                                                                , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
+                                                                                 )
+     FROM _tmpItem
+     WHERE vbPartnerId_To = 0
+       -- если спецодежда
+       AND _tmpItemPartion_20202.MovementItemId = _tmpItem.MovementItemId
+     ;
 
      -- 1.2.2. формируются Проводки для количественного учета
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
@@ -2441,8 +2604,8 @@ END IF;
                         THEN zc_MIContainer_CountAsset()
                         ELSE zc_MIContainer_Count()
               END AS DescId
-            , vbMovementDescId, inMovementId, MovementItemId
-            , ContainerId_Goods
+            , vbMovementDescId, inMovementId, _tmpItem.MovementItemId
+            , COALESCE (_tmpItemPartion_20202.ContainerId_Goods, _tmpItem.ContainerId_Goods) AS ContainerId_Goods
             , 0                                       AS AccountId              -- нет счета
             , CASE WHEN _tmpItem.isTareReturning = TRUE THEN zc_Enum_AnalyzerId_TareReturning() ELSE 0 END AS AnalyzerId             -- нет аналитики, т.е. деление Поставщик, Заготовитель, Покупатель, Талоны пока не надо
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
@@ -2450,12 +2613,13 @@ END IF;
             , vbContainerId_Analyzer                  AS ContainerId_Analyzer   -- Контейнер - по долгам поставщика
             , _tmpItem.GoodsKindId                    AS ObjectIntId_Analyzer   -- вид товара
             , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- Поставщик или...
-            , _tmpItem.ContainerId_Goods              AS ContainerIntId_Analyzer  -- Контейнер "товар" - тот же самый
+            , COALESCE (_tmpItemPartion_20202.ContainerId_Goods, _tmpItem.ContainerId_Goods) AS ContainerIntId_Analyzer  -- Контейнер "товар" - тот же самый
             , 0                                       AS ParentId
-            , OperCount_Partner                       AS Amount
+            , COALESCE (_tmpItemPartion_20202.OperCount, _tmpItem.OperCount_Partner) AS Amount
             , vbOperDate                              AS OperDate               -- т.е. по "Дате склад"
             , TRUE                                    AS isActive
        FROM _tmpItem
+            LEFT JOIN _tmpItemPartion_20202 ON _tmpItemPartion_20202.MovementItemId = _tmpItem.MovementItemId
        -- WHERE OperCount <> 0
       UNION ALL
        SELECT 0
@@ -2463,7 +2627,7 @@ END IF;
                         THEN zc_MIContainer_CountAsset()
                         ELSE zc_MIContainer_Count()
               END AS DescId
-            , vbMovementDescId, inMovementId, MovementItemId
+            , vbMovementDescId, inMovementId, _tmpItem.MovementItemId
             , ContainerId_Goods
             , 0                                       AS AccountId                -- нет счета
             , zc_Enum_AnalyzerId_Count_40200()        AS AnalyzerId               -- есть аналитика, Разница в весе, хотя реально эта разница не попадает в статью затрат 40200...
@@ -2474,19 +2638,19 @@ END IF;
             , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer     -- Поставщик или...
             , _tmpItem.ContainerId_Goods              AS ContainerIntId_Analyzer  -- Контейнер "товар" - тот же самый
             , 0                                       AS ParentId
-            , OperCount - OperCount_Partner           AS Amount
+            , _tmpItem.OperCount - _tmpItem.OperCount_Partner AS Amount
             , vbOperDate                              AS OperDate                 -- т.е. по "Дате склад"
             , TRUE                                    AS isActive
        FROM _tmpItem
-       WHERE OperCount <> OperCount_Partner
+       WHERE _tmpItem.OperCount <> _tmpItem.OperCount_Partner
       UNION ALL
        SELECT 0
             , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
                         THEN zc_MIContainer_CountAsset()
                         ELSE zc_MIContainer_Count()
               END AS DescId
-            , vbMovementDescId, inMovementId, MovementItemId
-            , ContainerId_Goods
+            , vbMovementDescId, inMovementId, _tmpItem.MovementItemId
+            , _tmpItem.ContainerId_Goods
             , 0                                       AS AccountId                -- нет счета
             , zc_Enum_AnalyzerId_Income_Packer()      AS AnalyzerId               -- есть аналитика, по заготовителю
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer        -- Товар
@@ -2496,11 +2660,11 @@ END IF;
             , vbMemberId_Packer                       AS ObjectExtId_Analyzer     -- заготовитель
             , _tmpItem.ContainerId_Goods              AS ContainerIntId_Analyzer  -- Контейнер "товар" - тот же самый
             , 0                                       AS ParentId
-            , OperCount_Packer                        AS Amount
+            , _tmpItem.OperCount_Packer               AS Amount
             , vbOperDate                              AS OperDate               -- т.е. по "Дате склад"
             , TRUE                                    AS isActive
        FROM _tmpItem
-       WHERE OperCount_Packer <> 0;
+       WHERE _tmpItem.OperCount_Packer <> 0;
 
 
      -- 1.2.3. определяется ContainerId_GoodsTicketFuel для проводок по количественному учету - Расход талонов
@@ -2594,7 +2758,7 @@ END IF;
        AND _tmpItem.UnitId_Asset = _tmpItem_byAccount.UnitId_Asset
     ;
 
-     -- 1.3.2. определяется ContainerId_Summ для проводок по суммовому учету + формируется Аналитика <элемент с/с>
+     -- 1.3.2.1. определяется ContainerId_Summ для проводок по суммовому учету + формируется Аналитика <элемент с/с> - если НЕ спецодежда
      UPDATE _tmpItem SET ContainerId_Summ =  CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
                                              THEN
                                                   lpInsertUpdate_ContainerSumm_Asset (inOperDate               := vbOperDate
@@ -2636,6 +2800,34 @@ END IF;
                                                                                      )
                                              END
      WHERE _tmpItem.ContainerId_ProfitLoss = 0 -- !!!если НЕ ОПиУ!!!
+       -- если НЕ спецодежда
+       AND _tmpItem.MovementItemId NOT IN (SELECT _tmpItemPartion_20202.MovementItemId FROM _tmpItemPartion_20202)
+    ;
+
+     -- 1.3.2.2. определяется ContainerId_Summ для проводок по суммовому учету + формируется Аналитика <элемент с/с> - если спецодежда
+     UPDATE _tmpItemPartion_20202 SET ContainerId_Summ =
+                                                  lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
+                                                                                    , inUnitId                 := vbUnitId
+                                                                                    , inCarId                  := vbCarId
+                                                                                    , inMemberId               := vbMemberId_To
+                                                                                    , inBranchId               := NULL -- эта аналитика нужна для филиала
+                                                                                    , inJuridicalId_basis      := vbJuridicalId_Basis_To
+                                                                                    , inBusinessId             := _tmpItem.BusinessId
+                                                                                    , inAccountId              := _tmpItem.AccountId
+                                                                                    , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
+                                                                                    , inInfoMoneyId            := _tmpItem.InfoMoneyId
+                                                                                    , inInfoMoneyId_Detail     := _tmpItem.InfoMoneyId_Detail
+                                                                                    , inContainerId_Goods      := _tmpItemPartion_20202.ContainerId_Goods
+                                                                                    , inGoodsId                := _tmpItem.GoodsId
+                                                                                    , inGoodsKindId            := _tmpItem.GoodsKindId
+                                                                                    , inIsPartionSumm          := _tmpItem.isPartionSumm
+                                                                                    , inPartionGoodsId         := _tmpItemPartion_20202.PartionGoodsId
+                                                                                    , inAssetId                := _tmpItem.AssetId
+                                                                                     )
+     FROM _tmpItem
+     WHERE _tmpItem.ContainerId_ProfitLoss = 0 -- !!!если НЕ ОПиУ!!!
+       -- если спецодежда
+       AND _tmpItemPartion_20202.MovementItemId = _tmpItem.MovementItemId
     ;
 
      -- 1.3.3. формируются Проводки для суммового учета : (c/c остаток) + !!!есть MovementItemId!!!
@@ -2647,8 +2839,8 @@ END IF;
                         THEN zc_MIContainer_SummAsset()
                         ELSE zc_MIContainer_Summ()
               END AS DescId
-            , vbMovementDescId, inMovementId, MovementItemId
-            , ContainerId_Summ
+            , vbMovementDescId, inMovementId, _tmpItem.MovementItemId
+            , COALESCE (_tmpItemPartion_20202.ContainerId_Summ, _tmpItem.ContainerId_Summ) AS ContainerId_Summ
             , _tmpItem.AccountId                      AS AccountId                -- счет есть всегда
             , 0                                       AS AnalyzerId               -- нет аналитики, т.е. деление Поставщик, Заготовитель, Покупатель, Талоны пока не надо
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer        -- Товар
@@ -2656,12 +2848,13 @@ END IF;
             , vbContainerId_Analyzer                  AS ContainerId_Analyzer     -- Контейнер - по долгам поставщика
             , _tmpItem.GoodsKindId                    AS ObjectIntId_Analyzer     -- вид товара
             , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer     -- Поставщик или...
-            , _tmpItem.ContainerId_Goods              AS ContainerIntId_Analyzer  -- Контейнер "товар"
+            , COALESCE (_tmpItemPartion_20202.ContainerId_Goods, _tmpItem.ContainerId_Goods) AS ContainerIntId_Analyzer  -- Контейнер "товар"
             , 0                                       AS ParentId
-            , CASE WHEN OperCount <> OperCount_Partner AND OperCount_Partner <> 0 THEN CAST (OperCount * OperSumm_Partner / OperCount_Partner AS NUMERIC (16, 4)) ELSE OperSumm_Partner END AS Amount
+            , CASE WHEN _tmpItem.OperCount <> _tmpItem.OperCount_Partner AND _tmpItem.OperCount_Partner <> 0 THEN CAST (_tmpItem.OperCount * _tmpItem.OperSumm_Partner / _tmpItem.OperCount_Partner AS NUMERIC (16, 4)) ELSE COALESCE (_tmpItemPartion_20202.OperSumm, _tmpItem.OperSumm_Partner) END AS Amount
             , vbOperDate                              AS OperDate                 -- т.е. по "Дате склад"
             , TRUE                                    AS isActive
        FROM _tmpItem
+            LEFT JOIN _tmpItemPartion_20202 ON _tmpItemPartion_20202.MovementItemId = _tmpItem.MovementItemId
        WHERE _tmpItem.ContainerId_ProfitLoss = 0 -- !!!если НЕ ОПиУ!!!
          AND _tmpItem.OperSumm_Partner <> 0
       UNION ALL
@@ -2671,7 +2864,7 @@ END IF;
                         ELSE zc_MIContainer_Summ()
               END AS DescId
             , vbMovementDescId, inMovementId, MovementItemId
-            , ContainerId_Summ
+            , _tmpItem.ContainerId_Summ
             , _tmpItem.AccountId                      AS AccountId                -- счет есть всегда
             , zc_Enum_AnalyzerId_Count_40200()        AS AnalyzerId               -- есть аналитика, Разница в весе, хотя реально эта разница не попадает в статью затрат 40200...
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer        -- Товар
@@ -2681,21 +2874,21 @@ END IF;
             , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer     -- Поставщик или...
             , _tmpItem.ContainerId_Goods              AS ContainerIntId_Analyzer  -- Контейнер "товар"
             , 0                                       AS ParentId
-            , CASE WHEN OperCount <> OperCount_Partner AND OperCount_Partner <> 0 THEN OperSumm_Partner - CAST (OperCount * OperSumm_Partner / OperCount_Partner AS NUMERIC (16, 4)) ELSE 0 END AS Amount
+            , CASE WHEN _tmpItem.OperCount <> _tmpItem.OperCount_Partner AND _tmpItem.OperCount_Partner <> 0 THEN _tmpItem.OperSumm_Partner - CAST (_tmpItem.OperCount * _tmpItem.OperSumm_Partner / _tmpItem.OperCount_Partner AS NUMERIC (16, 4)) ELSE 0 END AS Amount
             , vbOperDate                              AS OperDate                 -- т.е. по "Дате склад"
             , TRUE                                    AS isActive
        FROM _tmpItem
        WHERE _tmpItem.ContainerId_ProfitLoss = 0 -- !!!если НЕ ОПиУ!!!
          AND _tmpItem.OperSumm_Partner <> 0
-         AND _tmpItem.OperCount <> OperCount_Partner
+         AND _tmpItem.OperCount <> _tmpItem.OperCount_Partner
       UNION ALL
        SELECT 0
             , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
                         THEN zc_MIContainer_SummAsset()
                         ELSE zc_MIContainer_Summ()
               END AS DescId
-            , vbMovementDescId, inMovementId, MovementItemId
-            , ContainerId_Summ
+            , vbMovementDescId, inMovementId, _tmpItem.MovementItemId
+            , _tmpItem.ContainerId_Summ
             , _tmpItem.AccountId                      AS AccountId                -- счет есть всегда
             , zc_Enum_AnalyzerId_Income_Packer()      AS AnalyzerId               -- есть аналитика, по заготовителю
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer        -- Товар
@@ -2705,7 +2898,7 @@ END IF;
             , vbMemberId_Packer                       AS ObjectExtId_Analyzer     -- заготовитель
             , _tmpItem.ContainerId_Goods              AS ContainerIntId_Analyzer  -- Контейнер "товар"
             , 0                                       AS ParentId
-            , OperSumm_Packer                         AS Amount
+            , _tmpItem.OperSumm_Packer                AS Amount
             , vbOperDate                              AS OperDate                 -- т.е. по "Дате склад"
             , TRUE                                    AS isActive
        FROM _tmpItem

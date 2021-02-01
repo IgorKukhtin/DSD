@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income20202(
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
     IN inPartionNumStart     TFloat    , -- Начальный № для Партии товара
-    IN inPartionNumEnd       TFloat    , -- Последний № для Партии товара
+ INOUT ioPartionNumEnd       TFloat    , -- Последний № для Партии товара
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ) 
@@ -29,8 +29,27 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Income());
 
 
+     -- проверка - для 
+     IF COALESCE (inPartionNumStart, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не введено значение <№ Партии с ...>.';
+     END IF;
+     -- проверка - для 
+     IF COALESCE (TRIM (inPartionGoods), '') = ''
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не введено значение <Шаблон для партии>.';
+     END IF;
+     -- проверка - для 
+     IF COALESCE (ioAmount, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не введено значение <Кол-во (склад)>.';
+     END IF;
+     -- меняем значение
+     ioPartionNumEnd:= inPartionNumStart + ioAmount - 1;
+
+
      -- !!!Заменили значение!!!
-     IF inIsCalcAmountPartner = TRUE --  OR 1 = 1 -- временно OR...
+     IF inIsCalcAmountPartner = TRUE OR 1 = 1 -- временно для Спецодежы ...
      THEN ioAmountPartner:= ioAmount;
      END IF;
 
@@ -46,7 +65,7 @@ BEGIN
                                                    , inPrice              := inPrice
                                                    , inCountForPrice      := ioCountForPrice
                                                    , inPartionNumStart    := inPartionNumStart
-                                                   , inPartionNumEnd      := inPartionNumEnd
+                                                   , inPartionNumEnd      := ioPartionNumEnd
                                                    , inPartionGoods       := inPartionGoods
                                                    , inGoodsKindId        := inGoodsKindId
                                                    , inAssetId            := inAssetId

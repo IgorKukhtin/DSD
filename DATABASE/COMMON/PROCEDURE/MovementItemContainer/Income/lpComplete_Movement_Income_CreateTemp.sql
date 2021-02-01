@@ -42,8 +42,8 @@ BEGIN
                                , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean
                                , PartionGoodsId Integer
                                 ) ON COMMIT DROP;
-
--- WHERE _tmpItem.ContainerId_ProfitLoss = 0 -- !!!если НЕ ОПиУ!!!
+     -- таблица - элементы 20202 
+     CREATE TEMP TABLE _tmpItemPartion_20202 (MovementItemId Integer, PartionGoodsId Integer, ContainerId_Goods Integer, ContainerId_Summ Integer, PartionGoods TVarChar, OperCount TFloat, OperSumm TFloat) ON COMMIT DROP;
 
 
 END;$BODY$

@@ -74,7 +74,7 @@ BEGIN
      -- Результат такой
      RETURN QUERY 
        WITH tmpRemains AS (SELECT Container.ObjectId                          AS GoodsId
-                                , Container.Amount                            AS Amount
+                                , SUM (Container.Amount)                      AS Amount
                                 , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
                            FROM ContainerLinkObject AS CLO_Unit
                                 INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId AND Container.DescId = zc_Container_Count() AND Container.Amount <> 0
@@ -87,6 +87,8 @@ BEGIN
                            WHERE CLO_Unit.ObjectId = vbUnitId
                              AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                              AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
+                           GROUP BY Container.ObjectId
+                                  , COALESCE (CLO_GoodsKind.ObjectId, 0)
                           )
           , tmpPrice AS (SELECT tmp.GoodsId
                               , tmp.GoodsKindId
@@ -406,7 +408,7 @@ BEGIN
      -- Результат такой
      RETURN QUERY 
        WITH tmpRemains AS (SELECT Container.ObjectId                          AS GoodsId
-                                , Container.Amount                            AS Amount
+                                , SUM (Container.Amount)                      AS Amount
                                 , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
                            FROM ContainerLinkObject AS CLO_Unit
                                 INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId AND Container.DescId = zc_Container_Count() AND Container.Amount <> 0
@@ -419,6 +421,8 @@ BEGIN
                            WHERE CLO_Unit.ObjectId = vbUnitId
                              AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                              AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
+                           GROUP BY Container.ObjectId
+                                  , COALESCE (CLO_GoodsKind.ObjectId, 0)
                           )
           , tmpPrice AS (SELECT tmp.GoodsId
                               , tmp.GoodsKindId
@@ -782,7 +786,7 @@ BEGIN
 
                           )
           , tmpRemains AS (SELECT tmpMI_Goods.MovementItemId
-                                , Container.Amount                            AS Amount
+                                , SUM (Container.Amount) AS Amount
                            FROM tmpMI_Goods
                                 INNER JOIN Container ON Container.ObjectId = tmpMI_Goods.GoodsId
                                                     AND Container.DescId = zc_Container_Count()
@@ -799,7 +803,9 @@ BEGIN
                                                              AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
                            WHERE COALESCE (CLO_GoodsKind.ObjectId, 0) = tmpMI_Goods.GoodsKindId
                              AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
+                           GROUP BY tmpMI_Goods.MovementItemId
                           )
+       -- Результат
        SELECT
              tmpMI_Goods.MovementItemId         AS Id
            , Object_Goods.Id          AS GoodsId
@@ -830,7 +836,7 @@ BEGIN
 
            , CAST ((tmpMI_Goods.AmountPartner ) * tmpMI_Goods.Price / tmpMI_Goods.CountForPrice AS NUMERIC (16, 2)) :: TFloat AS AmountSumm
 
-           , tmpRemains.Amount                  AS AmountRemains
+           , tmpRemains.Amount        :: TFloat AS AmountRemains
 
            , tmpMI_Goods.isErased               AS isErased
 
