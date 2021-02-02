@@ -987,7 +987,9 @@ uses
   ClearDefaultUnit in '..\..\FormsFarmacy\System\ClearDefaultUnit.pas' {ClearDefaultUnitForm: TParentForm},
   Report_Check_QuantityComparison in '..\..\FormsFarmacy\Report\Report_Check_QuantityComparison.pas' {Report_Check_QuantityComparisonForm: TParentForm},
   Report_Check_QuantityComparisonDialog in '..\..\FormsFarmacy\Report\Report_Check_QuantityComparisonDialog.pas' {Report_Check_QuantityComparisonDialogForm: TParentForm},
-  Report_Movement_Send_RemainsSun_UKTZED in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun_UKTZED.pas' {Report_Movement_Send_RemainsSun_UKTZEDForm: TParentForm};
+  Report_Movement_Send_RemainsSun_UKTZED in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun_UKTZED.pas' {Report_Movement_Send_RemainsSun_UKTZEDForm: TParentForm},
+  Report_GoodsRemainsUKTZEDDialog in '..\..\FormsFarmacy\Report\Report_GoodsRemainsUKTZEDDialog.pas' {Report_GoodsRemainsUKTZEDDialogForm: TParentForm},
+  Report_GoodsRemainsUKTZED in '..\..\FormsFarmacy\Report\Report_GoodsRemainsUKTZED.pas' {Report_GoodsRemainsUKTZEDForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

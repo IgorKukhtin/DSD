@@ -967,13 +967,15 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CommentSendSUNForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_CommentSendSUNForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsUKTZEDDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemainsUKTZEDDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsUKTZEDForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemainsUKTZEDForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_UKTZEDForm'));
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_UKTZEDForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSun_UKTZEDForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_QuantityComparisonForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_QuantityComparisonForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_QuantityComparisonForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_QuantityComparisonDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_QuantityComparisonDialogForm');

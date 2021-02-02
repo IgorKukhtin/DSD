@@ -16,8 +16,11 @@ $BODY$
     DECLARE vbLoadPriceListId Integer;
     DECLARE vbAreaId_find Integer;
     DECLARE vbConditionalPercent TFloat;
+    DECLARE vbisMorionCodeLoad Boolean;
+    DECLARE vbisBarCodeLoad Boolean;
 
 BEGIN
+      
     -- из JSON в таблицу
     DROP TABLE IF EXISTS tblJSON;
     CREATE TABLE tblJSON
@@ -162,113 +165,134 @@ BEGIN
          /*-- иначе в протокол запишем что типа Insert
          UPDATE LoadPriceList SET UserId_Insert = inUserId, Date_Insert = CURRENT_TIMESTAMP WHERE Id = vbLoadPriceListId;*/
     END IF;
+    
+    SELECT COALESCE (ObjectBoolean_MorionCodeLoad.ValueData, FALSE)  :: Boolean   AS isMorionCode
+         , COALESCE (ObjectBoolean_BarCodeLoad.ValueData, FALSE)     :: Boolean   AS isBarCode
+           INTO vbisMorionCodeLoad, vbisBarCodeLoad
+    FROM LoadPriceList
 
-/*    -- ищем по общему коду
-    WITH tmpCommonCode AS
-    (
-        SELECT
-            tmpGoods.GoodsId,
-            tmpGoods.isSpecCondition,
-            tmpGoods.CommonCode
+         -- признак Импорт кодов Мориона из прайса (выполнять или нет связь с гл.товаром)
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_MorionCodeLoad
+                                 ON ObjectBoolean_MorionCodeLoad.ObjectId = LoadPriceList.ContractId
+                                AND ObjectBoolean_MorionCodeLoad.DescId = zc_ObjectBoolean_Contract_MorionCodeLoad()
+         -- признак Импорт штрих-кодов из прайса (выполнять или нет связь с гл.товаром)
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_BarCodeLoad
+                                 ON ObjectBoolean_BarCodeLoad.ObjectId = LoadPriceList.ContractId
+                                AND ObjectBoolean_BarCodeLoad.DescId = zc_ObjectBoolean_Contract_BarCodeLoad()
+    WHERE LoadPriceList.Id = vbLoadPriceListId;
+    
 
-        FROM (WITH tmp AS (SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId
-                                , ObjectBoolean_Goods_SpecCondition.ValueData  AS isSpecCondition
-                           FROM ObjectLink AS ObjectLink_Goods_Object
-                                JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
-                                                ON ObjectLink_LinkGoods_Goods.ChildObjectId = ObjectLink_Goods_Object.ObjectId
-                                               AND ObjectLink_LinkGoods_Goods.DescId        = zc_ObjectLink_LinkGoods_Goods()
-                                JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
-                                                ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
-                                               AND ObjectLink_LinkGoods_GoodsMain.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-                                LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SpecCondition
-                                                        ON ObjectBoolean_Goods_SpecCondition.ObjectId = ObjectLink_Goods_Object.ObjectId
-                                                       AND ObjectBoolean_Goods_SpecCondition.DescId = zc_ObjectBoolean_Goods_SpecCondition()
-                           WHERE ObjectLink_Goods_Object.ChildObjectId = inJuridicalId
-                             AND ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
-                          )
-              SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId
-                   , tmp.isSpecCondition
-                   , Object_Goods.ObjectCode AS CommonCode
-              FROM Object AS Object_Goods
-                   INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                         ON ObjectLink_Goods_Object.ObjectId      = Object_Goods.Id
-                                        AND ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
-                                        AND ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_Marion()
-                   INNER JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
-                                         ON ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods.Id
-                                        AND ObjectLink_LinkGoods_Goods.DescId        = zc_ObjectLink_LinkGoods_Goods()
-                   INNER JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
-                                         ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
-                                        AND ObjectLink_LinkGoods_GoodsMain.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-                   LEFT JOIN tmp ON tmp.GoodsId = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
-                   INNER JOIN
-                    (SELECT DISTINCT inCommonCode FROM tblJSON)
-                                         AS tblJSON
-                                         ON Object_Goods.ObjectCode = tblJSON.inCommonCode
-              WHERE Object_Goods.DescId = zc_Object_Goods() and tblJSON.inCommonCode > 0
-             ) AS tmpGoods
-    )
-    UPDATE tblJSON
-    SET GoodsID = tmpCommonCode.GoodsID,
-        isSpecCondition = tmpCommonCode.isSpecCondition
-    FROM tmpCommonCode
-    WHERE inCommonCode = tmpCommonCode.CommonCode;
+    -- ищем по общему коду
+    IF vbisMorionCodeLoad = True
+    THEN
+      WITH tmpCommonCode AS
+      (
+          SELECT
+              tmpGoods.GoodsId,
+              tmpGoods.isSpecCondition,
+              tmpGoods.CommonCode
 
-    -- Если пусто коод поставщика и нашли в предыдущем исправляем код поставщика
-    WITH tmpGoodsCode AS
-    (SELECT DISTINCT
-           LoadPriceListItem.CommonCode
-         , LoadPriceListItem.GoodsCode
-    FROM LoadPriceListItem
-    WHERE LoadPriceListItem.LoadPriceListId = vbLoadPriceListId
-      AND COALESCE (LoadPriceListItem.CommonCode, 0) <> 0
-      AND (LoadPriceListItem.GoodsCode <> '0' AND COALESCE(LoadPriceListItem.GoodsCode, '') <> '')
-    )
-    UPDATE tblJSON
-      SET inGoodsCode = tmpGoodsCode.GoodsCode
-    FROM tmpGoodsCode
-    WHERE inCommonCode = tmpGoodsCode.CommonCode AND inCommonCode > 0
-      AND (tblJSON.inGoodsCode = '0' or COALESCE(tblJSON.inGoodsCode, '') = '');
+          FROM (WITH tmp AS (SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId
+                                  , ObjectBoolean_Goods_SpecCondition.ValueData  AS isSpecCondition
+                             FROM ObjectLink AS ObjectLink_Goods_Object
+                                  JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                                  ON ObjectLink_LinkGoods_Goods.ChildObjectId = ObjectLink_Goods_Object.ObjectId
+                                                 AND ObjectLink_LinkGoods_Goods.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                  JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                                                  ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
+                                                 AND ObjectLink_LinkGoods_GoodsMain.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                  LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SpecCondition
+                                                          ON ObjectBoolean_Goods_SpecCondition.ObjectId = ObjectLink_Goods_Object.ObjectId
+                                                         AND ObjectBoolean_Goods_SpecCondition.DescId = zc_ObjectBoolean_Goods_SpecCondition()
+                             WHERE ObjectLink_Goods_Object.ChildObjectId = inJuridicalId
+                               AND ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
+                            )
+                SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId
+                     , tmp.isSpecCondition
+                     , Object_Goods.ObjectCode AS CommonCode
+                FROM Object AS Object_Goods
+                     INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                           ON ObjectLink_Goods_Object.ObjectId      = Object_Goods.Id
+                                          AND ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
+                                          AND ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_Marion()
+                     INNER JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                           ON ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods.Id
+                                          AND ObjectLink_LinkGoods_Goods.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                     INNER JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                                           ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
+                                          AND ObjectLink_LinkGoods_GoodsMain.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                     LEFT JOIN tmp ON tmp.GoodsId = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
+                     INNER JOIN
+                      (SELECT DISTINCT inCommonCode FROM tblJSON)
+                                           AS tblJSON
+                                           ON Object_Goods.ObjectCode = tblJSON.inCommonCode
+                WHERE Object_Goods.DescId = zc_Object_Goods() and tblJSON.inCommonCode > 0
+               ) AS tmpGoods
+      )
+      UPDATE tblJSON
+      SET GoodsID = tmpCommonCode.GoodsID,
+          isSpecCondition = tmpCommonCode.isSpecCondition
+      FROM tmpCommonCode
+      WHERE inCommonCode = tmpCommonCode.CommonCode;
 
-    -- удаляем с нулевыми кодами поставщика по просьбе Любы
-    DELETE FROM tblJSON
-    WHERE tblJSON.inGoodsCode = '0' or COALESCE(tblJSON.inGoodsCode, '') = '';
+      -- Если пусто коод поставщика и нашли в предыдущем исправляем код поставщика
+      WITH tmpGoodsCode AS
+      (SELECT DISTINCT
+             LoadPriceListItem.CommonCode
+           , LoadPriceListItem.GoodsCode
+      FROM LoadPriceListItem
+      WHERE LoadPriceListItem.LoadPriceListId = vbLoadPriceListId
+        AND COALESCE (LoadPriceListItem.CommonCode, 0) <> 0
+        AND (LoadPriceListItem.GoodsCode <> '0' AND COALESCE(LoadPriceListItem.GoodsCode, '') <> '')
+      )
+      UPDATE tblJSON
+        SET inGoodsCode = tmpGoodsCode.GoodsCode
+      FROM tmpGoodsCode
+      WHERE inCommonCode = tmpGoodsCode.CommonCode AND inCommonCode > 0
+        AND (tblJSON.inGoodsCode = '0' or COALESCE(tblJSON.inGoodsCode, '') = '');
+
+      -- удаляем с нулевыми кодами поставщика по просьбе Любы
+      DELETE FROM tblJSON
+      WHERE tblJSON.inGoodsCode = '0' or COALESCE(tblJSON.inGoodsCode, '') = '';
+    END IF;
 
     -- ищем по штрихкоду
-    WITH tmpBarCode AS
-    (
-        SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId
-                   , ObjectBoolean_Goods_SpecCondition.ValueData  AS isSpecCondition
-                   , Object_Goods.ValueData AS BarCode
-        FROM Object AS Object_Goods
-             INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                   ON ObjectLink_Goods_Object.ObjectId      = Object_Goods.Id
-                                  AND ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
-                                  AND ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_BarCode()
-             INNER JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
-                                   ON ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods.Id
-                                   AND ObjectLink_LinkGoods_Goods.DescId        = zc_ObjectLink_LinkGoods_Goods()
-             INNER JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
-                                   ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
-                                  AND ObjectLink_LinkGoods_GoodsMain.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SpecCondition
-                                     ON ObjectBoolean_Goods_SpecCondition.ObjectId = Object_Goods.Id
-                                    AND ObjectBoolean_Goods_SpecCondition.DescId = zc_ObjectBoolean_Goods_SpecCondition()
-             INNER JOIN
-                (SELECT DISTINCT inBarCode
-                    FROM tblJSON
-                    WHERE inBarCode <> '' AND COALESCE(GoodsID, 0) = 0)
-                                   AS tblJSON
-                                   ON Object_Goods.ValueData = tblJSON.inBarCode
-        WHERE Object_Goods.DescId = zc_Object_Goods()
-    )
-    UPDATE tblJSON
-    SET GoodsID = tmpBarCode.GoodsID,
-        isSpecCondition = tmpBarCode.isSpecCondition
-    FROM tmpBarCode
-    WHERE inBarCode = tmpBarCode.BarCode
-      AND COALESCE (tblJSON.GoodsID, 0) = 0;
-*/
+    IF vbisBarCodeLoad = TRUE
+    THEN
+      WITH tmpBarCode AS
+      (
+          SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId
+                     , ObjectBoolean_Goods_SpecCondition.ValueData  AS isSpecCondition
+                     , Object_Goods.ValueData AS BarCode
+          FROM Object AS Object_Goods
+               INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                     ON ObjectLink_Goods_Object.ObjectId      = Object_Goods.Id
+                                    AND ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
+                                    AND ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_BarCode()
+               INNER JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                     ON ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods.Id
+                                     AND ObjectLink_LinkGoods_Goods.DescId        = zc_ObjectLink_LinkGoods_Goods()
+               INNER JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                                     ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
+                                    AND ObjectLink_LinkGoods_GoodsMain.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+               LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SpecCondition
+                                       ON ObjectBoolean_Goods_SpecCondition.ObjectId = Object_Goods.Id
+                                      AND ObjectBoolean_Goods_SpecCondition.DescId = zc_ObjectBoolean_Goods_SpecCondition()
+               INNER JOIN
+                  (SELECT DISTINCT inBarCode
+                      FROM tblJSON
+                      WHERE inBarCode <> '' AND COALESCE(GoodsID, 0) = 0)
+                                     AS tblJSON
+                                     ON Object_Goods.ValueData = tblJSON.inBarCode
+          WHERE Object_Goods.DescId = zc_Object_Goods()
+      )
+      UPDATE tblJSON
+      SET GoodsID = tmpBarCode.GoodsID,
+          isSpecCondition = tmpBarCode.isSpecCondition
+      FROM tmpBarCode
+      WHERE inBarCode = tmpBarCode.BarCode
+        AND COALESCE (tblJSON.GoodsID, 0) = 0;
+    END IF;
 
     -- ищем по коду и inJuridicalId
     WITH tmpGoodsCode AS

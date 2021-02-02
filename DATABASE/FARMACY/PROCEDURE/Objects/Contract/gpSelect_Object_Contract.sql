@@ -18,7 +18,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                Comment TVarChar,
                SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime,
                isReport Boolean,
-               isMorionCode Boolean, isBarCode Boolean, isPartialPay Boolean,
+               isMorionCode Boolean, isBarCode Boolean, 
+               isMorionCodeLoad Boolean, isBarCodeLoad Boolean, 
+               isPartialPay Boolean,
                isErased Boolean) AS
 $BODY$
 BEGIN
@@ -64,10 +66,12 @@ BEGIN
            , ObjectDate_Start.ValueData   AS StartDate 
            , ObjectDate_End.ValueData     AS EndDate   
  
-           , COALESCE (ObjectBoolean_Report.ValueData, FALSE)      :: Boolean   AS isReport
-           , COALESCE (ObjectBoolean_MorionCode.ValueData, FALSE)  :: Boolean   AS isMorionCode
-           , COALESCE (ObjectBoolean_BarCode.ValueData, FALSE)     :: Boolean   AS isBarCode
-           , COALESCE (ObjectBoolean_PartialPay.ValueData, FALSE)  :: Boolean   AS isPartialPay
+           , COALESCE (ObjectBoolean_Report.ValueData, FALSE)        :: Boolean   AS isReport
+           , COALESCE (ObjectBoolean_MorionCode.ValueData, FALSE)    :: Boolean   AS isMorionCode
+           , COALESCE (ObjectBoolean_BarCode.ValueData, FALSE)       :: Boolean   AS isBarCode
+           , COALESCE (ObjectBoolean_MorionCodeLoad.ValueData, FALSE):: Boolean   AS isMorionCodeLoad
+           , COALESCE (ObjectBoolean_BarCodeLoad.ValueData, FALSE)   :: Boolean   AS isBarCodeLoad
+           , COALESCE (ObjectBoolean_PartialPay.ValueData, FALSE)    :: Boolean   AS isPartialPay
            
            , Object_Contract_View.isErased
        FROM Object_Contract_View
@@ -113,6 +117,14 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_BarCode
                                    ON ObjectBoolean_BarCode.ObjectId = Object_Contract_View.ContractId
                                   AND ObjectBoolean_BarCode.DescId = zc_ObjectBoolean_Contract_BarCode()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_MorionCodeLoad
+                                   ON ObjectBoolean_MorionCodeLoad.ObjectId = Object_Contract_View.ContractId
+                                  AND ObjectBoolean_MorionCodeLoad.DescId = zc_ObjectBoolean_Contract_MorionCodeLoad()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_BarCodeLoad
+                                   ON ObjectBoolean_BarCodeLoad.ObjectId = Object_Contract_View.ContractId
+                                  AND ObjectBoolean_BarCodeLoad.DescId = zc_ObjectBoolean_Contract_BarCodeLoad()
 
            LEFT JOIN ObjectBoolean AS ObjectBoolean_PartialPay
                                    ON ObjectBoolean_PartialPay.ObjectId = Object_Contract_View.ContractId
