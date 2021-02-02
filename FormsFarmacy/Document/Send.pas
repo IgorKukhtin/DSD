@@ -193,6 +193,7 @@ type
     bbMISetUnErasedDetail: TdxBarButton;
     spErasedMIMasterDetail: TdsdStoredProc;
     spUnErasedMIMasterDetail: TdsdStoredProc;
+    cbisBanFiscalSale: TcxCheckBox;
   private
     { Private declarations }
   public

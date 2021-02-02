@@ -432,17 +432,17 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inis4Month'
+        Name = 'inisQuarter'
         Value = Null
-        Component = cb4Month
+        Component = cbQuarter
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisQuarter'
+        Name = 'inis4Month'
         Value = Null
-        Component = cbQuarter
+        Component = cb4Month
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

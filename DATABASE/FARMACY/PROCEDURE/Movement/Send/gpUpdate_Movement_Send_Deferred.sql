@@ -30,6 +30,7 @@ $BODY$
    DECLARE vbisReceived Boolean;
    DECLARE vbInsertDate TDateTime;
    DECLARE vbConfirmed Boolean;
+   DECLARE vbisBanFiscalSale Boolean;
 BEGIN
 
    IF COALESCE(inMovementId, 0) = 0 THEN
@@ -54,7 +55,8 @@ BEGIN
         COALESCE (MovementBoolean_Received.ValueData, FALSE),
         DATE_TRUNC ('DAY', MovementDate_Insert.ValueData),
         COALESCE (MovementBoolean_VIP.ValueData, FALSE),
-        COALESCE (MovementBoolean_Confirmed.ValueData, FALSE)
+        COALESCE (MovementBoolean_Confirmed.ValueData, FALSE), 
+        COALESCE (MovementBoolean_BanFiscalSale.ValueData, FALSE)
     INTO
         vbStatusId,
         vbisDeferred,
@@ -70,7 +72,8 @@ BEGIN
         vbisReceived,
         vbInsertDate,
         vbisVIP,
-        vbConfirmed
+        vbConfirmed,
+        vbisBanFiscalSale
     FROM Movement
         LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                   ON MovementBoolean_Deferred.MovementId = Movement.Id
@@ -125,6 +128,9 @@ BEGIN
         LEFT JOIN MovementBoolean AS MovementBoolean_Confirmed
                                   ON MovementBoolean_Confirmed.MovementId = Movement.Id
                                  AND MovementBoolean_Confirmed.DescId = zc_MovementBoolean_Confirmed()
+        LEFT JOIN MovementBoolean AS MovementBoolean_BanFiscalSale
+                                  ON MovementBoolean_BanFiscalSale.MovementId = Movement.Id
+                                 AND MovementBoolean_BanFiscalSale.DescId = zc_MovementBoolean_BanFiscalSale()
     WHERE Movement.Id = inMovementId;
    
     IF vbisDefSUN = TRUE AND inisDeferred = TRUE
@@ -340,6 +346,14 @@ BEGIN
                                                                     ON CLO_From.ContainerId = Container.Id
                                                                    AND CLO_From.ObjectId    = vbUnit_From
                                                                    AND CLO_From.DescId      = zc_ContainerLinkObject_Unit()
+                                     LEFT JOIN ContainerlinkObject AS ContainerLinkObject_DivisionParties
+                                                                   ON ContainerLinkObject_DivisionParties.Containerid = Container.Id
+                                                                  AND ContainerLinkObject_DivisionParties.DescId = zc_ContainerLinkObject_DivisionParties()
+                                                              
+                                     LEFT JOIN ObjectBoolean AS ObjectBoolean_BanFiscalSale
+                                                             ON ObjectBoolean_BanFiscalSale.ObjectId = ContainerLinkObject_DivisionParties.ObjectId
+                                                            AND ObjectBoolean_BanFiscalSale.DescId = zc_ObjectBoolean_DivisionParties_BanFiscalSale()
+                                WHERE (vbisBanFiscalSale = False OR vbisBanFiscalSale = True AND COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False) = True)
                                 GROUP BY Container.ObjectId
                                )
                  SELECT tmpMI.GoodsId, tmpMI.Amount

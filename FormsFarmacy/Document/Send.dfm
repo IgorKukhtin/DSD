@@ -1030,6 +1030,17 @@ inherited SendForm: TSendForm
       Text = #1054#1078#1080#1076#1072#1077#1090' '#1087#1086#1076#1090#1074#1077#1088#1078#1076'.'
       Width = 125
     end
+    object cbisBanFiscalSale: TcxCheckBox
+      Left = 799
+      Top = 81
+      Hint = #1055#1077#1088#1077#1084#1077#1097#1072#1090#1100' '#1090#1086#1074#1072#1088' '#1090#1086#1083#1100#1082#1086' '#1079#1072#1087#1088#1077#1097#1077#1085#1085#1099#1081' '#1082' '#1092#1080#1089#1082#1072#1083#1100#1085#1086#1081' '#1087#1088#1086#1076#1072#1078#1077
+      Caption = #1047#1072#1087#1088'. '#1082' '#1092#1080#1089#1082'. '#1087#1088#1086#1076#1072#1078#1077
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 36
+      Width = 126
+    end
   end
   object ceChecked: TcxCheckBox [2]
     Left = 732
@@ -2539,6 +2550,13 @@ inherited SendForm: TSendForm
         Value = Null
         Component = edConfirmed
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isBanFiscalSale'
+        Value = Null
+        Component = cbisBanFiscalSale
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 216

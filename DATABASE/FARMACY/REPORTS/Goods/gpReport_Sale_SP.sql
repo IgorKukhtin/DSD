@@ -604,7 +604,7 @@ BEGIN
                            , MAX (ObjectFloat_NDSKind_NDS.ValueData)     AS NDS
                            , STRING_AGG (DISTINCT Object_From.ValueData, ';') AS JuridicalName_in
                            , STRING_AGG (DISTINCT '№ '||Movement_Income.InvNumber||' от '||Movement_Income.OperDate::Date , ';') AS InvNumber_in
-                           , MAX (MovementLinkObject_NDSKind.ObjectId)                                                           AS NDSKindId
+                           , MAX (CASE WHEN MovementLinkObject_NDSKind.ObjectId = zc_Enum_NDSKind_Common() THEN zc_Enum_NDSKind_Medical() ELSE MovementLinkObject_NDSKind.ObjectId END) AS NDSKindId
                       FROM tmpMIC
                            LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
                                                                ON CLI_MI.ContainerId = tmpMIC.ContainerId
@@ -623,7 +623,7 @@ BEGIN
                                                         ON MovementLinkObject_NDSKind.MovementId = MI_Income.MovementId
                                                        AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
                            LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                                                 ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
+                                                 ON ObjectFloat_NDSKind_NDS.ObjectId = CASE WHEN MovementLinkObject_NDSKind.ObjectId = zc_Enum_NDSKind_Common() THEN zc_Enum_NDSKind_Medical() ELSE MovementLinkObject_NDSKind.ObjectId END
                                                 AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
                            LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = MI_Income.MovementId 
                            LEFT JOIN Object AS Object_From ON Object_From.Id = MLO_From.ObjectId
@@ -841,3 +841,6 @@ $BODY$
 -- SELECT * FROM gpReport_Sale_SP (inStartDate:= '01.09.2019', inEndDate:= '05.09.2019', inJuridicalId:= 0, inUnitId:= 0, inHospitalId:= 0, inGroupMemberSPId:= 0, inPercentSP:= 0, inisGroupMemberSP:= TRUE, inSession:= zfCalc_UserAdmin());
 
 select * from gpReport_Sale_SP(inStartDate := ('21.12.2020')::TDateTime , inEndDate := ('21.12.2020')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 0, inSession := '3');
+
+
+select * from gpReport_Sale_SP(inStartDate := ('08.01.2021')::TDateTime , inEndDate := ('31.01.2021')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 0 ,  inSession := '3');

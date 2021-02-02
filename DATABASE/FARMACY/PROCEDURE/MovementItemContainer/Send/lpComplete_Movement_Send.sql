@@ -25,6 +25,7 @@ $BODY$
    DECLARE vbSUN             Boolean;
    DECLARE vbAddress         TVarChar;
    DECLARE vbDivisionParties Boolean;
+   DECLARE vbisBanFiscalSale Boolean;
 
    DECLARE vbDate_6 TDateTime;
    DECLARE vbDate_3 TDateTime;
@@ -77,6 +78,7 @@ end if;*/
          , COALESCE (MovementLinkObject_PartionDateKind.ObjectId, 0)
          , COALESCE (MovementBoolean_SUN.ValueData, FALSE)
          , ObjectString_Unit_Address.ValueData
+         , COALESCE (MovementBoolean_BanFiscalSale.ValueData, FALSE)
            INTO
                 vbUnitFromId
               , vbJuridicalFromId
@@ -88,6 +90,7 @@ end if;*/
               , vbPartionDateId
               , vbSUN
               , vbAddress
+              , vbisBanFiscalSale
     FROM
         Movement
         INNER JOIN MovementLinkObject AS MovementLinkObject_From
@@ -121,6 +124,11 @@ end if;*/
         LEFT JOIN MovementBoolean AS MovementBoolean_SUN
                                   ON MovementBoolean_SUN.MovementId = Movement.Id
                                  AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+                                 
+        LEFT JOIN MovementBoolean AS MovementBoolean_BanFiscalSale
+                                  ON MovementBoolean_BanFiscalSale.MovementId = Movement.Id
+                                 AND MovementBoolean_BanFiscalSale.DescId = zc_MovementBoolean_BanFiscalSale()
+
     WHERE Movement.Id = inMovementId;
 
     vbDivisionParties := (vbRetailId_to = 4) AND (vbJuridicalFromId <> vbJuridicalToId) AND COALESCE(vbAddress, '') <> '';
@@ -239,7 +247,7 @@ end if;*/
                                                             ON MIFloat_ContainerId.MovementItemId = MI_Child.Id
                                                            AND MIFloat_ContainerId.DescId         = zc_MIFloat_ContainerId()
                                 LEFT JOIN Container ON Container.Id = MIFloat_ContainerId.ValueData :: Integer
-
+                                                       
                            WHERE MI_Master.MovementId = inMovementId
                              AND MI_Master.DescId     = zc_MI_Master()
                              AND MI_Master.IsErased   = FALSE
@@ -677,9 +685,17 @@ end if;*/
                       LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
                       -- ѕриход
                       LEFT JOIN Movement ON Movement.ID = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)
+                      LEFT JOIN ContainerlinkObject AS ContainerLinkObject_DivisionParties
+                                                    ON ContainerLinkObject_DivisionParties.Containerid = Container.Id
+                                                   AND ContainerLinkObject_DivisionParties.DescId = zc_ContainerLinkObject_DivisionParties()
+                                                      
+                      LEFT JOIN ObjectBoolean AS ObjectBoolean_BanFiscalSale
+                                              ON ObjectBoolean_BanFiscalSale.ObjectId = ContainerLinkObject_DivisionParties.ObjectId
+                                             AND ObjectBoolean_BanFiscalSale.DescId = zc_ObjectBoolean_DivisionParties_BanFiscalSale()
                  WHERE Container.WhereObjectId = vbUnitFromId
                    AND Container.DescId        = zc_Container_Count()
                    AND Container.Amount + COALESCE (ContainerUsed.Amount, 0) > 0
+                   AND (vbisBanFiscalSale = False OR vbisBanFiscalSale = True AND COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False) = True)
                 )
           -- контейнеры и zc_Container_Count, которые будут списаны (с подразделени€ "From")
         , tmpItem AS (
@@ -919,9 +935,18 @@ end if;*/
                                 -- элемента прихода от поставщика (если это парти€, котора€ была создана инвентаризацией)
                                 LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
 
+                                LEFT JOIN ContainerlinkObject AS ContainerLinkObject_DivisionParties
+                                                              ON ContainerLinkObject_DivisionParties.Containerid = Container.Id
+                                                             AND ContainerLinkObject_DivisionParties.DescId = zc_ContainerLinkObject_DivisionParties()
+                                                        
+                                LEFT JOIN ObjectBoolean AS ObjectBoolean_BanFiscalSale
+                                                        ON ObjectBoolean_BanFiscalSale.ObjectId = ContainerLinkObject_DivisionParties.ObjectId
+                                                       AND ObjectBoolean_BanFiscalSale.DescId = zc_ObjectBoolean_DivisionParties_BanFiscalSale()
+
                            WHERE Container.WhereObjectId = vbUnitFromId
                              AND Container.DescId        = zc_Container_Count()
                              AND Container.Amount + COALESCE (ContainerUsed.Amount, 0) > 0
+                             AND (vbisBanFiscalSale = False OR vbisBanFiscalSale = True AND COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False) = True)
                            )
         , ContainerPD AS (SELECT ContainerAll.Id
                                , Min(ObjectDate_ExpirationDate.ValueData)               AS ExpirationDate

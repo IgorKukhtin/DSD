@@ -3027,6 +3027,23 @@ begin
           exit;
         end;
 
+        if UnitConfigCDS.FieldByName('isCheckUKTZED').AsBoolean and not RemainsCDS.FieldByName('isBanFiscalSale').AsBoolean then
+        begin
+          nRecNo := RemainsCDS.RecNo;
+          try
+            if RemainsCDS.Locate('ID;isBanFiscalSale',
+              VarArrayOf([FieldByName('GoodsId').AsInteger, True]), []) and (RemainsCDS.FieldByName('Remains').AsCurrency > 0) then
+            begin
+              ShowMessage('¬ чеке есть позици€ по ” “¬Ёƒ, чтобы не передавать большие суммы в бухглатерию - можно данный код пробить в отдельном чеке.'#13#10#13#10 +
+                RemainsCDS.FieldByName('Id').AsString + ' - ' + RemainsCDS.FieldByName('GoodsName').AsString);
+              Exit;
+            end;
+          finally
+            RemainsCDS.RecNo := nRecNo;
+          end;
+        end;
+
+
 //        if (FieldByName('Amount').AsCurrency > 0) and FieldByName('isPresent').AsBoolean and
 //           (FormParams.ParamByName('LoyaltyGoodsId').Value <> FieldByName('GoodsId').AsInteger)  then
 //        begin
@@ -7108,6 +7125,24 @@ begin
         end;
 
 
+    end;
+
+    if UnitConfigCDS.FieldByName('isCheckUKTZED').AsBoolean and not RemainsCDS.FieldByName('isBanFiscalSale').AsBoolean then
+    begin
+      RemainsCDS.DisableControls;
+      nRecNo := RemainsCDS.RecNo;
+      try
+        if RemainsCDS.Locate('ID;isBanFiscalSale',
+          VarArrayOf([RemainsCDS.FieldByName('Id').AsInteger, True]), []) and (RemainsCDS.FieldByName('Remains').AsCurrency > 0) then
+        begin
+          ShowMessage('¬ чеке есть позици€ по ” “¬Ёƒ, чтобы не передавать большие суммы в бухглатерию - можно данный код пробить в отдельном чеке.'#13#10#13#10 +
+           RemainsCDS.FieldByName('Id').AsString + ' - ' + RemainsCDS.FieldByName('GoodsName').AsString);
+          Exit;
+        end;
+      finally
+        RemainsCDS.RecNo := nRecNo;
+        RemainsCDS.EnableControls;
+      end;
     end;
 
     //

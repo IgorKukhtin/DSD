@@ -269,9 +269,14 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_PharmacyItem() RETURNS integer AS 
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_PharmacyItem', 'Для аптечных пунктов'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_PharmacyItem');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_BanFiscalSale() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_BanFiscalSale'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_BanFiscalSale', 'Перемещать товар только запрещенный к фискальной продаже'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_BanFiscalSale');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 01.02.21                                                                                    * zc_MovementBoolean_BanFiscalSale
  27.01.21         * zc_MovementBoolean_is20202
  05.10.20                                                                                    * zc_MovementBoolean_Present
  31.08.20                                                                                    * zc_MovementBoolean_CorrectionSUN

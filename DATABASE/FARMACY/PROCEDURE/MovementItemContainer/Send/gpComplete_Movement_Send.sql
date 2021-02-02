@@ -34,6 +34,7 @@ $BODY$
   DECLARE vbComment TVarChar;
   DECLARE vbisAuto Boolean;
   DECLARE vbisVIP Boolean;
+  DECLARE vbisBanFiscalSale Boolean;
 BEGIN
     vbUserId:= inSession;
 
@@ -58,7 +59,8 @@ BEGIN
         DATE_TRUNC ('DAY', MovementDate_Insert.ValueData),
         COALESCE (MovementBoolean_isAuto.ValueData, FALSE), 
         COALESCE (MovementBoolean_VIP.ValueData, FALSE),
-        COALESCE (MovementString_Comment.ValueData, '')
+        COALESCE (MovementString_Comment.ValueData, ''), 
+        COALESCE (MovementBoolean_BanFiscalSale.ValueData, FALSE)
         
     INTO
         outOperDate,
@@ -69,10 +71,11 @@ BEGIN
         vbisSUN,
         vbisReceived,
         vbPartionDateKindId,
-        vbInsertDate
+        vbInsertDate,
         vbisAuto,
         vbisVIP,
-        vbComment
+        vbComment,
+        vbisBanFiscalSale
     FROM Movement
         INNER JOIN MovementLinkObject AS Movement_From
                                       ON Movement_From.MovementId = Movement.Id
@@ -104,8 +107,11 @@ BEGIN
         LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
                                   ON MovementBoolean_isAuto.MovementId = Movement.Id
                                  AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+        LEFT JOIN MovementBoolean AS MovementBoolean_BanFiscalSale
+                                  ON MovementBoolean_BanFiscalSale.MovementId = Movement.Id
+                                 AND MovementBoolean_BanFiscalSale.DescId = zc_MovementBoolean_BanFiscalSale()
     WHERE Movement.Id = inMovementId;
-
+    
     IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
               WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_CashierPharmacy()) -- Для роли "Кассир аптеки"
     THEN
@@ -200,6 +206,14 @@ BEGIN
                                                              ON CLO_From.ContainerId = Container.Id
                                                             AND CLO_From.ObjectId    = vbUnit_From
                                                             AND CLO_From.DescId      = zc_ContainerLinkObject_Unit()
+                              LEFT JOIN ContainerlinkObject AS ContainerLinkObject_DivisionParties
+                                                            ON ContainerLinkObject_DivisionParties.Containerid = Container.Id
+                                                           AND ContainerLinkObject_DivisionParties.DescId = zc_ContainerLinkObject_DivisionParties()
+                                                      
+                              LEFT JOIN ObjectBoolean AS ObjectBoolean_BanFiscalSale
+                                                      ON ObjectBoolean_BanFiscalSale.ObjectId = ContainerLinkObject_DivisionParties.ObjectId
+                                                     AND ObjectBoolean_BanFiscalSale.DescId = zc_ObjectBoolean_DivisionParties_BanFiscalSale()
+                         WHERE (vbisBanFiscalSale = False OR vbisBanFiscalSale = True AND COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False) = True)
                          GROUP BY Container.ObjectId
                         )
           SELECT tmpMI.GoodsId, tmpMI.Amount

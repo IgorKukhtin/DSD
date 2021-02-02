@@ -835,19 +835,19 @@ begin
       DateStart := IncMonth(DateStart, 1 - qryMaker.FieldByName('AmountMonth').AsInteger);
   end;
 
-  if qryMaker.FieldByName('isQuarter').AsBoolean and (MonthOf(Date) in [1, 4, 7, 10]) and
-    (DateStart <= IncDay(StartOfTheMonth(Date), -1)) and (DateEnd >= IncDay(StartOfTheMonth(Date), -1))  then
+  if qryMaker.FieldByName('isQuarter').AsBoolean and (MonthOf(qryMaker.FieldByName('SendPlan').AsDateTime) in [1, 4, 7, 10]) and
+    (DateEnd = IncDay(StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime), -1))  then
   begin
     FormQuarterFile := True;
-    DateEndQuarter := IncDay(StartOfTheMonth(Date), -1);
+    DateEndQuarter := DateEnd;
     DateStartQuarter := IncMonth(StartOfTheMonth(DateEndQuarter), - 2);
   end;
 
-  if qryMaker.FieldByName('is4Month').AsBoolean and (MonthOf(Date) in [1, 5, 9]) and
-    (DateStart <= IncDay(StartOfTheMonth(Date), -1)) and (DateEnd >= IncDay(StartOfTheMonth(Date), -1))  then
+  if qryMaker.FieldByName('is4Month').AsBoolean and (MonthOf(qryMaker.FieldByName('SendPlan').AsDateTime) in [1, 5, 9]) and
+    (DateEnd = IncDay(StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime), -1))  then
   begin
     Form4MonthFile := True;
-    DateEnd4Month := IncDay(StartOfTheMonth(Date), -1);
+    DateEnd4Month := DateEnd;
     DateStart4Month := IncMonth(StartOfTheMonth(DateEnd4Month), - 3);
   end;
 end;
