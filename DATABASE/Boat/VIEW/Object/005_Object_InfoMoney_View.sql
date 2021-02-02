@@ -18,6 +18,10 @@ CREATE OR REPLACE VIEW Object_InfoMoney_View AS
               AS TVarChar)  AS InfoMoneyName_all
 
        , Object_InfoMoney.isErased              AS isErased
+       
+       , Object_Unit.Id                    AS UnitId
+       , Object_Unit.ObjectCode            AS UnitCode
+       , Object_Unit.ValueData             AS UnitName
   FROM Object AS Object_InfoMoney
        LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
                             ON ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId = Object_InfoMoney.Id
@@ -28,6 +32,11 @@ CREATE OR REPLACE VIEW Object_InfoMoney_View AS
                             ON ObjectLink_InfoMoney_InfoMoneyGroup.ObjectId = Object_InfoMoney.Id
                            AND ObjectLink_InfoMoney_InfoMoneyGroup.DescId = zc_ObjectLink_InfoMoney_InfoMoneyGroup()
        LEFT JOIN Object AS Object_InfoMoneyGroup ON Object_InfoMoneyGroup.Id = ObjectLink_InfoMoney_InfoMoneyGroup.ChildObjectId
+
+       LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_Unit
+                            ON ObjectLink_InfoMoney_Unit.ObjectId = Object_InfoMoney.Id
+                           AND ObjectLink_InfoMoney_Unit.DescId = zc_ObjectLink_InfoMoney_Unit()
+       LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_InfoMoney_Unit.ChildObjectId
 
  WHERE Object_InfoMoney.DescId = zc_Object_InfoMoney();
 

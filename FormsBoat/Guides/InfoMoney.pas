@@ -21,7 +21,7 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul;
+  DataModul, ExternalLoad;
 
 type
   TInfoMoneyForm = class(TParentForm)
@@ -59,6 +59,15 @@ type
     actChoiceGuides: TdsdChoiceGuides;
     Erased: TcxGridDBColumn;
     isProfitLoss: TcxGridDBColumn;
+    FormParams: TdsdFormParams;
+    spGetImportSettingId: TdsdStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actGetImportSetting: TdsdExecStoredProc;
+    macStartLoad: TMultiAction;
+    bbStartLoad: TdxBarButton;
+    UnitName: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public

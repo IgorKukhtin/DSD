@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1072#1103' '#1089#1090#1072#1090#1100#1103
-  ClientHeight = 263
+  ClientHeight = 330
   ClientWidth = 306
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 40
-    Top = 224
+    Left = 32
+    Top = 288
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -37,8 +37,8 @@
     TabOrder = 3
   end
   object cxButton2: TcxButton
-    Left = 198
-    Top = 224
+    Left = 190
+    Top = 288
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -97,6 +97,22 @@
     Caption = #1047#1072#1090#1088#1072#1090#1099' '#1087#1086' '#1086#1087#1083#1072#1090#1077
     TabOrder = 10
     Width = 121
+  end
+  object cxLabel4: TcxLabel
+    Left = 16
+    Top = 221
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+  end
+  object edUnit: TcxButtonEdit
+    Left = 16
+    Top = 244
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 12
+    Width = 273
   end
   object ActionList: TActionList
     Left = 232
@@ -176,6 +192,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisProfitLoss'
         Value = Null
         Component = ceisProfitLoss
@@ -250,6 +274,21 @@
         Value = ''
         Component = GuidesInfoMoneyDestination
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -340,5 +379,35 @@
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 88
     Top = 168
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 216
+    Top = 235
   end
 end

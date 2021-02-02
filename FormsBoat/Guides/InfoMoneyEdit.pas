@@ -46,6 +46,9 @@ type
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
     dsdFormClose: TdsdFormClose;
     ceisProfitLoss: TcxCheckBox;
+    GuidesUnit: TdsdGuides;
+    cxLabel4: TcxLabel;
+    edUnit: TcxButtonEdit;
   private
     { Private declarations }
   public

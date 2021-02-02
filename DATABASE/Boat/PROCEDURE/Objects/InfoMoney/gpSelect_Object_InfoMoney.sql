@@ -1,13 +1,16 @@
 -- Function: gpSelect_Object_InfoMoney(TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_InfoMoney (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_InfoMoney (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_InfoMoney(
+    IN inShowAll     Boolean,
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar,
                InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar,
                InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar,
+               UnitId Integer, UnitCode Integer, UnitName TVarChar,
                isProfitLoss boolean,
                isErased boolean
 )
@@ -31,7 +34,11 @@ BEGIN
          , Object_InfoMoney_View.InfoMoneyDestinationId
          , Object_InfoMoney_View.InfoMoneyDestinationCode
          , Object_InfoMoney_View.InfoMoneyDestinationName
-         
+
+         , Object_InfoMoney_View.UnitId
+         , Object_InfoMoney_View.UnitCode
+         , Object_InfoMoney_View.UnitName
+                  
          , COALESCE (ObjectBoolean_ProfitLoss.ValueData, False)  AS isProfitLoss
 
          , Object_InfoMoney_View.isErased
@@ -39,6 +46,7 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_ProfitLoss
                                     ON ObjectBoolean_ProfitLoss.ObjectId = Object_InfoMoney_View.InfoMoneyId
                                    AND ObjectBoolean_ProfitLoss.DescId = zc_ObjectBoolean_InfoMoney_ProfitLoss()
+      WHERE Object_InfoMoney_View.isErased = FALSE OR inShowAll = TRUE
     UNION ALL
       SELECT 0 AS Id
            , NULL :: Integer AS Code
@@ -47,11 +55,16 @@ BEGIN
     
            , 0 AS InfoMoneyGroupId
            , 0 AS InfoMoneyGroupCode
-           , '' :: TVarChar as InfoMoneyGroupName
+           , '' :: TVarChar AS InfoMoneyGroupName
         
            , 0 AS InfoMoneyDestinationId
            , 0 AS InfoMoneyDestinationCode
-           , '' :: TVarChar as InfoMoneyDestinationName
+           , '' :: TVarChar AS InfoMoneyDestinationName
+
+           , 0 AS UnitId
+           , 0 AS UnitCode
+           , '' :: TVarChar AS UnitName
+
            , FALSE  AS isProfitLoss
            , FALSE  AS isErased
 ;
@@ -73,4 +86,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_InfoMoney('2')
+-- SELECT * FROM gpSelect_Object_InfoMoney(FALSE, '2')

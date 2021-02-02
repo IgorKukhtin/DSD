@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_InfoMoney()
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_InfoMoney(Integer, Integer, TVarChar, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_InfoMoney(Integer, Integer, TVarChar, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_InfoMoney(Integer, Integer, TVarChar, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_InfoMoney(
  INOUT ioId                     Integer   ,    -- ключ объекта <Статья назначения>
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_InfoMoney(
     IN inName                   TVarChar  ,    -- Название объекта <Статья назначения>
     IN inInfoMoneyGroupId       Integer   ,    -- ссылка на <Группы управленческих назначений>
     IN inInfoMoneyDestinationId Integer   ,    -- ссылка на <Управленческие назначения>
+    IN inUnitId                 Integer   ,    -- Подразделение
     IN inisProfitLoss           Boolean   ,    -- затраты по оплате
     IN inSession                TVarChar       -- сессия пользователя
 )
@@ -37,7 +39,11 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_InfoMoney_InfoMoneyGroup(), ioId, inInfoMoneyGroupId);
    -- сохранили связь с <Управленческие назначения>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_InfoMoney_InfoMoneyDestination(), ioId, inInfoMoneyDestinationId);
-   
+
+   -- сохранили связь с <Подразделение>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_InfoMoney_Unit(), ioId, inUnitId);
+
+
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_InfoMoney_ProfitLoss(), ioId, inisProfitLoss);
 
@@ -52,6 +58,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.02.21         * inUnitId
  28.08.15         * add inisProfitLoss
  18.04.14                                        * rem !!! это временно !!!
  21.09.13                                        * !!! это временно !!!

@@ -325,12 +325,17 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ProdOptions_Goods() RETURNS Integer AS 
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ProdOptions_Goods', 'Комплектующие', zc_Object_ProdOptions(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdOptions_Goods');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_InfoMoney_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_InfoMoney_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_InfoMoney_Unit', 'Подразделение', zc_Object_InfoMoney(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_InfoMoney_Unit');
+
 
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.02.21         * zc_ObjectLink_InfoMoney_Unit
  04.01.21         * zc_ObjectLink_Product_Client
  29.12.20         * zc_ObjectLink_Product_ReceiptProdModel
  25.12.20         * zc_ObjectLink_ProdOptions_TaxKind
