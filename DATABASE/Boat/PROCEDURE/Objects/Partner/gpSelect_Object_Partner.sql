@@ -135,7 +135,7 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_InfoMoney
                                ON ObjectLink_InfoMoney.ObjectId = Object_Partner.Id
                               AND ObjectLink_InfoMoney.DescId = zc_ObjectLink_Partner_InfoMoney()
-          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_PLZ.ChildObjectId
+          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_InfoMoney.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_TaxKind
                                ON ObjectLink_TaxKind.ObjectId = Object_Partner.Id
