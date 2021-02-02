@@ -3,7 +3,7 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1089#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103'>'
   ClientHeight = 376
-  ClientWidth = 597
+  ClientWidth = 612
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,11 +20,12 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 597
+    Width = 612
     Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 597
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -50,25 +51,33 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 86
+        Width = 73
       end
       object InfoMoneyGroup: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyGroupName'
         HeaderAlignmentVert = vaCenter
-        Width = 123
+        Width = 102
       end
       object InfoMoneyDestination: TcxGridDBColumn
         Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'InfoMoneyDestinationName'
         HeaderAlignmentVert = vaCenter
-        Width = 200
+        Width = 169
       end
       object Name: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 177
+        Width = 150
+      end
+      object UnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 104
       end
       object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

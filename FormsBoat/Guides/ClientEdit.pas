@@ -42,6 +42,40 @@ type
     edComment: TcxTextEdit;
     cxLabel6: TcxLabel;
     edDiscountTax: TcxCurrencyEdit;
+    cxLabel17: TcxLabel;
+    ceDayCalendar: TcxCurrencyEdit;
+    ceDayBank: TcxCurrencyEdit;
+    cxLabel18: TcxLabel;
+    cxLabel4: TcxLabel;
+    edFax: TcxTextEdit;
+    cxLabel5: TcxLabel;
+    edPhone: TcxTextEdit;
+    cxLabel7: TcxLabel;
+    edMobile: TcxTextEdit;
+    edIBAN: TcxTextEdit;
+    cxLabel8: TcxLabel;
+    cxLabel9: TcxLabel;
+    edStreet: TcxTextEdit;
+    edMember: TcxTextEdit;
+    cxLabel10: TcxLabel;
+    cxLabel11: TcxLabel;
+    edWWW: TcxTextEdit;
+    edEmail: TcxTextEdit;
+    cxLabel12: TcxLabel;
+    cxLabel13: TcxLabel;
+    edCodeDB: TcxTextEdit;
+    cxLabel14: TcxLabel;
+    edPLZ: TcxButtonEdit;
+    cxLabel15: TcxLabel;
+    edBank: TcxButtonEdit;
+    cxLabel16: TcxLabel;
+    edInfoMoney: TcxButtonEdit;
+    cxLabel19: TcxLabel;
+    edTaxKind: TcxButtonEdit;
+    GuidesPLZ: TdsdGuides;
+    GuidesBank: TdsdGuides;
+    GuidesInfoMoney: TdsdGuides;
+    GuidesTaxKind: TdsdGuides;
   private
     { Private declarations }
   public

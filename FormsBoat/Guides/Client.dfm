@@ -45,7 +45,6 @@ object ClientForm: TClientForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -75,6 +74,160 @@ object ClientForm: TClientForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 91
+      end
+      object Fax: TcxGridDBColumn
+        Caption = #1060#1072#1082#1089
+        DataBinding.FieldName = 'Fax'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object Phone: TcxGridDBColumn
+        Caption = #1058#1077#1083' '#1085#1086#1084#1077#1088
+        DataBinding.FieldName = 'Phone'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object Mobile: TcxGridDBColumn
+        Caption = #1052#1086#1073#1080#1083#1100#1085#1099#1081
+        DataBinding.FieldName = 'Mobile'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object IBAN: TcxGridDBColumn
+        Caption = #1088'/'#1089#1095
+        DataBinding.FieldName = 'IBAN'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object Street: TcxGridDBColumn
+        Caption = #1059#1083#1080#1094#1072
+        DataBinding.FieldName = 'Street'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object Member: TcxGridDBColumn
+        Caption = #1050#1086#1085#1090#1072#1085#1082#1090#1085#1086#1077' '#1083#1080#1094#1086
+        DataBinding.FieldName = 'Member'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object WWW: TcxGridDBColumn
+        Caption = #1040#1076#1088#1077#1089' '#1089#1072#1081#1090#1072
+        DataBinding.FieldName = 'WWW'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object Email: TcxGridDBColumn
+        Caption = #1069#1083'. '#1087#1086#1095#1090#1072
+        DataBinding.FieldName = 'Email'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1095#1090#1072
+        Options.Editing = False
+        Width = 80
+      end
+      object CodeDB: TcxGridDBColumn
+        Caption = #1050#1086#1076' ('#1085#1072#1096' '#1074' '#1080#1093' '#1073#1072#1079#1077')'
+        DataBinding.FieldName = 'CodeDB'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1085#1072#1096' '#1082#1086#1076' '#1074' '#1073#1072#1079#1077' '#1087#1072#1088#1090#1085#1077#1088#1072
+        Options.Editing = False
+        Width = 80
+      end
+      object DayCalendar: TcxGridDBColumn
+        Caption = #1054#1090#1089#1088'. '#1074' '#1082#1072#1083#1077#1085#1076'. '#1076#1085#1103#1093
+        DataBinding.FieldName = 'DayCalendar'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1090#1089#1088#1086#1095#1082#1072' '#1074' '#1082#1072#1083#1077#1085#1076#1072#1088#1085#1099#1093' '#1076#1085#1103#1093
+        Options.Editing = False
+        Width = 92
+      end
+      object DayBank: TcxGridDBColumn
+        Caption = #1054#1090#1089#1088'. '#1074' '#1073#1072#1085#1082'. '#1076#1085#1103#1093
+        DataBinding.FieldName = 'DayBank'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object InfoMoneyName: TcxGridDBColumn
+        Caption = #1057#1090#1072#1090#1100#1103' '#1059#1055
+        DataBinding.FieldName = 'InfoMoneyName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
+      object InfoMoneyGroupName: TcxGridDBColumn
+        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyGroupName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
+      object InfoMoneyDestinationName: TcxGridDBColumn
+        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+        DataBinding.FieldName = 'InfoMoneyDestinationName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
+      object TaxKindName: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1053#1044#1057
+        DataBinding.FieldName = 'TaxKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object BankName: TcxGridDBColumn
+        Caption = #1041#1072#1085#1082
+        DataBinding.FieldName = 'BankName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object PLZName: TcxGridDBColumn
+        Caption = #1055#1086#1095#1090#1086#1074#1099#1081' '#1072#1076#1088#1077#1089
+        DataBinding.FieldName = 'PLZName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
