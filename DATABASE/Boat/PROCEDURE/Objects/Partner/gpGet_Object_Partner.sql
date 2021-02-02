@@ -13,6 +13,11 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Comment TVarChar
              , BankId Integer, BankName TVarChar
              , PLZId Integer, PLZName TVarChar
+             , TaxKindId Integer, TaxKindName TVarChar
+             , InfoMoneyId Integer, InfoMoneyName TVarChar
+             , DiscountTax TFloat
+             , DayCalendar TFloat
+             , DayBank     TFloat
              )
 AS
 $BODY$
@@ -42,6 +47,14 @@ BEGIN
            , '' :: TVarChar           AS BankName
            , 0                        AS PLZId
            , '' :: TVarChar           AS PLZName
+
+           , 0                        AS TaxKindId
+           , '' :: TVarChar           AS TaxKindName
+           , 0                        AS InfoMoneyId
+           , '' :: TVarChar           AS InfoMoneyName
+           , 0 ::TFloat               AS DiscountTax
+           , 0 ::TFloat               AS DayCalendar
+           , 0 ::TFloat               AS DayBank
        ;
    ELSE
        RETURN QUERY
@@ -64,6 +77,14 @@ BEGIN
            , Object_Bank.ValueData           AS BankName
            , Object_PLZ.Id                   AS PLZId
            , Object_PLZ.ValueData            AS PLZName
+
+           , Object_TaxKind.Id               AS TaxKindId
+           , Object_TaxKind.ValueData        AS TaxKindName
+           , Object_InfoMoney.Id             AS InfoMoneyId
+           , Object_InfoMoney.ValueData      AS InfoMoneyName
+           , ObjectFloat_DiscountTax.ValueData ::TFloat AS DiscountTax
+           , ObjectFloat_DayCalendar.ValueData ::TFloat AS DayCalendar
+           , ObjectFloat_Bank.ValueData        ::TFloat AS DayBank
        FROM Object AS Object_Partner
           LEFT JOIN ObjectString AS ObjectString_Fax
                                  ON ObjectString_Fax.ObjectId = Object_Partner.Id
@@ -97,6 +118,16 @@ BEGIN
                                  ON ObjectString_Comment.ObjectId = Object_Partner.Id
                                 AND ObjectString_Comment.DescId = zc_ObjectString_Partner_Comment()
 
+          LEFT JOIN ObjectFloat AS ObjectFloat_DiscountTax
+                                ON ObjectFloat_DiscountTax.ObjectId = Object_Partner.Id
+                               AND ObjectFloat_DiscountTax.DescId = zc_ObjectFloat_Partner_DiscountTax()  
+          LEFT JOIN ObjectFloat AS ObjectFloat_DayCalendar
+                                ON ObjectFloat_DayCalendar.ObjectId = Object_Partner.Id
+                               AND ObjectFloat_DayCalendar.DescId = zc_ObjectFloat_Partner_DayCalendar() 
+          LEFT JOIN ObjectFloat AS ObjectFloat_Bank
+                                ON ObjectFloat_Bank.ObjectId = Object_Partner.Id
+                               AND ObjectFloat_Bank.DescId = zc_ObjectFloat_Partner_Bank()
+
           LEFT JOIN ObjectLink AS ObjectLink_PLZ
                                ON ObjectLink_PLZ.ObjectId = Object_Partner.Id
                               AND ObjectLink_PLZ.DescId = zc_ObjectLink_Partner_PLZ()
@@ -106,6 +137,16 @@ BEGIN
                                ON ObjectLink_Bank.ObjectId = Object_Partner.Id
                               AND ObjectLink_Bank.DescId = zc_ObjectLink_Partner_Bank()
           LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_Bank.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_InfoMoney
+                               ON ObjectLink_InfoMoney.ObjectId = Object_Partner.Id
+                              AND ObjectLink_InfoMoney.DescId = zc_ObjectLink_Partner_InfoMoney()
+          LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_InfoMoney.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+                               ON ObjectLink_TaxKind.ObjectId = Object_Partner.Id
+                              AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Partner_TaxKind()
+          LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
        WHERE Object_Partner.Id = inId;
    END IF;
 
@@ -117,6 +158,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.02.21         *
  09.11.20         *
  22.10.20         *
 */

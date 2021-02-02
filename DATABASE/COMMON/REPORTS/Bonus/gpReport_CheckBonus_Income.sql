@@ -45,11 +45,6 @@ $BODY$
    DECLARE inisMovement  Boolean ; -- по документам
 BEGIN
 
-   IF (COALESCE (inPaidKindId,0) = 0)
-   THEN
-        RAISE EXCEPTION 'Ошибка.Не выбрана форма оплаты';
-   END IF;
-
    inisMovement:= FALSE;
 
     RETURN QUERY

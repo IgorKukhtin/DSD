@@ -22,7 +22,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  ExternalLoad;
+  ExternalLoad, cxCurrencyEdit;
 
 type
   TPartnerForm = class(TParentForm)
@@ -70,6 +70,9 @@ type
     actGetImportSetting: TdsdExecStoredProc;
     actDoLoad: TExecuteImportSettingsAction;
     actStartLoad: TMultiAction;
+    DiscountTax: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
+    TaxKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

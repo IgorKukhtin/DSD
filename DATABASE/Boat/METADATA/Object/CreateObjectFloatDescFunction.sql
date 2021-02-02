@@ -120,9 +120,36 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_ProdOptItems_DiscountTax() RETURNS Int
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_ProdOptItems(), 'zc_ObjectFloat_ProdOptItems_DiscountTax', '% скидки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ProdOptItems_DiscountTax');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Partner_DiscountTax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Partner_DiscountTax'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Partner(), 'zc_ObjectFloat_Partner_DiscountTax', '% скидки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Partner_DiscountTax');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Partner_DayCalendar() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Partner_DayCalendar'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Partner(), 'zc_ObjectFloat_Partner_DayCalendar', 'Отсрочка в календарных днях' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Partner_DayCalendar');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Partner_Bank() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Partner_Bank'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Partner(), 'zc_ObjectFloat_Partner_Bank', 'Отсрочка в банковских днях' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Partner_Bank');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Client_DayCalendar() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Client_DayCalendar'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Client(), 'zc_ObjectFloat_Client_DayCalendar', 'Отсрочка в календарных днях' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Client_DayCalendar');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Client_Bank() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Client_Bank'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Client(), 'zc_ObjectFloat_Client_Bank', 'Отсрочка в банковских днях' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Client_Bank');
+
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.02.21         * zc_ObjectFloat_Partner_DiscountTax
+                    zc_ObjectFloat_Partner_Bank
+                    zc_ObjectFloat_Partner_DayCalendar
+                    zc_ObjectFloat_Client_DayCalendar
+                    zc_ObjectFloat_Client_Bank
  04.01.21         * zc_ObjectFloat_Client_DiscountTax
                     zc_ObjectFloat_ProdOptItems_DiscountTax
                     zc_ObjectFloat_Product_DiscountTax

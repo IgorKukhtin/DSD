@@ -52,7 +52,17 @@ BEGIN
 
    inisMovement:= FALSE;
 
-   -- временные таблицы
+   -- удаляем временные таблицы если уже есть такие
+   IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE 'tmpJuridical') THEN Drop TABLE tmpJuridical; END IF;
+   IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE 'tmpContract_full') THEN Drop TABLE tmpContract_full; END IF;
+   IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE 'tmpContract_all') THEN Drop TABLE tmpContract_all; END IF;
+   IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE 'tmpContract_find') THEN Drop TABLE tmpContract_find; END IF;
+   IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE 'tmpContractPartner') THEN Drop TABLE tmpContractPartner; END IF;
+   IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE 'tmpContract') THEN Drop TABLE tmpContract; END IF;
+   IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE 'tmpContractConditionKind') THEN Drop TABLE tmpContractConditionKind; END IF;
+   IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE 'tmpContractBonus') THEN Drop TABLE tmpContractBonus; END IF;
+   IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE 'tmpBase') THEN Drop TABLE tmpBase; END IF;
+   
    --поставщики
    CREATE TEMP TABLE tmpJuridical ON COMMIT DROP AS (SELECT ObjectLink_Juridical_JuridicalGroup.ObjectId AS JuridicalId
                                                      FROM ObjectLink AS ObjectLink_Juridical_JuridicalGroup
