@@ -102,6 +102,7 @@ type
     actPartionGoods20202ChoiceForm: TOpenChoiceForm;
     InsertRecord20202: TInsertRecord;
     bbInsertRecord20202: TdxBarButton;
+    macInsertRecord20202: TMultiAction;
   private
     { Private declarations }
   public

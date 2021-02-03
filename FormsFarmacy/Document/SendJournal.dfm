@@ -511,6 +511,15 @@ inherited SendJournalForm: TSendJournalForm
             Options.Editing = False
             Width = 84
           end
+          object isBanFiscalSale: TcxGridDBColumn
+            Caption = #1047#1072#1087#1088'. '#1082' '#1092#1080#1089#1082'. '#1087#1088#1086#1076#1072#1078#1077
+            DataBinding.FieldName = 'isBanFiscalSale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1077#1088#1077#1084#1077#1097#1072#1090#1100' '#1090#1086#1074#1072#1088' '#1090#1086#1083#1100#1082#1086' '#1079#1072#1087#1088#1077#1097#1077#1085#1085#1099#1081' '#1082' '#1092#1080#1089#1082#1072#1083#1100#1085#1086#1081' '#1087#1088#1086#1076#1072#1078#1077
+            Options.Editing = False
+            Width = 60
+          end
         end
       end
     end
@@ -1243,7 +1252,7 @@ inherited SendJournalForm: TSendJournalForm
       end
       item
         Name = 'outOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime

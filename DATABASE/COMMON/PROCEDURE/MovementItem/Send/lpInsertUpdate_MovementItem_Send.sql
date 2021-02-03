@@ -28,6 +28,12 @@ BEGIN
      -- меняем параметр
      IF inPartionGoodsDate <= '01.01.1900' THEN inPartionGoodsDate:= NULL; END IF;
 
+     -- чтоб не сохранялись пустые строки
+     IF COALESCE (inGoodsId,0) = 0
+     THEN
+        RETURN;
+     END IF;
+     
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
@@ -63,8 +69,6 @@ BEGIN
              ioPartionGoods:= (SELECT ValueData FROM Object WHERE Id = inPartionGoodsId);
          END IF;
      END IF;
-
-
 
 
      -- сохранили <Элемент документа>

@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_InfoMoney(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar,
                InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar,
+               UnitId Integer, UnitCode Integer, UnitName TVarChar,
                isProfitLoss boolean,
                isErased boolean) 
   AS
@@ -29,9 +30,14 @@ BEGIN
            , CAST (0 as Integer)   AS InfoMoneyGroupCode
            , CAST ('' as TVarChar) AS InfoMoneyGroupName
                      
-           , CAST (0 as Integer) AS InfoMoneyDestinationId
+           , CAST (0 as Integer)   AS InfoMoneyDestinationId
            , CAST (0 as Integer)   AS InfoMoneyDestinationCode
            , CAST ('' as TVarChar) AS InfoMoneyDestinationName
+
+           , CAST (0 as Integer)   AS UnitId
+           , CAST (0 as Integer)   AS UnitCode
+           , CAST ('' as TVarChar) AS UnitName
+
            , FALSE                  AS isProfitLoss
            , CAST (NULL AS Boolean) AS isErased
        FROM Object 
@@ -50,6 +56,10 @@ BEGIN
          , Object_InfoMoneyDestination.Id         AS InfoMoneyDestinationId
          , Object_InfoMoneyDestination.ObjectCode AS InfoMoneyDestinationCode
          , Object_InfoMoneyDestination.ValueData  AS InfoMoneyDestinationName
+
+         , Object_InfoMoney_View.UnitId
+         , Object_InfoMoney_View.UnitCode
+         , Object_InfoMoney_View.UnitName
          
          , COALESCE (ObjectBoolean_ProfitLoss.ValueData, False)  AS isProfitLoss
 

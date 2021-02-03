@@ -307,6 +307,16 @@
         Options.Editing = False
         Width = 60
       end
+      object EndDate_real: TcxGridDBColumn
+        Caption = #1044#1077#1081#1089#1090#1074'. '#1076#1086' ('#1080#1085#1092'.)'
+        DataBinding.FieldName = 'EndDate_real'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1086#1075#1086#1074#1086#1088' '#1076#1077#1081#1089#1090#1074'. '#1076#1086' ('#1080#1085#1092'.)'
+        Options.Editing = False
+        Width = 60
+      end
       object EndDate_Term: TcxGridDBColumn
         Caption = #1044#1077#1081#1089#1090#1074'. '#1076#1086' ('#1089' '#1087#1088#1086#1083#1086#1085#1075#1072#1094#1080#1077#1081')'
         DataBinding.FieldName = 'EndDate_Term'

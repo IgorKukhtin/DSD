@@ -870,15 +870,6 @@ inherited SendForm: TSendForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'OperDatePartion'
-          Value = 'NULL'
-          Component = MasterCDS
-          ComponentItem = 'PartionGoodsDate'
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'Amount'
           Value = Null
           Component = MasterCDS
@@ -911,8 +902,8 @@ inherited SendForm: TSendForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'PartionGoodsForm'
-      FormName = 'TPartionGoodsChoiceForm'
-      FormNameParam.Value = 'TPartionGoodsChoiceForm'
+      FormName = 'TPartionGoods20202ChoiceForm'
+      FormNameParam.Value = 'TPartionGoods20202ChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -969,15 +960,6 @@ inherited SendForm: TSendForm
           Component = MasterCDS
           ComponentItem = 'Price'
           DataType = ftFloat
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'OperDatePartion'
-          Value = 'NULL'
-          Component = MasterCDS
-          ComponentItem = 'PartionGoodsDate'
-          DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
@@ -1182,6 +1164,19 @@ inherited SendForm: TSendForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' '#1057#1087#1077#1094#1086#1076#1077#1078#1076#1099
       ImageIndex = 0
     end
+    object macInsertRecord20202: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = InsertRecord20202
+        end
+        item
+          Action = actRefreshPrice
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' '#1057#1087#1077#1094#1086#1076#1077#1078#1076#1099
+      ImageIndex = 0
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1378,7 +1373,7 @@ inherited SendForm: TSendForm
       Category = 0
     end
     object bbInsertRecord20202: TdxBarButton
-      Action = InsertRecord20202
+      Action = macInsertRecord20202
       Category = 0
     end
   end

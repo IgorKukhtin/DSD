@@ -26,6 +26,12 @@ BEGIN
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
+     -- чтоб не сохранялись пустые строки
+     IF COALESCE (inGoodsId,0) = 0
+     THEN
+        RETURN;
+     END IF;
+
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
 

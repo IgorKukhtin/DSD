@@ -32,6 +32,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , DriverSunId Integer, DriverSunName TVarChar
              , NumberSeats Integer
              , ConfirmedText TVarChar
+             , isBanFiscalSale Boolean
               )
 
 AS
@@ -164,6 +165,8 @@ BEGIN
                   WHEN MovementBoolean_Confirmed.ValueData IS NULL THEN 'Ожидает подтвержд.'   
                   WHEN MovementBoolean_Confirmed.ValueData = TRUE  THEN 'Подтвержден'   
                   ELSE 'Не подтвержден' END ::TVarChar          AS ConfirmedText
+                  
+           , COALESCE (MovementBoolean_BanFiscalSale.ValueData, FALSE)    ::Boolean AS isBanFiscalSale           
 
            --, date_part('day', MovementDate_Insert.ValueData - Movement.OperDate) ::TFloat AS InsertDateDiff 
            --, date_part('day', MovementDate_Update.ValueData - Movement.OperDate) ::TFloat AS UpdateDateDiff
@@ -264,6 +267,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Confirmed
                                       ON MovementBoolean_Confirmed.MovementId = Movement.Id
                                      AND MovementBoolean_Confirmed.DescId = zc_MovementBoolean_Confirmed()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_BanFiscalSale
+                                      ON MovementBoolean_BanFiscalSale.MovementId = Movement.Id
+                                     AND MovementBoolean_BanFiscalSale.DescId = zc_MovementBoolean_BanFiscalSale()
 
             LEFT JOIN MovementFloat AS MovementFloat_MCSPeriod
                                     ON MovementFloat_MCSPeriod.MovementId =  Movement.Id

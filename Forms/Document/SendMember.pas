@@ -77,6 +77,11 @@ type
     cxLabel5: TcxLabel;
     edSubjectDoc: TcxButtonEdit;
     GuidesSubjectDoc: TdsdGuides;
+    actPartionGoods20202ChoiceForm: TOpenChoiceForm;
+    actPartionGoods20202ChoiceFormGrid: TOpenChoiceForm;
+    InsertRecord20202: TInsertRecord;
+    macInsertRecord20202: TMultiAction;
+    bbInsertRecord20202: TdxBarButton;
   private
     { Private declarations }
   public

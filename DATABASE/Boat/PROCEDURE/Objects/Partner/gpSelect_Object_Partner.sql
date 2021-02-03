@@ -14,6 +14,13 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Comment TVarChar
              , BankId Integer, BankName TVarChar
              , PLZId Integer, PLZName TVarChar
+             , TaxKindId Integer, TaxKindName TVarChar
+             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+             , InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
+             , InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
+             , DiscountTax TFloat
+             , DayCalendar TFloat
+             , DayBank     TFloat
              , InsertName TVarChar
              , InsertDate TDateTime
              , isErased Boolean)
@@ -48,6 +55,26 @@ BEGIN
            , Object_Bank.ValueData           AS BankName
            , Object_PLZ.Id                   AS PLZId
            , Object_PLZ.ValueData            AS PLZName
+
+           , Object_TaxKind.Id               AS TaxKindId
+           , Object_TaxKind.ValueData        AS TaxKindName
+
+           , Object_InfoMoney_View.InfoMoneyId
+           , Object_InfoMoney_View.InfoMoneyCode
+           , Object_InfoMoney_View.InfoMoneyName
+           , Object_InfoMoney_View.InfoMoneyName_all
+
+           , Object_InfoMoney_View.InfoMoneyGroupId
+           , Object_InfoMoney_View.InfoMoneyGroupCode
+           , Object_InfoMoney_View.InfoMoneyGroupName
+
+           , Object_InfoMoney_View.InfoMoneyDestinationId
+           , Object_InfoMoney_View.InfoMoneyDestinationCode
+           , Object_InfoMoney_View.InfoMoneyDestinationName
+
+           , ObjectFloat_DiscountTax.ValueData ::TFloat AS DiscountTax
+           , ObjectFloat_DayCalendar.ValueData ::TFloat AS DayCalendar
+           , ObjectFloat_Bank.ValueData        ::TFloat AS DayBank
 
            , Object_Insert.ValueData         AS InsertName
            , ObjectDate_Insert.ValueData     AS InsertDate
@@ -85,6 +112,16 @@ BEGIN
                                  ON ObjectString_Comment.ObjectId = Object_Partner.Id
                                 AND ObjectString_Comment.DescId = zc_ObjectString_Partner_Comment()
 
+          LEFT JOIN ObjectFloat AS ObjectFloat_DiscountTax
+                                ON ObjectFloat_DiscountTax.ObjectId = Object_Partner.Id
+                               AND ObjectFloat_DiscountTax.DescId = zc_ObjectFloat_Partner_DiscountTax()  
+          LEFT JOIN ObjectFloat AS ObjectFloat_DayCalendar
+                                ON ObjectFloat_DayCalendar.ObjectId = Object_Partner.Id
+                               AND ObjectFloat_DayCalendar.DescId = zc_ObjectFloat_Partner_DayCalendar() 
+          LEFT JOIN ObjectFloat AS ObjectFloat_Bank
+                                ON ObjectFloat_Bank.ObjectId = Object_Partner.Id
+                               AND ObjectFloat_Bank.DescId = zc_ObjectFloat_Partner_Bank() 
+
           LEFT JOIN ObjectLink AS ObjectLink_PLZ
                                ON ObjectLink_PLZ.ObjectId = Object_Partner.Id
                               AND ObjectLink_PLZ.DescId = zc_ObjectLink_Partner_PLZ()
@@ -94,6 +131,16 @@ BEGIN
                                ON ObjectLink_Bank.ObjectId = Object_Partner.Id
                               AND ObjectLink_Bank.DescId = zc_ObjectLink_Partner_Bank()
           LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_Bank.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_InfoMoney
+                               ON ObjectLink_InfoMoney.ObjectId = Object_Partner.Id
+                              AND ObjectLink_InfoMoney.DescId = zc_ObjectLink_Partner_InfoMoney()
+          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_InfoMoney.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+                               ON ObjectLink_TaxKind.ObjectId = Object_Partner.Id
+                              AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Partner_TaxKind()
+          LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_Partner.Id
@@ -115,6 +162,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.02.21         *
  09.11.20         *
  22.10.20         *
 */

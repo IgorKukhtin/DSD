@@ -48,6 +48,14 @@ type
     bbUpdate_isMorionCode: TdxBarButton;
     bbUpdate_isBarCode: TdxBarButton;
     isPartialPay: TcxGridDBColumn;
+    isMorionCodeLoad: TcxGridDBColumn;
+    isBarCodeLoad: TcxGridDBColumn;
+    spUpdate_isBarCodeLoad: TdsdStoredProc;
+    spUpdate_isMorionCodeLoad: TdsdStoredProc;
+    actUpdate_isMorionCodeLoad: TdsdExecStoredProc;
+    actUpdate_isBarCodeLoad: TdsdExecStoredProc;
+    bbUpdate_isMorionCodeLoad: TdxBarButton;
+    bbUpdate_isBarCodeLoad: TdxBarButton;
   private
     { Private declarations }
   public

@@ -36,6 +36,7 @@ $BODY$
   DECLARE vbisSUN      Boolean;
   DECLARE vbisDeferred Boolean;
   DECLARE vbStatusID   Integer;
+  DECLARE vbisBanFiscalSale Boolean;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -50,6 +51,7 @@ BEGIN
          , COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)
          , COALESCE (MovementLinkObject_PartionDateKind.ObjectId, 0)
          , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean
+         , COALESCE (MovementBoolean_BanFiscalSale.ValueData, FALSE)
     INTO vbOperDate
        , vbStatusID
        , vbUnitId
@@ -57,6 +59,7 @@ BEGIN
        , vbisSUN
        , vbPartionDateId
        , vbisDeferred
+       , vbisBanFiscalSale
     FROM Movement
          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                       ON MovementLinkObject_From.MovementId = Movement.Id
@@ -76,6 +79,9 @@ BEGIN
          LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                    ON MovementBoolean_Deferred.MovementId = Movement.Id
                                   AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+         LEFT JOIN MovementBoolean AS MovementBoolean_BanFiscalSale
+                                   ON MovementBoolean_BanFiscalSale.MovementId = Movement.Id
+                                  AND MovementBoolean_BanFiscalSale.DescId = zc_MovementBoolean_BanFiscalSale()
     WHERE Movement.Id = inMovementId;
 
     -- значения для разделения по срокам
@@ -332,9 +338,16 @@ BEGIN
                             INNER JOIN tmpMI_Master ON tmpMI_Master.ObjectId = Container.ObjectId
                             LEFT JOIN tmpMI_Child_ContainerId ON tmpMI_Child_ContainerId.ContainerId = Container.Id
                             LEFT JOIN tmpContainerPD ON tmpContainerPD.ContainerId = Container.Id
+                            LEFT JOIN ContainerlinkObject AS ContainerLinkObject_DivisionParties
+                                                          ON ContainerLinkObject_DivisionParties.Containerid = Container.Id
+                                                         AND ContainerLinkObject_DivisionParties.DescId = zc_ContainerLinkObject_DivisionParties()                                                              
+                            LEFT JOIN ObjectBoolean AS ObjectBoolean_BanFiscalSale
+                                                    ON ObjectBoolean_BanFiscalSale.ObjectId = ContainerLinkObject_DivisionParties.ObjectId
+                                                   AND ObjectBoolean_BanFiscalSale.DescId = zc_ObjectBoolean_DivisionParties_BanFiscalSale()                                                          
                        WHERE Container.DescID = zc_Container_Count()
                          AND Container.WhereObjectId = vbUnitId
-                         AND  Container.Amount - COALESCE(tmpMI_Child_ContainerId.Amount, 0) > 0
+                         AND Container.Amount - COALESCE(tmpMI_Child_ContainerId.Amount, 0) > 0
+                         AND (vbisBanFiscalSale = False OR vbisBanFiscalSale = True AND COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False) = True)
                        )
           , DD AS (SELECT tmpMI_Master.ID     AS MovementItemId
                         , tmpMI_Master.Amount
@@ -472,6 +485,7 @@ BEGIN
                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                                 ON MovementLinkObject_From.MovementId = MIC.MovementId
                                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                               
                                GROUP BY Container.ObjectId
                                       , MovementLinkObject_From.ObjectId
                                )
@@ -557,9 +571,16 @@ BEGIN
                        FROM Container
                             INNER JOIN tmpMI_Master ON tmpMI_Master.ObjectId = Container.ObjectId
                             LEFT JOIN tmpMI_Child_ContainerId ON tmpMI_Child_ContainerId.ContainerId = Container.Id
+                            LEFT JOIN ContainerlinkObject AS ContainerLinkObject_DivisionParties
+                                                          ON ContainerLinkObject_DivisionParties.Containerid = Container.Id
+                                                         AND ContainerLinkObject_DivisionParties.DescId = zc_ContainerLinkObject_DivisionParties()                                                              
+                            LEFT JOIN ObjectBoolean AS ObjectBoolean_BanFiscalSale
+                                                    ON ObjectBoolean_BanFiscalSale.ObjectId = ContainerLinkObject_DivisionParties.ObjectId
+                                                   AND ObjectBoolean_BanFiscalSale.DescId = zc_ObjectBoolean_DivisionParties_BanFiscalSale()                                                          
                        WHERE Container.DescID = zc_Container_Count()
                          AND Container.WhereObjectId = vbUnitId
-                         AND  Container.Amount - COALESCE(tmpMI_Child_ContainerId.Amount, 0) > 0
+                         AND Container.Amount - COALESCE(tmpMI_Child_ContainerId.Amount, 0) > 0
+                         AND (vbisBanFiscalSale = False OR vbisBanFiscalSale = True AND COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False) = True)
                        )
           , DD AS (SELECT tmpMI_Master.ID     AS MovementItemId
                         , tmpMI_Master.Amount
@@ -704,6 +725,7 @@ BEGIN
                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                                 ON MovementLinkObject_From.MovementId = MIC.MovementId
                                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+
                                GROUP BY Container.ObjectId
                                       , MovementLinkObject_From.ObjectId
                                )

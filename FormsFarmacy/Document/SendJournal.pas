@@ -100,6 +100,7 @@ type
     isVIP: TcxGridDBColumn;
     isUrgently: TcxGridDBColumn;
     isConfirmed: TcxGridDBColumn;
+    isBanFiscalSale: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -28,6 +28,7 @@ $BODY$
    DECLARE vbFromId Integer;
    DECLARE vbUnitKey TVarChar;
    DECLARE vbUserUnitId Integer;
+   DECLARE vbOperDate TDateTime;
 
    DECLARE vbAmount        TFloat;
    DECLARE vbAmountManual  TFloat;
@@ -44,6 +45,7 @@ $BODY$
    DECLARE vbStatusId      Integer;
    DECLARE vbAmountPromo   TFloat;
    DECLARE vbRemains       TFloat;
+   DECLARE vbUserUnit      Integer;
    DECLARE vbDaySaleForSUN Integer;
    DECLARE vbTRID          Integer;
    DECLARE vbTRInvNumber   TVarChar; 
@@ -57,6 +59,7 @@ BEGIN
 
     --определяем подразделение получателя
     SELECT Movement.StatusId
+         , Movement.OperDate
          , MovementLinkObject_To.ObjectId                               AS UnitId
          , MovementLinkObject_From.ObjectId                             AS FromId
          , COALESCE (MovementBoolean_SUN.ValueData, FALSE)::Boolean     AS isSUN
@@ -67,7 +70,7 @@ BEGIN
          , COALESCE (MovementFloat_TotalCount.ValueData, 0)
          , COALESCE (ObjectFloat_CashSettings_DaySaleForSUN.ValueData, 0)::Integer
          , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean
-    INTO vbStatusId, vbUnitId, vbFromId, vbIsSUN, vbIsSUN_v2, vbIsSUN_v3, vbIsDefSUN, vbInsertDate, vbTotalCountOld, vbDaySaleForSUN, vbisDeferred
+    INTO vbStatusId, vbOperDate, vbUnitId, vbFromId, vbIsSUN, vbIsSUN_v2, vbIsSUN_v3, vbIsDefSUN, vbInsertDate, vbTotalCountOld, vbDaySaleForSUN, vbisDeferred
     FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = Movement.Id
@@ -406,8 +409,40 @@ BEGIN
 
                             WHERE Movement.StatusId = zc_Enum_Status_Complete()
                               AND Movement.DescId = zc_Movement_PromoUnit()
-                              AND Movement.OperDate = DATE_TRUNC ('MONTH', CURRENT_DATE));
+                              AND Movement.OperDate = DATE_TRUNC ('MONTH', vbOperDate));
+                              
+          vbUserUnit := (SELECT Count(*)
+                         FROM Movement
+                                
+                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.id
+                                                      AND MovementItem.DescId = zc_MI_Master()
 
+                               LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                                    ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
+                                                   AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+ 
+                               LEFT JOIN ObjectLink AS ObjectLink_Member_Unit
+                                                    ON ObjectLink_Member_Unit.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                                   AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit()
+
+                               LEFT JOIN ObjectLink AS ObjectLink_Member_Position
+                                                    ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                                   AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
+
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                                ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                                                          
+                         WHERE Movement.DescId = zc_Movement_EmployeeSchedule()
+                           AND Movement.OperDate = DATE_TRUNC ('MONTH', vbOperDate)
+                           AND COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId) = vbFromId
+                           AND ObjectLink_Member_Position.ChildObjectId = 1672498);
+          
+          IF COALESCE (vbUserUnit, 0) = 0
+          THEN
+            vbUserUnit := 1;
+          END IF ;
+          
           vbRemains := (SELECT Sum(Container.Amount) AS Amount
                             FROM Container
                             WHERE Container.DescId = zc_Container_Count()
@@ -448,10 +483,10 @@ BEGIN
            INTO vbAmountAuto
            FROM tmpProtocol;
 
-        IF COALESCE (vbAmountPromo, 0) < (COALESCE (vbRemains, 0) - COALESCE (vbAmountAuto, 0))
+        IF COALESCE (vbAmountPromo * vbUserUnit, 0) < (COALESCE (vbRemains, 0) - COALESCE (vbAmountAuto, 0))
         THEN
           RAISE EXCEPTION 'Ошибка. Остаток с учетом зануления <%> больше чем в плане по точке <%> использование коментария <%> запрещено.',
-                           COALESCE (vbRemains, 0) - COALESCE (vbAmountAuto, 0), COALESCE (vbAmountPromo, 0), (SELECT Object.ValueData FROM Object WHERE Object.ID = inCommentTRID);
+                           COALESCE (vbRemains, 0) - COALESCE (vbAmountAuto, 0), COALESCE (vbAmountPromo * vbUserUnit, 0), (SELECT Object.ValueData FROM Object WHERE Object.ID = inCommentTRID);
         END IF;
       END IF;
 
@@ -545,6 +580,34 @@ BEGIN
       END IF;
     END IF;
     
+    IF COALESCE(inCommentTRID, 0) = 14957072
+    THEN
+       IF NOT EXISTS(WITH GoodsPromo AS (SELECT Object_Goods_Retail.GoodsMainId                                                     AS GoodsId  
+                                              , max(tmp.RelatedProductId)                                                          AS RelatedProductId
+                                         FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp
+                                              LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = tmp.GoodsId
+                                         GROUP BY Object_Goods_Retail.GoodsMainId
+                                         )
+                          
+                     SELECT *
+                     FROM Object_Goods_Retail AS Object_Goods_Retail 
+                          LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
+
+                          LEFT JOIN ObjectFloat AS ObjectFloat_RelatedProduct
+                                                ON ObjectFloat_RelatedProduct.ObjectId = Object_Goods_Main.ConditionsKeepId
+                                               AND ObjectFloat_RelatedProduct.DescId = zc_ObjectFloat_ConditionsKeep_RelatedProduct()            
+
+                          LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_Main.Id
+
+                     WHERE Object_Goods_Retail.Id = inGoodsId
+                       AND COALESCE(GoodsPromo.RelatedProductId, ObjectFloat_RelatedProduct.ValueData) = 20628048)
+       THEN 
+         RAISE EXCEPTION 'Ошибка. По товару <%> - <%> нельзя ставить коммент "Нет хладогена."' 
+           , (SELECT ObjectCode FROM Object WHERE ID = inGoodsId)
+           , (SELECT ValueData FROM Object WHERE ID = inGoodsId);
+       END IF;
+    END IF;
+
     IF vbIsSUN = TRUE AND COALESCE (inReasonDifferencesId, 0) <> 0
     THEN
        RAISE EXCEPTION 'Ошибка. В перемещениях СУН причину разногласия использовать нельзя.';

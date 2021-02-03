@@ -2,6 +2,9 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                     , TFloat, TFloat, TFloat
+                                                     , Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
  INOUT ioId              Integer,       -- ключ объекта <>
@@ -17,8 +20,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inWWW             TVarChar,
     IN inEmail           TVarChar,
     IN inCodeDB          TVarChar,
+    IN inDiscountTax     TFloat ,
+    IN inDayCalendar     TFloat ,
+    IN inDayBank         TFloat ,
     IN inBankId          Integer , 
     IN inPLZId           Integer ,
+    IN inInfoMoneyId     Integer ,
+    IN inTaxKindId       Integer ,
     IN inSession         TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -66,10 +74,22 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Partner_Comment(), ioId, inComment);
 
    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Partner_DiscountTax(), ioId, inDiscountTax);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Partner_DayCalendar(), ioId, inDayCalendar);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Partner_Bank(), ioId, inDayBank);
+
+   -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner_PLZ(), ioId, inPLZId);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner_Bank(), ioId, inBankId);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner_InfoMoney(), ioId, inInfoMoneyId);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner_TaxKind(), ioId, inTaxKindId);
+   
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), ioId, CURRENT_TIMESTAMP);
@@ -87,6 +107,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.02.21         *
  09.11.20         *
  22.10.20         *
 */

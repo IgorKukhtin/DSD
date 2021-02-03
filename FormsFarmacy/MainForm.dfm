@@ -4108,6 +4108,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_GoodsRemainsUKTZED: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1054#1089#1090#1072#1090#1082#1080' '#1090#1086#1074#1072#1088#1072' '#1087#1086' '#1059#1050#1058#1042#1069#1044
+      FormName = 'TReport_GoodsRemainsUKTZEDForm'
+      FormNameParam.Value = 'TReport_GoodsRemainsUKTZEDForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4763,6 +4774,9 @@ inherited MainForm: TMainForm
       end
       object N271: TMenuItem
         Action = actReport_QuantityComparison
+      end
+      object N273: TMenuItem
+        Action = actReport_GoodsRemainsUKTZED
       end
       object N178: TMenuItem
         Caption = '-'

@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isDefSUN Boolean, isSent Boolean, isReceived Boolean, isNotDisplaySUN Boolean
              , isVIP Boolean, isUrgently Boolean, isConfirmed Boolean, ConfirmedText TVarChar
              , NumberSeats Integer
+             , isBanFiscalSale Boolean
               )
 AS
 $BODY$
@@ -70,6 +71,7 @@ BEGIN
              , FALSE                                            AS isConfirmed
              , CAST ('Не определено' AS TVarChar)               AS ConfirmedText
              , CAST (0 AS Integer)                              AS NumberSeats
+             , FALSE                                            AS isBanFiscalSale
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -113,6 +115,7 @@ BEGIN
                   WHEN MovementBoolean_Confirmed.ValueData = TRUE  THEN 'Подтвержден'   
                   ELSE 'Не подтвержден' END ::TVarChar          AS ConfirmedText
            , MovementFloat_NumberSeats.ValueData::Integer       AS NumberSeats
+           , COALESCE (MovementBoolean_BanFiscalSale.ValueData, FALSE)    ::Boolean AS isBanFiscalSale           
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -194,6 +197,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Confirmed
                                       ON MovementBoolean_Confirmed.MovementId = Movement.Id
                                      AND MovementBoolean_Confirmed.DescId = zc_MovementBoolean_Confirmed()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_BanFiscalSale
+                                      ON MovementBoolean_BanFiscalSale.MovementId = Movement.Id
+                                     AND MovementBoolean_BanFiscalSale.DescId = zc_MovementBoolean_BanFiscalSale()
 
             LEFT JOIN MovementFloat AS MovementFloat_MCSPeriod
                                     ON MovementFloat_MCSPeriod.MovementId =  Movement.Id

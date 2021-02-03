@@ -64,6 +64,18 @@ type
     cxLabel14: TcxLabel;
     edBank: TcxButtonEdit;
     GuidesBank: TdsdGuides;
+    cxLabel15: TcxLabel;
+    edInfoMoney: TcxButtonEdit;
+    GuidesInfoMoney: TdsdGuides;
+    cxLabel16: TcxLabel;
+    edTaxKind: TcxButtonEdit;
+    GuidesTaxKind: TdsdGuides;
+    ceDiscountTax: TcxCurrencyEdit;
+    Код: TcxLabel;
+    ceDayCalendar: TcxCurrencyEdit;
+    cxLabel17: TcxLabel;
+    ceDayBank: TcxCurrencyEdit;
+    cxLabel18: TcxLabel;
   private
     { Private declarations }
   public

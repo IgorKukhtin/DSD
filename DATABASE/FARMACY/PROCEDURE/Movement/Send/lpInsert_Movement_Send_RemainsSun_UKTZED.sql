@@ -226,12 +226,16 @@ BEGIN
                               LEFT JOIN ContainerlinkObject AS ContainerLinkObject_DivisionParties
                                                             ON ContainerLinkObject_DivisionParties.Containerid = Container.Id
                                                            AND ContainerLinkObject_DivisionParties.DescId = zc_ContainerLinkObject_DivisionParties()
-                              LEFT JOIN Object AS Object_DivisionParties ON Object_DivisionParties.Id = ContainerLinkObject_DivisionParties.ObjectId
+                                                    
+                              LEFT JOIN ObjectBoolean AS ObjectBoolean_BanFiscalSale
+                                                      ON ObjectBoolean_BanFiscalSale.ObjectId = ContainerLinkObject_DivisionParties.ObjectId
+                                                     AND ObjectBoolean_BanFiscalSale.DescId = zc_ObjectBoolean_DivisionParties_BanFiscalSale()
+                              
 
                          WHERE Container.DescId = zc_Container_Count()
                            AND Container.Amount <> 0
                            AND Container.WhereObjectId in (SELECT UnitId FROM _tmpUnit_SUN_UKTZED WHERE isOutUKTZED_SUN1 = TRUE)
-                           AND COALESCE (Object_DivisionParties.ObjectCode, 0) = 1
+                           AND COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False) = True
                          GROUP BY Container.ObjectId)
 
      INSERT INTO _tmpGoods_SUN_UKTZED (GoodsId, KoeffSUN)
@@ -254,11 +258,14 @@ BEGIN
                               LEFT JOIN ContainerlinkObject AS ContainerLinkObject_DivisionParties
                                                             ON ContainerLinkObject_DivisionParties.Containerid = Container.Id
                                                            AND ContainerLinkObject_DivisionParties.DescId = zc_ContainerLinkObject_DivisionParties()
-                              LEFT JOIN Object AS Object_DivisionParties ON Object_DivisionParties.Id = ContainerLinkObject_DivisionParties.ObjectId
+
+                              LEFT JOIN ObjectBoolean AS ObjectBoolean_BanFiscalSale
+                                                      ON ObjectBoolean_BanFiscalSale.ObjectId = ContainerLinkObject_DivisionParties.ObjectId
+                                                     AND ObjectBoolean_BanFiscalSale.DescId = zc_ObjectBoolean_DivisionParties_BanFiscalSale()
                          WHERE Container.DescId = zc_Container_Count()
                            AND Container.Amount <> 0
                            AND COALESCE (_tmpGoods_TP_exception.GoodsId, 0) = 0
-                           AND (_tmpUnit_SUN_UKTZED.isOutUKTZED_SUN1 = False OR _tmpUnit_SUN_UKTZED.isOutUKTZED_SUN1 = True AND COALESCE (Object_DivisionParties.ObjectCode, 0) = 1)
+                           AND (_tmpUnit_SUN_UKTZED.isOutUKTZED_SUN1 = False OR _tmpUnit_SUN_UKTZED.isOutUKTZED_SUN1 = True AND COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False) = True)
                          GROUP BY Container.WhereObjectId
                                 , Container.ObjectId
                         )
@@ -641,6 +648,6 @@ $BODY$
  30.01.21                                                     *
 */
 
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_UKTZED (inOperDate:= CURRENT_DATE + INTERVAL '2 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
+SELECT * FROM lpInsert_Movement_Send_RemainsSun_UKTZED (inOperDate:= CURRENT_DATE + INTERVAL '0 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 
 -- select * from gpReport_Movement_Send_RemainsSun_UKTZED(inOperDate := ('28.12.2020')::TDateTime ,  inSession := '3');

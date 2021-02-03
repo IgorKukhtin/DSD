@@ -49,6 +49,8 @@ type
     InfoMoneyDestination: TcxGridDBColumn;
     actChoiceGuides: TdsdChoiceGuides;
     Erased: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public
