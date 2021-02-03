@@ -2,8 +2,9 @@
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
   ClientHeight = 711
   ClientWidth = 934
+  ExplicitTop = -155
   ExplicitWidth = 940
-  ExplicitHeight = 739
+  ExplicitHeight = 736
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -562,7 +563,6 @@
   object edMainJuridical: TcxButtonEdit [34]
     Left = 17
     Top = 615
-    Enabled = False
     Properties.Buttons = <
       item
         Default = True
@@ -1678,7 +1678,7 @@
       end
       item
         Name = 'inStartPromo'
-        Value = 'NULL'
+        Value = Null
         Component = edStartPromo
         DataType = ftDateTime
         ParamType = ptInput
@@ -1686,7 +1686,7 @@
       end
       item
         Name = 'InEndPromo'
-        Value = 'NULL'
+        Value = Null
         Component = edEndPromo
         DataType = ftDateTime
         ParamType = ptInput
@@ -2074,14 +2074,14 @@
       end
       item
         Name = 'StartPromo'
-        Value = 'NULL'
+        Value = Null
         Component = edStartPromo
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndPromo'
-        Value = 'NULL'
+        Value = Null
         Component = edEndPromo
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -2501,7 +2501,7 @@
       end
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = ContractConditionCDS
         ComponentItem = 'StartDate'
         DataType = ftDateTime
@@ -2846,6 +2846,7 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 616
     Top = 72
