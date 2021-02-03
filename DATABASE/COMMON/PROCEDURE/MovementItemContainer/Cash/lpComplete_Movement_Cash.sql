@@ -315,13 +315,23 @@ BEGIN
                     ELSE COALESCE (MLO_PersonalServiceList.ObjectId, 0)
                END AS PersonalServiceListId
 
-               -- Филиал Баланс: всегда из кассы (нужен для НАЛ долгов или долгов подотчета) !!!но для ЗП - как в начислениях!!!
+                -- Филиал Баланс: всегда из кассы (нужен для НАЛ долгов или долгов подотчета) !!!но для ЗП - как в начислениях!!!
              , CASE WHEN MI_Child.Id > 0
                          THEN COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
+
+                    -- по кассе
+                  --WHEN ObjectLink_Cash_Branch.ChildObjectId > 0
+                  --     THEN ObjectLink_Cash_Branch.ChildObjectId
+
+                    -- по подразделению
                     WHEN MILinkObject_Unit.ObjectId > 0
                          THEN COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
-                    -- ELSE COALESCE (ObjectLink_Partner_Branch.ChildObjectId, COALESCE (ObjectLink_MoneyPlace_Branch.ChildObjectId, COALESCE (ObjectLink_Cash_Branch.ChildObjectId, zc_Branch_Basis())))
+
+                    -- опять по кассе
                     ELSE COALESCE (ObjectLink_Cash_Branch.ChildObjectId, zc_Branch_Basis())
+
+                    -- ELSE COALESCE (ObjectLink_Partner_Branch.ChildObjectId, COALESCE (ObjectLink_MoneyPlace_Branch.ChildObjectId, COALESCE (ObjectLink_Cash_Branch.ChildObjectId, zc_Branch_Basis())))
+
                END AS BranchId_Balance
                -- Филиал ОПиУ: всегда по подразделению !!!но для выплаты ЗП - не используется!!!
              , CASE WHEN MI_Child.Id > 0

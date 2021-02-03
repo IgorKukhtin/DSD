@@ -803,6 +803,9 @@ CREATE OR REPLACE FUNCTION zc_Enum_InfoMoney_10203() RETURNS Integer AS $BODY$BE
 -- 10204; Основное сырье + Прочее сырье + Прочее сырье
 CREATE OR REPLACE FUNCTION zc_Enum_InfoMoney_10204() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_InfoMoney_10204' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+-- 20101; Запчасти и Ремонты
+CREATE OR REPLACE FUNCTION zc_Enum_InfoMoney_20101() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_InfoMoney_20101' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 -- 20202; спецодежда
 CREATE OR REPLACE FUNCTION zc_Enum_InfoMoney_20202() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_InfoMoney_20202' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 

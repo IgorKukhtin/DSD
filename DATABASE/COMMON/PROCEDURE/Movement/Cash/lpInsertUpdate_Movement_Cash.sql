@@ -57,6 +57,12 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Должно быть выбрано значение <УП статья назначения>.';
      END IF;
      -- проверка
+     IF EXISTS (SELECT 1 FROM Object WHERE Object.Id = inUnitId AND Object.ValueData ILIKE '%Транспорт%') 
+        AND COALESCE (inCarId, 0) = 0 AND inInfoMoneyId = zc_Enum_InfoMoney_20101()
+     THEN
+        RAISE EXCEPTION 'Ошибка.Должно быть выбрано значение <Автомобиль>.';
+     END IF;
+     -- проверка
      IF EXISTS (SELECT InfoMoneyId FROM Object_InfoMoney_View WHERE InfoMoneyId = inInfoMoneyId AND InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_80300()) -- Расчеты с участниками
      THEN
          IF COALESCE (inMoneyPlaceId, 0) = 0

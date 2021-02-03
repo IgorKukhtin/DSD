@@ -20,6 +20,9 @@ END $$;
 -- ALTER TABLE movementItemlinkobject DISABLE TRIGGER All;
 -- ALTER TABLE movementlinkmovement DISABLE TRIGGER All;
 
+-- ALTER TABLE MovementProtocol_arc DISABLE TRIGGER All;
+-- ALTER TABLE MovementItemProtocol_arc DISABLE TRIGGER All;
+
 -- select * from _replica.table_update_data order by id desc limit 100
 -- select count(*) from _replica.table_update_data 
 

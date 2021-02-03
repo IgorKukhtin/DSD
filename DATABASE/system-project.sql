@@ -71,17 +71,21 @@ bigserial -- 1 to 9223372036854775807
 
 -- !!!Ïåðåáðàñûâàåì â ÀÐÕÈÂ!!!
 insert into MovementProtocol_arc
--- SELECT * FROM MovementProtocol ORDER BY id DESC LIMIT 1 -- SELECT Max(Id) FROM MovementProtocol
--- SELECT * FROM MovementProtocol where Id > (select max (Id) from MovementProtocol_arc); TRUNCATE TABLE MovementProtocol;
-SELECT * FROM MovementProtocol where Id < (select min (Id) from MovementProtocol_arc) ORDER BY id DESC LIMIT 400000;
+-- SELECT * FROM MovementProtocol ORDER BY id LIMIT 1 -- SELECT Max(Id) FROM MovementProtocol
+ SELECT * FROM MovementProtocol where Id > (select max (Id) from MovementProtocol_arc) ORDER BY id LIMIT 8000000 ; -- TRUNCATE TABLE MovementProtocol;
+-- SELECT * FROM MovementProtocol where Id < (select min (Id) from MovementProtocol_arc) ORDER BY id DESC LIMIT 400000;
 
 insert into MovementItemProtocol_arc
--- SELECT * FROM MovementItemProtocol ORDER BY id DESC LIMIT 1; -- SELECT Max(Id) FROM MovementItemProtocol
--- SELECT * FROM MovementItemProtocol where Id > (select max (Id) from MovementItemProtocol_arc); TRUNCATE TABLE MovementItemProtocol;
-SELECT * FROM MovementItemProtocol where Id < (select min (Id) from MovementItemProtocol_arc) ORDER BY id DESC LIMIT 400000; -- SELECT Max(Id) FROM MovementItemProtocol
+-- SELECT * FROM MovementItemProtocol ORDER BY id LIMIT 1 -- SELECT Max(Id) FROM MovementProtocol
+ SELECT * FROM MovementItemProtocol where Id > (select max (Id) from MovementItemProtocol_arc) ORDER BY id LIMIT 8000000 ; 
+-- TRUNCATE TABLE MovementItemProtocol;
+
+-- SELECT * FROM MovementProtocol_arc ORDER BY id LIMIT 100
+-- select 2, max (Id) from MovementItemProtocol_arc union select 1, min (Id) from MovementItemProtocol
+-- select 2, count(*) from MovementItemProtocol_arc union select 1, count(*) from MovementItemProtocol where Id <=419183741
 
 
--
+--
 -- delete FROM MovementProtocol_arc      where OperDate < '01.10.2017';
 -- delete FROM MovementItemProtocol_arc  where OperDate < '01.10.2017';
 

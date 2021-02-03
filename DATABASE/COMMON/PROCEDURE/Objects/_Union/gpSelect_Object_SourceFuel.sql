@@ -31,15 +31,19 @@ BEGIN
    -- определяется - может ли пользовать видеть весь справочник
    vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
 
+
+   -- !!!Временно захардкодил!!!
+   IF COALESCE (inOperDate, zc_DateStart()) <= zc_DateStart()
+   THEN
+       inOperDate:= CURRENT_DATE;
+   END IF;
+
    --
    IF COALESCE (inToId,0) <> 0 
       THEN vbToName := (SELECT Object.ValueData FROM Object WHERE Object.Id = inToId);
       ELSE
            vbToName := '' ::TVarChar;
    END IF;
-
-   -- !!!Временно захардкодил!!!
-   IF inOperDate IS NULL THEN inOperDate:= CURRENT_DATE; END IF;
 
 
    -- Результат
@@ -59,7 +63,7 @@ BEGIN
                                                    AND Object_Contract_View.isErased = FALSE
                                                    AND inOperDate BETWEEN Object_Contract_View.StartDate_condition AND Object_Contract_View.EndDate_condition
                      WHERE Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400() -- ГСМ
-                     ) 
+                    ) 
 
      SELECT Object_Partner.Id             AS Id
           , Object_Partner.ObjectCode     AS Code

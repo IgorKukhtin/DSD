@@ -1293,7 +1293,8 @@ BEGIN
                                          ON MIFloat_PartionNumStart.MovementItemId = _tmpItem.MovementItemId
                                         AND MIFloat_PartionNumStart.DescId = zc_MIFloat_PartionNumStart()
         WHERE _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_20202()
-          AND vbOperDate >= '01.02.2021'
+          AND (vbOperDate >= '01.02.2021' OR inUserId = 5)
+          AND _tmpItem.PartionGoods <> ''
         ;
 
      -- корректируем "копейки"
@@ -1758,6 +1759,7 @@ END IF;
           ) AS _tmpItem_byAccount
       WHERE _tmpItem_SummPartner.InfoMoneyDestinationId = _tmpItem_byAccount.InfoMoneyDestinationId;
 
+
      -- 2.0.1.2. определяется ContainerId для проводок по долг Поставщику или Физ.лицу (подотчетные лица)
      UPDATE _tmpItem_SummPartner SET ContainerId          = tmp.ContainerId
                                    , ContainerId_re       = tmp.ContainerId_re
@@ -1785,7 +1787,7 @@ END IF;
                                                                                                  , inDescId_6          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
                                                                                                  , inObjectId_6        := CASE WHEN vbInfoMoneyDestinationId_From = zc_Enum_InfoMoneyDestination_20400() /*ГСМ*/ THEN 0 ELSE CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN vbPartnerId_From ELSE NULL END END
                                                                                                  , inDescId_7          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Branch() ELSE NULL END
-                                                                                                 , inObjectId_7        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_Branch_Basis() ELSE NULL END -- долг Поставщика всегда на Главном филиале
+                                                                                                 , inObjectId_7        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN CASE WHEN vbBranchId_To > 0 THEN vbBranchId_To ELSE zc_Branch_Basis() END ELSE NULL END -- долг Поставщика всегда на Главном филиале
                                                                                                  , inDescId_8          := zc_ContainerLinkObject_Currency()
                                                                                                  , inObjectId_8        := vbCurrencyPartnerId
                                                                                                   )
@@ -1820,7 +1822,7 @@ END IF;
                                                                                                  , inDescId_7          := -- !!!замена!!!
                                                                                                                           CASE WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Branch() ELSE NULL END
                                                                                                  , inObjectId_7        := -- !!!замена!!!
-                                                                                                                          CASE WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() AND vbIsCorporate_From = FALSE THEN zc_Branch_Basis() ELSE NULL END -- долг Поставщика всегда на Главном филиале
+                                                                                                                          CASE WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() AND vbIsCorporate_From = FALSE THEN CASE WHEN vbBranchId_To > 0 THEN vbBranchId_To ELSE zc_Branch_Basis() END ELSE NULL END -- долг Поставщика всегда на Главном филиале
                                                                                                  , inDescId_8          := zc_ContainerLinkObject_Currency()
                                                                                                  , inObjectId_8        := vbCurrencyPartnerId
                                                                                                   )
@@ -1867,7 +1869,7 @@ END IF;
                                                                                                       , inDescId_6          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
                                                                                                       , inObjectId_6        := CASE WHEN vbInfoMoneyDestinationId_From = zc_Enum_InfoMoneyDestination_20400() /*ГСМ*/ THEN 0 ELSE CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN vbPartnerId_From ELSE NULL END END
                                                                                                       , inDescId_7          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Branch() ELSE NULL END
-                                                                                                      , inObjectId_7        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_Branch_Basis() ELSE NULL END -- долг Поставщика всегда на Главном филиале
+                                                                                                      , inObjectId_7        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN CASE WHEN vbBranchId_To > 0 THEN vbBranchId_To ELSE zc_Branch_Basis() END ELSE NULL END -- долг Поставщика НЕ всегда на Главном филиале
                                                                                                       , inDescId_8          := CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN NULL ELSE zc_ContainerLinkObject_Currency() END
                                                                                                       , inObjectId_8        := CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN NULL ELSE vbCurrencyPartnerId END
                                                                                                        )
@@ -1892,7 +1894,7 @@ END IF;
                                                                                                       , inDescId_6          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
                                                                                                       , inObjectId_6        := CASE WHEN vbInfoMoneyDestinationId_From = zc_Enum_InfoMoneyDestination_20400() /*ГСМ*/ THEN 0 ELSE CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN vbPartnerId_From ELSE NULL END END
                                                                                                       , inDescId_7          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Branch() ELSE NULL END
-                                                                                                      , inObjectId_7        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_Branch_Basis() ELSE NULL END -- долг Поставщика всегда на Главном филиале
+                                                                                                      , inObjectId_7        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN CASE WHEN vbBranchId_To > 0 THEN vbBranchId_To ELSE zc_Branch_Basis() END ELSE NULL END -- долг Поставщика всегда на Главном филиале
                                                                                                       , inDescId_8          := CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN NULL ELSE zc_ContainerLinkObject_Currency() END
                                                                                                       , inObjectId_8        := CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN NULL ELSE vbCurrencyPartnerId END
                                                                                                        )
@@ -1927,7 +1929,7 @@ END IF;
                                                                                                       , inDescId_7          := -- !!!замена!!!
                                                                                                                                CASE WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Branch() ELSE NULL END
                                                                                                       , inObjectId_7        := -- !!!замена!!!
-                                                                                                                               CASE WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() AND vbIsCorporate_From = FALSE THEN zc_Branch_Basis() ELSE NULL END -- долг Поставщика всегда на Главном филиале
+                                                                                                                               CASE WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() AND vbIsCorporate_From = FALSE THEN CASE WHEN vbBranchId_To > 0 THEN vbBranchId_To ELSE zc_Branch_Basis() END ELSE NULL END -- долг Поставщика всегда на Главном филиале
                                                                                                       , inDescId_8          := CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN NULL ELSE zc_ContainerLinkObject_Currency() END
                                                                                                       , inObjectId_8        := CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN NULL ELSE vbCurrencyPartnerId END
                                                                                                        )
@@ -1957,7 +1959,7 @@ END IF;
                                                                                                       , inDescId_7          := -- !!!замена!!!
                                                                                                                                CASE WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Branch() ELSE NULL END
                                                                                                       , inObjectId_7        := -- !!!замена!!!
-                                                                                                                               CASE WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() AND vbIsCorporate_From = FALSE THEN zc_Branch_Basis() ELSE NULL END -- долг Поставщика всегда на Главном филиале
+                                                                                                                               CASE WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() AND vbIsCorporate_From = FALSE THEN CASE WHEN vbBranchId_To > 0 THEN vbBranchId_To ELSE zc_Branch_Basis() END ELSE NULL END -- долг Поставщика всегда на Главном филиале
                                                                                                       , inDescId_8          := CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN NULL ELSE zc_ContainerLinkObject_Currency() END
                                                                                                       , inObjectId_8        := CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN NULL ELSE vbCurrencyPartnerId END
                                                                                                        )
@@ -1989,7 +1991,7 @@ END IF;
                                                                                                       , inDescId_6          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
                                                                                                       , inObjectId_6        := CASE WHEN vbInfoMoneyDestinationId_From = zc_Enum_InfoMoneyDestination_20400() /*ГСМ*/ THEN 0 ELSE CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN vbPartnerId_From ELSE NULL END END
                                                                                                       , inDescId_7          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Branch() ELSE NULL END
-                                                                                                      , inObjectId_7        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_Branch_Basis() ELSE NULL END -- долг Поставщика всегда на Главном филиале
+                                                                                                      , inObjectId_7        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN CASE WHEN vbBranchId_To > 0 THEN vbBranchId_To ELSE zc_Branch_Basis() END ELSE NULL END -- долг Поставщика всегда на Главном филиале
                                                                                                       , inDescId_8          := NULL -- ...zc_ContainerLinkObject_Currency()
                                                                                                       , inObjectId_8        := NULL -- ...vbCurrencyPartnerId
                                                                                                        )
@@ -2014,7 +2016,7 @@ END IF;
                                                                                                       , inDescId_6          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
                                                                                                       , inObjectId_6        := CASE WHEN vbInfoMoneyDestinationId_From = zc_Enum_InfoMoneyDestination_20400() /*ГСМ*/ THEN 0 ELSE CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN vbPartnerId_From ELSE NULL END END
                                                                                                       , inDescId_7          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Branch() ELSE NULL END
-                                                                                                      , inObjectId_7        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_Branch_Basis() ELSE NULL END -- долг Поставщика всегда на Главном филиале
+                                                                                                      , inObjectId_7        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN CASE WHEN vbBranchId_To > 0 THEN vbBranchId_To ELSE zc_Branch_Basis() END ELSE NULL END -- долг Поставщика всегда на Главном филиале
                                                                                                       , inDescId_8          := NULL -- ...zc_ContainerLinkObject_Currency()
                                                                                                       , inObjectId_8        := NULL -- ...vbCurrencyPartnerId
                                                                                                        )
@@ -2071,6 +2073,7 @@ END IF;
           ) AS tmp
      WHERE _tmpItem_SummPartner_To.GoodsId = tmp.GoodsId
     ;
+
 
      -- 2.0.2.2. определяется Счет(справочника) для проводок по долг ПОКУПАТЕЛЮ
      UPDATE _tmpItem_SummPartner_To SET AccountId = _tmpItem_byAccount.AccountId

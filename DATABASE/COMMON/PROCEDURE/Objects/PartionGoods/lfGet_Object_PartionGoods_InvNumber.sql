@@ -14,7 +14,7 @@ BEGIN
 
      IF EXISTS (SELECT GoodsId FROM Object_Goods_View WHERE GoodsId = inGoodsId AND InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300()) -- лмлю
      THEN
-         vbInvNumber:= (SELECT MAX (CAST (tmpObject.InvNumber AS Integer)) AS InvNumber
+         vbInvNumber:= (SELECT MAX (zfConvert_StringToNumber (tmpObject.InvNumber)) AS InvNumber
                         FROM (SELECT Object.ValueData AS InvNumber
                              FROM ObjectLink AS ObjectLink_Unit
                                   INNER JOIN Object ON Object.Id = ObjectLink_Unit.ObjectId

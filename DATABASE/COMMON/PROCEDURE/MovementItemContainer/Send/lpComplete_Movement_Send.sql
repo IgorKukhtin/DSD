@@ -84,6 +84,13 @@ BEGIN
                             , COALESCE (MIFloat_ContainerId.ValueData, 0) :: Integer AS ContainerId_asset
                             , COALESCE (CLO_PartionGoods.ObjectId, 0)                AS PartionGoodsId_asset
 
+                              -- для Спецодежда
+                            , CASE WHEN View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_20202()
+                                    AND MILinkObject_PartionGoods.ObjectId > 0
+                                        THEN MILinkObject_PartionGoods.ObjectId
+                                   ELSE 0
+                              END AS PartionGoodsId_item
+
                             , MovementItem.Amount AS OperCount
                             , COALESCE (MIFloat_Count.ValueData, 0) AS OperCountCount
 
@@ -171,6 +178,9 @@ BEGIN
                              LEFT JOIN MovementItemLinkObject AS MILinkObject_Storage
                                                               ON MILinkObject_Storage.MovementItemId = MovementItem.Id
                                                              AND MILinkObject_Storage.DescId = zc_MILinkObject_Storage()
+                             LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
+                                                              ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
+                                                             AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
 
                              LEFT JOIN MovementItemFloat AS MIFloat_Count
                                                          ON MIFloat_Count.MovementItemId = MovementItem.Id
@@ -444,7 +454,7 @@ BEGIN
             , _tmp.isPartionGoodsKind_From
             , _tmp.isPartionGoodsKind_To
               -- Партии товара, сформируем позже
-            , CASE WHEN vbMovementDescId = zc_Movement_SendAsset() THEN _tmp.PartionGoodsId_asset ELSE 0 END AS PartionGoodsId_From
+            , CASE WHEN vbMovementDescId = zc_Movement_SendAsset() THEN _tmp.PartionGoodsId_asset WHEN _tmp.PartionGoodsId_item > 0 AND _tmp.InfoMoneyId = zc_Enum_InfoMoney_20202() THEN _tmp.PartionGoodsId_item ELSE 0 END AS PartionGoodsId_From
             , CASE WHEN vbMovementDescId = zc_Movement_SendAsset() THEN _tmp.PartionGoodsId_asset ELSE 0 END AS PartionGoodsId_To
 
               -- Группы ОПиУ
@@ -465,7 +475,6 @@ BEGIN
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney
                                              ON View_InfoMoney.InfoMoneyId = tmpContainer_asset.InfoMoneyId
        ;
-
 
      -- Проверка - для ОС
      IF EXISTS (SELECT 1

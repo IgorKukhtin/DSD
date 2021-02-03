@@ -38,7 +38,29 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-     IF inBarCode = '' THEN RETURN; END IF;
+     IF inBarCode = '' THEN
+       RETURN QUERY
+       SELECT 0  :: Integer  AS Id
+            , 0  :: Integer  AS PartionId
+            , 0  :: Integer  AS GoodsId
+            , 0  :: Integer  AS GoodsCode
+            , '' :: TVarChar AS GoodsName
+            , '' :: TVarChar AS GoodsGroupNameFull
+            , 0  :: Integer  AS LabelId
+            , '' :: TVarChar AS LabelName
+            , 0  :: Integer  AS GoodsSizeId
+            , '' :: TVarChar AS GoodsSizeName
+            , '' :: TVarChar AS CompositionName
+            , '' :: TVarChar AS GoodsInfoName
+            , '' :: TVarChar AS LineFabricaName
+            , 0  :: Integer  AS PartnerId
+            , '' :: TVarChar AS PartnerName
+            , 0  :: TFloat   AS OperCount
+            , 0  :: TFloat   AS TotalCount
+            , 0  :: TFloat   AS OperPriceList
+            , '' :: TVarChar AS Text_info
+             ;
+     END IF;
      
 
      -- Нашли
