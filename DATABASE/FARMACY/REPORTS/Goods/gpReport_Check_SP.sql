@@ -108,6 +108,7 @@ RETURNS TABLE (MovementId     Integer
              , TotalSumm_Check TFloat
              , InsertName_Check TVarChar
              , InsertDate_Check TDateTime
+             , NDS TFloat
 )
 AS
 $BODY$
@@ -164,3 +165,5 @@ $BODY$
 -- select * from gpReport_Check_SP(inStartDate := ('01.01.2017')::TDateTime , inEndDate := ('31.12.2017')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 ,  inSession := '3');
 -- select * from gpReport_Check_SP(inStartDate := ('01.03.2018')::TDateTime , inEndDate := ('15.03.2018')::TDateTime , inJuridicalId := 393052 , inUnitId := 0 , inHospitalId := 4474509 ,  inSession := '3');
 -- select * from gpReport_Check_SP22(inStartDate := ('01.09.2018')::TDateTime , inEndDate := ('09.09.2018')::TDateTime, inJuridicalId := 393054 , inUnitId := 0 , inHospitalId := 3751525 ,  inSession := '3');
+
+select * from gpReport_Check_SP(inStartDate := ('01.02.2011')::TDateTime , inEndDate := ('02.02.2011')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inJuridicalMedicId := 10959824 ,  inSession := '3');

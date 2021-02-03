@@ -967,12 +967,19 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsUKTZEDDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SalesOfTermDrugsDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SalesOfTermDrugsDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SalesOfTermDrugsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SalesOfTermDrugsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SalesOfTermDrugsUnitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SalesOfTermDrugsUnitForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsUKTZEDDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemainsUKTZEDDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsUKTZEDForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemainsUKTZEDForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_UKTZEDForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_UKTZEDForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSun_UKTZEDForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_QuantityComparisonForm'));
@@ -2833,16 +2840,14 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TMemberSPForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberSPEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMemberSPEditForm');
-    //exit;
-}
-  // отчет реестр по постановлению 1303
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleSPForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleSPForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleSPDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleSPDialogForm');
-  exit;
-{
+    // отчет реестр по постановлению 1303
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleSPForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_SaleSPForm');
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleSPDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_SaleSPDialogForm');
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGroupMemberSPForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGroupMemberSPForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGroupMemberSPEditForm'));
@@ -2869,10 +2874,11 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsSPForm');
     exit;
+}
   // отчет по продажам товара соц. проекта
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSPForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSPDialogForm'));
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSPDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSPDialogForm');
   }
 

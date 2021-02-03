@@ -109,6 +109,7 @@ RETURNS TABLE (MovementId     Integer
              , TotalSumm_Check TFloat
              , InsertName_Check TVarChar
              , InsertDate_Check TDateTime
+             , NDS TFloat
 )
 AS
 $BODY$
@@ -713,6 +714,8 @@ BEGIN
              , tmpData.InsertName_Check
              , tmpData.InsertDate_Check
 
+             , ObjectFloat_NDSKind_NDS.ValueData AS NDS
+
         FROM tmpMI AS tmpData
              LEFT JOIN tmpInvoice ON tmpInvoice.JuridicalId = tmpData.JuridicalId
                                  ANd tmpInvoice.JuridicalMedicId = tmpData.JuridicalMedicId
@@ -738,6 +741,11 @@ BEGIN
              LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = tmpData.JuridicalMedicId and Object_PartnerMedical.DescId = zc_Object_PartnerMedical()
 
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsMainId
+
+             LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = tmpData.GoodsMainId
+             LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                   ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods_Main.NDSKindId
+                                  AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
 
              LEFT JOIN Movement ON Movement.Id = tmpData.MovementId
 

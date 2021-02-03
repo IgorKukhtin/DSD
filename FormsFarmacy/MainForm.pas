@@ -769,6 +769,8 @@ type
     N272: TMenuItem;
     actReport_GoodsRemainsUKTZED: TdsdOpenForm;
     N273: TMenuItem;
+    actReport_SalesOfTermDrugs: TdsdOpenForm;
+    N274: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

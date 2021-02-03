@@ -3518,6 +3518,18 @@
 				<Form>Report_GoodsRemainsUKTZEDForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_SalesOfTermDrugsDialog.pas">
+				<Form>Report_SalesOfTermDrugsDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_SalesOfTermDrugs.pas">
+				<Form>Report_SalesOfTermDrugsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_SalesOfTermDrugsUnit.pas">
+				<Form>Report_SalesOfTermDrugsUnitForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

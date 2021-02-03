@@ -4,7 +4,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
   ClientWidth = 1077
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1093
-  ExplicitHeight = 518
+  ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -380,6 +380,14 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 102
+          end
+          object NDS: TcxGridDBColumn
+            Caption = #1053#1044#1057
+            DataBinding.FieldName = 'NDS'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
           end
           object DailyNormSP: TcxGridDBColumn
             Caption = #1044#1086#1073#1086#1074#1072' '#1076#1086#1079#1072' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091', '#1088#1077#1082#1086#1084#1077#1085#1076#1086#1074#1072#1085#1072' '#1042#1054#1054#1047' (13)'
@@ -1099,7 +1107,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         end
         item
           Name = 'isDepartment'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1299,7 +1307,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         end
         item
           Name = 'isDepartment'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1343,7 +1351,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         end
         item
           Name = 'isDepartment'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1399,7 +1407,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         end
         item
           Name = 'isDepartment'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1455,7 +1463,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         end
         item
           Name = 'isDepartment'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1522,7 +1530,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         end
         item
           Name = 'isDepartment'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1571,7 +1579,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         end
         item
           Name = 'isDepartment'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1637,21 +1645,21 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       Params = <
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'isDepartment'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -2044,7 +2052,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       end
       item
         Name = 'inisInsert'
-        Value = 'False'
+        Value = False
         Component = cbisInsert
         DataType = ftBoolean
         ParamType = ptInput

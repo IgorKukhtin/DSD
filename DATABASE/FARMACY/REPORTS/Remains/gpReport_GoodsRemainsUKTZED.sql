@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsRemainsUKTZED(
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (JuridicalId  Integer, JuridicalName  TVarChar
-             , UnitId Integer, UnitName TVarChar 
+             , UnitId Integer, UnitName TVarChar
+
              , GoodsCode Integer, GoodsName TVarChar, NDS TFloat
              , Amount TFloat, Price TFloat, Summa TFloat
              )
@@ -79,29 +80,30 @@ BEGIN
                                             THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
                                             ELSE ROUND (Price_Value.ValueData, 2)
                                        END :: TFloat                           AS Price
-                                     , ObjectLink_Price_Unit.ChildObjectId     AS UnitId
                                      , Price_Goods.ChildObjectId               AS GoodsId
+                                     , ObjectLink_Price_Unit.ChildObjectId     AS UnitId
                                FROM tmpData
                                
-                                    INNER JOIN ObjectLink AS ObjectLink_Price_Unit ON ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
-                                                                                  AND ObjectLink_Price_Unit.ChildObjectId = tmpData.UnitId
-                                    
-                                    INNER JOIN ObjectLink AS Price_Goods
+                                   INNER JOIN ObjectLink AS ObjectLink_Price_Unit
+                                                         ON ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
+                                                        AND ObjectLink_Price_Unit.ChildObjectId = tmpData.UnitId
+                                                         
+                                   INNER JOIN ObjectLink AS Price_Goods
                                                          ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
                                                         AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
                                                         AND Price_Goods.ChildObjectId = tmpData.GoodsId
                                                         
-                                    LEFT JOIN ObjectFloat AS Price_Value
-                                                          ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                                         AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
-                                    -- Фикс цена для всей Сети
-                                    LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
-                                                           ON ObjectFloat_Goods_Price.ObjectId = Price_Goods.ChildObjectId
-                                                          AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
-                                    LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
-                                                            ON ObjectBoolean_Goods_TOP.ObjectId = Price_Goods.ChildObjectId
-                                                           AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
-                                )
+                                   LEFT JOIN ObjectFloat AS Price_Value
+                                                         ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                        AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                                   -- Фикс цена для всей Сети
+                                   LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
+                                                          ON ObjectFloat_Goods_Price.ObjectId = Price_Goods.ChildObjectId
+                                                         AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
+                                   LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                                           ON ObjectBoolean_Goods_TOP.ObjectId = Price_Goods.ChildObjectId
+                                                          AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
+                               )
 
 
         -- Результат
@@ -114,8 +116,8 @@ BEGIN
              
              , ObjectFloat_NDSKind_NDS.ValueData                     AS NDS
              , tmpData.Amount ::TFloat                               AS Amount
-             , tmpObject_Price.Price::TFloat AS Price
-             , Round(tmpObject_Price.Price * tmpData.Amount, 2) ::TFloat AS Summa
+             , tmpObject_Price.Price::TFloat                         AS Price
+             , Round(tmpData.Amount * tmpObject_Price.Price, 2)::TFloat AS Summa
              
         FROM tmpData
 
@@ -134,7 +136,7 @@ BEGIN
                                   AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
                                   
              LEFT JOIN tmpObject_Price ON tmpObject_Price.UnitId = tmpData.UnitId
-                                      AND tmpObject_Price.GoodsId = tmpData.GoodsId
+                                      AND tmpObject_Price.GoodsId = tmpData.GoodsId  
              
         ORDER BY Object_Juridical.ValueData
                , Object_Unit.ValueData
@@ -155,4 +157,4 @@ $BODY$
 -- тест
 --
 -- 
-select * from gpReport_GoodsRemainsUKTZED(inRemainsDate := ('01.01.2021')::TDateTime, inUnitId := 0 , inJuridicalId := 0 ,  inSession := '3');
+select * from gpReport_GoodsRemainsUKTZED(inRemainsDate := ('01.01.2021')::TDateTime, inUnitId := 183292 , inJuridicalId := 0 ,  inSession := '3');

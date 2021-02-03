@@ -90,6 +90,7 @@ type
     edJuridicalMedic: TcxButtonEdit;
     GuidesJuridicalMedic: TdsdGuides;
     InvNumber_Full: TcxGridDBColumn;
+    NDS: TcxGridDBColumn;
   private
     { Private declarations }
   public
