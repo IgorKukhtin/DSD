@@ -23,6 +23,7 @@ type
     procedure LoadCountryFormTest;
     procedure LoadColorPatternFormTest;
     procedure LoadDiscountParnerFormTest;
+    procedure LoadInvoiceFormTest;
     procedure LoadGoodsGroupFormTest;
     procedure LoadGoodsFormTest;
     procedure LoadGoodsTagFormTest;
@@ -212,6 +213,17 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TDiscountParnerEditForm');
 end;
 
+procedure TLoadFormTest.LoadInvoiceFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInvoiceJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInvoiceForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_PeriodDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovement_PeriodDialogForm');
+end;
+
 procedure TLoadFormTest.LoadGoodsGroupFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupForm'));
@@ -236,6 +248,9 @@ end;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxKindForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPaidKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPaidKindForm');
 end;
 
 procedure TLoadFormTest.LoadMeasureFormTest;

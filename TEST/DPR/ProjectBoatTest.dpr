@@ -209,7 +209,11 @@ uses
   Union_Goods_ReceiptService in '..\..\FormsBoat\Guides\Union_Goods_ReceiptService.pas' {Union_Goods_ReceiptServiceForm: TParentForm},
   ReceiptProdModel in '..\..\FormsBoat\Guides\ReceiptProdModel.pas' {ReceiptProdModelForm: TParentForm},
   TranslateMessage in '..\..\FormsBoat\Guides\TranslateMessage.pas' {TranslateMessageForm: TParentForm},
-  ProdColor in '..\..\FormsBoat\Guides\ProdColor.pas' {ProdColorForm: TParentForm};
+  ProdColor in '..\..\FormsBoat\Guides\ProdColor.pas' {ProdColorForm: TParentForm},
+  InvoiceJournal in '..\..\FormsBoat\Document\InvoiceJournal.pas' {InvoiceJournalForm: TParentForm},
+  Movement_PeriodDialog in '..\..\FormsBoat\Document\Movement_PeriodDialog.pas' {Movement_PeriodDialogForm: TParentForm},
+  Invoice in '..\..\FormsBoat\Document\Invoice.pas' {InvoiceForm: TParentForm},
+  PaidKind in '..\..\FormsBoat\Kind\PaidKind.pas' {PaidKindForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
