@@ -346,7 +346,7 @@
       end
       item
         Name = 'inServiceDate'
-        Value = 'NULL'
+        Value = Null
         Component = ceServiceDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -480,7 +480,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -671,7 +671,7 @@
       end
       item
         Name = 'ServiceDate'
-        Value = 'NULL'
+        Value = Null
         Component = ceServiceDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -757,7 +757,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = ceOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','

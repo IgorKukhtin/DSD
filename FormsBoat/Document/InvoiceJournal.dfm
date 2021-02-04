@@ -86,6 +86,8 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Width = 69
           end
           inherited colInvNumber: TcxGridDBColumn
+            Visible = False
+            GroupIndex = 0
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 63
@@ -498,14 +500,14 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       Params = <
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -824,10 +826,6 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         item
           Visible = True
           ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertMask'
         end
         item
           Visible = True

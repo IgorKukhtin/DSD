@@ -19,6 +19,7 @@ type
     procedure LoadLanguageFormTest;
     procedure LoadBankFormTest;
     procedure LoadBankAccountFormTest;
+    procedure LoadBankAccountMovementFormTest;
     procedure LoadBrandFormTest;
     procedure LoadClientFormTest;
     procedure LoadCountryFormTest;
@@ -198,6 +199,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountEditForm');
+end;
+
+procedure TLoadFormTest.LoadBankAccountMovementFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankAccountJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankAccountMovementForm');
 end;
 
 procedure TLoadFormTest.LoadClientFormTest;

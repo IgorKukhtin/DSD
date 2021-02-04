@@ -1060,7 +1060,6 @@ inherited MainForm: TMainForm
       Caption = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       object miBankAccountJournal: TMenuItem
         Action = actBankAccountJournal
-        Enabled = False
       end
       object miLine21: TMenuItem
         Caption = '-'
