@@ -43,6 +43,21 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             item
               Format = ',0.00##'
               Kind = skSum
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Amount_diff
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = AmountIn_Invoice
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = AmountOut_Invoice
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -62,6 +77,21 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             item
               Format = ',0.00##'
               Kind = skSum
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Amount_diff
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = AmountIn_Invoice
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = AmountOut_Invoice
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -135,6 +165,25 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 55
           end
+          object Amount_diff: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. '#1089#1091#1084#1084#1072
+            DataBinding.FieldName = 'Amount_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object isDiff: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'.'
+            DataBinding.FieldName = 'isDiff'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 51
+          end
           object MoneyPlaceName: TcxGridDBColumn
             Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
             DataBinding.FieldName = 'MoneyPlaceName'
@@ -174,6 +223,122 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
+          end
+          object AmountIn_Invoice: TcxGridDBColumn
+            Caption = 'Debet (Invoice)'
+            DataBinding.FieldName = 'AmountIn_Invoice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object AmountOut_Invoice: TcxGridDBColumn
+            Caption = 'Kredit (Invoice)'
+            DataBinding.FieldName = 'AmountOut_Invoice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object ObjectName_Invoice: TcxGridDBColumn
+            Caption = 'Lieferanten / Kunden (Invoice)'
+            DataBinding.FieldName = 'ObjectName_Invoice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1089#1090#1072#1074#1097#1080#1082' / '#1050#1083#1080#1077#1085#1090
+            Options.Editing = False
+            Width = 128
+          end
+          object DescName_Invoice: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090' (Invoice)'
+            DataBinding.FieldName = 'DescName_Invoice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object UnitName_Invoice: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' (Invoice)'
+            DataBinding.FieldName = 'UnitName_Invoice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
+          end
+          object InfoMoneyCode_Invoice: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055' (Invoice)'
+            DataBinding.FieldName = 'InfoMoneyCode_Invoice'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 33
+          end
+          object InfoMoneyName_Invoice: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' (Invoice)'
+            DataBinding.FieldName = 'InfoMoneyName_Invoice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
+          object ProductCode_Invoice: TcxGridDBColumn
+            Caption = 'Interne Nr (Boat) (Invoice)'
+            DataBinding.FieldName = 'ProductCode_Invoice'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1082#1086#1076' '#1083#1086#1076#1082#1080
+            Options.Editing = False
+            Width = 43
+          end
+          object ProductName_Invoice: TcxGridDBColumn
+            Caption = 'Boat (Invoice)'
+            DataBinding.FieldName = 'ProductName_Invoice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = 'Product'
+            Options.Editing = False
+            Width = 78
+          end
+          object ProductCIN_Invoice: TcxGridDBColumn
+            Caption = 'CIN Nr. (Invoice)'
+            DataBinding.FieldName = 'ProductCIN_Invoice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object PaidKindName_Invoice: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099' (Invoice)'
+            DataBinding.FieldName = 'PaidKindName_Invoice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 56
+          end
+          object ReceiptNumber_Invoice: TcxGridDBColumn
+            Caption = 'Quittung Nr (Invoice)'
+            DataBinding.FieldName = 'ReceiptNumber_Invoice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1082#1074#1080#1090#1072#1085#1094#1080#1080
+            Options.Editing = False
+            Width = 55
+          end
+          object Comment_Invoice: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' (Invoice)'
+            DataBinding.FieldName = 'Comment_Invoice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 95
           end
         end
       end

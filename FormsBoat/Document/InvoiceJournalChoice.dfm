@@ -1,8 +1,9 @@
-inherited InvoiceJournalForm: TInvoiceJournalForm
+inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1057#1095#1077#1090#1072'>'
   ClientHeight = 356
   ClientWidth = 1028
   AddOnFormData.RefreshAction = actRefreshStart
+  AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1044
   ExplicitHeight = 394
@@ -92,7 +93,17 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Options.Editing = False
             Width = 63
           end
-          object InvNumberPartner: TcxGridDBColumn [2]
+          object InvNumber_Full: TcxGridDBColumn [2]
+            Caption = #8470' '#1076#1086#1082'. ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'InvNumber_Full'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' ('#1080#1085#1092'.)'
+            Options.Editing = False
+            Width = 44
+          end
+          object InvNumberPartner: TcxGridDBColumn [3]
             Caption = #8470' '#1076#1086#1082'. ('#1074#1085'.)'
             DataBinding.FieldName = 'InvNumberPartner'
             HeaderAlignmentHorz = taCenter
@@ -335,6 +346,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       RefreshOnTabSetChanges = True
     end
     inherited actInsert: TdsdInsertUpdateAction
+      Enabled = False
       FormName = 'TInvoiceForm'
       FormNameParam.Value = 'TInvoiceForm'
       GuiParams = <
@@ -352,6 +364,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         end>
     end
     inherited actInsertMask: TdsdInsertUpdateAction
+      Enabled = False
       FormName = 'TInvoiceForm'
       FormNameParam.Value = 'TInvoiceForm'
       GuiParams = <
@@ -369,6 +382,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
+      Enabled = False
       FormName = 'TInvoiceForm'
       FormNameParam.Value = 'TInvoiceForm'
       GuiParams = <
@@ -823,9 +837,77 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
       ImageIndex = 43
     end
+    object dsdChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_Full'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber_Full'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ObjectId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ObjectId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ObjectName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ObjectName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Comment'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Comment'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      ImageIndex = 7
+      DataSource = MasterDS
+    end
   end
   inherited MasterDS: TDataSource
-    Top = 115
+    Left = 120
+  end
+  inherited MasterCDS: TClientDataSet
+    Left = 64
+    Top = 155
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Invoice'
@@ -843,28 +925,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbDelete'
         end
         item
           BeginGroup = True
@@ -882,6 +943,18 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbb'
         end
         item
           Visible = True
@@ -916,10 +989,6 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
           ItemName = 'dxBarStatic'
         end>
     end
-    object bbAddBonus: TdxBarButton
-      Action = mactInsertProfitLossService
-      Category = 0
-    end
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
@@ -929,18 +998,15 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       Category = 0
       ShortCut = 16465
     end
-    object bbisCopy: TdxBarButton
-      Action = mactIsCopy
+    object bbb: TdxBarButton
+      Action = dsdChoiceGuides
       Category = 0
     end
-    object bb: TdxBarButton
-      Action = macUpdateContract
-      Category = 0
-    end
-    object bbUpdateMoneyPlace: TdxBarButton
-      Action = macUpdateMoneyPlace
-      Category = 0
-    end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+      end>
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <

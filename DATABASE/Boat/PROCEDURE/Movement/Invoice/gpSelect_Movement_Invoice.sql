@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Invoice(
 )
 RETURNS TABLE (Id              Integer
              , InvNumber       TVarChar
+             , InvNumber_Full  TVarChar
              , OperDate        TDateTime
              , PlanDate        TDateTime
              , StatusCode      Integer
@@ -24,7 +25,7 @@ RETURNS TABLE (Id              Integer
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
-             , ProductId Integer, ProductCode Integer, ProductName TVarChar, CIN TVarChar
+             , ProductId Integer, ProductCode Integer, ProductName TVarChar, ProductCIN TVarChar
              , PaidKindId      Integer
              , PaidKindName    TVarChar
              , UnitId          Integer
@@ -94,6 +95,7 @@ BEGIN
     SELECT     
         Movement.Id
       , Movement.InvNumber
+      , ('№ ' || Movement.InvNumber || ' от ' || Movement.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Full
       , Movement.OperDate
       , MovementDate_Plan.ValueData         :: TDateTime    AS PlanDate
       , Object_Status.ObjectCode                            AS StatusCode

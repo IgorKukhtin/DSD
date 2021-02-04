@@ -74,7 +74,7 @@ BEGIN
            , Object_MoneyPlace.Id              AS MoneyPlaceId
            , Object_MoneyPlace.ValueData       AS MoneyPlaceName
            , Movement_Invoice.Id               AS MovementId_Invoice
-           , Movement_Invoice.InvNumber        AS InvNumber_Invoice
+           , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice
            , MovementString_Comment_Invoice.ValueData AS Comment_Invoice
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
@@ -82,7 +82,7 @@ BEGIN
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Invoice
                                            ON MovementLinkMovement_Invoice.MovementId = Movement.Id
                                           AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
-            LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MovementLinkMovement_Invoice.MovementId
+            LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MovementLinkMovement_Invoice.MovementChildId
 
             LEFT JOIN MovementString AS MovementString_Comment_Invoice
                                      ON MovementString_Comment_Invoice.MovementId = Movement_Invoice.Id

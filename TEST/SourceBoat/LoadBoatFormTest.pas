@@ -26,12 +26,12 @@ type
     procedure LoadColorPatternFormTest;
     procedure LoadCurrencyFormTest;
     procedure LoadDiscountParnerFormTest;
-    procedure LoadInvoiceFormTest;
     procedure LoadGoodsGroupFormTest;
     procedure LoadGoodsFormTest;
     procedure LoadGoodsTagFormTest;
     procedure LoadGoodsTypeFormTest;
     procedure LoadGoodsSizeFormTest;
+    procedure LoadInvoiceFormTest;
     procedure LoadImportSettingsFormTest;
     procedure LoadImportTypeFormTest;
     procedure LoadInfoMoneyFormTest;
@@ -239,6 +239,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TInvoiceJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInvoiceForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInvoiceJournalChoiceForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_PeriodDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovement_PeriodDialogForm');

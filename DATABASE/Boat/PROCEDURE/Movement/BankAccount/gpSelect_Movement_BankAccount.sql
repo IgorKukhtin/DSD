@@ -17,6 +17,22 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDa
              , BankAccountId Integer, BankAccountName TVarChar, BankName TVarChar
              , MoneyPlaceCode Integer, MoneyPlaceName TVarChar, ItemName TVarChar
              , InvNumber_Invoice_Full TVarChar
+             , AmountIn_Invoice TFloat
+             , AmountOut_Invoice TFloat
+             , Amount_diff TFloat
+             , isDiff Boolean
+             , ObjectName_Invoice TVarChar
+             , DescName_Invoice TVarChar
+             , InfoMoneyCode_Invoice Integer
+             , InfoMoneyName_Invoice TVarChar
+             , ProductCode_Invoice Integer
+             , ProductName_Invoice TVarChar
+             , ProductCIN_Invoice TVarChar
+             , PaidKindName_Invoice TVarChar
+             , UnitName_Invoice TVarChar
+             , InvNumberPartner_Invoice TVarChar
+             , ReceiptNumber_Invoice TVarChar
+             , Comment_Invoice TVarChar
               )
 AS
 $BODY$
@@ -34,6 +50,95 @@ BEGIN
                          UNION
                           SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                          )
+
+      , tmpMovement AS (SELECT Movement.*
+                        FROM tmpStatus
+                             JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  
+                                          AND Movement.DescId = zc_Movement_BankAccount() 
+                                          AND Movement.StatusId = tmpStatus.StatusId
+                        )
+      , tmpMovementLinkMovement AS (SELECT MovementLinkMovement_Invoice.*
+                                    FROM  MovementLinkMovement AS MovementLinkMovement_Invoice
+                                    WHERE MovementLinkMovement_Invoice.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                      AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
+                                    )
+      --данные док счет
+      , tmpInvoice_Params AS (SELECT tmp.MovementId
+                                   , MovementFloat_Amount.ValueData ::TFloat AS Amount
+                                   , Object_Object.Id                                    AS ObjectId
+                                   , Object_Object.ValueData                             AS ObjectName
+                                   , ObjectDesc.ItemName                                 AS DescName
+                                   , Object_InfoMoney_View.InfoMoneyId
+                                   , Object_InfoMoney_View.InfoMoneyCode
+                                   , Object_InfoMoney_View.InfoMoneyName
+                                   , Object_InfoMoney_View.InfoMoneyName_all
+                                   , Object_InfoMoney_View.InfoMoneyGroupName
+                                   , Object_InfoMoney_View.InfoMoneyDestinationName
+                                   , Object_Product.Id                          AS ProductId
+                                   , Object_Product.ObjectCode                  AS ProductCode
+                                   , Object_Product.ValueData                   AS ProductName
+                                   , ObjectString_CIN.ValueData                 AS ProductCIN
+                                   , Object_PaidKind.Id                         AS PaidKindId
+                                   , Object_PaidKind.ValueData                  AS PaidKindName
+                                   , Object_Unit.Id                             AS UnitId
+                                   , Object_Unit.ValueData                      AS UnitName
+                                   , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
+                                   , MovementString_ReceiptNumber.ValueData     AS ReceiptNumber
+                                   , MovementString_Comment.ValueData           AS Comment
+
+                              FROM (SELECT DISTINCT tmpMovementLinkMovement.MovementChildId AS MovementId FROM tmpMovementLinkMovement) AS tmp
+                                    LEFT JOIN MovementFloat AS MovementFloat_Amount
+                                                            ON MovementFloat_Amount.MovementId = tmp.MovementId
+                                                           AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+                        
+                                    LEFT JOIN MovementDate AS MovementDate_Plan
+                                                           ON MovementDate_Plan.MovementId = tmp.MovementId
+                                                          AND MovementDate_Plan.DescId = zc_MovementDate_Plan()
+                             
+                                    LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                                             ON MovementString_InvNumberPartner.MovementId = tmp.MovementId
+                                                            AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+                            
+                                    LEFT JOIN MovementString AS MovementString_ReceiptNumber
+                                                             ON MovementString_ReceiptNumber.MovementId = tmp.MovementId
+                                                            AND MovementString_ReceiptNumber.DescId = zc_MovementString_ReceiptNumber()
+                            
+                                    LEFT JOIN MovementString AS MovementString_Comment
+                                                             ON MovementString_Comment.MovementId = tmp.MovementId
+                                                            AND MovementString_Comment.DescId = zc_MovementString_Comment()
+                            
+                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_Object
+                                                                 ON MovementLinkObject_Object.MovementId = tmp.MovementId
+                                                                AND MovementLinkObject_Object.DescId = zc_MovementLinkObject_Object()
+                                    LEFT JOIN Object AS Object_Object ON Object_Object.Id = MovementLinkObject_Object.ObjectId
+                                    LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Object.DescId
+                                    
+                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_InfoMoney
+                                                                 ON MovementLinkObject_InfoMoney.MovementId = tmp.MovementId
+                                                                AND MovementLinkObject_InfoMoney.DescId = zc_MovementLinkObject_InfoMoney()
+                                    LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MovementLinkObject_InfoMoney.ObjectId
+                            
+                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
+                                                                 ON MovementLinkObject_Product.MovementId = tmp.MovementId
+                                                                AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
+                                    LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId
+                            
+                                    LEFT JOIN ObjectString AS ObjectString_CIN
+                                                           ON ObjectString_CIN.ObjectId = Object_Product.Id
+                                                          AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
+                            
+                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                 ON MovementLinkObject_Unit.MovementId = tmp.MovementId
+                                                                AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                    LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
+                            
+                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                                                 ON MovementLinkObject_PaidKind.MovementId = tmp.MovementId
+                                                                AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                                    LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+                              )
+
+
        SELECT
              Movement.Id
            , Movement.InvNumber
@@ -50,24 +155,35 @@ BEGIN
            , Object_Bank.ValueData             AS BankName
            , Object_MoneyPlace.ObjectCode      AS MoneyPlaceCode
            , Object_MoneyPlace.ValueData       AS MoneyPlaceName
-           --, (Object_MoneyPlace.ValueData || COALESCE (' * '|| Object_Bank.ValueData, '')) :: TVarChar AS MoneyPlaceName
            , ObjectDesc.ItemName
 
-           , ('є ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full           
-             
-       FROM (SELECT Movement.*
-             FROM tmpStatus
-                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  
-                               AND Movement.DescId = zc_Movement_BankAccount() 
-                               AND Movement.StatusId = tmpStatus.StatusId
-            ) AS tmpMovement
+           , ('є ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full
+           , CASE WHEN tmpInvoice_Params.Amount > 0 THEN tmpInvoice_Params.Amount      ELSE 0 END::TFloat AS AmountIn_Invoice
+           , CASE WHEN tmpInvoice_Params.Amount < 0 THEN -1 * tmpInvoice_Params.Amount ELSE 0 END::TFloat AS AmountOut_Invoice
+           , (COALESCE (MovementItem.Amount,0) + COALESCE (tmpInvoice_Params.Amount,0))          ::TFloat AS Amount_diff
+           , CASE WHEN COALESCE (MovementItem.Amount,0) + COALESCE (tmpInvoice_Params.Amount,0) <> 0 THEN TRUE ELSE FALSE END ::Boolean AS isDiff
+           , tmpInvoice_Params.ObjectName          AS ObjectName_Invoice
+           , tmpInvoice_Params.DescName            AS DescName_Invoice
+           , tmpInvoice_Params.InfoMoneyCode       AS InfoMoneyCode_Invoice
+           , tmpInvoice_Params.InfoMoneyName_all   AS InfoMoneyName_Invoice
+           , tmpInvoice_Params.ProductCode         AS ProductCode_Invoice
+           , tmpInvoice_Params.ProductName         AS ProductName_Invoice
+           , tmpInvoice_Params.ProductCIN          AS ProductCIN_Invoice
+           , tmpInvoice_Params.PaidKindName        AS PaidKindName_Invoice
+           , tmpInvoice_Params.UnitName            AS UnitName_Invoice
+           , tmpInvoice_Params.InvNumberPartner    AS InvNumberPartner_Invoice
+           , tmpInvoice_Params.ReceiptNumber       AS ReceiptNumber_Invoice
+           , tmpInvoice_Params.Comment             AS Comment_Invoice
+           
+
+       FROM tmpMovement
             LEFT JOIN Movement ON Movement.id = tmpMovement.Id
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpMovement.StatusId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Invoice
                                            ON MovementLinkMovement_Invoice.MovementId = Movement.Id
                                           AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
-            LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MovementLinkMovement_Invoice.MovementId
+            LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MovementLinkMovement_Invoice.MovementChildId
 
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId = Movement.Id
@@ -91,7 +207,11 @@ BEGIN
                                  ON ObjectLink_BankAccount_Bank.ObjectId = Object_BankAccount.Id
                                 AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
             LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
-            --
+            
+            -- из док. —чет
+            LEFT JOIN tmpInvoice_Params ON tmpInvoice_Params.MovementId = Movement_Invoice.Id
+
+
        ;
             
 END;
