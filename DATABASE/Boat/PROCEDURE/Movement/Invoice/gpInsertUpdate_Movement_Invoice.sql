@@ -1,13 +1,15 @@
 -- Function: gpInsert_Movement_Invoice()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Invoice (Integer, TVarChar, TDateTime, TDateTime, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Invoice (Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Invoice(
  INOUT ioId               Integer  ,  --
     IN inInvNumber        TVarChar ,  -- Номер документа
     IN inOperDate         TDateTime,  --
     IN inPlanDate         TDateTime,  -- Дата оплаты
-    IN inAmount           TFloat   ,  -- 
+    IN inAmountIn         TFloat   ,  -- 
+    IN inAmountOut        TFloat   ,  -- 
     IN inInvNumberPartner TVarChar ,  -- 
     IN inReceiptNumber    TVarChar ,  -- 
     IN inComment          TVarChar ,  -- 
@@ -21,26 +23,43 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Invoice(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbAmount TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
 
+     -- !!!
+     IF inAmountIn <> 0 THEN
+        vbAmount := inAmountIn;
+     ELSE
+        vbAmount := -1 * inAmountOut;
+     END IF;
+
+
     -- сохранили <Документ>
-    PERFORM lpInsertUpdate_Movement_Invoice (ioId              := ioId
-                                           , inInvNumber       := inInvNumber
-                                           , inOperDate        := inOperDate
-                                           , inPlanDate        := inPlanDate
-                                           , inAmount          := inAmount :: Tfloat
+    PERFORM lpInsertUpdate_Movement_Invoice (ioId               := ioId
+                                           , inInvNumber        := inInvNumber
+                                           , inOperDate         := inOperDate
+                                           , inPlanDate         := inPlanDate
+                                           , inAmount           := vbAmount :: Tfloat
                                            , inInvNumberPartner := inInvNumberPartner
-                                           , inReceiptNumber   := inReceiptNumber
-                                           , inComment         := inComment
-                                           , inObjectId        := inObjectId
-                                           , inUnitId          := inUnitId
-                                           , inInfoMoneyId     := inInfoMoneyId
-                                           , inProductId       := inProductId
-                                           , inPaidKindId      := inPaidKindId
-                                           , inUserId          := vbUserId
+                                           , inReceiptNumber    := inReceiptNumber
+                                           , inComment          := inComment
+                                           , inObjectId         := inObjectId
+                                           , inUnitId           := inUnitId
+                                           , inInfoMoneyId      := inInfoMoneyId
+                                           , inProductId        := inProductId
+                                           , inPaidKindId       := inPaidKindId
+                                           , inUserId           := vbUserId
                                            );
+
+
+     -- 5.3. проводим Документ
+     IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_Invoice())
+     THEN
+          PERFORM lpComplete_Movement_Invoice (inMovementId := ioId
+                                             , inUserId     := vbUserId);
+     END IF;
 
 END;
 $BODY$

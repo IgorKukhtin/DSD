@@ -15,13 +15,15 @@ RETURNS TABLE (Id              Integer
              , StatusCode      Integer
              , StatusName      TVarChar
              
-             , Amount          TFloat
+             , AmountIn        TFloat
+             , AmountOut       TFloat
 
              , ObjectId        Integer
              , ObjectName      TVarChar
              , DescName        TVarChar
-             , InfoMoneyId     Integer
-             , InfoMoneyName   TVarChar
+             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+             , InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
+             , InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
              , ProductId       Integer
              , ProductName     TVarChar
              , PaidKindId      Integer
@@ -97,12 +99,24 @@ BEGIN
       , MovementDate_Plan.ValueData         :: TDateTime    AS PlanDate
       , Object_Status.ObjectCode                            AS StatusCode
       , Object_Status.ValueData                             AS StatusName
-      , COALESCE (MovementFloat_Amount.ValueData,0)::TFloat AS Amount
+      --, COALESCE (MovementFloat_Amount.ValueData,0)::TFloat AS Amount
+      , CASE WHEN MovementFloat_Amount.ValueData > 0 THEN MovementFloat_Amount.ValueData      ELSE 0 END::TFloat AS AmountIn
+      , CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END::TFloat AS AmountOut
       , Object_Object.Id                                    AS ObjectId
       , Object_Object.ValueData                             AS ObjectName
       , ObjectDesc.ItemName                                 AS DescName
-      , Object_InfoMoney.Id                                 AS InfoMoneyId  
-      , Object_InfoMoney.ValueData                          AS InfoMoneyName 
+      , Object_InfoMoney_View.InfoMoneyId
+      , Object_InfoMoney_View.InfoMoneyCode
+      , Object_InfoMoney_View.InfoMoneyName
+      , Object_InfoMoney_View.InfoMoneyName_all
+
+      , Object_InfoMoney_View.InfoMoneyGroupId
+      , Object_InfoMoney_View.InfoMoneyGroupCode
+      , Object_InfoMoney_View.InfoMoneyGroupName
+
+      , Object_InfoMoney_View.InfoMoneyDestinationId
+      , Object_InfoMoney_View.InfoMoneyDestinationCode
+      , Object_InfoMoney_View.InfoMoneyDestinationName
       , Object_Product.Id                                   AS ProductId
       , Object_Product.ValueData                            AS ProductName
       , Object_PaidKind.Id                                  AS PaidKindId
@@ -144,7 +158,7 @@ BEGIN
         LEFT JOIN tmpMLO AS MovementLinkObject_InfoMoney
                          ON MovementLinkObject_InfoMoney.MovementId = Movement.Id
                         AND MovementLinkObject_InfoMoney.DescId = zc_MovementLinkObject_InfoMoney()
-        LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = MovementLinkObject_InfoMoney.ObjectId
+        LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MovementLinkObject_InfoMoney.ObjectId
 
         LEFT JOIN tmpMLO AS MovementLinkObject_Product
                          ON MovementLinkObject_Product.MovementId = Movement.Id

@@ -18,11 +18,14 @@ type
     procedure LoadServiceFormTest;
     procedure LoadLanguageFormTest;
     procedure LoadBankFormTest;
+    procedure LoadBankAccountFormTest;
     procedure LoadBrandFormTest;
     procedure LoadClientFormTest;
     procedure LoadCountryFormTest;
     procedure LoadColorPatternFormTest;
+    procedure LoadCurrencyFormTest;
     procedure LoadDiscountParnerFormTest;
+    procedure LoadInvoiceFormTest;
     procedure LoadGoodsGroupFormTest;
     procedure LoadGoodsFormTest;
     procedure LoadGoodsTagFormTest;
@@ -188,6 +191,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankEditForm');
 end;
+
+procedure TLoadFormTest.LoadBankAccountFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankAccountForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankAccountEditForm');
+end;
+
 procedure TLoadFormTest.LoadClientFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TClientForm'));
@@ -210,6 +222,17 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TDiscountParnerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountParnerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountParnerEditForm');
+end;
+
+procedure TLoadFormTest.LoadInvoiceFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInvoiceJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInvoiceForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_PeriodDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovement_PeriodDialogForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsGroupFormTest;
@@ -236,6 +259,9 @@ end;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxKindForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPaidKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPaidKindForm');
 end;
 
 procedure TLoadFormTest.LoadMeasureFormTest;
@@ -375,6 +401,17 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TolorPatternEditForm');
 end;
 
+procedure TLoadFormTest.LoadCurrencyFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCurrencyForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCurrencyEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrency_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCurrency_ObjectForm');
+end;
+
 procedure TLoadFormTest.LoadProdColorPatternFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdColorPatternForm'));
@@ -504,7 +541,13 @@ procedure TLoadFormTest.LoadUnionFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnion_Goods_ReceiptServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnion_Goods_ReceiptServiceForm');
-end;
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnion_ClientPartnerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnion_ClientPartnerForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMoneyPlace_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMoneyPlace_ObjectForm');
+  end;
 
 procedure TLoadFormTest.LoadImportSettingsFormTest;
 begin
@@ -522,6 +565,4 @@ end;
 
 initialization
   TestFramework.RegisterTest('Загрузка форм', TLoadFormTest.Suite);
-
-
 end.

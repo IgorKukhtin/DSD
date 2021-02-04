@@ -1118,7 +1118,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         end
         item
           Name = 'MasterOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = edOperDate
           DataType = ftDateTime
           ParamType = ptInput
@@ -1344,7 +1344,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         end
         item
           Name = 'inStartDate'
-          Value = 'NULL'
+          Value = Null
           Component = edStartSale
           DataType = ftDateTime
           ParamType = ptInput
@@ -1756,6 +1756,48 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         end>
       Caption = 'actExecClearComplement'
     end
+    object dsdExecStoredProc1: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefreshMI
+      BeforeAction = actExecuteSummaDialog
+      PostDataSetBeforeExecute = False
+      StoredProc = spPriceAdjustment
+      StoredProcList = <
+        item
+          StoredProc = spPriceAdjustment
+        end>
+      Caption = #1050#1086#1088#1077#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099' '#1087#1088#1072#1081#1089#1072', -% '#1080#1083#1080' +%'
+      Hint = #1050#1086#1088#1077#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099' '#1087#1088#1072#1081#1089#1072', -% '#1080#1083#1080' +%'
+      ImageIndex = 40
+    end
+    object actExecuteSummaDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteSummaDialog'
+      FormName = 'TSummaDialogForm'
+      FormNameParam.Value = 'TSummaDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Summa'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PriceAdjustment'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1042#1074#1086#1076' '#1087#1088#1086#1094#1077#1085#1090#1072' '#1082#1086#1088#1077#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099' '#1087#1088#1072#1081#1089#1072
+          Component = FormParams
+          ComponentItem = 'PriceAdjustmentLabel'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_OrderInternalPromo'
@@ -1870,6 +1912,10 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton3'
         end
         item
           Visible = True
@@ -2091,6 +2137,10 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Action = actClearComplement
       Category = 0
     end
+    object dxBarButton3: TdxBarButton
+      Action = dsdExecStoredProc1
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SearchAsFilter = False
@@ -2131,6 +2181,18 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Name = 'UnitID'
         Value = Null
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceAdjustment'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceAdjustmentLabel'
+        Value = #1042#1074#1086#1076' '#1087#1088#1086#1094#1077#1085#1090#1072' '#1082#1086#1088#1077#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099' '#1087#1088#1072#1081#1089#1072
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 40
     Top = 312
@@ -2153,7 +2215,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -2211,7 +2273,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       end
       item
         Name = 'StartSale'
-        Value = 'NULL'
+        Value = Null
         Component = edStartSale
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -2269,7 +2331,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       end
       item
         Name = 'inStartSale'
-        Value = 'NULL'
+        Value = Null
         Component = edStartSale
         DataType = ftDateTime
         ParamType = ptInput
@@ -2367,42 +2429,10 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     Top = 312
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 590
     Top = 208
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 654
     Top = 248
   end
@@ -2623,6 +2653,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     SearchAsFilter = False
     PropertiesCellList = <>
     Left = 334
@@ -2812,6 +2843,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     SearchAsFilter = False
     PropertiesCellList = <>
     Left = 278
@@ -3223,5 +3255,33 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     ParamKeyField = 'inMovementId'
     Left = 680
     Top = 408
+  end
+  object spPriceAdjustment: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_OrderInternalPromo_PriceAdjustment'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceAdjustment'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PriceAdjustment'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 584
+    Top = 136
   end
 end

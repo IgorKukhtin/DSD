@@ -214,6 +214,9 @@ type
     miReceiptService: TMenuItem;
     actTranslateMessage: TdsdOpenForm;
     miTranslateMessage: TMenuItem;
+    actInvoiceJournal: TdsdOpenForm;
+    N11: TMenuItem;
+    N12: TMenuItem;
   private
     { Private declarations }
   public
