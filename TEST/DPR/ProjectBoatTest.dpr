@@ -213,7 +213,14 @@ uses
   InvoiceJournal in '..\..\FormsBoat\Document\InvoiceJournal.pas' {InvoiceJournalForm: TParentForm},
   Movement_PeriodDialog in '..\..\FormsBoat\Document\Movement_PeriodDialog.pas' {Movement_PeriodDialogForm: TParentForm},
   Invoice in '..\..\FormsBoat\Document\Invoice.pas' {InvoiceForm: TParentForm},
-  PaidKind in '..\..\FormsBoat\Kind\PaidKind.pas' {PaidKindForm: TParentForm};
+  PaidKind in '..\..\FormsBoat\Kind\PaidKind.pas' {PaidKindForm: TParentForm},
+  Union_ClientPartner in '..\..\FormsBoat\Guides\Union_ClientPartner.pas' {Union_ClientPartnerForm: TParentForm},
+  BankAccount in '..\..\FormsBoat\Guides\BankAccount.pas' {BankAccountForm: TParentForm},
+  BankAccountEdit in '..\..\FormsBoat\Guides\BankAccountEdit.pas' {BankAccountEditForm: TParentForm},
+  Currency in '..\..\FormsBoat\Guides\Currency.pas' {CurrencyForm: TParentForm},
+  Currency_Object in '..\..\FormsBoat\Guides\Currency_Object.pas' {Currency_ObjectForm: TParentForm},
+  CurrencyEdit in '..\..\FormsBoat\Guides\CurrencyEdit.pas' {CurrencyEditForm: TParentForm},
+  MoneyPlace_Object in '..\..\FormsBoat\Guides\MoneyPlace_Object.pas' {MoneyPlace_ObjectForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

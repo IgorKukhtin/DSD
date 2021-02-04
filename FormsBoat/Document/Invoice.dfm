@@ -255,7 +255,7 @@
       end
       item
         Name = 'inPlanDate'
-        Value = 'NULL'
+        Value = Null
         Component = cePlanDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -357,7 +357,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -380,7 +380,7 @@
       end
       item
         Name = 'PlanDate'
-        Value = 'NULL'
+        Value = Null
         Component = cePlanDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -501,10 +501,10 @@
   object GuidesObject: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceObject
-    FormNameParam.Value = 'TPartnerForm'
+    FormNameParam.Value = 'TUnion_ClientPartnerForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPartnerForm'
+    FormName = 'TUnion_ClientPartnerForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item

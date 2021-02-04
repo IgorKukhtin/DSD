@@ -1287,16 +1287,12 @@ inherited MainForm: TMainForm
       end
       object miBankAccount: TMenuItem
         Action = actBankAccount
-        Enabled = False
-        Visible = False
       end
       object miBank: TMenuItem
         Action = actBank
       end
       object miCurrency: TMenuItem
         Action = actCurrency
-        Enabled = False
-        Visible = False
       end
       object miLine84: TMenuItem
         Caption = '-'

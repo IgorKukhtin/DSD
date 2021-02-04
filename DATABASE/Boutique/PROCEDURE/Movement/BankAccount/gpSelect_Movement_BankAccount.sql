@@ -106,8 +106,8 @@ BEGIN
            , CASE WHEN COALESCE (tmpMI.Amount,0) < 0 THEN -1 * tmpMI.Amount  ELSE 0 END :: TFloat AS AmountOut
            , CASE WHEN COALESCE (tmpMI.Amount,0) > 0 THEN tmpMI.Amount ELSE 0 END       :: TFloat AS AmountIn
 
-           , Object_BankAccount.Id                              AS BankAccountId
-           , Object_BankAccount.ValueData                       AS BankAccountName
+           , Object_BankAccount.Id                       AS BankAccountId
+           , Object_BankAccount.ValueData                AS BankAccountName
            , Object_Currency.Id                          AS CurrencyId
            , Object_Currency.ValueData                   AS CurrencyName
            , Object_MoneyPlace.Id                        AS MoneyPlaceId
