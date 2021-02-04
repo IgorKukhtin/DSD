@@ -26,7 +26,6 @@ object BankAccountForm: TBankAccountForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 469
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -403,6 +402,21 @@ object BankAccountForm: TBankAccountForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BankId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BankName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

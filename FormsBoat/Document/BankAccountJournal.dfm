@@ -12,17 +12,17 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Width = 835
     Height = 299
     TabOrder = 3
-    ExplicitWidth = 1028
+    ExplicitWidth = 835
     ExplicitHeight = 299
     ClientRectBottom = 299
     ClientRectRight = 835
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1028
+      ExplicitWidth = 835
       ExplicitHeight = 299
       inherited cxGrid: TcxGrid
         Width = 835
         Height = 299
-        ExplicitWidth = 1028
+        ExplicitWidth = 835
         ExplicitHeight = 299
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -181,7 +181,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   end
   inherited Panel: TPanel
     Width = 835
-    ExplicitWidth = 1028
+    ExplicitWidth = 835
     inherited deStart: TcxDateEdit
       EditValue = 43101d
     end
@@ -763,37 +763,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_BankAccount'
-    Params = <
-      item
-        Name = 'inStartDate'
-        Value = 41640d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndDate'
-        Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inJuridicalBasisId'
-        Value = Null
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsErased'
-        Value = False
-        Component = actShowErased
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
     Top = 131
   end
   inherited BarManager: TdxBarManager

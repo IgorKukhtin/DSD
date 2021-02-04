@@ -9,7 +9,17 @@ uses
   Vcl.ActnList, cxPropertiesStore, dsdAddOn, Vcl.StdCtrls, cxButtons,
   cxControls, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxTextEdit, dsdGuides, cxButtonEdit, cxMaskEdit, cxDropDownEdit, cxCalendar,
-  cxCurrencyEdit, cxLabel, dxSkinsCore, dxSkinsDefaultPainters;
+  cxCurrencyEdit, cxLabel, dxSkinsCore, dxSkinsDefaultPainters, dxSkinBlack,
+  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
+  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TBankAccountMovementForm = class(TAncestorEditDialogForm)
@@ -25,38 +35,20 @@ type
     cxLabel3: TcxLabel;
     cxLabel6: TcxLabel;
     ceObject: TcxButtonEdit;
-    lGuidesObject: TdsdGuides;
-    cxLabel5: TcxLabel;
-    ceInfoMoney: TcxButtonEdit;
-    GuidesInfoMoney: TdsdGuides;
-    ceContract: TcxButtonEdit;
-    cxLabel8: TcxLabel;
-    GuidesContract: TdsdGuides;
+    GuidesObject: TdsdGuides;
     cxLabel10: TcxLabel;
     ceComment: TcxTextEdit;
-    cxLabel9: TcxLabel;
-    ceCurrency: TcxButtonEdit;
-    GuidesCurrency: TdsdGuides;
     edInvNumber: TcxTextEdit;
-    cxLabel11: TcxLabel;
-    ceCurrencyPartnerValue: TcxCurrencyEdit;
-    cxLabel12: TcxLabel;
-    ceParPartnerValue: TcxCurrencyEdit;
     ceBank: TcxButtonEdit;
     cxLabel13: TcxLabel;
     GuidesBank: TdsdGuides;
-    cxLabel4: TcxLabel;
-    ceAmountSumm: TcxCurrencyEdit;
-    ceUnit: TcxButtonEdit;
-    cxLabel14: TcxLabel;
-    GuidesUnit: TdsdGuides;
     cxLabel15: TcxLabel;
     ceInvoice: TcxButtonEdit;
     GuidesInvoice: TdsdGuides;
     cxLabel16: TcxLabel;
     ceComment_Invoice: TcxTextEdit;
-    cxLabel17: TcxLabel;
-    ceServiceDate: TcxDateEdit;
+    cxLabel18: TcxLabel;
+    edInvNumberPartner: TcxTextEdit;
   private
     { Private declarations }
   public

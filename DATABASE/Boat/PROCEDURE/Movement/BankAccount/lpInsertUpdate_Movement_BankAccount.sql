@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION lpinsertupdate_movement_BankAccount(
      IN inamount               TFloat, 
      IN inbankaccountid        Integer, 
      IN inmoneyplaceid         Integer, 
-     IN inincomemovementid     Integer, 
+     IN inMovementId_Invoice     Integer, 
      IN incomment              TVarChar, 
      IN inuserid               Integer)
   RETURNS Integer AS
@@ -20,7 +20,7 @@ $BODY$
 BEGIN
  
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_BankAccount(), inInvNumber, inOperDate, NULL);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_BankAccount(), inInvNumber, inOperDate, NULL, inUserId);
 
      -- <>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner); 
@@ -36,7 +36,10 @@ BEGIN
 
      -- сохранили связь с <Объект>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_MoneyPlace(), vbMovementItemId, inMoneyPlaceId);
-    
+
+     -- сохранили связь с документом <Счет>
+     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), ioId, inMovementId_Invoice);
+
      -- Комментарий
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
 

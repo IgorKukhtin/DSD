@@ -742,8 +742,8 @@ inherited MainForm: TMainForm
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090' '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
-      FormName = 'TCashJournalForm'
-      FormNameParam.Value = 'TCashJournalForm'
+      FormName = 'TBankAccountJournalForm'
+      FormNameParam.Value = 'TBankAccountJournalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
