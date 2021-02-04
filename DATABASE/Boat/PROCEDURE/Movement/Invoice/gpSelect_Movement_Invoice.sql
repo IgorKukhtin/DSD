@@ -24,8 +24,7 @@ RETURNS TABLE (Id              Integer
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
-             , ProductId       Integer
-             , ProductName     TVarChar
+             , ProductId Integer, ProductCode Integer, ProductName TVarChar, CIN TVarChar
              , PaidKindId      Integer
              , PaidKindName    TVarChar
              , UnitId          Integer
@@ -117,16 +116,18 @@ BEGIN
       , Object_InfoMoney_View.InfoMoneyDestinationId
       , Object_InfoMoney_View.InfoMoneyDestinationCode
       , Object_InfoMoney_View.InfoMoneyDestinationName
-      , Object_Product.Id                                   AS ProductId
-      , Object_Product.ValueData                            AS ProductName
-      , Object_PaidKind.Id                                  AS PaidKindId
-      , Object_PaidKind.ValueData                           AS PaidKindName
-      , Object_Unit.Id                                      AS UnitId
-      , Object_Unit.ValueData                               AS UnitName
+      , Object_Product.Id                          AS ProductId
+      , Object_Product.ObjectCode                  AS ProductCode
+      , Object_Product.ValueData                   AS ProductName
+      , ObjectString_CIN.ValueData                 AS ProductCIN
+      , Object_PaidKind.Id                         AS PaidKindId
+      , Object_PaidKind.ValueData                  AS PaidKindName
+      , Object_Unit.Id                             AS UnitId
+      , Object_Unit.ValueData                      AS UnitName
 
-      , MovementString_InvNumberPartner.ValueData           AS InvNumberPartner
-      , MovementString_ReceiptNumber.ValueData              AS ReceiptNumber
-      , MovementString_Comment.ValueData                    AS Comment
+      , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
+      , MovementString_ReceiptNumber.ValueData     AS ReceiptNumber
+      , MovementString_Comment.ValueData           AS Comment
 
     FROM tmpMovement AS Movement
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -142,9 +143,11 @@ BEGIN
         LEFT JOIN tmpMovementString AS MovementString_InvNumberPartner
                                     ON MovementString_InvNumberPartner.MovementId = Movement.Id
                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+
         LEFT JOIN tmpMovementString AS MovementString_ReceiptNumber
                                     ON MovementString_ReceiptNumber.MovementId = Movement.Id
                                    AND MovementString_ReceiptNumber.DescId = zc_MovementString_ReceiptNumber()
+
         LEFT JOIN tmpMovementString AS MovementString_Comment
                                     ON MovementString_Comment.MovementId = Movement.Id
                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
@@ -164,6 +167,10 @@ BEGIN
                          ON MovementLinkObject_Product.MovementId = Movement.Id
                         AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
         LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId
+
+        LEFT JOIN ObjectString AS ObjectString_CIN
+                               ON ObjectString_CIN.ObjectId = Object_Product.Id
+                              AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
 
         LEFT JOIN tmpMLO AS MovementLinkObject_Unit
                          ON MovementLinkObject_Unit.MovementId = Movement.Id

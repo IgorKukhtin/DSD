@@ -199,13 +199,14 @@
   object cxLabel19: TcxLabel [26]
     Left = 179
     Top = 54
-    Caption = #1054#1092'. '#8470' '#1082#1074#1080#1090#1072#1085#1094#1080#1080
+    Caption = 'Quittung Nr'
   end
   object edReceiptNumber: TcxTextEdit [27]
     Left = 179
     Top = 74
     Hint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1082#1074#1080#1090#1072#1085#1094#1080#1080
     ParentShowHint = False
+    Properties.ReadOnly = True
     ShowHint = True
     TabOrder = 27
     Width = 155
@@ -219,8 +220,22 @@
     Top = 44
   end
   inherited ActionList: TActionList
-    Left = 334
+    Left = 302
     Top = 99
+    object actGetPlanDate: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      StoredProc = spGetPlanDate
+      StoredProcList = <
+        item
+          StoredProc = spGetPlanDate
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      RefreshOnTabSetChanges = False
+    end
   end
   inherited FormParams: TdsdFormParams
     Left = 39
@@ -508,6 +523,14 @@
     PositionDataSet = 'MasterCDS'
     Params = <
       item
+        Name = 'DayCalendar'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'DayCalendar'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Key'
         Value = ''
         Component = GuidesObject
@@ -536,20 +559,9 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ContractId'
-        Value = ''
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ContractName'
-        Value = ''
-        DataType = ftString
-        MultiSelectSeparator = ','
       end>
-    Left = 75
-    Top = 157
+    Left = 107
+    Top = 181
   end
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
@@ -602,7 +614,7 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 274
+    Left = 234
     Top = 121
   end
   object GuidesUnit: TdsdGuides
@@ -661,5 +673,48 @@
       end>
     Left = 147
     Top = 319
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actGetPlanDate
+    ComponentList = <
+      item
+        Component = GuidesObject
+      end>
+    Left = 96
+    Top = 64
+  end
+  object spGetPlanDate: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Invoice_PlanDate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = 42160d
+        Component = ceOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPlanDate'
+        Value = Null
+        Component = cePlanDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = GuidesObject
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 216
+    Top = 64
   end
 end

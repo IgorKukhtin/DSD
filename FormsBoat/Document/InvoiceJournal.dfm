@@ -217,6 +217,16 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Options.Editing = False
             Width = 80
           end
+          object ProductCode: TcxGridDBColumn
+            Caption = 'Interne Nr (Boat)'
+            DataBinding.FieldName = 'ProductCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1082#1086#1076' '#1083#1086#1076#1082#1080
+            Options.Editing = False
+            Width = 43
+          end
           object ProductName: TcxGridDBColumn
             Caption = 'Boat'
             DataBinding.FieldName = 'ProductName'
@@ -225,6 +235,14 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             HeaderHint = 'Product'
             Options.Editing = False
             Width = 78
+          end
+          object CIN: TcxGridDBColumn
+            Caption = 'CIN Nr.'
+            DataBinding.FieldName = 'CIN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
           object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
@@ -235,7 +253,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Width = 52
           end
           object ReceiptNumber: TcxGridDBColumn
-            Caption = #1054#1092'. '#8470' '#1082#1074#1080#1090'.'
+            Caption = 'Quittung Nr'
             DataBinding.FieldName = 'ReceiptNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

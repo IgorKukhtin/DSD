@@ -35,9 +35,8 @@ BEGIN
         vbAmount := -1 * inAmountOut;
      END IF;
 
-
     -- сохранили <Документ>
-    PERFORM lpInsertUpdate_Movement_Invoice (ioId               := ioId
+    ioId := lpInsertUpdate_Movement_Invoice (ioId               := ioId
                                            , inInvNumber        := inInvNumber
                                            , inOperDate         := inOperDate
                                            , inPlanDate         := inPlanDate

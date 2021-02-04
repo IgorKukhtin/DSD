@@ -42,6 +42,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
+      OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object Code: TcxGridDBColumn
@@ -66,6 +67,42 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 172
+      end
+      object DayCalendar: TcxGridDBColumn
+        Caption = #1054#1090#1089#1088'. '#1074' '#1082#1072#1083#1077#1085#1076'. '#1076#1085#1103#1093
+        DataBinding.FieldName = 'DayCalendar'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1090#1089#1088#1086#1095#1082#1072' '#1074' '#1082#1072#1083#1077#1085#1076#1072#1088#1085#1099#1093' '#1076#1085#1103#1093
+        Options.Editing = False
+        Width = 92
+      end
+      object InfoMoneyName: TcxGridDBColumn
+        Caption = #1057#1090#1072#1090#1100#1103' '#1059#1055
+        DataBinding.FieldName = 'InfoMoneyName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
+      object InfoMoneyGroupName: TcxGridDBColumn
+        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyGroupName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
+      object InfoMoneyDestinationName: TcxGridDBColumn
+        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+        DataBinding.FieldName = 'InfoMoneyDestinationName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -261,6 +298,37 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'DescName'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DayCalendar'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'DayCalendar'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName_all'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName_all'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

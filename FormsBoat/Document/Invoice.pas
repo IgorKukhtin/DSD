@@ -54,6 +54,9 @@ type
     edInvNumberPartner: TcxTextEdit;
     cxLabel19: TcxLabel;
     edReceiptNumber: TcxTextEdit;
+    RefreshDispatcher: TRefreshDispatcher;
+    spGetPlanDate: TdsdStoredProc;
+    actGetPlanDate: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
