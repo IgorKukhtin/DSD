@@ -5,7 +5,7 @@ inherited Report_Promo_Result_TradeForm: TReport_Promo_Result_TradeForm
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1091
-  ExplicitHeight = 472
+  ExplicitHeight = 469
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -309,7 +309,7 @@ inherited Report_Promo_Result_TradeForm: TReport_Promo_Result_TradeForm
             Options.Editing = False
             Width = 71
           end
-                    object AdvertisingName: TcxGridDBColumn
+          object AdvertisingName: TcxGridDBColumn
             Caption = #1056#1077#1082#1083#1072#1084#1085'. '#1087#1086#1076#1076#1077#1088#1078#1082#1072
             DataBinding.FieldName = 'AdvertisingName'
             HeaderAlignmentHorz = taCenter
@@ -707,14 +707,14 @@ inherited Report_Promo_Result_TradeForm: TReport_Promo_Result_TradeForm
       Params = <
         item
           Name = 'DateStart'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'DateEnd'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -740,7 +740,7 @@ inherited Report_Promo_Result_TradeForm: TReport_Promo_Result_TradeForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
@@ -748,7 +748,7 @@ inherited Report_Promo_Result_TradeForm: TReport_Promo_Result_TradeForm
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
@@ -853,7 +853,7 @@ inherited Report_Promo_Result_TradeForm: TReport_Promo_Result_TradeForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -865,40 +865,6 @@ inherited Report_Promo_Result_TradeForm: TReport_Promo_Result_TradeForm
           Component = MasterCDS
           ComponentItem = 'InvNumber'
           DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actOpenPromo: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
-      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
-      ImageIndex = 1
-      FormName = 'TPromoForm'
-      FormNameParam.Value = 'TPromoForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MovementId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 'NULL'
-          Component = MasterCDS
-          ComponentItem = 'OperDate'
-          DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -976,7 +942,7 @@ inherited Report_Promo_Result_TradeForm: TReport_Promo_Result_TradeForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -984,7 +950,7 @@ inherited Report_Promo_Result_TradeForm: TReport_Promo_Result_TradeForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -1111,10 +1077,6 @@ inherited Report_Promo_Result_TradeForm: TReport_Promo_Result_TradeForm
       Action = actReport_PromoDialog
       Category = 0
     end
-    object dxBarButton3: TdxBarButton
-      Action = actOpenPromo
-      Category = 0
-    end
     object bbPrint_Mov: TdxBarButton
       Action = actPrint_Mov
       Category = 0
@@ -1127,11 +1089,9 @@ inherited Report_Promo_Result_TradeForm: TReport_Promo_Result_TradeForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
       item
-        Action = actOpenPromo
       end>
     ActionItemList = <
       item
-        Action = actOpenPromo
         ShortCut = 13
       end>
     Left = 512
@@ -1211,7 +1171,7 @@ inherited Report_Promo_Result_TradeForm: TReport_Promo_Result_TradeForm
       end
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -1219,7 +1179,7 @@ inherited Report_Promo_Result_TradeForm: TReport_Promo_Result_TradeForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

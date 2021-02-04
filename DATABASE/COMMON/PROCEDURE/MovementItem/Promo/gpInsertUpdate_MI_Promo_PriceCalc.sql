@@ -357,9 +357,10 @@ BEGIN
      END IF;
 
 
-    IF inSession = '5'
+    IF inSession = '5' OR (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete())
     THEN
-        RAISE EXCEPTION 'Ошибка.Admin <%> <%> <%>'
+        RAISE EXCEPTION 'Ошибка.Документ в статусе <%>. Проверка: <%> <%>.'
+          , lfGet_Object_ValueData_sh (zc_Enum_Status_Complete())
           , (SELECT DISTINCT MIF.ValueData
              FROM MovementItem
                   LEFT JOIN MovementItemFloat AS MIF
@@ -371,7 +372,7 @@ BEGIN
           -- ORDER BY MovementItem.Id LIMIT 1
             )
           , vbContractCondition
-          , vbContractId_str
+--          , vbContractId_str
             ;
     END IF;
 

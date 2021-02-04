@@ -51,11 +51,14 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              )
 AS
 $BODY$
+  DECLARE vbUserId Integer;
   DECLARE vbSignInternalId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Promo());
+    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Promo());
+    -- vbUserId:= lpGetUserBySession (inSession);
 
+    --IF NOT EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId
 
     IF COALESCE (inMovementId, 0) < 0
     THEN

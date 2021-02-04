@@ -1,6 +1,6 @@
 <?php
-  $connectstring = "port=5432 dbname=project host=project-vds.vds.colocall.com user=postgres password=vas6ok";
-  $host = "http://project-vds.vds.colocall.com/project/index.php";
+  $connectstring = "port=5432 dbname=project_cloud1 host=alan-project.azurewebsites.net user=adminaccount@dev-project-db password=Install_test!";
+  $host = "http://alan-project.azurewebsites.net/index.php";
   $isArchive = true;
 ?>
 

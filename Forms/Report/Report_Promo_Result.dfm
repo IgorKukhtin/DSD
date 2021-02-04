@@ -5,7 +5,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1097
-  ExplicitHeight = 472
+  ExplicitHeight = 469
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -786,14 +786,14 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
       Params = <
         item
           Name = 'DateStart'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'DateEnd'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -819,7 +819,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
@@ -827,7 +827,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
@@ -932,7 +932,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -974,7 +974,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -1055,7 +1055,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -1063,7 +1063,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -1151,6 +1151,14 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton3'
         end
         item
           Visible = True
@@ -1293,7 +1301,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
       end
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -1301,7 +1309,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

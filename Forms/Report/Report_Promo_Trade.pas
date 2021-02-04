@@ -74,8 +74,6 @@ type
     AmountOutWeight: TcxGridDBColumn;
     AmountIn: TcxGridDBColumn;
     AmountInWeight: TcxGridDBColumn;
-    actOpenPromo: TdsdOpenForm;
-    dxBarButton3: TdxBarButton;
     cbPromo: TcxCheckBox;
     cbTender: TcxCheckBox;
     cbGoodsKind: TcxCheckBox;

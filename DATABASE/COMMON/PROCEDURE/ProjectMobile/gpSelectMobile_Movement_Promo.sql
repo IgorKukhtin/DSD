@@ -36,8 +36,20 @@ BEGIN
                                            , Movement_Promo.InvNumber
                                            , Movement_Promo.Operdate
                                            , Movement_Promo.StatusId
-                                           , MovementDate_StartSale.ValueData     AS StartSale
-                                           , MovementDate_EndSale.ValueData       AS EndSale
+                                           , CASE WHEN OP.isOperDateOrder = TRUE
+                                                       THEN MovementDate_StartSale.ValueData
+                                                          - (COALESCE (OP.PrepareDayCount, 0) :: TVarChar || ' DAY') :: INTERVAL
+                                                  ELSE MovementDate_StartSale.ValueData
+                                                     - (COALESCE (OP.PrepareDayCount, 0) :: TVarChar || ' DAY') :: INTERVAL
+                                                     - (COALESCE (OP.DocumentDayCount, 0) :: TVarChar || ' DAY') :: INTERVAL
+                                             END :: TDateTime AS StartSale
+                                           , CASE WHEN OP.isOperDateOrder = TRUE
+                                                       THEN MovementDate_EndSale.ValueData
+                                                          - (COALESCE (OP.PrepareDayCount, 0) :: TVarChar || ' DAY') :: INTERVAL
+                                                  ELSE MovementDate_EndSale.ValueData
+                                                     - (COALESCE (OP.PrepareDayCount, 0) :: TVarChar || ' DAY') :: INTERVAL
+                                                     - (COALESCE (OP.DocumentDayCount, 0) :: TVarChar || ' DAY') :: INTERVAL
+                                             END :: TDateTime AS EndSale
                                            , ROW_NUMBER() OVER (PARTITION BY MI_PromoPartner.ObjectId, MovementItem_PromoGoods.ObjectId ORDER BY Movement_Promo.Operdate DESC, Movement_PromoPartner.ParentId DESC) AS RowNum
                                       FROM Movement AS Movement_PromoPartner
                                            JOIN MovementItem AS MI_PromoPartner
@@ -51,17 +63,32 @@ BEGIN
                                            JOIN MovementDate AS MovementDate_StartSale
                                                              ON MovementDate_StartSale.MovementId = Movement_Promo.Id
                                                             AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
-                                                            AND MovementDate_StartSale.ValueData <= CURRENT_DATE
+                                                            AND MovementDate_StartSale.ValueData <= CURRENT_DATE + INTERVAL '10 DAY'
                                            JOIN MovementDate AS MovementDate_EndSale
                                                              ON MovementDate_EndSale.MovementId = Movement_Promo.Id
                                                             AND MovementDate_EndSale.DescId     = zc_MovementDate_EndSale()
-                                                            AND MovementDate_EndSale.ValueData  >= CURRENT_DATE
+                                                            AND MovementDate_EndSale.ValueData  >= CURRENT_DATE  - INTERVAL '10 DAY'
                                            JOIN MovementItem AS MovementItem_PromoGoods 
                                                              ON MovementItem_PromoGoods.MovementId = Movement_Promo.Id
                                                             AND MovementItem_PromoGoods.DescId     = zc_MI_Master()
                                                             AND MovementItem_PromoGoods.IsErased   = FALSE
                                       WHERE Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
                                         AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
+                                        --
+                                        AND CASE WHEN OP.isOperDateOrder = TRUE
+                                                      THEN MovementDate_StartSale.ValueData
+                                                         - (COALESCE (OP.PrepareDayCount, 0) :: TVarChar || ' DAY') :: INTERVAL
+                                                 ELSE MovementDate_StartSale.ValueData
+                                                    - (COALESCE (OP.PrepareDayCount, 0) :: TVarChar || ' DAY') :: INTERVAL
+                                                    - (COALESCE (OP.DocumentDayCount, 0) :: TVarChar || ' DAY') :: INTERVAL
+                                            END <= CURRENT_DATE
+                                        AND CASE WHEN OP.isOperDateOrder = TRUE
+                                                      THEN MovementDate_EndSale.ValueData
+                                                         - (COALESCE (OP.PrepareDayCount, 0) :: TVarChar || ' DAY') :: INTERVAL
+                                                 ELSE MovementDate_EndSale.ValueData
+                                                    - (COALESCE (OP.PrepareDayCount, 0) :: TVarChar || ' DAY') :: INTERVAL
+                                                    - (COALESCE (OP.DocumentDayCount, 0) :: TVarChar || ' DAY') :: INTERVAL
+                                            END >= CURRENT_DATE
                                      )
                 , tmpPromo AS (SELECT DISTINCT tmpPromoPartner.PromoId AS Id
                                     , tmpPromoPartner.InvNumber
@@ -76,11 +103,11 @@ BEGIN
                   , tmpPromo.InvNumber
                   , tmpPromo.Operdate
                   , tmpPromo.StatusId
-                  , (tmpPromo.StartSale - INTERVAL '1 DAY') :: TDateTime AS StartSale
+                  , (tmpPromo.StartSale - INTERVAL '0 DAY') :: TDateTime AS StartSale
                   , tmpPromo.EndSale
                   , (MI_Child.ObjectId IS NULL)          AS isChangePercent
                   , MovementString_CommentMain.ValueData AS CommentMain
-                  , true::Boolean                        AS isSync  
+                  , TRUE                      :: Boolean AS isSync  
              FROM tmpPromo
                   LEFT JOIN MovementItem AS MI_Child
                                          ON MI_Child.MovementId = tmpPromo.Id
@@ -104,4 +131,4 @@ $BODY$
 */
 
 -- SELECT * FROM gpSelectMobile_Movement_Promo (inSyncDateIn:= zc_DateStart(), inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpSelectMobile_Movement_Promo (inSyncDateIn:= zc_DateStart(), inSession:= '1156045')
+-- SELECT * FROM gpSelectMobile_Movement_Promo (inSyncDateIn:= zc_DateStart(), inSession:= '1068282')

@@ -1226,7 +1226,7 @@ begin
      //
      if (ParamStr(2)='autoALL') and (BranchEdit.Text <> 'BranchId : 0')
      then begin
-           if ((Hour_calc = 4) and (Minute_calc >=39 ) and (Minute_calc < 59))
+           if ((Hour_calc = 5) and (Minute_calc >=29 ) and (Minute_calc < 50))
            then begin
                      myLogMemo_add('start stop 20 min');
                      MyDelay(20*60*1000);
@@ -1253,7 +1253,7 @@ begin
      if  (((Hour_calc = 7)  and (Minute_calc >= 25))
        or ((Hour_calc = 21) and (Minute_calc >= 20))
        or ((Hour_calc = 23) and (Minute_calc >= 38))
-       or ((Hour_calc = 4)  and (Minute_calc >= 40) and ((ParamStr(6)='VAC_5')or(ParamStr(7)='VAC_5')or(ParamStr(8)='VAC_5')))
+       or ((Hour_calc = 5)  and (Minute_calc >= 30) and ((ParamStr(6)='VAC_5')or(ParamStr(7)='VAC_5')or(ParamStr(8)='VAC_5')))
          )
      and (beginVACUUM < 4) and (ParamStr(2)='autoALL')
      and (BranchEdit.Text = 'BranchId : 0')
@@ -1269,7 +1269,7 @@ begin
                                 +'   and query NOT ILIKE ' + FormatToVarCharServer_notNULL('%from pg_stat_activity as Load_PostgreSql%')
                                  );
               myLogMemo_add('rec VACUUM = ' + IntToStr(toSqlQuery_two.RecordCount));
-              if not ((Hour_calc = 4) and (Minute_calc >= 20) and (Minute_calc <= 59)) then
+              if not ((Hour_calc = 5) and (Minute_calc >= 30) and (Minute_calc <= 55)) then
               if toSqlQuery_two.RecordCount > 0 then
               begin
                    myLogMemo_add('-');
@@ -1284,7 +1284,7 @@ begin
                    //
                    myLogMemo_add('-');
                    //
-                   if not ((Hour_calc = 4) and (Minute_calc >= 20) and (Minute_calc <= 59)) then
+                   if not ((Hour_calc = 5) and (Minute_calc >= 30) and (Minute_calc < 55)) then
                    begin
                       MyDelay(1 * 100);
                       exit;
@@ -1311,7 +1311,7 @@ begin
                      end;
                    //
                    myLogMemo_add('-');
-                   if not ((Hour_calc = 4) and (Minute_calc >= 20) and (Minute_calc <= 59)) then
+                   if not ((Hour_calc = 5) and (Minute_calc >= 30) and (Minute_calc < 55)) then
                    begin
                       MyDelay(1 * 1000);
                       exit;
@@ -1336,7 +1336,7 @@ begin
                //
                myLogMemo_add('('+IntToStr(Hour_calc)+') start all VACUUM ('+IntToStr(beginVACUUM)+')');
                //
-               lVACUUM_all ((Hour_calc = 23)or(Hour_calc = 4));
+               lVACUUM_all ((Hour_calc = 23){or(Hour_calc = 5)});
                beginVACUUM:= beginVACUUM + 1;
                //
                myLogMemo_add('end all VACUUM');

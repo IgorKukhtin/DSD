@@ -10,6 +10,9 @@ RETURNS TABLE (Id               Integer
              , ObjectCode       Integer  -- Код
              , ValueData        TVarChar -- Название
              , JuridicalId      Integer  -- Юридическое лицо
+             , isOperDateOrder  Boolean  -- цена по дате заявки, в момент переоценки цены продажи - некоторым ТТ отгрузка происходит по дате заявки, т.е. по старым ценам, а некоторым ТТ на дату когда приедет к покупателю, т.е. по новым ценам
+             , PrepareDayCount  TFloat   -- За сколько дней принимается заказ
+             , DocumentDayCount TFloat   -- Через сколько дней оформляется документально, возможно понадобится рассчитать дату когда приедет покупателю
              , isErased         Boolean  -- Удаленный ли элемент
               )
 AS
@@ -65,6 +68,10 @@ BEGIN
                   , Object_Partner.ObjectCode
                   , Object_Partner.ValueData
                   , COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, 0)::Integer AS JuridicalId
+
+                  , COALESCE (ObjectBoolean_Retail_OperDateOrder.ValueData, FALSE) :: Boolean AS isOperDateOrder
+                  , COALESCE (ObjectFloat_Partner_PrepareDayCount.ValueData, 0.0)  :: TFloat  AS PrepareDayCount
+                  , COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0.0) :: TFloat  AS DocumentDayCount
                   , Object_Partner.isErased 
              FROM tmpPartner
                   JOIN Object AS Object_Partner
@@ -73,7 +80,23 @@ BEGIN
                   JOIN tmpIsErased ON tmpIsErased.isErased = Object_Partner.isErased
                   LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                        ON ObjectLink_Partner_Juridical.ObjectId = tmpPartner.PartnerId
-                                      AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical();
+                                      AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+
+                  LEFT JOIN ObjectFloat AS ObjectFloat_Partner_PrepareDayCount
+                                        ON ObjectFloat_Partner_PrepareDayCount.ObjectId = tmpPartner.PartnerId
+                                       AND ObjectFloat_Partner_PrepareDayCount.DescId = zc_ObjectFloat_Partner_PrepareDayCount()
+                  LEFT JOIN ObjectFloat AS ObjectFloat_Partner_DocumentDayCount
+                                        ON ObjectFloat_Partner_DocumentDayCount.ObjectId = tmpPartner.PartnerId
+                                       AND ObjectFloat_Partner_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
+
+                  LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                       ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                      AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
+                  LEFT JOIN ObjectBoolean AS ObjectBoolean_Retail_OperDateOrder
+                                          ON ObjectBoolean_Retail_OperDateOrder.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                                         AND ObjectBoolean_Retail_OperDateOrder.DescId = zc_ObjectBoolean_Retail_OperDateOrder()
+                 ;
+
       END IF;
 
 END;

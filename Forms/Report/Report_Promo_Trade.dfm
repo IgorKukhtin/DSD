@@ -1,10 +1,10 @@
 inherited Report_Promo_TradeForm: TReport_Promo_TradeForm
-  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1072#1082#1094#1080#1103#1084
+  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1072#1082#1094#1080#1103#1084' ('#1090#1086#1088#1075#1086#1074#1099#1077')'
   ClientHeight = 434
   ClientWidth = 925
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
   ExplicitWidth = 941
-  ExplicitHeight = 472
+  ExplicitHeight = 469
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -13,18 +13,17 @@ inherited Report_Promo_TradeForm: TReport_Promo_TradeForm
     Height = 351
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 833
+    ExplicitWidth = 925
     ExplicitHeight = 351
     ClientRectBottom = 351
     ClientRectRight = 925
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 833
+      ExplicitWidth = 925
       ExplicitHeight = 351
       inherited cxGrid: TcxGrid
         Width = 925
         Height = 351
-        ExplicitLeft = -3
-        ExplicitWidth = 833
+        ExplicitWidth = 925
         ExplicitHeight = 351
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -566,7 +565,7 @@ inherited Report_Promo_TradeForm: TReport_Promo_TradeForm
   inherited Panel: TPanel
     Width = 925
     Height = 57
-    ExplicitWidth = 833
+    ExplicitWidth = 925
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 114
@@ -731,14 +730,14 @@ inherited Report_Promo_TradeForm: TReport_Promo_TradeForm
       Params = <
         item
           Name = 'DateStart'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'DateEnd'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -764,7 +763,7 @@ inherited Report_Promo_TradeForm: TReport_Promo_TradeForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
@@ -772,7 +771,7 @@ inherited Report_Promo_TradeForm: TReport_Promo_TradeForm
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
@@ -839,40 +838,6 @@ inherited Report_Promo_TradeForm: TReport_Promo_TradeForm
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
-    end
-    object actOpenPromo: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
-      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
-      ImageIndex = 1
-      FormName = 'TPromoForm'
-      FormNameParam.Value = 'TPromoForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MovementId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 'NULL'
-          Component = MasterCDS
-          ComponentItem = 'OperDate'
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
     end
     object actPrintPromo: TdsdPrintAction
       Category = 'DSDLib'
@@ -1018,10 +983,6 @@ inherited Report_Promo_TradeForm: TReport_Promo_TradeForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbPrint1'
         end
         item
@@ -1061,10 +1022,6 @@ inherited Report_Promo_TradeForm: TReport_Promo_TradeForm
       Action = actReport_PromoDialog
       Category = 0
     end
-    object dxBarButton3: TdxBarButton
-      Action = actOpenPromo
-      Category = 0
-    end
     object bbPrint1: TdxBarButton
       Action = actPrint1
       Category = 0
@@ -1084,7 +1041,6 @@ inherited Report_Promo_TradeForm: TReport_Promo_TradeForm
       end>
     ActionItemList = <
       item
-        Action = actOpenPromo
         ShortCut = 13
       end>
   end

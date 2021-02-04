@@ -32,7 +32,8 @@ BEGIN
              , MovementDesc.Id       AS MovementDescId
              , MovementDesc.ItemName AS DescName
         FROM MovementDesc
-        WHERE Id IN (zc_Movement_Service(), zc_Movement_ProfitLossService())
+      --WHERE Id IN (zc_Movement_Service(), zc_Movement_ProfitLossService())
+        WHERE Id IN (zc_Movement_Service())
        UNION ALL
         -- Перевод долга (расход); Перевод долга (приход)
         SELECT 4                     AS DescId

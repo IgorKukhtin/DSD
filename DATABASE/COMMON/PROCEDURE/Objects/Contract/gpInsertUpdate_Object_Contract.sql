@@ -228,6 +228,10 @@ BEGIN
    THEN
       RAISE EXCEPTION 'Ошибка.<Главное юридическое лицо> не выбрано.';
    END IF;
+   IF COALESCE (inJuridicalBasisId, 0) <> zc_Juridical_Basis() AND vbUserId NOT IN (5, 9459)
+   THEN
+      RAISE EXCEPTION 'Ошибка.Должно быть выбрано <Главное юридическое лицо> = <%>.', lfGet_Object_ValueData_sh (zc_Juridical_Basis());
+   END IF;
    -- проверка
    IF COALESCE (inJuridicalId, 0) = 0
    THEN

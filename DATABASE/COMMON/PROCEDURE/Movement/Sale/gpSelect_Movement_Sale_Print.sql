@@ -143,7 +143,7 @@ BEGIN
                                                              AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_To.StartDate
                                                              AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_To.EndDate
      WHERE Movement.Id     = inMovementId
-       AND Movement.DescId = zc_Movement_Sale()
+       AND Movement.DescId <> zc_Movement_SendOnPrice()
      ;
 
      -- параметры из документа

@@ -38,6 +38,16 @@ BEGIN
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_Finance_CreateTemp();
 
+/* if inSession = '5' 
+ then
+     RAISE EXCEPTION 'Ошибка. test <%>'
+                  , (SELECT SUM COALESCE (Value, 0)
+                     FROM gpReport_CheckBonus (inStartDate:= inStartDate, inEndDate:= inEndDate, inPaidKindID:= inPaidKindID, inJuridicalId:= inJuridicalId, inBranchId:= inBranchId, inSession:= inSession) AS tmp
+                     WHERE Sum_Bonus <> 0
+                     AND JuridicalId = 14884 -- БІЛЛА-Україна ПП
+                    );
+ end if;*/
+
      -- 
      PERFORM lpInsertUpdate_Movement_ProfitLossService (ioId                := 0
                                                       , inInvNumber         := CAST (NEXTVAL ('movement_profitlossservice_seq') AS TVarChar) 
@@ -59,14 +69,9 @@ BEGIN
                                                       , inIsLoad            := TRUE                            :: Boolean
                                                       , inUserId            := vbUserId
                                                        )
-     FROM gpReport_CheckBonus (inStartDate:= inStartDate, inEndDate:= inEndDate, inPaidKindID:= inPaidKindID, inJuridicalId:= inJuridicalId, inBranchId:= inBranchId, inSession:= inSession) AS tmp
+     FROM gpReport_CheckBonus (inStartDate:= inStartDate, inEndDate:= inEndDate, inPaidKindID:= inPaidKindID, inJuridicalId:= inJuridicalId, inBranchId:= inBranchId, inIsMovement:= FALSE, inSession:= inSession) AS tmp
      WHERE Sum_Bonus <> 0
     ;
-
--- if inSession = '5' 
--- then
---     RAISE EXCEPTION 'Ошибка. test end';
--- end if;
 
 
 END;

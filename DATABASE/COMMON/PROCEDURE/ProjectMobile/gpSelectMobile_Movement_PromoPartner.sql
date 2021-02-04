@@ -45,11 +45,11 @@ BEGIN
                                            JOIN MovementDate AS MovementDate_StartSale
                                                              ON MovementDate_StartSale.MovementId = Movement_Promo.Id
                                                             AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
-                                                            AND MovementDate_StartSale.ValueData <= CURRENT_DATE
+                                                            AND MovementDate_StartSale.ValueData <= CURRENT_DATE + INTERVAL '10 DAY'
                                            JOIN MovementDate AS MovementDate_EndSale
                                                              ON MovementDate_EndSale.MovementId = Movement_Promo.Id
                                                             AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
-                                                            AND MovementDate_EndSale.ValueData >= CURRENT_DATE
+                                                            AND MovementDate_EndSale.ValueData >= CURRENT_DATE   - INTERVAL '10 DAY'
                                            JOIN MovementItem AS MovementItem_PromoGoods 
                                                              ON MovementItem_PromoGoods.MovementId = Movement_Promo.Id
                                                             AND MovementItem_PromoGoods.DescId     = zc_MI_Master()
@@ -59,6 +59,21 @@ BEGIN
                                                                            AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
                                       WHERE Movement_PromoPartner.DescId = zc_Movement_PromoPartner()
                                         AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
+                                        --
+                                        AND CASE WHEN OP.isOperDateOrder = TRUE
+                                                      THEN MovementDate_StartSale.ValueData
+                                                         - (COALESCE (OP.PrepareDayCount, 0) :: TVarChar || ' DAY') :: INTERVAL
+                                                 ELSE MovementDate_StartSale.ValueData
+                                                    - (COALESCE (OP.PrepareDayCount, 0) :: TVarChar || ' DAY') :: INTERVAL
+                                                    - (COALESCE (OP.DocumentDayCount, 0) :: TVarChar || ' DAY') :: INTERVAL
+                                            END <= CURRENT_DATE
+                                        AND CASE WHEN OP.isOperDateOrder = TRUE
+                                                      THEN MovementDate_EndSale.ValueData
+                                                         - (COALESCE (OP.PrepareDayCount, 0) :: TVarChar || ' DAY') :: INTERVAL
+                                                 ELSE MovementDate_EndSale.ValueData
+                                                    - (COALESCE (OP.PrepareDayCount, 0) :: TVarChar || ' DAY') :: INTERVAL
+                                                    - (COALESCE (OP.DocumentDayCount, 0) :: TVarChar || ' DAY') :: INTERVAL
+                                            END >= CURRENT_DATE
                                      )
                 , tmpPartner AS (SELECT DISTINCT tmpPromoPartner.PromoPartnerId AS Id
                                       , tmpPromoPartner.MovementId

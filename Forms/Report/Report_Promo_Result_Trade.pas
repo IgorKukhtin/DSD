@@ -66,8 +66,6 @@ type
     AmountOutWeight: TcxGridDBColumn;
     AmountIn: TcxGridDBColumn;
     AmountInWeight: TcxGridDBColumn;
-    actOpenPromo: TdsdOpenForm;
-    dxBarButton3: TdxBarButton;
     FormParams: TdsdFormParams;
     MainDiscount: TcxGridDBColumn;
     PersentResult: TcxGridDBColumn;
