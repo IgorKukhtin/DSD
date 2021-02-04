@@ -1,12 +1,15 @@
 -- Function: gpInsertUpdate_Object_Hardware()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Hardware (Integer, Integer, TVarChar, Boolean, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Hardware (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Hardware(
  INOUT ioId                     Integer   ,     -- ключ объекта <Город>
     IN inCode                   Integer   ,     -- Код объекта
     IN inIdentifier             TVarChar  ,     -- Идентификатор
     IN inisLicense              Boolean   ,     -- Лицензия на ПК
+    IN inisSmartphone           Boolean   ,     -- Смартфон
+    IN inisModem                Boolean   ,     -- 3G/4G модем
+    IN inisBarcodeScanner       Boolean   ,     -- Сканнер ш/к
     IN inUnitId                 Integer   ,     -- Подразделение
     IN inCashRegisterID         Integer   ,     -- Подразделение
     IN inComputerName           TVarChar  ,     -- Имя компютера
@@ -49,7 +52,7 @@ BEGIN
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Hardware());
 
    -- проверка уникальности для свойства <Наименование> 
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Hardware(), inName);
+   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Hardware(), inIdentifier);
    -- проверка уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Hardware(), vbCode_calc);
 
@@ -62,7 +65,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Hardware_CashRegister(), ioId, inCashRegisterID);
    
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Hardware_ComputerName(), outId, inComputerName);
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Hardware_ComputerName(), ioId, inComputerName);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Hardware_BaseBoardProduct(), ioId, inBaseBoardProduct);
@@ -80,23 +83,30 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Hardware_Comment(), ioId, inComment);
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Hardware_License(), outId, inisLicense);
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Hardware_License(), ioId, inisLicense);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Hardware_Smartphone(), ioId, inisSmartphone);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Hardware_Modem(), ioId, inisModem);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Hardware_BarcodeScanner(), ioId, inisBarcodeScanner);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Hardware (Integer, Integer, TVarChar, Boolean, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Hardware (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
 
 
 -------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Манько Д.А.   Шаблий О.В.
+ 04.02.21                                                                      *  
  27.01.21                                                                      *  
  12.04.20                                                                      *  
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_Hardware(ioId:=null, inCode:=null, inName:='Регион 1', inSession:='3')
+-- select * from gpInsertUpdate_Object_Hardware(ioId := 16211199 , inCode := 159 , inIdentifier := '2222' , inisLicense := 'True' , inisSmartphone := 'False' , inisModem := 'False' , inisBarcodeScanner := 'False' , inUnitId := 183292 , inCashRegisterId := 522458 , inComputerName := 'AMBERPHARMACY' , inBaseBoardProduct := 'Ginkgo 7A1' , inProcessorName := 'Intel(R) Core(TM) i7-4702MQ CPU @ 2.20GHz' , inDiskDriveModel := 'ST1000LM024 HN-M101MBB 1000 ГБ' , inPhysicalMemory := 'DDR3 16 ГБ 1600 МГц' , inComment := '' ,  inSession := '3');

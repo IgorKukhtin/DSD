@@ -216,7 +216,7 @@ BEGIN
         FROM tmpSUN;
      
      -- Товар из перемещения
-     IF inOperDate >= '01.02.2021'
+/*     IF inOperDate = '01.02.2021'
      THEN
      
        INSERT INTO _tmpGoods_SUN_Supplement (GoodsId, KoeffSUN, UnitOutId)
@@ -239,7 +239,7 @@ BEGIN
          AND Movement.InvNumber = '110120'
          AND Movement.StatusId = zc_Enum_Status_Complete();
        
-     END IF;
+     END IF;*/
 
      -- все Товары для схемы SUN Supplement
      INSERT INTO _tmpGoods_SUN_Supplement (GoodsId, KoeffSUN, UnitOutId)
@@ -676,6 +676,6 @@ $BODY$
  10.06.20                                                     *
 */
 
--- SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '0 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
+-- SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '4 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 
 -- select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('28.12.2020')::TDateTime ,  inSession := '3');

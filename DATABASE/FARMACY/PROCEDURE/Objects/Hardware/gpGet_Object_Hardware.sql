@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Hardware(
 )
 RETURNS TABLE (Id Integer, Code Integer, Identifier TVarChar
              , UnitId Integer, UnitName TVarChar
-             , CashRegisterID Integer, CashRegisterName TVarChar, isLicense Boolean, ComputerName TVarChar
+             , CashRegisterID Integer, CashRegisterName TVarChar
+             , isLicense Boolean, isSmartphone Boolean, isModem Boolean, isBarcodeScanner Boolean, ComputerName TVarChar
              , BaseBoardProduct TVarChar, ProcessorName TVarChar, DiskDriveModel TVarChar, PhysicalMemory TVarChar
              , Comment TVarChar
 ) AS
@@ -33,6 +34,9 @@ BEGIN
            , CAST ('' as TVarChar)     AS CashRegisterName
 
            , False                     AS isLicense
+           , False                     AS isSmartphone
+           , False                     AS isModem
+           , False                     AS isBarcodeScanner
            , CAST ('' as TVarChar)     AS ComputerName
            , CAST ('' as TVarChar)     AS BaseBoardProduct
 
@@ -57,6 +61,9 @@ BEGIN
            , Object_CashRegister.ValueData      AS CashRegisterName
 
            , COALESCE(ObjectBoolean_License.ValueData, False)                          AS isLicense
+           , COALESCE(ObjectBoolean_Smartphone.ValueData, False)                       AS isSmartphone
+           , COALESCE(ObjectBoolean_Modem.ValueData, False)                            AS isModem
+           , COALESCE(ObjectBoolean_BarcodeScanner.ValueData, False)                   AS isBarcodeScanner
 
            , COALESCE(ObjectString_ComputerName.ValueData, Object_Hardware.ValueData)  AS ComputerName
            , ObjectString_BaseBoardProduct.ValueData                   AS BaseBoardProduct
@@ -97,6 +104,15 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_License
                                     ON ObjectBoolean_License.ObjectId = Object_Hardware.Id
                                    AND ObjectBoolean_License.DescId = zc_ObjectBoolean_Hardware_License()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Smartphone
+                                    ON ObjectBoolean_Smartphone.ObjectId = Object_Hardware.Id
+                                   AND ObjectBoolean_Smartphone.DescId = zc_ObjectBoolean_Hardware_Smartphone()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Modem
+                                    ON ObjectBoolean_Modem.ObjectId = Object_Hardware.Id
+                                   AND ObjectBoolean_Modem.DescId = zc_ObjectBoolean_Hardware_Modem()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_BarcodeScanner
+                                    ON ObjectBoolean_BarcodeScanner.ObjectId = Object_Hardware.Id
+                                   AND ObjectBoolean_BarcodeScanner.DescId = zc_ObjectBoolean_Hardware_BarcodeScanner()
 
             LEFT JOIN ObjectString AS ObjectString_Comment
                                   ON ObjectString_Comment.ObjectId = Object_Hardware.Id
@@ -114,9 +130,10 @@ ALTER FUNCTION gpGet_Object_Hardware(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.   ÿ‡·ÎËÈ Œ.¬.
+ 04.02.21                                                                      *  
  27.01.21                                                                      *  
  12.04.20                                                                      *  
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpGet_Object_Hardware (0, '3')
+-- 

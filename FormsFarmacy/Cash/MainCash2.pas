@@ -2215,10 +2215,10 @@ begin
 end;
 
 procedure TMainCashForm2.SaveHardwareData(IsShowInputHardware : boolean = False);
-  var Identifier : string; License : boolean; Ini: TIniFile;
+  var Identifier : string; License, Smartphone, Modem, BarcodeScanner	 : boolean; Ini: TIniFile;
 begin
 
-  if gc_User.Local or (gc_User.Session = '3') then exit;
+//  if gc_User.Local or (gc_User.Session = '3') then exit;
 
   if FileExists(TPath.GetSharedDocumentsPath + '\FarmacyCash\HardwareData.ini') then
   begin
@@ -2226,6 +2226,9 @@ begin
     try
       Identifier := Ini.ReadString('HardwareData', 'Identifier', '');
       License := Ini.ReadBool('HardwareData', 'License', False);
+      Smartphone := Ini.ReadBool('HardwareData', 'Smartphone', False);
+      Modem := Ini.ReadBool('HardwareData', 'Modem', False);
+      BarcodeScanner := Ini.ReadBool('HardwareData', 'BarcodeScanner', False);
     finally
       Ini.free;
     end;
@@ -2234,11 +2237,14 @@ begin
   begin
     Identifier := '';
     License := False;
+    Smartphone := False;
+    Modem := False;
+    BarcodeScanner := False;
   end;
 
   if IsShowInputHardware or (Length(Trim(Identifier)) <> 4) then
   begin
-    if not InputHardwareDialog(Identifier, License) then
+    if not InputHardwareDialog(Identifier, License, Smartphone, Modem, BarcodeScanner) then
       exit;
 
     if (Trim(Identifier) = '') or (Length(Trim(Identifier)) <> 4) then
@@ -2253,6 +2259,9 @@ begin
     try
       Ini.WriteString('HardwareData', 'Identifier', Identifier);
       Ini.WriteBool('HardwareData', 'License', License);
+      Ini.WriteBool('HardwareData', 'Smartphone', Smartphone);
+      Ini.WriteBool('HardwareData', 'Modem', Modem);
+      Ini.WriteBool('HardwareData', 'BarcodeScanner', BarcodeScanner);
     finally
       Ini.free;
     end;
@@ -2265,6 +2274,12 @@ begin
         Identifier;
       spUpdateHardwareDataCash.ParamByName('inisLicense').Value :=
         License;
+      spUpdateHardwareDataCash.ParamByName('inisSmartphone').Value :=
+        Smartphone;
+      spUpdateHardwareDataCash.ParamByName('inisModem').Value :=
+        Modem;
+      spUpdateHardwareDataCash.ParamByName('inisBarcodeScanner').Value :=
+        BarcodeScanner;
       spUpdateHardwareDataCash.ParamByName('inSerial').Value :=
         Cash.FiscalNumber;
       spUpdateHardwareDataCash.ParamByName('inTaxRate').Value :=
@@ -2287,6 +2302,12 @@ begin
         Identifier;
       spUpdateHardwareData.ParamByName('inisLicense').Value :=
         License;
+      spUpdateHardwareData.ParamByName('inisSmartphone').Value :=
+        Smartphone;
+      spUpdateHardwareData.ParamByName('inisModem').Value :=
+        Modem;
+      spUpdateHardwareData.ParamByName('inisBarcodeScanner').Value :=
+        BarcodeScanner;
       spUpdateHardwareData.ParamByName('inComputerName').Value :=
         GetComputerName;
       spUpdateHardwareData.ParamByName('inBaseBoardProduct').Value :=

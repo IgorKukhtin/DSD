@@ -144,11 +144,32 @@
     Top = 49
     Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088
   end
-  object cxLicense: TcxCheckBox [22]
+  object cbLicense: TcxCheckBox [22]
     Left = 301
-    Top = 67
+    Top = 22
     Caption = #1051#1080#1094#1077#1085#1079#1080#1103' '#1085#1072' '#1055#1050
     TabOrder = 22
+    Width = 121
+  end
+  object cbSmartphone: TcxCheckBox [23]
+    Left = 301
+    Top = 49
+    Caption = #1057#1084#1072#1088#1090#1092#1086#1085
+    TabOrder = 23
+    Width = 121
+  end
+  object cbModem: TcxCheckBox [24]
+    Left = 301
+    Top = 76
+    Caption = '3G/4G '#1084#1086#1076#1077#1084
+    TabOrder = 24
+    Width = 121
+  end
+  object cbBarcodeScanner: TcxCheckBox [25]
+    Left = 301
+    Top = 103
+    Caption = #1057#1082#1072#1085#1085#1077#1088' '#1096'/'#1082
+    TabOrder = 25
     Width = 121
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -157,7 +178,7 @@
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 400
-    Top = 74
+    Top = 130
   end
   inherited ActionList: TActionList
     Images = dmMain.ImageList
@@ -182,7 +203,7 @@
   end
   inherited FormParams: TdsdFormParams
     Left = 328
-    Top = 210
+    Top = 266
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Hardware'
@@ -213,7 +234,31 @@
       item
         Name = 'inisLicense'
         Value = Null
-        Component = cxLicense
+        Component = cbLicense
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSmartphone'
+        Value = Null
+        Component = cbSmartphone
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisModem'
+        Value = Null
+        Component = cbModem
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisBarcodeScanner'
+        Value = Null
+        Component = cbBarcodeScanner
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -283,7 +328,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 328
-    Top = 74
+    Top = 130
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Hardware'
@@ -312,7 +357,28 @@
       item
         Name = 'isLicense'
         Value = Null
-        Component = cxLicense
+        Component = cbLicense
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSmartphone'
+        Value = Null
+        Component = cbSmartphone
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isModem'
+        Value = Null
+        Component = cbModem
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isBarcodeScanner'
+        Value = Null
+        Component = cbBarcodeScanner
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
@@ -389,7 +455,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 328
-    Top = 138
+    Top = 194
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'

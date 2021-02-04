@@ -8362,11 +8362,7 @@ inherited MainCashForm2: TMainCashForm2
   end
   object spUpdateHardwareDataCash: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_CashRegister_HardwareData'
-    DataSet = PUSHDS
-    DataSets = <
-      item
-        DataSet = PUSHDS
-      end>
+    DataSets = <>
     OutputType = otResult
     Params = <
       item
@@ -8392,6 +8388,27 @@ inherited MainCashForm2: TMainCashForm2
       end
       item
         Name = 'inisLicense'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSmartphone'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisModem'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisBarcodeScanner'
         Value = Null
         DataType = ftBoolean
         ParamType = ptInput
@@ -8438,11 +8455,7 @@ inherited MainCashForm2: TMainCashForm2
   end
   object spUpdateHardwareData: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Hardware_HardwareData'
-    DataSet = PUSHDS
-    DataSets = <
-      item
-        DataSet = PUSHDS
-      end>
+    DataSets = <>
     OutputType = otResult
     Params = <
       item
@@ -8454,6 +8467,27 @@ inherited MainCashForm2: TMainCashForm2
       end
       item
         Name = 'inisLicense'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSmartphone'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisModem'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisBarcodeScanner'
         Value = Null
         DataType = ftBoolean
         ParamType = ptInput

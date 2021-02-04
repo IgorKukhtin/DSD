@@ -44,6 +44,7 @@ type
     PriceSIP: TcxGridDBColumn;
     SummSIP: TcxGridDBColumn;
     GoodsGroupPromoName: TcxGridDBColumn;
+    UserNameInsert: TcxGridDBColumn;
   private
     { Private declarations }
   public
