@@ -33,6 +33,7 @@ type
     isSmartphone: TcxGridDBColumn;
     isModem: TcxGridDBColumn;
     isBarcodeScanner: TcxGridDBColumn;
+    DateUpdate: TcxGridDBColumn;
   private
     { Private declarations }
   public

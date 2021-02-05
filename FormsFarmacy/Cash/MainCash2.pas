@@ -2218,7 +2218,7 @@ procedure TMainCashForm2.SaveHardwareData(IsShowInputHardware : boolean = False)
   var Identifier : string; License, Smartphone, Modem, BarcodeScanner	 : boolean; Ini: TIniFile;
 begin
 
-//  if gc_User.Local or (gc_User.Session = '3') then exit;
+  if gc_User.Local or (gc_User.Session = '3') then exit;
 
   if FileExists(TPath.GetSharedDocumentsPath + '\FarmacyCash\HardwareData.ini') then
   begin
@@ -11632,6 +11632,7 @@ end;
 
 // ѕропись выполнени€ плана по сотруднику
 procedure TMainCashForm2.UpdateImplementationPlanEmployee;
+  var S : string; F : boolean;
 begin
 
   // ќчищаем данные по выполнению плана сотрудника
@@ -11666,17 +11667,31 @@ begin
           Exit;
         end;
 
-        while not PlanEmployeeCDS.Eof do
-        begin
-
-          if RemainsCDS.Locate('GoodsCode', PlanEmployeeCDS.FieldByName('GoodsCode').AsInteger, []) and
-             (RemainsCDS.FieldByName('Color_IPE').AsInteger <> PlanEmployeeCDS.FieldByName('Color').AsInteger) then
+        S := RemainsCDS.Filter;
+        F := RemainsCDS.Filtered;
+        try
+          while not PlanEmployeeCDS.Eof do
           begin
-            RemainsCDS.Edit;
-            RemainsCDS.FieldByName('Color_IPE').AsInteger := PlanEmployeeCDS.FieldByName('Color').AsInteger;
-            RemainsCDS.Post;
+
+            RemainsCDS.Filtered := False;
+            RemainsCDS.Filter := 'GoodsCode = ' + PlanEmployeeCDS.FieldByName('GoodsCode').AsString;
+            RemainsCDS.Filtered := True;
+            RemainsCDS.First;
+            while not RemainsCDS.Eof do
+            begin
+              if RemainsCDS.FieldByName('Color_IPE').AsInteger <> PlanEmployeeCDS.FieldByName('Color').AsInteger then
+              begin
+                RemainsCDS.Edit;
+                RemainsCDS.FieldByName('Color_IPE').AsInteger := PlanEmployeeCDS.FieldByName('Color').AsInteger;
+                RemainsCDS.Post;
+              end;
+            RemainsCDS.Next;
+            end;
+            PlanEmployeeCDS.Next;
           end;
-          PlanEmployeeCDS.Next;
+        finally
+          RemainsCDS.Filter := S;
+          RemainsCDS.Filtered := F;
         end;
 
       Except ON E:Exception do

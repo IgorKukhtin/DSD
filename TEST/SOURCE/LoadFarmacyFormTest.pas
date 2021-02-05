@@ -967,8 +967,8 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_PromoForm'));
-    TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_PromoForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceCheckForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PriceCheckForm');
 
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SalesOfTermDrugsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SalesOfTermDrugsDialogForm');

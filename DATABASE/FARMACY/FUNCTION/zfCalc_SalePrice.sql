@@ -30,7 +30,12 @@ BEGIN
      END IF;
 
      -- вернули цену
-     RETURN (ROUND((100 + vbPercent) * inPriceWithVAT / 100, 1));
+     IF (ROUND((100 + vbPercent) * inPriceWithVAT / 100, 1)) < inPriceWithVAT
+     THEN
+       RETURN (CEIL((100 + vbPercent) * inPriceWithVAT / 10) / 10.0);     
+     ELSE
+       RETURN (ROUND((100 + vbPercent) * inPriceWithVAT / 100, 1));
+     END IF;
 
 END;
 $BODY$
@@ -41,10 +46,9 @@ ALTER FUNCTION zfCalc_SalePrice(TFloat, TFloat, Boolean, TFloat, TFloat, TFloat)
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 05.02.21                                                       * 
  10.06.15                        * 
  13.04.15                        * 
 */
-/*
--- тест
-*/
+-- тест select zfCalc_SalePrice(0.41, 4, False, 0, 0, 0) 

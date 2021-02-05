@@ -1,13 +1,13 @@
 -- Function: gpReport_PriceCheck()
 
---DROP FUNCTION IF EXISTS gpReport_PriceCheck (TFloat, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_PriceCheck (TFloat, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_PriceCheck(
     IN inPercent          TFloat    , -- Процент отклонения
     IN inUserId           Integer   , -- Сотрудник
     IN inisHideExceptRed  Boolean   , -- Скрыть кроме красных
-    IN inisRetail         Boolean,     -- только по сети
+    IN inisRetail         Boolean   , -- только по сети
+    IN inManagerUnitsOnly Boolean   , -- Только подразделения менеджера
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -120,17 +120,17 @@ BEGIN
             GoodsId               Integer,
             GoodsCode             Integer,
             GoodsName             TVarChar,
-            isResolution_224      Boolean,
-            isTop                 Boolean,
+            isResolution_224      Boolean Not Null Default False,
+            isTop                 Boolean Not Null Default False,
             PercentMarkup         TFloat,
             PriceTop              TFloat,
-            isSP                  Boolean,
-            isPromo               Boolean,
+            isSP                  Boolean Not Null Default False,
+            isPromo               Boolean Not Null Default False,
             UnitCount             Integer,
             BadPriceCount         Integer,
             BadPricePlus          Integer,
             BadPriceMinus         Integer,
-            isBadPriceUser        Boolean,
+            isBadPriceUser        Boolean Not Null Default False,
             PriceIn               TFLoat,
             DateIn                TDateTime,
             JuridicalInName       TVarChar,
@@ -201,12 +201,14 @@ BEGIN
          , tmpUnitPrice.ManagerId
     FROM tmpUnitPrice
          INNER JOIN tmpResult ON tmpResult.GoodsId = tmpUnitPrice.GoodsId
+    WHERE COALESCE(inManagerUnitsOnly, False) = False OR COALESCE(inUserId, 0) = 0 OR COALESCE(inUserId, 0) = tmpUnitPrice.ManagerId
     GROUP BY tmpUnitPrice.UnitID, tmpUnitPrice.ManagerId
     ORDER BY tmpUnitPrice.UnitID;
 
       -- Заполняем подразделение
 
-    OPEN curUnit FOR SELECT * FROM tmpUnit ORDER BY tmpUnit;
+    OPEN curUnit FOR SELECT * FROM tmpUnit 
+                     ORDER BY tmpUnit;
     LOOP
         FETCH curUnit INTO vbID, vbUnitID;
         IF NOT FOUND THEN EXIT; END IF;
@@ -238,7 +240,7 @@ BEGIN
     END LOOP;
     CLOSE curUnit;
 
-    -- Удаляем что номально
+    -- Удаляем что номрально
     DELETE FROM tmpResult
     WHERE tmpResult.BadPriceCount = 0;
 
@@ -539,8 +541,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 05.02.21                                                       *
  07.11.20                                                       *
 */
 
 -- тест
--- select * from gpReport_PriceCheck(inPercent := 5, inUserId := 0, inisHideExceptRed := False, inisRetail := False, inSession := '3');               
+-- select * from gpReport_PriceCheck(inPercent := 5, inUserId := 0, inisHideExceptRed := False, inisRetail := False, inManagerUnitsOnly := True, inSession := '3');               

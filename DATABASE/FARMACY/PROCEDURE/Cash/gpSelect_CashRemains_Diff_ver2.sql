@@ -367,11 +367,11 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                                  FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
                                  WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
                                 )
-                 , tmpGoodsDiscount AS (SELECT Object_Goods_Retail.GoodsMainId              AS GoodsMainId
-                                             , Object_Object.Id                             AS GoodsDiscountId
-                                             , Object_Object.ValueData                      AS GoodsDiscountName
+                 , tmpGoodsDiscount AS (SELECT Object_Goods_Retail.GoodsMainId                           AS GoodsMainId
+                                             , Object_Object.Id                                          AS GoodsDiscountId
+                                             , Object_Object.ValueData                                   AS GoodsDiscountName
                                              , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False)  AS isGoodsForProject
-                                             , COALESCE(ObjectFloat_MaxPrice.ValueData, 0)::TFloat       AS MaxPrice 
+                                             , MAX(COALESCE(ObjectFloat_MaxPrice.ValueData, 0))::TFloat  AS MaxPrice 
                                           FROM Object AS Object_BarCode
                                               INNER JOIN ObjectLink AS ObjectLink_BarCode_Goods
                                                                     ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
@@ -391,7 +391,11 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                                                                     ON ObjectFloat_MaxPrice.ObjectId = Object_BarCode.Id
                                                                    AND ObjectFloat_MaxPrice.DescId = zc_ObjectFloat_BarCode_MaxPrice()
                                           WHERE Object_BarCode.DescId = zc_Object_BarCode()
-                                            AND Object_BarCode.isErased = False)
+                                            AND Object_BarCode.isErased = False
+                                          GROUP BY Object_Goods_Retail.GoodsMainId
+                                                 , Object_Object.Id
+                                                 , Object_Object.ValueData
+                                                 , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False))
                  , tmpGoodsUKTZED AS (SELECT Object_Goods_Juridical.GoodsMainId
                                            , REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')::TVarChar AS UKTZED
                                            , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Juridical.GoodsMainId
