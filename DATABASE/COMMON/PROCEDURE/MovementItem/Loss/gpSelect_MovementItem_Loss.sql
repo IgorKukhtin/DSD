@@ -149,7 +149,6 @@ BEGIN
                                             THEN zc_DateEnd()
                                        ELSE COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd())
                                   END AS PartionDate
-                                , CLO_PartionGoods.ObjectId AS PartionGoodsId
                            FROM tmpDescWhereObject
                                 INNER JOIN ContainerLinkObject AS CLO_Unit
                                                                ON CLO_Unit.ObjectId = vbUnitId
@@ -188,8 +187,8 @@ BEGIN
                                               THEN zc_DateEnd()
                                          ELSE COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd())
                                     END
-                                  , CLO_PartionGoods.ObjectId
                           )
+
        -- Результат
        SELECT
              0                          AS Id
@@ -365,7 +364,6 @@ BEGIN
                                             THEN zc_DateEnd()
                                        ELSE COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd())
                                   END AS PartionDate
-                                , CLO_PartionGoods.ObjectId AS PartionGoodsId
                            FROM tmpDescWhereObject
                                 INNER JOIN ContainerLinkObject AS CLO_Unit
                                                                ON CLO_Unit.ObjectId = vbUnitId
@@ -404,8 +402,9 @@ BEGIN
                                               THEN zc_DateEnd()
                                          ELSE COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd())
                                     END
-                                  , CLO_PartionGoods.ObjectId
                           )
+
+
        -- Результат
        SELECT
              MovementItem.Id                    AS Id
@@ -421,7 +420,7 @@ BEGIN
            , MIFloat_Count.ValueData            AS Count
            , MIFloat_HeadCount.ValueData        AS HeadCount
            , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
-           , COALESCE (tmpRemains.PartionGoodsId, Object_PartionGoods.Id )             :: Integer AS PartionGoodsId
+           , Object_PartionGoods.Id :: Integer AS PartionGoodsId
            , COALESCE (Object_PartionGoods.ValueData, MIString_PartionGoods.ValueData) ::TVarChar AS PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
