@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_CashSettings()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, Boolean, TDateTime, TFloat, TFloat, Integer, Boolean, Boolean, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Boolean, Boolean, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inShareFromPriceName      TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inSummaFormSendVIP        TFloat    ,     -- Сумма от которой показан товар при формировании перемещений VIP
     IN inSummaUrgentlySendVIP    TFloat    ,     -- Сумма перемещения от которой разрешен признак срочно
     IN inDaySaleForSUN           Integer   ,     -- Количество дней для контроля <Продано/Продажа до след СУН>
+    IN inDayNonCommoditySUN      Integer   ,     -- Количество дней для контроля Комментария "Нетоварный вид"
     IN inisBlockVIP              Boolean   ,     -- Блокировать формирование перемещений VIP
     IN inisPairedOnlyPromo       Boolean   ,     -- При опускании парных контролировать только акционный
     IN inAttemptsSub             TFloat    ,     -- Количество попыток до успешной сдачи теста для предложения подмен
@@ -52,6 +53,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_SummaUrgentlySendVIP(), vbID, inSummaUrgentlySendVIP);
       -- сохранили Количество дней для контроля <Продано/Продажа до след СУН>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_DaySaleForSUN(), vbID, inDaySaleForSUN);
+      -- сохранили Количество дней для контроля Комментария "Нетоварный вид"
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_DayNonCommoditySUN(), vbID, inDayNonCommoditySUN);
       -- сохранили Количество попыток до успешной сдачи теста для предложения подмен
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_AttemptsSub(), vbID, inAttemptsSub);
 

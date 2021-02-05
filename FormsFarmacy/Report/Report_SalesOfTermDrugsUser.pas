@@ -1,4 +1,4 @@
-unit Report_SalesOfTermDrugsUnit;
+unit Report_SalesOfTermDrugsUser;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxSkinXmas2008Blue;
 
 type
-  TReport_SalesOfTermDrugsUnitForm = class(TAncestorReportForm)
+  TReport_SalesOfTermDrugsUserForm = class(TAncestorReportForm)
     cxLabel4: TcxLabel;
     edUnit: TcxButtonEdit;
     bbGoodsPartyReport: TdxBarButton;
@@ -40,8 +40,13 @@ type
     edDaysBeforeDelay: TcxCurrencyEdit;
     cxLabel5: TcxLabel;
     FormParams: TdsdFormParams;
-    actOpenSalesOfTermDrugsUser: TdsdInsertUpdateAction;
-    dxBarButton1: TdxBarButton;
+    GoodsCode: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    ExpirationDate: TcxGridDBColumn;
+    DaysBeforeDelay: TcxGridDBColumn;
+    edUser: TcxButtonEdit;
+    cxLabel6: TcxLabel;
+    GuidesUser: TdsdGuides;
   private
     { Private declarations }
   public
@@ -54,6 +59,6 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_SalesOfTermDrugsUnitForm);
+  RegisterClass(TReport_SalesOfTermDrugsUserForm);
 
 end.

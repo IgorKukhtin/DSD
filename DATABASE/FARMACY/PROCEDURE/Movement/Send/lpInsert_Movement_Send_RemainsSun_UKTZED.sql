@@ -502,7 +502,7 @@ BEGIN
          -- курсор2. - Потребность для vbGoodsId
          OPEN curResult_next FOR
              SELECT _tmpRemains_all_UKTZED.UnitId
-                  , CASE WHEN COALESCE (_tmpGoods_SUN_UKTZED.KoeffSUN, 0) = 0 THEN
+                  , CASE WHEN COALESCE (_tmpGoods_SUN_UKTZED.KoeffSUN, 0) <= 1 THEN
                     CASE WHEN _tmpRemains_all_UKTZED.AmountSalesMonth = 0
                          THEN - _tmpRemains_all_UKTZED.AmountRemains
                          ELSE (_tmpRemains_all_UKTZED.Need - _tmpRemains_all_UKTZED.AmountRemains)::Integer
@@ -520,7 +520,7 @@ BEGIN
 
                   LEFT JOIN _tmpUnit_SUN_UKTZED ON _tmpUnit_SUN_UKTZED.UnitId = _tmpRemains_all_UKTZED.UnitId
 
-             WHERE (CASE WHEN COALESCE (_tmpGoods_SUN_UKTZED.KoeffSUN, 0) = 0 THEN
+             WHERE (CASE WHEN COALESCE (_tmpGoods_SUN_UKTZED.KoeffSUN, 0) <= 1 THEN
                     CASE WHEN _tmpRemains_all_UKTZED.AmountSalesMonth = 0
                          THEN - _tmpRemains_all_UKTZED.AmountRemains
                          ELSE (_tmpRemains_all_UKTZED.Need - _tmpRemains_all_UKTZED.AmountRemains)::Integer
@@ -547,20 +547,32 @@ BEGIN
              -- если данные закончились, или все кол-во найдено тогда выход
              IF NOT FOUND OR vbSurplus = 0 THEN EXIT; END IF;
 
-/*             IF vbUnitId_to = 377610 AND vbGoodsId = 12918138
+--             IF vbUnitId_to = 8393158 AND vbGoodsId = 21310
+--             THEN
+--               raise notice 'Value 05: % % % % % % %', vbUnitId_from, vbUnitId_to, vbGoodsId, vbKoeffSUN, vbNeed, vbSurplus, CASE WHEN vbSurplus > vbNeed THEN vbNeed ELSE vbSurplus END;
+--             END IF;
+
+             IF COALESCE(vbKoeffSUN, 0) <= 1 OR vbSurplus >= vbNeed
              THEN
-               raise notice 'Value 05: % % % % % %', vbUnitId_from, vbUnitId_to, vbGoodsId, vbNeed, vbSurplus, CASE WHEN vbSurplus > vbNeed THEN vbNeed ELSE vbSurplus END;
+               INSERT INTO _tmpResult_UKTZED (UnitId_from, UnitId_to, GoodsId, Amount)
+                 VALUES (vbUnitId_from, vbUnitId_to, vbGoodsId, CASE WHEN vbSurplus > vbNeed THEN vbNeed ELSE vbSurplus END);
+
+               UPDATE _tmpRemains_all_UKTZED SET AmountUse = AmountUse + CASE WHEN vbSurplus > vbNeed THEN vbNeed ELSE vbSurplus END
+               WHERE _tmpRemains_all_UKTZED.UnitId = vbUnitId_to
+                 AND _tmpRemains_all_UKTZED.GoodsId = vbGoodsId;
+
+               vbSurplus := vbSurplus - CASE WHEN vbSurplus > vbNeed THEN vbNeed ELSE vbSurplus END;
+             ELSEIF vbKoeffSUN > 1 AND (FLOOR (vbSurplus / vbKoeffSUN) * vbKoeffSUN) > 0
+             THEN
+               INSERT INTO _tmpResult_UKTZED (UnitId_from, UnitId_to, GoodsId, Amount)
+                 VALUES (vbUnitId_from, vbUnitId_to, vbGoodsId, FLOOR (vbSurplus / vbKoeffSUN) * vbKoeffSUN);
+
+               UPDATE _tmpRemains_all_UKTZED SET AmountUse = AmountUse + FLOOR (vbSurplus / vbKoeffSUN) * vbKoeffSUN
+               WHERE _tmpRemains_all_UKTZED.UnitId = vbUnitId_to
+                 AND _tmpRemains_all_UKTZED.GoodsId = vbGoodsId;
+
+               vbSurplus := vbSurplus - FLOOR (vbSurplus / vbKoeffSUN) * vbKoeffSUN;             
              END IF;
-
-*/
-             INSERT INTO _tmpResult_UKTZED (UnitId_from, UnitId_to, GoodsId, Amount)
-               VALUES (vbUnitId_from, vbUnitId_to, vbGoodsId, CASE WHEN vbSurplus > vbNeed THEN vbNeed ELSE vbSurplus END);
-
-             UPDATE _tmpRemains_all_UKTZED SET AmountUse = AmountUse + CASE WHEN vbSurplus > vbNeed THEN vbNeed ELSE vbSurplus END
-             WHERE _tmpRemains_all_UKTZED.UnitId = vbUnitId_to
-               AND _tmpRemains_all_UKTZED.GoodsId = vbGoodsId;
-
-             vbSurplus := vbSurplus - CASE WHEN vbSurplus > vbNeed THEN vbNeed ELSE vbSurplus END;
 
          END LOOP; -- финиш цикла по курсору2
          CLOSE curResult_next; -- закрыли курсор2.
@@ -648,6 +660,8 @@ $BODY$
  30.01.21                                                     *
 */
 
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_UKTZED (inOperDate:= CURRENT_DATE + INTERVAL '0 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
+--SELECT * FROM lpInsert_Movement_Send_RemainsSun_UKTZED (inOperDate:= CURRENT_DATE + INTERVAL '0 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 
 -- select * from gpReport_Movement_Send_RemainsSun_UKTZED(inOperDate := ('28.12.2020')::TDateTime ,  inSession := '3');
+
+select * from gpReport_Movement_Send_RemainsSun_UKTZED(inOperDate := ('08.02.2021')::TDateTime ,  inSession := '3');

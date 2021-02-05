@@ -1,17 +1,19 @@
- -- Function: gpReport_SalesOfTermDrugsUnit()
+ -- Function: gpReport_SalesOfTermDrugsUser()
 
-DROP FUNCTION IF EXISTS gpReport_SalesOfTermDrugsUnit (TDateTime, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_SalesOfTermDrugsUser (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_SalesOfTermDrugsUnit(
+CREATE OR REPLACE FUNCTION gpReport_SalesOfTermDrugsUser(
     IN inStartDate        TDateTime,
     IN inEndDate          TDateTime,
     IN inDaysBeforeDelay  Integer  ,  -- Количество дней до окончания срока годности
     IN inUnitId           Integer  ,  -- Подразделение
+    IN inUserId           Integer  ,  -- Сотрудник
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (UserId Integer, UserName TVarChar
+RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
 
-             , Amount TFloat, Summa TFloat, AverageSale TFloat
+             , Amount TFloat, Price TFloat, Summa TFloat
+             , OperDate TDateTime, ExpirationDate TDateTime, DaysBeforeDelay Integer
              )
 AS
 $BODY$
@@ -55,14 +57,19 @@ BEGIN
                               )
                              
                              
-  SELECT Object_User.Id                                    AS UserId
-       , Object_User.ValueData                             AS UserName
-       , SUM(tmpExpirationDate.Amount)::TFloat                                               AS Amount
-       , SUM(Round(tmpExpirationDate.Amount * tmpExpirationDate.Price, 2))::TFloat           AS Summs
-       , Round(SUM(Round(tmpExpirationDate.Amount * tmpExpirationDate.Price, 2)) / 
-               SUM(tmpExpirationDate.Amount), 2)::TFloat                                     AS AverageSale
+  SELECT Object_Goods.Id                                   AS GoodsId
+       , Object_Goods.ObjectCode                           AS GoodsCode
+       , Object_Goods.ValueData                            AS GoodsName
+       , tmpExpirationDate.Amount::TFloat                  AS Amount
+       , tmpExpirationDate.Price::TFloat                   AS Summs
+       , Round(tmpExpirationDate.Amount * tmpExpirationDate.Price, 2)::TFloat  AS Summs
+       , tmpExpirationDate.OperDate
+       , tmpExpirationDate.ExpirationDate
+       , tmpExpirationDate.DaysBeforeDelay
   FROM tmpExpirationDate  
   
+       INNER JOIN Object AS Object_Goods ON Object_Goods.ID = tmpExpirationDate.GoodsId
+
        LEFT JOIN MovementLinkObject AS MLO_Insert
                                     ON MLO_Insert.MovementId = tmpExpirationDate.MovementId
                                    AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
@@ -74,9 +81,8 @@ BEGIN
        LEFT JOIN Object AS Object_User ON Object_User.Id = COALESCE(MLO_Insert.ObjectId, MovementLinkObject_UserConfirmedKind.ObjectId)
        
   WHERE tmpExpirationDate.DaysBeforeDelay <= inDaysBeforeDelay
-  GROUP BY Object_User.Id
-         , Object_User.ValueData
-  ORDER BY Object_User.ValueData;
+    AND COALESCE(MLO_Insert.ObjectId, MovementLinkObject_UserConfirmedKind.ObjectId) = inUserId
+  ORDER BY Object_User.ValueData, Object_Goods.ValueData;
 END;
 
 $BODY$
@@ -91,4 +97,4 @@ $BODY$
 -- тест
 --
 -- 
-select * from gpReport_SalesOfTermDrugsUnit(inStartDate := ('01.01.2021')::TDateTime, inEndDate := ('31.01.2021')::TDateTime, inDaysBeforeDelay := 90, inUnitId := 183292 , inSession := '3');         
+select * from gpReport_SalesOfTermDrugsUser(inStartDate := ('01.01.2021')::TDateTime, inEndDate := ('31.01.2021')::TDateTime, inDaysBeforeDelay := 90, inUnitId := 183292, inUserId := 3353680 , inSession := '3');         
