@@ -64,6 +64,8 @@ type
     isProductionIn: TcxGridDBColumn;
     TotalCountTare: TcxGridDBColumn;
     DocumentKindName: TcxGridDBColumn;
+    SubjectDocName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);

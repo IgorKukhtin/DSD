@@ -44,6 +44,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PositionId1_Stick Integer, PositionName1_Stick TVarChar
 
              , PersonalGroupId Integer, PersonalGroupName TVarChar
+
+             , Comment TVarChar
               )
 AS
 $BODY$
@@ -149,6 +151,9 @@ BEGIN
 
              , Object_PersonalGroup.Id                              AS PersonalGroupId
              , Object_PersonalGroup.ValueData                       AS PersonalGroupName
+
+             , MovementString_Comment.ValueData           AS Comment
+
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -171,6 +176,9 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_PartionGoods
                                      ON MovementString_PartionGoods.MovementId = Movement.Id
                                     AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId =  Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
@@ -313,7 +321,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Movement_WeighingPartner (Integer, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

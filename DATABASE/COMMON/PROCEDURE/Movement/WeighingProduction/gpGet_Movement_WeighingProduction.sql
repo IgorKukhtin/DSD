@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , BarCodeBoxId Integer, BarCodeBoxName TVarChar
              , SubjectDocId Integer, SubjectDocCode Integer, SubjectDocName TVarChar
              , PersonalGroupId Integer, PersonalGroupName TVarChar
+             , Comment TVarChar
               )
 AS
 $BODY$
@@ -33,14 +34,14 @@ BEGIN
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
-         RETURN QUERY 
+         RETURN QUERY
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('Movement_WeighingProduction_seq') AS TVarChar) AS InvNumber
              , CAST (CURRENT_DATE as TDateTime) AS OperDate
              , Object_Status.Code               AS StatusCode
              , Object_Status.Name               AS StatusName
-             
+
              , CAST ('' AS TVarChar)            AS Parent
              , 0                                AS MovementId_Parent
              , CAST (Null AS TDateTime)         AS OperDate_Parent
@@ -52,7 +53,7 @@ BEGIN
 
              , 0                     AS MovementId_Order
              , CAST ('' AS TVarChar) AS InvNumberOrder
-             
+
              , 0                     AS MovementDescNumber
              , 0                     AS MovementDesc
              , CAST ('' AS TVarChar) AS MovementDescName
@@ -82,9 +83,12 @@ BEGIN
 
              , 0                     AS PersonalGroupId
              , CAST ('' AS TVarChar) AS PersonalGroupName
+
+             , CAST ('' AS TVarChar) AS Comment
+
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
-       RETURN QUERY 
+       RETURN QUERY
          SELECT
                Movement.Id
              , Movement.InvNumber
@@ -95,16 +99,16 @@ BEGIN
              , Movement_Parent.InvNumber         AS InvNumber_Parent
              , Movement_Parent.Id                AS MovementId_Parent
              , Movement_Parent.OperDate          AS OperDate_Parent
-              
+
              , MovementBoolean_isIncome.ValueData    AS isProductionIn
              , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
 
-             , MovementDate_StartWeighing.ValueData  AS StartWeighing  
+             , MovementDate_StartWeighing.ValueData  AS StartWeighing
              , MovementDate_EndWeighing.ValueData    AS EndWeighing
 
              , MovementLinkMovement_Order.MovementChildId AS MovementId_Order
              , Movement_Order.InvNumber       :: TVarChar AS InvNumberOrder
-               
+
              , MovementFloat_MovementDescNumber.ValueData :: Integer AS MovementDescNumber
              , MovementDesc.Id                            AS MovementDesc
              , MovementDesc.ItemName                      AS MovementDescName
@@ -112,27 +116,29 @@ BEGIN
 
              , MovementString_PartionGoods.ValueData      AS PartionGoods
 
-             , Object_From.Id                  AS FromId
-             , Object_From.ValueData           AS FromName
-             , Object_To.Id                    AS ToId
-             , Object_To.ValueData             AS ToName
-             
-             , Object_User.Id                  AS UserId
-             , Object_User.ValueData           AS UserName
+             , Object_From.Id                             AS FromId
+             , Object_From.ValueData                      AS FromName
+             , Object_To.Id                               AS ToId
+             , Object_To.ValueData                        AS ToName
 
-             , Object_DocumentKind.Id          AS DocumentKindId
-             , Object_DocumentKind.ValueData   AS DocumentKindName
-             , Object_GoodsTypeKind.Id         AS GoodsTypeKindId
-             , Object_GoodsTypeKind.ValueData  AS GoodsTypeKindName
-             , Object_BarCodeBox.Id            AS BarCodeBoxId
-             , Object_BarCodeBox.ValueData     AS BarCodeBoxName
+             , Object_User.Id                             AS UserId
+             , Object_User.ValueData                      AS UserName
 
-             , Object_SubjectDoc.Id            AS SubjectDocId
-             , Object_SubjectDoc.ObjectCode    AS SubjectDocCode
-             , Object_SubjectDoc.ValueData     AS SubjectDocName
+             , Object_DocumentKind.Id                     AS DocumentKindId
+             , Object_DocumentKind.ValueData              AS DocumentKindName
+             , Object_GoodsTypeKind.Id                    AS GoodsTypeKindId
+             , Object_GoodsTypeKind.ValueData             AS GoodsTypeKindName
+             , Object_BarCodeBox.Id                       AS BarCodeBoxId
+             , Object_BarCodeBox.ValueData                AS BarCodeBoxName
 
-             , Object_PersonalGroup.Id         AS PersonalGroupId
-             , Object_PersonalGroup.ValueData  AS PersonalGroupName
+             , Object_SubjectDoc.Id                       AS SubjectDocId
+             , Object_SubjectDoc.ObjectCode               AS SubjectDocCode
+             , Object_SubjectDoc.ValueData                AS SubjectDocName
+
+             , Object_PersonalGroup.Id                    AS PersonalGroupId
+             , Object_PersonalGroup.ValueData             AS PersonalGroupName
+
+             , MovementString_Comment.ValueData           AS Comment
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
@@ -150,15 +156,15 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_EndWeighing
                                    ON MovementDate_EndWeighing.MovementId = Movement.Id
                                   AND MovementDate_EndWeighing.DescId = zc_MovementDate_EndWeighing()
-                                  
+
             LEFT JOIN MovementFloat AS MovementFloat_MovementDescNumber
                                     ON MovementFloat_MovementDescNumber.MovementId = Movement.Id
                                    AND MovementFloat_MovementDescNumber.DescId = zc_MovementFloat_MovementDescNumber()
             LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
                                     ON MovementFloat_MovementDesc.MovementId = Movement.Id
                                    AND MovementFloat_MovementDesc.DescId = zc_MovementFloat_MovementDesc()
-            LEFT JOIN MovementDesc ON MovementDesc.Id = MovementFloat_MovementDesc.ValueData 
-            
+            LEFT JOIN MovementDesc ON MovementDesc.Id = MovementFloat_MovementDesc.ValueData
+
 
             LEFT JOIN MovementFloat AS MovementFloat_WeighingNumber
                                     ON MovementFloat_WeighingNumber.MovementId = Movement.Id
@@ -171,17 +177,20 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_PartionGoods
                                      ON MovementString_PartionGoods.MovementId = Movement.Id
                                     AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId =  Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-            
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-            
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_User
                                          ON MovementLinkObject_User.MovementId = Movement.Id
                                         AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()

@@ -26,8 +26,8 @@ BEGIN
 
 
      -- рассчитываем бонус сети - НОВАЯ СХЕМА
-     vbContractCondition := (
-   --vbContractId_str := (
+   --vbContractCondition := (
+     vbContractId_str := (
              WITH -- все контрагенты Акции
                   tmpPromoPartner_all AS (SELECT tmp.PartnerId
                                                , tmp.ContractId
@@ -231,53 +231,53 @@ BEGIN
                           )
     , tmpContract_res AS (SELECT DISTINCT
                                  tmpContractGroup.ContractId_master
-                               , tmpContractGroup.ContractId_child
+                             --, tmpContractGroup.ContractId_child
                            FROM tmpContractGroup
                                 INNER JOIN tmpContractGoods ON tmpContractGoods.ContractId = tmpContractGroup.ContractId_master
                                                             OR tmpContractGoods.ContractId = tmpContractGroup.ContractId_child
                           )
-                             -- Результат
-                             SELECT MAX (tmp.Value) AS ContractCondition
-                           --SELECT STRING_AGG (tmp.ContractId_master :: TVarChar, ';')  AS ContractId_str
-                             FROM (SELECT tmpContract_res.ContractId_master
-                                        , SUM (COALESCE (ObjectFloat_Value.ValueData, 0)) AS Value
+       -- Результат
+       SELECT MAX (tmp.Value) AS ContractCondition
+       --SELECT STRING_AGG (tmp.ContractId_master :: TVarChar, ';')  AS ContractId_str
+       FROM (SELECT tmpContract_res.ContractId_master
+                  , SUM (COALESCE (ObjectFloat_Value.ValueData, 0)) AS Value
 
-                                   FROM tmpContract_res
-                                       INNER JOIN Object_Contract_InvNumber_View ON Object_Contract_InvNumber_View.ContractId          = tmpContract_res.ContractId_master
-                                                                                AND Object_Contract_InvNumber_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
-                                                                                AND Object_Contract_InvNumber_View.isErased            = FALSE
-                                                                                -- Готовая продукция OR  Маркетинг + Бонусы за продукцию
-                                                                                --AND Object_Contract_InvNumber_View.InfoMoneyId       IN (zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_21501())
+             FROM tmpContract_res
+                 INNER JOIN Object_Contract_InvNumber_View ON Object_Contract_InvNumber_View.ContractId          = tmpContract_res.ContractId_master
+                                                          AND Object_Contract_InvNumber_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                                          AND Object_Contract_InvNumber_View.isErased            = FALSE
+                                                          -- Готовая продукция OR  Маркетинг + Бонусы за продукцию
+                                                          --AND Object_Contract_InvNumber_View.InfoMoneyId       IN (zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_21501())
 
-                                       LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
-                                                            ON ObjectLink_ContractCondition_Contract.ChildObjectId = tmpContract_res.ContractId_master
-                                                           AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
-                                       INNER JOIN Object AS Object_ContractCondition
-                                                         ON Object_ContractCondition.Id       = ObjectLink_ContractCondition_Contract.ObjectId
-                                                        AND Object_ContractCondition.isErased = FALSE
-                                       INNER JOIN ObjectLink AS ObjectLink_ContractConditionKind
-                                                             ON ObjectLink_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
-                                                            AND ObjectLink_ContractConditionKind.ChildObjectId IN (zc_Enum_ContractConditionKind_BonusPercentAccount()
-                                                                                                                 , zc_Enum_ContractConditionKind_BonusPercentAccountSendDebt()
-                                                                                                                 , zc_Enum_ContractConditionKind_BonusPercentSaleReturn()
-                                                                                                                 , zc_Enum_ContractConditionKind_BonusPercentSale()
-                                                                                                                  )
-                                                            AND ObjectLink_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
+                 LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
+                                      ON ObjectLink_ContractCondition_Contract.ChildObjectId = tmpContract_res.ContractId_master
+                                     AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+                 INNER JOIN Object AS Object_ContractCondition
+                                   ON Object_ContractCondition.Id       = ObjectLink_ContractCondition_Contract.ObjectId
+                                  AND Object_ContractCondition.isErased = FALSE
+                 INNER JOIN ObjectLink AS ObjectLink_ContractConditionKind
+                                       ON ObjectLink_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                                      AND ObjectLink_ContractConditionKind.ChildObjectId IN (zc_Enum_ContractConditionKind_BonusPercentAccount()
+                                                                                           , zc_Enum_ContractConditionKind_BonusPercentAccountSendDebt()
+                                                                                           , zc_Enum_ContractConditionKind_BonusPercentSaleReturn()
+                                                                                           , zc_Enum_ContractConditionKind_BonusPercentSale()
+                                                                                            )
+                                      AND ObjectLink_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
 
-                                       LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_BonusKind
-                                                            ON ObjectLink_ContractCondition_BonusKind.ObjectId = Object_ContractCondition.Id
-                                                           AND ObjectLink_ContractCondition_BonusKind.DescId   = zc_ObjectLink_ContractCondition_BonusKind()
-                                       INNER JOIN Object AS Object_BonusKind
-                                                         ON Object_BonusKind.Id = ObjectLink_ContractCondition_BonusKind.ChildObjectId
-                                                      --AND Object_BonusKind.Id = 81959   ---Бонус
+                 LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_BonusKind
+                                      ON ObjectLink_ContractCondition_BonusKind.ObjectId = Object_ContractCondition.Id
+                                     AND ObjectLink_ContractCondition_BonusKind.DescId   = zc_ObjectLink_ContractCondition_BonusKind()
+                 INNER JOIN Object AS Object_BonusKind
+                                   ON Object_BonusKind.Id = ObjectLink_ContractCondition_BonusKind.ChildObjectId
+                                --AND Object_BonusKind.Id = 81959   ---Бонус
 
-                                       INNER JOIN ObjectFloat AS ObjectFloat_Value
-                                                              ON ObjectFloat_Value.ObjectId = Object_ContractCondition.Id
-                                                             AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
+                 INNER JOIN ObjectFloat AS ObjectFloat_Value
+                                        ON ObjectFloat_Value.ObjectId = Object_ContractCondition.Id
+                                       AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
 
-                                   GROUP BY tmpContract_res.ContractId_master
-                                  ) AS tmp
-                             );
+             GROUP BY tmpContract_res.ContractId_master
+            ) AS tmp
+       );
 
 
      -- рассчитываем бонус сети - СТАРАЯ СХЕМА
@@ -357,7 +357,7 @@ BEGIN
      END IF;
 
 
-    IF inSession = '5' OR (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete())
+    IF inSession = '5' OR EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete())
     THEN
         RAISE EXCEPTION 'Ошибка.Документ в статусе <%>. Проверка: <%> <%>.'
           , lfGet_Object_ValueData_sh (zc_Enum_Status_Complete())
@@ -371,8 +371,8 @@ BEGIN
                AND MovementItem.isErased = FALSE
           -- ORDER BY MovementItem.Id LIMIT 1
             )
-          , vbContractCondition
---          , vbContractId_str
+--          , vbContractCondition
+          , vbContractId_str
             ;
     END IF;
 

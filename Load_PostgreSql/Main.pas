@@ -1247,6 +1247,13 @@ begin
                      myLogMemo_add('end stop');
            end;
            //
+           if ((Hour_calc = 7) and (Minute_calc >=40 ))
+           then begin
+                     myLogMemo_add('start stop 20 min');
+                     MyDelay(20*60*1000);
+                     myLogMemo_add('end stop');
+           end;
+           //
            exit;
       end;
      //

@@ -704,7 +704,7 @@ BEGIN
                                          FROM _tmpItem
                                          WHERE _tmpItem.IsMaster          = TRUE
                                            AND _tmpItem.OperSumm_Currency <> 0
-                                           AND (_tmpItem.OperDate < zc_DateStart_Asset() OR _tmpItem.InfoMoneyGroupId <> zc_Enum_InfoMoneyGroup_70000())
+                                         --AND (_tmpItem.OperDate < zc_DateStart_Asset() OR _tmpItem.InfoMoneyGroupId <> zc_Enum_InfoMoneyGroup_70000())
                                         )
                           -- итоговые суммы, по ним - курс
                         , tmpSumm AS (SELECT SUM (tmp.OperSumm_Currency) AS OperSumm_Currency
@@ -801,21 +801,11 @@ BEGIN
                  , _tmpItem.ObjectId
                  , _tmpItem.ObjectDescId
 
-                 , CASE -- сразу в ќѕи” - »нвестиции
-                        WHEN _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000()
-                             THEN 0
-    
-                        ELSE -1 * vbSumm_diff
-                   END AS OperSumm
-                 , 0   AS OperSumm_Diff
+                 , -1 * vbSumm_diff AS OperSumm
+                 , 0                AS OperSumm_Diff
 
-                 , CASE -- сразу в ќѕи” - »нвестиции
-                        WHEN _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000()
-                             THEN -1 * vbSumm_diff
-    
-                        ELSE 0
-                   END AS OperSumm_Asset
-                 , 0   AS OperSumm_Diff_Asset
+                 , 0 AS OperSumm_Asset
+                 , 0 AS OperSumm_Diff_Asset
 
                  , _tmpItem.MovementItemId
     
@@ -869,7 +859,7 @@ BEGIN
               AND vbSumm_diff <> 0
     
            UNION ALL
-            -- ќѕи” или счет д.средства - касса
+            -- 1.2. ќѕи” или счет д.средства - касса
             SELECT _tmpItem.MovementDescId
                  , _tmpItem.OperDate
 
@@ -879,38 +869,11 @@ BEGIN
                  , CASE WHEN _tmpItem.ObjectDescId = zc_Object_Cash() AND _tmpItem.CurrencyId <> zc_Enum_Currency_Basis() THEN _tmpItem.ObjectDescId
                         WHEN _tmpItem.ObjectDescId = zc_Object_Cash() THEN _tmpItem_find.ObjectDescId
                         ELSE 0 END AS ObjectDescId
+                 , vbSumm_diff AS OperSumm
+                 , CASE WHEN _tmpItem.ObjectDescId = zc_Object_Cash() THEN 0 ELSE 1 * vbSumm_diff END AS OperSumm_Diff
 
-                 , CASE -- сразу в ќѕи” - »нвестиции
-                        WHEN _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000()
-                             THEN 0
-    
-                        ELSE 1 * vbSumm_diff
-                   END AS OperSumm
-                 , CASE -- сразу в ќѕи” - »нвестиции
-                        WHEN _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000()
-                             THEN 0
-    
-                        WHEN _tmpItem.ObjectDescId = zc_Object_Cash()
-                             THEN 0
-
-                        ELSE 1 * vbSumm_diff
-                   END AS OperSumm_Diff
-
-                 , CASE -- сразу в ќѕи” - »нвестиции
-                        WHEN _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000()
-                             THEN 1 * vbSumm_diff
-    
-                        ELSE 0
-                   END AS OperSumm_Asset
-                 , CASE -- сразу в ќѕи” - »нвестиции
-                        WHEN _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000()
-                             THEN 1 * vbSumm_diff
-    
-                        WHEN _tmpItem.ObjectDescId = zc_Object_Cash()
-                             THEN 0
-
-                        ELSE 0
-                   END AS OperSumm_Diff_Asset
+                 , 0 AS OperSumm_Asset
+                 , 0 AS OperSumm_Diff_Asset
 
                  , _tmpItem.MovementItemId
     
@@ -966,8 +929,10 @@ BEGIN
                  -- если это касса √–Ќ, тогда надо брать параметры из Master
                  LEFT JOIN _tmpItem AS _tmpItem_find ON _tmpItem_find.MovementItemId = _tmpItem.MovementItemId
                                                     AND _tmpItem_find.IsMaster       = TRUE
+                                                    AND COALESCE (_tmpItem_find.OperSumm_Asset, 0) = 0
             WHERE _tmpItem.IsMaster = FALSE
               AND vbSumm_diff <> 0
+              AND COALESCE (_tmpItem.OperSumm_Asset, 0) = 0
            ;
 
      END IF; -- !!! урсова€ разница!!!

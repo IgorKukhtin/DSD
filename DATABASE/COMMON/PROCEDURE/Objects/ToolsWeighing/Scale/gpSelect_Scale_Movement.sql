@@ -43,6 +43,10 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , PositionId1_Stick Integer, PositionCode1_Stick Integer, PositionName1_Stick TVarChar
 
              , EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean
+
+             , SubjectDocName TVarChar
+             , Comment TVarChar
+
              , UserName TVarChar
               )
 AS
@@ -70,7 +74,7 @@ BEGIN
                          UNION
                           SELECT zc_Enum_Status_UnComplete() AS StatusId
                          )
-
+       -- Результат
        SELECT  Movement.Id
              , zfConvert_StringToNumber (Movement.InvNumber)  AS InvNumber
              , Movement.OperDate
@@ -145,7 +149,6 @@ BEGIN
              , Object_ReestrKind.Id             	      AS ReestrKindId
              , Object_ReestrKind.ValueData       	      AS ReestrKindName
 
-
              , Object_Personal1.Id AS PersonalId1, Object_Personal1.ObjectCode AS PersonalCode1, Object_Personal1.ValueData AS PersonalName1
              , Object_Personal2.Id AS PersonalId2, Object_Personal2.ObjectCode AS PersonalCode2, Object_Personal2.ValueData AS PersonalName2
              , Object_Personal3.Id AS PersonalId3, Object_Personal3.ObjectCode AS PersonalCode3, Object_Personal3.ValueData AS PersonalName3
@@ -164,6 +167,9 @@ BEGIN
              , COALESCE (MovementBoolean_EdiOrdspr.ValueData, FALSE)    AS EdiOrdspr
              , COALESCE (MovementBoolean_EdiInvoice.ValueData, FALSE)   AS EdiInvoice
              , COALESCE (MovementBoolean_EdiDesadv.ValueData, FALSE)    AS EdiDesadv
+
+             , Object_SubjectDoc.ValueData        AS SubjectDocName
+             , MovementString_Comment.ValueData   AS Comment
 
              , Object_User.ValueData              AS UserName
 
@@ -375,6 +381,15 @@ BEGIN
             LEFT JOIN Movement AS Movement_Reestr ON Movement_Reestr.Id       = MI_Reestr.MovementId
                                                  AND Movement_Reestr.StatusId <> zc_Enum_Status_Erased()
                                                  AND MI_Reestr.isErased       = FALSE
+
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId =  Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                         ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
+                                        AND MovementLinkObject_SubjectDoc.DescId     = zc_MovementLinkObject_SubjectDoc()
+            LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
 
        ORDER BY COALESCE (MovementDate_EndWeighing.ValueData, MovementDate_StartWeighing.ValueData) DESC
               , MovementDate_StartWeighing.ValueData DESC

@@ -263,6 +263,7 @@ begin
      ParamAdd(Params,'SubjectDocId',ftInteger);
      ParamAdd(Params,'SubjectDocCode',ftInteger);
      ParamAdd(Params,'SubjectDocName',ftString);
+     ParamAdd(Params,'DocumentComment',ftString);
 
      ParamAdd(Params,'isPersonalGroup',ftBoolean);
      ParamAdd(Params,'PersonalGroupId',ftInteger);

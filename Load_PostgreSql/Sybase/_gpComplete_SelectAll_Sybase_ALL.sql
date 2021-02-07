@@ -22,8 +22,8 @@ BEGIN
 IF inIsBefoHistoryCost = TRUE
 THEN
     inGroupId:= -1;
--- ELSE
---    inGroupId:= -1; -- ¬се
+ ELSE
+    inGroupId:= -1; -- ¬се
 --  inGroupId:=  0; -- ф.ƒнепр
 --  inGroupId:=  1; -- ф. иев
 --  inGroupId:=  2; -- остальные филиалы
@@ -37,7 +37,7 @@ END IF;
      vbIsSale:= -- если последний 1 день мес€ца
                 DATE_TRUNC ('MONTH', CURRENT_DATE + INTERVAL '1 DAY')  > (DATE_TRUNC ('MONTH', CURRENT_DATE))
                 -- или ѕ≈–¬џ≈ 12 дней мес€ца
-             OR DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '12 DAY') < (DATE_TRUNC ('MONTH', CURRENT_DATE))
+             OR DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '5 DAY') < (DATE_TRUNC ('MONTH', CURRENT_DATE))
                 -- или ѕ≈–¬џ≈ 5 дней мес€ца
            --OR DATE_TRUNC ('MONTH', CURRENT_DATE + INTERVAL '5 DAY')  < (DATE_TRUNC ('MONTH', CURRENT_DATE))
                 ;

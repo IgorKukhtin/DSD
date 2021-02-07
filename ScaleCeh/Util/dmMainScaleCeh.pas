@@ -285,6 +285,7 @@ begin
            ParamByName('SubjectDocId').AsInteger   := DataSet.FieldByName('SubjectDocId').asInteger;
            ParamByName('SubjectDocCode').AsInteger := DataSet.FieldByName('SubjectDocCode').asInteger;
            ParamByName('SubjectDocName').asString  := DataSet.FieldByName('SubjectDocName').asString;
+           ParamByName('DocumentComment').asString := DataSet.FieldByName('Comment').asString;
 
            ParamByName('PersonalGroupId').AsInteger   := DataSet.FieldByName('PersonalGroupId').asInteger;
            ParamByName('PersonalGroupCode').AsInteger := DataSet.FieldByName('PersonalGroupCode').asInteger;
@@ -665,6 +666,7 @@ begin
          Params.AddParam('inMovementId_Order', ftInteger, ptInput, execParamsMovement.ParamByName('OrderExternalId').AsInteger);
          Params.AddParam('inIsProductionIn', ftBoolean, ptInput, execParamsMovement.ParamByName('isSendOnPriceIn').AsBoolean);
          Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
+         Params.AddParam('inComment', ftString, ptInput, execParamsMovement.ParamByName('DocumentComment').AsString);
          //try
            Execute;
            execParamsMovement.ParamByName('MovementId').AsInteger:=DataSet.FieldByName('Id').asInteger;

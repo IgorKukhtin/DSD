@@ -402,6 +402,10 @@ BEGIN
                                                                               AND MILO.DescId = zc_MILinkObject_Branch()
                               )
             --
+          , tmpMILO_InfoMoney AS (SELECT * FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId IN (SELECT DISTINCT tmpMIContainer_Summ.MovementItemId FROM tmpMIContainer_Summ WHERE MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_Service(), zc_Movement_MobileBills()))
+                                                                                 AND MILO.DescId = zc_MILinkObject_InfoMoney()
+                                 )
+            --
           , tmpMLO_Branch AS (SELECT * FROM MovementLinkObject AS MLO WHERE MLO.MovementId IN (SELECT DISTINCT tmpMIContainer_Summ.MovementId FROM tmpMIContainer_Summ)
                                                                         AND MLO.DescId = zc_MovementLinkObject_Branch()
                              )
@@ -612,7 +616,7 @@ BEGIN
 
 
                 , ContainerLinkObject_Currency.ObjectId AS CurrencyId
-                , ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
+                , COALESCE (ContainerLinkObject_InfoMoney.ObjectId, MILinkObject_InfoMoney.ObjectId) AS InfoMoneyId
                 , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = FALSE THEN 0 WHEN ContainerLinkObject_InfoMoneyDetail.ObjectId <> 0 THEN ContainerLinkObject_InfoMoneyDetail.ObjectId ELSE ContainerLinkObject_InfoMoney.ObjectId END AS InfoMoneyId_Detail
 
                 , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.MovementItemId_Parent ELSE 0 END AS MovementItemId_Parent
@@ -688,6 +692,12 @@ BEGIN
                  LEFT JOIN tmpMLO_Branch AS MovementLinkObject_Branch
                                          ON MovementLinkObject_Branch.MovementId = tmpMIContainer_Summ.MovementId
                                      -- AND MovementLinkObject_Branch.DescId     = zc_MovementLinkObject_Branch()
+                 -- вот так ”ѕ статью если ќѕи”
+                 LEFT JOIN tmpMILO_InfoMoney AS MILinkObject_InfoMoney
+                                             ON MILinkObject_InfoMoney.MovementItemId = tmpMIContainer_Summ.MovementItemId -- MIReport_MI.MovementItemId -- COALESCE (MovementItemContainer.MovementItemId, MIReport_MI.MovementItemId)
+                                            AND tmpMIContainer_Summ.AccountId         = zc_Enum_Account_100301()
+                                         -- AND MILinkObject_Branch.DescId         = zc_MILinkObject_InfoMoney()
+                                     
 
            ) AS tmpMIContainer_Summ
 

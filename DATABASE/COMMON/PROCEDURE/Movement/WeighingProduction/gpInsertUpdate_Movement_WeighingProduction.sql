@@ -1,10 +1,11 @@
 -- Function: gpInsertUpdate_Movement_WeighingProduction()
-	
+
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingProduction (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingProduction (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingProduction (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingProduction (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingProduction (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingProduction (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingProduction (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_WeighingProduction(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -15,13 +16,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_WeighingProduction(
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inDocumentKindId      Integer   , -- Тип документа
-    IN inSubjectDocId        Integer   , -- 
-    IN inPersonalGroupId     Integer   , -- 
+    IN inSubjectDocId        Integer   , --
+    IN inPersonalGroupId     Integer   , --
     IN inMovementId_Order    Integer   , -- ключ Документа заявка
     IN inPartionGoods        TVarChar  , -- Партия товара
-    IN inIsProductionIn      Boolean   , -- 
+    IN inIsProductionIn      Boolean   , --
+    IN inComment             TVarChar  , --
     IN inSession             TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS Integer
 AS
 $BODY$
@@ -61,7 +63,7 @@ BEGIN
          -- сохранили свойство <Протокол начало взвешивания>
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartWeighing(), ioId, vbStartWeighing);
      END IF;
-     
+
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isIncome(), ioId, inIsProductionIn);
 
@@ -71,9 +73,12 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementDescNumber(), ioId, inMovementDescNumber);
      -- сохранили свойство <Номер взвешивания>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_WeighingNumber(), ioId, inWeighingNumber);
- 
+
      -- сохранили свойство <Партия товара>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_PartionGoods(), ioId, inPartionGoods);
+     -- сохранили свойство <Comment>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+
 
      -- сохранили связь с <От кого (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);

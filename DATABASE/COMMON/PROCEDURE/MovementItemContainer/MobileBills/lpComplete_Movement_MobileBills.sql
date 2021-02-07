@@ -16,6 +16,7 @@ BEGIN
      -- !!!об€зательно!!! очистили таблицу - элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
      DELETE FROM _tmpItem;
 
+
      -- заполн€ем таблицу - элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
      INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm
                          , MovementItemId, ContainerId
@@ -134,6 +135,11 @@ BEGIN
           AND Movement.DescId = zc_Movement_MobileBills()
           AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
        ;
+
+
+     -- !!!сохранили св€зь с <InfoMoney> !!!
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), _tmpItem.MovementItemId, _tmpItem.InfoMoneyId)
+     FROM _tmpItem;
 
 
      -- проверка

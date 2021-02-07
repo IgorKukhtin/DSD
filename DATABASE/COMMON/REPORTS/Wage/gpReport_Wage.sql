@@ -166,7 +166,7 @@ BEGIN
     RETURN QUERY
 
     -- Report_1 - По штатному расписанию - из Модели + из Табеля - По проводкам кол-во
-    WITH Res AS /* (StaffListId, DocumentKindId, UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName,Count_Member,HoursPlan,HoursDay, PersonalGroupId, PersonalGroupName, MemberId, MemberName, SheetWorkTime_Date, SUM_MemberHours, SheetWorkTime_Amount
+    WITH Res_1 AS /* (StaffListId, DocumentKindId, UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName,Count_Member,HoursPlan,HoursDay, PersonalGroupId, PersonalGroupName, MemberId, MemberName, SheetWorkTime_Date, SUM_MemberHours, SheetWorkTime_Amount
                    , ServiceModelCode,ServiceModelName,Price,FromId,FromName,ToId,ToName,MovementDescId,MovementDescName,SelectKindId,SelectKindName,Ratio
                    , ModelServiceItemChild_FromId,ModelServiceItemChild_FromDescId,ModelServiceItemChild_FromName,ModelServiceItemChild_ToId,ModelServiceItemChild_ToDescId,ModelServiceItemChild_ToName
                    , StorageLineId_From, StorageLineName_From, StorageLineId_To, StorageLineName_To
@@ -207,6 +207,77 @@ BEGIN
                                      inPositionId     := inPositionId,   --должность
                                      inSession        := inSession
                                     ) AS Report_1
+   )
+ , tmpReport_1 AS (SELECT DISTINCT Res_1.MemberId /*, Res_1.PersonalGroupId, Res_1.PositionId, Res_1.PositionLevelId*/ FROM Res_1 WHERE Res_1.SheetWorkTime_Amount > 0)
+ , Res AS (
+    SELECT
+         Res_1.StaffListId
+       , Res_1.DocumentKindId
+       , Res_1.UnitId
+       , Res_1.UnitName
+       , Res_1.PositionId
+       , Res_1.PositionName
+       , Res_1.PositionLevelId
+       , Res_1.PositionLevelName
+       , Res_1.Count_Member
+       , Res_1.HoursPlan
+       , Res_1.HoursDay
+       , Res_1.PersonalGroupId
+       , Res_1.PersonalGroupName
+       , Res_1.MemberId
+       , Res_1.MemberName
+       , Res_1.SheetWorkTime_Date
+       , Res_1.SUM_MemberHours
+       , Res_1.SheetWorkTime_Amount
+       , Res_1.ServiceModelCode
+       , Res_1.ServiceModelName
+       , Res_1.Price
+
+       , Res_1.FromId
+       , Res_1.FromName
+       , Res_1.ToId
+       , Res_1.ToName
+       , Res_1.MovementDescId
+       , Res_1.MovementDescName
+       , Res_1.SelectKindId
+       , Res_1.SelectKindName
+       , Res_1.Ratio
+
+       , Res_1.ModelServiceItemChild_FromId
+       , Res_1.ModelServiceItemChild_FromDescId
+       , Res_1.ModelServiceItemChild_FromName
+       , Res_1.ModelServiceItemChild_ToId
+       , Res_1.ModelServiceItemChild_ToDescId
+       , Res_1.ModelServiceItemChild_ToName
+
+       , Res_1.StorageLineId_From
+       , Res_1.StorageLineName_From
+       , Res_1.StorageLineId_To
+       , Res_1.StorageLineName_To
+
+       , Res_1.GoodsKind_FromId
+       , Res_1.GoodsKind_FromName
+       , Res_1.GoodsKindComplete_FromId
+       , Res_1.GoodsKindComplete_FromName
+       , Res_1.GoodsKind_ToId
+       , Res_1.GoodsKind_ToName
+       , Res_1.GoodsKindComplete_ToId
+       , Res_1.GoodsKindComplete_ToName
+
+       , Res_1.OperDate
+       , Res_1.Count_Day
+       , Res_1.Count_MemberInDay
+       , Res_1.Gross
+       , Res_1.GrossOnOneMember
+
+       , Res_1.Amount
+       , Res_1.AmountOnOneMember
+       , Res_1.ModelServiceId
+       , Res_1.StaffListSummKindId
+       , Res_1.KoeffHoursWork_car
+
+    FROM Res_1
+
    UNION ALL
     -- Report_2 - По штатному расписанию - Тип суммы ИЛИ по часам - из Табеля
     /*INSERT INTO Res (StaffListId, UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName,Count_Member,HoursPlan,HoursDay, PersonalGroupId, PersonalGroupName, MemberId, MemberName
@@ -232,7 +303,7 @@ BEGIN
        , Report_2.MemberName
        , NULL :: TDateTime AS SheetWorkTime_Date
        , Report_2.SUM_MemberHours
-       , Report_2.SheetWorkTime_Amount
+       , CASE WHEN tmpReport_1.MemberId > 0 THEN 0 ELSE Report_2.SheetWorkTime_Amount END AS SheetWorkTime_Amount
        , Report_2.StaffListSummKindId   AS ServiceModelCode
        , Report_2.StaffListSummKindName AS ServiceModelName
        , Report_2.StaffListSumm_Value   AS Price
@@ -287,6 +358,7 @@ BEGIN
                                  , inPositionId     := inPositionId
                                  , inSession        := inSession
                                   ) AS Report_2
+         LEFT JOIN tmpReport_1 ON tmpReport_1.MemberId = Report_2.MemberId
     WHERE COALESCE (inModelServiceId, 0) = 0
    )
 

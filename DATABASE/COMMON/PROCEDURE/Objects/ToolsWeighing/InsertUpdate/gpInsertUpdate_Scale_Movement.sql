@@ -6,7 +6,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integ
 */
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Scale_Movement(
     IN inId                   Integer   , -- Ключ объекта <Документ>
@@ -23,6 +24,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Scale_Movement(
     IN inMovementId_Transport Integer   , -- ключ Документа ИЛИ - криво - через этот прараметр передаем - Через кого поступил возврат
     IN inChangePercent        TFloat    , -- (-)% Скидки (+)% Наценки
     IN inBranchCode           Integer   , -- 
+    IN inComment              TVarChar  , --
     IN inSession              TVarChar    -- сессия пользователя
 )                              
 RETURNS TABLE (Id        Integer
@@ -130,6 +132,7 @@ BEGIN
                                                    , inBranchCode          := inBranchCode
                                                    , inPartionGoods        := '' :: TVarChar
                                                    , inChangePercent       := inChangePercent
+                                                   , inComment             := inComment
                                                    , inSession             := inSession
                                                     );
 

@@ -31,9 +31,12 @@ BEGIN
           RAISE EXCEPTION 'Ошибка.Нет Прав.';
       END IF;
 
-
+-- Хаджиева В.С.
 -- IF inGUID = '?13' AND inSession = '1156045' THEN RETURN 0; END IF;
  IF inSession = '1156045' THEN RETURN 0; END IF;
+ -- testm
+ IF inSession = '1123966 ' THEN RETURN 0; END IF;
+ 
 
 
       -- поиск Id документа по GUID

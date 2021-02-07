@@ -503,7 +503,10 @@ begin
            and(ParamsMI.ParamByName('RealWeight_Get').AsFloat > 0)
            and(CDS.FieldByName('Weight').AsFloat > 0)
            and(SettingMain.isCalc_sht = TRUE)
-           then if rgGoodsKind.Items.Count > 1
+           then if (gbPrice.Visible = TRUE)and (ActiveControl<>EditPrice)
+                then ActiveControl:=EditPrice
+                else
+                if rgGoodsKind.Items.Count > 1
                 then ActiveControl:=EditGoodsKindCode
                 else
                      if infoPanelTareFix.Visible
@@ -514,12 +517,14 @@ begin
                 or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
                  and(SettingMain.isCalc_sht = FALSE))
                 then ActiveControl:=EditWeightValue
-                else if rgGoodsKind.Items.Count > 1
-                     then ActiveControl:=EditGoodsKindCode
-                     else
-                          if infoPanelTareFix.Visible
-                          then ActiveControl:=EditTare1
-                          else ActiveControl:=EditTareCount
+                else if (gbPrice.Visible = TRUE)and (ActiveControl<>EditPrice)
+                     then ActiveControl:=EditPrice
+                     else if rgGoodsKind.Items.Count > 1
+                          then ActiveControl:=EditGoodsKindCode
+                          else
+                              if infoPanelTareFix.Visible
+                              then ActiveControl:=EditTare1
+                              else ActiveControl:=EditTareCount
       else
       if (ActiveControl=EditWeightValue)or(ActiveControl=EditPrice)
       then if (gbPrice.Visible = TRUE)and (ActiveControl<>EditPrice)
@@ -536,7 +541,10 @@ begin
                 then if (SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
                      and(ParamsMI.ParamByName('RealWeight_Get').AsFloat > 0)
                      and(CDS.FieldByName('Weight').AsFloat > 0)
-                     then if rgGoodsKind.Items.Count > 1
+                     then if (gbPrice.Visible = TRUE)and (ActiveControl<>EditPrice)
+                          then ActiveControl:=EditPrice
+                          else
+                          if rgGoodsKind.Items.Count > 1
                           then ActiveControl:=EditGoodsKindCode
                           else
                                if infoPanelTareFix.Visible
@@ -546,7 +554,10 @@ begin
                           if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)
                           or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
                           then ActiveControl:=EditWeightValue
-                          else if rgGoodsKind.Items.Count > 1
+                          else if (gbPrice.Visible = TRUE)and (ActiveControl<>EditPrice)
+                               then ActiveControl:=EditPrice
+                               else
+                               if rgGoodsKind.Items.Count > 1
                                then ActiveControl:=EditGoodsKindCode
                                else
                                     if infoPanelTareFix.Visible

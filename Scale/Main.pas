@@ -1346,6 +1346,17 @@ begin
                //
                EditSubjectDoc.Text:=execParams.ParamByName('SubjectDocName').AsString;
                //
+               with DialogStringValueForm do
+               begin
+                    LabelStringValue.Caption:='Ввод примечания для <'+execParams.ParamByName('SubjectDocName').AsString+'>';
+                    ActiveControl:=StringValueEdit;
+                    StringValueEdit.Text:=ParamsMovement.ParamByName('DocumentComment').AsString;
+                    if Execute (false, false)
+                    then ParamsMovement.ParamByName('DocumentComment').AsString:= StringValueEdit.Text;
+                    //
+                    EditSubjectDoc.Text:= EditSubjectDoc.Text + ' / ' + ParamsMovement.ParamByName('DocumentComment').AsString;
+               end;
+               //
                DMMainScaleForm.gpInsertUpdate_Scale_Movement(ParamsMovement);
      end;
      //
@@ -1665,8 +1676,10 @@ begin
      PanelPersonalDriver.Caption:=ParamByName('PersonalDriverName').asString;
      PanelCar.Caption:=ParamByName('CarName').asString;
      PanelRoute.Caption:=ParamByName('RouteName').asString;
-
-     EditSubjectDoc.Text:=ParamByName('SubjectDocName').asString;
+     //
+     if ParamByName('DocumentComment').asString <> ''
+     then EditSubjectDoc.Text:=ParamByName('SubjectDocName').asString + ' / ' + ParamByName('DocumentComment').asString
+     else EditSubjectDoc.Text:=ParamByName('SubjectDocName').asString;
 
   end;
 end;

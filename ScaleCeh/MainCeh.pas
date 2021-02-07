@@ -2778,7 +2778,10 @@ begin
     then PanelMovementDesc.Caption:=ParamByName('MovementDescName_master').asString
                          + ' з. ' + ParamByName('OrderExternalName_master').asString
     else PanelMovementDesc.Caption:=ParamByName('MovementDescName_master').asString;
-    EditSubjectDoc.Text:=ParamByName('SubjectDocName').asString;
+    //
+    if ParamByName('DocumentComment').asString <> ''
+    then EditSubjectDoc.Text:=ParamByName('SubjectDocName').asString + ' / ' + ParamByName('DocumentComment').asString
+    else EditSubjectDoc.Text:=ParamByName('SubjectDocName').asString;
 
   end;
 
@@ -3555,6 +3558,17 @@ begin
                ParamsMovement.ParamByName('SubjectDocName').AsString:=execParams.ParamByName('SubjectDocName').AsString;
                //
                EditSubjectDoc.Text:=execParams.ParamByName('SubjectDocName').AsString;
+               //
+               with DialogStringValueForm do
+               begin
+                    LabelStringValue.Caption:='¬вод примечани€ дл€ <'+execParams.ParamByName('SubjectDocName').AsString+'>';
+                    ActiveControl:=StringValueEdit;
+                    StringValueEdit.Text:=ParamsMovement.ParamByName('DocumentComment').AsString;
+                    if Execute (false, false)
+                    then ParamsMovement.ParamByName('DocumentComment').AsString:= StringValueEdit.Text;
+                    //
+                    EditSubjectDoc.Text:= EditSubjectDoc.Text + ' / ' + ParamsMovement.ParamByName('DocumentComment').AsString;
+               end;
                //
                DMMainScaleCehForm.gpInsertUpdate_ScaleCeh_Movement(ParamsMovement);
      end;

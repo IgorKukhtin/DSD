@@ -4,7 +4,8 @@
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleCeh_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleCeh_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleCeh_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleCeh_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleCeh_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleCeh_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ScaleCeh_Movement(
     IN inId                  Integer   , -- Ключ объекта <Документ>
@@ -13,13 +14,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ScaleCeh_Movement(
     IN inMovementDescNumber  Integer   , -- Вид документа
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
-    IN inSubjectDocId        Integer   , -- 
-    IN inPersonalGroupId     Integer   , -- 
+    IN inSubjectDocId        Integer   , --
+    IN inPersonalGroupId     Integer   , --
     IN inMovementId_Order    Integer   , -- ключ Документа заявка
-    IN inIsProductionIn      Boolean   , -- 
-    IN inBranchCode          Integer   , -- 
+    IN inIsProductionIn      Boolean   , --
+    IN inBranchCode          Integer   , --
+    IN inComment             TVarChar  , --
     IN inSession             TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS TABLE (Id        Integer
              , InvNumber TVarChar
              , OperDate  TDateTime
@@ -55,7 +57,7 @@ BEGIN
                                                       , inWeighingNumber      := CASE WHEN inId <> 0
                                                                                            THEN (SELECT MovementFloat.ValueData FROM MovementFloat WHERE MovementFloat.MovementId = inId AND MovementFloat.DescId = zc_MovementFloat_WeighingNumber())
                                                                                       WHEN inMovementDescId = zc_Movement_ProductionSeparate()
-                                                                                           THEN 0 -- update при закрытии документа (расчет для производства - по № партии) 
+                                                                                           THEN 0 -- update при закрытии документа (расчет для производства - по № партии)
                                                                                       WHEN inMovementDescId NOT IN (zc_Movement_ProductionSeparate(), zc_Movement_Inventory())
                                                                                            THEN 1
                                                                                       ELSE 1 + COALESCE ((SELECT MAX (COALESCE (MovementFloat_WeighingNumber.ValueData, 0))
@@ -88,6 +90,7 @@ BEGIN
                                                       , inMovementId_Order    := inMovementId_Order
                                                       , inPartionGoods        := (SELECT MovementString.ValueData FROM MovementString WHERE MovementString.MovementId = inId AND MovementString.DescId = zc_MovementString_PartionGoods())
                                                       , inIsProductionIn      := inIsProductionIn
+                                                      , inComment             := inComment
                                                       , inSession             := inSession
                                                        );
      -- Результат

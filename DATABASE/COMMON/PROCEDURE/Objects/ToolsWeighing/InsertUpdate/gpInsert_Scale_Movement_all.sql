@@ -737,7 +737,7 @@ end if;
                                                   , inToId                  := ToId
                                                   , inDocumentKindId        := 0
                                                   , inSubjectDocId          := SubjectDocId
-                                                  , inComment               := '' :: TvarChar
+                                                  , inComment               := tmp.Comment
                                                   , inUserId                := vbUserId
                                                    )
                                           WHEN vbMovementDescId = zc_Movement_ProductionUnion()

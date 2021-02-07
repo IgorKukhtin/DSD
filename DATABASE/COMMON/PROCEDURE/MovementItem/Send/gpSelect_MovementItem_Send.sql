@@ -1,4 +1,4 @@
--- Function: gpSelect_MovementItem_Send()
+ -- Function: gpSelect_MovementItem_Send()
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_Send (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar);

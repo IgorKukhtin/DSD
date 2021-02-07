@@ -126,6 +126,8 @@ type
     PersonalName1_Stick: TcxGridDBColumn;
     PositionName1_Stick: TcxGridDBColumn;
     MovementId_Order: TcxGridDBColumn;
+    SubjectDocName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);

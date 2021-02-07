@@ -67,7 +67,12 @@ begin
      else
      if fIsPartionGoods = true
      then Result:=Recalc_PartionGoods(StringValueEdit)
-     else Result:=true;
+     else begin
+          //Result:=trim(StringValueEdit.Text)<>'';
+          //if not Result
+          //then begin ShowMessage ('Значение не введено.');exit;end;
+            Result:=true;
+     end;
 end;
 {------------------------------------------------------------------------------}
 end.

@@ -332,6 +332,23 @@ object GuideMovementCehForm: TGuideMovementCehForm
           HeaderAlignmentVert = vaCenter
           Width = 60
         end
+        object SubjectDocName: TcxGridDBColumn
+          Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
+          DataBinding.FieldName = 'SubjectDocName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+          Options.Editing = False
+          Width = 80
+        end
+        object Comment: TcxGridDBColumn
+          Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+          DataBinding.FieldName = 'Comment'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 80
+        end
       end
       object cxDBGridLevel: TcxGridLevel
         GridView = cxDBGridDBTableView
@@ -486,6 +503,7 @@ object GuideMovementCehForm: TGuideMovementCehForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 408
     Top = 392

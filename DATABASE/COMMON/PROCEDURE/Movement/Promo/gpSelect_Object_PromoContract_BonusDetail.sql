@@ -291,7 +291,7 @@ BEGIN
             , tmpContract.ContractKindId
             , tmpContract.ContractKindCode
             , tmpContract.ContractKindName
-       FROM tmpContract_res
+       FROM (SELECT DISTINCT tmpContract_res.ContractId_master FROM tmpContract_res) AS tmpContract_res
             LEFT JOIN _tmpContractAll AS tmpContract ON tmpContract.ContractId = tmpContract_res.ContractId_master
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpContract.PaidKindId
             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = tmpContract.InfoMoneyId
@@ -353,7 +353,8 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
                                ON ObjectLink_ContractCondition_Contract.ObjectId = Object_ContractCondition.Id
                               AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
-          INNER JOIN tmpContract_res ON tmpContract_res.ContractId_master = ObjectLink_ContractCondition_Contract.ChildObjectId
+          INNER JOIN (SELECT DISTINCT tmpContract_res.ContractId_master FROM tmpContract_res
+                     ) AS tmpContract_res ON tmpContract_res.ContractId_master = ObjectLink_ContractCondition_Contract.ChildObjectId
  
           LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
                                ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = Object_ContractCondition.Id

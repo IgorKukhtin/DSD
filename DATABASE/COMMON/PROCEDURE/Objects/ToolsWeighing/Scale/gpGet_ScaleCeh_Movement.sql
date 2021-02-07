@@ -36,6 +36,7 @@ RETURNS TABLE (MovementId       Integer
              , MovementDescId_Order Integer
              , InvNumber_Order  TVarChar
              , OrderExternalName_master TVarChar
+             , Comment TVarChar
               )
 AS
 $BODY$
@@ -116,6 +117,7 @@ BEGIN
                                                              AND MovementFloat_MovementDesc.DescId = zc_MovementFloat_MovementDesc()
                                  WHERE tmpMovement_find.Id > 0
                                 )
+       -- Результат
        SELECT tmpMovement.Id                                 AS MovementId
             , '' ::TVarChar                                  AS BarCode
             , tmpMovement.InvNumber                          AS InvNumber
@@ -157,6 +159,8 @@ BEGIN
             , Movement_Order.InvNumber     AS InvNumber_Order
             , ('№ <' || Movement_Order.InvNumber || '>' || ' от <' || DATE (Movement_Order.OperDate) :: TVarChar || '>') :: TVarChar AS OrderExternalName_master
 
+            , MovementString_Comment.ValueData AS Comment
+
        FROM tmpMovement
             LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
             LEFT JOIN Object AS Object_To ON Object_To.Id = tmpMovement.ToId
@@ -171,6 +175,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_MovementDescNumber
                                     ON MovementFloat_MovementDescNumber.MovementId =  tmpMovement.Id
                                    AND MovementFloat_MovementDescNumber.DescId = zc_MovementFloat_MovementDescNumber()
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId =  tmpMovement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
       ;
 
 END;

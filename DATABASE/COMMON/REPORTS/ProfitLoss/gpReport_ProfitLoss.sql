@@ -105,7 +105,7 @@ BEGIN
                                  LEFT JOIN MovementItem AS MovementItem_1
                                                                   ON MovementItem_1.Id = MIContainer.MovementItemId
                                                                  AND MovementItem_1.DescId = zc_MI_Master()
-                                                                 AND MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_Service())
+                                                                 AND MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_Service(), zc_Movement_MobileBills())
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                                   ON MILinkObject_InfoMoney.MovementItemId = MovementItem_1.Id
                                                                  AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()

@@ -470,7 +470,7 @@ BEGIN
                                                   , inToId                  := ToId
                                                   , inDocumentKindId        := vbDocumentKindId
                                                   , inSubjectDocId          := SubjectDocId
-                                                  , inComment               := '' :: TvarChar
+                                                  , inComment               := tmp.Comment
                                                   , inUserId                := vbUserId
                                                    )
                                           WHEN vbMovementDescId = zc_Movement_ProductionUnion()
@@ -1429,7 +1429,7 @@ BEGIN
                                         LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                                      ON MovementLinkObject_From.MovementId = Movement.Id
                                                                     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-    
+
                                         LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                                      ON MovementLinkObject_To.MovementId = Movement.Id
                                                                     AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -1447,7 +1447,7 @@ BEGIN
                                                                    ON ObjectLink_GoodsScaleCeh_Goods.ObjectId = Object_GoodsScaleCeh.Id
                                                                   AND ObjectLink_GoodsScaleCeh_Goods.DescId = zc_ObjectLink_GoodsScaleCeh_Goods()
                                               LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_GoodsScaleCeh_Goods.ChildObjectId
-                              
+
                                               LEFT JOIN ObjectLink AS ObjectLink_GoodsScaleCeh_From
                                                                    ON ObjectLink_GoodsScaleCeh_From.ObjectId = Object_GoodsScaleCeh.Id
                                                                   AND ObjectLink_GoodsScaleCeh_From.DescId   = zc_ObjectLink_GoodsScaleCeh_From()

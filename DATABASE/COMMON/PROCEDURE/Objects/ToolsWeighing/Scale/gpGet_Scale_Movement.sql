@@ -62,6 +62,8 @@ RETURNS TABLE (MovementId       Integer
              , SubjectDocName TVarChar
 
              , TotalSumm TFloat
+
+             , Comment TVarChar
               )
 AS
 $BODY$
@@ -235,6 +237,7 @@ BEGIN
                                         , tmp.isTax, tmp.CountTax
                                    FROM lpGet_Object_Juridical_PrintKindItem ((SELECT tmpMovement.JuridicalId FROM tmpMovement LIMIT 1)) AS tmp
                                   )
+       -- Результат
        SELECT tmpMovement.Id                                 AS MovementId
             , '' ::TVarChar                                  AS BarCode
             , tmpMovement.InvNumber                          AS InvNumber
@@ -312,6 +315,8 @@ BEGIN
 
             , MovementFloat_TotalSumm.ValueData AS TotalSumm
 
+            , MovementString_Comment.ValueData AS Comment
+
        FROM tmpMovement
             LEFT JOIN tmpMovementTransport ON tmpMovementTransport.MovementId_Transport = tmpMovement.MovementId_Transport
             LEFT JOIN tmpJuridicalPrint ON tmpJuridicalPrint.JuridicalId = tmpMovement.JuridicalId
@@ -370,6 +375,10 @@ BEGIN
                                          ON MovementLinkObject_Personal.MovementId = tmpMovement.MovementId_Order
                                         AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
+
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId =  tmpMovement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
       ;
 
 END;

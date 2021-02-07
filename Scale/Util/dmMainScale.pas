@@ -184,6 +184,7 @@ begin
          ParamByName('SubjectDocId').AsInteger   := DataSet.FieldByName('SubjectDocId').asInteger;
          ParamByName('SubjectDocCode').AsInteger := DataSet.FieldByName('SubjectDocCode').asInteger;
          ParamByName('SubjectDocName').asString  := DataSet.FieldByName('SubjectDocName').asString;
+         ParamByName('DocumentComment').asString := DataSet.FieldByName('Comment').asString;
 
          ParamByName('ContractId').AsInteger    := DataSet.FieldByName('ContractId').asInteger;
          ParamByName('ContractCode').AsInteger  := DataSet.FieldByName('ContractCode').asInteger;
@@ -505,6 +506,7 @@ begin
        else Params.AddParam('inMovementId_Transport', ftInteger, ptInput, execParamsMovement.ParamByName('TransportId').AsInteger);
        Params.AddParam('inChangePercent', ftFloat, ptInput, execParamsMovement.ParamByName('ChangePercent').AsFloat);
        Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
+       Params.AddParam('inComment', ftString, ptInput, execParamsMovement.ParamByName('DocumentComment').AsString);
        //try
          Execute;
          execParamsMovement.ParamByName('MovementId').AsInteger:=DataSet.FieldByName('Id').asInteger;

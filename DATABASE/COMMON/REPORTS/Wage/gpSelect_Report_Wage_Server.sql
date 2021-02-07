@@ -217,6 +217,8 @@ BEGIN
                    , ModelServiceId, StaffListSummKindId
                    , KoeffHoursWork_car
                     )
+    WITH tmpReport_1 AS (SELECT DISTINCT Res.MemberId /*, Res.PersonalGroupId, Res.PositionId, Res.PositionLevelId*/ FROM Res WHERE Res.SheetWorkTime_Amount > 0)
+    -- Результат
     SELECT
         Report_2.StaffListId
        ,Report_2.UnitId
@@ -233,7 +235,7 @@ BEGIN
        ,Report_2.MemberId
        ,Report_2.MemberName
        ,Report_2.SUM_MemberHours
-       ,Report_2.SheetWorkTime_Amount
+       ,CASE WHEN tmpReport_1.MemberId > 0 THEN 0 ELSE Report_2.SheetWorkTime_Amount END AS SheetWorkTime_Amount
        ,Report_2.StaffListSummKindId   AS ServiceModelCode
        ,Report_2.StaffListSummKindName AS ServiceModelName
        ,Report_2.StaffListSumm_Value   AS Price
@@ -249,6 +251,12 @@ BEGIN
                                         , inPositionId     := inPositionId
                                         , inSession        := inSession
                                          ) AS Report_2
+         LEFT JOIN tmpReport_1 ON tmpReport_1.MemberId = Report_2.MemberId
+                            --AND COALESCE (tmpReport_1.PersonalGroupId, 0) = COALESCE (Report_2.PersonalGroupId, 0)
+                            --AND COALESCE (tmpReport_1.PositionId, 0)      = COALESCE (Report_2.PositionId, 0)
+                            --AND COALESCE (tmpReport_1.PositionLevelId, 0) = COALESCE (Report_2.PositionLevelId, 0)
+                               
+
     WHERE COALESCE (inModelServiceId, 0) = 0
     ;
 
