@@ -973,6 +973,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_SalesOfTermDrugsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SalesOfTermDrugsUnitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SalesOfTermDrugsUnitForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SalesOfTermDrugsUserForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SalesOfTermDrugsUserForm');
 
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsUKTZEDDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemainsUKTZEDDialogForm');

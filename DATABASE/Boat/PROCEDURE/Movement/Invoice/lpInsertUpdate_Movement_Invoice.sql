@@ -28,6 +28,12 @@ BEGIN
     -- определяем признак Создание/Корректировка
     vbIsInsert:= COALESCE (ioId, 0) = 0;
     
+    --inReceiptNumber формируется только для Amount>0
+    IF COALESCE (inAmount,0) <= 0
+    THEN
+        inReceiptNumber := Null;
+    END IF;
+     
     -- сохранили <Документ>
     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Invoice(), inInvNumber, inOperDate, NULL, 0);
     

@@ -47,6 +47,7 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
               , isReport   Boolean      -- для отчета              
               , isSendMaker Boolean     -- для отчета производителю
               , GoodsGroupPromoName TVarChar -- Группы товаров для маркетинга
+              , UserNameInsert TVarChar -- Кто создал или подтвердил
               )
 AS
 $BODY$
@@ -277,8 +278,18 @@ BEGIN
        
        , tmpMovement AS (SELECT Movement.*
                               , Object_Status.ValueData  AS StatusName
+                              , Object_User.ValueData                             AS UserNameInsert
                          FROM Movement
                               LEFT JOIN tmpStatus AS Object_Status ON Object_Status.Id = Movement.StatusId-- and Object_Status.descid = zc_Object_Status()
+                              LEFT JOIN MovementLinkObject AS MLO_Insert
+                                                           ON MLO_Insert.MovementId = Movement.Id
+                                                          AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+                                                           
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_UserConfirmedKind
+                                                           ON MovementLinkObject_UserConfirmedKind.MovementId = Movement.Id
+                                                          AND MovementLinkObject_UserConfirmedKind.DescId = zc_MovementLinkObject_UserConfirmedKind()
+                               
+                              LEFT JOIN Object AS Object_User ON Object_User.Id = COALESCE(MLO_Insert.ObjectId, MovementLinkObject_UserConfirmedKind.ObjectId)
                          WHERE Movement.Id IN (SELECT DISTINCT tmpData.MovementId_Check FROM tmpData )
                         )
                         
@@ -361,6 +372,7 @@ BEGIN
             , tmpData.isReport     :: Boolean
             , CASE WHEN COALESCE(MakerReport.JuridicalId, 0) = 0 THEN True ELSE False END  AS isSendMaker  
             , Object_GoodsGroupPromo.ValueData       AS GoodsGroupPromoName
+            , Movement.UserNameInsert
 
      FROM tmpData 
         LEFT JOIN tmpMovement AS Movement ON Movement.Id = tmpData.MovementId_Check
@@ -424,3 +436,7 @@ $BODY$
 -- тест
 --select * from gpReport_MovementCheck_Promo(inMakerId := 2336655 , inStartDate := ('01.11.2016')::TDateTime , inEndDate := ('30.11.2016')::TDateTime ,  inSession := '3');
 -- select * from gpReport_MovementCheck_Promo(2336605 , '01.01.2019', '31.01.2019', '3') 
+
+
+select * from gpReport_MovementCheck_Promo(inMakerId := 8341223 , inStartDate := ('01.01.2021')::TDateTime , inEndDate := ('31.01.2021')::TDateTime ,  inSession := '3');
+

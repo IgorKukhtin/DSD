@@ -4,7 +4,7 @@ object HardwareDialogForm: THardwareDialogForm
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = #1040#1087#1087#1072#1088#1072#1090#1085#1072#1103' '#1095#1072#1089#1090#1100
-  ClientHeight = 229
+  ClientHeight = 290
   ClientWidth = 427
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@ object HardwareDialogForm: THardwareDialogForm
   TextHeight = 13
   object pn2: TPanel
     Left = 0
-    Top = 188
+    Top = 249
     Width = 427
     Height = 41
     Align = alBottom
@@ -31,8 +31,7 @@ object HardwareDialogForm: THardwareDialogForm
     ParentFont = False
     ShowCaption = False
     TabOrder = 2
-    ExplicitTop = 136
-    ExplicitWidth = 381
+    ExplicitTop = 188
     DesignSize = (
       427
       41)
@@ -46,7 +45,6 @@ object HardwareDialogForm: THardwareDialogForm
       Caption = #1054#1090#1084#1077#1085#1072
       ModalResult = 8
       TabOrder = 0
-      ExplicitLeft = 289
     end
     object bbOk: TcxButton
       Left = 242
@@ -58,22 +56,20 @@ object HardwareDialogForm: THardwareDialogForm
       Default = True
       ModalResult = 1
       TabOrder = 1
-      ExplicitLeft = 196
     end
   end
   object pn1: TPanel
     Left = 0
     Top = 0
     Width = 427
-    Height = 188
+    Height = 249
     Align = alClient
     ShowCaption = False
     TabOrder = 1
-    ExplicitWidth = 381
-    ExplicitHeight = 136
+    ExplicitHeight = 188
     DesignSize = (
       427
-      188)
+      249)
     object Label1: TLabel
       AlignWithMargins = True
       Left = 16
@@ -106,6 +102,45 @@ object HardwareDialogForm: THardwareDialogForm
       Style.Font.Style = []
       Style.IsFontAssigned = True
       TabOrder = 0
+    end
+    object cbSmartphone: TcxCheckBox
+      Left = 16
+      Top = 168
+      Caption = #1057#1084#1072#1088#1090#1092#1086#1085
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -15
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = []
+      Style.IsFontAssigned = True
+      TabOrder = 1
+    end
+    object cbModem: TcxCheckBox
+      Left = 16
+      Top = 192
+      Caption = '3G/4G '#1084#1086#1076#1077#1084
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -15
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = []
+      Style.IsFontAssigned = True
+      TabOrder = 2
+    end
+    object cbBarcodeScanner: TcxCheckBox
+      Left = 16
+      Top = 216
+      Caption = #1057#1082#1072#1085#1085#1077#1088' '#1096'/'#1082
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -15
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = []
+      Style.IsFontAssigned = True
+      TabOrder = 3
     end
   end
   object edMaskIdentifier: TcxMaskEdit

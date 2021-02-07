@@ -30,6 +30,10 @@ type
     Identifier: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     isLicense: TcxGridDBColumn;
+    isSmartphone: TcxGridDBColumn;
+    isModem: TcxGridDBColumn;
+    isBarcodeScanner: TcxGridDBColumn;
+    DateUpdate: TcxGridDBColumn;
   private
     { Private declarations }
   public

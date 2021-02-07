@@ -57,6 +57,30 @@ inherited HardwareForm: THardwareForm
             Options.Editing = False
             Width = 74
           end
+          object isSmartphone: TcxGridDBColumn
+            Caption = #1057#1084#1072#1088#1090#1092#1086#1085
+            DataBinding.FieldName = 'isSmartphone'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 71
+          end
+          object isModem: TcxGridDBColumn
+            Caption = '3G/4G '#1084#1086#1076#1077#1084
+            DataBinding.FieldName = 'isModem'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object isBarcodeScanner: TcxGridDBColumn
+            Caption = #1057#1082#1072#1085#1085#1077#1088' '#1096'/'#1082
+            DataBinding.FieldName = 'isBarcodeScanner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 58
+          end
           object ComputerName: TcxGridDBColumn
             Caption = ' '#1048#1084#1103' '#1082#1086#1084#1087#1102#1090#1077#1088#1072
             DataBinding.FieldName = 'ComputerName'
@@ -112,6 +136,14 @@ inherited HardwareForm: THardwareForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 90
+          end
+          object DateUpdate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'DateUpdate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 98
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077

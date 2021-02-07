@@ -731,6 +731,12 @@ BEGIN
                               , CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) = 0 THEN MIFloat_Price.ValueData ELSE 0 END
                         )
 
+     , tmpChild_TotalDayCount AS (SELECT tmpChild.MemberId, tmpChild.PositionId
+                                       , SUM (tmpChild.DayCount) AS Amount
+                                  FROM tmpChild
+                                  GROUP BY tmpChild.MemberId, tmpChild.PositionId
+                                  )
+
        -- Результат
        SELECT 0 :: Integer                            AS Id
             , Object_Personal.Id                      AS PersonalId
@@ -782,6 +788,7 @@ BEGIN
                                   - COALESCE (tmpAll.SummMinus, 0) - COALESCE (tmpAll.SummFine, 0) - COALESCE (tmpAll.SummFineOth, 0) - COALESCE (tmpAll.SummNalog, 0)) :: TFloat AS TotalSumm
 
             , tmpChild_TotalSumm.Amount     :: TFloat AS TotalSummChild
+            , tmpChild_TotalDayCount.Amount :: TFloat AS TotalDayCount
             -- чайлд
             , Object_PositionLevel.Id                 AS PositionLevelId
             , Object_PositionLevel.ValueData          AS PositionLevelName
@@ -816,6 +823,8 @@ BEGIN
 
             LEFT JOIN tmpChild_TotalSumm ON tmpChild_TotalSumm.MemberId   = tmpAll.MemberId
                                         AND tmpChild_TotalSumm.PositionId = tmpAll.PositionId
+            LEFT JOIN tmpChild_TotalDayCount ON tmpChild_TotalDayCount.MemberId   = tmpAll.MemberId
+                                            AND tmpChild_TotalDayCount.PositionId = tmpAll.PositionId
 
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpAll.MemberId -- tmpAll.PersonalId
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = NULL -- tmpAll.UnitId

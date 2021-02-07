@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDa
              , BankAccountId Integer, BankAccountName TVarChar
              , BankId Integer, BankName TVarChar
              , MoneyPlaceId Integer, MoneyPlaceName TVarChar
-             , InvoiceId Integer, InvoiceInvNumber TVarChar
+             , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
              )
 AS
 $BODY$
@@ -34,14 +34,11 @@ BEGIN
              0 AS Id
            , CAST (NEXTVAL ('movement_bankaccount_seq') AS TVarChar)  AS InvNumber
            , ''::TVarChar                                      AS InvNumberPartner
-           
-           , inOperDate AS OperDate
+           , inOperDate                                        AS OperDate
            , lfObject_Status.Code                              AS StatusCode
            , lfObject_Status.Name                              AS StatusName
-           
            , 0::TFloat                                         AS AmountIn
            , 0::TFloat                                         AS AmountOut
-
            , ''::TVarChar                                      AS Comment
            , 0                                                 AS BankAccountId
            , '':: TVarChar                                     AS BankAccountName
@@ -49,8 +46,9 @@ BEGIN
            , '':: TVarChar                                     AS BankName
            , 0                                                 AS MoneyPlaceId
            , CAST ('' as TVarChar)                             AS MoneyPlaceName
-           , 0                                                 AS InvoiceId
-           , CAST ('' as TVarChar)                             AS InvoiceInvNumber
+           , 0                                                 AS MovementId_Invoice
+           , CAST ('' as TVarChar)                             AS InvNumber_Invoice
+           , CAST ('' as TVarChar)                             AS Comment_Invoice
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
       ;
      ELSE
@@ -75,15 +73,20 @@ BEGIN
            , Object_Bank.ValueData             AS BankName
            , Object_MoneyPlace.Id              AS MoneyPlaceId
            , Object_MoneyPlace.ValueData       AS MoneyPlaceName
-           , Movement_Invoice.Id               AS InvoiceId
-           , Movement_Invoice.InvNumber        AS InvoiceInvNumber 
+           , Movement_Invoice.Id               AS MovementId_Invoice
+           , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice
+           , MovementString_Comment_Invoice.ValueData AS Comment_Invoice
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Invoice
                                            ON MovementLinkMovement_Invoice.MovementId = Movement.Id
                                           AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
-            LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MovementLinkMovement_Invoice.MovementId
+            LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MovementLinkMovement_Invoice.MovementChildId
+
+            LEFT JOIN MovementString AS MovementString_Comment_Invoice
+                                     ON MovementString_Comment_Invoice.MovementId = Movement_Invoice.Id
+                                    AND MovementString_Comment_Invoice.DescId = zc_MovementString_Comment()
 
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId = Movement.Id
@@ -106,6 +109,7 @@ BEGIN
                                  ON ObjectLink_BankAccount_Bank.ObjectId = Object_BankAccount.Id
                                 AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
             LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
+
        WHERE Movement.Id =  inMovementId_Value;
 
    END IF;  

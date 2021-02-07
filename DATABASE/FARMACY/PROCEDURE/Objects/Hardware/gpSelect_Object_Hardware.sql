@@ -7,9 +7,11 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Hardware(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Identifier TVarChar, isCashRegister boolean, CashRegisterName TVarChar
-             , UnitId Integer, UnitCode Integer, UnitName TVarChar, isLicense Boolean, ComputerName TVarChar
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar
+             , isLicense Boolean, isSmartphone Boolean, isModem Boolean, isBarcodeScanner Boolean
+             , ComputerName TVarChar
              , BaseBoardProduct TVarChar, ProcessorName TVarChar, DiskDriveModel TVarChar, PhysicalMemory TVarChar
-             , Comment TVarChar
+             , Comment TVarChar, DateUpdate TDateTime
              , isErased boolean) AS
 $BODY$BEGIN
 
@@ -33,6 +35,9 @@ $BODY$BEGIN
         , Object_Unit.ValueData              AS UnitName
 
         , ObjectBoolean_License.ValueData                           AS isLicense
+        , ObjectBoolean_Smartphone.ValueData                        AS isSmartphone
+        , ObjectBoolean_Modem.ValueData                             AS isModem
+        , ObjectBoolean_BarcodeScanner.ValueData                    AS isBarcodeScanner
 
         , COALESCE(ObjectString_ComputerName.ValueData, Object_Hardware.ValueData)  AS ComputerName
         , ObjectString_BaseBoardProduct.ValueData                   AS BaseBoardProduct
@@ -41,6 +46,8 @@ $BODY$BEGIN
         , ObjectString_PhysicalMemory.ValueData                     AS PhysicalMemory
         
         , ObjectString_Comment.ValueData                            AS Comment
+        
+        , ObjectDate_Update.ValueData                               AS DateUpdate
 
         , Object_Hardware.isErased           AS isErased
 
@@ -74,10 +81,23 @@ $BODY$BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_License
                                 ON ObjectBoolean_License.ObjectId = Object_Hardware.Id
                                AND ObjectBoolean_License.DescId = zc_ObjectBoolean_Hardware_License()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Smartphone
+                                ON ObjectBoolean_Smartphone.ObjectId = Object_Hardware.Id
+                               AND ObjectBoolean_Smartphone.DescId = zc_ObjectBoolean_Hardware_Smartphone()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Modem
+                                ON ObjectBoolean_Modem.ObjectId = Object_Hardware.Id
+                               AND ObjectBoolean_Modem.DescId = zc_ObjectBoolean_Hardware_Modem()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_BarcodeScanner
+                                ON ObjectBoolean_BarcodeScanner.ObjectId = Object_Hardware.Id
+                               AND ObjectBoolean_BarcodeScanner.DescId = zc_ObjectBoolean_Hardware_BarcodeScanner()
+
+        LEFT JOIN ObjectDate AS ObjectDate_Update
+                             ON ObjectDate_Update.ObjectId = Object_Hardware.Id
+                            AND ObjectDate_Update.DescId = zc_ObjectDate_Hardware_Update()
 
         LEFT JOIN ObjectString AS ObjectString_Comment
-                              ON ObjectString_Comment.ObjectId = Object_Hardware.Id
-                             AND ObjectString_Comment.DescId = zc_ObjectString_Hardware_Comment()
+                               ON ObjectString_Comment.ObjectId = Object_Hardware.Id
+                              AND ObjectString_Comment.DescId = zc_ObjectString_Hardware_Comment()
 
    WHERE Object_Hardware.DescId = zc_Object_Hardware()
      AND (Object_Hardware.isErased = False or inIsErased = True);
@@ -93,6 +113,7 @@ ALTER FUNCTION gpSelect_Object_Hardware(boolean, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Манько Д.А.   Шаблий О.В.
+ 04.02.21                                                                      *  
  27.01.21                                                                      *  
  12.04.20                                                                      *
 */

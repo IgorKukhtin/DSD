@@ -43,6 +43,8 @@ type
     cxLabel5: TcxLabel;
     edAttemptsSub: TcxCurrencyEdit;
     cxLabel6: TcxLabel;
+    edDayNonCommoditySUN: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
   private
     { Private declarations }
   public

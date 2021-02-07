@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount(
     IN inAmountOut            TFloat    , -- Сумма расхода
     IN inBankAccountId        Integer   , -- Расчетный счет 	
     IN inMoneyPlaceId         Integer   , -- Юр лицо, счет, касса  	
-    IN inInvoiceMovementId    Integer   , -- Счет
+    IN inMovementId_Invoice   Integer   , -- Счет
     IN inComment              TVarChar  , -- Комментарий
     IN inSession              TVarChar    -- сессия пользователя
 )                              
@@ -56,7 +56,7 @@ BEGIN
                                                , inAmount               := vbAmount
                                                , inBankAccountId        := inBankAccountId
                                                , inMoneyPlaceId         := inMoneyPlaceId
-                                               , inInvoiceMovementId    := inInvoiceMovementId
+                                               , inMovementId_Invoice   := inMovementId_Invoice
                                                , inComment              := inComment
                                                , inUserId               := vbUserId
                                                 );

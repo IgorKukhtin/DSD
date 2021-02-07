@@ -107,6 +107,7 @@ BEGIN
                                                      ON MI_Loyalty.MovementId = Movement.Id
                                                     AND MI_Loyalty.DescId = zc_MI_Child()
                                                     AND MI_Loyalty.isErased = FALSE
+                                                    AND MI_Loyalty.Amount <> 0
                                                     AND MI_Loyalty.ObjectId = vbUnitId
                                                     
                              LEFT JOIN MovementBoolean AS MovementBoolean_Electron
@@ -417,4 +418,4 @@ LANGUAGE plpgsql VOLATILE;
 
 -- тест
 -- 
-SELECT LoyaltyID, * FROM gpSelect_Cash_UnitConfig('3000497773', '3')
+SELECT LoyaltyID, * FROM gpSelect_Cash_UnitConfig('3000497773', '13543334')

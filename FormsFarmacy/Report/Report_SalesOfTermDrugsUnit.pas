@@ -40,10 +40,8 @@ type
     edDaysBeforeDelay: TcxCurrencyEdit;
     cxLabel5: TcxLabel;
     FormParams: TdsdFormParams;
-    GoodsCode: TcxGridDBColumn;
-    OperDate: TcxGridDBColumn;
-    ExpirationDate: TcxGridDBColumn;
-    DaysBeforeDelay: TcxGridDBColumn;
+    actOpenSalesOfTermDrugsUser: TdsdInsertUpdateAction;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

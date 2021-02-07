@@ -3,7 +3,7 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
   Top = 0
   Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1094#1077#1085' '#1084#1077#1078#1076#1091' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084#1080
   ClientHeight = 440
-  ClientWidth = 931
+  ClientWidth = 1145
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,10 +20,11 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 931
+    Width = 1145
     Height = 31
     Align = alTop
     TabOrder = 0
+    ExplicitWidth = 931
     object cxLabel4: TcxLabel
       Left = 7
       Top = 4
@@ -72,14 +73,22 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
       TabOrder = 5
       Width = 77
     end
+    object cbManagerUnitsOnly: TcxCheckBox
+      Left = 863
+      Top = 3
+      Caption = #1058#1086#1083#1100#1082#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1084#1077#1085#1077#1076#1078#1077#1088#1072
+      TabOrder = 6
+      Width = 210
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 931
+    Width = 1145
     Height = 383
     Align = alClient
     TabOrder = 5
+    ExplicitWidth = 931
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -318,6 +327,11 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
         Component = cePercent
         Properties.Strings = (
           'Value')
+      end
+      item
+        Component = cbManagerUnitsOnly
+        Properties.Strings = (
+          'Checked')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -585,6 +599,14 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
         Name = 'inisRetail'
         Value = Null
         Component = cbisRetail
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inManagerUnitsOnly'
+        Value = Null
+        Component = cbManagerUnitsOnly
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

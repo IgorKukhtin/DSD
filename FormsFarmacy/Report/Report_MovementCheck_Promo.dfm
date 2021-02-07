@@ -424,6 +424,14 @@ inherited Report_MovementCheck_PromoForm: TReport_MovementCheck_PromoForm
             HeaderAlignmentVert = vaCenter
             Width = 101
           end
+          object UserNameInsert: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1083
+            DataBinding.FieldName = 'UserNameInsert'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 99
+          end
         end
       end
     end
@@ -517,7 +525,7 @@ inherited Report_MovementCheck_PromoForm: TReport_MovementCheck_PromoForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -622,7 +630,7 @@ inherited Report_MovementCheck_PromoForm: TReport_MovementCheck_PromoForm
       end
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -630,7 +638,7 @@ inherited Report_MovementCheck_PromoForm: TReport_MovementCheck_PromoForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

@@ -34,6 +34,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbReceiptNumber Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Cash());
@@ -41,7 +42,12 @@ BEGIN
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
-
+     -- Quittung Nr последний+1  -- формируется только для Amount>0
+     vbReceiptNumber := COALESCE ((SELECT MAX (MovementString.ValueData::Integer) + 1
+                                   FROM MovementString
+                                   WHERE MovementString.DescId = zc_MovementString_ReceiptNumber())
+                                   , 1);
+                                   
      RETURN QUERY 
        SELECT
              0 AS Id
@@ -66,7 +72,7 @@ BEGIN
            , CAST ('' as TVarChar)      AS UnitName
 
            , CAST ('' as TVarChar)      AS InvNumberPartner
-           , CAST ('' as TVarChar)      AS ReceiptNumber
+           , vbReceiptNumber:: TVarChar AS ReceiptNumber
            , CAST ('' as TVarChar)      AS Comment
 
 

@@ -36,7 +36,10 @@ type
     edIdentifier: TcxTextEdit;
     cxLabel9: TcxLabel;
     cxPropertiesStore1: TcxPropertiesStore;
-    cxLicense: TcxCheckBox;
+    cbLicense: TcxCheckBox;
+    cbSmartphone: TcxCheckBox;
+    cbModem: TcxCheckBox;
+    cbBarcodeScanner: TcxCheckBox;
   private
     { Private declarations }
   public

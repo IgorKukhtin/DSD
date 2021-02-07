@@ -1,12 +1,16 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashRegister_HardwareData(TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashRegister_HardwareData(TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashRegister_HardwareData(TVarChar, TVarChar, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashRegister_HardwareData(TVarChar, TVarChar, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashRegister_HardwareData(TVarChar, TVarChar, TVarChar, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashRegister_HardwareData(
     IN inSerial                  TVarChar,      -- Серийный номер аппарата
     IN inTaxRate                 TVarChar,      -- Налоговые ставки
     IN inIdentifier              TVarChar,      -- Идентификатор
     IN inisLicense               Boolean,       -- Лицензия на ПК
+    IN inisSmartphone            Boolean,       -- Смартфон
+    IN inisModem                 Boolean,       -- 3G/4G модем
+    IN inisBarcodeScanner        Boolean,       -- Сканнер ш/к
     IN inComputerName            TVarChar,      -- Имя компютера
     IN inBaseBoardProduct        TVarChar,      -- Материнская плата
     IN inProcessorName           TVarChar,      -- Процессор
@@ -49,6 +53,9 @@ BEGIN
   
   vbHardware := gpInsertUpdate_Object_Hardware_HardwareData(inIdentifier        := inIdentifier,
                                                             inisLicense         := inisLicense,
+                                                            inisSmartphone      := inisSmartphone,
+                                                            inisModem           := inisModem,
+                                                            inisBarcodeScanner  := inisBarcodeScanner,
                                                             inComputerName      := inComputerName,
                                                             inBaseBoardProduct  := inBaseBoardProduct,
                                                             inProcessorName     := inProcessorName,
@@ -64,6 +71,9 @@ BEGIN
                      , ObjectString_DiskDriveModel.ValueData                     AS DiskDriveModel
                      , ObjectString_PhysicalMemory.ValueData                     AS PhysicalMemory
                      , ObjectBoolean_License.ValueData                           AS isLicense
+                     , ObjectBoolean_Smartphone.ValueData                        AS isSmartphone
+                     , ObjectBoolean_Modem.ValueData                             AS isМodem
+                     , ObjectBoolean_BarcodeScanner.ValueData                    AS isBarcodeScanner
 
                  FROM Object AS Object_Hardware
                       
@@ -87,13 +97,25 @@ BEGIN
                       LEFT JOIN ObjectBoolean AS ObjectBoolean_License
                                               ON ObjectBoolean_License.ObjectId = Object_Hardware.Id
                                              AND ObjectBoolean_License.DescId = zc_ObjectBoolean_Hardware_License()
+                      LEFT JOIN ObjectBoolean AS ObjectBoolean_Smartphone
+                                              ON ObjectBoolean_Smartphone.ObjectId = Object_Hardware.Id
+                                             AND ObjectBoolean_Smartphone.DescId = zc_ObjectBoolean_Hardware_Smartphone()
+                      LEFT JOIN ObjectBoolean AS ObjectBoolean_Modem
+                                              ON ObjectBoolean_Modem.ObjectId = Object_Hardware.Id
+                                             AND ObjectBoolean_Modem.DescId = zc_ObjectBoolean_Hardware_Modem()
+                      LEFT JOIN ObjectBoolean AS ObjectBoolean_BarcodeScanner
+                                              ON ObjectBoolean_BarcodeScanner.ObjectId = Object_Hardware.Id
+                                             AND ObjectBoolean_BarcodeScanner.DescId = zc_ObjectBoolean_Hardware_BarcodeScanner()
                  WHERE Object_Hardware.Id = vbHardware 
                    AND ((COALESCE(ObjectString_ComputerName.ValueData, '')     <> COALESCE(inComputerName, '')) OR
                         (COALESCE(ObjectString_BaseBoardProduct.ValueData, '') <> COALESCE(inBaseBoardProduct, '')) OR
                         (COALESCE(ObjectString_ProcessorName.ValueData, '')    <> COALESCE(inProcessorName, '')) OR
                         (COALESCE(ObjectString_DiskDriveModel.ValueData , '')  <> COALESCE(inDiskDriveModel, '')) OR
                         (COALESCE(ObjectString_PhysicalMemory.ValueData , '')  <> COALESCE(inPhysicalMemory, '')) OR
-                        (COALESCE(ObjectBoolean_License.ValueData , False)     <> COALESCE(inisLicense, False))))
+                        (COALESCE(ObjectBoolean_License.ValueData , False)     <> COALESCE(inisLicense, False)) OR
+                        (COALESCE(ObjectBoolean_Smartphone.ValueData, False)     <> COALESCE(inisSmartphone, False)) OR
+                        (COALESCE(ObjectBoolean_Modem.ValueData, False)          <> COALESCE(inisModem, False)) OR
+                        (COALESCE(ObjectBoolean_BarcodeScanner.ValueData, False) <> COALESCE(inisBarcodeScanner, False))))
   THEN
   
     -- сохранили связь с <Аппаратная часть с кассой>
@@ -143,12 +165,13 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_CashRegister_HardwareData(TVarChar, TVarChar, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_CashRegister_HardwareData(TVarChar, TVarChar, TVarChar, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 04.02.21                                                                      *  
  27.01.21                                                                     *  
  08.04.20                                                                     *
 */

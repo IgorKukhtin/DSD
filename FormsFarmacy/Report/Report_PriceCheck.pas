@@ -89,6 +89,7 @@ type
     isSP: TcxGridDBColumn;
     isPromo: TcxGridDBColumn;
     cbisRetail: TcxCheckBox;
+    cbManagerUnitsOnly: TcxCheckBox;
   private
   public
   end;

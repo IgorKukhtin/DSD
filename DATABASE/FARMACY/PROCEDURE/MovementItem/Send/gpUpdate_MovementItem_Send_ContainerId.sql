@@ -25,8 +25,64 @@ BEGIN
     THEN
       RAISE EXCEPTION 'Изменение привязки вам запрещено, обратитесь к системному администратору';
     END IF;
+    
+    
 
     IF EXISTS (SELECT 1
+               FROM MovementItem
+
+                    INNER JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                 ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
+                                                AND MIFloat_ContainerId.DescId         = zc_MIFloat_ContainerId()
+                                                AND MIFloat_ContainerId.ValueData      = inContainerID
+
+               WHERE MovementItem.ParentId = inParentId
+                 AND MovementItem.isErased = True)
+    THEN
+      UPDATE MovementItem SET isErased = False
+      WHERE MovementItem.Id = 
+              (SELECT MovementItem.Id
+               FROM MovementItem
+
+                    INNER JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                 ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
+                                                AND MIFloat_ContainerId.DescId         = zc_MIFloat_ContainerId()
+                                                AND MIFloat_ContainerId.ValueData      = inContainerID
+
+               WHERE MovementItem.ParentId = inParentId
+                 AND MovementItem.Amount = 0);
+    
+      RETURN;
+    ELSEIF EXISTS (SELECT 1
+               FROM MovementItem
+
+                    INNER JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                 ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
+                                                AND MIFloat_ContainerId.DescId         = zc_MIFloat_ContainerId()
+                                                AND MIFloat_ContainerId.ValueData      = inContainerID
+
+               WHERE MovementItem.ParentId = inParentId
+                 AND MovementItem.Amount = 0)
+    THEN
+      vbAmount := COALESCE((SELECT Container.Amount
+                            FROM Container
+                            WHERE Container.ID = inContainerID), 0);
+
+      UPDATE MovementItem SET Amount = vbAmount
+      WHERE MovementItem.Id = 
+              (SELECT MovementItem.Id
+               FROM MovementItem
+
+                    INNER JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                 ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
+                                                AND MIFloat_ContainerId.DescId         = zc_MIFloat_ContainerId()
+                                                AND MIFloat_ContainerId.ValueData      = inContainerID
+
+               WHERE MovementItem.ParentId = inParentId
+                 AND MovementItem.Amount = 0);
+    
+      RETURN;
+    ELSEIF EXISTS (SELECT 1
                FROM MovementItem
 
                     INNER JOIN MovementItemFloat AS MIFloat_ContainerId
@@ -89,3 +145,5 @@ $BODY$
 
 -- тест
 -- select * from gpUpdate_MovementItem_Send_ContainerId(inMovementItemId := 367430631 , inParentId := 367429823 , inContainerID := 23812831 , inisAddNewLine := False, inSession := '3');
+
+--select * from gpUpdate_MovementItem_Send_ContainerId(inMovementItemId := 0 , inParentId := 400731454 , inContainerID := 23354530 , inisAddNewLine := 'False' ,  inSession := '3');

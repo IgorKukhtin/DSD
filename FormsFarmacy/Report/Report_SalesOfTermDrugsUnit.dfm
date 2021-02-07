@@ -1,30 +1,30 @@
 inherited Report_SalesOfTermDrugsUnitForm: TReport_SalesOfTermDrugsUnitForm
   Caption = #1055#1088#1086#1076#1072#1078#1080' '#1089#1088#1086#1082#1086#1074#1099#1093' '#1087#1088#1077#1087#1072#1088#1072#1090#1086#1074' g'#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
   ClientHeight = 567
-  ClientWidth = 790
+  ClientWidth = 716
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 806
+  ExplicitWidth = 732
   ExplicitHeight = 606
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 790
+    Width = 716
     Height = 484
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 734
+    ExplicitWidth = 790
     ExplicitHeight = 484
     ClientRectBottom = 484
-    ClientRectRight = 790
+    ClientRectRight = 716
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 734
+      ExplicitWidth = 790
       ExplicitHeight = 484
       inherited cxGrid: TcxGrid
-        Width = 790
+        Width = 716
         Height = 484
-        ExplicitWidth = 734
+        ExplicitWidth = 790
         ExplicitHeight = 484
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -123,23 +123,7 @@ inherited Report_SalesOfTermDrugsUnitForm: TReport_SalesOfTermDrugsUnitForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 127
-          end
-          object GoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'GoodsCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 54
-          end
-          object GoodsName: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088
-            DataBinding.FieldName = 'GoodsName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 165
+            Width = 207
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
@@ -150,17 +134,7 @@ inherited Report_SalesOfTermDrugsUnitForm: TReport_SalesOfTermDrugsUnitForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
-          end
-          object Price: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
-            DataBinding.FieldName = 'Price'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 62
+            Width = 87
           end
           object Summa: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
@@ -170,48 +144,34 @@ inherited Report_SalesOfTermDrugsUnitForm: TReport_SalesOfTermDrugsUnitForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 62
+            Width = 90
           end
-          object OperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1087#1088#1086#1076#1072#1078#1080
-            DataBinding.FieldName = 'OperDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 72
-          end
-          object ExpirationDate: TcxGridDBColumn
-            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
-            DataBinding.FieldName = 'ExpirationDate'
+          object AverageSale: TcxGridDBColumn
+            Caption = 'C'#1088#1077#1076#1085#1103#1103' '#1087#1088#1086#1076#1072#1078#1072
+            DataBinding.FieldName = 'AverageSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 81
-          end
-          object DaysBeforeDelay: TcxGridDBColumn
-            Caption = #1044#1085#1077#1081' '#1076#1086' '#1087#1088#1086#1089#1088#1086#1095#1082#1080
-            DataBinding.FieldName = 'DaysBeforeDelay'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 77
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 790
+    Width = 716
     Height = 57
-    ExplicitWidth = 734
+    ExplicitWidth = 790
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 124
-      Top = 2
+      Top = 6
       TabStop = False
       Properties.ReadOnly = True
       ExplicitLeft = 124
-      ExplicitTop = 2
+      ExplicitTop = 6
     end
     inherited deEnd: TcxDateEdit
       Left = 330
@@ -246,6 +206,7 @@ inherited Report_SalesOfTermDrugsUnitForm: TReport_SalesOfTermDrugsUnitForm
         end>
       Properties.ReadOnly = False
       StyleDisabled.Color = clWindow
+      StyleDisabled.TextColor = clWindowText
       TabOrder = 5
       Width = 279
     end
@@ -266,12 +227,13 @@ inherited Report_SalesOfTermDrugsUnitForm: TReport_SalesOfTermDrugsUnitForm
         end>
       Properties.ReadOnly = False
       StyleDisabled.Color = clWindow
+      StyleDisabled.TextColor = clWindowText
       TabOrder = 7
       Width = 199
     end
     object edDaysBeforeDelay: TcxCurrencyEdit
       Left = 609
-      Top = 5
+      Top = 6
       TabStop = False
       EditValue = 90.000000000000000000
       Properties.DecimalPlaces = 0
@@ -384,6 +346,85 @@ inherited Report_SalesOfTermDrugsUnitForm: TReport_SalesOfTermDrugsUnitForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actOpenSalesOfTermDrugsUser: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1087#1088#1086#1076#1072#1078#1080' '#1087#1086' '#1072#1087#1090#1077#1082#1077' '#1080' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
+      ImageIndex = 1
+      FormName = 'TReport_SalesOfTermDrugsUserForm'
+      FormNameParam.Value = 'TReport_SalesOfTermDrugsUserForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DaysBeforeDelay'
+          Value = 90.000000000000000000
+          Component = edDaysBeforeDelay
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = GuidesJuridical
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = GuidesJuridical
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UserId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UserId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UserName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UserName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      CheckIDRecords = True
+      ActionType = acUpdate
+      DataSource = MasterDS
+      IdFieldName = 'UserId'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -458,6 +499,10 @@ inherited Report_SalesOfTermDrugsUnitForm: TReport_SalesOfTermDrugsUnitForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -479,8 +524,16 @@ inherited Report_SalesOfTermDrugsUnitForm: TReport_SalesOfTermDrugsUnitForm
       Action = ExecuteDialog
       Category = 0
     end
+    object dxBarButton1: TdxBarButton
+      Action = actOpenSalesOfTermDrugsUser
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = actOpenSalesOfTermDrugsUser
+      end>
     Left = 424
     Top = 256
   end

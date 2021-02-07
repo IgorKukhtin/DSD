@@ -220,7 +220,10 @@ uses
   Currency in '..\..\FormsBoat\Guides\Currency.pas' {CurrencyForm: TParentForm},
   Currency_Object in '..\..\FormsBoat\Guides\Currency_Object.pas' {Currency_ObjectForm: TParentForm},
   CurrencyEdit in '..\..\FormsBoat\Guides\CurrencyEdit.pas' {CurrencyEditForm: TParentForm},
-  MoneyPlace_Object in '..\..\FormsBoat\Guides\MoneyPlace_Object.pas' {MoneyPlace_ObjectForm: TParentForm};
+  MoneyPlace_Object in '..\..\FormsBoat\Guides\MoneyPlace_Object.pas' {MoneyPlace_ObjectForm: TParentForm},
+  BankAccountJournal in '..\..\FormsBoat\Document\BankAccountJournal.pas' {BankAccountJournalForm: TParentForm},
+  BankAccountMovement in '..\..\FormsBoat\Document\BankAccountMovement.pas' {BankAccountMovementForm: TParentForm},
+  InvoiceJournalChoice in '..\..\FormsBoat\Document\InvoiceJournalChoice.pas' {InvoiceJournalChoiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -14,7 +14,7 @@ uses
   Datasnap.DBClient, cxGridLevel, cxGridCustomView, cxGrid, cxCurrencyEdit,
   Vcl.ComCtrls, cxCheckBox, cxBlobEdit, dxSkinsdxBarPainter, dxBarExtItems,
   dxBar, cxNavigator, cxDataControllerConditionalFormattingRulesManagerDialog,
-  DataModul, System.Actions;
+  DataModul, System.Actions, dxDateRanges;
 
 type
   TListGoodsForm = class(TAncestorBaseForm)
@@ -207,16 +207,6 @@ begin
     ListGoodsCDS.DisableControls;
     ListDiffCDS.Filtered := False;
     nPos := ListGoodsCDS.RecNo;
-    WaitForSingleObject(MutexDiffCDS, INFINITE);
-    try
-      if FileExists(ListDiff_lcl) then
-      begin
-        LoadLocalData(ListDiffCDS, ListDiff_lcl);
-        if not ListDiffCDS.Active then ListDiffCDS.Open;
-      end;
-    finally
-      ReleaseMutex(MutexDiffCDS);
-    end;
     while ListlDiffNoSendCDS.RecordCount > 0 do ListlDiffNoSendCDS.Delete;
     FillingListGoodsCDS(True);
     FillingListlDiffNoSendCDS;
@@ -438,6 +428,17 @@ begin
     pnlLocal.Visible := False;
   except
     pnlLocal.Visible := True;
+  end;
+
+  WaitForSingleObject(MutexDiffCDS, INFINITE);
+  try
+    if FileExists(ListDiff_lcl) then
+    begin
+      LoadLocalData(ListDiffCDS, ListDiff_lcl);
+      if not ListDiffCDS.Active then ListDiffCDS.Open;
+    end;
+  finally
+    ReleaseMutex(MutexDiffCDS);
   end;
 
   if not CashListDiffCDS.Active then Exit;
