@@ -1343,6 +1343,7 @@ BEGIN
   ;
 
 -- lpCreateTempTable_OrderInternal Конец процедуры
+--      raise notice 'Value: %', 21;
 
    --RAISE EXCEPTION 'Ошибка.';
      RETURN QUERY
@@ -2283,11 +2284,15 @@ BEGIN
 
 
    -- выбираем отложенные Чеки (как в кассе колонка VIP)
+   , tmpMovementChekID AS (SELECT
+                                  Movement.Id
+                           FROM Movement
+                           WHERE Movement.DescId = zc_Movement_Check()
+                            AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                         )
    , tmpMovementChek AS (SELECT Movement.Id
                          FROM MovementBoolean AS MovementBoolean_Deferred
-                              INNER JOIN Movement ON Movement.Id     = MovementBoolean_Deferred.MovementId
-                                                 AND Movement.DescId = zc_Movement_Check()
-                                                 AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                              INNER JOIN tmpMovementChekID AS Movement ON Movement.Id     = MovementBoolean_Deferred.MovementId
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                             ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
@@ -2297,9 +2302,7 @@ BEGIN
                         UNION
                          SELECT Movement.Id
                          FROM MovementString AS MovementString_CommentError
-                              INNER JOIN Movement ON Movement.Id     = MovementString_CommentError.MovementId
-                                                 AND Movement.DescId = zc_Movement_Check()
-                                                 AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                              INNER JOIN tmpMovementChekID AS Movement ON Movement.Id     = MovementString_CommentError.MovementId
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                             ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
@@ -2357,13 +2360,17 @@ BEGIN
                                          , PartnerGoods.Id AS PartnerGoodsId
                                          , LoadPriceList.JuridicalId
                                          , ROW_NUMBER() OVER (PARTITION BY LoadPriceList.JuridicalId, PartnerGoods.Id ORDER BY LoadPriceList.OperDate DESC, LoadPriceListItem.Id DESC) AS ORD
-                                    FROM LoadPriceList
-                                         LEFT JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
+                                    FROM tmpData AS tmpMI
+                                    
+                                         INNER JOIN LoadPriceList ON LoadPriceList.JuridicalId = tmpMI.JuridicalId
+                                         
+                                         INNER JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
+                                                                     AND COALESCE (LoadPriceListItem.GoodsNDS,'') <> ''
                              
-                                         LEFT JOIN Object_Goods_Juridical AS PartnerGoods ON PartnerGoods.JuridicalId  = LoadPriceList.JuridicalId
-                                                                                         AND PartnerGoods.Code = LoadPriceListItem.GoodsCode
+                                         INNER JOIN Object_Goods_Juridical AS PartnerGoods ON PartnerGoods.JuridicalId  = LoadPriceList.JuridicalId
+                                                                                          AND PartnerGoods.Code = LoadPriceListItem.GoodsCode
+                                                                                          AND PartnerGoods.Id = tmpMI.PartnerGoodsId
     
-                                    WHERE COALESCE (LoadPriceListItem.GoodsNDS,'') <> ''
                                     ) AS tmp
                               WHERE tmp.ORD = 1
                               )
@@ -4186,4 +4193,4 @@ where Movement.DescId = zc_Movement_OrderInternal()
 
 -- тест select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 18820132 , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'FALSE' ,  inSession := '7564573');
 
-select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 21918961  , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 22029712   , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');

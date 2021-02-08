@@ -349,13 +349,18 @@ BEGIN
                                             , PartnerGoods.Id AS PartnerGoodsId
                                             , LoadPriceList.JuridicalId
                                             , ROW_NUMBER() OVER (PARTITION BY LoadPriceList.JuridicalId, LoadPriceListItem.GoodsId ORDER BY LoadPriceList.OperDate DESC, LoadPriceListItem.Id DESC) AS ORD
-                                       FROM LoadPriceList
-                                            LEFT JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
+                                       FROM _tmpOrderInternal_MI AS tmpMI
+
+                                            INNER JOIN LoadPriceList ON LoadPriceList.JuridicalId = tmpMI.JuridicalId 
+                                                                    AND LoadPriceList.ContractId = tmpMI.ContractId 
+
+                                            INNER JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
+                                                                        AND COALESCE (LoadPriceListItem.GoodsNDS,'') <> ''
                                 
-                                            LEFT JOIN Object_Goods_Juridical AS PartnerGoods ON PartnerGoods.JuridicalId  = LoadPriceList.JuridicalId
-                                                                                            AND PartnerGoods.Code = LoadPriceListItem.GoodsCode
+                                            INNER JOIN Object_Goods_Juridical AS PartnerGoods ON PartnerGoods.JuridicalId  = LoadPriceList.JuridicalId
+                                                                                             AND PartnerGoods.Code = LoadPriceListItem.GoodsCode
+                                                                                             AND PartnerGoods.Id = tmpMI.PartnerGoodsId
        
-                                       WHERE COALESCE (LoadPriceListItem.GoodsNDS,'') <> ''
                                        ) AS tmp
                                  WHERE tmp.ORD = 1
                                  )
@@ -908,7 +913,7 @@ BEGIN
 
              LEFT JOIN tmpCostCredit ON _tmpMI.Price BETWEEN tmpCostCredit.MinPrice  AND tmpCostCredit.PriceLimit
 
-             LEFT JOIN tmpLoadPriceList_NDS ON tmpLoadPriceList_NDS.GoodsId = _tmpMI.GoodsId
+             LEFT JOIN tmpLoadPriceList_NDS ON tmpLoadPriceList_NDS.PartnerGoodsId = _tmpMI.GoodsId
                                            AND tmpLoadPriceList_NDS.JuridicalId = _tmpMI.JuridicalId
 ;
 
@@ -1373,7 +1378,7 @@ BEGIN
 
              LEFT JOIN tmpCostCredit ON _tmpMI.Price BETWEEN tmpCostCredit.MinPrice  AND tmpCostCredit.PriceLimit
 
-             LEFT JOIN tmpLoadPriceList_NDS ON tmpLoadPriceList_NDS.GoodsId = _tmpMI.GoodsId
+             LEFT JOIN tmpLoadPriceList_NDS ON tmpLoadPriceList_NDS.PartnerGoodsId = _tmpMI.GoodsId
                                            AND tmpLoadPriceList_NDS.JuridicalId = _tmpMI.JuridicalId
 ;
 
@@ -1451,3 +1456,5 @@ where Movement.DescId = zc_Movement_OrderInternal()
 */
 
 -- тест select * from gpSelect_MovementItem_OrderInternal_Child(inMovementId := 15668431 , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'FALSE' ,  inSession := '7564573');
+
+--select * from gpSelect_MovementItem_OrderInternal_Child(inMovementId := 22066168  , inShowAll := 'True' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');

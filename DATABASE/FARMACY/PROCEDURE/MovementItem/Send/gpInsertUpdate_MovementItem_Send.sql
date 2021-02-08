@@ -126,7 +126,7 @@ BEGIN
                                   SELECT MovementItemProtocol.Id
                                        , MovementItemProtocol.MovementItemId
                                        , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
-                                  FROM MovementItemProtocol_old AS MovementItemProtocol
+                                  FROM movementitemprotocol_arc AS MovementItemProtocol
                                   WHERE MovementItemProtocol.MovementItemId = ioId
                                         AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
                                         AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
