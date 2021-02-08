@@ -320,6 +320,14 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
+      object Comment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 132
+      end
       object UserName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
         DataBinding.FieldName = 'UserName'
@@ -1045,7 +1053,7 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'OperDate_parent'
           DataType = ftDateTime
@@ -1218,6 +1226,7 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 248
     Top = 216
