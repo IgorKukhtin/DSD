@@ -22,7 +22,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     Left = 0
     Top = 0
     Width = 1366
-    Height = 100
+    Height = 129
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
@@ -328,29 +328,63 @@ object WeighingPartnerForm: TWeighingPartnerForm
       TabOrder = 36
       Width = 94
     end
+    object cxLabel23: TcxLabel
+      Left = 9
+      Top = 84
+      Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+    end
+    object ed: TcxButtonEdit
+      Left = 9
+      Top = 99
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 38
+      Width = 246
+    end
+    object cxLabel24: TcxLabel
+      Left = 262
+      Top = 84
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    end
+    object ceComment: TcxTextEdit
+      Left = 262
+      Top = 99
+      Properties.ReadOnly = True
+      TabOrder = 40
+      Width = 319
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 126
+    Top = 155
     Width = 1366
-    Height = 336
+    Height = 307
     Align = alClient
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 336
+    ExplicitTop = 126
+    ExplicitHeight = 336
+    ClientRectBottom = 307
     ClientRectRight = 1366
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 312
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 1366
-        Height = 312
+        Height = 283
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 312
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -2017,6 +2051,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 347
     Top = 337
@@ -2492,6 +2527,28 @@ object WeighingPartnerForm: TWeighingPartnerForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SubjectDocId'
+        Value = Null
+        Component = GuidesSubjectDoc
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SubjectDocName'
+        Value = Null
+        Component = GuidesSubjectDoc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -2824,14 +2881,14 @@ object WeighingPartnerForm: TWeighingPartnerForm
       end
       item
         Name = 'OperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'OperDateEnd'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -3090,5 +3147,34 @@ object WeighingPartnerForm: TWeighingPartnerForm
       end>
     Left = 1176
     Top = 64
+  end
+  object GuidesSubjectDoc: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ed
+    FormNameParam.Value = 'TDocumentKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TDocumentKindForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesSubjectDoc
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesSubjectDoc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 150
+    Top = 88
   end
 end

@@ -45,6 +45,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , PersonalCode1_Stick Integer, PersonalName1_Stick TVarChar
              , PositionCode1_Stick Integer, PositionName1_Stick TVarChar
              , UserName TVarChar
+             , Comment TVarChar
              , StartBegin_movement TDateTime, EndBegin_movement TDateTime, diffBegin_sec_movement TFloat -- для документа
              , StartBegin TDateTime, EndBegin TDateTime, diffBegin_sec TFloat                            -- для строк
              , GoodsCode Integer, GoodsName TVarChar, GoodsGroupNameFull TVarChar
@@ -233,6 +234,7 @@ BEGIN
              , Object_Position1_Stick.ObjectCode AS PositionCode1_Stick, Object_Position1_Stick.ValueData AS PositionName1_Stick
 
              , Object_User.ValueData              AS UserName
+             , MovementString_Comment.ValueData   AS Comment
 
              , MovementDate_StartBegin.ValueData  AS StartBegin_movement
              , MovementDate_EndBegin.ValueData    AS EndBegin_movement
@@ -332,6 +334,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                      ON MovementString_InvNumberOrder.MovementId = Movement.Id
                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId =  Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
@@ -663,6 +669,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 08.02.21         * Comment
  17.08.20         *
  04.11.19         *
  17.12.18         *
