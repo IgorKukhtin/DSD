@@ -223,7 +223,10 @@ uses
   MoneyPlace_Object in '..\..\FormsBoat\Guides\MoneyPlace_Object.pas' {MoneyPlace_ObjectForm: TParentForm},
   BankAccountJournal in '..\..\FormsBoat\Document\BankAccountJournal.pas' {BankAccountJournalForm: TParentForm},
   BankAccountMovement in '..\..\FormsBoat\Document\BankAccountMovement.pas' {BankAccountMovementForm: TParentForm},
-  InvoiceJournalChoice in '..\..\FormsBoat\Document\InvoiceJournalChoice.pas' {InvoiceJournalChoiceForm: TParentForm};
+  InvoiceJournalChoice in '..\..\FormsBoat\Document\InvoiceJournalChoice.pas' {InvoiceJournalChoiceForm: TParentForm},
+  Income in '..\..\FormsBoat\Document\Income.pas' {IncomeForm: TParentForm},
+  IncomeJournal in '..\..\FormsBoat\Document\IncomeJournal.pas' {IncomeJournalForm: TParentForm},
+  IncomeJournalChoice in '..\..\FormsBoat\Document\IncomeJournalChoice.pas' {IncomeJournalChoiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

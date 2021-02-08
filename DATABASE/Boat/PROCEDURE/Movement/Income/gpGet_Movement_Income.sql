@@ -1,10 +1,11 @@
 -- Function: gpGet_Movement_Income()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_Income (Integer, TVarChar);
-
+DROP FUNCTION IF EXISTS gpGet_Movement_Income (Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Income(
     IN inMovementId        Integer  , -- ключ Документа
+    IN inOperDate          TDateTime ,
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
@@ -32,7 +33,7 @@ BEGIN
                0                         AS Id
              , CAST (NEXTVAL ('movement_Income_seq') AS TVarChar) AS InvNumber
              , CAST ('' AS TVarChar)     AS InvNumberPartner
-             , CURRENT_DATE::TDateTime   AS OperDate
+             , inOperDate   ::TDateTime   AS OperDate     --CURRENT_DATE
              , NULL ::TDateTime          AS OperDatePartner 
              , Object_Status.Code        AS StatusCode
              , Object_Status.Name        AS StatusName
@@ -114,8 +115,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_Income (Integer, TVarChar) OWNER TO postgres;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

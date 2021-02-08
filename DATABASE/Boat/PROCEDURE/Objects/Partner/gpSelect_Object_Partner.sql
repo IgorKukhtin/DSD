@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Comment TVarChar
              , BankId Integer, BankName TVarChar
              , PLZId Integer, PLZName TVarChar
-             , TaxKindId Integer, TaxKindName TVarChar
+             , TaxKindId Integer, TaxKindName TVarChar, TaxKind_Value TFloat
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
@@ -58,6 +58,7 @@ BEGIN
 
            , Object_TaxKind.Id               AS TaxKindId
            , Object_TaxKind.ValueData        AS TaxKindName
+           , ObjectFloat_TaxKind_Value.ValueData AS TaxKind_Value
 
            , Object_InfoMoney_View.InfoMoneyId
            , Object_InfoMoney_View.InfoMoneyCode
@@ -141,6 +142,10 @@ BEGIN
                                ON ObjectLink_TaxKind.ObjectId = Object_Partner.Id
                               AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Partner_TaxKind()
           LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
+
+          LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id 
+                               AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value() 
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_Partner.Id
