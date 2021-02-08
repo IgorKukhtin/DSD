@@ -42,7 +42,8 @@ BEGIN
      -- проверка - для 
      IF COALESCE (ioAmount, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Не введено значение <Кол-во (склад)>.';
+         ioAmount:= 1;
+       --RAISE EXCEPTION 'Ошибка.Не введено значение <Кол-во (склад)>.';
      END IF;
      -- меняем значение
      ioPartionNumEnd:= inPartionNumStart + ioAmount - 1;

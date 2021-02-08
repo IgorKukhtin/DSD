@@ -572,7 +572,7 @@ BEGIN
 
            , CAST (NULL AS TFloat) AS AmountSumm
 
-           , tmpRemains.Amount          AS AmountRemains
+           , tmpRemains.Amount        :: TFloat AS AmountRemains
 
            , FALSE AS isErased
 
@@ -664,7 +664,7 @@ BEGIN
                         ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0) ) * tmpMI.Price AS NUMERIC (16, 2))
                    END AS TFloat) AS AmountSumm
 
-           , tmpRemains.Amount          AS AmountRemains
+           , tmpRemains.Amount        :: TFloat AS AmountRemains
 
            , MovementItem.isErased
      
