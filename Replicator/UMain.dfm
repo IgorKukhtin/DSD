@@ -21,7 +21,7 @@ object frmMain: TfrmMain
     Top = 0
     Width = 984
     Height = 662
-    ActivePage = tsLog
+    ActivePage = tsCompare
     Align = alClient
     TabOrder = 0
     object tsLog: TTabSheet
@@ -473,7 +473,7 @@ object frmMain: TfrmMain
         Top = 0
         Width = 976
         Height = 634
-        ActivePage = tsCompareSequences
+        ActivePage = tsCompareRecCount
         Align = alClient
         TabOrder = 0
         object tsCompareRecCount: TTabSheet
@@ -512,6 +512,7 @@ object frmMain: TfrmMain
                   Visible = True
                 end
                 item
+                  Alignment = taRightJustify
                   Expanded = False
                   FieldName = 'CountMaster'
                   Title.Alignment = taCenter
@@ -520,11 +521,21 @@ object frmMain: TfrmMain
                   Visible = True
                 end
                 item
+                  Alignment = taRightJustify
                   Expanded = False
                   FieldName = 'CountSlave'
                   Title.Alignment = taCenter
                   Title.Caption = #1082#1086#1083'-'#1074#1086' '#1079#1072#1087#1080#1089#1077#1081' Slave'
                   Width = 125
+                  Visible = True
+                end
+                item
+                  Alignment = taRightJustify
+                  Expanded = False
+                  FieldName = 'CountDiff'
+                  Title.Alignment = taCenter
+                  Title.Caption = 'Master - Slave'
+                  Width = 85
                   Visible = True
                 end>
             end
@@ -611,19 +622,30 @@ object frmMain: TfrmMain
                   Visible = True
                 end
                 item
+                  Alignment = taRightJustify
                   Expanded = False
                   FieldName = 'MasterValue'
                   Title.Alignment = taCenter
-                  Title.Caption = #1087#1086#1089#1083#1077#1076#1085#1077#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1074' Master'
-                  Width = 160
+                  Title.Caption = #1079#1085#1072#1095#1077#1085#1080#1077' '#1074' Master'
+                  Width = 120
                   Visible = True
                 end
                 item
+                  Alignment = taRightJustify
                   Expanded = False
                   FieldName = 'SlaveValue'
                   Title.Alignment = taCenter
-                  Title.Caption = #1087#1086#1089#1083#1077#1076#1085#1077#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1074' Slave'
-                  Width = 160
+                  Title.Caption = #1079#1085#1072#1095#1077#1085#1080#1077' '#1074' Slave'
+                  Width = 120
+                  Visible = True
+                end
+                item
+                  Alignment = taRightJustify
+                  Expanded = False
+                  FieldName = 'DiffValue'
+                  Title.Alignment = taCenter
+                  Title.Caption = 'Master - Slave'
+                  Width = 80
                   Visible = True
                 end
                 item
@@ -694,8 +716,6 @@ object frmMain: TfrmMain
     object tsSettings: TTabSheet
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
       ImageIndex = 1
-      ExplicitLeft = 8
-      ExplicitTop = 28
       DesignSize = (
         976
         634)

@@ -1336,7 +1336,7 @@ const
   cSelectPKFields        = 'SELECT * FROM _replica.gpSelect_PKFields(%s)';
 //  cSelectPKFields        = 'SELECT pk_keys FROM _replica.table_update_data WHERE table_name ILIKE %s limit 1';
   cSelectTableNames      = 'SELECT * FROM _replica.gpSelect_Replica_tables()';
-  cSelectUnion           = 'SELECT ''%s'' as TableName, %d AS CountMaster, %d AS CountSlave';
+  cSelectUnion           = 'SELECT ''%s'' as TableName, ''%s'' AS CountMaster, ''%s'' AS CountSlave, ''%s'' AS CountDiff';
   cSelectCount           = 'SELECT COUNT(*) FROM %s AS RecCount';
   cSelectCountSlaveNoId  = 'SELECT Max(%s) as MaxIdSlave, COUNT(*) AS RecCount FROM %s';
   cSelectCountSlave      = 'SELECT Max(Id) as MaxIdSlave, COUNT(*) AS RecCount FROM %s';
@@ -1350,7 +1350,7 @@ var
   arrTables: array of TTableData;
   sTableName, sSQL: string;
 begin
-  Result := Format(cSelectUnion, ['<нет данных>', 0, 0]) + ';';
+  Result := Format(cSelectUnion, ['<нет данных>',  '0', '0', '0']) + ';';
 
   try
     // строим массив имен таблиц
@@ -1473,13 +1473,13 @@ begin
       if FStopped then Exit;
 
       // для таблиц сервера Master
-      if arrTables[I].Name = 'MovementItemContainer'  then
+      if (arrTables[I].Name = 'MovementItemContainer') and (arrTables[I].MaxIdSlave > 0)  then
         arrTables[I].CountSQLMaster := Format(cSelectCountIdMaster, [arrTables[I].Name, arrTables[I].MaxIdSlave])
       else
-        if arrTables[I].PK_Id then
+        if (arrTables[I].PK_Id) and (arrTables[I].MaxIdSlave > 0) then
           arrTables[I].CountSQLMaster := Format(cSelectCountMaster, [arrTables[I].Name, arrTables[I].MaxIdSlave])
         else
-          if Length(arrTables[I].PK_field) > 0 then
+          if (Length(arrTables[I].PK_field) > 0) and (arrTables[I].MaxIdSlave > 0) then
             arrTables[I].CountSQLMaster := Format(cSelectCountMasterNoId, [arrTables[I].Name, arrTables[I].PK_field, arrTables[I].MaxIdSlave])
           else
             arrTables[I].CountSQLMaster := Format(cSelectCount, [arrTables[I].Name]);
@@ -1509,9 +1509,9 @@ begin
             if arrTables[J].MasterCount = arrTables[J].SlaveCount then Continue;
 
           if Length(sSQL) = 0 then
-            sSQL := Format(cSelectUnion, [arrTables[J].Name, arrTables[J].MasterCount, arrTables[J].SlaveCount])
+            sSQL := Format(cSelectUnion, [arrTables[J].Name, FormatFloat(',0.', arrTables[J].MasterCount), FormatFloat(',0.', arrTables[J].SlaveCount), FormatFloat(',0.', arrTables[J].MasterCount - arrTables[J].SlaveCount)])
           else
-            sSQL := sSQL + cUnion + Format(cSelectUnion, [arrTables[J].Name, arrTables[J].MasterCount, arrTables[J].SlaveCount]);
+            sSQL := sSQL + cUnion + Format(cSelectUnion, [arrTables[J].Name, FormatFloat(',0.', arrTables[J].MasterCount), FormatFloat(',0.', arrTables[J].SlaveCount), FormatFloat(',0.', arrTables[J].MasterCount - arrTables[J].SlaveCount)]);
         end;
 
         if Length(sSQL) > 0 then
@@ -1532,9 +1532,9 @@ begin
         if arrTables[I].MasterCount = arrTables[I].SlaveCount then Continue;
 
       if Length(sSQL) = 0 then
-        sSQL := Format(cSelectUnion, [arrTables[I].Name, arrTables[I].MasterCount, arrTables[I].SlaveCount])
+        sSQL := Format(cSelectUnion, [arrTables[I].Name, FormatFloat(',0.', arrTables[I].MasterCount), FormatFloat(',0.', arrTables[I].SlaveCount), FormatFloat(',0.', arrTables[J].MasterCount - arrTables[J].SlaveCount)])
       else
-        sSQL := sSQL + cUnion + Format(cSelectUnion, [arrTables[I].Name, arrTables[I].MasterCount, arrTables[I].SlaveCount]);
+        sSQL := sSQL + cUnion + Format(cSelectUnion, [arrTables[I].Name, FormatFloat(',0.', arrTables[I].MasterCount), FormatFloat(',0.', arrTables[I].SlaveCount), FormatFloat(',0.', arrTables[J].MasterCount - arrTables[J].SlaveCount)]);
     end;
 
     if Length(sSQL) > 0 then
@@ -1555,14 +1555,14 @@ type
     SlaveIncrement: Integer;
   end;
 const
-  cSelectUnion = 'select ''%s'' as SequenceName, %d as MasterValue, %d as SlaveValue, %d as MasterIncrement, %d as SlaveIncrement';
+  cSelectUnion = 'select ''%s'' as SequenceName, ''%s'' as MasterValue, ''%s'' as SlaveValue, ''%s'' as DiffValue, %d as MasterIncrement, %d as SlaveIncrement';
 var
   I, J: Integer;
   arrMasterSeq, arrSlaveSeq: TSequenceDataArray;
   arrUnion: array of TUnionData;
   sSelect: string;
 begin
-  Result := Format(cSelectUnion, ['<нет данных>', 0, 0, 0, 0]);
+  Result := Format(cSelectUnion, ['<нет данных>', '0', '0', '0', 0, 0]);
 
   try
 
@@ -1616,7 +1616,7 @@ begin
         then Continue;
 
       sSelect := Format(cSelectUnion, [
-        arrUnion[I].Name, arrUnion[I].MasterValue, arrUnion[I].SlaveValue, arrUnion[I].MasterIncrement, arrUnion[I].SlaveIncrement
+        arrUnion[I].Name, FormatFloat(',0.', arrUnion[I].MasterValue), FormatFloat(',0.', arrUnion[I].SlaveValue), FormatFloat(',0.', arrUnion[I].MasterValue - arrUnion[I].SlaveValue), arrUnion[I].MasterIncrement, arrUnion[I].SlaveIncrement
       ]);
 
       if Length(Result) = 0 then

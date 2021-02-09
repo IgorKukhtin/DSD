@@ -108,6 +108,12 @@ where T.table_name ILIKE 'movementitemcontainer'
    OR T.table_name ILIKE 'soldtable'
    OR T.table_name ILIKE 'resourseitemprotocol'*/
 
+-- where T.table_name ILIKE 'MovementItemLinkObject'
+where T.table_name ILIKE 'movementitemprotocol_arc'
+   OR T.table_name ILIKE 'movementitemprotocol'
+   OR T.table_name ILIKE 'movementprotocol'
+   OR T.table_name ILIKE 'movementprotocol_arc'
+
 
     group by T.table_name, B.table_name
   order by case when T.table_name ilike 'resourseitemprotocol' then 102 
