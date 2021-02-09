@@ -53,7 +53,7 @@ object IncomeForm: TIncomeForm
       Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
     end
     object edFrom: TcxButtonEdit
-      Left = 271
+      Left = 404
       Top = 23
       Properties.Buttons = <
         item
@@ -62,7 +62,7 @@ object IncomeForm: TIncomeForm
         end>
       Properties.ReadOnly = True
       TabOrder = 3
-      Width = 324
+      Width = 191
     end
     object edTo: TcxButtonEdit
       Left = 601
@@ -77,7 +77,7 @@ object IncomeForm: TIncomeForm
       Width = 249
     end
     object cxLabel3: TcxLabel
-      Left = 271
+      Left = 404
       Top = 5
       Hint = #1054#1090' '#1082#1086#1075#1086
       Caption = 'Lieferanten'
@@ -193,6 +193,23 @@ object IncomeForm: TIncomeForm
       TabOrder = 20
       Width = 249
     end
+    object cxLabel10: TcxLabel
+      Left = 273
+      Top = 5
+      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+    end
+    object edPaidKind: TcxButtonEdit
+      Left = 273
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 22
+      Width = 124
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
@@ -203,15 +220,12 @@ object IncomeForm: TIncomeForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 155
-    ExplicitHeight = 300
     ClientRectBottom = 332
     ClientRectRight = 850
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 276
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -219,7 +233,6 @@ object IncomeForm: TIncomeForm
         Height = 308
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 276
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -287,6 +300,11 @@ object IncomeForm: TIncomeForm
               Format = ',0.####'
               Kind = skSum
               Column = SummWithVAT
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = GoodsName
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -578,10 +596,6 @@ object IncomeForm: TIncomeForm
           ItemName = 'bbShowAll'
         end
         item
-          Visible = True
-          ItemName = 'bbShowErasedCost'
-        end
-        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
@@ -682,6 +696,7 @@ object IncomeForm: TIncomeForm
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
+      Enabled = False
     end
     object bbGridToExel: TdxBarButton
       Action = GridToExcel
@@ -698,10 +713,12 @@ object IncomeForm: TIncomeForm
     object bbMIContainer: TdxBarButton
       Action = actMIContainer
       Category = 0
+      Enabled = False
     end
     object bbMovementItemProtocol: TdxBarButton
       Action = MovementItemProtocolOpenForm
       Category = 0
+      Enabled = False
     end
     object bbCalcAmountPartner: TdxBarControlContainerItem
       Caption = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
@@ -1169,8 +1186,8 @@ object IncomeForm: TIncomeForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'GoodsForm'
-      FormName = 'TGoods_ObjectForm'
-      FormNameParam.Value = 'TGoods_ObjectForm'
+      FormName = 'TGoodsForm'
+      FormNameParam.Value = 'TGoodsForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1567,6 +1584,14 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPaidKindId'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = ceComment
@@ -1575,8 +1600,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 418
-    Top = 256
+    Left = 202
+    Top = 184
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -1613,19 +1638,20 @@ object IncomeForm: TIncomeForm
         Control = edChangePercent
       end
       item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
+        Control = edPaidKind
       end
       item
         Control = ceComment
+      end
+      item
+      end
+      item
+      end
+      item
+      end
+      item
+      end
+      item
       end
       item
       end>
@@ -1764,6 +1790,21 @@ object IncomeForm: TIncomeForm
         Component = ceComment
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindId'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindName'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 200
@@ -1797,7 +1838,7 @@ object IncomeForm: TIncomeForm
     Top = 224
   end
   object spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpSetErased_MovementItem'
+    StoredProcName = 'gpMovementItem_Income_SetErased'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1822,7 +1863,7 @@ object IncomeForm: TIncomeForm
     Top = 248
   end
   object spUnErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpSetUnErased_MovementItem'
+    StoredProcName = 'gpMovementItem_Income_SetUnErased'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1920,7 +1961,7 @@ object IncomeForm: TIncomeForm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 312
+    Left = 488
     Top = 16
   end
   object PrintHeaderCDS: TClientDataSet
@@ -1979,6 +2020,14 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPartionId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId'
         Value = Null
         Component = MasterCDS
@@ -1987,52 +2036,23 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioAmount'
+        Name = 'inAmount'
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioAmountPartner'
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountPacker'
-        Value = 0.000000000000000000
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsCalcAmountPartner'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPrice'
+        Name = 'inOperPrice'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Price'
+        ComponentItem = 'OperPrice'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMIId_Invoice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MIId_Invoice'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioCountForPrice'
+        Name = 'inCountForPrice'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CountForPrice'
@@ -2041,49 +2061,11 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outAmountSumm'
+        Name = 'inComment'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'AmountSumm'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inLiveWeight'
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inHeadCount'
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPartionGoods'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PartionGoods'
+        ComponentItem = 'Comment'
         DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsKindId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsKindId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAssetId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AssetId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -2136,5 +2118,35 @@ object IncomeForm: TIncomeForm
     PackSize = 1
     Left = 273
     Top = 408
+  end
+  object GuidesPaidKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPaidKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 312
+    Top = 8
   end
 end

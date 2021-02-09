@@ -39,7 +39,7 @@ CREATE OR REPLACE FUNCTION zc_Color_Lime() RETURNS Integer AS $BODY$BEGIN RETURN
 CREATE OR REPLACE FUNCTION zc_Color_Pink() RETURNS Integer AS $BODY$BEGIN RETURN (16440317); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 -- CREATE OR REPLACE FUNCTION zfCalc_UserAdmin() RETURNS .....;
-
+CREATE OR REPLACE FUNCTION zc_Measure_Sh() RETURNS Integer AS $BODY$BEGIN RETURN (0); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 /*
 -- Значения для эти ф-ций будут сформированы в Load_PostgreSqlBoutique, или !!!руками значения =0!!!

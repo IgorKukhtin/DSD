@@ -250,6 +250,13 @@ object IncomeJournalForm: TIncomeJournalForm
         HeaderHint = #1050#1086#1084#1091
         Width = 91
       end
+      object PaidKindName: TcxGridDBColumn
+        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+        DataBinding.FieldName = 'PaidKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
       object TotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'TotalCount'
@@ -1197,13 +1204,6 @@ object IncomeJournalForm: TIncomeJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsLastComplete'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 64
@@ -1248,7 +1248,7 @@ object IncomeJournalForm: TIncomeJournalForm
     end
   end
   object spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement'
+    StoredProcName = 'gpUnComplete_Movement_Income'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1265,7 +1265,7 @@ object IncomeJournalForm: TIncomeJournalForm
     Top = 272
   end
   object spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement'
+    StoredProcName = 'gpSetErased_Movement_Income'
     DataSet = ClientDataSet
     DataSets = <
       item

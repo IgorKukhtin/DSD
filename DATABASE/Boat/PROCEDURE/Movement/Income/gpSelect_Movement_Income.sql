@@ -14,9 +14,10 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
              , PriceWithVAT Boolean
              , VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat
-             , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
+             , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummVAT TFloat
              , FromId Integer, FromCode Integer, FromName TVarChar
              , ToId Integer, ToCode Integer, ToName TVarChar
+             , PaidKindId Integer, PaidKindName TVarChar
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
@@ -51,6 +52,7 @@ BEGIN
                                     , Movement_Income.StatusId                  AS StatusId
                                     , MovementLinkObject_To.ObjectId            AS ToId
                                     , MovementLinkObject_From.ObjectId          AS FromId
+                                    , MovementLinkObject_PaidKind.ObjectId      AS PaidKindId
                                FROM tmpStatus
                                     INNER JOIN Movement AS Movement_Income 
                                                        ON Movement_Income.StatusId = tmpStatus.StatusId
@@ -64,6 +66,10 @@ BEGIN
                                     LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                                  ON MovementLinkObject_From.MovementId = Movement_Income.Id
                                                                 AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+
+                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                                                 ON MovementLinkObject_PaidKind.MovementId = Movement_Income.Id
+                                                                AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
 
                                     LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                                              ON MovementString_InvNumberPartner.MovementId = Movement_Income.Id
@@ -90,6 +96,7 @@ BEGIN
              , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
              , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
              , MovementFloat_TotalSumm.ValueData          AS TotalSumm
+             , (COALESCE (MovementFloat_TotalSummPVAT.ValueData,0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData,0)) :: TFloat AS TotalSummVAT
   
              , Object_From.Id                             AS FromId
              , Object_From.ObjectCode                     AS FromCode
@@ -97,6 +104,8 @@ BEGIN
              , Object_To.Id                               AS ToId
              , Object_To.ObjectCode                       AS ToCode
              , Object_To.ValueData                        AS ToName
+             , Object_PaidKind.Id                         AS PaidKindId      
+             , Object_PaidKind.ValueData                  AS PaidKindName
              , MovementString_Comment.ValueData :: TVarChar AS Comment
 
              , Object_Insert.ValueData              AS InsertName
@@ -109,6 +118,7 @@ BEGIN
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Income.StatusId
         LEFT JOIN Object AS Object_From   ON Object_From.Id   = Movement_Income.FromId
         LEFT JOIN Object AS Object_To     ON Object_To.Id     = Movement_Income.ToId
+        LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Movement_Income.PaidKindId
 
         LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                 ON MovementFloat_TotalCount.MovementId = Movement_Income.Id
