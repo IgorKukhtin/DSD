@@ -584,8 +584,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 323
-    Top = 112
+    Left = 363
+    Top = 128
   end
   object GuidesInvoice: TdsdGuides
     KeyField = 'Id'
@@ -622,8 +622,59 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ObjectId'
+        Value = Null
+        Component = GuidesObject
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ObjectName'
+        Value = Null
+        Component = GuidesObject
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountOut'
+        Value = Null
+        Component = ceAmountIn
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountIn'
+        Value = Null
+        Component = ceAmountOut
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 124
     Top = 183
+  end
+  object GuidesFiller: TGuidesFiller
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
+    GuidesList = <
+      item
+        Guides = GuidesInvoice
+      end
+      item
+        Guides = GuidesBankAccount
+      end>
+    ActionItemList = <
+      item
+      end>
+    Left = 200
+    Top = 136
   end
 end

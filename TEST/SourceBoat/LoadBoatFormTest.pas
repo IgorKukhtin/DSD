@@ -283,6 +283,8 @@ end;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxKindForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxKindEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTaxKindEditForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPaidKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPaidKindForm');

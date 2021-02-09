@@ -226,7 +226,8 @@ uses
   InvoiceJournalChoice in '..\..\FormsBoat\Document\InvoiceJournalChoice.pas' {InvoiceJournalChoiceForm: TParentForm},
   Income in '..\..\FormsBoat\Document\Income.pas' {IncomeForm: TParentForm},
   IncomeJournal in '..\..\FormsBoat\Document\IncomeJournal.pas' {IncomeJournalForm: TParentForm},
-  IncomeJournalChoice in '..\..\FormsBoat\Document\IncomeJournalChoice.pas' {IncomeJournalChoiceForm: TParentForm};
+  IncomeJournalChoice in '..\..\FormsBoat\Document\IncomeJournalChoice.pas' {IncomeJournalChoiceForm: TParentForm},
+  TaxKindEdit in '..\..\FormsBoat\Kind\TaxKindEdit.pas' {TaxKindEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -356,9 +356,16 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Client_TaxKind', 'Тип НДС', zc_Object_Client(), zc_Object_TaxKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Client_TaxKind');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ProdColorPatternPhoto_ProdColorPattern() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdColorPatternPhoto_ProdColorPattern'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ProdColorPatternPhoto_ProdColorPattern', ' Фото', zc_Object_ProdColorPatternPhoto(), zc_Object_ProdColorPattern() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdColorPatternPhoto_ProdColorPattern');
+
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.02.21         * zc_ObjectLink_ProdColorPatternPhoto_ProdColorPattern
  02.02.21         * zc_ObjectLink_InfoMoney_Unit
                     zc_ObjectLink_Partner_InfoMoney
                     zc_ObjectLink_Partner_TaxKind

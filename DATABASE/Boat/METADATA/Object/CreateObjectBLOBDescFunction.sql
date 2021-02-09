@@ -24,9 +24,14 @@ CREATE OR REPLACE FUNCTION zc_objectblob_goodsPhoto_data() RETURNS integer AS $B
 INSERT INTO ObjectBLOBDesc (DescId, Code ,itemname)
    SELECT zc_Object_goodsPhoto(), 'zc_objectblob_goodsPhoto_data','фото' WHERE NOT EXISTS (SELECT * FROM ObjectBlobDesc WHERE Code = 'zc_objectblob_goodsPhoto_data');
 
+CREATE OR REPLACE FUNCTION zc_objectblob_ProdColorPatternPhoto_data() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBlobDesc WHERE Code = 'zc_objectblob_ProdColorPatternPhoto_data'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBLOBDesc (DescId, Code ,itemname)
+   SELECT zc_Object_ProdColorPatternPhoto(), 'zc_objectblob_ProdColorPatternPhoto_data','фото' WHERE NOT EXISTS (SELECT * FROM ObjectBlobDesc WHERE Code = 'zc_objectblob_ProdColorPatternPhoto_data');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.02.21         * zc_Object_ProdColorPatternPhoto
  28.08.20                                        * 
 */
