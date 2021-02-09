@@ -5,6 +5,7 @@ interface
 function GetIniFile(out AIniFileName: String):boolean;
 
 function GetValue(const ASection,AParamName,ADefault: String): String;
+function GetValueInt(const ASection,AParamName: String; ADefault : Integer): Integer;
 
 //возвраащет тип кассового аппарата;
 function iniCashType:String;
@@ -20,6 +21,9 @@ function iniPortSpeed:String;
 function iniLocalDataBaseHead: String;
 function iniLocalDataBaseBody: String;
 function iniLocalDataBaseDiff: String;
+//Возвращает код Аптеки
+function iniLocalUnitCodeGet: Integer;
+function iniLocalUnitCodeSave(AFarmacyCode: Integer): Integer;
 //Возвращает имя Аптеки
 function iniLocalUnitNameGet: string;
 function iniLocalUnitNameSave(AFarmacyName: string): string;
@@ -48,7 +52,7 @@ function UpdateOption : Boolean;
 procedure AutomaticUpdateProgram;
 
 var gUnitName, gUserName, gPassValue: string;
-var gUnitId : Integer;
+var gUnitId, gUnitCode : Integer;
 var isMainForm_OLD : Boolean;
 
 implementation
@@ -118,6 +122,21 @@ Begin
   End;
   ini := TiniFile.Create(IniFileName);
   Result := ini.ReadString(ASection,AParamName,ADefault);
+  ini.Free;
+End;
+
+function GetValueInt(const ASection,AParamName: String; ADefault : Integer): Integer;
+var
+  ini: TiniFile;
+  IniFileName : String;
+Begin
+  if not GetIniFile(IniFileName) then
+  Begin
+    Result := 0;
+    exit;
+  End;
+  ini := TiniFile.Create(IniFileName);
+  Result := ini.ReadInteger(ASection,AParamName,ADefault);
   ini.Free;
 End;
 
@@ -199,6 +218,28 @@ begin
   End;
 end;
 
+function iniLocalUnitCodeGet: Integer;
+begin
+  Result := GetValueInt('Common','FarmacyCode', 0);
+end;
+
+function iniLocalUnitCodeSave(AFarmacyCode: Integer): Integer;
+var
+  f: TIniFile;
+begin
+  Result := GetValueInt('Common','FarmacyCode', 0);
+  if Result <> AFarmacyCode then
+  Begin
+    Result := AFarmacyCode;
+    f := TIniFile.Create(ExtractFilePath(Application.ExeName)+'ini\'+FileName);
+    try
+      f.WriteInteger('Common','FarmacyCode',Result);
+    finally
+      f.Free;
+    end;
+  End;
+end;
+
 function iniLocalUnitNameGet: string;
 begin
   Result := GetValue('Common','FarmacyName', '');
@@ -209,7 +250,7 @@ var
   f: TIniFile;
 begin
   Result := GetValue('Common','FarmacyName', '');
-  if Result = '' then
+  if Result <> AFarmacyName then
   Begin
     Result := AFarmacyName;
     f := TIniFile.Create(ExtractFilePath(Application.ExeName)+'ini\'+FileName);

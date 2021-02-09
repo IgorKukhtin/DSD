@@ -134,7 +134,8 @@ uses
   SelectionFromDirectory in '..\FormsFarmacy\Cash\SelectionFromDirectory.pas' {SelectionFromDirectoryForm: TParentForm},
   ChoosingRelatedProduct in '..\FormsFarmacy\Cash\ChoosingRelatedProduct.pas' {ChoosingRelatedProductForm},
   EditFromDirectory in '..\FormsFarmacy\Cash\EditFromDirectory.pas' {EditFromDirectoryForm: TParentForm},
-  HardwareDialog in '..\FormsFarmacy\Cash\HardwareDialog.pas' {HardwareDialogForm};
+  HardwareDialog in '..\FormsFarmacy\Cash\HardwareDialog.pas' {HardwareDialogForm},
+  UnitTreeCash in '..\FormsFarmacy\Cash\UnitTreeCash.pas' {UnitTreeCashForm: TParentForm};
 
 {$R *.res}
 

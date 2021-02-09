@@ -8,7 +8,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, LoginForm, cxGraphics, cxControls,
   cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Menus,
   cxPropertiesStore, Vcl.StdCtrls, cxButtons, cxTextEdit, cxMaskEdit,
-  cxDropDownEdit, cxLabel, dsdDB, dxSkinsCore, dxSkinsDefaultPainters, cxClasses;
+  cxDropDownEdit, cxLabel, dsdDB, dxSkinsCore, dxSkinsDefaultPainters, cxClasses,
+  System.Actions, Vcl.ActnList, dsdAction;
 
 type
   TcxComboBoxUser = Class(TcxComboBox)
@@ -26,11 +27,19 @@ type
     cxLabel4: TcxLabel;
     edFarmacyName: TcxComboBox;
     spChekFarmacyName: TdsdStoredProc;
+    spGetUnitName: TdsdStoredProc;
+    ActionList1: TActionList;
+    actLoginAdmin: TAction;
+    FormParams: TdsdFormParams;
+    spGet_User_IsAdmin: TdsdStoredProc;
     procedure btnOkClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure actLoginAdminExecute(Sender: TObject);
   private
     { Private declarations }
+    FUnitCode : Integer;
+    FReRegistration : Boolean;
   public
     { Public declarations }
   end;
@@ -41,7 +50,7 @@ var
 implementation
 
 uses Storage, Authentication, CommonData, MessagesUnit, StrUtils, LocalWorkUnit,
-  IniUtils;
+  IniUtils, UnitTreeCash;
 
 {$R *.dfm}
 
@@ -58,13 +67,80 @@ begin
 end;
 
 { TLoginForm1 }
+procedure TLoginForm1.actLoginAdminExecute(Sender: TObject);
+begin
+  if not FReRegistration then
+  begin
+    FReRegistration := True;
+    edFarmacyName.Enabled := False;
+    edFarmacyName.Text := 'Перерегистрация аптеки';
+    Caption := 'Вход в систему с перерегистрацией';
+  end else
+  begin
+    FReRegistration := False;
+    edFarmacyName.Text := iniLocalUnitNameGet;
+    FUnitCode := iniLocalUnitCodeGet;
+    if (edFarmacyName.Text = '') and (FUnitCode = 0) then
+    begin
+      edFarmacyName.Enabled := True;
+      ActiveControl:=edFarmacyName;
+    end;
+    Caption := 'Вход в систему';
+  end;
+end;
+
 procedure TLoginForm1.btnOkClick(Sender: TObject);
 begin
   inherited;
   // сохраняем авторизационные данные для запуска сервиса + для вывода в MainForm
+
+  if ModalResult <> mrOk then exit;
+
+  if FReRegistration then
+  begin
+    if not gc_User.Local  then
+    begin
+      try
+        spGet_User_IsAdmin.Execute;
+        if spGet_User_IsAdmin.ParamByName('gpGet_User_IsAdmin').Value = True then
+        begin
+           with TUnitTreeCashForm.Create(Application) do
+           begin
+             try
+               actRefresh.Execute;
+               if (ShowModal = mrOk) and (ClientDataSet.RecordCount > 0) then
+               begin
+                 iniLocalUnitCodeSave(ClientDataSet.FieldByName('Code').AsInteger);
+                 iniLocalUnitNameSave(ClientDataSet.FieldByName('Name').AsString);
+                 edFarmacyName.Text := iniLocalUnitNameGet;
+                 FUnitCode := iniLocalUnitCodeGet;
+               end else
+               begin
+                 Self.ModalResult := mrNone;
+                 Exit;
+               end;
+             finally
+               Free;
+             end;
+           end;
+        end else
+        begin
+          edFarmacyName.Text := iniLocalUnitNameGet;
+          ShowMessage('Перерегистрация доступна только администратору.');
+        end;
+      except ON E: Exception do
+          Begin
+             Application.OnException(Application.MainForm,E);
+             ModalResult := mrNone;
+          End;
+      end;
+    end else edFarmacyName.Text := iniLocalUnitNameGet;;
+  end;
+
   IniUtils.gUnitId    := 0;
   IniUtils.gUnitName  := edFarmacyName.Text;
   IniUtils.gUserName  := edUserName.Text;
+  IniUtils.gUnitCode  := FUnitCode;
   IniUtils.gPassValue := edPassword.Text;
 
   if ModalResult <> mrOk then exit;
@@ -72,13 +148,22 @@ begin
   //только для On-line режима 10.04.2017
   if not gc_User.Local then
   begin
+      spChekFarmacyName.ParamByName('inUnitCode').Value := FUnitCode;
       spChekFarmacyName.ParamByName('inUnitName').Value := edFarmacyName.Text;
       try spChekFarmacyName.Execute;
           IniUtils.gUnitId    := spChekFarmacyName.ParamByName('outUnitId').Value;
+          IniUtils.gUnitName  := spChekFarmacyName.ParamByName('outUnitName').Value;
+          IniUtils.gUnitCode  := spChekFarmacyName.ParamByName('outUnitCode').Value;
           //
           if spChekFarmacyName.ParamByName('outIsEnter').Value = FALSE
           then ModalResult := mrCancel
-          else if edFarmacyName.Enabled then iniLocalUnitNameSave(edFarmacyName.Text);
+          else
+          begin
+            if FUnitCode = 0 then iniLocalUnitCodeSave(spChekFarmacyName.ParamByName('outUnitCode').Value);
+            if edFarmacyName.Enabled then iniLocalUnitNameSave(edFarmacyName.Text)
+            else if edFarmacyName.Text <> spChekFarmacyName.ParamByName('outUnitName').Value then
+              iniLocalUnitNameSave(spChekFarmacyName.ParamByName('outUnitName').Value);
+          end;
       except ON E: Exception do
           Begin
              Application.OnException(Application.MainForm,E);
@@ -93,6 +178,8 @@ procedure TLoginForm1.FormCreate(Sender: TObject);
 begin
   inherited;
   edFarmacyName.Text := iniLocalUnitNameGet;
+  FUnitCode := iniLocalUnitCodeGet;
+  FReRegistration := False;
 end;
 
 procedure TLoginForm1.FormShow(Sender: TObject);
@@ -101,7 +188,8 @@ begin
   ActiveControl:=edUserName;
   //
   edFarmacyName.Text := iniLocalUnitNameGet;
-  if edFarmacyName.Text <> '' then
+  FUnitCode := iniLocalUnitCodeGet;
+  if (edFarmacyName.Text <> '') or (FUnitCode <> 0) then
     edFarmacyName.Enabled := False // Поле заполняется один раз
   else
     ActiveControl:=edFarmacyName;

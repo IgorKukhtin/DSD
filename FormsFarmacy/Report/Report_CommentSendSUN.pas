@@ -78,6 +78,7 @@ type
     PercentZeroing: TcxGridDBColumn;
     edPercentZeroing: TcxDBTextEdit;
     cxLabel3: TcxLabel;
+    Sale: TcxGridDBColumn;
   private
   public
   end;
