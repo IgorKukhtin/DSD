@@ -691,7 +691,7 @@ object ProdColorPatternEditForm: TProdColorPatternEditForm
     Top = 160
   end
   object spPhotoSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ProdColorPatternGoodsPhoto'
+    StoredProcName = 'gpSelect_Object_ProdColorPatternPhoto'
     DataSet = PhotoCDS
     DataSets = <
       item
@@ -703,14 +703,6 @@ object ProdColorPatternEditForm: TProdColorPatternEditForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsId'
-        Value = Null
-        Component = GuidesGoods
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
