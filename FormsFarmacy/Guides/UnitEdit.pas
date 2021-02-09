@@ -162,6 +162,8 @@ type
     cxLabel48: TcxLabel;
     edPromoForSale: TcxTextEdit;
     cdMinPercentMarkup: TcxCheckBox;
+    ceSerialNumberMypharmacy: TcxCurrencyEdit;
+    cxLabel49: TcxLabel;
   private
     { Private declarations }
   public

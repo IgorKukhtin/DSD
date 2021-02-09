@@ -1889,9 +1889,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_DayNonCommoditySUN() RETU
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_DayNonCommoditySUN', 'Количество дней для контроля Комментария "Нетоварный вид"' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_DayNonCommoditySUN');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_SerialNumberMypharmacy() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_SerialNumberMypharmacy'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_SerialNumberMypharmacy', 'Серийный номер на сайте моя аптека' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_SerialNumberMypharmacy');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 09.02.21                                                                                      * zc_ObjectFloat_Unit_SerialNumberMypharmacy
  05.02.21                                                                                      * zc_ObjectFloat_CashSettings_DayNonCommoditySUN
  09.12.20                                                                                      * zc_ObjectFloat_Unit_ShareFromPrice
  05.12.20                                                                                      * zc_ObjectFloat_Goods_KoeffSUN_Supplementv1

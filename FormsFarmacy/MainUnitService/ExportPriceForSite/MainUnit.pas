@@ -11,7 +11,9 @@ uses
   cxMaskEdit, cxSpinEdit, Vcl.StdCtrls, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxClasses,
   cxGridCustomView, cxGrid, ZAbstractRODataset, ZAbstractDataset, ZDataset,
-  ZAbstractConnection, ZConnection, cxGridExportLink, System.Zip, cxProgressBar;
+  ZAbstractConnection, ZConnection, cxGridExportLink, System.Zip, cxProgressBar,
+  IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
+  IdExplicitTLSClientServerBase, IdFTP;
 
 type
   TForm1 = class(TForm)
@@ -29,12 +31,41 @@ type
     cxProgressBarUnit: TcxProgressBar;
     UnitName: TStaticText;
     qryRest_Group: TZQuery;
+    cxGrid: TcxGrid;
+    cxGridDBTableView: TcxGridDBTableView;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    RegNumber: TcxGridDBColumn;
+    isReport2: TcxGridDBColumn;
+    cxGridLevel: TcxGridLevel;
+    dsUnit: TDataSource;
+    btnForm: TButton;
+    btnExport: TButton;
+    btnSendFTP: TButton;
+    IdFTP1: TIdFTP;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
+    procedure btnFormClick(Sender: TObject);
+    procedure btnExportClick(Sender: TObject);
+    procedure btnSendFTPClick(Sender: TObject);
   private
     { Private declarations }
-    FilePath: string;
+    FHostTabletki: string;
+    FPathTabletki: string;
+    FUserTabletki: string;
+    FPasswordTabletki: string;
+    FHostMyPharmacy: string;
+    FPathMyPharmacy: string;
+    FUserMyPharmacy: string;
+    FPasswordMyPharmacy: string;
+
+    FFilePath: string;
+
+    FFileRest_Group: string;
+    FFileRest_Tabletki: string;
+    FFileRest_MyPharmacy: string;
+
     function ReportExport(AUnitId: Integer; AUnitName: String) : boolean;
     procedure ReportCompress(AUnitId: Integer; AUnitName: String);
     procedure ReportCompressMyPharmacy(AUnitId: Integer; AUnitName: String);
@@ -42,6 +73,7 @@ type
     procedure ReportCompressRest_Group(AUnitId: Integer);
   public
     { Public declarations }
+    procedure SendFTP(AHost, AUsername, APassword, ADir, AFileName: String);
     procedure Add_Log(AMessage:String);
   end;
 
@@ -74,7 +106,115 @@ end;
 procedure TForm1.btnExecuteClick(Sender: TObject);
 begin
   btnExecute.Enabled := False;
+  btnForm.Enabled := False;
+  btnExport.Enabled := False;
+  btnSendFTP.Enabled := False;
   Timer1.Enabled := True;
+end;
+
+procedure TForm1.btnExportClick(Sender: TObject);
+begin
+  if not qryReport.Active then Exit;
+
+  FFileRest_Group := '';
+  FFileRest_Tabletki := '';
+  FFileRest_MyPharmacy := '';
+
+  if (qryUnit.RecNo = 1) and (HourOf(Now) < 2) then
+  begin
+    try
+      dsReport.DataSet := qryRest_Group;
+      qryRest_Group.Close;
+      qryRest_Group.Open;
+      if ReportExportRest_Group(qryUnit.FieldByName('SerialNumber').AsInteger) then
+      begin
+        ReportCompressRest_Group(qryUnit.FieldByName('SerialNumber').AsInteger);
+      end;
+    finally
+      dsReport.DataSet := qryReport;
+    end;
+  end;
+
+  if qryReport.RecordCount > 3 then
+  Begin
+    if ReportExport(qryUnit.FieldByName('RegNumber').AsInteger, qryUnit.FieldByName('Name').AsString) then
+    begin
+      if qryUnit.FieldByName('SerialNumber').AsInteger <> 0 then
+        ReportCompress(qryUnit.FieldByName('SerialNumber').AsInteger, qryUnit.FieldByName('Name').AsString);
+      if qryUnit.FieldByName('RegNumber').AsInteger <> 0 then
+        ReportCompressMyPharmacy(qryUnit.FieldByName('RegNumber').AsInteger, qryUnit.FieldByName('Name').AsString);
+    end;
+  End;
+
+end;
+
+procedure TForm1.btnFormClick(Sender: TObject);
+begin
+  FFileRest_Group := '';
+  FFileRest_Tabletki := '';
+  FFileRest_MyPharmacy := '';
+
+  if ZConnection1.Connected then
+  try
+    qryReport.Close;
+    qryReport.Params.ParamByName('inUnitId').Value := qryUnit.FieldByName('Id').AsInteger;
+    qryReport.Open;
+  except ON E:Exception DO
+    Begin
+      ZConnection1.Disconnect;
+      Add_Log(E.Message);
+      Exit;
+    End;
+  End;
+end;
+
+
+procedure TForm1.btnSendFTPClick(Sender: TObject);
+begin
+  if FFileRest_Group <> '' then
+    SendFTP(FHostTabletki, FUserTabletki, FPasswordTabletki, FPathTabletki, FFileRest_Group);
+  if FFileRest_Tabletki <> '' then
+    SendFTP(FHostTabletki, FUserTabletki, FPasswordTabletki, FPathTabletki, FFileRest_Tabletki);
+  if FFileRest_MyPharmacy <> '' then
+    SendFTP(FHostMyPharmacy, FUserMyPharmacy, FPasswordMyPharmacy, FPathMyPharmacy, FFileRest_MyPharmacy);
+end;
+
+procedure TForm1.SendFTP(AHost, AUsername, APassword, ADir, AFileName: String);
+begin
+  try
+    IdFTP1.Disconnect;
+    IdFTP1.Host := AHost;
+    idFTP1.Username := AUsername;
+    idFTP1.Password := APassword;
+    try
+      idFTP1.Connect;
+    Except ON E: Exception DO
+      Begin
+        Add_Log(E.Message);
+        exit;
+      End;
+    end;
+    if ADir <> '' then
+    try
+      idFTP1.ChangeDir(ADir);
+    except ON E: Exception DO
+      begin
+        Add_Log(E.Message);
+        exit;
+      end;
+    end;
+    try
+      idFTP1.Put(AFileName);
+      // DeleteFile(AFileName);
+    except ON E: Exception DO
+      Begin
+        Add_Log(E.Message);
+        exit;
+      End;
+    end;
+  finally
+    idFTP1.Disconnect;
+  end;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
@@ -88,10 +228,10 @@ Begin
   ini := TIniFile.Create(ChangeFileExt(Application.ExeName,'.ini'));
   try
 
-    FilePath := ini.readString('Options', 'FilePath', ExtractFilePath(Application.ExeName));
-    if FilePath[Length(FilePath)] <> '\' then
-      FilePath := FilePath + '\';
-    ini.WriteString('Options', 'FilePath', FilePath);
+    FFilePath := ini.readString('Options', 'FilePath', ExtractFilePath(Application.ExeName));
+    if FFilePath[Length(FFilePath)] <> '\' then
+      FFilePath := FFilePath + '\';
+    ini.WriteString('Options', 'FilePath', FFilePath);
 
     ZConnection1.Database := ini.ReadString('Connect','DataBase','farmacy');
     ini.WriteString('Connect','DataBase',ZConnection1.Database);
@@ -104,6 +244,17 @@ Begin
 
     ZConnection1.Password := ini.ReadString('Connect','Password','postgres');
     ini.WriteString('Connect','Password',ZConnection1.Password);
+
+    FHostTabletki := ini.ReadString('FTP','HostTabletki','ftp.tabletki.ua');
+    FPathTabletki := ini.ReadString('FTP','PathTabletki','');
+    FUserTabletki := ini.ReadString('FTP','UserTabletki','479');
+    FPasswordTabletki := ini.ReadString('FTP','PasswordTabletki','d83cd49bd18b');
+
+    FHostMyPharmacy := ini.ReadString('FTP','HostMyPharmacy','mypharmacy.com.ua');
+    FPathMyPharmacy := ini.ReadString('FTP','PathMyPharmacy','');
+    FUserMyPharmacy := ini.ReadString('FTP','UserMyPharmacy','neboley');
+    FPasswordMyPharmacy := ini.ReadString('FTP','PasswordMyPharmacy','46306');
+
 
   finally
     ini.free;
@@ -126,22 +277,26 @@ Begin
     end;
   end;
 
+
   if not ZConnection1.Connected then
   begin
-    Close;
+    Timer1.Enabled := True;
     Exit;
-  end;
+  end else qryUnit.Open;;
 
   if not ((ParamCount >= 1) and (CompareText(ParamStr(1), 'manual') = 0)) then
   begin
     btnExecute.Enabled := False;
+    btnForm.Enabled := False;
+    btnExport.Enabled := False;
+    btnSendFTP.Enabled := False;
     Timer1.Enabled := True;
   end;
 end;
 
 procedure TForm1.ReportCompress(AUnitId: Integer; AUnitName: String);
 var
-  UnitFile, RestFile: string;
+  UnitFile: string;
   SR: TSearchRec;
   ZipList: TStringList;
   ZipName: string;
@@ -151,28 +306,28 @@ begin
 
   try
 
-    if not ForceDirectories(FilePath + AUnitName + '\zip\') then
+    if not ForceDirectories(FFilePath + AUnitName + '\zip\') then
     begin
       Add_Log('Не могу создать директорию архивирования');
       exit;
     end;
 
-    UnitFile := FilePath  + AUnitName + '\' + AUnitName + '.xml';
-    RestFile := FilePath  + AUnitName + '\Zip\' +
+    UnitFile := FFilePath  + AUnitName + '\' + AUnitName + '.xml';
+    FFileRest_Tabletki := FFilePath  + AUnitName + '\Zip\' +
       'Rest_' + IntToStr(AUnitId) + '_' + FormatDateTime('yyyymmddhhmmss', Now) + '.zip';
 
     ZipList := TStringList.Create;
 
-    if FindFirst(FilePath + AUnitName + '\Zip\Rest_' + IntToStr(AUnitId) + '*.zip', faAnyFile, SR) = 0 then
+    if FindFirst(FFilePath + AUnitName + '\Zip\Rest_' + IntToStr(AUnitId) + '*.zip', faAnyFile, SR) = 0 then
     repeat
-      ZipList.Add(FilePath + AUnitName + '\Zip\' + SR.Name);
+      ZipList.Add(FFilePath + AUnitName + '\Zip\' + SR.Name);
     until FindNext(SR) <> 0;
     FindClose(SR);
 
     ZipFile := TZipFile.Create;
 
     try
-      ZipFile.Open(RestFile, zmWrite);
+      ZipFile.Open(FFileRest_Tabletki, zmWrite);
       ZipFile.Add(UnitFile);
       ZipFile.Close;
 
@@ -193,7 +348,7 @@ end;
 
 procedure TForm1.ReportCompressMyPharmacy(AUnitId: Integer; AUnitName: String);
 var
-  UnitFile, TempFile, RestFile: string;
+  UnitFile, TempFile: string;
   SR: TSearchRec;
   ZipList: TStringList;
   ZipName: string;
@@ -203,16 +358,16 @@ begin
 
   try
 
-    if not ForceDirectories(FilePath + AUnitName + '\ZipMyPharmacy\') then
+    if not ForceDirectories(FFilePath + AUnitName + '\ZipMyPharmacy\') then
     begin
       Add_Log('Не могу создать директорию архивирования');
       exit;
     end;
 
-    UnitFile := FilePath  + AUnitName + '\' + AUnitName + '.xml';
-    RestFile := IntToStr(AUnitId) + '_' + FormatDateTime('yyyymmddhhmmss', Now);
-    TempFile := FilePath  + AUnitName + '\' + RestFile + '.xml';
-    RestFile := FilePath  + AUnitName + '\ZipMyPharmacy\' + RestFile + '.zip';
+    UnitFile := FFilePath  + AUnitName + '\' + AUnitName + '.xml';
+    FFileRest_MyPharmacy := IntToStr(AUnitId) + '_' + FormatDateTime('yyyymmddhhmmss', Now);
+    TempFile := FFilePath  + AUnitName + '\' + FFileRest_MyPharmacy + '.xml';
+    FFileRest_MyPharmacy := FFilePath  + AUnitName + '\ZipMyPharmacy\' + FFileRest_MyPharmacy + '.zip';
 
     if not CopyFile(PWideChar(UnitFile), PWideChar(TempFile), True) then
     begin
@@ -222,16 +377,16 @@ begin
 
     ZipList := TStringList.Create;
 
-    if FindFirst(FilePath + AUnitName + '\ZipMyPharmacy\' + IntToStr(AUnitId) + '*.zip', faAnyFile, SR) = 0 then
+    if FindFirst(FFilePath + AUnitName + '\ZipMyPharmacy\' + IntToStr(AUnitId) + '*.zip', faAnyFile, SR) = 0 then
     repeat
-      ZipList.Add(FilePath + AUnitName + '\ZipMyPharmacy\' + SR.Name);
+      ZipList.Add(FFilePath + AUnitName + '\ZipMyPharmacy\' + SR.Name);
     until FindNext(SR) <> 0;
     FindClose(SR);
 
     ZipFile := TZipFile.Create;
 
     try
-      ZipFile.Open(RestFile, zmWrite);
+      ZipFile.Open(FFileRest_MyPharmacy, zmWrite);
       ZipFile.Add(TempFile);
       ZipFile.Close;
 
@@ -253,7 +408,7 @@ end;
 
 procedure TForm1.ReportCompressRest_Group(AUnitId: Integer);
 var
-  UnitFile, RestFile: string;
+  UnitFile: string;
   SR: TSearchRec;
   ZipName: string;
   ZipFile: TZipFile;
@@ -262,22 +417,22 @@ begin
 
   try
 
-    if not ForceDirectories(FilePath) then
+    if not ForceDirectories(FFilePath) then
     begin
       Add_Log('Не могу создать директорию архивирования');
       exit;
     end;
 
-    UnitFile := FilePath  + 'rest_group_' + IntToStr(AUnitId) + '.xml';
-    RestFile := FilePath  + 'rest_group_' + IntToStr(AUnitId) + '.zip';
+    UnitFile := FFilePath  + 'rest_group_' + IntToStr(AUnitId) + '.xml';
+    FFileRest_Group := FFilePath  + 'rest_group_' + IntToStr(AUnitId) + '.zip';
 
-    if FileExists(FilePath  + 'rest_group_' + IntToStr(AUnitId) + '.zip') then
-      DeleteFile(FilePath  + 'rest_group_' + IntToStr(AUnitId) + '.zip');
+    if FileExists(FFilePath  + 'rest_group_' + IntToStr(AUnitId) + '.zip') then
+      DeleteFile(FFilePath  + 'rest_group_' + IntToStr(AUnitId) + '.zip');
 
     ZipFile := TZipFile.Create;
 
     try
-      ZipFile.Open(RestFile, zmWrite);
+      ZipFile.Open(FFileRest_Group, zmWrite);
       ZipFile.Add(UnitFile);
       ZipFile.Close;
 
@@ -302,9 +457,9 @@ begin
   Add_Log('Начало выгрузки отчета');
   Result := False;
 
-  UnitFile := FilePath  + AUnitName + '\' + AUnitName + '.xml';
+  UnitFile := FFilePath  + AUnitName + '\' + AUnitName + '.xml';
 
-  if not ForceDirectories(FilePath  + AUnitName) then
+  if not ForceDirectories(FFilePath  + AUnitName) then
   begin
     Add_Log('Не могу создать директорию выгрузки');
     exit;
@@ -344,9 +499,9 @@ begin
   Add_Log('Начало выгрузки отчета');
   Result := False;
 
-  UnitFile := FilePath  + 'rest_group_' + IntToStr(AUnitId) + '.xml';
+  UnitFile := FFilePath  + 'rest_group_' + IntToStr(AUnitId) + '.xml';
 
-  if not ForceDirectories(FilePath) then
+  if not ForceDirectories(FFilePath) then
   begin
     Add_Log('Не могу создать директорию выгрузки');
     exit;
@@ -385,7 +540,6 @@ begin
 
     if ZConnection1.Connected then
     try
-      qryUnit.Open;
 
       qryUnit.First;
       cxProgressBarUnit.Properties.Max := qryUnit.RecordCount;
@@ -395,33 +549,11 @@ begin
         cxProgressBarUnit.Position := qryUnit.RecNo;
         Application.ProcessMessages;
         Sleep(100);
-        if (qryUnit.RecNo = 1) and (HourOf(Now) < 2) then
-        begin
-          try
-            dsReport.DataSet := qryRest_Group;
-            qryRest_Group.Close;
-            qryRest_Group.Open;
-            if ReportExportRest_Group(qryUnit.FieldByName('SerialNumber').AsInteger) then
-            begin
-              ReportCompressRest_Group(qryUnit.FieldByName('SerialNumber').AsInteger);
-            end;
-          finally
-            dsReport.DataSet := qryReport;
-          end;
-        end;
 
-        qryReport.Close;
-        qryReport.Params.ParamByName('inUnitId').Value := qryUnit.FieldByName('Id').AsInteger;
-        qryReport.Open;
+        btnFormClick(Sender);
+        btnExportClick(Sender);
+        btnSendFTPClick(Sender);
 
-        if qryReport.RecordCount > 3 then
-        Begin
-          if ReportExport(qryUnit.FieldByName('RegNumber').AsInteger, qryUnit.FieldByName('Name').AsString) then
-          begin
-            ReportCompress(qryUnit.FieldByName('SerialNumber').AsInteger, qryUnit.FieldByName('Name').AsString);
-            ReportCompressMyPharmacy(qryUnit.FieldByName('RegNumber').AsInteger, qryUnit.FieldByName('Name').AsString);
-          end;
-        End;
         qryUnit.Next;
       End;
     except ON E:Exception DO
