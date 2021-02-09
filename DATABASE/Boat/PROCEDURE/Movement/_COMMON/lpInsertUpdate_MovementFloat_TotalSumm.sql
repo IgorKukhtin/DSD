@@ -1,8 +1,8 @@
 -- Function: lpInsertUpdate_MovementFloat_TotalSumm (Integer)
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementFloat_TotalSumm22 (Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementFloat_TotalSumm (Integer);
 
-CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementFloat_TotalSumm22(
+CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementFloat_TotalSumm(
     IN inMovementId Integer -- Ключ объекта <Документ>
 )
   RETURNS VOID AS
@@ -67,7 +67,7 @@ BEGIN
 
            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
-                                       AND MovementLinkObject_PaidKind.DescId = CASE WHEN Movement.DescId = zc_Movement_TransferDebtOut() THEN zc_MovementLinkObject_PaidKindTo() WHEN Movement.DescId = zc_Movement_TransferDebtIn() THEN zc_MovementLinkObject_PaidKindFrom() ELSE zc_MovementLinkObject_PaidKind() END
+                                       AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
 
       WHERE Movement.Id = inMovementId;
 
@@ -86,7 +86,7 @@ BEGIN
                       THEN CAST ( (zfCalc_SummIn (tmpMI.OperCount_Master, tmpMI.Price, COALESCE (tmpMI.CountForPrice,1) )) / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
                  WHEN vbPriceWithVAT
                       -- если цены c НДС (Вариант может быть если  первичен расчет НДС =1/6 )
-                      THEN zfCalc_SummIn (tmpMI.OperCount_Master, tmpMI.Price, COALESCE (tmpMI.CountForPrice,1) ) - CAST ( ((zfCalc_SummIn (tmpMI.OperCount_Master, tmpMI.Price, COALESCE (tmpMI.CountForPrice,1) )) / (100 / vbVATPercent + 1) AS NUMERIC (16, 2)))
+                      THEN zfCalc_SummIn (tmpMI.OperCount_Master, tmpMI.Price, COALESCE (tmpMI.CountForPrice,1) ) - CAST ( ((zfCalc_SummIn (tmpMI.OperCount_Master, tmpMI.Price, COALESCE (tmpMI.CountForPrice,1) )) / (100 / vbVATPercent + 1)) AS NUMERIC (16, 2) )
             END) AS OperSumm_MVAT
     
             -- Сумма с НДС
@@ -95,7 +95,7 @@ BEGIN
                       THEN (zfCalc_SummIn (tmpMI.OperCount_Master, tmpMI.Price, COALESCE (tmpMI.CountForPrice,1) ))
                  -- если цены без НДС
                  WHEN vbVATPercent > 0
-                      THEN CAST ( (1 + vbVATPercent / 100) * zfCalc_SummIn (tmpMI.OperCount_Master, tmpMI.Price, COALESCE (tmpMI.CountForPrice,1) ) AS NUMERIC (16, 2))
+                      THEN CAST ( ((1 + vbVATPercent / 100) * zfCalc_SummIn (tmpMI.OperCount_Master, tmpMI.Price, COALESCE (tmpMI.CountForPrice,1) )) AS NUMERIC (16, 2))
             END) AS OperSumm_PVAT
     
             -- Сумма с НДС + !!!НЕ!!! учтена скидка в цене
@@ -114,24 +114,24 @@ BEGIN
        
        FROM (SELECT MovementItem.DescId
                   , MovementItem.ObjectId            AS GoodsId
-                  , (CASE WHEN MovementItem.DescId = zc_MI_Master() THEN MovementItem.Amount ELSE 0 END) AS OperCount_Master
-                  , (CASE WHEN MovementItem.DescId = zc_MI_Child() THEN MovementItem.Amount ELSE 0 END)  AS OperCount_Child
+                  , CASE WHEN MovementItem.DescId = zc_MI_Master() THEN MovementItem.Amount ELSE 0 END AS OperCount_Master
+                  , CASE WHEN MovementItem.DescId = zc_MI_Child() THEN MovementItem.Amount ELSE 0 END  AS OperCount_Child
                   , MIFloat_OperPrice.ValueData      AS OperPrice_original
                   --цена со скидкой
-                  , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
-                         THEN zfCalc_PriceTruncate (inOperDate     := COALESCE (tmpMI_child_ReturnIn.OperDate_tax, vbOperDatePartner)
+                  , CASE WHEN MIFloat_ChangePercent.ValueData <> 0  AND vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) -- !!!для НАЛ не учитываем!!!
+                         THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
                                                   , inChangePercent:= MIFloat_ChangePercent.ValueData
                                                   , inPrice        := MIFloat_OperPrice.ValueData
                                                   , inIsWithVAT    := vbPriceWithVAT
                                                    )
-                         WHEN vbDiscountPercent <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
-                              THEN zfCalc_PriceTruncate (inOperDate     := COALESCE (tmpMI_child_ReturnIn.OperDate_tax, vbOperDatePartner)
+                         WHEN vbDiscountPercent <> 0 AND vbMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) -- !!!для НАЛ не учитываем!!!
+                              THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
                                                        , inChangePercent:= -1 * vbDiscountPercent
                                                        , inPrice        := MIFloat_OperPrice.ValueData
                                                        , inIsWithVAT    := vbPriceWithVAT
                                                         )
-                         WHEN vbExtraChargesPercent <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
-                              THEN zfCalc_PriceTruncate (inOperDate     := COALESCE (tmpMI_child_ReturnIn.OperDate_tax, vbOperDatePartner)
+                         WHEN vbExtraChargesPercent <> 0 AND vbMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) -- !!!для НАЛ не учитываем!!!
+                              THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
                                                        , inChangePercent:= 1 * vbExtraChargesPercent
                                                        , inPrice        := MIFloat_OperPrice.ValueData
                                                        , inIsWithVAT    := vbPriceWithVAT
@@ -140,7 +140,7 @@ BEGIN
                     END AS Price
                   , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
                   , COALESCE (MIFloat_ChangePercent.ValueData, 0) AS ChangePercent
-                  , (zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, COALESCE (MIFloat_CountForPrice.ValueData, 0) ) AS OperSumm_original
+                  , zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, COALESCE (MIFloat_CountForPrice.ValueData, 0) ) AS OperSumm_original
              FROM MovementItem
                   LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MovementItem.PartionId
                   
@@ -163,11 +163,16 @@ BEGIN
 
 
   
-             -- Сохранили свойство <Итого количество("главные элементы")>
-             PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, vbTotalCount);
-             -- Сохранили свойство <Итого Сумма>
-             PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, vbTotalSumm);
-      
+         -- Сохранили свойство <Итого количество("главные элементы")>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, vbTotalCount_Master);
+         -- Сохранили свойство <Итого Сумма>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, vbTotalSumm);
+         -- Сохранили свойство <Итого сумма по накладной (без НДС)>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummMVAT(), inMovementId, vbOperSumm_MVAT);
+         -- Сохранили свойство <Итого сумма по накладной (с НДС)>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPVAT(), inMovementId, vbOperSumm_PVAT);
+         -- Сохранили свойство <Итого сумма скидки по накладной>
+         --PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummChange(), inMovementId, vbOperSumm_Partner - vbOperSumm_PVAT_original); 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -176,13 +181,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 13.05.20         *
- 14.02.19         * add TotalSummJur
- 21.07.17         *
- 15.06.17         *
- 28.04.15                         *
+ 09.02.21         *
 */
 -- select lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= id) from gpSelect_Movement_WeighingPartner (inStartDate := ('01.06.2014')::TDateTime , inEndDate := ('30.06.2014')::TDateTime ,  inSession := '5') as a
 -- тест
---
- SELECT lpInsertUpdate_MovementFloat_TotalSumm22 (inMovementId:= 76) 
+-- 
+SELECT lpInsertUpdate_MovementFloat_TotalSumm(inMovementId:= 76) 
