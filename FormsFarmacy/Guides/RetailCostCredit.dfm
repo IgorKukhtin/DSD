@@ -6,7 +6,7 @@ inherited RetailCostCreditForm: TRetailCostCreditForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 486
-  ExplicitHeight = 461
+  ExplicitHeight = 462
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -136,13 +136,13 @@ inherited RetailCostCreditForm: TRetailCostCreditForm
         end
         item
           Name = 'MinPrice'
-          Value = '0'
+          Value = 0.000000000000000000
           DataType = ftFloat
           MultiSelectSeparator = ','
         end
         item
           Name = 'Percent'
-          Value = '0'
+          Value = 0.000000000000000000
           DataType = ftFloat
           MultiSelectSeparator = ','
         end
@@ -253,7 +253,7 @@ inherited RetailCostCreditForm: TRetailCostCreditForm
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsName'
+          ComponentItem = 'RetailName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -493,7 +493,7 @@ inherited RetailCostCreditForm: TRetailCostCreditForm
       end
       item
         Name = 'inValue'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'Value'
         DataType = ftFloat

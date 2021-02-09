@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , BarCodeBoxId Integer, BarCodeBoxName TVarChar
              , SubjectDocId Integer, SubjectDocName TVarChar
              , PersonalGroupId Integer, PersonalGroupName TVarChar, UnitName_PersonalGroup TVarChar
+             , Comment TVarChar
               )
 AS
 $BODY$
@@ -101,6 +102,7 @@ BEGIN
              , Object_PersonalGroup.Id         AS PersonalGroupId
              , Object_PersonalGroup.ValueData  AS PersonalGroupName
              , Object_Unit_PersonalGroup.ValueData AS UnitName_PersonalGroup
+             , MovementString_Comment.ValueData AS Comment
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_WeighingProduction()
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -196,6 +198,9 @@ BEGIN
                                 AND ObjectLink_PersonalGroup_Unit.DescId = zc_ObjectLink_PersonalGroup_Unit()
             LEFT JOIN Object AS Object_Unit_PersonalGroup ON Object_Unit_PersonalGroup.Id = ObjectLink_PersonalGroup_Unit.ChildObjectId
 
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId = Movement.Id 
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
        WHERE Movement.DescId = zc_Movement_WeighingProduction()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
   
@@ -207,6 +212,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 08.02.21         * Comment
  17.08.20         *
  03.03.20         * Add Order
  05.10.16         * add inJuridicalBasisId

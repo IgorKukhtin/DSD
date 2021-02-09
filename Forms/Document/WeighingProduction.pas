@@ -171,6 +171,11 @@ type
     cxLabel22: TcxLabel;
     edPersonalGroup: TcxButtonEdit;
     GuidesPersonalGroup: TdsdGuides;
+    cxLabel19: TcxLabel;
+    ceComment: TcxTextEdit;
+    cxLabel20: TcxLabel;
+    ed: TcxButtonEdit;
+    GuidesSubjectDoc: TdsdGuides;
   private
   public
   end;

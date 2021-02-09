@@ -84,30 +84,6 @@ BEGIN
   
   WHERE MovementItemProtocol.MovementItemId = inMovementItemId
     -- AND 1=0
- UNION ALL
-  -- old-1
-  SELECT 
-     MovementItemProtocol.OperDate,
-     MovementItemProtocol.ProtocolData::Text,
-     Object_User.ValueData     AS UserName,
-
-     Object_Unit.ObjectCode    AS UnitCode,
-     Object_Unit.ValueData     AS UnitName,
-     Object_Position.ValueData AS PositionName,
-
-     MovementItemProtocol.MovementItemId
-  FROM MovementItemProtocol_Old AS MovementItemProtocol
-       JOIN Object AS Object_User ON Object_User.Id = MovementItemProtocol.UserId
-
-       LEFT JOIN ObjectLink AS ObjectLink_User_Member
-                            ON ObjectLink_User_Member.ObjectId = Object_User.Id
-                           AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-       LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
-       LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
-       LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
-  
-  WHERE MovementItemProtocol.MovementItemId = inMovementItemId
-    -- AND 1=0
   ;
 
   ELSE

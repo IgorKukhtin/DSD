@@ -209,33 +209,6 @@ BEGIN
        LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
   -- WHERE 1=0
- UNION ALL
-  -- old-1
-  SELECT 
-     MovementProtocol.OperDate,
-     MovementProtocol.ProtocolData::Text,
-     Object_User.ValueData,
-
-     Object_Unit.ObjectCode    AS UnitCode,
-     Object_Unit.ValueData     AS UnitName,
-     Object_Position.ValueData AS PositionName,
-     
-     Movement.InvNumber, 
-     Movement.OperDate, 
-     MovementDesc.ItemName AS MovementDescName,
-     MovementProtocol.isInsert
-  FROM MovementProtocol_Old AS MovementProtocol
-       JOIN Object AS Object_User ON Object_User.Id = MovementProtocol.UserId
-       JOIN Movement ON Movement.Id = MovementProtocol.MovementId AND Movement.Id = inMovementId
-       JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
-
-       LEFT JOIN ObjectLink AS ObjectLink_User_Member
-                            ON ObjectLink_User_Member.ObjectId = Object_User.Id
-                           AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-       LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
-       LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
-       LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
-  -- WHERE 1=0
   ;
 
   ELSE

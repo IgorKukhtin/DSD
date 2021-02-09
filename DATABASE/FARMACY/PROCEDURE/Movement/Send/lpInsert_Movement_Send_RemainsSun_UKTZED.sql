@@ -75,15 +75,15 @@ BEGIN
      END IF;
 
      -- Исключения по техническим переучетам по Аптекам - если есть в непроведенных ТП то исключаем из распределения
-     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpGoods_TP_exception'))
+     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpGoods_TP_exception_UKTZED'))
      THEN
-       CREATE TEMP TABLE _tmpGoods_TP_exception   (UnitId Integer, GoodsId Integer) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpGoods_TP_exception_UKTZED   (UnitId Integer, GoodsId Integer) ON COMMIT DROP;
      END IF;
 
      -- Уже использовано в текущем СУН
-     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpGoods_Sun_exception'))
+     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpGoods_Sun_exception_UKTZED'))
      THEN
-       CREATE TEMP TABLE _tmpGoods_Sun_exception   (UnitId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpGoods_Sun_exception_UKTZED   (UnitId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
      END IF;
 
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
@@ -109,9 +109,9 @@ BEGIN
      -- все Подразделения для схемы SUN
      DELETE FROM _tmpUnit_SUN_UKTZED;
      -- Исключения по техническим переучетам по Аптекам - если есть в непроведенных ТП то исключаем из распределения
-     DELETE FROM _tmpGoods_TP_exception;
+     DELETE FROM _tmpGoods_TP_exception_UKTZED;
      -- Уже использовано в текущем СУН
-     DELETE FROM _tmpGoods_Sun_exception;
+     DELETE FROM _tmpGoods_Sun_exception_UKTZED;
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
      DELETE FROM _tmpRemains_all_UKTZED;
      -- 2. все остатки, НТЗ, и коэф. товарного запаса
@@ -187,7 +187,7 @@ BEGIN
                             , MovementItem.ObjectId
                      )
 
-     INSERT INTO _tmpGoods_TP_exception   (UnitId, GoodsId)
+     INSERT INTO _tmpGoods_TP_exception_UKTZED   (UnitId, GoodsId)
      SELECT tmpGoods.UnitId, tmpGoods.GoodsId
      FROM tmpGoods;
 
@@ -215,7 +215,7 @@ BEGIN
                             , MovementItem.ObjectId
                     )
      -- Результат-1
-     INSERT INTO _tmpGoods_Sun_exception (UnitId, GoodsId, Amount)
+     INSERT INTO _tmpGoods_Sun_exception_UKTZED (UnitId, GoodsId, Amount)
         SELECT tmpSUN.UnitId, tmpSUN.GoodsId, tmpSUN.Amount
         FROM tmpSUN;
 
@@ -253,8 +253,8 @@ BEGIN
                               -- !!!только для таких Аптек!!!
                               INNER JOIN _tmpGoods_SUN_UKTZED ON _tmpGoods_SUN_UKTZED.GoodsId = Container.ObjectId
                               INNER JOIN _tmpUnit_SUN_UKTZED ON _tmpUnit_SUN_UKTZED.UnitId = Container.WhereObjectId
-                              LEFT JOIN _tmpGoods_TP_exception ON _tmpGoods_TP_exception.GoodsId = Container.ObjectId
-                                                              AND _tmpGoods_TP_exception.UnitId = Container.WhereObjectId
+                              LEFT JOIN _tmpGoods_TP_exception_UKTZED ON _tmpGoods_TP_exception_UKTZED.GoodsId = Container.ObjectId
+                                                              AND _tmpGoods_TP_exception_UKTZED.UnitId = Container.WhereObjectId
                               LEFT JOIN ContainerlinkObject AS ContainerLinkObject_DivisionParties
                                                             ON ContainerLinkObject_DivisionParties.Containerid = Container.Id
                                                            AND ContainerLinkObject_DivisionParties.DescId = zc_ContainerLinkObject_DivisionParties()
@@ -264,7 +264,7 @@ BEGIN
                                                      AND ObjectBoolean_BanFiscalSale.DescId = zc_ObjectBoolean_DivisionParties_BanFiscalSale()
                          WHERE Container.DescId = zc_Container_Count()
                            AND Container.Amount <> 0
-                           AND COALESCE (_tmpGoods_TP_exception.GoodsId, 0) = 0
+                           AND COALESCE (_tmpGoods_TP_exception_UKTZED.GoodsId, 0) = 0
                            AND (_tmpUnit_SUN_UKTZED.isOutUKTZED_SUN1 = False OR _tmpUnit_SUN_UKTZED.isOutUKTZED_SUN1 = True AND COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False) = True)
                          GROUP BY Container.WhereObjectId
                                 , Container.ObjectId
@@ -387,8 +387,8 @@ BEGIN
              , tmpObject_Price.MCSValue
 
                -- остаток
-             , CASE WHEN COALESCE (tmpRemains.Amount - COALESCE (_tmpGoods_Sun_exception.Amount, 0), 0) > 0
-                    THEN COALESCE (tmpRemains.Amount - COALESCE (_tmpGoods_Sun_exception.Amount, 0), 0) ELSE 0 END AS AmountRemains
+             , CASE WHEN COALESCE (tmpRemains.Amount - COALESCE (_tmpGoods_Sun_exception_UKTZED.Amount, 0), 0) > 0
+                    THEN COALESCE (tmpRemains.Amount - COALESCE (_tmpGoods_Sun_exception_UKTZED.Amount, 0), 0) ELSE 0 END AS AmountRemains
                -- реализация
              , COALESCE (tmpSalesDay.AmountSalesDay, 0)      AS AmountSalesDay
              , COALESCE (tmpSalesMonth.AmountSalesMonth, 0)  AS AmountSalesMonth
@@ -407,8 +407,8 @@ BEGIN
                                      ON tmpSalesMonth.UnitId  = tmpObject_Price.UnitId
                                     AND tmpSalesMonth.GoodsId = tmpObject_Price.GoodsId
 
-             LEFT JOIN _tmpGoods_Sun_exception ON _tmpGoods_Sun_exception.UnitId  = tmpObject_Price.UnitId
-                                              AND _tmpGoods_Sun_exception.GoodsId = tmpObject_Price.GoodsId
+             LEFT JOIN _tmpGoods_Sun_exception_UKTZED ON _tmpGoods_Sun_exception_UKTZED.UnitId  = tmpObject_Price.UnitId
+                                              AND _tmpGoods_Sun_exception_UKTZED.GoodsId = tmpObject_Price.GoodsId
 
        ;
 
@@ -664,4 +664,4 @@ $BODY$
 
 -- select * from gpReport_Movement_Send_RemainsSun_UKTZED(inOperDate := ('28.12.2020')::TDateTime ,  inSession := '3');
 
-select * from gpReport_Movement_Send_RemainsSun_UKTZED(inOperDate := ('08.02.2021')::TDateTime ,  inSession := '3');
+-- select * from gpReport_Movement_Send_RemainsSun_UKTZED(inOperDate := ('08.02.2021')::TDateTime ,  inSession := '3');

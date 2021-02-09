@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , TotalCount TFloat, TotalCountTare TFloat
              , FromName TVarChar, ToName TVarChar
              , UserName TVarChar
+             , Comment TVarChar
              , DocumentKindId Integer, DocumentKindName TVarChar
              , GoodsTypeKindId Integer, GoodsTypeKindName TVarChar
              , BarCodeBoxId Integer, BarCodeBoxName TVarChar
@@ -140,6 +141,8 @@ BEGIN
              , Object_To.ValueData             AS ToName
              
              , Object_User.ValueData           AS UserName
+             
+             , MovementString_Comment.ValueData AS Comment
 
              , Object_DocumentKind.Id          AS DocumentKindId
              , Object_DocumentKind.ValueData   AS DocumentKindName
@@ -151,7 +154,6 @@ BEGIN
              , MIDate_StartBegin.ValueData  AS StartBegin
              , MIDate_EndBegin.ValueData    AS EndBegin
              , EXTRACT (EPOCH FROM (COALESCE (MIDate_EndBegin.ValueData, zc_DateStart()) - COALESCE (MIDate_StartBegin.ValueData, zc_DateStart())) :: INTERVAL) :: TFloat AS diffBegin_sec
-
 
            , Object_Goods.ObjectCode  AS GoodsCode
            , Object_Goods.ValueData   AS GoodsName
@@ -282,6 +284,10 @@ BEGIN
                                 AND ObjectLink_PersonalGroup_Unit.DescId = zc_ObjectLink_PersonalGroup_Unit()
             LEFT JOIN Object AS Object_Unit_PersonalGroup ON Object_Unit_PersonalGroup.Id = ObjectLink_PersonalGroup_Unit.ChildObjectId
 
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId = Movement.Id 
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
             --- строки
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                    AND MovementItem.DescId     = zc_MI_Master()
@@ -403,6 +409,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 08.02.21         * Comment
  17.08.20         *
  05.10.16         * add inJuridicalBasisId
  29.08.15         * add inGoodsGroupId, inGoodsId

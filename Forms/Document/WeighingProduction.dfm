@@ -22,13 +22,10 @@ object WeighingProductionForm: TWeighingProductionForm
     Left = 0
     Top = 0
     Width = 1289
-    Height = 100
+    Height = 129
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = -40
-    ExplicitTop = 4
-    ExplicitWidth = 1309
     object edInvNumber: TcxTextEdit
       Left = 113
       Top = 23
@@ -281,32 +278,46 @@ object WeighingProductionForm: TWeighingProductionForm
       TabOrder = 29
       Width = 108
     end
+    object cxLabel19: TcxLabel
+      Left = 278
+      Top = 81
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    end
+    object ceComment: TcxTextEdit
+      Left = 277
+      Top = 96
+      Enabled = False
+      Properties.ReadOnly = True
+      TabOrder = 31
+      Width = 278
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 126
+    Top = 155
     Width = 1289
-    Height = 336
+    Height = 307
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 1309
-    ClientRectBottom = 336
+    ExplicitTop = 126
+    ExplicitHeight = 336
+    ClientRectBottom = 307
     ClientRectRight = 1289
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 1309
+      ExplicitHeight = 312
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 1289
-        Height = 312
+        Height = 283
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1309
+        ExplicitHeight = 312
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -703,6 +714,24 @@ object WeighingProductionForm: TWeighingProductionForm
     Properties.ReadOnly = True
     TabOrder = 15
     Width = 160
+  end
+  object cxLabel20: TcxLabel
+    Left = 8
+    Top = 81
+    Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+  end
+  object ed: TcxButtonEdit
+    Left = 8
+    Top = 96
+    Enabled = False
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 17
+    Width = 264
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1432,7 +1461,7 @@ object WeighingProductionForm: TWeighingProductionForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           ComponentItem = 'OperDate_parent'
           DataType = ftDateTime
           ParamType = ptInput
@@ -1549,6 +1578,7 @@ object WeighingProductionForm: TWeighingProductionForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 347
     Top = 337
@@ -1655,14 +1685,14 @@ object WeighingProductionForm: TWeighingProductionForm
       end
       item
         Name = 'StartWeighing'
-        Value = ''
+        Value = Null
         Component = edStartWeighing
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndWeighing'
-        Value = ''
+        Value = Null
         Component = edEndWeighing
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -1835,6 +1865,28 @@ object WeighingProductionForm: TWeighingProductionForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SubjectDocId'
+        Value = Null
+        Component = GuidesSubjectDoc
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SubjectDocName'
+        Value = Null
+        Component = GuidesSubjectDoc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -1936,8 +1988,8 @@ object WeighingProductionForm: TWeighingProductionForm
     FormNameParam.MultiSelectSeparator = ','
     PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 55
-    Top = 88
+    Left = 87
+    Top = 24
   end
   object spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_WeighingProduction'
@@ -2301,7 +2353,7 @@ object WeighingProductionForm: TWeighingProductionForm
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
-    Left = 36
+    Left = 52
     Top = 24
   end
   object getMovementForm: TdsdStoredProc
@@ -2355,7 +2407,36 @@ object WeighingProductionForm: TWeighingProductionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 976
-    Top = 96
+    Left = 984
+    Top = 80
+  end
+  object GuidesSubjectDoc: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ed
+    FormNameParam.Value = 'TDocumentKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TDocumentKindForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesSubjectDoc
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesSubjectDoc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 150
+    Top = 88
   end
 end

@@ -32,7 +32,7 @@ BEGIN
      vbIsInsert:= COALESCE (vbMovementItemId, 0) = 0;
 
      -- сохранили <Элемент документа>
-     vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inBankAccountId, ioId, inAmount, NULL);
+     vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inBankAccountId, Null, ioId, inAmount, NULL);
 
      -- сохранили связь с <Объект>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_MoneyPlace(), vbMovementItemId, inMoneyPlaceId);

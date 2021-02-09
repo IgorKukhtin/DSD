@@ -73,6 +73,7 @@ type
     DiscountTax: TcxGridDBColumn;
     InfoMoneyName: TcxGridDBColumn;
     TaxKindName: TcxGridDBColumn;
+    TaxKind_Value: TcxGridDBColumn;
   private
     { Private declarations }
   public

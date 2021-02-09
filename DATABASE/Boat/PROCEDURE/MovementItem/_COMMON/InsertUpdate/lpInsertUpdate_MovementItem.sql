@@ -1,11 +1,13 @@
 -- Function: lpInsertUpdate_MovementItem
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem (Integer, Integer, Integer, Integer, TFloat, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem (Integer, Integer, Integer, Integer, Integer, TFloat, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem(
  INOUT ioId           Integer, 
     IN inDescId       Integer, 
     IN inObjectId     Integer, 
+    IN inPartionId    Integer, -- Партия в Object_PartionGoods.MovementItemId
     IN inMovementId   Integer,
     IN inAmount       TFloat,
     IN inParentId     Integer,
@@ -13,9 +15,12 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem(
 )
   RETURNS Integer AS
 $BODY$
-  DECLARE vbStatusId  Integer;
-  DECLARE vbInvNumber TVarChar;
-  DECLARE vbIsErased  Boolean;
+  DECLARE vbStatusId        Integer;
+  DECLARE vbInvNumber       TVarChar;
+  DECLARE vbIsErased        Boolean;
+  DECLARE vbMovementId      Integer;
+  DECLARE vbMovementDescId  Integer;
+  DECLARE vbDescId          Integer;
 BEGIN
      -- меняем параметр
      IF inParentId = 0
@@ -29,6 +34,11 @@ BEGIN
          inObjectId := NULL;
      END IF;
 
+     -- меняем параметр  
+     IF inPartionId = 0
+     THEN
+         inPartionId := NULL;
+     END IF;
 
      -- 0. Проверка
      IF COALESCE (inMovementId, 0) = 0
@@ -38,43 +48,69 @@ BEGIN
 
 
      -- определяем <Статус>
-     SELECT StatusId, InvNumber INTO vbStatusId, vbInvNumber FROM Movement WHERE Id = inMovementId;
-     IF vbStatusId <> zc_Enum_Status_UnComplete()
+     SELECT StatusId, InvNumber, DescId INTO vbStatusId, vbInvNumber, vbMovementDescId FROM Movement WHERE Id = inMovementId;
+
+     -- проверка - проведенные/удаленные документы Изменять нельзя + !!!временно для SYBASE -1 * zc_User_Sybase() !!!
+     IF vbStatusId <> zc_Enum_Status_UnComplete() 
      THEN
          RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData_sh (vbStatusId);
      END IF;
+
      -- проверка - inAmount
-     IF inAmount IS NULL
+     IF inAmount IS NULL AND inDescId = zc_MI_Master()
      THEN
-         RAISE EXCEPTION 'Ошибка-1.Не определено количество/сумма в документе № <%>.', vbInvNumber;
-     END IF;
-     -- проверка - inObjectId
-     IF inObjectId IS NULL
+         RAISE EXCEPTION 'Ошибка-1.Не определено Количество в документе № <%>.', vbInvNumber;
+     ELSEIF inAmount IS NULL AND inDescId <> zc_MI_Master()
      THEN
---         RAISE EXCEPTION 'Ошибка-1.Не определен Объект в документе № <%>.', vbInvNumber;
+         RAISE EXCEPTION 'Ошибка-1.Не определена Сумма в документе № <%>.', vbInvNumber;
      END IF;
 
+     -- проверка - inObjectId
+     IF inObjectId IS NULL AND inDescId = zc_MI_Master()
+     THEN
+         RAISE EXCEPTION 'Ошибка-1.Не определен Товар в документе № <%>.', vbInvNumber;
+     END IF;
+     /*
+     -- проверка - inPartionId
+     IF inPartionId IS NULL AND inDescId = zc_MI_Master() AND vbMovementDescId NOT IN (zc_Movement_Income())
+     THEN
+         RAISE EXCEPTION 'Ошибка-1.Не определена Партия в документе № <%>.', vbInvNumber;
+     END IF;
+*/
 
      IF COALESCE (ioId, 0) = 0
      THEN
          --
-         INSERT INTO MovementItem (DescId, ObjectId, MovementId, Amount, ParentId)
-                           VALUES (inDescId, inObjectId, inMovementId, inAmount, inParentId) RETURNING Id INTO ioId;
+         INSERT INTO MovementItem (DescId, ObjectId, PartionId, MovementId, Amount, ParentId)
+                           VALUES (inDescId, inObjectId, inPartionId, inMovementId, inAmount, inParentId) RETURNING Id INTO ioId;
      ELSE
          --
-         UPDATE MovementItem SET ObjectId = inObjectId, Amount = inAmount, ParentId = inParentId/*, MovementId = inMovementId*/ WHERE Id = ioId
-         RETURNING isErased INTO vbIsErased;
-         --
+         UPDATE MovementItem SET ObjectId   = inObjectId
+                               , PartionId  = inPartionId
+                               , Amount     = inAmount
+                               , ParentId   = inParentId
+                                 -- !!!временно для Sybase!!!
+                               , MovementId = inMovementId
+                            -- , DescId     = inDescId
+         WHERE Id = ioId
+         RETURNING isErased, MovementId, DescId INTO vbIsErased, vbMovementId, vbDescId
+        ;
+
+         -- если такой элемент не был найден
          IF NOT FOUND THEN
-            RAISE EXCEPTION 'Ошибка.Элемент <%> в документе № <%> не найдена.', ioId, vbInvNumber;
-            INSERT INTO MovementItem (Id, DescId, ObjectId, MovementId, Amount, ParentId)
-                              VALUES (ioId, inDescId, inObjectId, inMovementId, inAmount, inParentId) RETURNING Id INTO ioId;
+            -- Ошибка
+            RAISE EXCEPTION 'Ошибка.Элемент <%> в документе № <%> не найден.', ioId, vbInvNumber;
+            --
+            INSERT INTO MovementItem (Id, DescId, ObjectId, PartionId, MovementId, Amount, ParentId)
+                              VALUES (ioId, inDescId, inObjectId, inPartionId, inMovementId, inAmount, inParentId) RETURNING Id INTO ioId;
          END IF;
-         --
+ 
+         -- Проверка
          IF vbIsErased = TRUE
          THEN
              RAISE EXCEPTION 'Ошибка.Элемент не может корректироваться т.к. он <Удален>.';
          END IF;
+
      END IF;
 END;
 $BODY$
@@ -84,14 +120,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 11.07.15                                        * add inUserId
- 17.05.14                                        * add проверка - inAmount and inObjectId
- 05.04.14                                        * add vbIsErased
- 31.10.13                                        * add vbInvNumber
- 06.10.13                                        * add vbStatusId
- 09.08.13                                        * add inObjectId := NULL
- 09.08.13                                        * add inObjectId := NULL
- 23.07.13                                        * add inParentId := NULL
+ 08.02.21         *
 */
 
 -- тест

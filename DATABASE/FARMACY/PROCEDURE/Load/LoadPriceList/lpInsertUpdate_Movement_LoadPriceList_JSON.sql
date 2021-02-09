@@ -403,7 +403,7 @@ BEGIN
         Price = inPrice, PriceOriginal = tblJSON.PriceOriginal, ExpirationDate = inExpirationDate, PackCount = COALESCE(inPackCount, ''), ProducerName = COALESCE(inProducerName, '')
       , Remains = tblJSON.inRemains
     FROM tblJSON
-    WHERE LoadPriceListId = vbLoadPriceListId AND GoodsCode = inGoodsCode AND COALESCE(CommonCode, 0) = COALESCE(inCommonCode) AND COALESCE (inPrice, 0) <> 0;
+    WHERE LoadPriceListId = vbLoadPriceListId AND GoodsCode = inGoodsCode AND COALESCE(CommonCode, 0) = COALESCE(inCommonCode, 0) AND COALESCE (inPrice, 0) <> 0;
 
 
     -- добавляем новое
@@ -427,7 +427,10 @@ BEGIN
         inPrice, PriceOriginal, inExpirationDate, COALESCE(inPackCount, '') as inPackCount, COALESCE(inProducerName, '') as inProducerName
       , tblJSON.inRemains
     FROM tblJSON
-    WHERE COALESCE (inPrice, 0) <> 0 AND NOT EXISTS(SELECT * FROM LoadPriceListItem WHERE LoadPriceListId = vbLoadPriceListId AND GoodsCode = inGoodsCode AND COALESCE(CommonCode, 0) = COALESCE(inCommonCode));
+    WHERE COALESCE (inPrice, 0) <> 0 
+      AND NOT EXISTS(SELECT * FROM LoadPriceListItem 
+                     WHERE LoadPriceListId = vbLoadPriceListId 
+                       AND GoodsCode = inGoodsCode AND COALESCE(CommonCode, 0) = COALESCE(inCommonCode, 0));
 
    -- Удаление удаление чего нет в прайсе
    DELETE FROM LoadPriceListItem 
