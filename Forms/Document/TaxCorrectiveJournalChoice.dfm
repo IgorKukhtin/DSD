@@ -1,5 +1,5 @@
 inherited TaxCorrectiveJournalChoiceForm: TTaxCorrectiveJournalChoiceForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1085#1072#1082#1083#1072#1076#1085#1099#1077'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 535
   ClientWidth = 1110
   AddOnFormData.ChoiceAction = dsdChoiceGuides
@@ -507,10 +507,11 @@ inherited TaxCorrectiveJournalChoiceForm: TTaxCorrectiveJournalChoiceForm
     ExplicitWidth = 1110
     ExplicitHeight = 41
     inherited deStart: TcxDateEdit
-      Left = 497
+      Left = 273
       Top = 10
       EditValue = 42370d
-      ExplicitLeft = 497
+      Properties.ReadOnly = True
+      ExplicitLeft = 273
       ExplicitTop = 10
     end
     inherited deEnd: TcxDateEdit
@@ -522,10 +523,10 @@ inherited TaxCorrectiveJournalChoiceForm: TTaxCorrectiveJournalChoiceForm
       ExplicitTop = 20
     end
     inherited cxLabel1: TcxLabel
-      Left = 471
+      Left = 249
       Top = 11
       Caption = #1086#1090':'
-      ExplicitLeft = 471
+      ExplicitLeft = 249
       ExplicitTop = 11
       ExplicitWidth = 20
     end
@@ -551,7 +552,7 @@ inherited TaxCorrectiveJournalChoiceForm: TTaxCorrectiveJournalChoiceForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 336
+      Width = 112
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -670,6 +671,14 @@ inherited TaxCorrectiveJournalChoiceForm: TTaxCorrectiveJournalChoiceForm
         Value = Null
         Component = GuidesTax
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = Null
+        Component = actShowErased
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -915,10 +924,11 @@ inherited TaxCorrectiveJournalChoiceForm: TTaxCorrectiveJournalChoiceForm
   object GuidesTax: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTax
-    FormNameParam.Value = 'TTaxJournalForm'
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TTaxJournalChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TTaxJournalForm'
+    FormName = 'TTaxJournalChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -939,16 +949,14 @@ inherited TaxCorrectiveJournalChoiceForm: TTaxCorrectiveJournalChoiceForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'MasterJuridicalId'
+        Name = 'OperDate_Tax'
         Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterJuridicalName'
-        Value = Null
-        DataType = ftString
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 241
+    Left = 169
+    Top = 8
   end
 end
