@@ -86,9 +86,9 @@ BEGIN
                       FROM ObjectBoolean AS ObjectBoolean_PriceWithVAT
                       WHERE ObjectBoolean_PriceWithVAT.ObjectId = inPriceListId
                         AND ObjectBoolean_PriceWithVAT.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()
-                      );
+                      )::Boolean;
 
-   -- тип ндс и % берем из товара
+   /*-- тип ндс и % берем из товара
    vbVATPercent := (SELECT ObjectFloat_TaxKind_Value.ValueData AS VATPercent
                     FROM ObjectLink AS ObjectLink_Goods_TaxKind
                          LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
@@ -97,12 +97,19 @@ BEGIN
                     WHERE ObjectLink_Goods_TaxKind.ObjectId = inGoodsId
                       AND ObjectLink_Goods_TaxKind.DescId = zc_ObjectLink_Goods_TaxKind()
                     );
+   */
+   -- учитываем только zc_Enum_TaxKind_Basis
+   vbVATPercent := (SELECT ObjectFloat_TaxKind_Value.ValueData AS VATPercent
+                    FROM ObjectFloat AS ObjectFloat_TaxKind_Value
+                    WHERE ObjectFloat_TaxKind_Value.ObjectId = zc_Enum_TaxKind_Basis()
+                      AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
+                    )::TFloat;
 
    -- расчет цены без НДС, до 4 знаков
-   ioPriceNoVAT := (CASE WHEN vbPriceWithVAT = FALSE THEN ioPriceNoVAT ELSE CAST ( ioPriceWVAT * ( 1 - COALESCE (vbVATPercent,0) / 100) AS NUMERIC (16, 2)) END) ::TFloat;
+   ioPriceNoVAT := (CASE WHEN vbPriceWithVAT = FALSE THEN ioPriceNoVAT ELSE CAST ( ioPriceWVAT * ( 1 - COALESCE (vbVATPercent,0)::TFloat / 100) AS NUMERIC (16, 2)) END) ::TFloat;
 
    -- расчет цены с НДС, до 4 знаков
-   ioPriceWVAT := (CASE WHEN vbPriceWithVAT = TRUE THEN ioPriceWVAT ELSE CAST ( ioPriceNoVAT * (1 + COALESCE (vbVATPercent,0) / 100)  AS NUMERIC (16, 2)) END) ::TFloat;
+   ioPriceWVAT := (CASE WHEN vbPriceWithVAT = TRUE THEN ioPriceWVAT ELSE CAST ( ioPriceNoVAT * (1 + COALESCE (vbVATPercent,0)::TFloat / 100)  AS NUMERIC (16, 2)) END) ::TFloat;
 
    -- определяется какое значение сохраняем. если прайс без НДС - то цену без НДС, если прайс с НДС - то сохраняем цену с НДС
    vbValue := (CASE WHEN vbPriceWithVAT = FALSE THEN ioPriceNoVAT ELSE ioPriceWVAT END) ::TFLOAT;
