@@ -146,6 +146,8 @@ type
     ExecuteDialogINN: TExecuteDialog;
     macUpdateINN: TMultiAction;
     bbUpdateINN: TdxBarButton;
+    actOpenFormTaxCorrective: TdsdOpenForm;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

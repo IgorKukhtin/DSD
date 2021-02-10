@@ -647,7 +647,7 @@ inherited TaxJournalForm: TTaxJournalForm
         end
         item
           Name = 'inMask'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
@@ -679,13 +679,13 @@ inherited TaxJournalForm: TTaxJournalForm
         end
         item
           Name = 'inMask'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
@@ -719,7 +719,7 @@ inherited TaxJournalForm: TTaxJournalForm
         end
         item
           Name = 'inMask'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
@@ -958,7 +958,7 @@ inherited TaxJournalForm: TTaxJournalForm
         end
         item
           Name = 'isElectron'
-          Value = '0'
+          Value = False
           Component = MasterCDS
           ComponentItem = 'isElectron'
           DataType = ftBoolean
@@ -974,7 +974,7 @@ inherited TaxJournalForm: TTaxJournalForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -1035,7 +1035,7 @@ inherited TaxJournalForm: TTaxJournalForm
         end
         item
           Name = 'IsPartnerDate'
-          Value = 'False'
+          Value = False
           Component = edIsRegisterDate
           DataType = ftBoolean
           ParamType = ptInput
@@ -1249,7 +1249,7 @@ inherited TaxJournalForm: TTaxJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -1396,6 +1396,44 @@ inherited TaxJournalForm: TTaxJournalForm
       Hint = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1048#1053#1053' '#1076#1083#1103' 1-'#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 76
     end
+    object actOpenFormTaxCorrective: TdsdOpenForm
+      Category = 'TaxCorrective'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
+      Hint = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
+      ImageIndex = 25
+      FormName = 'TTaxCorrectiveChoiceForm'
+      FormNameParam.Value = 'TTaxCorrectiveChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInvNumberPartner'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumberPartner'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1433,7 +1471,7 @@ inherited TaxJournalForm: TTaxJournalForm
       end
       item
         Name = 'inIsRegisterDate'
-        Value = 'False'
+        Value = False
         Component = edIsRegisterDate
         DataType = ftBoolean
         ParamType = ptInput
@@ -1521,6 +1559,14 @@ inherited TaxJournalForm: TTaxJournalForm
         item
           Visible = True
           ItemName = 'bbMovementCheck'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
         end
         item
           Visible = True
@@ -1710,6 +1756,10 @@ inherited TaxJournalForm: TTaxJournalForm
       Action = macUpdateINN
       Category = 0
     end
+    object bb: TdxBarButton
+      Action = actOpenFormTaxCorrective
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
@@ -1820,6 +1870,8 @@ inherited TaxJournalForm: TTaxJournalForm
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_Tax'
+    Left = 376
+    Top = 112
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -1993,7 +2045,7 @@ inherited TaxJournalForm: TTaxJournalForm
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2171,7 +2223,7 @@ inherited TaxJournalForm: TTaxJournalForm
       end
       item
         Name = 'onisMedoc'
-        Value = 'False'
+        Value = False
         Component = MasterCDS
         ComponentItem = 'isMedoc'
         DataType = ftBoolean
@@ -2188,7 +2240,7 @@ inherited TaxJournalForm: TTaxJournalForm
     Params = <
       item
         Name = 'inDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -2260,7 +2312,7 @@ inherited TaxJournalForm: TTaxJournalForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -2373,7 +2425,7 @@ inherited TaxJournalForm: TTaxJournalForm
       end
       item
         Name = 'outIsINN'
-        Value = 'False'
+        Value = False
         Component = MasterCDS
         ComponentItem = 'isINN'
         DataType = ftBoolean

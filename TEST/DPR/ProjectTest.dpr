@@ -20,6 +20,8 @@ program ProjectTest;
 
 
 
+
+
 uses
   DUnitTestRunner,
   VKDBFDataSet in '..\..\SOURCE\DBF\VKDBFDataSet.pas',
@@ -1230,7 +1232,8 @@ uses
   Report_SaleExternal_OrderSaleDialog in '..\..\Forms\Report\Report_SaleExternal_OrderSaleDialog.pas' {Report_SaleExternal_OrderSaleDialogForm: TParentForm},
   Income20202Journal in '..\..\Forms\Document\Income20202Journal.pas' {Income20202JournalForm: TParentForm},
   Income20202 in '..\..\Forms\Document\Income20202.pas' {Income20202Form: TParentForm},
-  PartionGoods20202Choice in '..\..\Forms\Guides\PartionGoods20202Choice.pas' {PartionGoods20202ChoiceForm: TParentForm};
+  PartionGoods20202Choice in '..\..\Forms\Guides\PartionGoods20202Choice.pas' {PartionGoods20202ChoiceForm: TParentForm},
+  TaxCorrectiveJournalChoice in '..\..\Forms\Document\TaxCorrectiveJournalChoice.pas' {TaxCorrectiveJournalChoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
