@@ -6,6 +6,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client (Integer, Integer
                                                     , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                     , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                     , TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client (Integer, Integer
+                                                    , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                    , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                    , TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client(
  INOUT ioId              Integer,       -- ключ объекта <Бренд>
@@ -21,9 +25,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client(
     IN inWWW             TVarChar,
     IN inEmail           TVarChar,
     IN inCodeDB          TVarChar,
+    IN inTaxNumber       TVarChar,
     IN inDiscountTax     TFloat  ,      -- % скидки
-    IN inDayCalendar     TFloat ,
-    IN inDayBank         TFloat ,
+    IN inDayCalendar     TFloat  ,
+    IN inDayBank         TFloat  ,
     IN inBankId          Integer , 
     IN inPLZId           Integer ,
     IN inInfoMoneyId     Integer ,
@@ -72,7 +77,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Client_Email(), ioId, inEmail);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Client_CodeDB(), ioId, inCodeDB);
-
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Client_TaxNumber(), ioId, inTaxNumber);
+   
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Client_DiscountTax(), ioId, inDiscountTax);

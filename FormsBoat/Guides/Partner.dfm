@@ -160,6 +160,16 @@ object PartnerForm: TPartnerForm
         Options.Editing = False
         Width = 80
       end
+      object TaxNumber: TcxGridDBColumn
+        Caption = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#8470
+        DataBinding.FieldName = 'TaxNumber'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1085#1072#1096' '#1082#1086#1076' '#1074' '#1073#1072#1079#1077' '#1087#1072#1088#1090#1085#1077#1088#1072
+        Options.Editing = False
+        Width = 80
+      end
       object BankName: TcxGridDBColumn
         Caption = #1041#1072#1085#1082
         DataBinding.FieldName = 'BankName'

@@ -3,7 +3,7 @@ object ProdEngineForm: TProdEngineForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1052#1086#1090#1086#1088#1099'>'
   ClientHeight = 376
-  ClientWidth = 537
+  ClientWidth = 598
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object ProdEngineForm: TProdEngineForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 537
+    Width = 598
     Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 537
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -70,6 +71,15 @@ object ProdEngineForm: TProdEngineForm
       object Power: TcxGridDBColumn
         Caption = #1052#1086#1097#1085#1086#1089#1090#1100' ('#1083'.'#1089'.)'
         DataBinding.FieldName = 'Power'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 107
+      end
+      object Volume: TcxGridDBColumn
+        Caption = #1054#1073#1098#1077#1084' (cm'#179')'
+        DataBinding.FieldName = 'Volume'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter

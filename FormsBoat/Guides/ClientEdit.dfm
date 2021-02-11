@@ -212,7 +212,7 @@ object ClientEditForm: TClientEditForm
     Left = 10
     Top = 293
     TabOrder = 31
-    Width = 273
+    Width = 130
   end
   object cxLabel14: TcxLabel
     Left = 10
@@ -282,9 +282,20 @@ object ClientEditForm: TClientEditForm
     TabOrder = 39
     Width = 273
   end
+  object cxLabel20: TcxLabel
+    Left = 153
+    Top = 273
+    Caption = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#8470
+  end
+  object edTaxNumber: TcxTextEdit
+    Left = 153
+    Top = 293
+    TabOrder = 41
+    Width = 130
+  end
   object ActionList: TActionList
-    Left = 152
-    Top = 56
+    Left = 176
+    Top = 48
     object actDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -418,6 +429,14 @@ object ClientEditForm: TClientEditForm
         Name = 'inCodeDB'
         Value = Null
         Component = edCodeDB
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTaxNumber'
+        Value = Null
+        Component = edTaxNumber
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -668,6 +687,13 @@ object ClientEditForm: TClientEditForm
         Value = Null
         Component = GuidesTaxKind
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxNumber'
+        Value = Null
+        Component = edTaxNumber
         DataType = ftString
         MultiSelectSeparator = ','
       end>

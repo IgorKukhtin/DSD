@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_ProdEngine(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , Power TFloat
+             , Power TFloat, Volume TFloat
              , Comment TVarChar
              ) AS
 $BODY$BEGIN
@@ -24,6 +24,7 @@ $BODY$BEGIN
            , CAST ('' as TVarChar)  AS NAME
            
            , CAST (0 AS TFloat)     AS Power
+           , CAST (0 AS TFloat)     AS Volume
            , CAST ('' AS TVarChar)  AS Comment
            ;
    ELSE
@@ -33,8 +34,9 @@ $BODY$BEGIN
          , Object_ProdEngine.ObjectCode     AS Code
          , Object_ProdEngine.ValueData      AS Name
 
-         , ObjectFloat_Power.ValueData    AS Power
-         , ObjectString_Comment.ValueData  AS Comment
+         , ObjectFloat_Power.ValueData      AS Power
+         , ObjectFloat_Volume.ValueData     AS Volume
+         , ObjectString_Comment.ValueData   AS Comment
         
      FROM Object AS Object_ProdEngine
           LEFT JOIN ObjectString AS ObjectString_Comment
@@ -44,6 +46,9 @@ $BODY$BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_Power
                                 ON ObjectFloat_Power.ObjectId = Object_ProdEngine.Id
                                AND ObjectFloat_Power.DescId = zc_ObjectFloat_ProdEngine_Power()
+          LEFT JOIN ObjectFloat AS ObjectFloat_Volume
+                                ON ObjectFloat_Volume.ObjectId = Object_ProdEngine.Id
+                               AND ObjectFloat_Volume.DescId = zc_ObjectFloat_ProdEngine_Volume()
 
        WHERE Object_ProdEngine.Id = inId;
    END IF;

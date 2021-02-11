@@ -76,6 +76,8 @@ type
     cxLabel17: TcxLabel;
     ceDayBank: TcxCurrencyEdit;
     cxLabel18: TcxLabel;
+    cxLabel20: TcxLabel;
+    edTaxNumber: TcxTextEdit;
   private
     { Private declarations }
   public

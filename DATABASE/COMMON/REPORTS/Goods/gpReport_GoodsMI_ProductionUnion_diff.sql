@@ -388,10 +388,10 @@ BEGIN
 
 */
 , tmpOperationGroup.TotalCount_out :: TFloat 
-           , (tmpOperationGroup.OperCount - tmpOperationGroup.TotalCount_out)           :: TFloat AS OperCount_diff
-           , (tmpOperationGroup.OperCount_Weight - tmpOperationGroup.TotalCount_weight) :: TFloat AS OperCount_weight_diff
-           , (tmpOperationGroup.OperCount_sh - tmpOperationGroup.TotalCount_sh)         :: TFloat AS OperCount_sh_diff
-           , (tmpOperationGroup.OperSumm - tmpOperationGroup.TotalSumm_out)             :: TFloat AS Summ_diff
+           , (COALESCE (tmpOperationGroup.OperCount,0) - COALESCE (tmpOperationGroup.TotalCount_out,0))           :: TFloat AS OperCount_diff
+           , (COALESCE (tmpOperationGroup.OperCount_Weight,0) - COALESCE (tmpOperationGroup.TotalCount_weight,0)) :: TFloat AS OperCount_weight_diff
+           , (COALESCE (tmpOperationGroup.OperCount_sh,0) - COALESCE (tmpOperationGroup.TotalCount_sh,0))         :: TFloat AS OperCount_sh_diff
+           , (COALESCE (tmpOperationGroup.OperSumm,0) - COALESCE (tmpOperationGroup.TotalSumm_out,0))             :: TFloat AS Summ_diff
 
 
       FROM tmpOperationGroup

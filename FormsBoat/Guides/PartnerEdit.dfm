@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <Lieferanten>'
-  ClientHeight = 431
+  ClientHeight = 443
   ClientWidth = 571
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -169,7 +169,7 @@
     Left = 10
     Top = 294
     TabOrder = 25
-    Width = 273
+    Width = 130
   end
   object cxLabel13: TcxLabel
     Left = 10
@@ -281,6 +281,17 @@
     Top = 8
     Hint = #1054#1090#1089#1088#1086#1095#1082#1072' '#1074' '#1073#1072#1085#1082#1086#1074#1089#1082#1080#1093' '#1076#1085#1103#1093
     Caption = #1054#1090#1089#1088'. '#1074' '#1073#1072#1085#1082'. '#1076#1085'.'
+  end
+  object cxLabel20: TcxLabel
+    Left = 153
+    Top = 274
+    Caption = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#8470
+  end
+  object edTaxNumber: TcxTextEdit
+    Left = 153
+    Top = 293
+    TabOrder = 41
+    Width = 130
   end
   object ActionList: TActionList
     Left = 152
@@ -477,6 +488,14 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTaxNumber'
+        Value = Null
+        Component = edTaxNumber
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 96
@@ -668,6 +687,13 @@
         Value = Null
         Component = GuidesTaxKind
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxNumber'
+        Value = Null
+        Component = edTaxNumber
         DataType = ftString
         MultiSelectSeparator = ','
       end>

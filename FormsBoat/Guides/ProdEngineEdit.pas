@@ -42,6 +42,8 @@ type
     edComment: TcxTextEdit;
     cxLabel6: TcxLabel;
     edPower: TcxCurrencyEdit;
+    edVolume: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
   private
     { Private declarations }
   public

@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Fax TVarChar, Phone TVarChar, Mobile TVarChar
              , IBAN TVarChar, Street TVarChar, Member TVarChar
              , WWW TVarChar, Email TVarChar, CodeDB TVarChar
+             , TaxNumber TVarChar
              , Comment TVarChar
              , BankId Integer, BankName TVarChar
              , PLZId Integer, PLZName TVarChar
@@ -50,6 +51,7 @@ BEGIN
            , COALESCE (ObjectString_WWW.ValueData,'')::TVarChar      AS WWW
            , COALESCE (ObjectString_Email.ValueData,'')::TVarChar    AS Email
            , COALESCE (ObjectString_CodeDB.ValueData,'')::TVarChar   AS CodeDB
+           , COALESCE (ObjectString_TaxNumber.ValueData,'')::TVarChar AS TaxNumber
            , COALESCE (ObjectString_Comment.ValueData,'')::TVarChar  AS Comment
 
            , Object_Bank.Id                  AS BankId
@@ -112,6 +114,9 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_CodeDB
                                  ON ObjectString_CodeDB.ObjectId = Object_Client.Id
                                 AND ObjectString_CodeDB.DescId = zc_ObjectString_Client_CodeDB()
+          LEFT JOIN ObjectString AS ObjectString_TaxNumber
+                                 ON ObjectString_TaxNumber.ObjectId = Object_Client.Id
+                                AND ObjectString_TaxNumber.DescId = zc_ObjectString_Client_TaxNumber()
 
           LEFT JOIN ObjectFloat AS ObjectFloat_DiscountTax
                                 ON ObjectFloat_DiscountTax.ObjectId = Object_Client.Id
