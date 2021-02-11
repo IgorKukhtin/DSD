@@ -57,6 +57,7 @@ type
     procedure LoadEmailFormTest;
     procedure LoadEmailSettingsFormTest;
     procedure LoadEmployeeScheduleFormTest;
+    procedure LoadFinalSUAFormTest;
     procedure LoadFiscalFormTest;
     procedure LoadGoodsGroupFormTest;
     procedure LoadGoodsGroupPromoFormTest;
@@ -590,6 +591,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyValue_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCurrencyValue_ObjectForm');
 
+end;
+
+procedure TLoadFormTest.LoadFinalSUAFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFinalSUAForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFinalSUAForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFinalSUAJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFinalSUAJournalForm');
 end;
 
 procedure TLoadFormTest.LoadFiscalFormTest;

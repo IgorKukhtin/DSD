@@ -446,9 +446,15 @@ CREATE OR REPLACE FUNCTION zc_Movement_DistributionPromo() RETURNS Integer AS $B
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_DistributionPromo', 'Раздача акционных материалов' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_DistributionPromo');
 
+CREATE OR REPLACE FUNCTION zc_Movement_FinalSUA() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_FinalSUA'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_FinalSUA', 'Итоговый СУА' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_FinalSUA');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 11.02.21                                                                                     * zc_Movement_FinalSUA
  31.11.20         * zc_Movement_ReestrIncome
  04.11.20                                                                                     * zc_Movement_DistributionPromo
  13.10.20                                                                                     * zc_Movement_RelatedProduct
