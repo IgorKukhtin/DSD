@@ -67,7 +67,6 @@ inherited Report_GoodsMI_ProductionUnion_diffForm: TReport_GoodsMI_ProductionUni
             item
               Format = ',0.####'
               Kind = skSum
-              Column = OperCount_sh_diff
             end
             item
               Format = ',0.####'
@@ -108,7 +107,6 @@ inherited Report_GoodsMI_ProductionUnion_diffForm: TReport_GoodsMI_ProductionUni
             item
               Format = ',0.####'
               Kind = skSum
-              Column = OperCount_sh_diff
             end
             item
               Format = ',0.####'
@@ -317,7 +315,7 @@ inherited Report_GoodsMI_ProductionUnion_diffForm: TReport_GoodsMI_ProductionUni
             Width = 90
           end
           object TotalCount_out: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1088#1072#1089#1093#1086#1076
+            Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1088#1072#1089#1093#1086#1076' ('#1074#1077#1089')'
             DataBinding.FieldName = 'TotalCount_out'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -339,16 +337,6 @@ inherited Report_GoodsMI_ProductionUnion_diffForm: TReport_GoodsMI_ProductionUni
           object OperCount_weight_diff: TcxGridDBColumn
             Caption = #1054#1090#1082#1083'. '#1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1093#1086#1076'/ '#1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076' ('#1074#1077#1089')'
             DataBinding.FieldName = 'OperCount_weight_diff'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
-          object OperCount_sh_diff: TcxGridDBColumn
-            Caption = #1054#1090#1082#1083'. '#1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1093#1086#1076'/ '#1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076' ('#1096#1090'.)'
-            DataBinding.FieldName = 'OperCount_sh_diff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
