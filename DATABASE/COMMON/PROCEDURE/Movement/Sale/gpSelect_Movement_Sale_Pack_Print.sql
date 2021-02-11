@@ -175,6 +175,7 @@ BEGIN
                                -- , tmpMI.GoodsKindId
                                 , MAX (COALESCE (MIFloat_LevelNumber.ValueData, 0))   AS LevelNumber
                                 , SUM (COALESCE (MIFloat_BoxCount.ValueData, 0))      AS BoxCount
+                                , COUNT (*)                                           AS BoxCount_calc
                                 , SUM (COALESCE (MIFloat_BoxNumber.ValueData, 0))     AS BoxNumber
                                 , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner
                                 , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) AS AmountPartnerWeight
@@ -389,7 +390,7 @@ BEGIN
            , COALESCE (tmpObject_GoodsPropertyValue.Article, COALESCE (tmpObject_GoodsPropertyValueGroup.Article, '')) AS Article_Juridical
            , COALESCE (tmpObject_GoodsPropertyValue.BarCode, COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode, '')) AS BarCode_Juridical
            , tmpMovementItem.LevelNumber                                            AS LevelNumber
-           , tmpMovementItem.BoxCount                                               AS BoxCount
+           , CASE WHEN COALESCE (tmpMovementItem.BoxCount, 0) = 0 AND tmpMovementItem.BoxCount_calc > 0 THEN tmpMovementItem.BoxCount_calc ELSE tmpMovementItem.BoxCount END :: Integer AS BoxCount
            , tmpMovementItem.BoxNumber
            , (COALESCE (tmpMovementItem.BoxCount, 0) * COALESCE (tmpObject_GoodsPropertyValue.GoodsBox_Weight, 0)):: TFloat AS BoxWeight
 
@@ -526,6 +527,8 @@ BEGIN
              END :: Boolean AS isFozzyPage5
                      
            , vbIsContract_30201 :: Boolean AS isContract_30201
+
+           , '”крањна, м.ƒн≥про' :: TVarChar AS LoadingPlace
 
        FROM tmpMovementData AS tmpMovementItem
           LEFT JOIN tmpMovementParam ON tmpMovementParam.MovementId = tmpMovementItem.MovementId

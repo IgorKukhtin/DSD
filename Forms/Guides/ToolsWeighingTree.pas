@@ -73,6 +73,8 @@ type
     ToolsWeighingPlaceName: TcxGridDBColumn;
     ToolsWeighingPlaceChoiceForm: TOpenChoiceForm;
     Id: TcxGridDBColumn;
+    actProtocol: TdsdOpenForm;
+    bbProtocol: TdxBarButton;
   private
     { Private declarations }
   public

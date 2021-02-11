@@ -97,7 +97,38 @@ BEGIN
                                    FROM lpGet_Object_Juridical_PrintKindItem ((SELECT tmpPartnerJuridical.JuridicalId FROM tmpPartnerJuridical LIMIT 1)) AS tmp
                                   )
            , tmpJuridical_find AS (SELECT DISTINCT tmpPartnerJuridical.JuridicalId FROM tmpPartnerJuridical)
-           , tmpContract_find AS (SELECT Object_Contract_View.* FROM tmpJuridical_find INNER JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = tmpJuridical_find.JuridicalId)
+            , tmpContract_find AS (SELECT tmpJuridical_find.JuridicalId               AS JuridicalId
+                                        , OL_Contract.ObjectId                        AS ContractId
+                                        , Object_Contract.ObjectCode                  AS ContractCode
+                                        , Object_Contract.ValueData                   AS InvNumber
+                                        , Object_Contract.isErased                    AS isErased
+                                        , Object_ContractTag.ValueData                AS ContractTagName
+                                        , ObjectLink_Contract_PaidKind.ChildObjectId  AS PaidKindId
+                                        , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
+                                        , COALESCE (ObjectLink_Contract_ContractStateKind.ChildObjectId, 0) AS ContractStateKindId
+                                   FROM tmpJuridical_find
+                                        INNER JOIN ObjectLink AS OL_Contract
+                                                              ON OL_Contract.ChildObjectId = tmpJuridical_find.JuridicalId
+                                                             AND OL_Contract.DescId        = zc_ObjectLink_Contract_Juridical()
+                                        LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = OL_Contract.ObjectId
+
+                                        LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractTag
+                                                             ON ObjectLink_Contract_ContractTag.ObjectId = OL_Contract.ObjectId
+                                                            AND ObjectLink_Contract_ContractTag.DescId   = zc_ObjectLink_Contract_ContractTag()
+                                        LEFT JOIN Object AS Object_ContractTag ON Object_ContractTag.Id = ObjectLink_Contract_ContractTag.ChildObjectId
+
+                                        LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                                             ON ObjectLink_Contract_InfoMoney.ObjectId = OL_Contract.ObjectId
+                                                            AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+
+                                        LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
+                                                             ON ObjectLink_Contract_PaidKind.ObjectId = OL_Contract.ObjectId
+                                                            AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
+                                        LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
+                                                             ON ObjectLink_Contract_ContractStateKind.ObjectId = OL_Contract.ObjectId
+                                                            AND ObjectLink_Contract_ContractStateKind.DescId = zc_ObjectLink_Contract_ContractStateKind() 
+                                  )
+ --          , tmpContract_find AS (SELECT Object_Contract_View.* FROM tmpContract_find2 INNER JOIN Object_Contract_View ON Object_Contract_View.ContractId = tmpContract_find2.ContractId)
            , tmpPartnerContract AS (SELECT tmpPartnerJuridical.ObjectDescId
                                          , tmpPartnerJuridical.PartnerId
                                          , tmpPartnerJuridical.PartnerCode

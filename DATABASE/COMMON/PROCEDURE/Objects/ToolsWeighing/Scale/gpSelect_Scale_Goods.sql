@@ -24,6 +24,7 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
              , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar, GoodsKindId_list TVarChar, GoodsKindId_max Integer, GoodsKindCode_max Integer, GoodsKindName_max TVarChar
              , MeasureId Integer, MeasureName TVarChar
              , ChangePercentAmount TFloat
+             , Amount_Remains TFloat
              , Amount_Order TFloat
              , Amount_OrderWeight TFloat
              , Amount_Weighing TFloat
@@ -142,7 +143,23 @@ BEGIN
 
          -- Результат - по заявке
          RETURN QUERY
-            WITH tmpMovement AS (SELECT Movement_find.Id     AS MovementId
+            WITH tmpRemains AS (SELECT Container.ObjectId     AS GoodsId
+                                     , SUM (Container.Amount) AS Amount
+                                 FROM Container
+                                      INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                                     ON CLO_Unit.ContainerId = Container.Id
+                                                                    AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                                                    AND CLO_Unit.ObjectId IN (2961184 -- Склад спецодежда б/у
+                                                                                            , 8455    -- Склад специй
+                                                                                            , 3398383 -- Склад резины
+                                                                                            , 8456    -- Склад запчастей
+                                                                                             )
+                                 WHERE Container.DescId = zc_Container_Count()
+                                   AND Container.Amount <> 0
+                                   AND inBranchCode BETWEEN 301 AND 310
+                                 GROUP BY Container.ObjectId
+                                )
+               , tmpMovement AS (SELECT Movement_find.Id     AS MovementId
                                       , Movement_find.DescId AS MovementDescId
                                  FROM (SELECT inOrderExternalId AS MovementId WHERE vbRetailId <> 0) AS tmpMovement
                                       INNER JOIN Movement ON Movement.Id = tmpMovement.MovementId
@@ -430,6 +447,9 @@ BEGIN
                                   END
                         ELSE 0
                    END :: TFloat AS ChangePercentAmount
+
+                 , tmpRemains.Amount :: TFloat AS Amount_Remains
+
                  , tmpMI.Amount_Order :: TFloat    AS Amount_Order
                  , (tmpMI.Amount_Order * CASE WHEN inBranchCode BETWEEN 301 AND 310 THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat    AS Amount_OrderWeight
                  , tmpMI.Amount_Weighing :: TFloat AS Amount_Weighing
@@ -491,6 +511,7 @@ BEGIN
                          -- , tmpMI.isTare
                  ) AS tmpMI
 
+                 LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI.GoodsId
                  LEFT JOIN tmpChangePercentAmount ON tmpChangePercentAmount.GoodsId     = tmpMI.GoodsId
                                                  AND tmpChangePercentAmount.GoodsKindId = tmpMI.GoodsKindId
 
@@ -723,7 +744,23 @@ BEGIN
         inMovementId:= COALESCE (inMovementId, 0);
         -- Результат - все товары
         RETURN QUERY
-           WITH tmpInfoMoney AS (SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, FALSE AS isTare
+           WITH tmpRemains AS (SELECT Container.ObjectId     AS GoodsId
+                                     , SUM (Container.Amount) AS Amount
+                                 FROM Container
+                                      INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                                     ON CLO_Unit.ContainerId = Container.Id
+                                                                    AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                                                    AND CLO_Unit.ObjectId IN (2961184 -- Склад спецодежда б/у
+                                                                                            , 8455    -- Склад специй
+                                                                                            , 3398383 -- Склад резины
+                                                                                            , 8456    -- Склад запчастей
+                                                                                             )
+                                 WHERE Container.DescId = zc_Container_Count()
+                                   AND Container.Amount <> 0
+                                   AND inBranchCode BETWEEN 301 AND 310
+                                 GROUP BY Container.ObjectId
+                                )
+              , tmpInfoMoney AS (SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, FALSE AS isTare
                                  FROM Object_InfoMoney_View AS View_InfoMoney
                                  WHERE inIsGoodsComplete = TRUE
                                    AND inBranchCode NOT BETWEEN 301 AND 310
@@ -970,6 +1007,9 @@ BEGIN
                                  END
                        ELSE 0
                   END :: TFloat AS ChangePercentAmount
+
+                 , tmpRemains.Amount :: TFloat AS Amount_Remains
+
                 , 0 :: TFloat AS Amount_Order
                 , 0 :: TFloat AS Amount_OrderWeight
                 , 0 :: TFloat AS Amount_Weighing
@@ -996,6 +1036,8 @@ BEGIN
 
            FROM tmpGoods
     
+                LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpGoods.GoodsId
+
                 LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                       ON ObjectFloat_Weight.ObjectId = tmpGoods.GoodsId
                                      AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()

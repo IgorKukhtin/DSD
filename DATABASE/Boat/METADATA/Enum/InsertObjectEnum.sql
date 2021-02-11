@@ -1867,7 +1867,7 @@ BEGIN
                                                               inImportTypeId := vbImportTypeId,
                                                               inEmailId      := (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_Email()),
                                                               inContactPersonId:= (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_ContactPerson()),
-                                                              inStartRow     := 3,
+                                                              inStartRow     := 4,
                                                               inHDR          := False,
                                                               inDirectory    := NULL::TVarChar,
                                                               inQuery        := NULL::TVarChar,
@@ -2240,11 +2240,11 @@ BEGIN
                                                       inSession           := vbUserId::TVarChar);
 
     vbImportTypeItemId := 0;
-    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inisArc';
+    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name ILIKE 'inIsArc';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
                                                                 inParamNumber   := 20, 
-                                                                inName          := 'inisArc', 
-                                                                inParamType     := 'ftBoolean', 
+                                                                inName          := 'inIsArc', 
+                                                                inParamType     := 'ftString', 
                                                                 inUserParamName := 'Архив', 
                                                                 inImportTypeId  := vbImportTypeId, 
                                                                 inSession       := vbUserId::TVarChar);
@@ -2577,15 +2577,4 @@ END $$;
  09.11.20         * загрузка групп товаров
  11.10.20         *
  24.08.20                                        *
-*/
-
-
-
-/*
-
-
-
-
-
-
 */

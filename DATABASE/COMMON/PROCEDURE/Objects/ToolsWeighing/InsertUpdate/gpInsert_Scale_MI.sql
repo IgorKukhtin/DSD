@@ -79,6 +79,7 @@ BEGIN
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Insert_Scale_MI());
      vbUserId:= lpGetUserBySession (inSession);
 
+IF inBranchCode BETWEEN 201 AND 210 AND COALESCE (inBoxCount, 0) = 0 THEN inBoxCount:= 1; END IF;
 
      -- сразу запомнили время начала выполнения Проц.
      vbOperDate_StartBegin:= CLOCK_TIMESTAMP();

@@ -361,8 +361,9 @@ BEGIN
 
                                                                                      END
                            )
-           , tmpMovement_find AS (SELECT tmpMovement.Id
+       , tmpMovement_find_all AS (SELECT tmpMovement.Id
                                        , MovementLinkMovement_Order.MovementId AS MovementId_get
+                                       , MovementLinkObject_User.ObjectId      AS UserId
                                   FROM tmpMovement
                                        INNER JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                                                        ON MovementLinkMovement_Order.MovementChildId = tmpMovement.Id
@@ -370,11 +371,17 @@ BEGIN
                                        INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Order.MovementId
                                                           AND Movement.DescId = zc_Movement_WeighingPartner()
                                                           AND Movement.StatusId = zc_Enum_Status_UnComplete()
-                                       INNER JOIN MovementLinkObject
-                                               AS MovementLinkObject_User
-                                               ON MovementLinkObject_User.MovementId = Movement.Id
-                                              AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
-                                              AND MovementLinkObject_User.ObjectId = vbUserId
+                                       LEFT JOIN MovementLinkObject
+                                              AS MovementLinkObject_User
+                                              ON MovementLinkObject_User.MovementId = Movement.Id
+                                             AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
+                                          -- AND MovementLinkObject_User.ObjectId = vbUserId
+                                              -- AND vbUserId <> 5
+                                 )
+           , tmpMovement_find AS (SELECT tmpMovement_find_all.Id
+                                       , tmpMovement_find_all.MovementId_get
+                                  FROM tmpMovement_find_all
+                                  WHERE tmpMovement_find_all.UserId = vbUserId
                                               -- AND vbUserId <> 5
                                  )
            , tmpJuridicalPrint AS (SELECT tmpGet.Id AS JuridicalId

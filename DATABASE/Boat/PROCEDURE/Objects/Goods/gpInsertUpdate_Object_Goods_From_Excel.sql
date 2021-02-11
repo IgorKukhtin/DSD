@@ -6,6 +6,13 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods_From_Excel (TVarChar, TVarCh
                                                               , Boolean
                                                               , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                               , TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods_From_Excel (TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                              , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                              , Integer, Integer, Integer
+                                                              , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                              , TVarChar
+                                                              , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                              , TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods_From_Excel(
     IN inArticle         TVarChar,
@@ -27,7 +34,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods_From_Excel(
     IN inComment1        TVarChar,
     IN inComment2        TVarChar,
     IN inModelEtiketen   TVarChar,
-    IN inisArc           Boolean ,
+    IN inIsArc           TVarChar,
     IN inEKPrice         TFloat  ,
     IN inEmpfPrice       TFloat  ,
     IN inMin             TFloat  ,
@@ -52,11 +59,24 @@ $BODY$
    DECLARE vbPriceList1Id Integer;
    DECLARE vbPriceList2Id Integer;
    DECLARE vbMeasureId Integer;
-   DECLARE vbmodeletiketenid Integer;
+   DECLARE vbModelEtiketenId Integer;
+   DECLARE vbIsArc           Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Goods());
    vbUserId:= lpGetUserBySession (inSession);
+
+
+   -- временно
+   IF COALESCE (TRIM (inName), '') = '' THEN RETURN; END IF;
+
+
+ --RAISE EXCEPTION 'inisArc    % ', inisArc;
+   IF TRIM (inisArc) ILIKE 'J'
+   THEN vbIsArc:= TRUE;
+   ELSE
+       vbIsArc:= FALSE;
+   END IF;
 
 
    -- ед.изм. ставим шт
@@ -74,17 +94,17 @@ BEGIN
                                                            ) AS tmp);
    END IF;
 
--- уточнит как искать Артикулы
    -- пробуем найти Артикул
-   IF COALESCE (inName, '') <> '' OR COALESCE (inObjectCode, 0) = 0
+   IF COALESCE (inName, '') <> '' AND inObjectCode > 0
    THEN
+       -- по Коду
        vbGoodsId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND Object.ObjectCode = inObjectCode);
        
    ELSE
        IF COALESCE (vbGoodsId, 0) = 0
        THEN
-           --RAISE EXCEPTION 'Ошибка.Для товара <%> <%> не установлен код <%>.', inArticle, inName, inObjectCode;
-           RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Для товара <%> <%> не установлен код <%>.' :: TVarChar
+         --RAISE EXCEPTION 'Ошибка.Нет данных для Article = <%>   Name = <%>   ObjectCode = <%>.', inArticle, inName, inObjectCode;
+           RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Нет данных для Article = <%>   Name = <%>   ObjectCode = <%>.' :: TVarChar
                                                  , inProcedureName := 'gpInsertUpdate_Object_Goods_From_Excel' :: TVarChar
                                                  , inUserId        := vbUserId
                                                  , inParam1        := inArticle    :: TVarChar
@@ -122,11 +142,12 @@ BEGIN
    IF COALESCE (vbGoodsGroupId,0) = 0
    THEN
         --RAISE EXCEPTION 'Ошибка.Группа товара с кодом = <%> не найдена. Товар <%>', inGoodsGroupCode, inName;
-        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Группа товара с кодом = <%> не найдена. Товар <%>' :: TVarChar
+        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Группа товара с кодом = <%> не найдена. Товар (<%>)<%>' :: TVarChar
                                               , inProcedureName := 'gpInsertUpdate_Object_Goods_From_Excel' :: TVarChar
                                               , inUserId        := vbUserId
                                               , inParam1        := inGoodsGroupCode    :: TVarChar
-                                              , inParam2        := inName       :: TVarChar
+                                              , inParam2        := inObjectCode :: TVarChar
+                                              , inParam3        := inName       :: TVarChar
                                               );
    END IF;
 
@@ -286,7 +307,7 @@ BEGIN
                                               , inMatchCode        := TRIM (inMatchCode)    :: TVarChar 
                                               , inFeeNumber        := TRIM (inFeeNumber)     :: TVarChar
                                               , inComment          := CASE WHEN TRIM (inComment1) <> '' OR TRIM (inComment2) <> '' THEN (TRIM (inComment1)||' / '||TRIM (inComment2)) ELSE '' END  :: TVarChar
-                                              , inisArc            := COALESCE (inisArc, FALSE)    :: Boolean
+                                              , inIsArc            := vbIsArc
                                               , inAmountMin        := inMin            :: TFloat
                                               , inAmountRefer      := inRefer          :: TFloat
                                               , inEKPrice          := inEmpfPrice      :: TFloat
@@ -315,7 +336,7 @@ BEGIN
                                          , inMatchCode        := CASE WHEN TRIM (inMatchCode) <> '' THEN TRIM (inMatchCode) ELSE tmp.MatchCode END:: TVarChar 
                                          , inFeeNumber        := CASE WHEN TRIM (inFeeNumber) <> '' THEN TRIM (inFeeNumber) ELSE tmp.FeeNumber END:: TVarChar
                                          , inComment          := CASE WHEN TRIM (inComment1) <> '' OR TRIM (inComment2) <> '' THEN (TRIM (inComment1)||' / '||TRIM (inComment2)) ELSE tmp.Comment END  :: TVarChar
-                                         , inisArc            := COALESCE (inisArc, tmp.isArc, FALSE)    :: Boolean
+                                         , inisArc            := COALESCE (vbIsArc, tmp.isArc, FALSE)    :: Boolean
                                          , inAmountMin        := CASE WHEN COALESCE (inMin, 0) <> 0 THEN inMin ELSE tmp.AmountMin END :: TFloat
                                          , inAmountRefer      := CASE WHEN COALESCE (inRefer, 0) <> 0 THEN inRefer ELSE tmp.AmountRefer END :: TFloat
                                          , inEKPrice          := CASE WHEN COALESCE (inEKPrice, 0) <> 0 THEN inEKPrice ELSE tmp.EKPrice END      :: TFloat
