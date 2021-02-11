@@ -1966,11 +1966,11 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMovementItemId'
+        Name = 'ioMovementItemId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

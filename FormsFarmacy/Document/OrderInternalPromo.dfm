@@ -693,7 +693,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         DataBinding.FieldName = 'IsReport'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 86
+        Width = 101
       end
       object clJuridicalCode: TcxGridDBColumn
         Caption = #1050#1086#1076
@@ -701,7 +701,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1076' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-        Width = 41
+        Width = 49
       end
       object clJuridicalName: TcxGridDBColumn
         Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' ('#1076#1083#1103' '#1086#1090#1095#1077#1090#1072')'
@@ -717,14 +717,22 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 385
+        Width = 414
       end
       object clComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 288
+        Width = 343
+      end
+      object CorrPrice: TcxGridDBColumn
+        Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099
+        DataBinding.FieldName = 'CorrPrice'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '+ ,0.#### %;- ,0.#### %; ;'
+        Width = 111
       end
     end
     object cxGridLevel2: TcxGridLevel
@@ -1756,48 +1764,6 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         end>
       Caption = 'actExecClearComplement'
     end
-    object dsdExecStoredProc1: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefreshMI
-      BeforeAction = actExecuteSummaDialog
-      PostDataSetBeforeExecute = False
-      StoredProc = spPriceAdjustment
-      StoredProcList = <
-        item
-          StoredProc = spPriceAdjustment
-        end>
-      Caption = #1050#1086#1088#1077#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099' '#1087#1088#1072#1081#1089#1072', -% '#1080#1083#1080' +%'
-      Hint = #1050#1086#1088#1077#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099' '#1087#1088#1072#1081#1089#1072', -% '#1080#1083#1080' +%'
-      ImageIndex = 40
-    end
-    object actExecuteSummaDialog: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'actExecuteSummaDialog'
-      FormName = 'TSummaDialogForm'
-      FormNameParam.Value = 'TSummaDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Summa'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'PriceAdjustment'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Label'
-          Value = #1042#1074#1086#1076' '#1087#1088#1086#1094#1077#1085#1090#1072' '#1082#1086#1088#1077#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099' '#1087#1088#1072#1081#1089#1072
-          Component = FormParams
-          ComponentItem = 'PriceAdjustmentLabel'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_OrderInternalPromo'
@@ -1912,10 +1878,6 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton3'
         end
         item
           Visible = True
@@ -2138,8 +2100,11 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Category = 0
     end
     object dxBarButton3: TdxBarButton
-      Action = dsdExecStoredProc1
+      Caption = #1050#1086#1088#1077#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099' '#1087#1088#1072#1081#1089#1072', -% '#1080#1083#1080' +%'
       Category = 0
+      Hint = #1050#1086#1088#1077#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099' '#1087#1088#1072#1081#1089#1072', -% '#1080#1083#1080' +%'
+      Visible = ivAlways
+      ImageIndex = 40
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -2900,6 +2865,15 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCorrPrice'
+        Value = Null
+        Component = PartnerDCS
+        ComponentItem = 'CorrPrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisErased'
         Value = Null
         Component = PartnerDCS
@@ -3255,33 +3229,5 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     ParamKeyField = 'inMovementId'
     Left = 680
     Top = 408
-  end
-  object spPriceAdjustment: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MI_OrderInternalPromo_PriceAdjustment'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPriceAdjustment'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PriceAdjustment'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    NeedResetData = True
-    ParamKeyField = 'inMovementId'
-    Left = 584
-    Top = 136
   end
 end

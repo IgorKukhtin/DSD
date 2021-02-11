@@ -149,12 +149,12 @@ inherited ListGoodsForm: TListGoodsForm
         Width = 82
       end
       object colIsClose: TcxGridDBColumn
-        Caption = #1047#1072#1082#1088#1099#1090
+        Caption = #1047#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072
         DataBinding.FieldName = 'IsClose'
         PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 50
+        Width = 58
       end
       object colisFirst: TcxGridDBColumn
         Caption = '1-'#1074#1099#1073#1086#1088

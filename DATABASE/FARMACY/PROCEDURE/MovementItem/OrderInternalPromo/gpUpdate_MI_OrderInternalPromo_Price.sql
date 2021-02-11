@@ -30,7 +30,7 @@ BEGIN
 
     FROM (WITH 
              -- данные по ценам товаров
-               SelectMinPrice_AllGoods AS (SELECT * FROM lpSelect_GoodsMinPrice_onDate_byPromo (inOperdate := CURRENT_DATE, inUnitId := 0, inObjectId := vbRetailId, inUserId := vbUserId) AS SelectMinPrice_AllGoods)
+               SelectMinPrice_AllGoods AS (SELECT * FROM lpSelect_GoodsMinPrice_onDate_byPromo (inOperdate := CURRENT_DATE, inUnitId := 0, inObjectId := vbRetailId, inMovementId := inMovementId, inUserId := vbUserId) AS SelectMinPrice_AllGoods)
              -- —троки документа
              , tmpGoodsPromo AS (SELECT MovementItem.Id        AS MI_Id
                                       , MovementItem.ObjectId  AS GoodsId_retail

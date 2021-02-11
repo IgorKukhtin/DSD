@@ -77,6 +77,7 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     actChoice: TAction;
     dxBarButton2: TdxBarButton;
+    TreeImageList: TImageList;
     procedure actChoiceExecute(Sender: TObject);
   private
     { Private declarations }

@@ -169,10 +169,8 @@ type
     bbSetComplement: TdxBarButton;
     bbClearComplement: TdxBarButton;
     AddToM: TcxGridDBColumn;
-    dsdExecStoredProc1: TdsdExecStoredProc;
-    spPriceAdjustment: TdsdStoredProc;
-    actExecuteSummaDialog: TExecuteDialog;
     dxBarButton3: TdxBarButton;
+    CorrPrice: TcxGridDBColumn;
   private
     { Private declarations }
   public
