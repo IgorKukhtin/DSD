@@ -136,6 +136,7 @@ type
     infoPanelWeightTare6: TPanel;
     LabelWeightTare6: TLabel;
     PanelWeightTare6: TPanel;
+    Amount_Remains: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -1750,6 +1751,8 @@ begin
   //прайс-лист
   {for i := 0 to Length(PriceList_Array)-1 do
     rgPriceList.Items.Add('('+IntToStr(PriceList_Array[i].Code)+') '+ PriceList_Array[i].Name);}
+
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Amount_Remains').Index].Visible:=(SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310);
 
   with spSelect do
   begin

@@ -161,6 +161,11 @@ object GuideGoodsForm: TGuideGoodsForm
             Format = ',0.####'
             Kind = skSum
             Column = Amount_diffWeight
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = Amount_Remains
           end>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -177,6 +182,11 @@ object GuideGoodsForm: TGuideGoodsForm
             Format = ',0.####'
             Kind = skSum
             Column = Amount_diffWeight
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = Amount_Remains
           end>
         DataController.Summary.SummaryGroups = <>
         OptionsCustomize.ColumnHiding = True
@@ -257,6 +267,16 @@ object GuideGoodsForm: TGuideGoodsForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 40
+        end
+        object Amount_Remains: TcxGridDBColumn
+          Caption = #1054#1089#1090#1072#1090#1086#1082
+          DataBinding.FieldName = 'Amount_Remains'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 35
         end
         object CountForWeight: TcxGridDBColumn
           Caption = #1050#1086#1083'. '#1076#1083#1103' '#1042#1077#1089#1072

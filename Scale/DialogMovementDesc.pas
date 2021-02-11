@@ -972,11 +972,12 @@ begin
                     then EditBarCode.Text:=IntToStr(ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger);
 
                     isEditBarCode:=true;
-                    EditBarCodeExit(Self);
+                    ActiveControl:=EditPartnerCode;
+                    //EditBarCodeExit(Self);
                     //переопределяются параметры, т.к. они используются в фильтре справ.
                     ParamsMovement_local.ParamByName('MovementDescId').AsInteger:= CDS.FieldByName('MovementDescId').asInteger;
                     //
-                    ActiveControl:=EditPartnerCode;
+                    //ActiveControl:=EditPartnerCode;
               end
           else
           if (ActiveControl=EditBarCode) and (not infoPanelPartner.Visible)
