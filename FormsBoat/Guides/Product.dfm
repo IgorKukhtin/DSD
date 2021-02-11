@@ -636,8 +636,6 @@ object ProductForm: TProductForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitLeft = 6
-      ExplicitTop = 23
       object cxGridDBTableViewProdOptItems: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ProdOptItemsDS
@@ -1100,8 +1098,6 @@ object ProductForm: TProductForm
       Color = clAqua
       ParentBackground = False
       TabOrder = 1
-      ExplicitLeft = 6
-      ExplicitTop = 1
     end
   end
   object PanelProdColorItems: TPanel
@@ -1705,6 +1701,18 @@ object ProductForm: TProductForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -1865,6 +1873,10 @@ object ProductForm: TProductForm
     end
     object bbShowAllBoatSale: TdxBarButton
       Action = actShowAllBoatSale
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actPrint
       Category = 0
     end
   end
@@ -2797,6 +2809,54 @@ object ProductForm: TProductForm
         end>
       isShowModal = False
     end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' Agilis'
+      Hint = #1055#1077#1095#1072#1090#1100' Agilis'
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintProduct_Agilis'
+      ReportNameParam.Value = 'PrintProduct_Agilis'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Product'
@@ -2847,8 +2907,8 @@ object ProductForm: TProductForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 432
-    Top = 80
+    Left = 472
+    Top = 120
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 352
@@ -2967,8 +3027,8 @@ object ProductForm: TProductForm
     MasterSource = DataSource
     PacketRecords = 0
     Params = <>
-    Left = 248
-    Top = 272
+    Left = 264
+    Top = 240
   end
   object ProdColorItemsDS: TDataSource
     DataSet = ProdColorItemsCDS
@@ -3413,8 +3473,8 @@ object ProductForm: TProductForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 872
-    Top = 112
+    Left = 776
+    Top = 128
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -3464,5 +3524,41 @@ object ProductForm: TProductForm
     object MenuItem6: TMenuItem
       Action = actSetUnErasedOpt
     end
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 908
+    Top = 105
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 900
+    Top = 158
+  end
+  object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Product_AgilisPrint'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inProductId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 968
+    Top = 112
   end
 end

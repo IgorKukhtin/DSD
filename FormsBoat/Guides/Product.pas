@@ -176,6 +176,11 @@ type
     SummDiscount2: TcxGridDBColumn;
     SummDiscount3: TcxGridDBColumn;
     SummDiscount_total: TcxGridDBColumn;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrint: TdsdStoredProc;
+    actPrint: TdsdPrintAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public
