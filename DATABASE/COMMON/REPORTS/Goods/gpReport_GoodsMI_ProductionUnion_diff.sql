@@ -27,10 +27,10 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
              , AmountDel TFloat
              , MainPrice TFloat, ChildPrice TFloat
 
-             , TotalCount_weight     TFloat 
-             , OperCount_diff        TFloat
-             , OperCount_weight_diff TFloat
-             , Summ_diff             TFloat
+             , Amount_Weight      TFloat 
+             , ChildAmount_Weight TFloat
+             , Amount_weight_diff TFloat
+             , Summ_diff          TFloat
              )   
 AS
 $BODY$
@@ -223,7 +223,10 @@ BEGIN
                               , SUM (CASE WHEN tmpMI_ContainerOut.MIContainerDescId = zc_MIContainer_Summ()  THEN tmpMI_ContainerOut.Amount ELSE 0 END) AS OperSumm
                               
                               , SUM (CASE WHEN tmpMI_ContainerOut.MIContainerDescId = zc_MIContainer_Count() THEN tmpMI_ContainerOut.Amount ELSE 0 END
-                                   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)   AS OperCount_weight
+                                   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData
+                                          WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_kg() THEN 1
+                                          ELSE 0
+                                     END)   AS OperCount_weight
 
                          FROM tmpMI_ContainerOut
                               LEFT JOIN ContainerLinkObject AS ContainerLO_PartionGoods
@@ -254,8 +257,7 @@ BEGIN
                                       , tmpMI_in.GoodsId       
                                       , tmpMI_in.GoodsKindId 
                                       , tmpMI_in.OperCount
-                                      , tmpMI_in.OperCount_Weight
-                                      , tmpMI_in.OperCount_sh
+                                      , tmpMI_in.OperCount_weight
                                       , tmpMI_in.OperSumm
                                       , tmpMI_in.SubjectDocName
 
@@ -264,7 +266,6 @@ BEGIN
                                       , 0 AS GoodsKindId_out
                                       , 0 AS OperCount_out
                                       , 0 AS OperCount_out_weight
-                                      , 0 AS OperCount_out_sh
                                       , 0 AS OperSumm_out
 
                                       , tmpMI_out.OperCount        AS TotalCount_out
@@ -358,15 +359,10 @@ BEGIN
            , CASE WHEN tmpOperationGroup.OperCount     <> 0 THEN tmpOperationGroup.OperSumm     / tmpOperationGroup.OperCount     ELSE 0 END :: TFloat AS MainPrice
            , CASE WHEN tmpOperationGroup.OperCount_out <> 0 THEN tmpOperationGroup.OperSumm_out / tmpOperationGroup.OperCount_out ELSE 0 END :: TFloat AS ChildPrice
 
-           --разница к кг, шт, грн
-          /* , (tmpOperationGroup.TotalCount_out)           :: TFloat AS OperCount_diff
-           , (tmpOperationGroup.TotalCount_weight) :: TFloat AS OperCount_weight_diff
-           , (tmpOperationGroup.TotalSumm_out)             :: TFloat AS Summ_diff
-
-          */
-, tmpOperationGroup.TotalCount_out :: TFloat 
-           , (COALESCE (tmpOperationGroup.OperCount,0) - COALESCE (tmpOperationGroup.TotalCount_out,0))           :: TFloat AS OperCount_diff
-           , (COALESCE (tmpOperationGroup.OperCount_Weight,0) - COALESCE (tmpOperationGroup.TotalCount_weight,0)) :: TFloat AS OperCount_weight_diff
+           --вес приход, рвсход и разница к кг, грн
+           , COALESCE (tmpOperationGroup.OperCount_Weight,0)  ::TFloat AS Amount_Weight
+           , COALESCE (tmpOperationGroup.TotalCount_weight,0) ::TFloat AS ChildAmount_Weight
+           , (COALESCE (tmpOperationGroup.OperCount_Weight,0) - COALESCE (tmpOperationGroup.TotalCount_weight,0)) :: TFloat AS Amount_weight_diff
            , (COALESCE (tmpOperationGroup.OperSumm,0) - COALESCE (tmpOperationGroup.TotalSumm_out,0))             :: TFloat AS Summ_diff
 
       FROM tmpOperationGroup
