@@ -94,6 +94,7 @@ type
     bbStartLoad: TdxBarButton;
     TaxKindName: TcxGridDBColumn;
     TaxKind_Value: TcxGridDBColumn;
+    DescName: TcxGridDBColumn;
   private
     { Private declarations }
   public

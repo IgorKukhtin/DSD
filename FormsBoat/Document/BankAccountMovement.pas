@@ -49,6 +49,7 @@ type
     ceComment_Invoice: TcxTextEdit;
     cxLabel18: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
+    GuidesFiller: TGuidesFiller;
   private
     { Private declarations }
   public

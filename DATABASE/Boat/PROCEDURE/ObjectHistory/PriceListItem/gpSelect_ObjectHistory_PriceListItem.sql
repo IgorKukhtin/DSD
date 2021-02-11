@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_PriceListItem(
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer , ObjectId Integer
-                , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+                , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, DescName TVarChar
                 , Article TVarChar, ArticleVergl TVarChar, PartnerName   TVarChar
                 , EKPrice TFloat, EKPriceWVAT TFloat
                 , EmpfPrice TFloat, EmpfPriceWVAT TFloat
@@ -32,6 +32,7 @@ $BODY$
    DECLARE vbStartDate TDateTime;
    DECLARE vbEndDate TDateTime;
    DECLARE vbPriceWithVAT Boolean;
+   DECLARE vbVATPercent TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
@@ -62,6 +63,13 @@ BEGIN
      WHERE ObjectBoolean_PriceWithVAT.ObjectId = inPriceListId
        AND ObjectBoolean_PriceWithVAT.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT();
 
+   -- учитываем только zc_Enum_TaxKind_Basis
+   vbVATPercent := (SELECT ObjectFloat_TaxKind_Value.ValueData AS VATPercent
+                    FROM ObjectFloat AS ObjectFloat_TaxKind_Value
+                    WHERE ObjectFloat_TaxKind_Value.ObjectId = zc_Enum_TaxKind_Basis()
+                      AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
+                    )::TFloat;
+
 
    IF inShowAll = TRUE THEN
 
@@ -88,6 +96,7 @@ BEGIN
                        AND ObjectHistory_PriceListItem.EndDate              >= vbStartDate
                        AND ObjectHistory_PriceListItem.StartDate            <= vbEndDate
                     )
+   
    , tmpMinMax AS (SELECT tmp.GoodsId          AS GoodsId
                         , MIN (tmp.ValuePrice) AS ValuePrice_min
                         , MAX (tmp.ValuePrice) AS ValuePrice_max
@@ -148,7 +157,7 @@ BEGIN
                       , COALESCE (tmpPrice.ValuePrice, 0)    :: TFloat    AS ValuePrice
                  FROM Object AS Object_Goods
                       LEFT JOIN tmpPrice ON tmpPrice.GoodsId = Object_Goods.Id
-                 WHERE Object_Goods.DescId = zc_Object_Goods()
+                 WHERE Object_Goods.DescId IN (zc_Object_Goods(), zc_Object_ReceiptProdModel())
                )
 
        -- Результат
@@ -158,17 +167,18 @@ BEGIN
            , Object_Goods.Id                AS GoodsId     --ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
            , Object_Goods.ObjectCode        AS GoodsCode
            , Object_Goods.ValueData         AS GoodsName
+           , ObjectDesc.ItemName            AS DescName
            , ObjectString_Article.ValueData      AS Article
            , ObjectString_ArticleVergl.ValueData AS ArticleVergl
            , Object_Partner.ValueData            AS PartnerName
 
            , ObjectFloat_EKPrice.ValueData   ::TFloat   AS EKPrice
            , CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
-                * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS EKPriceWVAT-- расчет входной цены с НДС, до 4 знаков
+                * (1 + (COALESCE (vbVATPercent, 0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS EKPriceWVAT-- расчет входной цены с НДС, до 4 знаков
                 
            , ObjectFloat_EmpfPrice.ValueData ::TFloat   AS EmpfPrice
            , CAST (COALESCE (ObjectFloat_EmpfPrice.ValueData, 0)
-                * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100) ) AS NUMERIC (16, 2)) ::TFloat AS EmpfPriceWVAT-- расчет рекомендованной цены с НДС, до 4 знаков
+                * (1 + (COALESCE (vbVATPercent, 0) / 100) ) AS NUMERIC (16, 2)) ::TFloat AS EmpfPriceWVAT-- расчет рекомендованной цены с НДС, до 4 знаков
 
            , Object_Goods.isErased          AS isErased
 
@@ -181,12 +191,12 @@ BEGIN
              -- расчет цены без НДС, до 2 знаков
            , CASE WHEN vbPriceWithVAT = FALSE
                   THEN COALESCE (tmpPrice.ValuePrice, 0)
-                  ELSE CAST (COALESCE (tmpPrice.ValuePrice, 0) * ( 1 - (ObjectFloat_TaxKind_Value.ValueData / 100))  AS NUMERIC (16, 2))
+                  ELSE CAST (COALESCE (tmpPrice.ValuePrice, 0) * ( 1 - (vbVATPercent / 100))  AS NUMERIC (16, 2))
              END ::TFloat  AS PriceNoVAT   -- сохраненная цена - цена без НДС
 
              -- расчет цены с НДС, до 2 знаков
            , CASE WHEN vbPriceWithVAT = FALSE
-                  THEN CAST ( COALESCE (tmpPrice.ValuePrice, 0) * ( 1 + (ObjectFloat_TaxKind_Value.ValueData / 100))  AS NUMERIC (16, 2))
+                  THEN CAST ( COALESCE (tmpPrice.ValuePrice, 0) * ( 1 + (vbVATPercent / 100))  AS NUMERIC (16, 2))
                   ELSE COALESCE (tmpPrice.ValuePrice, 0) 
              END ::TFloat  AS PriceWVAT
 
@@ -217,7 +227,10 @@ BEGIN
            , ObjectDate_Protocol_Update.ValueData AS UpdateDate
            --
        FROM tmpData AS tmpPrice
-          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpPrice.GoodsId
+          LEFT JOIN Object AS Object_Goods
+                           ON Object_Goods.Id = tmpPrice.GoodsId
+                          AND Object_Goods.DescId IN (zc_Object_Goods(), zc_Object_ReceiptProdModel())
+          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Goods.DescId
           
           LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                  ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
@@ -272,7 +285,6 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
                                 ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
                                AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
-       WHERE Object_Goods.DescId = zc_Object_Goods()
        ;
 
    ELSE
@@ -323,19 +335,20 @@ BEGIN
              ObjectHistory_PriceListItem.Id
            , ObjectHistory_PriceListItem.ObjectId
            , ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
-           , Object_Goods.ObjectCode AS GoodsCode
-           , Object_Goods.ValueData  AS GoodsName
+           , Object_Goods.ObjectCode             AS GoodsCode
+           , Object_Goods.ValueData              AS GoodsName
+           , ObjectDesc.ItemName                 AS DescName
            , ObjectString_Article.ValueData      AS Article
            , ObjectString_ArticleVergl.ValueData AS ArticleVergl
            , Object_Partner.ValueData            AS PartnerName
 
            , ObjectFloat_EKPrice.ValueData   ::TFloat   AS EKPrice
            , CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
-                * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS EKPriceWVAT-- расчет входной цены с НДС, до 4 знаков
+                * (1 + (COALESCE (vbVATPercent, 0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS EKPriceWVAT-- расчет входной цены с НДС, до 4 знаков
                 
            , ObjectFloat_EmpfPrice.ValueData ::TFloat   AS EmpfPrice
            , CAST (COALESCE (ObjectFloat_EmpfPrice.ValueData, 0)
-                * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100) ) AS NUMERIC (16, 2)) ::TFloat AS EmpfPriceWVAT-- расчет рекомендованной цены с НДС, до 4 знаков
+                * (1 + (COALESCE (vbVATPercent, 0) / 100) ) AS NUMERIC (16, 2)) ::TFloat AS EmpfPriceWVAT-- расчет рекомендованной цены с НДС, до 4 знаков
 
            , Object_Goods.isErased   AS isErased
 
@@ -348,12 +361,12 @@ BEGIN
              -- расчет цены без НДС, до 2 знаков
            , CASE WHEN vbPriceWithVAT = FALSE
                   THEN COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0)
-                  ELSE CAST (COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                  ELSE CAST (COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) * ( 1 - COALESCE (vbVATPercent,0) / 100)  AS NUMERIC (16, 2))
              END ::TFloat  AS PriceNoVAT   -- сохраненная цена - цена без НДС
 
              -- расчет цены с НДС, до 2 знаков
            , CASE WHEN vbPriceWithVAT = FALSE
-                  THEN CAST ( COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                  THEN CAST ( COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) * ( 1 + COALESCE (vbVATPercent,0) / 100)  AS NUMERIC (16, 2))
                   ELSE COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) 
              END ::TFloat  AS PriceWVAT
 
@@ -387,6 +400,7 @@ BEGIN
                                ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                               AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_PriceListItem_Goods.ChildObjectId
+          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Goods.DescId
 
           LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                   ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
@@ -464,6 +478,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.02.21         *
  13.11.20         *
  27.11.19         * GoodsKind
  22.10.18         *

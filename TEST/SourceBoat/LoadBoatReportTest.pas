@@ -59,6 +59,8 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+
+    LoadReportFromFile('PrintProduct_Agilis', ReportPath + '\PrintProduct_Agilis.fr3');
 //  LoadReportFromFile('Анализ продаж1', ReportPath + '\Анализ продаж1.fr3');
 //  LoadReportFromFile('Анализ продаж (группа)', ReportPath + '\Анализ продаж (группа).fr3');
 //  LoadReportFromFile('Анализ продаж (линия_группа)', ReportPath + '\Анализ продаж (линия_группа).fr3');

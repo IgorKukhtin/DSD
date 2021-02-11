@@ -954,6 +954,19 @@
         TabOrder = 21
         Width = 129
       end
+      object ceSerialNumberMypharmacy: TcxCurrencyEdit
+        Left = 15
+        Top = 303
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####'
+        TabOrder = 22
+        Width = 168
+      end
+      object cxLabel49: TcxLabel
+        Left = 15
+        Top = 284
+        Caption = #1057#1077#1088'. '#1085#1086#1084#1077#1088' '#1085#1072' '#1089#1072#1081#1090#1077' "'#1052#1086#1103' '#1072#1087#1090#1077#1082#1072'"'
+      end
     end
   end
   object ActionList: TActionList
@@ -1095,7 +1108,7 @@
       end
       item
         Name = 'inStartServiceNigth'
-        Value = '0'
+        Value = Null
         Component = edStartServiceNigth
         DataType = ftDateTime
         ParamType = ptInput
@@ -1103,7 +1116,7 @@
       end
       item
         Name = 'inEndServiceNigth'
-        Value = 'NULL'
+        Value = Null
         Component = edEndServiceNigth
         DataType = ftDateTime
         ParamType = ptInput
@@ -1111,7 +1124,7 @@
       end
       item
         Name = 'inCreateDate'
-        Value = 'NULL'
+        Value = Null
         Component = edCreateDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -1119,7 +1132,7 @@
       end
       item
         Name = 'inCloseDate'
-        Value = 'NULL'
+        Value = Null
         Component = edCloseDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -1127,7 +1140,7 @@
       end
       item
         Name = 'inTaxUnitStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = edTaxUnitStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -1135,7 +1148,7 @@
       end
       item
         Name = 'inTaxUnitEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = edTaxUnitEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -1143,7 +1156,7 @@
       end
       item
         Name = 'inDateSP'
-        Value = 'NULL'
+        Value = Null
         Component = edDateSp
         DataType = ftDateTime
         ParamType = ptInput
@@ -1151,7 +1164,7 @@
       end
       item
         Name = 'inStartTimeSP'
-        Value = 'NULL'
+        Value = Null
         Component = edStartSP
         DataType = ftDateTime
         ParamType = ptInput
@@ -1159,7 +1172,7 @@
       end
       item
         Name = 'inEndTimeSP'
-        Value = 'NULL'
+        Value = Null
         Component = edEndSP
         DataType = ftDateTime
         ParamType = ptInput
@@ -1374,7 +1387,7 @@
       end
       item
         Name = 'inMondayStart'
-        Value = 'NULL'
+        Value = Null
         Component = ceMondayStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -1382,7 +1395,7 @@
       end
       item
         Name = 'inMondayEnd'
-        Value = 'NULL'
+        Value = Null
         Component = ceMondayEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -1390,7 +1403,7 @@
       end
       item
         Name = 'inSaturdayStart'
-        Value = 'NULL'
+        Value = Null
         Component = ceSaturdayStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -1398,7 +1411,7 @@
       end
       item
         Name = 'inSaturdayEnd'
-        Value = 'NULL'
+        Value = Null
         Component = ceSaturdayEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -1406,7 +1419,7 @@
       end
       item
         Name = 'inSundayStart'
-        Value = 'NULL'
+        Value = Null
         Component = ceSundayStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -1414,7 +1427,7 @@
       end
       item
         Name = 'inSundayEnd'
-        Value = 'NULL'
+        Value = Null
         Component = ceSundayEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -1495,6 +1508,13 @@
         Value = Null
         Component = cdMinPercentMarkup
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSerialNumberMypharmacy'
+        Value = Null
+        Component = ceSerialNumberMypharmacy
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1614,14 +1634,14 @@
       end
       item
         Name = 'StartServiceNigth'
-        Value = 'NULL'
+        Value = Null
         Component = edStartServiceNigth
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndServiceNigth'
-        Value = 'NULL'
+        Value = Null
         Component = edEndServiceNigth
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -1664,14 +1684,14 @@
       end
       item
         Name = 'CreateDate'
-        Value = 'NULL'
+        Value = Null
         Component = edCreateDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'CloseDate'
-        Value = 'NULL'
+        Value = Null
         Component = edCloseDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -1796,14 +1816,14 @@
       end
       item
         Name = 'TaxUnitStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = edTaxUnitStart
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'TaxUnitEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = edTaxUnitEnd
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -1824,21 +1844,21 @@
       end
       item
         Name = 'DateSp'
-        Value = 'NULL'
+        Value = Null
         Component = edDateSp
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'StartTimeSP'
-        Value = 'NULL'
+        Value = Null
         Component = edStartSP
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndTimeSP'
-        Value = 'NULL'
+        Value = Null
         Component = edEndSP
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -1909,42 +1929,42 @@
       end
       item
         Name = 'MondayStart'
-        Value = 'NULL'
+        Value = Null
         Component = ceMondayStart
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'MondayEnd'
-        Value = 'NULL'
+        Value = Null
         Component = ceMondayEnd
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'SaturdayStart'
-        Value = 'NULL'
+        Value = Null
         Component = ceSaturdayStart
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'SaturdayEnd'
-        Value = 'NULL'
+        Value = Null
         Component = ceSaturdayEnd
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'SundayStart'
-        Value = 'NULL'
+        Value = Null
         Component = ceSundayStart
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'SundayEnd'
-        Value = 'NULL'
+        Value = Null
         Component = ceSundayEnd
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -2072,6 +2092,12 @@
         Value = Null
         Component = cdMinPercentMarkup
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SerialNumberMypharmacy'
+        Value = Null
+        Component = ceSerialNumberMypharmacy
         MultiSelectSeparator = ','
       end>
     PackSize = 1

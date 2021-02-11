@@ -5,18 +5,15 @@ inherited LoginForm1: TLoginForm1
   inherited cxLabel1: TcxLabel
     Left = 2
     Top = 3
-    Style.IsFontAssigned = True
     ExplicitLeft = 2
     ExplicitTop = 3
     AnchorX = 230
     AnchorY = 123
   end
   inherited cxLabel2: TcxLabel
-    Style.IsFontAssigned = True
     AnchorX = 153
   end
   inherited cxLabel3: TcxLabel
-    Style.IsFontAssigned = True
     AnchorX = 153
   end
   object cxLabel4: TcxLabel [7]
@@ -38,7 +35,7 @@ inherited LoginForm1: TLoginForm1
     Width = 204
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 16
+    Left = 48
     Top = 8
   end
   object spChekFarmacyName: TdsdStoredProc
@@ -58,6 +55,23 @@ inherited LoginForm1: TLoginForm1
         MultiSelectSeparator = ','
       end
       item
+        Name = 'outUnitCode'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outUnitName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitCode'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inUnitName'
         Value = Null
         DataType = ftString
@@ -65,7 +79,73 @@ inherited LoginForm1: TLoginForm1
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 56
-    Top = 88
+    Left = 48
+    Top = 56
+  end
+  object spGetUnitName: TdsdStoredProc
+    StoredProcName = 'gpGet_FarmacyUnitName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outUnitCode'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outUnitName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitCode'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 48
+    Top = 104
+  end
+  object ActionList1: TActionList
+    Left = 104
+    Top = 104
+    object actLoginAdmin: TAction
+      Caption = 'actLoginAdmin'
+      ShortCut = 16469
+      OnExecute = actLoginAdminExecute
+    end
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'UnitId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 152
+    Top = 104
+  end
+  object spGet_User_IsAdmin: TdsdStoredProc
+    StoredProcName = 'gpGet_User_IsAdmin'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'gpGet_User_IsAdmin'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 232
+    Top = 7
   end
 end

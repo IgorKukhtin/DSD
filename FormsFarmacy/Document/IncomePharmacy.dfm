@@ -910,7 +910,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         end
         item
           Name = 'isPrice'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -967,7 +967,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         end
         item
           Name = 'isPrice'
-          Value = 'FALSE'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1410,7 +1410,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
@@ -1476,7 +1476,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       end
       item
         Name = 'PaymentDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
@@ -1966,10 +1966,18 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMovementItemId'
+        Name = 'ioMovementItemId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2081,7 +2089,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       end
       item
         Name = 'inisDocument'
-        Value = 'False'
+        Value = False
         Component = cbisDocument
         DataType = ftBoolean
         ParamType = ptInputOutput

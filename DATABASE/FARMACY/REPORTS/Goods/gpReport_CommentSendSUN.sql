@@ -7,12 +7,13 @@ CREATE OR REPLACE FUNCTION gpReport_CommentSendSUN(
     IN inEndDate       TDateTime , --
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, UnitCode Integer, UnitName TVarChar
+RETURNS TABLE (Id Integer, UnitCode Integer, UnitName TVarChar, TypeSUN TVarChar
              , InvNumber TVarChar, OperDate TDateTime
              , CommentSendCode Integer, CommentSendName TVarChar
              , GoodsCode Integer, GoodsName TVarChar
              , Price TFloat, Amount TFloat, Summa TFloat, Formed TFloat, PercentZeroing TFloat
              , PercentZeroingRange TFloat
+             , Sale TFloat
               )
 
 AS
@@ -48,6 +49,10 @@ BEGIN
                           , MovementItem.Id                                                                AS MovementItemId
                           , MovementItem.Amount                                                            AS Amount
                           , COALESCE(MIFloat_PriceFrom.ValueData,0)                                        AS Price
+                          , CASE WHEN COALESCE (MovementBoolean_SUN_v4.ValueData, FALSE) = TRUE THEN 'СУН-ПИ'
+                                 WHEN COALESCE (MovementBoolean_SUN_v3.ValueData, FALSE) = TRUE THEN 'Э-СУН'
+                                 WHEN COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE) = TRUE THEN 'СУН-v2'
+                                 ELSE 'СУН-v1' END::TVarChar                                               AS TypeSUN 
                      FROM tmpMovement AS Movement
                           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                        ON MovementLinkObject_From.MovementId = Movement.Id
@@ -65,6 +70,16 @@ BEGIN
                           LEFT OUTER JOIN MovementItemFloat AS MIFloat_PriceFrom
                                                             ON MIFloat_PriceFrom.MovementItemId = MovementItem.ID
                                                            AND MIFloat_PriceFrom.DescId = zc_MIFloat_PriceFrom()
+
+                          LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v2
+                                                    ON MovementBoolean_SUN_v2.MovementId = Movement.Id
+                                                   AND MovementBoolean_SUN_v2.DescId = zc_MovementBoolean_SUN_v2()
+                          LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v3
+                                                    ON MovementBoolean_SUN_v3.MovementId = Movement.Id
+                                                   AND MovementBoolean_SUN_v3.DescId = zc_MovementBoolean_SUN_v3()
+                          LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v4
+                                                    ON MovementBoolean_SUN_v4.MovementId = Movement.Id
+                                                   AND MovementBoolean_SUN_v4.DescId = zc_MovementBoolean_SUN_v4()
                      WHERE COALESCE (MILinkObject_CommentSend.ObjectId , 0) <> 0
                      )
      , tmpProtocolUnion AS (SELECT  MovementItemProtocol.Id
@@ -105,10 +120,28 @@ BEGIN
                             LEFT JOIN tmpProtocol ON tmpProtocol.MovementItemId = MovementItem.Id
                      --  WHERE Movement.StatusId = zc_Enum_Status_Complete() 
                      )
+     , tmpResultGroup AS (SELECT DISTINCT tmpResult.UnitId
+                                        , tmpResult.GoodsID
+                          FROM tmpResult)
+     , tmpSale AS (SELECT tmpResultGroup.UnitId
+                        , tmpResultGroup.GoodsID
+                        , SUM(- MIC.Amount)::TFloat     AS Sale
+                   FROM tmpResultGroup
+                   
+                        LEFT JOIN MovementItemContainer AS MIC
+                                                        ON MIC.OperDate >= inStartDate
+                                                       AND MIC.OperDate < inEndDate + INTERVAL '1 DAY'
+                                                       AND MIC.ObjectId_analyzer = tmpResultGroup.GoodsID
+                                                       AND MIC.WhereObjectId_analyzer = tmpResultGroup.UnitId
+                                                       AND MIC.MovementDescId = zc_Movement_Check()
+                        
+                   GROUP BY tmpResultGroup.UnitId
+                          , tmpResultGroup.GoodsID)
 
   SELECT tmpResult.Id
        , Object_From.ObjectCode                                                           AS UnitCode
        , Object_From.ValueData                                                            AS UnitName
+       , tmpResult.TypeSUN                                                                AS TypeSUN
        , tmpResult.InvNumber
        , tmpResult.OperDate
        , Object_CommentSend.ObjectCode                                                    AS CommentSendCode
@@ -124,12 +157,15 @@ BEGIN
               ELSE ROUND((1 - tmpResult.Amount / COALESCE(tmpProtocol.AmountAuto, tmpResult.Amount)) * 100, 2) END::TFloat AS PercentZeroing
        , CASE WHEN tmpResulAll.AmountAuto > 0 
               THEN ROUND(tmpResulAll.AmountZeroing / tmpResulAll.AmountAuto * 100, 2) ELSE 0 END::TFloat                   AS PercentZeroingRange
+       , tmpSale.Sale
   FROM tmpResult
        LEFT JOIN Object AS Object_From ON Object_From.Id = tmpResult.UnitId
        LEFT JOIN Object AS Object_CommentSend ON Object_CommentSend.Id = tmpResult.CommentSendID
        LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpResult.GoodsID
        LEFT JOIN tmpProtocol ON tmpProtocol.MovementItemId = tmpResult.MovementItemId
        LEFT JOIN tmpResulAll ON 1 = 1
+       LEFT JOIN tmpSale ON tmpSale.UnitId = tmpResult.UnitId
+                        AND tmpSale.GoodsID = tmpResult.GoodsID
   ORDER BY Object_From.ValueData, tmpResult.Id;
 
 END;
@@ -147,5 +183,4 @@ ALTER FUNCTION gpReport_PercentageOverdueSUN (TDateTime, TDateTime, TVarChar) OW
 -- тест
 -- SELECT * FROM gpReport_CommentSendSUN (inStartDate:= '25.08.2020', inEndDate:= '25.08.2020', inSession:= '3')
 
-
-select * from gpReport_CommentSendSUN(inStartDate := ('11.01.2021')::TDateTime , inEndDate := ('17.01.2021')::TDateTime ,  inSession := '3');
+select * from gpReport_CommentSendSUN(inStartDate := ('08.02.2021')::TDateTime , inEndDate := ('14.02.2021')::TDateTime ,  inSession := '3');

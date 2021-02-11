@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer
              , JuridicalCode Integer
              , JuridicalName TVarChar
              , Comment TVarChar
+             , CorrPrice TFloat
              , IsReport  Boolean
               )
 
@@ -30,6 +31,7 @@ BEGIN
           , Object_Juridical.ObjectCode              AS JuridicalCode
           , Object_Juridical.ValueData               AS JuridicalName
           , MovementString_Comment.ValueData         AS Comment
+          , MovementFloat_CorrPrice.ValueData       AS CorrPrice
           , CASE WHEN Movement.StatusId = zc_Enum_Status_Erased() THEN FALSE ELSE TRUE END AS IsReport
      FROM Movement 
         --INNER JOIN tmpStatus ON Movement.StatusId = tmpStatus.StatusId
@@ -43,6 +45,10 @@ BEGIN
                                  ON MovementString_Comment.MovementId = Movement.Id
                                 AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
+        LEFT JOIN MovementFloat AS MovementFloat_CorrPrice
+                                ON MovementFloat_CorrPrice.MovementId = Movement.Id
+                               AND MovementFloat_CorrPrice.DescId = zc_MovementFloat_CorrOther()
+
      WHERE Movement.DescId = zc_Movement_OrderInternalPromoPartner()
        AND Movement.ParentId = inMovementId
      ORDER BY Object_Juridical.ValueData;
@@ -55,7 +61,10 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 10.02.21                                                       *
  15.10.17         *
 */
 --select * from gpSelect_Movement_OrderInternalPromoPartner(inMovementId := 0 , inIsErased:= true, inSession := '3');
+
+select * from gpSelect_Movement_OrderInternalPromoPartner(inMovementId := 21065554 , inIsErased := 'False' ,  inSession := '3');

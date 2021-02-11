@@ -216,6 +216,11 @@ object Report_CommentSendSUNForm: TReport_CommentSendSUNForm
         item
           Format = ',0.00;-,0.00; ;'
           Kind = skSum
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Column = Sale
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -328,6 +333,16 @@ object Report_CommentSendSUNForm: TReport_CommentSendSUNForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 75
+      end
+      object Sale: TcxGridDBColumn
+        Caption = #1055#1088#1086#1076#1072#1085#1086
+        DataBinding.FieldName = 'Sale'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 72
       end
     end
     object cxGridLevel: TcxGridLevel

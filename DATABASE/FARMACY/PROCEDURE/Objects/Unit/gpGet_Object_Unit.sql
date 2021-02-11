@@ -52,7 +52,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                SerialNumberTabletki Integer,
                LayoutId  Integer, LayoutName TVarChar,
                PromoForSale TVarChar,
-               isMinPercentMarkup Boolean
+               isMinPercentMarkup Boolean,
+               SerialNumberMypharmacy Integer
                ) AS
 $BODY$
 BEGIN
@@ -281,6 +282,8 @@ BEGIN
       
       , ObjectString_PromoForSale.ValueData                AS PromoForSale
       , COALESCE (ObjectBoolean_MinPercentMarkup.ValueData, FALSE):: Boolean      AS isMinPercentMarkup
+      , ObjectFloat_SerialNumberMypharmacy.ValueData::Integer                     AS  SerialNumberMypharmacy
+      
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
                              ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
@@ -556,6 +559,9 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_SerialNumberTabletki
                               ON ObjectFloat_SerialNumberTabletki.ObjectId = Object_Unit.Id
                              AND ObjectFloat_SerialNumberTabletki.DescId = zc_ObjectFloat_Unit_SerialNumberTabletki()
+        LEFT JOIN ObjectFloat AS ObjectFloat_SerialNumberMypharmacy
+                              ON ObjectFloat_SerialNumberMypharmacy.ObjectId = Object_Unit.Id
+                             AND ObjectFloat_SerialNumberMypharmacy.DescId = zc_ObjectFloat_Unit_SerialNumberMypharmacy()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_MinPercentMarkup
                                 ON ObjectBoolean_MinPercentMarkup.ObjectId = Object_Unit.Id

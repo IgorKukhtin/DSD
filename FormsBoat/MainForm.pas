@@ -217,6 +217,9 @@ type
     actInvoiceJournal: TdsdOpenForm;
     N11: TMenuItem;
     N12: TMenuItem;
+    actTaxKindEdit: TdsdOpenForm;
+    miTaxKindEdit: TMenuItem;
+    N13: TMenuItem;
   private
     { Private declarations }
   public

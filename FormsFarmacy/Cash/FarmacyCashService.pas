@@ -1133,10 +1133,20 @@ begin
       sp.Params.Clear;
       sp.Params.AddParam('outIsEnter', ftBoolean, ptOutput, Null);
       sp.Params.AddParam('outUnitId', ftInteger, ptOutput, Null);
+      sp.Params.AddParam('outUnitCode', ftInteger, ptOutput, Null);
+      sp.Params.AddParam('outUnitName', ftString, ptOutput, Null);
+      sp.Params.AddParam('inUnitCode',ftInteger,ptInput, iniLocalUnitCodeGet);
       sp.Params.AddParam('inUnitName',ftString,ptInput, iniLocalUnitNameGet);
       if sp.Execute(False,False) = '' then
       begin
         Result := sp.Params.ParamByName('outIsEnter').Value;
+
+        if Result then
+        begin
+          if iniLocalUnitCodeGet = 0 then iniLocalUnitCodeSave(sp.ParamByName('outUnitCode').Value);
+          if iniLocalUnitNameGet <> sp.ParamByName('outUnitName').Value then
+            iniLocalUnitNameSave(sp.ParamByName('outUnitName').Value)
+        end;
 
         if gc_User.Local then
         begin
@@ -1578,7 +1588,7 @@ begin
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
 
                   Add_Log('Start Execute gpInsertUpdate_Movement_Check_ver2');
-                  Add_Log('      ' + Head.UID);
+                  Add_Log('      ' + String(Head.UID));
                   dsdSave.Execute(False, False);
                   Add_Log('End Execute gpInsertUpdate_Movement_Check_ver2'+
                           ' ID = '+ dsdSave.Params.ParamByName('ioID').AsString);
@@ -1765,7 +1775,7 @@ begin
               dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
               try
                 Add_Log('Start Execute gpComplete_Movement_Check_ver2_NoDiff');
-                Add_Log('      ' + Head.UID + ' ID - ' + IntToStr(Head.ID));
+                Add_Log('      ' + String(Head.UID) + ' ID - ' + IntToStr(Head.ID));
                 dsdSave.Execute(False, False);
                 Add_Log('Start Execute gpComplete_Movement_Check_ver2_NoDiff');
                 Head.COMPL := True;

@@ -1679,7 +1679,7 @@ begin
                (RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsCurrency < FieldByName('PriceSale').AsCurrency) and
                (FieldByName('Amount').AsCurrency > 0) then
             begin
-              ShowMessage('Превышена максимально возможная цена на препарат <' + FieldByName('GoodsName').AsString + '>. Обратитесь к Ирине Бажан...');
+              ShowMessage('Превышена максимально возможная цена на препарат <' + FieldByName('GoodsName').AsString + '>. Обратитесь к Калининой Кристине...');
             end;
 
             Next;
@@ -2835,7 +2835,7 @@ var
   nSumAll: Currency;
   GoodsId: Integer;
   nRecNo: Integer;
-  GoodsIdPS: Integer;
+  GoodsIdPS, nGoodsNotUKTZED, nGoodsUKTZED: Integer;
   nAmountPS, nPresent: Currency;
   PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID: Variant;
   aRelatedProductId : array of Integer;
@@ -2912,7 +2912,7 @@ begin
   NDSKindId := RemainsCDS.FieldByName('NDSKindId').AsVariant;
   DiscountExternalID := RemainsCDS.FieldByName('DiscountExternalID').AsVariant;
   DivisionPartiesID := RemainsCDS.FieldByName('DivisionPartiesID').AsVariant;
-  nPresent := 0;
+  nPresent := 0; nGoodsNotUKTZED := 0; nGoodsUKTZED := 0;
   isPromoForSale := False;
   try
     RemainsCDS.DisableControls;
@@ -2996,7 +2996,7 @@ begin
              (RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsCurrency < FieldByName('PriceSale').AsCurrency) and
              (FieldByName('Amount').AsCurrency > 0) then
           begin
-            ShowMessage('Превышена максимально возможная цена на препарат <' + FieldByName('GoodsName').AsString + '>. Обратитесь к Ирине Бажан...');
+            ShowMessage('Превышена максимально возможная цена на препарат <' + FieldByName('GoodsName').AsString + '>. Обратитесь к Калининой Кристине...');
             exit;
           end;
 
@@ -3038,30 +3038,11 @@ begin
           end;
         end;
 
-        if RemainsCDS.FieldByName('isBanFiscalSale').AsBoolean and not actSpec.Checked and
-          (FieldByName('Amount').AsCurrency > 0) and not FieldByName('isPresent').AsBoolean then
+        if (FieldByName('Amount').AsCurrency > 0) and not FieldByName('isPresent').AsBoolean then
         begin
-          if not gc_User.Local then
-          begin
-            actShowPUSH_UKTZED.Execute
-          end else ShowMessage('Товар <' + FieldByName('GoodsName').AsString + '> из выбранной партии по техническим причинам пробивается по служебному чеку (зеленая галка)...');
-          exit;
-        end;
-
-        if UnitConfigCDS.FieldByName('isCheckUKTZED').AsBoolean and not RemainsCDS.FieldByName('isBanFiscalSale').AsBoolean then
-        begin
-          nRecNo := RemainsCDS.RecNo;
-          try
-            if RemainsCDS.Locate('ID;isBanFiscalSale',
-              VarArrayOf([FieldByName('GoodsId').AsInteger, True]), []) and (RemainsCDS.FieldByName('Remains').AsCurrency > 0) then
-            begin
-              ShowMessage('В чеке есть позиция по УКТВЭД, чтобы не передавать большие суммы в бухглатерию - можно данный код пробить в отдельном чеке.'#13#10#13#10 +
-                RemainsCDS.FieldByName('Id').AsString + ' - ' + RemainsCDS.FieldByName('GoodsName').AsString);
-              Exit;
-            end;
-          finally
-            RemainsCDS.RecNo := nRecNo;
-          end;
+          if RemainsCDS.FieldByName('isBanFiscalSale').AsBoolean then
+            nGoodsUKTZED := FieldByName('GoodsId').AsInteger
+          else nGoodsNotUKTZED := FieldByName('GoodsId').AsInteger;
         end;
 
 
@@ -3112,6 +3093,32 @@ begin
     RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
       VarArrayOf([GoodsId, PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID]), []);
     RemainsCDS.EnableControls;
+  end;
+
+  if nGoodsUKTZED <> 0 then
+  begin
+    try
+      if CheckCDS.Locate('GoodsID', nGoodsUKTZED, []) then
+      begin
+
+        if UnitConfigCDS.FieldByName('isCheckUKTZED').AsBoolean and (nGoodsNotUKTZED <> 0) then
+        begin
+          ShowMessage('В чеке есть позиция по УКТВЭД, чтобы не передавать большие суммы в бухгалтерию - можно данный код пробить в отдельном чеке.'#13#10#13#10 +
+            CheckCDS.FieldByName('GoodsCode').AsString + ' - ' + CheckCDS.FieldByName('GoodsName').AsString);
+          Exit;
+        end;
+
+        if not actSpec.Checked then
+        begin
+          if not gc_User.Local then
+          begin
+            actShowPUSH_UKTZED.Execute
+          end else ShowMessage('Товар <' + CheckCDS.FieldByName('GoodsName').AsString + '> из выбранной партии по техническим причинам пробивается по служебному чеку (зеленая галка)...');
+          exit;
+        end;
+      end else Exit;
+    finally
+    end;
   end;
 
   // Выбор сопутствующего товара
@@ -5225,7 +5232,7 @@ begin
            (RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsCurrency < FieldByName('PriceSale').AsCurrency) and
            (FieldByName('Amount').AsCurrency > 0) then
         begin
-          ShowMessage('Превышена максимально возможная цена на препарат <' + FieldByName('GoodsName').AsString + '>. Обратитесь к Ирине Бажан...');
+          ShowMessage('Превышена максимально возможная цена на препарат <' + FieldByName('GoodsName').AsString + '>. Обратитесь к Калининой Кристине...');
         end;
 
         Next;
@@ -7148,24 +7155,6 @@ begin
 
     end;
 
-    if UnitConfigCDS.FieldByName('isCheckUKTZED').AsBoolean and not RemainsCDS.FieldByName('isBanFiscalSale').AsBoolean then
-    begin
-      RemainsCDS.DisableControls;
-      nRecNo := RemainsCDS.RecNo;
-      try
-        if RemainsCDS.Locate('ID;isBanFiscalSale',
-          VarArrayOf([RemainsCDS.FieldByName('Id').AsInteger, True]), []) and (RemainsCDS.FieldByName('Remains').AsCurrency > 0) then
-        begin
-          ShowMessage('В чеке есть позиция по УКТВЭД, чтобы не передавать большие суммы в бухглатерию - можно данный код пробить в отдельном чеке.'#13#10#13#10 +
-           RemainsCDS.FieldByName('Id').AsString + ' - ' + RemainsCDS.FieldByName('GoodsName').AsString);
-          Exit;
-        end;
-      finally
-        RemainsCDS.RecNo := nRecNo;
-        RemainsCDS.EnableControls;
-      end;
-    end;
-
     //
     // потому что криво, надо правильно определить ТОВАР + цена БЕЗ скидки
     if SoldRegim = True then // это ПРОДАЖА
@@ -7763,7 +7752,7 @@ begin
                  (RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsCurrency < FieldByName('PriceSale').AsCurrency) and
                  (FieldByName('Amount').AsCurrency > 0) then
               begin
-                ShowMessage('Превышена максимально возможная цена на препарат <' + FieldByName('GoodsName').AsString + '>. Обратитесь к Ирине Бажан...');
+                ShowMessage('Превышена максимально возможная цена на препарат <' + FieldByName('GoodsName').AsString + '>. Обратитесь к Калининой Кристине...');
               end;
 
               Next;
@@ -7832,7 +7821,7 @@ begin
                  (RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsCurrency < FieldByName('PriceSale').AsCurrency) and
                  (FieldByName('Amount').AsCurrency > 0) then
               begin
-                ShowMessage('Превышена максимально возможная цена на препарат <' + FieldByName('GoodsName').AsString + '>. Обратитесь к Ирине Бажан...');
+                ShowMessage('Превышена максимально возможная цена на препарат <' + FieldByName('GoodsName').AsString + '>. Обратитесь к Калининой Кристине...');
               end;
 
               Next;

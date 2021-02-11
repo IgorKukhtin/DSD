@@ -160,10 +160,17 @@ BEGIN
     -- сохранили связь с менеджером и покупателем + <Статус заказа (Состояние VIP-чека)>
     IF COALESCE (inManagerId,0) <> 0
     THEN
-        -- сохранили менеджера
-        PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_CheckMember(), ioId, inManagerId);
-        -- сохранили ФИО покупателя
-        PERFORM lpInsertUpdate_MovementString(zc_MovementString_Bayer(), ioId, inBayer);
+        IF vbIsInsert = TRUE OR COALESCE(inInvNumberOrder, '') = '' AND 
+           NOT EXISTS(SELECT 1 
+                      FROM  MovementLinkObject AS MovementLinkObject_CheckSourceKind
+                      WHERE MovementLinkObject_CheckSourceKind.MovementId = ioId
+                        AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind())
+        THEN
+          -- сохранили менеджера
+          PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_CheckMember(), ioId, inManagerId);
+          -- сохранили ФИО покупателя
+          PERFORM lpInsertUpdate_MovementString(zc_MovementString_Bayer(), ioId, inBayer);
+        END IF;
         -- Отмечаем документ как отложенный
         PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Deferred(), ioId, TRUE);
         -- !!! только 1 раз!!! сохранили

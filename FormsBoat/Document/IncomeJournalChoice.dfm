@@ -12,17 +12,17 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
     Width = 765
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 1110
+    ExplicitWidth = 765
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 765
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1110
+      ExplicitWidth = 765
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 765
         Height = 478
-        ExplicitWidth = 1110
+        ExplicitWidth = 765
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -296,12 +296,12 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
   end
   inherited Panel: TPanel
     Width = 765
-    ExplicitWidth = 1110
+    ExplicitWidth = 765
     inherited deStart: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 44197d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 44197d
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -389,21 +389,6 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'KeyList'
-          Value = Null
-          Component = cxGridDBTableView
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValuelist'
-          Value = Null
-          Component = cxGridDBTableView
-          ComponentItem = 'colInvNumber'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'ToId'
           Value = Null
           Component = MasterCDS
@@ -416,6 +401,14 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'ToName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TotalSumm'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'TotalSumm'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072

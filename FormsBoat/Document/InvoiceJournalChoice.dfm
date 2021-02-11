@@ -4,7 +4,6 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
   ClientWidth = 1028
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1044
   ExplicitHeight = 394
   PixelsPerInch = 96
@@ -895,6 +894,22 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
           ComponentItem = 'Comment'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AmountIn'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AmountIn'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AmountOut'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AmountOut'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
@@ -926,6 +941,10 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExecuteDialog'
         end
         item
           BeginGroup = True
@@ -1000,6 +1019,10 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
     end
     object bbb: TdxBarButton
       Action = dsdChoiceGuides
+      Category = 0
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
       Category = 0
     end
   end

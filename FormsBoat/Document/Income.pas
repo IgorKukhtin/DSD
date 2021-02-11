@@ -145,6 +145,9 @@ type
     macOpenFormTransport: TMultiAction;
     bbOpenFormTransport: TdxBarButton;
     bbOpenFormService: TdxBarButton;
+    cxLabel10: TcxLabel;
+    edPaidKind: TcxButtonEdit;
+    GuidesPaidKind: TdsdGuides;
   private
   public
   end;

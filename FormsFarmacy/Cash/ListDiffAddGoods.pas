@@ -387,6 +387,11 @@ begin
       Label1.Caption := S;
 
       S := '';
+      if ListGoodsCDS.FieldByName('IsClose').AsBoolean then
+      begin
+        S := #13#10#13#10'ВНИМАНИЕ! Код  закрыт для заказа МАРКЕТИНГОМ.'#13#10'См. аналог. товар (колонка "Закрыт для заказа")' + S;
+        Label7.Font.Size := Label7.Font.Size - 2;
+      end;
       if AmountDiffUser <> 0 Then S := #13#10#13#10'ВЫ УЖЕ ПОСТАВИЛИ СЕГОДНЯ - ' + CurrToStr(AmountDiffUser) + ' упк.';
       if (AmountIncome > 0) or (AmountIncomeSend > 0) then
       begin

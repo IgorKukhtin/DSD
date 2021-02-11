@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
              , VATPercent TFloat, ChangePercent TFloat
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
+             , PaidKindId Integer, PaidKindName TVarChar
              , Comment TVarChar
               )
 AS
@@ -44,6 +45,8 @@ BEGIN
              , CAST ('' AS TVarChar)     AS FromName
              , 0                         AS ToId
              , CAST ('' AS TVarChar)     AS ToName
+             , 0                         AS PaidKindId
+             , CAST ('' AS TVarChar)     AS PaidKindName
              , CAST ('' AS TVarChar)     AS Comment
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -68,6 +71,8 @@ BEGIN
           , Object_From.ValueData                     AS FromName
           , Object_To.Id                              AS ToId      
           , Object_To.ValueData                       AS ToName
+          , Object_PaidKind.Id                        AS PaidKindId      
+          , Object_PaidKind.ValueData                 AS PaidKindName
           , COALESCE (MovementString_Comment.ValueData,'') :: TVarChar AS Comment
 
         FROM Movement AS Movement_Income 
@@ -82,6 +87,11 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement_Income.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                         ON MovementLinkObject_PaidKind.MovementId = Movement_Income.Id
+                                        AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId 
 
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId = Movement_Income.Id

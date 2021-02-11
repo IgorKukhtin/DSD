@@ -120,6 +120,7 @@ BEGIN
                                       , MovementItem_Income_View.GoodsId
                                  FROM MovementItem_Income_View WHERE MovementId = inMovementId
                                  GROUP BY MovementItem_Income_View.GoodsId
+                                 HAVING SUM (Amount) <> 0
                                 ),
 
          tmpPrice_View AS (SELECT ROUND(Price_Value.ValueData,2)::TFloat  AS Price 

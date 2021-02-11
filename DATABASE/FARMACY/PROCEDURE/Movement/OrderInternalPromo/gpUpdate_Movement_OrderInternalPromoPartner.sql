@@ -6,6 +6,7 @@ DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderInternalPromoPartner (Integer, TV
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_OrderInternalPromoPartner(
     IN inId                    Integer    , -- Ключ объекта <Документ>
     IN inComment               TVarChar   , -- Примечание
+    IN inCorrPrice             TFloat     , -- Корректировка цены
     IN inIsErased              Boolean    , -- Удаленный ли элемент
     IN inSession               TVarChar     -- сессия пользователя
 )
@@ -19,6 +20,9 @@ BEGIN
     -- сохранили <Примечание>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), inId, inComment);
     
+    -- сохранили <Корректировка цены>
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CorrOther(), inId, inCorrPrice);
+
     --переопределяем. 
     inIsErased := NOT inIsErased;
     
@@ -40,6 +44,7 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 10.02.21                                                       *
  21.04.19         *
 */

@@ -311,10 +311,14 @@ CREATE OR REPLACE FUNCTION zc_Object_TranslateMessage() RETURNS Integer AS $BODY
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_TranslateMessage', 'Перевод Сообщений' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_TranslateMessage');
 
+CREATE OR REPLACE FUNCTION zc_Object_ProdColorPatternPhoto() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ProdColorPatternPhoto'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_ProdColorPatternPhoto', 'Фото Boat Structure' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ProdColorPatternPhoto');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.02.21         * zc_Object_ProdColorPatternPhoto
  15.12.20         * zc_Object_TranslateMessage
  11.12.20         * zc_Object_ColorPattern
                     zc_Object_ReceiptService

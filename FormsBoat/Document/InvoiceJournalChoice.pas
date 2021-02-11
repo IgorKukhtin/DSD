@@ -66,6 +66,7 @@ type
     macUpdateMoneyPlace: TMultiAction;
     dsdChoiceGuides: TdsdChoiceGuides;
     bbb: TdxBarButton;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

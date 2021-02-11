@@ -257,6 +257,15 @@ object ProdColorPatternForm: TProdColorPatternForm
         Options.Editing = False
         Width = 40
       end
+      object isPhoto: TcxGridDBColumn
+        Caption = #1045#1089#1090#1100' '#1092#1086#1090#1086
+        DataBinding.FieldName = 'isPhoto'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1045#1089#1090#1100' '#1092#1086#1090#1086
+        Options.Editing = False
+        Width = 50
+      end
       object EKPrice: TcxGridDBColumn
         Caption = 'Netto EK'
         DataBinding.FieldName = 'EKPrice'

@@ -31,6 +31,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , BasisPrice TFloat, BasisPriceWVAT TFloat
              , SalePrice TFloat, SalePriceWVAT TFloat
              , isEnabled Boolean
+             , isPhoto Boolean
               )
 AS
 $BODY$
@@ -211,6 +212,27 @@ BEGIN
                       WHERE Object_ProdColorPattern.DescId = zc_Object_ProdColorPattern()
                        AND (Object_ProdColorPattern.isErased = FALSE OR inIsErased = TRUE)
                      )
+                     
+          , tmpGoodsPhoto AS (SELECT ObjectLink_GoodsPhoto_Goods.ChildObjectId AS ObjectId
+                                   , Object_GoodsPhoto.Id                      AS PhotoId
+                                   , ROW_NUMBER() OVER (PARTITION BY ObjectLink_GoodsPhoto_Goods.ChildObjectId ORDER BY Object_GoodsPhoto.Id) AS Ord
+                              FROM Object AS Object_GoodsPhoto
+                                     JOIN ObjectLink AS ObjectLink_GoodsPhoto_Goods
+                                                     ON ObjectLink_GoodsPhoto_Goods.ObjectId = Object_GoodsPhoto.Id
+                                                    AND ObjectLink_GoodsPhoto_Goods.DescId   = zc_ObjectLink_GoodsPhoto_Goods()
+                               WHERE Object_GoodsPhoto.DescId   = zc_Object_GoodsPhoto()
+                                 AND Object_GoodsPhoto.isErased = FALSE
+                             )
+          , tmpProdColorPatternPhoto AS (SELECT ObjectLink_ProdColorPatternPhoto_ProdColorPattern.ChildObjectId AS ObjectId
+                                   , Object_ProdColorPatternPhoto.Id                      AS PhotoId
+                                   , ROW_NUMBER() OVER (PARTITION BY ObjectLink_ProdColorPatternPhoto_ProdColorPattern.ChildObjectId ORDER BY Object_ProdColorPatternPhoto.Id) AS Ord
+                              FROM Object AS Object_ProdColorPatternPhoto
+                                     JOIN ObjectLink AS ObjectLink_ProdColorPatternPhoto_ProdColorPattern
+                                                     ON ObjectLink_ProdColorPatternPhoto_ProdColorPattern.ObjectId = Object_ProdColorPatternPhoto.Id
+                                                    AND ObjectLink_ProdColorPatternPhoto_ProdColorPattern.DescId   = zc_ObjectLink_ProdColorPatternPhoto_ProdColorPattern()
+                               WHERE Object_ProdColorPatternPhoto.DescId   = zc_Object_ProdColorPatternPhoto()
+                                 AND Object_ProdColorPatternPhoto.isErased = FALSE
+                             )
      --
      SELECT
            tmpData.Id
@@ -263,8 +285,15 @@ BEGIN
         , tmpData.SalePriceWVAT ::TFloat
 
         , TRUE :: Boolean AS isEnabled
+        , CASE WHEN tmpPhoto1.ObjectId > 0 OR tmpPhoto2.ObjectId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPhoto
 
      FROM tmpData
+             LEFT JOIN tmpProdColorPatternPhoto AS tmpPhoto1
+                                                ON tmpPhoto1.ObjectId = tmpData.Id
+                                               AND tmpPhoto1.Ord = 1
+             LEFT JOIN tmpGoodsPhoto AS tmpPhoto2
+                                     ON tmpPhoto2.ObjectId = tmpData.GoodsId
+                                    AND tmpPhoto2.Ord = 1
      WHERE tmpData.ColorPatternId = inColorPatternId
         OR inColorPatternId       = 0
 
@@ -320,6 +349,7 @@ BEGIN
         , tmpData.SalePriceWVAT ::TFloat
 
         , FALSE :: Boolean AS isEnabled
+        , CASE WHEN tmpPhoto1.ObjectId > 0 OR tmpPhoto2.ObjectId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPhoto
 
      FROM Object AS Object_ColorPattern
           INNER JOIN (SELECT 0                  :: Integer AS Id
@@ -400,6 +430,13 @@ BEGIN
                                ON ObjectLink_Brand.ObjectId = Object_Model.Id
                               AND ObjectLink_Brand.DescId = zc_ObjectLink_ProdModel_Brand()
           LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
+
+          LEFT JOIN tmpProdColorPatternPhoto AS tmpPhoto1
+                                             ON tmpPhoto1.ObjectId = tmpData.Id
+                                            AND tmpPhoto1.Ord = 1
+          LEFT JOIN tmpGoodsPhoto AS tmpPhoto2
+                                  ON tmpPhoto2.ObjectId = tmpData.GoodsId
+                                 AND tmpPhoto2.Ord = 1
 
      WHERE Object_ColorPattern.DescId   = zc_Object_ColorPattern()
        AND Object_ColorPattern.isErased = FALSE

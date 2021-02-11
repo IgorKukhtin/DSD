@@ -19,7 +19,12 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  dsdGuides, cxMaskEdit, cxButtonEdit;
+  dsdGuides, cxMaskEdit, cxButtonEdit, cxStyles, dxSkinscxPCPainter,
+  cxCustomData, cxFilter, cxData, cxDataStorage, Data.DB, cxDBData,
+  dxSkinsdxBarPainter, dxBarExtItems, dxBar, cxClasses, Document,
+  Datasnap.DBClient, cxGridLevel, cxGridCustomTableView, cxGridTableView,
+  cxGridDBTableView, cxGridCustomView, cxGrid, cxImage, cxVGrid, cxDBVGrid,
+  cxInplaceContainer, Vcl.ExtCtrls;
 
 type
   TProdColorPatternEditForm = class(TParentForm)
@@ -52,6 +57,52 @@ type
     cxLabel7: TcxLabel;
     cxButtonEdit1: TcxButtonEdit;
     GuidesProdOptions: TdsdGuides;
+    Panel: TPanel;
+    cxDBVerticalGrid: TcxDBVerticalGrid;
+    colFileName: TcxDBEditorRow;
+    dxBarDockControl3: TdxBarDockControl;
+    PanelPhoto: TPanel;
+    Image3: TcxImage;
+    Image2: TcxImage;
+    Image1: TcxImage;
+    cxGrid1: TcxGrid;
+    cxGrid1DBTableView1: TcxGridDBTableView;
+    cxGrid1DBTableView1Column1: TcxGridDBColumn;
+    cxGrid1Level1: TcxGridLevel;
+    PhotoCDS: TClientDataSet;
+    PhotoDS: TDataSource;
+    Photo: TDocument;
+    spGetPhoto: TdsdStoredProc;
+    spDeletePhoto: TdsdStoredProc;
+    spPhotoSelect: TdsdStoredProc;
+    spInsertPhoto: TdsdStoredProc;
+    ActionList1: TActionList;
+    actRefresh: TdsdDataSetRefresh;
+    FormClose: TdsdFormClose;
+    InsertUpdateGuides: TdsdInsertUpdateGuides;
+    actInsertPhoto: TdsdExecStoredProc;
+    PhotoRefresh: TdsdDataSetRefresh;
+    DocumentRefresh: TdsdDataSetRefresh;
+    PhotoOpenAction: TDocumentOpenAction;
+    DocumentOpenAction: TDocumentOpenAction;
+    MultiActionInsertPhoto: TMultiAction;
+    actDeletePhoto: TdsdExecStoredProc;
+    spInserUpdateProdColorPattern: TdsdExecStoredProc;
+    BarManager: TdxBarManager;
+    BarManagerBar1: TdxBar;
+    bbAddDocument: TdxBarButton;
+    bbRefreshDoc: TdxBarButton;
+    bbStatic: TdxBarStatic;
+    bbOpenDocument: TdxBarButton;
+    bbInsertCondition: TdxBarButton;
+    bbPhotoRefresh: TdxBarButton;
+    bbSetErasedContractCondition: TdxBarButton;
+    bbPhotoOpenAction: TdxBarButton;
+    bbDeleteDocument: TdxBarButton;
+    spGetPhoto_panel: TdsdStoredProc;
+    DataSource: TDataSource;
+    ClientDataSet: TClientDataSet;
+    DBViewAddOn: TdsdDBViewAddOn;
   private
     { Private declarations }
   public
