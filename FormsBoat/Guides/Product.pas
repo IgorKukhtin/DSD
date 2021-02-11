@@ -180,7 +180,10 @@ type
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
-    bb: TdxBarButton;
+    bbPrint: TdxBarButton;
+    actPrintStructure: TdsdPrintAction;
+    bbPrintStructure: TdxBarButton;
+    spSelectPrintStructure: TdsdStoredProc;
   private
     { Private declarations }
   public
