@@ -150,37 +150,42 @@ BEGIN
                           AND Movement.StatusId <>zc_Enum_Status_Erased()   --= zc_Enum_Status_Complete()
                         )
 
-   , tmpMovementAll_SE AS (SELECT tmpMovement.*
-                                , Object_From.Id                 AS FromId
-                                , Object_From.ValueData          AS FromName
-                                , Object_PartnerFrom.Id          AS PartnerId_from
-                                , Object_PartnerFrom.ValueData   AS PartnerName_from
-                                , Object_GoodsProperty.ValueData AS GoodsPropertyName
-                                , Object_PartnerReal.Id          AS PartnerRealId 
-                                , Object_PartnerReal.ValueData   AS PartnerRealName
-                                , Object_PartnerReal.DescId      AS PartnerRealDescId
-                           FROM tmpMovement_SE AS tmpMovement
-                                LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                             ON MovementLinkObject_From.MovementId = tmpMovement.Id
-                                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-   
-                                LEFT JOIN ObjectLink AS ObjectLink_PartnerExternal_Partner
-                                                     ON ObjectLink_PartnerExternal_Partner.ObjectId = Object_From.Id
-                                                    AND ObjectLink_PartnerExternal_Partner.DescId = zc_ObjectLink_PartnerExternal_Partner()
-                                LEFT JOIN Object AS Object_PartnerFrom ON Object_PartnerFrom.Id = ObjectLink_PartnerExternal_Partner.ChildObjectId
-   
-                                LEFT JOIN ObjectLink AS ObjectLink_PartnerReal
-                                                     ON ObjectLink_PartnerReal.ObjectId = Object_From.Id 
-                                                    AND ObjectLink_PartnerReal.DescId = zc_ObjectLink_PartnerExternal_PartnerReal()
-   
-                                LEFT JOIN ObjectLink AS ObjectLink_Retail
-                                                     ON ObjectLink_Retail.ObjectId = Object_From.Id
-                                                    AND ObjectLink_Retail.DescId = zc_ObjectLink_PartnerExternal_Retail()
-                                --если не указано РЦ считаем и группируем по Торг. сети
-                                LEFT JOIN Object AS Object_PartnerReal ON Object_PartnerReal.Id = COALESCE (ObjectLink_PartnerReal.ChildObjectId, ObjectLink_Retail.ChildObjectId)
-   
-                                LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = tmpMovement.GoodsPropertyId
+   , tmpMovementAll_SE AS (SELECT tmp.*
+                                , ROUND (EXTRACT ( DAY FROM (tmp.OperDate_max - tmp.OperDate_min )) / 31 )+1 AS CountMonth
+                           FROM (SELECT tmpMovement.*
+                                      , Object_From.Id                 AS FromId
+                                      , Object_From.ValueData          AS FromName
+                                      , Object_PartnerFrom.Id          AS PartnerId_from
+                                      , Object_PartnerFrom.ValueData   AS PartnerName_from
+                                      , Object_GoodsProperty.ValueData AS GoodsPropertyName
+                                      , Object_PartnerReal.Id          AS PartnerRealId 
+                                      , Object_PartnerReal.ValueData   AS PartnerRealName
+                                      , Object_PartnerReal.DescId      AS PartnerRealDescId
+                                      , MIN (tmpMovement.OperDate) OVER (PARTITION BY Object_From.Id, Object_PartnerFrom.Id, Object_PartnerReal.Id) AS OperDate_min
+                                      , MAX (tmpMovement.OperDate) OVER (PARTITION BY Object_From.Id, Object_PartnerFrom.Id, Object_PartnerReal.Id) AS OperDate_max
+                                 FROM tmpMovement_SE AS tmpMovement
+                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                   ON MovementLinkObject_From.MovementId = tmpMovement.Id
+                                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                      LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+         
+                                      LEFT JOIN ObjectLink AS ObjectLink_PartnerExternal_Partner
+                                                           ON ObjectLink_PartnerExternal_Partner.ObjectId = Object_From.Id
+                                                          AND ObjectLink_PartnerExternal_Partner.DescId = zc_ObjectLink_PartnerExternal_Partner()
+                                      LEFT JOIN Object AS Object_PartnerFrom ON Object_PartnerFrom.Id = ObjectLink_PartnerExternal_Partner.ChildObjectId
+         
+                                      LEFT JOIN ObjectLink AS ObjectLink_PartnerReal
+                                                           ON ObjectLink_PartnerReal.ObjectId = Object_From.Id 
+                                                          AND ObjectLink_PartnerReal.DescId = zc_ObjectLink_PartnerExternal_PartnerReal()
+         
+                                      LEFT JOIN ObjectLink AS ObjectLink_Retail
+                                                           ON ObjectLink_Retail.ObjectId = Object_From.Id
+                                                          AND ObjectLink_Retail.DescId = zc_ObjectLink_PartnerExternal_Retail()
+                                      --если не указано РЦ считаем и группируем по Торг. сети
+                                      LEFT JOIN Object AS Object_PartnerReal ON Object_PartnerReal.Id = COALESCE (ObjectLink_PartnerReal.ChildObjectId, ObjectLink_Retail.ChildObjectId)
+         
+                                      LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = tmpMovement.GoodsPropertyId
+                                 ) AS tmp
                           )
    
    , tmpGoods AS (SELECT lfSelect.GoodsId AS GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect
@@ -314,15 +319,15 @@ BEGIN
                             , SUM (CASE WHEN Movement.OperDate BETWEEN vbStartDate_2 AND vbStartDate_3 - INTERVAL '1 DAY' THEN tmpMI.AmountKg END) AS AmountKg_2
                             , SUM (CASE WHEN Movement.OperDate BETWEEN vbStartDate_3 AND vbEndDate                        THEN tmpMI.AmountKg END) AS AmountKg_3
                             , SUM (tmpMI.AmountKg)    AS AmountKg
-                            , SUM (tmpMI.AmountKg)/3  AS AmountKg_avg
-                            , SUM ((SUM(tmpMI.AmountKg)/3)) OVER (PARTITION BY Movement.PartnerRealId) AS TotalAmountKg_avg
+                            , SUM (tmpMI.AmountKg)/Movement.CountMonth  AS AmountKg_avg
+                            , SUM ((SUM(tmpMI.AmountKg)/Movement.CountMonth)) OVER (PARTITION BY Movement.PartnerRealId) AS TotalAmountKg_avg
                             -- для сумм
                             , SUM (CASE WHEN Movement.OperDate BETWEEN vbStartDate   AND vbStartDate_2 - INTERVAL '1 DAY' THEN tmpMI.SummWithVAT END) AS SummWithVAT_1
                             , SUM (CASE WHEN Movement.OperDate BETWEEN vbStartDate_2 AND vbStartDate_3 - INTERVAL '1 DAY' THEN tmpMI.SummWithVAT END) AS SummWithVAT_2
                             , SUM (CASE WHEN Movement.OperDate BETWEEN vbStartDate_3 AND vbEndDate                        THEN tmpMI.SummWithVAT END) AS SummWithVAT_3
                             , SUM (tmpMI.SummWithVAT)    AS SummWithVAT
-                            , SUM (tmpMI.SummWithVAT)/3  AS SummWithVAT_avg
-                            , SUM ((SUM(tmpMI.SummWithVAT)/3)) OVER (PARTITION BY Movement.PartnerRealId) AS TotalSummWithVAT_avg
+                            , SUM (tmpMI.SummWithVAT)/Movement.CountMonth  AS SummWithVAT_avg
+                            , SUM ((SUM(tmpMI.SummWithVAT)/Movement.CountMonth)) OVER (PARTITION BY Movement.PartnerRealId) AS TotalSummWithVAT_avg
                        FROM tmpMovementAll_SE AS Movement
                             INNER JOIN tmpMI ON tmpMI.MovementId = Movement.Id
                        GROUP BY Movement.FromName
@@ -331,6 +336,7 @@ BEGIN
                               , Movement.PartnerRealId
                               , Movement.PartnerRealName
                               , Movement.GoodsPropertyName
+                              , Movement.CountMonth
                         ) AS tmp
                  )
 

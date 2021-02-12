@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ProdColorName TVarChar
              , ModelId Integer, ModelName TVarChar, ModelName_full TVarChar
              , EngineId Integer, EngineName TVarChar
              , ReceiptProdModelId Integer, ReceiptProdModelName TVarChar
-             , ClientId Integer, ClientName TVarChar
+             , ClientId Integer, ClientCode Integer, ClientName TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
              , isSale Boolean
@@ -397,6 +397,7 @@ BEGIN
                        , Object_ReceiptProdModel.ValueData AS ReceiptProdModelName
 
                        , Object_Client.Id                AS ClientId
+                       , Object_Client.ObjectCode        AS ClientCode
                        , Object_Client.ValueData         AS ClientName
 
                        , Object_Insert.ValueData         AS InsertName
@@ -506,6 +507,7 @@ BEGIN
          , tmpResAll.ReceiptProdModelName
 
          , tmpResAll.ClientId
+         , tmpResAll.ClientCode
          , tmpResAll.ClientName
 
          , tmpResAll.InsertName

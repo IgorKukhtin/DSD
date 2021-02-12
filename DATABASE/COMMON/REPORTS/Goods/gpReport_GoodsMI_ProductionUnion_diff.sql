@@ -26,13 +26,11 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
              , ChildAmount TFloat, ChildSumm TFloat
              , AmountDel TFloat
              , MainPrice TFloat, ChildPrice TFloat
-             
-, TotalCount_out TFloat 
 
-             , OperCount_diff        TFloat
-             , OperCount_weight_diff TFloat
-             , OperCount_sh_diff     TFloat
-             , Summ_diff             TFloat
+             , Amount_Weight      TFloat 
+             , ChildAmount_Weight TFloat
+             , Amount_weight_diff TFloat
+             , Summ_diff          TFloat
              )   
 AS
 $BODY$
@@ -193,8 +191,6 @@ BEGIN
                              
                              , SUM (CASE WHEN tmpMI_ContainerIn.MIContainerDescId = zc_MIContainer_Count() THEN tmpMI_ContainerIn.Amount ELSE 0 END
                                   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS OperCount_Weight
-                             , SUM (CASE WHEN tmpMI_ContainerIn.MIContainerDescId = zc_MIContainer_Count() THEN tmpMI_ContainerIn.Amount ELSE 0 END
-                                  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END)                            AS OperCount_sh
                              
                              , STRING_AGG (DISTINCT tmpMI_ContainerIn.SubjectDocName, '; ') AS SubjectDocName
                         FROM tmpMI_ContainerIn
@@ -227,9 +223,11 @@ BEGIN
                               , SUM (CASE WHEN tmpMI_ContainerOut.MIContainerDescId = zc_MIContainer_Summ()  THEN tmpMI_ContainerOut.Amount ELSE 0 END) AS OperSumm
                               
                               , SUM (CASE WHEN tmpMI_ContainerOut.MIContainerDescId = zc_MIContainer_Count() THEN tmpMI_ContainerOut.Amount ELSE 0 END
-                                   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)   AS OperCount_weight
-                              , SUM (CASE WHEN tmpMI_ContainerOut.MIContainerDescId = zc_MIContainer_Count() THEN tmpMI_ContainerOut.Amount ELSE 0 END
-                                   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END)                              AS OperCount_sh
+                                   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData
+                                          WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_kg() THEN 1
+                                          ELSE 0
+                                     END)   AS OperCount_weight
+
                          FROM tmpMI_ContainerOut
                               LEFT JOIN ContainerLinkObject AS ContainerLO_PartionGoods
                                                             ON ContainerLO_PartionGoods.ContainerId = tmpMI_ContainerOut.ContainerId
@@ -259,8 +257,7 @@ BEGIN
                                       , tmpMI_in.GoodsId       
                                       , tmpMI_in.GoodsKindId 
                                       , tmpMI_in.OperCount
-                                      , tmpMI_in.OperCount_Weight
-                                      , tmpMI_in.OperCount_sh
+                                      , tmpMI_in.OperCount_weight
                                       , tmpMI_in.OperSumm
                                       , tmpMI_in.SubjectDocName
 
@@ -269,12 +266,10 @@ BEGIN
                                       , 0 AS GoodsKindId_out
                                       , 0 AS OperCount_out
                                       , 0 AS OperCount_out_weight
-                                      , 0 AS OperCount_out_sh
                                       , 0 AS OperSumm_out
 
                                       , tmpMI_out.OperCount        AS TotalCount_out
                                       , tmpMI_out.OperCount_Weight AS TotalCount_weight
-                                      , tmpMI_out.OperCount_sh     AS TotalCount_sh
                                       , tmpMI_out.OperSumm         AS TotalSumm_out
                                  FROM tmpMI_in
                                      LEFT JOIN  (SELECT tmpMI_out.MovementId       
@@ -285,7 +280,6 @@ BEGIN
                                                      -- , tmpMI_out.PartionGoodsId_in
                                                       , SUM (tmpMI_out.OperCount)        AS OperCount
                                                       , SUM (tmpMI_out.OperCount_Weight) AS OperCount_weight
-                                                      , SUM (tmpMI_out.OperCount_sh)     AS OperCount_sh
                                                       , SUM (tmpMI_out.OperSumm)         AS OperSumm
                                                  FROM tmpMI_out
                                                  GROUP BY tmpMI_out.MovementId       
@@ -300,12 +294,6 @@ BEGIN
                                                                AND tmpMI_out.GoodsId_in        = tmpMI_in.GoodsId
                                                                AND tmpMI_out.GoodsKindId_in    = tmpMI_in.GoodsKindId
                                                               -- AND tmpMI_out.PartionGoodsId_in = tmpMI_in.PartionGoodsId
-                                     LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                                          ON ObjectLink_Goods_Measure.ObjectId = tmpMI_in.GoodsId
-                                                         AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-                                     LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                                           ON ObjectFloat_Weight.ObjectId = tmpMI_in.GoodsId
-                                                          AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
                                  UNION
                                  SELECT tmpMI_out.MovementId
                                       , tmpMI_out.isPeresort
@@ -315,7 +303,6 @@ BEGIN
                                       , tmpMI_out.GoodsKindId_in    AS GoodsKindId 
                                       , 0 AS OperCount
                                       , 0 AS OperCount_Weight
-                                      , 0 AS OperCount_sh
                                       , 0 AS OperSumm
                                       , '' ::TVarChar AS SubjectDocName
 
@@ -324,19 +311,11 @@ BEGIN
                                       , tmpMI_out.GoodsKindId      AS GoodsKindId_out
                                       , tmpMI_out.OperCount        AS OperCount_out
                                       , tmpMI_out.OperCount_Weight AS OperCount_out_weight
-                                      , tmpMI_out.OperCount_sh     AS OperCount_out_sh
                                       , tmpMI_out.OperSumm         AS OperSumm_out
                                       , 0 AS TotalCount_out
                                       , 0 AS TotalCount_weight
-                                      , 0 AS TotalCount_sh
                                       , 0 AS TotalSumm_out
                                   FROM tmpMI_out
-                                     LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                                          ON ObjectLink_Goods_Measure.ObjectId = tmpMI_out.GoodsId
-                                                         AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-                                     LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                                           ON ObjectFloat_Weight.ObjectId = tmpMI_out.GoodsId
-                                                          AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
                                  )
 
 
@@ -380,19 +359,11 @@ BEGIN
            , CASE WHEN tmpOperationGroup.OperCount     <> 0 THEN tmpOperationGroup.OperSumm     / tmpOperationGroup.OperCount     ELSE 0 END :: TFloat AS MainPrice
            , CASE WHEN tmpOperationGroup.OperCount_out <> 0 THEN tmpOperationGroup.OperSumm_out / tmpOperationGroup.OperCount_out ELSE 0 END :: TFloat AS ChildPrice
 
-           --разница к кг, шт, грн
-          /* , (tmpOperationGroup.TotalCount_out)           :: TFloat AS OperCount_diff
-           , (tmpOperationGroup.TotalCount_weight) :: TFloat AS OperCount_weight_diff
-           , (tmpOperationGroup.TotalCount_sh)         :: TFloat AS OperCount_sh_diff
-           , (tmpOperationGroup.TotalSumm_out)             :: TFloat AS Summ_diff
-
-*/
-, tmpOperationGroup.TotalCount_out :: TFloat 
-           , (tmpOperationGroup.OperCount - tmpOperationGroup.TotalCount_out)           :: TFloat AS OperCount_diff
-           , (tmpOperationGroup.OperCount_Weight - tmpOperationGroup.TotalCount_weight) :: TFloat AS OperCount_weight_diff
-           , (tmpOperationGroup.OperCount_sh - tmpOperationGroup.TotalCount_sh)         :: TFloat AS OperCount_sh_diff
-           , (tmpOperationGroup.OperSumm - tmpOperationGroup.TotalSumm_out)             :: TFloat AS Summ_diff
-
+           --вес приход, рвсход и разница к кг, грн
+           , COALESCE (tmpOperationGroup.OperCount_Weight,0)  ::TFloat AS Amount_Weight
+           , COALESCE (tmpOperationGroup.TotalCount_weight,0) ::TFloat AS ChildAmount_Weight
+           , (COALESCE (tmpOperationGroup.OperCount_Weight,0) - COALESCE (tmpOperationGroup.TotalCount_weight,0)) :: TFloat AS Amount_weight_diff
+           , (COALESCE (tmpOperationGroup.OperSumm,0) - COALESCE (tmpOperationGroup.TotalSumm_out,0))             :: TFloat AS Summ_diff
 
       FROM tmpOperationGroup
 

@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_Object_ProdEngine()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdEngine(Integer, Integer, TVarChar, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdEngine(Integer, Integer, TVarChar, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdEngine(
  INOUT ioId       Integer   ,    -- ключ объекта <Модели>
     IN inCode     Integer   ,    -- Код объекта
     IN inName     TVarChar  ,    -- Название объекта
     IN inPower    TFloat    ,
+    IN inVolume   TFloat    ,
     IN inComment  TVarChar  ,
     IN inSession  TVarChar       -- сессия пользователя
 )
@@ -39,7 +41,9 @@ BEGIN
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdEngine_Power(), ioId, inPower);
-
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdEngine_Volume(), ioId, inVolume);
+   
 
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>

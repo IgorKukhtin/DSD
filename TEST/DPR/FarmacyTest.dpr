@@ -993,7 +993,9 @@ uses
   Report_SalesOfTermDrugsDialog in '..\..\FormsFarmacy\Report\Report_SalesOfTermDrugsDialog.pas' {Report_SalesOfTermDrugsDialogForm: TParentForm},
   Report_SalesOfTermDrugs in '..\..\FormsFarmacy\Report\Report_SalesOfTermDrugs.pas' {Report_SalesOfTermDrugsForm: TParentForm},
   Report_SalesOfTermDrugsUnit in '..\..\FormsFarmacy\Report\Report_SalesOfTermDrugsUnit.pas' {Report_SalesOfTermDrugsUnitForm: TParentForm},
-  Report_SalesOfTermDrugsUser in '..\..\FormsFarmacy\Report\Report_SalesOfTermDrugsUser.pas' {Report_SalesOfTermDrugsUserForm: TParentForm};
+  Report_SalesOfTermDrugsUser in '..\..\FormsFarmacy\Report\Report_SalesOfTermDrugsUser.pas' {Report_SalesOfTermDrugsUserForm: TParentForm},
+  FinalSUA in '..\..\FormsFarmacy\Document\FinalSUA.pas' {FinalSUAForm: TParentForm},
+  FinalSUAJournal in '..\..\FormsFarmacy\Document\FinalSUAJournal.pas' {FinalSUAJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

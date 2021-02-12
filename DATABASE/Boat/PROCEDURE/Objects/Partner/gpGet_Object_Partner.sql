@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Fax TVarChar, Phone TVarChar, Mobile TVarChar
              , IBAN TVarChar, Street TVarChar, Member TVarChar
              , WWW TVarChar, Email TVarChar, CodeDB TVarChar
+             , TaxNumber TVarChar
              , Comment TVarChar
              , BankId Integer, BankName TVarChar
              , PLZId Integer, PLZName TVarChar
@@ -42,6 +43,7 @@ BEGIN
            , '' :: TVarChar           AS WWW
            , '' :: TVarChar           AS Email
            , '' :: TVarChar           AS CodeDB
+           , '' :: TVarChar           AS TaxNumber
            , '' :: TVarChar           AS Comment
            , 0                        AS BankId
            , '' :: TVarChar           AS BankName
@@ -71,6 +73,7 @@ BEGIN
            , ObjectString_WWW.ValueData      AS WWW
            , ObjectString_Email.ValueData    AS Email
            , ObjectString_CodeDB.ValueData   AS CodeDB
+           , ObjectString_TaxNumber.ValueData AS TaxNumber
            , ObjectString_Comment.ValueData  AS Comment
 
            , Object_Bank.Id                  AS BankId
@@ -114,6 +117,10 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_CodeDB
                                  ON ObjectString_CodeDB.ObjectId = Object_Partner.Id
                                 AND ObjectString_CodeDB.DescId = zc_ObjectString_Partner_CodeDB()
+          LEFT JOIN ObjectString AS ObjectString_TaxNumber
+                                 ON ObjectString_TaxNumber.ObjectId = Object_Partner.Id
+                                AND ObjectString_TaxNumber.DescId = zc_ObjectString_Partner_TaxNumber()
+                                
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_Partner.Id
                                 AND ObjectString_Comment.DescId = zc_ObjectString_Partner_Comment()

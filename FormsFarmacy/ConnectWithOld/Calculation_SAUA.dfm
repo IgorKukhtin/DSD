@@ -33,7 +33,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
       Caption = 'Panel2'
       ShowCaption = False
       TabOrder = 0
-      ExplicitHeight = 168
       object Panel4: TPanel
         Left = 0
         Top = 0
@@ -43,7 +42,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         Caption = 'Panel4'
         ShowCaption = False
         TabOrder = 0
-        ExplicitHeight = 168
         object cxLabel3: TcxLabel
           Left = 1
           Top = 1
@@ -60,7 +58,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           Align = alClient
           ItemHeight = 13
           TabOrder = 1
-          ExplicitHeight = 149
         end
       end
       object Panel5: TPanel
@@ -72,7 +69,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         Caption = 'Panel5'
         ShowCaption = False
         TabOrder = 1
-        ExplicitHeight = 168
         object cxLabel4: TcxLabel
           Left = 1
           Top = 1
@@ -89,7 +85,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           Align = alClient
           ItemHeight = 13
           TabOrder = 1
-          ExplicitHeight = 149
         end
       end
     end
@@ -387,7 +382,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1055#1088#1086#1094#1077#1085#1090' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1082#1086#1076#1086#1074' '#1074' '#1095#1077#1082#1072#1093' '#1076#1083#1103' '#1057#1040#1059#1040
-        Options.Editing = False
         Width = 66
         Position.BandIndex = 0
         Position.ColIndex = 4
@@ -516,6 +510,30 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actScheduleNearestSUN1: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecactScheduleNearestSUN1
+        end>
+      View = cxGridDBBandedTableView1
+      QuestionBeforeExecute = #1047#1072#1087#1083#1072#1085#1080#1088#1086#1074#1072#1090#1100' '#1085#1072' '#1073#1083#1080#1078#1072#1081#1096#1080#1081' '#1057#1059#1053'1?'
+      Caption = #1047#1072#1087#1083#1072#1085#1080#1088#1086#1074#1072#1090#1100' '#1085#1072' '#1073#1083#1080#1078#1072#1081#1096#1080#1081' '#1057#1059#1053'1'
+      Hint = #1047#1072#1087#1083#1072#1085#1080#1088#1086#1074#1072#1090#1100' '#1085#1072' '#1073#1083#1080#1078#1072#1081#1096#1080#1081' '#1057#1059#1053'1'
+      ImageIndex = 30
+    end
+    object actExecactScheduleNearestSUN1: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spScheduleNearestSUN1
+      StoredProcList = <
+        item
+          StoredProc = spScheduleNearestSUN1
+        end>
+      Caption = 'actExecactScheduleNearestSUN1'
+    end
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -566,25 +584,21 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           ItemName = 'bbStaticText'
         end
         item
+          Visible = True
+          ItemName = 'bbScheduleNearestSUN1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStaticText'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbStaticText'
         end
         item
           Visible = True
-          ItemName = 'bbStaticText'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton4'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStaticText'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStaticText'
+          ItemName = 'dxBarButton6'
         end
         item
           Visible = True
@@ -679,6 +693,15 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object bbScheduleNearestSUN1: TdxBarButton
+      Action = actScheduleNearestSUN1
+      Category = 0
+      PaintStyle = psCaptionGlyph
+    end
+    object dxBarButton6: TdxBarButton
+      Action = actGridToExcel
+      Category = 0
+    end
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -732,7 +755,7 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
     Params = <
       item
         Name = 'inDateStart'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -740,7 +763,7 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
       end
       item
         Name = 'inDateEnd'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -817,5 +840,39 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
     PackSize = 1
     Left = 56
     Top = 360
+  end
+  object spScheduleNearestSUN1: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_AddFinalSUA'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = cdsResult
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = cdsResult
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNeed'
+        Value = Null
+        Component = cdsResult
+        ComponentItem = 'Need'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 56
+    Top = 448
   end
 end

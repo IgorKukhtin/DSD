@@ -9,21 +9,21 @@ inherited Report_SaleExternal_OrderSaleForm: TReport_SaleExternal_OrderSaleForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 58
+    Top = 87
     Width = 1240
-    Height = 425
+    Height = 396
     TabOrder = 3
     ExplicitTop = 58
     ExplicitWidth = 1240
     ExplicitHeight = 425
-    ClientRectBottom = 425
+    ClientRectBottom = 396
     ClientRectRight = 1240
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1240
       ExplicitHeight = 425
       inherited cxGrid: TcxGrid
         Width = 1240
-        Height = 425
+        Height = 396
         ExplicitWidth = 1240
         ExplicitHeight = 425
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -449,9 +449,9 @@ inherited Report_SaleExternal_OrderSaleForm: TReport_SaleExternal_OrderSaleForm
   end
   inherited Panel: TPanel
     Width = 1240
-    Height = 32
+    Height = 61
     ExplicitWidth = 1240
-    ExplicitHeight = 32
+    ExplicitHeight = 61
     inherited deStart: TcxDateEdit
       Left = 145
       EditValue = 42826d
@@ -529,6 +529,51 @@ inherited Report_SaleExternal_OrderSaleForm: TReport_SaleExternal_OrderSaleForm
       Width = 174
     end
   end
+  object cxLabel6: TcxLabel [2]
+    Left = 25
+    Top = 33
+    Caption = #1052#1077#1089#1103#1094' 1:'
+  end
+  object edMonth1: TcxDateEdit [3]
+    Left = 74
+    Top = 32
+    EditValue = 42826d
+    Properties.DisplayFormat = 'mmmm YYYY'
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 7
+    Width = 96
+  end
+  object cxLabel7: TcxLabel [4]
+    Left = 180
+    Top = 33
+    Caption = #1052#1077#1089#1103#1094' 2:'
+  end
+  object edMonth2: TcxDateEdit [5]
+    Left = 229
+    Top = 32
+    EditValue = 42826d
+    Properties.DisplayFormat = 'mmmm YYYY'
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 9
+    Width = 96
+  end
+  object cxLabel8: TcxLabel [6]
+    Left = 332
+    Top = 33
+    Caption = #1052#1077#1089#1103#1094' 3:'
+  end
+  object edMonth3: TcxDateEdit [7]
+    Left = 383
+    Top = 32
+    EditValue = 42826d
+    Properties.DisplayFormat = 'mmmm YYYY'
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 11
+    Width = 96
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
     Top = 320
@@ -579,6 +624,14 @@ inherited Report_SaleExternal_OrderSaleForm: TReport_SaleExternal_OrderSaleForm
     end
     inherited actRefresh: TdsdDataSetRefresh
       TabSheet = tsMain
+      StoredProc = spGetReport
+      StoredProcList = <
+        item
+          StoredProc = spGetReport
+        end
+        item
+          StoredProc = spSelect
+        end>
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -702,7 +755,7 @@ inherited Report_SaleExternal_OrderSaleForm: TReport_SaleExternal_OrderSaleForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -713,7 +766,7 @@ inherited Report_SaleExternal_OrderSaleForm: TReport_SaleExternal_OrderSaleForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -874,7 +927,7 @@ inherited Report_SaleExternal_OrderSaleForm: TReport_SaleExternal_OrderSaleForm
     DateStart = nil
     DateEnd = nil
     Left = 184
-    Top = 40
+    Top = 72
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -909,7 +962,7 @@ inherited Report_SaleExternal_OrderSaleForm: TReport_SaleExternal_OrderSaleForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -917,7 +970,7 @@ inherited Report_SaleExternal_OrderSaleForm: TReport_SaleExternal_OrderSaleForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -1080,5 +1133,51 @@ inherited Report_SaleExternal_OrderSaleForm: TReport_SaleExternal_OrderSaleForm
       end>
     Left = 816
     Top = 8
+  end
+  object spGetReport: TdsdStoredProc
+    StoredProcName = 'gpGetReport_SaleExternal_OrderSale_Month'
+    DataSet = MasterCDS
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end
+      item
+      end
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = 42826d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Month_1'
+        Value = Null
+        Component = edMonth1
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Month_2'
+        Value = Null
+        Component = edMonth2
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Month_3'
+        Value = Null
+        Component = edMonth3
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 224
+    Top = 320
   end
 end

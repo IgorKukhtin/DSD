@@ -2047,13 +2047,13 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleExternal_OrderSaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleExternal_OrderSaleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleExternal_OrderSaleDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleExternal_OrderSaleDialogForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleExternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleExternalDialogForm'));

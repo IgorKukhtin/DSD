@@ -83,7 +83,20 @@ object ProdEngineEditForm: TProdEngineEditForm
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 9
-    Width = 273
+    Width = 132
+  end
+  object edVolume: TcxCurrencyEdit
+    Left = 151
+    Top = 119
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 10
+    Width = 132
+  end
+  object cxLabel4: TcxLabel
+    Left = 151
+    Top = 99
+    Caption = #1054#1073#1098#1077#1084' cm'#179
   end
   object ActionList: TActionList
     Left = 152
@@ -154,6 +167,14 @@ object ProdEngineEditForm: TProdEngineEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inVolume'
+        Value = Null
+        Component = edVolume
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = edComment
@@ -207,6 +228,13 @@ object ProdEngineEditForm: TProdEngineEditForm
         Name = 'Power'
         Value = Null
         Component = edPower
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Volume'
+        Value = Null
+        Component = edVolume
         DataType = ftFloat
         MultiSelectSeparator = ','
       end

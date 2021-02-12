@@ -4130,6 +4130,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actFinalSUAJournal: TdsdOpenForm
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
+      MoveParams = <>
+      Caption = #1048#1090#1086#1075#1086#1074#1099#1081' '#1057#1059#1040
+      FormName = 'TFinalSUAJournalForm'
+      FormNameParam.Value = 'TFinalSUAJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5049,6 +5060,9 @@ inherited MainForm: TMainForm
       end
       object N268: TMenuItem
         Action = actCalculation_SAUA
+      end
+      object N275: TMenuItem
+        Action = actFinalSUAJournal
       end
       object miReport_Check_GoodsPriceChange: TMenuItem
         Action = actReport_Check_GoodsPriceChange

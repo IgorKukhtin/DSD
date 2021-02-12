@@ -48,6 +48,13 @@ type
     edJuridical: TcxButtonEdit;
     GuidesJuridical: TdsdGuides;
     actRefreshContract: TdsdDataSetRefresh;
+    cxLabel6: TcxLabel;
+    edMonth1: TcxDateEdit;
+    cxLabel7: TcxLabel;
+    edMonth2: TcxDateEdit;
+    cxLabel8: TcxLabel;
+    edMonth3: TcxDateEdit;
+    spGetReport: TdsdStoredProc;
   private
     { Private declarations }
   public

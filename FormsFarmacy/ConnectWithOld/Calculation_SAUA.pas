@@ -79,6 +79,11 @@ type
     cbNotCheckNoMCS: TcxCheckBox;
     ceResolutionParameter: TcxCurrencyEdit;
     cxLabel8: TcxLabel;
+    actScheduleNearestSUN1: TMultiAction;
+    actExecactScheduleNearestSUN1: TdsdExecStoredProc;
+    bbScheduleNearestSUN1: TdxBarButton;
+    dxBarButton6: TdxBarButton;
+    spScheduleNearestSUN1: TdsdStoredProc;
     procedure ParentFormCreate(Sender: TObject);
     procedure ParentFormClose(Sender: TObject; var Action: TCloseAction);
     procedure actCalculationExecute(Sender: TObject);

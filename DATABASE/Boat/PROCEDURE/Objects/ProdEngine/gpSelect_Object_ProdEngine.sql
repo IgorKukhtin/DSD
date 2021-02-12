@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ProdEngine(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , Power TFloat
+             , Power TFloat, Volume TFloat
              , Comment TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
@@ -27,6 +27,7 @@ BEGIN
          , Object_ProdEngine.ValueData     AS Name
 
          , ObjectFloat_Power.ValueData     AS Power
+         , ObjectFloat_Volume.ValueData    AS Volume
          , ObjectString_Comment.ValueData  AS Comment
 
          , Object_Insert.ValueData         AS InsertName
@@ -41,6 +42,10 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_Power
                                 ON ObjectFloat_Power.ObjectId = Object_ProdEngine.Id
                                AND ObjectFloat_Power.DescId = zc_ObjectFloat_ProdEngine_Power()
+
+          LEFT JOIN ObjectFloat AS ObjectFloat_Volume
+                                ON ObjectFloat_Volume.ObjectId = Object_ProdEngine.Id
+                               AND ObjectFloat_Volume.DescId = zc_ObjectFloat_ProdEngine_Volume()
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_ProdEngine.Id
