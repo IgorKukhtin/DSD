@@ -176,7 +176,7 @@ BEGIN
                    INNER JOIN ObjectFloat AS ObjectFloat_Quality_NumberPrint
                                           ON ObjectFloat_Quality_NumberPrint.ObjectId = ObjectLink_GoodsQuality_Quality.ChildObjectId
                                          AND ObjectFloat_Quality_NumberPrint.DescId = zc_ObjectFloat_Quality_NumberPrint()
-                                         AND ObjectFloat_Quality_NumberPrint.ValueData = 1 -- !!!так захардкодил!!!, вообще их пока 2: вторая для консервов, первая все остальное
+                                         AND ObjectFloat_Quality_NumberPrint.ValueData IN (1, 4) -- !!!так захардкодил!!!, вообще их пока 2: вторая для консервов, первая все остальное
 
                    LEFT JOIN ObjectString AS ObjectString_Value1
                                           ON ObjectString_Value1.ObjectId = ObjectLink_GoodsQuality_Goods.ObjectId
@@ -999,4 +999,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Quality_Print (inMovementId:= 130359, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_Quality_Print (inMovementId:= 130359, inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 1>";

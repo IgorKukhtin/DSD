@@ -63,6 +63,7 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
 
   FROM Object_Contract_InvNumber_View
        LEFT JOIN Object_ContractCondition_ValueView AS View_ContractCondition_Value ON View_ContractCondition_Value.ContractId = Object_Contract_InvNumber_View.ContractId
+                                                                                   AND COALESCE (View_ContractCondition_Value.EndDate, zc_DateEnd()) >= CURRENT_DATE
 
        LEFT JOIN ObjectDate AS ObjectDate_Start
                             ON ObjectDate_Start.ObjectId = Object_Contract_InvNumber_View.ContractId

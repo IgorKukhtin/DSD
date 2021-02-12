@@ -1524,6 +1524,22 @@ END IF;
                                       , ContainerId_External, AccountId_External
                                       , FounderId, ContractId, JuridicalId
                                        )
+        -- "виртуальная запись" для SummReparation, есди вдруг в _tmpItem пусто
+        WITH tmpItem_child AS (SELECT MovementItem.Id AS MovementItemId
+                               FROM MovementItem
+                                    LEFT JOIN _tmpItem ON 1=1
+                               WHERE MovementItem.MovementId = inMovementId
+                                 AND MovementItem.DescId     = zc_MI_Child()
+                                 AND MovementItem.isErased   = FALSE
+                                 -- в _tmpItem пусто
+                                 AND _tmpItem.MovementItemId IS NULL
+                                 --
+                                 AND vbMemberId_To <> 0 AND vbMovementDescId = zc_Movement_Income()
+                                 -- !!!т.е. Эта схема ТОЛЬКО для ГСМ!!!
+                                 AND vbInfoMoneyId_From = zc_Enum_InfoMoney_20401()
+                               LIMIT 1
+                              )
+        -- Результат
         SELECT _tmpItem.MovementItemId
              , 0 AS ContainerId_Goods, 0 AS ContainerId, 0 AS AccountId
              , tmpPersonal.InfoMoneyDestinationId
@@ -1593,7 +1609,22 @@ END IF;
              , COALESCE (ObjectLink_Contract.ChildObjectId, 0)  AS ContractId
              , COALESCE (ObjectLink_Juridical.ChildObjectId, 0) AS JuridicalId
 
-        FROM _tmpItem
+        FROM (-- обычный _tmpItem
+              SELECT _tmpItem.MovementItemId
+                   , _tmpItem.GoodsId
+                   , _tmpItem.OperCount
+                   , _tmpItem.OperSumm_Partner
+                   , FALSE AS isReparation
+              FROM _tmpItem
+             UNION ALL
+              -- "виртуальная запись" для SummReparation, есди вдруг в _tmpItem пусто
+              SELECT tmpItem_child.MovementItemId  AS MovementItemId
+                   , vbMemberId_To                 AS GoodsId
+                   , 0                             AS OperCount
+                   , 0                             AS OperSumm_Partner
+                   , TRUE AS isReparation
+              FROM tmpItem_child
+             ) AS _tmpItem
              LEFT JOIN (SELECT CASE WHEN _tmpItem.OperCount <> tmp.FuelRealCalc AND tmp.FuelRealCalc <> 0
                                          THEN CAST (tmp.FuelRealCalc * _tmpItem.OperSumm_Partner / _tmpItem.OperCount AS NUMERIC (16, 2))
                                     WHEN tmp.FuelRealCalc <> 0
@@ -1660,6 +1691,8 @@ END IF;
         WHERE vbMemberId_To <> 0 AND vbMovementDescId = zc_Movement_Income()
           -- !!!т.е. Эта схема ТОЛЬКО для ГСМ!!!
           AND vbInfoMoneyId_From = zc_Enum_InfoMoney_20401()
+          -- если нет SummReparation, "виртуальная запись" НЕ нужна
+          AND (_tmpItem.isReparation = FALSE OR tmpFuel.SummReparation > 0)
         -- убрал т.к. хоть одна проводка должна быть (!!!для отчетов!!!)
         -- AND _tmpItem.OperSumm_Partner <> 0
        ;

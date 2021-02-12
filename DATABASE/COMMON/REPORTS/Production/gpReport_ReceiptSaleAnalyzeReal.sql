@@ -421,6 +421,27 @@ BEGIN
             WHERE Object.Id = 2167 -- (94134) РАСХОДЫ ЦЕХА Мясо
             LIMIT 1
            )
+          -- Товары ГП, если в рецептуре указаны расходы = (94133) РАСХОДІ ИРНА
+        , tmpGoods_20900 AS
+           (SELECT DISTINCT 
+                   COALESCE (ObjectLink_Receipt_Goods.ChildObjectId, 0)     AS GoodsId
+               --, COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+            FROM ObjectLink AS ObjectLink_Receipt_ReceiptCost
+                 INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
+                                       ON ObjectLink_Receipt_Goods.ObjectId = ObjectLink_Receipt_ReceiptCost.ObjectId
+                                      AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                 INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_Receipt_ReceiptCost.ObjectId
+                                                    AND Object_Receipt.isErased = FALSE
+                 INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                          ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
+                                         AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
+                                         AND ObjectBoolean_Main.ValueData = TRUE
+                 LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                      ON ObjectLink_Receipt_GoodsKind.ObjectId = Object_Receipt.Id
+                                     AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
+            WHERE ObjectLink_Receipt_ReceiptCost.ChildObjectId = 487092 -- (94133) РАСХОДІ ИРНА
+              AND ObjectLink_Receipt_ReceiptCost.DescId        = zc_ObjectLink_Receipt_ReceiptCost()
+           )
         , tmpPrice_20900 AS
            (SELECT COALESCE (PriceList1.Price, 0) AS Price1,  COALESCE (PriceList2.Price, 0) AS Price2, COALESCE(PriceList3.Price, 0) AS Price3
             FROM Object
@@ -472,6 +493,7 @@ BEGIN
            , CAST (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                              THEN COALESCE (tmpPrice_10100.Price1, 0)
                         WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
+                          OR tmpGoods_20900.GoodsId > 0
                              THEN PriceListSale.Price * 1.2 * 0.85
                                 + COALESCE (tmpPrice_20900.Price1, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
                         WHEN tmpResult.newSumm1 <> 0 AND tmpResult.OperCount_sale <> 0
@@ -481,6 +503,7 @@ BEGIN
            , CAST (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                              THEN COALESCE (tmpPrice_10100.Price2, 0)
                         WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
+                          OR tmpGoods_20900.GoodsId > 0
                              THEN PriceListSale.Price * 1.2 * 0.85
                                 + COALESCE (tmpPrice_20900.Price2, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
                         WHEN tmpResult.newSumm2 <> 0 AND tmpResult.OperCount_sale <> 0
@@ -490,6 +513,7 @@ BEGIN
            , CAST (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                              THEN COALESCE (tmpPrice_10100.Price3, 0)
                         WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
+                          OR tmpGoods_20900.GoodsId > 0
                              THEN PriceListSale.Price * 1.2 * 0.85
                                 + COALESCE (tmpPrice_20900.Price3, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
                         WHEN tmpResult.newSumm3 <> 0 AND tmpResult.OperCount_sale <> 0
@@ -499,23 +523,41 @@ BEGIN
 
            , CAST (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                              THEN COALESCE (tmpPrice_10100.Price1, 0)
+
+                    /*WHEN (View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
+                        OR tmpGoods_20900.GoodsId > 0) and inSession = '5'
+                         --THEN COALESCE (tmpPrice_20900.Price1, 0)
+                           THEN tmpResult.SummOut_sale*/
+
                         WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
+                          OR tmpGoods_20900.GoodsId > 0
                              THEN COALESCE (tmpPrice_20900.Price1, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
+
                         WHEN tmpResult.newSumm1_cost <> 0 AND tmpResult.OperCount_sale <> 0
                              THEN tmpResult.newSumm1_cost / tmpResult.OperCount_sale
                         ELSE tmpResult.Summ1_cost / tmpResult.Value_receipt
                    END AS NUMERIC (16, 3)) AS Price1_cost
+
            , CAST (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                              THEN COALESCE (tmpPrice_10100.Price2, 0)
+
+                      /*WHEN (View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
+                          OR tmpGoods_20900.GoodsId > 0) and inSession = '5'
+                           --THEN COALESCE (tmpPrice_20900.Price1, 0)
+                             THEN tmpResult.OperCount_sale*/
+
                         WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
+                          OR tmpGoods_20900.GoodsId > 0
                              THEN COALESCE (tmpPrice_20900.Price2, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
                         WHEN tmpResult.newSumm2_cost <> 0 AND tmpResult.OperCount_sale <> 0
                              THEN tmpResult.newSumm2_cost / tmpResult.OperCount_sale
                         ELSE tmpResult.Summ2_cost / tmpResult.Value_receipt
                    END AS NUMERIC (16, 3)) AS Price2_cost
+
            , CAST (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                              THEN COALESCE (tmpPrice_10100.Price3, 0)
                         WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
+                          OR tmpGoods_20900.GoodsId > 0
                              THEN COALESCE (tmpPrice_20900.Price3, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
                         WHEN tmpResult.newSumm3_cost <> 0 AND tmpResult.OperCount_sale <> 0
                              THEN tmpResult.newSumm3_cost / tmpResult.OperCount_sale
@@ -531,33 +573,39 @@ BEGIN
 
            , CASE WHEN tmpResult.newSumm1 <> 0 AND tmpResult.OperCount_sale <> 0
                    AND COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_10100(), zc_Enum_InfoMoneyDestination_20900())
+                   AND tmpGoods_20900.GoodsId IS NULL
                        THEN tmpResult.newSumm1
                   ELSE
              tmpResult.OperCount_sale * CAST (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                                         THEN COALESCE (tmpPrice_10100.Price1, 0)
                                                    WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
+                                                     OR tmpGoods_20900.GoodsId > 0
                                                         THEN PriceListSale.Price * 1.2 * 0.85
                                                            + COALESCE (tmpPrice_20900.Price1, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
                                                    ELSE tmpResult.Summ1 / tmpResult.Value_receipt
                                               END AS NUMERIC (16, 3)) END AS SummPrice1_sale -- с/с реализ по план1
            , CASE WHEN tmpResult.newSumm2 <> 0 AND tmpResult.OperCount_sale <> 0
                    AND COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_10100(), zc_Enum_InfoMoneyDestination_20900())
+                   AND tmpGoods_20900.GoodsId IS NULL
                        THEN tmpResult.newSumm2
                   ELSE
              tmpResult.OperCount_sale * CAST (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                                         THEN COALESCE (tmpPrice_10100.Price2, 0)
                                                    WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
+                                                     OR tmpGoods_20900.GoodsId > 0
                                                         THEN PriceListSale.Price * 1.2 * 0.85
                                                            + COALESCE (tmpPrice_20900.Price2, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
                                                    ELSE tmpResult.Summ2 / tmpResult.Value_receipt
                                               END AS NUMERIC (16, 3)) END AS SummPrice2_sale -- с/с реализ по план2
            , CASE WHEN tmpResult.newSumm3 <> 0 AND tmpResult.OperCount_sale <> 0
                    AND COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_10100(), zc_Enum_InfoMoneyDestination_20900())
+                   AND tmpGoods_20900.GoodsId IS NULL
                        THEN tmpResult.newSumm3
                   ELSE
              tmpResult.OperCount_sale * CAST (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                                         THEN COALESCE (tmpPrice_10100.Price3, 0)
                                                    WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
+                                                     OR tmpGoods_20900.GoodsId > 0
                                                         THEN PriceListSale.Price * 1.2 * 0.85
                                                            + COALESCE (tmpPrice_20900.Price3, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
                                                    ELSE tmpResult.Summ3 / tmpResult.Value_receipt
@@ -567,42 +615,50 @@ BEGIN
 
            , CASE WHEN tmpResult.newSumm1_cost <> 0 AND tmpResult.OperCount_sale <> 0
                    AND COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_10100(), zc_Enum_InfoMoneyDestination_20900())
+                   AND tmpGoods_20900.GoodsId IS NULL
                        THEN tmpResult.newSumm1_cost
                   ELSE
              tmpResult.OperCount_sale * CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                                         THEN COALESCE (tmpPrice_10100.Price1, 0)
                                              WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
+                                               OR tmpGoods_20900.GoodsId > 0
                                                   THEN COALESCE (tmpPrice_20900.Price1, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
                                              ELSE CAST (tmpResult.Summ1_cost / tmpResult.Value_receipt AS NUMERIC (16, 3))
                                         END END AS SummCost1_sale -- сумма затрат на реализ по план1
            , CASE WHEN tmpResult.newSumm2_cost <> 0 AND tmpResult.OperCount_sale <> 0
                    AND COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_10100(), zc_Enum_InfoMoneyDestination_20900())
+                   AND tmpGoods_20900.GoodsId IS NULL
                        THEN tmpResult.newSumm2_cost
                   ELSE
              tmpResult.OperCount_sale * CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                                         THEN COALESCE (tmpPrice_10100.Price2, 0)
                                              WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
+                                               OR tmpGoods_20900.GoodsId > 0
                                                   THEN COALESCE (tmpPrice_20900.Price2, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
                                              ELSE CAST (tmpResult.Summ2_cost / tmpResult.Value_receipt AS NUMERIC (16, 3))
                                         END END AS SummCost2_sale -- сумма затрат на реализ по план2
            , CASE WHEN tmpResult.newSumm3_cost <> 0 AND tmpResult.OperCount_sale <> 0
                    AND COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_10100(), zc_Enum_InfoMoneyDestination_20900())
+                   AND tmpGoods_20900.GoodsId IS NULL
                        THEN tmpResult.newSumm3_cost
                   ELSE
              tmpResult.OperCount_sale * CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                                         THEN COALESCE (tmpPrice_10100.Price3, 0)
                                              WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
+                                               OR tmpGoods_20900.GoodsId > 0
                                                   THEN COALESCE (tmpPrice_20900.Price3, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
                                              ELSE CAST (tmpResult.Summ3_cost / tmpResult.Value_receipt AS NUMERIC (16, 3))
                                         END END AS SummCost3_sale -- сумма затрат на реализ по план3
 
            , CASE WHEN tmpResult.newSumm4_cost <> 0 AND tmpResult.OperCount_sale <> 0
                    AND COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_10100(), zc_Enum_InfoMoneyDestination_20900())
+                   AND tmpGoods_20900.GoodsId IS NULL
                        THEN tmpResult.newSumm4_cost
                   ELSE
              tmpResult.OperCount_sale * CAST (tmpResult.Summ4_cost / tmpResult.Value_receipt AS NUMERIC (16, 3)) END AS SummCost4_sale -- сумма затрат на реализ по план4
 
            , CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
+                    OR tmpGoods_20900.GoodsId > 0
                        THEN 100 * 1
                                 / 0.85
                           - 100
@@ -617,7 +673,9 @@ BEGIN
                        ELSE 0
              END AS Tax_Summ_sale -- % рент. для план1 / сумма по прайсу расчетному
 
-           , CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() AND tmpResult.OperCount_sale * PriceListSale.Price <> 0
+           , CASE WHEN (View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
+                     OR tmpGoods_20900.GoodsId > 0)
+                   AND tmpResult.OperCount_sale * PriceListSale.Price <> 0
                        THEN 100 * tmpResult.SummOut_sale
                                 / (tmpResult.OperCount_sale * CAST (PriceListSale.Price * 1.2 * 0.85 AS NUMERIC (16, 3)))
                           - 100
@@ -656,13 +714,13 @@ BEGIN
            , CAST (CASE WHEN tmpResult.OperCount_return <> 0 THEN tmpResult.SummOut_PriceList_return / tmpResult.OperCount_return ELSE 0 END AS NUMERIC (16, 3)) AS Price_out_pl_return
            , tmpResult.SummOut_return AS SummOut_return
            , CAST (CASE WHEN tmpResult.OperCount_return <> 0 THEN tmpResult.SummOut_return / tmpResult.OperCount_return ELSE 0 END AS NUMERIC (16, 3)) AS Price_out_return
-
            -- чистая прибыль
            , CAST ((tmpResult.OperCount_sale * ((CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END)
                                                 - ( (CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummIn_sale / tmpResult.OperCount_sale ELSE 0 END)
                                                     + (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                                                  THEN COALESCE (tmpPrice_10100.Price2, 0)
                                                             WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
+                                                              OR tmpGoods_20900.GoodsId > 0
                                                                  THEN COALESCE (tmpPrice_20900.Price2, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
                                                             WHEN tmpResult.newSumm2_cost <> 0 AND tmpResult.OperCount_sale <> 0
                                                                  THEN tmpResult.newSumm2_cost / tmpResult.OperCount_sale
@@ -676,6 +734,7 @@ BEGIN
                                                        + (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                                                     THEN COALESCE (tmpPrice_10100.Price2, 0)
                                                                WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
+                                                                  OR tmpGoods_20900.GoodsId > 0
                                                                     THEN COALESCE (tmpPrice_20900.Price2, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
                                                                WHEN tmpResult.newSumm2_cost <> 0 AND tmpResult.OperCount_sale <> 0
                                                                     THEN tmpResult.newSumm2_cost / tmpResult.OperCount_sale
@@ -699,8 +758,10 @@ BEGIN
             LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmpResult.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpResult.GoodsKindId
 
-            LEFT JOIN Object AS Object_Goods_isCost ON Object_Goods_isCost.Id = tmpResult.GoodsId_isCost
+            LEFT JOIN tmpGoods_20900 ON tmpGoods_20900.GoodsId     = tmpResult.GoodsId
+                                  --AND tmpGoods_20900.GoodsKindId = tmpResult.GoodsKindId
 
+            LEFT JOIN Object AS Object_Goods_isCost ON Object_Goods_isCost.Id = tmpResult.GoodsId_isCost
 
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
@@ -780,6 +841,8 @@ BEGIN
 
           LEFT JOIN tmpPrice_10100 ON View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
           LEFT JOIN tmpPrice_20900 ON View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
+                                   OR tmpGoods_20900.GoodsId > 0
+-- where inSession <> '5' or tmpGoods_20900.GoodsId > 0
          ;
 
       -- Результат
@@ -902,4 +965,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_ReceiptSaleAnalyzeReal (inStartDate:= '01.06.2019', inEndDate:= '01.06.2019', inUnitId_sale:= 8447, inUnitId_return:= 8447, inGoodsGroupId:= 0, inPriceListId_1:= 0, inPriceListId_2:= 0, inPriceListId_3:= 0, inPriceListId_sale:= 0, inIsGoodsKind:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_ReceiptSaleAnalyzeReal (inStartDate:= '01.06.2021', inEndDate:= '01.06.2021', inUnitId_sale:= 8447, inUnitId_return:= 8447, inGoodsGroupId:= 0, inPriceListId_1:= 0, inPriceListId_2:= 0, inPriceListId_3:= 0, inPriceListId_sale:= 0, inIsGoodsKind:= FALSE, inSession:= zfCalc_UserAdmin())

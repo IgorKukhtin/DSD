@@ -1284,7 +1284,7 @@ end;
 
 function TRaiffeisenBankLoad.GetOperDate: TDateTime;
 begin
-  result := FDataSet.FieldByName('DATA').AsDateTime;
+  result := FDataSet.FieldByName('DATA_S').AsDateTime;
 end;
 
 function TRaiffeisenBankLoad.GetOperSumm: real;

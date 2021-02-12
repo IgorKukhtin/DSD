@@ -1344,6 +1344,7 @@ const
   cSelectCountMasterNoId = 'SELECT COUNT(*) AS RecCount FROM %s WHERE %s <= %d';
   cSelectCountMaster     = 'SELECT COUNT(*) AS RecCount FROM %s WHERE Id <= %d';
   cSelectCountIdMaster   = 'SELECT COUNT(Id) AS RecCount FROM %s WHERE Id <= %d';
+  cSelectCountIdMaster_two = 'SELECT COUNT(Id) AS RecCount FROM %s';
   cUnion                 = ' UNION ALL ';
 var
   I, J: Integer;
@@ -1435,7 +1436,7 @@ begin
         end;
 
       // для таблиц сервера Slave
-      if arrTables[I].Name = 'MovementItemContainer'  then
+      if AnsiUpperCase(arrTables[I].Name) = AnsiUpperCase('MovementItemContainer')  then
         arrTables[I].CountSQLSlave := Format(cSelectCountIdSlave, [arrTables[I].Name])
       else
         if arrTables[I].PK_Id then
@@ -1473,8 +1474,12 @@ begin
       if FStopped then Exit;
 
       // для таблиц сервера Master
-      if (arrTables[I].Name = 'MovementItemContainer') and (arrTables[I].MaxIdSlave > 0)  then
+      if (AnsiUpperCase(arrTables[I].Name) = AnsiUpperCase('MovementItemContainer')) and (arrTables[I].MaxIdSlave > 0)  then
         arrTables[I].CountSQLMaster := Format(cSelectCountIdMaster, [arrTables[I].Name, arrTables[I].MaxIdSlave])
+      else
+      // еще раз, если пусто в Slave
+      if (AnsiUpperCase(arrTables[I].Name) = AnsiUpperCase('MovementItemContainer')) then
+        arrTables[I].CountSQLMaster := Format(cSelectCountIdMaster_two, [arrTables[I].Name])
       else
         if (arrTables[I].PK_Id) and (arrTables[I].MaxIdSlave > 0) then
           arrTables[I].CountSQLMaster := Format(cSelectCountMaster, [arrTables[I].Name, arrTables[I].MaxIdSlave])

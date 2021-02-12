@@ -44,7 +44,7 @@ BEGIN
  
 
     --
-    IF inBankMFOMain = '380805' THEN inAmount:= -1 * inAmount; END IF;
+  --IF inBankMFOMain = '380805' THEN inAmount:= -1 * inAmount; END IF;
 
  
     -- 1. Ќайти счет от кого и кому в справочнике счетов.
