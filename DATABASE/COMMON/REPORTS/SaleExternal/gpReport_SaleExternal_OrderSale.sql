@@ -319,15 +319,15 @@ BEGIN
                             , SUM (CASE WHEN Movement.OperDate BETWEEN vbStartDate_2 AND vbStartDate_3 - INTERVAL '1 DAY' THEN tmpMI.AmountKg END) AS AmountKg_2
                             , SUM (CASE WHEN Movement.OperDate BETWEEN vbStartDate_3 AND vbEndDate                        THEN tmpMI.AmountKg END) AS AmountKg_3
                             , SUM (tmpMI.AmountKg)    AS AmountKg
-                            , SUM (tmpMI.AmountKg)/CountMonth  AS AmountKg_avg
-                            , SUM ((SUM(tmpMI.AmountKg)/CountMonth)) OVER (PARTITION BY Movement.PartnerRealId) AS TotalAmountKg_avg
+                            , SUM (tmpMI.AmountKg)/Movement.CountMonth  AS AmountKg_avg
+                            , SUM ((SUM(tmpMI.AmountKg)/Movement.CountMonth)) OVER (PARTITION BY Movement.PartnerRealId) AS TotalAmountKg_avg
                             -- для сумм
                             , SUM (CASE WHEN Movement.OperDate BETWEEN vbStartDate   AND vbStartDate_2 - INTERVAL '1 DAY' THEN tmpMI.SummWithVAT END) AS SummWithVAT_1
                             , SUM (CASE WHEN Movement.OperDate BETWEEN vbStartDate_2 AND vbStartDate_3 - INTERVAL '1 DAY' THEN tmpMI.SummWithVAT END) AS SummWithVAT_2
                             , SUM (CASE WHEN Movement.OperDate BETWEEN vbStartDate_3 AND vbEndDate                        THEN tmpMI.SummWithVAT END) AS SummWithVAT_3
                             , SUM (tmpMI.SummWithVAT)    AS SummWithVAT
-                            , SUM (tmpMI.SummWithVAT)/CountMonth  AS SummWithVAT_avg
-                            , SUM ((SUM(tmpMI.SummWithVAT)/CountMonth)) OVER (PARTITION BY Movement.PartnerRealId) AS TotalSummWithVAT_avg
+                            , SUM (tmpMI.SummWithVAT)/Movement.CountMonth  AS SummWithVAT_avg
+                            , SUM ((SUM(tmpMI.SummWithVAT)/Movement.CountMonth)) OVER (PARTITION BY Movement.PartnerRealId) AS TotalSummWithVAT_avg
                        FROM tmpMovementAll_SE AS Movement
                             INNER JOIN tmpMI ON tmpMI.MovementId = Movement.Id
                        GROUP BY Movement.FromName
@@ -336,6 +336,7 @@ BEGIN
                               , Movement.PartnerRealId
                               , Movement.PartnerRealName
                               , Movement.GoodsPropertyName
+                              , Movement.CountMonth
                         ) AS tmp
                  )
 
