@@ -59,7 +59,7 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-
+    LoadReportFromFile('PrintProduct_Tender', ReportPath + '\PrintProduct_Tender.fr3');
     LoadReportFromFile('PrintProduct_Structure', ReportPath + '\PrintProduct_Structure.fr3');
     LoadReportFromFile('PrintProduct_Agilis', ReportPath + '\PrintProduct_Agilis.fr3');
 //  LoadReportFromFile('Анализ продаж1', ReportPath + '\Анализ продаж1.fr3');

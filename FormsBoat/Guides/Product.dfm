@@ -1721,6 +1721,14 @@ object ProductForm: TProductForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintTender'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -1889,6 +1897,10 @@ object ProductForm: TProductForm
     end
     object bbPrintStructure: TdxBarButton
       Action = actPrintStructure
+      Category = 0
+    end
+    object bbPrintTender: TdxBarButton
+      Action = actPrintTender
       Category = 0
     end
   end
@@ -2718,6 +2730,57 @@ object ProductForm: TProductForm
         end>
       ReportName = 'PrintProduct_Structure'
       ReportNameParam.Value = 'PrintProduct_Structure'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintTender: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintTender
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintTender
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' Tender'
+      Hint = #1055#1077#1095#1072#1090#1100' Tender'
+      ImageIndex = 18
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsColorCDS
+          UserName = 'frxDBDChild'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintProduct_Tender'
+      ReportNameParam.Value = 'PrintProduct_Tender'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -3644,5 +3707,38 @@ object ProductForm: TProductForm
     PackSize = 1
     Left = 1016
     Top = 160
+  end
+  object PrintItemsColorCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 876
+    Top = 190
+  end
+  object spSelectPrintTender: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Product_TendersPrint'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsColorCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inProductId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1000
+    Top = 208
   end
 end

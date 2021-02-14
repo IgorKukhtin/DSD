@@ -184,6 +184,10 @@ type
     actPrintStructure: TdsdPrintAction;
     bbPrintStructure: TdxBarButton;
     spSelectPrintStructure: TdsdStoredProc;
+    PrintItemsColorCDS: TClientDataSet;
+    actPrintTender: TdsdPrintAction;
+    spSelectPrintTender: TdsdStoredProc;
+    bbPrintTender: TdxBarButton;
   private
     { Private declarations }
   public
