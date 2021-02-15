@@ -3,7 +3,7 @@ object IncomeForm: TIncomeForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
   ClientHeight = 455
-  ClientWidth = 850
+  ClientWidth = 1038
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,12 @@ object IncomeForm: TIncomeForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 850
+    Width = 1038
     Height = 97
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 850
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -210,29 +211,61 @@ object IncomeForm: TIncomeForm
       TabOrder = 22
       Width = 124
     end
+    object cxLabel15: TcxLabel
+      Left = 858
+      Top = 5
+      Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
+    end
+    object ceInvoice: TcxButtonEdit
+      Left = 858
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 24
+      Width = 175
+    end
+    object cxLabel9: TcxLabel
+      Left = 858
+      Top = 45
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1076#1086#1082'. '#1057#1095#1077#1090')'
+    end
+    object ceComment_Invoice: TcxTextEdit
+      Left = 858
+      Top = 63
+      Properties.ReadOnly = True
+      TabOrder = 26
+      Width = 175
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 123
-    Width = 850
+    Width = 1038
     Height = 332
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 850
     ClientRectBottom = 332
-    ClientRectRight = 850
+    ClientRectRight = 1038
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 850
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 850
+        Width = 1038
         Height = 308
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 850
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1592,6 +1625,14 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementId_Invoice'
+        Value = Null
+        Component = GuidesInvoice
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = ceComment
@@ -1644,6 +1685,7 @@ object IncomeForm: TIncomeForm
         Control = ceComment
       end
       item
+        Control = ceInvoice
       end
       item
       end
@@ -1656,8 +1698,8 @@ object IncomeForm: TIncomeForm
       item
       end>
     GetStoredProc = spGet
-    Left = 248
-    Top = 225
+    Left = 344
+    Top = 217
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Income'
@@ -1802,6 +1844,21 @@ object IncomeForm: TIncomeForm
         Name = 'PaidKindName'
         Value = Null
         Component = GuidesPaidKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_Invoice'
+        Value = Null
+        Component = GuidesInvoice
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Invoice'
+        Value = Null
+        Component = GuidesInvoice
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2148,5 +2205,44 @@ object IncomeForm: TIncomeForm
       end>
     Left = 312
     Top = 8
+  end
+  object GuidesInvoice: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInvoice
+    Key = '0'
+    FormNameParam.Value = 'TInvoiceJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInvoiceJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesInvoice
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = GuidesInvoice
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = ''
+        Component = ceComment_Invoice
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 916
+    Top = 15
   end
 end

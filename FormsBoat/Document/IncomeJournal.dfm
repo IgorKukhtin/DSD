@@ -345,6 +345,28 @@ object IncomeJournalForm: TIncomeJournalForm
         Options.Editing = False
         Width = 130
       end
+      object InvNumber_Invoice: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
+        DataBinding.FieldName = 'InvNumber_Invoice'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 120
+      end
+      object Comment_Invoice: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' (Invoice)'
+        DataBinding.FieldName = 'Comment_Invoice'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 95
+      end
       object InsertName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
         DataBinding.FieldName = 'InsertName'

@@ -148,6 +148,11 @@ type
     cxLabel10: TcxLabel;
     edPaidKind: TcxButtonEdit;
     GuidesPaidKind: TdsdGuides;
+    cxLabel15: TcxLabel;
+    ceInvoice: TcxButtonEdit;
+    GuidesInvoice: TdsdGuides;
+    cxLabel9: TcxLabel;
+    ceComment_Invoice: TcxTextEdit;
   private
   public
   end;
