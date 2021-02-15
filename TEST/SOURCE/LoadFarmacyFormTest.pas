@@ -976,8 +976,8 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CommentSendSUNForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_CommentSendSUNForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_SUAForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSun_SUAForm');
 
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SalesOfTermDrugsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SalesOfTermDrugsDialogForm');

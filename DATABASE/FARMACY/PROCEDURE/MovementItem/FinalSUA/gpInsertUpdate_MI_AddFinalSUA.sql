@@ -19,6 +19,11 @@ BEGIN
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
     vbUserId := inSession;
     
+    IF COALESCE (inNeed, 0) <= 0
+    THEN
+      RETURN;
+    END IF;
+        
     vbOperDate := CURRENT_DATE + ((8 - date_part('DOW', CURRENT_DATE)::Integer)::TVarChar||' DAY')::INTERVAL;
 
     IF EXISTS(SELECT Movement.id

@@ -22,6 +22,7 @@ type
     function OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false; const isReturn: boolean = False): boolean;
     function CloseReceipt: boolean;
     function CloseReceiptEx(out CheckId: String): boolean;
+    function GetLastCheckId: Integer;
     function CashInputOutput(const Summa: double): boolean;
     function ProgrammingGoods(const GoodsCode: integer; const GoodsName: string; const Price, NDS: double): boolean;
     function ClosureFiscal: boolean;
@@ -112,6 +113,11 @@ end;
 function TCashIKC_C651T.CloseReceiptEx(out CheckId: String): boolean;
 begin
   result := True;
+end;
+
+function TCashIKC_C651T.GetLastCheckId: Integer;
+begin
+  Result := FPrinter.prKSEFPacket
 end;
 
 function TCashIKC_C651T.GetAlwaysSold: boolean;

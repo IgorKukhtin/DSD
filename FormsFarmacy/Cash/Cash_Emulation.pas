@@ -32,6 +32,7 @@ type
     function OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false; const isReturn: boolean = False): boolean;
     function CloseReceipt: boolean;
     function CloseReceiptEx(out CheckId: String): boolean;
+    function GetLastCheckId: Integer;
     function CashInputOutput(const Summa: double): boolean;
     function ProgrammingGoods(const GoodsCode: integer; const GoodsName: string; const Price, NDS: double): boolean;
     function ClosureFiscal: boolean;
@@ -126,6 +127,11 @@ begin
   result := True;
   FPrinter.FSummaCheck := 0;
 //  CheckId := FPrinter.CLOSEFISKCHECK[1, Password];
+end;
+
+function TCashEmulation.GetLastCheckId: Integer;
+begin
+  Result := 0;
 end;
 
 function TCashEmulation.GetAlwaysSold: boolean;
@@ -265,6 +271,7 @@ begin
 //      FPrinter.PAYMENT[0, ReplaceStr(FormatFloat('0.00', SummAdd), FormatSettings.DecimalSeparator, '.'), Password];
 //    end;
 
+    result := True;
   end else
   begin
     if not FisFiscal and FPrintSumma then
@@ -386,8 +393,8 @@ begin
     begin
 //      FPrinter.DISCOUNTTOTAL[ReplaceStr(FormatFloat('0.00', Disc), FormatSettings.DecimalSeparator, '.'), Password];
     end;
+    result := True;
   end else result := True;
-  result := True;
 end;
 
 

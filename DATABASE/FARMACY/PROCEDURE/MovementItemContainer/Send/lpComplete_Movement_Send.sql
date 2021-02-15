@@ -1322,6 +1322,7 @@ end if;*/
         PERFORM  gpSelect_MovementSUN_TechnicalRediscount(inMovementId, inUserId::TVarChar);
      END IF;
 
+
 /*
 !!!test
 if inMovementId = 14931454 AND inUserId = 3 then

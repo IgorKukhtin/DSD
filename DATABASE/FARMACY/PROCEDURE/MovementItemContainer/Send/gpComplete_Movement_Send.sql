@@ -401,6 +401,14 @@ BEGIN
 
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummMVAT(), inMovementId, vbTotalSummMVAT);
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPVAT(), inMovementId, vbTotalSummPVAT);
+
+    -- Проверим а не провели за время отложки были прицеденты
+  IF COALESCE ((SELECT MB.ValueData FROM MovementBoolean AS MB 
+                WHERE MB.MovementId = inMovementId 
+                  AND MB.DescId = zc_MovementBoolean_Deferred()), FALSE) = TRUE
+  THEN
+      RAISE EXCEPTION 'Ошибка. За время проведения документ отлаживали.';
+  END IF;
 --                           
 
   UPDATE Movement SET StatusId = zc_Enum_Status_Complete() 

@@ -20,6 +20,7 @@ type
     function OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false; const isReturn: boolean = False): boolean;
     function CloseReceipt: boolean;
     function CloseReceiptEx(out CheckId: String): boolean;
+    function GetLastCheckId: Integer;
     function CashInputOutput(const Summa: double): boolean;
     function ProgrammingGoods(const GoodsCode: integer; const GoodsName: string; const Price, NDS: double): boolean;
     function ClosureFiscal: boolean;
@@ -156,6 +157,11 @@ begin
   FPrinter.CLOSEFISKCHECK[1, Password];
   result := СообщениеКА(FPrinter.GETERROR);
   CheckId := IntToStr(FPrinter.COUNTERSDAY[3, Password]);
+end;
+
+function TCashFP3530T_NEW.GetLastCheckId: Integer;
+begin
+  Result := FPrinter.COUNTERSDAY[3, Password];
 end;
 
 function TCashFP3530T_NEW.GetAlwaysSold: boolean;

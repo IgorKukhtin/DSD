@@ -2826,7 +2826,7 @@ procedure TMainCashForm2.actPutCheckToCashExecute(Sender: TObject);
 var
   UID, CheckNumber, ConfirmationCode, S, S1: String;
   lMsg: String;
-  fErr, isPromoForSale, isYes: Boolean;
+  isPromoForSale, isYes: Boolean;
   dsdSave: TdsdStoredProc;
   nBankPOSTerminal: Integer;
   nPOSTerminalCode: Integer;
@@ -3306,6 +3306,16 @@ begin
 
   FormParams.ParamByName('PartionDateKindId').Value := GetPartionDateKindId;
 
+  // Commit Дисконт из CDS - по всем
+  if (FormParams.ParamByName('DiscountExternalId').Value > 0) then
+  begin
+    if Assigned(Cash) then CheckNumber := IntToStr(Cash.GetLastCheckId + 1);
+
+    if not DiscountServiceForm.fCommitCDS_Discount(CheckNumber,
+      CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value,
+      FormParams.ParamByName('DiscountCardNumber').Value) then Exit;
+  end;
+
   // послали на печать
   try
 
@@ -3314,142 +3324,131 @@ begin
       MainCashForm.PaidType, FiscalNumber, CheckNumber, nPOSTerminalCode) then
     Begin
       Add_Log('Печать чека завершена');
-      if (FormParams.ParamByName('DiscountExternalId').Value > 0) then
-        fErr := not DiscountServiceForm.fCommitCDS_Discount(CheckNumber,
-          CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value,
-          FormParams.ParamByName('DiscountCardNumber').Value)
-      else
-        fErr := false;
 
-      if fErr = True then
-        ShowMessage('Ошибка.Чек распечатан.Продажа не сохранена')
-      else
-      begin
-        Add_Log('Сохранение чека');
-        ShapeState.Brush.Color := clRed;
-        ShapeState.Repaint;
-        if SaveLocal(CheckCDS, FormParams.ParamByName('ManagerId').Value,
-          FormParams.ParamByName('ManagerName').Value,
-          FormParams.ParamByName('BayerName').Value,
-          // ***16.08.16
-          FormParams.ParamByName('BayerPhone').Value,
-          FormParams.ParamByName('ConfirmedKindName').Value,
-          FormParams.ParamByName('InvNumberOrder').Value,
-          FormParams.ParamByName('ConfirmedKindClientName').Value,
-          // ***20.07.16
-          FormParams.ParamByName('DiscountExternalId').Value,
-          FormParams.ParamByName('DiscountExternalName').Value,
-          FormParams.ParamByName('DiscountCardNumber').Value,
-          // ***08.04.17
-          FormParams.ParamByName('PartnerMedicalId').Value,
-          FormParams.ParamByName('PartnerMedicalName').Value,
-          FormParams.ParamByName('Ambulance').Value,
-          FormParams.ParamByName('MedicSP').Value,
-          FormParams.ParamByName('InvNumberSP').Value,
-          FormParams.ParamByName('OperDateSP').Value,
-          // ***15.06.17
-          FormParams.ParamByName('SPKindId').Value,
-          FormParams.ParamByName('SPKindName').Value,
-          FormParams.ParamByName('SPTax').Value,
-          // ***05.02.18
-          FormParams.ParamByName('PromoCodeID').Value,
-          // ***27.06.18
-          FormParams.ParamByName('ManualDiscount').Value,
-          // ***02.11.18
-          FormParams.ParamByName('SummPayAdd').Value,
-          // ***14.01.19
-          FormParams.ParamByName('MemberSPID').Value,
-          // ***20.02.19
-          FormParams.ParamByName('BankPOSTerminal').Value,
-          // ***25.02.19
-          FormParams.ParamByName('JackdawsChecksCode').Value,
-          // ***28.01.19
-          FormParams.ParamByName('SiteDiscount').Value,
-          // ***02.04.19
-          FormParams.ParamByName('RoundingDown').Value,
-          // ***13.05.19
-          FormParams.ParamByName('PartionDateKindId').Value,
-          FormParams.ParamByName('ConfirmationCodeSP').Value,
-          // ***07.11.19
-          FormParams.ParamByName('LoyaltySignID').Value,
-          // ***08.01.20
-          FormParams.ParamByName('LoyaltySMID').Value,
-          FormParams.ParamByName('LoyaltySMSumma').Value,
-          // ***16.08.20
-          FormParams.ParamByName('DivisionPartiesID').Value,
-          FormParams.ParamByName('DivisionPartiesName').Value,
-          // ***11.10.20
-          FormParams.ParamByName('MedicForSale').Value,
-          FormParams.ParamByName('BuyerForSale').Value,
-          FormParams.ParamByName('BuyerForSalePhone').Value,
-          FormParams.ParamByName('DistributionPromoList').Value,
+      Add_Log('Сохранение чека');
+      ShapeState.Brush.Color := clRed;
+      ShapeState.Repaint;
+      if SaveLocal(CheckCDS, FormParams.ParamByName('ManagerId').Value,
+        FormParams.ParamByName('ManagerName').Value,
+        FormParams.ParamByName('BayerName').Value,
+        // ***16.08.16
+        FormParams.ParamByName('BayerPhone').Value,
+        FormParams.ParamByName('ConfirmedKindName').Value,
+        FormParams.ParamByName('InvNumberOrder').Value,
+        FormParams.ParamByName('ConfirmedKindClientName').Value,
+        // ***20.07.16
+        FormParams.ParamByName('DiscountExternalId').Value,
+        FormParams.ParamByName('DiscountExternalName').Value,
+        FormParams.ParamByName('DiscountCardNumber').Value,
+        // ***08.04.17
+        FormParams.ParamByName('PartnerMedicalId').Value,
+        FormParams.ParamByName('PartnerMedicalName').Value,
+        FormParams.ParamByName('Ambulance').Value,
+        FormParams.ParamByName('MedicSP').Value,
+        FormParams.ParamByName('InvNumberSP').Value,
+        FormParams.ParamByName('OperDateSP').Value,
+        // ***15.06.17
+        FormParams.ParamByName('SPKindId').Value,
+        FormParams.ParamByName('SPKindName').Value,
+        FormParams.ParamByName('SPTax').Value,
+        // ***05.02.18
+        FormParams.ParamByName('PromoCodeID').Value,
+        // ***27.06.18
+        FormParams.ParamByName('ManualDiscount').Value,
+        // ***02.11.18
+        FormParams.ParamByName('SummPayAdd').Value,
+        // ***14.01.19
+        FormParams.ParamByName('MemberSPID').Value,
+        // ***20.02.19
+        FormParams.ParamByName('BankPOSTerminal').Value,
+        // ***25.02.19
+        FormParams.ParamByName('JackdawsChecksCode').Value,
+        // ***28.01.19
+        FormParams.ParamByName('SiteDiscount').Value,
+        // ***02.04.19
+        FormParams.ParamByName('RoundingDown').Value,
+        // ***13.05.19
+        FormParams.ParamByName('PartionDateKindId').Value,
+        FormParams.ParamByName('ConfirmationCodeSP').Value,
+        // ***07.11.19
+        FormParams.ParamByName('LoyaltySignID').Value,
+        // ***08.01.20
+        FormParams.ParamByName('LoyaltySMID').Value,
+        FormParams.ParamByName('LoyaltySMSumma').Value,
+        // ***16.08.20
+        FormParams.ParamByName('DivisionPartiesID').Value,
+        FormParams.ParamByName('DivisionPartiesName').Value,
+        // ***11.10.20
+        FormParams.ParamByName('MedicForSale').Value,
+        FormParams.ParamByName('BuyerForSale').Value,
+        FormParams.ParamByName('BuyerForSalePhone').Value,
+        FormParams.ParamByName('DistributionPromoList').Value,
 
-          True, // NeedComplete
-          CheckNumber, // FiscalCheckNumber
-          UID // out AUID
-          ) then
-        Begin
+        True, // NeedComplete
+        CheckNumber, // FiscalCheckNumber
+        UID // out AUID
+        ) then
+      Begin
 
-          if (FormParams.ParamByName('HelsiID').Value <> '') then
+        if (FormParams.ParamByName('HelsiID').Value <> '') then
+        begin
+          HelsiError := not SetPayment(CheckNumber,
+            CheckCDS.FieldByName('Summ').asCurrency);
+          if not HelsiError then
+            HelsiError := not IntegrationClientSign;
+          if not HelsiError then
+            HelsiError := not ProcessSignedDispense;
+
+          if HelsiError then
           begin
-            HelsiError := not SetPayment(CheckNumber,
-              CheckCDS.FieldByName('Summ').asCurrency);
-            if not HelsiError then
-              HelsiError := not IntegrationClientSign;
-            if not HelsiError then
-              HelsiError := not ProcessSignedDispense;
+            RejectDispense;
+
+            if CreateNewDispense(CheckCDS.FieldByName('IdSP').AsString,
+              CheckCDS.FieldByName('CountSP').asCurrency *
+              CheckCDS.FieldByName('Amount').asCurrency,
+              CheckCDS.FieldByName('PriceSale').asCurrency,
+              RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
+              CheckCDS.FieldByName('PriceSale').asCurrency, -2),
+              RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
+              CheckCDS.FieldByName('PriceRetSP').asCurrency, -2) -
+              RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
+              CheckCDS.FieldByName('PaymentSP').asCurrency, -2),
+              ConfirmationCode) then
+            begin
+              HelsiError := not SetPayment(CheckNumber,
+                CheckCDS.FieldByName('Summ').asCurrency);
+              if not HelsiError then
+                HelsiError := not IntegrationClientSign;
+              if not HelsiError then
+                HelsiError := not ProcessSignedDispense;
+            end;
 
             if HelsiError then
-            begin
               RejectDispense;
-
-              if CreateNewDispense(CheckCDS.FieldByName('IdSP').AsString,
-                CheckCDS.FieldByName('CountSP').asCurrency *
-                CheckCDS.FieldByName('Amount').asCurrency,
-                CheckCDS.FieldByName('PriceSale').asCurrency,
-                RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
-                CheckCDS.FieldByName('PriceSale').asCurrency, -2),
-                RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
-                CheckCDS.FieldByName('PriceRetSP').asCurrency, -2) -
-                RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
-                CheckCDS.FieldByName('PaymentSP').asCurrency, -2),
-                ConfirmationCode) then
-              begin
-                HelsiError := not SetPayment(CheckNumber,
-                  CheckCDS.FieldByName('Summ').asCurrency);
-                if not HelsiError then
-                  HelsiError := not IntegrationClientSign;
-                if not HelsiError then
-                  HelsiError := not ProcessSignedDispense;
-              end;
-
-              if HelsiError then
-                RejectDispense;
-            end;
-
-            if not GetStateReceipt then
-            begin
-              // pnlHelsiError.Visible := True;
-              // edHelsiError.Text := FormParams.ParamByName('InvNumberSP').Value;
-
-              nOldColor := Screen.MessageFont.Color;
-              try
-                Screen.MessageFont.Color := clRed;
-                Screen.MessageFont.Size := Screen.MessageFont.Size + 2;
-                MessageDlg
-                  ('РЕЦЕПТ НЕ ПРОШЕЛ ПО ХЕЛСИ !!!'#13#10#13#10'Нужно его погасить в FCASH в "Чеки->Сверка Чеков с Хелси"!',
-                  mtError, [mbOK], 0);
-              finally
-                Screen.MessageFont.Size := Screen.MessageFont.Size - 2;
-                Screen.MessageFont.Color := nOldColor;
-              end;
-            end;
           end;
 
-          Add_Log('Чек сохранен');
-          NewCheck(false);
+          if not GetStateReceipt then
+          begin
+            // pnlHelsiError.Visible := True;
+            // edHelsiError.Text := FormParams.ParamByName('InvNumberSP').Value;
+
+            nOldColor := Screen.MessageFont.Color;
+            try
+              Screen.MessageFont.Color := clRed;
+              Screen.MessageFont.Size := Screen.MessageFont.Size + 2;
+              MessageDlg
+                ('РЕЦЕПТ НЕ ПРОШЕЛ ПО ХЕЛСИ !!!'#13#10#13#10'Нужно его погасить в FCASH в "Чеки->Сверка Чеков с Хелси"!',
+                mtError, [mbOK], 0);
+            finally
+              Screen.MessageFont.Size := Screen.MessageFont.Size - 2;
+              Screen.MessageFont.Color := nOldColor;
+            end;
+          end;
         End;
-      end; // else if fErr = true
+
+        Add_Log('Чек сохранен');
+        NewCheck(false);
+      end;
     End;
 
     if HelsiError then
@@ -8736,6 +8735,7 @@ var
 
 { ------------------------------------------------------------------------------ }
 begin
+  Result := False;
   ACheckNumber := '';
   try
     try

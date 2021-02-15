@@ -84,9 +84,13 @@ type
     bbScheduleNearestSUN1: TdxBarButton;
     dxBarButton6: TdxBarButton;
     spScheduleNearestSUN1: TdsdStoredProc;
+    cxLabel9: TcxLabel;
+    cxLabel10: TcxLabel;
     procedure ParentFormCreate(Sender: TObject);
     procedure ParentFormClose(Sender: TObject; var Action: TCloseAction);
     procedure actCalculationExecute(Sender: TObject);
+    procedure CheckListBoxRecipientClickCheck(Sender: TObject);
+    procedure CheckListBoxAssortmentClickCheck(Sender: TObject);
   private
     { Private declarations }
   public
@@ -145,6 +149,28 @@ begin
    spCalculation.ParamByName('inRecipientList').Value := cRecipient;
    spCalculation.ParamByName('inAssortmentList').Value := cAssortment;
    spCalculation.Execute;
+end;
+
+procedure TCalculation_SAUAForm.CheckListBoxAssortmentClickCheck(
+  Sender: TObject);
+var i, nCount : integer;
+begin
+   nCount := 0;
+  for i := 0 to CheckListBoxAssortment.Items.Count - 1 do
+    if CheckListBoxAssortment.Checked[i] then Inc(nCount);
+
+  cxLabel10.Caption := 'Выбрано ' + IntToStr(nCount);
+end;
+
+procedure TCalculation_SAUAForm.CheckListBoxRecipientClickCheck(
+  Sender: TObject);
+var i, nCount : integer;
+begin
+   nCount := 0;
+  for i := 0 to CheckListBoxRecipient.Items.Count - 1 do
+    if CheckListBoxRecipient.Checked[i] then Inc(nCount);
+
+  cxLabel9.Caption := 'Выбрано ' + IntToStr(nCount);
 end;
 
 procedure TCalculation_SAUAForm.ParentFormClose(Sender: TObject;

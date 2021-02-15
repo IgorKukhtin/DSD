@@ -50,6 +50,7 @@ BEGIN
           AND Object_Unit.isErased = False
           AND COALESCE (ObjectLink_Juridical_Retail.ChildObjectId, 0) = 4
           AND COALESCE (ObjectString_Unit_Address.ValueData, '') <> ''
+          AND Object_Unit.ValueData NOT ILIKE '%Закры%'
 
         ORDER BY Object_Juridical.ValueData , Object_Unit.ValueData
        ;
@@ -65,5 +66,4 @@ $BODY$
 */
 
 -- тест
---
-SELECT * FROM gpSelect_Object_UnitForSAUA (zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Object_UnitForSAUA (zfCalc_UserAdmin());

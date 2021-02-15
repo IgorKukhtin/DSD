@@ -54,10 +54,21 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           Left = 1
           Top = 18
           Width = 458
-          Height = 132
+          Height = 115
+          OnClickCheck = CheckListBoxRecipientClickCheck
           Align = alClient
           ItemHeight = 13
           TabOrder = 1
+          ExplicitHeight = 95
+        end
+        object cxLabel9: TcxLabel
+          Left = 1
+          Top = 133
+          Align = alBottom
+          Caption = #1042#1099#1073#1088#1072#1085#1086' 0'
+          Properties.Alignment.Horz = taLeftJustify
+          ExplicitTop = 1
+          ExplicitWidth = 7
         end
       end
       object Panel5: TPanel
@@ -81,10 +92,21 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           Left = 1
           Top = 18
           Width = 431
-          Height = 132
+          Height = 115
+          OnClickCheck = CheckListBoxAssortmentClickCheck
           Align = alClient
           ItemHeight = 13
           TabOrder = 1
+          ExplicitHeight = 109
+        end
+        object cxLabel10: TcxLabel
+          Left = 1
+          Top = 133
+          Align = alBottom
+          Caption = #1042#1099#1073#1088#1072#1085#1086' 0'
+          Properties.Alignment.Horz = taLeftJustify
+          ExplicitTop = 1
+          ExplicitWidth = 7
         end
       end
     end

@@ -26,6 +26,7 @@ type
     function OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false; const isReturn: boolean = False): boolean;
     function CloseReceipt: boolean;
     function CloseReceiptEx(out CheckId: String): boolean;
+    function GetLastCheckId: Integer;
     function CashInputOutput(const Summa: double): boolean;
     function ProgrammingGoods(const GoodsCode: integer; const GoodsName: string; const Price, NDS: double): boolean;
     function ClosureFiscal: boolean;
@@ -273,6 +274,14 @@ begin
     ClosePort;
   end;
   result := True;
+end;
+
+function TCashMINI_FP54.GetLastCheckId: Integer;
+  var I : integer;
+begin
+  Result := 0;
+  SendCommand('get_last_receipt_number;');
+  if FResultCount >= 1 then if TryStrToInt(FResult[1], I) then Result := I;
 end;
 
 function TCashMINI_FP54.GetAlwaysSold: boolean;

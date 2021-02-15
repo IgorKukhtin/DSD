@@ -428,6 +428,15 @@ BEGIN
       PERFORM  gpSelect_MovementSUN_TechnicalRediscount(inMovementId, inSession);
    END IF;
 
+    -- Проверим а не провели за время отложки были прицеденты
+   IF NOT EXISTS(SELECT Movement.StatusId
+                 FROM Movement
+                 WHERE Movement.Id = inMovementId
+                   AND Movement.StatusId = zc_Enum_Status_UnComplete())
+   THEN
+       RAISE EXCEPTION 'Ошибка. За время отложки документ провели или удалили.';
+   END IF;
+
 
 END;
 $BODY$

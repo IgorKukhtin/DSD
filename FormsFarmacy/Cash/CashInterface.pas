@@ -15,6 +15,7 @@ type
      function OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false; const isReturn: boolean = False): boolean;
      function CloseReceipt: boolean;
      function CloseReceiptEx(out CheckId: String): boolean;
+     function GetLastCheckId: Integer;
      function CashInputOutput(const Summa: double): boolean;
      function ClosureFiscal: boolean;
      function XReport: boolean;

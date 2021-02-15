@@ -2571,10 +2571,7 @@ begin
         IdFTP.Connect;
         if IdFTP.Connected then
         try
-          if Pos('/', iniLocalUnitNameGet) > 0 then
-          begin
-            if not ChangeDirFTP(GetFtpDIR + Copy(iniLocalUnitNameGet, 1, Pos('/', iniLocalUnitNameGet) - 1), True) then Exit;
-          end else if not ChangeDirFTP(GetFtpDIR + iniLocalUnitNameGet, True) then Exit;
+          if not ChangeDirFTP(GetFtpDIR + StringReplace(iniLocalUnitNameGet, '/', '-', [rfReplaceAll, rfIgnoreCase]), True) then Exit;
           for i := 0 to sl.Count - 1 do
           begin
             IdFTP.Put(p + sl.Strings[i], sl.Strings[i], False);

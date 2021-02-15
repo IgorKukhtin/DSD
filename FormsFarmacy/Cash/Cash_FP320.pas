@@ -24,6 +24,7 @@ type
     function OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false; const isReturn: boolean = False): boolean;
     function CloseReceipt: boolean;
     function CloseReceiptEx(out CheckId: String): boolean;
+    function GetLastCheckId: Integer;
     function CashInputOutput(const Summa: double): boolean;
     function ProgrammingGoods(const GoodsCode: integer; const GoodsName: string; const Price, NDS: double): boolean;
     function ClosureFiscal: boolean;
@@ -136,6 +137,11 @@ end;
 function TCashFP320.CloseReceiptEx(out CheckId: String): boolean;
 begin
   Result := CloseReceipt;
+end;
+
+function TCashFP320.GetLastCheckId: Integer;
+begin
+  Result := 0;
 end;
 
 function TCashFP320.ClosureFiscal: boolean;

@@ -4100,7 +4100,7 @@ inherited MainForm: TMainForm
     object actReport_RemainsSun_UKTZED: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
-      Caption = #1057#1059#1053' '#1087#1086' '#1059#1050#1058#1042#1069#1044' ('#1086#1090#1087#1088#1072#1074#1082#1072')'
+      Caption = #1054#1090#1095#1077#1090' '#1057#1059#1053' '#1087#1086' '#1059#1050#1058#1042#1069#1044' ('#1086#1090#1087#1088#1072#1074#1082#1072')'
       FormName = 'TReport_Movement_Send_RemainsSun_UKTZEDForm'
       FormNameParam.Value = 'TReport_Movement_Send_RemainsSun_UKTZEDForm'
       FormNameParam.DataType = ftString
@@ -4136,6 +4136,17 @@ inherited MainForm: TMainForm
       Caption = #1048#1090#1086#1075#1086#1074#1099#1081' '#1057#1059#1040
       FormName = 'TFinalSUAJournalForm'
       FormNameParam.Value = 'TFinalSUAJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_Movement_Send_RemainsSun_SUA: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1057#1059#1053')'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1057#1059#1053' '#1087#1086' '#1057#1059#1040
+      FormName = 'TReport_Movement_Send_RemainsSun_SUAForm'
+      FormNameParam.Value = 'TReport_Movement_Send_RemainsSun_SUAForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -4871,6 +4882,9 @@ inherited MainForm: TMainForm
       end
       object N272: TMenuItem
         Action = actReport_RemainsSun_UKTZED
+      end
+      object N276: TMenuItem
+        Action = actReport_Movement_Send_RemainsSun_SUA
       end
       object N202: TMenuItem
         Caption = '-'

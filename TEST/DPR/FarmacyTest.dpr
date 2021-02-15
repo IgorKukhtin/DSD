@@ -995,7 +995,8 @@ uses
   Report_SalesOfTermDrugsUnit in '..\..\FormsFarmacy\Report\Report_SalesOfTermDrugsUnit.pas' {Report_SalesOfTermDrugsUnitForm: TParentForm},
   Report_SalesOfTermDrugsUser in '..\..\FormsFarmacy\Report\Report_SalesOfTermDrugsUser.pas' {Report_SalesOfTermDrugsUserForm: TParentForm},
   FinalSUA in '..\..\FormsFarmacy\Document\FinalSUA.pas' {FinalSUAForm: TParentForm},
-  FinalSUAJournal in '..\..\FormsFarmacy\Document\FinalSUAJournal.pas' {FinalSUAJournalForm: TParentForm};
+  FinalSUAJournal in '..\..\FormsFarmacy\Document\FinalSUAJournal.pas' {FinalSUAJournalForm: TParentForm},
+  Report_Movement_Send_RemainsSun_SUA in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun_SUA.pas' {Report_Movement_Send_RemainsSun_SUAForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
