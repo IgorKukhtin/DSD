@@ -2473,10 +2473,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_UnitSupplementSUN1Out() RETURNS I
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Goods_UnitSupplementSUN1Out', 'Подразделения для отправки по дополнению СУН1', zc_Object_Goods(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_UnitSupplementSUN1Out');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Instructions_InstructionsKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Instructions_InstructionsKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Instructions_InstructionsKind', 'Связь с разделами инструкций', zc_Object_Instructions(), zc_Object_InstructionsKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Instructions_InstructionsKind');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 16.02.21                                                                                      * zc_ObjectLink_Instructions_InstructionsKind
  28.01.21                                                                                      * zc_ObjectLink_Goods_UnitSupplementSUN1Out
  18.01.21         * zc_ObjectLink_ReportBonus_ContractMaster
                     zc_ObjectLink_ReportBonus_ContractChild

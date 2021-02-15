@@ -1333,6 +1333,14 @@ CREATE OR REPLACE FUNCTION zc_Object_AmbulantClinicSP() RETURNS Integer AS $BODY
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_AmbulantClinicSP', 'Амбулатория (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_AmbulantClinicSP');
 
+CREATE OR REPLACE FUNCTION zc_Object_InstructionsKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_InstructionsKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_InstructionsKind', 'Разделы инструкций' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_InstructionsKind');
+
+CREATE OR REPLACE FUNCTION zc_Object_Instructions() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Instructions'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_Instructions', 'Инструкции' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Instructions');
+
 
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
@@ -1350,6 +1358,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 16.02.21                                                                                        * zc_Object_InstructionsKind, zc_Object_Instructions
  23.11.20         * zc_Object_ContractConditionPartner
  20.10.20                                                                                        * zc_Object_AmbulantClinicSP
  30.10.20         * zc_Object_PartnerExternal
