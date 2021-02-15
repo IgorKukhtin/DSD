@@ -49,6 +49,8 @@ type
     bbUpdate_OperDateList: TdxBarButton;
     JuridicalName: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
+    CommentMarketing: TcxGridDBColumn;
+    ConfirmedMarketing: TcxGridDBColumn;
   private
     { Private declarations }
   public

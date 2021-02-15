@@ -17,6 +17,11 @@ BEGIN
     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_FinalSUA());
     vbUserId := inSession;
 
+    IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+    THEN
+      RAISE EXCEPTION '¬ыполненние операции вам запрещено, обратитесь к системному администратору';
+    END IF;
+
     -- –аспроводим документ изменени€ сроков
     SELECT Movement.StatusId, Movement.OperDate
     INTO vbStatusId, vbOperDate  

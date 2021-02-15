@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ArticleLossId Integer, ArticleLossName TVarChar
              , Comment TVarChar
              , RetailFund TFloat, RetailFundUsed TFloat, RetailFundResidue TFloat, SummaFund TFloat, SummaFundAvailable TFloat
+             , CommentMarketing TVarChar, ConfirmedMarketing Boolean
               )
 AS
 $BODY$
@@ -44,6 +45,8 @@ BEGIN
              , CAST (NULL AS TFloat)                            AS RetailFundResidue
              , CAST (NULL AS TFloat)                            AS SummaFund
              , CAST (0 AS TFloat)                               AS SummaFundAvailable
+             , CAST ('' AS TVarChar) 		                    AS CommentMarketing
+             , False                		                    AS ConfirmedMarketing
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
      RETURN QUERY
@@ -73,6 +76,8 @@ BEGIN
              ELSE COALESCE(ObjectFloat_Retail_Fund.ValueData , 0) -
              COALESCE(ObjectFloat_Retail_FundUsed.ValueData, 0) +                
              COALESCE(MovementFloat_SummaFund.ValueData, 0) END::TFloat         AS SummaFundAvailable
+           , COALESCE (MovementString_CommentMarketing.ValueData,'')      :: TVarChar AS CommentMarketing
+           , COALESCE (MovementBoolean_ConfirmedMarketing.ValueData,False):: Boolean  AS ConfirmedMarketing
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -113,6 +118,14 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementString AS MovementString_CommentMarketing
+                                     ON MovementString_CommentMarketing.MovementId = Movement.Id
+                                    AND MovementString_CommentMarketing.DescId = zc_MovementString_CommentMarketing()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_ConfirmedMarketing
+                                      ON MovementBoolean_ConfirmedMarketing.MovementId = Movement.Id
+                                     AND MovementBoolean_ConfirmedMarketing.DescId = zc_MovementBoolean_ConfirmedMarketing()
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Loss();
 

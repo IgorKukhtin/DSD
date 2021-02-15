@@ -170,6 +170,14 @@ object CommentSendForm: TCommentSendForm
           ItemName = 'bbRefresh'
         end
         item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
@@ -193,10 +201,6 @@ object CommentSendForm: TCommentSendForm
         item
           Visible = True
           ItemName = 'bbProtocolOpenForm'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -240,6 +244,10 @@ object CommentSendForm: TCommentSendForm
     end
     object bbProtocolOpenForm: TdxBarButton
       Action = ProtocolOpenForm
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actShowAll
       Category = 0
     end
   end
@@ -403,6 +411,25 @@ object CommentSendForm: TCommentSendForm
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_CommentSend'
@@ -411,7 +438,15 @@ object CommentSendForm: TCommentSendForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inisShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 144
     Top = 152
@@ -462,6 +497,7 @@ object CommentSendForm: TCommentSendForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 48
     Top = 216

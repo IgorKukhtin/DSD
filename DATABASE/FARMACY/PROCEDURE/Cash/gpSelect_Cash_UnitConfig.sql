@@ -175,7 +175,8 @@ BEGIN
                                   , Object_CashSettings.ValueData              AS Name
                                   , ObjectString_CashSettings_ShareFromPriceName.ValueData  AS ShareFromPriceName
                                   , ObjectString_CashSettings_ShareFromPriceCode.ValueData  AS ShareFromPriceCode
-                                  , COALESCE(ObjectBoolean_CashSettings_GetHardwareData.ValueData, FALSE)    AS isGetHardwareData
+                                  , COALESCE(ObjectBoolean_CashSettings_GetHardwareData.ValueData, FALSE) 
+                                    AND (vbRetailId = 4)                                                     AS isGetHardwareData
                                   , COALESCE(ObjectBoolean_CashSettings_PairedOnlyPromo.ValueData, FALSE)    AS isPairedOnlyPromo
                              FROM Object AS Object_CashSettings
                                   LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName

@@ -248,12 +248,35 @@ inherited LossForm: TLossForm
       Top = 67
       Properties.ReadOnly = False
       TabOrder = 10
-      Width = 759
+      Width = 377
     end
     object cxLabel7: TcxLabel
       Left = 8
       Top = 48
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    end
+    object edCommentMarketing: TcxTextEdit
+      Left = 400
+      Top = 67
+      Properties.ReadOnly = False
+      TabOrder = 12
+      Width = 367
+    end
+    object cxLabel4: TcxLabel
+      Left = 400
+      Top = 48
+      Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+    end
+    object cbConfirmedMarketing: TcxCheckBox
+      Left = 588
+      Top = 44
+      Hint = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1084
+      Caption = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1084
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 14
+      Width = 179
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -516,6 +539,20 @@ inherited LossForm: TLossForm
         end>
       isShowModal = False
     end
+    object actUpdate_ConfirmedMarketing: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_ConfirmedMarketing
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_ConfirmedMarketing
+        end>
+      Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1088#1080#1079#1085#1072#1082#1072' "'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1084'"'
+      Hint = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1088#1080#1079#1085#1072#1082#1072' "'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1084'"'
+      ImageIndex = 79
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1084'"?'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -676,6 +713,10 @@ inherited LossForm: TLossForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton5'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -708,6 +749,10 @@ inherited LossForm: TLossForm
     end
     object dxBarButton4: TdxBarButton
       Action = actMovementItemContainerCount
+      Category = 0
+    end
+    object dxBarButton5: TdxBarButton
+      Action = actUpdate_ConfirmedMarketing
       Category = 0
     end
   end
@@ -786,7 +831,7 @@ inherited LossForm: TLossForm
       end
       item
         Name = 'SummaFundAvailable'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -823,7 +868,7 @@ inherited LossForm: TLossForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -917,14 +962,17 @@ inherited LossForm: TLossForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'CommentMarketing'
         Value = ''
+        Component = edCommentMarketing
         DataType = ftString
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
+        Name = 'isConfirmedMarketing'
         Value = ''
-        ParamType = ptUnknown
+        Component = cbConfirmedMarketing
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
@@ -1045,13 +1093,16 @@ inherited LossForm: TLossForm
         MultiSelectSeparator = ','
       end
       item
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptUnknown
+        Name = 'inConfirmedMarketing'
+        Value = Null
+        Component = edCommentMarketing
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Value = 0.000000000000000000
+        Component = edCommentMarketing
         DataType = ftFloat
         ParamType = ptUnknown
         MultiSelectSeparator = ','
@@ -1136,12 +1187,13 @@ inherited LossForm: TLossForm
         Control = edUnit
       end
       item
-      end
-      item
         Control = edArticleLoss
       end
       item
         Control = edComment
+      end
+      item
+        Control = edCommentMarketing
       end>
     Left = 232
     Top = 193
@@ -1152,43 +1204,11 @@ inherited LossForm: TLossForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Loss_SetErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 718
     Top = 512
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Loss_SetUnErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 718
     Top = 464
   end
@@ -1307,7 +1327,7 @@ inherited LossForm: TLossForm
       end
       item
         Name = 'inAmount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1486,7 +1506,7 @@ inherited LossForm: TLossForm
       end
       item
         Name = 'outOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -1561,5 +1581,32 @@ inherited LossForm: TLossForm
     PackSize = 1
     Left = 504
     Top = 403
+  end
+  object spUpdate_ConfirmedMarketing: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Loss_ConfirmedMarketing'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioisConfirmedMarketing'
+        Value = ''
+        Component = cbConfirmedMarketing
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'ioId'
+    Left = 362
+    Top = 336
   end
 end

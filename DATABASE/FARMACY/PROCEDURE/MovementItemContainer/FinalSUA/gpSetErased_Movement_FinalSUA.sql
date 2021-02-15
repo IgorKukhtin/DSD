@@ -17,6 +17,11 @@ BEGIN
      -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_FinalSUA());
      vbUserId := inSession;
 
+     IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+     THEN
+       RAISE EXCEPTION 'Выполненние операции вам запрещено, обратитесь к системному администратору';
+     END IF;
+
      -- проверка - если <Master> Проведен, то <Ошибка>
      PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
 

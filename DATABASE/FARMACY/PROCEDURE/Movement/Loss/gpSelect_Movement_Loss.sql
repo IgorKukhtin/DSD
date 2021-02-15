@@ -17,6 +17,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSummPrice TFloat
              , SummaFund TFloat
              , Comment TVarChar
+             , CommentMarketing TVarChar
+             , ConfirmedMarketing Boolean
               )
 
 AS
@@ -123,7 +125,9 @@ BEGIN
 --           , tmpSumm.SummPrice     :: TFloat    AS TotalSummPrice
            , MovementFloat_TotalSummSale.ValueData AS TotalSummPrice
            , MovementFloat_SummaFund.ValueData  AS SummaFund
-           , COALESCE (MovementString_Comment.ValueData,'')     :: TVarChar AS Comment
+           , COALESCE (MovementString_Comment.ValueData,'')               :: TVarChar AS Comment
+           , COALESCE (MovementString_CommentMarketing.ValueData,'')      :: TVarChar AS CommentMarketing
+           , COALESCE (MovementBoolean_ConfirmedMarketing.ValueData,False):: Boolean  AS ConfirmedMarketing
 
        FROM tmpMovement
 
@@ -165,6 +169,14 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementString AS MovementString_CommentMarketing
+                                     ON MovementString_CommentMarketing.MovementId = Movement.Id
+                                    AND MovementString_CommentMarketing.DescId = zc_MovementString_CommentMarketing()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_ConfirmedMarketing
+                                      ON MovementBoolean_ConfirmedMarketing.MovementId = Movement.Id
+                                     AND MovementBoolean_ConfirmedMarketing.DescId = zc_MovementBoolean_ConfirmedMarketing()
             ;
 END;
 $BODY$

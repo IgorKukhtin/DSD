@@ -21,6 +21,31 @@ inherited LossFundForm: TLossFundForm
               Kind = skSum
               Column = PriceIn
             end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Price
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = Remains_Amount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colIsErased
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = PriceIn
+            end>
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -36,6 +61,17 @@ inherited LossFundForm: TLossFundForm
       ExplicitWidth = 257
       Width = 257
     end
+    inherited edCommentMarketing: TcxTextEdit
+      TabOrder = 13
+      Visible = False
+    end
+    inherited cxLabel4: TcxLabel
+      Visible = False
+    end
+    inherited cbConfirmedMarketing: TcxCheckBox
+      TabOrder = 17
+      Visible = False
+    end
     object ceSummaFund: TcxCurrencyEdit
       Left = 674
       Top = 67
@@ -44,11 +80,6 @@ inherited LossFundForm: TLossFundForm
       Properties.DisplayFormat = ',0.00;-,0.00; ;'
       TabOrder = 12
       Width = 93
-    end
-    object cxLabel4: TcxLabel
-      Left = 674
-      Top = 48
-      Caption = #1057#1091#1084#1084#1072' '#1080#1079' '#1092#1086#1085#1076#1072
     end
     object ceRetailFundResidue: TcxCurrencyEdit
       Left = 575
@@ -132,7 +163,7 @@ inherited LossFundForm: TLossFundForm
       GuiParams = <
         item
           Name = 'Summa'
-          Value = '0'
+          Value = 0.000000000000000000
           Component = FormParams
           ComponentItem = 'SummaFundAvailable'
           DataType = ftFloat
@@ -198,7 +229,7 @@ inherited LossFundForm: TLossFundForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -308,7 +339,7 @@ inherited LossFundForm: TLossFundForm
       end
       item
         Name = 'SummaFundAvailable'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = FormParams
         ComponentItem = 'SummaFundAvailable'
         DataType = ftFloat
@@ -317,6 +348,25 @@ inherited LossFundForm: TLossFundForm
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = 'ClientDataSet'
+  end
+  inherited spUpdate_ConfirmedMarketing: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioisConfirmedMarketing'
+        Value = False
+        Component = cbConfirmedMarketing
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
   end
   object spUpdate_SummaFund: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Loss_SummaFund'
@@ -333,7 +383,7 @@ inherited LossFundForm: TLossFundForm
       end
       item
         Name = 'inSummaFund'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = ceSummaFund
         DataType = ftFloat
         ParamType = ptInput

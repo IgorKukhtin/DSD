@@ -139,6 +139,22 @@ inherited LossJournalForm: TLossJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 101
           end
+          object CommentMarketing: TcxGridDBColumn
+            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+            DataBinding.FieldName = 'CommentMarketing'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 95
+          end
+          object ConfirmedMarketing: TcxGridDBColumn
+            Caption = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1084
+            DataBinding.FieldName = 'ConfirmedMarketing'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 112
+          end
         end
       end
     end
@@ -170,7 +186,8 @@ inherited LossJournalForm: TLossJournalForm
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 179
+    Left = 139
+    Top = 267
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 24
@@ -368,7 +385,7 @@ inherited LossJournalForm: TLossJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptUnknown
         MultiSelectSeparator = ','
@@ -513,14 +530,14 @@ inherited LossJournalForm: TLossJournalForm
       end
       item
         Name = 'inIsCurrentData'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'outOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime
@@ -657,7 +674,7 @@ inherited LossJournalForm: TLossJournalForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -766,7 +783,7 @@ inherited LossJournalForm: TLossJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptUnknown
         MultiSelectSeparator = ','

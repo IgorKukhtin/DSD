@@ -13,12 +13,11 @@ uses
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxButtonEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid, cxPC;
+  cxGrid, cxPC, cxCheckBox;
 
 type
   TLossFundForm = class(TLossForm)
     ceSummaFund: TcxCurrencyEdit;
-    cxLabel4: TcxLabel;
     ceRetailFundResidue: TcxCurrencyEdit;
     cxLabel21: TcxLabel;
     spUpdate_SummaFund: TdsdStoredProc;

@@ -12,6 +12,7 @@ $BODY$
    DECLARE vbRetailId Integer;
    DECLARE vbStartDate TDateTime;
    DECLARE vbEndDate TDateTime;
+   DECLARE vbMiddleDate TDateTime;
    DECLARE vbDays TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
@@ -30,6 +31,8 @@ BEGIN
                                      ON MovementLinkObject_Retail.MovementId = Movement.Id
                                     AND MovementLinkObject_Retail.DescId = zc_MovementLinkObject_Retail()
      WHERE Movement.Id = inMovementId;
+     
+     vbMiddleDate := vbStartDate + (DATE_PART ( 'day', ((vbEndDate - vbStartDate) / 2))||' DAY')::Interval;
 
     -- Cуществующие чайлд
      CREATE TEMP TABLE tmpMI_Child (Id Integer, ParentId Integer, UnitId Integer, AmountManual TFloat) ON COMMIT DROP;
@@ -90,7 +93,7 @@ BEGIN
               -- продажи
              , tmpContainer AS (SELECT MIContainer.WhereObjectId_analyzer          AS UnitId
                                      , MIContainer.ObjectId_analyzer               AS GoodsId
-                                     , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS Amount
+                                     , SUM (COALESCE (-1 * MIContainer.Amount * CASE WHEN MIContainer.OperDate > vbMiddleDate THEN 0.5 ELSE 1.0 END, 0)) AS Amount
                                      FROM MovementItemContainer AS MIContainer
                                           INNER JOIN tmpUnit ON tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
                                           INNER JOIN tmpMI_Master ON tmpMI_Master.GoodsId = MIContainer.ObjectId_analyzer
@@ -188,7 +191,7 @@ BEGIN
               -- продажи
              , tmpContainer AS (SELECT MIContainer.WhereObjectId_analyzer          AS UnitId
                                      , MIContainer.ObjectId_analyzer               AS GoodsId
-                                     , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS Amount
+                                     , SUM (COALESCE (-1 * MIContainer.Amount * CASE WHEN MIContainer.OperDate > vbMiddleDate THEN 0.5 ELSE 1.0 END, 0)) AS Amount
                                      FROM MovementItemContainer AS MIContainer
                                           INNER JOIN tmpUnit ON tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
                                           INNER JOIN tmpMI_Master ON tmpMI_Master.GoodsId = MIContainer.ObjectId_analyzer
@@ -443,7 +446,7 @@ BEGIN
               -- продажи
              , tmpContainer AS (SELECT MIContainer.WhereObjectId_analyzer          AS UnitId
                                      , MIContainer.ObjectId_analyzer               AS GoodsId
-                                     , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS Amount
+                                     , SUM (COALESCE (-1 * MIContainer.Amount * CASE WHEN MIContainer.OperDate > vbMiddleDate THEN 0.5 ELSE 1.0 END, 0)) AS Amount
                                      FROM MovementItemContainer AS MIContainer
                                           INNER JOIN tmpUnit ON tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
                                           INNER JOIN tmpMI_Master ON tmpMI_Master.GoodsId = MIContainer.ObjectId_analyzer

@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Loss (Integer, TVarChar, TDateTime, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Loss (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Loss (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Loss(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Loss(
     IN inUnitId              Integer   , -- Подразделение
     IN inArticleLossId       Integer   , -- Статьи списания
     IN inComment             TVarChar  , -- Примечание
+    IN inConfirmedMarketing  TVarChar  , -- Комментарий маркетинга
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -40,6 +42,9 @@ BEGIN
 
      -- сохранили <Примечание>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+
+     -- сохранили <Комментарий маркетинга>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_CommentMarketing(), ioId, inConfirmedMarketing);
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSummLoss (ioId);

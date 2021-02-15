@@ -132,7 +132,7 @@ BEGIN
      END IF;
 
      -- 4. Остатки по которым есть Автозаказ и срок
-     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_SUA'))
+     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpRemains_calc_SUA'))
      THEN
        CREATE TEMP TABLE _tmpRemains_calc_SUA   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat, AmountSun_real TFloat, AmountSun_summ TFloat, AmountSun_summ_save TFloat, AmountSun_unit TFloat, AmountSun_unit_save TFloat, AmountUse TFloat) ON COMMIT DROP;
      END IF;
@@ -1528,6 +1528,6 @@ $BODY$
 */
 
 --
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_SUA (inOperDate:= CURRENT_DATE + INTERVAL '1 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
+-- SELECT * FROM lpInsert_Movement_Send_RemainsSun_SUA (inOperDate:= CURRENT_DATE + INTERVAL '1 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 
 -- select * from gpReport_Movement_Send_RemainsSun_SUA(inOperDate := ('28.12.2020')::TDateTime ,  inSession := '3');

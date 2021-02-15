@@ -15,6 +15,11 @@ BEGIN
   -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Complete_FinalSUA());
   vbUserId := inSession;
     
+  IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+  THEN
+    RAISE EXCEPTION 'Выполненние операции вам запрещено, обратитесь к системному администратору';
+  END IF;
+
   -- пересчитали Итоговые суммы
   PERFORM lpInsertUpdate_FinalSUA_TotalSumm (inMovementId);
   

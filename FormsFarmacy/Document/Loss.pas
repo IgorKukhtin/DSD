@@ -71,6 +71,12 @@ type
     bbUpdateSummaFund: TdxBarButton;
     actMovementItemContainerCount: TdsdOpenForm;
     dxBarButton4: TdxBarButton;
+    edCommentMarketing: TcxTextEdit;
+    cxLabel4: TcxLabel;
+    cbConfirmedMarketing: TcxCheckBox;
+    spUpdate_ConfirmedMarketing: TdsdStoredProc;
+    actUpdate_ConfirmedMarketing: TdsdExecStoredProc;
+    dxBarButton5: TdxBarButton;
   private
     { Private declarations }
   public
