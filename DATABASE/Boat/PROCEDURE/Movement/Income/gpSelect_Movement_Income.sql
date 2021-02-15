@@ -53,6 +53,7 @@ BEGIN
                                     , MovementLinkObject_To.ObjectId            AS ToId
                                     , MovementLinkObject_From.ObjectId          AS FromId
                                     , MovementLinkObject_PaidKind.ObjectId      AS PaidKindId
+                                    , MovementLinkMovement_Invoice.MovementChildId AS MovementId_Invoice
                                FROM tmpStatus
                                     INNER JOIN Movement AS Movement_Income 
                                                        ON Movement_Income.StatusId = tmpStatus.StatusId
@@ -78,6 +79,10 @@ BEGIN
                                     LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                                            ON MovementDate_OperDatePartner.MovementId = Movement_Income.Id
                                                           AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+
+                                    LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Invoice
+                                                                   ON MovementLinkMovement_Invoice.MovementId = Movement.Id
+                                                                  AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
                               )
 
 
@@ -107,6 +112,9 @@ BEGIN
              , Object_PaidKind.Id                         AS PaidKindId      
              , Object_PaidKind.ValueData                  AS PaidKindName
              , MovementString_Comment.ValueData :: TVarChar AS Comment
+             
+             , Movement_Invoice.Id               AS MovementId_Invoice
+             , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice
 
              , Object_Insert.ValueData              AS InsertName
              , MovementDate_Insert.ValueData        AS InsertDate
@@ -119,6 +127,7 @@ BEGIN
         LEFT JOIN Object AS Object_From   ON Object_From.Id   = Movement_Income.FromId
         LEFT JOIN Object AS Object_To     ON Object_To.Id     = Movement_Income.ToId
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Movement_Income.PaidKindId
+        LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = Movement_Income.MovementId_Invoice
 
         LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                 ON MovementFloat_TotalCount.MovementId = Movement_Income.Id

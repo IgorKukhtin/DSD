@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , SummNalog TFloat, SummMinus TFloat, SummFine TFloat, SummAdd TFloat, SummHoliday TFloat, SummHosp TFloat
              , SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat, SummMinusExt TFloat
              , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
+             , SummCompensation TFloat
              , Amount_current TFloat, Amount_avance TFloat, Amount_avance_ret TFloat, Amount_service TFloat
              , SummRemains TFloat, SummCardSecondRemains TFloat
              , isCalculated Boolean
@@ -140,6 +141,7 @@ BEGIN
                                    , SUM (COALESCE (MIFloat_SummTransportAddLong.ValueData, 0)) AS SummTransportAddLong
                                    , SUM (COALESCE (MIFloat_SummTransportTaxi.ValueData, 0))    AS SummTransportTaxi
                                    , SUM (COALESCE (MIFloat_SummPhone.ValueData, 0))            AS SummPhone
+                                   , SUM (COALESCE (MIFloat_SummCompensation.ValueData, 0))     AS SummCompensation
                                    , MovementItem.ObjectId                                  AS PersonalId
                                    , MILinkObject_Unit.ObjectId                             AS UnitId
                                    , MILinkObject_Position.ObjectId                         AS PositionId
@@ -204,6 +206,10 @@ BEGIN
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummHosp
                                                                ON MIFloat_SummHosp.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummHosp.DescId         = zc_MIFloat_SummHosp()
+
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummCompensation
+                                                               ON MIFloat_SummCompensation.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummCompensation.DescId = zc_MIFloat_SummCompensation()
 
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummSocialIn
                                                                ON MIFloat_SummSocialIn.MovementItemId = MovementItem.Id
@@ -290,6 +296,7 @@ BEGIN
                                    , tmpParent_all.SummTransportAddLong
                                    , tmpParent_all.SummTransportTaxi
                                    , tmpParent_all.SummPhone
+                                   , tmpParent_all.SummCompensation
                                    , tmpParent_all.PersonalId
                                    , tmpParent_all.UnitId
                                    , tmpParent_all.PositionId
@@ -325,6 +332,7 @@ BEGIN
                                    , 0 AS SummTransportAddLong
                                    , 0 AS SummTransportTaxi
                                    , 0 AS SummPhone
+                                   , 0 AS SummCompensation
                                    , CLO_Personal.ObjectId  AS PersonalId
                                    , CLO_Unit.ObjectId      AS UnitId
                                    , CLO_Position.ObjectId  AS PositionId
@@ -453,6 +461,7 @@ BEGIN
                                    , SUM (tmpParent.SummTransportAddLong)         AS SummTransportAddLong
                                    , SUM (tmpParent.SummTransportTaxi)            AS SummTransportTaxi
                                    , SUM (tmpParent.SummPhone)                    AS SummPhone
+                                   , SUM (tmpParent.SummCompensation)             AS SummCompensation
                                    , SUM (tmpMIContainer.Amount_current)          AS Amount_current
                                    , SUM (tmpMIContainer.Amount_avance)           AS Amount_avance
                                    , SUM (tmpMIContainer.Amount_avance_ret)       AS Amount_avance_ret
@@ -496,6 +505,7 @@ BEGIN
                                    , tmpService.SummTransportAddLong
                                    , tmpService.SummTransportTaxi
                                    , tmpService.SummPhone
+                                   , tmpService.SummCompensation
                                    , tmpService.Amount_current
                                    , tmpService.Amount_avance
                                    , tmpService.Amount_avance_ret
@@ -558,6 +568,7 @@ BEGIN
             , tmpData.SummTransportAddLong :: TFloat AS SummTransportAddLong
             , tmpData.SummTransportTaxi    :: TFloat AS SummTransportTaxi
             , tmpData.SummPhone            :: TFloat AS SummPhone
+            , tmpData.SummCompensation     :: TFloat AS SummCompensation
 
             , tmpData.Amount_current     :: TFloat AS Amount_current
             , tmpData.Amount_avance      :: TFloat AS Amount_avance
@@ -612,6 +623,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 15.02.21         * SummCompensation
  20.06.17         * add SummCardSecondCash
  04.04.15                                        * all
  16.09.14         *
