@@ -263,6 +263,14 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 150
     Top = 160

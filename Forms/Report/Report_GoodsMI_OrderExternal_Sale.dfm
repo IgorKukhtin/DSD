@@ -4,6 +4,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
   ClientWidth = 1092
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -49
   ExplicitWidth = 1108
   ExplicitHeight = 425
   PixelsPerInch = 96
@@ -684,7 +685,6 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
           object WeightDiff_B: TcxGridDBColumn
             Caption = '> '#1079#1072#1103#1074#1082#1080' ('#1082#1075')'
             DataBinding.FieldName = 'WeightDiff_B'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
@@ -694,7 +694,6 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
           object WeightDiff_M: TcxGridDBColumn
             Caption = '< '#1079#1072#1103#1074#1082#1080' ('#1082#1075')'
             DataBinding.FieldName = 'WeightDiff_M'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
@@ -757,7 +756,6 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             Caption = '% '#1086#1090#1082#1083
             DataBinding.FieldName = 'AmountTax'
             Visible = False
-            VisibleForCustomization = False
             Width = 60
           end
           object DiffTax: TcxGridDBColumn
@@ -784,6 +782,26 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             Visible = False
             VisibleForCustomization = False
             Width = 20
+          end
+          object TotalCount_Diff: TcxGridDBColumn
+            DataBinding.FieldName = 'TotalCount_Diff'
+            Visible = False
+            Width = 50
+          end
+          object TotalWeight_Diff: TcxGridDBColumn
+            DataBinding.FieldName = 'TotalWeight_Diff'
+            Visible = False
+            Width = 50
+          end
+          object TotalAmountTax: TcxGridDBColumn
+            DataBinding.FieldName = 'TotalAmountTax'
+            Visible = False
+            Width = 50
+          end
+          object TotalWeightTax: TcxGridDBColumn
+            DataBinding.FieldName = 'TotalWeightTax'
+            Visible = False
+            Width = 50
           end
         end
       end
@@ -1362,7 +1380,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1373,7 +1391,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','

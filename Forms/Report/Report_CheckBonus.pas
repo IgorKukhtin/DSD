@@ -97,6 +97,8 @@ type
     PartKg: TcxGridDBColumn;
     ProtocolReportBonusForm: TdsdOpenForm;
     bbProtocolReportBonusForm: TdxBarButton;
+    cxLabel7: TcxLabel;
+    edOperDate: TcxDateEdit;
   private
     { Private declarations }
   public

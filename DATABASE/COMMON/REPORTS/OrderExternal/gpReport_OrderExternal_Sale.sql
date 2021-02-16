@@ -45,10 +45,16 @@ RETURNS TABLE (OperDate TDateTime, OperDatePartner TDateTime
              , WeightDiff_B TFloat
              , WeightDiff_M TFloat
              , Diff_M       TFloat
+            -- , Diff_M1    TFloat
              , AmountTax    TFloat
+             , WeightTax    TFloat
              , DiffTax      TFloat
              , isPrint_M    Boolean
              , CountPrint_M TFloat
+, TotalCount_Diff TFloat
+, TotalWeight_Diff TFloat
+, TotalAmountTax TFloat
+, TotalWeightTax TFloat
               )
 
 AS
@@ -689,7 +695,7 @@ BEGIN
                   FROM tmpData1 AS tmpDataUnion
                   )
 
-    , tmpData_All AS (SELECT tmp.OperDate_Order
+    , tmpData_All_1 AS (SELECT tmp.OperDate_Order
                            , tmp.OperDatePartner_Order
                            , tmp.OperDate_Sale
                            , tmp.OperDatePartner_Sale
@@ -768,10 +774,16 @@ BEGIN
                           --, ((COALESCE (tmp.Amount12,0) + COALESCE (tmp.Amount_Dozakaz,0)) * vbDiffTax / 100) :: TFloat AS AmountTax
                           --вес заказа по % откл.
                           --, ((COALESCE (tmp.Amount_Weight_Itog,0)+ COALESCE (tmp.Amount_Weight_Dozakaz,0)) * vbDiffTax / 100) :: TFloat AS WeightTax
-
                        FROM tmpData AS tmp
                       )
+  , tmpData_All AS (SELECT tmpData_All.*
+                         , SUM (COALESCE (tmpData_All.CountDiff_M,0) - COALESCE (tmpData_All.CountDiff_B,0)) OVER (PARTITION BY tmpData_All.InvNumber_Order, tmpData_All.FromId, tmpData_All.GoodsKindId, tmpData_All.GoodsId) AS TotalCount_Diff
+                         , SUM (COALESCE (tmpData_All.WeightDiff_M,0) - COALESCE (tmpData_All.WeightDiff_B,0)) OVER (PARTITION BY tmpData_All.InvNumber_Order, tmpData_All.FromId, tmpData_All.GoodsKindId, tmpData_All.GoodsId) AS TotalWeight_Diff
+                         , SUM (COALESCE (tmpData_All.AmountTax,0)) OVER (PARTITION BY tmpData_All.InvNumber_Order, tmpData_All.FromId, tmpData_All.GoodsKindId, tmpData_All.GoodsId) AS TotalAmountTax
+                         , SUM (COALESCE (tmpData_All.WeightTax,0)) OVER (PARTITION BY tmpData_All.InvNumber_Order, tmpData_All.FromId, tmpData_All.GoodsKindId, tmpData_All.GoodsId) AS TotalWeightTax
 
+                    FROM tmpData_All_1 AS tmpData_All
+                    )
        -- запрос
        SELECT
              tmpMovement.OperDate_Order        ::TDateTime    AS OperDate
@@ -831,16 +843,36 @@ BEGIN
            , tmpMovement.TotalWeightDiff_B :: TFloat AS TotalWeightDiff_B
            , tmpMovement.TotalWeightDiff_M :: TFloat AS TotalWeightDiff_M
 
-           , tmpMovement.CountDiff_B  :: TFloat AS CountDiff_B
-           , tmpMovement.CountDiff_M  :: TFloat AS CountDiff_M
-           , tmpMovement.WeightDiff_B :: TFloat AS WeightDiff_B
-           , tmpMovement.WeightDiff_M :: TFloat AS WeightDiff_M
-           , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMovement.TotalCountDiff_M ELSE tmpMovement.TotalWeightDiff_M END :: TFloat AS Diff_M
+           , COALESCE (tmpMovement.CountDiff_B,0)  :: TFloat AS CountDiff_B
+           , COALESCE (tmpMovement.CountDiff_M,0)  :: TFloat AS CountDiff_M
+           , COALESCE (tmpMovement.WeightDiff_B,0) :: TFloat AS WeightDiff_B
+           , COALESCE (tmpMovement.WeightDiff_M,0) :: TFloat AS WeightDiff_M
+           --, CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMovement.TotalCountDiff_M ELSE tmpMovement.TotalWeightDiff_M END :: TFloat AS Diff_M
+           , CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
+                  THEN COALESCE (tmpMovement.CountDiff_M,0) - COALESCE (tmpMovement.CountDiff_B,0)
+                  ELSE COALESCE (tmpMovement.WeightDiff_M,0) - COALESCE (tmpMovement.WeightDiff_B,0)
+             END :: TFloat AS Diff_M
            , tmpMovement.AmountTax    :: TFloat AS AmountTax
+           , tmpMovement.WeightTax    :: TFloat AS WeightTax
            , vbDiffTax                :: TFloat AS DiffTax
 
-           , CASE WHEN ( tmpMovement.TotalCountDiff_M <> 0 AND tmpMovement.TotalCountDiff_M >= tmpMovement.AmountTax) OR (tmpMovement.TotalWeightDiff_M <> 0 AND tmpMovement.TotalWeightDiff_M >= tmpMovement.WeightTax ) THEN TRUE ELSE FALSE END AS isPrint_M
+           , CASE WHEN (COALESCE (tmpMovement.TotalCountDiff_M,0)  - COALESCE (tmpMovement.TotalCountDiff_B,0) <> 0 AND COALESCE (tmpMovement.TotalCountDiff_M,0)   - COALESCE (tmpMovement.TotalCountDiff_B,0) >= tmpMovement.AmountTax) 
+                    OR (COALESCE (tmpMovement.TotalWeightDiff_M,0) - COALESCE (tmpMovement.TotalWeightDiff_B,0) <> 0 AND COALESCE (tmpMovement.TotalWeightDiff_M,0) - COALESCE (tmpMovement.TotalWeightDiff_B,0) >= tmpMovement.WeightTax )
+                     THEN TRUE 
+                     ELSE FALSE
+             END 
+             AS isPrint_M
+          /* , CASE WHEN (COALESCE (tmpMovement.TotalCount_Diff,0) <> 0 AND COALESCE (tmpMovement.TotalCount_Diff,0) >= tmpMovement.TotalAmountTax) 
+                    OR (COALESCE (tmpMovement.TotalWeight_Diff,0) <> 0 AND COALESCE (tmpMovement.TotalWeight_Diff,0) >= tmpMovement.TotalWeightTax )
+                  THEN TRUE 
+                  ELSE FALSE
+             END              AS isPrint_M*/
+
            , SUM (CASE WHEN ( tmpMovement.TotalCountDiff_M <> 0 AND tmpMovement.TotalCountDiff_M >= tmpMovement.AmountTax) OR (tmpMovement.TotalWeightDiff_M <> 0 AND tmpMovement.TotalWeightDiff_M >= tmpMovement.WeightTax ) THEN 1 ELSE 0 END) OVER (PARTITION BY Object_From.Id, tmpMovement.InvNumber_Order)  ::TFloat AS CountPrint_M
+, tmpMovement.TotalCount_Diff ::TFloat
+, tmpMovement.TotalWeight_Diff ::TFloat
+, tmpMovement.TotalAmountTax ::TFloat
+, tmpMovement.TotalWeightTax ::TFloat
        FROM tmpData_All AS tmpMovement
           LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
           LEFT JOIN ObjectDesc AS ObjectDesc_From ON ObjectDesc_From.Id = Object_From.DescId
@@ -889,4 +921,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_OrderExternal_Sale (inStartDate:= '06.08.2018', inEndDate:= '06.08.2018', inFromId := 0, inToId := 0, inRouteId := 0, inRouteSortingId := 0, inGoodsGroupId := 0, inIsByDoc := True, inSession:= '2')
-

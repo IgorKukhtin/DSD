@@ -1091,7 +1091,7 @@ inherited Report_Mobile_OrderExternal_SaleForm: TReport_Mobile_OrderExternal_Sal
         end
         item
           Name = 'inIsByDoc'
-          Value = 'False'
+          Value = False
           Component = edByDoc
           DataType = ftBoolean
           ParamType = ptInput
@@ -1179,7 +1179,7 @@ inherited Report_Mobile_OrderExternal_SaleForm: TReport_Mobile_OrderExternal_Sal
       end
       item
         Name = 'inIsByDoc'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

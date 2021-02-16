@@ -732,6 +732,20 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     TabOrder = 9
     Width = 327
   end
+  object cxLabel7: TcxLabel [6]
+    Left = 642
+    Top = 32
+    Caption = #1044#1072#1090#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103':'
+  end
+  object edOperDate: TcxDateEdit [7]
+    Left = 744
+    Top = 32
+    EditValue = 44197d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 11
+    Width = 85
+  end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
@@ -889,6 +903,14 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       OpenBeforeShow = True
@@ -925,7 +947,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -936,7 +958,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1004,7 +1026,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1015,7 +1037,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1083,7 +1105,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1094,7 +1116,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1592,8 +1614,8 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     Left = 368
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 120
-    Top = 184
+    Left = 128
+    Top = 120
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -1661,6 +1683,14 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         Name = 'inEndDate'
         Value = 41640d
         Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1750,8 +1780,8 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 669
-    Top = 30
+    Left = 461
+    Top = 65534
   end
   object GuidesBranch: TdsdGuides
     KeyField = 'Id'
