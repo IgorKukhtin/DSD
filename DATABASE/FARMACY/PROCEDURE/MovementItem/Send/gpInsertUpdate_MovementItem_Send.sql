@@ -581,6 +581,7 @@ BEGIN
     END IF;
     
     IF COALESCE(inCommentTRID, 0) = 14957072
+       AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
     THEN
        IF NOT EXISTS(WITH GoodsPromo AS (SELECT Object_Goods_Retail.GoodsMainId                                                     AS GoodsId  
                                               , max(tmp.RelatedProductId)                                                          AS RelatedProductId

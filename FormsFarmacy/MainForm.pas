@@ -775,6 +775,8 @@ type
     N275: TMenuItem;
     actReport_Movement_Send_RemainsSun_SUA: TdsdOpenForm;
     N276: TMenuItem;
+    actInstructions: TdsdOpenForm;
+    N277: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

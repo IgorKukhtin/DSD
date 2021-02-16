@@ -456,7 +456,7 @@ object MainForm: TMainForm
       end
       item
         Name = 'inByDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','

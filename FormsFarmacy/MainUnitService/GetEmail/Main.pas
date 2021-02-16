@@ -253,7 +253,7 @@ begin
          StartTime_calc:= EncodeDateTime(Year, Month, Day, Hour_calc, Minute_calc, 0, 0);
          //расчет конечные дата + время
          DecodeTime(ArrayList[i].EndTime, Hour_calc, Minute_calc, Second, MSec);
-         EndTime_calc:= EncodeDateTime(Year, Month, Day, Hour_calc, Minute_calc, 0, 0);
+         EndTime_calc:= EncodeDateTime(Year, Month, Day, Hour_calc, Minute_calc, 59, 0);
          //теперь можно проверить
          if not ((StartTime_calc <= NOW) and (EndTime_calc >= NOW))
          then Result:= -1;

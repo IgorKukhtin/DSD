@@ -1980,13 +1980,12 @@ BEGIN
       , tmpRemains AS (SELECT Container.ObjectId
                             , SUM (Container.Amount) AS Amount
                        FROM Container
-                            INNER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
-                                                           ON ContainerLinkObject_Unit.ContainerId = Container.Id
-                                                          AND ContainerLinkObject_Unit.ObjectId = vbUnitId
+
                             INNER JOIN tmpGoodsId AS tmp
                                                   ON tmp.GoodsId = Container.ObjectId
                        WHERE Container.DescId = zc_Container_Count()
-                         AND Container.Amount<>0
+                         AND Container.Amount <> 0
+                         AND Container.WhereObjectId = vbUnitId
 --                         AND Container.ObjectId in (SELECT tmpMI.GoodsId FROM tmpGoodsId AS tmpMI)
                        GROUP BY Container.ObjectId
                       )
@@ -3535,13 +3534,12 @@ BEGIN
       , tmpRemains AS (SELECT Container.ObjectId
                             , SUM (Container.Amount) AS Amount
                        FROM Container
-                            INNER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
-                                                           ON ContainerLinkObject_Unit.ContainerId = Container.Id
-                                                          AND ContainerLinkObject_Unit.ObjectId = vbUnitId
+
                             INNER JOIN tmpGoodsId AS tmp
                                                   ON tmp.GoodsId = Container.ObjectId
                        WHERE Container.DescId = zc_Container_Count()
                          AND Container.Amount<>0
+                         AND Container.WhereObjectId = vbUnitId
 --                         AND Container.ObjectId in (SELECT tmpMI.GoodsId FROM tmpGoodsId AS tmpMI)
                        GROUP BY Container.ObjectId
                       )
@@ -4193,4 +4191,5 @@ where Movement.DescId = zc_Movement_OrderInternal()
 
 -- тест select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 18820132 , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'FALSE' ,  inSession := '7564573');
 
-select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 22029712   , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
+-- select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 22029712   , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
+

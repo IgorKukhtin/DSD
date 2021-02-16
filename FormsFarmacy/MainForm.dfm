@@ -4152,6 +4152,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actInstructions: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1048#1085#1089#1090#1088#1091#1082#1094#1080#1080
+      FormName = 'TInstructionsForm'
+      FormNameParam.Value = 'TInstructionsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5370,75 +5381,78 @@ inherited MainForm: TMainForm
       object N247: TMenuItem [16]
         Action = actComputerAccessoriesRegister
       end
-      object N7: TMenuItem [17]
+      object N277: TMenuItem [17]
+        Action = actInstructions
+      end
+      object N7: TMenuItem [18]
         Caption = '-'
       end
-      object miSaveData: TMenuItem [18]
+      object miSaveData: TMenuItem [19]
         Action = actSaveData
       end
-      object miPriceGroupSettings: TMenuItem [19]
+      object miPriceGroupSettings: TMenuItem [20]
         Action = actPriceGroupSettings
       end
-      object N102: TMenuItem [20]
+      object N102: TMenuItem [21]
         Action = actPriceGroupSettingsTOP
       end
-      object miJuridicalSettings: TMenuItem [21]
+      object miJuridicalSettings: TMenuItem [22]
         Action = actJuridicalSettings
       end
-      object N9: TMenuItem [22]
+      object N9: TMenuItem [23]
         Caption = '-'
       end
-      object miImportType: TMenuItem [23]
+      object miImportType: TMenuItem [24]
         Action = actImportType
       end
-      object miImportSettings: TMenuItem [24]
+      object miImportSettings: TMenuItem [25]
         Action = actImportSettings
       end
-      object miImportExportLink: TMenuItem [25]
+      object miImportExportLink: TMenuItem [26]
         Action = actImportExportLink
       end
-      object miGlobalConst: TMenuItem [26]
+      object miGlobalConst: TMenuItem [27]
         Action = actGlobalConst
       end
-      object FarmacyCash1: TMenuItem [28]
+      object FarmacyCash1: TMenuItem [29]
         Action = actUnitForFarmacyCash
       end
-      object N10: TMenuItem [30]
+      object N10: TMenuItem [31]
         Caption = '-'
       end
-      object miReprice: TMenuItem [31]
+      object miReprice: TMenuItem [32]
         Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072
         OnClick = miRepriceClick
       end
-      object miRepriceChange: TMenuItem [32]
+      object miRepriceChange: TMenuItem [33]
         Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1094#1077#1085' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
         OnClick = miRepriceChangeClick
       end
-      object miReprice_test: TMenuItem [33]
+      object miReprice_test: TMenuItem [34]
         Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' ('#1090#1077#1089#1090')'
         OnClick = miReprice_testClick
       end
-      object miRepricePromo: TMenuItem [34]
+      object miRepricePromo: TMenuItem [35]
         Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1087#1086' '#1089#1088#1077#1076#1085#1080#1084' '#1094#1077#1085#1072#1084' '#1080' '#1084#1072#1088#1082'. '#1082#1086#1085#1090#1088#1072#1082#1090#1072#1084
         OnClick = miRepricePromoClick
       end
-      object miExportSalesForSupp: TMenuItem [35]
+      object miExportSalesForSupp: TMenuItem [36]
         Action = actExportSalesForSuppClick
       end
-      object N173: TMenuItem [36]
+      object N173: TMenuItem [37]
         Action = actRepriceUnitSheduler
       end
-      object miRecalcMCSSheduler: TMenuItem [37]
+      object miRecalcMCSSheduler: TMenuItem [38]
         Action = actRecalcMCSSheduler
       end
-      object N265: TMenuItem [38]
+      object N265: TMenuItem [39]
         Action = actReport_PriceCheck
       end
-      object N261: TMenuItem [41]
+      object N261: TMenuItem [42]
         Caption = #1055#1086#1080#1089#1082' '#1087#1086' '#1085#1072#1079#1074#1072#1085#1080#1103#1084' '#1074' '#1084#1077#1085#1102
         OnClick = N261Click
       end
-      object N270: TMenuItem [42]
+      object N270: TMenuItem [43]
         Action = actClearDefaultUnit
       end
     end

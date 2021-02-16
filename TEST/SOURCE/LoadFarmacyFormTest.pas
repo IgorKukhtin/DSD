@@ -76,6 +76,7 @@ type
     procedure LoadInfoMoneyGroupFormTest;
     procedure LoadInfoMoneyDestinationFormTest;
     procedure LoadInfoMoneyFormTest;
+    procedure LoadInstructionsFormTest;
     procedure LoadInventoryFormTest;
     procedure LoadInvoiceFormTest;
     procedure LoadIlliquidUnitFormTest;
@@ -2204,6 +2205,18 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyGroup_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyGroupEditForm');
+end;
+
+procedure TLoadFormTest.LoadInstructionsFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInstructionsKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInstructionsKindForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInstructionsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInstructionsForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInstructionsEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInstructionsEditForm');
 end;
 
 procedure TLoadFormTest.LoadInventoryFormTest;

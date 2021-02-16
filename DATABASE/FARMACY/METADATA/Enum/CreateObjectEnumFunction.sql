@@ -515,10 +515,19 @@ CREATE OR REPLACE FUNCTION zc_Enum_CheckSourceKind_Tabletki() RETURNS integer AS
 
 CREATE OR REPLACE FUNCTION zc_Enum_DivisionParties_UKTVED() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_DivisionParties_UKTVED' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+-- !!!
+-- !!! Разделы инструкций
+-- !!!
+
+CREATE OR REPLACE FUNCTION zc_Enum_InstructionsKind_IT() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_InstructionsKind_IT' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_InstructionsKind_Managers() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_InstructionsKind_Managers' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_InstructionsKind_Marketing() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_InstructionsKind_Marketing' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.    Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
+ 16.02.21                                                                                                   * zc_Enum_InstructionsKind_
  13.08.20                                                                                                   * zc_Enum_DivisionParties_UKTVED
  15.06.20                                                                                                   * zc_Enum_CheckSourceKind_Liki24
  24.04.19                                                                                                   * Проверка и погашение рецептов по доступным лекарствам

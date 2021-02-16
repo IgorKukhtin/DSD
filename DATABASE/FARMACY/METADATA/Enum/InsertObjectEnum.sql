@@ -4390,10 +4390,22 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DivisionParties_UKTVED(), inDescId:= zc_Object_DivisionParties(), inCode:= 1, inName:= 'Запрещенный к фискальной продаже по УКТВЭД',             inEnumName:= 'zc_Enum_DivisionParties_UKTVED');
      
 END $$;
+
+DO $$
+BEGIN
+     -- !!! Разделы инструкций
+     
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_InstructionsKind_IT(),        inDescId:= zc_Object_InstructionsKind(), inCode:= 1, inName:= 'Инструкции ИТ',                     inEnumName:= 'zc_Enum_InstructionsKind_IT');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_InstructionsKind_Managers(),  inDescId:= zc_Object_InstructionsKind(), inCode:= 2, inName:= 'Инструкции Менеджеров',             inEnumName:= 'zc_Enum_InstructionsKind_Managers');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_InstructionsKind_Marketing(), inDescId:= zc_Object_InstructionsKind(), inCode:= 3, inName:= 'Инструкции Маркетинга',             inEnumName:= 'zc_Enum_InstructionsKind_Marketing');
+     
+END $$;
+
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.    Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
+ 16.02.21                                                                                                   * zc_Object_InstructionsKind
  13.08.20                                                                                                   * zc_Enum_DivisionParties_UKTVED
  15.06.20                                                                                                   * zc_Enum_CheckSourceKind_Liki24
  24.04.19                                                                                                   * Проверка и погашение рецептов по доступным лекарствам

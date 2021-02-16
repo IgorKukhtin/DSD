@@ -1198,11 +1198,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Hardware_ComputerName() RETURNS Integ
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Hardware_ComputerName', zc_Object_Hardware(), 'Имя компьютера' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Hardware_ComputerName');
  
-
+CREATE OR REPLACE FUNCTION zc_ObjectString_Instructions_FileName() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Instructions_FileName'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Instructions_FileName', zc_Object_Instructions(), 'Имя файла' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Instructions_FileName');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 16.02.21                                                                                                         * zc_ObjectString_Instructions_FileName  
  27.01.21                                                                                                         * zc_ObjectString_Hardware_ComputerName  
  02.11.20         * zc_ObjectString_GoodsPropertyValue_ArticleExternal
  30.10.20         * zc_ObjectString_PartnerExternal_ObjectCode
