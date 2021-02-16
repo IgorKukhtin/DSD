@@ -24,6 +24,7 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbOrderFinanceId Integer;
+  DECLARE vbBankAccountMainId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_OrderFinance());
@@ -37,6 +38,11 @@ BEGIN
                           WHERE MovementLinkObject.MovementId = inMovementId
                             AND MovementLinkObject.DescId = zc_MovementLinkObject_OrderFinance()
                          );
+     vbBankAccountMainId := (SELECT MovementLinkObject.ObjectId AS Id
+                             FROM MovementLinkObject
+                             WHERE MovementLinkObject.MovementId = inMovementId
+                               AND MovementLinkObject.DescId = zc_MovementLinkObject_BankAccount()
+                            );
 --   select DISCTINCT zc_ObjectLink_Contract_Juridical если zc_ObjectLink_Contract_InfoMoney соответсвует соотвю списку полученному из zc_ObjectLink_OrderFinanceProperty_Object
      
      RETURN QUERY
@@ -78,18 +84,19 @@ BEGIN
                                        AND Object_JuridicalOrderFinance.isErased = FALSE
                                      )
                                      */
-     tmpJuridicalOrderFinance AS (SELECT DISCTINCT
+                                     
+     tmpJuridicalOrderFinance AS (SELECT DISTINCT
                                          tmp.BankAccountId
                                        , tmp.JuridicalId
                                        , tmp.InfoMoneyId
                                   FROM gpSelect_Object_JuridicalOrderFinance_choice (inBankAccountMainId:= vbBankAccountMainId
-                                                                                   , inOrderFinanceId := vbOrderFinanceId
+                                                                                   , inOrderFinanceId := COALESCE (vbOrderFinanceId,0)
                                                                                    , inisShowAll      := FALSE 
                                                                                    , inisErased       := FALSE
                                                                                    , inSession        := inSession) AS tmp
                                   )
-
-   , tmpData AS (SELECT DISTINCT 
+--select * from gpSelect_Object_JuridicalOrderFinance_choice(inBankAccountMainId := 351627 , inOrderFinanceId := 0 , inShowAll := 'False' , inisErased := 'False' ,  inSession := '5');
+   , tmpData AS (SELECT DISTINCT
                         ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
                       , ObjectLink_Contract_InfoMoney.ObjectId      AS ContractId
                       , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId

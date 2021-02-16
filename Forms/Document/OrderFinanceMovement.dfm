@@ -513,6 +513,11 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
               Format = ',0.####'
               Kind = skSum
               Column = chSummOrderFinance
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = chJuridicalName
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1831,6 +1836,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 6
       end>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 347
     Top = 337
@@ -1951,7 +1957,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -2402,6 +2408,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 6
       end>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 819
     Top = 265
@@ -2431,7 +2438,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inShowAll'
+        Name = 'inisShowAll'
         Value = False
         Component = actShowAllJur
         DataType = ftBoolean

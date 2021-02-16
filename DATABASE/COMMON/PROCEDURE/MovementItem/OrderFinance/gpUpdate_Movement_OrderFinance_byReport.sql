@@ -26,9 +26,9 @@ BEGIN
      
      -- из шапки документа
      SELECT Movement.OperDate
-          , MovementLinkObject.ObjectId             AS OrderFinanceId
-          , OrderFinance_PaidKind.ChildObjectId     AS PaidKindId
-          , MovementLinkObject_BankAccount.ObjectId AS BankAccountId
+          , COALESCE (MovementLinkObject.ObjectId,0)              AS OrderFinanceId
+          , OrderFinance_PaidKind.ChildObjectId                   AS PaidKindId
+          , COALESCE (MovementLinkObject_BankAccount.ObjectId,0)  AS BankAccountId
      INTO vbOperDate, vbOrderFinanceId, vbPaidKindId, vbBankAccountMainId
      FROM Movement
           LEFT JOIN MovementLinkObject ON MovementLinkObject.MovementId = inMovementId
