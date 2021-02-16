@@ -38,7 +38,7 @@ BEGIN
              , Object_Status.Code        AS StatusCode
              , Object_Status.Name        AS StatusName
              , CAST (False as Boolean)   AS PriceWithVAT
-             , CAST (0 as TFloat)        AS VATPercent
+             , ObjectFloat_TaxKind_Value.ValueData :: TFloat AS VATPercent
              , CAST (0 as TFloat)        AS ChangePercent
              , 0                         AS FromId
              , CAST ('' AS TVarChar)     AS FromName
@@ -50,7 +50,10 @@ BEGIN
              , 0                         AS MovementId_Invoice
              , CAST ('' as TVarChar)     AS InvNumber_Invoice
              , CAST ('' as TVarChar)     AS Comment_Invoice
-          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
+          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
+               LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                     ON ObjectFloat_TaxKind_Value.ObjectId = zc_Enum_TaxKind_Basis()
+                                    AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value();
 
      ELSE
 
@@ -61,7 +64,6 @@ BEGIN
           , Movement_OrderClient.InvNumber
           , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
           , Movement_OrderClient.OperDate             AS OperDate
-          , MovementDate_OperDatePartner.ValueData    AS OperDatePartner
           , Object_Status.ObjectCode                  AS StatusCode
           , Object_Status.ValueData                   AS StatusName
 

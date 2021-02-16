@@ -775,8 +775,8 @@ inherited MainForm: TMainForm
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
-      FormName = 'TIncomeJournalForm'
-      FormNameParam.Value = 'TIncomeJournalForm'
+      FormName = 'TOrderClientJournalForm'
+      FormNameParam.Value = 'TOrderClientJournalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -956,7 +956,6 @@ inherited MainForm: TMainForm
       end
       object miOrderClient: TMenuItem
         Action = actOrderClient
-        Enabled = False
       end
       object miLine12: TMenuItem
         Caption = '-'
