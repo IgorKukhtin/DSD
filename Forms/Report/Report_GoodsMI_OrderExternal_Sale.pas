@@ -113,6 +113,9 @@ type
     TotalWeight_Diff: TcxGridDBColumn;
     TotalAmountTax: TcxGridDBColumn;
     TotalWeightTax: TcxGridDBColumn;
+    AmountSale_Weight_M: TcxGridDBColumn;
+    Amount_Weight_M: TcxGridDBColumn;
+    Amount_Weight_Dozakaz_M: TcxGridDBColumn;
   private
     { Private declarations }
   public

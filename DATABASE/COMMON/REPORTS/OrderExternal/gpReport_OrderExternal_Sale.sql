@@ -51,6 +51,11 @@ RETURNS TABLE (OperDate TDateTime, OperDatePartner TDateTime
              , DiffTax      TFloat
              , isPrint_M    Boolean
              , CountPrint_M TFloat
+             
+           , AmountSale_Weight_M      TFloat
+           , Amount_Weight_M          TFloat
+           , Amount_Weight_Dozakaz_M  TFloat
+           
 , TotalCount_Diff TFloat
 , TotalWeight_Diff TFloat
 , TotalAmountTax TFloat
@@ -782,6 +787,13 @@ BEGIN
                          , SUM (COALESCE (tmpData_All.AmountTax,0)) OVER (PARTITION BY tmpData_All.InvNumber_Order, tmpData_All.FromId, tmpData_All.GoodsKindId, tmpData_All.GoodsId) AS TotalAmountTax
                          , SUM (COALESCE (tmpData_All.WeightTax,0)) OVER (PARTITION BY tmpData_All.InvNumber_Order, tmpData_All.FromId, tmpData_All.GoodsKindId, tmpData_All.GoodsId) AS TotalWeightTax
 
+           , CASE WHEN (COALESCE (tmpData_All.TotalCountDiff_M,0)  - COALESCE (tmpData_All.TotalCountDiff_B,0) <> 0 AND COALESCE (tmpData_All.TotalCountDiff_M,0)   - COALESCE (tmpData_All.TotalCountDiff_B,0) >= tmpData_All.AmountTax) 
+                    OR (COALESCE (tmpData_All.TotalWeightDiff_M,0) - COALESCE (tmpData_All.TotalWeightDiff_B,0) <> 0 AND COALESCE (tmpData_All.TotalWeightDiff_M,0) - COALESCE (tmpData_All.TotalWeightDiff_B,0) >= tmpData_All.WeightTax )
+                     THEN TRUE 
+                     ELSE FALSE
+             END 
+             AS isPrint_M
+             
                     FROM tmpData_All_1 AS tmpData_All
                     )
        -- запрос
@@ -847,21 +859,25 @@ BEGIN
            , COALESCE (tmpMovement.CountDiff_M,0)  :: TFloat AS CountDiff_M
            , COALESCE (tmpMovement.WeightDiff_B,0) :: TFloat AS WeightDiff_B
            , COALESCE (tmpMovement.WeightDiff_M,0) :: TFloat AS WeightDiff_M
-           --, CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMovement.TotalCountDiff_M ELSE tmpMovement.TotalWeightDiff_M END :: TFloat AS Diff_M
-           , CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
+           , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMovement.TotalCountDiff_M ELSE tmpMovement.TotalWeightDiff_M END :: TFloat AS Diff_M
+          /* , CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
                   THEN COALESCE (tmpMovement.CountDiff_M,0) - COALESCE (tmpMovement.CountDiff_B,0)
                   ELSE COALESCE (tmpMovement.WeightDiff_M,0) - COALESCE (tmpMovement.WeightDiff_B,0)
-             END :: TFloat AS Diff_M
+             END :: TFloat AS Diff_M*/
            , tmpMovement.AmountTax    :: TFloat AS AmountTax
            , tmpMovement.WeightTax    :: TFloat AS WeightTax
            , vbDiffTax                :: TFloat AS DiffTax
 
-           , CASE WHEN (COALESCE (tmpMovement.TotalCountDiff_M,0)  - COALESCE (tmpMovement.TotalCountDiff_B,0) <> 0 AND COALESCE (tmpMovement.TotalCountDiff_M,0)   - COALESCE (tmpMovement.TotalCountDiff_B,0) >= tmpMovement.AmountTax) 
+
+          -- , CASE WHEN tmpMovement.isPrint_M = TRUE THEN tmpMovement.AmountSale_Weight ELSE 0 END AS AmountSale_Weight_M
+          , tmpMovement.isPrint_M ::Boolean
+           /*, CASE WHEN (COALESCE (tmpMovement.TotalCountDiff_M,0)  - COALESCE (tmpMovement.TotalCountDiff_B,0) <> 0 AND COALESCE (tmpMovement.TotalCountDiff_M,0)   - COALESCE (tmpMovement.TotalCountDiff_B,0) >= tmpMovement.AmountTax) 
                     OR (COALESCE (tmpMovement.TotalWeightDiff_M,0) - COALESCE (tmpMovement.TotalWeightDiff_B,0) <> 0 AND COALESCE (tmpMovement.TotalWeightDiff_M,0) - COALESCE (tmpMovement.TotalWeightDiff_B,0) >= tmpMovement.WeightTax )
                      THEN TRUE 
                      ELSE FALSE
              END 
              AS isPrint_M
+             */
           /* , CASE WHEN (COALESCE (tmpMovement.TotalCount_Diff,0) <> 0 AND COALESCE (tmpMovement.TotalCount_Diff,0) >= tmpMovement.TotalAmountTax) 
                     OR (COALESCE (tmpMovement.TotalWeight_Diff,0) <> 0 AND COALESCE (tmpMovement.TotalWeight_Diff,0) >= tmpMovement.TotalWeightTax )
                   THEN TRUE 
@@ -869,10 +885,17 @@ BEGIN
              END              AS isPrint_M*/
 
            , SUM (CASE WHEN ( tmpMovement.TotalCountDiff_M <> 0 AND tmpMovement.TotalCountDiff_M >= tmpMovement.AmountTax) OR (tmpMovement.TotalWeightDiff_M <> 0 AND tmpMovement.TotalWeightDiff_M >= tmpMovement.WeightTax ) THEN 1 ELSE 0 END) OVER (PARTITION BY Object_From.Id, tmpMovement.InvNumber_Order)  ::TFloat AS CountPrint_M
-, tmpMovement.TotalCount_Diff ::TFloat
-, tmpMovement.TotalWeight_Diff ::TFloat
-, tmpMovement.TotalAmountTax ::TFloat
-, tmpMovement.TotalWeightTax ::TFloat
+
+           --дл€ печати
+           , CASE WHEN tmpMovement.isPrint_M = TRUE THEN tmpMovement.AmountSale_Weight ELSE 0 END        ::TFloat AS AmountSale_Weight_M
+           , CASE WHEN tmpMovement.isPrint_M = TRUE THEN COALESCE (tmpMovement.Amount_Weight1,0) + COALESCE (tmpMovement.Amount_Weight2,0) ELSE 0 END ::TFloat AS Amount_Weight_M
+           , CASE WHEN tmpMovement.isPrint_M = TRUE THEN tmpMovement.Amount_Weight_Dozakaz ELSE 0 END    ::TFloat AS Amount_Weight_Dozakaz_M
+           
+           --информационно дл€ проверки
+           , tmpMovement.TotalCount_Diff ::TFloat
+           , tmpMovement.TotalWeight_Diff ::TFloat
+           , tmpMovement.TotalAmountTax ::TFloat
+           , tmpMovement.TotalWeightTax ::TFloat
        FROM tmpData_All AS tmpMovement
           LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
           LEFT JOIN ObjectDesc AS ObjectDesc_From ON ObjectDesc_From.Id = Object_From.DescId

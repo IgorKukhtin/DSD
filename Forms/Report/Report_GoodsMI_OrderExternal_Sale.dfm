@@ -4,7 +4,6 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
   ClientWidth = 1092
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -49
   ExplicitWidth = 1108
   ExplicitHeight = 425
   PixelsPerInch = 96
@@ -155,6 +154,46 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
               Format = ',0.####'
               Kind = skSum
               Column = WeightDiff_M
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxGridDBTableViewColumn1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCount_Diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalWeight_Diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalAmountTax
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalWeightTax
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSale_Weight_M
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Weight_M
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Weight_Dozakaz_M
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -292,6 +331,46 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
               Format = ',0.####'
               Kind = skSum
               Column = WeightDiff_M
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cxGridDBTableViewColumn1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCount_Diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalWeight_Diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalAmountTax
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalWeightTax
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSale_Weight_M
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Weight_M
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Weight_Dozakaz_M
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -786,21 +865,43 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
           object TotalCount_Diff: TcxGridDBColumn
             DataBinding.FieldName = 'TotalCount_Diff'
             Visible = False
+            VisibleForCustomization = False
             Width = 50
           end
           object TotalWeight_Diff: TcxGridDBColumn
             DataBinding.FieldName = 'TotalWeight_Diff'
             Visible = False
+            VisibleForCustomization = False
             Width = 50
           end
           object TotalAmountTax: TcxGridDBColumn
             DataBinding.FieldName = 'TotalAmountTax'
             Visible = False
+            VisibleForCustomization = False
             Width = 50
           end
           object TotalWeightTax: TcxGridDBColumn
             DataBinding.FieldName = 'TotalWeightTax'
             Visible = False
+            VisibleForCustomization = False
+            Width = 50
+          end
+          object AmountSale_Weight_M: TcxGridDBColumn
+            DataBinding.FieldName = 'AmountSale_Weight_M'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 60
+          end
+          object Amount_Weight_M: TcxGridDBColumn
+            DataBinding.FieldName = 'Amount_Weight_M'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 50
+          end
+          object Amount_Weight_Dozakaz_M: TcxGridDBColumn
+            DataBinding.FieldName = 'Amount_Weight_Dozakaz_M'
+            Visible = False
+            VisibleForCustomization = False
             Width = 50
           end
         end

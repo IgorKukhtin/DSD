@@ -15,7 +15,7 @@ RETURNS TABLE(MovementId           Integer   --
             , ToName               TVarChar
             , OperDate_ord         TDateTime
             , OperDatePartner_ord  TDateTime
-            , Invnumber_ord        Integer
+            , Invnumber_ord        TVarChar--Integer
             , InvNumberPartner_ord TVarChar
             , GoodsName            TVarChar  --Позиция
             , GoodsCode            Integer   --Код позиции
@@ -121,7 +121,7 @@ BEGIN
              , Object_To.ValueData               ::TVarChar AS ToName
              , Movement_order.OperDate                      AS OperDate_ord
              , tmpOperDatePartner_ord.ValueData             AS OperDatePartner_ord
-             , Movement_order.Invnumber          ::Integer  AS Invnumber_ord
+             , Movement_order.Invnumber          ::TVarChar AS Invnumber_ord
              , tmpInvNumberPartner_ord.ValueData ::TVarChar AS InvNumberPartner_ord
              , Object_Goods.ValueData                       AS GoodsName
              , Object_Goods.ObjectCode                      AS GoodsCode
