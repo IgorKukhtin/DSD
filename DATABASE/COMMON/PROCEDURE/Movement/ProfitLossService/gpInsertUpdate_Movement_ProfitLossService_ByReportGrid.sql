@@ -1,10 +1,12 @@
 -- Function: gpInsertUpdate_Movement_ProfitLossService_ByReportGrid 
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReportGrid (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReportGrid (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReportGrid (TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService_ByReportGrid (
     IN inStartDate                TDateTime ,  
     IN inEndDate                  TDateTime ,
+    IN inOperDate                 TDateTime ,
     IN inPaidKindId               Integer   ,
     IN inJuridicalId              Integer   ,
     IN inBranchId                 Integer   ,
@@ -39,7 +41,7 @@ BEGIN
      -- 
      PERFORM lpInsertUpdate_Movement_ProfitLossService (ioId                := 0
                                                       , inInvNumber         := CAST (NEXTVAL ('movement_profitlossservice_seq') AS TVarChar) 
-                                                      , inOperDate          := inEndDate
+                                                      , inOperDate          := inOperDate
                                                       , inAmountIn          := 0                               :: TFloat
                                                       , inAmountOut         := Sum_Bonus                       :: TFloat
                                                       , inBonusValue        := CAST (Value AS NUMERIC (16, 2)) :: TFloat

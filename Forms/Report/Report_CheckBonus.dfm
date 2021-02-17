@@ -1979,6 +1979,14 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inOperDate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inPaidKindId'
         Value = ''
         Component = GuidesPaidKind
