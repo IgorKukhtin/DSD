@@ -30,6 +30,7 @@ RETURNS TABLE (Id Integer, ParentId integer
              , Multiplicity TFloat
              , DoesNotShare Boolean
              , IdSP TVarChar
+             , ProgramIdSP TVarChar
              , CountSP TFloat
              , PriceRetSP TFloat
              , PaymentSP TFloat
@@ -169,6 +170,7 @@ BEGIN
 
            , COALESCE (ObjectBoolean_DoesNotShare.ValueData, FALSE)              AS DoesNotShare
            , Null::TVArChar                                                      AS IdSP  
+           , Null::TVArChar                                                      AS ProgramIdSP
            , Null::TFloat                                                        AS CountSP 
            , Null::TFloat                                                        AS PriceRetSP
            , Null::TFloat                                                        AS PaymentSP

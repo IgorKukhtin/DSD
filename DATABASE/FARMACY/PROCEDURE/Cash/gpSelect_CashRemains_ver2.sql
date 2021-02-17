@@ -28,7 +28,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                PriceChange TFloat, FixPercent TFloat, FixDiscount TFloat, Multiplicity TFloat,
                DoesNotShare boolean, GoodsAnalogId Integer, GoodsAnalogName TVarChar,
                GoodsAnalog TVarChar, GoodsAnalogATC TVarChar, GoodsActiveSubstance TVarChar,
-               CountSP TFloat, IdSP TVarChar, DosageIdSP TVarChar, PriceRetSP TFloat, PaymentSP TFloat,
+               CountSP TFloat, IdSP TVarChar, ProgramIdSP TVarChar, DosageIdSP TVarChar, PriceRetSP TFloat, PaymentSP TFloat,
                AmountMonth TFloat, PricePartionDate TFloat,
                PartionDateDiscount TFloat,
                NotSold boolean, NotSold60 boolean,
@@ -170,6 +170,7 @@ BEGIN
                                , MIFloat_PaymentSP.ValueData   AS PaymentSP
                                , MIFloat_CountSP.ValueData     AS CountSP
                                , MIString_IdSP.ValueData       AS IdSP
+                               , COALESCE (MIString_ProgramIdSP.ValueData, '')::TVarChar AS ProgramIdSP
                                , MIString_DosageIdSP.ValueData AS DosageIdSP
                                                                 -- № п/п - на всякий случай
                                , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
@@ -211,6 +212,9 @@ BEGIN
                                LEFT JOIN MovementItemString AS MIString_IdSP
                                                             ON MIString_IdSP.MovementItemId = MovementItem.Id
                                                            AND MIString_IdSP.DescId = zc_MIString_IdSP()
+                               LEFT JOIN MovementItemString AS MIString_ProgramIdSP
+                                                            ON MIString_ProgramIdSP.MovementItemId = MovementItem.Id
+                                                           AND MIString_ProgramIdSP.DescId = zc_MIString_ProgramIdSP()
                                -- DosageID лікарського засобу
                                LEFT JOIN MovementItemString AS MIString_DosageIdSP
                                                             ON MIString_DosageIdSP.MovementItemId = MovementItem.Id
@@ -869,6 +873,7 @@ BEGIN
           , Object_Goods_Main.ActiveSubstance                      AS GoodsActiveSubstance
           , tmpGoodsSP.CountSP                                     AS CountSP
           , tmpGoodsSP.IdSP                                        AS IdSP
+          , tmpGoodsSP.ProgramIdSP                                 AS ProgramIdSP
           , tmpGoodsSP.DosageIdSP                                  AS DosageIdSP
           , tmpGoodsSP.PriceRetSP                                  AS PriceRetSP
           , tmpGoodsSP.PaymentSP                                   AS PaymentSP

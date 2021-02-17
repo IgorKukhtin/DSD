@@ -777,6 +777,8 @@ type
     N276: TMenuItem;
     actInstructions: TdsdOpenForm;
     N277: TMenuItem;
+    actPromoBonus: TdsdOpenForm;
+    N278: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

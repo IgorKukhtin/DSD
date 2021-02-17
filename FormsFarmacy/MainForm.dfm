@@ -4163,6 +4163,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actPromoBonus: TdsdOpenForm
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
+      MoveParams = <>
+      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1089' '#1091#1095#1077#1090#1086#1084' '#1073#1086#1085#1091#1089#1072
+      FormName = 'TPromoBonusJournalForm'
+      FormNameParam.Value = 'TPromoBonusJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5103,6 +5114,9 @@ inherited MainForm: TMainForm
       end
       object N65: TMenuItem
         Action = actPromo
+      end
+      object N278: TMenuItem
+        Action = actPromoBonus
       end
       object N128: TMenuItem
         Action = actPromoUnit

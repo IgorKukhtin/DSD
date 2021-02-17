@@ -3258,6 +3258,7 @@ begin
   begin
     HelsiError := True;
     if not CreateNewDispense(CheckCDS.FieldByName('IdSP').AsString,
+      CheckCDS.FieldByName('ProgramIdSP').AsString,
       CheckCDS.FieldByName('CountSP').asCurrency * CheckCDS.FieldByName
       ('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,
       RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
@@ -3404,6 +3405,7 @@ begin
             RejectDispense;
 
             if CreateNewDispense(CheckCDS.FieldByName('IdSP').AsString,
+              CheckCDS.FieldByName('ProgramIdSP').AsString,
               CheckCDS.FieldByName('CountSP').asCurrency *
               CheckCDS.FieldByName('Amount').asCurrency,
               CheckCDS.FieldByName('PriceSale').asCurrency,
@@ -7629,6 +7631,8 @@ begin
           // ***25.04.19
           CheckCDS.FieldByName('IdSP').AsString := SourceClientDataSet.FieldByName
             ('IdSP').AsString;
+          CheckCDS.FieldByName('ProgramIdSP').AsString := SourceClientDataSet.FieldByName
+            ('ProgramIdSP').AsString;
           CheckCDS.FieldByName('CountSP').asCurrency :=
             SourceClientDataSet.FieldByName('CountSP').asCurrency;
           CheckCDS.FieldByName('PriceRetSP').asCurrency :=

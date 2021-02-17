@@ -6749,6 +6749,11 @@ inherited MainCashForm2: TMainCashForm2
         Size = 60
       end
       item
+        Name = 'ProgramIdSP'
+        DataType = ftString
+        Size = 60
+      end
+      item
         Name = 'CountSP'
         DataType = ftFloat
       end

@@ -153,10 +153,10 @@ BEGIN
   
     inPrice := COALESCE(inPrice, 0);
     -- проверить что у нас на самом деле меняется
-    SELECT MinimumLot INTO vbMinimumLot
-    FROM Object_Goods_View 
-    WHERE Object_Goods_View.Id = inGoodsId
-      AND Object_Goods_View.MinimumLot <> 0;
+    SELECT Object_Goods_Retail.MinimumLot INTO vbMinimumLot
+    FROM Object_Goods_Retail 
+    WHERE Object_Goods_Retail.Id = inGoodsId
+      AND Object_Goods_Retail.MinimumLot <> 0;
     
     SELECT
         (CEIL((MovementItem.Amount

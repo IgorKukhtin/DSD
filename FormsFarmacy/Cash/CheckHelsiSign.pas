@@ -16,7 +16,7 @@ uses
   dxBar, dxCore, cxDateUtils, cxNavigator,
   cxDataControllerConditionalFormattingRulesManagerDialog, cxDropDownEdit,
   cxGridBandedTableView, cxGridDBBandedTableView, cxLabel, cxCalendar,
-  System.Actions;
+  System.Actions, dxDateRanges;
 
 type
   TCheckHelsiSignForm = class(TAncestorBaseForm)
@@ -143,6 +143,7 @@ begin
 
 
     if not CreateNewDispense(ClientDataSet.FieldByName('IdSP').AsString,
+                             ClientDataSet.FieldByName('ProgramIdSP').AsString,
                              ClientDataSet.FieldByName('CountSP').AsCurrency * ClientDataSet.FieldByName('Amount').AsCurrency,
                              ClientDataSet.FieldByName('PriceSale').asCurrency,
                              RoundTo(ClientDataSet.FieldByName('Amount').asCurrency * ClientDataSet.FieldByName('PriceSale').asCurrency, -2),

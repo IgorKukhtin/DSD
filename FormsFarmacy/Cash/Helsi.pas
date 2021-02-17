@@ -67,6 +67,7 @@ type
     //
 
     FSell_Medication_ID : string;
+    FProgram_Medication_Id : string;
     FSell_qty : Currency;
     FSell_price : Currency;
     FSell_amount : Currency;
@@ -109,7 +110,7 @@ function GetHelsiReceipt(const AReceipt : String; var AID, AIDList, AName : stri
 
 function GetHelsiReceiptState(const AReceipt : String; var AState : string) : boolean;
 
-function CreateNewDispense(IDSP : string; AQty, APrice, ASell_amount, ADiscount_amount : currency;
+function CreateNewDispense(AIDSP, AProgramIdSP : string; AQty, APrice, ASell_amount, ADiscount_amount : currency;
   ACode : string) : boolean;  overload;
 function CreateNewDispense : boolean; overload;
 
@@ -536,6 +537,7 @@ begin
     jsonTemp.AddPair('sell_price', TJSONNumber.Create(FSell_price));
     jsonTemp.AddPair('sell_amount', TJSONNumber.Create(FSell_amount));
     jsonTemp.AddPair('discount_amount', TJSONNumber.Create(FDiscount_amount));
+    jsonTemp.AddPair('program_medication_id', FProgram_Medication_Id);
 
     JSONA := TJSONArray.Create;
     JSONA.AddElement(jsonTemp);
@@ -1208,7 +1210,7 @@ begin
 end;
 
 
-function CreateNewDispense(IDSP : string; AQty, APrice, ASell_amount, ADiscount_amount : currency;
+function CreateNewDispense(AIDSP, AProgramIdSP : string; AQty, APrice, ASell_amount, ADiscount_amount : currency;
   ACode : string) : boolean;
 begin
 
@@ -1220,7 +1222,8 @@ begin
     Exit;
   end;
 
-  HelsiApi.FSell_Medication_ID := IDSP;
+  HelsiApi.FSell_Medication_ID := AIDSP;
+  HelsiApi.FProgram_Medication_Id := AProgramIdSP;
   HelsiApi.FSell_qty := AQty;
   HelsiApi.FSell_price := APrice;
   HelsiApi.FSell_amount := ASell_amount;

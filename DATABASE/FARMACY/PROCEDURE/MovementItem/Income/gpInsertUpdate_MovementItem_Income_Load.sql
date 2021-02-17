@@ -419,7 +419,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), vbMovementItemId, vbPartnerGoodsId);
 
      -- Срок годности заодно влепим
-     IF inExpirationDate IS NOT NULL THEN 
+     IF inExpirationDate IS NOT NULL AND inExpirationDate <> '01.01.1900' THEN
         -- сохранили свойство <Срок годности>
         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), vbMovementItemId, inExpirationDate);
      END IF;
@@ -436,12 +436,12 @@ BEGIN
         PERFORM lpInsertUpdate_MovementItemString (zc_MIString_SertificatNumber(), vbMovementItemId, inSertificatNumber);
      END IF;
     -- Если есть до дату начала регистрации
-     IF inSertificatStart IS NOT NULL THEN
+     IF inSertificatStart IS NOT NULL AND inSertificatStart <> '01.01.1900' THEN 
         -- сохранили свойство <Дата начала регистрации>
         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_SertificatStart(), vbMovementItemId, inSertificatStart);
      END IF;
     -- Если есть до дату окончания регистрации
-     IF inSertificatEnd IS NOT NULL THEN
+     IF inSertificatEnd IS NOT NULL AND inSertificatEnd <> '01.01.1900' THEN
         -- сохранили свойство <Дата окончания регистрации>
         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_SertificatEnd(), vbMovementItemId, inSertificatEnd);
      END IF;
