@@ -1,72 +1,88 @@
--- Function: gpSelect_MovementItem_PromoBonus()
+-- Function: gpSelect_Movement_PromoBonus()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_PromoBonus (Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_PromoBonus (TDateTime, TDateTime, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PromoBonus(
-    IN inMovementId  Integer      , -- ключ Документа
-    IN inShowAll     Boolean      , --
-    IN inIsErased    Boolean      , --
-    IN inSession     TVarChar       -- сессия пользователя
+CREATE OR REPLACE FUNCTION gpSelect_Movement_PromoBonus(
+    IN inStartDate     TDateTime , --
+    IN inEndDate       TDateTime , --
+    IN inIsErased      Boolean ,
+    IN inSession       TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
-             , Amount TFloat, MIPromoId Integer, MovementPromoId Integer
-             , isErased Boolean)
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+             , StatusCode Integer, StatusName TVarChar
+             , TotalCount TFloat
+             , Comment TVarChar
+             , InsertName TVarChar, InsertDate TDateTime
+             , UpdateName TVarChar, UpdateDate TDateTime)
  AS
 $BODY$
-    DECLARE vbUserId   Integer;
+   DECLARE vbUserId Integer;
+   DECLARE vbObjectId Integer;
+   DECLARE vbUnitKey TVarChar;
+   DECLARE vbUnitId Integer;
 BEGIN
-    -- проверка прав пользователя на вызов процедуры
-    -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_PromoBonus());
-    vbUserId:= lpGetUserBySession (inSession);
-
-        -- Результат такой
-        RETURN QUERY
-               WITH
-                   MI_Master AS (SELECT MovementItem.Id                            AS Id
-                                      , MovementItem.ObjectId                      AS GoodsId
-                                      , MILinkObject_Juridical.ObjectId            AS JuridicalId
-                                      , MovementItem.Amount                        AS Amount
-                                      , MIFloat_MovementItemId.ValueData::Integer  AS MIPromoId
-                                      , MIPromo.MovementId                         AS MovementPromoId
-                                      , MovementItem.isErased                      AS isErased
-                                 FROM MovementItem
-
-                                     LEFT JOIN MovementItemLinkObject AS MILinkObject_Juridical
-                                                                      ON MILinkObject_Juridical.MovementItemId = MovementItem.Id
-                                                                     AND MILinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
-
-                                     LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
-                                                                 ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
-                                                                AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
-                                                                
-                                     LEFT JOIN MovementItem AS MIPromo ON MIPromo.ID = MIFloat_MovementItemId.ValueData::Integer
-
-                                 WHERE MovementItem.MovementId = inMovementId
-                                   AND MovementItem.DescId = zc_MI_Master()
-                                   AND (MovementItem.isErased = False OR inIsErased = True)
-                                 )
 
 
-               SELECT MI_Master.Id                                      AS Id
-                    , MI_Master.GoodsId                                 AS GoodsId
-                    , Object_Goods.ObjectCode                           AS GoodsCode
-                    , Object_Goods.ValueData                            AS GoodsName
-                    , Object_Juridical.Id                               AS JuridicalId
-                    , Object_Juridical.ObjectCode                       AS JuridicalCode
-                    , Object_Juridical.ValueData                        AS JuridicalName
-                    , MI_Master.Amount                                  AS Amount
-                    , MI_Master.MIPromoId                               AS MIPromoId
-                    , MI_Master.MovementPromoId                         AS MovementPromoId
-                    , COALESCE(MI_Master.IsErased, False)               AS isErased
-               FROM MI_Master
+     -- проверка прав пользователя на вызов процедуры
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PromoBonus());
+     vbUserId:= lpGetUserBySession (inSession);
 
-                   LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MI_Master.GoodsId
-                   LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MI_Master.JuridicalId
+     RETURN QUERY
+     WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
+                  UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
+                  UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
+                       )
+ 
+       SELECT
+             Movement.Id                          AS Id
+           , Movement.InvNumber                   AS InvNumber
+           , Movement.OperDate                    AS OperDate
+           , Object_Status.ObjectCode             AS StatusCode
+           , Object_Status.ValueData              AS StatusName
+           , MovementFloat_TotalCount.ValueData   AS TotalCount
 
+           , COALESCE (MovementString_Comment.ValueData,'')     :: TVarChar AS Comment
 
-                   ;
+           , Object_Insert.ValueData              AS InsertName
+           , MovementDate_Insert.ValueData        AS InsertDate
+           , Object_Update.ValueData              AS UpdateName
+           , MovementDate_Update.ValueData        AS UpdateDate
+
+       FROM (SELECT Movement.id
+             FROM tmpStatus
+                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_PromoBonus() AND Movement.StatusId = tmpStatus.StatusId
+            ) AS tmpMovement
+
+            LEFT JOIN Movement ON Movement.id = tmpMovement.id
+
+            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCount
+                                    ON MovementFloat_TotalCount.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+ 
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementDate AS MovementDate_Insert
+                                   ON MovementDate_Insert.MovementId = Movement.Id
+                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+            LEFT JOIN MovementLinkObject AS MLO_Insert
+                                         ON MLO_Insert.MovementId = Movement.Id
+                                        AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
+
+            LEFT JOIN MovementDate AS MovementDate_Update
+                                   ON MovementDate_Update.MovementId = Movement.Id
+                                  AND MovementDate_Update.DescId = zc_MovementDate_Update()
+            LEFT JOIN MovementLinkObject AS MLO_Update
+                                         ON MLO_Update.MovementId = Movement.Id
+                                        AND MLO_Update.DescId = zc_MovementLinkObject_Update()
+            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId 
+
+       ;
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -77,4 +93,4 @@ $BODY$
  17.02.21                                                      *
 */
 -- 
-select * from gpSelect_MovementItem_PromoBonus(inMovementId := 0 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_Movement_PromoBonus(inStartDate:= '01.01.2021', inEndDate:= '01.03.2021', inIsErased := FALSE, inSession:= '3');

@@ -53,24 +53,24 @@ BEGIN
    ELSE
        RETURN QUERY 
        SELECT 
-               Object.Id                           AS Id 
-             , Object.ObjectCode                   AS Code
-             , Object.ValueData                    AS Name
+               Object_ImportType.Id                AS Id 
+             , Object_ImportType.ObjectCode        AS Code
+             , Object_ImportType.ValueData         AS Name
 
              , Object_InstructionsKind.Id          AS InstructionsKindId
              , Object_InstructionsKind.ObjectCode  AS InstructionsKindCode
              , Object_InstructionsKind.ValueData   AS InstructionsKindName
 
              , ObjectString_FileName.ValueData     AS FileName
-             , Object.isErased                     AS isErased
+             , Object_ImportType.isErased          AS isErased
        FROM Object AS Object_ImportType
 
             LEFT JOIN ObjectString AS ObjectString_FileName
-                                   ON ObjectString_FileName.ObjectId = Object.Id
+                                   ON ObjectString_FileName.ObjectId = Object_ImportType.Id
                                   AND ObjectString_FileName.DescId = zc_ObjectString_Instructions_FileName()
 
             LEFT JOIN ObjectLink AS ObjectLink_InstructionsKind
-                                 ON ObjectLink_InstructionsKind.ObjectId = Object.Id
+                                 ON ObjectLink_InstructionsKind.ObjectId = Object_ImportType.Id
                                 AND ObjectLink_InstructionsKind.DescId = zc_ObjectLink_Instructions_InstructionsKind()
             LEFT JOIN Object AS Object_InstructionsKind ON Object_InstructionsKind.Id = ObjectLink_InstructionsKind.ChildObjectId
                                   

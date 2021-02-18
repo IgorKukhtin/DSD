@@ -1893,10 +1893,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_SerialNumberMypharmacy() RETURNS 
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_SerialNumberMypharmacy', 'Серийный номер на сайте моя аптека' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_SerialNumberMypharmacy');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_UpperLimitPromoBonus() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_UpperLimitPromoBonus'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_UpperLimitPromoBonus', 'Верхний предел сравнения (маркет бонусы)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_UpperLimitPromoBonus');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_LowerLimitPromoBonus() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_LowerLimitPromoBonus'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_LowerLimitPromoBonus', 'Нижний предел сравнения (маркет бонусы)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_LowerLimitPromoBonus');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 18.02.21                                                                                      * zc_ObjectFloat_CashSettings_UpperLimitPromoBonus, zc_ObjectFloat_CashSettings_LowerLimitPromoBonus
  09.02.21                                                                                      * zc_ObjectFloat_Unit_SerialNumberMypharmacy
  05.02.21                                                                                      * zc_ObjectFloat_CashSettings_DayNonCommoditySUN
  09.12.20                                                                                      * zc_ObjectFloat_Unit_ShareFromPrice

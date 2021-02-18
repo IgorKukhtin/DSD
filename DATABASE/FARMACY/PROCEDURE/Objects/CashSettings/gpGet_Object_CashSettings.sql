@@ -17,6 +17,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isBlockVIP Boolean
              , isPairedOnlyPromo Boolean
              , AttemptsSub Integer
+             , UpperLimitPromoBonus TFloat
+             , LowerLimitPromoBonus TFloat
              ) AS
 $BODY$
 BEGIN
@@ -39,6 +41,8 @@ BEGIN
         , COALESCE(ObjectBoolean_CashSettings_BlockVIP.ValueData, FALSE)           AS isBlockVIP
         , COALESCE(ObjectBoolean_CashSettings_PairedOnlyPromo.ValueData, FALSE)    AS isPairedOnlyPromo
         , ObjectFloat_CashSettings_AttemptsSub.ValueData::Integer                  AS AttemptsSub
+        , ObjectFloat_CashSettings_UpperLimitPromoBonus.ValueData                  AS UpperLimitPromoBonus
+        , ObjectFloat_CashSettings_LowerLimitPromoBonus.ValueData                  AS LowerLimitPromoBonus
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id 
@@ -67,6 +71,12 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AttemptsSub
                               ON ObjectFloat_CashSettings_AttemptsSub.ObjectId = Object_CashSettings.Id 
                              AND ObjectFloat_CashSettings_AttemptsSub.DescId = zc_ObjectFloat_CashSettings_AttemptsSub()
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_UpperLimitPromoBonus
+                              ON ObjectFloat_CashSettings_UpperLimitPromoBonus.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_UpperLimitPromoBonus.DescId = zc_ObjectFloat_CashSettings_UpperLimitPromoBonus()
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_LowerLimitPromoBonus
+                              ON ObjectFloat_CashSettings_LowerLimitPromoBonus.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_LowerLimitPromoBonus.DescId = zc_ObjectFloat_CashSettings_LowerLimitPromoBonus()
         LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_BlockVIP
                                 ON ObjectBoolean_CashSettings_BlockVIP.ObjectId = Object_CashSettings.Id 
                                AND ObjectBoolean_CashSettings_BlockVIP.DescId = zc_ObjectBoolean_CashSettings_BlockVIP()

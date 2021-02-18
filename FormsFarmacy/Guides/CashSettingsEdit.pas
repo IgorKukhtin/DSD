@@ -45,6 +45,10 @@ type
     cxLabel6: TcxLabel;
     edDayNonCommoditySUN: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
+    edLowerLimitPromoBonus: TcxCurrencyEdit;
+    edUpperLimitPromoBonus: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
+    cxLabel9: TcxLabel;
   private
     { Private declarations }
   public
