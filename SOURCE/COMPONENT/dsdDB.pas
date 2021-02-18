@@ -675,7 +675,7 @@ begin
   Data := Value;
   if VarisNull(Data) then
     case DataType of
-      ftDate, ftTime, ftDateTime: Data := '01-01-1900'
+      ftDate, ftTime, ftDateTime: Data := StringReplace('01-01-1900', '-', FormatSettings.DateSeparator, [rfReplaceAll])
       else  Data := '';
     end;
   if varType(Data) in [varSingle, varDouble, varCurrency] then

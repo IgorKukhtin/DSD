@@ -125,6 +125,7 @@ type
     procedure LoadProfitLossDirectionFormTest;
     procedure LoadPromoFormTest;
     procedure LoadPromoCodeFormTest;
+    procedure LoadPromoBonusFormTest;
     procedure LoadPromoUnitFormTest;
     procedure LoadProvinceCityFormTest;
     procedure LoadReasonDifferencesFormTest;
@@ -2087,6 +2088,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPromoCodeSignPercentDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoCodeSignUnitNameDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoCodeSignUnitNameDialogForm');
+end;
+
+procedure TLoadFormTest.LoadPromoBonusFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoBonusJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoBonusJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoBonusForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoBonusForm');
 end;
 
 procedure TLoadFormTest.LoadPromoUnitFormTest;

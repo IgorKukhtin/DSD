@@ -132,7 +132,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Height = 470
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheet1
+    Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 470
     ClientRectRight = 990
@@ -263,6 +263,26 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 78
+          end
+          object EndDate: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086
+            DataBinding.FieldName = 'EndDate'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086
+            Options.Editing = False
+            Width = 60
+          end
+          object EndDate_real: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'EndDate_real'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086' ('#1080#1085#1092'.)'
+            Options.Editing = False
+            Width = 60
           end
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'. '#1083#1080#1094#1086
@@ -905,6 +925,22 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertRecord_JurOrdFin'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedJurOrdFin'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedJurOrdFin'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdate_AmountByReport'
         end
         item
@@ -1046,7 +1082,20 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 0
     end
     object bbExport: TdxBarButton
-      Action = actExport
+      Action = actExport_New
+      Category = 0
+    end
+    object bbSetErasedJurOrdFin: TdxBarButton
+      Action = actSetErasedJurOrdFin
+      Category = 0
+    end
+    object bbSetUnErasedJurOrdFin: TdxBarButton
+      Action = actSetUnErasedJurOrdFin
+      Category = 0
+    end
+    object bbInsertRecord_JurOrdFin: TdxBarButton
+      Action = InsertRecord_JurOrdFin
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1101#1083#1077#1084#1077#1085#1090' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Category = 0
     end
   end
@@ -1087,6 +1136,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet1
       MoveParams = <>
+      Enabled = False
       StoredProc = spSelectJuridicalOrderFinance
       StoredProcList = <
         item
@@ -1107,7 +1157,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -1135,6 +1184,22 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end>
       Caption = 'actUpdateJuridicalDS'
       DataSource = JuridicalDS
+    end
+    object actExport_New: TMultiAction
+      Category = 'Export_file'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Export_FileName
+        end
+        item
+          Action = actExport_file
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1075#1088#1091#1079#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
+      InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1091#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085
+      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083
+      Hint = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083
+      ImageIndex = 53
     end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -1231,7 +1296,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -1242,7 +1306,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spErasedMIMaster
       StoredProcList = <
         item
@@ -1262,7 +1325,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spUnErasedMIMaster
       StoredProcList = <
         item
@@ -1460,6 +1522,60 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end>
       isShowModal = False
     end
+    object actContractChoiceForm_JurOrdFin: TOpenChoiceForm
+      Category = 'JuridicalOrderFinance'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'ContractChoiceForm'
+      FormName = 'TContractChoiceForm'
+      FormNameParam.Value = 'TContractChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = JuridicalCDS
+          ComponentItem = 'JuridicalId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = JuridicalCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = JuridicalCDS
+          ComponentItem = 'InfoMoneyId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyCode'
+          Value = Null
+          Component = JuridicalCDS
+          ComponentItem = 'InfoMoneyCode'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = JuridicalCDS
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actBankAccountChoiceFormJur: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1588,6 +1704,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet1
       MoveParams = <>
+      Enabled = False
       StoredProc = spSelectJuridicalOrderFinance
       StoredProcList = <
         item
@@ -1608,7 +1725,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -1729,6 +1845,59 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Hint = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083
       ImageIndex = 53
     end
+    object actExport_file: TdsdStoredProcExportToFile
+      Category = 'Export_file'
+      MoveParams = <>
+      dsdStoredProcName = spSelect_Export
+      FileExt = '.xml'
+      Left = 1208
+      Top = 168
+    end
+    object actSetErasedJurOrdFin: TdsdUpdateErased
+      Category = 'JuridicalOrderFinance'
+      TabSheet = cxTabSheet1
+      MoveParams = <>
+      Enabled = False
+      StoredProc = spErasedUnErased_JurOrdFin
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased_JurOrdFin
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ErasedFieldName = 'isErased'
+      DataSource = JuridicalDS
+    end
+    object actSetUnErasedJurOrdFin: TdsdUpdateErased
+      Category = 'JuridicalOrderFinance'
+      TabSheet = cxTabSheet1
+      MoveParams = <>
+      Enabled = False
+      StoredProc = spErasedUnErased_JurOrdFin
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased_JurOrdFin
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = JuridicalDS
+    end
+    object InsertRecord_JurOrdFin: TInsertRecord
+      Category = 'JuridicalOrderFinance'
+      TabSheet = cxTabSheet1
+      MoveParams = <>
+      Enabled = False
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView1
+      Action = actContractChoiceForm_JurOrdFin
+      Params = <>
+      Caption = 'InsertRecord_JurOrdFin'
+      ImageIndex = 0
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -1842,7 +2011,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 347
-    Top = 337
+    Top = 385
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 326
@@ -2041,8 +2210,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     KeyField = 'Id'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
-    Left = 422
-    Top = 306
+    Left = 430
+    Top = 418
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
@@ -2051,6 +2220,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     IdParam.MultiSelectSeparator = ','
     GuidesList = <
       item
+        Guides = GuidesBankAccount
       end
       item
       end>
@@ -2058,8 +2228,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       item
         Action = actInsertUpdateMovement
       end>
-    Left = 144
-    Top = 224
+    Left = 160
+    Top = 160
   end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'
@@ -2390,7 +2560,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
   end
   object dsdDBViewAddOnJuridical: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridDBTableView
+    View = cxGridDBTableView1
     OnDblClickActionList = <
       item
       end>
@@ -2645,5 +2815,26 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Params = <>
     Left = 40
     Top = 464
+  end
+  object spErasedUnErased_JurOrdFin: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSet = JuridicalCDS
+    DataSets = <
+      item
+        DataSet = JuridicalCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = JuridicalCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 688
+    Top = 424
   end
 end

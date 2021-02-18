@@ -999,7 +999,9 @@ uses
   Report_Movement_Send_RemainsSun_SUA in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun_SUA.pas' {Report_Movement_Send_RemainsSun_SUAForm: TParentForm},
   InstructionsKind in '..\..\FormsFarmacy\Kind\InstructionsKind.pas' {InstructionsKindForm: TParentForm},
   Instructions in '..\..\FormsFarmacy\Guides\Instructions.pas' {InstructionsForm: TParentForm},
-  InstructionsEdit in '..\..\FormsFarmacy\Guides\InstructionsEdit.pas' {InstructionsEditForm: TParentForm};
+  InstructionsEdit in '..\..\FormsFarmacy\Guides\InstructionsEdit.pas' {InstructionsEditForm: TParentForm},
+  PromoBonus in '..\..\FormsFarmacy\Document\PromoBonus.pas' {PromoBonusForm: TParentForm},
+  PromoBonusJournal in '..\..\FormsFarmacy\Document\PromoBonusJournal.pas' {PromoBonusJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

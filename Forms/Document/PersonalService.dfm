@@ -1766,9 +1766,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -2847,6 +2844,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object actExportZP: TMultiAction
       Category = 'Export'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       ActionList = <
         item
           Action = actGet_Export_FileNameZp

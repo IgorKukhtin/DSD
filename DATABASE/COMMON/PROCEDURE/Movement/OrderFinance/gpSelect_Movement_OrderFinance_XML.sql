@@ -96,7 +96,7 @@ BEGIN
             INNER JOIN ObjectLink AS ObjectLink_Contract_PaidKind
                                   ON ObjectLink_Contract_PaidKind.ObjectId = Object_Contract.Id
                                  AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
-                                 AND ObjectLink_Contract_PaidKind.ChildObjectId = tmpMovement.PaidKindId
+                                 --AND ObjectLink_Contract_PaidKind.ChildObjectId = tmpMovement.PaidKindId
 
             LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
                                  ON ObjectLink_Contract_InfoMoney.ObjectId = Object_Contract.Id
@@ -116,7 +116,8 @@ BEGIN
      INSERT INTO _Result(RowData)
     SELECT '<ROW '
          || 'AMOUNT ="'||tmp.AMOUNT||'" '                                               --Сумма платежа в копейках                         
-         || 'CORRSNAME="'||COALESCE (tmp.CORRSNAME,'')::TVarChar||'" '                  -- Наименование получателя платежа                 
+         --|| 'CORRSNAME="'||COALESCE (tmp.CORRSNAME,'')::TVarChar||'" '                  -- Наименование получателя платежа                 
+         || 'CORRSNAME="'|| replace (substring (COALESCE (tmp.CORRSNAME,''), 1, 36), '"', '&quot;') :: TVarChar||'" ' -- Наименование получателя платежа обрезаем , если больше 36 символов
          || 'DETAILSOFPAYMENT="'||COALESCE (tmp.DETAILSOFPAYMENT,'')::TVarChar||'" '    --Назначение платежа                               
          || 'CORRACCOUNTNO="'||COALESCE (tmp.CORRIBAN,'')::TVarChar||'" '               --№ счета получателя платежа                       
          || 'CORRIBAN="'||COALESCE (tmp.CORRIBAN,'')::TVarChar||'" '                    --IBAN получателя платежа                          
@@ -125,7 +126,8 @@ BEGIN
          || 'CORRBANKID="'||COALESCE (tmp.CORRBANKID,'')::TVarChar||'" '                --Код банка получателя платежа (МФО)               
          || 'CORRIDENTIFYCODE="'||COALESCE (tmp.CORRIDENTIFYCODE,'')::TVarChar||'" '    --Идентификационный код получателя платежа (ЕГРПОУ)
          || 'CORRCOUNTRYID="'||COALESCE (tmp.CORRCOUNTRYID,'')::TVarChar||'" '          --Код страны корреспондента                        
-         || 'DOCUMENTNO="'||COALESCE (tmp.DOCUMENTNO,'')::TVarChar||'" '                --№ документа                                      
+         --|| 'DOCUMENTNO="'||COALESCE (tmp.DOCUMENTNO,'')::TVarChar||'" '                --№ документа                                      
+         || 'DOCUMENTNO="'||CAST (NEXTVAL ('movement_bankaccount_plat_seq') AS TVarChar)||'" '
          || 'VALUEDATE="'||COALESCE (tmp.VALUEDATE::TVarChar,'')::TVarChar||'" '        --Дата валютирования                               
          || 'PRIORITY="'||tmp.PRIORITY||'" '                                            --Приоритет                                        
          || 'DOCUMENTDATE="'||tmp.DOCUMENTDATE||'" '                                    --Дата документа                                   

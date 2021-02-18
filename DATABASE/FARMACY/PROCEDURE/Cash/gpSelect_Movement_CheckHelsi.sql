@@ -20,7 +20,7 @@ RETURNS TABLE (Ord Integer
              , Summ TFloat
              , PriceSale TFloat
              , SummSale TFloat
-             , CountSP TFloat, IdSP TVarChar, DosageIdSP TVarChar, PriceRetSP TFloat, PaymentSP TFloat
+             , CountSP TFloat, IdSP TVarChar, ProgramIdSP TVarChar, DosageIdSP TVarChar, PriceRetSP TFloat, PaymentSP TFloat
              , State TVarChar
              , Color_calc Integer
               )
@@ -52,6 +52,7 @@ WITH -- Товары соц-проект
                                , MIFloat_PaymentSP.ValueData   AS PaymentSP
                                , MIFloat_CountSP.ValueData     AS CountSP
                                , MIString_IdSP.ValueData       AS IdSP
+                               , COALESCE (MIString_ProgramIdSP.ValueData, '')::TVarChar AS ProgramIdSP
                                , MIString_DosageIdSP.ValueData AS DosageIdSP
                                                                 -- № п/п - на всякий случай
                                , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
@@ -93,6 +94,9 @@ WITH -- Товары соц-проект
                                LEFT JOIN MovementItemString AS MIString_IdSP
                                                             ON MIString_IdSP.MovementItemId = MovementItem.Id
                                                            AND MIString_IdSP.DescId = zc_MIString_IdSP()
+                               LEFT JOIN MovementItemString AS MIString_ProgramIdSP
+                                                            ON MIString_ProgramIdSP.MovementItemId = MovementItem.Id
+                                                           AND MIString_ProgramIdSP.DescId = zc_MIString_ProgramIdSP()
                                -- DosageID лікарського засобу
                                LEFT JOIN MovementItemString AS MIString_DosageIdSP
                                                             ON MIString_DosageIdSP.MovementItemId = MovementItem.Id
@@ -131,6 +135,7 @@ WITH -- Товары соц-проект
 
            , tmpGoodsSP.CountSP                                     AS CountSP
            , tmpGoodsSP.IdSP                                        AS IdSP
+           , tmpGoodsSP.ProgramIdSP                                 AS ProgramIdSP
            , tmpGoodsSP.DosageIdSP                                  AS DosageIdSP
            , tmpGoodsSP.PriceRetSP                                  AS PriceRetSP
            , tmpGoodsSP.PaymentSP                                   AS PaymentSP

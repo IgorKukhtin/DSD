@@ -1,9 +1,9 @@
--- Function: lpInsertUpdate_Movement_FinalSUA()
+-- Function: lpInsertUpdate_Movement_PromoBonus()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_FinalSUA (Integer, TVarChar, TDateTime, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PromoBonus (Integer, TVarChar, TDateTime, TVarChar, Integer);
 
 
-CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_FinalSUA(
+CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PromoBonus(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
@@ -26,7 +26,7 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_FinalSUA(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_PromoBonus(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
 
      -- сохранили <Примечание>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
@@ -49,7 +49,7 @@ BEGIN
      END IF;
 
      -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_FinalSUA_TotalSumm (ioId);
+     PERFORM lpInsertUpdate_PromoBonus_TotalSumm (ioId);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
@@ -61,8 +61,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 11.02.21                                                       *
+ 17.02.21                                                       *
  */
 
 -- тест
--- SELECT * FROM lpInsertUpdate_Movement_FinalSUA (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')
+-- SELECT * FROM lpInsertUpdate_Movement_PromoBonus (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')

@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer
              , Multiplicity TFloat
              , DoesNotShare Boolean
              , IdSP TVarChar
+             , ProgramIdSP TVarChar
              , CountSP TFloat
              , PriceRetSP TFloat
              , PaymentSP TFloat
@@ -293,6 +294,7 @@ BEGIN
            , Null::TFloat                                                        AS Multiplicity
            , COALESCE (Object_Goods_Main.isDoesNotShare, FALSE)                  AS DoesNotShare
            , Null::TVArChar                                                      AS IdSP
+           , Null::TVArChar                                                      AS ProgramIdSP
            , Null::TFloat                                                        AS CountSP
            , Null::TFloat                                                        AS PriceRetSP
            , Null::TFloat                                                        AS PaymentSP
@@ -368,4 +370,3 @@ ALTER FUNCTION gpSelect_MovementItem_CheckLoadCash (Integer, TVarChar) OWNER TO 
 -- select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 18769698 ,  inSession := '3');
 --
  select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 18805062    ,  inSession := '3');
-

@@ -859,7 +859,10 @@ BEGIN
            , COALESCE (tmpMovement.CountDiff_M,0)  :: TFloat AS CountDiff_M
            , COALESCE (tmpMovement.WeightDiff_B,0) :: TFloat AS WeightDiff_B
            , COALESCE (tmpMovement.WeightDiff_M,0) :: TFloat AS WeightDiff_M
-           , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMovement.TotalCountDiff_M ELSE tmpMovement.TotalWeightDiff_M END :: TFloat AS Diff_M
+           
+           , tmpMovement.TotalWeightDiff_M :: TFloat AS Diff_M
+          -- , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMovement.TotalCountDiff_M ELSE tmpMovement.TotalWeightDiff_M END :: TFloat AS Diff_M
+
           /* , CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
                   THEN COALESCE (tmpMovement.CountDiff_M,0) - COALESCE (tmpMovement.CountDiff_B,0)
                   ELSE COALESCE (tmpMovement.WeightDiff_M,0) - COALESCE (tmpMovement.WeightDiff_B,0)

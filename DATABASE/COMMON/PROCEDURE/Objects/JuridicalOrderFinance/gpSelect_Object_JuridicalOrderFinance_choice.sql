@@ -110,7 +110,7 @@ BEGIN
              , Object_Retail.Id                 AS RetailId
              , Object_Retail.ValueData          AS RetailName
 
-             , Main_BankAccount_View.BankName   AS BankAccountName_main
+             , Main_BankAccount_View.BankName   AS BankName_main
              , Main_BankAccount_View.MFO        AS MFO_main
              , Main_BankAccount_View.Id         AS BankAccountId_main
              , Main_BankAccount_View.Name       AS BankAccountName_main
@@ -192,7 +192,7 @@ BEGIN
              , Object_Retail.Id                 AS RetailId
              , Object_Retail.ValueData          AS RetailName
 
-             , Main_BankAccount_View.BankName   AS BankAccountName_main
+             , Main_BankAccount_View.BankName   AS BankName_main
              , Main_BankAccount_View.MFO        AS MFO_main
              , Main_BankAccount_View.Id         AS BankAccountId_main
              , Main_BankAccount_View.Name       AS BankAccountName_main

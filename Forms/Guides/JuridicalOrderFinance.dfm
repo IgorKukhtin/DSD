@@ -219,6 +219,7 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     inherited actRefresh: TdsdDataSetRefresh
@@ -241,13 +242,13 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
         end
         item
           Name = 'Price'
-          Value = '0'
+          Value = 0.000000000000000000
           DataType = ftFloat
           MultiSelectSeparator = ','
         end
         item
           Name = 'Value'
-          Value = '0'
+          Value = 0.000000000000000000
           DataType = ftFloat
           MultiSelectSeparator = ','
         end
@@ -437,7 +438,7 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
       GuiParams = <
         item
           Name = 'inStartDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'inStartDate'
           DataType = ftDateTime
@@ -446,7 +447,7 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
         end
         item
           Name = 'inEndDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'inEndDate'
           DataType = ftDateTime
@@ -487,8 +488,8 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 80
-    Top = 176
+    Left = 24
+    Top = 208
   end
   inherited MasterCDS: TClientDataSet
     FilterOptions = []
@@ -667,7 +668,7 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
       end
       item
         Name = 'inValue'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'Value'
         DataType = ftFloat
@@ -770,7 +771,8 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 280
+    Left = 360
+    Top = 65528
   end
   object spInsert_byMovBankAccount: TdsdStoredProc
     StoredProcName = 'gpInsert_Object_JuridicalOrderFinance_byBankAccount'
@@ -779,7 +781,7 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inStartDate'
         DataType = ftDateTime
@@ -788,7 +790,7 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inEndDate'
         DataType = ftDateTime
@@ -814,7 +816,7 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
     Params = <
       item
         Name = 'StartDate'
-        Value = ''
+        Value = Null
         Component = FormParams
         ComponentItem = 'inStartDate'
         DataType = ftDateTime
@@ -822,7 +824,7 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
       end
       item
         Name = 'EndDate'
-        Value = ''
+        Value = Null
         Component = FormParams
         ComponentItem = 'inEndDate'
         DataType = ftDateTime

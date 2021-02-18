@@ -160,6 +160,16 @@ type
     actExport: TMultiAction;
     bbExport: TdxBarButton;
     actBankAccountChoiceFormJurMain: TOpenChoiceForm;
+    actExport_file: TdsdStoredProcExportToFile;
+    actExport_New: TMultiAction;
+    spErasedUnErased_JurOrdFin: TdsdStoredProc;
+    actSetErasedJurOrdFin: TdsdUpdateErased;
+    actSetUnErasedJurOrdFin: TdsdUpdateErased;
+    bbSetErasedJurOrdFin: TdxBarButton;
+    bbSetUnErasedJurOrdFin: TdxBarButton;
+    InsertRecord_JurOrdFin: TInsertRecord;
+    actContractChoiceForm_JurOrdFin: TOpenChoiceForm;
+    bbInsertRecord_JurOrdFin: TdxBarButton;
   private
   public
   end;

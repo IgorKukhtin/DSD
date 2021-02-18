@@ -99,6 +99,11 @@ type
     bbProtocolReportBonusForm: TdxBarButton;
     cxLabel7: TcxLabel;
     edOperDate: TcxDateEdit;
+    macInsertUpdate_ByGrid: TMultiAction;
+    spInsertUpdate_ByGrid: TdsdStoredProc;
+    actInsertUpdate_ByGrid: TdsdExecStoredProc;
+    macInsertUpdate_ByGrid_list: TMultiAction;
+    bbInsertUpdate_ByGrid: TdxBarButton;
   private
     { Private declarations }
   public

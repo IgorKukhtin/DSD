@@ -485,6 +485,8 @@ inherited CheckHelsiSignForm: TCheckHelsiSignForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 600
     Top = 320
   end
