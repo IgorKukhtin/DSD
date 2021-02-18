@@ -12,7 +12,8 @@ RETURNS TABLE (Id Integer
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , OKPO TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
-             , PaidKindName TVarChar, InfoMoneyName TVarChar, StartDate TDateTime
+             , PaidKindName TVarChar, InfoMoneyName TVarChar
+             , StartDate TDateTime, EndDate_real TDateTime, EndDate TVarChar
              , Amount TFloat, AmountRemains TFloat, AmountPartner TFloat, AmountPlan TFloat
              , BankName TVarChar, MFO TVarChar, BankAccountId Integer, BankAccountName TVarChar
              , Comment TVarChar
@@ -186,8 +187,13 @@ BEGIN
            , Object_Contract.ValueData        AS ContractName
            , Object_PaidKind.ValueData        AS PaidKindName
            , Object_InfoMoney.ValueData       AS InfoMoneyName
-           , ObjectDate_Start.ValueData       AS StartDate
-           
+           --, ObjectDate_Start.ValueData       AS StartDate
+           , View_Contract.StartDate
+           , View_Contract.EndDate_real
+           , (''|| CASE WHEN View_Contract.ContractTermKindId = zc_Enum_ContractTermKind_Long() THEN '* ' ELSE '' END
+                || (LPAD (EXTRACT (Day FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||LPAD (EXTRACT (Month FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||EXTRACT (YEAR FROM View_Contract.EndDate_term) :: TVarChar)
+             ) ::TVarChar AS EndDate
+                             
            , tmpMI.Amount
            , tmpMI.AmountRemains
            , tmpMI.AmountPartner
@@ -225,7 +231,7 @@ BEGIN
 
             LEFT JOIN Object_BankAccount_View AS Partner_BankAccount_View ON Partner_BankAccount_View.Id = COALESCE (tmpMI.BankAccountId, tmpData.BankAccountId)
 
-            LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
+           /* LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
                                  ON ObjectLink_Contract_PaidKind.ObjectId = tmpData.ContractId
                                 AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = ObjectLink_Contract_PaidKind.ChildObjectId
@@ -234,6 +240,9 @@ BEGIN
                                  ON ObjectDate_Start.ObjectId = tmpData.ContractId
                                 AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
                                 AND Object_Contract.ValueData <> '-'
+           */
+            LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = tmpData.ContractId
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = View_Contract.PaidKindId
             
             ;
        ELSE
@@ -252,8 +261,14 @@ BEGIN
            , Object_Contract.ValueData        AS ContractName
            , Object_PaidKind.ValueData        AS PaidKindName
            , Object_InfoMoney.ValueData       AS InfoMoneyName
-           , ObjectDate_Start.ValueData       AS StartDate
-           
+           --, ObjectDate_Start.ValueData       AS StartDate
+           , View_Contract.StartDate
+           , View_Contract.EndDate_real
+           , (''|| CASE WHEN View_Contract.ContractTermKindId = zc_Enum_ContractTermKind_Long() THEN '* ' ELSE '' END
+                || (LPAD (EXTRACT (Day FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||LPAD (EXTRACT (Month FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||EXTRACT (YEAR FROM View_Contract.EndDate_term) :: TVarChar)
+             ) ::TVarChar AS EndDate
+
+
            , MovementItem.Amount              AS Amount
            , MIFloat_AmountRemains.ValueData  AS AmountRemains
            , MIFloat_AmountPartner.ValueData  AS AmountPartner
@@ -330,7 +345,7 @@ BEGIN
             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Contract_InfoMoney.ChildObjectId
 
 
-            LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
+            /*LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
                                  ON ObjectLink_Contract_PaidKind.ObjectId = Object_Contract.Id
                                 AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = ObjectLink_Contract_PaidKind.ChildObjectId
@@ -339,6 +354,9 @@ BEGIN
                                  ON ObjectDate_Start.ObjectId = Object_Contract.Id
                                 AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
                                 AND Object_Contract.ValueData <> '-'
+             */
+            LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = Object_Contract.Id
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = View_Contract.PaidKindId
             ;
      END IF;
 END;

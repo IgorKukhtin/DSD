@@ -132,7 +132,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Height = 470
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheet1
+    Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 470
     ClientRectRight = 990
@@ -263,6 +263,26 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 78
+          end
+          object EndDate: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086
+            DataBinding.FieldName = 'EndDate'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086
+            Options.Editing = False
+            Width = 60
+          end
+          object EndDate_real: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'EndDate_real'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086' ('#1080#1085#1092'.)'
+            Options.Editing = False
+            Width = 60
           end
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'. '#1083#1080#1094#1086
@@ -454,6 +474,9 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -1046,7 +1069,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 0
     end
     object bbExport: TdxBarButton
-      Action = actExport
+      Action = actExport_New
       Category = 0
     end
   end
@@ -1087,6 +1110,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet1
       MoveParams = <>
+      Enabled = False
       StoredProc = spSelectJuridicalOrderFinance
       StoredProcList = <
         item
@@ -1107,7 +1131,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -1135,6 +1158,22 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end>
       Caption = 'actUpdateJuridicalDS'
       DataSource = JuridicalDS
+    end
+    object actExport_New: TMultiAction
+      Category = 'Export_file'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Export_FileName
+        end
+        item
+          Action = actExport_file
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1075#1088#1091#1079#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
+      InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1091#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085
+      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083
+      Hint = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083
+      ImageIndex = 53
     end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -1231,7 +1270,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -1242,7 +1280,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spErasedMIMaster
       StoredProcList = <
         item
@@ -1262,7 +1299,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spUnErasedMIMaster
       StoredProcList = <
         item
@@ -1588,6 +1624,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet1
       MoveParams = <>
+      Enabled = False
       StoredProc = spSelectJuridicalOrderFinance
       StoredProcList = <
         item
@@ -1608,7 +1645,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -1728,6 +1764,14 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083
       Hint = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083
       ImageIndex = 53
+    end
+    object actExport_file: TdsdStoredProcExportToFile
+      Category = 'Export_file'
+      MoveParams = <>
+      dsdStoredProcName = spSelect_Export
+      FileExt = '.xml'
+      Left = 1208
+      Top = 168
     end
   end
   object MasterDS: TDataSource
@@ -2051,6 +2095,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     IdParam.MultiSelectSeparator = ','
     GuidesList = <
       item
+        Guides = GuidesBankAccount
       end
       item
       end>
@@ -2058,8 +2103,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       item
         Action = actInsertUpdateMovement
       end>
-    Left = 144
-    Top = 224
+    Left = 160
+    Top = 160
   end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'

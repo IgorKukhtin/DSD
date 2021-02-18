@@ -160,6 +160,8 @@ type
     actExport: TMultiAction;
     bbExport: TdxBarButton;
     actBankAccountChoiceFormJurMain: TOpenChoiceForm;
+    actExport_file: TdsdStoredProcExportToFile;
+    actExport_New: TMultiAction;
   private
   public
   end;
