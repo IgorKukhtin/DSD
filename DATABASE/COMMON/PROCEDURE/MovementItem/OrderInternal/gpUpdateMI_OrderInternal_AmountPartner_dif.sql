@@ -105,7 +105,7 @@ BEGIN
                                                    END)  <> 0
                                        )
 
-                        -- выбираем продажи по заказам
+                          -- выбираем продажи по заказам
                         , tmpMISale AS (SELECT tmp.MovementId             AS MovementId_order -- заявка
                                              , MovementItem.Id
                                              , MovementItem.ObjectId      AS GoodsId

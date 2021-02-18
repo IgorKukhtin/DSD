@@ -1,6 +1,6 @@
 -- Function: lpGet_Movement_EDI (Integer, Integer)
 
- DROP FUNCTION IF EXISTS lpGet_Movement_EDI (Integer, Integer);
+DROP FUNCTION IF EXISTS lpGet_Movement_EDI (Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpGet_Movement_EDI(
     IN inMovementId      Integer  , -- ключ Документа

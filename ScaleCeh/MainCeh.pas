@@ -3443,7 +3443,7 @@ begin
                         , CDS.FieldByName('MovementItemId').AsInteger
                         , TRUE)
      else
-     if ParamsMovement.ParamByName('isSticker_Ceh').asBoolean = FALSE
+     if (1=0) and (ParamsMovement.ParamByName('isSticker_Ceh').asBoolean = FALSE)
      then ShowMessage ('Для данной операции не предусмотрена печать Стикера')
      else
          // Сразу печатаем Этикетку - для сырья
@@ -3453,7 +3453,7 @@ begin
            then Print_Sticker_Ceh (ParamsMovement.ParamByName('MovementDescId').AsInteger
                                  , ParamsMovement.ParamByName('MovementId').AsInteger
                                  , CDS.FieldByName('MovementItemId').AsInteger
-                                 , FALSE);
+                                 , TRUE);
 end;
 {------------------------------------------------------------------------}
 procedure TMainCehForm.bbSale_Order_allClick(Sender: TObject);

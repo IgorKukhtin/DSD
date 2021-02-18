@@ -12,6 +12,7 @@ BEGIN
 
       IF vbAmount > 0.0
       THEN
+           -- Первый период
            FOR vbRec IN 
                SELECT OperDate
                     , SUM (Amount)::TFloat AS Amount
@@ -19,7 +20,7 @@ BEGIN
                WHERE ContainerId = inContainerId
                  AND (MovementDescId = zc_Movement_Sale()
                   OR (MovementDescId = zc_Movement_TransferDebtOut() AND isActive))
-                 AND OperDate <= inDate
+                 AND OperDate BETWEEN inDate - INTERVAL '30 DAY' AND inDate
                GROUP BY OperDate
                ORDER BY OperDate DESC
            LOOP
@@ -32,6 +33,66 @@ BEGIN
                      RETURN vbOverDayCount;
                 END IF;  
            END LOOP;
+           
+           -- Второй период
+           IF vbAmount > 0.0
+           THEN
+               FOR vbRec IN 
+                   SELECT OperDate
+                        , SUM (Amount)::TFloat AS Amount
+                   FROM MovementItemContainer
+                   WHERE ContainerId = inContainerId
+                     AND (MovementDescId = zc_Movement_Sale()
+                      OR (MovementDescId = zc_Movement_TransferDebtOut() AND isActive))
+                     AND OperDate BETWEEN inDate - INTERVAL '80 DAY' AND inDate - INTERVAL '31 DAY'
+                   GROUP BY OperDate
+                   ORDER BY OperDate DESC
+               LOOP
+                    vbAmount:= vbAmount - vbRec.Amount;
+    
+                    IF vbAmount <= 0.0 
+                    THEN
+                         vbOverDayCount:= DATE_PART ('day', inDate - vbRec.OperDate)::Integer + 1;
+    
+                         RETURN vbOverDayCount;
+                    END IF;  
+               END LOOP;
+           END IF;
+           
+           -- Третий период
+           IF vbAmount > 0.0
+           THEN
+               FOR vbRec IN 
+                   SELECT OperDate
+                        , SUM (Amount)::TFloat AS Amount
+                   FROM MovementItemContainer
+                   WHERE ContainerId = inContainerId
+                     AND (MovementDescId = zc_Movement_Sale()
+                      OR (MovementDescId = zc_Movement_TransferDebtOut() AND isActive))
+                     AND OperDate BETWEEN inDate - INTERVAL '180 DAY' AND inDate - INTERVAL '81 DAY'
+                   GROUP BY OperDate
+                   ORDER BY OperDate DESC
+               LOOP
+                    vbAmount:= vbAmount - vbRec.Amount;
+    
+                    IF vbAmount <= 0.0 
+                    THEN
+                         vbOverDayCount:= DATE_PART ('day', inDate - vbRec.OperDate)::Integer + 1;
+    
+                         RETURN vbOverDayCount;
+                    END IF;  
+               END LOOP;
+           END IF;
+
+
+           -- Последний
+           IF vbAmount > 0.0
+           THEN
+               -- пусть пока будет эта константа
+               vbOverDayCount:= 181;
+
+           END IF;
+
       END IF;
 
       RETURN vbOverDayCount;

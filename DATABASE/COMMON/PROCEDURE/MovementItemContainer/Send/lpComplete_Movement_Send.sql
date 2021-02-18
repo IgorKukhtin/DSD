@@ -18,9 +18,16 @@ $BODY$
 
   DECLARE vbIsPartionGoodsKind_Unit_From Boolean;
   DECLARE vbIsPartionGoodsKind_Unit_To   Boolean;
+
+  DECLARE vbIsAssetBalance_to Boolean;
 BEGIN
      -- Эти параметры нужны для
      vbMovementDescId:= (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId);
+     
+     -- если надо вернуть обратно с забаланса в баланс только кол-во
+     vbIsAssetBalance_to:= COALESCE ('30.01.2021' = (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_SendAsset()), FALSE)
+   --AND 1=0
+    ;
 
 
      -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
@@ -920,7 +927,7 @@ BEGIN
                                                                                     , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                      )
                                                  END
-                       , ContainerId_GoodsTo   = CASE WHEN _tmpItem.ContainerDescId = zc_Container_CountAsset()
+                       , ContainerId_GoodsTo   = CASE WHEN _tmpItem.ContainerDescId = zc_Container_CountAsset() AND vbIsAssetBalance_to = FALSE
                                                  THEN 
                                                  lpInsertUpdate_ContainerCount_Asset (inOperDate               := _tmpItem.OperDate
                                                                                     , inUnitId                 := CASE WHEN _tmpItem.MemberId_To <> 0 THEN 0 /*_tmpItem.UnitId_Item*/ ELSE _tmpItem.UnitId_To END
@@ -1149,7 +1156,10 @@ BEGIN
                ) AS _tmpItem_byAccount ON _tmpItem_byAccount.AccountDirectionId_To  = _tmpItem.AccountDirectionId_To
                                       AND _tmpItem_byAccount.InfoMoneyDestinationId = _tmpItem.InfoMoneyDestinationId
      WHERE _tmpItemSumm.MovementItemId        = _tmpItem.MovementItemId
-       AND _tmpItemSumm.ContainerId_GoodsFrom = _tmpItem.ContainerId_GoodsFrom;
+       AND _tmpItemSumm.ContainerId_GoodsFrom = _tmpItem.ContainerId_GoodsFrom
+       -- если это НЕ возврат обратно с забаланса в баланс только кол-во
+       AND vbIsAssetBalance_to                = FALSE
+      ;
 
 
      -- 1.3.2. определяется ContainerId для проводок по суммовому учету - Кому  + определяется контейнер для Проводки - Прибыль
@@ -1175,6 +1185,10 @@ BEGIN
                                END
                            , ContainerId_To = CASE WHEN _tmpItemSumm.ContainerDescId = zc_Container_SummAsset()
                                               THEN
+                                              -- если надо вернуть обратно с забаланса в баланс только кол-во
+                                              CASE WHEN vbIsAssetBalance_to = TRUE
+                                              THEN 0
+                                              ELSE
                                               lpInsertUpdate_ContainerSumm_Asset (inOperDate               := _tmpItem.OperDate
                                                                                 , inUnitId                 := CASE WHEN _tmpItem.MemberId_To <> 0 THEN 0 /*_tmpItem.UnitId_Item*/ ELSE _tmpItem.UnitId_To END
                                                                                 , inCarId                  := _tmpItem.CarId_To
@@ -1215,6 +1229,7 @@ BEGIN
                                                                                                                    ELSE _tmpItem.AssetId
                                                                                                               END
                                                                                  )
+                                              END
                                               ELSE
                                               lpInsertUpdate_ContainerSumm_Goods (inOperDate               := _tmpItem.OperDate
                                                                                 , inUnitId                 := CASE WHEN _tmpItem.MemberId_To <> 0 THEN 0 /*_tmpItem.UnitId_Item*/ ELSE _tmpItem.UnitId_To END
@@ -1267,6 +1282,7 @@ BEGIN
      -- 1.1.2. формируются Проводки для количественного учета - Кому + определяется MIContainer.Id (количественный) - !!!после прибыли, т.к. нужен ContainerId_ProfitLoss!!!
      UPDATE _tmpItem SET MIContainerId_To = lpInsertUpdate_MovementItemContainer (ioId                      := 0
                                                                                 , inDescId                  := CASE WHEN _tmpItem.ContainerDescId = zc_Container_CountAsset()
+                                                                                                                     AND vbIsAssetBalance_to      = FALSE
                                                                                                                          THEN zc_MIContainer_CountAsset()
                                                                                                                     ELSE zc_MIContainer_Count()
                                                                                                                END
@@ -1377,6 +1393,8 @@ BEGIN
      FROM _tmpItem
      WHERE _tmpItemSumm.MovementItemId        = _tmpItem.MovementItemId
        AND _tmpItemSumm.ContainerId_GoodsFrom = _tmpItem.ContainerId_GoodsFrom
+       -- если это НЕ возврат обратно с забаланса в баланс только кол-во
+       AND vbIsAssetBalance_to                = FALSE
        ;
 
      -- 1.3.4. формируются Проводки для суммового учета - От кого
@@ -1395,7 +1413,8 @@ BEGIN
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer_From           AS WhereObjectId_Analyzer -- Подраделение или...
             , _tmpItemSumm.ContainerId_ProfitLoss     AS ContainerId_Analyzer   -- Контейнер ОПиУ - статья ОПиУ
-            , _tmpItemSumm.ContainerId_To             AS ContainerIntId_Analyzer-- суммовой Контейнер-Корреспондент (т.е. из прихода)
+              -- суммовой/количественный Контейнер-Корреспондент (т.е. из прихода)
+            , CASE WHEN vbIsAssetBalance_to = TRUE THEN _tmpItem.ContainerId_GoodsTo ELSE _tmpItemSumm.ContainerId_To END AS ContainerIntId_Analyzer
             , _tmpItem.GoodsKindId                    AS ObjectIntId_Analyzer   -- вид товара
             , vbWhereObjectId_Analyzer_To             AS ObjectExtId_Analyzer   -- Подраделение "Кому"
             , _tmpItemSumm.MIContainerId_To           AS ParentId

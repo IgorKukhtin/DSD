@@ -103,8 +103,8 @@ BEGIN
                   , tmpPromo.InvNumber
                   , tmpPromo.Operdate
                   , tmpPromo.StatusId
-                  , (tmpPromo.StartSale - INTERVAL '0 DAY') :: TDateTime AS StartSale
-                  , tmpPromo.EndSale
+                  , MIN ((tmpPromo.StartSale - INTERVAL '0 DAY')) :: TDateTime AS StartSale
+                  , MAX (tmpPromo.EndSale)                        :: TDateTime AS EndSale
                   , (MI_Child.ObjectId IS NULL)          AS isChangePercent
                   , MovementString_CommentMain.ValueData AS CommentMain
                   , TRUE                      :: Boolean AS isSync  
@@ -117,6 +117,12 @@ BEGIN
                   LEFT JOIN MovementString AS MovementString_CommentMain
                                            ON MovementString_CommentMain.MovementId = tmpPromo.Id
                                           AND MovementString_CommentMain.DescId = zc_MovementString_CommentMain() 
+             GROUP BY tmpPromo.Id
+                    , tmpPromo.InvNumber
+                    , tmpPromo.Operdate
+                    , tmpPromo.StatusId
+                    , (MI_Child.ObjectId IS NULL)
+                    , MovementString_CommentMain.ValueData
              ;
       END IF;
 END;

@@ -171,4 +171,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelectMobile_Object_Juridical (inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())
--- SELECT * FROM gpSelectMobile_Object_Juridical (inSyncDateIn := zc_DateStart(), inSession := '1839161')
+-- SELECT * FROM gpSelectMobile_Object_Juridical (inSyncDateIn := zc_DateStart(), inSession := '1071994')

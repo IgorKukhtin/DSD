@@ -135,7 +135,7 @@ BEGIN
                            , zfCalc_PartionMovementName (Movement.DescId, MovementDesc.ItemName, Movement.InvNumber, Movement.OperDate) AS InvNumber_Full
                            , Movement.OperDate                             AS OperDate
                            , Movement.StatusId                             AS StatusId
-                           , 0                                             AS PersonalDriverId
+                           , MovementItem.ObjectId                         AS PersonalDriverId
                            , MIString_Comment.ValueData                    AS Comment
                            , 0                                             AS CarId  
                            , 0                                             AS RouteId
@@ -161,9 +161,9 @@ BEGIN
                                                            ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id 
                                                           AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
 
-                         LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                                          ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                                         AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                           ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
                       WHERE inisOnlyService = TRUE
                      )
 

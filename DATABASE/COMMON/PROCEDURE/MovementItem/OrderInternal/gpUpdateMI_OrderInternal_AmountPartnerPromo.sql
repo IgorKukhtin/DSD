@@ -54,8 +54,10 @@ BEGIN
                                                                                              , zc_Enum_InfoMoney_30201() -- Мясное сырье
                                                                                               )
                                                   )
-                    , tmpOrder_all AS (SELECT MovementItem.ObjectId                                                    AS GoodsId
+                    , tmpOrder_all AS (SELECT MovementItem.MovementId                                                  AS MovementId
+                                            , MovementItem.ObjectId                                                    AS GoodsId
                                             , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())         AS GoodsKindId
+                                            , COALESCE (MIFloat_PromoMovementId.ValueData, 0)                          AS MovementId_promo
                                               -- заказ покупателя БЕЗ акций, сегодня + завтра
                                             , SUM (CASE WHEN Movement.OperDate >= inOperDate AND COALESCE (MIFloat_PromoMovementId.ValueData, 0) = 0 THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountPartner
                                               -- заказ покупателя ТОЛЬКО Акции, сегодня + завтра
@@ -101,12 +103,14 @@ BEGIN
                                             LEFT JOIN MovementItemFloat AS MIFloat_PromoMovementId
                                                                         ON MIFloat_PromoMovementId.MovementItemId = MovementItem.Id
                                                                        AND MIFloat_PromoMovementId.DescId         = zc_MIFloat_PromoMovementId()
-                                       WHERE Movement.OperDate BETWEEN (inOperDate - INTERVAL '3 DAY') AND inOperDate + INTERVAL '0 DAY'
+                                       WHERE Movement.OperDate BETWEEN (inOperDate - INTERVAL '7 DAY') AND inOperDate + INTERVAL '0 DAY'
                                          AND MovementDate_OperDatePartner.ValueData >= inOperDate
                                          AND Movement.DescId   = zc_Movement_OrderExternal()
                                          AND Movement.StatusId = zc_Enum_Status_Complete()
-                                       GROUP BY MovementItem.ObjectId
+                                       GROUP BY MovementItem.MovementId
+                                              , MovementItem.ObjectId
                                               , MILinkObject_GoodsKind.ObjectId
+                                              , MIFloat_PromoMovementId.ValueData
                                        HAVING SUM (CASE WHEN Movement.OperDate = inOperDate THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) <> 0
                                            OR SUM (CASE WHEN Movement.OperDate < inOperDate
                                                          AND MovementDate_OperDatePartner.ValueData >= inOperDate
@@ -114,16 +118,69 @@ BEGIN
                                                         ELSE 0
                                                    END)  <> 0
                                        )
-                        , tmpOrder AS (SELECT tmpOrder_all.GoodsId
+                          -- выбираем продажи по заказам
+                        , tmpMISale AS (SELECT tmp.MovementId             AS MovementId_order -- заявка
+                                             , MovementItem.Id
+                                             , MovementItem.ObjectId      AS GoodsId
+                                             , MovementItem.Amount        AS Amount
+                                      FROM (SELECT DISTINCT tmpOrder_all.MovementId FROM tmpOrder_all) AS tmp
+                                           LEFT JOIN MovementLinkMovement AS MLM_Order
+                                                                          ON MLM_Order.MovementChildId = tmp.MovementId
+                                                                         AND MLM_Order.DescId          = zc_MovementLinkMovement_Order()
+                                           INNER JOIN Movement AS MovementSale
+                                                               ON MovementSale.Id     = MLM_Order.MovementId  -- продажа
+                                                              AND MovementSale.DescId IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
+                                                            --AND MovementSale.StatusId <> zc_Enum_Status_Erased()
+                                                              AND MovementSale.StatusId = zc_Enum_Status_Complete()
+                                                              -- обязатательно прошлые продажи, т.к. остаток берем на 8:00
+                                                              AND MovementSale.OperDate < inOperDate
+                                           LEFT JOIN MovementItem ON MovementItem.MovementId = MovementSale.Id
+                                                                 AND MovementItem.DescId     = zc_MI_Master()
+                                                                 AND MovementItem.isErased   = FALSE
+                                       )
+                        , tmpMILO_GoodsKind AS (SELECT MovementItemLinkObject.*
+                                                FROM MovementItemLinkObject
+                                                WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMISale.Id FROM tmpMISale)
+                                                   AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
+                                                )
+                        , tmpSale AS (SELECT tmpMISale.MovementId_order -- заявка
+                                           , tmpMISale.GoodsId
+                                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                           , SUM (tmpMISale.Amount)  AS Amount
+                                      FROM tmpMISale
+                                           LEFT JOIN tmpMILO_GoodsKind AS MILinkObject_GoodsKind
+                                                                       ON MILinkObject_GoodsKind.MovementItemId = tmpMISale.Id
+                                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                      WHERE tmpMISale.Amount > 0
+                                      GROUP BY tmpMISale.MovementId_order -- заявка
+                                             , tmpMISale.GoodsId
+                                             , MILinkObject_GoodsKind.ObjectId
+                                      )
+                      , tmpOrder_s AS (SELECT tmpOrder_all.GoodsId
                                             , tmpOrder_all.GoodsKindId
-                                            , tmpOrder_all.AmountPartner
-                                            , tmpOrder_all.AmountPartnerNext
-                                            , tmpOrder_all.AmountPartnerPromo
-                                            , tmpOrder_all.AmountPartnerNextPromo
-                                            , tmpOrder_all.AmountPartnerPrior
-                                            , tmpOrder_all.AmountPartnerPriorPromo
+                                            , tmpOrder_all.AmountPartner           - CASE WHEN tmpOrder_all.MovementId_promo = 0 THEN COALESCE (tmpSale.Amount, 0) ELSE 0 END AS AmountPartner
+                                            , tmpOrder_all.AmountPartnerNext       - CASE WHEN tmpOrder_all.MovementId_promo = 0 THEN COALESCE (tmpSale.Amount, 0) ELSE 0 END AS AmountPartnerNext
+                                            , tmpOrder_all.AmountPartnerPromo      - CASE WHEN tmpOrder_all.MovementId_promo > 0 THEN COALESCE (tmpSale.Amount, 0) ELSE 0 END AS AmountPartnerPromo
+                                            , tmpOrder_all.AmountPartnerNextPromo  - CASE WHEN tmpOrder_all.MovementId_promo > 0 THEN COALESCE (tmpSale.Amount, 0) ELSE 0 END AS AmountPartnerNextPromo
+                                            , tmpOrder_all.AmountPartnerPrior      - CASE WHEN tmpOrder_all.MovementId_promo = 0 THEN COALESCE (tmpSale.Amount, 0) ELSE 0 END AS AmountPartnerPrior
+                                            , tmpOrder_all.AmountPartnerPriorPromo - CASE WHEN tmpOrder_all.MovementId_promo > 0 THEN COALESCE (tmpSale.Amount, 0) ELSE 0 END AS AmountPartnerPriorPromo
                                        FROM tmpOrder_all
                                             INNER JOIN tmpGoods ON tmpGoods.GoodsId = tmpOrder_all.GoodsId
+                                            LEFT JOIN tmpSale ON tmpSale.MovementId_order = tmpOrder_all.MovementId
+                                                             AND tmpSale.GoodsId          = tmpOrder_all.GoodsId
+                                                             AND tmpSale.GoodsKindId      = tmpOrder_all.GoodsKindId
+                                       )
+                        , tmpOrder AS (SELECT tmpOrder_s.GoodsId
+                                            , tmpOrder_s.GoodsKindId
+                                            , SUM (CASE WHEN tmpOrder_s.AmountPartner           > 0 THEN tmpOrder_s.AmountPartner           ELSE 0 END) AS AmountPartner
+                                            , SUM (CASE WHEN tmpOrder_s.AmountPartnerNext       > 0 THEN tmpOrder_s.AmountPartnerNext       ELSE 0 END) AS AmountPartnerNext
+                                            , SUM (CASE WHEN tmpOrder_s.AmountPartnerPromo      > 0 THEN tmpOrder_s.AmountPartnerPromo      ELSE 0 END) AS AmountPartnerPromo
+                                            , SUM (CASE WHEN tmpOrder_s.AmountPartnerNextPromo  > 0 THEN tmpOrder_s.AmountPartnerNextPromo  ELSE 0 END) AS AmountPartnerNextPromo
+                                            , SUM (CASE WHEN tmpOrder_s.AmountPartnerPrior      > 0 THEN tmpOrder_s.AmountPartnerPrior      ELSE 0 END) AS AmountPartnerPrior
+                                            , SUM (CASE WHEN tmpOrder_s.AmountPartnerPriorPromo > 0 THEN tmpOrder_s.AmountPartnerPriorPromo ELSE 0 END) AS AmountPartnerPriorPromo
+                                       FROM tmpOrder_s
+                                       GROUP BY tmpOrder_s.GoodsId
+                                              , tmpOrder_s.GoodsKindId
                                        )
                      , tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
                                       , MovementItem.ObjectId                         AS GoodsId

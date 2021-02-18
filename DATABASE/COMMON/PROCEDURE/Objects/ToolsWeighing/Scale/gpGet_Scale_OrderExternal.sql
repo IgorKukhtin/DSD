@@ -160,6 +160,13 @@ BEGIN
                                            -- Склады
                                            SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8453) AS lfSelect
                                            WHERE vbBranchId = zc_Branch_Basis()
+                                          UNION
+                                           -- Склады
+                                           SELECT OL.ObjectId AS UnitId
+                                           FROM ObjectLink AS OL
+                                           WHERE OL.ChildObjectId = 8377 -- филиал Кр.Рог
+                                             AND OL.DescId        = zc_ObjectLink_Unit_Branch()
+                                             AND vbBranchId       = zc_Branch_Basis()
                                           )
                    SELECT 1
                    FROM _tmpMovement_find_all AS tmp
@@ -191,6 +198,15 @@ BEGIN
                                -- Склады
                                SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8453) AS lfSelect
                                WHERE vbBranchId = zc_Branch_Basis()
+                            /*UNION
+                               -- Склады
+                               SELECT DISTINCT
+                                      OL.ObjectId AS UnitId
+                               FROM ObjectLink AS OL
+                                    JOIN _tmpMovement_find_all ON _tmpMovement_find_all.DescId = zc_Movement_ReturnIn()
+                               WHERE OL.ChildObjectId = 8377 -- филиал Кр.Рог
+                                 AND OL.DescId        = zc_ObjectLink_Unit_Branch()
+                                 AND vbBranchId       = zc_Branch_Basis()*/
                               )
           , tmpMovement AS (SELECT tmpMovement.Id
                                  , tmpMovement.InvNumber
@@ -245,6 +261,11 @@ BEGIN
                                          AND inBranchCode BETWEEN 301 AND 310
                                          AND tmpMovement.DescId = zc_Movement_OrderInternal()
                                              THEN 8455 -- Склад специй
+
+                                        -- Для Кр.Рог
+                                        WHEN ObjectLink_UnitTo_Branch.ChildObjectId = 8377 -- филиал Кр.Рог
+                                         AND vbBranchId                             = zc_Branch_Basis()
+                                             THEN 8461 -- Склад Возвратов
 
                                         -- Для остальных - Заявка покупателя или SendOnPrice или ReturnIn
                                         ELSE MovementLinkObject_To.ObjectId
@@ -308,6 +329,7 @@ BEGIN
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                               ON MovementLinkObject_To.MovementId = tmpMovement.Id
                                                              AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+
                                  LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                       ON ObjectLink_Partner_Juridical.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_From.ObjectId)
                                                      AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
@@ -319,7 +341,11 @@ BEGIN
                                                      AND ObjectLink_UnitTo_Branch.DescId = zc_ObjectLink_Unit_Branch()
 
                                  LEFT JOIN tmpUnit_Branch AS tmpUnit_Branch_From ON tmpUnit_Branch_From.UnitId = MovementLinkObject_From.ObjectId
-                                 LEFT JOIN tmpUnit_Branch AS tmpUnit_Branch_To   ON tmpUnit_Branch_To.UnitId   = MovementLinkObject_To.ObjectId
+                                 LEFT JOIN tmpUnit_Branch AS tmpUnit_Branch_To   ON tmpUnit_Branch_To.UnitId   = CASE WHEN ObjectLink_UnitTo_Branch.ChildObjectId = 8377 -- филиал Кр.Рог
+                                                                                                                       AND vbBranchId                             = zc_Branch_Basis()
+                                                                                                                           THEN 8461 -- Склад Возвратов
+                                                                                                                      ELSE MovementLinkObject_To.ObjectId
+                                                                                                                 END
 
                                  LEFT JOIN Object AS Object_From ON Object_From.Id = CASE -- Для заявки поставщику
                                                                                           WHEN tmpMovement.DescId = zc_Movement_OrderIncome()
@@ -355,6 +381,10 @@ BEGIN
                                                                                            AND inBranchCode BETWEEN 301 AND 310
                                                                                            AND tmpMovement.DescId = zc_Movement_OrderInternal()
                                                                                                THEN 8455 -- Склад специй
+
+                                                                                          WHEN ObjectLink_UnitTo_Branch.ChildObjectId = 8377 -- филиал Кр.Рог
+                                                                                           AND vbBranchId                             = zc_Branch_Basis()
+                                                                                               THEN 8461 -- Склад Возвратов
 
                                                                                           -- Для остальных - Заявка покупателя или SendOnPrice или ReturnIn
                                                                                           ELSE MovementLinkObject_To.ObjectId
@@ -512,6 +542,14 @@ BEGIN
                                   WHERE MLO_PriceList.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
                                     AND MLO_PriceList.DescId     = zc_MovementLinkObject_PriceList()
                                  )
+           , tmpMLM AS (SELECT *
+                        FROM MovementLinkMovement AS MLM
+                        WHERE MLM.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                       )
+           , tmpMS AS (SELECT *
+                        FROM MovementString AS MS
+                        WHERE MS.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                       )
        -- Результат
        SELECT tmpMovement.Id                                 AS MovementId
             , tmpMovement.DescId                             AS MovementDescId_order
@@ -667,13 +705,13 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                     ON MovementFloat_ChangePercent.MovementId =  tmpMovement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
-            LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                     ON MovementString_InvNumberPartner.MovementId =  tmpMovement.Id
-                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+            LEFT JOIN tmpMS AS MovementString_InvNumberPartner
+                            ON MovementString_InvNumberPartner.MovementId =  tmpMovement.Id
+                           AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
-                                           ON MovementLinkMovement_Order.MovementId = tmpMovement.Id
-                                          AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+            LEFT JOIN tmpMLM AS MovementLinkMovement_Order
+                             ON MovementLinkMovement_Order.MovementId = tmpMovement.Id
+                            AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
 
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiOrdspr
                                     ON ObjectBoolean_Partner_EdiOrdspr.ObjectId =  tmpMovement.FromId

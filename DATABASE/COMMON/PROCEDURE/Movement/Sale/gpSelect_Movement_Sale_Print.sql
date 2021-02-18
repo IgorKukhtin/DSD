@@ -654,6 +654,7 @@ BEGIN
                   ELSE FALSE
              END :: Boolean AS isJuridicalDocument
            , CASE WHEN COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis()) = zc_Branch_Basis()
+                   AND COALESCE (ObjectLink_Juridical_Retail.ChildObjectId, 0) <> 3207268 -- Мануфактура - для ф.КрРог
                        THEN TRUE
                   ELSE FALSE
              END :: Boolean AS isBranchBasis

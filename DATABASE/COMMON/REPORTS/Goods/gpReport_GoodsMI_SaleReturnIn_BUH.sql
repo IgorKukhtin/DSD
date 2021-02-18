@@ -1,6 +1,6 @@
--- Function: gpReport_Goods_Movement ()
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn_BUH (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+-- Function: gpReport_GoodsMI_SaleReturnIn_BUH ()
 
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn_BUH (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn_BUH (
     IN inStartDate    TDateTime ,
@@ -231,6 +231,7 @@ BEGIN
                          , CASE WHEN isSale = TRUE THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From() END AS MLO_DescId
                     FROM Constant_ProfitLoss_AnalyzerId_View
                     WHERE isCost = FALSE
+                      AND Constant_ProfitLoss_AnalyzerId_View.AnalyzerId IN (zc_Enum_AnalyzerId_SaleCount_10400(), zc_Enum_AnalyzerId_ReturnInCount_10800())
                    )
   , tmpOperationGroup2 AS (SELECT MIContainer.ContainerId_Analyzer
                                 , MIContainer.ObjectId_Analyzer                  AS GoodsId
@@ -249,13 +250,13 @@ BEGIN
                                                                   WHEN MovementBoolean_PriceWithVAT.ValueData = FALSE
                                                                       THEN zfCalc_PriceTruncate (inOperDate     := MovementDate_OperDatePartner.ValueData
                                                                                                , inChangePercent:= MIFloat_ChangePercent.ValueData
-                                                                                               , inPrice        := MIFloat_Price.ValueData
+                                                                                               , inPrice        := MIFloat_Price.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
                                                                                                , inIsWithVAT    := MovementBoolean_PriceWithVAT.ValueData
                                                                                                 )
                                                                          * MovementFloat_VATPercent.ValueData / 100
                                                                  ELSE zfCalc_PriceTruncate (inOperDate     := MovementDate_OperDatePartner.ValueData
                                                                                           , inChangePercent:= MIFloat_ChangePercent.ValueData
-                                                                                          , inPrice        := MIFloat_Price.ValueData
+                                                                                          , inPrice        := MIFloat_Price.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
                                                                                           , inIsWithVAT    := MovementBoolean_PriceWithVAT.ValueData
                                                                                            )
                                                                     / (1 + 100 / MovementFloat_VATPercent.ValueData)
@@ -268,13 +269,13 @@ BEGIN
                                                             WHEN MovementBoolean_PriceWithVAT.ValueData = FALSE
                                                                  THEN zfCalc_PriceTruncate (inOperDate     := MovementDate_OperDatePartner.ValueData
                                                                                           , inChangePercent:= MIFloat_ChangePercent.ValueData
-                                                                                          , inPrice        := MIFloat_Price.ValueData
+                                                                                          , inPrice        := MIFloat_Price.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
                                                                                           , inIsWithVAT    := MovementBoolean_PriceWithVAT.ValueData
                                                                                            )
                                                                     * MovementFloat_VATPercent.ValueData / 100
                                                             ELSE zfCalc_PriceTruncate (inOperDate     := MovementDate_OperDatePartner.ValueData
                                                                                      , inChangePercent:= MIFloat_ChangePercent.ValueData
-                                                                                     , inPrice        := MIFloat_Price.ValueData
+                                                                                     , inPrice        := MIFloat_Price.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
                                                                                      , inIsWithVAT    := MovementBoolean_PriceWithVAT.ValueData
                                                                                       )
                                                                / (1 + 100 / MovementFloat_VATPercent.ValueData)
@@ -285,6 +286,17 @@ BEGIN
                                 INNER JOIN MovementItemContainer AS MIContainer
                                                                  ON MIContainer.AnalyzerId = tmpAnalyzer.AnalyzerId
                                                                 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+/*and MIContainer.ObjectId_Analyzer IN (2404,
+2163,
+8015,
+431552,
+3056,
+2795,
+8255,
+3456960,
+3456962,
+3456965,
+3713924)*/
                                 INNER JOIN ContainerLinkObject AS ContainerLO_Juridical
                                                                ON ContainerLO_Juridical.ContainerId = MIContainer.ContainerId_Analyzer
                                                               AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
@@ -314,6 +326,9 @@ BEGIN
                                 LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                             ON MIFloat_Price.MovementItemId = MIContainer.MovementItemId
                                                            AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                            ON MIFloat_CountForPrice.MovementItemId = MIContainer.MovementItemId
+                                                           AND MIFloat_CountForPrice.DescId         = zc_MIFloat_CountForPrice()
 
                                 LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                                        ON MovementDate_OperDatePartner.MovementId =  MIContainer.MovementId
@@ -349,17 +364,34 @@ BEGIN
 
                                 , CAST (-1 * MovementItem.Amount
                                            * CASE WHEN COALESCE (MovementFloat_VATPercent.ValueData, 0) = 0 THEN 0
-                                                  WHEN MovementBoolean_PriceWithVAT.ValueData = FALSE THEN MIFloat_Price.ValueData * MovementFloat_VATPercent.ValueData / 100
+                                                  WHEN MovementBoolean_PriceWithVAT.ValueData = FALSE
+                                                       THEN MIFloat_Price.ValueData * MovementFloat_VATPercent.ValueData / 100
+                                                          / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
                                                   ELSE MIFloat_Price.ValueData / (1 + 100 / MovementFloat_VATPercent.ValueData)
+                                                     / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
                                              END AS NUMERIC (16, 2)) AS Sale_SummVAT
 
                                 , 0 AS Return_SummVAT
                            FROM Movement
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId     = zc_MI_Master()
+/*and MovementItem.ObjectId in (2404,
+2163,
+8015,
+431552,
+3056,
+2795,
+8255,
+3456960,
+3456962,
+3456965,
+3713924)*/
                                 LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                             ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                            AND MIFloat_Price.DescId         = zc_MIFloat_Price()
+                                LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                            ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_CountForPrice.DescId         = zc_MIFloat_CountForPrice()
                                 -- LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                 --                             ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                 --                            AND MIFloat_CountForPrice.DescId         = zc_MIFloat_CountForPrice()

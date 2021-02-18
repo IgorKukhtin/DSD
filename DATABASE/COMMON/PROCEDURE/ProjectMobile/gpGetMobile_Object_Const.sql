@@ -73,6 +73,8 @@ BEGIN
             END AS UnitId
           , CASE WHEN inSession = '5866615' -- Матіюк В.Ю.
                       THEN 8379 -- филиал Киев
+                 WHEN ObjectLink_Unit_Branch.ChildObjectId = 8377 -- филиал Кр.Рог
+                      THEN zc_Branch_Basis()
                  ELSE COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
             END AS BranchId
             INTO vbMemberId, vbPersonalId, vbUnitId, vbBranchId

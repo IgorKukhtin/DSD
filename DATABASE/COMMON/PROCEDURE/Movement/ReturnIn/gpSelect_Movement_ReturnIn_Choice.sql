@@ -59,6 +59,11 @@ BEGIN
                          UNION SELECT tmpRoleAccessKey_all.AccessKeyId FROM tmpRoleAccessKey_all WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll) GROUP BY tmpRoleAccessKey_all.AccessKeyId
                          UNION SELECT 0 AS AccessKeyId WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
                          UNION SELECT zc_Enum_Process_AccessKey_DocumentDnepr() AS AccessKeyId WHERE vbIsXleb = TRUE
+                         -- DocumentKrRog + DocumentDnepr
+                         UNION SELECT zc_Enum_Process_AccessKey_DocumentKrRog() AS AccessKeyId
+                               WHERE EXISTS (SELECT 1 FROM tmpRoleAccessKey_user WHERE tmpRoleAccessKey_user.AccessKeyId = zc_Enum_Process_AccessKey_DocumentDnepr())
+                         UNION SELECT zc_Enum_Process_AccessKey_DocumentDnepr() AS AccessKeyId
+                               WHERE EXISTS (SELECT 1 FROM tmpRoleAccessKey_user WHERE tmpRoleAccessKey_user.AccessKeyId = zc_Enum_Process_AccessKey_DocumentKrRog())
                               )
      SELECT
              Movement.Id                                    AS Id
@@ -275,4 +280,4 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn_Choice (TDateTime, TDateTime, Boolean,
 */
 
 -- тест
--- select * from gpSelect_Movement_ReturnIn_Choice(instartdate := ('01.01.2015')::TDateTime , inenddate := ('07.01.2015')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inPartnerId := 17474 ,  inSession := '5');
+-- SELECT * FROM gpSelect_Movement_ReturnIn_Choice(instartdate := ('01.01.2015')::TDateTime , inenddate := ('07.01.2015')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inPartnerId := 17474 ,  inSession := '5');
