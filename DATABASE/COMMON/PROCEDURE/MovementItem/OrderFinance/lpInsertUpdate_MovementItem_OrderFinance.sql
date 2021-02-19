@@ -1,7 +1,8 @@
 -- Function: lpInsertUpdate_MovementItem_OrderFinance()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderFinance(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderFinance(
     IN inContractId            Integer   , -- 
     IN inBankAccountId         Integer   , --
     IN inAmount                TFloat    , -- 
+    IN inAmountStart           TFloat    , -- 
     IN inComment               TVarChar  , -- 
     IN inUserId                Integer     -- пользователь
 )
@@ -33,6 +35,9 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), ioId, inContractId);
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_BankAccount(), ioId, inBankAccountId);
+
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountStart(), ioId, inAmountStart);
 
      IF vbIsInsert = TRUE
      THEN
@@ -61,6 +66,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.02.21         * inAmountStart
  29.07.19         *
 */
 

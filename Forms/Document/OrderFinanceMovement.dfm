@@ -172,6 +172,11 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountPartner
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountStart
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -202,6 +207,11 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = JuridicalName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountStart
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -371,6 +381,18 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 97
+          end
+          object AmountStart: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095#1077#1090#1085#1072#1103' '#1089#1091#1084#1084#1072' '#1082' '#1086#1087#1083#1072#1090#1077
+            DataBinding.FieldName = 'AmountStart'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090#1085#1072#1103' '#1089#1091#1084#1084#1072' '#1082' '#1086#1087#1083#1072#1090#1077
             Width = 97
           end
           object Amount: TcxGridDBColumn
@@ -567,14 +589,13 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actJuridicalChoiceForm
+                Action = actContractChoiceForm_JurOrdFin
                 Default = True
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 150
           end
           object chJuridicalGroupName: TcxGridDBColumn
@@ -613,6 +634,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
           object chBankName_main: TcxGridDBColumn
             Caption = #1041#1072#1085#1082' ('#1086#1090#1082#1091#1076#1072')'
             DataBinding.FieldName = 'BankName_main'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -629,6 +651,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1088'/'#1089#1095#1077#1090', '#1089' '#1082#1086#1090#1086#1088#1086#1075#1086' '#1084#1099' '#1087#1083#1072#1090#1080#1084
@@ -741,6 +764,21 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
+          end
+          object chContractName: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088
+            DataBinding.FieldName = 'ContractName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actContractChoiceForm_JurOrdFin
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
           end
           object chIsCorporate: TcxGridDBColumn
             Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'.'#1083'.'
@@ -1573,6 +1611,22 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = Null
+          Component = JuridicalCDS
+          ComponentItem = 'ContractId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = JuridicalCDS
+          ComponentItem = 'ContractName'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1866,6 +1920,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = JuridicalDS
     end
@@ -1882,6 +1937,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = JuridicalDS
@@ -1968,6 +2024,15 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountStart'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountStart'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2654,8 +2719,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       item
         Name = 'inBankAccountMainId'
         Value = Null
-        Component = JuridicalCDS
-        ComponentItem = 'BankAccountId_main'
+        Component = GuidesBankAccount
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

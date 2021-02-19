@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer
              , PaidKindName TVarChar, InfoMoneyName TVarChar
              , StartDate TDateTime, EndDate_real TDateTime, EndDate TVarChar
              , Amount TFloat, AmountRemains TFloat, AmountPartner TFloat, AmountPlan TFloat
+             , AmountStart TFloat
              , BankName TVarChar, MFO TVarChar, BankAccountId Integer, BankAccountName TVarChar
              , Comment TVarChar
              , InsertName TVarChar, UpdateName TVarChar
@@ -119,6 +120,7 @@ BEGIN
                     , MIFloat_AmountRemains.ValueData   AS AmountRemains
                     , MIFloat_AmountPartner.ValueData   AS AmountPartner
                     , MIFloat_AmountPlan.ValueData      AS AmountPlan
+                    , MIFloat_AmountStart.ValueData     AS AmountStart
                     , MILinkObject_BankAccount.ObjectId AS BankAccountId
                     , MIString_Comment.ValueData        AS Comment
                     , Object_Insert.ValueData           AS InsertName
@@ -143,7 +145,11 @@ BEGIN
                     LEFT JOIN MovementItemFloat AS MIFloat_AmountPlan
                                                 ON MIFloat_AmountPlan.MovementItemId = MovementItem.Id
                                                AND MIFloat_AmountPlan.DescId = zc_MIFloat_AmountPlan()
-        
+
+                    LEFT JOIN MovementItemFloat AS MIFloat_AmountStart
+                                                ON MIFloat_AmountStart.MovementItemId = MovementItem.Id
+                                               AND MIFloat_AmountStart.DescId = zc_MIFloat_AmountStart()
+
                     LEFT JOIN MovementItemString AS MIString_Comment
                                                  ON MIString_Comment.MovementItemId = MovementItem.Id
                                                 AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -194,10 +200,12 @@ BEGIN
                 || (LPAD (EXTRACT (Day FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||LPAD (EXTRACT (Month FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||EXTRACT (YEAR FROM View_Contract.EndDate_term) :: TVarChar)
              ) ::TVarChar AS EndDate
                              
-           , tmpMI.Amount
-           , tmpMI.AmountRemains
-           , tmpMI.AmountPartner
-           , tmpMI.AmountPlan
+           , tmpMI.Amount        ::TFloat
+           , tmpMI.AmountRemains ::TFloat
+           , tmpMI.AmountPartner ::TFloat
+           , tmpMI.AmountPlan    ::TFloat
+           , tmpMI.AmountStart   ::TFloat
+           
 
            , Partner_BankAccount_View.BankName
            , Partner_BankAccount_View.MFO
@@ -269,10 +277,11 @@ BEGIN
              ) ::TVarChar AS EndDate
 
 
-           , MovementItem.Amount              AS Amount
-           , MIFloat_AmountRemains.ValueData  AS AmountRemains
-           , MIFloat_AmountPartner.ValueData  AS AmountPartner
-           , MIFloat_AmountPlan.ValueData     AS AmountPlan
+           , MovementItem.Amount              :: TFloat AS Amount
+           , MIFloat_AmountRemains.ValueData  :: TFloat AS AmountRemains
+           , MIFloat_AmountPartner.ValueData  :: TFloat AS AmountPartner
+           , MIFloat_AmountPlan.ValueData     :: TFloat AS AmountPlan
+           , MIFloat_AmountStart.ValueData    :: TFloat AS AmountStart
 
            , Partner_BankAccount_View.BankName
            , Partner_BankAccount_View.MFO
@@ -305,6 +314,10 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_AmountPlan
                                         ON MIFloat_AmountPlan.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountPlan.DescId = zc_MIFloat_AmountPlan()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountStart
+                                        ON MIFloat_AmountStart.MovementItemId = MovementItem.Id
+                                       AND MIFloat_AmountStart.DescId = zc_MIFloat_AmountStart()
 
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
@@ -366,6 +379,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 18.02.21         * AmountStart
  29.07.19         *
 */
 

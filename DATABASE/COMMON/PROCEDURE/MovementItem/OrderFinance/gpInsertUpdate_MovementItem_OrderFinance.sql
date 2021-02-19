@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_MovementItem_OrderFinance()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinance(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinance(
     IN inContractId            Integer   , -- 
     IN inBankAccountId         Integer   , --
     IN inAmount                TFloat    , -- 
+    IN inAmountStart           TFloat    , -- 
     IN inComment               TVarChar  , -- 
     IN inSession               TVarChar    -- сессия пользователя
 )
@@ -30,6 +32,7 @@ BEGIN
                                                   , inContractId          := inContractId
                                                   , inBankAccountId       := inBankAccountId
                                                   , inAmount              := inAmount
+                                                  , inAmountStart         := inAmountStart
                                                   , inComment             := inComment
                                                   , inUserId              := vbUserId
                                                    ) AS tmp;
@@ -41,6 +44,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.02.21         * inAmountStart
  29.07.19         *
 */
 
