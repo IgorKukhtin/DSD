@@ -2686,7 +2686,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       item
         Name = 'inisErased'
         Value = Null
-        Component = actShowErased
+        Component = actShowErasedJur
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
