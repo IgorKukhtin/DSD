@@ -120,6 +120,7 @@ BEGIN
                                   , ObjectString_GK_Value1.ValueData     AS Value1_gk
                                   , ObjectString_GK_Value11.ValueData    AS Value11_gk
                                   , ObjectFloat_GK_NormInDays.ValueData  AS NormInDays_gk
+                                  , ObjectFloat_GK_DaysQ.ValueData       AS DaysQ_gk
                              FROM tmpMI
                                   JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
                                                   ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = tmpMI.ObjectId
@@ -137,6 +138,9 @@ BEGIN
                                   LEFT JOIN ObjectFloat AS ObjectFloat_GK_NormInDays
                                                         ON ObjectFloat_GK_NormInDays.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
                                                        AND ObjectFloat_GK_NormInDays.DescId   = zc_ObjectFloat_GoodsByGoodsKind_NormInDays()
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_GK_DaysQ
+                                                        ON ObjectFloat_GK_DaysQ.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                       AND ObjectFloat_GK_DaysQ.DescId   = zc_ObjectFloat_GoodsByGoodsKind_DaysQ()
                             )
           , tmpMIGoods AS (SELECT DISTINCT tmpMI.ObjectId AS GoodsId FROM tmpMI)
           , tmpUKTZED AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (tmp.GoodsGroupId) AS CodeUKTZED FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
@@ -463,6 +467,7 @@ BEGIN
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI.AmountPartner ELSE 0 END AS TFloat) AS Amount13
 
            , tmpMovement_QualityParams.OperDateIn
+           , (tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.DaysQ_gk <> 0 THEN (tmpMIGoodsByGoodsKind.DaysQ_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl) :: TDateTime AS OperDateIn_str4
            , tmpMovement_QualityParams.OperDateOut
 
            , (tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl) :: TDateTime AS OperDate_end
@@ -592,6 +597,7 @@ BEGIN
                                   , ObjectString_GK_Value1.ValueData     AS Value1_gk
                                   , ObjectString_GK_Value11.ValueData    AS Value11_gk
                                   , ObjectFloat_GK_NormInDays.ValueData  AS NormInDays_gk
+                                  , ObjectFloat_GK_DaysQ.ValueData       AS DaysQ_gk
                              FROM tmpMI
                                   JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
                                                   ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = tmpMI.ObjectId
@@ -609,6 +615,9 @@ BEGIN
                                   LEFT JOIN ObjectFloat AS ObjectFloat_GK_NormInDays
                                                         ON ObjectFloat_GK_NormInDays.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
                                                        AND ObjectFloat_GK_NormInDays.DescId   = zc_ObjectFloat_GoodsByGoodsKind_NormInDays()
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_GK_DaysQ
+                                                        ON ObjectFloat_GK_DaysQ.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                       AND ObjectFloat_GK_DaysQ.DescId   = zc_ObjectFloat_GoodsByGoodsKind_DaysQ()
                             )
           , tmpMIGoods AS (SELECT DISTINCT tmpMI.ObjectId AS GoodsId FROM tmpMI)
           , tmpUKTZED AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (tmp.GoodsGroupId) AS CodeUKTZED FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
@@ -901,6 +910,7 @@ BEGIN
            , 0 AS Amount13
 
            , Movement.OperDate AS OperDateIn
+           , (Movement.OperDate + (CASE WHEN tmpMIGoodsByGoodsKind.DaysQ_gk <> 0 THEN (tmpMIGoodsByGoodsKind.DaysQ_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl) :: TDateTime AS OperDateIn_str4
            , Movement.OperDate AS OperDateOut
 
            , (tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl) :: TDateTime AS OperDate_end
@@ -992,6 +1002,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 19.02.21         * add DaysQ_gk
  24.07.19         *
  13.01.17         * add CodeUKTZED
  31.03.15                                        * all

@@ -137,6 +137,17 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 48
           end
+          object DaysQ: TcxGridDBColumn
+            Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1044#1072#1090#1099' '#1087#1088#1086#1080#1079#1074' '#1074' '#1082#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1084
+            DataBinding.FieldName = 'DaysQ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.;-0.; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1044#1072#1090#1099' '#1087#1088#1086#1080#1079#1074' '#1074' '#1082#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1084
+            Width = 45
+          end
           object Weight: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1090#1086#1074'.'
             DataBinding.FieldName = 'Weight'
@@ -1251,6 +1262,15 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ChangePercentAmount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDaysQ'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DaysQ'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

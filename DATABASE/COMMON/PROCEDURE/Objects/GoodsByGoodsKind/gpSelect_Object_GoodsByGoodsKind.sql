@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , WeightMin TFloat, WeightMax TFloat
              , Height TFloat, Length TFloat, Width TFloat
              , NormInDays TFloat
+             , DaysQ TFloat
              , isOrder Boolean, isScaleCeh Boolean, isNotMobile Boolean
              , GoodsSubId Integer, GoodsSubCode Integer, GoodsSubName TVarChar, MeasureSubName TVarChar
              , GoodsKindSubId Integer, GoodsKindSubName TVarChar
@@ -172,6 +173,7 @@ BEGIN
            , COALESCE (ObjectFloat_Length.ValueData,0)          ::TFloat  AS Length
            , COALESCE (ObjectFloat_Width.ValueData,0)           ::TFloat  AS Width
            , COALESCE (ObjectFloat_NormInDays.ValueData,0)      ::TFloat  AS NormInDays
+           , COALESCE (ObjectFloat_DaysQ.ValueData,0)           ::TFloat  AS DaysQ
 
            , COALESCE (ObjectBoolean_Order.ValueData, False)           AS isOrder
            , COALESCE (ObjectBoolean_ScaleCeh.ValueData, False)        AS isScaleCeh
@@ -296,6 +298,9 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_NormInDays
                                   ON ObjectFloat_NormInDays.ObjectId = Object_GoodsByGoodsKind_View.Id
                                  AND ObjectFloat_NormInDays.DescId = zc_ObjectFloat_GoodsByGoodsKind_NormInDays()
+            LEFT JOIN ObjectFloat AS ObjectFloat_DaysQ
+                                  ON ObjectFloat_DaysQ.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                 AND ObjectFloat_DaysQ.DescId = zc_ObjectFloat_GoodsByGoodsKind_DaysQ()
 
  --
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Order
@@ -431,6 +436,7 @@ ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 19.02.21        * DaysQ
  10.04.20        *
  13.03.19        * NormInDays
  22.06.18        *

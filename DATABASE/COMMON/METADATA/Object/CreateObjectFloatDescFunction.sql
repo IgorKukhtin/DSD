@@ -498,6 +498,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_GoodsByGoodsKind_Tax_Ves() RETURNS Int
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_GoodsByGoodsKind(), 'zc_ObjectFloat_GoodsByGoodsKind_Tax_Ves', '% отклонения Категория товара "Неноминальный"' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsByGoodsKind_Tax_Ves');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_GoodsByGoodsKind_DaysQ() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsByGoodsKind_DaysQ'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_GoodsByGoodsKind(), 'zc_ObjectFloat_GoodsByGoodsKind_DaysQ', 'Изменение Даты произв в качественном' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsByGoodsKind_DaysQ');
 
 --
 
@@ -1904,6 +1907,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 19.02.21         * zc_ObjectFloat_GoodsByGoodsKind_DaysQ
  18.02.21                                                                                      * zc_ObjectFloat_CashSettings_UpperLimitPromoBonus, zc_ObjectFloat_CashSettings_LowerLimitPromoBonus
  09.02.21                                                                                      * zc_ObjectFloat_Unit_SerialNumberMypharmacy
  05.02.21                                                                                      * zc_ObjectFloat_CashSettings_DayNonCommoditySUN
