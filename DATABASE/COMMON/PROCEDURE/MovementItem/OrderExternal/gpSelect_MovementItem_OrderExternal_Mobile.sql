@@ -54,10 +54,11 @@ BEGIN
      FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
                                                , inPartnerId      := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
                                                , inMovementDescId := zc_Movement_Sale() -- !!!не ошибка!!!
-                                               , inOperDate_order := (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
+                                               , inOperDate_order := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
                                                , inOperDatePartner:= NULL
                                                , inDayPrior_PriceReturn:= 0 -- !!!параметр здесь не важен!!!
                                                , inIsPrior        := FALSE -- !!!параметр здесь не важен!!!
+                                               , inOperDatePartner_order:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
                                                 ) AS tmp;
 
 
@@ -81,7 +82,7 @@ BEGIN
                                           WHERE ObjectLink_Juridical.ObjectId = vbPartnerId
                                             AND ObjectLink_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                                          )
-                                  THEN (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
+                                  THEN (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
                              ELSE (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
                                 + (COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL
                              -- + (COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()),  0) :: TVarChar || ' DAY') :: INTERVAL
@@ -1129,5 +1130,4 @@ ALTER FUNCTION gpSelect_MovementItem_OrderExternal_Mobile (Integer, Integer, TDa
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_OrderExternal_Mobile (inMovementId:= 25173, inPriceListId:= zc_PriceList_Basis(), inOperDate:= CURRENT_TIMESTAMP, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_MovementItem_OrderExternal_Mobile (inMovementId:= 25173, inPriceListId:= zc_PriceList_Basis(), inOperDate:= CURRENT_TIMESTAMP, inShowAll:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
-
 --select * from gpSelect_MovementItem_OrderExternal_Mobile(inMovementId := 5123250  , inPriceListId := 18840 , inOperDate := ('01.12.2016')::TDateTime , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '5');

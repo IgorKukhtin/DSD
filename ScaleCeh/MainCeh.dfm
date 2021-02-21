@@ -1167,13 +1167,14 @@ object MainCehForm: TMainCehForm
     end
     object rgScale: TRadioGroup
       Left = 0
-      Top = 456
+      Top = 421
       Width = 130
       Height = 117
       Align = alBottom
       Caption = #1042#1077#1089#1099
       TabOrder = 1
       OnClick = rgScaleClick
+      ExplicitTop = 456
     end
     object Panel25: TPanel
       Left = 0
@@ -1247,12 +1248,13 @@ object MainCehForm: TMainCehForm
     end
     object HeadCountPanel: TPanel
       Left = 0
-      Top = 396
+      Top = 361
       Width = 130
       Height = 60
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 4
+      ExplicitTop = 396
       object HeadCountLabel: TLabel
         Left = 0
         Top = 0
@@ -1767,6 +1769,30 @@ object MainCehForm: TMainCehForm
         TabOrder = 0
         Text = 'EditPersonalGroup'
         Width = 120
+      end
+    end
+    object PanelSticker_Ceh: TPanel
+      Left = 0
+      Top = 538
+      Width = 130
+      Height = 35
+      Align = alBottom
+      Font.Charset = RUSSIAN_CHARSET
+      Font.Color = clTeal
+      Font.Height = -12
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 9
+      Visible = False
+      ExplicitTop = 573
+      object cbSticker_Ceh: TCheckBox
+        Left = 7
+        Top = 8
+        Width = 117
+        Height = 17
+        Caption = #1055#1077#1095#1072#1090#1100' '#1057#1090#1080#1082#1077#1088#1072
+        TabOrder = 0
       end
     end
   end

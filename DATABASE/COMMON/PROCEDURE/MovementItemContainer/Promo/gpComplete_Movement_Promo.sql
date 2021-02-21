@@ -5,14 +5,21 @@ DROP FUNCTION IF EXISTS gpComplete_Movement_Promo  (Integer, TVarChar);
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Promo(
     IN inMovementId        Integer               , -- ключ Документа
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
-)                              
+)
 RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId    Integer;
+   DECLARE vbStartSale TDateTime;
+   DECLARE vbEndSale   TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Promo());
+
+
+     -- нашли
+     vbStartSale:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_StartSale());
+     vbEndSale  := (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_EndSale());
 
 
      -- проверка - если нет ВСЕХ подписей, проводить нельзя
@@ -26,8 +33,8 @@ BEGIN
     IF EXISTS (SELECT 1
                 FROM MovementItem
                      INNER JOIN MovementItemFloat AS MIFloat_PriceTender
-                                                  ON MIFloat_PriceTender.MovementItemId = MovementItem.Id 
-                                                 AND MIFloat_PriceTender.DescId = zc_MIFloat_PriceTender() 
+                                                  ON MIFloat_PriceTender.MovementItemId = MovementItem.Id
+                                                 AND MIFloat_PriceTender.DescId = zc_MIFloat_PriceTender()
                                                  AND MIFloat_PriceTender.valueData <> 0
                 WHERE MovementItem.MovementId = inMovementId
                   AND MovementItem.DescId     = zc_MI_Master()
@@ -47,7 +54,7 @@ BEGIN
                 GROUP BY MovementItem.ObjectId
                 HAVING MIN (MovementItem.Amount) <> MAX (MovementItem.Amount)
                )
-     THEN 
+     THEN
          RAISE EXCEPTION 'Ошибка.Для товара <%> введен разный Процент скидки : <%> и <%>.'
                        , lfGet_Object_ValueData(
                          (SELECT MovementItem.ObjectId
@@ -89,6 +96,86 @@ BEGIN
      PERFORM lpUpdate_Movement_Promo_Auto (inMovementId := inMovementId
                                          , inUserId     := vbUserId
                                           );
+
+     -- проверка - не должно быть в этом периоде таких же Акций
+    CREATE TEMP TABLE _tmpPromo_find ON COMMIT DROP AS
+      (WITH tmpPromoPartner AS (SELECT COALESCE (MovementItem.ObjectId, 0)          AS PartnerId
+                                     , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
+                                FROM Movement
+                                     INNER JOIN MovementItem
+                                             ON MovementItem.MovementId = Movement.Id
+                                            AND MovementItem.DescId     = zc_MI_Master()
+                                            AND MovementItem.isErased   = FALSE
+                                     LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                                                      ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                                                     AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                                WHERE Movement.ParentId = inMovementId
+                               )
+            , tmpPromoGoods AS (SELECT DISTINCT MovementItem.ObjectId AS GoodsId
+                                FROM MovementItem
+                                WHERE MovementItem.MovementId = inMovementId
+                                  AND MovementItem.DescId     = zc_MI_Master()
+                                  AND MovementItem.isErased   = FALSE
+                               )
+       -- Результат
+       SELECT Movement.Id AS MovementId, Movement.InvNumber, Movement.OperDate
+            , MovementDate_StartSale.ValueData AS StartSale, MovementDate_EndSale.ValueData AS EndSale
+            , MI_PromoGoods.ObjectId   AS GoodsId
+            , MI_PromoPartner.ObjectId AS PartnerId
+       FROM Movement
+            INNER JOIN MovementDate AS MovementDate_StartSale
+                                    ON MovementDate_StartSale.MovementId = Movement.Id
+                                   AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
+            INNER JOIN MovementDate AS MovementDate_EndSale
+                                    ON MovementDate_EndSale.MovementId = Movement.Id
+                                   AND MovementDate_EndSale.DescId     = zc_MovementDate_EndSale()
+            INNER JOIN Movement AS Movement_PromoPartner ON Movement_PromoPartner.ParentId = Movement.Id
+                                                        AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
+            INNER JOIN MovementItem AS MI_PromoGoods
+                                    ON MI_PromoGoods.MovementId = Movement.Id
+                                   AND MI_PromoGoods.DescId     = zc_MI_Master()
+                                   AND MI_PromoGoods.isErased   = FALSE
+            -- Товары
+            INNER JOIN tmpPromoGoods ON tmpPromoGoods.GoodsId = MI_PromoGoods.ObjectId
+
+            INNER JOIN MovementItem AS MI_PromoPartner
+                                    ON MI_PromoPartner.MovementId = Movement_PromoPartner.Id
+                                   AND MI_PromoPartner.DescId     = zc_MI_Master()
+                                   AND MI_PromoPartner.isErased   = FALSE
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                             ON MILinkObject_Contract.MovementItemId = MI_PromoPartner.Id
+                                            AND MILinkObject_Contract.DescId         = zc_MILinkObject_Contract()
+            -- Контрагенты
+            INNER JOIN tmpPromoPartner ON tmpPromoPartner.PartnerId  = MI_PromoPartner.ObjectId
+                                      AND (tmpPromoPartner.ContractId = COALESCE (MILinkObject_Contract.ObjectId, 0)
+                                        OR tmpPromoPartner.ContractId = 0
+                                        OR COALESCE (MILinkObject_Contract.ObjectId, 0) = 0
+                                          )
+
+       WHERE Movement.DescId   = zc_Movement_Promo()
+         AND Movement.StatusId = zc_Enum_Status_Complete()
+       AND (vbStartSale BETWEEN MovementDate_StartSale.ValueData AND MovementDate_EndSale.ValueData
+         OR vbEndSale   BETWEEN MovementDate_StartSale.ValueData AND MovementDate_EndSale.ValueData
+           )
+      );
+
+     -- проверка - не должно быть в этом периоде таких же Акций
+     IF EXISTS (SELECT 1 FROM _tmpPromo_find WHERE _tmpPromo_find.MovementId <> inMovementId)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Невозможно дублирование Акций.%Найдена Акция № <%> от <%>%период проведения с <%> по <%>%для <%>%%.'
+                        , CHR (13)
+                        , (SELECT _tmpPromo_find.InvNumber FROM _tmpPromo_find WHERE _tmpPromo_find.MovementId <> inMovementId ORDER BY _tmpPromo_find.MovementId LIMIT 1)
+                        , (SELECT zfConvert_DateToString (_tmpPromo_find.OperDate) FROM _tmpPromo_find WHERE _tmpPromo_find.MovementId <> inMovementId ORDER BY _tmpPromo_find.MovementId LIMIT 1)
+                        , CHR (13)
+                        , (SELECT zfConvert_DateToString (_tmpPromo_find.StartSale) FROM _tmpPromo_find WHERE _tmpPromo_find.MovementId <> inMovementId ORDER BY _tmpPromo_find.MovementId LIMIT 1)
+                        , (SELECT zfConvert_DateToString (_tmpPromo_find.EndSale)   FROM _tmpPromo_find WHERE _tmpPromo_find.MovementId <> inMovementId ORDER BY _tmpPromo_find.MovementId LIMIT 1)
+                        , CHR (13)
+                        , (SELECT lfGet_Object_ValueData (_tmpPromo_find.GoodsId) FROM _tmpPromo_find WHERE _tmpPromo_find.MovementId <> inMovementId ORDER BY _tmpPromo_find.MovementId LIMIT 1)
+                        , CHR (13)
+                        , (SELECT lfGet_Object_ValueData_sh (_tmpPromo_find.PartnerId) FROM _tmpPromo_find WHERE _tmpPromo_find.MovementId <> inMovementId ORDER BY _tmpPromo_find.MovementId LIMIT 1)
+                         ;
+     END IF;
+
 
      -- проводим Документ + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId

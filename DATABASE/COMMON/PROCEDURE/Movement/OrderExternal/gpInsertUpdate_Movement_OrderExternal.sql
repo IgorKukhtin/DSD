@@ -77,10 +77,11 @@ BEGIN
          FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := inContractId
                                                    , inPartnerId      := inFromId
                                                    , inMovementDescId := zc_Movement_Sale() -- !!!не ошибка!!!
-                                                   , inOperDate_order := outOperDatePartner
+                                                   , inOperDate_order := inOperDate
                                                    , inOperDatePartner:= NULL
                                                    , inDayPrior_PriceReturn:= 0 -- !!!параметр здесь не важен!!!
                                                    , inIsPrior        := FALSE -- !!!параметр здесь не важен!!!
+                                                   , inOperDatePartner_order:= outOperDatePartner
                                                     ) AS tmp;
          -- !!!замена!!!
          -- !!!на дату outOperDatePartner!!!

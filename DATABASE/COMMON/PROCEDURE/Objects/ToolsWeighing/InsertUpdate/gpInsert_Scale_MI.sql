@@ -79,7 +79,7 @@ BEGIN
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Insert_Scale_MI());
      vbUserId:= lpGetUserBySession (inSession);
 
-IF inBranchCode BETWEEN 201 AND 210 AND COALESCE (inBoxCount, 0) = 0 THEN inBoxCount:= 1; END IF;
+-- IF inBranchCode BETWEEN 201 AND 210 AND COALESCE (inBoxCount, 0) = 0 THEN inBoxCount:= 1; END IF;
 
      -- сразу запомнили врем€ начала выполнени€ ѕроц.
      vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
@@ -283,7 +283,7 @@ IF inBranchCode BETWEEN 201 AND 210 AND COALESCE (inBoxCount, 0) = 0 THEN inBoxC
                                                                          END
                                                    , inMovementDescId := vbMovementDescId
                                                    , inOperDate_order := CASE WHEN vbMovementId_order <> 0
-                                                                                   THEN (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId_order AND MD.DescId = zc_MovementDate_OperDatePartner())
+                                                                                   THEN (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_order)
                                                                               ELSE NULL
                                                                          END
                                                    , inOperDatePartner:= CASE WHEN 1=0 AND inBranchCode BETWEEN 201 AND 210 -- Dnepr-OBV
@@ -294,6 +294,7 @@ IF inBranchCode BETWEEN 201 AND 210 AND COALESCE (inBoxCount, 0) = 0 THEN inBoxC
                                                                          END
                                                    , inDayPrior_PriceReturn:= inDayPrior_PriceReturn
                                                    , inIsPrior        := FALSE -- !!!отказались от старых цен!!!
+                                                   , inOperDatePartner_order:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId_order AND MD.DescId = zc_MovementDate_OperDatePartner())
                                                     ) AS tmp;
      END IF;
      END IF;

@@ -68,15 +68,16 @@ BEGIN
                                                , inPartnerId      := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
                                                , inMovementDescId := zc_Movement_Sale()
                                                , inOperDate_order := CASE WHEN vbMovementId_order <> 0
-                                                                               THEN (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId_order AND MD.DescId = zc_MovementDate_OperDatePartner())
+                                                                               THEN (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_order)
                                                                           ELSE NULL
                                                                      END
-                                               , inOperDatePartner:= CASE WHEN vbMovementId_order <> 0 AND inOperDate + INTERVAL '1 DAY' >= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId_order AND MD.DescId = zc_MovementDate_OperDatePartner())
+                                               , inOperDatePartner:= CASE WHEN vbMovementId_order <> 0 AND inOperDate + INTERVAL '1 DAY' >= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_order)
                                                                                THEN NULL
                                                                           ELSE inOperDate
                                                                      END
                                                , inDayPrior_PriceReturn:= 0 -- !!!параметр здесь не важен!!!
                                                , inIsPrior        := FALSE -- !!!параметр здесь не важен!!!
+                                               , inOperDatePartner_order:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId_order AND MD.DescId = zc_MovementDate_OperDatePartner())
                                                 ) AS tmp;
 
 
@@ -108,7 +109,7 @@ BEGIN
                                           WHERE ObjectLink_Juridical.ObjectId = vbPartnerId
                                             AND ObjectLink_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                                          )
-                                  THEN (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId_order AND MD.DescId = zc_MovementDate_OperDatePartner())
+                                  THEN (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_order)
                              ELSE (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
                         END;
 

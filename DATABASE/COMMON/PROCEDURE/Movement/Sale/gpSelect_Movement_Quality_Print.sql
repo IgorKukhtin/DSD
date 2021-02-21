@@ -999,4 +999,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Quality_Print (inMovementId:= 130359, inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 1>";
+-- SELECT * FROM gpSelect_Movement_Quality_Print (inMovementId:= 19042873, inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 1>";

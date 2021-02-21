@@ -304,16 +304,17 @@ BEGIN
      END IF;
 
 
-     -- эти параметры всегда из Прайс-листа !!!на дату vbOperDatePartner!!!
+     -- эти параметры всегда из Прайс-листа !!!на дату vbOperDate!!!
      SELECT PriceListId, PriceWithVAT, VATPercent, OperDate
             INTO vbPriceListId, vbPriceWithVAT, vbVATPercent, vbOperDate_pl
      FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := vbContractId
                                                , inPartnerId      := vbPartnerId
                                                , inMovementDescId := zc_Movement_Sale()
-                                               , inOperDate_order := vbOperDatePartner
+                                               , inOperDate_order := vbOperDate
                                                , inOperDatePartner:= NULL
                                                , inDayPrior_PriceReturn:= 0 -- !!!параметр здесь не важен!!!
                                                , inIsPrior        := FALSE -- !!!параметр здесь не важен!!!
+                                               , inOperDatePartner_order:= vbOperDatePartner
                                                 ) AS tmp;
 
 

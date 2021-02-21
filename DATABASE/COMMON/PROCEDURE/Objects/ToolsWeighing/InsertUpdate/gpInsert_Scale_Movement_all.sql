@@ -81,10 +81,15 @@ end if;
      -- проверка
      IF inBranchCode <> COALESCE((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_BranchCode()), inBranchCode)
      THEN
-         RAISE EXCEPTION 'Ошибка.У Вас в настройках код Филиала = <%>.Документ можно закрыть на компьютере где код Филиала = <%>.'
-                       , inBranchCode
-                       , (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_BranchCode())
-                        ;
+         /*IF inBranchCode = 7
+         THEN
+             PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_BranchCode(), inMovementId, inBranchCode);
+         ELSE*/
+             RAISE EXCEPTION 'Ошибка.У Вас в настройках код Филиала = <%>.Документ можно закрыть на компьютере где код Филиала = <%>.'
+                           , inBranchCode
+                           , zfConvert_FloatToString ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_BranchCode()))
+                            ;
+       --END IF;
      END IF;
 
 
@@ -1691,7 +1696,8 @@ end if;
 end if;*/
 
 -- !!! ВРЕМЕННО !!!
-IF inSession = '5' AND 1=1 THEN
+ IF inSession = '5' AND 1=1 THEN
+-- IF inSession = '1162887' AND 1=1 THEN
     RAISE EXCEPTION 'Admin - Test = OK : %  %  %  % % % % %'
   , inBranchCode -- 'Повторите действие через 3 мин.'
   , vbMovementId_begin

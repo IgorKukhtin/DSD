@@ -1,16 +1,18 @@
 -- Function: lfGet_Object_Partner_PriceList_onDate (Integer, Integer, TDateTime)
 
 DROP FUNCTION IF EXISTS lfGet_Object_Partner_PriceList_onDate (Integer, Integer, Integer, TDateTime, TDateTime, Boolean);
-DROP FUNCTION IF EXISTS lfGet_Object_Partner_PriceList_onDate (Integer, Integer, Integer, TDateTime, TDateTime, Integer, Boolean);
+-- DROP FUNCTION IF EXISTS lfGet_Object_Partner_PriceList_onDate (Integer, Integer, Integer, TDateTime, TDateTime, Integer, Boolean);
+DROP FUNCTION IF EXISTS lfGet_Object_Partner_PriceList_onDate (Integer, Integer, Integer, TDateTime, TDateTime, Integer, Boolean, TDateTime);
 
 CREATE OR REPLACE FUNCTION lfGet_Object_Partner_PriceList_onDate(
-    IN inContractId           Integer, 
-    IN inPartnerId            Integer,
-    IN inMovementDescId       Integer,
-    IN inOperDate_order       TDateTime,
-    IN inOperDatePartner      TDateTime,
-    IN inDayPrior_PriceReturn Integer,
-    IN inIsPrior              Boolean
+    IN inContractId            Integer, 
+    IN inPartnerId             Integer,
+    IN inMovementDescId        Integer,
+    IN inOperDate_order        TDateTime,
+    IN inOperDatePartner       TDateTime,
+    IN inDayPrior_PriceReturn  Integer,
+    IN inIsPrior               Boolean,
+    IN inOperDatePartner_order TDateTime -- DEFAULT NULL
 )
 RETURNS TABLE (OperDate TDateTime, PriceListId Integer, PriceListName TVarChar, PriceWithVAT Boolean, VATPercent TFloat, DescId Integer, Code TVarChar, ItemName TVarChar)
 AS
@@ -162,16 +164,23 @@ BEGIN
               IF inOperDate_order IS NULL
               THEN
                   -- поиск даты для заявки
-                  inOperDate_order:= inOperDatePartner :: Date - COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: Integer
-                                                            -- - COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()), 0) :: Integer
+                  inOperDate_order:= inOperDatePartner :: Date - COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()), 0) :: Integer
+                                                               - COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: Integer
                                                                ;
               END IF;
               IF inOperDatePartner IS NULL
               THEN
-                  -- поиск даты для акций
-                  inOperDatePartner:= inOperDate_order :: Date + COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: Integer
-                                                            -- + COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()), 0) :: Integer
-                                                               ;
+                  IF inOperDatePartner_order IS NOT NULL
+                  THEN
+                     -- поиск даты для акций
+                     inOperDatePartner:= inOperDatePartner_order :: Date + COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: Integer
+                                                                         ;
+                  ELSE
+                     -- поиск даты для акций
+                     inOperDatePartner:= inOperDate_order :: Date + COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()), 0) :: Integer
+                                                                  + COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: Integer
+                                                                  ;
+                  END IF;
               END IF;
               -- 2.1. в следующем порядке: 1.1) акционный у контрагента 1.2) акционный у договора 1.3) акционный у юр.лица 2.1) обычный у контрагента 2.2) обычный у договора 2.3) обычный у юр.лица 3) zc_PriceList_Basis
               WITH tmpPartner AS (SELECT inPartnerId AS PartnerId, inContractId AS ContractId, vbJuridicalId AS JuridicalId)
@@ -377,4 +386,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lfGet_Object_Partner_PriceList_onDate (inContractId:= 347332, inPartnerId:= 348917, inMovementDescId:= zc_Movement_Sale(), inOperDate_order:= '05.05.2015', inOperDatePartner:= NULL, inDayPrior_PriceReturn:= 10, inIsPrior:= NULL)
+-- SELECT * FROM lfGet_Object_Partner_PriceList_onDate (inContractId:= 347332, inPartnerId:= 348917, inMovementDescId:= zc_Movement_Sale(), inOperDate_order:= CURRENT_DATE, inOperDatePartner:= NULL, inDayPrior_PriceReturn:= 10, inIsPrior:= NULL, inOperDatePartner_order:= CURRENT_DATE)

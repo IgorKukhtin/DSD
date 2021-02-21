@@ -29,8 +29,8 @@ BEGIN
              INNER JOIN MovementItem ON MovementItem.Id       = MIFloat_PromoMovement.MovementItemId
                                     AND MovementItem.isErased = FALSE
              INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
-                               AND Movement.StatusId = zc_Enum_Status_Complete()
-                               AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_Sale(), zc_Movement_ReturnIn())
+                                AND Movement.StatusId = zc_Enum_Status_Complete()
+                                AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_Sale(), zc_Movement_ReturnIn())
              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
@@ -67,7 +67,7 @@ BEGIN
                                                     )
      FROM (WITH tmpData AS (SELECT _tmpData.*
                             FROM _tmpData
-                                 LEFT JOIN MovementItem_PromoGoods_View AS MI_PromoGoods 
+                                 LEFT JOIN MovementItem_PromoGoods_View AS MI_PromoGoods
                                                                         ON MI_PromoGoods.MovementId           = inMovementId
                                                                        AND MI_PromoGoods.GoodsId              = _tmpData.GoodsId
                                                                        AND (MI_PromoGoods.GoodsKindCompleteId = _tmpData.GoodsKindId
@@ -85,15 +85,15 @@ BEGIN
                                    --  № п/п
                                  , ROW_NUMBER() OVER (PARTITION BY tmpData.GoodsId ORDER BY MI_PromoGoods.Amount DESC) AS Ord
                             FROM tmpData
-                                 INNER JOIN MovementItem_PromoGoods_View AS MI_PromoGoods 
+                                 INNER JOIN MovementItem_PromoGoods_View AS MI_PromoGoods
                                                                          ON MI_PromoGoods.MovementId           = inMovementId
                                                                         AND MI_PromoGoods.GoodsId              = tmpData.GoodsId
                                                                         AND MI_PromoGoods.isErased             = FALSE
                                  LEFT JOIN MovementItemFloat AS MIFloat_PriceTender
-                                                             ON MIFloat_PriceTender.MovementItemId = MI_PromoGoods.Id 
-                                                            AND MIFloat_PriceTender.DescId         = zc_MIFloat_PriceTender() 
+                                                             ON MIFloat_PriceTender.MovementItemId = MI_PromoGoods.Id
+                                                            AND MIFloat_PriceTender.DescId         = zc_MIFloat_PriceTender()
                            )
-           -- Результат                
+           -- Результат
            SELECT tmpData.GoodsId                                  AS GoodsId
                 , tmpData.GoodsKindId                              AS GoodsKindCompleteId
                 , COALESCE (tmpFind.Amount, tmpData.ChangePercent) AS Amount
@@ -105,7 +105,7 @@ BEGIN
                 LEFT JOIN tmpFind ON tmpFind.GoodsId = tmpData.GoodsId
                                  AND tmpFind.Ord     = 1
           ) AS tmp
-    ;    
+    ;
 */
      -- Результат - записываем в MovementItem Акция
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountOut()  , tmp.Id, CASE WHEN tmp.isErased = TRUE THEN 0 ELSE COALESCE (tmp.AmountOut, 0) END)
@@ -115,28 +115,47 @@ BEGIN
                                 FROM _tmpData
                                 GROUP BY _tmpData.GoodsId
                                )
+              , tmpData_promo AS (SELECT MI_PromoGoods.Id
+                                       , MI_PromoGoods.GoodsId
+                                       , MI_PromoGoods.GoodsKindCompleteId
+                                       , MI_PromoGoods.isErased
+                                         --  № п/п
+                                       , ROW_NUMBER() OVER (PARTITION BY MI_PromoGoods.GoodsId ORDER BY MI_PromoGoods.Amount DESC) AS Ord
+                                  FROM MovementItem_PromoGoods_View AS MI_PromoGoods
+                                  WHERE MI_PromoGoods.MovementId = inMovementId
+                                    AND MI_PromoGoods.isErased   = FALSE
+                                 )
+              , tmpData_notFind AS (SELECT DISTINCT _tmpData.GoodsId
+                                    FROM _tmpData
+                                         LEFT JOIN tmpData_promo ON tmpData_promo.GoodsId             = _tmpData.GoodsId
+                                                                AND tmpData_promo.GoodsKindCompleteId = _tmpData.GoodsKindId
+                                    WHERE tmpData_promo.GoodsId IS NULL
+                                   )
+           -- если в продажах "другие" виды упаковки
            SELECT MI_PromoGoods.Id
                 , MI_PromoGoods.isErased
-                , COALESCE (_tmpData.AmountOut,   COALESCE (tmpData_sum.AmountOut, 0))   /* * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END*/ AS AmountOut
-                , COALESCE (_tmpData.AmountOrder, COALESCE (tmpData_sum.AmountOrder, 0)) /** CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END*/  AS AmountOrder
-                , COALESCE (_tmpData.AmountIn,    COALESCE (tmpData_sum.AmountIn, 0))    /** CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END*/  AS AmountIn
-           FROM MovementItem_PromoGoods_View AS MI_PromoGoods
+                , COALESCE (tmpData_sum.AmountOut,   0)   /* * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END*/ AS AmountOut
+                , COALESCE (tmpData_sum.AmountOrder, 0) /** CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END*/  AS AmountOrder
+                , COALESCE (tmpData_sum.AmountIn,    0)    /** CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END*/  AS AmountIn
+           FROM tmpData_promo AS MI_PromoGoods
+                JOIN tmpData_notFind ON tmpData_notFind.GoodsId = MI_PromoGoods.GoodsId
                 LEFT JOIN tmpData_sum ON tmpData_sum.GoodsId = MI_PromoGoods.GoodsId
-                                     AND COALESCE (MI_PromoGoods.GoodsKindCompleteId, 0) = 0
+           WHERE MI_PromoGoods.Ord = 1
+          UNION ALL
+           -- если в продажах "такие же" виды упаковки
+           SELECT MI_PromoGoods.Id
+                , MI_PromoGoods.isErased
+                , COALESCE (_tmpData.AmountOut,   0)   /* * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END*/ AS AmountOut
+                , COALESCE (_tmpData.AmountOrder, 0) /** CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END*/  AS AmountOrder
+                , COALESCE (_tmpData.AmountIn,    0)    /** CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END*/  AS AmountIn
+           FROM tmpData_promo AS MI_PromoGoods
+                LEFT JOIN tmpData_notFind ON tmpData_notFind.GoodsId = MI_PromoGoods.GoodsId
                 LEFT JOIN _tmpData ON _tmpData.GoodsId     = MI_PromoGoods.GoodsId
                                   AND _tmpData.GoodsKindId = MI_PromoGoods.GoodsKindCompleteId
-                    --              AND MI_PromoGoods.isErased = FALSE
-                /*LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                     ON ObjectLink_Goods_Measure.ObjectId = MI_PromoGoods.GoodsId
-                                    AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
-                LEFT JOIN ObjectFloat AS ObjectFloat_Goods_Weight
-                                      ON ObjectFloat_Goods_Weight.ObjectId = ObjectLink_Goods_Measure.ObjectId
-                                     AND ObjectFloat_Goods_Weight.DescId   = zc_ObjectFloat_Goods_Weight()*/
-           WHERE MI_PromoGoods.MovementId = inMovementId
-           ) AS tmp
+           WHERE tmpData_notFind.GoodsId IS NULL
+          ) AS tmp
     ;
 
-     
 
 END;
 $BODY$

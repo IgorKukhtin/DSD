@@ -72,7 +72,7 @@ BEGIN
                                                                          END
                                                    , inMovementDescId := inMovementDescId
                                                    , inOperDate_order := CASE WHEN inMovementId_Order <> 0
-                                                                                   THEN (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId_Order AND MD.DescId = zc_MovementDate_OperDatePartner())
+                                                                                   THEN (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId_Order)
                                                                               ELSE NULL
                                                                          END
                                                    , inOperDatePartner:= CASE WHEN inMovementId_Order <> 0
@@ -81,6 +81,7 @@ BEGIN
                                                                          END
                                                    , inDayPrior_PriceReturn:= 0 -- !!!параметр здесь не важен!!!
                                                    , inIsPrior        := FALSE -- !!!отказались от старых цен!!!
+                                                   , inOperDatePartner_order:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId_Order AND MD.DescId = zc_MovementDate_OperDatePartner())
                                                     ) AS tmp);
      END IF;
 
@@ -152,7 +153,7 @@ then
     RAISE EXCEPTION 'Admin - Test = OK - %', inToId;
     -- 'Повторите действие через 3 мин.'
 end if;
-if inSession = '5' AND 1=1
+if inSession = '5' AND 1=0
 then
     RAISE EXCEPTION 'Admin - Test = OK - %', inToId;
     -- 'Повторите действие через 3 мин.'

@@ -277,6 +277,8 @@ type
     PersonalGroupPanel: TPanel;
     LabelPersonalGroup: TLabel;
     EditPersonalGroup: TcxButtonEdit;
+    PanelSticker_Ceh: TPanel;
+    cbSticker_Ceh: TCheckBox;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -986,6 +988,7 @@ begin
        //
        // Сразу печатаем Этикетку - для сырья
        if (Result = TRUE) and (Length(PrinterSticker_Array) > 0) and (ParamsMovement.ParamByName('isSticker_Ceh').asBoolean = TRUE)
+         and (cbSticker_Ceh.Checked = TRUE)
        then
          if PrinterSticker_Array[0].Name <> ''
          then Print_Sticker_Ceh (ParamsMovement.ParamByName('MovementDescId').AsInteger
@@ -1137,6 +1140,8 @@ begin
 
           InitializeGoodsKind(ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger);
      end;
+     //
+     //PanelSticker_Ceh.Visible:=ParamsMovement.ParamByName('isSticker_Ceh').asBoolean = TRUE;
      //***myActiveControl;
      if (ParamsMovement.ParamByName('DocumentKindId').AsInteger = zc_Enum_DocumentKind_CuterWeight)
       or(ParamsMovement.ParamByName('DocumentKindId').AsInteger = zc_Enum_DocumentKind_RealWeight)
@@ -2675,6 +2680,10 @@ begin
             LabelCountPack.Caption:='Живой вес';
             LabelSkewer.Caption:='Крючки';
   end ;
+  //
+  PanelSticker_Ceh.Visible:=(PrinterSticker_Array[0].Name <> '')
+                        and ((SettingMain.BranchCode = 201) or (SettingMain.BranchCode = 202));
+
   HeadCountPanel.Visible:=SettingMain.isModeSorting = FALSE;
   infoPanelCount.Visible:=SettingMain.isModeSorting = FALSE;
   infoPanelTare_enter.Visible:=SettingMain.isModeSorting = FALSE;
@@ -3443,7 +3452,8 @@ begin
                         , CDS.FieldByName('MovementItemId').AsInteger
                         , TRUE)
      else
-     if (1=0) and (ParamsMovement.ParamByName('isSticker_Ceh').asBoolean = FALSE)
+     if (ParamsMovement.ParamByName('isSticker_Ceh').asBoolean = FALSE)
+       and (1=0)
      then ShowMessage ('Для данной операции не предусмотрена печать Стикера')
      else
          // Сразу печатаем Этикетку - для сырья

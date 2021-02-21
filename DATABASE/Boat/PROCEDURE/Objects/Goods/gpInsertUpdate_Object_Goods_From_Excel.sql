@@ -66,6 +66,24 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Goods());
    vbUserId:= lpGetUserBySession (inSession);
 
+/*
+       IF inObjectCode = 1850
+       THEN
+         RAISE EXCEPTION 'Ошибка. inArticle = <%>   Name = <%>   ObjectCode = <%>.', inArticle, inName, inObjectCode;
+       ELSE if inObjectCode in (1851,
+1044,
+1045,
+1020,
+3121,
+1018,
+12938)
+then
+    RAISE EXCEPTION 'Ошибка. inArticle = <%>   Name = <%>   ObjectCode = <%>.', inArticle, inName, inObjectCode;
+else RETURN;
+
+       END IF;
+       END IF;
+*/
 
    -- временно
    IF COALESCE (TRIM (inName), '') = '' THEN RETURN; END IF;
@@ -151,7 +169,7 @@ BEGIN
                                               );
    END IF;
 
-   IF COALESCE (inPartnerCode, 0) <> 0
+   /*IF COALESCE (inPartnerCode, 0) <> 0
    THEN
        -- пробуем найти 
        vbPartnerId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Partner() AND Object.ObjectCode = inPartnerCode);
@@ -165,7 +183,7 @@ BEGIN
                                                   , inParam1        := inPartnerCode    :: TVarChar
                                                   );
        END IF;
-   END IF;
+   END IF;*/
 
    IF COALESCE (inGoodsSize, '') <> ''
    THEN

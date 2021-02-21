@@ -102,10 +102,11 @@ BEGIN
          FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := inContractId
                                                    , inPartnerId      := inToId
                                                    , inMovementDescId := zc_Movement_Sale()
-                                                   , inOperDate_order := CASE WHEN inMovementId_Order <> 0 THEN (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId_Order AND MD.DescId = zc_MovementDate_OperDatePartner()) ELSE NULL END 
+                                                   , inOperDate_order := CASE WHEN inMovementId_Order <> 0 THEN (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId_Order) ELSE NULL END 
                                                    , inOperDatePartner:= CASE WHEN inMovementId_Order <> 0 THEN NULL ELSE inOperDate END
                                                    , inDayPrior_PriceReturn:= 0 -- !!!параметр здесь не важен!!!
                                                    , inIsPrior        := FALSE -- !!!параметр здесь не важен!!!
+                                                   , inOperDatePartner_order:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId_Order AND MD.DescId = zc_MovementDate_OperDatePartner())
                                                     ) AS tmp;
          -- !!!замена!!!
          -- !!!расчет!!! эти параметры всегда из Прайс-листа !!!на дату inOperDatePartner!!!
