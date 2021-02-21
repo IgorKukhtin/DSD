@@ -3671,10 +3671,6 @@
 				<Form>InfoMoneyPlace_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\OrderFinanceMovement.pas">
-				<Form>OrderFinanceMovementForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\OrderFinanceJournal.pas">
 				<Form>OrderFinanceJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -4234,6 +4230,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_ProductionUnion_diff.pas">
 				<Form>Report_GoodsMI_ProductionUnion_diffForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderFinanceMovement.pas">
+				<Form>OrderFinanceMovementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

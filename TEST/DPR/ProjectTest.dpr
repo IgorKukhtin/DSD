@@ -1090,7 +1090,6 @@ uses
   OrderFinance in '..\..\Forms\Guides\OrderFinance.pas' {OrderFinanceForm: TParentForm},
   OrderFinanceEdit in '..\..\Forms\Guides\OrderFinanceEdit.pas' {OrderFinanceEditForm: TParentForm},
   InfoMoneyPlace_Object in '..\..\Forms\Guides\InfoMoneyPlace_Object.pas' {InfoMoneyPlace_ObjectForm: TParentForm},
-  OrderFinanceMovement in '..\..\Forms\Document\OrderFinanceMovement.pas' {OrderFinanceMovementForm: TParentForm},
   OrderFinanceJournal in '..\..\Forms\Document\OrderFinanceJournal.pas' {OrderFinanceJournalForm: TParentForm},
   JuridicalOrderFinance in '..\..\Forms\Guides\JuridicalOrderFinance.pas' {JuridicalOrderFinanceForm: TParentForm},
   Report_RemainsOLAPTable in '..\..\Forms\Report\Report_RemainsOLAPTable.pas' {Report_RemainsOLAPTableForm: TParentForm},
@@ -1234,7 +1233,8 @@ uses
   Income20202 in '..\..\Forms\Document\Income20202.pas' {Income20202Form: TParentForm},
   PartionGoods20202Choice in '..\..\Forms\Guides\PartionGoods20202Choice.pas' {PartionGoods20202ChoiceForm: TParentForm},
   TaxCorrectiveJournalChoice in '..\..\Forms\Document\TaxCorrectiveJournalChoice.pas' {TaxCorrectiveJournalChoiceForm: TParentForm},
-  Report_GoodsMI_ProductionUnion_diff in '..\..\Forms\Report\Report_GoodsMI_ProductionUnion_diff.pas' {Report_GoodsMI_ProductionUnion_diffForm: TParentForm};
+  Report_GoodsMI_ProductionUnion_diff in '..\..\Forms\Report\Report_GoodsMI_ProductionUnion_diff.pas' {Report_GoodsMI_ProductionUnion_diffForm: TParentForm},
+  OrderFinanceMovement in '..\..\Forms\Document\OrderFinanceMovement.pas' {OrderFinanceMovementForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

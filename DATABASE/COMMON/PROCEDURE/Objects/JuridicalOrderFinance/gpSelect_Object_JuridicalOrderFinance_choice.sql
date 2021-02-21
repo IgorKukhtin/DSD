@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer
              , InfoMoneyCode Integer
              , InfoMoneyName TVarChar
              , InfoMoneyName_all TVarChar
+             , ContractId Integer, ContractName TVarChar
              , SummOrderFinance TFloat
              , isErased Boolean
              ) AS
@@ -36,6 +37,8 @@ BEGIN
         WITH
         tmpData AS (SELECT DISTINCT Object_Contract_View.JuridicalId
                          , Object_Contract_View.InfoMoneyId
+                         , Object_Contract_View.ContractId
+                         , Object_Contract_View.InvNumber AS ContractName
                     FROM Object_Contract_View
                     WHERE Object_Contract_View.isErased = FALSE
                       AND Object_Contract_View.EndDate >= CURRENT_DATE
@@ -126,6 +129,9 @@ BEGIN
              , Object_InfoMoney_View.InfoMoneyCode
              , Object_InfoMoney_View.InfoMoneyName
              , Object_InfoMoney_View.InfoMoneyName_all
+             
+             , tmpData.ContractId
+             , tmpData.ContractName
 
              , COALESCE (tmpJuridicalOrderFinance.SummOrderFinance,0) :: TFloat  AS SummOrderFinance
             
@@ -178,6 +184,16 @@ BEGIN
                                                                  OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyGroupId)
                         )
 
+     , tmpData AS (SELECT DISTINCT Object_Contract_View.JuridicalId
+                        , Object_Contract_View.InfoMoneyId
+                        , Object_Contract_View.ContractId
+                        , Object_Contract_View.InvNumber AS ContractName
+                   FROM Object_Contract_View
+                   WHERE Object_Contract_View.isErased = FALSE
+                     AND Object_Contract_View.EndDate >= CURRENT_DATE
+                  )
+
+
 
         SELECT Object_JuridicalOrderFinance.Id  AS Id
  
@@ -209,6 +225,9 @@ BEGIN
              , Object_InfoMoney_View.InfoMoneyName
              , Object_InfoMoney_View.InfoMoneyName_all
              
+             , tmpData.ContractId
+             , tmpData.ContractName
+
              , ObjectFloat_SummOrderFinance.ValueData :: TFloat AS SummOrderFinance
             
              , Object_JuridicalOrderFinance.isErased  AS isErased
@@ -255,6 +274,9 @@ BEGIN
              LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate
                                      ON ObjectBoolean_isCorporate.ObjectId = Object_Juridical.Id
                                     AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
+
+             LEFT JOIN tmpData ON tmpData.InfoMoneyId = Object_InfoMoney_View.InfoMoneyId
+                              AND tmpData.JuridicalId = Object_Juridical.Id
 
         WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
          AND (Object_JuridicalOrderFinance.isErased = inisErased OR inisErased = TRUE)

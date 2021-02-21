@@ -904,6 +904,9 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_PartionNumEnd() RETURNS Integer AS $BODY$B
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_PartionNumEnd', 'Последний № для Партии товара' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionNumEnd');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_AmountStart() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountStart'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_AmountStart', 'Первоначальный план оплат' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountStart');
 
 ----!!!!!!Farmacy
 

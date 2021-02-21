@@ -18,11 +18,7 @@ BEGIN
      vbUserId := inSession;
      
      inOperDate := DATE_TRUNC ('DAY', inOperDate);
-     
-     IF date_part('DOW', inOperDate)::Integer <> 1
-     THEN 
-       RAISE EXCEPTION 'Ошибка. Документ "Итоговый СУА" создавать можно только понедельником.';     
-     END IF;     
+       
      
      IF COALESCE (ioId, 0) = 0
         AND EXISTS(SELECT Movement.id

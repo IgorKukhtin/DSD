@@ -19,6 +19,10 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpGetUserBySession (inSession); 
 
+   IF COALESCE (inJuridicalId,0) = 0
+   THEN
+       RETURN;
+   END IF;
 
    -- проверка уникальности
    IF EXISTS (SELECT 1

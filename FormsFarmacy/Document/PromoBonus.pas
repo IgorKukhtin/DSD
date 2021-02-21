@@ -49,10 +49,20 @@ type
     GuidesUpdate: TdsdGuides;
     RefreshDispatcher: TRefreshDispatcher;
     actRefreshUnit: TdsdDataSetRefresh;
-    bbOpenFormIncome: TdxBarButton;
+    bbOpenFormPromo: TdxBarButton;
     bbMIChildProtocolOpenForm: TdxBarButton;
     dxBarButton1: TdxBarButton;
-    JuridicalName: TcxGridDBColumn;
+    MakerName: TcxGridDBColumn;
+    actInsertByPromo: TdsdExecStoredProc;
+    spInsertByPromo: TdsdStoredProc;
+    dxBarButton2: TdxBarButton;
+    actOpenFormPromo: TdsdInsertUpdateAction;
+    macMarketingBonus: TMultiAction;
+    actExec_Update_MarketingBonus: TdsdExecStoredProc;
+    actExecuteDialogactMarketingBonus: TExecuteDialog;
+    dxBarButton3: TdxBarButton;
+    sptExec_Update_MarketingBonus: TdsdStoredProc;
+    DateUpdate: TcxGridDBColumn;
   private
     { Private declarations }
   public
