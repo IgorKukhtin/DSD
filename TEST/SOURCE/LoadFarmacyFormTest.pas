@@ -978,10 +978,17 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_SUAForm'));
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPrice_PromoBonusForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPrice_PromoBonusForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_UnitDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_UnitDialogForm');
+
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_SUAForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSun_SUAForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SalesOfTermDrugsDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SalesOfTermDrugsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SalesOfTermDrugsDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SalesOfTermDrugsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SalesOfTermDrugsForm');

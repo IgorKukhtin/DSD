@@ -1001,7 +1001,9 @@ uses
   Instructions in '..\..\FormsFarmacy\Guides\Instructions.pas' {InstructionsForm: TParentForm},
   InstructionsEdit in '..\..\FormsFarmacy\Guides\InstructionsEdit.pas' {InstructionsEditForm: TParentForm},
   PromoBonus in '..\..\FormsFarmacy\Document\PromoBonus.pas' {PromoBonusForm: TParentForm},
-  PromoBonusJournal in '..\..\FormsFarmacy\Document\PromoBonusJournal.pas' {PromoBonusJournalForm: TParentForm};
+  PromoBonusJournal in '..\..\FormsFarmacy\Document\PromoBonusJournal.pas' {PromoBonusJournalForm: TParentForm},
+  Report_GoodsPrice_PromoBonus in '..\..\FormsFarmacy\Report\Report_GoodsPrice_PromoBonus.pas' {Report_GoodsPrice_PromoBonusForm: TParentForm},
+  Report_UnitDialog in '..\..\FormsFarmacy\Report\Report_UnitDialog.pas' {Report_GoodsPrice_PromoBonusDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

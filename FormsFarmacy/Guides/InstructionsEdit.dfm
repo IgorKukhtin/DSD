@@ -90,6 +90,7 @@
     Caption = #1048#1084#1103' '#1092#1072#1081#1083#1072
   end
   object ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 240
     Top = 12
     object dsdDataSetRefresh: TdsdDataSetRefresh
@@ -120,6 +121,190 @@
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
+    end
+    object actSendFile: TdsdFTP
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actUpdate_FileName
+      BeforeAction = actOpenInstruction
+      HostParam.Value = ''
+      HostParam.Component = FormParams
+      HostParam.ComponentItem = 'Host'
+      HostParam.DataType = ftString
+      HostParam.MultiSelectSeparator = ','
+      PortParam.Value = 21
+      PortParam.Component = FormParams
+      PortParam.ComponentItem = 'Port'
+      PortParam.MultiSelectSeparator = ','
+      UsernameParam.Value = ''
+      UsernameParam.Component = FormParams
+      UsernameParam.ComponentItem = 'Username'
+      UsernameParam.DataType = ftString
+      UsernameParam.MultiSelectSeparator = ','
+      PasswordParam.Value = ''
+      PasswordParam.Component = FormParams
+      PasswordParam.ComponentItem = 'Password'
+      PasswordParam.DataType = ftString
+      PasswordParam.MultiSelectSeparator = ','
+      DirParam.Value = ''
+      DirParam.Component = FormParams
+      DirParam.ComponentItem = 'Dir'
+      DirParam.DataType = ftString
+      DirParam.MultiSelectSeparator = ','
+      FullFileNameParam.Value = ''
+      FullFileNameParam.Component = FormParams
+      FullFileNameParam.ComponentItem = 'FullFileName'
+      FullFileNameParam.DataType = ftString
+      FullFileNameParam.MultiSelectSeparator = ','
+      FileNameFTPParam.Value = ''
+      FileNameFTPParam.Component = FormParams
+      FileNameFTPParam.ComponentItem = 'FileNameFTP'
+      FileNameFTPParam.DataType = ftString
+      FileNameFTPParam.MultiSelectSeparator = ','
+      FileNameParam.Value = ''
+      FileNameParam.Component = edFileName
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      DownloadFolderParam.Value = ''
+      DownloadFolderParam.DataType = ftString
+      DownloadFolderParam.MultiSelectSeparator = ','
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1092#1072#1081#1083
+      ImageIndex = 30
+    end
+    object actDownloadAndRunFile: TdsdFTP
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actInstructionsFTPParams
+      HostParam.Value = ''
+      HostParam.Component = FormParams
+      HostParam.ComponentItem = 'Host'
+      HostParam.DataType = ftString
+      HostParam.MultiSelectSeparator = ','
+      PortParam.Value = 21
+      PortParam.Component = FormParams
+      PortParam.ComponentItem = 'Port'
+      PortParam.MultiSelectSeparator = ','
+      UsernameParam.Value = ''
+      UsernameParam.Component = FormParams
+      UsernameParam.ComponentItem = 'Username'
+      UsernameParam.DataType = ftString
+      UsernameParam.MultiSelectSeparator = ','
+      PasswordParam.Value = ''
+      PasswordParam.Component = FormParams
+      PasswordParam.ComponentItem = 'Password'
+      PasswordParam.DataType = ftString
+      PasswordParam.MultiSelectSeparator = ','
+      DirParam.Value = ''
+      DirParam.Component = FormParams
+      DirParam.ComponentItem = 'Dir'
+      DirParam.DataType = ftString
+      DirParam.MultiSelectSeparator = ','
+      FullFileNameParam.Value = ''
+      FullFileNameParam.DataType = ftString
+      FullFileNameParam.MultiSelectSeparator = ','
+      FileNameFTPParam.Value = ''
+      FileNameFTPParam.Component = FormParams
+      FileNameFTPParam.ComponentItem = 'FileNameFTP'
+      FileNameFTPParam.DataType = ftString
+      FileNameFTPParam.MultiSelectSeparator = ','
+      FileNameParam.Value = ''
+      FileNameParam.Component = edFileName
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      DownloadFolderParam.Value = 'Instructions'
+      DownloadFolderParam.DataType = ftString
+      DownloadFolderParam.MultiSelectSeparator = ','
+      FTPOperation = ftpDownloadAndRun
+      Caption = 'actDownloadAndRunFile'
+      ImageIndex = 28
+    end
+    object actDelFile: TdsdFTP
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actUpdate_FileName
+      BeforeAction = actInstructionsFTPParams
+      HostParam.Value = ''
+      HostParam.Component = FormParams
+      HostParam.ComponentItem = 'Host'
+      HostParam.DataType = ftString
+      HostParam.MultiSelectSeparator = ','
+      PortParam.Value = 21
+      PortParam.Component = FormParams
+      PortParam.ComponentItem = 'Port'
+      PortParam.MultiSelectSeparator = ','
+      UsernameParam.Value = ''
+      UsernameParam.Component = FormParams
+      UsernameParam.ComponentItem = 'Username'
+      UsernameParam.DataType = ftString
+      UsernameParam.MultiSelectSeparator = ','
+      PasswordParam.Value = ''
+      PasswordParam.Component = FormParams
+      PasswordParam.ComponentItem = 'Password'
+      PasswordParam.DataType = ftString
+      PasswordParam.MultiSelectSeparator = ','
+      DirParam.Value = ''
+      DirParam.Component = FormParams
+      DirParam.ComponentItem = 'Dir'
+      DirParam.DataType = ftString
+      DirParam.MultiSelectSeparator = ','
+      FullFileNameParam.Value = ''
+      FullFileNameParam.DataType = ftString
+      FullFileNameParam.MultiSelectSeparator = ','
+      FileNameFTPParam.Value = ''
+      FileNameFTPParam.Component = FormParams
+      FileNameFTPParam.ComponentItem = 'FileNameFTP'
+      FileNameFTPParam.DataType = ftString
+      FileNameFTPParam.MultiSelectSeparator = ','
+      FileNameParam.Value = ''
+      FileNameParam.Component = edFileName
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      DownloadFolderParam.Value = 'Instructions'
+      DownloadFolderParam.DataType = ftString
+      DownloadFolderParam.MultiSelectSeparator = ','
+      FTPOperation = ftpDelete
+      Caption = 'actDelFile'
+      ImageIndex = 52
+    end
+    object actOpenInstruction: TFileDialogAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actInstructionsFTPParams
+      FileOpenDialog.FavoriteLinks = <>
+      FileOpenDialog.FileTypes = <
+        item
+          DisplayName = #1048#1085#1089#1090#1088#1091#1082#1094#1080#1080
+          FileMask = '*.doc;*.docx'
+        end>
+      FileOpenDialog.OkButtonLabel = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1092#1072#1081#1083
+      FileOpenDialog.Options = []
+      Param.Value = Null
+      Param.Component = FormParams
+      Param.ComponentItem = 'FullFileName'
+      Param.DataType = ftString
+      Param.MultiSelectSeparator = ','
+    end
+    object actInstructionsFTPParams: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInstructionsFTPParams
+      StoredProcList = <
+        item
+          StoredProc = spInstructionsFTPParams
+        end>
+      Caption = 'actInstructionsFTPParams'
+    end
+    object actUpdate_FileName: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_FileName
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_FileName
+        end>
+      Caption = 'actUpdate_FileName'
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -166,7 +351,54 @@
       item
         Name = 'Id'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FullFileName'
+        Value = Null
+        DataType = ftString
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Host'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Port'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Username'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Password'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Dir'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FileNameFTP'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FileName'
+        Value = Null
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 296
@@ -285,28 +517,7 @@
         end
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'dxBarButton3'
         end
         item
           Visible = True
@@ -314,7 +525,7 @@
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'dxBarButton4'
         end
         item
           Visible = True
@@ -322,7 +533,7 @@
         end
         item
           Visible = True
-          ItemName = 'dxBarButton2'
+          ItemName = 'dxBarButton5'
         end
         item
           Visible = True
@@ -330,7 +541,7 @@
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -394,6 +605,18 @@
       Category = 0
       Visible = ivAlways
     end
+    object dxBarButton3: TdxBarButton
+      Action = actSendFile
+      Category = 0
+    end
+    object dxBarButton4: TdxBarButton
+      Action = actDownloadAndRunFile
+      Category = 0
+    end
+    object dxBarButton5: TdxBarButton
+      Action = actDelFile
+      Category = 0
+    end
   end
   object InstructionsKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -423,5 +646,93 @@
       end>
     Left = 192
     Top = 47
+  end
+  object spInstructionsFTPParams: TdsdStoredProc
+    StoredProcName = 'gpSelect_InstructionsFTPParams'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inID'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outHost'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Host'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPort'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'Port'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outUsername'
+        Value = 0.000000000000000000
+        Component = FormParams
+        ComponentItem = 'Username'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPassword'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'Password'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDir'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'Dir'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileNameFTP'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FileNameFTP'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 184
+    Top = 120
+  end
+  object spUpdate_FileName: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Instructions_FileName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFileName'
+        Value = Null
+        Component = edFileName
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 48
+    Top = 160
   end
 end

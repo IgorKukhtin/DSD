@@ -424,7 +424,7 @@ inherited PromoBonusForm: TPromoBonusForm
         end>
       View = cxGridDBTableView
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1073#1086#1085#1091#1089'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1048#1079#1084#1077#1085#1080#1090#1100' "'#1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1073#1086#1085#1091#1089'""'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1073#1086#1085#1091#1089'"'
       ImageIndex = 43
     end
     object actExec_Update_MarketingBonus: TdsdExecStoredProc
@@ -464,6 +464,30 @@ inherited PromoBonusForm: TPromoBonusForm
         end>
       isShowModal = True
       OpenBeforeShow = True
+    end
+    object actReport_GoodsPrice_PromoBonus: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 
+        #1042#1083#1080#1103#1085#1080#1077' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' '#1094#1077#1085#1099' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1089' '#1091#1095#1077#1090#1086#1084' '#1073#1086#1085#1091#1089#1072' '#1085#1072' '#1087#1077#1088#1077#1086#1094#1077 +
+        #1085#1082#1091
+      Hint = 
+        #1042#1083#1080#1103#1085#1080#1077' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' '#1094#1077#1085#1099' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1089' '#1091#1095#1077#1090#1086#1084' '#1073#1086#1085#1091#1089#1072' '#1085#1072' '#1087#1077#1088#1077#1086#1094#1077 +
+        #1085#1082#1091
+      ImageIndex = 3
+      FormName = 'TReport_GoodsPrice_PromoBonusForm'
+      FormNameParam.Value = 'TReport_GoodsPrice_PromoBonusForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource
@@ -575,6 +599,10 @@ inherited PromoBonusForm: TPromoBonusForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -628,6 +656,10 @@ inherited PromoBonusForm: TPromoBonusForm
     end
     object dxBarButton3: TdxBarButton
       Action = macMarketingBonus
+      Category = 0
+    end
+    object dxBarButton4: TdxBarButton
+      Action = actReport_GoodsPrice_PromoBonus
       Category = 0
     end
   end

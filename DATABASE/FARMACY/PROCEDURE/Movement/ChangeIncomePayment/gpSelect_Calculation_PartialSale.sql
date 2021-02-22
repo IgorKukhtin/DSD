@@ -95,6 +95,7 @@ BEGIN
 
                                        LEFT JOIN MovementItemContainer ON MovementItemContainer.ContainerID = Container.ID
                                                                       AND MovementItemContainer.OperDate >= inOperDate
+                                                                      AND MovementItemContainer.MovementItemId <> Object_PartionMovementItem.ObjectCode
 
                              WHERE Object_PartionMovementItem.ObjectCode IN (SELECT DISTINCT tmpIncomeList.MovementItemId FROM tmpIncomeList)
                                AND Object_PartionMovementItem.DescId = zc_object_PartionMovementItem()

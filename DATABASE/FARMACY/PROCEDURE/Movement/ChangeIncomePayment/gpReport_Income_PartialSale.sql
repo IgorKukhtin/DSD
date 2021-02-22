@@ -133,6 +133,7 @@ BEGIN
 
                                        LEFT JOIN MovementItemContainer ON MovementItemContainer.ContainerID = Container.ID
                                                                       AND MovementItemContainer.OperDate >= inOperDate
+                                                                      AND MovementItemContainer.MovementId <> tmpIncomeList.MovementId
 
                              WHERE Object_PartionMovementItem.ObjectCode IN (SELECT DISTINCT tmpIncomeList.MovementItemId FROM tmpIncomeList)
                                AND Object_PartionMovementItem.DescId = zc_object_PartionMovementItem()
@@ -186,4 +187,4 @@ $BODY$
                               
 --select * from gpReport_Income_PartialSale(inOperDate := ('28.12.2020')::TDateTime, inJuridicalId := 13310756 , inFromId := 9526799, inSession := '3');
 
-select * from gpReport_Income_PartialSale(inOperDate := ('26.01.2021')::TDateTime , inJuridicalId := 723462 , inFromId := 15702720 ,  inSession := '3');
+select * from gpReport_Income_PartialSale(inOperDate := ('15.02.2021')::TDateTime , inJuridicalId := 13310756 , inFromId := 9526799 ,  inSession := '3');

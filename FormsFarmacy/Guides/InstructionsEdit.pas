@@ -49,6 +49,17 @@ type
     edFileName: TcxTextEdit;
     cxLabel2: TcxLabel;
     InstructionsKindGuides: TdsdGuides;
+    actSendFile: TdsdFTP;
+    actDownloadAndRunFile: TdsdFTP;
+    actDelFile: TdsdFTP;
+    dxBarButton3: TdxBarButton;
+    dxBarButton4: TdxBarButton;
+    dxBarButton5: TdxBarButton;
+    actOpenInstruction: TFileDialogAction;
+    spInstructionsFTPParams: TdsdStoredProc;
+    actInstructionsFTPParams: TdsdExecStoredProc;
+    spUpdate_FileName: TdsdStoredProc;
+    actUpdate_FileName: TdsdExecStoredProc;
   private
     { Private declarations }
   public
