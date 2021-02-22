@@ -67,12 +67,13 @@ BEGIN
                OR COALESCE (tmp.Remains, 0) <> 0;
 
     -- строки документа
-    CREATE TEMP TABLE _tmpData (Id Integer, JuridicalId Integer, ContractId Integer, PaidKindId Integer, InfoMoneyId Integer, BankAccountId Integer) ON COMMIT DROP;
-    INSERT INTO _tmpData (Id, JuridicalId, ContractId, PaidKindId, InfoMoneyId, BankAccountId)
+    CREATE TEMP TABLE _tmpData (Id Integer, JuridicalId Integer, ContractId Integer, PaidKindId Integer, InfoMoneyId Integer, BankAccountId Integer, Comment TVarChar) ON COMMIT DROP;
+    INSERT INTO _tmpData (Id, JuridicalId, ContractId, PaidKindId, InfoMoneyId, BankAccountId, Comment)
      WITH
      tmpJuridicalOrderFinance AS (SELECT tmp.BankAccountId
                                        , tmp.JuridicalId
                                        , tmp.InfoMoneyId
+                                       , tmp.Comment
                                   FROM gpSelect_Object_JuridicalOrderFinance_choice (inBankAccountMainId := vbBankAccountMainId
                                                                                    , inOrderFinanceId    := vbOrderFinanceId
                                                                                    , inisShowAll         := FALSE
@@ -103,6 +104,7 @@ BEGIN
                       , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
                       , OL_Contract_PaidKind.ChildObjectId          AS PaidKindId
                       , tmpJuridicalOrderFinance.BankAccountId      AS BankAccountId
+                      , tmpJuridicalOrderFinance.Comment            AS Comment
                  FROM ObjectLink AS ObjectLink_Contract_InfoMoney
                       
                       INNER JOIN ObjectLink AS ObjectLink_Contract_Juridical
@@ -125,6 +127,7 @@ BEGIN
                     , OL_Contract_PaidKind.ChildObjectId  AS PaidKindId
                     , OL_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
                     , MILinkObject_BankAccount.ObjectId   AS BankAccountId
+                    , MIString_Comment.ValueData          AS Comment
                FROM MovementItem
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                                     ON MILinkObject_Contract.MovementItemId = MovementItem.Id
@@ -132,6 +135,10 @@ BEGIN
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_BankAccount
                                                     ON MILinkObject_BankAccount.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_BankAccount.DescId = zc_MILinkObject_BankAccount()
+
+                   LEFT JOIN MovementItemString AS MIString_Comment
+                                                ON MIString_Comment.MovementItemId = MovementItem.Id
+                                               AND MIString_Comment.DescId = zc_MIString_Comment()
 
                    INNER JOIN ObjectLink AS OL_Contract_PaidKind
                                          ON OL_Contract_PaidKind.ObjectId = MILinkObject_Contract.ObjectId
@@ -153,6 +160,7 @@ BEGIN
            , COALESCE (tmpData.PaidKindId, tmpMI.PaidKindId)   AS PaidKindId
            , COALESCE (tmpData.InfoMoneyId, tmpMI.InfoMoneyId) AS InfoMoneyId
            , COALESCE (tmpData.BankAccountId, tmpMI.BankAccountId) AS BankAccountId
+           , COALESCE (tmpData.Comment, tmpMI.Comment)         AS Comment
        FROM tmpData
             FULL JOIN tmpMI ON tmpMI.JuridicalId   = tmpData.JuridicalId
                            AND tmpMI.ContractId    = tmpData.ContractId
@@ -168,6 +176,7 @@ BEGIN
                                              , inBankAccountId := _tmpData.BankAccountId
                                              , inAmountRemains := COALESCE (_tmpReport.Remains,0)                 ::TFloat
                                              , inAmountPartner := COALESCE (_tmpReport.DefermentPaymentRemains,0) ::TFloat
+                                             , inComment       := _tmpData.Comment                                ::TVarChar
                                              , inUserId        := vbUserId
                                               )
     FROM _tmpData

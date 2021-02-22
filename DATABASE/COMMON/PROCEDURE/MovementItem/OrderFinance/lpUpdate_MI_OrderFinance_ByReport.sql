@@ -1,7 +1,8 @@
 -- Function: lpUpdate_MI_OrderFinance_ByReport()
 
 DROP FUNCTION IF EXISTS lpUpdate_MI_OrderFinance_ByReport (Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
-DROP FUNCTION IF EXISTS lpUpdate_MI_OrderFinance_ByReport (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
+--DROP FUNCTION IF EXISTS lpUpdate_MI_OrderFinance_ByReport (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpUpdate_MI_OrderFinance_ByReport (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpUpdate_MI_OrderFinance_ByReport(
     IN inId               Integer   , --  люч объекта <Ёлемент документа>
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION lpUpdate_MI_OrderFinance_ByReport(
     IN inBankAccountId    Integer   , --
     IN inAmountRemains    TFloat    , -- 
     IN inAmountPartner    TFloat    , -- 
+    IN inComment          TVarChar ,
     IN inUserId           Integer     -- пользователь
 )
 RETURNS VOID
@@ -37,6 +39,10 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), inId, inAmountPartner);
 
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), inId, inComment);
+     
+     
      IF vbIsInsert = TRUE
      THEN
          -- сохранили св€зь с <>

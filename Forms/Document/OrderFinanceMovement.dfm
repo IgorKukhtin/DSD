@@ -817,6 +817,11 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 135
           end
+          object chComment: TcxGridDBColumn
+            Caption = #1053#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1072
+            DataBinding.FieldName = 'Comment'
+            Width = 70
+          end
         end
         object cxGridLevel1: TcxGridLevel
           GridView = cxGridDBTableView1
@@ -2746,6 +2751,15 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Component = JuridicalCDS
         ComponentItem = 'SummOrderFinance'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = JuridicalCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

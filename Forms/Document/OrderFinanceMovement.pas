@@ -170,6 +170,7 @@ type
     InsertRecord_JurOrdFin: TInsertRecord;
     actContractChoiceForm_JurOrdFin: TOpenChoiceForm;
     bbInsertRecord_JurOrdFin: TdxBarButton;
+    chComment: TcxGridDBColumn;
   private
   public
   end;

@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_Object_ImportTypeItems()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalOrderFinance (Integer, Integer, Integer, Integer, TFloat, Tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalOrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, Tvarchar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalOrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, Tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalOrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, Tvarchar, Tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalOrderFinance(
  INOUT ioId                      Integer   ,   	-- ключ объекта <>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalOrderFinance(
     IN inBankAccountId           Integer   ,    -- 
     IN inInfoMoneyId             Integer   ,    -- 
     IN inSummOrderFinance        TFloat   ,    -- 
+    IN inComment                 TVarChar ,
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS Integer AS
@@ -66,7 +68,10 @@ BEGIN
    -- сохранили св-во <>
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_JuridicalOrderFinance_SummOrderFinance(), ioId, inSummOrderFinance);
 
-
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_JuridicalOrderFinance_Comment(), ioId, inComment);
+   
+   
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 END;$BODY$
@@ -77,6 +82,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.02.21         * inComment
  09.09.20         * add inBankAccountMainId
  06.08.19         * 
 */

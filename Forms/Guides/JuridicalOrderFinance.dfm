@@ -135,6 +135,14 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
             HeaderAlignmentVert = vaCenter
             Width = 73
           end
+          object Comment: TcxGridDBColumn
+            Caption = #1053#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1072
+            DataBinding.FieldName = 'Comment'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
           object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
@@ -472,7 +480,8 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
         end>
       QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1088'/'#1089#1095#1077#1090#1072'?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1086#1073#1085#1086#1074#1083#1077#1085#1099
-      Caption = 'macInsert_byMovBankAccount'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1088'/'#1089#1095#1077#1090#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1088'/'#1089#1095#1077#1090#1072
       ImageIndex = 27
     end
     object actInsert_byMovBankAccount: TdsdExecStoredProc
