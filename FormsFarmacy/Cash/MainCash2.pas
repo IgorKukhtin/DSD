@@ -546,6 +546,8 @@ type
     actLoadLiki24_Search: TMultiAction;
     Color_IPE: TcxGridDBColumn;
     PlanEmployeeCDS: TClientDataSet;
+    actInstructionsCash: TdsdOpenForm;
+    N57: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);

@@ -140,7 +140,7 @@ inherited PromoBonusForm: TPromoBonusForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 253
+            Width = 235
           end
           object MakerName: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
@@ -148,7 +148,15 @@ inherited PromoBonusForm: TPromoBonusForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 222
+            Width = 179
+          end
+          object GoodsGroupPromoName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1076#1083#1103' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+            DataBinding.FieldName = 'GoodsGroupPromoName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 86
           end
           object Amount: TcxGridDBColumn
             Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1073#1086#1085#1091#1089

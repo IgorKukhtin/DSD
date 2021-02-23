@@ -2233,6 +2233,9 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInstructionsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInstructionsEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInstructionsCashForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInstructionsCashForm');
 end;
 
 procedure TLoadFormTest.LoadInventoryFormTest;

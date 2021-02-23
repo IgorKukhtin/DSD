@@ -1003,7 +1003,8 @@ uses
   PromoBonus in '..\..\FormsFarmacy\Document\PromoBonus.pas' {PromoBonusForm: TParentForm},
   PromoBonusJournal in '..\..\FormsFarmacy\Document\PromoBonusJournal.pas' {PromoBonusJournalForm: TParentForm},
   Report_GoodsPrice_PromoBonus in '..\..\FormsFarmacy\Report\Report_GoodsPrice_PromoBonus.pas' {Report_GoodsPrice_PromoBonusForm: TParentForm},
-  Report_UnitDialog in '..\..\FormsFarmacy\Report\Report_UnitDialog.pas' {Report_GoodsPrice_PromoBonusDialogForm: TParentForm};
+  Report_UnitDialog in '..\..\FormsFarmacy\Report\Report_UnitDialog.pas' {Report_GoodsPrice_PromoBonusDialogForm: TParentForm},
+  InstructionsCash in '..\..\FormsFarmacy\Cash\InstructionsCash.pas' {InstructionsCashForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

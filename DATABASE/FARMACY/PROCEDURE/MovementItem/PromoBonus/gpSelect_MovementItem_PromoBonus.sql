@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , MakerId Integer, MakerCode Integer, MakerName TVarChar
              , Amount TFloat, MIPromoId Integer, MovementPromoId Integer
+             , GoodsGroupPromoID Integer, GoodsGroupPromoName TVarChar
              , DateUpdate TDateTime
              , isErased Boolean)
  AS
@@ -66,6 +67,8 @@ BEGIN
                     , MI_Master.Amount                                  AS Amount
                     , MI_Master.MIPromoId                               AS MIPromoId
                     , MI_Master.MovementPromoId                         AS MovementPromoId
+                    , Object_GoodsGroupPromo.ID              AS GoodsGroupPromoID
+                    , Object_GoodsGroupPromo.ValueData       AS GoodsGroupPromoName
                     , date_trunc('day',MI_Master.DateUpdate)::TDateTime AS DateUpdate
                     , COALESCE(MI_Master.IsErased, False)               AS isErased
                FROM MI_Master
@@ -73,6 +76,10 @@ BEGIN
                    LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MI_Master.GoodsId
                    LEFT JOIN Object AS Object_Maker ON Object_Maker.Id = MI_Master.MakerId
 
+                   LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupPromo 
+                                        ON ObjectLink_Goods_GoodsGroupPromo.ObjectId = Object_Goods.Id
+                                       AND ObjectLink_Goods_GoodsGroupPromo.DescId = zc_ObjectLink_Goods_GoodsGroupPromo()
+                   LEFT JOIN Object AS Object_GoodsGroupPromo ON Object_GoodsGroupPromo.Id = ObjectLink_Goods_GoodsGroupPromo.ChildObjectId
 
                    ;
 END;

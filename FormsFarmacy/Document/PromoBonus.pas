@@ -65,6 +65,7 @@ type
     DateUpdate: TcxGridDBColumn;
     actReport_GoodsPrice_PromoBonus: TdsdOpenForm;
     dxBarButton4: TdxBarButton;
+    GoodsGroupPromoName: TcxGridDBColumn;
   private
     { Private declarations }
   public
