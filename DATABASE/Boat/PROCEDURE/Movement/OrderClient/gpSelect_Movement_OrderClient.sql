@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
              , FromId Integer, FromCode Integer, FromName TVarChar
              , ToId Integer, ToCode Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
+             , ProductId Integer, ProductName TVarChar, BrandId Integer, BrandName TVarChar, CIN TVarChar
              , Comment TVarChar
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
              , InsertName TVarChar, InsertDate TDateTime
@@ -50,12 +51,13 @@ BEGIN
                                     , MovementLinkObject_To.ObjectId            AS ToId
                                     , MovementLinkObject_From.ObjectId          AS FromId
                                     , MovementLinkObject_PaidKind.ObjectId      AS PaidKindId
+                                    , MovementLinkObject_Product.ObjectId       AS ProductId
                                     , MovementLinkMovement_Invoice.MovementChildId AS MovementId_Invoice
                                FROM tmpStatus
                                     INNER JOIN Movement AS Movement_OrderClient 
-                                                       ON Movement_OrderClient.StatusId = tmpStatus.StatusId
-                                                      AND Movement_OrderClient.OperDate BETWEEN inStartDate AND inEndDate
-                                                      AND Movement_OrderClient.DescId = zc_Movement_OrderClient()
+                                                        ON Movement_OrderClient.StatusId = tmpStatus.StatusId
+                                                       AND Movement_OrderClient.OperDate BETWEEN inStartDate AND inEndDate
+                                                       AND Movement_OrderClient.DescId = zc_Movement_OrderClient()
 
                                     LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                                  ON MovementLinkObject_To.MovementId = Movement_OrderClient.Id
@@ -68,6 +70,10 @@ BEGIN
                                     LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                                                  ON MovementLinkObject_PaidKind.MovementId = Movement_OrderClient.Id
                                                                 AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+
+                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
+                                                                 ON MovementLinkObject_Product.MovementId = Movement_OrderClient.Id
+                                                                AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
 
                                     LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                                              ON MovementString_InvNumberPartner.MovementId = Movement_OrderClient.Id
@@ -103,6 +109,11 @@ BEGIN
              , Object_To.ValueData                        AS ToName
              , Object_PaidKind.Id                         AS PaidKindId      
              , Object_PaidKind.ValueData                  AS PaidKindName
+             , Object_Product.Id                          AS ProductId
+             , Object_Product.ValueData                   AS ProductName
+             , Object_Brand.Id                            AS BrandId
+             , Object_Brand.ValueData                     AS BrandName
+             , ObjectString_CIN.ValueData                 AS CIN
              , MovementString_Comment.ValueData :: TVarChar AS Comment
              
              , Movement_Invoice.Id               AS MovementId_Invoice
@@ -120,6 +131,7 @@ BEGIN
         LEFT JOIN Object AS Object_From   ON Object_From.Id   = Movement_OrderClient.FromId
         LEFT JOIN Object AS Object_To     ON Object_To.Id     = Movement_OrderClient.ToId
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Movement_OrderClient.PaidKindId
+        LEFT JOIN Object AS Object_Product  ON Object_Product.Id  = Movement_OrderClient.ProductId
         LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = Movement_OrderClient.MovementId_Invoice
 
         LEFT JOIN MovementString AS MovementString_Comment_Invoice
@@ -173,6 +185,15 @@ BEGIN
                                      ON MLO_Update.MovementId = Movement_OrderClient.Id
                                     AND MLO_Update.DescId = zc_MovementLinkObject_Update()
         LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId  
+
+        --
+        LEFT JOIN ObjectString AS ObjectString_CIN
+                               ON ObjectString_CIN.ObjectId = Object_Product.Id
+                              AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
+        LEFT JOIN ObjectLink AS ObjectLink_Brand
+                             ON ObjectLink_Brand.ObjectId = Object_Product.Id
+                            AND ObjectLink_Brand.DescId = zc_ObjectLink_Product_Brand()
+        LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
        ;
 
 END;
@@ -182,6 +203,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 23.02.21         *
  15.02.21         *
 */
 

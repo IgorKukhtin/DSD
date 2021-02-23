@@ -149,6 +149,14 @@ type
     cxLabel9: TcxLabel;
     ceComment_Invoice: TcxTextEdit;
     DescName: TcxGridDBColumn;
+    cxLabel6: TcxLabel;
+    edProduct: TcxButtonEdit;
+    GuidesProduct: TdsdGuides;
+    cxLabel12: TcxLabel;
+    GuidesBrand: TdsdGuides;
+    edBrand: TcxButtonEdit;
+    edCIN: TcxTextEdit;
+    cxLabel13: TcxLabel;
   private
   public
   end;

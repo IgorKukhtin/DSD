@@ -1604,8 +1604,8 @@ object ProductForm: TProductForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 48
-    Top = 64
+    Left = 40
+    Top = 136
     DockControlHeights = (
       0
       0
@@ -2084,6 +2084,29 @@ object ProductForm: TProductForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BrandId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BrandId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BrandName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BrandName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CIN'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CIN'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

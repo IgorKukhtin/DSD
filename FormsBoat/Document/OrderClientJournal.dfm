@@ -330,6 +330,31 @@ object OrderClientJournalForm: TOrderClientJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
+      object ProductName: TcxGridDBColumn
+        Caption = 'Boat'
+        DataBinding.FieldName = 'ProductName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object CIN: TcxGridDBColumn
+        Caption = 'CIN Nr. (boat)'
+        DataBinding.FieldName = 'CIN'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object BrandName: TcxGridDBColumn
+        Caption = 'Brand  (boat)'
+        DataBinding.FieldName = 'BrandName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
