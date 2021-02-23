@@ -54,6 +54,7 @@ type
     dxBarSubItem1: TdxBarSubItem;
     dxBarStatic1: TdxBarStatic;
     isResolution_224: TcxGridDBColumn;
+    isPromoBonus: TcxGridDBColumn;
   private
     { Private declarations }
   public

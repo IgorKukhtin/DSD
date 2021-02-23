@@ -122,6 +122,7 @@ BEGIN
             GoodsName             TVarChar,
             isResolution_224      Boolean Not Null Default False,
             isTop                 Boolean Not Null Default False,
+            isPromoBonus          Boolean Not Null Default False,
             PercentMarkup         TFloat,
             PriceTop              TFloat,
             isSP                  Boolean Not Null Default False,
@@ -143,13 +144,28 @@ BEGIN
       ) ON COMMIT DROP;
 
     -- Собираем товары
-    INSERT INTO tmpResult (GoodsId, GoodsCode, GoodsName, isResolution_224, isTop, PercentMarkup, PriceTop, isSP, isPromo,
+    
+    WITH 
+    PromoBonus AS (SELECT MovementItem.Id                            AS Id
+                        , MovementItem.ObjectId                      AS GoodsId
+                        , MovementItem.Amount                        AS Amount
+                   FROM MovementItem
+                   WHERE MovementItem.MovementId = (SELECT MAX(Movement.id) FROM Movement 
+                                                    WHERE Movement.OperDate <= CURRENT_DATE   
+                                                      AND Movement.DescId = zc_Movement_PromoBonus() 
+                                                      AND Movement.StatusId = zc_Enum_Status_Complete())
+                     AND MovementItem.DescId = zc_MI_Master()
+                     AND MovementItem.isErased = False
+                     AND MovementItem.Amount > 0)
+                         
+    INSERT INTO tmpResult (GoodsId, GoodsCode, GoodsName, isResolution_224, isTop, isPromoBonus, PercentMarkup, PriceTop, isSP, isPromo,
                            UnitCount, BadPriceCount, isBadPriceUser, BadPricePlus, BadPriceMinus, PriceAverage, PriceMin, PriceMax)
     SELECT tmpUnitPrice.GoodsId
          , Object_Goods.ObjectCode       AS GoodsCode
          , Object_Goods.Name             AS GoodsName
          , Object_Goods.isResolution_224
          , Object_Goods_Retail.IsTop
+         , COALESCE (SUM(PromoBonus.Amount), 0) > 0  AS isPromoBonus
          , CASE WHEN Object_Goods_Retail.IsTop = TRUE THEN Object_Goods_Retail.PercentMarkup END
          , CASE WHEN Object_Goods_Retail.IsTop = TRUE THEN Object_Goods_Retail.Price END
          , False
@@ -166,6 +182,7 @@ BEGIN
          LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = tmpUnitPrice.GoodsId
          LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = Object_Goods.Id
                                       AND Object_Goods_Retail.RetailId = 4
+         LEFT JOIN PromoBonus ON PromoBonus.GoodsId = Object_Goods_Retail.Id
     GROUP BY tmpUnitPrice.GoodsId, Object_Goods.ObjectCode, Object_Goods.Name, Object_Goods.isResolution_224
            , Object_Goods_Retail.IsTop, Object_Goods_Retail.PercentMarkup, Object_Goods_Retail.Price
     HAVING (MIN(tmpUnitPrice.Price) * (100.0 + inPercent) / 100.0) < MAX(tmpUnitPrice.Price)
@@ -545,5 +562,5 @@ $BODY$
  07.11.20                                                       *
 */
 
--- тест
+-- тест 
 -- select * from gpReport_PriceCheck(inPercent := 5, inUserId := 0, inisHideExceptRed := False, inisRetail := False, inManagerUnitsOnly := True, inSession := '3');               

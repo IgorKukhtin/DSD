@@ -497,6 +497,26 @@ inherited PromoBonusForm: TPromoBonusForm
         end>
       isShowModal = False
     end
+    object actReport_Reprice_PromoBonus: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1056#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1080' '#1087#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1084' '#1073#1086#1085#1091#1089#1072#1084
+      Hint = #1056#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1080' '#1087#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1084' '#1073#1086#1085#1091#1089#1072#1084
+      ImageIndex = 18
+      FormName = 'TReport_Reprice_PromoBonusForm'
+      FormNameParam.Value = 'TReport_Reprice_PromoBonusForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -611,6 +631,10 @@ inherited PromoBonusForm: TPromoBonusForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton5'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -668,6 +692,10 @@ inherited PromoBonusForm: TPromoBonusForm
     end
     object dxBarButton4: TdxBarButton
       Action = actReport_GoodsPrice_PromoBonus
+      Category = 0
+    end
+    object dxBarButton5: TdxBarButton
+      Action = actReport_Reprice_PromoBonus
       Category = 0
     end
   end

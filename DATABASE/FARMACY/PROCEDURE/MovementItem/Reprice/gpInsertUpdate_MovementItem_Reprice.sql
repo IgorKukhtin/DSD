@@ -1,6 +1,6 @@
 -- Function: gpInsert_MovementItem_Reprice()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Reprice (Integer, Integer, Integer, Integer, TFloat, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Reprice (Integer, Integer, Integer, Integer, TFloat, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Reprice(
  INOUT ioId                  Integer   , -- Ключ записи
@@ -13,11 +13,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Reprice(
     IN inExpirationDate      TDateTime , -- Срок годности
     IN inMinExpirationDate   TDateTime , -- Срок годности остатка
     IN inAmount              TFloat    , -- Количество (Остаток)
+
     IN inPriceOld            TFloat    , -- Цена старая
     IN inPriceNew            TFloat    , -- Цена новая
     IN inJuridical_Price     TFloat    , -- Цена поставщика
     IN inJuridical_Percent   TFloat    , -- % Корректировки наценки поставщика
     IN inContract_Percent    TFloat    , -- % Корректировки наценки Договора
+    IN inisPromoBonus        Boolean   , -- По маркетинговому бонусу  
     IN inGUID                TVarChar  , -- GUID для определения текущей переоценки
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -117,6 +119,12 @@ BEGIN
                                                , inJuridical_Percent  := inJuridical_Percent
                                                , inContract_Percent   := inContract_Percent
                                                , inUserId             := vbUserId);
+
+    -- сохранили <По маркетинговому бонусу >
+    IF COALESCE (inisPromoBonus, False) = TRUE
+    THEN
+      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PromoBonus(), ioId, inisPromoBonus);
+    END IF;
 
     -- if inSession = zfCalc_UserAdmin() then
     --

@@ -1,6 +1,6 @@
 -- Function: gpInsert_MovementItem_Reprice_Clipped()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Reprice_Clipped (Integer, Integer, Integer, Integer, TFloat, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Reprice_Clipped (Integer, Integer, Integer, Integer, TFloat, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Reprice_Clipped(
  INOUT ioId                  Integer   , -- Ключ записи
@@ -18,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Reprice_Clipped(
     IN inJuridical_Price     TFloat    , -- Цена поставщика
     IN inJuridical_Percent   TFloat    , -- % Корректировки наценки поставщика
     IN inContract_Percent    TFloat    , -- % Корректировки наценки Договора
+    IN inisPromoBonus        Boolean   , -- По маркетинговому бонусу  
     IN inGUID                TVarChar  , -- GUID для определения текущей переоценки
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -114,6 +115,11 @@ BEGIN
 
     -- сохранили <Признак лог отсечения>
     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_ClippedReprice(), ioId, True);
+    -- сохранили <По маркетинговому бонусу >
+    IF COALESCE (inisPromoBonus, False) = TRUE
+    THEN
+      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PromoBonus(), ioId, inisPromoBonus);
+    END IF;
 
 END;
 $BODY$
