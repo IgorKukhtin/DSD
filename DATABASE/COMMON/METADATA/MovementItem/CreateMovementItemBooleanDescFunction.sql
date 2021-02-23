@@ -140,10 +140,16 @@ CREATE OR REPLACE FUNCTION zc_MIBoolean_Complement() RETURNS Integer AS $BODY$BE
 INSERT INTO MovementItemBooleanDesc (Code, ItemName)
   SELECT 'zc_MIBoolean_Complement', 'Дополнить' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_Complement'); 
 
+CREATE OR REPLACE FUNCTION zc_MIBoolean_PromoBonus() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_PromoBonus'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_PromoBonus', 'По маркетинговому бонусу' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_PromoBonus'); 
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.   Шаблий О.В.
+ 23.02.21                                                                       * zc_MIBoolean_PromoBonus
  13.11.20                                                                       * zc_MIBoolean_Complement
  03.11.20                                                                       * zc_MIBoolean_PartialPay
  05.10.20                                                                       * zc_MIBoolean_Present

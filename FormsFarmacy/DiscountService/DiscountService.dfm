@@ -234,7 +234,7 @@ object DiscountServiceForm: TDiscountServiceForm
       end
       item
         Name = 'outInvoiceDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
