@@ -911,7 +911,7 @@ BEGIN
 
            , Movement.OperDate AS OperDateIn
            -- в качественное для страницы №4 - zc_ObjectFloat_GoodsByGoodsKind_DaysQ - если св-во заполнено выводим 3 даты через зпт, 1) дата пок - 1 - DaysQ  2)дата пок - DaysQ 3)дата пок если не заполнено выводим "дата пок"
-           , CASE WHEN COALESCE (tmpMIGoodsByGoodsKind.DaysQ_gk,0) = 0 THEN zfConvert_DateToString (Movement.OperDate)
+           , CASE WHEN COALESCE (tmpMIGoodsByGoodsKind.DaysQ_gk,0) = 0 THEN zfConvert_DateToString (Movement.OperDatePartner)
                   ELSE zfConvert_DateToString (Movement.OperDatePartner)||', '
                     || zfConvert_DateToString (Movement.OperDatePartner - ((tmpMIGoodsByGoodsKind.DaysQ_gk)     :: TVarChar || ' DAY') :: INTERVAl) ||', '
                     || zfConvert_DateToString (Movement.OperDatePartner - ((tmpMIGoodsByGoodsKind.DaysQ_gk + 1) :: TVarChar || ' DAY') :: INTERVAl) 

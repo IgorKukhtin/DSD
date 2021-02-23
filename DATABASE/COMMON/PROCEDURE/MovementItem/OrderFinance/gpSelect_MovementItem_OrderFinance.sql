@@ -91,6 +91,7 @@ BEGIN
                                          tmp.BankAccountId
                                        , tmp.JuridicalId
                                        , tmp.InfoMoneyId
+                                       , tmp.Comment
                                   FROM gpSelect_Object_JuridicalOrderFinance_choice (inBankAccountMainId:= vbBankAccountMainId
                                                                                    , inOrderFinanceId := COALESCE (vbOrderFinanceId,0)
                                                                                    , inisShowAll      := FALSE 
@@ -103,6 +104,7 @@ BEGIN
                       , ObjectLink_Contract_InfoMoney.ObjectId      AS ContractId
                       , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
                       , tmpJuridicalOrderFinance.BankAccountId      AS BankAccountId
+                      , tmpJuridicalOrderFinance.Comment            AS Comment
                  FROM ObjectLink AS ObjectLink_Contract_InfoMoney
                       LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                            ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Contract_InfoMoney.ObjectId
@@ -212,7 +214,7 @@ BEGIN
            , Partner_BankAccount_View.Id      AS BankAccountId
            , Partner_BankAccount_View.Name    AS BankAccountName
 
-           , tmpMI.Comment
+           , COALESCE (tmpMI.Comment, tmpData.Comment) ::TVarChar AS Comment
 
            , tmpMI.InsertName
            , tmpMI.UpdateName
