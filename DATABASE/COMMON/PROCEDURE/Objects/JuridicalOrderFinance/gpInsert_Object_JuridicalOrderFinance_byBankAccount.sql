@@ -69,7 +69,7 @@ BEGIN
                                 AND tmp.InfoMoneyId = tmpBankAccount.InfoMoneyId
                                 AND tmp.BankAccountId_main = tmpBankAccount.BankAccountId_main
                                 AND tmp.BankAccountId = tmpBankAccount.BankAccountId
-          WHERE tmp.ord = 1);
+          WHERE tmpBankAccount.ord = 1);
 
    -- сохраненне данные в справочнике
    CREATE TEMP TABLE tmpJuridicalOrderFinance ON COMMIT DROP AS (

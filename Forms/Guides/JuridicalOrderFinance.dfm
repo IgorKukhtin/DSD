@@ -77,6 +77,14 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
             Options.Editing = False
             Width = 192
           end
+          object OKPO: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054
+            DataBinding.FieldName = 'OKPO'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055' '#1089#1090#1072#1090#1100#1080
             DataBinding.FieldName = 'InfoMoneyCode'

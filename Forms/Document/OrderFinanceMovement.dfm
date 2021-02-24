@@ -140,9 +140,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -499,9 +496,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -1646,8 +1640,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'BankAccount_ObjectChoiceForm'
-      FormName = 'TBankAccount_ObjectForm'
-      FormNameParam.Value = 'TBankAccount_ObjectForm'
+      FormName = 'TBankAccountForm'
+      FormNameParam.Value = 'TBankAccountForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -2086,8 +2080,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 347
-    Top = 385
+    Left = 355
+    Top = 369
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 326
@@ -2286,8 +2280,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     KeyField = 'Id'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
-    Left = 430
-    Top = 418
+    Left = 446
+    Top = 338
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
@@ -2415,8 +2409,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 500
-    Top = 204
+    Left = 524
+    Top = 180
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -2451,7 +2445,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 599
+    Left = 607
     Top = 184
   end
   object spInsertMaskMIMaster: TdsdStoredProc
