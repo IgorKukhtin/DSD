@@ -208,6 +208,14 @@ inherited RepriceForm: TRepriceForm
             Options.Editing = False
             Width = 86
           end
+          object isPromoBonus: TcxGridDBColumn
+            Caption = #1055#1086' '#1084#1072#1088#1082#1077#1090'. '#1073#1086#1085#1091#1089#1091
+            DataBinding.FieldName = 'isPromoBonus'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
           object Color_calc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_calc'
             Visible = False

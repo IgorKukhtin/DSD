@@ -26,8 +26,8 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                isGetHardwareData boolean, isPairedOnlyPromo Boolean, 
                DiscountExternalId integer, DiscountExternalCode integer, DiscountExternalName TVarChar,
                GoodsDiscountId integer, GoodsDiscountCode integer, GoodsDiscountName TVarChar,
-               isPromoForSale Boolean, isCheckUKTZED Boolean
-
+               isPromoForSale Boolean, isCheckUKTZED Boolean,
+               LikiDneproToken TVarChar, LikiDneproId Integer
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -270,6 +270,8 @@ BEGIN
        , Object_DiscountCheck.ValueData                                            AS GoodsDiscountName
        , COALESCE(ObjectString_PromoForSale.ValueData, '') <> ''                   AS isPromoForSale
        , COALESCE (ObjectBoolean_CheckUKTZED.ValueData, FALSE)                     AS isCheckUKTZED
+       , '3bc48397885c039ee40586f4781d10006e3c01b0ba4776f4df5ec1f64af38f2a'::TVarChar   AS LikiDneproToken
+       , 13                                                                             AS LikiDneproId
 
 
    FROM Object AS Object_Unit

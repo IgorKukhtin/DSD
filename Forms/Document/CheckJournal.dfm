@@ -801,7 +801,7 @@ inherited CheckJournalForm: TCheckJournalForm
         end
         item
           Name = 'Date'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime

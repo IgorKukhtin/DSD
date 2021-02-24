@@ -90,6 +90,7 @@ type
     isPromo: TcxGridDBColumn;
     cbisRetail: TcxCheckBox;
     cbManagerUnitsOnly: TcxCheckBox;
+    isPromoBonus: TcxGridDBColumn;
   private
   public
   end;

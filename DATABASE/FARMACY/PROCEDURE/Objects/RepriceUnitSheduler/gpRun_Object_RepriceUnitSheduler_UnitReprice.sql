@@ -69,6 +69,7 @@ BEGIN
         isResolution_224 Boolean,
         isUseReprice Boolean,
         reprice boolean,
+        isPromoBonus Boolean,
         isSP boolean
       ) ON COMMIT DROP;
     END IF;
@@ -190,6 +191,7 @@ BEGIN
                                   isResolution_224,
                                   isUseReprice,
                                   reprice,
+                                  isPromoBonus,
                                   isSP
                                  )
     SELECT id,
@@ -234,6 +236,7 @@ BEGIN
            isResolution_224,
            isUseReprice,
            reprice,
+           isPromoBonus,
            COALESCE (tmpGoodsSP.GoodsId, 0) <> 0
     FROM gpSelect_AllGoodsPrice(inUnitId := vbUnitID, inUnitId_to := 0, inMinPercent := vbPercentDifference,
       inVAT20 := vbVAT20, inTaxTo := 0, inPriceMaxTo := 0,  inSession := inSession)
@@ -258,6 +261,7 @@ BEGIN
       inJuridical_Price := COALESCE (tmpAllGoodsPrice.Juridical_Price, 0),
       inJuridical_Percent := COALESCE (tmpAllGoodsPrice.Juridical_Percent, 0),
       inContract_Percent := COALESCE (tmpAllGoodsPrice.Contract_Percent, 0),
+      inisPromoBonus  := COALESCE (tmpAllGoodsPrice.isPromoBonus, False),
       inGUID := vbGUID,
       inSession := inSession)
     FROM tmpAllGoodsPrice
@@ -285,6 +289,7 @@ BEGIN
       inJuridical_Price := COALESCE (tmpAllGoodsPrice.Juridical_Price, 0),
       inJuridical_Percent := COALESCE (tmpAllGoodsPrice.Juridical_Percent, 0),
       inContract_Percent := COALESCE (tmpAllGoodsPrice.Contract_Percent, 0),
+      inisPromoBonus  := COALESCE (tmpAllGoodsPrice.isPromoBonus, False),
       inGUID := vbGUID,
       inSession := inSession)
     FROM tmpAllGoodsPrice
@@ -318,6 +323,8 @@ raise notice 'All: % % %', (select Count(*) from tmpAllGoodsPrice where Reprice 
      text_var1 = text_var1||' '||vbUnitID::Text;
      PERFORM lpLog_Run_Schedule_Function('gpRun_Object_RepriceUnitSheduler_UnitReprice ', True, text_var1::TVarChar, inSession::Integer);
   END;
+  
+  --RAISE EXCEPTION 'Тест прошел успешно для <%> <%>', inID, inSession;  
 
 --  raise notice 'All: %', (select Count(*) from tmpAllGoodsPrice);
 --  raise notice 'All: %', (select Count(*) from tmpAllGoodsPrice where Reprice = True);

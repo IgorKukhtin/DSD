@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer
              , InfoMoneyName_all TVarChar
              , ContractId Integer, ContractName TVarChar
              , SummOrderFinance TFloat
+             , Comment TVarChar
              , isErased Boolean
              ) AS
 $BODY$
@@ -70,6 +71,7 @@ BEGIN
                                           , OL_JuridicalOrderFinance_BankAccount.ChildObjectId     AS BankAccountId
                                           , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId       AS InfoMoneyId
                                           , ObjectFloat_SummOrderFinance.ValueData :: TFloat       AS SummOrderFinance
+                                          , ObjectString_Comment.ValueData ::TVarChar              AS Comment
                                           , Object_JuridicalOrderFinance.isErased                  AS isErased
 
                                      FROM Object AS Object_JuridicalOrderFinance
@@ -94,7 +96,11 @@ BEGIN
                                          LEFT JOIN ObjectFloat AS ObjectFloat_SummOrderFinance
                                                                ON ObjectFloat_SummOrderFinance.ObjectId = Object_JuridicalOrderFinance.Id
                                                               AND ObjectFloat_SummOrderFinance.DescId = zc_ObjectFloat_JuridicalOrderFinance_SummOrderFinance()
-                              
+
+                                         LEFT JOIN ObjectString AS ObjectString_Comment
+                                                                ON ObjectString_Comment.ObjectId = Object_JuridicalOrderFinance.Id
+                                                               AND ObjectString_Comment.DescId = zc_ObjectString_JuridicalOrderFinance_Comment()
+                                                               
                                      WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
                                         AND (Object_JuridicalOrderFinance.isErased = inisErased OR inisErased = TRUE)
                                         AND (tmpInfoMoney.InfoMoneyId IS NOT NULL OR inOrderFinanceId = 0)
@@ -134,6 +140,7 @@ BEGIN
              , tmpData.ContractName
 
              , COALESCE (tmpJuridicalOrderFinance.SummOrderFinance,0) :: TFloat  AS SummOrderFinance
+             , COALESCE (tmpJuridicalOrderFinance.Comment,'')         ::TVarChar AS Comment
             
              , COALESCE (tmpJuridicalOrderFinance.isErased, FALSE)    :: Boolean AS isErased
              
@@ -228,7 +235,8 @@ BEGIN
              , tmpData.ContractId
              , tmpData.ContractName
 
-             , ObjectFloat_SummOrderFinance.ValueData :: TFloat AS SummOrderFinance
+             , ObjectFloat_SummOrderFinance.ValueData :: TFloat   AS SummOrderFinance
+             , ObjectString_Comment.ValueData         :: TVarChar AS Comment
             
              , Object_JuridicalOrderFinance.isErased  AS isErased
  
@@ -259,6 +267,10 @@ BEGIN
                                    ON ObjectFloat_SummOrderFinance.ObjectId = Object_JuridicalOrderFinance.Id
                                   AND ObjectFloat_SummOrderFinance.DescId = zc_ObjectFloat_JuridicalOrderFinance_SummOrderFinance()
   
+             LEFT JOIN ObjectString AS ObjectString_Comment
+                                    ON ObjectString_Comment.ObjectId = Object_JuridicalOrderFinance.Id
+                                   AND ObjectString_Comment.DescId = zc_ObjectString_JuridicalOrderFinance_Comment()
+
              LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
  
              LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail

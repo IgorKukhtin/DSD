@@ -15,6 +15,7 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbIsInsert Boolean;
+   DECLARE vbAmount Integer;
 BEGIN
      
      IF EXISTS(SELECT 1
@@ -34,6 +35,9 @@ BEGIN
 
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
+     
+     vbAmount := COALESCE((SELECT MovementItem.Amount
+                           FROM MovementItem WHERE  MovementItem.ID = ioId), 0);
           
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
@@ -44,9 +48,7 @@ BEGIN
 
        -- Сохранили <Дату изменения>
      -- сохранили
-     IF COALESCE (inAmount, 0) <> (SELECT MovementItem.Amount
-                                   FROM MovementItem WHERE  MovementItem.ID = ioId) OR
-        vbIsInsert = TRUE AND COALESCE (inAmount, 0) <> 0
+     IF COALESCE (inAmount, 0) <> vbAmount
      THEN
        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Update(), ioId, CURRENT_TIMESTAMP);
      END IF;

@@ -978,10 +978,22 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_SUAForm'));
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPrice_PromoBonusForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPrice_PromoBonusForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_UnitDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_UnitDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Reprice_PromoBonusForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Reprice_PromoBonusForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceCheckForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PriceCheckForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_SUAForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSun_SUAForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SalesOfTermDrugsDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SalesOfTermDrugsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SalesOfTermDrugsDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SalesOfTermDrugsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SalesOfTermDrugsForm');
@@ -1009,9 +1021,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckSiteDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckSiteForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckSiteForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceCheckForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_PriceCheckForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ClippedReprice_SaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ClippedReprice_SaleForm');
@@ -2226,6 +2235,9 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInstructionsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInstructionsEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInstructionsCashForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInstructionsCashForm');
 end;
 
 procedure TLoadFormTest.LoadInventoryFormTest;

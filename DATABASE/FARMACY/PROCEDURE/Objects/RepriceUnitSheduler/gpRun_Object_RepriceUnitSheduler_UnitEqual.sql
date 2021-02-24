@@ -228,6 +228,7 @@ BEGIN
       inJuridical_Price := COALESCE (tmpAllGoodsPrice.Juridical_Price, 0),
       inJuridical_Percent := COALESCE (tmpAllGoodsPrice.Juridical_Percent, 0),
       inContract_Percent := COALESCE (tmpAllGoodsPrice.Contract_Percent, 0),
+      inisPromoBonus  := FALSE,
       inGUID := vbGUID,
       inSession := inSession)
     FROM tmpAllGoodsPrice
@@ -251,6 +252,7 @@ BEGIN
       inJuridical_Price := COALESCE (tmpAllGoodsPrice.Juridical_Price, 0),
       inJuridical_Percent := COALESCE (tmpAllGoodsPrice.Juridical_Percent, 0),
       inContract_Percent := COALESCE (tmpAllGoodsPrice.Contract_Percent, 0),
+      inisPromoBonus  := False,
       inGUID := vbGUID,
       inSession := inSession)
     FROM tmpAllGoodsPrice
@@ -265,6 +267,8 @@ BEGIN
      text_var1 = text_var1||' '||vbUnitID::Text;
      PERFORM lpLog_Run_Schedule_Function('gpRun_Object_RepriceUnitSheduler_UnitReprice ', True, text_var1::TVarChar, inSession::Integer);
   END;
+
+--  RAISE EXCEPTION 'Тест прошел успешно для <%> <%>', inID, inSession;  
 
 --  raise notice 'All: %', (select Count(*) from tmpAllGoodsPrice);
 --  raise notice 'All: %', (select Count(*) from tmpAllGoodsPrice where Reprice = True);

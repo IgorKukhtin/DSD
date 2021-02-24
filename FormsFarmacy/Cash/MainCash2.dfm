@@ -5883,6 +5883,18 @@ inherited MainCashForm2: TMainCashForm2
         end>
       Caption = 'actLoadLiki24_Search'
     end
+    object actInstructionsCash: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1085#1089#1090#1088#1091#1082#1094#1080#1080
+      ShortCut = 16463
+      FormName = 'TInstructionsCashForm'
+      FormNameParam.Value = 'TInstructionsCashForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -6099,6 +6111,9 @@ inherited MainCashForm2: TMainCashForm2
       end
       object N53: TMenuItem
         Action = actGoodsSP_Cash
+      end
+      object N57: TMenuItem
+        Action = actInstructionsCash
       end
       object N33: TMenuItem
         Caption = '-'

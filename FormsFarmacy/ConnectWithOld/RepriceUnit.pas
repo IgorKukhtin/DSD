@@ -148,6 +148,7 @@ type
     GuidesProvinceCity: TdsdGuides;
     colisResolution_224: TcxGridDBColumn;
     cdsResultisResolution_224: TBooleanField;
+    colisPromoBonus: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure btnRepriceClick(Sender: TObject);
     procedure btnSelectNewPriceClick(Sender: TObject);
@@ -311,8 +312,16 @@ begin
           except ShowMessage('13');exit;end;
 
           try
-          spInsertUpdate_MovementItem_Reprice.ParamByName('inGUID').Value := GUID_Str;
+          if edUnit.Text <> ''
+          then spInsertUpdate_MovementItem_Reprice.ParamByName('inisPromoBonus').Value := False
+
+          else spInsertUpdate_MovementItem_Reprice.ParamByName('inisPromoBonus').Value :=
+            AllGoodsPriceGridTableView.DataController.Values[RecIndex,colisPromoBonus.Index];
           except ShowMessage('14');exit;end;
+
+          try
+          spInsertUpdate_MovementItem_Reprice.ParamByName('inGUID').Value := GUID_Str;
+          except ShowMessage('15');exit;end;
 
           try
           spInsertUpdate_MovementItem_Reprice.Execute;

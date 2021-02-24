@@ -2,7 +2,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   Left = 0
   Top = 0
   Caption = #1054#1073#1097#1080#1077' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1082#1072#1089#1089
-  ClientHeight = 429
+  ClientHeight = 460
   ClientWidth = 533
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -31,7 +31,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object cxButton1: TcxButton
     Left = 156
-    Top = 388
+    Top = 421
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -41,7 +41,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object cxButton2: TcxButton
     Left = 306
-    Top = 388
+    Top = 421
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -114,7 +114,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object cbBlockVIP: TcxCheckBox
     Left = 16
-    Top = 333
+    Top = 366
     Hint = #1055#1086#1083#1091#1095#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1072#1087#1087#1072#1088#1072#1090#1085#1086#1081' '#1095#1072#1089#1090#1080
     Caption = #1041#1083#1086#1082#1080#1088#1086#1074#1072#1090#1100' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' VIP'
     ParentShowHint = False
@@ -124,7 +124,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object cbPairedOnlyPromo: TcxCheckBox
     Left = 16
-    Top = 356
+    Top = 389
     Hint = #1055#1088#1080' '#1086#1087#1091#1089#1082#1072#1085#1080#1080' '#1087#1072#1088#1085#1099#1093' '#1082#1086#1085#1090#1088#1086#1083#1080#1088#1086#1074#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1072#1082#1094#1080#1086#1085#1085#1099#1081
     Caption = #1055#1088#1080' '#1086#1087#1091#1089#1082#1072#1085#1080#1080' '#1087#1072#1088#1085#1099#1093' '#1082#1086#1085#1090#1088#1086#1083#1080#1088#1086#1074#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1072#1082#1094#1080#1086#1085#1085#1099#1081
     ParentShowHint = False
@@ -196,8 +196,21 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object cxLabel9: TcxLabel
     Left = 20
-    Top = 293
+    Top = 291
     Caption = #1042#1077#1088#1093#1085#1080#1081' '#1087#1088#1077#1076#1077#1083' '#1089#1088#1072#1074#1085#1077#1085#1080#1103' ('#1084#1072#1088#1082#1077#1090' '#1073#1086#1085#1091#1089#1099')'
+  end
+  object edMinPercentPromoBonus: TcxCurrencyEdit
+    Left = 404
+    Top = 335
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 25
+    Width = 121
+  end
+  object cxLabel10: TcxLabel
+    Left = 20
+    Top = 337
+    Caption = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1072#1103' '#1085#1072#1094#1077#1085#1082#1072' ('#1084#1072#1088#1082#1077#1090' '#1073#1086#1085#1091#1089#1099')'
   end
   object ActionList: TActionList
     Left = 344
@@ -337,6 +350,14 @@ object CashSettingsEditForm: TCashSettingsEditForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMinPercentPromoBonus'
+        Value = Null
+        Component = edMinPercentPromoBonus
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 456
@@ -432,6 +453,13 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Name = 'LowerLimitPromoBonus'
         Value = Null
         Component = edLowerLimitPromoBonus
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MinPercentPromoBonus'
+        Value = Null
+        Component = edMinPercentPromoBonus
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>

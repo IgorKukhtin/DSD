@@ -1027,6 +1027,8 @@ begin
           exit;
         end;
 
+        Result:= True;
+
       end else if gCode in [4, 16] then
 
         Result:= True //!!!все ОК и Чек можно сохранить!!!

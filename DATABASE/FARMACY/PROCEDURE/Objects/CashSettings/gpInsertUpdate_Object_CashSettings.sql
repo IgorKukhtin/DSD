@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_CashSettings()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inShareFromPriceName      TVarChar  ,     -- ѕеречень фраз в названи€х товаров которые можно делить с любой ценой
@@ -16,6 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inAttemptsSub             TFloat    ,     --  оличество попыток до успешной сдачи теста дл€ предложени€ подмен
     IN inUpperLimitPromoBonus    TFloat    ,     -- ¬ерхний предел сравнени€ (маркет бонусы)
     IN inLowerLimitPromoBonus    TFloat    ,     -- Ќижний предел сравнени€ (маркет бонусы)
+    IN inMinPercentPromoBonus    TFloat    ,     -- ћинимальна€ наценка (маркет бонусы)
     IN inSession                 TVarChar        -- сесси€ пользовател€
 )
   RETURNS VOID AS
@@ -63,6 +64,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_UpperLimitPromoBonus(), vbID, inUpperLimitPromoBonus);
       -- сохранили Ќижний предел сравнени€ (маркет бонусы)
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_LowerLimitPromoBonus(), vbID, inLowerLimitPromoBonus);
+      -- сохранили ћинимальна€ наценка (маркет бонусы)
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_MinPercentPromoBonus(), vbID, inMinPercentPromoBonus);
 
    -- сохранили Ѕлокировать формирование перемещений VIP
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_BlockVIP(), vbID, inisBlockVIP);

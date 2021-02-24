@@ -60,7 +60,8 @@ RETURNS TABLE (
     isResolution_224    Boolean ,   -- Постановление 224
     isUseReprice        Boolean ,   -- Переоценивать в ночной переоценке
     Reprice             Boolean ,   --
-    isGoodsReprice      Boolean
+    isGoodsReprice      Boolean ,   --
+    isPromoBonus        Boolean     -- По маркетинговому бонусу  
     )
 
 AS
@@ -72,6 +73,9 @@ $BODY$
   DECLARE vbInterval_ExpirationDate      Interval;
   DECLARE vbisTopNo_Unit       Boolean;
   DECLARE vbisMinPercentMarkup Boolean;
+  DECLARE vbUpperLimitPromoBonus TFloat;
+  DECLARE vbLowerLimitPromoBonus TFloat;
+  DECLARE vbMinPercentPromoBonus TFloat;
 BEGIN
     vbUserId := inSession;
     vbObjectId := COALESCE (lpGet_DefaultValue('zc_Object_Retail', vbUserId), '0');
@@ -96,6 +100,23 @@ BEGIN
                                 AND ObjectBoolean_MinPercentMarkup.DescId = zc_ObjectBoolean_Unit_MinPercentMarkup()
     WHERE Object_Unit_View.Id = inUnitId;
     
+    SELECT ObjectFloat_CashSettings_UpperLimitPromoBonus.ValueData                  AS UpperLimitPromoBonus
+         , ObjectFloat_CashSettings_LowerLimitPromoBonus.ValueData                  AS LowerLimitPromoBonus
+         , ObjectFloat_CashSettings_MinPercentPromoBonus.ValueData                  AS MinPercentPromoBonus
+    INTO vbUpperLimitPromoBonus, vbLowerLimitPromoBonus, vbMinPercentPromoBonus
+    FROM Object AS Object_CashSettings
+         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_UpperLimitPromoBonus
+                               ON ObjectFloat_CashSettings_UpperLimitPromoBonus.ObjectId = Object_CashSettings.Id
+                              AND ObjectFloat_CashSettings_UpperLimitPromoBonus.DescId = zc_ObjectFloat_CashSettings_UpperLimitPromoBonus()
+         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_LowerLimitPromoBonus
+                               ON ObjectFloat_CashSettings_LowerLimitPromoBonus.ObjectId = Object_CashSettings.Id
+                              AND ObjectFloat_CashSettings_LowerLimitPromoBonus.DescId = zc_ObjectFloat_CashSettings_LowerLimitPromoBonus()
+         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_MinPercentPromoBonus
+                               ON ObjectFloat_CashSettings_MinPercentPromoBonus.ObjectId = Object_CashSettings.Id 
+                              AND ObjectFloat_CashSettings_MinPercentPromoBonus.DescId = zc_ObjectFloat_CashSettings_MinPercentPromoBonus()
+    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+    LIMIT 1;
+
   RETURN QUERY
     WITH DD
     AS
@@ -222,6 +243,19 @@ BEGIN
                         AND ObjectLink_Price_Unit.ChildObjectId IN (inUnitId_to, inUnitId)
                       )
 
+  , PromoBonus AS (SELECT MovementItem.Id                            AS Id
+                        , Object_Goods_Retail.GoodsMainId            AS GoodsId
+                        , MovementItem.Amount                        AS Amount
+                   FROM MovementItem
+                        INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItem.ObjectId
+                   WHERE MovementItem.MovementId = (SELECT MAX(Movement.id) FROM Movement 
+                                                    WHERE Movement.OperDate <= CURRENT_DATE   
+                                                      AND Movement.DescId = zc_Movement_PromoBonus() 
+                                                      AND Movement.StatusId = zc_Enum_Status_Complete())
+                     AND MovementItem.DescId = zc_MI_Master()
+                     AND MovementItem.isErased = False
+                     AND MovementItem.Amount > 0
+                     AND vbObjectId = 4)
   , ResultSet AS
     (
         SELECT
@@ -245,18 +279,22 @@ BEGIN
                             AND SelectMinPrice_AllGoods.MinExpirationDate > zc_DateStart()
                             AND SelectMinPrice_AllGoods.MinExpirationDate > CURRENT_DATE
                             AND COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) <> 0
-                                THEN vbMarginPercent_ExpirationDate + COALESCE (ObjectFloat_Contract_Percent.ValueData, 0)
+                                THEN zfCalc_MarginPercent_PromoBonus (vbMarginPercent_ExpirationDate + COALESCE (ObjectFloat_Contract_Percent.ValueData, 0),
+                                                                      PromoBonus.Amount, vbUpperLimitPromoBonus, vbLowerLimitPromoBonus, vbMinPercentPromoBonus)
                            -- % наценки для срока годности < 6 мес.
                            WHEN vbMarginPercent_ExpirationDate > 0
                             AND SelectMinPrice_AllGoods.MinExpirationDate <= (CURRENT_DATE + vbInterval_ExpirationDate)
                             AND SelectMinPrice_AllGoods.MinExpirationDate > zc_DateStart()
                             AND SelectMinPrice_AllGoods.MinExpirationDate > CURRENT_DATE
-                                THEN vbMarginPercent_ExpirationDate + COALESCE (ObjectFloat_Juridical_Percent.ValueData, 0)
+                                THEN zfCalc_MarginPercent_PromoBonus (vbMarginPercent_ExpirationDate + COALESCE (ObjectFloat_Juridical_Percent.ValueData, 0),
+                                                                      PromoBonus.Amount, vbUpperLimitPromoBonus, vbLowerLimitPromoBonus, vbMinPercentPromoBonus)
 
                            WHEN COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) <> 0
-                                THEN COALESCE (MarginCondition.MarginPercent,0) + COALESCE (ObjectFloat_Contract_Percent.ValueData, 0)
+                                THEN zfCalc_MarginPercent_PromoBonus (COALESCE (MarginCondition.MarginPercent,0) + COALESCE (ObjectFloat_Contract_Percent.ValueData, 0),
+                                                                      PromoBonus.Amount, vbUpperLimitPromoBonus, vbLowerLimitPromoBonus, vbMinPercentPromoBonus)
 
-                           ELSE COALESCE (MarginCondition.MarginPercent,0) + COALESCE (ObjectFloat_Juridical_Percent.ValueData, 0)
+                           ELSE zfCalc_MarginPercent_PromoBonus (COALESCE (MarginCondition.MarginPercent,0) + COALESCE (ObjectFloat_Juridical_Percent.ValueData, 0),
+                                                                 PromoBonus.Amount, vbUpperLimitPromoBonus, vbLowerLimitPromoBonus, vbMinPercentPromoBonus)
                       END
             END::TFloat AS MarginPercent
           , (SelectMinPrice_AllGoods.Price * (100 + Object_Goods.NDS)/100)::TFloat AS Juridical_Price
@@ -269,17 +307,21 @@ BEGIN
                                     AND SelectMinPrice_AllGoods.MinExpirationDate > zc_DateStart()
                                     AND SelectMinPrice_AllGoods.MinExpirationDate > CURRENT_DATE
                                     AND COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) <> 0
-                                        THEN vbMarginPercent_ExpirationDate + COALESCE (ObjectFloat_Contract_Percent.ValueData, 0)
+                                        THEN zfCalc_MarginPercent_PromoBonus (vbMarginPercent_ExpirationDate + COALESCE (ObjectFloat_Contract_Percent.ValueData, 0),
+                                                                              PromoBonus.Amount, vbUpperLimitPromoBonus, vbLowerLimitPromoBonus, vbMinPercentPromoBonus)
                                    -- % наценки для срока годности < 6 мес.
                                    WHEN vbMarginPercent_ExpirationDate > 0
                                     AND SelectMinPrice_AllGoods.MinExpirationDate <= (CURRENT_DATE + vbInterval_ExpirationDate)
                                     AND SelectMinPrice_AllGoods.MinExpirationDate > zc_DateStart()
                                     AND SelectMinPrice_AllGoods.MinExpirationDate > CURRENT_DATE
-                                        THEN vbMarginPercent_ExpirationDate + COALESCE (ObjectFloat_Juridical_Percent.ValueData, 0)
+                                        THEN zfCalc_MarginPercent_PromoBonus (vbMarginPercent_ExpirationDate + COALESCE (ObjectFloat_Juridical_Percent.ValueData, 0),
+                                                                              PromoBonus.Amount, vbUpperLimitPromoBonus, vbLowerLimitPromoBonus, vbMinPercentPromoBonus)
 
                                    WHEN COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) <> 0
-                                       THEN MarginCondition.MarginPercent + COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) -- % наценки в КАТЕГОРИИ
-                                   ELSE MarginCondition.MarginPercent + COALESCE (ObjectFloat_Juridical_Percent.ValueData, 0)    -- % наценки в КАТЕГОРИИ
+                                       THEN zfCalc_MarginPercent_PromoBonus (MarginCondition.MarginPercent + COALESCE (ObjectFloat_Contract_Percent.ValueData, 0),
+                                                                             PromoBonus.Amount, vbUpperLimitPromoBonus, vbLowerLimitPromoBonus, vbMinPercentPromoBonus) -- % наценки в КАТЕГОРИИ
+                                   ELSE zfCalc_MarginPercent_PromoBonus (MarginCondition.MarginPercent + COALESCE (ObjectFloat_Juridical_Percent.ValueData, 0),
+                                                                         PromoBonus.Amount, vbUpperLimitPromoBonus, vbLowerLimitPromoBonus, vbMinPercentPromoBonus)    -- % наценки в КАТЕГОРИИ
                               END
                             , CASE WHEN vbisTopNo_Unit = TRUE THEN SelectMinPrice_AllGoods.isTOP_Price   ELSE SelectMinPrice_AllGoods.isTop END                  -- ТОП позиция
                             , CASE WHEN vbisTopNo_Unit = TRUE THEN SelectMinPrice_AllGoods.PercentMarkup 
@@ -319,7 +361,13 @@ BEGIN
             Object_Goods.IsTop    AS IsTop_Goods,
             Coalesce(ObjectBoolean_Goods_IsPromo.ValueData, False) :: Boolean   AS IsPromo,
             Coalesce(ObjectBoolean_Goods_Resolution_224.ValueData, False) :: Boolean   AS isResolution_224,
-            Object_Goods.Price    AS PriceFix_Goods
+            Object_Goods.Price    AS PriceFix_Goods,
+            CASE WHEN SelectMinPrice_AllGoods.isTop = TRUE
+                 THEN FALSE
+                 ELSE (COALESCE (MarginCondition.MarginPercent,0) + COALESCE (ObjectFloat_Juridical_Percent.ValueData, 0)) > 
+                       zfCalc_MarginPercent_PromoBonus (COALESCE (MarginCondition.MarginPercent,0) + COALESCE (ObjectFloat_Juridical_Percent.ValueData, 0),
+                                                        PromoBonus.Amount, vbUpperLimitPromoBonus, vbLowerLimitPromoBonus, vbMinPercentPromoBonus)
+            END::Boolean   AS isPromoBonus
         FROM
             lpSelectMinPrice_AllGoods(inUnitId   := inUnitId
                                     , inObjectId := -1 * vbObjectId -- !!!со знаком "-" что бы НЕ учитывать маркет. контракт!!!
@@ -374,6 +422,8 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Resolution_224
                                     ON ObjectBoolean_Goods_Resolution_224.ObjectId = Object_Price.GoodsMainId
                                    AND ObjectBoolean_Goods_Resolution_224.DescId = zc_ObjectBoolean_Goods_Resolution_224()
+
+            LEFT JOIN PromoBonus ON PromoBonus.GoodsId = Object_Price.GoodsMainId
 
         WHERE Object_Goods.isSp = FALSE
          -- AND COALESCE (ObjectBoolean_Juridical_UseReprice.ValueData, FALSE) = True
@@ -493,7 +543,9 @@ BEGIN
                              ELSE (ResultSet.NewPrice / ResultSet.LastPrice) * 100 - 100
                         END AS NUMERIC (16, 1)) :: TFloat BETWEEN - 10 AND 0) AS Reprice,
 
-        CASE WHEN tmpGoodsReprice.GoodsId IS NOT NULL THEN TRUE ELSE FALSE END AS isGoodsReprice
+        CASE WHEN tmpGoodsReprice.GoodsId IS NOT NULL THEN TRUE ELSE FALSE END AS isGoodsReprice,
+        
+        ResultSet.isPromoBonus                                                 AS isPromoBonus
         
     FROM
         ResultSet

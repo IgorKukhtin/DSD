@@ -49,6 +49,8 @@ type
     edUpperLimitPromoBonus: TcxCurrencyEdit;
     cxLabel8: TcxLabel;
     cxLabel9: TcxLabel;
+    edMinPercentPromoBonus: TcxCurrencyEdit;
+    cxLabel10: TcxLabel;
   private
     { Private declarations }
   public

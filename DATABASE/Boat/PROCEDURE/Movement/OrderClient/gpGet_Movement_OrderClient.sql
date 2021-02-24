@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
+             , ProductId Integer, ProductName TVarChar, BrandId Integer, BrandName TVarChar, CIN TVarChar
              , Comment TVarChar
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
               )
@@ -46,6 +47,11 @@ BEGIN
              , CAST ('' AS TVarChar)     AS ToName
              , 0                         AS PaidKindId
              , CAST ('' AS TVarChar)     AS PaidKindName
+             , 0                         AS ProductId
+             , CAST ('' AS TVarChar)     AS ProductName
+             , 0                         AS BrandId
+             , CAST ('' AS TVarChar)     AS BrandName
+             , CAST ('' AS TVarChar)     AS CIN
              , CAST ('' AS TVarChar)     AS Comment
              , 0                         AS MovementId_Invoice
              , CAST ('' as TVarChar)     AS InvNumber_Invoice
@@ -77,6 +83,13 @@ BEGIN
           , Object_To.ValueData                       AS ToName
           , Object_PaidKind.Id                        AS PaidKindId      
           , Object_PaidKind.ValueData                 AS PaidKindName
+
+          , Object_Product.Id                          AS ProductId
+          , Object_Product.ValueData                   AS ProductName
+          , Object_Brand.Id                            AS BrandId
+          , Object_Brand.ValueData                     AS BrandName
+          , ObjectString_CIN.ValueData                 AS CIN
+             
           , COALESCE (MovementString_Comment.ValueData,'') :: TVarChar AS Comment
           , Movement_Invoice.Id                       AS MovementId_Invoice
           , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice
@@ -99,6 +112,11 @@ BEGIN
                                          ON MovementLinkObject_PaidKind.MovementId = Movement_OrderClient.Id
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId 
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
+                                         ON MovementLinkObject_Product.MovementId = Movement_OrderClient.Id
+                                        AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
+            LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId
 
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId = Movement_OrderClient.Id
@@ -128,6 +146,15 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment_Invoice
                                      ON MovementString_Comment_Invoice.MovementId = Movement_Invoice.Id
                                     AND MovementString_Comment_Invoice.DescId = zc_MovementString_Comment()
+
+            --
+            LEFT JOIN ObjectString AS ObjectString_CIN
+                                   ON ObjectString_CIN.ObjectId = Object_Product.Id
+                                  AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
+            LEFT JOIN ObjectLink AS ObjectLink_Brand
+                                 ON ObjectLink_Brand.ObjectId = Object_Product.Id
+                                AND ObjectLink_Brand.DescId = zc_ObjectLink_Product_Brand()
+            LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
 
         WHERE Movement_OrderClient.Id = inMovementId
           AND Movement_OrderClient.DescId = zc_Movement_OrderClient()

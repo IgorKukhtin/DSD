@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , MarginPercent TFloat
              , IsTop_Goods Boolean
              , isResolution_224 boolean
+             , isPromoBonus boolean
              , Color_calc Integer
              )
 AS
@@ -133,6 +134,7 @@ BEGIN
 
              , COALESCE(Object_Goods.IsTop, false)                              AS IsTop_Goods
              , Object_Goods_Main.isResolution_224                               AS isResolution_224
+             , COALESCE(MIBoolean_PromoBonus.ValueData, False)                  AS isPromoBonus
              , CASE WHEN COALESCE(MIBoolean_ClippedReprice.ValueData, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_calc
         FROM  MovementItem
             LEFT JOIN MovementItemFloat AS MIFloat_Price
@@ -210,6 +212,10 @@ BEGIN
             LEFT JOIN MovementItemBoolean AS MIBoolean_ClippedReprice
                                           ON MIBoolean_ClippedReprice.MovementItemId = MovementItem.Id
                                          AND MIBoolean_ClippedReprice.DescId         = zc_MIBoolean_ClippedReprice()
+
+            LEFT JOIN MovementItemBoolean AS MIBoolean_PromoBonus
+                                          ON MIBoolean_PromoBonus.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_PromoBonus.DescId         = zc_MIBoolean_PromoBonus()
 
             LEFT JOIN GoodsPrice AS SelectMinPrice_AllGoods
                                  ON SelectMinPrice_AllGoods.GoodsId = MovementItem.ObjectId

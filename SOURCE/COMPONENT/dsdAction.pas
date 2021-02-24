@@ -7,7 +7,7 @@ interface
 uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst, ComObj,
   cxControls, dsdGuides, ImgList, cxPC, cxGrid, cxGridTableView, cxDBPivotGrid,
   cxGridDBTableView, frxClass, frxExportPDF, cxGridCustomView, Dialogs, Controls,
-  dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL, cxDateNavigator
+  dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL, cxDateNavigator, IdFTP, System.IOUtils
   {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
 
 type
@@ -947,6 +947,46 @@ type
     property InfoAfterExecute;
   end;
 
+  TdsdFTPOperationType = (ftpSend, ftpDownload, ftpDownloadAndRun, ftpDelete);
+
+  TdsdFTP = class(TdsdCustomAction)
+  private
+    FHostParam: TdsdParam;
+    FPortParam: TdsdParam;
+    FUsernameParam: TdsdParam;
+    FPasswordParam: TdsdParam;
+    FDirParam: TdsdParam;
+
+    FFullFileNameParam: TdsdParam;
+    FFileNameFTPParam: TdsdParam;
+    FFileNameParam: TdsdParam;
+    FDownloadFolderParam: TdsdParam;
+
+    FFTPOperation : TdsdFTPOperationType;
+    FIdFTP: TIdFTP;
+  protected
+    function LocalExecute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property HostParam: TdsdParam read FHostParam write FHostParam;
+    property PortParam: TdsdParam read FPortParam write FPortParam;
+    property UsernameParam: TdsdParam read FUsernameParam write FUsernameParam;
+    property PasswordParam: TdsdParam read FPasswordParam write FPasswordParam;
+    property DirParam: TdsdParam read FDirParam write FDirParam;
+    property FullFileNameParam: TdsdParam read FFullFileNameParam write FFullFileNameParam;
+    property FileNameFTPParam: TdsdParam read FFileNameFTPParam write FFileNameFTPParam;
+    property FileNameParam: TdsdParam read FFileNameParam write FFileNameParam;
+    property DownloadFolderParam: TdsdParam read FDownloadFolderParam write FDownloadFolderParam;
+    property FTPOperation : TdsdFTPOperationType read FFTPOperation write FFTPOperation default ftpSend;
+    property Caption;
+    property Hint;
+    property ImageIndex;
+    property ShortCut;
+    property SecondaryShortCuts;
+  end;
+
 procedure Register;
 
 implementation
@@ -1000,6 +1040,7 @@ begin
   RegisterActions('DSDLib', [TdsdDOCReportFormAction], TdsdDOCReportFormAction);
   RegisterActions('DSDLib', [TdsdOpenStaticForm], TdsdOpenStaticForm);
   RegisterActions('DSDLib', [TdsdSetDefaultParams], TdsdSetDefaultParams);
+  RegisterActions('DSDLib', [TdsdFTP], TdsdFTP);
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);
   RegisterActions('DSDLibExport', [TdsdExportToXML], TdsdExportToXML);
@@ -4008,6 +4049,197 @@ begin
     FDefaultParams.Items[I].Param.Value := FDefaultParams.Items[I].Value;
 
   Result := True;
+end;
+
+  {TdsdFTP}
+
+constructor TdsdFTP.Create(AOwner: TComponent);
+begin
+  inherited;
+
+  FIdFTP := TIdFTP.Create(Nil);
+
+  FHostParam := TdsdParam.Create(nil);
+  FHostParam.DataType := ftString;
+  FHostParam.Value := '';
+
+  FPortParam := TdsdParam.Create(nil);
+  FPortParam.DataType := ftInteger;
+  FPortParam.Value := FIdFTP.Port;
+
+  FUsernameParam := TdsdParam.Create(nil);
+  FUsernameParam.DataType := ftString;
+  FUsernameParam.Value := '';
+
+  FPasswordParam := TdsdParam.Create(nil);
+  FPasswordParam.DataType := ftString;
+  FPasswordParam.Value := '';
+
+  FDirParam := TdsdParam.Create(nil);
+  FDirParam.DataType := ftString;
+  FDirParam.Value := '';
+
+  FFullFileNameParam := TdsdParam.Create(nil);
+  FFullFileNameParam.DataType := ftString;
+  FFullFileNameParam.Value := '';
+
+  FFileNameFTPParam := TdsdParam.Create(nil);
+  FFileNameFTPParam.DataType := ftString;
+  FFileNameFTPParam.Value := '';
+
+  FFileNameParam := TdsdParam.Create(nil);
+  FFileNameParam.DataType := ftString;
+  FFileNameParam.Value := '';
+
+  FDownloadFolderParam := TdsdParam.Create(nil);
+  FDownloadFolderParam.DataType := ftString;
+  FDownloadFolderParam.Value := '';
+
+
+end;
+
+destructor TdsdFTP.Destroy;
+begin
+  FreeAndNil(FHostParam);
+  FreeAndNil(FPortParam);
+  FreeAndNil(FUsernameParam);
+  FreeAndNil(FPasswordParam);
+  FreeAndNil(FDirParam);
+  FreeAndNil(FFullFileNameParam);
+  FreeAndNil(FFileNameFTPParam);
+  FreeAndNil(FFileNameParam);
+
+  FreeAndNil(FIdFTP);
+  inherited;
+end;
+
+function TdsdFTP.LocalExecute: Boolean;
+  var FullFileName,  FileNameFTP, FileName : String;
+begin
+  inherited;
+  Result := False;
+
+  if (FHostParam.Value = '') or
+     (FUsernameParam.Value = '') or
+     (FPasswordParam.Value = '') then
+  begin
+    ShowMessage('Не заполнены Host, Username или Password.');
+    Exit;
+  end;
+
+  if FTPOperation = ftpSend then
+  begin
+    if FFullFileNameParam.Value = '' then
+    begin
+      ShowMessage('Не определен параметр <FullFileNameParam> в котором должен быть полный путь к сохраняемому файлу на FTP.');
+      Exit;
+    end;
+
+    FullFileName :=  FFullFileNameParam.Value;
+    if not TFile.Exists(FullFileName) then
+    begin
+      ShowMessage('Файл ' + FullFileName + ' не найден.');
+      Exit;
+    end;
+
+    FileName := TPath.GetFileName(FullFileName);
+
+    if FFileNameFTPParam.Value <> '' then
+    begin
+      FileNameFTP := FFileNameFTPParam.Value;
+      if TPath.GetExtension(FileNameFTP) = '' then
+        FileNameFTP := FileNameFTP +  TPath.GetExtension(FileName);
+    end else FileNameFTP := FileName;
+
+  end else if FTPOperation = ftpDelete then
+  begin
+
+    if FFileNameParam.Value = '' then
+    begin
+      ShowMessage('Файл не загружался на FTP.');
+      Exit;
+    end;
+
+    if FFileNameFTPParam.Value = '' then
+      FileNameFTP :=  FFileNameParam.Value
+    else FileNameFTP :=  FFileNameFTPParam.Value;
+
+  end else
+  begin
+    if FFileNameParam.Value = '' then
+    begin
+      ShowMessage('Файл не загружался на FTP.');
+      Exit;
+    end;
+
+    if FFileNameFTPParam.Value = '' then
+      FileNameFTP :=  FFileNameParam.Value
+    else FileNameFTP :=  FFileNameFTPParam.Value;
+
+    if FDownloadFolderParam.Value <> '' then
+    begin
+      if Pos(':', FDownloadFolderParam.Value) > 0 then  FullFileName :=  FDownloadFolderParam.Value
+      else FullFileName := ExtractFilePath(Application.ExeName) + FDownloadFolderParam.Value;
+    end else FullFileName := ExtractFilePath(Application.ExeName);
+
+    if FullFileName[Length(FullFileName)] <> '\' then FullFileName := FullFileName + '\' ;
+    FullFileName := FullFileName + FFileNameParam.Value;
+  end;
+
+  try
+    FIdFTP.Disconnect;
+    FIdFTP.Host := FHostParam.Value;
+    FIdFTP.Port := FPortParam.Value;
+    FIdFTP.Username := FUsernameParam.Value;
+    FIdFTP.Password := FPasswordParam.Value;
+    try
+      FIdFTP.Connect;
+    Except ON E: Exception DO
+      Begin
+        ShowMessage(E.Message);
+        exit;
+      End;
+    end;
+
+    // Изменяем директорий если надо
+    if FDirParam.Value <> '' then
+    try
+      FIdFTP.ChangeDir(FDirParam.Value);
+    except ON E: Exception DO
+      begin
+        ShowMessage(E.Message);
+        exit;
+      end;
+    end;
+
+    try
+
+      case FTPOperation of
+        ftpSend : begin
+                    FIdFTP.Put(FullFileName,  FileNameFTP);
+                    FFileNameParam.Value := FileName;
+                  end;
+        ftpDelete : begin
+                      FIdFTP.List (nil, '-la ' + FileNameFTP, False);
+                      if FIdFTP.DirectoryListing.Count > 0 then FIdFTP.Delete(FileNameFTP);
+                      FFileNameParam.Value := '';
+                    end;
+        else FIdFTP.Get(FileNameFTP, FullFileName);
+      end;
+
+    except ON E: Exception DO
+      Begin
+        ShowMessage(E.Message);
+        exit;
+      End;
+    end;
+
+    if FTPOperation = ftpDownloadAndRun then  ShellExecute(0, 'open', PChar(FullFileName), '', '', 1);
+    Result := True;
+  finally
+    FIdFTP.Disconnect;
+  end;
+
 end;
 
 initialization

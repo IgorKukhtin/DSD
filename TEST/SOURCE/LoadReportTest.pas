@@ -196,10 +196,10 @@ begin
 
   LoadReportFromFile('Отчет движение по товару (партии ТМЦ+МНМА)', ReportPath + '\Отчеты (товарные)\Отчет движение по товару (партии ТМЦ+МНМА).fr3');
   exit;
-}
+
   LoadReportFromFile('Отчет Заявка Отгрузка (меньше заявки)', ReportPath + '\Отчеты (товарные)\Отчет Заявка Отгрузка (меньше заявки).fr3');
   exit;
-   {
+
   LoadReportFromFile('Отчет движение по ОС', ReportPath + '\Отчеты (товарные)\Отчет движение по ОС.fr3');
   exit;
 
@@ -473,9 +473,10 @@ begin
   exit;
 
   LoadReportFromFile('PrintMovement_SalePack', ReportPath + '\Товарный Учет\PrintMovement_SalePack.fr3');
-
+   }
   LoadReportFromFile('PrintMovement_Quality', ReportPath + '\Товарный Учет\PrintMovement_Quality.fr3');
-
+  exit;
+  {
   LoadReportFromFile('PrintMovement_Quality32049199', ReportPath + '\Товарный Учет\PrintMovement_Quality32049199.fr3');
 
   LoadReportFromFile('PrintMovement_Quality32294926', ReportPath + '\Товарный Учет\PrintMovement_Quality32294926.fr3');

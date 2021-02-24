@@ -69,7 +69,8 @@ BEGIN
              , Object_BankAccount_View.Name     AS CORRIBAN
              , Object_To.ValueData              AS CORRSNAME
              , COALESCE (ObjectHistory_JuridicalDetails_View.OKPO,'') :: TVarChar AS CORRIDENTIFYCODE
-             , Object_InfoMoney.ValueData       AS DETAILSOFPAYMENT
+             --, Object_InfoMoney.ValueData       AS DETAILSOFPAYMENT
+             , COALESCE (MIString_Comment.ValueData, Object_InfoMoney.ValueData) ::TVarChar AS DETAILSOFPAYMENT
              , (COALESCE (tmpMI.Amount,0) *100) :: INTEGER AS AMOUNT
              , 804                  ::TVarChar  AS CORRCOUNTRYID    --Код страны корреспондента
              , 50                   ::TVarChar  AS PRIORITY         --Приоритет
@@ -87,7 +88,11 @@ BEGIN
              LEFT JOIN Object AS Object_To ON Object_To.Id = tmpMI.JuridicalId
              -- если юр. лицо
              LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = tmpMI.JuridicalId
-             
+
+            LEFT JOIN MovementItemString AS MIString_Comment
+                                         ON MIString_Comment.MovementItemId = tmpMI.MI_Id
+                                        AND MIString_Comment.DescId = zc_MIString_Comment()
+
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                              ON MILinkObject_Contract.MovementItemId = tmpMI.MI_Id
                                             AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
@@ -102,6 +107,7 @@ BEGIN
                                  ON ObjectLink_Contract_InfoMoney.ObjectId = Object_Contract.Id
                                 AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Contract_InfoMoney.ChildObjectId
+
             ;
 
  

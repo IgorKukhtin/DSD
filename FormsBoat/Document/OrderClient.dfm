@@ -3,7 +3,7 @@ object OrderClientForm: TOrderClientForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'>'
   ClientHeight = 455
-  ClientWidth = 1038
+  ClientWidth = 1168
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,13 @@ object OrderClientForm: TOrderClientForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1038
+    Width = 1168
     Height = 97
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitTop = 5
+    ExplicitWidth = 1201
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -62,10 +64,10 @@ object OrderClientForm: TOrderClientForm
         end>
       Properties.ReadOnly = True
       TabOrder = 3
-      Width = 191
+      Width = 165
     end
     object edTo: TcxButtonEdit
-      Left = 601
+      Left = 576
       Top = 23
       Properties.Buttons = <
         item
@@ -74,7 +76,7 @@ object OrderClientForm: TOrderClientForm
         end>
       Properties.ReadOnly = True
       TabOrder = 2
-      Width = 249
+      Width = 177
     end
     object cxLabel3: TcxLabel
       Left = 404
@@ -85,7 +87,7 @@ object OrderClientForm: TOrderClientForm
       ShowHint = True
     end
     object cxLabel4: TcxLabel
-      Left = 601
+      Left = 576
       Top = 5
       Caption = #1050#1086#1084#1091
     end
@@ -126,7 +128,7 @@ object OrderClientForm: TOrderClientForm
       Properties.DisplayFormat = ',0.###'
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 191
+      Width = 165
     end
     object cxLabel7: TcxLabel
       Left = 309
@@ -166,15 +168,15 @@ object OrderClientForm: TOrderClientForm
       Width = 157
     end
     object cxLabel16: TcxLabel
-      Left = 601
+      Left = 576
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 601
+      Left = 576
       Top = 63
       TabOrder = 18
-      Width = 249
+      Width = 177
     end
     object cxLabel10: TcxLabel
       Left = 273
@@ -194,13 +196,13 @@ object OrderClientForm: TOrderClientForm
       Width = 124
     end
     object cxLabel15: TcxLabel
-      Left = 858
-      Top = 5
+      Left = 758
+      Top = 45
       Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
     end
     object ceInvoice: TcxButtonEdit
-      Left = 858
-      Top = 23
+      Left = 758
+      Top = 63
       Properties.Buttons = <
         item
           Default = True
@@ -208,43 +210,77 @@ object OrderClientForm: TOrderClientForm
         end>
       Properties.ReadOnly = True
       TabOrder = 22
-      Width = 175
+      Width = 156
     end
     object cxLabel9: TcxLabel
-      Left = 858
+      Left = 921
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1076#1086#1082'. '#1057#1095#1077#1090')'
     end
     object ceComment_Invoice: TcxTextEdit
-      Left = 858
+      Left = 921
       Top = 63
       Properties.ReadOnly = True
       TabOrder = 24
-      Width = 175
+      Width = 242
+    end
+    object cxLabel12: TcxLabel
+      Left = 921
+      Top = 5
+      Caption = 'Brand'
+    end
+    object edBrand: TcxButtonEdit
+      Left = 921
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 26
+      Width = 117
+    end
+    object edCIN: TcxTextEdit
+      Left = 1043
+      Top = 23
+      TabOrder = 27
+      Width = 120
+    end
+    object cxLabel13: TcxLabel
+      Left = 1043
+      Top = 5
+      Caption = 'CIN Nr.'
     end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 123
-    Width = 1038
+    Width = 1168
     Height = 332
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 1038
     ClientRectBottom = 332
-    ClientRectRight = 1038
+    ClientRectRight = 1168
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 1038
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1038
+        Width = 1168
         Height = 308
         Align = alClient
         TabOrder = 0
+        ExplicitLeft = 3
+        ExplicitTop = -3
+        ExplicitWidth = 1043
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -510,6 +546,23 @@ object OrderClientForm: TOrderClientForm
         end
       end
     end
+  end
+  object cxLabel6: TcxLabel
+    Left = 758
+    Top = 5
+    Caption = 'Boat'
+  end
+  object edProduct: TcxButtonEdit
+    Left = 758
+    Top = 23
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 156
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1399,7 +1452,7 @@ object OrderClientForm: TOrderClientForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 624
+    Left = 664
     Top = 16
   end
   object PopupMenu: TPopupMenu
@@ -1597,6 +1650,14 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inProductId'
+        Value = Null
+        Component = GuidesProduct
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inMovementId_Invoice'
         Value = Null
         Component = GuidesInvoice
@@ -1659,6 +1720,7 @@ object OrderClientForm: TOrderClientForm
         Control = ceInvoice
       end
       item
+        Control = edProduct
       end
       item
       end
@@ -1826,6 +1888,43 @@ object OrderClientForm: TOrderClientForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProductId'
+        Value = Null
+        Component = GuidesProduct
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProductName'
+        Value = Null
+        Component = GuidesProduct
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BrandId'
+        Value = Null
+        Component = GuidesBrand
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BrandName'
+        Value = Null
+        Component = GuidesBrand
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CIN'
+        Value = Null
+        Component = edCIN
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 200
@@ -1982,8 +2081,8 @@ object OrderClientForm: TOrderClientForm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 488
-    Top = 16
+    Left = 456
+    Top = 8
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -2152,7 +2251,91 @@ object OrderClientForm: TOrderClientForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 916
-    Top = 15
+    Left = 844
+    Top = 55
+  end
+  object GuidesProduct: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edProduct
+    FormNameParam.Value = 'TProductForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TProductForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesProduct
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesProduct
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CIN'
+        Value = Null
+        Component = edCIN
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BrandId'
+        Value = Null
+        Component = GuidesBrand
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BrandName'
+        Value = Null
+        Component = GuidesBrand
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 808
+    Top = 16
+  end
+  object GuidesBrand: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBrand
+    FormNameParam.Value = 'TBrandForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBrandForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBrand
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBrand
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 943
+    Top = 4
   end
 end

@@ -24,7 +24,6 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
     Height = 31
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 931
     object cxLabel4: TcxLabel
       Left = 7
       Top = 4
@@ -88,7 +87,6 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
     Height = 383
     Align = alClient
     TabOrder = 5
-    ExplicitWidth = 931
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -187,6 +185,13 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 55
+      end
+      object isPromoBonus: TcxGridDBColumn
+        Caption = #1052#1072#1088#1082#1077#1090'. '#1073#1086#1085#1091#1089
+        DataBinding.FieldName = 'isPromoBonus'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 58
       end
       object PriceAverage: TcxGridDBColumn
         Caption = #1057#1088#1077#1076#1085#1103#1103' '#1094#1077#1085#1072

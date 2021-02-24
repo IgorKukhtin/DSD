@@ -56,6 +56,7 @@ type
     actInsert_byMovBankAccount: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     bbInsert_byMovBankAccount: TdxBarButton;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

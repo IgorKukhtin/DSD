@@ -140,8 +140,8 @@ object ProductEditForm: TProductEditForm
     Width = 82
   end
   object edCIN: TcxTextEdit
-    Left = 10
-    Top = 77
+    Left = 8
+    Top = 81
     TabOrder = 17
     Width = 273
   end
@@ -446,7 +446,7 @@ object ProductEditForm: TProductEditForm
       end
       item
         Name = 'inDateStart'
-        Value = 'NULL'
+        Value = Null
         Component = edDateStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -454,7 +454,7 @@ object ProductEditForm: TProductEditForm
       end
       item
         Name = 'inDateBegin'
-        Value = 'NULL'
+        Value = Null
         Component = edDateBegin
         DataType = ftDateTime
         ParamType = ptInput
@@ -462,7 +462,7 @@ object ProductEditForm: TProductEditForm
       end
       item
         Name = 'inDateSale'
-        Value = 'NULL'
+        Value = Null
         Component = edDateSale
         DataType = ftDateTime
         ParamType = ptInput
@@ -543,21 +543,21 @@ object ProductEditForm: TProductEditForm
       end
       item
         Name = 'DateStart'
-        Value = 'NULL'
+        Value = Null
         Component = edDateStart
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'DateBegin'
-        Value = 'NULL'
+        Value = Null
         Component = edDateBegin
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'DateSale'
-        Value = 'NULL'
+        Value = Null
         Component = edDateSale
         DataType = ftDateTime
         MultiSelectSeparator = ','

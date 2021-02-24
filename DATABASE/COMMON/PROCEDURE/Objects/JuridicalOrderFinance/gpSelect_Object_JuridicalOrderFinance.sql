@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_JuridicalOrderFinance()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_JuridicalOrderFinance(Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_JuridicalOrderFinance(Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_JuridicalOrderFinance(
     IN inBankAccountId_main  Integer,       -- 
@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer
              , InfoMoneyName TVarChar
              , InfoMoneyName_all TVarChar
              , SummOrderFinance TFloat
+             , Comment TVarChar
              , isErased Boolean
              ) AS
 $BODY$
@@ -45,6 +46,7 @@ BEGIN
                                           , OL_JuridicalOrderFinance_BankAccount.ChildObjectId     AS BankAccountId
                                           , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId       AS InfoMoneyId
                                           , ObjectFloat_SummOrderFinance.ValueData :: TFloat       AS SummOrderFinance
+                                          , ObjectString_Comment.ValueData ::TVarChar              AS Comment
                                           , Object_JuridicalOrderFinance.isErased                  AS isErased
                               
                                      FROM Object AS Object_JuridicalOrderFinance
@@ -67,7 +69,10 @@ BEGIN
                                          LEFT JOIN ObjectFloat AS ObjectFloat_SummOrderFinance
                                                                ON ObjectFloat_SummOrderFinance.ObjectId = Object_JuridicalOrderFinance.Id
                                                               AND ObjectFloat_SummOrderFinance.DescId = zc_ObjectFloat_JuridicalOrderFinance_SummOrderFinance()
-                              
+
+                                         LEFT JOIN ObjectString AS ObjectString_Comment
+                                                                ON ObjectString_Comment.ObjectId = Object_JuridicalOrderFinance.Id
+                                                               AND ObjectString_Comment.DescId = zc_ObjectString_JuridicalOrderFinance_Comment()
                                      WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
                                         AND (Object_JuridicalOrderFinance.isErased = inisErased OR inisErased = TRUE)
                                         AND (OL_JuridicalOrderFinance_BankAccountMain.ChildObjectId = inBankAccountId_main OR inBankAccountId_main = 0)
@@ -103,6 +108,8 @@ BEGIN
              , Object_InfoMoney_View.InfoMoneyName_all
 
              , COALESCE (tmpJuridicalOrderFinance.SummOrderFinance,0) :: TFloat  AS SummOrderFinance
+             
+             , COALESCE (tmpJuridicalOrderFinance.Comment,'')         ::TVarChar AS Comment
             
              , COALESCE (tmpJuridicalOrderFinance.isErased, FALSE)    :: Boolean AS isErased
              
@@ -165,6 +172,8 @@ BEGIN
              , Object_InfoMoney_View.InfoMoneyName_all
              
              , ObjectFloat_SummOrderFinance.ValueData :: TFloat AS SummOrderFinance
+             
+             , ObjectString_Comment.ValueData         :: TVarChar AS Comment
             
              , Object_JuridicalOrderFinance.isErased  AS isErased
  
@@ -193,6 +202,10 @@ BEGIN
                                    ON ObjectFloat_SummOrderFinance.ObjectId = Object_JuridicalOrderFinance.Id
                                   AND ObjectFloat_SummOrderFinance.DescId = zc_ObjectFloat_JuridicalOrderFinance_SummOrderFinance()
   
+             LEFT JOIN ObjectString AS ObjectString_Comment
+                                    ON ObjectString_Comment.ObjectId = Object_JuridicalOrderFinance.Id
+                                   AND ObjectString_Comment.DescId = zc_ObjectString_JuridicalOrderFinance_Comment()
+
              LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
  
              LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
