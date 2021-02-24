@@ -26,8 +26,8 @@ BEGIN
 
 
      -- рассчитываем бонус сети - Ќќ¬јя —’≈ћј
-   --vbContractCondition := (
-     vbContractId_str := (
+     vbContractCondition := (
+   --vbContractId_str := (
              WITH -- все контрагенты јкции
                   tmpPromoPartner_all AS (SELECT tmp.PartnerId
                                                , tmp.ContractId
@@ -371,8 +371,8 @@ BEGIN
                AND MovementItem.isErased = FALSE
           -- ORDER BY MovementItem.Id LIMIT 1
             )
---          , vbContractCondition
-          , vbContractId_str
+          , vbContractCondition
+--          , vbContractId_str
             ;
     END IF;
 

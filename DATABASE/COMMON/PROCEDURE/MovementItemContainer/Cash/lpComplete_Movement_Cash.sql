@@ -735,7 +735,7 @@ BEGIN
                                                  ) AS tmpContainer
                                                  LEFT JOIN MovementItemContainer AS MIContainer
                                                                                  ON MIContainer.Containerid = tmpContainer.ContainerId_Currency
-                                                                                AND MIContainer.OperDate    >= vbOperDate_currency
+                                                                                AND MIContainer.OperDate    > vbOperDate_currency
                                             GROUP BY tmpContainer.ContainerId
                                                    , tmpContainer.ContainerId_Currency
                                                    , tmpContainer.AccountId
@@ -766,7 +766,7 @@ BEGIN
                                                  ) AS tmpContainer
                                                  LEFT JOIN MovementItemContainer AS MIContainer
                                                                                  ON MIContainer.Containerid = tmpContainer.ContainerId
-                                                                                AND MIContainer.OperDate    >= vbOperDate_currency
+                                                                                AND MIContainer.OperDate    > vbOperDate_currency
                                             GROUP BY tmpContainer.ContainerId
                                                    , tmpContainer.AccountId
                                                    , tmpContainer.Amount

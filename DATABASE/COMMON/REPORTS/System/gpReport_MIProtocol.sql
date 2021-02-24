@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpReport_MIProtocol (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_MIProtocol(
-    IN inStartDate          TDateTime , -- 
+    IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
     IN inUnitId             Integer , --
     IN inUserId             Integer , --
@@ -17,7 +17,7 @@ RETURNS TABLE (UserId Integer, UserCode Integer, UserName TVarChar
              , PositionName   TVarChar
              , UnitId Integer, UnitName TVarChar
              , BranchId Integer, BranchName TVarChar
-   
+
              , MovementId          Integer
              , MovementItemId      Integer
              , OperDate_Protocol   TDateTime
@@ -47,8 +47,8 @@ $BODY$
 BEGIN
 
    -- Результат
-   RETURN QUERY 
-    WITH 
+   RETURN QUERY
+    WITH
     tmpPersonal AS (SELECT View_Personal.MemberId
                           , MAX (View_Personal.PersonalId) AS PersonalId
                           , MAX (View_Personal.UnitId) AS UnitId
@@ -60,7 +60,7 @@ BEGIN
   , tmpUser AS (SELECT Object_User.Id AS UserId
                      , Object_User.ObjectCode AS UserCode
                      , Object_User.ValueData  AS UserName
-                     , tmpPersonal.MemberId 
+                     , tmpPersonal.MemberId
                      , ObjectLink_Unit_Branch.ChildObjectId AS BranchId
                      , tmpPersonal.UnitId
                      , tmpPersonal.PositionId
@@ -72,7 +72,7 @@ BEGIN
                       LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                              ON ObjectLink_Unit_Branch.ObjectId = tmpPersonal.UnitId
                             AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-                   
+
                 WHERE Object_User.DescId = zc_Object_User()
                 )
 
@@ -80,9 +80,9 @@ BEGIN
                 FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect_Object_Unit_byGroup
                 WHERE inUnitId <> 0
                UNION
-                SELECT Object.Id AS UnitId 
+                SELECT Object.Id AS UnitId
                 FROM Object
-                WHERE Object.DescId = zc_Object_Unit() 
+                WHERE Object.DescId = zc_Object_Unit()
                   AND COALESCE (inUnitId, 0) = 0
                )
 
@@ -128,54 +128,54 @@ BEGIN
                                                       AND MovementDesc.Id IN (zc_Movement_ReturnOut()
                                                                             , zc_Movement_Send()
                                                                             , zc_Movement_SendAsset()
-                                                                            , zc_Movement_SendOnPrice()       
-                                                                            , zc_Movement_Sale()              
-                                                                            , zc_Movement_ReturnIn()          
-                                                                            , zc_Movement_Loss()              
+                                                                            , zc_Movement_SendOnPrice()
+                                                                            , zc_Movement_Sale()
+                                                                            , zc_Movement_ReturnIn()
+                                                                            , zc_Movement_Loss()
                                                                             , zc_Movement_ProductionSeparate()
-                                                                            , zc_Movement_ProductionUnion()   
-                                                                            , zc_Movement_Inventory()         
-                                                                            , zc_Movement_Income()            
-                                                                            , zc_Movement_WeighingPartner()   
+                                                                            , zc_Movement_ProductionUnion()
+                                                                            , zc_Movement_Inventory()
+                                                                            , zc_Movement_Income()
+                                                                            , zc_Movement_WeighingPartner()
                                                                             , zc_Movement_WeighingProduction())
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                           
+
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
 
-                            INNER JOIN tmpUnit ON (tmpUnit.UnitId = MovementLinkObject_From.ObjectId 
-                                                  OR 
-                                                   tmpUnit.UnitId = MovementLinkObject_To.ObjectId)
+                            LEFT JOIN tmpUnit AS tmpUnit_from ON tmpUnit_from.UnitId = MovementLinkObject_From.ObjectId
+                            LEFT JOIN tmpUnit AS tmpUnit_to   ON tmpUnit_to.UnitId   = MovementLinkObject_To.ObjectId
 
                        WHERE  (MovementItemProtocol.UserId = inUserId OR inUserId = 0)
                           AND ( (inIsMovement = FALSE AND MovementItemProtocol.OperDate >= inStartDate AND MovementItemProtocol.OperDate < inEndDate + INTERVAL '1 DAY')
-                               OR 
+                               OR
                                 (inIsMovement = TRUE AND Movement.OperDate >= inStartDate AND Movement.OperDate < inEndDate + INTERVAL '1 DAY')
                               )
+                          AND (tmpUnit_from.UnitId > 0  OR tmpUnit_to.UnitId > 0)
                           --AND ( (MovementLinkObject_From.ObjectId = inUnitId OR MovementLinkObject_To.ObjectId = inUnitId) OR inUnitId = 0)
-                      ) 
+                      )
    ------------------------
 
-     -- Результат 
+     -- Результат
      SELECT tmpData.UserId
           , COALESCE (tmpUser.UserCode, Object_User.ObjectCode) ::Integer  AS UserCode
           , COALESCE (tmpUser.UserName, Object_User.ValueData)  ::TVarChar AS UserName
 
-          , Object_Member.ValueData           AS MemberName 
-          , Object_Position.ValueData         AS PositionName 
+          , Object_Member.ValueData           AS MemberName
+          , Object_Position.ValueData         AS PositionName
           , Object_Unit.Id                    AS UnitId
           , Object_Unit.ValueData             AS UnitName
           , Object_Branch.Id                  AS BranchId
           , Object_Branch.ValueData           AS BranchName
-       
+
           , tmpData.MovementId
           , tmpData.MovementItemId
           , tmpData.OperDate_Protocol  ::TDateTime
           , tmpData.OperDate_Movement  ::TDateTime
-          , tmpData.Invnumber_Movement ::Integer
+          , zfConvert_StringToNumber (tmpData.Invnumber_Movement) ::Integer
           , tmpData.DescId_Movement
           , tmpData.DescName_Movement
           , Object_Status.ObjectCode          AS StatusCode
@@ -183,7 +183,7 @@ BEGIN
 
           , Object_From.ValueData             AS FromName
           , Object_To.ValueData               AS ToName
-          
+
           , CASE WHEN (tmpData.DescId_Movement = zc_Movement_ProductionSeparate() AND tmpData.DescId_MovementItem = zc_MI_Master())
                      OR
                       (tmpData.DescId_Movement = zc_Movement_ProductionUnion() AND tmpData.DescId_MovementItem = zc_MI_Child())
@@ -194,20 +194,20 @@ BEGIN
                  THEN 'приход'
                  ELSE ''
             END                      ::TVarChar         AS Text_inf
-          
-          
+
+
           , Object_Goods.ObjectCode  ::Integer          AS GoodsCode
           , Object_Goods.ValueData   ::TVarChar         AS GoodsName
           , tmpData.GoodsKindName    ::TVarChar         AS GoodsKindName
-          
-          , tmpData.Amount           ::TFloat           AS Amount       
+
+          , tmpData.Amount           ::TFloat           AS Amount
           , (CASE WHEN COALESCE (tmpData.AmountPartner, '') = '' THEN '0'  ELSE tmpData.AmountPartner END) ::TFloat AS AmountPartner
           , (CASE WHEN COALESCE (tmpData.Price, '') = '' THEN '0'  ELSE tmpData.Price END) ::TFloat AS Price
 
           , tmpData.IsInsert         ::Boolean          AS IsInsert
-          , CASE WHEN tmpData.isErased ::Boolean = TRUE OR tmpData.StatusId_Movement = zc_Enum_Status_Erased() THEN TRUE ELSE FALSE END  ::Boolean AS isErased  
+          , CASE WHEN tmpData.isErased ::Boolean = TRUE OR tmpData.StatusId_Movement = zc_Enum_Status_Erased() THEN TRUE ELSE FALSE END  ::Boolean AS isErased
           , tmpData.isErased         ::Boolean          AS isErased_Object
-          
+
      FROM tmpMI_Protocol AS tmpData
           INNER JOIN tmpGoods ON tmpGoods.GoodsId = tmpData.GoodsId
 
@@ -219,12 +219,12 @@ BEGIN
           LEFT JOIN Object AS Object_User ON Object_User.Id = tmpData.UserId
 
           LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpUser.MemberId
-          LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpUser.PositionId 
+          LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpUser.PositionId
           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUser.UnitId
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpUser.BranchId
-          
+
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
-          
+
     ;
 
 END;

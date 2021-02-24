@@ -155,12 +155,13 @@ type
     bbPrintSticker_fp: TdxBarButton;
     mactGoodsPrintList_Print_fp: TMultiAction;
     bbGoodsPrintList_Print_fp: TdxBarButton;
-    actExport2: TMultiAction;
-    actExport_file: TdsdStoredProcExportToFile;
-    actGet_Export_FileName2: TdsdExecStoredProc;
     spGet_Export_FileName2: TdsdStoredProc;
     actPrint_Curr: TdsdPrintAction;
     bbPrint_Curr: TdxBarButton;
+    ExportEmailCDS: TClientDataSet;
+    ExportEmailDS: TDataSource;
+    spGet_Export_Email: TdsdStoredProc;
+    actGet_Export_Email: TdsdExecStoredProc;
   private
     { Private declarations }
   public

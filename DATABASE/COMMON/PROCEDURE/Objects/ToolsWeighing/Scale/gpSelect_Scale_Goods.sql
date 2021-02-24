@@ -133,10 +133,11 @@ BEGIN
               FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract()), 1)
                                                         , inPartnerId      := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
                                                         , inMovementDescId := zc_Movement_Sale()
-                                                        , inOperDate_order := COALESCE ((SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inOrderExternalId AND MD.DescId = zc_MovementDate_OperDatePartner()), CURRENT_TIMESTAMP)
+                                                        , inOperDate_order := COALESCE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inOrderExternalId), CURRENT_TIMESTAMP)
                                                         , inOperDatePartner:= NULL
                                                         , inDayPrior_PriceReturn:= NULL
                                                         , inIsPrior        := FALSE -- !!!отказались от старых цен!!!
+                                                        , inOperDatePartner_order:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inOrderExternalId AND MD.DescId = zc_MovementDate_OperDatePartner())
                                                          ) AS tmp;
          END IF;
 

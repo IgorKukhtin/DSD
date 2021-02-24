@@ -6,6 +6,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitTop = -141
   ExplicitWidth = 1147
   ExplicitHeight = 598
   PixelsPerInch = 96
@@ -2296,42 +2297,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       DefaultFileName = 'Report_'
       DefaultFileExt = 'XML'
     end
-    object actSMTPFile: TdsdSMTPFileAction
-      Category = 'Export_file'
-      MoveParams = <>
-      Host.Value = Null
-      Host.ComponentItem = 'Host'
-      Host.DataType = ftString
-      Host.MultiSelectSeparator = ','
-      Port.Value = 25
-      Port.ComponentItem = 'Port'
-      Port.DataType = ftString
-      Port.MultiSelectSeparator = ','
-      UserName.Value = Null
-      UserName.ComponentItem = 'UserName'
-      UserName.DataType = ftString
-      UserName.MultiSelectSeparator = ','
-      Password.Value = Null
-      Password.ComponentItem = 'Password'
-      Password.DataType = ftString
-      Password.MultiSelectSeparator = ','
-      Body.Value = Null
-      Body.ComponentItem = 'Body'
-      Body.DataType = ftString
-      Body.MultiSelectSeparator = ','
-      Subject.Value = Null
-      Subject.ComponentItem = 'Subject'
-      Subject.DataType = ftString
-      Subject.MultiSelectSeparator = ','
-      FromAddress.Value = Null
-      FromAddress.ComponentItem = 'AddressFrom'
-      FromAddress.DataType = ftString
-      FromAddress.MultiSelectSeparator = ','
-      ToAddress.Value = Null
-      ToAddress.ComponentItem = 'AddressTo'
-      ToAddress.DataType = ftString
-      ToAddress.MultiSelectSeparator = ','
-    end
     object actExport: TMultiAction
       Category = 'Export_file'
       MoveParams = <>
@@ -2340,26 +2305,16 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           Action = actGet_Export_FileName
         end
         item
+          Action = actGet_Export_Email
+        end
+        item
           Action = actSelect_Export
         end
         item
           Action = actExport_Grid
-        end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1075#1088#1091#1079#1080#1090#1100' '#1086#1089#1090#1072#1090#1082#1080' '#1074'  '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
-      InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1091#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085
-      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1086#1089#1090#1072#1090#1082#1080' '#1074' '#1092#1072#1081#1083
-      Hint = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083
-      ImageIndex = 53
-    end
-    object actExport2: TMultiAction
-      Category = 'Export_file'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGet_Export_FileName
         end
         item
-          Action = actExport_file
+          Action = actSMTPFile
         end>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1075#1088#1091#1079#1080#1090#1100' '#1086#1089#1090#1072#1090#1082#1080' '#1074'  '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
       InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1091#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085
@@ -2367,24 +2322,59 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Hint = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083
       ImageIndex = 53
     end
-    object actExport_file: TdsdStoredProcExportToFile
-      Category = 'Export_file'
-      MoveParams = <>
-      dsdStoredProcName = spSelect_Export
-      FileExt = '.xml'
-      Left = 1208
-      Top = 176
-    end
-    object actGet_Export_FileName2: TdsdExecStoredProc
-      Category = 'Export_file'
+    object actGet_Export_Email: TdsdExecStoredProc
+      Category = 'Export_Email'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet_Export_FileName2
+      StoredProc = spGet_Export_Email
       StoredProcList = <
         item
-          StoredProc = spGet_Export_FileName2
+          StoredProc = spGet_Export_Email
         end>
-      Caption = 'actGet_Export_FileName2'
+      Caption = 'actGet_Export_Email'
+    end
+    object actSMTPFile: TdsdSMTPFileAction
+      Category = 'Export_Email'
+      MoveParams = <>
+      Host.Value = Null
+      Host.Component = ExportEmailCDS
+      Host.ComponentItem = 'Host'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Port.Value = 25
+      Port.Component = ExportEmailCDS
+      Port.ComponentItem = 'Port'
+      Port.DataType = ftString
+      Port.MultiSelectSeparator = ','
+      UserName.Value = Null
+      UserName.Component = ExportEmailCDS
+      UserName.ComponentItem = 'UserName'
+      UserName.DataType = ftString
+      UserName.MultiSelectSeparator = ','
+      Password.Value = Null
+      Password.Component = ExportEmailCDS
+      Password.ComponentItem = 'Password'
+      Password.DataType = ftString
+      Password.MultiSelectSeparator = ','
+      Body.Value = Null
+      Body.ComponentItem = 'Body'
+      Body.DataType = ftString
+      Body.MultiSelectSeparator = ','
+      Subject.Value = Null
+      Subject.Component = ExportEmailCDS
+      Subject.ComponentItem = 'Subject'
+      Subject.DataType = ftString
+      Subject.MultiSelectSeparator = ','
+      FromAddress.Value = Null
+      FromAddress.Component = ExportEmailCDS
+      FromAddress.ComponentItem = 'AddressFrom'
+      FromAddress.DataType = ftString
+      FromAddress.MultiSelectSeparator = ','
+      ToAddress.Value = Null
+      ToAddress.Component = ExportEmailCDS
+      ToAddress.ComponentItem = 'AddressTo'
+      ToAddress.DataType = ftString
+      ToAddress.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -2799,7 +2789,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 272
+    Left = 264
   end
   object GuidesBrand: TdsdGuides
     KeyField = 'Id'
@@ -3068,7 +3058,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     Params = <
       item
         Name = 'inValue'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'Remains'
         DataType = ftFloat
@@ -3533,29 +3523,56 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       item
         Name = 'outFileName'
         Value = Null
-        Component = actExport_file
-        ComponentItem = 'DefaultFileName'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'outDefaultFileExt'
         Value = Null
-        Component = actExport_file
-        ComponentItem = 'DefaultFileExt'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'outEncodingANSI'
         Value = Null
-        Component = actExport_file
-        ComponentItem = 'EncodingANSI'
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 416
-    Top = 456
+    Left = 352
+    Top = 408
+  end
+  object ExportEmailCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 248
+    Top = 424
+  end
+  object ExportEmailDS: TDataSource
+    DataSet = ExportEmailCDS
+    Left = 288
+    Top = 425
+  end
+  object spGet_Export_Email: TdsdStoredProc
+    StoredProcName = 'gpGet_GoodsRemains_Email'
+    DataSet = ExportEmailCDS
+    DataSets = <
+      item
+        DataSet = ExportEmailCDS
+      end>
+    Params = <
+      item
+        Name = 'inFileName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inFileName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 384
+    Top = 434
   end
 end
