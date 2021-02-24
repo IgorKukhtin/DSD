@@ -19,6 +19,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ProdColorName TVarChar
              , EngineId Integer, EngineName TVarChar
              , ReceiptProdModelId Integer, ReceiptProdModelName TVarChar
              , ClientId Integer, ClientCode Integer, ClientName TVarChar
+             , MovementId_OrderClient Integer
+             , OperDate_OrderClient  TDateTime
+             , InvNumber_OrderClient TVarChar
+
              , InsertName TVarChar
              , InsertDate TDateTime
              , isSale Boolean
@@ -473,6 +477,34 @@ BEGIN
                                              ON ObjectDate_Insert.ObjectId = Object_Product.Id
                                             AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
                   )
+     -- документы заказа
+    , tmpOrderClient AS (SELECT tmp.*
+                         FROM (SELECT Movement.*
+                              , ('№ ' || Movement.InvNumber || '  ' || Movement.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_full
+                              , Object_From.Id         AS FromId
+                              , Object_From.ObjectCode AS FromCode
+                              , Object_From.ValueData  AS FromName
+                              , MovementLinkObject_Product.ObjectId AS ProductId
+                              , ROW_NUMBER() OVER (PARTITION BY MovementLinkObject_Product.ObjectId
+                                                   ORDER BY CASE WHEN Movement.StatusId = zc_Enum_Status_Complete() THEN 1
+                                                                 WHEN Movement.StatusId = zc_Enum_Status_UnComplete() THEN 2
+                                                                 ELSE 9999
+                                                            END)    AS Ord
+                         FROM MovementLinkObject AS MovementLinkObject_Product
+                              INNER JOIN Movement ON Movement.Id = MovementLinkObject_Product.MovementId
+                                                 AND Movement.DescId = zc_Movement_OrderClient()
+                                                 AND Movement.StatusId <> zc_Enum_Status_Erased()
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                           ON MovementLinkObject_From.MovementId = Movement.Id
+                                                          AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                              LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+                         WHERE MovementLinkObject_Product.ObjectId IN (SELECT DISTINCT tmpProduct.Id FROM tmpProduct)
+                           AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
+                               ) AS tmp
+                         --WHERE tmp.Ord = 1
+                         )
+
+
      -- Результат
     SELECT
            tmpResAll.Id
@@ -506,9 +538,16 @@ BEGIN
          , tmpResAll.ReceiptProdModelId
          , tmpResAll.ReceiptProdModelName
 
-         , tmpResAll.ClientId
+/*         , tmpResAll.ClientId
          , tmpResAll.ClientCode
          , tmpResAll.ClientName
+*/
+         , tmpOrderClient.FromId    ::Integer   AS ClientId
+         , tmpOrderClient.FromCode  ::Integer   AS ClientCode
+         , tmpOrderClient.FromName  ::TVarChar  AS ClientName
+         , tmpOrderClient.Id        ::Integer   AS MovementId_OrderClient
+         , tmpOrderClient.OperDate  ::TDateTime AS OperDate_OrderClient
+         , tmpOrderClient.InvNumber ::TVarChar  AS InvNumber_OrderClient
 
          , tmpResAll.InsertName
          , tmpResAll.InsertDate
@@ -579,6 +618,9 @@ BEGIN
      FROM tmpResAll
           LEFT JOIN tmpCalc AS tmpCalc_1 ON tmpCalc_1.ProductId = tmpResAll.Id AND tmpCalc_1.isBasis = TRUE
           LEFT JOIN tmpCalc AS tmpCalc_2 ON tmpCalc_2.ProductId = tmpResAll.Id AND tmpCalc_2.isBasis = FALSE
+          
+          LEFT JOIN tmpOrderClient ON tmpOrderClient.ProductId = tmpResAll.Id 
+          
      ;
 
 END;

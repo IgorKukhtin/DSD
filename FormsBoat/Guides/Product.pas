@@ -188,6 +188,10 @@ type
     actPrintTender: TdsdPrintAction;
     spSelectPrintTender: TdsdStoredProc;
     bbPrintTender: TdxBarButton;
+    OperDate_OrderClient: TcxGridDBColumn;
+    InvNumber_OrderClient: TcxGridDBColumn;
+    actUpdate_OrderClient: TdsdInsertUpdateAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

@@ -33,8 +33,10 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
- --DECLARE vbCode_calc Integer;
+   DECLARE vbVATPercent Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbMovementId Integer;
+    
    /*DECLARE vbDateStart TDateTime;
    DECLARE vbModelId Integer;
    DECLARE vbModelNom TVarChar;
@@ -43,9 +45,6 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Product());
    vbUserId:= lpGetUserBySession (inSession);
-
-   -- Если код не установлен, определяем его как последний+1
-   -- vbCode_calc:= lfGet_ObjectCode (inCode, zc_Object_Product());
 
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -70,54 +69,6 @@ BEGIN
                                               );
    END IF;
 
-/*
-   -- формируется в gpGet_Object_Product_CIN
-   --находим сохраненную дату производства и модель, если изменили то нужно изменять CIN, 
-   
-   vbDateStart := (SELECT ObjectDate_DateStart.ValueData
-                   FROM ObjectDate AS ObjectDate_DateStart
-                   WHERE ObjectDate_DateStart.ObjectId = ioId
-                     AND ObjectDate_DateStart.DescId = zc_ObjectDate_Product_DateStart()
-                   );
-   vbModelId := (SELECT ObjectLink_Model.ChildObjectId
-                 FROM ObjectLink AS ObjectLink_Model
-                 WHERE ObjectLink_Model.ObjectId = ioId
-                   AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model()
-                 );
-
-
-   IF (COALESCE (vbDateStart, zc_DateStart()) <> inDateStart) OR (COALESCE (vbModelId,0) <> inModelId)
-   THEN
-       -- находим последний номер конкретной модели + 1
-       vbModelNom := COALESCE ((SELECT LPAD ( (1 + MAX (SUBSTRING (ObjectString_CIN.ValueData, 8, 4)) :: Integer) :: TVarChar, 4, '0')
-                                FROM ObjectLink AS ObjectLink_Model
-                                     LEFT JOIN ObjectString AS ObjectString_CIN
-                                                            ON ObjectString_CIN.ObjectId = ObjectLink_Model.ObjectId
-                                                           AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
-                                WHERE ObjectLink_Model.ChildObjectId = inModelId
-                                  AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model())
-                                , '0001'
-                               ) ::TVarChar ;
-
-       /* zc_ObjectString_ProdModel_PatternCIN 
-          потом последний номер конкретной модели +1 
-          потом 1 буква месяца (от 1 до 12)
-          потом 1 цифра 0 
-          потом 2 цифры год производства
-       Пример: DE-AGLD0001A020 или DE-AGLA0002F019*/
-
-       inCIN := (SELECT ObjectString_PatternCIN.ValueData
-                      || vbModelNom
-                      || LEFT (zfCalc_MonthName_ABC( inDateStart), 1)
-                      || '0'
-                      || RIGHT ( (EXTRACT (YEAR FROM inDateStart) ::TVarChar), 2)
-                 FROM ObjectString AS ObjectString_PatternCIN
-                 WHERE ObjectString_PatternCIN.ObjectId = inModelId
-                   AND ObjectString_PatternCIN.DescId = zc_ObjectString_ProdModel_PatternCIN()
-                 );
-   END IF;
-*/
-   
    -- проверка - должен быть Код
    IF COALESCE (inCode, 0) = 0 THEN
       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Должен быть определен <Interne Nr.>' :: TVarChar
@@ -206,7 +157,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Product_ReceiptProdModel(), ioId, inReceiptProdModelId);
    
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Product_Client(), ioId, inClientId);
+   --PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Product_Client(), ioId, inClientId);
 
 
    -- только при создании
@@ -256,6 +207,54 @@ BEGIN
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
+
+   --формирование zc_Movement_OrderClient в статусе "на исполнении"
+   -- 1 -- пробуем найти док. если он уже создан
+   vbMovementId := (SELECT Movement.Id
+                    FROM MovementLinkObject AS MovementLinkObject_Product
+                         INNER JOIN Movement ON Movement.Id = MovementLinkObject_Product.MovementId
+                                            AND Movement.DescId = zc_Movement_OrderClient()
+                                            AND Movement.StatusId <> zc_Enum_Status_Erased()
+                    WHERE MovementLinkObject_Product.ObjectId = ioId
+                      AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
+                    LIMIT 1
+                    );
+   -- если док есть то ничего не делаем, есл нет создаем
+   IF COALESCE(vbMovementId,0) = 0
+   THEN
+       -- учитываем только zc_Enum_TaxKind_Basis
+       vbVATPercent := (SELECT ObjectFloat_TaxKind_Value.ValueData AS VATPercent
+                        FROM ObjectFloat AS ObjectFloat_TaxKind_Value
+                        WHERE ObjectFloat_TaxKind_Value.ObjectId = zc_Enum_TaxKind_Basis()
+                          AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
+                        )::TFloat;
+                    
+       --создаем документ
+       PERFORM lpInsertUpdate_Movement_OrderClient(ioId               := 0            ::Integer
+                                                 , inInvNumber        := CAST (NEXTVAL ('movement_OrderClient_seq') AS TVarChar) ::TVarChar
+                                                 , inInvNumberPartner := ''           ::TVarChar
+                                                 , inOperDate         := CURRENT_DATE ::TDateTime
+                                                 , inPriceWithVAT     := FALSE        ::Boolean
+                                                 , inVATPercent       := vbVATPercent ::TFloat
+                                                 , inChangePercent    := 0            ::TFloat
+                                                 , inFromId           := inClientId   ::Integer
+                                                 , inToId             := 0            ::Integer
+                                                 , inPaidKindId       := 0            ::Integer
+                                                 , inProductId        := ioId         ::Integer
+                                                 , inMovementId_Invoice := 0          ::Integer
+                                                 , inComment          := ''           ::TVarChar
+                                                 , inUserId           := vbUserId     ::Integer
+                                                 );
+   ELSE
+       --документ есть могут помеять только клиента
+       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), vbMovementId, inClientId);
+
+       -- сохранили протокол
+       PERFORM lpInsert_MovementProtocol (vbMovementId, vbUserId, False);
+
+   END IF;
+
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -263,6 +262,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.02.21         *
  11.01.21         *
  04.01.21         *
  09.10.20         *

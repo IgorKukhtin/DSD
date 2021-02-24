@@ -228,7 +228,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
         Width = 55
       end
       object FromName: TcxGridDBColumn
-        Caption = 'Lieferanten'
+        Caption = 'Kunden'
         DataBinding.FieldName = 'FromName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter

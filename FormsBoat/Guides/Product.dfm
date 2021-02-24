@@ -600,6 +600,20 @@ object ProductForm: TProductForm
           Visible = False
           VisibleForCustomization = False
         end
+        object OperDate_OrderClient: TcxGridDBColumn
+          Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1079#1072#1082#1072#1079#1072
+          DataBinding.FieldName = 'OperDate_OrderClient'
+          HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082'. '#1079#1072#1082#1072#1079#1072
+          Options.Editing = False
+          Width = 70
+        end
+        object InvNumber_OrderClient: TcxGridDBColumn
+          Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079#1072
+          DataBinding.FieldName = 'InvNumber_OrderClient'
+          HeaderHint = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079#1072
+          Options.Editing = False
+          Width = 70
+        end
       end
       object cxGridLevel: TcxGridLevel
         GridView = cxGridDBTableView
@@ -1701,6 +1715,14 @@ object ProductForm: TProductForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1903,6 +1925,11 @@ object ProductForm: TProductForm
       Action = actPrintTender
       Category = 0
     end
+    object bb: TdxBarButton
+      Action = actUpdate_OrderClient
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -1943,6 +1970,11 @@ object ProductForm: TProductForm
           Name = 'Id'
           Value = '0'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_OrderClient'
+          Value = '0'
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
@@ -1965,6 +1997,14 @@ object ProductForm: TProductForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_OrderClient'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'inMovementId_OrderClient'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -3002,6 +3042,42 @@ object ProductForm: TProductForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actUpdate_OrderClient: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      ShortCut = 115
+      ImageIndex = 28
+      FormName = 'TOrderClientForm'
+      FormNameParam.Value = 'TOrderClientForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_OrderClient'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 44197d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
   end
   object spSelect: TdsdStoredProc

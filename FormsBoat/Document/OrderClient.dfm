@@ -26,8 +26,6 @@ object OrderClientForm: TOrderClientForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 5
-    ExplicitWidth = 1201
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -82,7 +80,7 @@ object OrderClientForm: TOrderClientForm
       Left = 404
       Top = 5
       Hint = #1054#1090' '#1082#1086#1075#1086
-      Caption = 'Lieferanten'
+      Caption = 'Kunden'
       ParentShowHint = False
       ShowHint = True
     end
@@ -263,14 +261,12 @@ object OrderClientForm: TOrderClientForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 1038
     ClientRectBottom = 332
     ClientRectRight = 1168
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 1038
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -278,9 +274,6 @@ object OrderClientForm: TOrderClientForm
         Height = 308
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 3
-        ExplicitTop = -3
-        ExplicitWidth = 1043
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -399,14 +392,6 @@ object OrderClientForm: TOrderClientForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
-          end
-          object CIN: TcxGridDBColumn
-            Caption = 'CIN Nr.'
-            DataBinding.FieldName = 'CIN'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 58
           end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
@@ -1260,8 +1245,8 @@ object OrderClientForm: TOrderClientForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'GoodsForm'
-      FormName = 'TGoodsForm'
-      FormNameParam.Value = 'TGoodsForm'
+      FormName = 'TUnion_Goods_ReceiptServiceForm'
+      FormNameParam.Value = 'TUnion_Goods_ReceiptServiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

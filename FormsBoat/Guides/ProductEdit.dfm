@@ -503,6 +503,12 @@ object ProductEditForm: TProductEditForm
         Value = Null
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 96
     Top = 8

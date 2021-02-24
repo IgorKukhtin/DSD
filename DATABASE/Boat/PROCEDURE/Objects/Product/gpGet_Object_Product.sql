@@ -1,17 +1,18 @@
 -- Function: gpGet_Object_Product()
 
 DROP FUNCTION IF EXISTS gpGet_Object_Product(Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_Product(Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Product(
-    IN inId          Integer,       -- Основные средства
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inId                      Integer,       -- Основные средства
+    iN inMovementId_OrderClient  Integer, 
+    IN inSession                 TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Hours TFloat, DiscountTax TFloat, DiscountNextTax TFloat
              , DateStart TDateTime, DateBegin TDateTime, DateSale TDateTime
              , CIN TVarChar, EngineNum TVarChar
              , Comment TVarChar
-             --, ProdGroupId Integer, ProdGroupName TVarChar
              , BrandId Integer, BrandName TVarChar
              , ModelId Integer, ModelName TVarChar, ModelName_full TVarChar
              , EngineId Integer, EngineName TVarChar
@@ -19,10 +20,21 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ClientId Integer, ClientName TVarChar
              , isBasicConf Boolean, isProdColorPattern Boolean
               ) AS
-$BODY$BEGIN
+$BODY$
+    DECLARE vbClientId   Integer;
+    DECLARE vbClientName TVarChar;
+BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_Product());
+
+   SELECT Object.Id        AS ClientId
+        , Object.ValueData AS ClientName
+   INTO vbClientId, vbClientName
+   FROM MovementLinkObject AS MovementLinkObject_From
+        LEFT JOIN Object ON Object.Id = MovementLinkObject_From.ObjectId
+   WHERE MovementLinkObject_From.MovementId = inMovementId_OrderClient
+     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From();
 
    IF COALESCE (inId, 0) = 0
    THEN
@@ -53,8 +65,8 @@ $BODY$BEGIN
            , CAST ('' AS TVarChar)     AS EngineName
            , CAST (0 AS Integer)       AS ReceiptProdModelId
            , CAST ('' AS TVarChar)     AS ReceiptProdModelName
-           , CAST (0 AS Integer)       AS ClientId
-           , CAST ('' AS TVarChar)     AS ClientName
+           , CAST (vbClientId AS Integer)    AS ClientId
+           , CAST (vbClientName AS TVarChar) AS ClientName
            , CAST (TRUE AS Boolean)    AS isBasicConf
            , CAST (TRUE AS Boolean)    AS isProdColorPattern
        ;
@@ -75,27 +87,24 @@ $BODY$BEGIN
          , ObjectString_EngineNum.ValueData AS EngineNum
          , ObjectString_Comment.ValueData   AS Comment
 
-         --, Object_ProdGroup.Id             AS ProdGroupId
-         --, Object_ProdGroup.ValueData      AS ProdGroupName
+         , Object_Brand.Id                  AS BrandId
+         , Object_Brand.ValueData           AS BrandName
 
-         , Object_Brand.Id                   AS BrandId
-         , Object_Brand.ValueData            AS BrandName
-
-         , Object_Model.Id                   AS ModelId
-         , Object_Model.ValueData            AS ModelName
+         , Object_Model.Id                  AS ModelId
+         , Object_Model.ValueData           AS ModelName
          , (Object_Model.ValueData ||' (' || Object_Brand_Model.ValueData||')') ::TVarChar AS ModelName_full
 
-         , Object_Engine.Id                  AS EngineId
-         , Object_Engine.ValueData           AS EngineName
+         , Object_Engine.Id                 AS EngineId
+         , Object_Engine.ValueData          AS EngineName
 
          , Object_ReceiptProdModel.Id        AS ReceiptProdModelId
          , Object_ReceiptProdModel.ValueData AS ReceiptProdModelName
 
-         , Object_Client.Id                  AS ClientId
-         , Object_Client.ValueData           AS ClientName
+         , vbClientId                       AS ClientId
+         , vbClientName                     AS ClientName
 
          , COALESCE (ObjectBoolean_BasicConf.ValueData, FALSE) :: Boolean AS isBasicConf
-         , CAST (FALSE AS Boolean)           AS isProdColorPattern
+         , CAST (FALSE AS Boolean)          AS isProdColorPattern
 
      FROM Object AS Object_Product
           LEFT JOIN ObjectBoolean AS ObjectBoolean_BasicConf
@@ -153,10 +162,10 @@ $BODY$BEGIN
                               AND ObjectLink_Brand.DescId = zc_ObjectLink_Product_Brand()
           LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
 
-          LEFT JOIN ObjectLink AS ObjectLink_Client
+          /*LEFT JOIN ObjectLink AS ObjectLink_Client
                                ON ObjectLink_Client.ObjectId = Object_Product.Id
                               AND ObjectLink_Client.DescId = zc_ObjectLink_Product_Client()
-          LEFT JOIN Object AS Object_Client ON Object_Client.Id = ObjectLink_Client.ChildObjectId
+          LEFT JOIN Object AS Object_Client ON Object_Client.Id = ObjectLink_Client.ChildObjectId*/
 
           LEFT JOIN ObjectLink AS ObjectLink_Model
                                ON ObjectLink_Model.ObjectId = Object_Product.Id
