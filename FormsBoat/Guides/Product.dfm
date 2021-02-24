@@ -2004,7 +2004,7 @@ object ProductForm: TProductForm
           Name = 'inMovementId_OrderClient'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'inMovementId_OrderClient'
+          ComponentItem = 'MovementId_OrderClient'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>

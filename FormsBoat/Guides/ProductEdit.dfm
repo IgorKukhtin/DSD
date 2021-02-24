@@ -527,6 +527,14 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMovementId_OrderClient'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Name'
         Value = ''
         Component = edName
