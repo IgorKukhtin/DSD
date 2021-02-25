@@ -434,6 +434,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inTaxNumber'
+        Value = Null
+        Component = edTaxNumber
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inDiscountTax'
         Value = Null
         Component = ceDiscountTax
@@ -486,14 +494,6 @@
         Value = Null
         Component = GuidesTaxKind
         ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inTaxNumber'
-        Value = Null
-        Component = edTaxNumber
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
