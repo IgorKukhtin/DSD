@@ -386,10 +386,21 @@ AS
              zc_Movement_Sale()
            , CAST ('Tax' AS TVarChar)
            , CAST ('01.12.2018' AS TDateTime)
+           , CAST ('28.02.2021' AS TDateTime)
+           , CAST (0 AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintMovement_Tax1218' AS TVarChar)
+      UNION
+--налоговая c 01.03.2021
+      SELECT
+             zc_Movement_Sale()
+           , CAST ('Tax' AS TVarChar)
+           , CAST ('01.03.2021' AS TDateTime)
            , CAST ('01.01.2214' AS TDateTime)
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
-           , CAST ('PrintMovement_Tax1218' AS TVarChar)           
+           , CAST ('PrintMovement_Tax0321' AS TVarChar)           
+
       UNION
 --коррект
       SELECT
@@ -447,10 +458,20 @@ AS
              zc_movement_TaxCorrective()
            , CAST ('TaxCorrective' AS TVarChar)
            , CAST ('01.12.2018' AS TDateTime)
-           , CAST ('01.01.2214' AS TDateTime)
+           , CAST ('28.02.2021' AS TDateTime)
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_TaxCorrective1218' AS TVarChar)
+      UNION
+--коррект  c 01.03.2021
+      SELECT
+             zc_movement_TaxCorrective()
+           , CAST ('TaxCorrective' AS TVarChar)
+           , CAST ('01.03.2021' AS TDateTime)
+           , CAST ('01.01.2214' AS TDateTime)
+           , CAST (0 AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintMovement_TaxCorrective0321' AS TVarChar)
 /*
 -- Новая форма налоговой
       UNION
@@ -694,6 +715,7 @@ ALTER TABLE PrintForms_View OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 24.02.21         * add Tax0321, TaxCorrective0321
  17.12.18         * PrintMovement_Quality32049199
  26.10.17         * add PrintObject_Sticker
  19.06.17         * add PrintMovement_Sale2902403938

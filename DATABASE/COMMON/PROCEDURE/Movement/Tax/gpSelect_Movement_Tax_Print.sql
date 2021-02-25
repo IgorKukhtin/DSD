@@ -396,6 +396,13 @@ order by 4*/
                   THEN ''
              ELSE OH_JuridicalDetails_To.Phone END      AS Phone_To
 
+           --с 01,03,2021 новый параметр Код - если номер платника податку заполнен  в ячейку ставим 1, иначе пусто
+           , CASE WHEN COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) IN ('100000000000', '300000000000','')
+                    OR COALESCE (ObjectString_Retail_OKPO.ValueData, OH_JuridicalDetails_To.OKPO,'') = ''
+                  THEN ''
+                  ELSE '1'
+             END :: TVarChar AS Code_To
+
 
            /*, ObjectString_BuyerGLNCode.ValueData        AS BuyerGLNCode
            , ObjectString_SupplierGLNCode.ValueData     AS SupplierGLNCode*/
@@ -442,6 +449,9 @@ order by 4*/
            , OH_JuridicalDetails_From.MFO               AS BankMFO_From
            , OH_JuridicalDetails_From.Phone             AS Phone_From
            , OH_JuridicalDetails_From.InvNumberBranch   AS InvNumberBranch_From
+
+           --с 01,03,2021 новый параметр Код - если номер платника податку заполнен  в ячейку ставим 1, иначе пусто
+           , CASE WHEN COALESCE (OH_JuridicalDetails_From.OKPO,'') <> '' THEN '1' ELSE '' END ::TVarChar AS Code_From
 
            , MovementString_InvNumberPartnerEDI.ValueData  AS InvNumberPartnerEDI
            , COALESCE (MovementDate_COMDOC.ValueData, COALESCE (Movement_EDI.OperDate, MovementDate_OperDatePartnerEDI.ValueData))    AS OperDatePartnerEDI_tax

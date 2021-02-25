@@ -2002,6 +2002,9 @@ BEGIN
            , tmpData_all.AccounterName_To
            , tmpData_all.AccounterINN_To
 
+           --с 01,03,2021 новый параметр Код - если номер платника податку заполнен  в ячейку ставим 1, иначе пусто
+           , CASE WHEN COALESCE (tmpData_all.OKPO_To,'') IN ('100000000000', '300000000000','') THEN '' ELSE '1' END :: TVarChar AS Code_To
+
            , tmpData_all.BankAccount_To
            , tmpData_all.BankName_To
            , tmpData_all.BankMFO_To
@@ -2018,6 +2021,9 @@ BEGIN
            , tmpData_all.OKPO_From_ifin
            , tmpData_all.INN_From
 
+           --с 01,03,2021 новый параметр Код - если номер платника податку заполнен  в ячейку ставим 1, иначе пусто
+           , CASE WHEN COALESCE (tmpData_all.OKPO_From,'') <> '' THEN '1' ELSE '' END ::TVarChar AS Code_From
+           
            , tmpData_all.InvNumberBranch_From
            , tmpData_all.NumberVAT_From
            , tmpData_all.AccounterName_From
