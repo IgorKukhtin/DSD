@@ -69,6 +69,8 @@ type
     dxBarControlContainerItem5: TdxBarControlContainerItem;
     actNoStaticCodes: TBooleanStoredProcAction;
     bbNoStaticCodes: TdxBarButton;
+    actSP: TBooleanStoredProcAction;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

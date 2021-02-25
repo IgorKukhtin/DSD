@@ -27,9 +27,9 @@ BEGIN
 
     outHost := 'ftp.neboley.dp.ua';
     outPort := 13021;
-    outUsername := 'education';
-    outPassword := 'qG2BwS4M';
-    outDir := 'Instructions';
+    outUsername := 'instruction';
+    outPassword := 'lhu1xHqoi21I2qsG';
+    outDir := '';
     outFileNameFTP := 'Instruction_'||inID::Integer;
   
 END;

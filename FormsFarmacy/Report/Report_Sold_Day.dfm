@@ -1,33 +1,33 @@
 inherited Report_Sold_DayForm: TReport_Sold_DayForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1087#1083#1072#1085#1072' '#1087#1088#1086#1076#1072#1078' ('#1076#1085#1077#1074#1085#1086#1081')'
   ClientHeight = 575
-  ClientWidth = 957
+  ClientWidth = 1129
   AddOnFormData.RefreshAction = actRefreshStart
-  ExplicitWidth = 973
+  ExplicitWidth = 1145
   ExplicitHeight = 614
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 48
-    Width = 957
+    Width = 1129
     Height = 527
     TabOrder = 3
     ExplicitTop = 48
-    ExplicitWidth = 797
+    ExplicitWidth = 1129
     ExplicitHeight = 527
     ClientRectBottom = 527
-    ClientRectRight = 957
+    ClientRectRight = 1129
     ClientRectTop = 24
     inherited tsMain: TcxTabSheet
       Caption = #1055#1088#1086#1089#1090#1086#1077' '#1087#1088#1077#1076#1089#1090#1072#1074#1083#1077#1085#1080#1077
       TabVisible = True
       ExplicitTop = 24
-      ExplicitWidth = 797
+      ExplicitWidth = 1129
       ExplicitHeight = 503
       inherited cxGrid: TcxGrid
-        Width = 957
+        Width = 1129
         Height = 276
-        ExplicitWidth = 797
+        ExplicitWidth = 1129
         ExplicitHeight = 276
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -190,21 +190,19 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 276
-        Width = 957
+        Width = 1129
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = grChart
-        ExplicitWidth = 797
       end
       object grChart: TcxGrid
         Left = 0
         Top = 284
-        Width = 957
+        Width = 1129
         Height = 219
         Align = alBottom
         TabOrder = 2
-        ExplicitWidth = 797
         object grChartDBChartView1: TcxGridDBChartView
           DataController.DataSource = MasterDS
           DiagramLine.Active = True
@@ -243,18 +241,16 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
     object tsPivot: TcxTabSheet
       Caption = #1057#1074#1086#1076#1085#1072#1103' '#1090#1072#1073#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitWidth = 797
       object cxDBPivotGrid1: TcxDBPivotGrid
         Left = 0
         Top = 0
-        Width = 957
+        Width = 1129
         Height = 503
         Align = alClient
         DataSource = MasterDS
         Groups = <>
         OptionsView.RowGrandTotalWidth = 118
         TabOrder = 0
-        ExplicitWidth = 797
         object pcolPlanDate: TcxDBPivotGridField
           AreaIndex = 2
           AllowedAreas = [faColumn, faRow, faFilter]
@@ -336,10 +332,10 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
     end
   end
   inherited Panel: TPanel
-    Width = 957
+    Width = 1129
     Height = 22
     Visible = False
-    ExplicitWidth = 797
+    ExplicitWidth = 1129
     ExplicitHeight = 22
     inherited deStart: TcxDateEdit
       Left = 159
@@ -476,6 +472,25 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
       ImageIndexTrue = 76
       ImageIndexFalse = 79
     end
+    object actSP: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1041#1077#1079' '#1091#1095#1077#1090#1072' '#1088#1077#1080#1084#1073#1091#1088#1089#1072#1094#1080#1080
+      Hint = #1041#1077#1079' '#1091#1095#1077#1090#1072' '#1088#1077#1080#1084#1073#1091#1088#1089#1072#1094#1080#1080
+      ImageIndex = 80
+      Value = False
+      HintTrue = #1057' '#1091#1095#1077#1090#1086#1084' '#1088#1077#1080#1084#1073#1091#1088#1089#1072#1094#1080#1080
+      HintFalse = #1041#1077#1079' '#1091#1095#1077#1090#1072' '#1088#1077#1080#1084#1073#1091#1088#1089#1072#1094#1080#1080
+      CaptionTrue = #1057' '#1091#1095#1077#1090#1086#1084' '#1088#1077#1080#1084#1073#1091#1088#1089#1072#1094#1080#1080
+      CaptionFalse = #1041#1077#1079' '#1091#1095#1077#1090#1072' '#1088#1077#1080#1084#1073#1091#1088#1089#1072#1094#1080#1080
+      ImageIndexTrue = 77
+      ImageIndexFalse = 80
+    end
   end
   inherited MasterDS: TDataSource
     Top = 128
@@ -514,6 +529,14 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
         Name = 'inisNoStaticCodes'
         Value = Null
         Component = actNoStaticCodes
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSP'
+        Value = Null
+        Component = actSP
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -578,6 +601,10 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
         item
           Visible = True
           ItemName = 'bbNoStaticCodes'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end>
     end
     object dxBarControlContainerItem1: TdxBarControlContainerItem
@@ -624,6 +651,11 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
     end
     object bbNoStaticCodes: TdxBarButton
       Action = actNoStaticCodes
+      Category = 0
+      PaintStyle = psCaptionGlyph
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actSP
       Category = 0
       PaintStyle = psCaptionGlyph
     end

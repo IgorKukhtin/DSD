@@ -979,7 +979,7 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPrice_PromoBonusForm'));
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPrice_PromoBonusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPrice_PromoBonusForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_UnitDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_UnitDialogForm');
@@ -990,7 +990,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceCheckForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_SUAForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_SUAForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSun_SUAForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SalesOfTermDrugsDialogForm'));
@@ -1556,10 +1556,10 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SoldForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_SoldForm');
-}
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sold_DayForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Sold_DayForm');
-{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sold_DayUserForm'));
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sold_DayUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Sold_DayUserForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ByPartionGoodsForm'));
@@ -2332,19 +2332,19 @@ begin
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceIncomeForm');
 
-
+}
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
-
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeOperDataDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeOperDataDialogForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePharmacyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePharmacyForm');
-{  exit;
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePharmacyJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePharmacyJournalForm');

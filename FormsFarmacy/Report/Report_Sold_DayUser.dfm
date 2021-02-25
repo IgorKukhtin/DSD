@@ -1,10 +1,15 @@
 inherited Report_Sold_DayUserForm: TReport_Sold_DayUserForm
+  ClientWidth = 959
+  ExplicitWidth = 975
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Width = 959
     TabOrder = 2
+    ClientRectRight = 959
     inherited tsMain: TcxTabSheet
       inherited cxGrid: TcxGrid
+        Width = 959
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
@@ -13,8 +18,17 @@ inherited Report_Sold_DayUserForm: TReport_Sold_DayUserForm
           Styles.Header = nil
         end
       end
+      inherited cxSplitter1: TcxSplitter
+        Width = 959
+      end
+      inherited grChart: TcxGrid
+        Width = 959
+      end
     end
     inherited tsPivot: TcxTabSheet
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       inherited cxDBPivotGrid1: TcxDBPivotGrid
         inherited pcolPlanDate: TcxDBPivotGridField
           UniqueName = #1044#1072#1090#1072
@@ -44,6 +58,7 @@ inherited Report_Sold_DayUserForm: TReport_Sold_DayUserForm
     end
   end
   inherited Panel: TPanel
+    Width = 959
     inherited deStart: TcxDateEdit
       OnDblClick = nil
     end
@@ -60,6 +75,55 @@ inherited Report_Sold_DayUserForm: TReport_Sold_DayUserForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcelPivot'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem3'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem4'
+        end
+        item
+          UserDefine = [udPaintStyle]
+          UserPaintStyle = psCaptionGlyph
+          Visible = True
+          ItemName = 'bbQuasiSchedule'
+        end>
+    end
   end
   inherited UnitGuides: TdsdGuides
     Top = 160

@@ -32,7 +32,13 @@ RETURNS TABLE (
     isTop              Boolean,
     isTOP_Price        Boolean,
     isOneJuridical     Boolean,
-    PercentMarkup      TFloat
+    PercentMarkup      TFloat,
+
+    isJuridicalPromo   Boolean,
+    JuridicalPromoId   Integer,
+    ContractPromoId    Integer,
+    PercentMarkupPromo TFloat,
+    PricePromo         TFloat
 )
 
 AS
@@ -236,7 +242,7 @@ BEGIN
                         , tmp.GoodsId        -- здесь товар "сети"
                         , tmp.ChangePercent
                    FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp
-                   WHERE vbIsGoodsPromo = TRUE -- !!!т.е. только в этом случае учитывается маркет. контракт!!!
+                  -- WHERE vbIsGoodsPromo = TRUE -- !!!т.е. только в этом случае учитывается маркет. контракт!!!
                   )
     -- Список цены + ТОП + % наценки
   , GoodsPrice AS
@@ -303,12 +309,12 @@ BEGIN
                    WHEN tmpJuridicalSettingsItem.JuridicalSettingsId IS NULL
                     THEN PriceList.Amount
                          -- учитывается % бонуса из Маркетинговый контракт
-                       * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
+                       * (1 - COALESCE (CASE WHEN vbIsGoodsPromo = TRUE THEN GoodsPromo.ChangePercent ELSE 0 END, 0) / 100)
 
                    ELSE -- иначе учитывается бонус - для ТОП-позиции или НЕ ТОП-позиции
                       (PriceList.Amount * (100 - COALESCE (tmpJuridicalSettingsItem.Bonus, 0)) / 100)
                        -- И учитывается % бонуса из Маркетинговый контракт
-                    * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
+                    * (1 - COALESCE (CASE WHEN vbIsGoodsPromo = TRUE THEN GoodsPromo.ChangePercent ELSE 0 END, 0) / 100)
               END :: TFloat AS FinalPrice
 
           , MILinkObject_Goods.ObjectId        AS Partner_GoodsId
@@ -326,6 +332,7 @@ BEGIN
 
           , tmpJuridicalArea.AreaId            AS AreaId
           , tmpJuridicalArea.AreaName          AS AreaName
+          , COALESCE (GoodsPromo.GoodsId, 0) = _tmpMinPrice_RemainsList.ObjectId_retail  AS isJuridicalPromo
 
         FROM -- Остатки + коды ...
              _tmpMinPrice_RemainsList
@@ -376,6 +383,7 @@ BEGIN
             -- % бонуса из Маркетинговый контракт
             LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId     = _tmpMinPrice_RemainsList.ObjectId
                                 AND GoodsPromo.JuridicalId = LastPriceList_find_View.JuridicalId
+                                
         WHERE (COALESCE (Object_JuridicalGoods.MinimumLot, 0) = 0
             OR Object_JuridicalGoods.IsPromo                  = FALSE
               )
@@ -439,6 +447,7 @@ BEGIN
       , ddd.isTOP
       , ddd.isTOP_Price
       , ddd.PercentMarkup
+      , ddd.isJuridicalPromo
 
     FROM (SELECT DISTINCT
           tmpMinPrice_RemainsPrice.GoodsId
@@ -472,6 +481,7 @@ BEGIN
 
           , tmpMinPrice_RemainsPrice.AreaId
           , tmpMinPrice_RemainsPrice.AreaName
+          , tmpMinPrice_RemainsPrice.isJuridicalPromo
           , ROW_NUMBER() OVER (PARTITION BY tmpMinPrice_RemainsPrice.PriceListMovementId
                                           , tmpMinPrice_RemainsPrice.GoodsId
                                             ORDER BY tmpMinPrice_RemainsPrice.Price DESC) AS Ord
@@ -505,6 +515,17 @@ BEGIN
                           FROM FinalList
                           GROUP BY FinalList.GoodsId
                          )
+  , FinalListPromo AS (SELECT FinalList.*
+                          , ROW_NUMBER() OVER (PARTITION BY FinalList.GoodsId 
+                                               ORDER BY CASE WHEN FinalList.PartionGoodsDate IS NULL 
+                                                               OR FinalList.PartionGoodsDate >= CURRENT_DATE + INTERVAL '6 month'
+                                                        THEN 0 ELSE 1 END 
+                                                      , FinalList.SuperFinalPrice ASC
+                                                      , FinalList.Deferment DESC
+                                                      , FinalList.PriceListMovementItemId ASC) AS Ord
+                     FROM FinalList
+                     WHERE FinalList.isJuridicalPromo = True
+                    )
     -- Результат
     SELECT
         MinPriceList.GoodsId,
@@ -530,9 +551,23 @@ BEGIN
         MinPriceList.isTop :: Boolean AS isTop,
         MinPriceList.isTOP_Price :: Boolean AS isTOP_Price,
         CASE WHEN tmpCountJuridical.CountJuridical > 1 THEN FALSE ELSE TRUE END :: Boolean AS isOneJuridical,
-        MinPriceList.PercentMarkup :: TFloat AS PercentMarkup
+        MinPriceList.PercentMarkup :: TFloat AS PercentMarkup,
+        
+        MinPriceList.isJuridicalPromo,
+        FinalListOne.JuridicalId, 
+        FinalListOne.ContractId, 
+        FinalListOne.PercentMarkup :: TFloat AS PercentMarkupPromo,
+        CASE WHEN COALESCE (FinalListTwo.Price, 0) = 0
+             THEN FinalListOne.Price 
+             ELSE ROUND((FinalListOne.Price + FinalListTwo.Price) / 2, 2) END :: TFloat
     FROM MinPriceList
          LEFT JOIN tmpCountJuridical ON tmpCountJuridical.GoodsId = MinPriceList.GoodsId
+
+         LEFT JOIN FinalListPromo AS FinalListOne ON FinalListOne.GoodsId = MinPriceList.GoodsId
+                                 AND FinalListOne.Ord = 1
+         LEFT JOIN FinalListPromo AS FinalListTwo ON FinalListTwo.GoodsId = MinPriceList.GoodsId
+                                 AND FinalListTwo.Ord = 2
+    WHERE MinPriceList.Ord = 1
     ;
 
 END;
@@ -559,4 +594,5 @@ ALTER FUNCTION lpSelectMinPrice_AllGoods (Integer, Integer, Integer) OWNER TO po
 -- SELECT * FROM lpSelectMinPrice_AllGoods (183292, 4, 3) WHERE GoodsCode = 8969 -- "Аптека_1 пр_Правды_6"
 -- SELECT * FROM lpSelectMinPrice_AllGoods (183292, 4, 3) 
 
--- SELECT * FROM lpSelectMinPrice_AllGoods (183292, 4, 3) 
+-- 
+SELECT * FROM lpSelectMinPrice_AllGoods (183292, -4, 3); 

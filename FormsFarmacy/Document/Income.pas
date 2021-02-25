@@ -174,6 +174,7 @@ type
     spUpdateIncome_OperData: TdsdStoredProc;
     dxBarButton2: TdxBarButton;
     cbUseNDSKind: TcxCheckBox;
+    PromoBonus: TcxGridDBColumn;
   private
     { Private declarations }
   public

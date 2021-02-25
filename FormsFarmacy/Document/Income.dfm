@@ -664,6 +664,16 @@
             Options.Editing = False
             Width = 87
           end
+          object PromoBonus: TcxGridDBColumn
+            Caption = #1052#1072#1088#1082#1077#1090'. '#1073#1086#1085#1091#1089
+            DataBinding.FieldName = 'PromoBonus'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 71
+          end
         end
       end
     end
@@ -3495,7 +3505,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 1028
-    Top = 208
+    Top = 176
   end
   object spUpdateMovementIncome_OrderExt: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Income_OrderExternal'

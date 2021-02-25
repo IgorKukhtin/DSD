@@ -21,8 +21,8 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_ImportType());
 
---  raise notice 'Object: %', inID;
-
+  --raise notice 'Object: %', inId;
+  
   BEGIN
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpallgoodsprice'))
     THEN
@@ -70,7 +70,19 @@ BEGIN
         isUseReprice Boolean,
         reprice boolean,
         isPromoBonus Boolean,
-        isSP boolean
+        AddPercentRepriceMin TFloat, 
+        JuridicalPromoId     Integer,
+        ContractPromoId      Integer,
+        Juridical_PricePromo TFloat,
+        Juridical_PercentPromo TFloat,
+        Contract_PercentPromo  TFloat,
+        NewPricePromo        TFloat,
+        PriceDiffPromo       TFloat,
+        RepricePromo         Boolean ,
+        AddPercentRepricePromoMin TFloat,
+        
+        idRepriceMain         Boolean ,
+        idRepriceSecond       Boolean                
       ) ON COMMIT DROP;
     END IF;
 
@@ -192,7 +204,18 @@ BEGIN
                                   isUseReprice,
                                   reprice,
                                   isPromoBonus,
-                                  isSP
+                                  AddPercentRepriceMin,
+                                  JuridicalPromoId,
+                                  ContractPromoId,
+                                  Juridical_PricePromo,
+                                  Juridical_PercentPromo,
+                                  Contract_PercentPromo,
+                                  NewPricePromo,
+                                  PriceDiffPromo,
+                                  RepricePromo,
+                                  AddPercentRepricePromoMin,
+                                  idRepriceMain,
+                                  idRepriceSecond
                                  )
     SELECT id,
            id_retail,
@@ -237,7 +260,29 @@ BEGIN
            isUseReprice,
            reprice,
            isPromoBonus,
-           COALESCE (tmpGoodsSP.GoodsId, 0) <> 0
+           AddPercentRepriceMin,
+           JuridicalPromoId,
+           ContractPromoId,
+           Juridical_PricePromo,
+           Juridical_PercentPromo,
+           Contract_PercentPromo,
+           NewPricePromo,
+           PriceDiffPromo,
+           RepricePromo,
+           AddPercentRepricePromoMin,
+           
+           Reprice = True
+           AND (PriceDiff <= vbPercentRepriceMax
+           AND PriceDiff >= (- vbPercentRepriceMin + COALESCE(AddPercentRepriceMin, 0))
+            OR IsTop_Goods = TRUE
+           AND COALESCE (tmpGoodsSP.GoodsId, 0) = 0
+           AND isResolution_224 = FALSE)
+           AND isUseReprice = TRUE                   AS idRepriceMain,
+           
+           COALESCE(isPromoBonus, FALSE) = True AND COALESCE(RepricePromo, False) = True
+            AND (PriceDiffPromo <= 0
+            AND PriceDiffPromo >= (- vbPercentRepriceMin + COALESCE(AddPercentRepricePromoMin, 0))) AS idRepriceSecond
+                      
     FROM gpSelect_AllGoodsPrice(inUnitId := vbUnitID, inUnitId_to := 0, inMinPercent := vbPercentDifference,
       inVAT20 := vbVAT20, inTaxTo := 0, inPriceMaxTo := 0,  inSession := inSession)
          LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = gpSelect_AllGoodsPrice.ID;
@@ -265,14 +310,30 @@ BEGIN
       inGUID := vbGUID,
       inSession := inSession)
     FROM tmpAllGoodsPrice
-    WHERE Reprice = True
-      AND (PriceDiff <= vbPercentRepriceMax
-      AND PriceDiff >= - vbPercentRepriceMin
-       OR IsTop_Goods = TRUE
-      AND isSP = FALSE
-      AND isResolution_224 = FALSE)
-      AND isUseReprice = TRUE;
+    WHERE idRepriceMain = True;
       
+    PERFORM gpInsertUpdate_MovementItem_Reprice(
+      ioID := 0 ,
+      inGoodsId := tmpAllGoodsPrice.Id,
+      inUnitId := vbUnitID,
+      inUnitId_Forwarding := 0 ,
+      inTax := 0 ,
+      inJuridicalId := COALESCE (tmpAllGoodsPrice.JuridicalPromoId, 0),
+      inContractId := COALESCE (tmpAllGoodsPrice.ContractPromoId, 0),
+      inExpirationDate := tmpAllGoodsPrice.ExpirationDate,
+      inMinExpirationDate := tmpAllGoodsPrice.MinExpirationDate,
+      inAmount := COALESCE (tmpAllGoodsPrice.RemainsCount, 0),
+      inPriceOld := COALESCE (tmpAllGoodsPrice.LastPrice, 0),
+      inPriceNew := COALESCE (tmpAllGoodsPrice.NewPricePromo, 0),
+      inJuridical_Price := COALESCE (tmpAllGoodsPrice.Juridical_PricePromo, 0),
+      inJuridical_Percent := COALESCE (tmpAllGoodsPrice.Juridical_PercentPromo, 0),
+      inContract_Percent := COALESCE (tmpAllGoodsPrice.Contract_PercentPromo, 0),
+      inisPromoBonus  := COALESCE (tmpAllGoodsPrice.isPromoBonus, False),
+      inGUID := vbGUID,
+      inSession := inSession)
+    FROM tmpAllGoodsPrice
+    WHERE idRepriceMain = False AND idRepriceSecond = True;
+
     PERFORM gpInsertUpdate_MovementItem_Reprice_Clipped(
       ioID := 0 ,
       inGoodsId := tmpAllGoodsPrice.Id,
@@ -294,28 +355,8 @@ BEGIN
       inSession := inSession)
     FROM tmpAllGoodsPrice
     WHERE Reprice = True
-      AND (PriceDiff > vbPercentRepriceMax
-       OR PriceDiff < - vbPercentRepriceMin)
-      AND NOT (IsTop_Goods = TRUE AND isSP = FALSE AND isResolution_224 = FALSE)
-       OR Reprice = False AND isResolution_224 = True
-       OR Reprice = True AND isUseReprice = FALSE;
-
-/*
-raise notice 'All: % % %', (select Count(*) from tmpAllGoodsPrice where Reprice = True)
-                         , (select Count(*) from tmpAllGoodsPrice where Reprice = True
-      AND (PriceDiff <= vbPercentRepriceMax
-      AND PriceDiff >= - vbPercentRepriceMin
-       OR IsTop_Goods = TRUE
-      AND isSP = FALSE
-      AND isResolution_224 = FALSE)
-      AND isUseReprice = TRUE)
-                         , (select Count(*) from tmpAllGoodsPrice where Reprice = True
-      AND (PriceDiff > vbPercentRepriceMax
-       OR PriceDiff < - vbPercentRepriceMin)
-      AND NOT (IsTop_Goods = TRUE AND isSP = FALSE AND isResolution_224 = FALSE)
-       OR Reprice = False AND isResolution_224 = True
-       OR Reprice = True AND isUseReprice = FALSE);   */   
-
+      AND idRepriceMain = False AND idRepriceSecond = False
+       OR Reprice = FALSE AND idRepriceMain = False AND idRepriceSecond = False AND isResolution_224 = True;
 
   EXCEPTION
      WHEN others THEN
@@ -323,8 +364,20 @@ raise notice 'All: % % %', (select Count(*) from tmpAllGoodsPrice where Reprice 
      text_var1 = text_var1||' '||vbUnitID::Text;
      PERFORM lpLog_Run_Schedule_Function('gpRun_Object_RepriceUnitSheduler_UnitReprice ', True, text_var1::TVarChar, inSession::Integer);
   END;
-  
-  --RAISE EXCEPTION 'Тест прошел успешно для <%> <%>', inID, inSession;  
+
+/*  raise notice 'All: % % % % %', (select Count(*) from tmpAllGoodsPrice where Reprice = True or RepricePromo = True)
+                      
+   , (select Count(*) from tmpAllGoodsPrice where idRepriceMain = True)
+   , (select Count(*) from tmpAllGoodsPrice where idRepriceMain = False AND idRepriceSecond = True)
+                        
+    , (select Count(*) from tmpAllGoodsPrice where Reprice = True
+      AND idRepriceMain = False AND idRepriceSecond = False
+       OR Reprice = FALSE AND idRepriceMain = False AND idRepriceSecond = False AND isResolution_224 = True)
+
+    , (select Count(*) from tmpAllGoodsPrice where idRepriceMain = False AND idRepriceSecond = False AND isResolution_224 = True);      
+*/       
+       
+--  RAISE EXCEPTION 'Тест прошел успешно для <%> <%>', inID, inSession;  
 
 --  raise notice 'All: %', (select Count(*) from tmpAllGoodsPrice);
 --  raise notice 'All: %', (select Count(*) from tmpAllGoodsPrice where Reprice = True);

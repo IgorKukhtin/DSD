@@ -122,13 +122,33 @@ BEGIN
                            )
 
       , tmpPrice_View AS (SELECT tmpPrice.GoodsId 
-                               , ROUND(Price_Value.ValueData,2)::TFloat AS Price
-                               , CASE WHEN vbSiteDiscount = 0 THEN Price_Value.ValueData 
-                                 ELSE CEIL(ROUND(Price_Value.ValueData,2) * (100.0 - vbSiteDiscount) / 10.0) / 10.0 END::TFloat AS PriceReserve
+                               , CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                                       AND ObjectFloat_Goods_Price.ValueData > 0
+                                      THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
+                                      ELSE ROUND (Price_Value.ValueData, 2)
+                                 END :: TFloat                                                                                  AS Price
+                               , CASE WHEN vbSiteDiscount = 0 
+                                 THEN CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                                            AND ObjectFloat_Goods_Price.ValueData > 0
+                                           THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
+                                           ELSE ROUND (Price_Value.ValueData, 2)
+                                 END
+                                 ELSE CEIL(CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                                                 AND ObjectFloat_Goods_Price.ValueData > 0
+                                                THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
+                                                ELSE ROUND (Price_Value.ValueData, 2)
+                                           END * (100.0 - vbSiteDiscount) / 10.0) / 10.0 END::TFloat AS PriceReserve
                           FROM tmpPrice
                                LEFT JOIN ObjectFloat AS Price_Value
                                                      ON Price_Value.ObjectId = tmpPrice.Id
                                                     AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                               -- Фикс цена для всей Сети
+                               LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
+                                                      ON ObjectFloat_Goods_Price.ObjectId = tmpPrice.GoodsId
+                                                     AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
+                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                                       ON ObjectBoolean_Goods_TOP.ObjectId = tmpPrice.GoodsId
+                                                      AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
                           )
         -- Штрих-коды производителя
       , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId AS GoodsMainId
@@ -247,3 +267,5 @@ ALTER FUNCTION gpSelect_GoodsOnUnitRemains_ForTabletki (Integer, TVarChar) OWNER
 -- тест
 -- SELECT * FROM gpSelect_GoodsOnUnitRemains_ForTabletki (inUnitId := 183292, inSession:= '-3')
 
+
+Select * from gpSelect_GoodsOnUnitRemains_ForTabletki(13711869 ,'3');
