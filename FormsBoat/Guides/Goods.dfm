@@ -26,7 +26,6 @@ object GoodsForm: TGoodsForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitHeight = 333
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -945,7 +944,7 @@ object GoodsForm: TGoodsForm
       GuiParams = <
         item
           Name = 'inStartDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'inStartDate'
           DataType = ftDateTime
@@ -954,7 +953,7 @@ object GoodsForm: TGoodsForm
         end
         item
           Name = 'inEndDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'inEndDate'
           DataType = ftDateTime
