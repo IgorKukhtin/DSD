@@ -2410,6 +2410,24 @@ object OrderClientForm: TOrderClientForm
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1058#1088#1072#1085#1089#1087#1086#1088#1090'>'
       ImageIndex = 25
     end
+    object actUpdateDataSetProdOptItems: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateProdOptItems
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateProdOptItems
+        end
+        item
+          StoredProc = spSelect_ProdOptItems
+        end
+        item
+          StoredProc = spSelect_ProdColorItems
+        end>
+      Caption = 'actUpdateDataSetProdColorItems'
+      DataSource = ProdOptItemsDS
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -3413,7 +3431,7 @@ object OrderClientForm: TOrderClientForm
         Name = 'inProductId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Id'
+        ComponentItem = 'GoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -3675,7 +3693,7 @@ object OrderClientForm: TOrderClientForm
         Name = 'inProductId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Id'
+        ComponentItem = 'GoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

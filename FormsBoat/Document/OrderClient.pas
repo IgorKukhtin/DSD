@@ -247,6 +247,7 @@ type
     cxGridLevel1: TcxGridLevel;
     Panel3: TPanel;
     cxSplitter1: TcxSplitter;
+    actUpdateDataSetProdOptItems: TdsdUpdateDataSet;
   private
   public
   end;
