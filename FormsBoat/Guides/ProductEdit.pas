@@ -73,7 +73,7 @@ type
     edClienttext: TcxLabel;
     edClient: TcxButtonEdit;
     GuidesClient: TdsdGuides;
-    edChangePercent: TcxCurrencyEdit;
+    edDiscountTax: TcxCurrencyEdit;
     RefreshDispatcher: TRefreshDispatcher;
     spGetCIN: TdsdStoredProc;
     actGetCIN: TdsdDataSetRefresh;

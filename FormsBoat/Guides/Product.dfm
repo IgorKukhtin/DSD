@@ -509,9 +509,9 @@ object ProductForm: TProductForm
           Options.Editing = False
           Width = 84
         end
-        object ChangePercent: TcxGridDBColumn
+        object DiscountTax: TcxGridDBColumn
           Caption = '% '#1089#1082#1080#1076#1082#1080
-          DataBinding.FieldName = 'ChangePercent'
+          DataBinding.FieldName = 'DiscountTax'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter

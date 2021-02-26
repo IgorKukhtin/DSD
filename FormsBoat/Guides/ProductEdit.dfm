@@ -286,7 +286,7 @@ object ProductEditForm: TProductEditForm
     TabOrder = 34
     Width = 239
   end
-  object edChangePercent: TcxCurrencyEdit
+  object edDiscountTax: TcxCurrencyEdit
     Left = 331
     Top = 168
     Properties.DecimalPlaces = 2
@@ -537,9 +537,9 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inChangePercent'
+        Name = 'inDiscountTax'
         Value = Null
-        Component = edChangePercent
+        Component = edDiscountTax
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -803,9 +803,9 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ChangePercent'
+        Name = 'DiscountTax'
         Value = Null
-        Component = edChangePercent
+        Component = edDiscountTax
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -1114,7 +1114,7 @@ object ProductEditForm: TProductEditForm
       item
         Name = 'DiscountTax'
         Value = Null
-        Component = edChangePercent
+        Component = edDiscountTax
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

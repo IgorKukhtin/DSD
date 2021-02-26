@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderClient(
     IN inOperDate            TDateTime , -- Дата документа
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , --
-    IN inChangePercent       TFloat    , --
+    IN inDiscountTax         TFloat    , --
     IN inDiscountNextTax     TFloat    , --
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому
@@ -47,7 +47,7 @@ BEGIN
      -- сохранили значение <НДС>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, inVATPercent);
      -- сохранили значение <% скидки>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountTax(), ioId, inDiscountTax);
      -- сохранили значение <% скидки доп>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountNextTax(), ioId, inDiscountNextTax);     
 

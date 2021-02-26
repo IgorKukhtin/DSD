@@ -37,9 +37,12 @@ INSERT INTO MovementFloatDesc(Code, ItemName)
 
 CREATE OR REPLACE FUNCTION zc_movementfloat_discountnexttax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_movementfloat_discountnexttax'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementFloatDesc(Code, ItemName)
-  SELECT 'zc_movementfloat_discountnexttax', '(-)% Скидки (+)% Наценки дополнительный' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_movementfloat_discountnexttax');
+  SELECT 'zc_movementfloat_discountnexttax', '% Скидки дополнительный' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_movementfloat_discountnexttax');
 
- 
+ CREATE OR REPLACE FUNCTION zc_MovementFloat_DiscountTax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_DiscountTax'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_DiscountTax', '% Скидки' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_DiscountTax');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.

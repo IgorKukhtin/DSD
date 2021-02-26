@@ -26,7 +26,6 @@ object OrderClientForm: TOrderClientForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1181
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -118,7 +117,7 @@ object OrderClientForm: TOrderClientForm
       TabOrder = 4
       Width = 81
     end
-    object edChangePercent: TcxCurrencyEdit
+    object edDiscountTax: TcxCurrencyEdit
       Left = 404
       Top = 63
       Properties.Alignment.Horz = taRightJustify
@@ -137,8 +136,7 @@ object OrderClientForm: TOrderClientForm
     object cxLabel8: TcxLabel
       Left = 404
       Top = 45
-      Hint = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
-      Caption = '(-)% '#1057#1082' (+)% '#1053#1072#1094
+      Caption = '% '#1057#1082#1080#1076#1082#1080
     end
     object cxLabel11: TcxLabel
       Left = 9
@@ -263,17 +261,12 @@ object OrderClientForm: TOrderClientForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 1181
-    ExplicitHeight = 332
     ClientRectBottom = 374
     ClientRectRight = 1209
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitTop = 32
-      ExplicitWidth = 1263
-      ExplicitHeight = 638
       object Panel1: TPanel
         Left = 0
         Top = 0
@@ -282,9 +275,6 @@ object OrderClientForm: TOrderClientForm
         Align = alClient
         Caption = 'Panel1'
         TabOrder = 0
-        ExplicitLeft = 152
-        ExplicitWidth = 1189
-        ExplicitHeight = 105
         object cxGrid: TcxGrid
           Left = 1
           Top = 1
@@ -292,10 +282,6 @@ object OrderClientForm: TOrderClientForm
           Height = 163
           Align = alClient
           TabOrder = 0
-          ExplicitLeft = 128
-          ExplicitTop = 28
-          ExplicitWidth = 1179
-          ExplicitHeight = 85
           object cxGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
@@ -570,9 +556,6 @@ object OrderClientForm: TOrderClientForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel4
-        ExplicitLeft = 3
-        ExplicitTop = 248
-        ExplicitWidth = 1263
       end
       object Panel4: TPanel
         Left = 0
@@ -582,9 +565,6 @@ object OrderClientForm: TOrderClientForm
         Align = alBottom
         Caption = 'Panel4'
         TabOrder = 2
-        ExplicitLeft = 24
-        ExplicitTop = 416
-        ExplicitWidth = 1147
         object PanelProdColorItems: TPanel
           Left = 1
           Top = 1
@@ -594,7 +574,6 @@ object OrderClientForm: TOrderClientForm
           BevelEdges = [beLeft]
           BevelOuter = bvNone
           TabOrder = 0
-          ExplicitWidth = 584
           object cxGridProdColorItems: TcxGrid
             Left = 0
             Top = 17
@@ -604,9 +583,6 @@ object OrderClientForm: TOrderClientForm
             TabOrder = 0
             LookAndFeel.NativeStyle = True
             LookAndFeel.SkinName = 'UserSkin'
-            ExplicitLeft = -16
-            ExplicitTop = 33
-            ExplicitWidth = 545
             object cxGridDBTableViewProdColorItems: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = ProdColorItemsDS
@@ -1028,8 +1004,6 @@ object OrderClientForm: TOrderClientForm
             Color = clLime
             ParentBackground = False
             TabOrder = 1
-            ExplicitLeft = -42
-            ExplicitWidth = 432
           end
         end
         object PanelProdOptItems: TPanel
@@ -1041,8 +1015,6 @@ object OrderClientForm: TOrderClientForm
           BevelEdges = [beLeft]
           BevelOuter = bvNone
           TabOrder = 1
-          ExplicitLeft = 664
-          ExplicitTop = 6
           object cxGridProdOptItems: TcxGrid
             Left = 0
             Top = 17
@@ -1052,9 +1024,6 @@ object OrderClientForm: TOrderClientForm
             TabOrder = 0
             LookAndFeel.NativeStyle = True
             LookAndFeel.SkinName = 'UserSkin'
-            ExplicitLeft = 134
-            ExplicitTop = 31
-            ExplicitWidth = 522
             object cxGridDBTableViewProdOptItems: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = ProdOptItemsDS
@@ -1512,7 +1481,6 @@ object OrderClientForm: TOrderClientForm
             Color = clAqua
             ParentBackground = False
             TabOrder = 1
-            ExplicitWidth = 612
           end
         end
         object cxSplitter1: TcxSplitter
@@ -1522,7 +1490,6 @@ object OrderClientForm: TOrderClientForm
           Height = 175
           AlignSplitter = salRight
           Control = PanelProdOptItems
-          ExplicitLeft = 1208
         end
       end
     end
@@ -1541,14 +1508,13 @@ object OrderClientForm: TOrderClientForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 5
+    TabOrder = 4
     Width = 156
   end
   object cxLabel14: TcxLabel
     Left = 520
     Top = 45
-    Hint = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080' '#1044#1086#1087#1086#1083#1085#1080#1090'.'
-    Caption = '(-)% '#1057#1082' (+)% '#1053#1072#1094' ('#1076#1086#1087')'
+    Caption = '% '#1057#1082#1080#1076#1082#1080' ('#1076#1086#1087')'
   end
   object edDiscountNextTax: TcxCurrencyEdit
     Left = 520
@@ -2605,9 +2571,9 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inChangePercent'
+        Name = 'inDiscountTax'
         Value = 0.000000000000000000
-        Component = edChangePercent
+        Component = edDiscountTax
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2703,7 +2669,7 @@ object OrderClientForm: TOrderClientForm
         Control = edVATPercent
       end
       item
-        Control = edChangePercent
+        Control = edDiscountTax
       end
       item
         Control = edPaidKind
@@ -2815,9 +2781,9 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ChangePercent'
+        Name = 'DiscountTax'
         Value = 0.000000000000000000
-        Component = edChangePercent
+        Component = edDiscountTax
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -2929,8 +2895,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 344
-    Top = 184
+    Left = 200
+    Top = 232
   end
   object RefreshAddOn: TRefreshAddOn
     DataSet = 'ClientDataSet'
@@ -3072,7 +3038,7 @@ object OrderClientForm: TOrderClientForm
       item
         Name = 'DiscountTax'
         Value = 0.000000000000000000
-        Component = edChangePercent
+        Component = edDiscountTax
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
