@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isGoodsTypeKind_Sh Boolean, isGoodsTypeKind_Nom Boolean, isGoodsTypeKind_Ves Boolean
              , BoxId Integer, BoxCode Integer, BoxName TVarChar
              , WeightOnBox TFloat, CountOnBox  TFloat
+             , Value1_GoodsQuality TVarChar
              )
 AS
 $BODY$
@@ -56,6 +57,24 @@ BEGIN
                            WHERE ObjectBoolean_Order.ValueData = TRUE 
                               OR COALESCE (ObjectLink_GoodsByGoodsKind_GoodsBrand.ChildObjectId, 0) <> 0
                            )
+   , tmpGoodsQuality_RAW AS (SELECT GoodsQuality_Goods.ChildObjectId  AS GoodsId
+                                  , ObjectString_Value1.ValueData     AS Value1
+                             FROM Object AS Object_GoodsQuality
+                                 INNER JOIN ObjectLink AS GoodsQuality_Quality
+                                                       ON GoodsQuality_Quality.ObjectId = Object_GoodsQuality.Id
+                                                      AND GoodsQuality_Quality.DescId = zc_ObjectLink_GoodsQuality_Quality()
+                                                      AND GoodsQuality_Quality.ChildObjectId = 5412640                    --Ìÿסמ
+                                 LEFT JOIN ObjectString AS ObjectString_Value1
+                                                        ON ObjectString_Value1.ObjectId = Object_GoodsQuality.Id 
+                                                       AND ObjectString_Value1.DescId = zc_ObjectString_GoodsQuality_Value1()
+
+                                 LEFT JOIN ObjectLink AS GoodsQuality_Goods
+                                                      ON GoodsQuality_Goods.ObjectId = Object_GoodsQuality.Id
+                                                     AND GoodsQuality_Goods.DescId = zc_ObjectLink_GoodsQuality_Goods()
+                             WHERE Object_GoodsQuality.DescId = zc_Object_GoodsQuality()
+                               AND Object_GoodsQuality.isErased = FALSE
+                             )
+
 
    SELECT
          Object_GoodsPropertyValue.Id         AS Id
@@ -111,6 +130,8 @@ BEGIN
        , Object_Box.ValueData                   AS BoxName
        , ObjectFloat_WeightOnBox.ValueData      AS WeightOnBox
        , ObjectFloat_CountOnBox.ValueData       AS CountOnBox
+       
+       , tmpGoodsQuality_RAW.Value1  ::TVarChar AS Value1_GoodsQuality
 
    FROM Object AS Object_GoodsPropertyValue
         LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
@@ -232,7 +253,7 @@ BEGIN
         LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = Object_Goods.Id
                                      AND tmpGoodsByGoodsKind.GoodsKindId = Object_GoodsKind.Id
 
-
+        LEFT JOIN tmpGoodsQuality_RAW ON tmpGoodsQuality_RAW.GoodsId = Object_Goods.Id
 
    WHERE Object_GoodsPropertyValue.DescId = zc_Object_GoodsPropertyValue()
      AND (ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = inGoodsPropertyId OR inGoodsPropertyId = 0);
@@ -294,6 +315,26 @@ BEGIN
                                 WHERE ObjectBoolean_Order.ValueData = TRUE 
                                    OR COALESCE (ObjectLink_GoodsByGoodsKind_GoodsBrand.ChildObjectId, 0) <> 0
                                 )
+
+      , tmpGoodsQuality_RAW AS (SELECT GoodsQuality_Goods.ChildObjectId  AS GoodsId
+                                     , ObjectString_Value1.ValueData     AS Value1
+                                FROM Object AS Object_GoodsQuality
+                                    INNER JOIN ObjectLink AS GoodsQuality_Quality
+                                                          ON GoodsQuality_Quality.ObjectId = Object_GoodsQuality.Id
+                                                         AND GoodsQuality_Quality.DescId = zc_ObjectLink_GoodsQuality_Quality()
+                                                         AND GoodsQuality_Quality.ChildObjectId = 5412640                    --Ìÿסמ
+                                    LEFT JOIN ObjectString AS ObjectString_Value1
+                                                           ON ObjectString_Value1.ObjectId = Object_GoodsQuality.Id 
+                                                          AND ObjectString_Value1.DescId = zc_ObjectString_GoodsQuality_Value1()
+   
+                                    LEFT JOIN ObjectLink AS GoodsQuality_Goods
+                                                         ON GoodsQuality_Goods.ObjectId = Object_GoodsQuality.Id
+                                                        AND GoodsQuality_Goods.DescId = zc_ObjectLink_GoodsQuality_Goods()
+                                WHERE Object_GoodsQuality.DescId = zc_Object_GoodsQuality()
+                                  AND Object_GoodsQuality.isErased = FALSE
+                                )
+
+
    ---
    SELECT
          tmpObjectLink.GoodsPropertyValueId         AS Id
@@ -350,6 +391,8 @@ BEGIN
        , tmpObjectLink.BoxName
        , tmpObjectLink.WeightOnBox
        , tmpObjectLink.CountOnBox
+       
+       , tmpGoodsQuality_RAW.Value1  ::TVarChar AS Value1_GoodsQuality
     FROM tmpGoods 
         LEFT JOIN (SELECT Object_GoodsPropertyValue.Id          AS GoodsPropertyValueId
                         , Object_GoodsPropertyValue.ObjectCode  AS GoodsPropertyValueCode
@@ -500,6 +543,7 @@ BEGIN
 
         LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = tmpGoods.GoodsId
                                      AND tmpGoodsByGoodsKind.GoodsKindId = tmpObjectLink.GoodsKindId
+        LEFT JOIN tmpGoodsQuality_RAW ON tmpGoodsQuality_RAW.GoodsId = tmpGoods.GoodsId
        ;
      END IF;         
     

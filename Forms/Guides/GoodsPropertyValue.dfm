@@ -129,6 +129,14 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
+      object Value1_GoodsQuality: TcxGridDBColumn
+        Caption = #1053#1072#1081#1084#1077#1085#1091#1074#1072#1085#1085#1103', '#1089#1086#1088#1090', '#8470'2'
+        DataBinding.FieldName = 'Value1_GoodsQuality'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 98
+      end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
         DataBinding.FieldName = 'Name'
@@ -966,6 +974,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 480
     Top = 280

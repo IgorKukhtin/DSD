@@ -702,7 +702,7 @@ end;
 
 procedure TLoadFormTest.LoadGoodsPropertyValueFormTest;
 begin
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyValueForm');
   {
@@ -714,9 +714,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyValueVMSForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyValueVMSForm');
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyValueExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyValueExternalForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadQualityParamsFormTest;
