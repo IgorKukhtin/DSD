@@ -50,15 +50,17 @@ type
     isErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    InstructionsCashKindName: TcxGridDBColumn;
+    InstructionsKindName: TcxGridDBColumn;
     bbSetRelatedProduct: TdxBarButton;
     bbClearRelatedProduct: TdxBarButton;
     actProtocolOpenForm: TdsdOpenForm;
     dxBarButton1: TdxBarButton;
     dxBarButton2: TdxBarButton;
-    spInstructionsFTPParams: TdsdStoredProc;
-    actDownloadAndRunFile: TdsdFTP;
     dxBarButton3: TdxBarButton;
+    FormParams: TdsdFormParams;
+    spInstructionsFTPParams: TdsdStoredProc;
+    actInstructionsFTPParams: TdsdExecStoredProc;
+    actDownloadAndRunFile: TdsdFTP;
   private
     { Private declarations }
   public

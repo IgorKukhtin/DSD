@@ -26,8 +26,6 @@ object InstructionsCashForm: TInstructionsCashForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 570
-    ExplicitHeight = 285
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -51,9 +49,9 @@ object InstructionsCashForm: TInstructionsCashForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object InstructionsCashKindName: TcxGridDBColumn
+      object InstructionsKindName: TcxGridDBColumn
         Caption = #1056#1072#1079#1076#1077#1083' '#1080#1085#1089#1090#1088#1091#1082#1094#1080#1081
-        DataBinding.FieldName = 'InstructionsCashKindName'
+        DataBinding.FieldName = 'InstructionsKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 109
@@ -328,25 +326,42 @@ object InstructionsCashForm: TInstructionsCashForm
         end>
       isShowModal = False
     end
+    object actInstructionsFTPParams: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInstructionsFTPParams
+      StoredProcList = <
+        item
+          StoredProc = spInstructionsFTPParams
+        end>
+      Caption = 'actInstructionsFTPParams'
+    end
     object actDownloadAndRunFile: TdsdFTP
       Category = 'DSDLib'
       MoveParams = <>
+      BeforeAction = actInstructionsFTPParams
       HostParam.Value = Null
+      HostParam.Component = FormParams
       HostParam.ComponentItem = 'Host'
       HostParam.DataType = ftString
       HostParam.MultiSelectSeparator = ','
       PortParam.Value = Null
+      PortParam.Component = FormParams
       PortParam.ComponentItem = 'Port'
       PortParam.MultiSelectSeparator = ','
       UsernameParam.Value = Null
+      UsernameParam.Component = FormParams
       UsernameParam.ComponentItem = 'Username'
       UsernameParam.DataType = ftString
       UsernameParam.MultiSelectSeparator = ','
       PasswordParam.Value = Null
+      PasswordParam.Component = FormParams
       PasswordParam.ComponentItem = 'Password'
       PasswordParam.DataType = ftString
       PasswordParam.MultiSelectSeparator = ','
       DirParam.Value = Null
+      DirParam.Component = FormParams
       DirParam.ComponentItem = 'Dir'
       DirParam.DataType = ftString
       DirParam.MultiSelectSeparator = ','
@@ -354,17 +369,21 @@ object InstructionsCashForm: TInstructionsCashForm
       FullFileNameParam.DataType = ftString
       FullFileNameParam.MultiSelectSeparator = ','
       FileNameFTPParam.Value = Null
+      FileNameFTPParam.Component = FormParams
       FileNameFTPParam.ComponentItem = 'FileNameFTP'
       FileNameFTPParam.DataType = ftString
       FileNameFTPParam.MultiSelectSeparator = ','
       FileNameParam.Value = ''
+      FileNameParam.Component = ClientDataSet
+      FileNameParam.ComponentItem = 'FileName'
       FileNameParam.DataType = ftString
       FileNameParam.MultiSelectSeparator = ','
       DownloadFolderParam.Value = 'Instructions'
       DownloadFolderParam.DataType = ftString
       DownloadFolderParam.MultiSelectSeparator = ','
       FTPOperation = ftpDownloadAndRun
-      Caption = 'actDownloadAndRunFile'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080' '#1086#1090#1082#1088#1099#1090#1100' '#1092#1072#1081#1083
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080' '#1086#1090#1082#1088#1099#1090#1100' '#1092#1072#1081#1083
       ImageIndex = 28
     end
   end
@@ -426,6 +445,53 @@ object InstructionsCashForm: TInstructionsCashForm
     Left = 128
     Top = 216
   end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'FullFileName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Host'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Port'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Username'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Password'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Dir'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FileNameFTP'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 400
+    Top = 192
+  end
   object spInstructionsFTPParams: TdsdStoredProc
     StoredProcName = 'gpSelect_InstructionsFTPParams'
     DataSets = <>
@@ -434,6 +500,7 @@ object InstructionsCashForm: TInstructionsCashForm
       item
         Name = 'inID'
         Value = Null
+        Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -441,6 +508,7 @@ object InstructionsCashForm: TInstructionsCashForm
       item
         Name = 'outHost'
         Value = Null
+        Component = FormParams
         ComponentItem = 'Host'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -448,18 +516,21 @@ object InstructionsCashForm: TInstructionsCashForm
       item
         Name = 'outPort'
         Value = Null
+        Component = FormParams
         ComponentItem = 'Port'
         MultiSelectSeparator = ','
       end
       item
         Name = 'outUsername'
         Value = Null
+        Component = FormParams
         ComponentItem = 'Username'
         MultiSelectSeparator = ','
       end
       item
         Name = 'outPassword'
         Value = Null
+        Component = FormParams
         ComponentItem = 'Password'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -467,6 +538,7 @@ object InstructionsCashForm: TInstructionsCashForm
       item
         Name = 'outDir'
         Value = Null
+        Component = FormParams
         ComponentItem = 'Dir'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -474,12 +546,13 @@ object InstructionsCashForm: TInstructionsCashForm
       item
         Name = 'outFileNameFTP'
         Value = Null
+        Component = FormParams
         ComponentItem = 'FileNameFTP'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 440
-    Top = 104
+    Left = 416
+    Top = 96
   end
 end

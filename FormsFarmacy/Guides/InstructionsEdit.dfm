@@ -168,7 +168,8 @@
       DownloadFolderParam.Value = ''
       DownloadFolderParam.DataType = ftString
       DownloadFolderParam.MultiSelectSeparator = ','
-      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1092#1072#1081#1083
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1092#1072#1081#1083' '#1085#1072' FTP'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1092#1072#1081#1083' '#1085#1072' FTP'
       ImageIndex = 30
     end
     object actDownloadAndRunFile: TdsdFTP
@@ -215,7 +216,8 @@
       DownloadFolderParam.DataType = ftString
       DownloadFolderParam.MultiSelectSeparator = ','
       FTPOperation = ftpDownloadAndRun
-      Caption = 'actDownloadAndRunFile'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080' '#1086#1090#1082#1088#1099#1090#1100' '#1092#1072#1081#1083
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080' '#1086#1090#1082#1088#1099#1090#1100' '#1092#1072#1081#1083
       ImageIndex = 28
     end
     object actDelFile: TdsdFTP
@@ -263,7 +265,8 @@
       DownloadFolderParam.DataType = ftString
       DownloadFolderParam.MultiSelectSeparator = ','
       FTPOperation = ftpDelete
-      Caption = 'actDelFile'
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1092#1072#1081#1083' '#1089' FTP'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1092#1072#1081#1083' '#1089' FTP'
       ImageIndex = 52
     end
     object actOpenInstruction: TFileDialogAction

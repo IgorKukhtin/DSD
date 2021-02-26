@@ -7,7 +7,8 @@ interface
 uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst, ComObj,
   cxControls, dsdGuides, ImgList, cxPC, cxGrid, cxGridTableView, cxDBPivotGrid,
   cxGridDBTableView, frxClass, frxExportPDF, cxGridCustomView, Dialogs, Controls,
-  dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL, cxDateNavigator, IdFTP, System.IOUtils
+  dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL, cxDateNavigator, IdFTP, System.IOUtils,
+  IdFTPCommon
   {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
 
 type
@@ -4058,6 +4059,9 @@ begin
   inherited;
 
   FIdFTP := TIdFTP.Create(Nil);
+  FIdFTP.Passive := True;
+  FIdFTP.TransferType := ftBinary;
+  FIdFTP.UseExtensionDataPort := True;
 
   FHostParam := TdsdParam.Create(nil);
   FHostParam.DataType := ftString;
@@ -4162,7 +4166,7 @@ begin
 
     if FFileNameFTPParam.Value = '' then
       FileNameFTP :=  FFileNameParam.Value
-    else FileNameFTP :=  FFileNameFTPParam.Value;
+    else FileNameFTP :=  FFileNameFTPParam.Value + TPath.GetExtension(FFileNameParam.Value);
 
   end else
   begin
@@ -4174,13 +4178,19 @@ begin
 
     if FFileNameFTPParam.Value = '' then
       FileNameFTP :=  FFileNameParam.Value
-    else FileNameFTP :=  FFileNameFTPParam.Value;
+    else FileNameFTP :=  FFileNameFTPParam.Value + TPath.GetExtension(FFileNameParam.Value);
 
     if FDownloadFolderParam.Value <> '' then
     begin
       if Pos(':', FDownloadFolderParam.Value) > 0 then  FullFileName :=  FDownloadFolderParam.Value
       else FullFileName := ExtractFilePath(Application.ExeName) + FDownloadFolderParam.Value;
     end else FullFileName := ExtractFilePath(Application.ExeName);
+
+    if not ForceDirectories(FullFileName) then
+    begin
+      ShowMessage('Ошибка создания директории для сохранения файла. Покажите это окно системному администратору...');
+      Exit;
+    end;
 
     if FullFileName[Length(FullFileName)] <> '\' then FullFileName := FullFileName + '\' ;
     FullFileName := FullFileName + FFileNameParam.Value;
@@ -4216,15 +4226,25 @@ begin
 
       case FTPOperation of
         ftpSend : begin
-                    FIdFTP.Put(FullFileName,  FileNameFTP);
+                    FIdFTP.Put(FullFileName,  FileNameFTP, True);
                     FFileNameParam.Value := FileName;
                   end;
         ftpDelete : begin
-                      FIdFTP.List (nil, '-la ' + FileNameFTP, False);
-                      if FIdFTP.DirectoryListing.Count > 0 then FIdFTP.Delete(FileNameFTP);
+                      try
+                        FIdFTP.List (nil, '-la ' + FileNameFTP, False);
+                      except ON E: Exception DO
+                      end;
+                      if FIdFTP.DirectoryListing.Count > 0 then
+                      begin
+                         if MessageDlg('Вы уверены в удалении файла инструкции?', mtInformation, mbOKCancel, 0) <> mrOk then Exit;
+                         FIdFTP.Delete(FileNameFTP);
+                      end;
                       FFileNameParam.Value := '';
                     end;
-        else FIdFTP.Get(FileNameFTP, FullFileName);
+        else begin
+                if TFile.Exists(FullFileName) then TFile.Delete(FullFileName);
+                FIdFTP.Get(FileNameFTP, FullFileName, True);
+             end;
       end;
 
     except ON E: Exception DO
