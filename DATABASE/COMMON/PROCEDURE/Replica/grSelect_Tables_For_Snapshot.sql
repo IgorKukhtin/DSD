@@ -110,7 +110,7 @@ where T.table_name ILIKE 'movementitemcontainer'
 
 -- where T.table_name ILIKE 'MovementItemLinkObject'
 where T.table_name ILIKE 'movementitemprotocol_arc'
-   OR T.table_name ILIKE 'movementitemprotocol'
+--   OR T.table_name ILIKE 'movementitemprotocol'
    OR T.table_name ILIKE 'movementprotocol'
    OR T.table_name ILIKE 'movementprotocol_arc'
 

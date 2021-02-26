@@ -1101,4 +1101,4 @@ where (namefull  like '%ScaleCeh_201 Movement%'  or namefull  like '%Scale_201 M
 */
 
 -- тест
--- SELECT * FROM gpSelect_Scale_Goods (inIsGoodsComplete:= TRUE, inOperDate:= CURRENT_DATE, inMovementId:= -79137, inOrderExternalId:= 0, inPriceListId:=0, inGoodsCode:= 0, inGoodsName:= '', inDayPrior_PriceReturn:= 10, inBranchCode:= 301, inSession:=zfCalc_UserAdmin()) WHERE GoodsCode = 901
+-- SELECT * FROM gpSelect_Scale_Goods (inIsGoodsComplete:= TRUE, inOperDate:= CURRENT_DATE, inMovementId:= -79137, inOrderExternalId:= 0, inPriceListId:=0, inGoodsCode:= 0, inGoodsName:= '', inDayPrior_PriceReturn:= 10, inBranchCode:= 1, inSession:=zfCalc_UserAdmin()) WHERE GoodsCode = 901

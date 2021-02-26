@@ -134,7 +134,7 @@ BEGIN
          || 'CORRCOUNTRYID="'||COALESCE (tmp.CORRCOUNTRYID,'')::TVarChar||'" '          --Код страны корреспондента                        
          --|| 'DOCUMENTNO="'||COALESCE (tmp.DOCUMENTNO,'')::TVarChar||'" '                --№ документа                                      
          || 'DOCUMENTNO="'||CAST (NEXTVAL ('movement_bankaccount_plat_seq') AS TVarChar)||'" '
-         || 'VALUEDATE="'||COALESCE (tmp.VALUEDATE::TVarChar,'')::TVarChar||'" '        --Дата валютирования                               
+       --|| 'VALUEDATE="'||COALESCE (tmp.VALUEDATE::TVarChar,'')::TVarChar||'" '        --Дата валютирования                               
          || 'PRIORITY="'||tmp.PRIORITY||'" '                                            --Приоритет                                        
          || 'DOCUMENTDATE="'||tmp.DOCUMENTDATE||'" '                                    --Дата документа                                   
          || 'ADDENTRIES="'||COALESCE (tmp.ADDENTRIES,'')::TVarChar||'" '                --Дополнительные реквизиты платежа                 
