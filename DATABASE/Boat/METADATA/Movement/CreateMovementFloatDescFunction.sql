@@ -35,7 +35,11 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummPVAT() RETURNS Integer AS $
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_TotalSummPVAT', 'Итого сумма по документу (с НДС)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummPVAT');
 
+CREATE OR REPLACE FUNCTION zc_movementfloat_discountnexttax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_movementfloat_discountnexttax'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_movementfloat_discountnexttax', '(-)% Скидки (+)% Наценки дополнительный' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_movementfloat_discountnexttax');
 
+ 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.

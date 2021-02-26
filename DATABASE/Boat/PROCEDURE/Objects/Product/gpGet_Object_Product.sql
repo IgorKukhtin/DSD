@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Product(
     IN inSession                 TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , Hours TFloat, DiscountTax TFloat, DiscountNextTax TFloat
+             , Hours TFloat, ChangePercent TFloat, DiscountNextTax TFloat
              , DateStart TDateTime, DateBegin TDateTime, DateSale TDateTime
              , CIN TVarChar, EngineNum TVarChar
              , Comment TVarChar
@@ -18,23 +18,19 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , EngineId Integer, EngineName TVarChar
              , ReceiptProdModelId Integer, ReceiptProdModelName TVarChar
              , ClientId Integer, ClientName TVarChar
+             , MovementId_OrderClient Integer
+             , OperDate_OrderClient  TDateTime
+             , InvNumber_OrderClient TVarChar
+             , StatusCode_OrderClient Integer
+             , StatusName_OrderClient TVarChar 
              , isBasicConf Boolean, isProdColorPattern Boolean
               ) AS
 $BODY$
-    DECLARE vbClientId   Integer;
-    DECLARE vbClientName TVarChar;
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_Product());
 
-   SELECT Object.Id        AS ClientId
-        , Object.ValueData AS ClientName
-   INTO vbClientId, vbClientName
-   FROM MovementLinkObject AS MovementLinkObject_From
-        LEFT JOIN Object ON Object.Id = MovementLinkObject_From.ObjectId
-   WHERE MovementLinkObject_From.MovementId = inMovementId_OrderClient
-     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From();
 
    IF COALESCE (inId, 0) = 0
    THEN
@@ -45,7 +41,7 @@ BEGIN
            , CAST ('' as TVarChar)     AS Name
 
            , CAST (0 AS TFloat)        AS Hours
-           , CAST (0 AS TFloat)        AS DiscountTax
+           , CAST (0 AS TFloat)        AS ChangePercent
            , CAST (0 AS TFloat)        AS DiscountNextTax
            , CAST (NULL AS TDateTime)  AS DateStart
            , CAST (NULL AS TDateTime)  AS DateBegin
@@ -67,19 +63,54 @@ BEGIN
            , CAST ('' AS TVarChar)     AS ReceiptProdModelName
            , CAST (vbClientId AS Integer)    AS ClientId
            , CAST (vbClientName AS TVarChar) AS ClientName
+
+           , CAST (0 AS Integer)       AS MovementId_OrderClient
+           , CAST (NULL AS TDateTime)  AS OperDate_OrderClient
+           , CAST ('' AS TVarChar)     AS InvNumber_OrderClient
+           , CAST (0 AS Integer)       AS StatusCode_OrderClient
+           , CAST ('' AS TVarChar)     AS StatusName_OrderClient
+             
            , CAST (TRUE AS Boolean)    AS isBasicConf
            , CAST (TRUE AS Boolean)    AS isProdColorPattern
        ;
    ELSE
      RETURN QUERY
+     WITH
+     tmpOrderClient AS (SELECT Object_From.Id             AS ClientId
+                             , Object_From.ValueData      AS ClientName
+                             , Object_Status.ObjectCode   AS StatusCode
+                             , Object_Status.ValueData    AS StatusName
+                             , Movement.InvNumber ::TVarChar
+                             , Movement.OperDate  ::TDateTime
+                             , Movement.Id                AS MovementId
+                             , MovementFloat_ChangePercent.ValueData      AS ChangePercent
+                             , MovementFloat_DiscountNextTax.ValueData    AS DiscountNextTax
+                        FROM Movement
+                             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+                     
+                             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                          ON MovementLinkObject_From.MovementId = Movement.Id
+                                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+                             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                                     ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
+                             LEFT JOIN MovementFloat AS MovementFloat_DiscountNextTax
+                                                     ON MovementFloat_DiscountNextTax.MovementId = Movement.Id
+                                                    AND MovementFloat_DiscountNextTax.DescId = zc_MovementFloat_DiscountNextTax()
+                        WHERE Movement.Id = inMovementId_OrderClient
+                          AND Movement.DescId = zc_Movement_OrderClient()
+                          )
      SELECT
            Object_Product.Id             AS Id
          , Object_Product.ObjectCode     AS Code
          , Object_Product.ValueData      AS Name
 
          , ObjectFloat_Hours.ValueData      AS Hours
-         , ObjectFloat_DiscountTax.ValueData     AS DiscountTax
-         , ObjectFloat_DiscountNextTax.ValueData AS DiscountNextTax
+         , tmpOrderClient.ChangePercent     AS ChangePercent
+         , tmpOrderClient.DiscountNextTax   AS DiscountNextTax
          , ObjectDate_DateStart.ValueData   AS DateStart
          , ObjectDate_DateBegin.ValueData   AS DateBegin
          , ObjectDate_DateSale.ValueData    AS DateSale
@@ -100,8 +131,14 @@ BEGIN
          , Object_ReceiptProdModel.Id        AS ReceiptProdModelId
          , Object_ReceiptProdModel.ValueData AS ReceiptProdModelName
 
-         , vbClientId                       AS ClientId
-         , vbClientName                     AS ClientName
+         , tmpOrderClient.ClientId                 AS ClientId
+         , tmpOrderClient.ClientName               AS ClientName
+
+         , tmpOrderClient.MovementId :: Integer    AS MovementId_OrderClient
+         , tmpOrderClient.OperDate   :: TDateTime  AS OperDate_OrderClient
+         , tmpOrderClient.InvNumber  :: TVarChar   AS InvNumber_OrderClient
+         , tmpOrderClient.StatusCode :: Integer    AS StatusCode_OrderClient
+         , tmpOrderClient.StatusName :: TVarChar   AS StatusName_OrderClient
 
          , COALESCE (ObjectBoolean_BasicConf.ValueData, FALSE) :: Boolean AS isBasicConf
          , CAST (FALSE AS Boolean)          AS isProdColorPattern
@@ -182,6 +219,7 @@ BEGIN
                               AND ObjectLink_Engine.DescId = zc_ObjectLink_Product_Engine()
           LEFT JOIN Object AS Object_Engine ON Object_Engine.Id = ObjectLink_Engine.ChildObjectId
 
+          LEFT JOIN tmpOrderClient ON 1=1
        WHERE Object_Product.Id = inId;
    END IF;
 
@@ -197,4 +235,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_Product(0, '2')
+-- SELECT * FROM gpGet_Object_Product(0, 0,'2')

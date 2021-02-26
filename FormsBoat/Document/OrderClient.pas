@@ -157,6 +157,8 @@ type
     edBrand: TcxButtonEdit;
     edCIN: TcxTextEdit;
     cxLabel13: TcxLabel;
+    cxLabel14: TcxLabel;
+    edDiscountNextTax: TcxCurrencyEdit;
   private
   public
   end;

@@ -42,13 +42,6 @@ BEGIN
                                                , vbUserId
                                                );
 
-                  
-     -- пересчитали Итоговые суммы
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
-
-     -- сохранили протокол
-     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
-
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;

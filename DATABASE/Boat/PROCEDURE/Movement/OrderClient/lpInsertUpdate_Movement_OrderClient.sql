@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderClient (Integer, TVarChar, TVarChar, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderClient (Integer, TVarChar, TVarChar, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderClient (Integer, TVarChar, TVarChar, TDateTime, Boolean, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderClient(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderClient(
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , --
     IN inChangePercent       TFloat    , --
+    IN inDiscountNextTax     TFloat    , --
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому
     IN inPaidKindId          Integer   , -- ФО
@@ -46,7 +48,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, inVATPercent);
      -- сохранили значение <% скидки>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
-     
+     -- сохранили значение <% скидки доп>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountNextTax(), ioId, inDiscountNextTax);     
 
      -- сохранили <>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);

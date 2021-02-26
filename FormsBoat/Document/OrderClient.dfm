@@ -3,7 +3,7 @@ object OrderClientForm: TOrderClientForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'>'
   ClientHeight = 455
-  ClientWidth = 1168
+  ClientWidth = 1181
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,13 @@ object OrderClientForm: TOrderClientForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1168
+    Width = 1181
     Height = 97
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitLeft = -40
+    ExplicitTop = -13
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -62,10 +64,10 @@ object OrderClientForm: TOrderClientForm
         end>
       Properties.ReadOnly = True
       TabOrder = 3
-      Width = 165
+      Width = 241
     end
     object edTo: TcxButtonEdit
-      Left = 576
+      Left = 651
       Top = 23
       Properties.Buttons = <
         item
@@ -74,7 +76,7 @@ object OrderClientForm: TOrderClientForm
         end>
       Properties.ReadOnly = True
       TabOrder = 2
-      Width = 177
+      Width = 128
     end
     object cxLabel3: TcxLabel
       Left = 404
@@ -85,8 +87,8 @@ object OrderClientForm: TOrderClientForm
       ShowHint = True
     end
     object cxLabel4: TcxLabel
-      Left = 576
-      Top = 5
+      Left = 651
+      Top = 0
       Caption = #1050#1086#1084#1091
     end
     object edPriceWithVAT: TcxCheckBox
@@ -126,7 +128,7 @@ object OrderClientForm: TOrderClientForm
       Properties.DisplayFormat = ',0.###'
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 165
+      Width = 110
     end
     object cxLabel7: TcxLabel
       Left = 309
@@ -136,7 +138,8 @@ object OrderClientForm: TOrderClientForm
     object cxLabel8: TcxLabel
       Left = 404
       Top = 45
-      Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
+      Hint = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
+      Caption = '(-)% '#1057#1082' (+)% '#1053#1072#1094
     end
     object cxLabel11: TcxLabel
       Left = 9
@@ -166,15 +169,15 @@ object OrderClientForm: TOrderClientForm
       Width = 157
     end
     object cxLabel16: TcxLabel
-      Left = 576
+      Left = 651
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 576
+      Left = 651
       Top = 63
       TabOrder = 18
-      Width = 177
+      Width = 290
     end
     object cxLabel10: TcxLabel
       Left = 273
@@ -194,12 +197,12 @@ object OrderClientForm: TOrderClientForm
       Width = 124
     end
     object cxLabel15: TcxLabel
-      Left = 758
+      Left = 948
       Top = 45
       Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
     end
     object ceInvoice: TcxButtonEdit
-      Left = 758
+      Left = 948
       Top = 63
       Properties.Buttons = <
         item
@@ -208,27 +211,27 @@ object OrderClientForm: TOrderClientForm
         end>
       Properties.ReadOnly = True
       TabOrder = 22
-      Width = 156
+      Width = 117
     end
     object cxLabel9: TcxLabel
-      Left = 921
+      Left = 1070
       Top = 45
-      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1076#1086#1082'. '#1057#1095#1077#1090')'
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1057#1095#1077#1090')'
     end
     object ceComment_Invoice: TcxTextEdit
-      Left = 921
+      Left = 1070
       Top = 63
       Properties.ReadOnly = True
       TabOrder = 24
-      Width = 242
+      Width = 120
     end
     object cxLabel12: TcxLabel
-      Left = 921
+      Left = 948
       Top = 5
       Caption = 'Brand'
     end
     object edBrand: TcxButtonEdit
-      Left = 921
+      Left = 948
       Top = 23
       Properties.Buttons = <
         item
@@ -241,13 +244,13 @@ object OrderClientForm: TOrderClientForm
       Width = 117
     end
     object edCIN: TcxTextEdit
-      Left = 1043
+      Left = 1070
       Top = 23
       TabOrder = 27
       Width = 120
     end
     object cxLabel13: TcxLabel
-      Left = 1043
+      Left = 1070
       Top = 5
       Caption = 'CIN Nr.'
     end
@@ -255,25 +258,28 @@ object OrderClientForm: TOrderClientForm
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 123
-    Width = 1168
+    Width = 1181
     Height = 332
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 1168
     ClientRectBottom = 332
-    ClientRectRight = 1168
+    ClientRectRight = 1181
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 1168
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1168
+        Width = 1181
         Height = 308
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1168
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -533,12 +539,12 @@ object OrderClientForm: TOrderClientForm
     end
   end
   object cxLabel6: TcxLabel
-    Left = 758
+    Left = 785
     Top = 5
     Caption = 'Boat'
   end
   object edProduct: TcxButtonEdit
-    Left = 758
+    Left = 785
     Top = 23
     Properties.Buttons = <
       item
@@ -548,6 +554,23 @@ object OrderClientForm: TOrderClientForm
     Properties.ReadOnly = True
     TabOrder = 7
     Width = 156
+  end
+  object cxLabel14: TcxLabel
+    Left = 520
+    Top = 45
+    Hint = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080' '#1044#1086#1087#1086#1083#1085#1080#1090'.'
+    Caption = '(-)% '#1057#1082' (+)% '#1053#1072#1094' ('#1076#1086#1087')'
+  end
+  object edDiscountNextTax: TcxCurrencyEdit
+    Left = 520
+    Top = 63
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Width = 125
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1437,8 +1460,8 @@ object OrderClientForm: TOrderClientForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 664
-    Top = 16
+    Left = 712
+    Top = 8
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -1606,6 +1629,14 @@ object OrderClientForm: TOrderClientForm
         Name = 'inChangePercent'
         Value = 0.000000000000000000
         Component = edChangePercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscountNextTax'
+        Value = Null
+        Component = edDiscountNextTax
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1808,6 +1839,13 @@ object OrderClientForm: TOrderClientForm
         Name = 'ChangePercent'
         Value = 0.000000000000000000
         Component = edChangePercent
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountNextTax'
+        Value = Null
+        Component = edDiscountNextTax
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -2025,7 +2063,7 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 124
+    Left = 164
     Top = 56
   end
   object GuidesFrom: TdsdGuides
@@ -2066,8 +2104,8 @@ object OrderClientForm: TOrderClientForm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 456
-    Top = 8
+    Left = 376
+    Top = 65528
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

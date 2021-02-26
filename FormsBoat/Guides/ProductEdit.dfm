@@ -2,8 +2,8 @@ object ProductEditForm: TProductEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1080'>'
-  ClientHeight = 605
-  ClientWidth = 299
+  ClientHeight = 523
+  ClientWidth = 584
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,18 +18,18 @@ object ProductEditForm: TProductEditForm
   TextHeight = 13
   object edName: TcxTextEdit
     Left = 10
-    Top = 481
+    Top = 393
     TabOrder = 0
     Width = 273
   end
   object cxLabel1: TcxLabel
     Left = 10
-    Top = 463
+    Top = 375
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 32
-    Top = 573
+    Top = 485
     Width = 75
     Height = 25
     Action = actInsertUpdateGuides
@@ -38,7 +38,7 @@ object ProductEditForm: TProductEditForm
   end
   object cxButton2: TcxButton
     Left = 176
-    Top = 573
+    Top = 485
     Width = 75
     Height = 25
     Action = actFormClose
@@ -63,18 +63,18 @@ object ProductEditForm: TProductEditForm
   end
   object cxLabel3: TcxLabel
     Left = 10
-    Top = 511
+    Top = 423
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit
     Left = 10
-    Top = 531
+    Top = 443
     TabOrder = 7
     Width = 273
   end
   object cxLabel6: TcxLabel
     Left = 10
-    Top = 418
+    Top = 330
     Hint = #1053#1072#1095#1072#1083#1086' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
     Caption = #1053#1072#1095#1072#1083#1086' '#1087#1088#1086#1080#1079#1074'.'
     ParentShowHint = False
@@ -90,7 +90,7 @@ object ProductEditForm: TProductEditForm
   end
   object cxLabel4: TcxLabel
     Left = 105
-    Top = 418
+    Top = 330
     Hint = #1042#1074#1086#1076' '#1074' '#1101#1082#1089#1087#1083#1091#1072#1090#1072#1094#1080#1102
     Caption = #1042#1074#1086#1076' '#1074' '#1101#1082#1089#1087#1083'.'
     ParentShowHint = False
@@ -98,7 +98,7 @@ object ProductEditForm: TProductEditForm
   end
   object cxLabel5: TcxLabel
     Left = 201
-    Top = 418
+    Top = 330
     Hint = #1055#1088#1086#1076#1072#1078#1072
     Caption = #1055#1088#1086#1076#1072#1078#1072
   end
@@ -109,12 +109,12 @@ object ProductEditForm: TProductEditForm
   end
   object cxLabel9: TcxLabel
     Left = 10
-    Top = 58
+    Top = 63
     Caption = 'CIN Nr.'
   end
   object edDateStart: TcxDateEdit
     Left = 10
-    Top = 438
+    Top = 350
     EditValue = 42160d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -123,7 +123,7 @@ object ProductEditForm: TProductEditForm
   end
   object edDateBegin: TcxDateEdit
     Left = 105
-    Top = 438
+    Top = 350
     EditValue = 42160d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -132,7 +132,7 @@ object ProductEditForm: TProductEditForm
   end
   object edDateSale: TcxDateEdit
     Left = 201
-    Top = 438
+    Top = 350
     EditValue = 42160d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -175,7 +175,7 @@ object ProductEditForm: TProductEditForm
   end
   object cxLabel12: TcxLabel
     Left = 10
-    Top = 101
+    Top = 102
     Caption = 'Model'
   end
   object edModel: TcxButtonEdit
@@ -246,34 +246,37 @@ object ProductEditForm: TProductEditForm
     Width = 273
   end
   object edDiscountNextTax: TcxCurrencyEdit
-    Left = 151
-    Top = 392
+    Left = 456
+    Top = 168
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 30
-    Width = 132
+    Width = 114
   end
   object cxLabel15: TcxLabel
-    Left = 151
-    Top = 371
-    Caption = '% '#1089#1082'. ('#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081')'
+    Left = 472
+    Top = 147
+    Hint = '% '#1089#1082'. ('#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081')'
+    Caption = '% '#1089#1082'. ('#1076#1086#1087'.)'
+    ParentShowHint = False
+    ShowHint = True
   end
   object cxLabel16: TcxLabel
-    Left = 10
-    Top = 372
+    Left = 331
+    Top = 148
     Caption = '% '#1089#1082'. ('#1086#1089#1085#1086#1074#1085#1086#1081')'
   end
   object edClienttext: TcxLabel
-    Left = 10
-    Top = 328
+    Left = 331
+    Top = 102
     Hint = #1050#1083#1080#1077#1085#1090
     Caption = 'Kunden'
     ParentShowHint = False
     ShowHint = True
   end
   object edClient: TcxButtonEdit
-    Left = 10
-    Top = 348
+    Left = 331
+    Top = 121
     Properties.Buttons = <
       item
         Default = True
@@ -281,19 +284,70 @@ object ProductEditForm: TProductEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 34
-    Width = 273
+    Width = 239
   end
-  object edDiscountTax: TcxCurrencyEdit
-    Left = 10
-    Top = 392
+  object edChangePercent: TcxCurrencyEdit
+    Left = 331
+    Top = 168
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 35
-    Width = 132
+    Width = 114
+  end
+  object ceStatus: TcxButtonEdit
+    Left = 331
+    Top = 30
+    Properties.Buttons = <
+      item
+        Kind = bkGlyph
+      end
+      item
+        Default = True
+        Kind = bkGlyph
+      end
+      item
+        Kind = bkGlyph
+      end>
+    Properties.Images = dmMain.ImageList
+    Properties.ReadOnly = True
+    TabOrder = 36
+    Width = 239
+  end
+  object cxLabel8: TcxLabel
+    Left = 331
+    Top = 8
+    Caption = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072
+  end
+  object cxLabel17: TcxLabel
+    Left = 331
+    Top = 63
+    Caption = #8470' '#1076#1086#1082'.'
+  end
+  object edInvNumber: TcxTextEdit
+    Left = 331
+    Top = 81
+    Properties.ReadOnly = True
+    TabOrder = 39
+    Width = 114
+  end
+  object cxLabel18: TcxLabel
+    Left = 456
+    Top = 63
+    Caption = #1044#1072#1090#1072
+  end
+  object edOperDate: TcxDateEdit
+    Left = 456
+    Top = 81
+    EditValue = 42160d
+    Properties.ReadOnly = True
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 41
+    Width = 114
   end
   object ActionList: TActionList
-    Left = 176
-    Top = 179
+    Left = 232
+    Top = 147
     object actDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -334,6 +388,60 @@ object ProductEditForm: TProductEditForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object UnCompleteMovement: TChangeGuidesStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spChangeStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end
+        item
+        end
+        item
+        end>
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 11
+      Status = mtUncomplete
+      Guides = GuidesStatus
+    end
+    object CompleteMovement: TChangeGuidesStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spChangeStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end
+        item
+        end
+        item
+        end>
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 12
+      Status = mtComplete
+      Guides = GuidesStatus
+    end
+    object DeleteMovement: TChangeGuidesStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spChangeStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end
+        item
+        end
+        item
+        end>
+      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      ImageIndex = 13
+      Status = mtDelete
+      Guides = GuidesStatus
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -429,9 +537,9 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDiscountTax'
+        Name = 'inChangePercent'
         Value = Null
-        Component = edDiscountTax
+        Component = edChangePercent
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -695,9 +803,9 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'DiscountTax'
+        Name = 'ChangePercent'
         Value = Null
-        Component = edDiscountTax
+        Component = edChangePercent
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -706,6 +814,35 @@ object ProductEditForm: TProductEditForm
         Value = Null
         Component = edDiscountNextTax
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_OrderClient'
+        Value = Null
+        Component = edInvNumber
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate_OrderClient'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StatusCode_OrderClient'
+        Value = Null
+        Component = GuidesStatus
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StatusName_OrderClient'
+        Value = Null
+        Component = GuidesStatus
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -725,11 +862,11 @@ object ProductEditForm: TProductEditForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 128
-    Top = 529
+    Top = 441
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 248
-    Top = 505
+    Top = 417
   end
   object GuidesBrand: TdsdGuides
     KeyField = 'Id'
@@ -977,13 +1114,13 @@ object ProductEditForm: TProductEditForm
       item
         Name = 'DiscountTax'
         Value = Null
-        Component = edDiscountTax
+        Component = edChangePercent
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 128
-    Top = 339
+    Left = 417
+    Top = 104
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -1039,5 +1176,41 @@ object ProductEditForm: TProductEditForm
     PackSize = 1
     Left = 256
     Top = 72
+  end
+  object spChangeStatus: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Status_OrderClient'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMovementId_OrderClient'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStatusCode'
+        Value = ''
+        Component = GuidesStatus
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 460
+    Top = 24
+  end
+  object GuidesStatus: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceStatus
+    FormNameParam.Value = ''
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    PositionDataSet = 'ClientDataSet'
+    Params = <>
+    Left = 391
+    Top = 24
   end
 end

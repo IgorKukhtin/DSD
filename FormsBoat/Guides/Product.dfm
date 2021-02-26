@@ -509,9 +509,9 @@ object ProductForm: TProductForm
           Options.Editing = False
           Width = 84
         end
-        object DiscountTax: TcxGridDBColumn
+        object ChangePercent: TcxGridDBColumn
           Caption = '% '#1089#1082#1080#1076#1082#1080
-          DataBinding.FieldName = 'DiscountTax'
+          DataBinding.FieldName = 'ChangePercent'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
@@ -600,9 +600,36 @@ object ProductForm: TProductForm
           Visible = False
           VisibleForCustomization = False
         end
+        object StatusCode_OrderClient: TcxGridDBColumn
+          Caption = #1057#1090#1072#1090#1091#1089
+          DataBinding.FieldName = 'StatusCode_OrderClient'
+          PropertiesClassName = 'TcxImageComboBoxProperties'
+          Properties.Images = dmMain.ImageList
+          Properties.Items = <
+            item
+              Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+              ImageIndex = 11
+              Value = 1
+            end
+            item
+              Description = #1055#1088#1086#1074#1077#1076#1077#1085
+              ImageIndex = 12
+              Value = 2
+            end
+            item
+              Description = #1059#1076#1072#1083#1077#1085
+              ImageIndex = 13
+              Value = 3
+            end>
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 55
+        end
         object OperDate_OrderClient: TcxGridDBColumn
           Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1079#1072#1082#1072#1079#1072
           DataBinding.FieldName = 'OperDate_OrderClient'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
           HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082'. '#1079#1072#1082#1072#1079#1072
           Options.Editing = False
           Width = 70
@@ -610,6 +637,8 @@ object ProductForm: TProductForm
         object InvNumber_OrderClient: TcxGridDBColumn
           Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079#1072
           DataBinding.FieldName = 'InvNumber_OrderClient'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
           HeaderHint = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079#1072
           Options.Editing = False
           Width = 70

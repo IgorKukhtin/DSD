@@ -23,7 +23,7 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   cxCurrencyEdit, cxSplitter, cxButtonEdit, ExternalLoad, Vcl.Menus,
-  Vcl.ExtCtrls;
+  Vcl.ExtCtrls, cxImageComboBox;
 
 type
   TProductForm = class(TParentForm)

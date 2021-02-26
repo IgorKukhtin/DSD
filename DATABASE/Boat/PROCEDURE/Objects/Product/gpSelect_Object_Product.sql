@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Product(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ProdColorName TVarChar
-             , Hours TFloat, DiscountTax TFloat, DiscountNextTax TFloat
+             , Hours TFloat, ChangePercent TFloat, DiscountNextTax TFloat
              , DateStart TDateTime, DateBegin TDateTime, DateSale TDateTime
              , CIN TVarChar, EngineNum TVarChar
              , Comment TVarChar
@@ -22,6 +22,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ProdColorName TVarChar
              , MovementId_OrderClient Integer
              , OperDate_OrderClient  TDateTime
              , InvNumber_OrderClient TVarChar
+             , StatusCode_OrderClient Integer
+             , StatusName_OrderClient TVarChar
 
              , InsertName TVarChar
              , InsertDate TDateTime
@@ -481,10 +483,14 @@ BEGIN
     , tmpOrderClient AS (SELECT tmp.*
                          FROM (SELECT Movement.*
                               , ('№ ' || Movement.InvNumber || '  ' || Movement.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_full
+                              , Object_Status.ObjectCode   AS StatusCode
+                              , Object_Status.ValueData    AS StatusName
                               , Object_From.Id         AS FromId
                               , Object_From.ObjectCode AS FromCode
                               , Object_From.ValueData  AS FromName
                               , MovementLinkObject_Product.ObjectId AS ProductId
+                              , MovementFloat_ChangePercent.ValueData      AS ChangePercent
+                              , MovementFloat_DiscountNextTax.ValueData    AS DiscountNextTax
                               , ROW_NUMBER() OVER (PARTITION BY MovementLinkObject_Product.ObjectId
                                                    ORDER BY CASE WHEN Movement.StatusId = zc_Enum_Status_Complete() THEN 1
                                                                  WHEN Movement.StatusId = zc_Enum_Status_UnComplete() THEN 2
@@ -498,6 +504,15 @@ BEGIN
                                                            ON MovementLinkObject_From.MovementId = Movement.Id
                                                           AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                               LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+                              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+                              LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                                      ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                                                     AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+                              LEFT JOIN MovementFloat AS MovementFloat_DiscountNextTax
+                                                      ON MovementFloat_DiscountNextTax.MovementId = Movement.Id
+                                                     AND MovementFloat_DiscountNextTax.DescId = zc_MovementFloat_DiscountNextTax()
                          WHERE MovementLinkObject_Product.ObjectId IN (SELECT DISTINCT tmpProduct.Id FROM tmpProduct)
                            AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
                                ) AS tmp
@@ -513,8 +528,10 @@ BEGIN
          , tmpResAll.ProdColorName
 
          , tmpResAll.Hours            ::TFloat
-         , tmpResAll.DiscountTax      ::TFloat
-         , tmpResAll.DiscountNextTax  ::TFloat
+         --, tmpResAll.DiscountTax      ::TFloat
+         --, tmpResAll.DiscountNextTax  ::TFloat
+         , tmpOrderClient.ChangePercent    ::TFloat AS ChangePercent
+         , tmpOrderClient.DiscountNextTax  ::TFloat AS DiscountNextTax
          , tmpResAll.DateStart
          , tmpResAll.DateBegin
          , tmpResAll.DateSale
@@ -548,6 +565,8 @@ BEGIN
          , tmpOrderClient.Id        ::Integer   AS MovementId_OrderClient
          , tmpOrderClient.OperDate  ::TDateTime AS OperDate_OrderClient
          , tmpOrderClient.InvNumber ::TVarChar  AS InvNumber_OrderClient
+         , tmpOrderClient.StatusCode ::Integer  AS StatusCode_OrderClient
+         , tmpOrderClient.StatusName ::TVarChar AS StatusName_OrderClient
 
          , tmpResAll.InsertName
          , tmpResAll.InsertDate

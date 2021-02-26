@@ -280,6 +280,16 @@ object OrderClientJournalForm: TOrderClientJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 111
       end
+      object DiscountNextTax: TcxGridDBColumn
+        Caption = '(-)% '#1089#1082'. (+)% '#1085#1072#1094' ('#1076#1086#1087'.)'
+        DataBinding.FieldName = 'DiscountNextTax'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 111
+      end
       object PriceWithVAT: TcxGridDBColumn
         Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
         DataBinding.FieldName = 'PriceWithVAT'

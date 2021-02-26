@@ -73,10 +73,21 @@ type
     edClienttext: TcxLabel;
     edClient: TcxButtonEdit;
     GuidesClient: TdsdGuides;
-    edDiscountTax: TcxCurrencyEdit;
+    edChangePercent: TcxCurrencyEdit;
     RefreshDispatcher: TRefreshDispatcher;
     spGetCIN: TdsdStoredProc;
     actGetCIN: TdsdDataSetRefresh;
+    spChangeStatus: TdsdStoredProc;
+    ceStatus: TcxButtonEdit;
+    cxLabel8: TcxLabel;
+    GuidesStatus: TdsdGuides;
+    cxLabel17: TcxLabel;
+    edInvNumber: TcxTextEdit;
+    cxLabel18: TcxLabel;
+    edOperDate: TcxDateEdit;
+    UnCompleteMovement: TChangeGuidesStatus;
+    CompleteMovement: TChangeGuidesStatus;
+    DeleteMovement: TChangeGuidesStatus;
   private
     { Private declarations }
   public

@@ -19,7 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Product(
     IN inIsBasicConf           Boolean   ,    -- включать базовую Комплектацию
     IN inIsProdColorPattern    Boolean   ,    -- автоматически добавить все Items Boat Structure
     IN inHours                 TFloat    ,
-    IN inDiscountTax           TFloat    ,
+    IN inChangePercent         TFloat    ,
     IN inDiscountNextTax       TFloat    ,
     IN inDateStart             TDateTime ,
     IN inDateBegin             TDateTime ,
@@ -126,10 +126,6 @@ BEGIN
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Product_Hours(), ioId, inHours);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Product_DiscountTax(), ioId, inDiscountTax);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Product_DiscountNextTax(), ioId, inDiscountNextTax);
    
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Product_DateStart(), ioId, inDateStart);
@@ -228,27 +224,43 @@ BEGIN
                         WHERE ObjectFloat_TaxKind_Value.ObjectId = zc_Enum_TaxKind_Basis()
                           AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
                         )::TFloat;
+                        
                     
        --создаем документ
-       PERFORM lpInsertUpdate_Movement_OrderClient(ioId               := 0            ::Integer
-                                                 , inInvNumber        := CAST (NEXTVAL ('movement_OrderClient_seq') AS TVarChar) ::TVarChar
-                                                 , inInvNumberPartner := ''           ::TVarChar
-                                                 , inOperDate         := CURRENT_DATE ::TDateTime
-                                                 , inPriceWithVAT     := FALSE        ::Boolean
-                                                 , inVATPercent       := vbVATPercent ::TFloat
-                                                 , inChangePercent    := 0            ::TFloat
-                                                 , inFromId           := inClientId   ::Integer
-                                                 , inToId             := 0            ::Integer
-                                                 , inPaidKindId       := 0            ::Integer
-                                                 , inProductId        := ioId         ::Integer
-                                                 , inMovementId_Invoice := 0          ::Integer
-                                                 , inComment          := ''           ::TVarChar
-                                                 , inUserId           := vbUserId     ::Integer
-                                                 );
+       vbMovementId:= lpInsertUpdate_Movement_OrderClient(ioId               := 0            ::Integer
+                                                        , inInvNumber        := CAST (NEXTVAL ('movement_OrderClient_seq') AS TVarChar) ::TVarChar
+                                                        , inInvNumberPartner := ''           ::TVarChar
+                                                        , inOperDate         := CURRENT_DATE ::TDateTime
+                                                        , inPriceWithVAT     := FALSE        ::Boolean
+                                                        , inVATPercent       := vbVATPercent ::TFloat
+                                                        , inChangePercent    := inChangePercent   ::TFloat
+                                                        , inDiscountNextTax  := inDiscountNextTax ::TFloat
+                                                        , inFromId           := inClientId   ::Integer
+                                                        , inToId             := 0            ::Integer
+                                                        , inPaidKindId       := zc_Enum_PaidKind_FirstForm() ::Integer
+                                                        , inProductId        := ioId         ::Integer
+                                                        , inMovementId_Invoice := 0          ::Integer
+                                                        , inComment          := ''           ::TVarChar
+                                                        , inUserId           := vbUserId     ::Integer
+                                                        );
+       --
+       PERFORM lpInsertUpdate_MovementItem_OrderClient (ioId            := 0
+                                                      , inMovementId    := vbMovementId
+                                                      , inGoodsId       := ioId
+                                                      , inAmount        := 1  ::TFloat
+                                                      , inOperPrice     := 0  ::TFloat
+                                                      , inCountForPrice := 1  ::TFloat
+                                                      , inComment       := '' ::TVarChar
+                                                      , inUserId        := vbUserId
+                                                      );
    ELSE
        --документ есть могут помеять только клиента
        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), vbMovementId, inClientId);
-
+       -- сохранили значение <% скидки>
+       PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), vbMovementId, inChangePercent);
+       -- сохранили значение <% скидки доп>
+       PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountNextTax(), vbMovementId, inDiscountNextTax);    
+     
        -- сохранили протокол
        PERFORM lpInsert_MovementProtocol (vbMovementId, vbUserId, False);
 

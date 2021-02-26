@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
              , OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , PriceWithVAT Boolean
-             , VATPercent TFloat, ChangePercent TFloat
+             , VATPercent TFloat, ChangePercent TFloat, DiscountNextTax TFloat
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -41,6 +41,7 @@ BEGIN
              , CAST (False as Boolean)   AS PriceWithVAT
              , ObjectFloat_TaxKind_Value.ValueData :: TFloat AS VATPercent
              , CAST (0 as TFloat)        AS ChangePercent
+             , CAST (0 as TFloat)        AS DiscountNextTax
              , 0                         AS FromId
              , CAST ('' AS TVarChar)     AS FromName
              , 0                         AS ToId
@@ -76,6 +77,7 @@ BEGIN
           , MovementBoolean_PriceWithVAT.ValueData    AS PriceWithVAT
           , MovementFloat_VATPercent.ValueData        AS VATPercent
           , MovementFloat_ChangePercent.ValueData     AS ChangePercent
+          , MovementFloat_DiscountNextTax.ValueData   AS DiscountNextTax
 
           , Object_From.Id                            AS FromId
           , Object_From.ValueData                     AS FromName
@@ -129,7 +131,11 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                     ON MovementFloat_ChangePercent.MovementId = Movement_OrderClient.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
-    
+
+            LEFT JOIN MovementFloat AS MovementFloat_DiscountNextTax
+                                    ON MovementFloat_DiscountNextTax.MovementId = Movement_OrderClient.Id
+                                   AND MovementFloat_DiscountNextTax.DescId = zc_MovementFloat_DiscountNextTax()
+
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId = Movement_OrderClient.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
