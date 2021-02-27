@@ -61,20 +61,19 @@ BEGIN
 
 
     RETURN QUERY
-    SELECT * FROM lpReport_Account_noBalance (
-         inStartDate             := inStartDate,  
-         inEndDate               := inEndDate,
-         inAccountGroupId        := inAccountGroupId, 
-         inAccountDirectionId    := inAccountDirectionId, 
-         inInfoMoneyId           := inInfoMoneyId, 
-         inAccountId             := inAccountId,
-         inBusinessId            := inBusinessId,
-         inProfitLossGroupId     := inProfitLossGroupId,
-         inProfitLossDirectionId := inProfitLossDirectionId, 
-         inProfitLossId          := inProfitLossId,
-         inBranchId              := inBranchId,
-         inUserId                := vbUserId
-       ) AS tmp
+    SELECT * FROM lpReport_Account_noBalance (inStartDate             := inStartDate,  
+                                              inEndDate               := inEndDate,
+                                              inAccountGroupId        := inAccountGroupId, 
+                                              inAccountDirectionId    := inAccountDirectionId, 
+                                              inInfoMoneyId           := inInfoMoneyId, 
+                                              inAccountId             := inAccountId,
+                                              inBusinessId            := inBusinessId,
+                                              inProfitLossGroupId     := inProfitLossGroupId,
+                                              inProfitLossDirectionId := inProfitLossDirectionId, 
+                                              inProfitLossId          := inProfitLossId,
+                                              inBranchId              := inBranchId,
+                                              inUserId                := vbUserId
+                                            ) AS tmp
     WHERE tmp.SummStart <> 0 OR tmp.SummIn <> 0 OR tmp.SummOut <> 0 OR tmp.SummEnd <> 0
    ;
 
@@ -87,7 +86,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 27.02.21                                        * err InfoManey
+ 27.02.21                                        *
 */
 
 -- тест
