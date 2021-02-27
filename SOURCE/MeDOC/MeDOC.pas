@@ -1360,6 +1360,9 @@ begin
   ZVIT.DECLARBODY.HKSEL := HeaderDataSet.FieldByName('INN_From').AsString;
   ZVIT.DECLARBODY.ChildNodes['HNUM2'].SetAttributeNS('nil', NS_URI, true);
   ZVIT.DECLARBODY.HTINSEL:= HeaderDataSet.FieldByName('OKPO_From').AsString;
+  // код
+  if HeaderDataSet.FieldByName('Code_From').AsString <> ''
+  then ZVIT.DECLARBODY.HKS := StrToInt(HeaderDataSet.FieldByName('Code_From').AsString);
 
   ZVIT.DECLARBODY.HKBUY := HeaderDataSet.FieldByName('INN_To').AsString;
   // № Філії покупця
@@ -1368,6 +1371,9 @@ begin
   else ZVIT.DECLARBODY.ChildNodes['HFBUY'].SetAttributeNS('nil', NS_URI, true);
 
   ZVIT.DECLARBODY.HTINBUY := HeaderDataSet.FieldByName('OKPO_To').AsString;
+  // код
+  if HeaderDataSet.FieldByName('Code_To').AsString <> ''
+  then ZVIT.DECLARBODY.HKB := StrToInt(HeaderDataSet.FieldByName('Code_To').AsString);
 
   // Загальна сума коштів, що підлягають сплаті з урахуванням податку на додану вартість
   ZVIT.DECLARBODY.R04G11  := ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
@@ -1852,7 +1858,7 @@ begin
        CreateJ1201009XMLFile_IFIN(HeaderDataSet, ItemsDataSet, FileName)
    else
 
-   // так для Медка
+   // так для Медка - 2021
    if HeaderDataSet.FieldByName('OperDate_begin').asDateTime >= StrToDateTime( '01.03.2021', F)
    then
        CreateJ1201011XMLFile(HeaderDataSet, ItemsDataSet, FileName)
@@ -2925,6 +2931,9 @@ begin
   ZVIT.DECLARBODY.HNAMESEL := HeaderDataSet.FieldByName('JuridicalName_To').AsString;
   // Податковий номер платника податку або серія та/або номер паспорта (постачальник)
   ZVIT.DECLARBODY.HTINSEL := HeaderDataSet.FieldByName('OKPO_To').AsString;
+  // код
+  if HeaderDataSet.FieldByName('Code_To').AsString <> ''
+  then ZVIT.DECLARBODY.HKS := StrToInt(HeaderDataSet.FieldByName('Code_To').AsString);
 
   // Дата складання РК
   ZVIT.DECLARBODY.HFILL := FormatDateTime('ddmmyyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime);
@@ -2952,6 +2961,9 @@ begin
   else ZVIT.DECLARBODY.ChildNodes['HFBUY'].SetAttributeNS('nil', NS_URI, true);
   // Податковий номер платника податку або серія та/або номер паспорта (покупець)
   ZVIT.DECLARBODY.HTINBUY := HeaderDataSet.FieldByName('OKPO_From').AsString;
+  // код
+  if HeaderDataSet.FieldByName('Code_From').AsString <> ''
+  then ZVIT.DECLARBODY.HKB := StrToInt(HeaderDataSet.FieldByName('Code_From').AsString);
 
      // !!!!
      if (gc_User.Session = '5') or (gc_User.Session = '81241') then begin
@@ -3366,7 +3378,7 @@ begin
        CreateJ1201209XMLFile_IFIN(HeaderDataSet, ItemsDataSet, FileName)
    else
 
-   // так для Медка
+   // так для Медка - 2021
    if HeaderDataSet.FieldByName('OperDate_begin').asDateTime >= StrToDateTime( '01.03.2021', F) then
       CreateJ1201211XMLFile(HeaderDataSet, ItemsDataSet, FileName)
    else

@@ -1234,7 +1234,9 @@ uses
   PartionGoods20202Choice in '..\..\Forms\Guides\PartionGoods20202Choice.pas' {PartionGoods20202ChoiceForm: TParentForm},
   TaxCorrectiveJournalChoice in '..\..\Forms\Document\TaxCorrectiveJournalChoice.pas' {TaxCorrectiveJournalChoiceForm: TParentForm},
   Report_GoodsMI_ProductionUnion_diff in '..\..\Forms\Report\Report_GoodsMI_ProductionUnion_diff.pas' {Report_GoodsMI_ProductionUnion_diffForm: TParentForm},
-  OrderFinanceMovement in '..\..\Forms\Document\OrderFinanceMovement.pas' {OrderFinanceMovementForm: TParentForm};
+  OrderFinanceMovement in '..\..\Forms\Document\OrderFinanceMovement.pas' {OrderFinanceMovementForm: TParentForm},
+  Medoc_J1201011 in '..\..\SOURCE\MeDOC\Medoc_J1201011.pas',
+  Medoc_J1201211 in '..\..\SOURCE\MeDOC\Medoc_J1201211.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}
