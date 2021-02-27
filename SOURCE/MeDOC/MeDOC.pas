@@ -1362,7 +1362,8 @@ begin
   ZVIT.DECLARBODY.HTINSEL:= HeaderDataSet.FieldByName('OKPO_From').AsString;
   // код
   if HeaderDataSet.FieldByName('Code_From').AsString <> ''
-  then ZVIT.DECLARBODY.HKS := StrToInt(HeaderDataSet.FieldByName('Code_From').AsString);
+  then ZVIT.DECLARBODY.HKS := StrToInt(HeaderDataSet.FieldByName('Code_From').AsString)
+  else ZVIT.DECLARBODY.ChildNodes['HKS'].SetAttributeNS('nil', NS_URI, true);
 
   ZVIT.DECLARBODY.HKBUY := HeaderDataSet.FieldByName('INN_To').AsString;
   // № Філії покупця
@@ -1373,7 +1374,8 @@ begin
   ZVIT.DECLARBODY.HTINBUY := HeaderDataSet.FieldByName('OKPO_To').AsString;
   // код
   if HeaderDataSet.FieldByName('Code_To').AsString <> ''
-  then ZVIT.DECLARBODY.HKB := StrToInt(HeaderDataSet.FieldByName('Code_To').AsString);
+  then ZVIT.DECLARBODY.HKB := StrToInt(HeaderDataSet.FieldByName('Code_To').AsString)
+  else ZVIT.DECLARBODY.ChildNodes['HKB'].SetAttributeNS('nil', NS_URI, true);
 
   // Загальна сума коштів, що підлягають сплаті з урахуванням податку на додану вартість
   ZVIT.DECLARBODY.R04G11  := ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
@@ -2933,7 +2935,8 @@ begin
   ZVIT.DECLARBODY.HTINSEL := HeaderDataSet.FieldByName('OKPO_To').AsString;
   // код
   if HeaderDataSet.FieldByName('Code_To').AsString <> ''
-  then ZVIT.DECLARBODY.HKS := StrToInt(HeaderDataSet.FieldByName('Code_To').AsString);
+  then ZVIT.DECLARBODY.HKS := StrToInt(HeaderDataSet.FieldByName('Code_To').AsString)
+  else ZVIT.DECLARBODY.ChildNodes['HKS'].SetAttributeNS('nil', NS_URI, true);
 
   // Дата складання РК
   ZVIT.DECLARBODY.HFILL := FormatDateTime('ddmmyyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime);
@@ -2963,7 +2966,8 @@ begin
   ZVIT.DECLARBODY.HTINBUY := HeaderDataSet.FieldByName('OKPO_From').AsString;
   // код
   if HeaderDataSet.FieldByName('Code_From').AsString <> ''
-  then ZVIT.DECLARBODY.HKB := StrToInt(HeaderDataSet.FieldByName('Code_From').AsString);
+  then ZVIT.DECLARBODY.HKB := StrToInt(HeaderDataSet.FieldByName('Code_From').AsString)
+  else ZVIT.DECLARBODY.ChildNodes['HKB'].SetAttributeNS('nil', NS_URI, true);
 
      // !!!!
      if (gc_User.Session = '5') or (gc_User.Session = '81241') then begin

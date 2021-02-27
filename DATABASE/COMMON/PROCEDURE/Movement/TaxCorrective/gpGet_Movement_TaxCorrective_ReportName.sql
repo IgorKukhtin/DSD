@@ -24,7 +24,9 @@ BEGIN
      -- поиск даты
      SELECT MAX (CASE WHEN tmpMovement.OperDate1 > tmpMovement.OperDate2 THEN tmpMovement.OperDate1 ELSE tmpMovement.OperDate2 END)
             INTO vbOperDate
-     FROM (SELECT CASE WHEN Movement_find.OperDate < '01.03.2017' AND MovementDate_DateRegistered.ValueData >= '01.03.2017'
+     FROM (SELECT CASE WHEN (CURRENT_DATE >= '01.03.2021'  OR inSession = '5') AND COALESCE (MovementString_InvNumberRegistered.ValueData, '') = ''
+                            THEN '01.03.2021'
+                       WHEN Movement_find.OperDate < '01.03.2017' AND MovementDate_DateRegistered.ValueData >= '01.03.2017'
                             THEN Movement_find.OperDate
                        ELSE COALESCE (MovementDate_DateRegistered.ValueData, Movement_find.OperDate)
                        -- ELSE COALESCE (MovementDate_DateRegistered.ValueData, CURRENT_DATE)
@@ -43,6 +45,9 @@ BEGIN
                 LEFT JOIN MovementDate AS MovementDate_DateRegistered
                                        ON MovementDate_DateRegistered.MovementId = Movement.Id
                                       AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
+                LEFT JOIN MovementString AS MovementString_InvNumberRegistered
+                                         ON MovementString_InvNumberRegistered.MovementId = Movement.Id
+                                        AND MovementString_InvNumberRegistered.DescId     = zc_MovementString_InvNumberRegistered()
            WHERE Movement.Id = inMovementId
              AND Movement.DescId = zc_Movement_TaxCorrective()
           UNION

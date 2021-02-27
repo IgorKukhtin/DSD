@@ -158,8 +158,16 @@ order by 4*/
           -- , ObjectLink_Juridical_GoodsProperty.ChildObjectId         AS GoodsPropertyId
           -- , ObjectLink_JuridicalBasis_GoodsProperty.ChildObjectId    AS GoodsPropertyId_basis
 
-          , CASE WHEN MovementDate_DateRegistered.ValueData > Movement_Tax.OperDate THEN MovementDate_DateRegistered.ValueData ELSE Movement_Tax.OperDate END AS OperDate_begin
-          , CASE WHEN MovementString_InvNumberRegistered.ValueData <> '' THEN COALESCE (MovementDate_DateRegistered.ValueData, Movement_Tax.OperDate) ELSE CURRENT_DATE END AS OperDate_rus
+          , CASE WHEN (CURRENT_DATE >= '01.03.2021'  OR inSession = '5') AND COALESCE (MovementString_InvNumberRegistered.ValueData, '') = ''
+                      THEN '01.03.2021'
+                 WHEN MovementDate_DateRegistered.ValueData > Movement_Tax.OperDate
+                      THEN MovementDate_DateRegistered.ValueData
+                 ELSE Movement_Tax.OperDate
+            END AS OperDate_begin
+          , CASE WHEN MovementString_InvNumberRegistered.ValueData <> ''
+                      THEN COALESCE (MovementDate_DateRegistered.ValueData, Movement_Tax.OperDate)
+                 ELSE CURRENT_DATE
+            END AS OperDate_rus
           
           , COALESCE (ObjectBoolean_isLongUKTZED.ValueData, TRUE)    AS isLongUKTZED
 

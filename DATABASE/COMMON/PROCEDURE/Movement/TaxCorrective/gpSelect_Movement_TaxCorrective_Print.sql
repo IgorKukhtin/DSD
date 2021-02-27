@@ -95,7 +95,12 @@ BEGIN
      -- определяется <Налоговый документ> и его параметры
      SELECT COALESCE (tmpMovement.MovementId_TaxCorrective, 0) AS MovementId_TaxCorrective
           , Movement_TaxCorrective.StatusId                    AS StatusId_TaxCorrective
-          , CASE WHEN MovementDate_DateRegistered.ValueData > Movement_TaxCorrective.OperDate THEN MovementDate_DateRegistered.ValueData ELSE Movement_TaxCorrective.OperDate END AS OperDate_begin
+          , CASE WHEN (CURRENT_DATE >= '01.03.2021'  OR inSession = '5') AND COALESCE (MovementString_InvNumberRegistered.ValueData, '') = ''
+                      THEN '01.03.2021'
+                 WHEN MovementDate_DateRegistered.ValueData > Movement_TaxCorrective.OperDate
+                      THEN MovementDate_DateRegistered.ValueData
+                 ELSE Movement_TaxCorrective.OperDate
+            END AS OperDate_begin
           , COALESCE (ObjectBoolean_isLongUKTZED.ValueData, TRUE)    AS isLongUKTZED
             -- вид налоговой
           , MLO_DocumentTaxKind_tax.ObjectId  AS DocumentTaxKindId_tax
@@ -121,6 +126,9 @@ BEGIN
           LEFT JOIN MovementDate AS MovementDate_DateRegistered
                                  ON MovementDate_DateRegistered.MovementId = tmpMovement.MovementId_TaxCorrective
                                 AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
+          LEFT JOIN MovementString AS MovementString_InvNumberRegistered
+                                   ON MovementString_InvNumberRegistered.MovementId = tmpMovement.MovementId_TaxCorrective
+                                  AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = tmpMovement.MovementId_TaxCorrective
                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
