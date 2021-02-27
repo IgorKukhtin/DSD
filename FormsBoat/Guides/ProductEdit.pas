@@ -20,7 +20,8 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   dsdGuides, cxMaskEdit, cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
-  cxDropDownEdit, cxCalendar, cxCheckBox;
+  cxDropDownEdit, cxCalendar, cxCheckBox, dxSkinsdxBarPainter, dxBarExtItems,
+  dxBar, cxClasses, Vcl.ExtCtrls;
 
 type
   TProductEditForm = class(TParentForm)
@@ -78,7 +79,6 @@ type
     spGetCIN: TdsdStoredProc;
     actGetCIN: TdsdDataSetRefresh;
     spChangeStatus: TdsdStoredProc;
-    ceStatus: TcxButtonEdit;
     cxLabel8: TcxLabel;
     GuidesStatus: TdsdGuides;
     cxLabel17: TcxLabel;
@@ -88,6 +88,17 @@ type
     UnCompleteMovement: TChangeGuidesStatus;
     CompleteMovement: TChangeGuidesStatus;
     DeleteMovement: TChangeGuidesStatus;
+    Panel1: TPanel;
+    dxBarDockControl3: TdxBarDockControl;
+    BarManager: TdxBarManager;
+    BarManagerBar1: TdxBar;
+    bbCompleteMovement: TdxBarButton;
+    bbDeleteMovement: TdxBarButton;
+    bbDeleteDocument: TdxBarButton;
+    actUnComplete: TdsdChangeMovementStatus;
+    actComplete: TdsdChangeMovementStatus;
+    actSetErased: TdsdChangeMovementStatus;
+    ceStatus: TcxButtonEdit;
   private
     { Private declarations }
   public

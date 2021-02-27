@@ -3,7 +3,7 @@ object ProductEditForm: TProductEditForm
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1080'>'
   ClientHeight = 523
-  ClientWidth = 584
+  ClientWidth = 590
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -294,25 +294,6 @@ object ProductEditForm: TProductEditForm
     TabOrder = 35
     Width = 114
   end
-  object ceStatus: TcxButtonEdit
-    Left = 331
-    Top = 30
-    Properties.Buttons = <
-      item
-        Kind = bkGlyph
-      end
-      item
-        Default = True
-        Kind = bkGlyph
-      end
-      item
-        Kind = bkGlyph
-      end>
-    Properties.Images = dmMain.ImageList
-    Properties.ReadOnly = True
-    TabOrder = 36
-    Width = 239
-  end
   object cxLabel8: TcxLabel
     Left = 331
     Top = 8
@@ -327,7 +308,7 @@ object ProductEditForm: TProductEditForm
     Left = 331
     Top = 81
     Properties.ReadOnly = True
-    TabOrder = 39
+    TabOrder = 38
     Width = 114
   end
   object cxLabel18: TcxLabel
@@ -342,8 +323,47 @@ object ProductEditForm: TProductEditForm
     Properties.ReadOnly = True
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 41
+    TabOrder = 40
     Width = 114
+  end
+  object Panel1: TPanel
+    Left = 507
+    Top = 200
+    Width = 63
+    Height = 49
+    Caption = 'Panel1'
+    TabOrder = 41
+    Visible = False
+    object dxBarDockControl3: TdxBarDockControl
+      Left = 1
+      Top = 1
+      Width = 238
+      Height = 26
+      Align = dalNone
+      BarManager = BarManager
+    end
+  end
+  object ceStatus: TcxButtonEdit
+    Left = 331
+    Top = 30
+    Properties.Buttons = <
+      item
+        Action = CompleteMovement
+        Kind = bkGlyph
+      end
+      item
+        Action = UnCompleteMovement
+        Default = True
+        Kind = bkGlyph
+      end
+      item
+        Action = DeleteMovement
+        Kind = bkGlyph
+      end>
+    Properties.Images = dmMain.ImageList
+    Properties.ReadOnly = True
+    TabOrder = 46
+    Width = 216
   end
   object ActionList: TActionList
     Left = 232
@@ -442,6 +462,39 @@ object ProductEditForm: TProductEditForm
       ImageIndex = 13
       Status = mtDelete
       Guides = GuidesStatus
+    end
+    object actUnComplete: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <
+        item
+        end>
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 11
+      Status = mtUncomplete
+    end
+    object actComplete: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <
+        item
+        end>
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 12
+      Status = mtComplete
+    end
+    object actSetErased: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <
+        item
+        end>
+      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      ImageIndex = 13
+      Status = mtDelete
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -1199,8 +1252,8 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 460
-    Top = 24
+    Left = 524
+    Top = 14
   end
   object GuidesStatus: TdsdGuides
     KeyField = 'Id'
@@ -1210,7 +1263,60 @@ object ProductEditForm: TProductEditForm
     FormNameParam.MultiSelectSeparator = ','
     PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 391
-    Top = 24
+    Left = 471
+    Top = 14
+  end
+  object BarManager: TdxBarManager
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    Categories.Strings = (
+      'Default')
+    Categories.ItemsVisibles = (
+      2)
+    Categories.Visibles = (
+      True)
+    ImageOptions.Images = dmMain.ImageList
+    PopupMenuLinks = <>
+    UseSystemFont = True
+    Left = 416
+    Top = 1
+    DockControlHeights = (
+      0
+      0
+      0
+      0)
+    object BarManagerBar1: TdxBar
+      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      CaptionButtons = <>
+      DockControl = dxBarDockControl3
+      DockedDockControl = dxBarDockControl3
+      DockedLeft = 0
+      DockedTop = 0
+      FloatLeft = 651
+      FloatTop = 377
+      FloatClientWidth = 51
+      FloatClientHeight = 44
+      ItemLinks = <>
+      OneOnRow = True
+      Row = 0
+      UseOwnFont = False
+      Visible = True
+      WholeRow = False
+    end
+    object bbCompleteMovement: TdxBarButton
+      Action = CompleteMovement
+      Category = 0
+    end
+    object bbDeleteMovement: TdxBarButton
+      Action = DeleteMovement
+      Category = 0
+    end
+    object bbDeleteDocument: TdxBarButton
+      Action = UnCompleteMovement
+      Category = 0
+    end
   end
 end

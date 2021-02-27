@@ -229,7 +229,9 @@ uses
   IncomeJournalChoice in '..\..\FormsBoat\Document\IncomeJournalChoice.pas' {IncomeJournalChoiceForm: TParentForm},
   TaxKindEdit in '..\..\FormsBoat\Kind\TaxKindEdit.pas' {TaxKindEditForm: TParentForm},
   OrderClient in '..\..\FormsBoat\Document\OrderClient.pas' {OrderClientForm: TParentForm},
-  OrderClientJournal in '..\..\FormsBoat\Document\OrderClientJournal.pas' {OrderClientJournalForm: TParentForm};
+  OrderClientJournal in '..\..\FormsBoat\Document\OrderClientJournal.pas' {OrderClientJournalForm: TParentForm},
+  Medoc_J1201011 in '..\..\SOURCE\MeDOC\Medoc_J1201011.pas',
+  Medoc_J1201211 in '..\..\SOURCE\MeDOC\Medoc_J1201211.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
