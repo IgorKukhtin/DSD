@@ -165,7 +165,7 @@ type
     actSetErasedCost: TdsdChangeMovementStatus;
     actUnCompleteCost: TdsdChangeMovementStatus;
     spCheckDescService: TdsdStoredProc;
-    spCheckDescTransport: TdsdStoredProc;
+    spCheckDescInvoice: TdsdStoredProc;
     InsertRecordCost: TInsertRecord;
     CostJournalChoiceForm: TOpenChoiceForm;
   private

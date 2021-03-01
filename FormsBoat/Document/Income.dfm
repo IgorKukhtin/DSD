@@ -1519,10 +1519,10 @@ object IncomeForm: TIncomeForm
       Category = 'OpenForm'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spCheckDescTransport
+      StoredProc = spCheckDescInvoice
       StoredProcList = <
         item
-          StoredProc = spCheckDescTransport
+          StoredProc = spCheckDescInvoice
         end>
       Caption = 'actCheckRight'
     end
@@ -1672,6 +1672,7 @@ object IncomeForm: TIncomeForm
     end
     object macOpenFormInvoice: TMultiAction
       Category = 'OpenForm'
+      TabSheet = cxTabSheetCost
       MoveParams = <>
       Enabled = False
       ActionList = <
@@ -2809,7 +2810,7 @@ object IncomeForm: TIncomeForm
     Left = 920
     Top = 256
   end
-  object spCheckDescTransport: TdsdStoredProc
+  object spCheckDescInvoice: TdsdStoredProc
     StoredProcName = 'gpCheckDesc_Movement_IncomeCost'
     DataSets = <>
     OutputType = otResult
