@@ -298,6 +298,9 @@ BEGIN
                                        , inTaxKindId, inTaxValue
                                        , TRUE, TRUE
                                         );
+        -- сохранили партию
+        UPDATE MovementItem SET PartionId = inMovementItemId WHERE MovementItem.Id = inMovementItemId;
+
    --ELSE
          -- !!!не забыли - проверили что НЕТ движения, тогда инфу в партии можно менять!!!
          -- PERFORM lpCheck ...
