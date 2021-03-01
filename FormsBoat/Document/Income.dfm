@@ -944,6 +944,10 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementCostProtocolOpenForm'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1069,6 +1073,10 @@ object IncomeForm: TIncomeForm
     end
     object bbOpenFormService: TdxBarButton
       Action = macOpenFormService
+      Category = 0
+    end
+    object bbMovementCostProtocolOpenForm: TdxBarButton
+      Action = MovementCostProtocolOpenForm
       Category = 0
     end
   end
@@ -1376,6 +1384,38 @@ object IncomeForm: TIncomeForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object MovementCostProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetCost
+      MoveParams = <>
+      Enabled = False
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1079#1072#1090#1088#1072#1090'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1079#1072#1090#1088#1072#1090'>'
+      ImageIndex = 34
+      FormName = 'TMovementProtocolForm'
+      FormNameParam.Value = 'TMovementProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = CostCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = CostCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>

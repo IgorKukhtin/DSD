@@ -168,6 +168,8 @@ type
     spCheckDescInvoice: TdsdStoredProc;
     InsertRecordCost: TInsertRecord;
     CostJournalChoiceForm: TOpenChoiceForm;
+    MovementCostProtocolOpenForm: TdsdOpenForm;
+    bbMovementCostProtocolOpenForm: TdxBarButton;
   private
   public
   end;
