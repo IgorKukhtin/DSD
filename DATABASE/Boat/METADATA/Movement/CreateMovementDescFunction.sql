@@ -54,6 +54,10 @@ CREATE OR REPLACE FUNCTION zc_Movement_OrderClient() RETURNS Integer AS $BODY$BE
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_OrderClient', 'Заказ Клиента' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_OrderClient');
 
+CREATE OR REPLACE FUNCTION zc_Movement_IncomeCost() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_IncomeCost'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_IncomeCost', 'Затраты' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_IncomeCost');
+
 
 
 /*-------------------------------------------------------------------------------

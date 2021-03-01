@@ -231,7 +231,9 @@ uses
   OrderClient in '..\..\FormsBoat\Document\OrderClient.pas' {OrderClientForm: TParentForm},
   OrderClientJournal in '..\..\FormsBoat\Document\OrderClientJournal.pas' {OrderClientJournalForm: TParentForm},
   Medoc_J1201011 in '..\..\SOURCE\MeDOC\Medoc_J1201011.pas',
-  Medoc_J1201211 in '..\..\SOURCE\MeDOC\Medoc_J1201211.pas';
+  Medoc_J1201211 in '..\..\SOURCE\MeDOC\Medoc_J1201211.pas',
+  IncomeCostJournal in '..\..\FormsBoat\Document\IncomeCostJournal.pas' {IncomeCostJournalForm: TParentForm},
+  IncomeCost in '..\..\FormsBoat\Document\IncomeCost.pas' {IncomeCostForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

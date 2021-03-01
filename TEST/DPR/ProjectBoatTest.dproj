@@ -757,6 +757,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201011.pas"/>
 			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201211.pas"/>
+			<DCCReference Include="..\..\FormsBoat\Document\IncomeCostJournal.pas">
+				<Form>IncomeCostJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Document\IncomeCost.pas">
+				<Form>IncomeCostForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

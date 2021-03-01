@@ -43,6 +43,8 @@ BEGIN
                     FROM Object_Contract_View
                     WHERE Object_Contract_View.isErased = FALSE
                       AND Object_Contract_View.EndDate >= CURRENT_DATE
+                      AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                      AND Object_Contract_View.isErased = FALSE
                    )
 
        -- по inOrderFinanceId выбираем статьи, которые отображать в документе
@@ -198,6 +200,8 @@ BEGIN
                    FROM Object_Contract_View
                    WHERE Object_Contract_View.isErased = FALSE
                      AND Object_Contract_View.EndDate >= CURRENT_DATE
+                     AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                     AND Object_Contract_View.isErased = FALSE
                   )
 
 
