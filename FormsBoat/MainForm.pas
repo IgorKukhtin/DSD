@@ -220,6 +220,8 @@ type
     actTaxKindEdit: TdsdOpenForm;
     miTaxKindEdit: TMenuItem;
     N13: TMenuItem;
+    actIncomeCost: TdsdOpenForm;
+    N14: TMenuItem;
   private
     { Private declarations }
   public

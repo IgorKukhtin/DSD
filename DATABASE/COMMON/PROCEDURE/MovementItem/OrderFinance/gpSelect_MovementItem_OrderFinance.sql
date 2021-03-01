@@ -27,6 +27,7 @@ $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbOrderFinanceId Integer;
   DECLARE vbBankAccountMainId Integer;
+  DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_OrderFinance());
@@ -45,6 +46,12 @@ BEGIN
                              WHERE MovementLinkObject.MovementId = inMovementId
                                AND MovementLinkObject.DescId = zc_MovementLinkObject_BankAccount()
                             );
+     vbOperDate := (SELECT Movement.OperDate
+                    FROM Movement
+                    WHERE Movement.Id = inMovementId
+                    );
+
+
 --   select DISCTINCT zc_ObjectLink_Contract_Juridical если zc_ObjectLink_Contract_InfoMoney соответсвует соотвю списку полученному из zc_ObjectLink_OrderFinanceProperty_Object
      
      RETURN QUERY
@@ -87,7 +94,46 @@ BEGIN
                                      )
                                      */
                                      
-     tmpJuridicalOrderFinance AS (SELECT DISTINCT
+          -- если в справ. назначение платежа пусто, надо дл€ таких договоров на показать все делать поиск последнего из банковской выписки, за последний мес€ц
+          tmp_Comment AS (SELECT *
+                          FROM (SELECT DISTINCT
+                                       Object_MoneyPlace.Id               AS JuridicalId
+                                     , MILinkObject_InfoMoney.ObjectId    AS InfoMoneyId
+                                     , MovementItem.ObjectId              AS BankAccountId_main
+                                     , MILinkObject_BankAccount.ObjectId  AS BankAccountId
+                                     , MIString_Comment.ValueData         AS Comment
+                                     , ROW_NUMBER() OVER (Partition by  Object_MoneyPlace.Id, MILinkObject_InfoMoney.ObjectId, MovementItem.ObjectId ORDER BY Movement.Id DESC ) AS Ord_byComment   -- комментарий последнего документа
+                                FROM Movement
+                                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
+                                                            AND MovementItem.DescId = zc_MI_Master()
+                                                            AND COALESCE (MovementItem.Amount,0) < 0
+
+                                     LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                                                      ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                                                     AND MILinkObject_MoneyPlace.DescId         = zc_MILinkObject_MoneyPlace()
+                                     INNER JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = MILinkObject_MoneyPlace.ObjectId
+                                                                        AND Object_MoneyPlace.DescId = zc_Object_Juridical()
+
+                                     LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                                                      ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                                                     AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                                     INNER JOIN MovementItemLinkObject AS MILinkObject_BankAccount
+                                                                      ON MILinkObject_BankAccount.MovementItemId = MovementItem.Id
+                                                                     AND MILinkObject_BankAccount.DescId = zc_MILinkObject_BankAccount()
+
+                                     LEFT JOIN MovementItemString AS MIString_Comment
+                                                                  ON MIString_Comment.MovementItemId = MovementItem.Id
+                                                                 AND MIString_Comment.DescId = zc_MIString_Comment()
+                
+                                WHERE Movement.DescId = zc_Movement_BankAccount()
+                                  AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '1 MONTH' AND vbOperDate
+                                  AND Movement.StatusId = zc_Enum_Status_Complete()
+                                  AND MovementItem.ObjectId = vbBankAccountMainId   --4529011   --  р/сч. ќ“ѕ банк
+                                ) AS tmp
+                          WHERE tmp.Ord_byComment = 1
+                          )
+
+   , tmpJuridicalOrderFinance AS (SELECT DISTINCT
                                          tmp.BankAccountId
                                        , tmp.JuridicalId
                                        , tmp.InfoMoneyId
@@ -104,7 +150,7 @@ BEGIN
                       , ObjectLink_Contract_InfoMoney.ObjectId      AS ContractId
                       , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
                       , tmpJuridicalOrderFinance.BankAccountId      AS BankAccountId
-                      , tmpJuridicalOrderFinance.Comment            AS Comment
+                      , COALESCE (tmpJuridicalOrderFinance.Comment, tmp_Comment.Comment) ::TVarChar AS Comment
                  FROM ObjectLink AS ObjectLink_Contract_InfoMoney
                       LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                            ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Contract_InfoMoney.ObjectId
@@ -112,6 +158,9 @@ BEGIN
 
                       INNER JOIN tmpJuridicalOrderFinance ON tmpJuridicalOrderFinance.JuridicalId = ObjectLink_Contract_Juridical.ChildObjectId
                                                          AND tmpJuridicalOrderFinance.InfoMoneyId = ObjectLink_Contract_InfoMoney.ChildObjectId
+
+                      LEFT JOIN tmp_Comment ON tmp_Comment.JuridicalId = ObjectLink_Contract_Juridical.ChildObjectId
+                                           AND tmp_Comment.InfoMoneyId = ObjectLink_Contract_InfoMoney.ChildObjectId
                  WHERE ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
                 )
 
@@ -214,7 +263,8 @@ BEGIN
            , Partner_BankAccount_View.Id      AS BankAccountId
            , Partner_BankAccount_View.Name    AS BankAccountName
 
-           , COALESCE (tmpMI.Comment, tmpData.Comment) ::TVarChar AS Comment
+           --, COALESCE (tmpMI.Comment, tmpData.Comment) ::TVarChar AS Comment
+           , CASE WHEN COALESCE (tmpMI.Comment,'') = '' THEN COALESCE (tmpData.Comment,'') ELSE COALESCE (tmpMI.Comment,'') END ::TVarChar AS Comment
 
            , tmpMI.InsertName
            , tmpMI.UpdateName
@@ -253,7 +303,6 @@ BEGIN
            */
             LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = tmpData.ContractId
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = View_Contract.PaidKindId
-            
             ;
        ELSE
      -- –езультат такой

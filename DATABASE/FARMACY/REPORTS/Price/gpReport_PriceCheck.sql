@@ -123,6 +123,7 @@ BEGIN
             isResolution_224      Boolean Not Null Default False,
             isTop                 Boolean Not Null Default False,
             isPromoBonus          Boolean Not Null Default False,
+            PromoBonus            TFloat,
             PercentMarkup         TFloat,
             PriceTop              TFloat,
             isSP                  Boolean Not Null Default False,
@@ -158,7 +159,7 @@ BEGIN
                      AND MovementItem.isErased = False
                      AND MovementItem.Amount > 0)
                          
-    INSERT INTO tmpResult (GoodsId, GoodsCode, GoodsName, isResolution_224, isTop, isPromoBonus, PercentMarkup, PriceTop, isSP, isPromo,
+    INSERT INTO tmpResult (GoodsId, GoodsCode, GoodsName, isResolution_224, isTop, isPromoBonus, PromoBonus, PercentMarkup, PriceTop, isSP, isPromo,
                            UnitCount, BadPriceCount, isBadPriceUser, BadPricePlus, BadPriceMinus, PriceAverage, PriceMin, PriceMax)
     SELECT tmpUnitPrice.GoodsId
          , Object_Goods.ObjectCode       AS GoodsCode
@@ -166,6 +167,7 @@ BEGIN
          , Object_Goods.isResolution_224
          , Object_Goods_Retail.IsTop
          , COALESCE (SUM(PromoBonus.Amount), 0) > 0  AS isPromoBonus
+         , Max(PromoBonus.Amount)                    AS PromoBonus
          , CASE WHEN Object_Goods_Retail.IsTop = TRUE THEN Object_Goods_Retail.PercentMarkup END
          , CASE WHEN Object_Goods_Retail.IsTop = TRUE THEN Object_Goods_Retail.Price END
          , False

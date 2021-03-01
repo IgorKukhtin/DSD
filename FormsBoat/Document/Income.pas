@@ -125,7 +125,7 @@ type
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
     spInsertUpdateMovement_Params: TdsdStoredProc;
-    bbInsertRecord: TdxBarButton;
+    bbInsertRecordCost: TdxBarButton;
     bbCompleteCost: TdxBarButton;
     bbactUnCompleteCost: TdxBarButton;
     bbactSetErasedCost: TdxBarButton;
@@ -138,11 +138,11 @@ type
     bbPrintStickerTermo: TdxBarButton;
     bbMIContainerCost: TdxBarButton;
     actCheckDescService: TdsdExecStoredProc;
-    actCheckDescTransport: TdsdExecStoredProc;
+    actCheckDescInvoice: TdsdExecStoredProc;
     actOpenFormService: TdsdOpenForm;
-    actOpenFormTransport: TdsdOpenForm;
+    actOpenFormInvoice: TdsdOpenForm;
     macOpenFormService: TMultiAction;
-    macOpenFormTransport: TMultiAction;
+    macOpenFormInvoice: TMultiAction;
     bbOpenFormTransport: TdxBarButton;
     bbOpenFormService: TdxBarButton;
     cxLabel10: TcxLabel;
@@ -153,6 +153,23 @@ type
     GuidesInvoice: TdsdGuides;
     cxLabel9: TcxLabel;
     ceComment_Invoice: TcxTextEdit;
+    spUnComplete_IncomeCost: TdsdStoredProc;
+    spComplete_IncomeCost: TdsdStoredProc;
+    spSetErased_IncomeCost: TdsdStoredProc;
+    spSelect_IncomeCost_byParent: TdsdStoredProc;
+    spInsertUpdate_IncomeCost: TdsdStoredProc;
+    CostDS: TDataSource;
+    CostCDS: TClientDataSet;
+    actUpdateClientDataCost: TdsdUpdateDataSet;
+    actCompleteCost: TdsdChangeMovementStatus;
+    actSetErasedCost: TdsdChangeMovementStatus;
+    actUnCompleteCost: TdsdChangeMovementStatus;
+    spCheckDescService: TdsdStoredProc;
+    spCheckDescInvoice: TdsdStoredProc;
+    InsertRecordCost: TInsertRecord;
+    CostJournalChoiceForm: TOpenChoiceForm;
+    MovementCostProtocolOpenForm: TdsdOpenForm;
+    bbMovementCostProtocolOpenForm: TdxBarButton;
   private
   public
   end;

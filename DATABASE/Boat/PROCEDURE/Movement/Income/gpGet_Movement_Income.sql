@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
              , OperDate TDateTime, OperDatePartner TDateTime
              , StatusCode Integer, StatusName TVarChar
              , PriceWithVAT Boolean
-             , VATPercent TFloat, ChangePercent TFloat
+             , VATPercent TFloat, DiscountTax TFloat
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -41,7 +41,7 @@ BEGIN
              , Object_Status.Name        AS StatusName
              , CAST (False as Boolean)   AS PriceWithVAT
              , CAST (0 as TFloat)        AS VATPercent
-             , CAST (0 as TFloat)        AS ChangePercent
+             , CAST (0 as TFloat)        AS DiscountTax
              , 0                         AS FromId
              , CAST ('' AS TVarChar)     AS FromName
              , 0                         AS ToId
@@ -69,7 +69,7 @@ BEGIN
 
           , MovementBoolean_PriceWithVAT.ValueData    AS PriceWithVAT
           , MovementFloat_VATPercent.ValueData        AS VATPercent
-          , MovementFloat_ChangePercent.ValueData     AS ChangePercent
+          , MovementFloat_DiscountTax.ValueData       AS DiscountTax
 
           , Object_From.Id                            AS FromId
           , Object_From.ValueData                     AS FromName
@@ -112,9 +112,9 @@ BEGIN
                                     ON MovementFloat_VATPercent.MovementId = Movement_Income.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
     
-            LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
-                                    ON MovementFloat_ChangePercent.MovementId = Movement_Income.Id
-                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+            LEFT JOIN MovementFloat AS MovementFloat_DiscountTax
+                                    ON MovementFloat_DiscountTax.MovementId = Movement_Income.Id
+                                   AND MovementFloat_DiscountTax.DescId = zc_MovementFloat_DiscountTax()
     
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId = Movement_Income.Id

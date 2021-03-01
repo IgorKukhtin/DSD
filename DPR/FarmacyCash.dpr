@@ -135,7 +135,10 @@ uses
   ChoosingRelatedProduct in '..\FormsFarmacy\Cash\ChoosingRelatedProduct.pas' {ChoosingRelatedProductForm},
   EditFromDirectory in '..\FormsFarmacy\Cash\EditFromDirectory.pas' {EditFromDirectoryForm: TParentForm},
   HardwareDialog in '..\FormsFarmacy\Cash\HardwareDialog.pas' {HardwareDialogForm},
-  UnitTreeCash in '..\FormsFarmacy\Cash\UnitTreeCash.pas' {UnitTreeCashForm: TParentForm};
+  UnitTreeCash in '..\FormsFarmacy\Cash\UnitTreeCash.pas' {UnitTreeCashForm: TParentForm},
+  LikiDniproReceiptDialog in '..\FormsFarmacy\Cash\LikiDniproReceiptDialog.pas' {LikiDniproReceiptDialogForm: TParentForm},
+  EnterRecipeNumber1303 in '..\FormsFarmacy\Cash\EnterRecipeNumber1303.pas' {EnterRecipeNumber1303Form},
+  LikiDniproReceipt in '..\FormsFarmacy\Cash\LikiDniproReceipt.pas';
 
 {$R *.res}
 

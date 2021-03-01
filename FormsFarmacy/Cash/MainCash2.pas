@@ -548,6 +548,15 @@ type
     PlanEmployeeCDS: TClientDataSet;
     actInstructionsCash: TdsdOpenForm;
     N57: TMenuItem;
+    actRecipeNumber1303: TAction;
+    N13031: TMenuItem;
+    pnlPosition: TPanel;
+    cmPosition: TcxMemo;
+    edName_inn_ua: TcxTextEdit;
+    edName_reg_ua: TcxTextEdit;
+    edCommentPosition: TcxTextEdit;
+    bbPositionNext: TcxButton;
+    cbMorionFilter: TcxCheckBox;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -693,6 +702,8 @@ type
       ARecord: TcxCustomGridRecord; ACellViewInfo: TcxGridTableDataCellViewInfo;
       const AMousePos: TPoint; var AHintText: TCaption;
       var AIsHintMultiLine: Boolean; var AHintTextRect: TRect);
+    procedure actRecipeNumber1303Execute(Sender: TObject);
+    procedure bbPositionNextClick(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: Boolean;
@@ -874,6 +885,7 @@ type
     procedure ClearDistributionPromo;
     procedure AddDistributionPromo(AID : Integer; AAmount, ASumm : Currency);
     function ShowDistributionPromo : Boolean;
+    function SetMorionCodeFilter : boolean;
   end;
 
 var
@@ -906,7 +918,8 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog,
   EmployeeScheduleCash, SelectionFromDirectory,
   EnterLoyaltyNumber, Report_ImplementationPlanEmployeeCash,
   EnterLoyaltySaveMoney, ChoosingPresent, ChoosingRelatedProduct,
-  LoyaltySMList, EnterLoyaltySMDiscount, GetSystemInfo, ListSelection;
+  LoyaltySMList, EnterLoyaltySMDiscount, GetSystemInfo, ListSelection,
+  LikiDniproReceipt, EnterRecipeNumber1303, LikiDniproReceiptDialog;
 
 const
   StatusUnCompleteCode = 1;
@@ -1468,6 +1481,7 @@ begin
   lblLoyaltySMBuyer.Caption := '';
   edLoyaltySMSummaRemainder.Value := 0;
   edLoyaltySMSumma.Value := 0;
+  pnlPosition.Visible := False;
 
   MainGridDBTableView.DataController.Filter.Clear;
   CheckGridDBTableView.DataController.Filter.Clear;
@@ -3462,6 +3476,48 @@ begin
     ShapeState.Brush.Color := clGreen;
     ShapeState.Repaint;
   end;
+end;
+
+procedure TMainCashForm2.actRecipeNumber1303Execute(Sender: TObject);
+  var S : string;
+begin
+  if not CheckSP then
+    exit;
+
+  if pnlHelsiError.Visible then
+  begin
+    ShowMessage('Обработайте непогашенный чек Хелси!');
+    exit;
+  end;
+
+  if (not CheckCDS.isempty) and (Self.FormParams.ParamByName('InvNumberSP')
+    .Value = '') or pnlManualDiscount.Visible or pnlPromoCode.Visible or
+    pnlSiteDiscount.Visible then
+  Begin
+    ShowMessage('Текущий чек не пустой. Сначала очистите чек!');
+    exit;
+  End;
+
+  if pnlPromoCode.Visible or pnlPromoCodeLoyalty.Visible then
+  begin
+    ShowMessage('В текущем чеке применен промокод. Сначала очистите чек!');
+    exit;
+  end;
+
+  if pnlPosition.Visible then pnlPosition.Visible := False;
+
+  S := '1046-1238-FC-0655';
+  if not InputEnterRecipeNumber1303(S) then Exit;
+
+  if GetReceipt1303(S) then
+  begin
+    if LikiDniproReceiptApi.Recipe.FRecipe_Type in [2, 3] then
+    begin
+      if not ShowLikiDniproReceiptDialog then Exit;
+      bbPositionNextClick(Sender);
+    end else ShowMessage('Тип рецепта не поддерживаеться.');
+  end;
+
 end;
 
 procedure TMainCashForm2.actRefreshAllExecute(Sender: TObject);
@@ -6526,6 +6582,68 @@ begin
   SetPromoCodeLoyaltySM(0, '', '', 0, 0);
 end;
 
+function TMainCashForm2.SetMorionCodeFilter : boolean;
+  var S : string; I : Integer; Res: TArray<string>;
+begin
+  if LikiDniproReceiptApi.PositionCDS.FieldByName('id_morion').AsString <> '' then
+  begin
+    Res := TRegEx.Split(LikiDniproReceiptApi.PositionCDS.FieldByName('id_morion').AsString, ',');
+    S := '';
+    for I := 0 to High(Res) do
+      if I = 0 then
+        S := S + 'MorionCode = ' + Res[I]
+      else S := S + ' or MorionCode = ' + Res[I];
+
+    RemainsCDS.DisableControls;
+    try
+      RemainsCDS.Filtered := False;
+      if RemainsCDS.RecordCount = 0 then RemainsCDS.Filter := 'Remains <> 0 and (' + S + ')';
+      RemainsCDS.Filtered := True;
+    finally
+      if RemainsCDS.RecordCount = 0 then
+      begin
+        RemainsCDS.Filtered := False;
+        RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0';
+        RemainsCDS.Filtered := True;
+      end;
+      RemainsCDS.EnableControls;
+    end;
+  end else
+  begin
+    cbMorionFilter.Enabled := False;
+    cbMorionFilter.Checked := False;
+  end;
+end;
+
+procedure TMainCashForm2.bbPositionNextClick(Sender: TObject);
+begin
+  inherited;
+  if not pnlPosition.Visible then
+  begin
+    pnlPosition.Visible := True;
+    LikiDniproReceiptApi.PositionCDS.First;
+  end else
+  begin
+    LikiDniproReceiptApi.PositionCDS.Next;
+    if LikiDniproReceiptApi.PositionCDS.Eof then
+    begin
+      pnlPosition.Visible := False;
+      Exit;
+    end;
+  end;
+
+  cmPosition.Text := LikiDniproReceiptApi.PositionCDS.FieldByName('position').AsString;
+  edName_inn_ua.Text := LikiDniproReceiptApi.PositionCDS.FieldByName('name_inn_ua').AsString;
+  edName_reg_ua.Text := LikiDniproReceiptApi.PositionCDS.FieldByName('name_reg_ua').AsString;
+  edCommentPosition.Text := LikiDniproReceiptApi.PositionCDS.FieldByName('comment').AsString +
+                            '. Выписано: ' + LikiDniproReceiptApi.PositionCDS.FieldByName('drugs_need_bought').AsString +
+                            IfThen(LikiDniproReceiptApi.PositionCDS.FieldByName('doctor_recommended_manufacturer').AsString = '', '',
+                            '. Рек. произв. ' + LikiDniproReceiptApi.PositionCDS.FieldByName('doctor_recommended_manufacturer').AsString);
+
+  SetMorionCodeFilter;
+
+end;
+
 procedure TMainCashForm2.edAmountExit(Sender: TObject);
 begin
   edAmount.Enabled := false;
@@ -8475,6 +8593,8 @@ begin
   edSiteDiscount.Value := 0;
   DiscountServiceForm.gCode := 0;
   DiscountServiceForm.isBeforeSale := False;
+  pnlPosition.Visible := false;
+
   pnlLoyaltySaveMoney.Visible := false;
   lblLoyaltySMBuyer.Caption := '';
   edLoyaltySMSummaRemainder.Value := 0;

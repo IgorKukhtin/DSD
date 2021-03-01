@@ -171,6 +171,8 @@ type
     actContractChoiceForm_JurOrdFin: TOpenChoiceForm;
     bbInsertRecord_JurOrdFin: TdxBarButton;
     chComment: TcxGridDBColumn;
+    ProtocolOpenFormJOF: TdsdOpenForm;
+    bb: TdxBarButton;
   private
   public
   end;

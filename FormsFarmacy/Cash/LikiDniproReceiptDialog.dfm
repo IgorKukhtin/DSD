@@ -1,46 +1,143 @@
 inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
-  Caption = #1042#1099#1073#1086#1088' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074' - '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090
-  ClientHeight = 227
-  ClientWidth = 577
+  Caption = #1042#1099#1073#1086#1088' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074' '#1088#1077#1094#1077#1087#1090#1072
+  ClientHeight = 263
+  ClientWidth = 526
   Position = poScreenCenter
-  ExplicitWidth = 583
-  ExplicitHeight = 256
+  AddOnFormData.RefreshAction = nil
+  ExplicitWidth = 532
+  ExplicitHeight = 292
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel [0]
     Left = 0
     Top = 0
-    Width = 577
-    Height = 103
-    Align = alClient
+    Width = 526
+    Height = 73
+    Align = alTop
     ShowCaption = False
     TabOrder = 0
+    object Label3: TLabel
+      Left = 105
+      Top = 43
+      Width = 89
+      Height = 13
+      Caption = #1042#1080#1076' '#1089#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072':'
+    end
+    object cxLabel13: TcxLabel
+      Left = 200
+      Top = 1
+      Caption = #1044#1072#1090#1072' '#1088#1077#1094#1077#1087#1090#1072
+    end
+    object cxLabel14: TcxLabel
+      Left = 24
+      Top = 1
+      Caption = #1053#1086#1084#1077#1088' '#1088#1077#1094#1077#1087#1090#1072
+    end
+    object edRecipe_Number: TcxTextEdit
+      Left = 24
+      Top = 18
+      TabStop = False
+      Enabled = False
+      Properties.ReadOnly = True
+      StyleDisabled.TextColor = clWindowText
+      TabOrder = 2
+      Width = 170
+    end
+    object edCreated: TcxDateEdit
+      Left = 200
+      Top = 18
+      TabStop = False
+      EditValue = 42261d
+      Enabled = False
+      Properties.ReadOnly = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      StyleDisabled.TextColor = clWindowText
+      TabOrder = 3
+      Width = 90
+    end
+    object edSPKind: TcxButtonEdit
+      Left = 200
+      Top = 40
+      Enabled = False
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.Nullstring = '<'#1044#1083#1103' '#1074#1099#1073#1086#1088#1072' '#1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1075#1086' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1103' '#1085#1072#1078#1084#1080#1090#1077' [Ctrl+Enter]>'
+      Properties.ReadOnly = True
+      Properties.UseNullString = True
+      Style.Color = clWindow
+      StyleDisabled.Color = clWindow
+      StyleDisabled.TextColor = clWindowText
+      TabOrder = 4
+      Width = 282
+    end
+    object edValid_From: TcxDateEdit
+      Left = 296
+      Top = 18
+      TabStop = False
+      EditValue = 42261d
+      Enabled = False
+      Properties.ReadOnly = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      StyleDisabled.TextColor = clWindowText
+      TabOrder = 5
+      Width = 90
+    end
+    object cxLabel1: TcxLabel
+      Left = 296
+      Top = 1
+      Caption = #1044#1072#1090#1072' '#1074#1099#1087#1080#1089#1082#1080' '
+    end
+    object edValid_To: TcxDateEdit
+      Left = 392
+      Top = 18
+      TabStop = False
+      EditValue = 42261d
+      Enabled = False
+      Properties.ReadOnly = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      StyleDisabled.TextColor = clWindowText
+      TabOrder = 7
+      Width = 90
+    end
+    object cxLabel2: TcxLabel
+      Left = 392
+      Top = 1
+      Caption = #1057#1088#1086#1082' '#1076#1077#1081#1089#1090#1074#1080#1103
+    end
+  end
+  object Panel2: TPanel [1]
+    Left = 0
+    Top = 73
+    Width = 526
+    Height = 148
+    Align = alClient
+    ShowCaption = False
+    TabOrder = 1
     object Label1: TLabel
-      Left = 16
-      Top = 8
+      Left = 25
+      Top = 10
       Width = 138
       Height = 13
       Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077':'
     end
     object Label2: TLabel
       Left = 25
-      Top = 58
+      Top = 69
       Width = 56
       Height = 13
       Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072
     end
-    object Label3: TLabel
-      Left = 297
-      Top = 8
-      Width = 89
-      Height = 13
-      Caption = #1042#1080#1076' '#1089#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072':'
-    end
     object cePartnerMedical: TcxButtonEdit
-      Left = 16
-      Top = 27
+      Left = 25
+      Top = 45
       Properties.Buttons = <
         item
           Default = True
@@ -49,179 +146,128 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       Properties.Nullstring = '<'#1044#1083#1103' '#1074#1099#1073#1086#1088#1072' '#1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1075#1086' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1103' '#1085#1072#1078#1084#1080#1090#1077' [Ctrl+Enter]>'
       Properties.ReadOnly = True
       Properties.UseNullString = True
-      Properties.OnChange = cePartnerMedicalPropertiesChange
       TabOrder = 0
       Text = '<'#1044#1083#1103' '#1074#1099#1073#1086#1088#1072' '#1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1075#1086' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1103' '#1085#1072#1078#1084#1080#1090#1077' [Ctrl+Enter]>'
-      Width = 265
+      Width = 470
     end
-    object cxLabel13: TcxLabel
-      Left = 473
-      Top = 54
-      Caption = #1044#1072#1090#1072' '#1088#1077#1094#1077#1087#1090#1072
-    end
-    object cxLabel14: TcxLabel
-      Left = 297
-      Top = 56
-      Caption = #1053#1086#1084#1077#1088' '#1088#1077#1094#1077#1087#1090#1072
-    end
-    object cxLabel17: TcxLabel
-      Left = 406
-      Top = 4
-      Caption = #8470' '#1072#1084#1073#1091#1083#1072#1090#1086#1088#1080#1080' '
-      Visible = False
-    end
-    object edAmbulance: TcxTextEdit
-      Left = 447
-      Top = 0
-      Properties.ReadOnly = False
-      TabOrder = 4
-      Visible = False
-      Width = 116
-    end
-    object edInvNumberSP: TcxTextEdit
-      Left = 297
-      Top = 76
-      Properties.ReadOnly = False
-      TabOrder = 5
-      Width = 170
-    end
-    object edMedicSP: TcxButtonEdit
-      Left = 16
-      Top = 76
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      Properties.UseNullString = True
-      TabOrder = 6
-      Text = '<'#1044#1083#1103' '#1074#1099#1073#1086#1088#1072' '#1060#1048#1054' '#1074#1088#1072#1095#1072' '#1085#1072#1078#1084#1080#1090#1077' [Ctrl+Enter]>'
-      Width = 265
-    end
-    object edOperDateSP: TcxDateEdit
-      Left = 473
-      Top = 76
-      EditValue = 42261d
-      Properties.ReadOnly = False
-      Properties.SaveTime = False
-      Properties.ShowTime = False
-      TabOrder = 7
-      Width = 90
-    end
-    object edSPKind: TcxButtonEdit
-      Left = 297
-      Top = 27
-      ParentColor = True
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.Nullstring = '<'#1044#1083#1103' '#1074#1099#1073#1086#1088#1072' '#1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1075#1086' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1103' '#1085#1072#1078#1084#1080#1090#1077' [Ctrl+Enter]>'
-      Properties.ReadOnly = True
-      Properties.UseNullString = True
-      Properties.OnChange = edSPKindPropertiesChange
-      TabOrder = 8
-      Text = '<'#1044#1083#1103' '#1074#1099#1073#1086#1088#1072' '#1042#1080#1076#1072' '#1089#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072' '#1085#1072#1078#1084#1080#1090#1077' [Ctrl+Enter]>'
-      Width = 266
-    end
-  end
-  object Panel2: TPanel [1]
-    Left = 0
-    Top = 103
-    Width = 577
-    Height = 124
-    Align = alBottom
-    ShowCaption = False
-    TabOrder = 1
     object cxLabel22: TcxLabel
-      Left = 16
-      Top = 1
+      Left = 263
+      Top = 65
       Caption = #1060#1048#1054' '#1087#1072#1094#1080#1077#1085#1090#1072
     end
-    object cxLabel23: TcxLabel
-      Left = 249
-      Top = 1
-      Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1087#1072#1094'-'#1090#1072
+    object edInstitution_Name: TcxTextEdit
+      Left = 25
+      Top = 23
+      TabStop = False
+      Enabled = False
+      Properties.ReadOnly = True
+      Style.BorderStyle = ebsNone
+      StyleDisabled.BorderStyle = ebsNone
+      StyleDisabled.Color = clBtnFace
+      StyleDisabled.TextColor = clHotLight
+      TabOrder = 2
+      Width = 470
     end
-    object cxLabel24: TcxLabel
-      Left = 352
-      Top = 1
-      Caption = #1053#1086#1084#1077#1088'/'#1089#1077#1088#1080#1103' '#1087#1072#1089#1087#1086#1088#1090#1072' '#1087#1072#1094'-'#1090#1072
-    end
-    object cxLabel25: TcxLabel
-      Left = 16
-      Top = 40
-      Caption = #1048#1053#1053' '#1087#1072#1094#1080#1077#1085#1090#1072
-    end
-    object cxLabel26: TcxLabel
-      Left = 117
-      Top = 40
-      Caption = #1040#1076#1088#1077#1089' '#1087#1072#1094#1080#1077#1085#1090#1072
-    end
-    object edMemberSP: TcxButtonEdit
-      Left = 16
-      Top = 17
+    object edMedicSP: TcxButtonEdit
+      Left = 25
+      Top = 111
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
+      Properties.UseNullString = True
+      TabOrder = 3
+      Text = '<'#1044#1083#1103' '#1074#1099#1073#1086#1088#1072' '#1060#1048#1054' '#1074#1088#1072#1095#1072' '#1085#1072#1078#1084#1080#1090#1077' [Ctrl+Enter]>'
+      Width = 232
+    end
+    object edMemberSP: TcxButtonEdit
+      Left = 263
+      Top = 111
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 4
+      Text = '<'#1044#1083#1103' '#1074#1099#1073#1086#1088#1072' '#1060#1048#1054' '#1087#1072#1094#1080#1077#1085#1090#1072' '#1085#1072#1078#1084#1080#1090#1077' [Ctrl+Enter]>'
+      Width = 232
+    end
+    object edPatient_Name: TcxTextEdit
+      Left = 263
+      Top = 84
+      TabStop = False
+      Enabled = False
+      Properties.ReadOnly = True
+      Style.BorderStyle = ebsNone
+      StyleDisabled.BorderStyle = ebsNone
+      StyleDisabled.Color = clBtnFace
+      StyleDisabled.TextColor = clHotLight
       TabOrder = 5
-      Width = 227
+      Width = 232
     end
-    object edPassport: TcxTextEdit
-      Left = 352
-      Top = 17
+    object rdDoctor_Name: TcxTextEdit
+      Left = 26
+      Top = 82
+      TabStop = False
+      Enabled = False
       Properties.ReadOnly = True
+      Style.BorderStyle = ebsNone
+      StyleDisabled.BorderStyle = ebsNone
+      StyleDisabled.Color = clBtnFace
+      StyleDisabled.TextColor = clHotLight
       TabOrder = 6
-      Width = 211
-    end
-    object edInn: TcxTextEdit
-      Left = 16
-      Top = 58
-      Properties.ReadOnly = True
-      TabOrder = 7
-      Width = 95
-    end
-    object edAddress: TcxTextEdit
-      Left = 117
-      Top = 58
-      Properties.ReadOnly = True
-      TabOrder = 8
-      Width = 446
-    end
-    object edGroupMemberSP: TcxTextEdit
-      Left = 249
-      Top = 17
-      Properties.ReadOnly = True
-      TabOrder = 9
-      Width = 95
+      Width = 231
     end
   end
-  object bbSP_Prior: TcxButton [2]
-    Left = 191
-    Top = 191
-    Width = 97
-    Height = 25
-    Anchors = [akTop, akRight]
-    Caption = #1040#1074#1090#1086#1079#1072#1087#1086#1083#1085#1080#1090#1100
+  object Panel4: TPanel [2]
+    Left = 0
+    Top = 221
+    Width = 526
+    Height = 42
+    Align = alBottom
+    ShowCaption = False
     TabOrder = 2
-    OnClick = bbSP_PriorClick
+    object bbCancel: TcxButton
+      Left = 308
+      Top = 8
+      Width = 75
+      Height = 25
+      Caption = #1054#1090#1084#1077#1085#1072
+      ModalResult = 2
+      TabOrder = 1
+    end
+    object bbOk: TcxButton
+      Left = 134
+      Top = 6
+      Width = 75
+      Height = 25
+      Caption = 'Ok'
+      Default = True
+      TabOrder = 0
+      OnClick = bbOkClick
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 251
-    Top = 72
+    Left = 459
+    Top = 16
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 8
-    Top = 64
+    Left = 384
+    Top = 24
   end
   inherited ActionList: TActionList
-    Left = 199
-    Top = 63
+    Left = 15
+    Top = 31
+    object actFormClose: TdsdFormClose
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actFormClose'
+      ShortCut = 27
+    end
   end
   object PartnerMedicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -269,7 +315,7 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       item
         Name = 'MasterOperDate'
         Value = Null
-        Component = edOperDateSP
+        Component = edCreated
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
@@ -321,7 +367,6 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       item
         Name = 'GroupMemberSP'
         Value = Null
-        Component = edGroupMemberSP
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -329,7 +374,6 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       item
         Name = 'Passport'
         Value = Null
-        Component = edPassport
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -337,7 +381,6 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       item
         Name = 'Inn'
         Value = Null
-        Component = edInn
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -345,13 +388,12 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       item
         Name = 'eAddress'
         Value = Null
-        Component = edAddress
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 120
-    Top = 16
+    Left = 136
+    Top = 112
   end
   object MedicSPGuides: TdsdGuides
     KeyField = 'Id'
@@ -415,7 +457,7 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       item
         Name = 'MasterOperDate'
         Value = Null
-        Component = edOperDateSP
+        Component = edCreated
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
@@ -447,12 +489,13 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 232
-    Top = 48
+    Left = 136
+    Top = 160
   end
   object SPKindGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edSPKind
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TSPKindForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -483,11 +526,11 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 448
-    Top = 32
+    Left = 232
+    Top = 25
   end
-  object spGet_SPKind_def: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_SPKind_def'
+  object spGet_SPKind: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_SPKind_1303'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -505,111 +548,10 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Tax'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 472
-    Top = 104
-  end
-  object spGet_SP_Prior: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Check_SP_Prior'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'outPartnerMedicalId'
-        Value = ''
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outPartnerMedicalName'
-        Value = ''
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outMedicSPId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outMedicSPName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outOperDateSP'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outSPKindId'
-        Value = Null
-        Component = SPKindGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outSPKindName'
-        Value = Null
-        Component = SPKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outMemberSPId'
-        Value = Null
-        Component = GuidesMemberSP
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outMemberSPName'
-        Value = Null
-        Component = GuidesMemberSP
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outGroupMemberSP'
-        Value = Null
-        Component = edGroupMemberSP
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outPassport'
-        Value = Null
-        Component = edPassport
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outInn'
-        Value = Null
-        Component = edInn
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outAddress'
-        Value = Null
-        Component = edAddress
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 312
-    Top = 168
+    Left = 304
+    Top = 25
   end
   object GuidesMemberSP: TdsdGuides
     KeyField = 'Id'
@@ -647,7 +589,6 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       item
         Name = 'GroupMemberSPName'
         Value = ''
-        Component = edGroupMemberSP
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -670,7 +611,6 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       item
         Name = 'Address'
         Value = ''
-        Component = edAddress
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -678,7 +618,6 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       item
         Name = 'Passport'
         Value = ''
-        Component = edPassport
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -686,13 +625,12 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       item
         Name = 'Inn'
         Value = ''
-        Component = edInn
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 128
-    Top = 104
+    Left = 416
+    Top = 168
   end
   object spSelect_Object_MemberSP: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_MemberSP_Cash'
@@ -717,31 +655,27 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       item
         Name = 'GroupMemberSPName'
         Value = Null
-        Component = edGroupMemberSP
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'Passport'
         Value = Null
-        Component = edPassport
         MultiSelectSeparator = ','
       end
       item
         Name = 'INN'
         Value = Null
-        Component = edInn
         MultiSelectSeparator = ','
       end
       item
         Name = 'Address'
         Value = Null
-        Component = edAddress
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 368
-    Top = 112
+    Left = 424
+    Top = 80
   end
   object spGet_Movement_InvNumberSP: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_InvNumberSP'
@@ -759,7 +693,7 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       item
         Name = 'inInvNumberSP'
         Value = ''
-        Component = edInvNumberSP
+        Component = edRecipe_Number
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -771,7 +705,7 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 80
-    Top = 168
+    Left = 288
+    Top = 80
   end
 end

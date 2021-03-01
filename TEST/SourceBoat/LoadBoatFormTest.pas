@@ -32,6 +32,7 @@ type
     procedure LoadGoodsTypeFormTest;
     procedure LoadGoodsSizeFormTest;
     procedure LoadIncomeFormTest;
+    procedure LoadIncomeCostFormTest;
     procedure LoadInvoiceFormTest;
     procedure LoadImportSettingsFormTest;
     procedure LoadImportTypeFormTest;
@@ -258,6 +259,17 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalChoiceForm');
+end;
+
+procedure TLoadFormTest.LoadIncomeCostFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeCostJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeCostJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeCostForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeCostForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCostJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCostJournalChoiceForm');
 end;
 
 procedure TLoadFormTest.LoadOrderClientFormTest;

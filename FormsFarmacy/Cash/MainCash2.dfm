@@ -1,7 +1,7 @@
 inherited MainCashForm2: TMainCashForm2
   ActiveControl = lcName
   Caption = #1055#1088#1086#1076#1072#1078#1072
-  ClientHeight = 560
+  ClientHeight = 646
   ClientWidth = 964
   PopupMenu = PopupMenu
   OnCloseQuery = ParentFormCloseQuery
@@ -12,17 +12,18 @@ inherited MainCashForm2: TMainCashForm2
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
   ExplicitWidth = 980
-  ExplicitHeight = 599
+  ExplicitHeight = 685
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
     Left = 0
-    Top = 407
+    Top = 493
     Width = 964
     Height = 153
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitTop = 407
     object CheckGrid: TcxGrid
       Left = 0
       Top = 0
@@ -280,27 +281,31 @@ inherited MainCashForm2: TMainCashForm2
   end
   object cxSplitter2: TcxSplitter [1]
     Left = 0
-    Top = 404
+    Top = 490
     Width = 964
     Height = 3
     AlignSplitter = salBottom
     Control = BottomPanel
+    ExplicitTop = 404
   end
   object MainPanel: TPanel [2]
     Left = 0
-    Top = 265
+    Top = 328
     Width = 964
-    Height = 139
+    Height = 162
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitTop = 265
+    ExplicitHeight = 139
     object MainGrid: TcxGrid
       Left = 0
       Top = 21
       Width = 964
-      Height = 85
+      Height = 108
       Align = alClient
       TabOrder = 0
+      ExplicitHeight = 85
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnCanFocusRecord = MainGridDBTableViewCanFocusRecord
@@ -1070,11 +1075,12 @@ inherited MainCashForm2: TMainCashForm2
     end
     object SearchPanel: TPanel
       Left = 0
-      Top = 106
+      Top = 129
       Width = 964
       Height = 33
       Align = alBottom
       TabOrder = 1
+      ExplicitTop = 106
       object ShapeState: TShape
         Left = 810
         Top = 13
@@ -2162,7 +2168,7 @@ inherited MainCashForm2: TMainCashForm2
   end
   object pnlAnalogFilter: TPanel [11]
     Left = 0
-    Top = 244
+    Top = 307
     Width = 964
     Height = 21
     Align = alTop
@@ -2170,6 +2176,7 @@ inherited MainCashForm2: TMainCashForm2
     ParentBackground = False
     TabOrder = 11
     Visible = False
+    ExplicitTop = 244
     DesignSize = (
       964
       21)
@@ -2510,6 +2517,92 @@ inherited MainCashForm2: TMainCashForm2
       TabOrder = 2
       OnExit = edLoyaltySMSummaExit
       Width = 60
+    end
+  end
+  object pnlPosition: TPanel [15]
+    Left = 0
+    Top = 244
+    Width = 964
+    Height = 63
+    Align = alTop
+    Color = 15656679
+    ParentBackground = False
+    TabOrder = 15
+    Visible = False
+    DesignSize = (
+      964
+      63)
+    object cmPosition: TcxMemo
+      Left = 1
+      Top = 1
+      Align = alLeft
+      Properties.ReadOnly = True
+      TabOrder = 0
+      Height = 61
+      Width = 348
+    end
+    object edName_inn_ua: TcxTextEdit
+      Left = 349
+      Top = 0
+      TabStop = False
+      Anchors = [akLeft, akTop, akRight]
+      Properties.AutoSelect = False
+      Properties.MaxLength = 8
+      Properties.ReadOnly = True
+      TabOrder = 1
+      OnExit = edPromoCodeExit
+      OnKeyDown = edPromoCodeKeyDown
+      OnKeyPress = edPromoCodeKeyPress
+      Width = 394
+    end
+    object edName_reg_ua: TcxTextEdit
+      Left = 349
+      Top = 21
+      TabStop = False
+      Anchors = [akLeft, akTop, akRight]
+      Properties.AutoSelect = False
+      Properties.MaxLength = 8
+      Properties.ReadOnly = True
+      TabOrder = 2
+      OnExit = edPromoCodeExit
+      OnKeyDown = edPromoCodeKeyDown
+      OnKeyPress = edPromoCodeKeyPress
+      Width = 394
+    end
+    object edCommentPosition: TcxTextEdit
+      Left = 349
+      Top = 42
+      TabStop = False
+      Anchors = [akLeft, akTop, akRight]
+      Properties.AutoSelect = False
+      Properties.MaxLength = 8
+      Properties.ReadOnly = True
+      TabOrder = 3
+      OnExit = edPromoCodeExit
+      OnKeyDown = edPromoCodeKeyDown
+      OnKeyPress = edPromoCodeKeyPress
+      Width = 394
+    end
+    object bbPositionNext: TcxButton
+      Left = 935
+      Top = 1
+      Width = 28
+      Height = 61
+      Hint = #1057#1083#1082#1076#1091#1102#1097#1080#1094#1081' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090' '#1089' '#1088#1077#1094#1077#1087#1090#1072
+      Align = alRight
+      OptionsImage.ImageIndex = 80
+      OptionsImage.Images = dmMain.ImageList
+      TabOrder = 4
+      TabStop = False
+      OnClick = bbPositionNextClick
+      ExplicitTop = -3
+    end
+    object cbMorionFilter: TcxCheckBox
+      Left = 775
+      Top = 2
+      Anchors = [akTop, akRight]
+      Caption = #1060#1080#1083#1100#1090#1088' '#1087#1086' '#1082#1086#1076#1091' '#1084#1086#1088#1080#1086#1085#1072
+      TabOrder = 5
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -5895,6 +5988,12 @@ inherited MainCashForm2: TMainCashForm2
       GuiParams = <>
       isShowModal = False
     end
+    object actRecipeNumber1303: TAction
+      Category = 'DSDLib'
+      Caption = #1042#1074#1086#1076' '#1085#1086#1084#1077#1088#1072' '#1088#1077#1094#1077#1087#1090#1072' '#1087#1088#1086#1075#1088#1072#1084#1084#1099' 1303'
+      ShortCut = 32882
+      OnExecute = actRecipeNumber1303Execute
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -6079,6 +6178,9 @@ inherited MainCashForm2: TMainCashForm2
     end
     object N25: TMenuItem
       Action = actSetSPHelsi
+    end
+    object N13031: TMenuItem
+      Action = actRecipeNumber1303
     end
     object N15: TMenuItem
       Caption = #1051#1080#1089#1090' '#1086#1090#1082#1072#1079#1072
@@ -7976,7 +8078,7 @@ inherited MainCashForm2: TMainCashForm2
       end>
     PackSize = 1
     Left = 56
-    Top = 216
+    Top = 200
   end
   object pm_OpenCheck: TPopupMenu
     Left = 456
@@ -8840,8 +8942,8 @@ inherited MainCashForm2: TMainCashForm2
       end>
     PackSize = 1
     AutoWidth = True
-    Left = 176
-    Top = 216
+    Left = 160
+    Top = 192
   end
   object PlanEmployeeCDS: TClientDataSet
     Aggregates = <>

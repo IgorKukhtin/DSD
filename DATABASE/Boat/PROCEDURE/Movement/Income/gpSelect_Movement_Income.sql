@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
              , OperDate TDateTime, OperDatePartner TDateTime
              , StatusCode Integer, StatusName TVarChar
              , PriceWithVAT Boolean
-             , VATPercent TFloat, ChangePercent TFloat
+             , VATPercent TFloat, DiscountTax TFloat
              , TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummVAT TFloat
              , FromId Integer, FromCode Integer, FromName TVarChar
@@ -97,7 +97,7 @@ BEGIN
 
              , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
              , MovementFloat_VATPercent.ValueData         AS VATPercent
-             , MovementFloat_ChangePercent.ValueData      AS ChangePercent
+             , MovementFloat_DiscountTax.ValueData        AS DiscountTax
              , MovementFloat_TotalCount.ValueData         AS TotalCount
              , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
              , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
@@ -147,9 +147,9 @@ BEGIN
                                 ON MovementFloat_VATPercent.MovementId = Movement_Income.Id
                                AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
 
-        LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
-                                ON MovementFloat_ChangePercent.MovementId = Movement_Income.Id
-                               AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+        LEFT JOIN MovementFloat AS MovementFloat_DiscountTax
+                                ON MovementFloat_DiscountTax.MovementId = Movement_Income.Id
+                               AND MovementFloat_DiscountTax.DescId = zc_MovementFloat_DiscountTax()
 
         LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
                                 ON MovementFloat_TotalSummPVAT.MovementId = Movement_Income.Id

@@ -6,10 +6,13 @@ inherited Report_Sold_DayUserForm: TReport_Sold_DayUserForm
   inherited PageControl: TcxPageControl
     Width = 959
     TabOrder = 2
+    ExplicitWidth = 959
     ClientRectRight = 959
     inherited tsMain: TcxTabSheet
+      ExplicitWidth = 959
       inherited cxGrid: TcxGrid
         Width = 959
+        ExplicitWidth = 959
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
@@ -20,16 +23,18 @@ inherited Report_Sold_DayUserForm: TReport_Sold_DayUserForm
       end
       inherited cxSplitter1: TcxSplitter
         Width = 959
+        ExplicitWidth = 959
       end
       inherited grChart: TcxGrid
         Width = 959
+        ExplicitWidth = 959
       end
     end
     inherited tsPivot: TcxTabSheet
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitWidth = 959
       inherited cxDBPivotGrid1: TcxDBPivotGrid
+        Width = 959
+        ExplicitWidth = 959
         inherited pcolPlanDate: TcxDBPivotGridField
           UniqueName = #1044#1072#1090#1072
         end
@@ -59,6 +64,7 @@ inherited Report_Sold_DayUserForm: TReport_Sold_DayUserForm
   end
   inherited Panel: TPanel
     Width = 959
+    ExplicitWidth = 959
     inherited deStart: TcxDateEdit
       OnDblClick = nil
     end
@@ -68,6 +74,47 @@ inherited Report_Sold_DayUserForm: TReport_Sold_DayUserForm
     inherited ceUnit: TcxButtonEdit
       Enabled = False
     end
+  end
+  inherited spSelect: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inMonth'
+        Value = 42370d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inQuasiSchedule'
+        Value = False
+        Component = actQuasiSchedule
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNoStaticCodes'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSP'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
   end
   inherited BarManager: TdxBarManager
     DockControlHeights = (
@@ -127,5 +174,8 @@ inherited Report_Sold_DayUserForm: TReport_Sold_DayUserForm
   end
   inherited UnitGuides: TdsdGuides
     Top = 160
+  end
+  inherited rdUnit: TRefreshDispatcher
+    Top = 216
   end
 end

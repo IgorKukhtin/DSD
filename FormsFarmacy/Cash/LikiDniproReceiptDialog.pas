@@ -29,138 +29,55 @@ type
     Label1: TLabel;
     Label2: TLabel;
     cxLabel13: TcxLabel;
-    edOperDateSP: TcxDateEdit;
+    edCreated: TcxDateEdit;
     cxLabel14: TcxLabel;
-    edInvNumberSP: TcxTextEdit;
-    cxLabel17: TcxLabel;
-    edAmbulance: TcxTextEdit;
+    edRecipe_Number: TcxTextEdit;
     edMedicSP: TcxButtonEdit;
     MedicSPGuides: TdsdGuides;
     Label3: TLabel;
     edSPKind: TcxButtonEdit;
     SPKindGuides: TdsdGuides;
-    spGet_SPKind_def: TdsdStoredProc;
-    bbSP_Prior: TcxButton;
-    spGet_SP_Prior: TdsdStoredProc;
+    spGet_SPKind: TdsdStoredProc;
     Panel1: TPanel;
     Panel2: TPanel;
     cxLabel22: TcxLabel;
-    cxLabel23: TcxLabel;
-    cxLabel24: TcxLabel;
-    cxLabel25: TcxLabel;
-    cxLabel26: TcxLabel;
     edMemberSP: TcxButtonEdit;
-    edPassport: TcxTextEdit;
-    edInn: TcxTextEdit;
-    edAddress: TcxTextEdit;
     GuidesMemberSP: TdsdGuides;
-    edGroupMemberSP: TcxTextEdit;
     spSelect_Object_MemberSP: TdsdStoredProc;
     spGet_Movement_InvNumberSP: TdsdStoredProc;
+    edValid_From: TcxDateEdit;
+    cxLabel1: TcxLabel;
+    edValid_To: TcxDateEdit;
+    cxLabel2: TcxLabel;
+    edInstitution_Name: TcxTextEdit;
+    rdDoctor_Name: TcxTextEdit;
+    edPatient_Name: TcxTextEdit;
+    Panel4: TPanel;
+    bbCancel: TcxButton;
+    bbOk: TcxButton;
+    actFormClose: TdsdFormClose;
     procedure bbOkClick(Sender: TObject);
     procedure DiscountExternalGuidesAfterChoice(Sender: TObject);
-    procedure bbSP_PriorClick(Sender: TObject);
-    procedure edSPKindPropertiesChange(Sender: TObject);
-    procedure cePartnerMedicalPropertiesChange(Sender: TObject);
   private
     { Private declarations }
-
-    FHelsiID : string;
-    FHelsiIDList : string;
-    FHelsiName : string;
-    FHelsiQty : currency;
-    FHelsiDate : TDateTime;
   public
-     function DiscountDialogExecute(var APartnerMedicalId, ASPKindId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP, ASPKindName: String;
-       var AOperDateSP : TDateTime; var ASPTax : Currency; var AMemberSPID: Integer; var AMemberSPName: String;
-       var AHelsiID, AHelsiIDList, AHelsiName : string; var AHelsiQty : currency): boolean;
-     function CheckInvNumberSP(ASPKind : integer; ANumber : string) : boolean;
   end;
+
+function ShowLikiDniproReceiptDialog : boolean;
 
 
 implementation
 
 {$R *.dfm}
 
-uses IniUtils, RegularExpressions;
-
-function TLikiDniproReceiptDialogForm.CheckInvNumberSP(ASPKind : integer; ANumber : string) : boolean;
-  var Res: TArray<string>; I, J : Integer; bCheck : boolean;
-begin
-  Result := False;
-
-//  if (MainCashForm.UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger = 0) or
-//    (MainCashForm.UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger <> ASPKind) then
-//  begin
-//    if Length(ANumber) <> 19 then
-//    begin
-//      ShowMessage ('Ошибка.<Номер рецепта> должен содержать 19 символов...');
-//      exit;
-//    end;
-//
-//    Res := TRegEx.Split(ANumber, '-');
-//
-//    if High(Res) <> 3 then
-//    begin
-//      ShowMessage ('Ошибка.<Номер рецепта> должен содержать 4 блока по 4 символа разделенных символом "-" ...');
-//      exit;
-//    end;
-//
-//    for I := 0 to High(Res) do
-//    begin
-//      if Length(Res[I]) <> 4 then
-//      begin
-//        ShowMessage ('Ошибка.<Номер рецепта> должен содержать 4 блока по 4 символа разделенных символом "-"...');
-//        exit;
-//      end;
-//
-//      for J := 1 to 4 do if not (Res[I][J] in ['0'..'9','A'..'Z']) then
-//      begin
-//        ShowMessage ('Ошибка.<Номер рецепта> должен содержать только цыфры и большие буквы латинского алфовита...');
-//        exit;
-//      end;
-//    end;
-//
-//    //Сначала ищем в текущем ДБФ
-//    if isMainForm_OLD = TRUE
-//    then bCheck := MainCash.MainCashForm.pCheck_InvNumberSP (ASPKind, ANumber)
-//    else bCheck := MainCash2.MainCashForm.pCheck_InvNumberSP (ASPKind, ANumber);
-//
-//    if bCheck then
-//    begin
-//      ShowMessage ('Ошибка.<Номер рецепта> уже использован. Повторное использование запрещено...');
-//      exit;
-//    end;
-//
-//    if spGet_Movement_InvNumberSP.Execute = '' then
-//    begin
-//      if spGet_Movement_InvNumberSP.ParamByName('outIsExists').Value then
-//      begin
-//        ShowMessage ('Ошибка.<Номер рецепта> уже использован. Повторное использование запрещено...');
-//        Exit;
-//      end;
-//    end else Exit;
-//
-//    Result := True;
-//  end else
-//  begin
-//
-//    if spGet_Movement_InvNumberSP.Execute = '' then
-//    begin
-//      if spGet_Movement_InvNumberSP.ParamByName('outIsExists').Value then
-//      begin
-//        ShowMessage ('Ошибка.<Номер рецепта> уже использован. Повторное использование запрещено...');
-//        Exit;
-//      end;
-//    end else Exit;
-//
-//    Result := GetHelsiReceipt(ANumber, FHelsiID, FHelsiIDList, FHelsiName, FHelsiQty, FHelsiDate);
-//  end;
-end;
+uses IniUtils, RegularExpressions, LikiDniproReceipt, MainCash2;
 
 procedure TLikiDniproReceiptDialogForm.bbOkClick(Sender: TObject);
-var Key :Integer;
+  var Key :Integer;
 begin
+  if LikiDniproReceiptApi.Recipe.FRecipe_Type = 2 then
+  begin
+
 //    try StrToDate(edOperDateSP.Text)
 //    except
 //          ActiveControl:=edOperDateSP;
@@ -186,15 +103,6 @@ begin
 //          ModalResult:=mrNone; // не надо закрывать
 //          exit;
 //    end;
-//
-//    // 23.01.2018 - «№ амбулатории»  - убрать эту ячейку , она не нужна
-//    {if trim (edAmbulance.Text) = '' then
-//    begin ActiveControl:=edAmbulance;
-//          ShowMessage ('Ошибка.Значение <№ амбулатории> не определено');
-//          ModalResult:=mrNone; // не надо закрывать
-//          exit;
-//    end;}
-//    //
 //
 //    try Key:= SPKindGuides.Params.ParamByName('Key').Value; except Key:= 0;end;
 //    if Key = 0 then
@@ -241,182 +149,9 @@ begin
 //    end
 //    // а здесь уже все ОК
 //    else ModalResult:=mrOk;
+  end;
 
-end;
-
-procedure TLikiDniproReceiptDialogForm.bbSP_PriorClick(Sender: TObject);
-var APartnerMedicalId: Integer;
-    APartnerMedicalName, AMedicSP : String;
-    AOperDateSP : TDateTime;
-begin
-//      ActiveControl:= edInvNumberSP;
-//      //
-//      if PartnerMedicalGuides.Params.ParamByName('Key').Value <> 0
-//      then begin
-//                ShowMessage ('Ошибка.Медицинское учреждение уже заполнено.Необходимо сначала обнулить значение');
-//                exit;
-//          end;
-//      if edMedicSP.Text <> ''
-//      then begin
-//                ShowMessage ('Ошибка.ФИО врача уже заполнено.Необходимо сначала обнулить значение');
-//                exit;
-//          end;
-//      //
-//      //Сначала ищем в текущем ДБФ
-//      if isMainForm_OLD = TRUE
-//      then MainCash.MainCashForm.pGet_OldSP (APartnerMedicalId, APartnerMedicalName, AMedicSP, AOperDateSP)
-//      else MainCash2.MainCashForm.pGet_OldSP (APartnerMedicalId, APartnerMedicalName, AMedicSP, AOperDateSP);
-//
-//      //если не нашли - попробуем в базе
-//      if APartnerMedicalId = 0 then
-//      begin
-//          spGet_SP_Prior.Execute;
-//          if spGet_SP_Prior.ParamByName('outPartnerMedicalId').Value = 0
-//          then
-//               ShowMessage('Данные для заполнения не найдены')
-//          else
-//          begin
-//               PartnerMedicalGuides.Params.ParamByName('Key').Value      := spGet_SP_Prior.ParamByName('outPartnerMedicalId').Value;
-//               PartnerMedicalGuides.Params.ParamByName('TextValue').Value:= spGet_SP_Prior.ParamByName('outPartnerMedicalName').Value;
-//               cePartnerMedical.Text:= spGet_SP_Prior.ParamByName('outPartnerMedicalName').Value;
-//               edMedicSP.Text       := spGet_SP_Prior.ParamByName('outMedicSPName').Value;
-//               //вернуть через строчку, т.к. с TDateTime - ошибка
-//               AOperDateSP          := StrToDate(spGet_SP_Prior.ParamByName('outOperDateSP').Value);
-//               edOperDateSP.Date    := AOperDateSP;
-//          end
-//      end
-//      else
-//      begin
-//          PartnerMedicalGuides.Params.ParamByName('Key').Value      := APartnerMedicalId;
-//          PartnerMedicalGuides.Params.ParamByName('TextValue').Value:= APartnerMedicalName;
-//          cePartnerMedical.Text:= APartnerMedicalName;
-//          edMedicSP.Text:= AMedicSP;
-//          edOperDateSP.Date:= AOperDateSP;
-//      end;
-
-end;
-
-procedure TLikiDniproReceiptDialogForm.cePartnerMedicalPropertiesChange(Sender: TObject);
-begin
-  inherited;
-  if PartnerMedicalGuides.Params.ParamByName('Key').Value <> 0 then
-     GuidesMemberSP.DisableGuidesOpen := False
-  else GuidesMemberSP.DisableGuidesOpen := True;
-end;
-
-function TLikiDniproReceiptDialogForm.DiscountDialogExecute(var APartnerMedicalId, ASPKindId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP, ASPKindName: String;
-  var AOperDateSP : TDateTime; var ASPTax : Currency; var AMemberSPID: Integer; var AMemberSPName: String;
-  var AHelsiID, AHelsiIDList, AHelsiName : string; var AHelsiQty : currency): boolean;
-Begin
-//      FHelsiID := ''; FHelsiIDList := ''; FHelsiName := '';
-//      edAmbulance.Text:= AAmbulance;
-//      edMedicSP.Text:= AMedicSP;
-//      edInvNumberSP.Text:= AInvNumberSP;
-//      edOperDateSP.Text:= DateToStr(aOperDateSP);
-//      edSPKind.Text:= AInvNumberSP;
-//      FormParams.ParamByName('MasterUnitId').Value  :=IniUtils.gUnitId;
-//      FormParams.ParamByName('MasterUnitName').Value:=IniUtils.gUnitName;
-//      //
-//      PartnerMedicalGuides.Params.ParamByName('Key').Value      := APartnerMedicalId;
-//      PartnerMedicalGuides.Params.ParamByName('TextValue').Value:= '';
-//      if APartnerMedicalId > 0 then
-//      begin
-//          cePartnerMedical.Text:= APartnerMedicalName;
-//          PartnerMedicalGuides.Params.ParamByName('TextValue').Value:= APartnerMedicalName;
-//      end;
-//      //
-//      SPKindGuides.Params.ParamByName('Key').Value      := ASPKindId;
-//      SPKindGuides.Params.ParamByName('TextValue').Value:= '';
-//      SPKindGuides.Params.ParamByName('Tax').Value:= ASPTax;
-//      //FormParams.ParamByName('SPTax').Value:=ASPTax;
-//
-//      if ASPKindId > 0 then
-//      begin
-//          edSPKind.Text:= ASPKindName;
-//          SPKindGuides.Params.ParamByName('TextValue').Value:= ASPKindName;
-//      end
-//      else begin
-//                spGet_SPKind_def.Execute;
-//                SPKindGuides.Params.ParamByName('Tax').Value:= 0
-//      end;
-//
-//      if AMemberSPID <> 0 then
-//      begin
-//          GuidesMemberSP.Params.ParamByName('Key').Value      := AMemberSPID;
-//          try
-//            spSelect_Object_MemberSP.Execute;
-//          except
-//          end;
-//      end;
-//
-//      GuidesMemberSP.DisableGuidesOpen := True;
-//      cePartnerMedicalPropertiesChange(Nil);
-//      edSPKindPropertiesChange(Nil);
-//
-//      //
-//      Result := ShowModal = mrOK;
-//      //
-//      if Result then
-//      begin
-//        try APartnerMedicalId := PartnerMedicalGuides.Params.ParamByName('Key').Value;
-//        except
-//            APartnerMedicalId := 0;
-//            PartnerMedicalGuides.Params.ParamByName('Key').Value:= 0;
-//        end;
-//        APartnerMedicalName   := PartnerMedicalGuides.Params.ParamByName('TextValue').Value;
-//        AAmbulance:= trim (edAmbulance.Text);
-//        AMedicSP:= trim (edMedicSP.Text);
-//        AInvNumberSP:= trim (edInvNumberSP.Text);
-//        AOperDateSP:= StrToDate (edOperDateSP.Text);
-//
-//        try ASPKindId := SPKindGuides.Params.ParamByName('Key').Value;
-//        except
-//            ASPKindId := 0;
-//            SPKindGuides.Params.ParamByName('Key').Value:= 0;
-//        end;
-//        ASPKindName   := SPKindGuides.Params.ParamByName('TextValue').Value;
-//        ASPTax        := SPKindGuides.Params.ParamByName('Tax').Value;
-//        if Panel2.Visible then
-//        begin
-//          AMemberSPID := GuidesMemberSP.Params.ParamByName('Key').Value;
-//          AMemberSPName := GuidesMemberSP.Params.ParamByName('TextValue').Value;
-//          if edGroupMemberSP.Text <> '' then AMemberSPName := AMemberSPName + ' / ' + edGroupMemberSP.Text
-//        end else
-//        begin
-//          AMemberSPID := 0;
-//          AMemberSPName :=''
-//        end;
-//
-//        if (MainCashForm.UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger <> 0) and
-//          (MainCashForm.UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger = ASPKindId) then
-//        begin
-//          AHelsiID            := FHelsiID;
-//          AHelsiIDList        := FHelsiIDList;
-//          AHelsiName          := FHelsiName;
-//          AHelsiQty           := FHelsiQty;
-//        end else
-//        begin
-//          AHelsiID            := '';
-//          AHelsiName          := '';
-//          AHelsiQty           := 0;
-//         end;
-//
-//      end
-//      else begin
-//              APartnerMedicalId   := 0;
-//              APartnerMedicalName := '';
-//              AAmbulance          := '';
-//              AMedicSP            := '';
-//              AInvNumberSP        := '';
-//              ASPTax              := 0;
-//              ASPKindId           := 0;
-//              ASPKindName         := '';
-//              AMemberSPID         := 0;
-//              AMemberSPName       := '';
-//              AHelsiID            := '';
-//              AHelsiName          := '';
-//              AHelsiQty           := 0;
-//           end;
+  ModalResult:=mrOk;
 end;
 
 procedure TLikiDniproReceiptDialogForm.DiscountExternalGuidesAfterChoice(Sender: TObject);
@@ -425,12 +160,54 @@ begin
   inherited;
 end;
 
-procedure TLikiDniproReceiptDialogForm.edSPKindPropertiesChange(Sender: TObject);
+function ShowLikiDniproReceiptDialog : boolean;
+  var LikiDniproReceiptDialog : TLikiDniproReceiptDialogForm;
 begin
-  inherited;
-  if SPKindGuides.Params.ParamByName('Key').Value <> '' then
-     Panel2.Visible := SPKindGuides.Params.ParamByName('Key').Value = 4823010
-  else Panel2.Visible := False;
+
+  if LikiDniproReceiptApi.PositionCDS.IsEmpty then
+  begin
+    ShowMessage('Медикаменты не найдены.');
+    Exit;
+  end;
+
+  LikiDniproReceiptDialog := TLikiDniproReceiptDialogForm.Create(Screen.ActiveControl);
+  try
+    LikiDniproReceiptDialog.edRecipe_Number.Text := LikiDniproReceiptApi.Recipe.FRecipe_Number;
+    LikiDniproReceiptDialog.edCreated.Date := LikiDniproReceiptApi.Recipe.FRecipe_Created;
+    if LikiDniproReceiptApi.Recipe.FRecipe_Valid_From = Null then
+    begin
+      LikiDniproReceiptDialog.cxLabel1.Visible := False;
+      LikiDniproReceiptDialog.edValid_From.Visible := False;
+    end else LikiDniproReceiptDialog.edValid_From.Date := LikiDniproReceiptApi.Recipe.FRecipe_Valid_From;
+    if LikiDniproReceiptApi.Recipe.FRecipe_Valid_From = Null then
+    begin
+      LikiDniproReceiptDialog.cxLabel2.Visible := False;
+      LikiDniproReceiptDialog.edValid_To.Visible := False;
+    end else LikiDniproReceiptDialog.edValid_To.Date := LikiDniproReceiptApi.Recipe.FRecipe_Valid_To;
+
+    LikiDniproReceiptDialog.edInstitution_Name.Text := LikiDniproReceiptApi.Recipe.FInstitution_Name;
+    LikiDniproReceiptDialog.rdDoctor_Name.Text := LikiDniproReceiptApi.Recipe.FDoctor_Name;
+    LikiDniproReceiptDialog.edPatient_Name.Text := LikiDniproReceiptApi.Recipe.FPatient_Name;
+
+    if LikiDniproReceiptApi.Recipe.FRecipe_Type = 2 then
+    begin
+      LikiDniproReceiptDialog.spGet_SPKind.Execute;
+    end else
+    begin
+      LikiDniproReceiptDialog.edSPKind.Visible := False;
+      LikiDniproReceiptDialog.Label3.Caption := 'Рецепт за полную стоимость.';
+      LikiDniproReceiptDialog.Label3.Font.Size := Round(LikiDniproReceiptDialog.Label3.Font.Size * 1.5);
+      LikiDniproReceiptDialog.Label3.Font.Color := clRed;
+      LikiDniproReceiptDialog.cePartnerMedical.Visible := False;
+      LikiDniproReceiptDialog.edValid_To.Visible := False;
+      LikiDniproReceiptDialog.edMedicSP.Visible := False;
+      LikiDniproReceiptDialog.edMemberSP.Visible := False;
+    end;
+
+    Result := LikiDniproReceiptDialog.ShowModal = mrOk;
+  finally
+    LikiDniproReceiptDialog.Free;
+  end;
 end;
 
 End.

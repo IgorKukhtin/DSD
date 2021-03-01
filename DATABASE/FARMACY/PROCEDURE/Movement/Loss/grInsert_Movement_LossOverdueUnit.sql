@@ -122,13 +122,14 @@
     IF EXISTS(SELECT 1 FROM  tmpContainerOverdueLoss)
     THEN
         -- сохранили <Документ>
-        outMovementID := lpInsertUpdate_Movement_Loss (ioId               := 0
-                                                     , inInvNumber        := CAST (NEXTVAL ('Movement_Loss_seq') AS TVarChar)
-                                                     , inOperDate         := CURRENT_DATE
-                                                     , inUnitId           := inUnitId
-                                                     , inArticleLossId    := 13892113
-                                                     , inComment          := ''
-                                                     , inUserId           := vbUserId
+        outMovementID := lpInsertUpdate_Movement_Loss (ioId                 := 0
+                                                     , inInvNumber          := CAST (NEXTVAL ('Movement_Loss_seq') AS TVarChar)
+                                                     , inOperDate           := CURRENT_DATE
+                                                     , inUnitId             := inUnitId
+                                                     , inArticleLossId      := 13892113
+                                                     , inComment            := ''
+                                                     , inConfirmedMarketing := ''
+                                                     , inUserId             := vbUserId
                                                       );
 
         PERFORM lpInsertUpdate_MovementItem_Loss (ioId                := 0

@@ -91,7 +91,7 @@ BEGIN
                                                             , inOperDatePartner    := NULL          ::TDateTime
                                                             , inPriceWithVAT       := False         ::Boolean
                                                             , inVATPercent         := vbVATPercent  ::TFloat
-                                                            , inChangePercent      := vbDiscountTax ::TFloat
+                                                            , inDiscountTax        := vbDiscountTax ::TFloat
                                                             , inFromId             := vbPartnerId   ::Integer
                                                             , inToId               := 0             ::Integer
                                                             , inPaidKindId         := zc_Enum_PaidKind_FirstForm() ::Integer

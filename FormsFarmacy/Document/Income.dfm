@@ -674,6 +674,14 @@
             Options.Editing = False
             Width = 71
           end
+          object MarginPercentUnit: TcxGridDBColumn
+            Caption = '% '#1087#1086' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1082#1080' '#1090#1086#1095#1082#1080
+            DataBinding.FieldName = 'MarginPercentUnit'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
         end
       end
     end

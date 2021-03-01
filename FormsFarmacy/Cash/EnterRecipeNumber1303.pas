@@ -56,8 +56,10 @@ begin
   LoadKeyboardLayout('00000409', KLF_ACTIVATE);
   EnterRecipeNumber1303Form := TEnterRecipeNumber1303Form.Create(Screen.ActiveControl);
   try
+    if ANumber <> '' then EnterRecipeNumber1303Form.edMaskNumber.Text := ANumber;
+
     Result := EnterRecipeNumber1303Form.ShowModal = mrOk;
-    ANumber := StringReplace(EnterRecipeNumber1303Form.edMaskNumber.Text, '_', '', [rfReplaceAll]);
+    ANumber := Trim(StringReplace(EnterRecipeNumber1303Form.edMaskNumber.Text, '_', '', [rfReplaceAll]));
   finally
     EnterRecipeNumber1303Form.Free;
     LoadKeyboardLayout('00000419', KLF_ACTIVATE);

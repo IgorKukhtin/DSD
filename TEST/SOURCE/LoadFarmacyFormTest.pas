@@ -979,6 +979,7 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
+
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPrice_PromoBonusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPrice_PromoBonusForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_UnitDialogForm'));

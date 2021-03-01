@@ -175,6 +175,7 @@ type
     dxBarButton2: TdxBarButton;
     cbUseNDSKind: TcxCheckBox;
     PromoBonus: TcxGridDBColumn;
+    MarginPercentUnit: TcxGridDBColumn;
   private
     { Private declarations }
   public
