@@ -267,6 +267,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TIncomeCostJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeCostForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeCostForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCostJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCostJournalChoiceForm');
 end;
 
 procedure TLoadFormTest.LoadOrderClientFormTest;

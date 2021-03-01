@@ -63,7 +63,7 @@ BEGIN
                              , Object_StatusIncome.ObjectCode                       AS StatusCode_Income
 
                              , MovementFloat_AmountCost.ValueData            AS AmountCost
-                             , CASE WHEN Movement_Master.StatusId = zc_Enum_Status_Complete() THEN COALESCE (MovementFloat_AmountCost_Master.ValueData, 0) + COALESCE (MovementFloat_AmountMemberCost_Master.ValueData, 0) ELSE 0 END :: TFloat AS AmountCost_Master
+                             , CASE WHEN Movement_Master.StatusId = zc_Enum_Status_Complete() THEN COALESCE (MovementFloat_AmountCost_Master.ValueData, 0) ELSE 0 END :: TFloat AS AmountCost_Master
 
                              , Movement_Master.Id AS MovementId_master
 
@@ -85,9 +85,6 @@ BEGIN
                              LEFT JOIN MovementFloat AS MovementFloat_AmountCost_Master
                                                      ON MovementFloat_AmountCost_Master.MovementId = Movement_Master.Id
                                                     AND MovementFloat_AmountCost_Master.DescId     = zc_MovementFloat_AmountCost()
-                             LEFT JOIN MovementFloat AS MovementFloat_AmountMemberCost_Master
-                                                     ON MovementFloat_AmountMemberCost_Master.MovementId = Movement_Master.Id
-                                                    AND MovementFloat_AmountMemberCost_Master.DescId     = zc_MovementFloat_AmountMemberCost()
  
                              LEFT JOIN MovementDesc AS MovementDescMaster ON MovementDescMaster.Id = Movement_Master.DescId
  

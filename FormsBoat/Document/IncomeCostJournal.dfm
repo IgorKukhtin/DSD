@@ -1171,8 +1171,8 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1057#1095#1077#1090'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1057#1095#1077#1090'>'
       ImageIndex = 29
-      FormName = 'TTransportForm'
-      FormNameParam.Value = 'TTransportForm'
+      FormName = 'TInvoiceForm'
+      FormNameParam.Value = 'TInvoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1315,12 +1315,6 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
         Value = Null
         Component = actShowErased
         DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inJuridicalBasisId'
-        Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

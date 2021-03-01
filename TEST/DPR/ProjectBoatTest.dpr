@@ -233,7 +233,8 @@ uses
   Medoc_J1201011 in '..\..\SOURCE\MeDOC\Medoc_J1201011.pas',
   Medoc_J1201211 in '..\..\SOURCE\MeDOC\Medoc_J1201211.pas',
   IncomeCostJournal in '..\..\FormsBoat\Document\IncomeCostJournal.pas' {IncomeCostJournalForm: TParentForm},
-  IncomeCost in '..\..\FormsBoat\Document\IncomeCost.pas' {IncomeCostForm: TParentForm};
+  IncomeCost in '..\..\FormsBoat\Document\IncomeCost.pas' {IncomeCostForm: TParentForm},
+  CostJournalChoice in '..\..\FormsBoat\Document\CostJournalChoice.pas' {CostJournalChoiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

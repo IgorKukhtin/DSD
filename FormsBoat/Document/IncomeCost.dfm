@@ -1,10 +1,10 @@
 ﻿inherited IncomeCostForm: TIncomeCostForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1090#1088#1072#1090'>'
-  ClientHeight = 269
+  ClientHeight = 265
   ClientWidth = 322
   AddOnFormData.isSingle = False
   ExplicitWidth = 328
-  ExplicitHeight = 297
+  ExplicitHeight = 293
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -147,7 +147,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = '0'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -206,7 +206,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -355,7 +355,7 @@
       end
       item
         Name = 'isOnlyService'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
