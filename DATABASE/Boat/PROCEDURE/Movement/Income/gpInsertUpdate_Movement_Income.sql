@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
     IN inOperDatePartner     TDateTime , -- Дата накладной у контрагента
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , --
-    IN inChangePercent       TFloat    , --
+    IN inDiscountTax         TFloat    , --
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому
     IN inPaidKindId          Integer   , -- ФО
@@ -35,7 +35,7 @@ BEGIN
     ioId := lpInsertUpdate_Movement_Income(ioId, inInvNumber, inInvNumberPartner
                                          , inOperDate, inOperDatePartner
                                          , inPriceWithVAT
-                                         , inVATPercent, inChangePercent
+                                         , inVATPercent, inDiscountTax
                                          , inFromId, inToId
                                          , inPaidKindId
                                          , inMovementId_Invoice

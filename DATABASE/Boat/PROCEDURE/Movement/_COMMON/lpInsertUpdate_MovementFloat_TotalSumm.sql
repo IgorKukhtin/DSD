@@ -40,8 +40,9 @@ BEGIN
             END AS OperDatePartner
           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE)
           , COALESCE (MovementFloat_VATPercent.ValueData, 0)
-          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -1 * MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
-          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN      MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
+          , COALESCE (MovementFloat_DiscountTax.ValueData, 0) AS DiscountPercent
+          --, CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -1 * MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
+          --, CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN      MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
 
           , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)         AS PaidKindId
 
@@ -57,9 +58,9 @@ BEGIN
            LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                    ON MovementFloat_VATPercent.MovementId = Movement.Id
                                   AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
-           LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
-                                   ON MovementFloat_ChangePercent.MovementId = Movement.Id
-                                  AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+           LEFT JOIN MovementFloat AS MovementFloat_DiscountTax
+                                   ON MovementFloat_DiscountTax.MovementId = Movement.Id
+                                  AND MovementFloat_DiscountTax.DescId = zc_MovementFloat_DiscountTax()
 
            LEFT JOIN MovementLinkObject AS MovementLinkObject_FromTo
                                         ON MovementLinkObject_FromTo.MovementId = Movement.Id
@@ -185,5 +186,4 @@ $BODY$
 */
 -- select lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= id) from gpSelect_Movement_WeighingPartner (inStartDate := ('01.06.2014')::TDateTime , inEndDate := ('30.06.2014')::TDateTime ,  inSession := '5') as a
 -- тест
--- 
-SELECT lpInsertUpdate_MovementFloat_TotalSumm(inMovementId:= 76) 
+-- SELECT lpInsertUpdate_MovementFloat_TotalSumm(inMovementId:= 76) 
