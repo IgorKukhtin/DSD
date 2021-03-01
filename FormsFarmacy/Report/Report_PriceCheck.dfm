@@ -193,6 +193,14 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
         HeaderAlignmentVert = vaCenter
         Width = 58
       end
+      object PromoBonus: TcxGridDBColumn
+        Caption = '% '#1084#1072#1088#1082#1077#1090' '#1073#1086#1085#1091#1089#1072' '
+        DataBinding.FieldName = 'PromoBonus'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 72
+      end
       object PriceAverage: TcxGridDBColumn
         Caption = #1057#1088#1077#1076#1085#1103#1103' '#1094#1077#1085#1072
         DataBinding.FieldName = 'PriceAverage'

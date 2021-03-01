@@ -512,6 +512,16 @@ BEGIN
                         FROM ResultSet
                              INNER JOIN tmpGoodsRepriceAll ON UPPER (ResultSet.GoodsName) Like ('%'|| UPPER (tmpGoodsRepriceAll.Name) ||'%')
                         )
+  , tmpPriorities AS (SELECT DISTINCT Object_Goods_Retail.ID AS GoodsId
+                      FROM Object AS Object_JuridicalPriorities
+
+                          INNER JOIN ObjectLink AS ObjectLink_JuridicalPriorities_Goods
+                                               ON ObjectLink_JuridicalPriorities_Goods.ObjectId = Object_JuridicalPriorities.Id
+                                              AND ObjectLink_JuridicalPriorities_Goods.DescId = zc_ObjectLink_JuridicalPriorities_Goods()
+                          INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = ObjectLink_JuridicalPriorities_Goods.ChildObjectId
+
+                      WHERE Object_JuridicalPriorities.DescId = zc_Object_JuridicalPriorities()
+                        AND Object_JuridicalPriorities.isErased =False  )
 
     ----
     SELECT
@@ -615,7 +625,8 @@ BEGIN
           OR ResultSet.isResolution_224 = TRUE AND COALESCE(ResultSet.NDSKindId,0) = zc_Enum_NDSKind_Common() AND ResultSet.IsTop = TRUE AND
              CAST (CASE WHEN COALESCE(ResultSet.LastPrice,0) = 0 THEN 0.0
                              ELSE (ResultSet.NewPrice / ResultSet.LastPrice) * 100 - 100
-                        END AS NUMERIC (16, 1)) :: TFloat BETWEEN - 10 AND 0) AS Reprice,
+                        END AS NUMERIC (16, 1)) :: TFloat BETWEEN - 10 AND 0)
+        AND COALESCE(tmpPriorities.GoodsId, 0) = 0                             AS Reprice,
 
         CASE WHEN tmpGoodsReprice.GoodsId IS NOT NULL THEN TRUE ELSE FALSE END AS isGoodsReprice,
 
@@ -665,8 +676,9 @@ BEGIN
           OR ResultSet.isResolution_224 = TRUE AND COALESCE(ResultSet.NDSKindId,0) = zc_Enum_NDSKind_Common() AND ResultSet.IsTop = TRUE AND
              CAST (CASE WHEN COALESCE(ResultSet.LastPrice,0) = 0 THEN 0.0
                              ELSE (ResultSet.NewPricePromo / ResultSet.LastPrice) * 100 - 100
-                        END AS NUMERIC (16, 1)) :: TFloat BETWEEN - 10 AND 0) AS RepricePromo,
-        (-5) ::TFloat                                        AS AddPercentRepricePromoMin
+                        END AS NUMERIC (16, 1)) :: TFloat BETWEEN - 10 AND 0)
+        AND COALESCE(tmpPriorities.GoodsId, 0) = 0                             AS RepricePromo,
+        (-5) ::TFloat                                                          AS AddPercentRepricePromoMin
 
 
     FROM
@@ -687,6 +699,8 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Juridical_UseReprice
                                 ON ObjectBoolean_Juridical_UseReprice.ObjectId = ResultSet.JuridicalId
                                AND ObjectBoolean_Juridical_UseReprice.DescId = zc_ObjectBoolean_Juridical_UseReprice()
+                               
+        LEFT JOIN tmpPriorities ON tmpPriorities.GoodsId = ResultSet.Id
 
     WHERE
        ((inUnitId_to > 0 AND ResultSet.NewPrice_to > 0 AND 0 <> CAST (CASE WHEN COALESCE (ResultSet.LastPrice,0) = 0 THEN 0.0

@@ -1908,9 +1908,23 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_MinPercentPromoBonus() RE
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_MinPercentPromoBonus', 'Минимальная наценка (маркет бонусы)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_MinPercentPromoBonus');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PartnerMedical_LikiDniproId() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartnerMedical_LikiDniproId'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PartnerMedical(), 'zc_ObjectFloat_PartnerMedical_LikiDniproId', 'Id медицинского учреждения в системе МИС «Каштан»' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartnerMedical_LikiDniproId');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_MedicSP_LikiDniproId() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MedicSP_LikiDniproId'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_MedicSP(), 'zc_ObjectFloat_MedicSP_LikiDniproId', 'Id врача в системе МИС «Каштан»' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MedicSP_LikiDniproId');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_MemberSP_LikiDniproId() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MemberSP_LikiDniproId'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_MemberSP(), 'zc_ObjectFloat_MemberSP_LikiDniproId', 'Id пациента в системе МИС «Каштан»' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MemberSP_LikiDniproId');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 01.03.21                                                                                      * zc_ObjectFloat_PartnerMedical_LikiDniproId
  19.02.21         * zc_ObjectFloat_GoodsByGoodsKind_DaysQ
  18.02.21                                                                                      * zc_ObjectFloat_CashSettings_UpperLimitPromoBonus, zc_ObjectFloat_CashSettings_LowerLimitPromoBonus
  09.02.21                                                                                      * zc_ObjectFloat_Unit_SerialNumberMypharmacy
