@@ -4174,6 +4174,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_HammerTimeSUN: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1054#1090#1076#1072#1095#1072' '#1090#1086#1074#1072#1088#1072' '#1087#1086#1089#1083#1077' '#1087#1088#1080#1093#1086#1076#1072' '#1057#1059#1053
+      FormName = 'TReport_HammerTimeSUNForm'
+      FormNameParam.Value = 'TReport_HammerTimeSUNForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4832,6 +4843,9 @@ inherited MainForm: TMainForm
       end
       object N273: TMenuItem
         Action = actReport_GoodsRemainsUKTZED
+      end
+      object N279: TMenuItem
+        Action = actReport_HammerTimeSUN
       end
       object N178: TMenuItem
         Caption = '-'

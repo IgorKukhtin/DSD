@@ -779,6 +779,8 @@ type
     N277: TMenuItem;
     actPromoBonus: TdsdOpenForm;
     N278: TMenuItem;
+    actReport_HammerTimeSUN: TdsdOpenForm;
+    N279: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

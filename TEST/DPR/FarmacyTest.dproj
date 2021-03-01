@@ -3579,6 +3579,14 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Reprice_PromoBonus.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PartnerMedical_SPKind.pas">
+				<Form>PartnerMedical_SPKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_HammerTimeSUN.pas">
+				<Form>Report_HammerTimeSUNForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

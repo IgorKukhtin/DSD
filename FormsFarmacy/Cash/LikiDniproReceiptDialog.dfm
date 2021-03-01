@@ -269,19 +269,19 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       ShortCut = 27
     end
   end
-  object PartnerMedicalGuides: TdsdGuides
+  object GuidesPartnerMedical: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePartnerMedical
-    FormNameParam.Value = 'TPartnerMedical_ObjectForm'
+    FormNameParam.Value = 'TPartnerMedical_SPKindForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPartnerMedical_ObjectForm'
+    FormName = 'TPartnerMedical_SPKindForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = PartnerMedicalGuides
+        Component = GuidesPartnerMedical
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -289,105 +289,8 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PartnerMedicalGuides
+        Component = GuidesPartnerMedical
         ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MedicSPId'
-        Value = '0'
-        Component = MedicSPGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MedicSPName'
-        Value = ''
-        Component = MedicSPGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterOperDate'
-        Value = Null
-        Component = edCreated
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterUnitId'
-        Value = Null
-        ComponentItem = 'MasterUnitId'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterUnitName'
-        Value = Null
-        ComponentItem = 'MasterUnitName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterSPKindId'
-        Value = Null
-        Component = SPKindGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterSPKindName'
-        Value = Null
-        Component = SPKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GuidesMemberSPId'
-        Value = Null
-        Component = GuidesMemberSP
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GuidesMemberSPName'
-        Value = Null
-        Component = GuidesMemberSP
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GroupMemberSP'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Passport'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Inn'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'eAddress'
-        Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -395,7 +298,7 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
     Left = 136
     Top = 112
   end
-  object MedicSPGuides: TdsdGuides
+  object GuidesMedicSP: TdsdGuides
     KeyField = 'Id'
     LookupControl = edMedicSP
     Key = '0'
@@ -408,7 +311,7 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       item
         Name = 'Key'
         Value = ''
-        Component = MedicSPGuides
+        Component = GuidesMedicSP
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -416,7 +319,7 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = MedicSPGuides
+        Component = GuidesMedicSP
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -425,14 +328,14 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       item
         Name = 'MasterPartnerMedicalId'
         Value = ''
-        Component = PartnerMedicalGuides
+        Component = GuidesPartnerMedical
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MasterPartnerMedicalName'
         Value = ''
-        Component = PartnerMedicalGuides
+        Component = GuidesPartnerMedical
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -440,7 +343,7 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       item
         Name = 'PartnerMedicalId'
         Value = Null
-        Component = PartnerMedicalGuides
+        Component = GuidesPartnerMedical
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -448,7 +351,7 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       item
         Name = 'PartnerMedicalName'
         Value = Null
-        Component = PartnerMedicalGuides
+        Component = GuidesPartnerMedical
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -477,14 +380,14 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       item
         Name = 'MasterSPKindId'
         Value = Null
-        Component = SPKindGuides
+        Component = GuidesSPKind
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MasterSPKindName'
         Value = Null
-        Component = SPKindGuides
+        Component = GuidesSPKind
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -492,7 +395,7 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
     Left = 136
     Top = 160
   end
-  object SPKindGuides: TdsdGuides
+  object GuidesSPKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edSPKind
     DisableGuidesOpen = True
@@ -505,7 +408,7 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       item
         Name = 'Key'
         Value = ''
-        Component = SPKindGuides
+        Component = GuidesSPKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -513,7 +416,7 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = SPKindGuides
+        Component = GuidesSPKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -537,14 +440,14 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       item
         Name = 'Id'
         Value = Null
-        Component = SPKindGuides
+        Component = GuidesSPKind
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = Null
-        Component = SPKindGuides
+        Component = GuidesSPKind
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -596,14 +499,14 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       item
         Name = 'MasterPartnerMedicalId'
         Value = ''
-        Component = PartnerMedicalGuides
+        Component = GuidesPartnerMedical
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MasterPartnerMedicalName'
         Value = ''
-        Component = PartnerMedicalGuides
+        Component = GuidesPartnerMedical
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -632,49 +535,83 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
     Left = 416
     Top = 168
   end
-  object spSelect_Object_MemberSP: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_MemberSP_Cash'
+  object spSelect_SearchData: TdsdStoredProc
+    StoredProcName = 'gpSelect_SearchData_SPKind_1303'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inMemberSPId'
+        Name = 'inInstitution_Id'
         Value = ''
-        Component = GuidesMemberSP
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Name'
+        Name = 'inDoctor_Id'
         Value = ''
-        Component = edMemberSP
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPatient_Id'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInstitution_Edrpou'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPartnerMedicalId'
+        Value = Null
+        Component = GuidesPartnerMedical
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPartnerMedicalName'
+        Value = Null
+        Component = GuidesPartnerMedical
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'GroupMemberSPName'
+        Name = 'outMedicSPId'
         Value = Null
+        Component = GuidesMedicSP
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMedicSPName'
+        Value = Null
+        Component = GuidesMedicSP
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Passport'
+        Name = 'outMemberSPId'
         Value = Null
+        Component = GuidesMemberSP
+        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'INN'
+        Name = 'outMemberSPName'
         Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Address'
-        Value = Null
+        Component = GuidesMemberSP
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 424
+    Left = 272
     Top = 80
   end
   object spGet_Movement_InvNumberSP: TdsdStoredProc
@@ -685,7 +622,7 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       item
         Name = 'inSPKindId'
         Value = Null
-        Component = SPKindGuides
+        Component = GuidesSPKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -705,7 +642,7 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 288
+    Left = 424
     Top = 80
   end
 end

@@ -978,6 +978,8 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HammerTimeSUNForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_HammerTimeSUNForm');
 
 
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPrice_PromoBonusForm'));
@@ -2533,13 +2535,16 @@ end;
 
 procedure TLoadFormTest.LoadPartnerMedicalFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerMedical_ObjectForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TPartnerMedical_ObjectForm');
-  //
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerMedicalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TPartnerMedicalForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerMedicalEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TPartnerMedicalEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerMedical_SPKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartnerMedical_SPKindForm');
+
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerMedical_ObjectForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TPartnerMedical_ObjectForm');
+//  //
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerMedicalForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TPartnerMedicalForm');
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerMedicalEditForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TPartnerMedicalEditForm');
 end;
 
 procedure TLoadFormTest.LoadPaymentFormTest;
