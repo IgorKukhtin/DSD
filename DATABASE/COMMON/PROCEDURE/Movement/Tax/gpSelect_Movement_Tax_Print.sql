@@ -298,7 +298,8 @@ order by 4*/
                   WHEN vbOperDate_begin  < '01.04.2016' THEN 'J1201007'
                   WHEN Movement.OperDate < '01.03.2017' THEN 'J1201008'
                   WHEN vbOperDate_begin  < '01.12.2018' THEN 'J1201009'
-                  ELSE 'J1201010'
+                  WHEN vbOperDate_begin  < '01.03.2021' THEN 'J1201010'
+                  ELSE 'J1201011'
              END ::TVarChar AS CHARCODE
            -- , 'Неграш О.В.'::TVarChar                    AS N10
            , CASE WHEN Object_PersonalSigning.PersonalName <> ''

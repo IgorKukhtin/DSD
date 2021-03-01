@@ -135,7 +135,7 @@ BEGIN
              END AS WeightOne     -- "вес 1 ед." = вес / кол-во батонов
            , tmpMI.PartionGoodsDate
            , tmpMI.PartionGoods
-           , zfConvert_DateToString (zfCalc_PartionGoods_OperDate (tmpMI.PartionGoods)) AS PartionGoodsDate_str
+           , zfConvert_DateToString (CURRENT_DATE) AS PartionGoodsDate_str
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
 

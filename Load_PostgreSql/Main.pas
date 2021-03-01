@@ -1226,21 +1226,21 @@ begin
      //
      if (ParamStr(2)='autoALL') and (BranchEdit.Text <> 'BranchId : 0')
      then begin
-           if ((Hour_calc = 5) and (Minute_calc >=29 ) and (Minute_calc < 50))
+           if ((Hour_calc = 5) and (Minute_calc >= 29) and (Minute_calc < 49))
            then begin
                      myLogMemo_add('start stop 20 min');
                      MyDelay(20*60*1000);
                      myLogMemo_add('end stop');
            end;
            //
-           if ((Hour_calc = 23) and (Minute_calc >=39 )and (Minute_calc < 59))
+           if ((Hour_calc = 23) and (Minute_calc >= 39)and (Minute_calc < 59))
            then begin
                      myLogMemo_add('start stop 20 min');
                      MyDelay(20*60*1000);
                      myLogMemo_add('end stop');
            end;
            //
-           if ((Hour_calc = 21) and (Minute_calc >=20 )and (Minute_calc < 35))
+           if ((Hour_calc = 21) and (Minute_calc >= 20)and (Minute_calc < 35))
            then begin
                      myLogMemo_add('start stop 15 min');
                      MyDelay(15*60*1000);

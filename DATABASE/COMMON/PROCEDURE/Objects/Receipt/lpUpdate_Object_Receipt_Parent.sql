@@ -40,7 +40,7 @@ BEGIN
          AND*/ ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods();
 
    -- сохранили свойство
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Receipt_Parent(), ObjectLink_Receipt_Goods.ObjectId, tmp.ReceiptId_parent)
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Receipt_Parent(), ObjectLink_Receipt_Goods.ObjectId, CASE WHEN tmp.isParentMulti = TRUE THEN NULL ELSE tmp.ReceiptId_parent END)
          , lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Receipt_ParentMulti(), ObjectLink_Receipt_Goods.ObjectId, tmp.isParentMulti)
    FROM ObjectLink AS ObjectLink_Receipt_Goods
         LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent

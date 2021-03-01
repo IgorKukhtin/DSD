@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, PartionId Integer, GoodsId Integer, GoodsCode Integer
              , TotalSumm TFloat, TotalSummBalance TFloat, TotalSummPriceList TFloat, TotalSummPriceList_grn TFloat, TotalSummPriceJur TFloat
              , PriceTax TFloat       -- % наценки
              , Color_Calc Integer
+             , ContainerId Integer
              , isProtocol Boolean
              , isErased Boolean
               )
@@ -207,6 +208,8 @@ BEGIN
                  THEN zc_Color_Red() 
                  ELSE zc_Color_Black() 
               END :: Integer  AS Color_Calc
+
+           , Container.Id  AS ContainerId
 
            , CASE WHEN tmpProtocol.MovementItemId > 0 THEN TRUE ELSE FALSE END AS isProtocol
            , tmpMI.isErased

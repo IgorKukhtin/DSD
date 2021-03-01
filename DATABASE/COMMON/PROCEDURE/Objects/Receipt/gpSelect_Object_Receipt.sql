@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Co
                ReceiptCostId Integer, ReceiptCostCode Integer, ReceiptCostName TVarChar,
                ReceiptKindId Integer, ReceiptKindCode Integer, ReceiptKindName TVarChar,
                MeasureName TVarChar
-             , Code_Parent Integer, Name_Parent TVarChar, ReceiptCode_Parent TVarChar, isMain_Parent Boolean
+             , ReceiptId_Parent Integer, Code_Parent Integer, Name_Parent TVarChar, ReceiptCode_Parent TVarChar, isMain_Parent Boolean
              , GoodsCode_Parent Integer, GoodsName_Parent TVarChar, MeasureName_Parent TVarChar
              , GoodsKindName_Parent TVarChar, GoodsKindCompleteName_Parent TVarChar
              , GoodsGroupNameFull TVarChar, GoodsGroupAnalystName TVarChar, GoodsTagName TVarChar, TradeMarkName TVarChar
@@ -91,6 +91,7 @@ BEGIN
 
          , Object_Measure.ValueData     AS MeasureName
 
+         , Object_Receipt_Parent.Id              AS ReceiptId_Parent
          , Object_Receipt_Parent.ObjectCode      AS Code_Parent
          , Object_Receipt_Parent.ValueData       AS Name_Parent
          , ObjectString_Code_Parent.ValueData    AS ReceiptCode_Parent

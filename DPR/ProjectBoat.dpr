@@ -81,7 +81,9 @@ uses
   OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
   MainForm in '..\FormsBoat\MainForm.pas' {MainForm},
   dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas',
-  dsdAddOn in '..\SOURCE\COMPONENT\dsdAddOn.pas';
+  dsdAddOn in '..\SOURCE\COMPONENT\dsdAddOn.pas',
+  Medoc_J1201011 in '..\SOURCE\MeDOC\Medoc_J1201011.pas',
+  Medoc_J1201211 in '..\SOURCE\MeDOC\Medoc_J1201211.pas';
 
 {$R *.res}
 

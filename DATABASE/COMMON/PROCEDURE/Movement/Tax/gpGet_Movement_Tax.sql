@@ -123,6 +123,11 @@ BEGIN
      ELSE
 
      RETURN QUERY
+       WITH tmpMovementFloat   AS (SELECT * FROM MovementFloat      AS MF WHERE MF.MovementId = inMovementId)
+          , tmpMovementString  AS (SELECT * FROM MovementString     AS MS WHERE MS.MovementId = inMovementId)
+          , tmpMovementBoolean AS (SELECT * FROM MovementBoolean    AS MB WHERE MB.MovementId = inMovementId)
+          , tmpMLO             AS (SELECT * FROM MovementLinkObject AS ML WHERE ML.MovementId = inMovementId)
+       -- Результат
        SELECT
              Movement.Id						AS Id
            , FALSE                                                      AS isMask
@@ -186,10 +191,10 @@ BEGIN
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-            LEFT JOIN MovementBoolean AS MovementBoolean_Document
+            LEFT JOIN tmpMovementBoolean AS MovementBoolean_Document
                                       ON MovementBoolean_Document.MovementId = Movement.Id
                                      AND MovementBoolean_Document.DescId = zc_MovementBoolean_Document()
-            LEFT JOIN MovementBoolean AS MovementBoolean_Electron
+            LEFT JOIN tmpMovementBoolean AS MovementBoolean_Electron
                                       ON MovementBoolean_Electron.MovementId = Movement.Id
                                      AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
 
@@ -197,49 +202,49 @@ BEGIN
                                    ON MovementDate_DateRegistered.MovementId = Movement.Id
                                   AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
 
-            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+            LEFT JOIN tmpMovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
 
-            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+            LEFT JOIN tmpMovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId = Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
-            LEFT JOIN MovementString AS MovementString_Comment 
+            LEFT JOIN tmpMovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
-            LEFT JOIN MovementString AS MovementString_ToINN
+            LEFT JOIN tmpMovementString AS MovementString_ToINN
                                      ON MovementString_ToINN.MovementId = Movement.Id
                                     AND MovementString_ToINN.DescId     = zc_MovementString_ToINN()
                                     AND MovementString_ToINN.ValueData  <> ''
 
-            LEFT JOIN MovementString AS MovementString_InvNumberRegistered
+            LEFT JOIN tmpMovementString AS MovementString_InvNumberRegistered
                                      ON MovementString_InvNumberRegistered.MovementId = Movement.Id
                                     AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
 
-            LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+            LEFT JOIN tmpMovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId = Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalCount
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId = Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSummMVAT
                                     ON MovementFloat_TotalSummMVAT.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSummPVAT
                                     ON MovementFloat_TotalSummPVAT.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+            LEFT JOIN tmpMLO AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+            LEFT JOIN tmpMLO AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
@@ -248,24 +253,24 @@ BEGIN
                                                                AND Movement.OperDate >= ObjectHistory_JuridicalDetails_View.StartDate AND Movement.OperDate < ObjectHistory_JuridicalDetails_View.EndDate
 
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+            LEFT JOIN tmpMLO AS MovementLinkObject_Partner
                                          ON MovementLinkObject_Partner.MovementId = Movement.Id
                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+            LEFT JOIN tmpMLO AS MovementLinkObject_DocumentTaxKind
                                          ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
                                         AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
 
             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+            LEFT JOIN tmpMLO AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
 
             LEFT JOIN object_contract_invnumber_view AS Object_Contract ON Object_Contract.contractid = MovementLinkObject_Contract.ObjectId
 
-            LEFT JOIN MovementString AS MovementString_InvNumberBranch
+            LEFT JOIN tmpMovementString AS MovementString_InvNumberBranch
                                      ON MovementString_InvNumberBranch.MovementId =  Movement.Id
                                     AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
 
@@ -274,11 +279,11 @@ BEGIN
                                           AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
                                           AND MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_Tax()
             LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementId
-            LEFT JOIN MovementBoolean AS MovementBoolean_Checked
+            LEFT JOIN tmpMovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId = COALESCE (Movement_DocumentMaster.Id, Movement.Id)
                                      AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
+            LEFT JOIN tmpMLO AS MovementLinkObject_ReestrKind
                                          ON MovementLinkObject_ReestrKind.MovementId = COALESCE (Movement_DocumentMaster.Id, Movement.Id)
                                         AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
             LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId

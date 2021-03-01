@@ -86,7 +86,7 @@ else RETURN;
 */
 
    -- временно
-   IF COALESCE (TRIM (inName), '') = '' THEN RETURN; END IF;
+   IF COALESCE (TRIM (inName), '') = '' OR inObjectCode <= 0 THEN RETURN; END IF;
 
 
  --RAISE EXCEPTION 'inisArc    % ', inisArc;

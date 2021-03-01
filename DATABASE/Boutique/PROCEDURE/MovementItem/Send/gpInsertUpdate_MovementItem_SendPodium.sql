@@ -66,6 +66,11 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Партия>.';
      END IF;
 */
+     -- проверка - свойство должно быть установлено
+     IF COALESCE (ioAmount, 0) < 0 THEN
+        RAISE EXCEPTION 'Ошибка.Кол-во не может быть меньше 0.';
+     END IF;
+
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
