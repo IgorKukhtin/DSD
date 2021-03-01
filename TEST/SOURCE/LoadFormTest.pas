@@ -2060,10 +2060,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleExternalDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleExternalDialogForm');
   exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceNoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceNoForm');
-  exit;
+  {exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderInternalBasis_OlapForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderInternalBasis_OlapForm');
@@ -2252,7 +2252,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AccountMotionDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_AccountMotionDialogForm');
   exit;
+  }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Account_noBalanceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Account_noBalanceForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AccountMotion_noBalanceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_AccountMotion_noBalanceForm');
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportHoursWorkForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TransportHoursWorkForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportHoursWorkDialogForm'));

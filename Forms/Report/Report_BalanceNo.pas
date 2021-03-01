@@ -92,6 +92,12 @@ type
     bbPrint3: TdxBarButton;
     cbGroup: TcxCheckBox;
     bbGroup: TdxBarControlContainerItem;
+    actOpenReport_Account_noBalance: TdsdOpenForm;
+    actOpenReport_AccountMotion_noBalance: TdsdOpenForm;
+    macReport_AccountMotion_noBalance: TMultiAction;
+    macReport_Account_noBalance: TMultiAction;
+    bbReport_Account_noBalance: TdxBarButton;
+    bbReport_AccountMotion_noBalance: TdxBarButton;
   private
   public
   end;

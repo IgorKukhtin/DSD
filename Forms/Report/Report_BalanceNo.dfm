@@ -289,7 +289,7 @@ object Report_BalanceNoForm: TReport_BalanceNoForm
     Top = 179
     Caption = 'C'#1075#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100
     Properties.ReadOnly = False
-    TabOrder = 4
+    TabOrder = 3
     Width = 101
   end
   object cbGroup: TcxCheckBox
@@ -411,6 +411,26 @@ object Report_BalanceNoForm: TReport_BalanceNoForm
         end
         item
           Visible = True
+          ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_Account_noBalance'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_AccountMotion_noBalance'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint2'
         end
         item
@@ -508,6 +528,14 @@ object Report_BalanceNoForm: TReport_BalanceNoForm
       Visible = ivAlways
       Control = cbGroup
     end
+    object bbReport_Account_noBalance: TdxBarButton
+      Action = macReport_Account_noBalance
+      Category = 0
+    end
+    object bbReport_AccountMotion_noBalance: TdxBarButton
+      Action = macReport_AccountMotion_noBalance
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -535,6 +563,107 @@ object Report_BalanceNoForm: TReport_BalanceNoForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
+    end
+    object actOpenReport_Account_noBalance: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091'> ('#1079#1072#1073#1072#1083#1072#1085#1089')'
+      Hint = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091'> ('#1079#1072#1073#1072#1083#1072#1085#1089')'
+      FormName = 'TReport_Account_noBalanceForm'
+      FormNameParam.Value = 'TReport_Account_noBalanceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 43466d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 43466d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountGroupId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountGroupId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountGroupName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountGroupName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountDirectionId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountDirectionId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountDirectionName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountDirectionName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BusinessId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'BusinessId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BusinessName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'BusinessName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
     object actOpenReport_Account: TdsdOpenForm
       Category = 'DSDLib'
@@ -637,6 +766,133 @@ object Report_BalanceNoForm: TReport_BalanceNoForm
         end>
       isShowModal = False
     end
+    object actOpenReport_AccountMotion_noBalance: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1091' ('#1079#1072#1073#1072#1083#1072#1085#1089')'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1091' ('#1079#1072#1073#1072#1083#1072#1085#1089')'
+      ImageIndex = 26
+      FormName = 'TReport_AccountMotion_noBalanceForm'
+      FormNameParam.Value = 'TReport_AccountMotion_noBalanceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 43466d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 43466d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountGroupId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountGroupId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountGroupName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountGroupName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountDirectionId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountDirectionId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountDirectionName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountDirectionName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InfoMoneyId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BusinessId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'BusinessId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BusinessName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'BusinessName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementDescId'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementDescName'
+          Value = Null
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actOpenReport_AccountMotion: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -650,7 +906,7 @@ object Report_BalanceNoForm: TReport_BalanceNoForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = ''
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
@@ -658,7 +914,7 @@ object Report_BalanceNoForm: TReport_BalanceNoForm
         end
         item
           Name = 'EndDate'
-          Value = ''
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
@@ -764,6 +1020,20 @@ object Report_BalanceNoForm: TReport_BalanceNoForm
         end>
       isShowModal = False
     end
+    object macReport_AccountMotion_noBalance: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetBalanceParam
+        end
+        item
+          Action = actOpenReport_AccountMotion_noBalance
+        end>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1091' ('#1079#1072#1073#1072#1083#1072#1085#1089')'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1091' ('#1079#1072#1073#1072#1083#1072#1085#1089')'
+      ImageIndex = 26
+    end
     object macReport_AccountMotion: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -777,6 +1047,20 @@ object Report_BalanceNoForm: TReport_BalanceNoForm
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1091
       Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1091
       ImageIndex = 26
+    end
+    object macReport_Account_noBalance: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetBalanceParam
+        end
+        item
+          Action = actOpenReport_Account_noBalance
+        end>
+      Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091'> '#1079#1072#1073#1072#1083#1072#1085#1089
+      Hint = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091'> '#1079#1072#1073#1072#1083#1072#1085#1089
+      ImageIndex = 25
     end
     object macReport_Account: TMultiAction
       Category = 'DSDLib'
@@ -854,7 +1138,7 @@ object Report_BalanceNoForm: TReport_BalanceNoForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -865,7 +1149,7 @@ object Report_BalanceNoForm: TReport_BalanceNoForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -933,7 +1217,7 @@ object Report_BalanceNoForm: TReport_BalanceNoForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -944,7 +1228,7 @@ object Report_BalanceNoForm: TReport_BalanceNoForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1017,7 +1301,7 @@ object Report_BalanceNoForm: TReport_BalanceNoForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1028,7 +1312,7 @@ object Report_BalanceNoForm: TReport_BalanceNoForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','

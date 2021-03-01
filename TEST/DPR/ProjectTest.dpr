@@ -1236,7 +1236,9 @@ uses
   Report_GoodsMI_ProductionUnion_diff in '..\..\Forms\Report\Report_GoodsMI_ProductionUnion_diff.pas' {Report_GoodsMI_ProductionUnion_diffForm: TParentForm},
   OrderFinanceMovement in '..\..\Forms\Document\OrderFinanceMovement.pas' {OrderFinanceMovementForm: TParentForm},
   Medoc_J1201011 in '..\..\SOURCE\MeDOC\Medoc_J1201011.pas',
-  Medoc_J1201211 in '..\..\SOURCE\MeDOC\Medoc_J1201211.pas';
+  Medoc_J1201211 in '..\..\SOURCE\MeDOC\Medoc_J1201211.pas',
+  Report_Account_noBalance in '..\..\Forms\Report\Report_Account_noBalance.pas' {Report_Account_noBalanceForm: TParentForm},
+  Report_AccountMotion_noBalance in '..\..\Forms\Report\Report_AccountMotion_noBalance.pas' {Report_AccountMotion_noBalanceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
