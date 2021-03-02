@@ -51,16 +51,16 @@ BEGIN
      END IF;
      
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem_Income (ioId
-                                               , inMovementId
-                                               , inPartionId
-                                               , inGoodsId
-                                               , inAmount
-                                               , inOperPrice
-                                               , inCountForPrice
-                                               , inPartNumber
-                                               , inComment
-                                               , vbUserId
+     ioId := lpInsertUpdate_MovementItem_Income (ioId         ::Integer
+                                               , inMovementId ::Integer
+                                               , inPartionId  ::Integer
+                                               , inGoodsId    ::Integer
+                                               , inAmount     ::TFloat
+                                               , inOperPrice  ::TFloat
+                                               , inCountForPrice ::TFloat
+                                               , inPartNumber ::TVarChar
+                                               , inComment    ::TVarChar
+                                               , vbUserId     ::Integer
                                                );
 
      --сохраняем партию
