@@ -67,7 +67,7 @@ type
     spMovementSetErased: TdsdStoredProc;
     PriceWithVAT: TcxGridDBColumn;
     VATPercent: TcxGridDBColumn;
-    ChangePercent: TcxGridDBColumn;
+    DiscountTax: TcxGridDBColumn;
     TotalCount: TcxGridDBColumn;
     TotalSummMVAT: TcxGridDBColumn;
     TotalSumm: TcxGridDBColumn;

@@ -134,7 +134,7 @@ object IncomeForm: TIncomeForm
       TabOrder = 4
       Width = 81
     end
-    object edChangePercent: TcxCurrencyEdit
+    object edDiscountTax: TcxCurrencyEdit
       Left = 451
       Top = 63
       Properties.Alignment.Horz = taRightJustify
@@ -153,7 +153,7 @@ object IncomeForm: TIncomeForm
     object cxLabel8: TcxLabel
       Left = 451
       Top = 45
-      Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
+      Caption = '% '#1057#1082#1080#1076#1082#1080
     end
     object cxLabel11: TcxLabel
       Left = 9
@@ -1949,30 +1949,6 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inFromId'
-        Value = Null
-        Component = GuidesFrom
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inToId'
-        Value = Null
-        Component = GuidesTo
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDate'
-        Value = Null
-        Component = edOperDate
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inPartionId'
         Value = Null
         Component = MasterCDS
@@ -2214,9 +2190,9 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inChangePercent'
+        Name = 'inDiscountTax'
         Value = 0.000000000000000000
-        Component = edChangePercent
+        Component = edDiscountTax
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2297,7 +2273,7 @@ object IncomeForm: TIncomeForm
         Control = edVATPercent
       end
       item
-        Control = edChangePercent
+        Control = edDiscountTax
       end
       item
         Control = edPaidKind
@@ -2415,9 +2391,9 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ChangePercent'
+        Name = 'DiscountTax'
         Value = 0.000000000000000000
-        Component = edChangePercent
+        Component = edDiscountTax
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -2628,7 +2604,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'DiscountTax'
         Value = 0.000000000000000000
-        Component = edChangePercent
+        Component = edDiscountTax
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
