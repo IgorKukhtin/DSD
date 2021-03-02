@@ -254,8 +254,8 @@ object ProductEditForm: TProductEditForm
     Width = 114
   end
   object cxLabel15: TcxLabel
-    Left = 472
-    Top = 147
+    Left = 456
+    Top = 148
     Hint = '% '#1089#1082'. ('#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081')'
     Caption = '% '#1089#1082'. ('#1076#1086#1087'.)'
     ParentShowHint = False
@@ -286,7 +286,7 @@ object ProductEditForm: TProductEditForm
     TabOrder = 34
     Width = 239
   end
-  object edChangePercent: TcxCurrencyEdit
+  object edDiscountTax: TcxCurrencyEdit
     Left = 331
     Top = 168
     Properties.DecimalPlaces = 2
@@ -590,9 +590,9 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inChangePercent'
+        Name = 'inDiscountTax'
         Value = Null
-        Component = edChangePercent
+        Component = edDiscountTax
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -856,9 +856,9 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ChangePercent'
+        Name = 'DiscountTax'
         Value = Null
-        Component = edChangePercent
+        Component = edDiscountTax
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -1167,7 +1167,7 @@ object ProductEditForm: TProductEditForm
       item
         Name = 'DiscountTax'
         Value = Null
-        Component = edChangePercent
+        Component = edDiscountTax
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

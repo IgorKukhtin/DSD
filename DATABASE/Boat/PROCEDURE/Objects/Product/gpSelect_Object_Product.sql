@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Product(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ProdColorName TVarChar
-             , Hours TFloat, ChangePercent TFloat, DiscountNextTax TFloat
+             , Hours TFloat, DiscountTax TFloat, DiscountNextTax TFloat
              , DateStart TDateTime, DateBegin TDateTime, DateSale TDateTime
              , CIN TVarChar, EngineNum TVarChar
              , Comment TVarChar
@@ -489,7 +489,7 @@ BEGIN
                               , Object_From.ObjectCode AS FromCode
                               , Object_From.ValueData  AS FromName
                               , MovementLinkObject_Product.ObjectId AS ProductId
-                              , MovementFloat_ChangePercent.ValueData      AS ChangePercent
+                              , MovementFloat_DiscountTax.ValueData      AS DiscountTax
                               , MovementFloat_DiscountNextTax.ValueData    AS DiscountNextTax
                               , ROW_NUMBER() OVER (PARTITION BY MovementLinkObject_Product.ObjectId
                                                    ORDER BY CASE WHEN Movement.StatusId = zc_Enum_Status_Complete() THEN 1
@@ -507,9 +507,9 @@ BEGIN
 
                               LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-                              LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
-                                                      ON MovementFloat_ChangePercent.MovementId = Movement.Id
-                                                     AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+                              LEFT JOIN MovementFloat AS MovementFloat_DiscountTax
+                                                      ON MovementFloat_DiscountTax.MovementId = Movement.Id
+                                                     AND MovementFloat_DiscountTax.DescId = zc_MovementFloat_DiscountTax()
                               LEFT JOIN MovementFloat AS MovementFloat_DiscountNextTax
                                                       ON MovementFloat_DiscountNextTax.MovementId = Movement.Id
                                                      AND MovementFloat_DiscountNextTax.DescId = zc_MovementFloat_DiscountNextTax()
@@ -530,7 +530,7 @@ BEGIN
          , tmpResAll.Hours            ::TFloat
          --, tmpResAll.DiscountTax      ::TFloat
          --, tmpResAll.DiscountNextTax  ::TFloat
-         , tmpOrderClient.ChangePercent    ::TFloat AS ChangePercent
+         , tmpOrderClient.DiscountTax    ::TFloat AS DiscountTax
          , tmpOrderClient.DiscountNextTax  ::TFloat AS DiscountNextTax
          , tmpResAll.DateStart
          , tmpResAll.DateBegin

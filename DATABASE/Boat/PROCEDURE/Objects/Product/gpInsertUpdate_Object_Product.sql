@@ -19,7 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Product(
     IN inIsBasicConf           Boolean   ,    -- включать базовую Комплектацию
     IN inIsProdColorPattern    Boolean   ,    -- автоматически добавить все Items Boat Structure
     IN inHours                 TFloat    ,
-    IN inChangePercent         TFloat    ,
+    IN inDiscountTax           TFloat    ,
     IN inDiscountNextTax       TFloat    ,
     IN inDateStart             TDateTime ,
     IN inDateBegin             TDateTime ,
@@ -233,7 +233,7 @@ BEGIN
                                                         , inOperDate         := CURRENT_DATE ::TDateTime
                                                         , inPriceWithVAT     := FALSE        ::Boolean
                                                         , inVATPercent       := vbVATPercent ::TFloat
-                                                        , inChangePercent    := inChangePercent   ::TFloat
+                                                        , inDiscountTax      := inDiscountTax   ::TFloat
                                                         , inDiscountNextTax  := inDiscountNextTax ::TFloat
                                                         , inFromId           := inClientId   ::Integer
                                                         , inToId             := 0            ::Integer
@@ -257,7 +257,7 @@ BEGIN
        --документ есть могут помеять только клиента
        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), vbMovementId, inClientId);
        -- сохранили значение <% скидки>
-       PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), vbMovementId, inChangePercent);
+       PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountTax(), vbMovementId, inDiscountTax);
        -- сохранили значение <% скидки доп>
        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountNextTax(), vbMovementId, inDiscountNextTax);    
      

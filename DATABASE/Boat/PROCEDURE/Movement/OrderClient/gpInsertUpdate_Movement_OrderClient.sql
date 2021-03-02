@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderClient(
     IN inOperDate            TDateTime , -- Дата документа
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , --
-    IN inChangePercent       TFloat    , --
+    IN inDiscountTax        TFloat    , --
     IN inDiscountNextTax     TFloat    , --
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому
@@ -36,7 +36,7 @@ BEGIN
     ioId := lpInsertUpdate_Movement_OrderClient(ioId, inInvNumber, inInvNumberPartner
                                          , inOperDate
                                          , inPriceWithVAT
-                                         , inVATPercent, inChangePercent, inDiscountNextTax
+                                         , inVATPercent, inDiscountTax, inDiscountNextTax
                                          , inFromId, inToId
                                          , inPaidKindId
                                          , inProductId

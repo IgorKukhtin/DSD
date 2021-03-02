@@ -57,7 +57,7 @@ type
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
-    OperPricePrice: TcxGridDBColumn;
+    OperPrice: TcxGridDBColumn;
     Summ: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     actUpdateMasterDS: TdsdUpdateDataSet;

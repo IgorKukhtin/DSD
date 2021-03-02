@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderClient(
     IN inOperDate            TDateTime , -- Дата документа
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , --
-    IN inChangePercent       TFloat    , --
+    IN inDiscountTax         TFloat    , --
     IN inDiscountNextTax     TFloat    , --
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому
@@ -25,6 +25,7 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbInvNumberPoint Integer;
+   DECLARE vbMI_Id Integer;
 BEGIN
 
      -- определяем признак Создание/Корректировка
@@ -47,7 +48,7 @@ BEGIN
      -- сохранили значение <НДС>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, inVATPercent);
      -- сохранили значение <% скидки>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountTax(), ioId, inDiscountTax);
      -- сохранили значение <% скидки доп>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountNextTax(), ioId, inDiscountNextTax);     
 
@@ -85,6 +86,28 @@ BEGIN
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
 
+
+
+     --ищем строку док. с лодкой, находим  - перезаписываем, не находим создаем
+     vbMI_Id := (SELECT MovementItem.Id 
+                 FROM MovementItem 
+                 WHERE MovementItem.MovementId = ioId
+                   AND MovementItem.isErased = FALSE
+                   AND MovementItem.DescId = zc_MI_Master()
+                   AND MovementItem.ObjectId = inProductId
+                 );
+     --сохраняем лодку в строчную часть
+     PERFORM lpInsertUpdate_MovementItem_OrderClient (ioId            := COALESCE(vbMI_Id,0)
+                                                    , inMovementId    := ioId
+                                                    , inGoodsId       := inProductId
+                                                    , inAmount        := 1  ::TFloat
+                                                    , inOperPrice     := 0  ::TFloat
+                                                    , inCountForPrice := 1  ::TFloat
+                                                    , inComment       := '' ::TVarChar
+                                                    , inUserId        := inUserId
+                                                    );
+                                                      
+                                                      
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
