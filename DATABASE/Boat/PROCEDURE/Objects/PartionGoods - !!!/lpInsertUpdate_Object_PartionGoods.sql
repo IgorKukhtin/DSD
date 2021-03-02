@@ -280,7 +280,7 @@ BEGIN
               , TaxValue             = inTaxKindValue
      WHERE Object_PartionGoods.MovementItemId = inMovementItemId;
 
-     UPDATE MovementItem SET PartionId = inMovementItemId WHERE MovementItem.Id = inMovementItemId;
+
      -- если такой элемент не был найден
      IF NOT FOUND THEN
         -- добавили новый элемент
