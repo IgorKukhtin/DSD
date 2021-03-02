@@ -482,7 +482,7 @@ object IncomeForm: TIncomeForm
             Width = 80
           end
           object EmpfPrice: TcxGridDBColumn
-            Caption = 'Farbe'
+            Caption = 'Empf. VK'
             DataBinding.FieldName = 'EmpfPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -602,9 +602,6 @@ object IncomeForm: TIncomeForm
     object cxTabSheetCost: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GridCost: TcxGrid
         Left = 0
         Top = 0
@@ -1952,6 +1949,30 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inFromId'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inPartionId'
         Value = Null
         Component = MasterCDS
@@ -1977,10 +1998,28 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inEmpfPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'EmpfPrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inOperPrice'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'OperPrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPriceList'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPriceList'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1991,6 +2030,71 @@ object IncomeForm: TIncomeForm
         Component = MasterCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTaxKindValue'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TaxKindValue'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsGroupId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsGroupId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsTagId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsTagId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsTypeId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsTypeId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsSizeId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsSizeId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProdColorId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ProdColorId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMeasureId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MeasureId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTaxKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TaxKindId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

@@ -509,9 +509,9 @@ object ProductForm: TProductForm
           Options.Editing = False
           Width = 84
         end
-        object ChangePercent: TcxGridDBColumn
+        object DiscountTax: TcxGridDBColumn
           Caption = '% '#1089#1082#1080#1076#1082#1080
-          DataBinding.FieldName = 'ChangePercent'
+          DataBinding.FieldName = 'DiscountTax'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
@@ -1944,6 +1944,7 @@ object ProductForm: TProductForm
     end
     object bbPrint: TdxBarButton
       Action = actPrint
+      Caption = #1055#1077#1095#1072#1090#1100' '#1055#1088#1077#1076#1083#1086#1078#1077#1085#1080#1077
       Category = 0
     end
     object bbPrintStructure: TdxBarButton
@@ -1952,7 +1953,9 @@ object ProductForm: TProductForm
     end
     object bbPrintTender: TdxBarButton
       Action = actPrintTender
+      Caption = #1055#1077#1095#1072#1090#1100' '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1079#1072#1082#1072#1079#1072
       Category = 0
+      Hint = 'Print Order Confirmation'
     end
     object bb: TdxBarButton
       Action = actUpdate_OrderClient

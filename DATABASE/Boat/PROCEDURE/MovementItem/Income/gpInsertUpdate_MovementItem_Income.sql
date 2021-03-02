@@ -32,6 +32,7 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId   Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbOperPriceList_old TFloat;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -42,6 +43,13 @@ BEGIN
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
+     IF COALESCE (ioId, 0) <> 0
+     THEN
+         vbOperPriceList_old:= (SELECT Object_PartionGoods.OperPriceList FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = ioId);
+     ELSE
+         vbOperPriceList_old := inOperPriceList;
+     END IF;
+     
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem_Income (ioId
                                                , inMovementId
@@ -56,32 +64,31 @@ BEGIN
                                                );
 
      --сохраняем партию
-     inPartionId := lpInsertUpdate_Object_PartionGoods(
-                                                    , inMovementItemId    := ioId                 ::Integer       -- Ключ партии
-                                                    , inMovementId        := inMovementId         ::Integer       -- Ключ Документа
-                                                    , inFromId            := inFromId             ::Integer       -- Поставщик или Подразделение (место сборки)
-                                                    , inUnitId            := inToId               ::Integer       -- Подразделение(прихода)
-                                                    , inOperDate          := inOperDate           ::TDateTime     -- Дата прихода
-                                                    , inObjectId          := inGoodsId            ::Integer       -- Комплектующие или Лодка
-                                                    , inAmount            := inAmount             ::TFloat        -- Кол-во приход
-                                                    , inEKPrice           := inOperPrice          ::TFloat        -- Цена вх. без НДС
-                                                    , inCountForPrice     := COALESCE (inCountForPrice, 1)  ::TFloat  -- Цена за количество
-                                                    , inEmpfPrice         := inEmpfPrice          ::TFloat        -- Цена рекоменд. без НДС
-                                                    , inOperPriceList     := inOperPriceList      ::TFloat        -- Цена продажи, !!!грн!!!
-                                                    , inOperPriceList_old := vbOperPriceList_old  ::TFloat        -- Цена продажи, ДО изменения строки
-                                                    , inGoodsGroupId      := inGoodsGroupId       ::Integer       -- Группа товара
-                                                    , inGoodsTagId        := inGoodsTagId         ::Integer       -- Категория
-                                                    , inGoodsTypeId       := inGoodsTypeId        ::Integer       -- Тип детали 
-                                                    , inGoodsSizeId       := inGoodsSizeId        ::Integer       -- Размер
-                                                    , inProdColorId       := inProdColorId        ::Integer       -- Цвет
-                                                    , inMeasureId         := inMeasureId          ::Integer       -- Единица измерения
-                                                    , inTaxKindId         := inTaxKindId          ::Integer       -- Тип НДС (!информативно!)
-                                                    , inTaxKindValue      := inTaxKindValue       ::TFloat        -- Значение НДС (!информативно!)
-                                                    , inUserId            := vbUserId             ::Integer       --
-                                                );
-     --перезаписали партию                                           
+     inPartionId := lpInsertUpdate_Object_PartionGoods(inMovementItemId    := ioId                 ::Integer       -- Ключ партии
+                                                     , inMovementId        := inMovementId         ::Integer       -- Ключ Документа
+                                                     , inFromId            := inFromId             ::Integer       -- Поставщик или Подразделение (место сборки)
+                                                     , inUnitId            := inToId               ::Integer       -- Подразделение(прихода)
+                                                     , inOperDate          := inOperDate           ::TDateTime     -- Дата прихода
+                                                     , inObjectId          := inGoodsId            ::Integer       -- Комплектующие или Лодка
+                                                     , inAmount            := inAmount             ::TFloat        -- Кол-во приход
+                                                     , inEKPrice           := inOperPrice          ::TFloat        -- Цена вх. без НДС
+                                                     , inCountForPrice     := COALESCE (inCountForPrice, 1)  ::TFloat  -- Цена за количество
+                                                     , inEmpfPrice         := inEmpfPrice          ::TFloat        -- Цена рекоменд. без НДС
+                                                     , inOperPriceList     := inOperPriceList      ::TFloat        -- Цена продажи, !!!грн!!!
+                                                     , inOperPriceList_old := vbOperPriceList_old  ::TFloat        -- Цена продажи, ДО изменения строки
+                                                     , inGoodsGroupId      := inGoodsGroupId       ::Integer       -- Группа товара
+                                                     , inGoodsTagId        := inGoodsTagId         ::Integer       -- Категория
+                                                     , inGoodsTypeId       := inGoodsTypeId        ::Integer       -- Тип детали 
+                                                     , inGoodsSizeId       := inGoodsSizeId        ::Integer       -- Размер
+                                                     , inProdColorId       := inProdColorId        ::Integer       -- Цвет
+                                                     , inMeasureId         := inMeasureId          ::Integer       -- Единица измерения
+                                                     , inTaxKindId         := inTaxKindId          ::Integer       -- Тип НДС (!информативно!)
+                                                     , inTaxKindValue      := inTaxKindValue       ::TFloat        -- Значение НДС (!информативно!)
+                                                     , inUserId            := vbUserId             ::Integer       --
+                                                 );
+/*     --перезаписали партию                                           
      PERFORM lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inPartionId, inMovementId, inAmount, NULL,vbUserId);
-
+*/
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;

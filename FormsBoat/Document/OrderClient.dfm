@@ -136,8 +136,8 @@ object OrderClientForm: TOrderClientForm
     object cxLabel8: TcxLabel
       Left = 404
       Top = 45
-      Hint = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
-      Caption = '(-)% '#1057#1082' (+)% '#1053#1072#1094
+      Hint = '% '#1057#1082#1080#1076#1082#1080
+      Caption = '% '#1057#1082#1080#1076#1082#1080
     end
     object cxLabel11: TcxLabel
       Left = 9
@@ -1516,7 +1516,7 @@ object OrderClientForm: TOrderClientForm
     Left = 520
     Top = 45
     Hint = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080' '#1044#1086#1087#1086#1083#1085#1080#1090'.'
-    Caption = '(-)% '#1057#1082' (+)% '#1053#1072#1094' ('#1076#1086#1087')'
+    Caption = '% '#1057#1082#1080#1076#1082#1080' ('#1076#1086#1087')'
   end
   object edDiscountNextTax: TcxCurrencyEdit
     Left = 520

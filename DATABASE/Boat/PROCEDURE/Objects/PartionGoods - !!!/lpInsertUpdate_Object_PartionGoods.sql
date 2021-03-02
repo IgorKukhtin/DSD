@@ -38,6 +38,7 @@ $BODY$
    DECLARE vbId_income_ch     Integer;
    DECLARE vbId_sale_ch       Integer;
    DECLARE vbId_sale_part     Integer;
+   DECLARE vbMovementDescId   Integer;
 BEGIN
      -- заменили
      IF COALESCE (inCountForPrice, 0) = 0 THEN inCountForPrice:= 1; END IF;
@@ -248,11 +249,11 @@ BEGIN
      END IF;*/
      -- 2. ЗАВЕРШЕНО: Определили - можно ли изменять св-ва
 
-
+     vbMovementDescId:= (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId);
      -- изменили элемент - по значению <Ключ партии>
      UPDATE Object_PartionGoods
             SET MovementId           = inMovementId
-              , MovementDescId       = inMovementDescId
+              , MovementDescId       = vbMovementDescId --inMovementDescId
               , FromId               = inFromId
               , UnitId               = inUnitId
               , OperDate             = inOperDate
@@ -275,7 +276,7 @@ BEGIN
               , ProdColorId          = zfConvert_IntToNull (inProdColorId)
               , MeasureId            = inMeasureId
               , TaxKindId            = inTaxKindId
-              , TaxKindValue         = inTaxKindValue
+              , TaxValue             = inTaxKindValue
      WHERE Object_PartionGoods.MovementItemId = inMovementItemId;
 
 
@@ -286,7 +287,7 @@ BEGIN
                                        , Amount, EKPrice, CountForPrice, EmpfPrice, OperPriceList
                                        , GoodsGroupId, GoodsTagId, GoodsTypeId, GoodsSizeId, ProdColorId, MeasureId, TaxKindId, TaxValue
                                        , isErased, isArc)
-                                 VALUES (inMovementItemId, inMovementId, MovementDescId, inFromId, inUnitId, inOperDate, inObjectId
+                                 VALUES (inMovementItemId, inMovementId, vbMovementDescId, inFromId, inUnitId, inOperDate, inObjectId
                                        , 0 /*inAmount*/, inEKPrice, inCountForPrice, inEmpfPrice
                                          -- "сложно" получили цену
                                        , inOperPriceList /*CASE WHEN vbRePrice_exists = TRUE
@@ -295,7 +296,7 @@ BEGIN
                                          END*/
                                        , inGoodsGroupId, zfConvert_IntToNull (inGoodsTagId), zfConvert_IntToNull (inGoodsTypeId)
                                        , zfConvert_IntToNull (inGoodsSizeId), zfConvert_IntToNull (inProdColorId), inMeasureId
-                                       , inTaxKindId, inTaxValue
+                                       , inTaxKindId, inTaxKindValue
                                        , TRUE, TRUE
                                         );
         -- сохранили партию
