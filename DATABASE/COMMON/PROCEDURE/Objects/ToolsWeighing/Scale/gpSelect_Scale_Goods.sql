@@ -187,6 +187,7 @@ BEGIN
                                                    THEN vbFromId
                                               WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
                                                                                            , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные  + Прочие материалы
+                                                                                           , zc_Enum_InfoMoneyDestination_30500() -- Доходы  + Прочие доходы
                                                                                             )
                                                    THEN 8455 -- Склад специй
                                               ELSE 8439 -- Участок мясного сырья
@@ -250,6 +251,7 @@ BEGIN
                                                                               , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
                                                                               , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
                                                                               , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
+                                                                              , zc_Enum_InfoMoneyDestination_30500() -- Доходы  + Прочие доходы
                                                                                )
                                      OR tmpMI_Order2.InfoMoneyId IN (zc_Enum_InfoMoney_10105() -- Прочее мясное сырье
                                                                    , zc_Enum_InfoMoney_10106() -- Сыр
@@ -276,6 +278,7 @@ BEGIN
                                                                        AND Object_Goods.ObjectCode > 0
                                  WHERE View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
                                                                                , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
+                                                                               , zc_Enum_InfoMoneyDestination_30500() -- Доходы  + Прочие доходы
                                                                                 )
                                   AND Object_Goods.Id NOT IN (SELECT tmpMI_Order2.GoodsId FROM tmpMI_Order2)
                                    -- AND vbUserId = 5
@@ -325,6 +328,7 @@ BEGIN
                                                                                                                              , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
                                                                                                                              , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
                                                                                                                              , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
+                                                                                                                             , zc_Enum_InfoMoneyDestination_30500() -- Доходы  + Прочие доходы
                                                                                                                               )
                                                                                   OR View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10105() -- Прочее мясное сырье
                                                                                                                   , zc_Enum_InfoMoney_10106() -- Сыр
@@ -574,6 +578,7 @@ BEGIN
                                                                                                                   , zc_Enum_InfoMoneyDestination_20300() -- МНМА
                                                                                                                   , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
                                                                                                                   , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
+                                                                                                                  , zc_Enum_InfoMoneyDestination_30500() -- Доходы  + Прочие доходы
                                                                                                                    )
                                                                        OR View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10105() -- Прочее мясное сырье
                                                                                                        , zc_Enum_InfoMoney_10106() -- Сыр
@@ -662,6 +667,7 @@ BEGIN
                                                                                               , zc_Enum_InfoMoneyDestination_20300() -- МНМА
                                                                                               , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
                                                                                               , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
+                                                                                              , zc_Enum_InfoMoneyDestination_30500() -- Доходы  + Прочие доходы
                                                                                                )
                                                    OR View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10105() -- Прочее мясное сырье
                                                                                    , zc_Enum_InfoMoney_10106() -- Сыр
@@ -796,6 +802,7 @@ BEGIN
                                  FROM Object_InfoMoney_View AS View_InfoMoney
                                  WHERE View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
                                                                                , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
+                                                                               , zc_Enum_InfoMoneyDestination_30500() -- Доходы  + Прочие доходы
                                                                                 )
                                    AND inBranchCode NOT BETWEEN 301 AND 310
     
@@ -807,6 +814,7 @@ BEGIN
                                                                                 , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
                                                                                 , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
                                                                                 , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
+                                                                                , zc_Enum_InfoMoneyDestination_30500() -- Доходы  + Прочие доходы
                                                                                  )
                                      OR View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10105() -- Прочее мясное сырье
                                                                      , zc_Enum_InfoMoney_10106() -- Сыр

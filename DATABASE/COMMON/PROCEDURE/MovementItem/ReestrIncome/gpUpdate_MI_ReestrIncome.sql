@@ -140,10 +140,6 @@ BEGIN
                     lpInsertUpdate_Movement_ReestrIncome (ioId               := vbMovementId_ReestrIncome
                                                         , inInvNumber        := NEXTVAL ('Movement_ReestrIncome_seq') :: TVarChar
                                                         , inOperDate         := CURRENT_DATE
-                                                        , inCarId            := NULL
-                                                        , inPersonalDriverId := NULL
-                                                        , inMemberId         := NULL
-                                                        , inMovementId_Transport := NULL
                                                         , inUserId           := -1 * vbUserId -- !!! с минусом, значит "пустышка"!!!
                                                          );
          END IF;

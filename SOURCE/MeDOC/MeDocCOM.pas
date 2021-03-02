@@ -195,7 +195,7 @@ end;
 
 var DocumentList: IZDataset;
     s_err, SEND_DPA: string;
-    ii, MovementId, MedocCode, FormCode: integer;
+    ii, ii_date, MovementId, MedocCode, FormCode: integer;
     MedocDocument: IZDocument;
     HeaderDataSet: IZDataset;
     LineDataSet: IZDataset;
@@ -205,6 +205,9 @@ begin
     try
       // Получили список документов Медок
       DocumentList := GetDocumentList(CharCode.Value, StartOfTheMonth(PeriodDate.Value));
+      //
+      //AddToLog('------------');
+      //AddToLog('CharCode.Value: ' + CharCode.Value);
       // Получили список документов из Project
       FSelect_Movement_TaxAll.ParamByName('inPeriodDate').Value := StartOfTheMonth(PeriodDate.Value);
       FSelect_Movement_TaxAll.Execute;
@@ -240,7 +243,7 @@ begin
                    and (FormCode <> 14027)
                  then
                      //
-                     if (FormCode = 11518) or (FormCode = 11530) or (FormCode = 12860) or (FormCode = 14025) or (FormCode = 16271) or (FormCode = 16325)
+                     if (FormCode = 11518) or (FormCode = 11530) or (FormCode = 12860) or (FormCode = 14025) or (FormCode = 16271) or (FormCode = 16325) or (FormCode = 19580)
                      then
                        DocKind := 'Tax'
                      else
@@ -253,8 +256,16 @@ begin
                  AddToLog('inFromINN - FIRM_INN : ' + HeaderDataSet.Fields['FIRM_INN'].Value);
                  AddToLog('inToINN - N4 : ' + HeaderDataSet.Fields['N4'].Value);
                  if DocKind = 'Tax' then begin
+for ii := 0 to HeaderDataSet.Fields.Count-1 do
+   if HeaderDataSet.Fields[ii].Name = 'N11'
+   then break;
+ii_date:= ii;
                      AddToLog('inInvNumber - N2_11 : ' + HeaderDataSet.Fields['N2_11'].Value);
-                     AddToLog('inOperDate - N11 : ' + DateToStr(VarToDateTime(HeaderDataSet.Fields['N11'].Value)));
+//                    AddToLog('inOperDate - N11 : ' + DateToStr(VarToDateTime(HeaderDataSet.Fields['N11'].Value)));
+//                    AddToLog(IntToStr(ii_date));
+//                    AddToLog(HeaderDataSet.Fields[ii].Name);
+//                    AddToLog(HeaderDataSet.Fields[ii].Value);
+                     AddToLog('inOperDate - <'+HeaderDataSet.Fields[ii_date].Name+'> : ' + DateToStr(VarToDateTime(HeaderDataSet.Fields[ii_date].Value)));
                      AddToLog('inBranchNumber - N2_13 : ' + HeaderDataSet.Fields['N2_13'].Value);
                      AddToLog('inContract - N81 : ' + HeaderDataSet.Fields['N81'].Value);
                      AddToLog('inTotalSumm - A7_11 :' + FloatToStr(HeaderDataSet.Fields['A7_11'].Value));
@@ -262,8 +273,13 @@ begin
                  else
                  if DocKind = 'TaxCorrective'
                  then begin
+for ii := 0 to HeaderDataSet.Fields.Count-1 do
+   if HeaderDataSet.Fields[ii].Name = 'N15'
+   then break;
+ii_date:= ii;
                      AddToLog('inInvNumber - N1_11 : ' + HeaderDataSet.Fields['N1_11'].Value);
-                     AddToLog('inOperDate - N15 : ' + DateToStr(VarToDateTime(HeaderDataSet.Fields['N15'].Value)));
+                   //AddToLog('inOperDate - N15 : <' + DateToStr(VarToDateTime(HeaderDataSet.Fields['N15'].Value)));
+                     AddToLog('inOperDate - <'+HeaderDataSet.Fields[ii_date].Name+'> : <' + DateToStr(VarToDateTime(HeaderDataSet.Fields[ii_date].Value)));
                      AddToLog('inBranchNumber - N1_13 : ' + HeaderDataSet.Fields['N1_13'].Value);
                      AddToLog('inContract - N2_3 : ' + HeaderDataSet.Fields['N2_3'].Value);
                      AddToLog('inTotalSumm - A2_92 :' + FloatToStr(HeaderDataSet.Fields['A2_92'].Value));
@@ -308,7 +324,7 @@ end;
                    and (FormCode <> 14027)
                   then begin
                      //
-                     if (FormCode = 11518) or (FormCode = 11530) or (FormCode = 12860) or (FormCode = 14025) or (FormCode = 16271) or (FormCode = 16325)
+                     if (FormCode = 11518) or (FormCode = 11530) or (FormCode = 12860) or (FormCode = 14025) or (FormCode = 16271) or (FormCode = 16325) or (FormCode = 19580)
                      then
                        DocKind := 'Tax'
                      else
@@ -321,8 +337,12 @@ end;
                       try s_err:='inToINN - N4'; ParamByName('inToINN').Value := HeaderDataSet.Fields['N4'].Value; s_err:=''; except raise end;
 
                       if DocKind = 'Tax' then begin
+for ii := 0 to HeaderDataSet.Fields.Count-1 do
+   if HeaderDataSet.Fields[ii].Name = 'N11'
+   then break;
+ii_date:= ii;
                          try s_err:='inInvNumber - N2_11'; ParamByName('inInvNumber').Value := HeaderDataSet.Fields['N2_11'].Value; s_err:=''; except raise end;
-                         try s_err:='inOperDate - N11'; ParamByName('inOperDate').Value := VarToDateTime(HeaderDataSet.Fields['N11'].Value); s_err:=''; except raise end;
+                         try s_err:='inOperDate - '+HeaderDataSet.Fields[ii_date].Name + '('+IntToStr(ii_date)+')'; ParamByName('inOperDate').Value := VarToDateTime(HeaderDataSet.Fields[ii_date].Value); s_err:=''; except raise end;
                          try s_err:='inBranchNumber - N2_13'; ParamByName('inBranchNumber').Value := HeaderDataSet.Fields['N2_13'].Value; s_err:=''; except raise end;
                          try s_err:='inContract - N81'; ParamByName('inContract').Value := HeaderDataSet.Fields['N81'].Value; s_err:=''; except raise end;
                          try s_err:='inTotalSumm - A7_11'; ParamByName('inTotalSumm').Value := HeaderDataSet.Fields['A7_11'].Value; s_err:=''; except raise end;
@@ -331,8 +351,12 @@ end;
                                                              HeaderDataSet.Fields['A7_9'].Value;}
                       end
                       else begin
+for ii := 0 to HeaderDataSet.Fields.Count-1 do
+   if HeaderDataSet.Fields[ii].Name = 'N15'
+   then break;
+ii_date:= ii;
                          try s_err:='inInvNumber - N1_11'; ParamByName('inInvNumber').Value := HeaderDataSet.Fields['N1_11'].Value; s_err:=''; except raise end;
-                         try s_err:='inOperDate - N15'; ParamByName('inOperDate').Value := VarToDateTime(HeaderDataSet.Fields['N15'].Value); s_err:=''; except raise end;
+                         try s_err:='inOperDate - '+HeaderDataSet.Fields[ii_date].Name + '('+IntToStr(ii_date)+')'; ParamByName('inOperDate').Value := VarToDateTime(HeaderDataSet.Fields[ii_date].Value); s_err:=''; except raise end;
                          try s_err:='inBranchNumber - N1_13'; ParamByName('inBranchNumber').Value := HeaderDataSet.Fields['N1_13'].Value; s_err:=''; except raise end;
                          try s_err:='inContract - N2_3'; ParamByName('inContract').Value := HeaderDataSet.Fields['N2_3'].Value; s_err:=''; except raise end;
                          try s_err:='inTotalSumm - A2_92 + A1_9'; ParamByName('inTotalSumm').Value := HeaderDataSet.Fields['A2_92'].Value +

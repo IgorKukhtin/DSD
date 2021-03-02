@@ -63,7 +63,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       PeriodDate.Value = 42005d
       PeriodDate.Component = dePeriodDate
       PeriodDate.MultiSelectSeparator = ','
-      CharCode.Value = 'J1201010'
+      CharCode.Value = 'J1201011'
       CharCode.MultiSelectSeparator = ','
       Caption = 'TaxJur'
     end
@@ -73,7 +73,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       PeriodDate.Value = 42005d
       PeriodDate.Component = dePeriodDate
       PeriodDate.MultiSelectSeparator = ','
-      CharCode.Value = 'J1201210'
+      CharCode.Value = 'J1201211'
       CharCode.MultiSelectSeparator = ','
       Caption = 'TaxCorrectiveJur'
     end
@@ -83,7 +83,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       PeriodDate.Value = Null
       PeriodDate.Component = dePeriodDate
       PeriodDate.MultiSelectSeparator = ','
-      CharCode.Value = 'F1201010'
+      CharCode.Value = 'F1201011'
       CharCode.MultiSelectSeparator = ','
       Caption = 'TaxFiz'
     end
@@ -93,7 +93,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       PeriodDate.Value = Null
       PeriodDate.Component = dePeriodDate
       PeriodDate.MultiSelectSeparator = ','
-      CharCode.Value = 'F1201210'
+      CharCode.Value = 'F1201211'
       CharCode.MultiSelectSeparator = ','
       Caption = 'TaxCorrectiveFiz'
     end
@@ -148,7 +148,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
     Params = <
       item
         Name = 'inPeriod'
-        Value = 'NULL'
+        Value = Null
         Component = dePeriodDate
         DataType = ftDateTime
         ParamType = ptInput

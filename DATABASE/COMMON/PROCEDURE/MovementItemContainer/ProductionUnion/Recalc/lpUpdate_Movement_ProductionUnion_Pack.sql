@@ -20,6 +20,7 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, isDel
 AS
 $BODY$
 BEGIN
+if inStartDate not in ('07.02.2021', '20.02.2021', '21.02.2021', '26.02.2021', '27.02.2021') then return; end if; 
      -- ÷≈’ упаковки м€со
      -- if inUnitId <> 951601  then return; end if;
 
@@ -495,7 +496,15 @@ BEGIN
                        SELECT DISTINCT tmpReceipt_find.OperDate,  tmpReceipt_find.GoodsId,  tmpReceipt_find.GoodsId_child,  0 AS Koeff, 0 AS ContainerId FROM tmpReceipt_find WHERE tmpReceipt_find.Ord = 1 AND tmpReceipt_find.GoodsId_child > 0 AND tmpReceipt_find.GoodsId <> tmpReceipt_find.GoodsId_child
                       UNION
                        -- тоже самое - но замен€ем на zc_ObjectLink_GoodsByGoodsKind_GoodsMain
-                       SELECT DISTINCT tmpResult_master.OperDate, tmpResult_master.GoodsId,  OL_Goods.ChildObjectId AS GoodsId_child, 0 AS Koeff, 0 AS ContainerId FROM tmpResult_master INNER JOIN ObjectLink AS OL_GoodsMain ON OL_GoodsMain.ChildObjectId = tmpResult_master.GoodsId_child AND OL_GoodsMain.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsMain() INNER JOIN ObjectLink AS OL_Goods ON OL_Goods.ObjectId = OL_GoodsMain.ObjectId AND OL_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods() WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0 AND tmpResult_master.GoodsId_child > 0 AND tmpResult_master.GoodsId <> tmpResult_master.GoodsId_child
+                       SELECT DISTINCT tmpResult_master.OperDate, tmpResult_master.GoodsId,  OL_Goods.ChildObjectId AS GoodsId_child, 0 AS Koeff, 0 AS ContainerId
+                       FROM tmpResult_master
+                            INNER JOIN ObjectLink AS OL_GoodsMain ON OL_GoodsMain.ChildObjectId = tmpResult_master.GoodsId_child
+                                                 AND OL_GoodsMain.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsMain()
+                            INNER JOIN ObjectLink AS OL_Goods ON OL_Goods.ObjectId = OL_GoodsMain.ObjectId
+                                                 AND OL_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                       WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
+                         AND tmpResult_master.GoodsId_child > 0
+                         AND tmpResult_master.GoodsId <> tmpResult_master.GoodsId_child
                       UNION
                        SELECT DISTINCT tmpReceipt_find.OperDate,  tmpReceipt_find.GoodsId,   OL_Goods.ChildObjectId AS GoodsId_child, 0 AS Koeff, 0 AS ContainerId FROM tmpReceipt_find  INNER JOIN ObjectLink AS OL_GoodsMain ON OL_GoodsMain.ChildObjectId = tmpReceipt_find.GoodsId_child  AND OL_GoodsMain.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsMain() INNER JOIN ObjectLink AS OL_Goods ON OL_Goods.ObjectId = OL_GoodsMain.ObjectId AND OL_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods() WHERE tmpReceipt_find.Ord = 1 AND tmpReceipt_find.GoodsId_child > 0 AND tmpReceipt_find.GoodsId <> tmpReceipt_find.GoodsId_child
                       UNION
@@ -537,10 +546,15 @@ BEGIN
                       UNION
                        SELECT DISTINCT tmpAll_all.OperDate, tmpAll_all.GoodsId, tmpAll_all_2.GoodsId_child, tmpAll_all.Koeff, tmpAll_all.ContainerId
                        FROM tmpAll_all
+                            LEFT JOIN _tmpResult AS _tmpResult_1 ON _tmpResult_1.GoodsId       = tmpAll_all.GoodsId
+                                                                AND _tmpResult_1.ReceiptId_in  < 0
+                            LEFT JOIN _tmpResult AS _tmpResult_2 ON _tmpResult_2.GoodsId       = tmpAll_all.GoodsId_child
+                                                                AND _tmpResult_2.ReceiptId_in  < 0
                             -- все GoodsId, которые делаютс€ из GoodsId_child
                             INNER JOIN tmpAll_all AS tmpAll_all_1 ON tmpAll_all_1.GoodsId_child = tmpAll_all.GoodsId_child
                             -- все GoodsId, нужны их GoodsId_child
                             INNER JOIN tmpAll_all AS tmpAll_all_2 ON tmpAll_all_2.GoodsId       = tmpAll_all_1.GoodsId
+                       WHERE _tmpResult_1.GoodsId IS NULL AND _tmpResult_2.GoodsId IS NULL
 /*                      UNION
                        -- + если делаютс€ из одинакового, тогда могут и между собой
                        SELECT tmpAll_all.OperDate, tmpAll_all.GoodsId, tmpAll_all_find.GoodsId, tmpAll_all.Koeff, tmpAll_all.ContainerId
