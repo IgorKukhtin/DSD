@@ -262,7 +262,8 @@ BEGIN
               , EKPrice              = inEKPrice
               , CountForPrice        = inCountForPrice
               , EmpfPrice            = inEmpfPrice
-              , OperPriceList        = inOperPriceList /*CASE WHEN vbRePrice_exists = TRUE AND 1=0
+              , OperPriceList        = inOperPriceList ::TFloat
+                                          /*CASE WHEN vbRePrice_exists = TRUE AND 1=0
                                                  THEN --(SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (zc_DateEnd() - INTERVAL '1 DAY', zc_PriceList_Basis(), inObjectId) AS tmp)
                                             WHEN vbPriceList_change = TRUE
                                                  THEN inOperPriceList

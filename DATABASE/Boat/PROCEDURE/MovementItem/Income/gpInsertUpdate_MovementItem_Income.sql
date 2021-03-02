@@ -45,7 +45,7 @@ BEGIN
 
      IF COALESCE (ioId, 0) <> 0
      THEN
-         vbOperPriceList_old:= (SELECT Object_PartionGoods.OperPriceList FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = ioId);
+         vbOperPriceList_old:= (SELECT Object_PartionGoods.OperPriceList FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = ioId)::TFloat;
      ELSE
          vbOperPriceList_old := inOperPriceList;
      END IF;
@@ -86,9 +86,7 @@ BEGIN
                                                      , inTaxKindValue      := inTaxKindValue       ::TFloat        -- Значение НДС (!информативно!)
                                                      , inUserId            := vbUserId             ::Integer       --
                                                  );
-/*     --перезаписали партию                                           
-     PERFORM lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inPartionId, inMovementId, inAmount, NULL,vbUserId);
-*/
+
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
