@@ -277,9 +277,9 @@ object IncomeJournalForm: TIncomeJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object ChangePercent: TcxGridDBColumn
-        Caption = '(-)% '#1089#1082'. (+)% '#1085#1072#1094
-        DataBinding.FieldName = 'ChangePercent'
+      object DiscountTax: TcxGridDBColumn
+        Caption = '% '#1089#1082#1080#1076#1082#1080
+        DataBinding.FieldName = 'DiscountTax'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'

@@ -2,13 +2,17 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income(Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income(Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income(Integer, Integer, Integer, Integer, TDateTime, Integer, Integer
+                                                         , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                         , Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                         , TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>  
-    IN inFromId              Integer   , -- 
-    IN inToId                Integer   , -- 
-    IN inOperDate            TDateTime , --
+    --IN inFromId              Integer   , -- 
+    --IN inToId                Integer   , -- 
+    --IN inOperDate            TDateTime , --
     IN inPartionId           Integer   , -- Партия
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
@@ -33,42 +37,59 @@ $BODY$
    DECLARE vbUserId   Integer;
    DECLARE vbIsInsert Boolean;
    DECLARE vbOperPriceList_old TFloat;
+   DECLARE vbFromId Integer;
+   DECLARE vbToId Integer;
+   DECLARE vbOperDate TDateTime;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
      vbUserId := lpGetUserBySession (inSession);
 
+     -- из шапки
+     SELECT Movement.OperDate
+          , MovementLinkObject_To.ObjectId   AS ToId
+          , MovementLinkObject_From.ObjectId AS FromId
+   INTO vbOperDate, vbToId, vbFromId
+     FROM Movement
+      LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                   ON MovementLinkObject_To.MovementId = Movement.Id
+                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+      LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                   ON MovementLinkObject_From.MovementId = Movement.Id
+                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+     WHERE Movement.Id = inMovementId
+     ;
 
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      IF COALESCE (ioId, 0) <> 0
      THEN
-         vbOperPriceList_old:= (SELECT Object_PartionGoods.OperPriceList FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = ioId);
+         vbOperPriceList_old:= (SELECT Object_PartionGoods.OperPriceList FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = ioId)::TFloat;
      ELSE
          vbOperPriceList_old := inOperPriceList;
      END IF;
      
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem_Income (ioId
-                                               , inMovementId
-                                               , inPartionId
-                                               , inGoodsId
-                                               , inAmount
-                                               , inOperPrice
-                                               , inCountForPrice
-                                               , inPartNumber
-                                               , inComment
-                                               , vbUserId
+     ioId := lpInsertUpdate_MovementItem_Income (ioId         ::Integer
+                                               , inMovementId ::Integer
+                                               , inPartionId  ::Integer
+                                               , inGoodsId    ::Integer
+                                               , inAmount     ::TFloat
+                                               , inOperPrice  ::TFloat
+                                               , inCountForPrice ::TFloat
+                                               , inPartNumber ::TVarChar
+                                               , inComment    ::TVarChar
+                                               , vbUserId     ::Integer
                                                );
 
      --сохраняем партию
-     inPartionId := lpInsertUpdate_Object_PartionGoods(inMovementItemId    := ioId                 ::Integer       -- Ключ партии
+     PERFORM lpInsertUpdate_Object_PartionGoods(inMovementItemId    := ioId                 ::Integer       -- Ключ партии
                                                      , inMovementId        := inMovementId         ::Integer       -- Ключ Документа
-                                                     , inFromId            := inFromId             ::Integer       -- Поставщик или Подразделение (место сборки)
-                                                     , inUnitId            := inToId               ::Integer       -- Подразделение(прихода)
-                                                     , inOperDate          := inOperDate           ::TDateTime     -- Дата прихода
+                                                     , inFromId            := vbFromId             ::Integer       -- Поставщик или Подразделение (место сборки)
+                                                     , inUnitId            := vbToId               ::Integer       -- Подразделение(прихода)
+                                                     , inOperDate          := vbOperDate           ::TDateTime     -- Дата прихода
                                                      , inObjectId          := inGoodsId            ::Integer       -- Комплектующие или Лодка
                                                      , inAmount            := inAmount             ::TFloat        -- Кол-во приход
                                                      , inEKPrice           := inOperPrice          ::TFloat        -- Цена вх. без НДС
@@ -86,9 +107,7 @@ BEGIN
                                                      , inTaxKindValue      := inTaxKindValue       ::TFloat        -- Значение НДС (!информативно!)
                                                      , inUserId            := vbUserId             ::Integer       --
                                                  );
-/*     --перезаписали партию                                           
-     PERFORM lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inPartionId, inMovementId, inAmount, NULL,vbUserId);
-*/
+
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;

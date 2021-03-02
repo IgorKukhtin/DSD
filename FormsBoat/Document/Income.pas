@@ -77,7 +77,7 @@ type
     edOperDatePartner: TcxDateEdit;
     edPriceWithVAT: TcxCheckBox;
     edVATPercent: TcxCurrencyEdit;
-    edChangePercent: TcxCurrencyEdit;
+    edDiscountTax: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
     cxLabel8: TcxLabel;
     HeaderSaver: THeaderSaver;
