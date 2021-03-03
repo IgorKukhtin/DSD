@@ -4185,6 +4185,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Check_PromoBonusLosses: TdsdOpenForm
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
+      MoveParams = <>
+      Caption = ' '#1055#1088#1086#1076#1072#1078#1072' '#1087#1086' '#1084#1072#1088#1082#1077#1090' '#1073#1086#1085#1091#1089#1072#1084' '#1085#1086#1074#1072#1103'/'#1089#1090#1072#1088#1072#1103' '#1094#1077#1085#1072
+      FormName = 'TReport_Check_PromoBonusLossesForm'
+      FormNameParam.Value = 'TReport_Check_PromoBonusLossesForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5152,6 +5163,9 @@ inherited MainForm: TMainForm
       end
       object N274: TMenuItem
         Action = actReport_SalesOfTermDrugs
+      end
+      object N280: TMenuItem
+        Action = actReport_Check_PromoBonusLosses
       end
       object N133: TMenuItem
         Caption = '-'

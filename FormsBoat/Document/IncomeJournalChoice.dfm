@@ -219,9 +219,9 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object ChangePercent: TcxGridDBColumn
+          object DiscountTax: TcxGridDBColumn
             Caption = '(-)% '#1089#1082'. (+)% '#1085#1072#1094
-            DataBinding.FieldName = 'ChangePercent'
+            DataBinding.FieldName = 'DiscountTax'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'

@@ -1,7 +1,8 @@
 -- Function: zfCalc_RateFuelValue
 
-DROP FUNCTION IF EXISTS zfCalc_SalePrice(TFloat, TFloat, Boolean, TFloat, TFloat);
-DROP FUNCTION IF EXISTS zfCalc_SalePrice(TFloat, TFloat, Boolean, TFloat, TFloat, TFloat);
+--DROP FUNCTION IF EXISTS zfCalc_SalePrice(TFloat, TFloat, Boolean, TFloat, TFloat);
+--DROP FUNCTION IF EXISTS zfCalc_SalePrice(TFloat, TFloat, Boolean, TFloat, TFloat, TFloat);
+DROP FUNCTION IF EXISTS zfCalc_SalePrice(TFloat, TFloat, Boolean, TFloat, TFloat, TFloat, TFloat);
 
 CREATE OR REPLACE FUNCTION zfCalc_SalePrice(
     IN inPriceWithVAT        TFloat    , -- Цена С НДС
@@ -9,11 +10,13 @@ CREATE OR REPLACE FUNCTION zfCalc_SalePrice(
     IN inIsTop               Boolean   , -- ТОП позиция
     IN inPercentMarkup       TFloat    , -- % наценки у товара
     IN inJuridicalPercent    TFloat    , -- % корректировки у Юр Лица для ТОПа
-    IN inPrice               TFloat      -- Цена у товара (фиксированная)
+    IN inPrice               TFloat    , -- Цена у товара (фиксированная)
+    IN inPriceMax            TFloat      -- Максимальная цена для товара
 )
 RETURNS TFloat AS
 $BODY$
   DECLARE vbPercent TFloat;
+  DECLARE vbPrice TFloat;
 BEGIN
      -- !!!Цена у товара (фиксированная)!!!
      IF COALESCE(inPrice, 0) <> 0 THEN 
@@ -32,10 +35,17 @@ BEGIN
      -- вернули цену
      IF (ROUND((100 + vbPercent) * inPriceWithVAT / 100, 1)) < inPriceWithVAT
      THEN
-       RETURN (CEIL((100 + vbPercent) * inPriceWithVAT / 10) / 10.0);     
+       vbPrice := (CEIL((100 + vbPercent) * inPriceWithVAT / 10) / 10.0);     
      ELSE
-       RETURN (ROUND((100 + vbPercent) * inPriceWithVAT / 100, 1));
+       vbPrice := (ROUND((100 + vbPercent) * inPriceWithVAT / 100, 1));
      END IF;
+     
+     IF inPriceMax IS NOT NULL AND COALESCE (inPriceMax, 0) > 0 AND inPriceMax < vbPrice
+     THEN
+       vbPrice := inPriceMax;
+     END IF;
+     
+     RETURN vbPrice;
 
 END;
 $BODY$
@@ -51,4 +61,4 @@ ALTER FUNCTION zfCalc_SalePrice(TFloat, TFloat, Boolean, TFloat, TFloat, TFloat)
  10.06.15                        * 
  13.04.15                        * 
 */
--- тест select zfCalc_SalePrice(0.41, 4, False, 0, 0, 0) 
+-- тест select zfCalc_SalePrice(0.41, 4, False, 0, 0, 0, 0.0) 

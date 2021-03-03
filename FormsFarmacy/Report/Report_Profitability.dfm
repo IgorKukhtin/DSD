@@ -1,27 +1,27 @@
 inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
   Caption = #1054#1090#1095#1105#1090' '#1044#1086#1093#1086#1076#1085#1086#1089#1090#1080
   ClientHeight = 480
-  ClientWidth = 943
+  ClientWidth = 986
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 959
+  ExplicitWidth = 1002
   ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 58
-    Width = 943
+    Width = 986
     Height = 422
     TabOrder = 3
     ExplicitTop = 58
     ExplicitWidth = 943
     ExplicitHeight = 422
     ClientRectBottom = 422
-    ClientRectRight = 943
+    ClientRectRight = 986
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 943
       ExplicitHeight = 422
       inherited cxGrid: TcxGrid
-        Width = 943
+        Width = 986
         Height = 422
         ExplicitWidth = 943
         ExplicitHeight = 422
@@ -361,7 +361,7 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
     end
   end
   inherited Panel: TPanel
-    Width = 943
+    Width = 986
     Height = 32
     ExplicitWidth = 943
     ExplicitHeight = 32
@@ -403,13 +403,13 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
       Width = 244
     end
-    object cbNoStaticSalaryAmount: TcxCheckBox
+    object cbNoStaticCodes: TcxCheckBox
       Left = 583
       Top = 5
-      Hint = #1076#1083#1103' '#1040#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1085#1086#1081' '#1084#1072#1090#1088#1080#1094#1099
+      Hint = #1041#1077#1079' '#1089#1090#1072#1090#1080#1095#1077#1089#1082#1080#1093' '#1082#1086#1076#1086#1074
       Caption = #1041#1077#1079' '#1089#1090#1072#1090#1080#1095#1077#1089#1082#1080#1093' '#1082#1086#1076#1086#1074
+      State = cbsChecked
       TabOrder = 6
-      Visible = False
       Width = 179
     end
   end
@@ -525,9 +525,9 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'NoStaticSalaryAmount'
+          Name = 'isNoStaticCodes'
           Value = Null
-          Component = cbNoStaticSalaryAmount
+          Component = cbNoStaticCodes
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -629,9 +629,9 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisNoStaticSalaryAmount'
+        Name = 'inisNoStaticCodes'
         Value = Null
-        Component = cbNoStaticSalaryAmount
+        Component = cbNoStaticCodes
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

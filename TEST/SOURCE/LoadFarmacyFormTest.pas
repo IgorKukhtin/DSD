@@ -978,11 +978,14 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_PromoBonusLossesForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_PromoBonusLossesForm');
+
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HammerTimeSUNForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_HammerTimeSUNForm');
 
-
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPrice_PromoBonusForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPrice_PromoBonusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPrice_PromoBonusForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_UnitDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_UnitDialogForm');

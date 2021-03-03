@@ -269,6 +269,22 @@ BEGIN
                      AND MovementItem.isErased = False
                      AND MovementItem.Amount > 0
                      AND vbObjectId = 4)
+  , tmpGoodsDiscount AS (SELECT ObjectLink_BarCode_Goods.ChildObjectId                     AS GoodsId
+                              , MAX(COALESCE(ObjectFloat_MaxPrice.ValueData, 0))::TFloat   AS MaxPrice 
+                         FROM Object AS Object_BarCode
+                              INNER JOIN ObjectLink AS ObjectLink_BarCode_Goods
+                                                    ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
+                                                   AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
+                             -- INNER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = ObjectLink_BarCode_Goods.ChildObjectId
+
+                              INNER JOIN ObjectFloat AS ObjectFloat_MaxPrice
+                                                     ON ObjectFloat_MaxPrice.ObjectId = Object_BarCode.Id
+                                                    AND ObjectFloat_MaxPrice.DescId = zc_ObjectFloat_BarCode_MaxPrice()
+                                                                     
+                         WHERE Object_BarCode.DescId = zc_Object_BarCode()
+                           AND Object_BarCode.isErased = False
+                           AND COALESCE(ObjectFloat_MaxPrice.ValueData, 0) > 0
+                         GROUP BY ObjectLink_BarCode_Goods.ChildObjectId)
   , ResultSet AS
     (
         SELECT
@@ -352,6 +368,7 @@ BEGIN
                                              THEN Object_Price.Price ELSE Object_Goods.Price
                                         END -- Цена у товара (почти фиксированная)
                               END
+                            ,  tmpGoodsDiscount.MaxPrice
                              ) ::TFloat AS NewPrice
           , SelectMinPrice_AllGoods.PartionGoodsDate         AS ExpirationDate,
             SelectMinPrice_AllGoods.JuridicalId              AS JuridicalId,
@@ -433,6 +450,7 @@ BEGIN
                                              THEN Object_Price.Price ELSE Object_Goods.Price
                                         END -- Цена у товара (почти фиксированная)
                               END
+                            ,  tmpGoodsDiscount.MaxPrice
                              ) ::TFloat AS NewPricePromo
 
         FROM
@@ -498,6 +516,8 @@ BEGIN
                                    AND ObjectBoolean_Goods_Resolution_224.DescId = zc_ObjectBoolean_Goods_Resolution_224()
 
             LEFT JOIN PromoBonus ON PromoBonus.GoodsId = Object_Price.GoodsMainId
+
+            LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsId = SelectMinPrice_AllGoods.GoodsId
 
         WHERE Object_Goods.isSp = FALSE
          -- AND COALESCE (ObjectBoolean_Juridical_UseReprice.ValueData, FALSE) = True
@@ -761,4 +781,4 @@ $BODY$
 
 -- тест
 --
-SELECT * FROM gpSelect_AllGoodsPrice (13311246, 0, 30, True, 0, 0, '3') order by ID --where Reprice = False -- ExpirationDate < CURRENT_DATE + INTERVAL '6 month'  -- Аптека_1 пр_Правды_6
+SELECT * FROM gpSelect_AllGoodsPrice (377605 , 0, 30, True, 0, 0, '3') order by ID --where Reprice = False -- ExpirationDate < CURRENT_DATE + INTERVAL '6 month'  -- Аптека_1 пр_Правды_6

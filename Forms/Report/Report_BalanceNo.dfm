@@ -289,7 +289,7 @@ object Report_BalanceNoForm: TReport_BalanceNoForm
     Top = 179
     Caption = 'C'#1075#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100
     Properties.ReadOnly = False
-    TabOrder = 3
+    TabOrder = 2
     Width = 101
   end
   object cbGroup: TcxCheckBox
@@ -395,27 +395,15 @@ object Report_BalanceNoForm: TReport_BalanceNoForm
         end
         item
           Visible = True
-          ItemName = 'bbReport_Account'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStaticText'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenReport_AccountMotion'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStaticText'
-        end
-        item
-          Visible = True
           ItemName = 'bbStaticText'
         end
         item
           Visible = True
           ItemName = 'bbReport_Account_noBalance'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStaticText'
         end
         item
           Visible = True
