@@ -3,7 +3,7 @@ object Report_ProfitabilityDialogForm: TReport_ProfitabilityDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1044#1086#1093#1086#1076#1085#1086#1089#1090#1080'>'
-  ClientHeight = 177
+  ClientHeight = 186
   ClientWidth = 333
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_ProfitabilityDialogForm: TReport_ProfitabilityDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 49
-    Top = 135
+    Top = 148
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_ProfitabilityDialogForm: TReport_ProfitabilityDialogForm
   end
   object cxButton2: TcxButton
     Left = 223
-    Top = 135
+    Top = 148
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -79,13 +79,13 @@ object Report_ProfitabilityDialogForm: TReport_ProfitabilityDialogForm
     Top = 7
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
-  object cbNoStaticSalaryAmount: TcxCheckBox
+  object cbNoStaticCodes: TcxCheckBox
     Left = 8
     Top = 122
-    Hint = #1076#1083#1103' '#1040#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1085#1086#1081' '#1084#1072#1090#1088#1080#1094#1099
-    Caption = #1041#1077#1079' '#1089#1090#1072#1090#1080#1095#1077#1089#1082#1086#1081' '#1089#1091#1084#1084#1099' '#1047#1055
+    Hint = #1041#1077#1079' '#1089#1090#1072#1090#1080#1095#1077#1089#1082#1080#1093' '#1082#1086#1076#1086#1074
+    Caption = #1041#1077#1079' '#1089#1090#1072#1090#1080#1095#1077#1089#1082#1080#1093' '#1082#1086#1076#1086#1074
+    State = cbsChecked
     TabOrder = 8
-    Visible = False
     Width = 179
   end
   object PeriodChoice: TPeriodChoice
@@ -147,9 +147,9 @@ object Report_ProfitabilityDialogForm: TReport_ProfitabilityDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'NoStaticSalaryAmount'
+        Name = 'isNoStaticCodes'
         Value = Null
-        Component = cbNoStaticSalaryAmount
+        Component = cbNoStaticCodes
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

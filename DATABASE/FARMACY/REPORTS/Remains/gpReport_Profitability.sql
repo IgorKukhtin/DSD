@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION  gpReport_Profitability(
     IN inDateStart              TDateTime,  -- Дата начала
     IN inDateFinal              TDateTime,  -- Двта конца
     IN inUnitID                 Integer,    -- Подразделение
-    IN inisNoStaticSalaryAmount Boolean,    -- Без статической суммы ЗП
+    IN inisNoStaticCodes        Boolean,    -- Без статических кодов
     IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (UnitID          Integer
@@ -95,6 +95,11 @@ BEGIN
                                       , SUM (Container.Saldo)                   AS Saldo
                                  FROM AnalysisContainer as Container
                                  WHERE (inUnitID = 0 OR inUnitID = Container.UnitID)
+                                   AND Container.GoodsId NOT IN (SELECT Object_Goods_Retail.ID
+                                                                 FROM Object_Goods_Retail
+                                                                 WHERE (COALESCE (Object_Goods_Retail.SummaWages, 0) <> 0
+                                                                    OR COALESCE (Object_Goods_Retail.PercentWages, 0) <> 0)
+                                                                   AND inisNoStaticCodes = True)
                                  GROUP BY Container.UnitID
                                         , Container.GoodsId
                               )
@@ -154,6 +159,11 @@ BEGIN
                                 WHERE AnalysisContainerItem.OperDate >= inDateStart
                                   AND AnalysisContainerItem.OperDate < inDateFinal
                                   AND (inUnitID = 0 OR inUnitID = AnalysisContainerItem.UnitID)
+                                  AND AnalysisContainerItem.GoodsId NOT IN (SELECT Object_Goods_Retail.ID
+                                                                            FROM Object_Goods_Retail
+                                                                            WHERE (COALESCE (Object_Goods_Retail.SummaWages, 0) <> 0
+                                                                               OR COALESCE (Object_Goods_Retail.PercentWages, 0) <> 0)
+                                                                              AND inisNoStaticCodes = True )
                                 GROUP BY AnalysisContainerItem.UnitID)
              -- Статические суммы ЗП за реализацию единицы товара
            , tmpGoodsSummaWages AS (SELECT MovementItemContainer.WhereObjectId_analyzer                                                 AS UnitId
@@ -170,7 +180,7 @@ BEGIN
                                        AND MovementItemContainer.ObjectId_analyzer IN (SELECT Object_Goods_Retail.ID
                                                                                        FROM Object_Goods_Retail
                                                                                        WHERE COALESCE (Object_Goods_Retail.SummaWages, 0) <> 0)
-                                       AND inisNoStaticSalaryAmount = TRUE
+                                       AND False /*inisNoStaticSalaryAmount = TRUE*/
                                      GROUP BY MovementItemContainer.WhereObjectId_analyzer)
              -- Статические суммы ЗП % от продажи
            , tmpGoodsPercentWages AS (SELECT MovementItemContainer.WhereObjectId_analyzer                                              AS UnitId
@@ -188,7 +198,7 @@ BEGIN
                                         AND MovementItemContainer.ObjectId_analyzer IN (SELECT Object_Goods_Retail.ID
                                                                                         FROM Object_Goods_Retail
                                                                                         WHERE COALESCE (Object_Goods_Retail.PercentWages, 0) <> 0)
-                                        AND inisNoStaticSalaryAmount = TRUE
+                                        AND False --inisNoStaticSalaryAmount = TRUE
                                       GROUP BY MovementItemContainer.WhereObjectId_analyzer)
              -- Зврплата за период
            , tmpWages AS (SELECT Object_Unit.ID                     AS UnitID
@@ -381,5 +391,4 @@ $BODY$
 */
 
 -- тест
---
-select * from gpReport_Profitability(inDateStart := ('01.04.2020')::TDateTime , inDateFinal := ('30.06.2020')::TDateTime , inUnitId := 3457773 , inisNoStaticSalaryAmount := False,  inSession := '3');
+-- select * from gpReport_Profitability(inDateStart := ('01.04.2020')::TDateTime , inDateFinal := ('30.06.2020')::TDateTime , inUnitId := 3457773 , inisNoStaticCodes := False,  inSession := '3');

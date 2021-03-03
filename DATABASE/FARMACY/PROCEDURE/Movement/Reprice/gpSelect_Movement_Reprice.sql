@@ -108,7 +108,7 @@ BEGIN
         LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
         
     WHERE Movement.DescId = zc_Movement_Reprice()
-      AND DATE_TRUNC ('DAY', Movement.OperDate) BETWEEN inStartDate AND inEndDate
+      AND Movement.OperDate BETWEEN inStartDate AND inEndDate
     ORDER BY Movement.InvNumber;
 
 END;

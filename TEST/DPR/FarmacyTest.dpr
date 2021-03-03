@@ -1007,7 +1007,8 @@ uses
   InstructionsCash in '..\..\FormsFarmacy\Cash\InstructionsCash.pas' {InstructionsCashForm: TParentForm},
   Report_Reprice_PromoBonus in '..\..\FormsFarmacy\Report\Report_Reprice_PromoBonus.pas',
   PartnerMedical_SPKind in '..\..\FormsFarmacy\Guides\PartnerMedical_SPKind.pas' {PartnerMedical_SPKindForm: TParentForm},
-  Report_HammerTimeSUN in '..\..\FormsFarmacy\Report\Report_HammerTimeSUN.pas' {Report_HammerTimeSUNForm: TParentForm};
+  Report_HammerTimeSUN in '..\..\FormsFarmacy\Report\Report_HammerTimeSUN.pas' {Report_HammerTimeSUNForm: TParentForm},
+  Report_Check_PromoBonusLosses in '..\..\FormsFarmacy\Report\Report_Check_PromoBonusLosses.pas' {Report_Check_PromoBonusLossesForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
