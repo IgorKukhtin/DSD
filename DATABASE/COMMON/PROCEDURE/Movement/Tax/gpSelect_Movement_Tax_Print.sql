@@ -406,7 +406,9 @@ order by 4*/
              ELSE OH_JuridicalDetails_To.Phone END      AS Phone_To
 
            --с 01,03,2021 новый параметр Код - если номер платника податку заполнен  в ячейку ставим 1, иначе пусто
-           , CASE WHEN Object_To.ValueData ILIKE 'ФОП %' AND LENGTH(trim (COALESCE (ObjectString_Retail_OKPO.ValueData, OH_JuridicalDetails_To.OKPO,''))) = 10
+           , CASE WHEN Object_To.ValueData LIKE '%ФОП%'
+                   AND LENGTH(trim (COALESCE (ObjectString_Retail_OKPO.ValueData, OH_JuridicalDetails_To.OKPO,''))) = 10
+                   AND COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) <> '100000000000'
                   THEN '2'
                   WHEN COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) IN ('100000000000', '300000000000','')
                     OR COALESCE (ObjectString_Retail_OKPO.ValueData, OH_JuridicalDetails_To.OKPO,'') = ''

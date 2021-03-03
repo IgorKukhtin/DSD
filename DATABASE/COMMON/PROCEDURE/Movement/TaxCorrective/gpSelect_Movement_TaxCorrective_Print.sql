@@ -2012,7 +2012,9 @@ BEGIN
            , tmpData_all.AccounterINN_To
 
            --с 01,03,2021 новый параметр Код - если номер платника податку заполнен  в ячейку ставим 1, иначе пусто
-           , CASE WHEN tmpData_all.JuridicalName_To ILIKE 'ФОП %' AND LENGTH(trim (tmpData_all.OKPO_To)) = 10
+           , CASE WHEN tmpData_all.JuridicalName_To LIKE '%ФОП%'
+                   AND LENGTH(trim (tmpData_all.OKPO_To)) = 10
+                   AND tmpData_all.INN_To <> '100000000000'
                   THEN '2'
                   WHEN COALESCE (tmpData_all.OKPO_To,'') IN ('100000000000', '300000000000','') 
                   THEN ''
