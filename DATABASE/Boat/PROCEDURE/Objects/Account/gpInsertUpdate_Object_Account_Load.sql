@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Account_Load (Integer, TVarChar, T
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Account_Load(
     IN inAccountCode              Integer,       -- код статьи
     IN inAccountName              TVarChar,      -- Название счет
-    IN inAccountDestinationName   TVarChar,      -- Название Назначения
+    IN inAccountDirectionName   TVarChar,      -- Название Назначения
     IN inAccountGroupName         TVarChar,      -- Название группы
     IN inSession                  TVarChar       -- сессия пользователя
 )

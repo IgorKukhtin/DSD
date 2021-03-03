@@ -29,7 +29,7 @@ BEGIN
    -- проверка уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Account(), vbCode);
 
-   -- определяем свойство <Виды счетов>
+/*   -- определяем свойство <Виды счетов>
    IF EXISTS (SELECT Object_AccountGroup.Id
               FROM Object AS Object_AccountGroup
                    LEFT JOIN Object AS Object_AccountGroup_70000 ON Object_AccountGroup_70000.Id = zc_Enum_AccountGroup_70000()
@@ -40,7 +40,7 @@ BEGIN
    ELSE
        vbAccountKindId:= zc_Enum_AccountKind_Passive();
    END IF ;
-
+*/
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Account(), vbCode, inName);
 

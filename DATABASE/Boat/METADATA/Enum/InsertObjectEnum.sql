@@ -2915,10 +2915,10 @@ BEGIN
                                                       inSession           := vbUserId::TVarChar);
     
     vbImportTypeItemId := 0;
-    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inAccountDestinationName';
+    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inAccountDirectionName';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
                                                                 inParamNumber   := 3, 
-                                                                inName          := 'inAccountDestinationName', 
+                                                                inName          := 'inAccountDirectionName', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := '—чет назначение',
                                                                 inImportTypeId  := vbImportTypeId, 
