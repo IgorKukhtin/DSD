@@ -2038,7 +2038,14 @@ BEGIN
            , tmpData_all.INN_From
 
            --с 01,03,2021 новый параметр Код - если номер платника податку заполнен  в ячейку ставим 1, иначе пусто
-           , CASE WHEN COALESCE (tmpData_all.OKPO_From,'') <> '' THEN '1' ELSE '' END ::TVarChar AS Code_From
+           , CASE  WHEN tmpData_all.JuridicalName_From LIKE '%ФОП%'
+                   AND LENGTH(trim (tmpData_all.OKPO_From)) = 10
+                   AND tmpData_all.INN_From <> '100000000000'
+                  THEN '2'
+                  WHEN COALESCE (tmpData_all.OKPO_From,'') <> ''
+                  THEN '1' 
+                  ELSE ''
+             END ::TVarChar AS Code_From
            
            , tmpData_all.InvNumberBranch_From
            , tmpData_all.NumberVAT_From
