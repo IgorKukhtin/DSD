@@ -234,7 +234,13 @@ uses
   Medoc_J1201211 in '..\..\SOURCE\MeDOC\Medoc_J1201211.pas',
   IncomeCostJournal in '..\..\FormsBoat\Document\IncomeCostJournal.pas' {IncomeCostJournalForm: TParentForm},
   IncomeCost in '..\..\FormsBoat\Document\IncomeCost.pas' {IncomeCostForm: TParentForm},
-  CostJournalChoice in '..\..\FormsBoat\Document\CostJournalChoice.pas' {CostJournalChoiceForm: TParentForm};
+  CostJournalChoice in '..\..\FormsBoat\Document\CostJournalChoice.pas' {CostJournalChoiceForm: TParentForm},
+  Account in '..\..\FormsBoat\Guides\Account.pas' {AccountForm: TParentForm},
+  AccountEdit in '..\..\FormsBoat\Guides\AccountEdit.pas' {AccountEditForm: TParentForm},
+  AccountDirection in '..\..\FormsBoat\Guides\AccountDirection.pas' {AccountDirectionForm: TParentForm},
+  AccountDirectionEdit in '..\..\FormsBoat\Guides\AccountDirectionEdit.pas' {AccountDirectionEditForm: TParentForm},
+  AccountGroup in '..\..\FormsBoat\Guides\AccountGroup.pas' {AccountGroupForm: TParentForm},
+  AccountGroupEdit in '..\..\FormsBoat\Guides\AccountGroupEdit.pas' {AccountGroupEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

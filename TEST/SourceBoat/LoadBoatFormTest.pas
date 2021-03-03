@@ -17,6 +17,7 @@ type
     procedure MainFormTest;
     procedure LoadServiceFormTest;
     procedure LoadLanguageFormTest;
+    procedure LoadAccountFormTest;
     procedure LoadBankFormTest;
     procedure LoadBankAccountFormTest;
     procedure LoadBankAccountMovementFormTest;
@@ -123,6 +124,24 @@ procedure TLoadFormTest.SetUp;
 begin
   inherited;
   TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', gc_AdminPassword, gc_User);
+end;
+
+procedure TLoadFormTest.LoadAccountFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountGroupEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAccountGroupEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAccountGroupForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountDirectionEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAccountDirectionEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountDirectionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAccountDirectionForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAccountEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAccountForm');
 end;
 
 procedure TLoadFormTest.LoadServiceFormTest;

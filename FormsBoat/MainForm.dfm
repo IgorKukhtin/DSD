@@ -1357,15 +1357,12 @@ inherited MainForm: TMainForm
         Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
         object miAccountGroup: TMenuItem
           Action = actAccountGroup
-          Enabled = False
         end
         object miAccountDirection: TMenuItem
           Action = actAccountDirection
-          Enabled = False
         end
         object miAccount: TMenuItem
           Action = actAccount
-          Enabled = False
         end
         object miLine8001: TMenuItem
           Caption = '-'
