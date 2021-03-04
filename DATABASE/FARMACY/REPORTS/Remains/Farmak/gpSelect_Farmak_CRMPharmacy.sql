@@ -19,10 +19,15 @@ BEGIN
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                                            ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                                           AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
-                    WHERE MovementItem.MovementId = (SELECT MAX(Movement.Id)
+                    WHERE (MovementItem.MovementId = (SELECT MAX(Movement.Id)
                                                      FROM Movement
                                                      WHERE Movement.OperDate < date_trunc('month', CURRENT_DATE)
                                                        AND Movement.DescId = zc_Movement_Wages())
+                          OR
+                          MovementItem.MovementId = (SELECT MAX(Movement.Id)
+                                                     FROM Movement
+                                                     WHERE Movement.OperDate <= date_trunc('month', CURRENT_DATE)
+                                                       AND Movement.DescId = zc_Movement_Wages()))
                       AND MovementItem.DescId = zc_MI_Master()
                       AND MovementItem.isErased = False)
    
@@ -82,5 +87,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- 154
-SELECT * FROM gpSelect_Farmak_CRMPharmacy ('3')
+-- SELECT * FROM gpSelect_Farmak_CRMPharmacy ('3')

@@ -52,6 +52,7 @@ $BODY$
    DECLARE vbTROperDate    TDateTime;
    DECLARE vbTRStatusId    Integer;
    DECLARE vbisDeferred    Boolean;
+   DECLARE vHT_SUN         Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
@@ -231,6 +232,25 @@ BEGIN
       PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, False);
 
       RETURN;
+    END IF;
+    
+    IF vbIsSUN = FALSE AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+    THEN
+      vHT_SUN := COALESCE((SELECT Max(ObjectFloat_HT_SUN_v1.ValueData) FROM ObjectFloat AS ObjectFloat_HT_SUN_v1 
+                           WHERE ObjectFloat_HT_SUN_v1.DescId = zc_ObjectFloat_Unit_HT_SUN_v1()), 0);
+      IF vHT_SUN > 0 AND EXISTS(SELECT * 
+                                FROM Container
+                                     INNER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.ID
+                                                                     AND MovementItemContainer.MovementDescId = zc_Movement_Send() 
+                                                                     AND MovementItemContainer.Amount > 0
+                                                                     AND MovementItemContainer.OperDate >= CURRENT_DATE - (vHT_SUN::TVarChar||' day')::INTERVAL
+                                WHERE Container.WhereObjectId = vbFromId 
+                                  AND Container.ObjectId = inGoodsId  
+                                  AND Container.DescId = zc_Container_Count()
+                                  AND Container.Amount > 0)
+      THEN
+        RAISE EXCEPTION 'Ошибка. Данная позиция пришла к вам по СУН и остается на реализацию. Если нужно срочно переместить товар в другую аптеки - свяжитесь с IT отделом.';          
+      END IF;
     END IF;
 
     -- Для роли "Безнал" отключаем проверки
@@ -690,4 +710,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_Send (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_MovementItem_Send (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')n

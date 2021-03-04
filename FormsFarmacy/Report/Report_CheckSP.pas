@@ -91,6 +91,7 @@ type
     GuidesJuridicalMedic: TdsdGuides;
     InvNumber_Full: TcxGridDBColumn;
     NDS: TcxGridDBColumn;
+    PriceWithVAT: TcxGridDBColumn;
   private
     { Private declarations }
   public

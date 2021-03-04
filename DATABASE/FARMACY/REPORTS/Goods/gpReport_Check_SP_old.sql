@@ -42,6 +42,7 @@ RETURNS TABLE (MovementId     Integer
              , Amount         TFloat
              , PriceSale      TFloat
              , PriceCheckSP   TFloat 
+             , PriceWithVAT   TFloat 
              , SummaSP        TFloat
              , SummaSale      TFloat
              , SummaSP_pack   TFloat
@@ -370,6 +371,34 @@ BEGIN
                             AND MI_Check.isErased = FALSE
                           )
 
+        , tmpMI_CheckIncome AS (SELECT MovementItemContainer.MovementItemId AS Id
+                                      ,COALESCE (MI_Income_find.Id, MI_Income.Id) AS MI_IncomeId
+                                FROM MovementItemContainer 
+                                      
+                                     LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                                   ON ContainerLinkObject_MovementItem.Containerid = MovementItemContainer.ContainerId
+                                                                  AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                     LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                                     -- элемент прихода
+                                     LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                     -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                     LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                                 ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                                AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                     -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                     LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+                                WHERE MovementItemContainer.MovementId IN (SELECT tmpMovement_All.Id FROM tmpMovement_All)
+                                  AND MovementItemContainer.DescId = zc_MIContainer_Count()
+                                )
+        , tmpMI_CheckPriceWithVAT AS (SELECT MI_Check.Id
+                                           , Max(MIFloat_PriceWithVAT.ValueData) AS PriceWithVAT
+                                      FROM tmpMI_CheckIncome AS MI_Check
+
+                                           LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
+                                                                       ON MIFloat_PriceWithVAT.MovementItemId =  MI_Check.MI_IncomeId
+                                                                      AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+                                      GROUP BY MI_Check.Id
+                                      )
         , tmpMIFloat AS (SELECT *
                          FROM MovementItemFloat
                          WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_Check.Id FROM tmpMI_Check) 
@@ -403,7 +432,8 @@ BEGIN
                                           THEN CAST (COALESCE (MIFloat_PriceSale.ValueData, 0) - COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC(16,2))
                                      ELSE 0
                                 END)                                                 AS Price_calc
-
+                         , Max(tmpMI_CheckPriceWithVAT.PriceWithVAT)                 AS PriceWithVAT  
+                         
                     FROM tmpMov AS Movement_Check
                          INNER JOIN tmpMI_Check AS MI_Check ON MI_Check.MovementId = Movement_Check.Id
                                                 
@@ -420,6 +450,8 @@ BEGIN
                          LEFT JOIN tmpMIFloat AS MIFloat_Price
                                                      ON MIFloat_Price.MovementItemId = MI_Check.Id
                                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
+                         LEFT JOIN tmpMI_CheckPriceWithVAT ON tmpMI_CheckPriceWithVAT.Id = MI_Check.Id
                     GROUP BY Movement_Check.Id 
                            , Movement_Check.OperDate
                            , Movement_Check.OperDate_Calc
@@ -728,6 +760,7 @@ BEGIN
                     THEN tmpData.Price_calc
                     ELSE CAST ((tmpData.SummChangePercent / tmpData.Amount) AS NUMERIC(16,2))
                END                                                              :: TFloat  AS PriceCheckSP
+             , tmpData.PriceWithVAT :: TFloat 
              , CASE WHEN date_trunc('day', tmpData.OperDate) = ('01.06.2017' ::TDateTime)
                     THEN CAST (tmpData.Price_calc * tmpData.Amount AS NUMERIC(16,2))
                     ELSE CAST (tmpData.SummChangePercent AS NUMERIC(16,2)) 
@@ -869,3 +902,4 @@ $BODY$
 -- select * from gpReport_Check_SP(inStartDate := ('01.01.2017')::TDateTime , inEndDate := ('31.12.2017')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 ,  inSession := '3');
 -- select * from gpReport_Check_SP(inStartDate := ('01.03.2018')::TDateTime , inEndDate := ('15.03.2018')::TDateTime , inJuridicalId := 393052 , inUnitId := 0 , inHospitalId := 4474509 ,  inSession := '3');
 -- select * from gpReport_Check_SP22(inStartDate := ('01.09.2018')::TDateTime , inEndDate := ('09.09.2018')::TDateTime, inJuridicalId := 393054 , inUnitId := 0 , inHospitalId := 3751525 ,  inSession := '3');
+

@@ -498,6 +498,16 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             Options.Editing = False
             Width = 155
           end
+          object PriceWithVAT: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'PriceWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 72
+          end
           object JuridicalAddress: TcxGridDBColumn
             Caption = #1070#1088'. '#1072#1076#1088#1077#1089#1072' ('#1057#1043')'
             DataBinding.FieldName = 'JuridicalAddress'

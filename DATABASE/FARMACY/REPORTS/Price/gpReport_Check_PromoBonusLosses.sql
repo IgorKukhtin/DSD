@@ -162,9 +162,13 @@ BEGIN
          , Object_Goods_Main.Name                                 AS GoodsName
          , tnpMIC.AmountCheck::TFloat                             AS AmountCheck
          , tnpMIC.AmountCheckSum::TFloat                          AS AmountCheckSum
-         , Round(tnpMIC.AmountCheck * tmpPrice.PriceOld, 2)::TFloat    AS AmountCheckSumOld
+         , CASE WHEN tnpMIC.AmountCheckSum > Round(tnpMIC.AmountCheck * tmpPrice.PriceOld, 2)
+                THEN tnpMIC.AmountCheckSum
+                ELSE Round(tnpMIC.AmountCheck * tmpPrice.PriceOld, 2) END::TFloat    AS AmountCheckSumOld
          , (tnpMIC.AmountCheckSum -
-           Round(tnpMIC.AmountCheck * tmpPrice.PriceOld, 2))::TFloat   AS Delta
+           CASE WHEN tnpMIC.AmountCheckSum > Round(tnpMIC.AmountCheck * tmpPrice.PriceOld, 2)
+                THEN tnpMIC.AmountCheckSum
+                ELSE Round(tnpMIC.AmountCheck * tmpPrice.PriceOld, 2) END)::TFloat   AS Delta
     FROM tnpMIC
 
          INNER JOIN tmpPrice ON tmpPrice.UnitId = tnpMIC.UnitId
