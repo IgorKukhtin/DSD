@@ -49,7 +49,6 @@ inherited ProfitIncomeServiceJournalForm: TProfitIncomeServiceJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Summ
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -70,7 +69,6 @@ inherited ProfitIncomeServiceJournalForm: TProfitIncomeServiceJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Summ
             end
             item
               Format = #1057#1090#1088#1086#1082': ,0'
@@ -131,16 +129,6 @@ inherited ProfitIncomeServiceJournalForm: TProfitIncomeServiceJournalForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object Summ: TcxGridDBColumn
-            Caption = #1056#1072#1089#1095#1077#1090#1085#1072#1103' '#1073#1072#1079#1072
-            DataBinding.FieldName = 'Summ'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -729,10 +717,6 @@ inherited ProfitIncomeServiceJournalForm: TProfitIncomeServiceJournalForm
         item
           BeginGroup = True
           Visible = True
-          ItemName = 'bbReCompleteAll'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -877,6 +861,7 @@ inherited ProfitIncomeServiceJournalForm: TProfitIncomeServiceJournalForm
     Top = 208
   end
   inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_ProfitIncomeService'
     Top = 136
   end
   object spMovementReCompleteAll: TdsdStoredProc

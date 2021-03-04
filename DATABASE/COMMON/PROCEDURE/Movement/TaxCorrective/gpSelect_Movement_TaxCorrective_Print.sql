@@ -675,6 +675,7 @@ BEGIN
 , tmpMovement_Data AS (SELECT tmpMovement.Id                                  AS MovementId
                             , MovementLinkObject_To.ObjectId                  AS ToId
                             , MovementLinkObject_From.ObjectId                AS FromId
+                            , Object_From.ValueData                           AS FromName
                             , ObjectString_FromAddress.ValueData              AS FromAddress
                             , ObjectString_Partner_GLNCodeJuridical.ValueData AS Partner_GLNCodeJuridical
                             , ObjectString_Partner_GLNCodeCorporate.ValueData AS Partner_GLNCodeCorporate
@@ -684,7 +685,7 @@ BEGIN
                             , MovementLinkObject_DocumentTaxKind.ObjectId     AS DocumentTaxKind
                             , tmpDocumentTaxKind.KindCode                     AS Code_DocumentTaxKind
                             , tmpDocumentTaxKind.GoodsName                    AS Goods_DocumentTaxKind
-                            , tmpDocumentTaxKind.MeasureName                   AS Measure_DocumentTaxKind
+                            , tmpDocumentTaxKind.MeasureName                  AS Measure_DocumentTaxKind
                             , tmpDocumentTaxKind.MeasureCode                  AS MeasureCode_DocumentTaxKind
                             , tmpDocumentTaxKind.Price                        AS Price_DocumentTaxKind
 
@@ -746,6 +747,7 @@ BEGIN
                                                   AND ObjectString_JuridicalTo_GLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
 
                             LEFT JOIN tmpDocumentTaxKind ON tmpDocumentTaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
+                            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
                        )
 
 /*  -- причины корректировки и кода
@@ -933,6 +935,7 @@ BEGIN
                                                )
              END :: TVarChar AS SupplierGLNCode
 
+           , tmpMovement_Data.FromName AS JuridicalName_From_inf  -- для определения признака ФОП / не ФОП
            , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
                   THEN 'Неплатник'
              ELSE OH_JuridicalDetails_From.FullName END                     AS JuridicalName_From
@@ -1335,6 +1338,7 @@ BEGIN
 
                        , tmpData_all.SupplierGLNCode
 
+                       , tmpData_all.JuridicalName_From_inf
                        , tmpData_all.JuridicalName_From
                        , tmpData_all.JuridicalAddress_From
 
@@ -1596,6 +1600,7 @@ BEGIN
 
                        , tmpData_all.SupplierGLNCode
 
+                       , tmpData_all.JuridicalName_From_inf
                        , tmpData_all.JuridicalName_From
                        , tmpData_all.JuridicalAddress_From
 
@@ -1822,6 +1827,7 @@ BEGIN
 
                        , tmpData_all.SupplierGLNCode
 
+                       , tmpData_all.JuridicalName_From_inf
                        , tmpData_all.JuridicalName_From
                        , tmpData_all.JuridicalAddress_From
 
@@ -2038,7 +2044,7 @@ BEGIN
            , tmpData_all.INN_From
 
            --с 01,03,2021 новый параметр Код - если номер платника податку заполнен  в ячейку ставим 1, иначе пусто
-           , CASE  WHEN tmpData_all.JuridicalName_From LIKE '%ФОП%'
+           , CASE  WHEN tmpData_all.JuridicalName_From_inf LIKE '%ФОП%'
                    AND LENGTH(trim (tmpData_all.OKPO_From)) = 10
                    AND tmpData_all.INN_From <> '100000000000'
                   THEN '2'
