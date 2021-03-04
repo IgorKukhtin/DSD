@@ -16,6 +16,7 @@ RETURNS TABLE (Id              Integer
              , StatusCode      Integer
              , StatusName      TVarChar
              
+             , VATPercent      TFloat             
              , AmountIn        TFloat
              , AmountOut       TFloat
 
@@ -62,7 +63,8 @@ BEGIN
      , tmpMovementFloat AS (SELECT MovementFloat.*
                             FROM MovementFloat
                             WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                              AND MovementFloat.DescId = zc_MovementFloat_Amount()
+                              AND MovementFloat.DescId IN (zc_MovementFloat_Amount()
+                                                         , zc_MovementFloat_VATPercent())
                             )
 
      , tmpMovementDate AS (SELECT MovementDate.*
@@ -100,6 +102,7 @@ BEGIN
       , MovementDate_Plan.ValueData         :: TDateTime    AS PlanDate
       , Object_Status.ObjectCode                            AS StatusCode
       , Object_Status.ValueData                             AS StatusName
+      , MovementFloat_VATPercent.ValueData    ::TFloat      AS VATPercent
       --, COALESCE (MovementFloat_Amount.ValueData,0)::TFloat AS Amount
       , CASE WHEN MovementFloat_Amount.ValueData > 0 THEN MovementFloat_Amount.ValueData      ELSE 0 END::TFloat AS AmountIn
       , CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END::TFloat AS AmountOut
@@ -137,6 +140,10 @@ BEGIN
         LEFT JOIN tmpMovementFloat AS MovementFloat_Amount
                                    ON MovementFloat_Amount.MovementId = Movement.Id
                                   AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+
+        LEFT JOIN tmpMovementFloat AS MovementFloat_VATPercent
+                                   ON MovementFloat_VATPercent.MovementId = Movement.Id
+                                  AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
 
         LEFT JOIN tmpMovementDate AS MovementDate_Plan
                                   ON MovementDate_Plan.MovementId = Movement.Id

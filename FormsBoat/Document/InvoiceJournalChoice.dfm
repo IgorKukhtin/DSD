@@ -119,8 +119,6 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
           object PlanDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PlanDate'
-            PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'mmmm yyyy'
             FooterAlignmentHorz = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -278,6 +276,17 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 95
+          end
+          object VATPercent: TcxGridDBColumn
+            Caption = '% '#1053#1044#1057
+            DataBinding.FieldName = 'VATPercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
+            Width = 60
           end
         end
       end

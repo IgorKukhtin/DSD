@@ -68,6 +68,7 @@ type
     actUpdateMoneyPlace: TdsdDataSetRefresh;
     macUpdateMoneyPlace: TMultiAction;
     bbUpdateMoneyPlace: TdxBarButton;
+    VATPercent: TcxGridDBColumn;
   private
     { Private declarations }
   public

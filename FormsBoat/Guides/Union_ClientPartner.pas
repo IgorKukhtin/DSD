@@ -53,6 +53,7 @@ type
     DescName: TcxGridDBColumn;
     dxBarButton1: TdxBarButton;
     ShowErased: TBooleanStoredProcAction;
+    TaxKind_Value: TcxGridDBColumn;
   private
     { Private declarations }
   public

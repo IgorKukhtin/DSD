@@ -192,6 +192,8 @@ type
     InvNumber_OrderClient: TcxGridDBColumn;
     actUpdate_OrderClient: TdsdInsertUpdateAction;
     bb: TdxBarButton;
+    InfoMoneyName_Client: TcxGridDBColumn;
+    TaxKind_Value_Client: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1,12 +1,14 @@
 -- Function: lpInsertUpdate_Movement_Invoice()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Invoice (Integer, TVarChar, TDateTime, TDateTime, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Invoice (Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Invoice(
  INOUT ioId               Integer  ,  --
     IN inInvNumber        TVarChar ,  -- Номер документа
     IN inOperDate         TDateTime,  --
     IN inPlanDate         TDateTime,  -- Дата оплаты
+    IN inVATPercent       TFloat   ,  --
     IN inAmount           TFloat   ,  -- 
     IN inInvNumberPartner TVarChar ,  -- 
     IN inReceiptNumber    TVarChar ,  -- 
@@ -51,9 +53,11 @@ BEGIN
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Plan(), ioId, inPlanDate);
 
+    -- Сохранили свойство <% НДС>
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, inVATPercent);
     -- Сохранили свойство <Итого Сумма>
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), ioId, inAmount);
-
+    
     -- Примечание
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);    
     -- Примечание
@@ -70,6 +74,6 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  02.02.21         *
 */
