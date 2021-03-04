@@ -340,24 +340,17 @@ begin
         F.Add(qryUnit.FieldByName('PharmacyName').AsString);
         F.Add(qryUnit.FieldByName('PharmacyAddress').AsString);
         D.Name := 'CRMPharmacist';
-        if not qryUnit.FieldByName('PharmacistId').IsNull then
+        while not qryUnit.Eof and (qryUnit.FieldByName('PharmacyId').AsInteger = nID) do
         begin
-          while not qryUnit.Eof and (qryUnit.FieldByName('PharmacyId').AsInteger = nID) do
+          with D.R.Add do
           begin
-            with D.R.Add do
-            begin
-              F.Add(qryUnit.FieldByName('PharmacistId').AsString);
-              F.Add(qryUnit.FieldByName('PharmacistName').AsString);
-            end;
-            qryUnit.Next;
+            F.Add(qryUnit.FieldByName('PharmacistId').AsString);
+            F.Add(qryUnit.FieldByName('PharmacistName').AsString);
           end;
-          Continue;
+          qryUnit.Next;
         end;
-
       end;
     end;
-
-    qryUnit.Next;
   end;
 
   CRMPharmacy.OwnerDocument.Encoding := 'windows-1251';

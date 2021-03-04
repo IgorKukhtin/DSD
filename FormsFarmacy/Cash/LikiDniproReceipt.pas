@@ -49,6 +49,7 @@ type
 
     // Токены доступа
     FAccess_Token : String;
+    FPharmacy_Id : Integer;
 
     // Рецепт
     FNumber : String;
@@ -79,7 +80,7 @@ var LikiDniproReceiptApi : TLikiDniproReceiptApi;
 
 implementation
 
-uses RegularExpressions, System.Generics.Collections, Soap.EncdDecd;
+uses RegularExpressions, System.Generics.Collections, Soap.EncdDecd, MainCash2;
 
 function DelDoubleQuote(AStr : string) : string;
 begin
@@ -156,10 +157,9 @@ begin
 
   FPositionCDS := TClientDataSet.Create(Nil);
 
-  FLikiDnepr := 'https://liki-dnepr.nzt.su/api';
-
-  FAccess_Token := '3bc48397885c039ee40586f4781d10006e3c01b0ba4776f4df5ec1f64af38f2a';
-
+  FLikiDnepr := '';
+  FAccess_Token := '';
+  FPharmacy_Id := 0;
 end;
 
 destructor TLikiDniproReceiptApi.Destroy;
@@ -220,19 +220,20 @@ var
   I, L : integer;
 begin
   Result := False;
+  FRecipe.FRecipe_Number := '';
 
-  FRESTClient.BaseURL := FLikiDnepr + '/get-recipes';
+  FRESTClient.BaseURL := FLikiDnepr;
   FRESTClient.ContentType := 'application/x-www-form-urlencoded';
 
   FRESTRequest.ClearBody;
   FRESTRequest.Method := TRESTRequestMethod.rmGET;
-  FRESTRequest.Resource := '';
+  FRESTRequest.Resource := 'get-recipes';
   // required parameters
   FRESTRequest.Params.Clear;
   FRESTRequest.AddParameter('Authorization', 'Bearer ' + FAccess_Token, TRESTRequestParameterKind.pkHTTPHEADER,
                                                                         [TRESTRequestParameterOption.poDoNotEncode]);
   FRESTRequest.AddParameter('Accept', 'application/json', TRESTRequestParameterKind.pkHTTPHEADER);
-  FRESTRequest.AddParameter('pharmacy_id', '13', TRESTRequestParameterKind.pkGETorPOST);
+  FRESTRequest.AddParameter('pharmacy_id', IntToStr(FPharmacy_Id), TRESTRequestParameterKind.pkGETorPOST);
   FRESTRequest.AddParameter('recipe_number', FNumber, TRESTRequestParameterKind.pkGETorPOST);
   try
     FRESTRequest.Execute;
@@ -349,9 +350,21 @@ begin
 
   Result := False;
 
+  if (MainCashForm.UnitConfigCDS.FieldByName('LikiDneproId').AsInteger = 0) or
+     (MainCashForm.UnitConfigCDS.FieldByName('LikiDneproURL').AsString = '') or
+     (MainCashForm.UnitConfigCDS.FieldByName('LikiDneproToken').AsString = '')  then
+  begin
+    ShowMessage('Ошибка не установлены параметры для подключения к серверу LikiDnepro.');
+    Exit;
+  end;
+
+
   if not Assigned(LikiDniproReceiptApi) then
   begin
     LikiDniproReceiptApi := TLikiDniproReceiptApi.Create;
+    LikiDniproReceiptApi.FLikiDnepr := MainCashForm.UnitConfigCDS.FieldByName('LikiDneproURL').AsString;
+    LikiDniproReceiptApi.FAccess_Token := MainCashForm.UnitConfigCDS.FieldByName('LikiDneproToken').AsString;
+    LikiDniproReceiptApi.FPharmacy_Id := MainCashForm.UnitConfigCDS.FieldByName('LikiDneproId').AsInteger;
   end;
 
   Result := True;
@@ -361,7 +374,7 @@ function GetReceipt1303(const AReceipt : String) : boolean;
 begin
   Result := False;
 
-//  if not CheckRequest_Number(AReceipt) then Exit;
+  if not CheckLikiDniproReceipt_Number(AReceipt) then Exit;
 
   if not InitLikiDniproReceiptApi then Exit;
 

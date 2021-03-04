@@ -27,7 +27,7 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                DiscountExternalId integer, DiscountExternalCode integer, DiscountExternalName TVarChar,
                GoodsDiscountId integer, GoodsDiscountCode integer, GoodsDiscountName TVarChar,
                isPromoForSale Boolean, isCheckUKTZED Boolean,
-               LikiDneproToken TVarChar, LikiDneproId Integer
+               LikiDneproURL TVarChar, LikiDneproToken TVarChar, LikiDneproId Integer
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -270,8 +270,9 @@ BEGIN
        , Object_DiscountCheck.ValueData                                            AS GoodsDiscountName
        , COALESCE(ObjectString_PromoForSale.ValueData, '') <> ''                   AS isPromoForSale
        , COALESCE (ObjectBoolean_CheckUKTZED.ValueData, FALSE)                     AS isCheckUKTZED
+       , 'https://liki-dnepr.nzt.su/api'::TVarChar                                      AS LikiDneproURL
        , '3bc48397885c039ee40586f4781d10006e3c01b0ba4776f4df5ec1f64af38f2a'::TVarChar   AS LikiDneproToken
-       , 13                                                                             AS LikiDneproId
+       , 92                                                                             AS LikiDneproId
 
 
    FROM Object AS Object_Unit

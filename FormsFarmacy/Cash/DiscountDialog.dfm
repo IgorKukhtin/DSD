@@ -31,7 +31,7 @@ inherited DiscountDialogForm: TDiscountDialogForm
     ModalResult = 0
     OnClick = bbOkClick
     ExplicitLeft = 134
-    ExplicitTop = 339
+    ExplicitTop = 336
   end
   inherited bbCancel: TcxButton
     Left = 344
@@ -94,13 +94,14 @@ inherited DiscountDialogForm: TDiscountDialogForm
         DataBinding.FieldName = 'GoodsCode'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
+        Width = 43
       end
       object colGoodsName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 309
+        Width = 277
       end
       object colPrice: TcxGridDBColumn
         Caption = #1062#1077#1085#1072
@@ -109,7 +110,7 @@ inherited DiscountDialogForm: TDiscountDialogForm
         Properties.DisplayFormat = ',0.00; -,0.00; ;'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 64
+        Width = 65
       end
       object colAmount: TcxGridDBColumn
         Caption = #1054#1089#1090#1072#1090#1086#1082'.'
@@ -119,7 +120,16 @@ inherited DiscountDialogForm: TDiscountDialogForm
         Properties.DisplayFormat = ',0.000;-,0.000; ;'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 68
+        Width = 64
+      end
+      object colAmountProject: TcxGridDBColumn
+        Caption = #1054#1089#1090#1072#1090#1086#1082'. '#1076#1083#1103' '#1087#1088#1086#1077#1082#1090#1072
+        DataBinding.FieldName = 'AmountProject'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.000;-,0.000; ;'
+        HeaderAlignmentHorz = taCenter
+        Width = 64
       end
     end
     object ListGoodsGridLevel: TcxGridLevel

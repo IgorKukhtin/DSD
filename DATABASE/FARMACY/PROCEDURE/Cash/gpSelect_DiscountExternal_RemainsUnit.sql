@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_DiscountExternal_RemainsUnit(
 )
 RETURNS TABLE (Id Integer, Code Integer, BarCodeName TVarChar,
                GoodsId Integer, GoodsCode Integer, GoodsName TVarChar,
-               ObjectId Integer, ObjectName TVarChar, Price TFloat, Amount TFloat
+               ObjectId Integer, ObjectName TVarChar, Price TFloat, Amount TFloat, AmountProject TFloat
                ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -63,7 +63,8 @@ BEGIN
                          WHERE Object_BarCode.DescId = zc_Object_BarCode()
                            AND Object_BarCode.isErased = False),
           tmpContainer AS (SELECT tmpGoods.GoodsId,
-                                  SUM(Container.Amount)   AS Amount
+                                  SUM(Container.Amount)   AS Amount,
+                                  SUM(CASE WHEN zfPermit_Juridical_Discount (tmpGoods.ObjectId, MovementLinkObject_From.ObjectId) > 0 THEN Container.Amount END) AS AmountProject
                            FROM tmpGoods
                            
                                 LEFT JOIN Object_Goods_Retail AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsId
@@ -76,6 +77,22 @@ BEGIN
                                                    AND Container.ObjectId = Object_Goods_Retail.ID
                                                    AND Container.Amount <> 0
                              
+                                LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                              ON ContainerLinkObject_MovementItem.Containerid = Container.Id
+                                                             AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                                -- элемент прихода
+                                LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                            ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                           AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+
+                                LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                             ON MovementLinkObject_From.MovementId = COALESCE (MI_Income_find.MovementId ,MI_Income.MovementId)
+                                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                            GROUP BY tmpGoods.GoodsId),
           tmpObject_Price AS (SELECT CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
                                      AND ObjectFloat_Goods_Price.ValueData > 0
@@ -117,6 +134,7 @@ BEGIN
            
            , COALESCE(tmpObject_Price.Price,0)::TFloat
            , tmpContainer.Amount::TFloat
+           , tmpContainer.AmountProject::TFloat
                       
        FROM tmpGoods
        
@@ -133,11 +151,10 @@ LANGUAGE plpgsql VOLATILE;
 -------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 20.07.16         *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 03.03.21                                                       *
 
 */
 
 -- тест
--- 
-SELECT * FROM gpSelect_DiscountExternal_RemainsUnit ('3')
+-- select * from gpSelect_DiscountExternal_RemainsUnit( inSession := '3');

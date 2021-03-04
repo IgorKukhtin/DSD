@@ -19,11 +19,18 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
     ShowCaption = False
     TabOrder = 0
     object Label3: TLabel
-      Left = 105
+      Left = 25
       Top = 43
       Width = 89
       Height = 13
       Caption = #1042#1080#1076' '#1089#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072':'
+    end
+    object Label4: TLabel
+      Left = 376
+      Top = 45
+      Width = 42
+      Height = 13
+      Caption = #1057#1082#1080#1076#1082#1072':'
     end
     object cxLabel13: TcxLabel
       Left = 200
@@ -59,7 +66,7 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       Width = 90
     end
     object edSPKind: TcxButtonEdit
-      Left = 200
+      Left = 120
       Top = 40
       Enabled = False
       Properties.Buttons = <
@@ -74,7 +81,7 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       StyleDisabled.Color = clWindow
       StyleDisabled.TextColor = clWindowText
       TabOrder = 4
-      Width = 282
+      Width = 250
     end
     object edValid_From: TcxDateEdit
       Left = 296
@@ -111,6 +118,16 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       Left = 392
       Top = 1
       Caption = #1057#1088#1086#1082' '#1076#1077#1081#1089#1090#1074#1080#1103
+    end
+    object edDiscount_Percent: TcxTextEdit
+      Left = 424
+      Top = 40
+      TabStop = False
+      Enabled = False
+      Properties.ReadOnly = True
+      StyleDisabled.TextColor = clWindowText
+      TabOrder = 9
+      Width = 58
     end
   end
   object Panel2: TPanel [1]
@@ -180,6 +197,7 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
       Properties.UseNullString = True
       TabOrder = 3
       Text = '<'#1044#1083#1103' '#1074#1099#1073#1086#1088#1072' '#1060#1048#1054' '#1074#1088#1072#1095#1072' '#1085#1072#1078#1084#1080#1090#1077' [Ctrl+Enter]>'
+      Visible = False
       Width = 232
     end
     object edMemberSP: TcxButtonEdit
@@ -252,15 +270,15 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 459
-    Top = 16
+    Top = 64
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 384
-    Top = 24
+    Top = 72
   end
   inherited ActionList: TActionList
-    Left = 15
-    Top = 31
+    Left = 127
+    Top = 63
     object actFormClose: TdsdFormClose
       Category = 'DSDLib'
       MoveParams = <>
@@ -429,8 +447,8 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 232
-    Top = 25
+    Left = 208
+    Top = 65
   end
   object spGet_SPKind: TdsdStoredProc
     StoredProcName = 'gpGet_Object_SPKind_1303'
@@ -453,16 +471,16 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 304
-    Top = 25
+    Left = 328
+    Top = 65
   end
   object GuidesMemberSP: TdsdGuides
     KeyField = 'Id'
     LookupControl = edMemberSP
-    FormNameParam.Value = 'TMemberSPForm'
+    FormNameParam.Value = 'TMemberSP_SPKindForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMemberSPForm'
+    FormName = 'TMemberSP_SPKindForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -611,8 +629,8 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 272
-    Top = 80
+    Left = 264
+    Top = 64
   end
   object spGet_Movement_InvNumberSP: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_InvNumberSP'
@@ -644,5 +662,28 @@ inherited LikiDniproReceiptDialogForm: TLikiDniproReceiptDialogForm
     PackSize = 1
     Left = 424
     Top = 80
+  end
+  object spLink_MemberSP_LikiDnipro: TdsdStoredProc
+    StoredProcName = 'gpLink_Object_MemberSP_LikiDnipro'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMemberSPId'
+        Value = ''
+        Component = GuidesMemberSP
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLikiDniproId'
+        Value = ''
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 304
+    Top = 168
   end
 end
