@@ -1,18 +1,20 @@
--- Function: gpSelect_SearchData_SPKind_1303()
+-- Function: gpSelect_SearchData_SPKind_Kashtan()
 
-DROP FUNCTION IF EXISTS gpSelect_SearchData_SPKind_1303 (Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_SearchData_SPKind_Kashtan (Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_SearchData_SPKind_1303(
+CREATE OR REPLACE FUNCTION gpSelect_SearchData_SPKind_Kashtan(
     IN inInstitution_Id      Integer   , -- Id мед. учереждения
-    IN inDoctor_Id           Integer   , -- Id врача
-    IN inPatient_Id          Integer   , -- Id пациента
     IN inInstitution_Edrpou  TVarChar  , -- Окпо мед учереждения
+    IN inDoctor_Id           Integer   , -- Id врача
+    IN inDoctor_Name         TVarChar  , -- Имя врача
+    IN inPatient_Id          Integer   , -- Id пациента
+    IN inPatient_Name        TVarChar  , -- Имя пациента
    OUT outPartnerMedicalId   Integer   , -- Медицинское учреждение
    OUT outPartnerMedicalName TVarChar  , -- Медицинское учреждение
-   OUT outMedicSPId          Integer   , -- ФИО врача (Соц. проект)
-   OUT outMedicSPName        TVarChar  , -- ФИО врача (Соц. проект)
-   OUT outMemberSPId         Integer   , -- ФИО пациента (Соц. проект)
-   OUT outMemberSPName       TVarChar  , -- ФИО пациента (Соц. проект)
+   OUT outMedicKashtanId     Integer   , -- Id врача (МИС «Каштан»)
+   OUT outMedicKashtanName   TVarChar  , -- ФИО врача (МИС «Каштан»)
+   OUT outMemberKashtanId    Integer   , -- Id пациента (МИС «Каштан»)
+   OUT outMemberKashtanName  TVarChar  , -- ФИО пациента (МИС «Каштан»)
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS record
@@ -33,16 +35,16 @@ BEGIN
 
     outPartnerMedicalId := 0;
     outPartnerMedicalName := '';
-    outMedicSPId := 0;
-    outMedicSPName := '';
-    outMemberSPId := 0;
-    outMemberSPName := '';
+    outMedicKashtanId := 0;
+    outMedicKashtanName := '';
+    outMemberKashtanId := 0;
+    outMemberKashtanName := '';
 
     IF EXISTS(SELECT ObjectFloat.ObjectId FROM ObjectFloat
                     INNER JOIN Object ON Object.ID = ObjectFloat.ObjectId
                                      AND Object.DescId = zc_Object_PartnerMedical()
               WHERE ObjectFloat.DescId = zc_ObjectFloat_PartnerMedical_LikiDniproId()
-                AND ObjectFloat.ValueData = outMedicSPId)
+                AND ObjectFloat.ValueData = inInstitution_Id)
     THEN
 
       SELECT Object.ID, Object.ValueData
@@ -51,7 +53,7 @@ BEGIN
            INNER JOIN Object ON Object.ID = ObjectFloat.ObjectId
                             AND Object.DescId = zc_Object_PartnerMedical()
       WHERE ObjectFloat.DescId = zc_ObjectFloat_PartnerMedical_LikiDniproId()
-        AND ObjectFloat.ValueData = outMedicSPId;
+        AND ObjectFloat.ValueData = inInstitution_Id;
 
     ELSEIF COALESCE (inInstitution_Edrpou, '') <> ''
             AND EXISTS(WITH tmpObjectHistory AS (SELECT *
@@ -109,38 +111,42 @@ BEGIN
 
     END IF;
 
-    IF EXISTS(SELECT ObjectFloat.ObjectId FROM ObjectFloat
-                    INNER JOIN Object ON Object.ID = ObjectFloat.ObjectId
-                                     AND Object.DescId = zc_Object_MedicSP()
-              WHERE ObjectFloat.DescId = zc_ObjectFloat_MedicSP_LikiDniproId()
-                AND ObjectFloat.ValueData = outMedicSPId)
+    IF EXISTS(SELECT Object.Id FROM Object 
+              WHERE Object.ObjectCode = inDoctor_Id
+                AND Object.DescId = zc_Object_MedicKashtan())
     THEN
 
       SELECT Object.ID, Object.ValueData
-      INTO outMedicSPId, outMedicSPName
-      FROM ObjectFloat
-           INNER JOIN Object ON Object.ID = ObjectFloat.ObjectId
-                            AND Object.DescId = zc_Object_MedicSP()
-      WHERE ObjectFloat.DescId = zc_ObjectFloat_MedicSP_LikiDniproId()
-        AND ObjectFloat.ValueData = outMedicSPId;
+      INTO outMedicKashtanId, outMedicKashtanName
+      FROM Object 
+      WHERE Object.ObjectCode = inDoctor_Id
+        AND Object.DescId = zc_Object_MedicKashtan();
+
+    END IF;
+    
+    IF COALESCE (outMedicKashtanId, 0) = 0 OR COALESCE (outMedicKashtanName, '') <> inDoctor_Name
+    THEN
+      outMedicKashtanName := inDoctor_Name;
+      outMedicKashtanId := gpInsertUpdate_Object_MedicKashtan (outMedicKashtanId, inDoctor_Id, inDoctor_Name, inSession); 
+    END IF;
+
+    IF EXISTS(SELECT Object.Id FROM Object 
+              WHERE Object.ObjectCode = inPatient_Id
+                AND Object.DescId = zc_Object_MemberKashtan())
+    THEN
+
+      SELECT Object.ID, Object.ValueData
+      INTO outMemberKashtanId, outMemberKashtanName
+      FROM Object 
+      WHERE Object.ObjectCode = inPatient_Id
+        AND Object.DescId = zc_Object_MemberKashtan();
 
     END IF;
 
-    IF EXISTS(SELECT ObjectFloat.ObjectId FROM ObjectFloat
-                    INNER JOIN Object ON Object.ID = ObjectFloat.ObjectId
-                                     AND Object.DescId = zc_Object_MemberSP()
-              WHERE ObjectFloat.DescId = zc_ObjectFloat_MemberSP_LikiDniproId()
-                AND ObjectFloat.ValueData = inPatient_Id)
+    IF COALESCE (outMemberKashtanId, 0) = 0 OR COALESCE (outMemberKashtanName, '') <> inPatient_Name
     THEN
-
-      SELECT Object.ID, Object.ValueData
-      INTO outMemberSPId, outMemberSPName
-      FROM ObjectFloat
-           INNER JOIN Object ON Object.ID = ObjectFloat.ObjectId
-                            AND Object.DescId = zc_Object_MemberSP()
-      WHERE ObjectFloat.DescId = zc_ObjectFloat_MemberSP_LikiDniproId()
-        AND ObjectFloat.ValueData = inPatient_Id;
-
+      outMemberKashtanName := inPatient_Name;
+      outMemberKashtanId := gpInsertUpdate_Object_MemberKashtan (outMemberKashtanId, inPatient_Id, inPatient_Name, inSession); 
     END IF;
 
 END;
@@ -152,5 +158,5 @@ $BODY$
  01.03.21                                                       *
 */
 
---
-SELECT * FROM gpSelect_SearchData_SPKind_1303(inInstitution_Id :=  0,inDoctor_Id :=  0, inPatient_Id :=  0, inInstitution_Edrpou :=  '', inSession := '3');
+-- 
+select * from gpSelect_SearchData_SPKind_Kashtan(inInstitution_Id := 10 , inInstitution_Edrpou := '37899872' , inDoctor_Id := 1238 , inDoctor_Name := 'Давидова Наталія Петрівна' , inPatient_Id := 53426 , inPatient_Name := 'Аістова Анастасія Петрівна' ,  inSession := '3');

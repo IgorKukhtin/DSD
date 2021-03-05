@@ -797,7 +797,7 @@ type
       APartionDateKindId: Integer; AConfirmationCodeSP: string;
       ALoyaltySignID: Integer; ALoyaltySMID: Integer; ALoyaltySMSumma: Currency;
       ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone,
-      ADistributionPromoList: String;
+      ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
       ANeedComplete: Boolean; FiscalCheckNumber: String;
       out AUID: String): Boolean;
 
@@ -1445,6 +1445,10 @@ begin
   FormParams.ParamByName('BuyerForSalePhone').Value := '';
   FormParams.ParamByName('DistributionPromoList').Value := '';
   FormParams.ParamByName('isBanAdd').Value := False;
+  FormParams.ParamByName('MedicKashtanId').Value := 0;
+  FormParams.ParamByName('MedicKashtanName').Value := '';
+  FormParams.ParamByName('MemberKashtanId').Value := 0;
+  FormParams.ParamByName('MemberKashtanName').Value := '';
 
   ClearFilterAll;
 
@@ -3408,6 +3412,9 @@ begin
         FormParams.ParamByName('BuyerForSale').Value,
         FormParams.ParamByName('BuyerForSalePhone').Value,
         FormParams.ParamByName('DistributionPromoList').Value,
+        // ***05.03.21
+        FormParams.ParamByName('MedicKashtanId').Value,
+        FormParams.ParamByName('MemberKashtanId').Value,
 
         True, // NeedComplete
         CheckNumber, // FiscalCheckNumber
@@ -5102,6 +5109,9 @@ begin
     , FormParams.ParamByName('BuyerForSale').Value
     , FormParams.ParamByName('BuyerForSalePhone').Value
     , FormParams.ParamByName('DistributionPromoList').Value
+      // ***05.03.21
+    , FormParams.ParamByName('MedicKashtanId').Value
+    , FormParams.ParamByName('MemberKashtanId').Value
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
@@ -5205,6 +5215,9 @@ begin
     , FormParams.ParamByName('BuyerForSale').Value
     , FormParams.ParamByName('BuyerForSalePhone').Value
     , FormParams.ParamByName('DistributionPromoList').Value
+    // ***05.03.21
+    , FormParams.ParamByName('MedicKashtanId').Value
+    , FormParams.ParamByName('MemberKashtanId').Value
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
@@ -6014,7 +6027,9 @@ begin
     , FormParams.ParamByName('BuyerForSale').Value
     , FormParams.ParamByName('BuyerForSalePhone').Value
     , FormParams.ParamByName('DistributionPromoList').Value
-
+    // ***05.03.21
+    , FormParams.ParamByName('MedicKashtanId').Value
+    , FormParams.ParamByName('MemberKashtanId').Value
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
@@ -6648,7 +6663,11 @@ begin
           RemainsCDS.Filtered := True;
           cbMorionFilter.Enabled := False;
           cbMorionFilter.Checked := False;
-        end else cbMorionFilter.Checked := True;
+        end else
+        begin
+          cbMorionFilter.Enabled := True;
+          cbMorionFilter.Checked := True;
+        end;
         RemainsCDS.EnableControls;
       end;
     end else
@@ -6664,6 +6683,9 @@ end;
 procedure TMainCashForm2.bbPositionNextClick(Sender: TObject);
 begin
   inherited;
+  cbMorionFilter.Enabled := True;
+  if cbMorionFilter.Checked then cbMorionFilter.Checked := False;
+
   if not pnlPosition.Visible then
   begin
     pnlPosition.Visible := True;
@@ -6674,7 +6696,6 @@ begin
     if LikiDniproReceiptApi.PositionCDS.Eof then
     begin
       pnlPosition.Visible := False;
-      if cbMorionFilter.Checked then cbMorionFilter.Checked := False;
       Exit;
     end;
   end;
@@ -8609,6 +8630,10 @@ begin
   FormParams.ParamByName('BuyerForSalePhone').Value := '';
   FormParams.ParamByName('DistributionPromoList').Value := '';
   FormParams.ParamByName('isBanAdd').Value := False;
+  FormParams.ParamByName('MedicKashtanId').Value := 0;
+  FormParams.ParamByName('MedicKashtanName').Value := '';
+  FormParams.ParamByName('MemberKashtanId').Value := 0;
+  FormParams.ParamByName('MemberKashtanName').Value := '';
 
   FiscalNumber := '';
   pnlVIP.Visible := false;
@@ -10005,7 +10030,7 @@ function TMainCashForm2.SaveLocal(ADS: TClientDataSet; AManagerId: Integer;
   APartionDateKindId: Integer; AConfirmationCodeSP: string;
   ALoyaltySignID: Integer; ALoyaltySMID: Integer; ALoyaltySMSumma: Currency;
   ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone,
-  ADistributionPromoList: String;
+  ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
   ANeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 var
   NextVIPId: Integer;
@@ -10372,8 +10397,10 @@ begin
         FLocalDataBaseHead.FieldByName('BUYERFSP').Value := ABuyerForSalePhone;
         // Раздача акционных материалов
         FLocalDataBaseHead.FieldByName('DISTPROMO').Value := ADistributionPromoList;
-        // Раздача акционных материалов
-        FLocalDataBaseHead.FieldByName('DISTPROMO').Value := ADistributionPromoList;
+        // ФИО врача (МИС «Каштан»)
+        FLocalDataBaseHead.FieldByName('MEDICKID').Value := AMedicKashtanId;
+        // ФИО пациента (МИС «Каштан»)
+        FLocalDataBaseHead.FieldByName('MEMBERKID').Value := AMemberKashtanId;
         FLocalDataBaseHead.Post;
       End;
     except

@@ -1009,7 +1009,9 @@ uses
   PartnerMedical_SPKind in '..\..\FormsFarmacy\Guides\PartnerMedical_SPKind.pas' {PartnerMedical_SPKindForm: TParentForm},
   Report_HammerTimeSUN in '..\..\FormsFarmacy\Report\Report_HammerTimeSUN.pas' {Report_HammerTimeSUNForm: TParentForm},
   Report_Check_PromoBonusLosses in '..\..\FormsFarmacy\Report\Report_Check_PromoBonusLosses.pas' {Report_Check_PromoBonusLossesForm: TParentForm},
-  MemberSP_SPKind in '..\..\FormsFarmacy\Guides\MemberSP_SPKind.pas' {MemberSP_SPKindForm: TParentForm};
+  MemberSP_SPKind in '..\..\FormsFarmacy\Guides\MemberSP_SPKind.pas' {MemberSP_SPKindForm: TParentForm},
+  MemberKashtan in '..\..\FormsFarmacy\Guides\MemberKashtan.pas' {MemberKashtanForm: TParentForm},
+  MedicKashtan in '..\..\FormsFarmacy\Guides\MedicKashtan.pas' {MedicKashtanForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

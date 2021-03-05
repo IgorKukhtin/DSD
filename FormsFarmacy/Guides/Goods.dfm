@@ -455,11 +455,11 @@ inherited GoodsForm: TGoodsForm
             Width = 60
           end
           object AllowDivision: TcxGridDBColumn
-            Caption = #1044#1077#1083#1080#1090#1100' '#1085#1072' '#1082#1072#1089#1089#1072#1093
+            Caption = #1053#1077' '#1076#1077#1083#1080#1090#1100' '#1085#1072' '#1082#1072#1089#1089#1072#1093
             DataBinding.FieldName = 'AllowDivision'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1077#1083#1080#1090#1100' '#1085#1072' '#1082#1072#1089#1089#1072#1093
+            HeaderHint = #1053#1077' '#1076#1077#1083#1080#1090#1100' '#1085#1072' '#1082#1072#1089#1089#1072#1093
           end
           object GoodsAnalog: TcxGridDBColumn
             Caption = #1040#1085#1072#1083#1086#1075#1080' '#1087#1086' '#1076#1077#1081#1089#1090#1074#1091#1102#1097#1077#1084#1091' '#1074#1077#1097#1077#1089#1090#1074#1091

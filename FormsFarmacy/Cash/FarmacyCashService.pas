@@ -79,6 +79,9 @@ type
     BUYERFS  : String[100];      //ФИО покупателя (на продажу)
     BUYERFSP : String[100];      //Телефон покупателя (на продажу)
     DISTPROMO : String[254];     //Раздача акционных материалов.
+    //***15.01.20
+    MEDICKID   : integer;        //ФИО врача (МИС «Каштан»)
+    MEMBERKID   : integer;       //ФИО пациента (МИС «Каштан»)
 
   end;
   TBodyRecord = record
@@ -1421,6 +1424,9 @@ begin
                 BUYERFS := FieldByName('BUYERFS').AsString;
                 BUYERFSP := FieldByName('BUYERFSP').AsString;
                 DISTPROMO := FieldByName('DISTPROMO').AsString;
+                // ***05.03.21
+                MEDICKID := FieldByName('MEDICKID').AsInteger;
+                MEMBERKID := FieldByName('MEMBERKID').AsInteger;
 
                 FNeedSaveVIP := (MANAGER <> 0);
               end;
@@ -1584,6 +1590,9 @@ begin
                   dsdSave.Params.AddParam('inBuyerForSale', ftString, ptInput, Head.BUYERFS);
                   dsdSave.Params.AddParam('inBuyerForSalePhone', ftString, ptInput, Head.BUYERFSP);
                   dsdSave.Params.AddParam('inDistributionPromoList', ftString, ptInput, Head.DISTPROMO);
+                  // ***15.01.20
+                  dsdSave.Params.AddParam('inMedicKashtanID', ftInteger, ptInput, Head.MEDICKID);
+                  dsdSave.Params.AddParam('inMemberKashtanID', ftInteger, ptInput, Head.MEMBERKID);
                   // ***24.01.17
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
 

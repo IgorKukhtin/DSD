@@ -2874,10 +2874,17 @@ end;
 procedure TLoadFormTest.LoadSPObjectFormTest;
 begin
 
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicKashtanForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TMedicKashtanForm');
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberKashtanForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TMemberKashtanForm');
+
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberSP_SPKindForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMemberSP_SPKindForm');
 
-{
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SummSPForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_SummSPForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SummSP_DialogForm'));

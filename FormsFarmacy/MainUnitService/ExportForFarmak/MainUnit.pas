@@ -41,51 +41,34 @@ type
     UnitId: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
-    btnAllUnit: TButton;
+    btnExecuteGoods: TButton;
     Address: TcxGridDBColumn;
     Phones: TcxGridDBColumn;
-    PharmacyId: TcxGridDBColumn;
-    ProductId: TcxGridDBColumn;
-    ProductName: TcxGridDBColumn;
-    Producer: TcxGridDBColumn;
-    Morion: TcxGridDBColumn;
     btnExecuteUnit: TButton;
-    Barcode: TcxGridDBColumn;
-    RegistrationNumber: TcxGridDBColumn;
-    Optima: TcxGridDBColumn;
-    Badm: TcxGridDBColumn;
-    Quantity: TcxGridDBColumn;
-    Price: TcxGridDBColumn;
-    OfflinePrice: TcxGridDBColumn;
-    PickupPrice: TcxGridDBColumn;
-    i10000001: TcxGridDBColumn;
-    i10000002: TcxGridDBColumn;
-    Vat: TcxGridDBColumn;
-    PackSize: TcxGridDBColumn;
-    PackDivisor: TcxGridDBColumn;
     PharmacistId: TcxGridDBColumn;
     PharmacistName: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
-    procedure btnExportClick(Sender: TObject);
     procedure btnSendEmailClick(Sender: TObject);
     procedure btnAllClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure btnAllUnitClick(Sender: TObject);
-    procedure btnExecuteClick(Sender: TObject);
     procedure btnExecuteUnitClick(Sender: TObject);
+    procedure btnExecuteGoodsClick(Sender: TObject);
   private
     { Private declarations }
 
-    FileName: String;
     SavePath: String;
     Subject: String;
+    UseId: Integer;
+    MakerId: Integer;
 
     glRecipient: String;
+    FileNamePharmacy: String;
 
   public
     { Public declarations }
     procedure Add_Log(AMessage:String);
+    procedure OpenFormatSQL;
 
     procedure AllUnit;
   end;
@@ -97,7 +80,7 @@ implementation
 
 {$R *.dfm}
 
-uses Farmak_CRMPharmacyXML;
+uses Farmak_CRMPharmacyXML, Farmak_CRMWareXML;
 
 function GetThousandSeparator : string;
 begin
@@ -126,41 +109,60 @@ begin
   end;
 end;
 
-procedure TMainForm.AllUnit;
+procedure TMainForm.OpenFormatSQL;
+  var I, W : integer;
 begin
+  qryReport_Upload.DisableControls;
   try
 
-    Add_Log('');
-    Add_Log('-------------------');
-    Add_Log('Аптека : ' + qryUnit.FieldByName('ID').AsString);
+    if qryReport_Upload.IsEmpty then
+    begin
+      qryReport_Upload.Close;
+      Exit;
+    end;
 
-    btnExecuteClick(btnExecute);
-    btnExportClick(btnExport);
-    btnSendEmailClick(btnSendEmail);
-
-  except
-    on E: Exception do
-      Add_Log(E.Message);
+    for I := 0 to qryReport_Upload.FieldCount - 1 do with grtvUnit.CreateColumn do
+    begin
+      HeaderAlignmentHorz := TAlignment.taCenter;
+      Options.Editing := False;
+      DataBinding.FieldName := qryReport_Upload.Fields.Fields[I].FieldName;
+      if qryReport_Upload.Fields.Fields[I].DataType in [ftString, ftWideString] then
+      begin
+        W := 10;
+        qryReport_Upload.First;
+        while not qryReport_Upload.Eof do
+        begin
+          W := Max(W, LengTh(qryReport_Upload.Fields.Fields[I].AsString));
+          if W > 70 then Break;
+          qryReport_Upload.Next;
+        end;
+        qryReport_Upload.First;
+        Width := 6 * Min(W, 70) + 2;
+      end;
+    end;
+  finally
+    qryReport_Upload.EnableControls;
   end;
+end;
+
+procedure TMainForm.AllUnit;
+begin
 end;
 
 
 procedure TMainForm.btnAllClick(Sender: TObject);
 begin
   try
+      Add_Log('');
+      Add_Log('---- Отправка всех данных');
+
       // Экспорт аптек
       btnExecuteUnitClick(Nil);
       Application.ProcessMessages;
+
       btnSendEmailClick(Nil);
       Application.ProcessMessages;
 
-      // Экспорт медикаментов с остатками
-      btnExecuteClick(Nil);
-      Application.ProcessMessages;
-      btnExportClick(Nil);
-      Application.ProcessMessages;
-      btnSendEmailClick(Nil);
-      Application.ProcessMessages;
   except
     on E: Exception do
       Add_Log(E.Message);
@@ -168,99 +170,112 @@ begin
 
   qryUnit.Close;
   qryUnit.Open;
-end;
-
-procedure TMainForm.btnAllUnitClick(Sender: TObject);
-begin
-  AllUnit;
-  qryUnit.Close;
-  qryUnit.Open;
-end;
-
-procedure TMainForm.btnExecuteClick(Sender: TObject);
-begin
-
-  if not qryUnit.Active then Exit;
-  qryReport_Upload.Close;
-
-  qryReport_Upload.DisableControls;
-  try
-    try
-      FileName := qryUnit.FieldByName('ID').AsString;
-      if Assigned(Sender) then
-        qryReport_Upload.Params.ParamByName('UnitID').AsInteger := qryUnit.FieldByName('ID').AsInteger
-      else qryReport_Upload.Params.ParamByName('UnitID').AsInteger := 0;
-      qryReport_Upload.Open;
-    except
-      on E:Exception do
-      begin
-        Add_Log(E.Message);
-        Exit;
-      end;
-    end;
-
-  finally
-    qryReport_Upload.EnableControls;
-  end;
-end;
-
-procedure TMainForm.btnExportClick(Sender: TObject);
-begin
-  if not qryReport_Upload.Active then Exit;
-  if qryReport_Upload.IsEmpty then Exit;
-  Add_Log('Начало выгрузки отчета');
-  if not ForceDirectories(SavePath) then
-  Begin
-    Add_Log('Не могу создать директорию выгрузки');
-    exit;
-  end;
-
-  FileName := 'Stock_' + FormatDateTime('YYYYMMDDHHNNSS', Now);
-
-  // обычный отчет
-  try
-    try
-//      ExportGridToCSV(SavePath + FileName, grReportUnit, True, True, ',', 'csv', nil, TEncoding.UTF8);
-      ExportGridToFile(SavePath + FileName, cxExportToText, grReportUnit, True, True, False, ',', '', '', 'csv', nil, TEncoding.UTF8);
-    except
-      on E: Exception do
-      begin
-        Add_Log(E.Message);
-        exit;
-      end;
-    end;
-  finally
-  end;
 end;
 
 procedure TMainForm.btnSendEmailClick(Sender: TObject);
   VAR ZipFile: TZipFile;
 begin
 
-  if not FileExists(SavePath + FileName + '.csv') then Exit;
+//  if not FileExists(SavePath + FileName + '.csv') then Exit;
+//
+//  Add_Log('Начало отправки прайса: ' + SavePath + FileName + '.csv');
+//
+//  try
+//    ZipFile := TZipFile.Create;
+//
+//    try
+//      ZipFile.Open(SavePath + FileName + '.zip', zmWrite);
+//      ZipFile.Add(SavePath + FileName + '.csv');
+//      ZipFile.Close;
+//
+//      DeleteFile(SavePath + FileName + '.csv');
+//    finally
+//      ZipFile.Free;
+//    end;
+//  except
+//    on E: Exception do
+//    begin
+//      Add_Log(E.Message);
+//      exit;
+//    end;
+//  end;
 
-  Add_Log('Начало отправки прайса: ' + SavePath + FileName + '.csv');
+end;
 
+procedure TMainForm.btnExecuteGoodsClick(Sender: TObject);
+var
+  CRMWare: IXMLCRMWareType;
+begin
+
+  qryReport_Upload.Close;
+  qryReport_Upload.SQL.Text := 'SELECT * FROM gpSelect_Farmak_CRMWare (' + IntToStr(MakerId) + ', ''3'')';
   try
-    ZipFile := TZipFile.Create;
-
-    try
-      ZipFile.Open(SavePath + FileName + '.zip', zmWrite);
-      ZipFile.Add(SavePath + FileName + '.csv');
-      ZipFile.Close;
-
-      DeleteFile(SavePath + FileName + '.csv');
-    finally
-      ZipFile.Free;
-    end;
+    qryReport_Upload.Open;
+    OpenFormatSQL;
   except
     on E: Exception do
     begin
-      Add_Log(E.Message);
-      exit;
+      Add_Log('Ошибка открытия списка медикаментов: ' + E.Message);
+      Close;
+      Exit;
     end;
   end;
 
+  if not qryUnit.Active then Exit;
+  if qryUnit.IsEmpty then Exit;
+  Add_Log('Начало выгрузки таваров');
+  if not ForceDirectories(SavePath) then
+  Begin
+    Add_Log('Не могу создать директорию выгрузки');
+    exit;
+  end;
+
+  CRMWare := NewCRMWare;
+  CRMWare.User := UseId;
+  CRMWare.Scheme.Request := 'SET';
+  CRMWare.Scheme.Name := 'CRMWare';
+
+  with CRMWare.Scheme.Data.S.D do
+  begin
+    Name := 'CRMWare';
+    with f.Add do
+    begin
+      Name := 'WareId';
+      Type_ := 'String';
+    end;
+    with f.Add do
+    begin
+      Name := 'MorionCode';
+      Type_ := 'String';
+    end;
+    with f.Add do
+    begin
+      Name := 'BarCode';
+      Type_ := 'String';
+    end;
+    with f.Add do
+    begin
+      Name := 'WareName';
+      Type_ := 'String';
+    end;
+  end;
+
+  CRMWare.Scheme.Data.O.D.Name := 'CRMWare';
+  qryReport_Upload.First;
+  while not qryReport_Upload.Eof do
+  begin
+    with CRMWare.Scheme.Data.O.D.R.Add do
+    begin
+      Add(qryReport_Upload.FieldByName('WareId').AsString);
+      Add(qryReport_Upload.FieldByName('MorionCode').AsString);
+      Add(qryReport_Upload.FieldByName('BarCode').AsString);
+      Add(qryReport_Upload.FieldByName('WareName').AsString);
+    end;
+    qryReport_Upload.Next;
+  end;
+
+  CRMWare.OwnerDocument.Encoding := 'windows-1251';
+  CRMWare.OwnerDocument.SaveToFile(SavePath + 'CRMWare.xml');
 end;
 
 procedure TMainForm.btnExecuteUnitClick(Sender: TObject);
@@ -276,13 +291,13 @@ begin
     exit;
   end;
 
-  Subject := '0:' + FormatDateTime('YYYY-MM-DD', Now) + ':10:Не болей';
-  FileName := 'CRMPharmacy.xml';
+  Subject := IntToStr(UseId) + ':' + FormatDateTime('YYYY-MM-DD', Now) + ':10:Не болей';
+  FileNamePharmacy := 'CRMPharmacy.xml';
 
   // обычный отчет
 
   CRMPharmacy := NewCRMPharmacy;
-  CRMPharmacy.User := 000;
+  CRMPharmacy.User := UseId;
   CRMPharmacy.Scheme.Request := 'SET';
   CRMPharmacy.Scheme.Name := 'CRMPharmacy';
 
@@ -373,6 +388,12 @@ begin
     if SavePath[Length(SavePath)] <> '\' then SavePath := SavePath + '\';
     Ini.WriteString('Options', 'Path', SavePath);
 
+    UseId := Ini.ReadInteger('Options', 'UseId', 1);
+    Ini.WriteInteger('Options', 'UseId', UseId + 1);
+
+    MakerId := Ini.ReadInteger('Options', 'MakerId', 13648288);
+    Ini.WriteInteger('Options', 'MakerId', MakerId);
+
     ZConnection1.Database := Ini.ReadString('Connect', 'DataBase', 'farmacy');
     Ini.WriteString('Connect', 'DataBase', ZConnection1.Database);
 
@@ -387,7 +408,6 @@ begin
 
     glRecipient := Ini.ReadString('Mail','Recipient','DataSupport@farmak.ua');
     Ini.WriteString('Mail','Recipient',glRecipient);
-
 
   finally
     Ini.free;
@@ -424,7 +444,7 @@ begin
       (Pos('Farmacy.exe', Application.ExeName) <> 0)) then
     begin
       btnAll.Enabled := false;
-      btnAllUnit.Enabled := false;
+      btnExecuteGoods.Enabled := false;
       btnExecute.Enabled := false;
       btnExport.Enabled := false;
       btnSendEmail.Enabled := false;

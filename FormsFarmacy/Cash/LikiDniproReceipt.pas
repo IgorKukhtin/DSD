@@ -266,7 +266,6 @@ begin
 
           if DelDoubleQuote(j.FindValue('recipe_number').ToString) <> FNumber then Continue;
 
-
           if FRecipe.FRecipe_Number = '' then
           begin
             // Πεφεος
