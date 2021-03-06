@@ -704,6 +704,7 @@ type
       var AIsHintMultiLine: Boolean; var AHintTextRect: TRect);
     procedure actRecipeNumber1303Execute(Sender: TObject);
     procedure bbPositionNextClick(Sender: TObject);
+    procedure cbMorionFilterPropertiesChange(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: Boolean;
@@ -796,7 +797,7 @@ type
       APartionDateKindId: Integer; AConfirmationCodeSP: string;
       ALoyaltySignID: Integer; ALoyaltySMID: Integer; ALoyaltySMSumma: Currency;
       ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone,
-      ADistributionPromoList: String;
+      ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
       ANeedComplete: Boolean; FiscalCheckNumber: String;
       out AUID: String): Boolean;
 
@@ -1444,6 +1445,10 @@ begin
   FormParams.ParamByName('BuyerForSalePhone').Value := '';
   FormParams.ParamByName('DistributionPromoList').Value := '';
   FormParams.ParamByName('isBanAdd').Value := False;
+  FormParams.ParamByName('MedicKashtanId').Value := 0;
+  FormParams.ParamByName('MedicKashtanName').Value := '';
+  FormParams.ParamByName('MemberKashtanId').Value := 0;
+  FormParams.ParamByName('MemberKashtanName').Value := '';
 
   ClearFilterAll;
 
@@ -1482,6 +1487,8 @@ begin
   edLoyaltySMSummaRemainder.Value := 0;
   edLoyaltySMSumma.Value := 0;
   pnlPosition.Visible := False;
+  cbMorionFilter.Enabled := True;
+  cbMorionFilter.Checked := False;
 
   MainGridDBTableView.DataController.Filter.Clear;
   CheckGridDBTableView.DataController.Filter.Clear;
@@ -2862,6 +2869,12 @@ begin
     exit;
   TimerDroppedDown.Enabled := True;
 
+  if pnlPosition.Visible then
+  begin
+    ShowMessage('Ошибка. Закончите подбор медикаментов по рецепту.');
+    exit;
+  end;
+
   if (FormParams.ParamByName('CheckId').Value <> 0) and
     (FormParams.ParamByName('ConfirmedKindName').AsString = 'Не подтвержден')
   then
@@ -3241,7 +3254,6 @@ begin
   end;
 
 
-
   // проверили что есть остаток
   if not gc_User.Local then
     if fCheck_RemainsError = false then
@@ -3400,6 +3412,9 @@ begin
         FormParams.ParamByName('BuyerForSale').Value,
         FormParams.ParamByName('BuyerForSalePhone').Value,
         FormParams.ParamByName('DistributionPromoList').Value,
+        // ***05.03.21
+        FormParams.ParamByName('MedicKashtanId').Value,
+        FormParams.ParamByName('MemberKashtanId').Value,
 
         True, // NeedComplete
         CheckNumber, // FiscalCheckNumber
@@ -3484,6 +3499,12 @@ begin
   if not CheckSP then
     exit;
 
+  if (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
+  begin
+    ShowMessage('Применен соц проект.'#13#10'Для повторного применения обнулите чек..');
+    exit;
+  end;
+
   if pnlHelsiError.Visible then
   begin
     ShowMessage('Обработайте непогашенный чек Хелси!');
@@ -3504,9 +3525,11 @@ begin
     exit;
   end;
 
-  if pnlPosition.Visible then pnlPosition.Visible := False;
+  pnlPosition.Visible := False;
+  cbMorionFilter.Enabled := True;
+  cbMorionFilter.Checked := False;
 
-  S := '1046-1238-FC-0655';
+  S := '1046-1238-P2-0643';
   if not InputEnterRecipeNumber1303(S) then Exit;
 
   if GetReceipt1303(S) then
@@ -5086,6 +5109,9 @@ begin
     , FormParams.ParamByName('BuyerForSale').Value
     , FormParams.ParamByName('BuyerForSalePhone').Value
     , FormParams.ParamByName('DistributionPromoList').Value
+      // ***05.03.21
+    , FormParams.ParamByName('MedicKashtanId').Value
+    , FormParams.ParamByName('MemberKashtanId').Value
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
@@ -5189,6 +5215,9 @@ begin
     , FormParams.ParamByName('BuyerForSale').Value
     , FormParams.ParamByName('BuyerForSalePhone').Value
     , FormParams.ParamByName('DistributionPromoList').Value
+    // ***05.03.21
+    , FormParams.ParamByName('MedicKashtanId').Value
+    , FormParams.ParamByName('MemberKashtanId').Value
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
@@ -5541,6 +5570,12 @@ begin
   if not CheckSP then
     exit;
 
+  if (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
+  begin
+    ShowMessage('Применен соц проект.'#13#10'Для повторного применения обнулите чек..');
+    exit;
+  end;
+
   if pnlHelsiError.Visible then
   begin
     ShowMessage('Обработайте непогашенный чек Хелси!');
@@ -5754,6 +5789,12 @@ begin
 
   if not CheckSP then
     exit;
+
+  if (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
+  begin
+    ShowMessage('Применен соц проект.'#13#10'Для повторного применения обнулите чек..');
+    exit;
+  end;
 
   if not CheckCDS.isempty or pnlManualDiscount.Visible or
     pnlPromoCode.Visible or pnlSiteDiscount.Visible then
@@ -5986,7 +6027,9 @@ begin
     , FormParams.ParamByName('BuyerForSale').Value
     , FormParams.ParamByName('BuyerForSalePhone').Value
     , FormParams.ParamByName('DistributionPromoList').Value
-
+    // ***05.03.21
+    , FormParams.ParamByName('MedicKashtanId').Value
+    , FormParams.ParamByName('MemberKashtanId').Value
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
@@ -6257,6 +6300,17 @@ begin
   End;
   APoint := btnCheck.ClientToScreen(Point(0, btnCheck.ClientHeight));
   pm_OpenCheck.Popup(APoint.X, APoint.Y);
+end;
+
+procedure TMainCashForm2.cbMorionFilterPropertiesChange(Sender: TObject);
+begin
+  inherited;
+  if cbMorionFilter.Checked = False then
+  begin
+    RemainsCDS.Filtered := False;
+    RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0';
+    RemainsCDS.Filtered := True;
+  end else SetMorionCodeFilter;
 end;
 
 procedure TMainCashForm2.ceAmountExit(Sender: TObject);
@@ -6585,39 +6639,53 @@ end;
 function TMainCashForm2.SetMorionCodeFilter : boolean;
   var S : string; I : Integer; Res: TArray<string>;
 begin
-  if LikiDniproReceiptApi.PositionCDS.FieldByName('id_morion').AsString <> '' then
-  begin
-    Res := TRegEx.Split(LikiDniproReceiptApi.PositionCDS.FieldByName('id_morion').AsString, ',');
-    S := '';
-    for I := 0 to High(Res) do
-      if I = 0 then
-        S := S + 'MorionCode = ' + Res[I]
-      else S := S + ' or MorionCode = ' + Res[I];
+  cbMorionFilter.Properties.OnChange := Nil;
+  try
+    if LikiDniproReceiptApi.PositionCDS.FieldByName('id_morion').AsString <> '' then
+    begin
+      Res := TRegEx.Split(LikiDniproReceiptApi.PositionCDS.FieldByName('id_morion').AsString, ',');
+      S := '';
+      for I := 0 to High(Res) do
+        if I = 0 then
+          S := S + 'MorionCode = ' + Res[I]
+        else S := S + ' or MorionCode = ' + Res[I];
 
-    RemainsCDS.DisableControls;
-    try
-      RemainsCDS.Filtered := False;
-      if RemainsCDS.RecordCount = 0 then RemainsCDS.Filter := 'Remains <> 0 and (' + S + ')';
-      RemainsCDS.Filtered := True;
-    finally
-      if RemainsCDS.RecordCount = 0 then
-      begin
+      RemainsCDS.DisableControls;
+      try
         RemainsCDS.Filtered := False;
-        RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0';
+        RemainsCDS.Filter := 'Remains <> 0 and (' + S + ')';
         RemainsCDS.Filtered := True;
+      finally
+        if RemainsCDS.RecordCount = 0 then
+        begin
+          RemainsCDS.Filtered := False;
+          RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0';
+          RemainsCDS.Filtered := True;
+          cbMorionFilter.Enabled := False;
+          cbMorionFilter.Checked := False;
+        end else
+        begin
+          cbMorionFilter.Enabled := True;
+          cbMorionFilter.Checked := True;
+        end;
+        RemainsCDS.EnableControls;
       end;
-      RemainsCDS.EnableControls;
+    end else
+    begin
+      cbMorionFilter.Enabled := False;
+      cbMorionFilter.Checked := False;
     end;
-  end else
-  begin
-    cbMorionFilter.Enabled := False;
-    cbMorionFilter.Checked := False;
+  finally
+    cbMorionFilter.Properties.OnChange := cbMorionFilterPropertiesChange;
   end;
 end;
 
 procedure TMainCashForm2.bbPositionNextClick(Sender: TObject);
 begin
   inherited;
+  cbMorionFilter.Enabled := True;
+  if cbMorionFilter.Checked then cbMorionFilter.Checked := False;
+
   if not pnlPosition.Visible then
   begin
     pnlPosition.Visible := True;
@@ -8562,6 +8630,10 @@ begin
   FormParams.ParamByName('BuyerForSalePhone').Value := '';
   FormParams.ParamByName('DistributionPromoList').Value := '';
   FormParams.ParamByName('isBanAdd').Value := False;
+  FormParams.ParamByName('MedicKashtanId').Value := 0;
+  FormParams.ParamByName('MedicKashtanName').Value := '';
+  FormParams.ParamByName('MemberKashtanId').Value := 0;
+  FormParams.ParamByName('MemberKashtanName').Value := '';
 
   FiscalNumber := '';
   pnlVIP.Visible := false;
@@ -8594,6 +8666,9 @@ begin
   DiscountServiceForm.gCode := 0;
   DiscountServiceForm.isBeforeSale := False;
   pnlPosition.Visible := false;
+  cbMorionFilter.Enabled := True;
+  cbMorionFilter.Checked := False;
+
 
   pnlLoyaltySaveMoney.Visible := false;
   lblLoyaltySMBuyer.Caption := '';
@@ -9955,7 +10030,7 @@ function TMainCashForm2.SaveLocal(ADS: TClientDataSet; AManagerId: Integer;
   APartionDateKindId: Integer; AConfirmationCodeSP: string;
   ALoyaltySignID: Integer; ALoyaltySMID: Integer; ALoyaltySMSumma: Currency;
   ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone,
-  ADistributionPromoList: String;
+  ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
   ANeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 var
   NextVIPId: Integer;
@@ -10322,8 +10397,10 @@ begin
         FLocalDataBaseHead.FieldByName('BUYERFSP').Value := ABuyerForSalePhone;
         // Раздача акционных материалов
         FLocalDataBaseHead.FieldByName('DISTPROMO').Value := ADistributionPromoList;
-        // Раздача акционных материалов
-        FLocalDataBaseHead.FieldByName('DISTPROMO').Value := ADistributionPromoList;
+        // ФИО врача (МИС «Каштан»)
+        FLocalDataBaseHead.FieldByName('MEDICKID').Value := AMedicKashtanId;
+        // ФИО пациента (МИС «Каштан»)
+        FLocalDataBaseHead.FieldByName('MEMBERKID').Value := AMemberKashtanId;
         FLocalDataBaseHead.Post;
       End;
     except

@@ -67,6 +67,7 @@ type
     dsdChoiceGuides: TdsdChoiceGuides;
     bbb: TdxBarButton;
     bbExecuteDialog: TdxBarButton;
+    VATPercent: TcxGridDBColumn;
   private
     { Private declarations }
   public

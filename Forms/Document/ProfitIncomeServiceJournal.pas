@@ -46,7 +46,6 @@ type
     ContractChildInvNumber: TcxGridDBColumn;
     BonusValue: TcxGridDBColumn;
     AmountPartner: TcxGridDBColumn;
-    Summ: TcxGridDBColumn;
     JuridicalCode_Child: TcxGridDBColumn;
     JuridicalName_Child: TcxGridDBColumn;
     OKPO_Child: TcxGridDBColumn;

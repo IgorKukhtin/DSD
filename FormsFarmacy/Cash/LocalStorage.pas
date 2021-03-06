@@ -89,6 +89,9 @@ begin
       AddStrField(LocalDataBaseHead,  'BUYERFS', 100); //ФИО покупателя (на продажу)
       AddStrField(LocalDataBaseHead,  'BUYERFSP', 100); //Телефон покупателя (на продажу)
       AddStrField(LocalDataBaseHead,  'DISTPROMO', 254); //Раздача акционных материалов
+      //***05.03.21
+      AddIntField(LocalDataBaseHead,  'MEDICKID');     //ФИО врача (МИС «Каштан»)
+      AddIntField(LocalDataBaseHead,  'MEMBERKID');    //ФИО пациента (МИС «Каштан»)
 
       LocalDataBaseHead.CreateTable;
     end
@@ -151,6 +154,9 @@ begin
         if FindField('BUYERFSP') = nil then AddStrField(LFieldDefs, 'BUYERFSP', 100);
         //***04.12.20
         if FindField('DISTPROMO') = nil then AddStrField(LFieldDefs, 'DISTPROMO', 254);
+        //***05.03.21
+        if FindField('MEDICKID') = nil then AddIntField(LFieldDefs,  'MEDICKID');      //ФИО врача (МИС «Каштан»)
+        if FindField('MEMBERKID') = nil then AddIntField(LFieldDefs,  'MEMBERKID');    //ФИО пациента (МИС «Каштан»)
 
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -223,7 +229,9 @@ begin
         (FindField('MEDICFS') = nil) or
         (FindField('BUYERFS') = nil) or
         (FindField('BUYERFSP') = nil) or
-        (FindField('DISTPROMO') = nil));
+        (FindField('DISTPROMO') = nil) or
+        (FindField('MEDICKID') = nil) or
+        (FindField('MEMBERKID') = nil));
 
       Close;
 

@@ -32,8 +32,8 @@ type
     edCreated: TcxDateEdit;
     cxLabel14: TcxLabel;
     edRecipe_Number: TcxTextEdit;
-    edMedicSP: TcxButtonEdit;
-    GuidesMedicSP: TdsdGuides;
+    edMedicKashtan: TcxButtonEdit;
+    GuidesMedicKashtan: TdsdGuides;
     Label3: TLabel;
     edSPKind: TcxButtonEdit;
     GuidesSPKind: TdsdGuides;
@@ -41,8 +41,8 @@ type
     Panel1: TPanel;
     Panel2: TPanel;
     cxLabel22: TcxLabel;
-    edMemberSP: TcxButtonEdit;
-    GuidesMemberSP: TdsdGuides;
+    edMemberKashtan: TcxButtonEdit;
+    GuidesMemberKashtan: TdsdGuides;
     spSelect_SearchData: TdsdStoredProc;
     spGet_Movement_InvNumberSP: TdsdStoredProc;
     edValid_From: TcxDateEdit;
@@ -50,12 +50,12 @@ type
     edValid_To: TcxDateEdit;
     cxLabel2: TcxLabel;
     edInstitution_Name: TcxTextEdit;
-    rdDoctor_Name: TcxTextEdit;
-    edPatient_Name: TcxTextEdit;
     Panel4: TPanel;
     bbCancel: TcxButton;
     bbOk: TcxButton;
     actFormClose: TdsdFormClose;
+    edDiscount_Percent: TcxTextEdit;
+    Label4: TLabel;
     procedure bbOkClick(Sender: TObject);
     procedure DiscountExternalGuidesAfterChoice(Sender: TObject);
   private
@@ -78,32 +78,6 @@ begin
   if LikiDniproReceiptApi.Recipe.FRecipe_Type = 2 then
   begin
 
-//    try StrToDate(edCreated.Text)
-//    except
-//          ActiveControl:=edOperDateSP;
-//          ShowMessage ('Ошибка.Значение <Дата рецепта> не определено');
-//          ModalResult:=mrNone; // не надо закрывать
-//          exit;
-//    end;
-//    if StrToDate(edOperDateSP.Text) < NOW - 30 then
-//    begin ActiveControl:=edOperDateSP;
-//          ShowMessage ('Ошибка.Значение <Дата рецепта> не может быть раньше чем <'+DateToStr(NOW - 30)+'>');
-//          ModalResult:=mrNone; // не надо закрывать
-//          exit;
-//    end;
-//    if StrToDate(edOperDateSP.Text) > NOW then
-//    begin ActiveControl:=edOperDateSP;
-//          ShowMessage ('Ошибка.Значение <Дата рецепта> не может быть позже чем <'+DateToStr(NOW)+'>');
-//          ModalResult:=mrNone; // не надо закрывать
-//          exit;
-//    end;
-//    if trim (edInvNumberSP.Text) = '' then
-//    begin ActiveControl:=edInvNumberSP;
-//          ShowMessage ('Ошибка.Значение <Номер рецепта> не определено');
-//          ModalResult:=mrNone; // не надо закрывать
-//          exit;
-//    end;
-
     try Key:= GuidesSPKind.Params.ParamByName('Key').Value; except Key:= 0;end;
     if Key = 0 then
     begin
@@ -121,26 +95,23 @@ begin
           exit;
     end;
 
-//
-//      if trim (edMedicSP.Text) = '' then
-//      begin ActiveControl:=edMedicSP;
-//            ShowMessage ('Ошибка.Значение <ФИО врача> не определено');
-//            ModalResult:=mrNone; // не надо закрывать
-//            exit;
-//      end;
-//      //
-//
-//      try Key:= GuidesMemberSP.Params.ParamByName('Key').Value; except Key:= 0;end;
-//      if Key = 0 then
-//      begin
-//            ActiveControl:=edMemberSP;
-//            ShowMessage ('Внимание.Значение <ФИО пациента> не установлено.');
-//            ModalResult:=mrNone; // не надо закрывать
-//            exit;
-//      end;
-//
-//    // а здесь уже все ОК
-//    else ModalResult:=mrOk;
+    if trim (edMedicKashtan.Text) = '' then
+    begin ActiveControl:=edMedicKashtan;
+          ShowMessage ('Ошибка.Значение <ФИО врача> не определено');
+          ModalResult:=mrNone; // не надо закрывать
+          exit;
+    end;
+    //
+
+    try Key:= GuidesMemberKashtan.Params.ParamByName('Key').Value; except Key:= 0;end;
+    if Key = 0 then
+    begin
+          ActiveControl:=edMemberKashtan;
+          ShowMessage ('Внимание.Значение <ФИО пациента> не установлено.');
+          ModalResult:=mrNone; // не надо закрывать
+          exit;
+    end;
+
   end;
 
   ModalResult:=mrOk;
@@ -162,6 +133,21 @@ begin
     Exit;
   end;
 
+  if LikiDniproReceiptApi.Recipe.FRecipe_Type = 2 then
+  begin
+    if LikiDniproReceiptApi.Recipe.FRecipe_Valid_From > Date then
+    begin
+      ShowMessage('Рецепт не вступил в действие.');
+      Exit;
+    end;
+
+    if LikiDniproReceiptApi.Recipe.FRecipe_Valid_To < Date then
+    begin
+      ShowMessage('Рецепт просрочен.');
+      Exit;
+    end;
+  end;
+
   LikiDniproReceiptDialog := TLikiDniproReceiptDialogForm.Create(Screen.ActiveControl);
   try
     LikiDniproReceiptDialog.edRecipe_Number.Text := LikiDniproReceiptApi.Recipe.FRecipe_Number;
@@ -178,27 +164,29 @@ begin
     end else LikiDniproReceiptDialog.edValid_To.Date := LikiDniproReceiptApi.Recipe.FRecipe_Valid_To;
 
     LikiDniproReceiptDialog.edInstitution_Name.Text := LikiDniproReceiptApi.Recipe.FInstitution_Name;
-    LikiDniproReceiptDialog.rdDoctor_Name.Text := LikiDniproReceiptApi.Recipe.FDoctor_Name;
-    LikiDniproReceiptDialog.edPatient_Name.Text := LikiDniproReceiptApi.Recipe.FPatient_Name;
+
+    LikiDniproReceiptDialog.spGet_SPKind.Execute;
+    LikiDniproReceiptDialog.spSelect_SearchData.ParamByName('inInstitution_Id').Value := LikiDniproReceiptApi.Recipe.FInstitution_Id;
+    LikiDniproReceiptDialog.spSelect_SearchData.ParamByName('inInstitution_Edrpou').Value := LikiDniproReceiptApi.Recipe.FInstitution_Edrpou;
+    LikiDniproReceiptDialog.spSelect_SearchData.ParamByName('inDoctor_Id').Value := LikiDniproReceiptApi.Recipe.FDoctor_Id;
+    LikiDniproReceiptDialog.spSelect_SearchData.ParamByName('inDoctor_Name').Value := LikiDniproReceiptApi.Recipe.FDoctor_Name;
+    LikiDniproReceiptDialog.spSelect_SearchData.ParamByName('inPatient_Id').Value := LikiDniproReceiptApi.Recipe.FPatient_Id;
+    LikiDniproReceiptDialog.spSelect_SearchData.ParamByName('inPatient_Name').Value := LikiDniproReceiptApi.Recipe.FPatient_Name;
+    LikiDniproReceiptDialog.spSelect_SearchData.Execute;
 
     if LikiDniproReceiptApi.Recipe.FRecipe_Type = 2 then
     begin
-      LikiDniproReceiptDialog.spGet_SPKind.Execute;
-      LikiDniproReceiptDialog.spSelect_SearchData.ParamByName('inInstitution_Id').Value := LikiDniproReceiptApi.Recipe.FInstitution_Id;
-      LikiDniproReceiptDialog.spSelect_SearchData.ParamByName('inDoctor_Id').Value := LikiDniproReceiptApi.Recipe.FDoctor_Id;
-      LikiDniproReceiptDialog.spSelect_SearchData.ParamByName('inPatient_Id').Value := LikiDniproReceiptApi.Recipe.FPatient_Id;
-      LikiDniproReceiptDialog.spSelect_SearchData.ParamByName('inInstitution_Edrpou').Value := LikiDniproReceiptApi.Recipe.FInstitution_Edrpou;
-      LikiDniproReceiptDialog.spSelect_SearchData.Execute;
+      LikiDniproReceiptDialog.edDiscount_Percent.Text := CurrToStr(LikiDniproReceiptApi.Recipe.FCategory_1303_Discount_Percent) + ' %';
     end else
     begin
       LikiDniproReceiptDialog.edSPKind.Visible := False;
+      LikiDniproReceiptDialog.Label4.Visible := False;
+      LikiDniproReceiptDialog.edDiscount_Percent.Visible := False;
       LikiDniproReceiptDialog.Label3.Caption := 'Рецепт за полную стоимость.';
       LikiDniproReceiptDialog.Label3.Font.Size := Round(LikiDniproReceiptDialog.Label3.Font.Size * 1.5);
       LikiDniproReceiptDialog.Label3.Font.Color := clRed;
       LikiDniproReceiptDialog.cePartnerMedical.Visible := False;
       LikiDniproReceiptDialog.edValid_To.Visible := False;
-      LikiDniproReceiptDialog.edMedicSP.Visible := False;
-      LikiDniproReceiptDialog.edMemberSP.Visible := False;
     end;
 
     Result := LikiDniproReceiptDialog.ShowModal = mrOk;
@@ -213,9 +201,10 @@ begin
 
       MainCashForm.FormParams.ParamByName('PartnerMedicalId').Value := LikiDniproReceiptDialog.GuidesPartnerMedical.Params.ParamByName('Key').Value;
       MainCashForm.FormParams.ParamByName('PartnerMedicalName').Value := LikiDniproReceiptDialog.GuidesPartnerMedical.Params.ParamByName('TextValue').Value;
-      MainCashForm.FormParams.ParamByName('MedicSP').Value := LikiDniproReceiptDialog.GuidesMedicSP.Params.ParamByName('TextValue').Value;
-      MainCashForm.FormParams.ParamByName('MemberSPID').Value := LikiDniproReceiptDialog.GuidesMemberSP.Params.ParamByName('Key').Value;
-      MainCashForm.FormParams.ParamByName('MemberSP').Value := LikiDniproReceiptDialog.GuidesMemberSP.Params.ParamByName('TextValue').Value;
+      MainCashForm.FormParams.ParamByName('MedicKashtanId').Value := LikiDniproReceiptDialog.GuidesMedicKashtan.Params.ParamByName('Key').Value;
+      MainCashForm.FormParams.ParamByName('MedicKashtanName').Value := LikiDniproReceiptDialog.GuidesMedicKashtan.Params.ParamByName('TextValue').Value;
+      MainCashForm.FormParams.ParamByName('MemberKashtanId').Value := LikiDniproReceiptDialog.GuidesMemberKashtan.Params.ParamByName('Key').Value;
+      MainCashForm.FormParams.ParamByName('MemberKashtanName').Value := LikiDniproReceiptDialog.GuidesMemberKashtan.Params.ParamByName('TextValue').Value;
 
       MainCashForm.lblSPKindName.Caption := '  ' + FloatToStr(MainCashForm.FormParams.ParamByName('SPTax')
         .Value) + '% : ' + MainCashForm.FormParams.ParamByName('SPKindName').Value;
@@ -223,13 +212,11 @@ begin
       MainCashForm.Label30.Caption := '     Мед.уч.: ';
       MainCashForm.Label7.Caption := 'ФИО Врача:';
 
-      MainCashForm.lblPartnerMedicalName.Caption := '  ' + MainCashForm.FormParams.ParamByName
-        ('PartnerMedicalName').Value;
-      // + '  /  № амб. ' + FormParams.ParamByName('Ambulance').Value;
-      MainCashForm.lblMedicSP.Caption := '  ' + MainCashForm.FormParams.ParamByName('MedicSP').Value +
+      MainCashForm.lblPartnerMedicalName.Caption := '  ' + MainCashForm.FormParams.ParamByName('PartnerMedicalName').Value;
+      MainCashForm.lblMedicSP.Caption := '  ' + MainCashForm.FormParams.ParamByName('MedicKashtanName').Value +
         '  /  № ' + MainCashForm.FormParams.ParamByName('InvNumberSP').Value + ' от ' +
         DateToStr(MainCashForm.FormParams.ParamByName('OperDateSP').Value);
-      MainCashForm.lblMemberSP.Caption := '  ' + MainCashForm.FormParams.ParamByName('MemberSP').Value;
+      MainCashForm.lblMemberSP.Caption := '  ' + MainCashForm.FormParams.ParamByName('MemberKashtanName').Value;
       MainCashForm.pnlSP.Visible := MainCashForm.FormParams.ParamByName('InvNumberSP').Value <> '';
       MainCashForm.pnlSP.Visible := True;
     end;

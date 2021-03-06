@@ -256,19 +256,11 @@ BEGIN
                         AND ObjectLink_Price_Unit.ChildObjectId IN (inUnitId_to, inUnitId)
                       )
 
-  , PromoBonus AS (SELECT MovementItem.Id                            AS Id
-                        , Object_Goods_Retail.GoodsMainId            AS GoodsId
-                        , MovementItem.Amount                        AS Amount
-                   FROM MovementItem
-                        INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItem.ObjectId
-                   WHERE MovementItem.MovementId = (SELECT MAX(Movement.id) FROM Movement
-                                                    WHERE Movement.OperDate <= CURRENT_DATE
-                                                      AND Movement.DescId = zc_Movement_PromoBonus()
-                                                      AND Movement.StatusId = zc_Enum_Status_Complete())
-                     AND MovementItem.DescId = zc_MI_Master()
-                     AND MovementItem.isErased = False
-                     AND MovementItem.Amount > 0
-                     AND vbObjectId = 4)
+  , PromoBonus AS (SELECT PromoBonus.Id                            AS Id
+                        , PromoBonus.GoodsMainId                   AS GoodsId
+                        , PromoBonus.Amount                        AS Amount
+                   FROM gpSelect_PromoBonus_GoodsWeek (inSession) AS PromoBonus
+                   WHERE vbObjectId = 4)
   , tmpGoodsDiscount AS (SELECT ObjectLink_BarCode_Goods.ChildObjectId                     AS GoodsId
                               , MAX(COALESCE(ObjectFloat_MaxPrice.ValueData, 0))::TFloat   AS MaxPrice 
                          FROM Object AS Object_BarCode

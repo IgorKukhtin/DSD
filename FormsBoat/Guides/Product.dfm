@@ -643,6 +643,20 @@ object ProductForm: TProductForm
           Options.Editing = False
           Width = 70
         end
+        object InfoMoneyName_Client: TcxGridDBColumn
+          Caption = #1057#1090#1072#1090#1100#1103' '#1059#1055' ('#1082#1083#1080#1077#1085#1090')'
+          DataBinding.FieldName = 'InfoMoneyName_Client'
+          Visible = False
+          Options.Editing = False
+          Width = 60
+        end
+        object TaxKind_Value_Client: TcxGridDBColumn
+          Caption = '% '#1053#1044#1057' ('#1082#1083#1080#1077#1085#1090')'
+          DataBinding.FieldName = 'TaxKind_Value_Client'
+          Visible = False
+          Options.Editing = False
+          Width = 60
+        end
       end
       object cxGridLevel: TcxGridLevel
         GridView = cxGridDBTableView
@@ -2180,6 +2194,44 @@ object ProductForm: TProductForm
           Component = MasterCDS
           ComponentItem = 'CIN'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ClientId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ClientId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ClientName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ClientName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyId_Client'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName_Client'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TaxKind_Value'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'TaxKind_Value_Client'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

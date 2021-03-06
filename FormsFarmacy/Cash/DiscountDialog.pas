@@ -32,6 +32,7 @@ type
     spLoadRemainsDiscount: TdsdStoredProc;
     RemainsDiscountDS: TDataSource;
     RemainsDiscountCDS: TClientDataSet;
+    colAmountProject: TcxGridDBColumn;
     procedure bbOkClick(Sender: TObject);
     procedure DiscountExternalGuidesAfterChoice(Sender: TObject);
   private

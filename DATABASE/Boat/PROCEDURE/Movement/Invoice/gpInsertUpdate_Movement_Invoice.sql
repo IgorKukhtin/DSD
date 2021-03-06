@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Invoice(
     IN inInvNumber        TVarChar ,  -- Номер документа
     IN inOperDate         TDateTime,  --
     IN inPlanDate         TDateTime,  -- Дата оплаты
+    IN inVATPercent       TFloat   ,  --
     IN inAmountIn         TFloat   ,  -- 
     IN inAmountOut        TFloat   ,  -- 
     IN inInvNumberPartner TVarChar ,  -- 
@@ -47,6 +48,7 @@ BEGIN
                                            , inInvNumber        := inInvNumber
                                            , inOperDate         := inOperDate
                                            , inPlanDate         := inPlanDate
+                                           , inVATPercent       := inVATPercent
                                            , inAmount           := vbAmount :: Tfloat
                                            , inInvNumberPartner := inInvNumberPartner
                                            , inReceiptNumber    := inReceiptNumber

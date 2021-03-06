@@ -72,10 +72,44 @@ BEGIN
      RETURN NEXT Cursor1;
 
      OPEN Cursor2 FOR
+       WITH
+       tmpPhoto AS (SELECT ObjectLink_GoodsPhoto_Goods.ChildObjectId AS GoodsId
+                         , Object_GoodsPhoto.Id                      AS PhotoId
+                         , Object_GoodsPhoto.ValueData               AS FileName
+                         , ROW_NUMBER() OVER (PARTITION BY ObjectLink_GoodsPhoto_Goods.ChildObjectId ORDER BY Object_GoodsPhoto.Id) AS Ord
+                    FROM Object AS Object_GoodsPhoto
+                           JOIN ObjectLink AS ObjectLink_GoodsPhoto_Goods
+                                           ON ObjectLink_GoodsPhoto_Goods.ObjectId = Object_GoodsPhoto.Id
+                                          AND ObjectLink_GoodsPhoto_Goods.DescId   = zc_ObjectLink_GoodsPhoto_Goods()
+                                          AND ObjectLink_GoodsPhoto_Goods.ChildObjectId IN (SELECT DISTINCT tmpProdColorItems.GoodsId FROM tmpProdColorItems)
+                     WHERE Object_GoodsPhoto.DescId   = zc_Object_GoodsPhoto()
+                       AND Object_GoodsPhoto.isErased = FALSE
+                   )
+
 
        -- Результат
-       SELECT *
+       SELECT tmpProdColorItems.*
+            , ObjectBlob_GoodsPhoto_Data1.ValueData AS Photo1
+            , tmpPhoto1.FileName AS FileName1
        FROM tmpProdColorItems
+            LEFT JOIN tmpPhoto AS tmpPhoto1
+                               ON tmpPhoto1.GoodsId = tmpProdColorItems.GoodsId
+                              AND tmpPhoto1.Ord = 1
+            LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data1
+                                 ON ObjectBlob_GoodsPhoto_Data1.ObjectId = tmpPhoto1.PhotoId
+    
+/*            LEFT JOIN tmpPhoto AS tmpPhoto2
+                               ON tmpPhoto2.GoodsId = tmpProdColorItems.GoodsId
+                              AND tmpPhoto2.Ord = 2
+            LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data2
+                                 ON ObjectBlob_GoodsPhoto_Data2.ObjectId = tmpPhoto2.PhotoId
+    
+            LEFT JOIN tmpPhoto AS tmpPhoto3
+                               ON tmpPhoto3.GoodsId = tmpProdColorItems.GoodsId
+                              AND tmpPhoto3.Ord = 3
+            LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data3
+                                 ON ObjectBlob_GoodsPhoto_Data3.ObjectId = tmpPhoto3.PhotoId
+                                 */
        ;
 
      RETURN NEXT Cursor2;

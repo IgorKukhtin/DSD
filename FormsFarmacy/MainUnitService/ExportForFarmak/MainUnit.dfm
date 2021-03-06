@@ -36,95 +36,6 @@ object MainForm: TMainForm
       OptionsView.CellTextMaxLineCount = 100
       OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
-      object PharmacyId: TcxGridDBColumn
-        DataBinding.FieldName = 'PharmacyId'
-        Options.Editing = False
-        Width = 60
-      end
-      object ProductId: TcxGridDBColumn
-        DataBinding.FieldName = 'ProductId'
-        Options.Editing = False
-        Width = 60
-      end
-      object ProductName: TcxGridDBColumn
-        DataBinding.FieldName = 'ProductName'
-        Options.Editing = False
-        Width = 60
-      end
-      object Producer: TcxGridDBColumn
-        DataBinding.FieldName = 'Producer'
-        Options.Editing = False
-        Width = 60
-      end
-      object Morion: TcxGridDBColumn
-        DataBinding.FieldName = 'Morion'
-        Options.Editing = False
-        Width = 60
-      end
-      object Barcode: TcxGridDBColumn
-        DataBinding.FieldName = 'Barcode'
-        Width = 60
-      end
-      object RegistrationNumber: TcxGridDBColumn
-        DataBinding.FieldName = 'RegistrationNumber'
-        Options.Editing = False
-        Width = 60
-      end
-      object Optima: TcxGridDBColumn
-        DataBinding.FieldName = 'Optima'
-        Options.Editing = False
-        Width = 60
-      end
-      object Badm: TcxGridDBColumn
-        DataBinding.FieldName = 'Badm'
-        Options.Editing = False
-        Width = 60
-      end
-      object Quantity: TcxGridDBColumn
-        DataBinding.FieldName = 'Quantity'
-        Options.Editing = False
-        Width = 60
-      end
-      object Price: TcxGridDBColumn
-        DataBinding.FieldName = 'Price'
-        Options.Editing = False
-        Width = 60
-      end
-      object OfflinePrice: TcxGridDBColumn
-        DataBinding.FieldName = 'OfflinePrice'
-        Options.Editing = False
-        Width = 60
-      end
-      object PickupPrice: TcxGridDBColumn
-        DataBinding.FieldName = 'PickupPrice'
-        Options.Editing = False
-        Width = 60
-      end
-      object i10000001: TcxGridDBColumn
-        DataBinding.FieldName = '10000001 - insurance company #1 id'
-        Options.Editing = False
-        Width = 60
-      end
-      object i10000002: TcxGridDBColumn
-        DataBinding.FieldName = '10000002 - insurance company #2 id'
-        Options.Editing = False
-        Width = 60
-      end
-      object Vat: TcxGridDBColumn
-        DataBinding.FieldName = 'Vat'
-        Options.Editing = False
-        Width = 60
-      end
-      object PackSize: TcxGridDBColumn
-        DataBinding.FieldName = 'PackSize'
-        Options.Editing = False
-        Width = 60
-      end
-      object PackDivisor: TcxGridDBColumn
-        DataBinding.FieldName = 'PackDivisor'
-        Options.Editing = False
-        Width = 60
-      end
     end
     object grReportUnitLevel1: TcxGridLevel
       GridView = grtvUnit
@@ -153,7 +64,6 @@ object MainForm: TMainForm
       Height = 25
       Caption = #1069#1082#1089#1087#1086#1088#1090
       TabOrder = 2
-      OnClick = btnExportClick
     end
     object btnExecute: TButton
       Left = 615
@@ -162,7 +72,6 @@ object MainForm: TMainForm
       Height = 25
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100
       TabOrder = 1
-      OnClick = btnExecuteClick
     end
     object btnAll: TButton
       Left = 16
@@ -173,14 +82,14 @@ object MainForm: TMainForm
       TabOrder = 4
       OnClick = btnAllClick
     end
-    object btnAllUnit: TButton
-      Left = 480
+    object btnExecuteGoods: TButton
+      Left = 279
       Top = 0
-      Width = 129
+      Width = 105
       Height = 25
-      Caption = #1042#1089#1105' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
+      Caption = #1069#1082#1089#1087#1086#1088#1090' '#1090#1086#1074#1072#1088#1086#1074
       TabOrder = 0
-      OnClick = btnAllUnitClick
+      OnClick = btnExecuteGoodsClick
     end
     object btnExecuteUnit: TButton
       Left = 167
@@ -292,23 +201,10 @@ object MainForm: TMainForm
   object qryReport_Upload: TZQuery
     Connection = ZConnection1
     SQL.Strings = (
-      
-        ' SELECT * FROM gpSelect_GoodsOnUnitRemains_ForLiki24 (:UnitId, '#39 +
-        '3'#39')')
-    Params = <
-      item
-        DataType = ftUnknown
-        Name = 'UnitId'
-        ParamType = ptUnknown
-      end>
+      '')
+    Params = <>
     Left = 556
     Top = 336
-    ParamData = <
-      item
-        DataType = ftUnknown
-        Name = 'UnitId'
-        ParamType = ptUnknown
-      end>
   end
   object dsReport_Upload: TDataSource
     DataSet = qryReport_Upload

@@ -57,6 +57,8 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     spGetPlanDate: TdsdStoredProc;
     actGetPlanDate: TdsdDataSetRefresh;
+    cxLabel2: TcxLabel;
+    edVATPercent: TcxCurrencyEdit;
   private
     { Private declarations }
   public

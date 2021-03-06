@@ -719,7 +719,7 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -730,7 +730,7 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -890,10 +890,6 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
         end
         item
           BeginGroup = True
-          Visible = True
-          ItemName = 'bbReCompleteAll'
-        end
-        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -1063,6 +1059,7 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
     Top = 208
   end
   inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_ProfitLossService'
     Top = 136
   end
   object spMovementReCompleteAll: TdsdStoredProc

@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
+             , TaxKind_Value TFloat
              , isErased Boolean
 )
 AS
@@ -40,6 +41,7 @@ BEGIN
           , Object_InfoMoney_View.InfoMoneyDestinationId
           , Object_InfoMoney_View.InfoMoneyDestinationCode
           , Object_InfoMoney_View.InfoMoneyDestinationName
+          , ObjectFloat_TaxKind_Value.ValueData AS TaxKind_Value
           , Object_ClientPartner.isErased
         FROM Object AS Object_ClientPartner
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_ClientPartner.DescId
@@ -52,6 +54,15 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_DayCalendar
                                   ON ObjectFloat_DayCalendar.ObjectId = Object_ClientPartner.Id
                                  AND ObjectFloat_DayCalendar.DescId IN (zc_ObjectFloat_Partner_DayCalendar(),zc_ObjectFloat_Client_DayCalendar())
+
+            LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+                                 ON ObjectLink_TaxKind.ObjectId = Object_ClientPartner.Id
+                                AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
+            LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId 
+  
+            LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                  ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
+                                 AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
 
         WHERE Object_ClientPartner.DescId in (zc_Object_Partner(),zc_Object_Client())
           AND (Object_ClientPartner.isErased = FALSE OR inisShowAll = TRUE);

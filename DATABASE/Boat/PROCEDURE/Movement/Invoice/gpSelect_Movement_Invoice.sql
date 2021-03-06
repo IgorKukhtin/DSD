@@ -15,14 +15,13 @@ RETURNS TABLE (Id              Integer
              , PlanDate        TDateTime
              , StatusCode      Integer
              , StatusName      TVarChar
-             
              , AmountIn         TFloat
              , AmountOut        TFloat
              , AmountIn_NotVAT  TFloat
              , AmountOut_NotVAT TFloat
              , AmountIn_VAT     TFloat
              , AmountOut_VAT    TFloat
-             , TaxKindValue     TFloat
+             , VATPercent      TFloat             
 
              , ObjectId        Integer
              , ObjectName      TVarChar
@@ -67,7 +66,8 @@ BEGIN
      , tmpMovementFloat AS (SELECT MovementFloat.*
                             FROM MovementFloat
                             WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                              AND MovementFloat.DescId = zc_MovementFloat_Amount()
+                              AND MovementFloat.DescId IN (zc_MovementFloat_Amount()
+                                                         , zc_MovementFloat_VATPercent())
                             )
 
      , tmpMovementDate AS (SELECT MovementDate.*
@@ -110,13 +110,13 @@ BEGIN
       , CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END::TFloat AS AmountIn
       , CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END::TFloat AS AmountOut
         -- áåç ÍÄÑ
-      , CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * zfCalc_Summ_NoVAT (MovementFloat_Amount.ValueData, ObjectFloat_TaxKind_Value.ValueData) ELSE 0 END::TFloat AS AmountIn_NotVAT
-      , CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * zfCalc_Summ_NoVAT (MovementFloat_Amount.ValueData, ObjectFloat_TaxKind_Value.ValueData) ELSE 0 END::TFloat AS AmountOut_NotVAT
+      , CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * zfCalc_Summ_NoVAT (MovementFloat_Amount.ValueData, MovementFloat_VATPercent.ValueData) ELSE 0 END::TFloat AS AmountIn_NotVAT
+      , CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * zfCalc_Summ_NoVAT (MovementFloat_Amount.ValueData, MovementFloat_VATPercent.ValueData) ELSE 0 END::TFloat AS AmountOut_NotVAT
         -- ÍÄÑ
-      , CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * zfCalc_Summ_VAT (MovementFloat_Amount.ValueData, ObjectFloat_TaxKind_Value.ValueData) ELSE 0 END::TFloat AS AmountIn_VAT
-      , CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * zfCalc_Summ_VAT (MovementFloat_Amount.ValueData, ObjectFloat_TaxKind_Value.ValueData) ELSE 0 END::TFloat AS AmountOut_VAT
+      , CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * zfCalc_Summ_VAT (MovementFloat_Amount.ValueData, MovementFloat_VATPercent.ValueData) ELSE 0 END::TFloat AS AmountIn_VAT
+      , CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * zfCalc_Summ_VAT (MovementFloat_Amount.ValueData, MovementFloat_VATPercent.ValueData) ELSE 0 END::TFloat AS AmountOut_VAT
 
-      , ObjectFloat_TaxKind_Value.ValueData                 AS TaxKindValue
+      , MovementFloat_VATPercent.ValueData    ::TFloat      AS VATPercent
 
       , Object_Object.Id                                    AS ObjectId
       , Object_Object.ValueData                             AS ObjectName
@@ -153,6 +153,10 @@ BEGIN
                                    ON MovementFloat_Amount.MovementId = Movement.Id
                                   AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
 
+        LEFT JOIN tmpMovementFloat AS MovementFloat_VATPercent
+                                   ON MovementFloat_VATPercent.MovementId = Movement.Id
+                                  AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+
         LEFT JOIN tmpMovementDate AS MovementDate_Plan
                                   ON MovementDate_Plan.MovementId = Movement.Id
                                  AND MovementDate_Plan.DescId = zc_MovementDate_Plan()
@@ -175,13 +179,6 @@ BEGIN
         LEFT JOIN Object AS Object_Object ON Object_Object.Id = MovementLinkObject_Object.ObjectId
         LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Object.DescId
         
-        LEFT JOIN ObjectLink AS ObjectLink_TaxKind
-                             ON ObjectLink_TaxKind.ObjectId = Object_Object.Id
-                            AND ObjectLink_TaxKind.DescId   IN (zc_ObjectLink_Partner_TaxKind(), zc_ObjectLink_Client_TaxKind())
-        LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                              ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId 
-                             AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()
-
         LEFT JOIN tmpMLO AS MovementLinkObject_InfoMoney
                          ON MovementLinkObject_InfoMoney.MovementId = Movement.Id
                         AND MovementLinkObject_InfoMoney.DescId = zc_MovementLinkObject_InfoMoney()

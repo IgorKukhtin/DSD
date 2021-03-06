@@ -24,6 +24,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ProdColorName TVarChar
              , InvNumber_OrderClient TVarChar
              , StatusCode_OrderClient Integer
              , StatusName_OrderClient TVarChar
+             , InfoMoneyId_Client   Integer
+             , InfoMoneyName_Client TVarChar
+             , TaxKind_Value_Client TFloat
 
              , InsertName TVarChar
              , InsertDate TDateTime
@@ -490,7 +493,10 @@ BEGIN
                               , Object_From.ValueData  AS FromName
                               , MovementLinkObject_Product.ObjectId AS ProductId
                               , MovementFloat_DiscountTax.ValueData      AS DiscountTax
-                              , MovementFloat_DiscountNextTax.ValueData    AS DiscountNextTax
+                              , MovementFloat_DiscountNextTax.ValueData  AS DiscountNextTax
+                              , Object_InfoMoney_View.InfoMoneyId
+                              , Object_InfoMoney_View.InfoMoneyName_all
+                              , ObjectFloat_TaxKind_Value.ValueData AS TaxKind_Value
                               , ROW_NUMBER() OVER (PARTITION BY MovementLinkObject_Product.ObjectId
                                                    ORDER BY CASE WHEN Movement.StatusId = zc_Enum_Status_Complete() THEN 1
                                                                  WHEN Movement.StatusId = zc_Enum_Status_UnComplete() THEN 2
@@ -513,6 +519,19 @@ BEGIN
                               LEFT JOIN MovementFloat AS MovementFloat_DiscountNextTax
                                                       ON MovementFloat_DiscountNextTax.MovementId = Movement.Id
                                                      AND MovementFloat_DiscountNextTax.DescId = zc_MovementFloat_DiscountNextTax()
+
+                              LEFT JOIN ObjectLink AS ObjectLink_InfoMoney
+                                                   ON ObjectLink_InfoMoney.ObjectId = Object_From.Id
+                                                  AND ObjectLink_InfoMoney.DescId = zc_ObjectLink_Client_InfoMoney()
+                              LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_InfoMoney.ChildObjectId
+
+                              LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+                                                   ON ObjectLink_TaxKind.ObjectId = Object_From.Id
+                                                  AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
+
+                              LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                                    ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                                                   AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
                          WHERE MovementLinkObject_Product.ObjectId IN (SELECT DISTINCT tmpProduct.Id FROM tmpProduct)
                            AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
                                ) AS tmp
@@ -567,6 +586,9 @@ BEGIN
          , tmpOrderClient.InvNumber ::TVarChar  AS InvNumber_OrderClient
          , tmpOrderClient.StatusCode ::Integer  AS StatusCode_OrderClient
          , tmpOrderClient.StatusName ::TVarChar AS StatusName_OrderClient
+         , tmpOrderClient.InfoMoneyId       ::Integer  AS InfoMoneyId_Client
+         , tmpOrderClient.InfoMoneyName_all ::TVarChar AS InfoMoneyName_Client
+         , tmpOrderClient.TaxKind_Value ::TFloat AS TaxKind_Value_Client
 
          , tmpResAll.InsertName
          , tmpResAll.InsertDate

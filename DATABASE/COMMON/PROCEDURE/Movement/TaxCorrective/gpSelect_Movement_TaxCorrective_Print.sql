@@ -394,12 +394,15 @@ BEGIN
              INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
                                    ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
                                   AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
-             LEFT JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
 
              INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                    ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                   AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
              INNER JOIN tmpGoods ON tmpGoods.GoodsId = ObjectLink_GoodsPropertyValue_Goods.ChildObjectId
+
+             LEFT JOIN Object AS Object_GoodsPropertyValue
+                              ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                             AND Object_GoodsPropertyValue.ValueData  <> ''
 
              LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
                                   ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -408,16 +411,20 @@ BEGIN
              LEFT JOIN ObjectString AS ObjectString_BarCode
                                     ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                    AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
+                                   AND ObjectString_BarCode.ValueData       <> ''
              LEFT JOIN ObjectString AS ObjectString_Article
                                     ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                    AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
+                                   AND ObjectString_Article.ValueData       <> ''
 
              LEFT JOIN ObjectString AS ObjectString_BarCodeGLN
                                     ON ObjectString_BarCodeGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                    AND ObjectString_BarCodeGLN.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
+                                   AND ObjectString_BarCodeGLN.ValueData    <> ''
              LEFT JOIN ObjectString AS ObjectString_ArticleGLN
                                     ON ObjectString_ArticleGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                    AND ObjectString_ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
+                                   AND ObjectString_ArticleGLN.ValueData    <> ''
 
         WHERE Object_GoodsPropertyValue.ValueData  <> ''
            OR ObjectString_BarCode.ValueData       <> ''
@@ -675,6 +682,7 @@ BEGIN
 , tmpMovement_Data AS (SELECT tmpMovement.Id                                  AS MovementId
                             , MovementLinkObject_To.ObjectId                  AS ToId
                             , MovementLinkObject_From.ObjectId                AS FromId
+                            , Object_From.ValueData                           AS FromName
                             , ObjectString_FromAddress.ValueData              AS FromAddress
                             , ObjectString_Partner_GLNCodeJuridical.ValueData AS Partner_GLNCodeJuridical
                             , ObjectString_Partner_GLNCodeCorporate.ValueData AS Partner_GLNCodeCorporate
@@ -684,7 +692,7 @@ BEGIN
                             , MovementLinkObject_DocumentTaxKind.ObjectId     AS DocumentTaxKind
                             , tmpDocumentTaxKind.KindCode                     AS Code_DocumentTaxKind
                             , tmpDocumentTaxKind.GoodsName                    AS Goods_DocumentTaxKind
-                            , tmpDocumentTaxKind.MeasureName                   AS Measure_DocumentTaxKind
+                            , tmpDocumentTaxKind.MeasureName                  AS Measure_DocumentTaxKind
                             , tmpDocumentTaxKind.MeasureCode                  AS MeasureCode_DocumentTaxKind
                             , tmpDocumentTaxKind.Price                        AS Price_DocumentTaxKind
 
@@ -746,6 +754,7 @@ BEGIN
                                                   AND ObjectString_JuridicalTo_GLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
 
                             LEFT JOIN tmpDocumentTaxKind ON tmpDocumentTaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
+                            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
                        )
 
 /*  -- причины корректировки и кода
@@ -758,6 +767,14 @@ BEGIN
 . "Зменшення кількості при нульовому обсязі".
 . "Усунення неоднозначностей"  --zc_Enum_DocumentTaxKind_Change
 */
+
+, tmpObjectHistory_JuridicalDetails_ViewByDate AS (SELECT *
+                                                 FROM ObjectHistory_JuridicalDetails_ViewByDate
+                                                 WHERE ObjectHistory_JuridicalDetails_ViewByDate.JuridicalId IN (SELECT DISTINCT tmpMovement_Data.ToId FROM tmpMovement_Data
+                                                                                                           UNION SELECT DISTINCT tmpMovement_Data.FromId FROM tmpMovement_Data)
+                                                  )
+                                                  
+                                                  
    , tmpData_all AS
       -- РЕЗУЛЬТАТ
      (SELECT inMovementId                                                   AS inMovementId
@@ -933,6 +950,7 @@ BEGIN
                                                )
              END :: TVarChar AS SupplierGLNCode
 
+           , tmpMovement_Data.FromName AS JuridicalName_From_inf  -- для определения признака ФОП / не ФОП
            , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
                   THEN 'Неплатник'
              ELSE OH_JuridicalDetails_From.FullName END                     AS JuridicalName_From
@@ -1177,13 +1195,13 @@ BEGIN
             LEFT JOIN tmpPersonalBookkeeper ON tmpPersonalBookkeeper.BranchId = tmpMovement_Data.BranchId
             LEFT JOIN tmpMLM_Child ON tmpMLM_Child.MovementId = tmpMI.MovementId
 
-            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
-                                                                ON OH_JuridicalDetails_To.JuridicalId = tmpMovement_Data.ToId
-                                                               AND COALESCE (tmpMLM_Child.OperDate_Child, tmpMI.OperDate) >= OH_JuridicalDetails_To.StartDate AND COALESCE (tmpMLM_Child.OperDate_Child, tmpMI.OperDate) < OH_JuridicalDetails_To.EndDate
+            LEFT JOIN tmpObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
+                                                                   ON OH_JuridicalDetails_To.JuridicalId = tmpMovement_Data.ToId
+                                                                  AND COALESCE (tmpMLM_Child.OperDate_Child, tmpMI.OperDate) >= OH_JuridicalDetails_To.StartDate AND COALESCE (tmpMLM_Child.OperDate_Child, tmpMI.OperDate) < OH_JuridicalDetails_To.EndDate
 
-            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
-                                                                ON OH_JuridicalDetails_From.JuridicalId = tmpMovement_Data.FromId
-                                                               AND COALESCE (tmpMLM_Child.OperDate_Child, tmpMI.OperDate) >= OH_JuridicalDetails_From.StartDate AND COALESCE (tmpMLM_Child.OperDate_Child, tmpMI.OperDate) < OH_JuridicalDetails_From.EndDate
+            LEFT JOIN tmpObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
+                                                                   ON OH_JuridicalDetails_From.JuridicalId = tmpMovement_Data.FromId
+                                                                  AND COALESCE (tmpMLM_Child.OperDate_Child, tmpMI.OperDate) >= OH_JuridicalDetails_From.StartDate AND COALESCE (tmpMLM_Child.OperDate_Child, tmpMI.OperDate) < OH_JuridicalDetails_From.EndDate
 
             LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                  ON ObjectLink_Juridical_Retail.ObjectId = OH_JuridicalDetails_From.JuridicalId
@@ -1335,6 +1353,7 @@ BEGIN
 
                        , tmpData_all.SupplierGLNCode
 
+                       , tmpData_all.JuridicalName_From_inf
                        , tmpData_all.JuridicalName_From
                        , tmpData_all.JuridicalAddress_From
 
@@ -1596,6 +1615,7 @@ BEGIN
 
                        , tmpData_all.SupplierGLNCode
 
+                       , tmpData_all.JuridicalName_From_inf
                        , tmpData_all.JuridicalName_From
                        , tmpData_all.JuridicalAddress_From
 
@@ -1822,6 +1842,7 @@ BEGIN
 
                        , tmpData_all.SupplierGLNCode
 
+                       , tmpData_all.JuridicalName_From_inf
                        , tmpData_all.JuridicalName_From
                        , tmpData_all.JuridicalAddress_From
 
@@ -2038,7 +2059,7 @@ BEGIN
            , tmpData_all.INN_From
 
            --с 01,03,2021 новый параметр Код - если номер платника податку заполнен  в ячейку ставим 1, иначе пусто
-           , CASE  WHEN tmpData_all.JuridicalName_From LIKE '%ФОП%'
+           , CASE  WHEN tmpData_all.JuridicalName_From_inf LIKE '%ФОП%'
                    AND LENGTH(trim (tmpData_all.OKPO_From)) = 10
                    AND tmpData_all.INN_From <> '100000000000'
                   THEN '2'

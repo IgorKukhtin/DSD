@@ -65,6 +65,7 @@ type
     spUnErased: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     DiscountTax: TcxGridDBColumn;
+    TaxKind_Value: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -78,7 +78,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 6
-    Width = 320
+    Width = 209
   end
   object cxLabel5: TcxLabel [11]
     Left = 15
@@ -211,6 +211,20 @@
     TabOrder = 27
     Width = 155
   end
+  object cxLabel2: TcxLabel [28]
+    Left = 234
+    Top = 155
+    Caption = '% '#1053#1044#1057
+  end
+  object edVATPercent: TcxCurrencyEdit [29]
+    Left = 234
+    Top = 175
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    Properties.ReadOnly = True
+    TabOrder = 29
+    Width = 100
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 242
     Top = 324
@@ -274,6 +288,14 @@
         Value = Null
         Component = cePlanDate
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inVATPercent'
+        Value = Null
+        Component = edVATPercent
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -438,7 +460,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'infomoneyname'
+        Name = 'InfoMoneyName_all'
         Value = ''
         Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
@@ -510,6 +532,13 @@
         Component = ceComment
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VATPercent'
+        Value = Null
+        Component = edVATPercent
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 287
     Top = 368
@@ -559,6 +588,13 @@
         Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKind_Value'
+        Value = Null
+        Component = edVATPercent
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 107
@@ -615,8 +651,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 234
-    Top = 121
+    Left = 202
+    Top = 97
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -671,6 +707,48 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ClientId'
+        Value = Null
+        Component = GuidesObject
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ClientName'
+        Value = Null
+        Component = GuidesObject
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyName'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKind_Value'
+        Value = Null
+        Component = edVATPercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 147
     Top = 319
@@ -715,7 +793,7 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 216
-    Top = 64
+    Left = 184
+    Top = 48
   end
 end

@@ -223,6 +223,15 @@ object ClientForm: TClientForm
         Options.Editing = False
         Width = 70
       end
+      object TaxKind_Value: TcxGridDBColumn
+        Caption = '% '#1053#1044#1057
+        DataBinding.FieldName = 'TaxKind_Value'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
       object BankName: TcxGridDBColumn
         Caption = #1041#1072#1085#1082
         DataBinding.FieldName = 'BankName'
@@ -572,6 +581,14 @@ object ClientForm: TClientForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'DiscountTax'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TaxKind_Value'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'TaxKind_Value'
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>

@@ -23,7 +23,6 @@ inherited MainCashForm2: TMainCashForm2
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitTop = 407
     object CheckGrid: TcxGrid
       Left = 0
       Top = 0
@@ -286,7 +285,6 @@ inherited MainCashForm2: TMainCashForm2
     Height = 3
     AlignSplitter = salBottom
     Control = BottomPanel
-    ExplicitTop = 404
   end
   object MainPanel: TPanel [2]
     Left = 0
@@ -296,8 +294,6 @@ inherited MainCashForm2: TMainCashForm2
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 265
-    ExplicitHeight = 139
     object MainGrid: TcxGrid
       Left = 0
       Top = 21
@@ -305,7 +301,6 @@ inherited MainCashForm2: TMainCashForm2
       Height = 108
       Align = alClient
       TabOrder = 0
-      ExplicitHeight = 85
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnCanFocusRecord = MainGridDBTableViewCanFocusRecord
@@ -1080,7 +1075,6 @@ inherited MainCashForm2: TMainCashForm2
       Height = 33
       Align = alBottom
       TabOrder = 1
-      ExplicitTop = 106
       object ShapeState: TShape
         Left = 810
         Top = 13
@@ -2176,7 +2170,6 @@ inherited MainCashForm2: TMainCashForm2
     ParentBackground = False
     TabOrder = 11
     Visible = False
-    ExplicitTop = 244
     DesignSize = (
       964
       21)
@@ -2553,7 +2546,7 @@ inherited MainCashForm2: TMainCashForm2
       OnExit = edPromoCodeExit
       OnKeyDown = edPromoCodeKeyDown
       OnKeyPress = edPromoCodeKeyPress
-      Width = 394
+      Width = 425
     end
     object edName_reg_ua: TcxTextEdit
       Left = 349
@@ -2567,7 +2560,7 @@ inherited MainCashForm2: TMainCashForm2
       OnExit = edPromoCodeExit
       OnKeyDown = edPromoCodeKeyDown
       OnKeyPress = edPromoCodeKeyPress
-      Width = 394
+      Width = 425
     end
     object edCommentPosition: TcxTextEdit
       Left = 349
@@ -2581,7 +2574,7 @@ inherited MainCashForm2: TMainCashForm2
       OnExit = edPromoCodeExit
       OnKeyDown = edPromoCodeKeyDown
       OnKeyPress = edPromoCodeKeyPress
-      Width = 394
+      Width = 425
     end
     object bbPositionNext: TcxButton
       Left = 935
@@ -2595,13 +2588,13 @@ inherited MainCashForm2: TMainCashForm2
       TabOrder = 4
       TabStop = False
       OnClick = bbPositionNextClick
-      ExplicitTop = -3
     end
     object cbMorionFilter: TcxCheckBox
       Left = 775
       Top = 2
       Anchors = [akTop, akRight]
       Caption = #1060#1080#1083#1100#1090#1088' '#1087#1086' '#1082#1086#1076#1091' '#1084#1086#1088#1080#1086#1085#1072
+      Properties.OnChange = cbMorionFilterPropertiesChange
       TabOrder = 5
     end
   end
@@ -6735,6 +6728,28 @@ inherited MainCashForm2: TMainCashForm2
       end
       item
         Name = 'DistributionPromoList'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MedicKashtanId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MedicKashtanName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberKashtanId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberKashtanName'
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
