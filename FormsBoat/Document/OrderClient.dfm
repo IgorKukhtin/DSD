@@ -86,7 +86,7 @@ object OrderClientForm: TOrderClientForm
     end
     object cxLabel4: TcxLabel
       Left = 651
-      Top = 0
+      Top = 5
       Caption = #1050#1086#1084#1091
     end
     object edPriceWithVAT: TcxCheckBox
@@ -420,7 +420,7 @@ object OrderClientForm: TOrderClientForm
               Width = 50
             end
             object GoodsName: TcxGridDBColumn
-              Caption = #1058#1086#1074#1072#1088
+              Caption = #1051#1086#1076#1082#1072'/'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1089#1083#1091#1075#1080
               DataBinding.FieldName = 'GoodsName'
               PropertiesClassName = 'TcxButtonEditProperties'
               Properties.Buttons = <
@@ -437,6 +437,7 @@ object OrderClientForm: TOrderClientForm
             object MeasureName: TcxGridDBColumn
               Caption = #1045#1076'. '#1080#1079#1084'.'
               DataBinding.FieldName = 'MeasureName'
+              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
@@ -453,13 +454,14 @@ object OrderClientForm: TOrderClientForm
               Width = 70
             end
             object OperPricePrice: TcxGridDBColumn
-              Caption = #1062#1077#1085#1072
+              Caption = 'Ladenpreis'
               DataBinding.FieldName = 'OperPrice'
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
               Properties.DisplayFormat = ',0.####;-,0.####; ;'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
+              HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089
               Width = 80
             end
             object CountForPrice: TcxGridDBColumn
@@ -474,18 +476,20 @@ object OrderClientForm: TOrderClientForm
               Width = 55
             end
             object OperPriceWithVAT: TcxGridDBColumn
-              Caption = #1062#1077#1085#1072' c '#1053#1044#1057
+              Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1085#1076#1089
               DataBinding.FieldName = 'OperPriceWithVAT'
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
               Properties.DisplayFormat = ',0.####;-,0.####; ;'
+              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
+              HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1085#1076#1089
               Options.Editing = False
               Width = 80
             end
             object Summ: TcxGridDBColumn
-              Caption = #1057#1091#1084#1084#1072
+              Caption = 'Total LP'
               DataBinding.FieldName = 'Summ'
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
@@ -493,18 +497,21 @@ object OrderClientForm: TOrderClientForm
               Properties.ReadOnly = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
+              HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
               Options.Editing = False
               Width = 91
             end
             object SummWithVAT: TcxGridDBColumn
-              Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+              Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
               DataBinding.FieldName = 'SummWithVAT'
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
               Properties.DisplayFormat = ',0.####;-,0.####; ;'
               Properties.ReadOnly = False
+              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
+              HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
               Options.Editing = False
               Width = 91
             end

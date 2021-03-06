@@ -211,8 +211,8 @@ BEGIN
                                  , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_PersonalAccount()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END
                   --                    + CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeAsset()) AND MIContainer.Amount > 0   THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END
                                        ) AS MoneySumm
-                                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_TransportService()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ServiceSumm
-                                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProfitLossService(), zc_Movement_TransportService()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)
+                                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_ProfitIncomeService(), zc_Movement_TransportService()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ServiceSumm
+                                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProfitLossService(), zc_Movement_ProfitIncomeService(), zc_Movement_TransportService()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)
                                  + SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service()) AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_SaleSumm_10300() THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)
                                    AS ServiceRealSumm
                   
@@ -223,7 +223,7 @@ BEGIN
                                                                                                                                     , zc_Movement_PriceCorrective()
                                                                                                                                     , zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn()
                                                                                                                                     , zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_PersonalAccount()
-                                                                                                                                    , zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_TransportService()
+                                                                                                                                    , zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_ProfitIncomeService(), zc_Movement_TransportService()
                                                                                                                                     , zc_Movement_SendDebt()
                                                                                                                                     , zc_Movement_Currency()
                                                                                                                                      )
@@ -310,8 +310,8 @@ BEGIN
                                  , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_PriceCorrective()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS PriceCorrectiveSumm_Currency
                                  , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_PersonalAccount()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END
                                        ) AS MoneySumm_Currency
-                                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_TransportService()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ServiceSumm_Currency
-                                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProfitLossService(), zc_Movement_TransportService()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)
+                                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_ProfitIncomeService(), zc_Movement_TransportService()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ServiceSumm_Currency
+                                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProfitLossService(), zc_Movement_ProfitIncomeService(), zc_Movement_TransportService()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)
                                  + SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service()) AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_SaleSumm_10300() THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)
                                    AS ServiceRealSumm_Currency
                   
@@ -322,7 +322,7 @@ BEGIN
                                                                                                                                     , zc_Movement_PriceCorrective()
                                                                                                                                     , zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn()
                                                                                                                                     , zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_PersonalAccount()
-                                                                                                                                    , zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_TransportService()
+                                                                                                                                    , zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_ProfitIncomeService(), zc_Movement_TransportService()
                                                                                                                                     , zc_Movement_SendDebt()
                                                                                                                                     , zc_Movement_Currency()
                                                                                                                                      )

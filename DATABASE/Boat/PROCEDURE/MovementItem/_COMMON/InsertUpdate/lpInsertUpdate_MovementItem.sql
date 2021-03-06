@@ -68,7 +68,7 @@ BEGIN
      -- проверка - inObjectId
      IF inObjectId IS NULL AND inDescId = zc_MI_Master()
      THEN
-         RAISE EXCEPTION 'Ошибка-1.Не определен Товар в документе № <%>.', vbInvNumber;
+         RAISE EXCEPTION 'Ошибка-1.Не определен Элемент в документе № <%>.', vbInvNumber;
      END IF;
      /*
      -- проверка - inPartionId

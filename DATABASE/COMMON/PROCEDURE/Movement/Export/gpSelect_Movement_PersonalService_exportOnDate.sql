@@ -110,6 +110,13 @@ BEGIN
      -- ПАТ "БАНК ВОСТОК"
      IF vbBankId = 76968
      THEN
+        -- !!! замена !!!
+        inAmount:= (SELECT SUM (COALESCE (gpSelect.SummCardRecalc, 0) + COALESCE (gpSelect.SummHosp, 0))
+                    FROM gpSelect_MovementItem_PersonalService (inMovementId := inMovementId, inShowAll := 'False', inIsErased := 'False',  inSession := inSession) AS gpSelect
+                    WHERE (gpSelect.SummCardRecalc <> 0 OR gpSelect.SummHosp <> 0)
+                      AND gpSelect.BankOutDate = inOperDate
+                   );
+     
 	-- *** Шапка файла
 	-- Тип документа (из ТЗ)
 	INSERT INTO _tmpResult (NPP, RowData) VALUES (-100, 'Content-Type=doc/pay_sheet');
@@ -195,6 +202,12 @@ BEGIN
      -- ПАТ "ОТП БАНК"
      IF vbBankId = 76970
      THEN
+        -- !!! замена !!!
+        inAmount:= (SELECT SUM (COALESCE (gpSelect.SummCardRecalc, 0) + COALESCE (gpSelect.SummHosp, 0))
+                    FROM gpSelect_MovementItem_PersonalService (inMovementId := inMovementId, inShowAll := 'False', inIsErased := 'False',  inSession := inSession) AS gpSelect
+                    WHERE (gpSelect.SummCardRecalc <> 0 OR gpSelect.SummHosp <> 0)
+                      AND gpSelect.BankOutDate = inOperDate
+                   );
 
          -- первые строчки XML
          INSERT INTO _tmpResult (NPP, RowData) VALUES (-40, '<?xml version="1.0" encoding="windows-1251"?>');

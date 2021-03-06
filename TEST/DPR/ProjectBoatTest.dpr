@@ -240,7 +240,10 @@ uses
   AccountDirection in '..\..\FormsBoat\Guides\AccountDirection.pas' {AccountDirectionForm: TParentForm},
   AccountDirectionEdit in '..\..\FormsBoat\Guides\AccountDirectionEdit.pas' {AccountDirectionEditForm: TParentForm},
   AccountGroup in '..\..\FormsBoat\Guides\AccountGroup.pas' {AccountGroupForm: TParentForm},
-  AccountGroupEdit in '..\..\FormsBoat\Guides\AccountGroupEdit.pas' {AccountGroupEditForm: TParentForm};
+  AccountGroupEdit in '..\..\FormsBoat\Guides\AccountGroupEdit.pas' {AccountGroupEditForm: TParentForm},
+  MovementItemContainer in '..\..\FormsBoat\Document\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm},
+  Report_Balance in '..\..\FormsBoat\Report\Report_Balance.pas' {Report_BalanceForm: TParentForm},
+  Report_BalanceDialog in '..\..\FormsBoat\Report\Report_BalanceDialog.pas' {Report_BalanceDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -13,8 +13,10 @@ $BODY$
 DECLARE
   vbInfoMoneyId TVarChar;
 BEGIN
-     vbInfoMoneyId:= (SELECT CASE WHEN COALESCE (ObjectLink_GoodsGroup_InfoMoney.ChildObjectId,0) <> 0
-                                   THEN ObjectLink_GoodsGroup_InfoMoney.ChildObjectId
+     vbInfoMoneyId:= (SELECT CASE WHEN ObjectLink_GoodsGroup_InfoMoney.ChildObjectId <> 0
+                                  -- если есть значение у этой группы
+                                  THEN ObjectLink_GoodsGroup_InfoMoney.ChildObjectId
+                                  -- рекурсивно ищем у группы выше
                                   ELSE lfGet_Object_GoodsGroup_InfoMoneyId (ObjectLink_GoodsGroup.ChildObjectId) 
                              END
                       FROM Object
@@ -24,7 +26,8 @@ BEGIN
                          LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
                                 ON ObjectLink_GoodsGroup.ObjectId = Object.Id
                                AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_GoodsGroup_Parent()
-                      WHERE Object.Id = inObjectId);
+                      WHERE Object.Id = inObjectId
+                     );
 
      --
      RETURN (vbInfoMoneyId);

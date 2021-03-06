@@ -44,6 +44,11 @@ type
     bbOpenFormTransport: TdxBarButton;
     bbOpenFormService: TdxBarButton;
     cbOnlyService: TcxCheckBox;
+    Amount: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
+    PartnerCode: TcxGridDBColumn;
+    Amount_NotVAT: TcxGridDBColumn;
+    Amount_VAT: TcxGridDBColumn;
   private
     { Private declarations }
   public

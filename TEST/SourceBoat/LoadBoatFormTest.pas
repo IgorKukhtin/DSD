@@ -613,7 +613,17 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMoneyPlace_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMoneyPlace_ObjectForm');
-  end;
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemContainerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementItemContainerForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceDialogForm');
+
+end;
 
 procedure TLoadFormTest.LoadImportSettingsFormTest;
 begin

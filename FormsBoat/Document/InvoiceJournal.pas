@@ -68,6 +68,11 @@ type
     actUpdateMoneyPlace: TdsdDataSetRefresh;
     macUpdateMoneyPlace: TMultiAction;
     bbUpdateMoneyPlace: TdxBarButton;
+    TaxKindValue: TcxGridDBColumn;
+    AmountIn_NotVAT: TcxGridDBColumn;
+    AmountOut_NotVAT: TcxGridDBColumn;
+    AmountIn_VAT: TcxGridDBColumn;
+    AmountOut_VAT: TcxGridDBColumn;
   private
     { Private declarations }
   public

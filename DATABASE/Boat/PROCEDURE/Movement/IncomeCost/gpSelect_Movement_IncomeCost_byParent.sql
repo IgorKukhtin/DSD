@@ -13,9 +13,9 @@ RETURNS TABLE (Id Integer, MasterMovementId integer, InvNumber Integer, MasterIn
              , StatusCode Integer, StatusName TVarChar, MasterStatusCode Integer, MasterStatusName TVarChar
              , DescId Integer, ItemName TVarChar
              , Comment TVarChar, MasterComment TVarChar
-             , AmountCost TFloat, AmountCost_Master TFloat
-             , JuridicalCode Integer, JuridicalName TVarChar
-             , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+             , AmountCost TFloat, AmountCost_Master TFloat, AmountCostNotVAT_Master TFloat
+             , PartnerCode Integer, PartnerName TVarChar
+             , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
               )
 AS
 $BODY$
@@ -48,9 +48,23 @@ BEGIN
                              , MovementDescMaster.ItemName                   AS ItemName
                              , MovementString_Comment.ValueData              AS Comment
                              , MovementString_CommentMaster.ValueData        AS MasterComment
+                             
+                             , Object_Partner.ObjectCode AS PartnerCode
+                             , Object_Partner.ValueData  AS PartnerName
 
+                             , Object_InfoMoney_View.InfoMoneyCode
+                             , Object_InfoMoney_View.InfoMoneyGroupName
+                             , Object_InfoMoney_View.InfoMoneyDestinationName
+                             , Object_InfoMoney_View.InfoMoneyName
+                             , Object_InfoMoney_View.InfoMoneyName_all
+
+                              -- без НДС
                              , MovementFloat_AmountCost.ValueData            AS AmountCost
-                             , CASE WHEN Movement_Master.StatusId = zc_Enum_Status_Complete() THEN COALESCE (MovementFloat_AmountCost_Master.ValueData, 0) ELSE 0 END :: TFloat AS AmountCost_Master
+
+                               -- с НДС
+                             , CASE WHEN Movement_Master.StatusId = zc_Enum_Status_Complete() THEN -1 * MovementFloat_AmountCost_Master.ValueData ELSE 0 END :: TFloat AS AmountCost_Master
+                               -- без НДС
+                             , CASE WHEN Movement_Master.StatusId = zc_Enum_Status_Complete() THEN -1 * zfCalc_Summ_NoVAT (MovementFloat_AmountCost_Master.ValueData, ObjectFloat_TaxKind_Value.ValueData) ELSE 0 END :: TFloat AS AmountCostNotVAT_Master
 
                              , Movement_Master.Id AS MovementId_master
 
@@ -66,13 +80,13 @@ BEGIN
                              LEFT JOIN MovementFloat AS MovementFloat_MovementId
                                                      ON MovementFloat_MovementId.MovementId = Movement.Id
                                                     AND MovementFloat_MovementId.DescId = zc_MovementFloat_MovementId()
+
+                             -- Документ Счет
                              LEFT JOIN Movement AS Movement_Master ON Movement_Master.Id = MovementFloat_MovementId.ValueData :: Integer
+                             -- Сумма по счету
                              LEFT JOIN MovementFloat AS MovementFloat_AmountCost_Master
                                                      ON MovementFloat_AmountCost_Master.MovementId = Movement_Master.Id
-                                                    AND MovementFloat_AmountCost_Master.DescId     = zc_MovementFloat_AmountCost()
-                             /*LEFT JOIN MovementFloat AS MovementFloat_AmountMemberCost_Master
-                                                     ON MovementFloat_AmountMemberCost_Master.MovementId = Movement_Master.Id
-                                                    AND MovementFloat_AmountMemberCost_Master.DescId     = zc_MovementFloat_AmountMemberCost()*/
+                                                    AND MovementFloat_AmountCost_Master.DescId     = zc_MovementFloat_Amount()
 
                              LEFT JOIN MovementDesc AS MovementDescMaster ON MovementDescMaster.Id = Movement_Master.DescId
 
@@ -82,27 +96,27 @@ BEGIN
                                                       ON MovementString_CommentMaster.MovementId = Movement_Master.Id
                                                      AND MovementString_CommentMaster.DescId     = zc_MovementString_Comment()
 
+                             LEFT JOIN MovementLinkObject AS MLO_Object
+                                                          ON MLO_Object.MovementId = Movement_Master.Id
+                                                         AND MLO_Object.DescId     = zc_MovementLinkObject_Object()
+                             LEFT JOIN MovementLinkObject AS MLO_InfoMoney
+                                                          ON MLO_InfoMoney.MovementId = Movement_Master.Id
+                                                         AND MLO_InfoMoney.DescId     = zc_MovementLinkObject_InfoMoney()
+
+                             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MLO_Object.ObjectId
+                             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MLO_InfoMoney.ObjectId
+
+                             LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+                                                  ON ObjectLink_TaxKind.ObjectId = MLO_Object.ObjectId
+                                                 AND ObjectLink_TaxKind.DescId   IN (zc_ObjectLink_Partner_TaxKind(), zc_ObjectLink_Client_TaxKind())
+                             LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                                   ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                                                  AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()
+
+
+
                         WHERE Movement.ParentId = inParentId
                           AND Movement.DescId   = zc_Movement_IncomeCost()
-                       )
-     , tmpMI_master AS (SELECT tmpMovement.MovementId_master
-                             , 0                                            AS JuridicalCode
-                             , STRING_AGG (Object_Juridical.ValueData, ';') AS JuridicalName
-
-                             , 0 AS InfoMoneyCode
-                             , STRING_AGG (Object_InfoMoney_View.InfoMoneyName, ';') AS InfoMoneyName
-                             , STRING_AGG (Object_InfoMoney_View.InfoMoneyName_all, ';') AS InfoMoneyName_all
-                        FROM tmpMovement
-                             LEFT JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId_master
-                                                   AND MovementItem.DescId     = zc_MI_Master()
-                             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
-
-                             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
-                                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
-                                                             AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-                             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
-
-                        GROUP BY tmpMovement.MovementId_master
                        )
          -- Результат
          SELECT  tmpMovement.Id
@@ -123,15 +137,18 @@ BEGIN
 
                , tmpMovement.AmountCost
                , tmpMovement.AmountCost_Master
+               , tmpMovement.AmountCostNotVAT_Master
 
-               , tmpMI_master.JuridicalCode :: Integer
-               , tmpMI_master.JuridicalName :: TVarChar
+               , tmpMovement.PartnerCode
+               , tmpMovement.PartnerName
 
-               , tmpMI_master.InfoMoneyCode :: Integer
-               , tmpMI_master.InfoMoneyName :: TVarChar
-               , tmpMI_master.InfoMoneyName_all :: TVarChar
+               , tmpMovement.InfoMoneyCode
+               , tmpMovement.InfoMoneyGroupName
+               , tmpMovement.InfoMoneyDestinationName
+               , tmpMovement.InfoMoneyName
+               , tmpMovement.InfoMoneyName_all
+
          FROM tmpMovement
-              LEFT JOIN tmpMI_master ON tmpMI_master.MovementId_master = tmpMovement.MovementId_master
       ;
 
 END;

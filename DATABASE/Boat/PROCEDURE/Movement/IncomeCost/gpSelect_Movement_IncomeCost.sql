@@ -19,7 +19,13 @@ RETURNS TABLE (Id Integer, MasterMovementId integer, InvNumber Integer, MasterIn
              , OperDate_Income TDateTime
              , DescId_Income Integer,ItemName_Income TVarChar
              , StatusCode_Income Integer
-             , AmountCost TFloat, AmountCost_Master TFloat
+               -- Сумма затрат без НДС
+             , AmountCost TFloat
+               -- Сумма Счет без НДС
+             , AmountCost_Master TFloat
+               -- Сумма Счет с НДС
+             , AmountCostVAT_Master TFloat
+               --
              , ObjectCode Integer, ObjectName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
               )

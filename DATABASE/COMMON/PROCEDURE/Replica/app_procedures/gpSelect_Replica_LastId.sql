@@ -41,7 +41,7 @@ BEGIN
     END IF;
     
     -- если реальное кол-во записей не соответсвует разнице по Id, значит вклинились транзакции, которые не видно, хотя могут быть и "потерянные" Id
-    IF (vbId_End - inId_start + 1) <> (SELECT COUNT(*) FROM _replica.table_update_data WHERE Id BETWEEN inId_start AND vbId_End)
+   /*IF (vbId_End - inId_start + 1) <> (SELECT COUNT(*) FROM _replica.table_update_data WHERE Id BETWEEN inId_start AND vbId_End)
     THEN
        -- нашли время начала этой транзакции - здесь значение без timezone
        vbLast_modified:= (SELECT MAX (last_modified) FROM _replica.table_update_data WHERE Id BETWEEN vbId_End AND vbId_End);
@@ -95,7 +95,7 @@ BEGIN
                , vbLast_modified
           FROM _tmp_pg_stat_activity AS tmp;
 
-    END IF;
+    END IF;*/
 
     -- Результат
     RETURN vbId_End;

@@ -96,7 +96,7 @@ BEGIN
                                                             , inVATPercent         := vbVATPercent  ::TFloat
                                                             , inDiscountTax        := vbDiscountTax ::TFloat
                                                             , inFromId             := vbPartnerId   ::Integer
-                                                            , inToId               := 0             ::Integer
+                                                            , inToId               := 35139         ::Integer -- Склад
                                                             , inPaidKindId         := zc_Enum_PaidKind_FirstForm() ::Integer
                                                             , inMovementId_Invoice := 0             ::Integer
                                                             , inComment            := 'auto'        ::TVarChar
@@ -147,8 +147,8 @@ BEGIN
                                                    , inGoodsSizeId       := ObjectLink_Goods_GoodsSize.ChildObjectId        ::Integer       -- Размер
                                                    , inProdColorId       := ObjectLink_Goods_ProdColor.ChildObjectId        ::Integer       -- Цвет
                                                    , inMeasureId         := ObjectLink_Goods_Measure.ChildObjectId          ::Integer       -- Единица измерения
-                                                   , inTaxKindId         := ObjectLink_Goods_TaxKind.ChildObjectId          ::Integer       -- Тип НДС (!информативно!)
-                                                   , inTaxKindValue      := ObjectFloat_TaxKind_Value.ValueData             ::TFloat        -- Значение НДС (!информативно!)
+                                                   , inTaxKindId         := COALESCE (ObjectLink_Goods_TaxKind.ChildObjectId, 0) ::Integer       -- Тип НДС (!информативно!)
+                                                   , inTaxKindValue      := COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) ::TFloat        -- Значение НДС (!информативно!)
                                                    , inUserId            := vbUserId             ::Integer       --
                                                  )
           FROM Object

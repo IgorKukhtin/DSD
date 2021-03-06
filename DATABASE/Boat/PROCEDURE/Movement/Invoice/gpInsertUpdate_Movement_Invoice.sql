@@ -35,6 +35,13 @@ BEGIN
         vbAmount := -1 * inAmountOut;
      END IF;
 
+     -- Распроводим Документ
+     IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = ioId AND Movement.StatusId = zc_Enum_Status_Complete())
+     THEN
+         PERFORM lpUnComplete_Movement (inMovementId := ioId
+                                      , inUserId     := vbUserId);
+     END IF;
+
     -- сохранили <Документ>
     ioId := lpInsertUpdate_Movement_Invoice (ioId               := ioId
                                            , inInvNumber        := inInvNumber

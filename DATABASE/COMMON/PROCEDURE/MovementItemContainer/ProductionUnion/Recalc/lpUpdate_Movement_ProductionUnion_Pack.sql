@@ -20,7 +20,6 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, isDel
 AS
 $BODY$
 BEGIN
-if inStartDate not in ('07.02.2021', '20.02.2021', '21.02.2021', '26.02.2021', '27.02.2021') then return; end if; 
      -- ЦЕХ упаковки мясо
      -- if inUnitId <> 951601  then return; end if;
 

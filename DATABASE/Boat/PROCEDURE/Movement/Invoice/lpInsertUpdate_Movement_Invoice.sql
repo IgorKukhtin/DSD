@@ -29,9 +29,9 @@ BEGIN
     vbIsInsert:= COALESCE (ioId, 0) = 0;
     
     --inReceiptNumber формируетс€ только дл€ Amount>0
-    IF COALESCE (inAmount,0) <= 0
+    IF COALESCE (inAmount, 0) <= 0
     THEN
-        inReceiptNumber := Null;
+        inReceiptNumber := NULL;
     END IF;
      
     -- сохранили <ƒокумент>

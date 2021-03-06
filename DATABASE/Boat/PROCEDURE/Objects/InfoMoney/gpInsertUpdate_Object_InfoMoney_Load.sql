@@ -28,10 +28,10 @@ BEGIN
    IF COALESCE (inInfoMoneyCode,0) <> 0
    THEN
        -- поиск в спр. статьей
-       vbInfoMoneyId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_InfoMoney() AND Object.isErased = FALSE AND Object.ObjectCode = inInfoMoneyCode limit 1);
+       vbInfoMoneyId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_InfoMoney() AND Object.isErased = FALSE AND Object.ObjectCode = inInfoMoneyCode);
        
        -- Eсли не нашли записываем
-       IF COALESCE (vbInfoMoneyId,0) = 0
+       IF COALESCE (vbInfoMoneyId,0) = 0 OR 1=1
        THEN
        
            /*код формируется с обнулением  последних 2х/4х цифр
@@ -41,7 +41,7 @@ BEGIN
            */
            --проверяем есть ли  Назначение
            vbDestinationCode := (SELECT RPAD (LEFT (inInfoMoneyCode ::TVarChar, 3), 5,'0')) ::Integer;
-           vbDestinationId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_InfoMoneyDestination() AND Object.isErased = FALSE AND Object.ObjectCode = vbDestinationCode limit 1);
+           vbDestinationId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_InfoMoneyDestination() AND Object.isErased = FALSE AND Object.ObjectCode = vbDestinationCode);
            IF COALESCE (vbDestinationId,0) = 0
            THEN
                --записываем новый элемент
@@ -54,7 +54,7 @@ BEGIN
 
            --проверяем есть ли  Группа
            vbGroupCode := (SELECT RPAD (LEFT (inInfoMoneyCode ::TVarChar, 1), 5,'0')) ::Integer;
-           vbGroupId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_InfoMoneyGroup() AND Object.isErased = FALSE AND Object.ObjectCode = vbGroupCode limit 1);
+           vbGroupId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_InfoMoneyGroup() AND Object.isErased = FALSE AND Object.ObjectCode = vbGroupCode);
            IF COALESCE (vbGroupId,0) = 0
            THEN
                vbGroupId := gpInsertUpdate_Object_InfoMoneyGroup (ioId      := 0
@@ -80,7 +80,7 @@ BEGIN
            END IF;
 
            -- записываем Статью
-           PERFORM gpInsertUpdate_Object_InfoMoney (ioId                     := 0
+           PERFORM gpInsertUpdate_Object_InfoMoney (ioId                     := vbInfoMoneyId
                                                   , inCode                   := inInfoMoneyCode ::Integer
                                                   , inName                   := TRIM (inInfoMoneyName) ::TVarChar
                                                   , inInfoMoneyGroupId       := vbGroupId       ::Integer

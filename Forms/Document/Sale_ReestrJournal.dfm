@@ -2151,7 +2151,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         item
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDMaster2'
-          IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
+          IndexFieldNames = ''
         end>
       Params = <
         item

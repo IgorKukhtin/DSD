@@ -2065,7 +2065,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         item
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDMaster2'
-          IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
+          IndexFieldNames = ''
         end>
       Params = <
         item

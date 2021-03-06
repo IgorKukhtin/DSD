@@ -28,7 +28,7 @@ BEGIN
        vbAccountId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Account() AND Object.isErased = FALSE AND Object.ObjectCode = inAccountCode limit 1);
        
        -- Eсли не нашли записываем
-       IF COALESCE (vbAccountId,0) = 0
+       IF COALESCE (vbAccountId,0) = 0 OR 1=1
        THEN
        
            /*код формируется с обнулением  последних 2х/4х цифр
@@ -62,7 +62,7 @@ BEGIN
            END IF;
 
            -- записываем Статью
-           PERFORM gpInsertUpdate_Object_Account (ioId                   := 0
+           PERFORM gpInsertUpdate_Object_Account (ioId                   := vbAccountId
                                                 , inCode                 := inAccountCode ::Integer
                                                 , inName                 := TRIM (inAccountName) ::TVarChar
                                                 , inAccountGroupId       := vbGroupId       ::Integer

@@ -323,7 +323,7 @@ BEGIN
             , _tmpItem.MovementItemId
             , _tmpItem.ContainerId_Goods
             , 0                                       AS ParentId
-            , _tmpItem.AccountId                      AS AccountId              -- счет из суммового учета
+            , _tmpItem.AccountId                      AS AccountId              -- НЕТ счета из суммового учета
             , 0                                       AS AnalyzerId             -- нет - Типы аналитик (проводки)
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
             , _tmpItem.PartionId                      AS PartionId              -- Партия

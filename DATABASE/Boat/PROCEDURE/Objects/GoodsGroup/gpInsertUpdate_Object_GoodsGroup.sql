@@ -25,7 +25,7 @@ BEGIN
    vbIsInsert:= COALESCE (ioId, 0) = 0;
 
     -- Если код не установлен, определяем его как последний+1
-   ioCode:= lfGet_ObjectCode (ioCode, zc_Object_GoodsGroup()); 
+   ioCode:= lfGet_ObjectCode (ioCode, zc_Object_GoodsGroup());
 
    -- Проверка
    IF TRIM (inName) = '' THEN
@@ -77,11 +77,13 @@ BEGIN
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
-   
-/*
+
+
    -- изменили свойство <УП статью> у всех товаров этой группы
    PERFORM CASE WHEN inInfoMoneyId <> 0
+                -- всем группам ниже - ставим эту статью
                 THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_InfoMoney(), ObjectLink.ObjectId, inInfoMoneyId)
+                -- всем группам ниже - находим статью у группы выше
                 ELSE lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_InfoMoney(), ObjectLink.ObjectId, lfGet_Object_GoodsGroup_InfoMoneyId (ObjectLink.ChildObjectId))
            END
    FROM ObjectLink
@@ -150,7 +152,7 @@ BEGIN
                         AND ObjectLink.ChildObjectId = ioId
                      )
   ;
-  */
+
 
 END;
 $BODY$

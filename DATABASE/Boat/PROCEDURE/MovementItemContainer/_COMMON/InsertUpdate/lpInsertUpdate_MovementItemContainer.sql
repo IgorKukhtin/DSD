@@ -20,7 +20,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemContainer(
     IN inAccountId_Analyzer      Integer   , -- Счет - корреспондент
     
     IN inContainerId_Analyzer    Integer   , -- Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
-    IN inContainerIntId_Analyzer Integer   , -- Контейнер - Корреспондент
+    IN inContainerExtId_Analyzer Integer   , -- Контейнер - Корреспондент
  
     IN inObjectIntId_Analyzer    Integer   , -- Аналитический справочник (Размер, УП статья или что-то особенное - т.е. все то что не вписалось в аналитики выше)
     IN inObjectExtId_Analyzer    Integer   , -- Аналитический справочник (Подразделение - корреспондент, Подразделение ЗП, ФИО, Контрагент и т.д. - т.е. все то что не вписалось в аналитики выше)
@@ -92,7 +92,7 @@ BEGIN
 
                                       , AccountId_Analyzer
 
-                                      , ContainerId_Analyzer, ContainerIntId_Analyzer
+                                      , ContainerId_Analyzer, ContainerExtId_Analyzer
 
                                       , ObjectIntId_Analyzer, ObjectExtId_Analyzer
 
@@ -114,7 +114,7 @@ BEGIN
                                       , CASE WHEN inObjectIntId_Analyzer    = 0 THEN NULL ELSE inObjectIntId_Analyzer END
 
                                       , CASE WHEN inObjectExtId_Analyzer    = 0 THEN NULL ELSE inObjectExtId_Analyzer END
-                                      , CASE WHEN inContainerIntId_Analyzer = 0 THEN NULL ELSE inContainerIntId_Analyzer END
+                                      , CASE WHEN inContainerExtId_Analyzer = 0 THEN NULL ELSE inContainerExtId_Analyzer END
 
                                       , COALESCE (inAmount, 0)
                                       , inOperDate

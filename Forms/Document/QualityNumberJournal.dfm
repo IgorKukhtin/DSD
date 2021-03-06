@@ -280,7 +280,7 @@ inherited QualityNumberJournalForm: TQualityNumberJournalForm
         item
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDMaster2'
-          IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
+          IndexFieldNames = ''
         end
         item
           DataSet = PrintItemsCDS

@@ -2068,7 +2068,7 @@ inherited SaleForm: TSaleForm
         item
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDMaster2'
-          IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
+          IndexFieldNames = ''
         end>
       Params = <
         item

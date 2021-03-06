@@ -3,7 +3,7 @@
   ClientHeight = 465
   ClientWidth = 351
   ExplicitWidth = 357
-  ExplicitHeight = 493
+  ExplicitHeight = 490
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -21,7 +21,7 @@
   object Код: TcxLabel [2]
     Left = 15
     Top = 5
-    Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+    Caption = 'Interne Nr'
   end
   object cxLabel1: TcxLabel [3]
     Left = 123
@@ -185,12 +185,12 @@
   object cxLabel18: TcxLabel [24]
     Left = 15
     Top = 54
-    Caption = #8470' '#1076#1086#1082'. ('#1074#1085'.)'
+    Caption = 'Externe Nr'
   end
   object edInvNumberPartner: TcxTextEdit [25]
     Left = 15
     Top = 74
-    Hint = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' ('#1074#1085#1077#1096#1085#1080#1081')'
+    Hint = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1083#1080#1077#1085#1090#1072
     ParentShowHint = False
     ShowHint = True
     TabOrder = 25
@@ -206,7 +206,7 @@
     Top = 74
     Hint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1082#1074#1080#1090#1072#1085#1094#1080#1080
     ParentShowHint = False
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
     ShowHint = True
     TabOrder = 27
     Width = 155

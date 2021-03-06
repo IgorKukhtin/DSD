@@ -15,10 +15,11 @@ CREATE TABLE Object_PartionGoods(
    FromId              Integer ,         -- Поставщик или Подразделение (место сборки)
    UnitId              Integer ,         -- Подразделение (куда приход)
    OperDate            TDateTime,        -- Дата
-   ObjectId            Integer NOT NULL,         -- Комплектующие или Лодка
+   ObjectId            Integer NOT NULL, -- Комплектующие или Лодка
    Amount              TFloat  NOT NULL, -- Кол-во Приход
    EKPrice	       TFloat  NOT NULL, -- Цена вх. без НДС
    CountForPrice       TFloat  NOT NULL DEFAULT 1, -- для Цены вх. без НДС
+   CostPrice	       TFloat  NOT NULL, -- Цена затрат без НДС
    EmpfPrice	       TFloat  NOT NULL, -- Цена рекоменд. без НДС
    OperPriceList       TFloat  NOT NULL, -- Цена по прайсу без НДС
    GoodsGroupId        Integer,

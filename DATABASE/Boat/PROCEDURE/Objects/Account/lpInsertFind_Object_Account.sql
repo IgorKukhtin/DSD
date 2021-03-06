@@ -1,6 +1,5 @@
 -- Function: lpInsertFind_Object_Account (Integer, Integer, Integer, Integer, Boolean, Integer)
 
-DROP FUNCTION IF EXISTS lpInsertFind_Object_Account (Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertFind_Object_Account (Integer, Integer, Integer, Integer, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertFind_Object_Account(
@@ -40,7 +39,7 @@ BEGIN
 
    IF COALESCE (inInfoMoneyDestinationId, 0) = 0 AND COALESCE (inInfoMoneyId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Ошибка.Невозможно определить Счет т.к. не установлено <Управленческое назначение> : <%>, <%>, <%>, <%>', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
+       RAISE EXCEPTION 'Ошибка.Невозможно определить Счет т.к. не установлено <Управленческое назначение> : <%>, <%>, <%>, <%>', lfGet_Object_ValueData (inAccountGroupId), lfGet_Object_ValueData (inAccountDirectionId), lfGet_Object_ValueData (inInfoMoneyDestinationId), lfGet_Object_ValueData (inInfoMoneyId);
    END IF;
 
    IF COALESCE (inInfoMoneyDestinationId, 0) = 0
@@ -148,7 +147,7 @@ BEGIN
 
    IF COALESCE (vbAccountId, 0) = 0 
    THEN
-         RAISE EXCEPTION 'Ошибка.Счет не определен.Параметры: <%> <%> <%> <%> <%> <%>', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId, inInsert, inUserId;
+         RAISE EXCEPTION 'Ошибка.Счет не определен.Параметры: <%> <%> <%> <%> <%> <%>', lfGet_Object_ValueData (inAccountGroupId), lfGet_Object_ValueData (inAccountDirectionId), lfGet_Object_ValueData (inInfoMoneyDestinationId), lfGet_Object_ValueData (inInfoMoneyId), inInsert, inUserId;
    END IF;
 
    -- Возвращаем значение

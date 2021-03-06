@@ -12,8 +12,6 @@ $BODY$
   DECLARE vbPriceWithVAT Boolean;
   DECLARE vbVATPercent TFloat;
   DECLARE vbDiscountPercent TFloat;
-  DECLARE vbExtraChargesPercent TFloat;
-  DECLARE vbChangePrice TFloat;
   DECLARE vbPaidKindId Integer;
   
   DECLARE vbTotalCount_Master TFloat;
@@ -46,7 +44,7 @@ BEGIN
 
           , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)         AS PaidKindId
 
-            INTO vbMovementDescId, vbOperDatePartner, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbPaidKindId
+            INTO vbMovementDescId, vbOperDatePartner, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbPaidKindId
 
       FROM Movement
            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
@@ -128,12 +126,6 @@ BEGIN
                          WHEN vbDiscountPercent <> 0 AND vbMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) -- !!!для НАЛ не учитываем!!!
                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
                                                        , inChangePercent:= -1 * vbDiscountPercent
-                                                       , inPrice        := MIFloat_OperPrice.ValueData
-                                                       , inIsWithVAT    := vbPriceWithVAT
-                                                        )
-                         WHEN vbExtraChargesPercent <> 0 AND vbMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) -- !!!для НАЛ не учитываем!!!
-                              THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
-                                                       , inChangePercent:= 1 * vbExtraChargesPercent
                                                        , inPrice        := MIFloat_OperPrice.ValueData
                                                        , inIsWithVAT    := vbPriceWithVAT
                                                         )

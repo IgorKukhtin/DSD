@@ -89,8 +89,10 @@ BEGIN
      -- Данные: заголовок + строчная часть для ФОРМЫ 1
      OPEN Cursor1 FOR
        WITH tmpMI AS
-            (SELECT MovementItem.*
-                  , CASE WHEN Movement.DescId = zc_Movement_SendOnPrice() THEN MovementItem.Amount ELSE MIFloat_AmountPartner.ValueData END AS AmountPartner
+            (SELECT MovementItem.MovementId
+                  , MovementItem.ObjectId
+                  , SUM (MovementItem.Amount) :: TFloat AS Amount
+                  , SUM (CASE WHEN Movement.DescId = zc_Movement_SendOnPrice() THEN MovementItem.Amount ELSE MIFloat_AmountPartner.ValueData END) :: TFloat AS AmountPartner
                   , MILO_GoodsKind.ObjectId             AS GoodsKindId
                   , ObjectLink_GoodsGroup.ChildObjectId AS GoodsGroupId
              FROM MovementItem
@@ -114,6 +116,10 @@ BEGIN
                AND ((MIFloat_AmountPartner.ValueData <> 0 AND Movement.DescId <> zc_Movement_SendOnPrice())
                  OR (MovementItem.Amount <> 0 AND Movement.DescId = zc_Movement_SendOnPrice())
                    )
+             GROUP BY MovementItem.MovementId
+                    , MovementItem.ObjectId
+                    , MILO_GoodsKind.ObjectId
+                    , ObjectLink_GoodsGroup.ChildObjectId
             )
           , tmpMIGoodsByGoodsKind AS
                             (SELECT tmpMI.*
@@ -566,8 +572,10 @@ BEGIN
      -- Данные: заголовок + строчная часть ДЛЯ ФОРМЫ 2
      OPEN Cursor2 FOR
        WITH tmpMI AS
-                    (SELECT MovementItem.*
-                          , CASE WHEN Movement.DescId = zc_Movement_SendOnPrice() THEN MovementItem.Amount ELSE MIFloat_AmountPartner.ValueData END AS AmountPartner
+                    (SELECT MovementItem.MovementId
+                          , MovementItem.ObjectId
+                          , SUM (MovementItem.Amount) :: TFloat AS Amount
+                          , SUM (CASE WHEN Movement.DescId = zc_Movement_SendOnPrice() THEN MovementItem.Amount ELSE MIFloat_AmountPartner.ValueData END) :: TFloat AS AmountPartner
                           , MILO_GoodsKind.ObjectId             AS GoodsKindId
                           , ObjectLink_GoodsGroup.ChildObjectId AS GoodsGroupId
                      FROM MovementItem
@@ -591,6 +599,10 @@ BEGIN
                        AND ((MIFloat_AmountPartner.ValueData <> 0 AND Movement.DescId <> zc_Movement_SendOnPrice())
                          OR (MovementItem.Amount <> 0 AND Movement.DescId = zc_Movement_SendOnPrice())
                            )
+                     GROUP BY MovementItem.MovementId
+                            , MovementItem.ObjectId
+                            , MILO_GoodsKind.ObjectId
+                            , ObjectLink_GoodsGroup.ChildObjectId
                     )
           , tmpMIGoodsByGoodsKind AS
                             (SELECT tmpMI.*
@@ -993,9 +1005,11 @@ BEGIN
             LEFT JOIN tmpObject_GoodsPropertyValueGroup ON tmpObject_GoodsPropertyValueGroup.GoodsId = Object_Goods.Id
                                                        AND tmpObject_GoodsPropertyValue.GoodsId      IS NULL
       ORDER BY tmpGoodsQuality.QualityCode
-             , Object_GoodsGroup.ValueData
-             , Object_Goods.ValueData
-             , Object_GoodsKind.ValueData
+--             , Object_Goods.ObjectCode
+             , Object_Goods.ValueData, Object_GoodsKind.ValueData
+--             , Object_GoodsGroup.ValueData
+--             , Object_Goods.ValueData
+--             , Object_GoodsKind.ValueData
       ;
      RETURN NEXT Cursor2;
 

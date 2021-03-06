@@ -65,7 +65,6 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     CountForPrice: TcxGridDBColumn;
-    PartionName: TcxGridDBColumn;
     bbShowAll: TdxBarButton;
     bbStatic: TdxBarStatic;
     actShowAll: TBooleanStoredProcAction;
@@ -170,6 +169,12 @@ type
     CostJournalChoiceForm: TOpenChoiceForm;
     MovementCostProtocolOpenForm: TdsdOpenForm;
     bbMovementCostProtocolOpenForm: TdxBarButton;
+    CostPrice: TcxGridDBColumn;
+    AmountCostNotVAT_Master: TcxGridDBColumn;
+    PartnerCode: TcxGridDBColumn;
+    OperPrice_cost: TcxGridDBColumn;
+    TotalSumm_cost: TcxGridDBColumn;
+    Summ_cost: TcxGridDBColumn;
   private
   public
   end;

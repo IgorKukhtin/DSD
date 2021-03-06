@@ -22,7 +22,7 @@ CREATE TABLE MovementItemContainer(
    AccountId_analyzer      Integer     NULL, -- Счет - корреспондент
 
    ContainerId_analyzer    Integer     NULL, -- Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
-   ContainerIntId_analyzer Integer     NULL, -- Контейнер - Корреспондент
+   ContainerExtId_analyzer Integer     NULL, -- Контейнер - Корреспондент
 
    ObjectIntId_analyzer    Integer     NULL, -- Аналитический справочник (Размер, УП статья или что-то особенное - т.е. все то что не вписалось в аналитики выше)
    ObjectExtId_analyzer    Integer     NULL, -- Аналитический справочник (Подразделение - корреспондент, Подразделение ЗП, ФИО, Контрагент и т.д. - т.е. все то что не вписалось в аналитики выше)

@@ -16,6 +16,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_PartionGoods(
     IN inObjectId               Integer,       -- Комплектующие или Лодка
     IN inAmount                 TFloat,        -- Кол-во приход
     IN inEKPrice                TFloat,        -- Цена вх. без НДС
+  --IN inCostPrice              TFloat,        -- Цена затрат без НДС, !!!это значенеи будет формироваться не здесь!!!
     IN inCountForPrice          TFloat,        -- Цена за количество
     IN inEmpfPrice              TFloat,        -- Цена рекоменд. без НДС
     IN inOperPriceList          TFloat,        -- Цена продажи, !!!грн!!!
@@ -261,6 +262,7 @@ BEGIN
             --, Amount               = inAmount
               , EKPrice              = inEKPrice
               , CountForPrice        = inCountForPrice
+            --, CostPrice            = inCostPrice
               , EmpfPrice            = inEmpfPrice
               , OperPriceList        = inOperPriceList ::TFloat
                                           /*CASE WHEN vbRePrice_exists = TRUE AND 1=0
@@ -285,11 +287,11 @@ BEGIN
      IF NOT FOUND THEN
         -- добавили новый элемент
         INSERT INTO Object_PartionGoods (MovementItemId, MovementId, MovementDescId, FromId, UnitId, OperDate, ObjectId
-                                       , Amount, EKPrice, CountForPrice, EmpfPrice, OperPriceList
+                                       , Amount, EKPrice, CountForPrice, CostPrice, EmpfPrice, OperPriceList
                                        , GoodsGroupId, GoodsTagId, GoodsTypeId, GoodsSizeId, ProdColorId, MeasureId, TaxKindId, TaxValue
                                        , isErased, isArc)
                                  VALUES (inMovementItemId, inMovementId, vbMovementDescId, inFromId, inUnitId, inOperDate, inObjectId
-                                       , 0 /*inAmount*/, inEKPrice, inCountForPrice, inEmpfPrice
+                                       , 0 /*inAmount*/, inEKPrice, inCountForPrice, inEmpfPrice, 0
                                          -- "сложно" получили цену
                                        , inOperPriceList /*CASE WHEN vbRePrice_exists = TRUE
                                                  THEN (SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (zc_DateEnd() - INTERVAL '1 DAY', zc_PriceList_Basis(), inObjectId) AS tmp)

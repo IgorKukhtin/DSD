@@ -102,7 +102,9 @@ uses
   GuideUnit in '..\Scale\GuideUnit.pas' {GuideUnitForm},
   dmMainScaleCeh in '..\Scale\Util\dmMainScaleCeh.pas',
   APScale_TLB in '..\Scale\Util\APScale_TLB.pas',
-  dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas';
+  dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas',
+  Medoc_J1201011 in '..\SOURCE\MeDOC\Medoc_J1201011.pas',
+  Medoc_J1201211 in '..\SOURCE\MeDOC\Medoc_J1201211.pas';
 
 {$R *.res}
 

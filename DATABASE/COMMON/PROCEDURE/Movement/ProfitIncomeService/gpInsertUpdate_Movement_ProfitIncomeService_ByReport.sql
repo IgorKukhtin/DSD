@@ -59,8 +59,8 @@ BEGIN
           PERFORM lpInsertUpdate_Movement_ProfitIncomeService (ioId                := 0
                                                              , inInvNumber         := CAST (NEXTVAL ('movement_ProfitIncomeService_seq') AS TVarChar) 
                                                              , inOperDate          := inEndDate
-                                                             , inAmountIn          := 0                :: tfloat
-                                                             , inAmountOut         := tmp.Sum_Bonus    :: tfloat
+                                                             , inAmountIn          := tmp.Sum_Bonus    :: TFloat
+                                                             , inAmountOut         := 0                :: TFloat
                                                              , inBonusValue        := tmp.Value        :: TFloat
                                                              , inComment           := tmp.Comment      :: TVarChar
                                                              , inContractId        := tmp.ContractId_find

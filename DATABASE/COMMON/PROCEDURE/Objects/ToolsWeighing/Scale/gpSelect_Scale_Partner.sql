@@ -133,12 +133,13 @@ BEGIN
 
             , CASE WHEN tmpPrintKindItem.isPack = TRUE OR tmpPrintKindItem.isSpec = TRUE THEN COALESCE (tmpPrintKindItem.isMovement, FALSE) ELSE TRUE END :: Boolean AS isMovement
             , CASE WHEN tmpPrintKindItem.CountMovement > 0 THEN tmpPrintKindItem.CountMovement ELSE 2 END :: TFloat AS CountMovement
-            , COALESCE (tmpPrintKindItem.isAccount, FALSE)   :: Boolean AS isAccount,   COALESCE (tmpPrintKindItem.CountAccount, 0)   :: TFloat AS CountAccount
-            , COALESCE (tmpPrintKindItem.isTransport, FALSE) :: Boolean AS isTransport, COALESCE (tmpPrintKindItem.CountTransport, 0) :: TFloat AS CountTransport
-            , COALESCE (tmpPrintKindItem.isQuality, FALSE)   :: Boolean AS isQuality  , COALESCE (tmpPrintKindItem.CountQuality, 0)   :: TFloat AS CountQuality
-            , COALESCE (tmpPrintKindItem.isPack, FALSE)      :: Boolean AS isPack     , COALESCE (tmpPrintKindItem.CountPack, 0)      :: TFloat AS CountPack
-            , COALESCE (tmpPrintKindItem.isSpec, FALSE)      :: Boolean AS isSpec     , COALESCE (tmpPrintKindItem.CountSpec, 0)      :: TFloat AS CountSpec
-            , COALESCE (tmpPrintKindItem.isTax, FALSE)       :: Boolean AS isTax      , COALESCE (tmpPrintKindItem.CountTax, 0)       :: TFloat AS CountTax
+            , COALESCE (tmpPrintKindItem.isAccount, FALSE)   :: Boolean AS isAccount,   COALESCE (tmpPrintKindItem.CountAccount, 0)   :: TFloat  AS CountAccount
+            , COALESCE (tmpPrintKindItem.isTransport, FALSE) :: Boolean AS isTransport, COALESCE (tmpPrintKindItem.CountTransport, 0) :: TFloat  AS CountTransport
+            , CASE WHEN inBranchCode BETWEEN 201 AND 210 THEN TRUE ELSE COALESCE (tmpPrintKindItem.isQuality, FALSE) END              :: Boolean AS isQuality
+            , CASE WHEN inBranchCode BETWEEN 201 AND 210 THEN 1    ELSE COALESCE (tmpPrintKindItem.CountQuality, 0)  END              :: TFloat  AS CountQuality
+            , COALESCE (tmpPrintKindItem.isPack, FALSE)      :: Boolean AS isPack     , COALESCE (tmpPrintKindItem.CountPack, 0)      :: TFloat  AS CountPack
+            , COALESCE (tmpPrintKindItem.isSpec, FALSE)      :: Boolean AS isSpec     , COALESCE (tmpPrintKindItem.CountSpec, 0)      :: TFloat  AS CountSpec
+            , COALESCE (tmpPrintKindItem.isTax, FALSE)       :: Boolean AS isTax      , COALESCE (tmpPrintKindItem.CountTax, 0)       :: TFloat  AS CountTax
 
             , ObjectDesc.Id AS ObjectDescId
             , tmpPartner.MovementDescId
@@ -418,12 +419,13 @@ BEGIN
 
             , CASE WHEN tmpPrintKindItem.isPack = TRUE OR tmpPrintKindItem.isSpec = TRUE THEN COALESCE (tmpPrintKindItem.isMovement, FALSE) ELSE TRUE END :: Boolean AS isMovement
             , CASE WHEN tmpPrintKindItem.CountMovement > 0 THEN tmpPrintKindItem.CountMovement ELSE 2 END :: TFloat AS CountMovement
-            , COALESCE (tmpPrintKindItem.isAccount, FALSE)   :: Boolean AS isAccount,   COALESCE (tmpPrintKindItem.CountAccount, 0)   :: TFloat AS CountAccount
-            , COALESCE (tmpPrintKindItem.isTransport, FALSE) :: Boolean AS isTransport, COALESCE (tmpPrintKindItem.CountTransport, 0) :: TFloat AS CountTransport
-            , COALESCE (tmpPrintKindItem.isQuality, FALSE)   :: Boolean AS isQuality  , COALESCE (tmpPrintKindItem.CountQuality, 0)   :: TFloat AS CountQuality
-            , COALESCE (tmpPrintKindItem.isPack, FALSE)      :: Boolean AS isPack     , COALESCE (tmpPrintKindItem.CountPack, 0)      :: TFloat AS CountPack
-            , COALESCE (tmpPrintKindItem.isSpec, FALSE)      :: Boolean AS isSpec     , COALESCE (tmpPrintKindItem.CountSpec, 0)      :: TFloat AS CountSpec
-            , COALESCE (tmpPrintKindItem.isTax, FALSE)       :: Boolean AS isTax      , COALESCE (tmpPrintKindItem.CountTax, 0)       :: TFloat AS CountTax
+            , COALESCE (tmpPrintKindItem.isAccount, FALSE)   :: Boolean AS isAccount,   COALESCE (tmpPrintKindItem.CountAccount, 0)   :: TFloat  AS CountAccount
+            , COALESCE (tmpPrintKindItem.isTransport, FALSE) :: Boolean AS isTransport, COALESCE (tmpPrintKindItem.CountTransport, 0) :: TFloat  AS CountTransport
+            , CASE WHEN inBranchCode BETWEEN 201 AND 210 THEN TRUE ELSE COALESCE (tmpPrintKindItem.isQuality, FALSE) END              :: Boolean AS isQuality
+            , CASE WHEN inBranchCode BETWEEN 201 AND 210 THEN 1    ELSE COALESCE (tmpPrintKindItem.CountQuality, 0)  END              :: TFloat  AS CountQuality
+            , COALESCE (tmpPrintKindItem.isPack, FALSE)      :: Boolean AS isPack     , COALESCE (tmpPrintKindItem.CountPack, 0)      :: TFloat  AS CountPack
+            , COALESCE (tmpPrintKindItem.isSpec, FALSE)      :: Boolean AS isSpec     , COALESCE (tmpPrintKindItem.CountSpec, 0)      :: TFloat  AS CountSpec
+            , COALESCE (tmpPrintKindItem.isTax, FALSE)       :: Boolean AS isTax      , COALESCE (tmpPrintKindItem.CountTax, 0)       :: TFloat  AS CountTax
 
             , ObjectDesc.Id AS ObjectDescId
             , tmpPartner.MovementDescId

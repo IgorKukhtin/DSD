@@ -79,7 +79,7 @@ BEGIN
                                       , AccountId_Analyzer      -- Счет - корреспондент
                                       
                                       , ContainerId_Analyzer    -- Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
-                                      , ContainerIntId_Analyzer -- Контейнер - Корреспондент
+                                      , ContainerExtId_Analyzer -- Контейнер - Корреспондент
 
                                       , ObjectIntId_Analyzer    -- Аналитический справочник (Размер, УП статья или что-то особенное - т.е. все то что не вписалось в аналитики выше)
                                       , ObjectExtId_Analyzer    -- Аналитический справочник (Подразделение - корреспондент, Подразделение ЗП, ФИО, Контрагент и т.д. - т.е. все то что не вписалось в аналитики выше)
@@ -102,7 +102,7 @@ BEGIN
              , CASE WHEN AccountId_Analyzer      = 0 THEN NULL ELSE AccountId_Analyzer END
 
              , CASE WHEN ContainerId_Analyzer    = 0 THEN NULL ELSE ContainerId_Analyzer END
-             , CASE WHEN ContainerIntId_Analyzer = 0 THEN NULL ELSE ContainerIntId_Analyzer END
+             , CASE WHEN ContainerExtId_Analyzer = 0 THEN NULL ELSE ContainerExtId_Analyzer END
 
              , CASE WHEN ObjectIntId_Analyzer    = 0 THEN NULL ELSE ObjectIntId_Analyzer END
              , CASE WHEN ObjectExtId_Analyzer    = 0 THEN NULL ELSE ObjectExtId_Analyzer END
