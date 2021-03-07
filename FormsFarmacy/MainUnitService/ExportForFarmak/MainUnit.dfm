@@ -57,33 +57,35 @@ object MainForm: TMainForm
       TabOrder = 3
       OnClick = btnSendEmailClick
     end
-    object btnExport: TButton
-      Left = 711
+    object btnExecuteWhReceipt: TButton
+      Left = 554
       Top = 0
-      Width = 58
+      Width = 106
       Height = 25
-      Caption = #1069#1082#1089#1087#1086#1088#1090
+      Caption = #1069#1082#1089#1087#1086#1088#1090' '#1087#1088#1080#1093#1086#1076#1086#1074
       TabOrder = 2
+      OnClick = btnExecuteWhReceiptClick
     end
-    object btnExecute: TButton
-      Left = 615
+    object btnExecuteBalance: TButton
+      Left = 441
       Top = 0
-      Width = 90
+      Width = 107
       Height = 25
-      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100
+      Caption = #1069#1082#1089#1087#1086#1088#1090' '#1086#1089#1090#1072#1090#1082#1086#1074
       TabOrder = 1
+      OnClick = btnExecuteBalanceClick
     end
     object btnAll: TButton
-      Left = 16
+      Left = 6
       Top = 0
-      Width = 97
+      Width = 75
       Height = 25
-      Caption = #1042#1089#1105' '#1087#1086' '#1074#1089#1077#1084'!'
+      Caption = #1042#1089#1077' !'
       TabOrder = 4
       OnClick = btnAllClick
     end
     object btnExecuteGoods: TButton
-      Left = 279
+      Left = 330
       Top = 0
       Width = 105
       Height = 25
@@ -92,13 +94,30 @@ object MainForm: TMainForm
       OnClick = btnExecuteGoodsClick
     end
     object btnExecuteUnit: TButton
-      Left = 167
+      Left = 218
       Top = 0
       Width = 106
       Height = 25
       Caption = #1069#1082#1089#1087#1086#1088#1090' '#1072#1087#1090#1077#1082
       TabOrder = 5
       OnClick = btnExecuteUnitClick
+    end
+    object btnExecuteDespatch: TButton
+      Left = 666
+      Top = 0
+      Width = 106
+      Height = 25
+      Caption = #1069#1082#1089#1087#1086#1088#1090' '#1088#1072#1089#1093#1086#1076#1086#1074
+      TabOrder = 6
+      OnClick = btnExecuteDespatchClick
+    end
+    object DateStart: TcxDateEdit
+      Left = 120
+      Top = 4
+      EditValue = 42339d
+      Properties.ShowTime = False
+      TabOrder = 7
+      Width = 85
     end
   end
   object cxGrid: TcxGrid
@@ -210,5 +229,18 @@ object MainForm: TMainForm
     DataSet = qryReport_Upload
     Left = 680
     Top = 336
+  end
+  object qryMailParam: TZQuery
+    Connection = ZConnection1
+    SQL.Strings = (
+      'SELECT'
+      '    zc_Mail_From() AS Mail_From,'
+      '    zc_Mail_Host() AS Mail_Host,'
+      '    zc_Mail_Port() AS Mail_Port,'
+      '    zc_Mail_User() AS Mail_User,'
+      '    zc_Mail_Password() AS Mail_Password')
+    Params = <>
+    Left = 144
+    Top = 328
   end
 end

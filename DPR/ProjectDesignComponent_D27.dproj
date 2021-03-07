@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ProjectGuid>{DE44FE0D-7A69-4306-87B4-D2BC98098BF0}</ProjectGuid>
         <MainSource>ProjectDesignComponent_D27.dpk</MainSource>
-        <ProjectVersion>19.1</ProjectVersion>
+        <ProjectVersion>19.2</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
