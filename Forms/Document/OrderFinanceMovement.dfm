@@ -984,6 +984,14 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end
         item
           Visible = True
+          ItemName = 'bbInsert_byMovBankAccount'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdate_AmountByReport'
         end
         item
@@ -1004,7 +1012,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbProtocolOpenFormJOF'
         end
         item
           Visible = True
@@ -1145,8 +1153,12 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1101#1083#1077#1084#1077#1085#1090' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbProtocolOpenFormJOF: TdxBarButton
       Action = ProtocolOpenFormJOF
+      Category = 0
+    end
+    object bbInsert_byMovBankAccount: TdxBarButton
+      Action = macInsert_byMovBankAccount
       Category = 0
     end
   end
@@ -1251,6 +1263,19 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083
       Hint = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083
       ImageIndex = 53
+    end
+    object actRefreshOFJ: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectJuridicalOrderFinance
+      StoredProcList = <
+        item
+          StoredProc = spSelectJuridicalOrderFinance
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
     end
     object ProtocolOpenFormJOF: TdsdOpenForm
       Category = #1055#1088#1086#1090#1086#1082#1086#1083
@@ -1999,6 +2024,74 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Params = <>
       Caption = 'InsertRecord_JurOrdFin'
       ImageIndex = 0
+    end
+    object ExecuteDialogPeriod: TExecuteDialog
+      Category = 'JuridicalOrderFinance'
+      MoveParams = <>
+      Caption = 'ExecuteDialogPeriod'
+      FormName = 'TDatePeriodDialogForm'
+      FormNameParam.Value = 'TDatePeriodDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inStartDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inStartDate'
+          DataType = ftDateTime
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inEndDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inEndDate'
+          DataType = ftDateTime
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actInsert_byMovBankAccount: TdsdExecStoredProc
+      Category = 'JuridicalOrderFinance'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_byMovBankAccount
+      StoredProcList = <
+        item
+          StoredProc = spInsert_byMovBankAccount
+        end>
+      Caption = 'actInsert_byMovBankAccount'
+    end
+    object macInsert_byMovBankAccount: TMultiAction
+      Category = 'JuridicalOrderFinance'
+      TabSheet = cxTabSheet1
+      MoveParams = <>
+      Enabled = False
+      ActionList = <
+        item
+          Action = ExecuteDialogPeriod
+        end
+        item
+          Action = actInsert_byMovBankAccount
+        end
+        item
+          Action = actRefreshOFJ
+        end>
+      QuestionBeforeExecute = 
+        #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1074' '#1089#1087#1088'. '#1055#1072#1088#1072#1084'. '#1070#1088'. '#1083#1080#1094#1072', '#1089#1086#1075#1083#1072#1089#1085#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1088'/'#1089 +
+        #1095#1077#1090#1072'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1086#1073#1085#1086#1074#1083#1077#1085#1099
+      Caption = 
+        #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1074' '#1089#1087#1088'. '#1055#1072#1088#1072#1084'. '#1070#1088'. '#1083#1080#1094#1072', '#1089#1086#1075#1083#1072#1089#1085#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1088'/'#1089 +
+        #1095#1077#1090#1072
+      Hint = 
+        #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1074' '#1089#1087#1088'. '#1055#1072#1088#1072#1084'. '#1070#1088'. '#1083#1080#1094#1072', '#1089#1086#1075#1083#1072#1089#1085#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1088'/'#1089 +
+        #1095#1077#1090#1072
+      ImageIndex = 27
     end
   end
   object MasterDS: TDataSource
@@ -2852,8 +2945,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 656
-    Top = 40
+    Left = 648
+    Top = 24
   end
   object spSelect_Export: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_OrderFinance_XML'
@@ -2956,5 +3049,40 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     PackSize = 1
     Left = 688
     Top = 424
+  end
+  object spInsert_byMovBankAccount: TdsdStoredProc
+    StoredProcName = 'gpInsert_Object_JuridicalOrderFinance_byBankAccount'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inStartDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inEndDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankAccountId_main'
+        Value = ''
+        Component = GuidesBankAccount
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 712
+    Top = 176
   end
 end

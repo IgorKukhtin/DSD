@@ -135,6 +135,9 @@ contains
   DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas',
   OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
   IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
-  dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas';
+  dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas',
+  Medoc_J1201011 in '..\SOURCE\MeDOC\Medoc_J1201011.pas',
+  Medoc_J1201111 in '..\SOURCE\MeDOC\Medoc_J1201111.pas',
+  Medoc_J1201211 in '..\SOURCE\MeDOC\Medoc_J1201211.pas';
 
 end.

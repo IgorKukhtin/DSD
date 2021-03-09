@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ProjectGuid>{A409EC74-B7D5-47CD-BA6A-8C1B58C73E85}</ProjectGuid>
         <MainSource>ProjectComponent_D27.dpk</MainSource>
-        <ProjectVersion>19.1</ProjectVersion>
+        <ProjectVersion>19.2</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
@@ -236,6 +236,9 @@
         <DCCReference Include="..\SOURCE\EDI\OrderSpFozzXML.pas"/>
         <DCCReference Include="..\SOURCE\EDI\IftminFozzXML.pas"/>
         <DCCReference Include="..\SOURCE\COMPONENT\dsdTranslator.pas"/>
+        <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201011.pas"/>
+        <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201111.pas"/>
+        <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201211.pas"/>
         <None Include="ModelSupport_ProjectComponent_D27\default.txaPackage"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
@@ -428,6 +431,16 @@
                     </Platform>
                     <Platform Name="Android64">
                         <RemoteDir>res\drawable-xxhdpi</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_LauncherIcon192">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-xxxhdpi</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Android64">
+                        <RemoteDir>res\drawable-xxxhdpi</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>

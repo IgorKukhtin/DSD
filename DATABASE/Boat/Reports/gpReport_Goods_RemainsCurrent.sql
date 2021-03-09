@@ -24,6 +24,7 @@ RETURNS TABLE (PartionId            Integer
              , PartnerName          TVarChar
              --, BrandName            TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , Article TVarChar
              , GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar, MeasureName TVarChar
 
              , GoodsTagName         TVarChar
@@ -35,13 +36,17 @@ RETURNS TABLE (PartionId            Integer
              , GoodsSizeName_real   TVarChar
 
              , Amount_in               TFloat -- Итого кол-во Приход от поставщика
-             , EmpfPrice               TFloat -- Цена вх. в валюте
-             , CountForPrice           TFloat -- Кол. в цене вх. в валюте
+             , OperPrice               TFloat -- Цена вх. 
+             , CountForPrice           TFloat -- Кол. в цене вх.
              , OperPriceList           TFloat -- Цена по прайсу   
+             , OperPrice_cost          TFloat -- сумма затраты
+             , CostPrice               TFloat -- Цена вх + затрата
              , Remains                 TFloat -- Кол-во - остаток
-             , TotalSummEmpfPrice      TFloat -- Сумма по входным ценам
+             , TotalSummEKPrice        TFloat -- Сумма по входным ценам
              , TotalSummPriceList      TFloat -- Сумма по прайсу
-             , PriceTax                TFloat -- % Сезонной скидки !!!НА!!! zc_DateEnd
+             , Summ_Cost               TFloat -- Сумма затрат
+             , TotalSumm_Cost          TFloat -- Сумма вх+ затраты
+             , PriceTax                TFloat -- % скидки !!!НА!!! zc_DateEnd
                     
              , Comment_in       TVarChar
              , DiscountTax_in   TFloat
@@ -76,8 +81,6 @@ BEGIN
         --
         INSERT INTO _tmpUnit (UnitId)
           SELECT lfSelect.UnitId
-               , COALESCE (ObjectLink_Unit_PriceList.ChildObjectId, zc_PriceList_Basis()) AS PriceListId
-               , COALESCE (ObjectLink_PriceList_Currency.ChildObjectId, zc_Currency_Basis()) AS CurrencyId_pl
           FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect
          ;
     ELSE
@@ -129,13 +132,19 @@ BEGIN
                            , Object_PartionGoods.MovementId
                              -- Если есть права видеть Цену вх.
                            --, CASE WHEN vbIsOperPrice = TRUE THEN Object_PartionGoods.OperPrice ELSE 0 END AS OperPrice
-                           , Object_PartionGoods.EmpfPrice
+                           , Object_PartionGoods.EKPrice
                            , Object_PartionGoods.CountForPrice
 
                            , COALESCE (tmpPriceBasis.ValuePrice, Object_PartionGoods.OperPriceList) AS OperPriceList
-                           
+
+                             -- Цена без НДС затраты
+                           , Object_PartionGoods.CostPrice     ::TFloat
+                             -- Цена вх. с затратами без НДС
+                           , (Object_PartionGoods.EKPrice / Object_PartionGoods.CountForPrice + COALESCE (Object_PartionGoods.CostPrice,0) ) ::TFloat AS OperPrice_cost
+              
                            , Object_PartionGoods.Amount     AS Amount_in
                            , Object_PartionGoods.UnitId     AS UnitId_in
+                           
                              --  № п/п - только для = 1 возьмем Amount_in
                            , ROW_NUMBER() OVER (PARTITION BY Container.PartionId ORDER BY CASE WHEN Container.WhereObjectId = Object_PartionGoods.UnitId THEN 0 ELSE 1 END ASC) AS Ord
 
@@ -183,16 +192,18 @@ BEGIN
                               , tmpContainer.ProdColorId
                               , tmpContainer.TaxKindId
                               , tmpContainer.TaxKindValue
-                              , tmpContainer.EmpfPrice
+                              , tmpContainer.EKPrice
                               , tmpContainer.OperPriceList
+                              , tmpContainer.OperPrice_cost
+                              , tmpContainer.CostPrice
                               , tmpContainer.CountForPrice
                               , tmpContainer.UnitId_in
 
                                 --  только для Ord = 1
                               , SUM (CASE WHEN tmpContainer.Ord = 1 THEN tmpContainer.Amount_in ELSE 0 END) AS Amount_in
-                              --, SUM (CASE WHEN tmpContainer.Ord = 1 THEN zfCalc_SummIn (tmpContainer.Amount_in, tmpContainer.EmpfPrice, tmpContainer.CountForPrice) ELSE 0 END) AS TotalSummEmpfPrice
+                              --, SUM (CASE WHEN tmpContainer.Ord = 1 THEN zfCalc_SummIn (tmpContainer.Amount_in, tmpContainer.EKPrice, tmpContainer.CountForPrice) ELSE 0 END) AS TotalSummEKPrice
                               , SUM (tmpContainer.Remains)         AS Remains
-                              , SUM (zfCalc_SummIn        (tmpContainer.Remains, tmpContainer.EmpfPrice, tmpContainer.CountForPrice)) AS TotalSummEmpfPrice
+                              , SUM (zfCalc_SummIn        (tmpContainer.Remains, tmpContainer.EKPrice, tmpContainer.CountForPrice)) AS TotalSummEKPrice
                               , SUM (zfCalc_SummPriceList (tmpContainer.Remains, tmpContainer.OperPriceList))                       AS TotalSummPriceList
 
                               , MS_Comment.ValueData                        AS Comment_in
@@ -232,13 +243,15 @@ BEGIN
                                 , tmpContainer.ProdColorId
                                 , tmpContainer.TaxKindId
                                 , tmpContainer.TaxKindValue
-                                , tmpContainer.EmpfPrice
+                                , tmpContainer.EKPrice
                                 , tmpContainer.OperPriceList
                                 , tmpContainer.UnitId_in
                                 , MS_Comment.ValueData
                                 , MF_DiscountTax.ValueData
                                 , MF_VATPercent.ValueData
                                 , tmpContainer.CountForPrice
+                                , tmpContainer.OperPrice_cost
+                                , tmpContainer.CostPrice
                   )
 
        , tmpData AS (SELECT tmpData_All.UnitId
@@ -260,8 +273,10 @@ BEGIN
                           , tmpData_All.ProdColorId
                           , tmpData_All.TaxKindId
                           
-                          , tmpData_All.EmpfPrice
+                          , tmpData_All.EKPrice
                           , tmpData_All.OperPriceList
+                          , tmpData_All.OperPrice_cost
+                          , tmpData_All.CostPrice
                           , tmpData_All.CountForPrice
 
                           , tmpData_All.UnitId_in
@@ -271,7 +286,7 @@ BEGIN
 
                           , SUM (tmpData_All.Amount_in)          AS Amount_in
                           , SUM (tmpData_All.Remains)            AS Remains
-                          , SUM (tmpData_All.TotalSummEmpfPrice) AS TotalSummEmpfPrice
+                          , SUM (tmpData_All.TotalSummEKPrice) AS TotalSummEKPrice
                           , SUM (tmpData_All.TotalSummPriceList) AS TotalSummPriceList
                      FROM tmpData_All
                           LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = tmpData_All.GoodsSizeId
@@ -298,8 +313,10 @@ BEGIN
                             , tmpData_All.Comment_in
                             , tmpData_All.DiscountTax_in
                             , tmpData_All.VATPercent_in
-                            , tmpData_All.EmpfPrice
+                            , tmpData_All.EKPrice
                             , tmpData_All.CountForPrice
+                            , tmpData_All.OperPrice_cost
+                            , tmpData_All.CostPrice
               )
 
 
@@ -321,6 +338,7 @@ BEGIN
            , Object_Goods.Id                AS GoodsId
            , Object_Goods.ObjectCode        AS GoodsCode
            , Object_Goods.ValueData         AS GoodsName
+           , ObjectString_Article.ValueData AS Article
            , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_GoodsGroup.ValueData    AS GoodsGroupName
            , Object_Measure.ValueData       AS MeasureName
@@ -337,24 +355,30 @@ BEGIN
              -- Итого кол-во Приход от поставщика
            , tmpData.Amount_in    :: TFloat AS Amount_in
 
-           , CASE WHEN tmpData.Amount_in  <> 0 THEN tmpData.TotalSummEmpfPrice / tmpData.Amount_in
+           , CASE WHEN tmpData.Amount_in  <> 0 THEN tmpData.TotalSummEKPrice / tmpData.Amount_in
                   ELSE 0
-             END :: TFloat AS EmpfPrice
+             END :: TFloat AS OperPrice
            , COALESCE (tmpData.CountForPrice,1)   :: TFloat AS CountForPrice
 
              -- Цена по прайсу
            , tmpData.OperPriceList :: TFloat
 
+           , tmpData.OperPrice_cost   :: TFloat
+           , tmpData.CostPrice        :: TFloat
+
              -- Кол-во - остаток
            , tmpData.Remains                 :: TFloat AS Remains
              -- Сумма по входным ценам
-           , tmpData.TotalSummEmpfPrice      :: TFloat AS TotalSummEmpfPrice
+           , tmpData.TotalSummEKPrice      :: TFloat AS TotalSummEKPrice
              -- Сумма по прайсу - 
            , tmpData.TotalSummPriceList      :: TFloat AS TotalSummPriceList
+           
+           , (tmpData.Remains * tmpData.CostPrice ) :: TFloat AS Summ_Cost
+           , (tmpData.Remains * tmpData.OperPrice_cost ) :: TFloat AS TotalSumm_cost
 
-             -- % наценки по курсу на тек.дату
-           , CAST (CASE WHEN tmpData.TotalSummEmpfPrice <> 0
-                        THEN (100 * tmpData.Amount_in * tmpData.OperPriceList / tmpData.TotalSummEmpfPrice - 100)
+             -- % наценки 
+           , CAST (CASE WHEN  tmpData.OperPrice_cost <> 0
+                        THEN (100 * tmpData.OperPriceList / tmpData.OperPrice_cost - 100)
                         ELSE 0
                    END AS NUMERIC (16, 0)) :: TFloat AS PriceTax
 
@@ -378,6 +402,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
                                    ON ObjectString_GoodsGroupFull.ObjectId = tmpData.GoodsId
                                   AND ObjectString_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
+            LEFT JOIN ObjectString AS ObjectString_Article
+                                   ON ObjectString_Article.ObjectId = tmpData.GoodsId
+                                  AND ObjectString_Article.DescId = zc_ObjectString_Article()
            ;
 
 

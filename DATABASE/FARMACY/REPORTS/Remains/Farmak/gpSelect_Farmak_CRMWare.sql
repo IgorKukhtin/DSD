@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Farmak_CRMWare (
   inSession TVarChar
 )
 RETURNS TABLE (
+   GoodsId integer,
    WareId integer,
    MorionCode integer,
    BarCode TVarChar,
@@ -54,10 +55,11 @@ BEGIN
 
 
     SELECT
-           Object_Goods_Main.ObjectCode AS WareId
+           tmpGoodsPromo.GoodsId        AS GoodsId 
+         , Object_Goods_Main.ObjectCode AS WareId
          , Object_Goods_Main.MorionCode AS MorionCode
-         , tmpGoodsBarCode.BarCode AS BarCode
-         , Object_Goods_Main.Name AS WareName
+         , tmpGoodsBarCode.BarCode      AS BarCode
+         , Object_Goods_Main.Name       AS WareName
     FROM tmpGoodsPromo
 
         INNER JOIN Object_Goods_Retail AS Object_Goods ON Object_Goods.Id = tmpGoodsPromo.GoodsId

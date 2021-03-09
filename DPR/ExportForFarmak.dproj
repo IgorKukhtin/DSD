@@ -1,7 +1,7 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <ProjectGuid>{9EC2C8E1-2EE6-4CB0-948F-F29762EE48D8}</ProjectGuid>
-        <ProjectVersion>19.1</ProjectVersion>
+        <ProjectVersion>19.2</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <MainSource>ExportForFarmak.dpr</MainSource>
         <Base>True</Base>
@@ -109,6 +109,9 @@
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\MainUnitService\ExportForFarmak\Farmak\Farmak_CRMPharmacyXML.pas"/>
         <DCCReference Include="..\FormsFarmacy\MainUnitService\ExportForFarmak\Farmak\Farmak_CRMWareXML.pas"/>
+        <DCCReference Include="..\FormsFarmacy\MainUnitService\ExportForFarmak\Farmak\Farmak_CRMWhBalanceXML.pas"/>
+        <DCCReference Include="..\FormsFarmacy\MainUnitService\ExportForFarmak\Farmak\Farmak_CRMDespatchXML.pas"/>
+        <DCCReference Include="..\FormsFarmacy\MainUnitService\ExportForFarmak\Farmak\Farmak_CRMWhReceiptXML.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -308,6 +311,16 @@
                     </Platform>
                     <Platform Name="Android64">
                         <RemoteDir>res\drawable-xxhdpi</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_LauncherIcon192">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-xxxhdpi</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Android64">
+                        <RemoteDir>res\drawable-xxxhdpi</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>

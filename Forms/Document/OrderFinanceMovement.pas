@@ -172,7 +172,13 @@ type
     bbInsertRecord_JurOrdFin: TdxBarButton;
     chComment: TcxGridDBColumn;
     ProtocolOpenFormJOF: TdsdOpenForm;
-    bb: TdxBarButton;
+    bbProtocolOpenFormJOF: TdxBarButton;
+    ExecuteDialogPeriod: TExecuteDialog;
+    actInsert_byMovBankAccount: TdsdExecStoredProc;
+    macInsert_byMovBankAccount: TMultiAction;
+    spInsert_byMovBankAccount: TdsdStoredProc;
+    bbInsert_byMovBankAccount: TdxBarButton;
+    actRefreshOFJ: TdsdDataSetRefresh;
   private
   public
   end;

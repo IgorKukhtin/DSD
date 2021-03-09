@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Farmak_CRMPharmacy(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Farmak_CRMPharmacy(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (PharmacyId Integer, CompanyId TVarChar, PharmacyName TVarChar, PharmacyAddress TVarChar
+RETURNS TABLE (Id Integer, PharmacyId Integer, CompanyId TVarChar, PharmacyName TVarChar, PharmacyAddress TVarChar
              , PharmacistId Integer, PharmacistName TVarChar
              ) AS
 $BODY$
@@ -48,7 +48,8 @@ BEGIN
                            INNER JOIN tmpUser ON tmpUser.UserID = Object_User.Id)
 
        SELECT
-             Object_Unit_View.Code
+             Object_Unit_View.Id
+           , Object_Unit_View.Code
            , '39244174'::TVarChar AS CompanyId
            , Object_Unit_View.Name
            , ObjectString_Unit_Address.ValueData

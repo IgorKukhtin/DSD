@@ -476,6 +476,14 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_BuyerForSale() RETURNS Integer 
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_BuyerForSale', 'ФИО покупателя (на продажу)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_BuyerForSale');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_MedicKashtan() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_MedicKashtan'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_MedicKashtan', 'ФИО врача (МИС «Каштан»)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_MedicKashtan');
+
+
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_MemberKashtan() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_MemberKashtan'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_MemberKashtan', 'ФИО пациента (МИС «Каштан»)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_MemberKashtan');
 
 /*-------------------------------------------------------------------------------
 
@@ -483,6 +491,7 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 05.03.21                                                                                      * zc_MovementLinkObject_MedicKashtan, zc_MovementLinkObject_MemberKashtan
  10.10.20                                                                                      * zc_MovementLinkObject_MedicForSale, zc_MovementLinkObject_BuyerForSale
  03.09.20                                                                                      * zc_MovementLinkObject_CancelReason
  27.08.20         * zc_MovementLinkObject_Layout

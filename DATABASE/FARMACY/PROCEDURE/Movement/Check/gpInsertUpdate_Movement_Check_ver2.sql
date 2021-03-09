@@ -13,6 +13,7 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ ЧЕК>
@@ -51,6 +52,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
     IN inBuyerForSale        TVarChar  , -- ФИО покупателя (на продажу)
     IN inBuyerForSalePhone   TVarChar  , -- Телефон покупателя (на продажу)
     IN inDistributionPromoList TVarChar  , -- Раздача акционных материалов.
+    IN inMedicKashtanID      Integer   , -- ФИО врача (МИС «Каштан») 
+    IN inMemberKashtanID     Integer   , -- ФИО пациента (МИС «Каштан»)
     IN inUserSession	     TVarChar  , -- сессия пользователя под которой создан чек в программе
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -318,6 +321,17 @@ BEGIN
          vbIndex := vbIndex + 2;
       END LOOP;
     END IF;
+    
+    IF COALESCE(inMedicKashtanID, 0) <> 0 -- ФИО врача (МИС «Каштан») 
+    THEN
+      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_MedicKashtan(), ioId, inMedicKashtanID);        
+    END IF;
+    
+    IF COALESCE(inMemberKashtanID, 0) <> 0 -- ФИО пациента (МИС «Каштан»)
+    THEN
+      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_MemberKashtan(), ioId, inMemberKashtanID);            
+    END IF;
+
 
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
