@@ -136,6 +136,7 @@ type
     procedure LoadProductionSeparateFormTest;
     procedure LoadProfitLossFormTest;
     procedure LoadProfitLossServiceFormTest;
+    procedure LoadProfitLossResultFormTest;
     procedure LoadProfitIncomeServiceFormTest;
     procedure LoadPositionFormTest;
     procedure LoadPromoKindFormTest;
@@ -3002,6 +3003,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossService_51201JournalForm')
 end;
 
+procedure TLoadFormTest.LoadProfitLossResultFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossResultForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProfitLossResultForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossResultJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProfitLossResultJournalForm');
+
+end;
 procedure TLoadFormTest.LoadProfitIncomeServiceFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitIncomeServiceForm'));

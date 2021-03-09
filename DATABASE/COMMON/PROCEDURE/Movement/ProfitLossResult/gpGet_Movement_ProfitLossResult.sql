@@ -34,8 +34,8 @@ BEGIN
              , inOperDate                                       AS OperDate
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
-           , Object_Account.Id                                  AS AccountId
-           , Object_Account.ValueData                           AS AccountName
+             , Object_Account.Id                                AS AccountId
+             , Object_Account.ValueData                         AS AccountName
              , CAST (0 AS TFloat)                               AS TotalSumm
              , CAST ('' as TVarChar)                            AS Comment
              , FALSE                                            AS isCorrective
