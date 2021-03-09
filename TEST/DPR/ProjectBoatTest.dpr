@@ -243,7 +243,9 @@ uses
   AccountGroupEdit in '..\..\FormsBoat\Guides\AccountGroupEdit.pas' {AccountGroupEditForm: TParentForm},
   MovementItemContainer in '..\..\FormsBoat\Document\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm},
   Report_Balance in '..\..\FormsBoat\Report\Report_Balance.pas' {Report_BalanceForm: TParentForm},
-  Report_BalanceDialog in '..\..\FormsBoat\Report\Report_BalanceDialog.pas' {Report_BalanceDialogForm: TParentForm};
+  Report_BalanceDialog in '..\..\FormsBoat\Report\Report_BalanceDialog.pas' {Report_BalanceDialogForm: TParentForm},
+  Report_Goods_RemainsCurrentDialog in '..\..\FormsBoat\Report\Report_Goods_RemainsCurrentDialog.pas' {Report_Goods_RemainsCurrentDialogForm: TParentForm},
+  Report_Goods_RemainsCurrent in '..\..\FormsBoat\Report\Report_Goods_RemainsCurrent.pas' {Report_Goods_RemainsCurrentForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
