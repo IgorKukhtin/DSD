@@ -1238,7 +1238,9 @@ uses
   Medoc_J1201011 in '..\..\SOURCE\MeDOC\Medoc_J1201011.pas',
   Medoc_J1201211 in '..\..\SOURCE\MeDOC\Medoc_J1201211.pas',
   Report_Account_noBalance in '..\..\Forms\Report\Report_Account_noBalance.pas' {Report_Account_noBalanceForm: TParentForm},
-  Report_AccountMotion_noBalance in '..\..\Forms\Report\Report_AccountMotion_noBalance.pas' {Report_AccountMotion_noBalanceForm: TParentForm};
+  Report_AccountMotion_noBalance in '..\..\Forms\Report\Report_AccountMotion_noBalance.pas' {Report_AccountMotion_noBalanceForm: TParentForm},
+  ProfitLossResult in '..\..\Forms\Document\ProfitLossResult.pas' {ProfitLossResultForm: TParentForm},
+  ProfitLossResultJournal in '..\..\Forms\Document\ProfitLossResultJournal.pas' {ProfitLossResultJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

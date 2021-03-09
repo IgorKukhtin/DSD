@@ -1247,6 +1247,8 @@ type
     miIncome20202: TMenuItem;
     actReport_GoodsMI_ProductionUnion_diff: TdsdOpenForm;
     N237: TMenuItem;
+    actProfitLossResult: TdsdOpenForm;
+    miProfitLossResult: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
