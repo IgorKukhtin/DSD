@@ -275,7 +275,7 @@ object ProductForm: TProductForm
           DataBinding.FieldName = 'EngineNum'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #8470' '#1084#1086#1090#1086#1088#1072
+          HeaderHint = #1057#1077#1088#1080#1081#1085#1099#1081' '#8470' '#1084#1086#1090#1086#1088#1072
           Options.Editing = False
           Width = 66
         end
