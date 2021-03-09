@@ -1,4 +1,4 @@
--- Function: gpSelect_Object_GoodsByGoodsKind1CLink (TVarChar)
+-- Function: FillSoldTable
 
 DROP FUNCTION IF EXISTS FillSoldTable (TDateTime, TDateTime, TVarChar);
 
@@ -116,28 +116,45 @@ BEGIN
                                 , MIContainer.ObjectIntId_Analyzer
                         )
        
-          , tmpBonus AS (SELECT COALESCE (MIDate_OperDate.ValueData, MovementItemContainer.OperDate)      AS OperDate
-                              , COALESCE (MILinkObject_Juridical.ObjectId, CLO_Juridical.ObjectId)        AS JuridicalId
-                              , COALESCE (MILinkObject_Partner.ObjectId, 0)                               AS PartnerId
-                              , COALESCE (ObjectLink_Contract_InfoMoney.ChildObjectId, CLO_InfoMoney.ObjectId) AS InfoMoneyId
-                              , COALESCE (MovementLinkObject_PaidKind.ObjectId, CLO_PaidKind.ObjectId)    AS PaidKindId
-                              , COALESCE (MILinkObject_Branch.ObjectId, 0)                                AS BranchId
-                              , COALESCE (MILinkObject_ContractChild.ObjectId, CLO_Contract.ObjectId)     AS ContractId
+          , tmpBonus AS (SELECT MovementItemContainer.OperDate  AS OperDate
+                              , CLO_Juridical.ObjectId          AS JuridicalId
+                              , 0                               AS PartnerId
+                              , CLO_InfoMoney.ObjectId          AS InfoMoneyId
+                              , CLO_PaidKind.ObjectId           AS PaidKindId
+                              , 0                               AS BranchId
+                              , COALESCE (MILinkObject_ContractChild.ObjectId, CLO_Contract.ObjectId) AS ContractId
 
-                              , COALESCE (MILinkObject_Goods.ObjectId, 0)                                 AS GoodsId
-                              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                             AS GoodsKindId
+                            --, COALESCE (MIDate_OperDate.ValueData, MovementItemContainer.OperDate)      AS OperDate
+                            --, COALESCE (MILinkObject_Juridical.ObjectId, CLO_Juridical.ObjectId)        AS JuridicalId
+                            --, COALESCE (MILinkObject_Partner.ObjectId, 0)                               AS PartnerId
+                            --, COALESCE (ObjectLink_Contract_InfoMoney.ChildObjectId, CLO_InfoMoney.ObjectId) AS InfoMoneyId
+                            --, COALESCE (MovementLinkObject_PaidKind.ObjectId, CLO_PaidKind.ObjectId)    AS PaidKindId
+                            --, COALESCE (MILinkObject_Branch.ObjectId, 0)                                AS BranchId
+                            --, COALESCE (MILinkObject_ContractChild.ObjectId, CLO_Contract.ObjectId)     AS ContractId
 
-                              , COALESCE (MILinkObject_ContractConditionKind.ObjectId,0)                  AS ContractConditionKindId
-                              , COALESCE (MILinkObject_BonusKind.ObjectId,0)                              AS BonusKindId
-                              , COALESCE (MIFloat_BonusValue.ValueData,0)                                 AS BonusTax
+                            --, COALESCE (MILinkObject_Goods.ObjectId, 0)                                 AS GoodsId
+                            --, COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                             AS GoodsKindId
+
+                              , 0 AS GoodsId
+                              , 0 AS GoodsKindId
+
+                            --, COALESCE (MILinkObject_ContractConditionKind.ObjectId,0)                  AS ContractConditionKindId
+                            --, COALESCE (MILinkObject_BonusKind.ObjectId,0)                              AS BonusKindId
+                            --, COALESCE (MIFloat_BonusValue.ValueData,0)                                 AS BonusTax
+
+                              , 0 AS ContractConditionKindId
+                              , 0 AS BonusKindId
+                              , 0 AS BonusTax
 
                               , SUM (CASE WHEN MILinkObject_ContractChild.ObjectId > 0 OR MovementBoolean_isLoad.ValueData = TRUE
-                                               THEN COALESCE (MovementItem.Amount, -1 * MovementItemContainer.Amount)
+                                             --THEN COALESCE (MovementItem.Amount, -1 * MovementItemContainer.Amount)
+                                               THEN -1 * MovementItemContainer.Amount
                                           ELSE 0
                                      END) AS BonusBasis
                               , SUM (CASE WHEN MILinkObject_ContractChild.ObjectId > 0 OR MovementBoolean_isLoad.ValueData = TRUE
                                                THEN 0
-                                          ELSE COALESCE (MovementItem.Amount, -1 * MovementItemContainer.Amount)
+                                        --ELSE COALESCE (MovementItem.Amount, -1 * MovementItemContainer.Amount)
+                                          ELSE -1 * MovementItemContainer.Amount
                                      END) AS Bonus
                          FROM Movement
                               INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
@@ -158,7 +175,7 @@ BEGIN
                                                         ON MovementBoolean_isLoad.MovementId =  Movement.Id
                                                        AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
 
-                              LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+/*                            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                     AND MovementItem.DescId = zc_MI_Child()
                                                     AND MovementItem.isErased = FALSE
                               LEFT JOIN MovementItemLinkObject AS MILinkObject_Juridical
@@ -199,19 +216,82 @@ BEGIN
                                                           AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
                               LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
                                                    ON ObjectLink_Contract_InfoMoney.ObjectId = MILinkObject_ContractChild.ObjectId
-                                                  AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+                                                  AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()*/
 
                          WHERE Movement.DescId = zc_Movement_ProfitLossService()
-                         GROUP BY MIDate_OperDate.ValueData, MovementItemContainer.OperDate
-                                , MILinkObject_Juridical.ObjectId, CLO_Juridical.ObjectId
-                                , MILinkObject_Partner.ObjectId
-                                , ObjectLink_Contract_InfoMoney.ChildObjectId, CLO_InfoMoney.ObjectId
-                                , MovementLinkObject_PaidKind.ObjectId, CLO_PaidKind.ObjectId
-                                , MILinkObject_Branch.ObjectId
-                                , MILinkObject_ContractChild.ObjectId, CLO_Contract.ObjectId
+                         GROUP BY MovementItemContainer.OperDate --,MIDate_OperDate.ValueData
+                                , CLO_Juridical.ObjectId -- MILinkObject_Juridical.ObjectId
+                              --, MILinkObject_Partner.ObjectId
+                                , CLO_InfoMoney.ObjectId -- ObjectLink_Contract_InfoMoney.ChildObjectId
+                                , CLO_PaidKind.ObjectId -- MovementLinkObject_PaidKind.ObjectId
+                              --, MILinkObject_Branch.ObjectId
+                                , CLO_Contract.ObjectId, MILinkObject_ContractChild.ObjectId
 
-                                , MILinkObject_Goods.ObjectId
-                                , MILinkObject_GoodsKind.ObjectId
+                              --, MILinkObject_Goods.ObjectId
+                              --, MILinkObject_GoodsKind.ObjectId
+
+                              --, MILinkObject_ContractConditionKind
+                              --, MILinkObject_BonusKind.ObjectId
+                              --, MIFloat_BonusValue.ValueData
+
+                        UNION ALL
+                         SELECT MovementItemContainer.OperDate  AS OperDate
+                              , CLO_Juridical.ObjectId          AS JuridicalId
+                              , CLO_Partner.ObjectId            AS PartnerId
+                              , CLO_InfoMoney.ObjectId          AS InfoMoneyId
+                              , CLO_PaidKind.ObjectId           AS PaidKindId
+                              , CLO_Branch.ObjectId             AS BranchId
+                              , COALESCE (MILinkObject_ContractChild.ObjectId, CLO_Contract.ObjectId) AS ContractId
+
+                              , 0 AS GoodsId
+                              , 0 AS GoodsKindId
+
+                              , 0 AS ContractConditionKindId
+                              , 0 AS BonusKindId
+                              , 0 AS BonusTax
+
+                              , SUM (CASE WHEN MILinkObject_ContractChild.ObjectId > 0 OR MovementBoolean_isLoad.ValueData = TRUE
+                                               THEN -1 * MovementItemContainer.Amount
+                                          ELSE 0
+                                     END) AS BonusBasis
+                              , SUM (CASE WHEN MILinkObject_ContractChild.ObjectId > 0 OR MovementBoolean_isLoad.ValueData = TRUE
+                                               THEN 0
+                                          ELSE -1 * MovementItemContainer.Amount
+                                     END) AS Bonus
+                         FROM Movement
+                              INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
+                                                              AND MovementItemContainer.DescId = zc_MIContainer_Summ()
+                                                              AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
+                              INNER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
+                                                  AND Container.ObjectId = zc_Enum_Account_70301() -- !!!
+                              -- Õ¿À
+                              INNER JOIN ContainerLinkObject AS CLO_PaidKind
+                                                             ON CLO_PaidKind.ContainerId = Container.Id
+                                                            AND CLO_PaidKind.DescId      = zc_ContainerLinkObject_PaidKind()
+                                                            AND CLO_PaidKind.ObjectId    = zc_Enum_PaidKind_SecondForm()
+
+                              LEFT JOIN ContainerLinkObject AS CLO_Juridical ON CLO_Juridical.ContainerId = Container.Id AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
+                              LEFT JOIN ContainerLinkObject AS CLO_Contract  ON CLO_Contract.ContainerId  = Container.Id AND CLO_Contract.DescId  = zc_ContainerLinkObject_Contract()
+                              LEFT JOIN ContainerLinkObject AS CLO_InfoMoney ON CLO_InfoMoney.ContainerId = Container.Id AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+                              LEFT JOIN ContainerLinkObject AS CLO_Partner   ON CLO_Partner.ContainerId   = Container.Id AND CLO_Partner.DescId   = zc_ContainerLinkObject_Partner()
+                              LEFT JOIN ContainerLinkObject AS CLO_Branch    ON CLO_Branch.ContainerId    = Container.Id AND CLO_Branch.DescId    = zc_ContainerLinkObject_Branch()
+
+                              LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractChild
+                                                               ON MILinkObject_ContractChild.MovementItemId = MovementItemContainer.MovementItemId
+                                                              AND MILinkObject_ContractChild.DescId = zc_MILinkObject_ContractChild()
+                              LEFT JOIN MovementBoolean AS MovementBoolean_isLoad
+                                                        ON MovementBoolean_isLoad.MovementId =  Movement.Id
+                                                       AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
+
+
+                         WHERE Movement.DescId = zc_Movement_ProfitLossService()
+                         GROUP BY MovementItemContainer.OperDate
+                                , CLO_Juridical.ObjectId
+                                , CLO_Partner.ObjectId
+                                , CLO_InfoMoney.ObjectId
+                                , CLO_PaidKind.ObjectId
+                                , CLO_Branch.ObjectId
+                                , MILinkObject_ContractChild.ObjectId, CLO_Contract.ObjectId
                         )
           , tmpOperation_all AS 
            (SELECT tmpOperation_SaleReturn.OperDate

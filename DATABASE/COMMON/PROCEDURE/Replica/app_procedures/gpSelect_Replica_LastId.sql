@@ -40,6 +40,33 @@ BEGIN
 
     END IF;
     
+    -- если нет данных для команд, т.е. они уже удалены
+    IF 1 < COALESCE ((SELECT SUM (CASE WHEN Object.Id IS NULL THEN 1 ELSE 0 END) - SUM (CASE WHEN Object.Id > 0 THEN 1 ELSE 0 END)
+                      FROM _replica.table_update_data
+                           LEFT JOIN Object ON Object.Id = CASE WHEN 'Object' ILIKE table_update_data.table_name THEN CAST (_replica.zfCalc_WordText_Split_replica (table_update_data.pk_values, 1) AS BigInt) ELSE NULL END
+                      WHERE table_update_data.Id BETWEEN inId_start AND vbId_End
+                        AND operation ILIKE 'INSERT'
+                        AND table_name ILIKE 'Object'
+                     ), 0)
+    THEN
+        -- если нет команды DELETE
+        IF 1=1
+         /*100 > (SELECT COUNT(*)
+                  FROM _replica.table_update_data
+                       LEFT JOIN soldtable ON soldtable.Id = CASE WHEN 'soldtable' = table_update_data.table_name THEN CAST (_replica.zfCalc_WordText_Split_replica (table_update_data.pk_values, 1) AS BigInt) ELSE NULL END
+                  WHERE Id BETWEEN inId_start AND vbId_End
+                    AND (soldtable.Id > 0
+                      OR table_name ILIKE 'soldtable'
+                      OR operation ILIKE 'DELETE')
+                 )*/
+        THEN
+            -- !!!Рекурсия!!!
+            RETURN (_replica.gpSelect_Replica_LastId (vbId_End, CASE WHEN inRec_count >= 100000 THEN inRec_count / 100 ELSE inRec_count END :: Integer));
+
+        END IF;
+
+    END IF;
+    
     -- если реальное кол-во записей не соответсвует разнице по Id, значит вклинились транзакции, которые не видно, хотя могут быть и "потерянные" Id
    /*IF (vbId_End - inId_start + 1) <> (SELECT COUNT(*) FROM _replica.table_update_data WHERE Id BETWEEN inId_start AND vbId_End)
     THEN
@@ -112,7 +139,7 @@ $BODY$
 
 -- тест
 -- SELECT * FROM ResourseItemProtocol ORDER BY Id DESC LIMIT 100
--- SELECT _replica.gpSelect_Replica_LastId (3578398023, 200000)
+-- SELECT _replica.gpSelect_Replica_LastId (4084377910, 100000)
 /*
  WITH tmpParams2 AS (SELECT 789863512 AS Id_start, 200000 AS Rec_count, 0 AS Rec_count_diff)
 -- WITH tmpParams2 AS (SELECT 651426894 AS Id_start, 200000 AS Rec_count, 80000 AS Rec_count_diff)

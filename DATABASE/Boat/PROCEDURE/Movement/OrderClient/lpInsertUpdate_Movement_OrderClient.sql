@@ -87,7 +87,7 @@ BEGIN
      PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
 
 
-     IF inProductId > 0
+   /*IF inProductId > 0
      THEN
          -- ищем строку док. с лодкой, находим  - перезаписываем, не находим создаем
          vbMI_Id := (SELECT MovementItem.Id 
@@ -107,7 +107,7 @@ BEGIN
                                                         , inComment       := '' ::TVarChar
                                                         , inUserId        := inUserId
                                                         );
-     END IF;
+     END IF;*/
                                                       
                                                       
 END;

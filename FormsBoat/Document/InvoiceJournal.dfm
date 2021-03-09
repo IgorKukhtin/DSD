@@ -4,6 +4,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
   ClientWidth = 1028
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -238
   ExplicitWidth = 1044
   ExplicitHeight = 391
   PixelsPerInch = 96
@@ -70,7 +71,6 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = TaxKindValue
             end
             item
               Format = ',0.00##'
@@ -163,15 +163,13 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Options.Editing = False
             Width = 70
           end
-          object TaxKindValue: TcxGridDBColumn
+          object VATPercent: TcxGridDBColumn
             Caption = '% '#1053#1044#1057
-            DataBinding.FieldName = 'TaxKindValue'
+            DataBinding.FieldName = 'VATPercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
+            Visible = False
+            Width = 60
           end
           object AmountIn_NotVAT: TcxGridDBColumn
             Caption = 'Debet no_Vat'
@@ -340,14 +338,6 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 95
-          end
-          object VATPercent: TcxGridDBColumn
-            Caption = '% '#1053#1044#1057
-            DataBinding.FieldName = 'VATPercent'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
-            Width = 60
           end
         end
       end

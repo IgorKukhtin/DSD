@@ -417,11 +417,11 @@ object IncomeForm: TIncomeForm
             Width = 120
           end
           object PartNumber: TcxGridDBColumn
-            Caption = #8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091
+            Caption = 'S/N'
             DataBinding.FieldName = 'PartNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091
+            HeaderHint = #1057#1077#1088#1080#1081#1085#1099#1081' '#8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091
             Width = 100
           end
           object Amount: TcxGridDBColumn

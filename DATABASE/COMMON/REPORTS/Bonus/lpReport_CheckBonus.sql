@@ -1,4 +1,4 @@
- -- FunctiON: lpReport_CheckBonus ()
+-- FunctiON: lpReport_CheckBonus ()
 
 DROP FUNCTION IF EXISTS lpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
@@ -419,7 +419,7 @@ BEGIN
                                      )
       -- для договоров (если !!!заполнены уп-статьи для условий!!!) надо найти бонусный договор (по 4-м ключам + пусто в "Типы условий договоров")
       -- т.е. условие есть в базовых, но надо подставить "маркет-договор" и начисления провести на него
-    , tmpContractBonus AS (SELECT DISTINCT
+     , tmpContractBonus AS (SELECT DISTINCT
                                   tmpContract_find.ContractId_master
                                 , tmpContract_find.ContractId_find
                                 , View_Contract_InvNumber_find.InfoMoneyId AS InfoMoneyId_find
@@ -853,7 +853,7 @@ BEGIN
            , tmpAll as(SELECT tmp.*
                        FROM (SELECT tmpContract.InvNumber_master
                                   , tmpContract.InvNumber_child
-                                  , CASE WHEN tmpContract.InfoMoneyId_Condition <> 0
+                                  , CASE WHEN tmpContract.InfoMoneyId_Condition <> 0 AND tmpContractBonus.ContractId_find > 0
                                               THEN tmpContractBonus.InvNumber_find
                                          ELSE tmpContract.InvNumber_master
                                     END AS InvNumber_find
@@ -863,14 +863,14 @@ BEGIN
       
                                   , tmpContract.ContractId_master
                                   , tmpContract.ContractId_child 
-                                  , CASE WHEN tmpContract.InfoMoneyId_Condition <> 0
+                                  , CASE WHEN tmpContract.InfoMoneyId_Condition <> 0 AND tmpContractBonus.ContractId_find > 0
                                               THEN tmpContractBonus.ContractId_find
                                          ELSE tmpContract.ContractId_master
                                     END AS ContractId_find
       
                                   , tmpContract.InfoMoneyId_master
                                   , tmpContract.InfoMoneyId_child 
-                                  , CASE WHEN tmpContract.InfoMoneyId_Condition <> 0
+                                  , CASE WHEN tmpContract.InfoMoneyId_Condition <> 0 AND tmpContractBonus.ContractId_find > 0
                                               THEN tmpContractBonus.InfoMoneyId_find
                                          WHEN tmpContract.InfoMoneyId_master = zc_Enum_InfoMoney_30101() -- Готовая продукция
                                               THEN zc_Enum_InfoMoney_21501() -- Маркетинг + Бонусы за продукцию

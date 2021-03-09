@@ -554,6 +554,7 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 51101, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_51101');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 51201, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_51201');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 60301, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_60301');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 70301, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_70301');
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 100301, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_100301');
 

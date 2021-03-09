@@ -1,6 +1,6 @@
 -- Function: gpGet_Object_Product()
 
-DROP FUNCTION IF EXISTS gpGet_Object_Product(Integer, TVarChar);
+ DROP FUNCTION IF EXISTS gpGet_Object_Product(Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Object_Product(Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Product(
@@ -61,8 +61,8 @@ BEGIN
            , CAST ('' AS TVarChar)     AS EngineName
            , CAST (0 AS Integer)       AS ReceiptProdModelId
            , CAST ('' AS TVarChar)     AS ReceiptProdModelName
-           , CAST (vbClientId AS Integer)    AS ClientId
-           , CAST (vbClientName AS TVarChar) AS ClientName
+           , CAST (0 AS Integer)       AS ClientId
+           , CAST ('' AS TVarChar)     AS ClientId
 
            , CAST (0 AS Integer)       AS MovementId_OrderClient
            , CAST (NULL AS TDateTime)  AS OperDate_OrderClient

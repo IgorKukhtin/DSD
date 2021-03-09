@@ -761,7 +761,7 @@ BEGIN
            , tmpAll as(SELECT tmp.*
                        FROM (SELECT tmpContract.InvNumber_master
                                   , tmpContract.InvNumber_child
-                                  , CASE WHEN tmpContract.InfoMoneyId_Condition <> 0
+                                  , CASE WHEN tmpContract.InfoMoneyId_Condition <> 0 AND tmpContractBonus.ContractId_find > 0
                                               THEN tmpContractBonus.InvNumber_find
                                          ELSE tmpContract.InvNumber_master
                                     END AS InvNumber_find
@@ -771,14 +771,14 @@ BEGIN
       
                                   , tmpContract.ContractId_master
                                   , tmpContract.ContractId_child 
-                                  , CASE WHEN tmpContract.InfoMoneyId_Condition <> 0
+                                  , CASE WHEN tmpContract.InfoMoneyId_Condition <> 0 AND tmpContractBonus.ContractId_find > 0
                                               THEN tmpContractBonus.ContractId_find
                                          ELSE tmpContract.ContractId_master
                                     END AS ContractId_find
  
                                   , tmpContract.InfoMoneyId_master
                                   , tmpContract.InfoMoneyId_child 
-                                  , CASE WHEN tmpContract.InfoMoneyId_Condition <> 0
+                                  , CASE WHEN tmpContract.InfoMoneyId_Condition <> 0 AND tmpContractBonus.ContractId_find > 0
                                               THEN tmpContractBonus.InfoMoneyId_find
                                          WHEN tmpContract.InfoMoneyId_master = zc_Enum_InfoMoney_30101() -- Готовая продукция
                                               THEN zc_Enum_InfoMoney_21501() -- Маркетинг + Бонусы за продукцию
@@ -1523,7 +1523,4 @@ zc_ObjectLink_PersonalServiceList_Branch
 в одном договоре есть условие "% бонуса за нал оплаты" - % возврата будет по контрагентам
 и есть условие "% бонуса за БН оплаты" - % возврата будет итоговый, т.е. еще раз по договору базы взять уже все продажа/возврат
  */
- 
- 
- 
 --select * from gpReport_CheckBonusTest2(inStartDate := ('01.11.2020')::TDateTime , inEndDate := ('30.11.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId := 15088 , inBranchId := 0 , inisMovement := 'False' ,  inSession := '5');

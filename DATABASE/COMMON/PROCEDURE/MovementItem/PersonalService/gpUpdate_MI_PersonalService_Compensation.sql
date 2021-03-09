@@ -97,6 +97,7 @@ BEGIN
                          )
            -- Результат
            SELECT COALESCE (tmpMI.MovementItemId, 0) :: Integer AS MovementItemId
+                , COALESCE (tmpMI.MovementItemId, 0) :: Integer AS MovementItemId_2
                 , COALESCE (tmpReport_all.MemberId,   tmpMI.MemberId)   AS MemberId
                 , COALESCE (tmpReport_all.PersonalId, tmpMI.PersonalId) AS PersonalId
                 , COALESCE (tmpReport_all.PositionId, tmpMI.PositionId) AS PositionId
@@ -161,7 +162,9 @@ BEGIN
                                                         , inPersonalServiceListId := _tmpMI.PersonalServiceListId
                                                         , inUserId             := vbUserId
                                                          )
-     WHERE _tmpMI.Day_diff > 0 OR _tmpMI.MovementItemId > 0;
+     WHERE _tmpMI.Day_diff > 0 OR _tmpMI.MovementItemId > 0
+       AND _tmpMI.MovementItemId_2 = 0
+     ;
                                                          
                                                               -- сохраняем элементы
      PERFORM -- Положено дней отпуска
@@ -178,8 +181,16 @@ BEGIN
          --, lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCompensationRecalc(), _tmpMI.MovementItemId, (_tmpMI.Day_diff * _tmpMI.AmountCompensation))
      FROM _tmpMI
      WHERE _tmpMI.Day_diff > 0
+       AND _tmpMI.MovementItemId_2 = 0
     ;
 
+
+-- !!! ВРЕМЕННО !!!
+ IF inSession = '5' AND 1=0 THEN
+    RAISE EXCEPTION 'Admin - Test = OK : %'
+  , DATE_TRUNC ('YEAR', vbOperDate) - INTERVAL '1 DAY'
+   ;
+END IF;
 
 END;
 $BODY$

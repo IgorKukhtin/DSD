@@ -226,7 +226,7 @@ BEGIN
                         )::TFloat;
                         
                     
-       --создаем документ
+       -- создаем документ
        vbMovementId:= lpInsertUpdate_Movement_OrderClient(ioId               := 0            ::Integer
                                                         , inInvNumber        := CAST (NEXTVAL ('movement_OrderClient_seq') AS TVarChar) ::TVarChar
                                                         , inInvNumberPartner := ''           ::TVarChar
@@ -262,7 +262,7 @@ BEGIN
        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountNextTax(), vbMovementId, inDiscountNextTax);    
      
        -- сохранили протокол
-       PERFORM lpInsert_MovementProtocol (vbMovementId, vbUserId, False);
+       PERFORM lpInsert_MovementProtocol (vbMovementId, vbUserId, FALSE);
 
    END IF;
 

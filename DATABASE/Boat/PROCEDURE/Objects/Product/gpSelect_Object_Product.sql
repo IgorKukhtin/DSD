@@ -84,7 +84,6 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ProdColorName TVarChar
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbPriceWithVAT Boolean;
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
