@@ -1011,7 +1011,9 @@ uses
   Report_Check_PromoBonusLosses in '..\..\FormsFarmacy\Report\Report_Check_PromoBonusLosses.pas' {Report_Check_PromoBonusLossesForm: TParentForm},
   MemberSP_SPKind in '..\..\FormsFarmacy\Guides\MemberSP_SPKind.pas' {MemberSP_SPKindForm: TParentForm},
   MemberKashtan in '..\..\FormsFarmacy\Guides\MemberKashtan.pas' {MemberKashtanForm: TParentForm},
-  MedicKashtan in '..\..\FormsFarmacy\Guides\MedicKashtan.pas' {MedicKashtanForm: TParentForm};
+  MedicKashtan in '..\..\FormsFarmacy\Guides\MedicKashtan.pas' {MedicKashtanForm: TParentForm},
+  Report_Check_SP_ForDPSSDialog in '..\..\FormsFarmacy\Report\Report_Check_SP_ForDPSSDialog.pas' {Report_Check_SP_ForDPSSDialogForm: TParentForm},
+  Report_Check_SP_ForDPSS in '..\..\FormsFarmacy\Report\Report_Check_SP_ForDPSS.pas' {Report_Check_SP_ForDPSSForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

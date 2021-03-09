@@ -153,6 +153,9 @@ BEGIN
             INNER JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
             LEFT JOIN (SELECT DISTINCT JuridicalId, ContractId, isPriceCloseOrder
                          FROM lpSelect_Object_JuridicalSettingsRetail (vbObjectId) AS JuridicalSettings
+                              INNER JOIN Object AS Object_Juridical
+                                                ON Object_Juridical.Id = JuridicalSettings.MainJuridicalId
+                                               AND Object_Juridical.isErased = False 
                        WHERE JuridicalSettings.MainJuridicalId = vbJuridicalId OR COALESCE(vbJuridicalId, 0) = 0) AS JuridicalSettings
                     ON JuridicalSettings.JuridicalId = LoadPriceList.JuridicalId
                    AND JuridicalSettings.ContractId = LoadPriceList.ContractId
@@ -230,3 +233,5 @@ $BODY$
 -- select * from gpSelect_GoodsSearch(inAreaId := 5803492, inGoodsSearch := '111' , inProducerSearch := '' , inCodeSearch := '' ,  inSession := '3990942 ');
 
 --select * from gpSelect_GoodsSearch(inAreaId := 0 , inGoodsSearch := 'детралекс%1000' , inProducerSearch := '' , inCodeSearch := '' ,  inSession := '3');
+
+select * from gpSelect_GoodsSearch(inAreaId := 0 , inGoodsSearch := 'линекс%16' , inProducerSearch := '' , inCodeSearch := '' ,  inSession := '3');

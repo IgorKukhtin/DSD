@@ -85,7 +85,7 @@ BEGIN
              , NULL::Integer                                        AS AddressId
              , NULL::Integer                                        AS DstCodeId
              , tmpGoodsPromo.WareId                                 AS WareId
-             , COALESCE (MIF_Price.ValueData / (100.0 + tmpGoodsPromo.NDS) * 100.0, 0)::TFloat  AS Price
+             , COALESCE (COALESCE(MIF_Price.ValueData, MIF_PriceSale.ValueData) / (100.0 + tmpGoodsPromo.NDS) * 100.0, 0)::TFloat  AS Price
              , tmpData.Amount:: TFloat                              AS Quantity
         FROM tmpContainer AS tmpData
 
@@ -101,6 +101,10 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIF_Price
                                          ON MIF_Price.MovementItemId = tmpData.MovementItemId
                                         AND MIF_Price.DescId = zc_MIFloat_Price()
+                                        AND MIF_Price.ValueData > 0
+             LEFT JOIN MovementItemFloat AS MIF_PriceSale
+                                         ON MIF_PriceSale.MovementItemId = tmpData.MovementItemId
+                                        AND MIF_PriceSale.DescId = zc_MIFloat_PriceSale()
 
              LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
                                           ON MovementLinkObject_Insert.MovementId = tmpData.MovementId

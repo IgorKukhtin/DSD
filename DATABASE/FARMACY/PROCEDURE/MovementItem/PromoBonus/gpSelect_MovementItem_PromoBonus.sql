@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer
              , MakerId Integer, MakerCode Integer, MakerName TVarChar
              , Amount TFloat, MIPromoId Integer, MovementPromoId Integer
              , GoodsGroupPromoID Integer, GoodsGroupPromoName TVarChar
-             , DateUpdate TDateTime
+             , DateUpdate TDateTime, isLearnWeek Boolean
              , isErased Boolean)
  AS
 $BODY$
@@ -54,7 +54,9 @@ BEGIN
                                  WHERE MovementItem.MovementId = inMovementId
                                    AND MovementItem.DescId = zc_MI_Master()
                                    AND (MovementItem.isErased = False OR inIsErased = True)
-                                 )
+                                 ),
+                   tmpPromoBonus_GoodsWeek AS (SELECT * FROM gpSelect_PromoBonus_GoodsWeek(inSession := inSession))
+
 
 
                SELECT MI_Master.Id                                      AS Id
@@ -70,6 +72,7 @@ BEGIN
                     , Object_GoodsGroupPromo.ID              AS GoodsGroupPromoID
                     , Object_GoodsGroupPromo.ValueData       AS GoodsGroupPromoName
                     , date_trunc('day',MI_Master.DateUpdate)::TDateTime AS DateUpdate
+                    , COALESCE (tmpPromoBonus_GoodsWeek.ID, 0) <> 0     AS isLearnWeek
                     , COALESCE(MI_Master.IsErased, False)               AS isErased
                FROM MI_Master
 
@@ -80,6 +83,8 @@ BEGIN
                                         ON ObjectLink_Goods_GoodsGroupPromo.ObjectId = Object_Goods.Id
                                        AND ObjectLink_Goods_GoodsGroupPromo.DescId = zc_ObjectLink_Goods_GoodsGroupPromo()
                    LEFT JOIN Object AS Object_GoodsGroupPromo ON Object_GoodsGroupPromo.Id = ObjectLink_Goods_GoodsGroupPromo.ChildObjectId
+                   
+                   LEFT JOIN tmpPromoBonus_GoodsWeek ON tmpPromoBonus_GoodsWeek.ID = MI_Master.Id
 
                    ;
 END;
@@ -92,4 +97,4 @@ $BODY$
  17.02.21                                                      *
 */
 -- 
-select * from gpSelect_MovementItem_PromoBonus(inMovementId := 22181875  , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_PromoBonus(inMovementId := 22188745   , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

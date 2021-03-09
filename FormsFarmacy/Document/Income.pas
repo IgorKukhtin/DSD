@@ -176,6 +176,7 @@ type
     cbUseNDSKind: TcxCheckBox;
     PromoBonus: TcxGridDBColumn;
     MarginPercentUnit: TcxGridDBColumn;
+    isLearnWeek: TcxGridDBColumn;
   private
     { Private declarations }
   public

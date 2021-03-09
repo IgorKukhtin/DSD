@@ -33,20 +33,19 @@ BEGIN
                         AND MovementItem.DescId = zc_MI_Child()
                      )
 
-   , tmpMIFloat_ContainerId AS (SELECT MovementItemFloat.MovementItemId
-                                     , MovementItemFloat.ValueData :: Integer AS ContainerId
-                                FROM MovementItemFloat
-                                WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI_Child.Id FROM tmpMI_Child WHERE tmpMI_Child.IsErased = FALSE)
-                                  AND MovementItemFloat.DescId = zc_MIFloat_ContainerId()
-                                )
-    --
-   , tmpContainerAll AS (SELECT tmp.ContainerId
+   , tmpContainerAll AS (SELECT tmp.Id
+                              , MIFloat_ContainerId.ValueData :: Integer AS ContainerId
                               , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId) AS MovementId_Income
                               , COALESCE (MI_Income_find.Id,MI_Income.Id)                 AS MIId_Income
                               , ContainerLinkObject.ObjectId                              AS PartionGoodsId
-                      FROM tmpMIFloat_ContainerId AS tmp
+                      FROM tmpMI_Child AS tmp
+                      
+                           INNER JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                        ON MIFloat_ContainerId.MovementItemId = tmp.Id
+                                                       AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+                           
                            LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
-                                                         ON ContainerLinkObject_MovementItem.Containerid = tmp.ContainerId
+                                                         ON ContainerLinkObject_MovementItem.Containerid = MIFloat_ContainerId.ValueData :: Integer
                                                         AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
                            LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
                            -- элемент прихода
@@ -58,13 +57,14 @@ BEGIN
                            -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
                            LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
                                       
-                           LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = tmp.ContainerId
+                           LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = MIFloat_ContainerId.ValueData :: Integer
                                                         AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
 
 
                      )
     --
-   , tmpContainer AS (SELECT tmp.ContainerId
+   , tmpContainer AS (SELECT tmp.Id
+                           , tmp.ContainerId
                            , tmp.MovementId_Income                                                                          AS MovementId_Income
                            , COALESCE (ObjectDate_ExpirationDate.ValueData, MIDate_ExpirationDate.ValueData, zc_DateEnd())  AS ExpirationDate
                       FROM tmpContainerAll AS tmp
@@ -110,7 +110,7 @@ BEGIN
            , Object_Goods.ValueData     AS GoodsName
            , MovementItem.Amount
 
-           , MIFloat_ContainerId.ContainerId                   :: TFloat    AS ContainerId
+           , tmpContainer.ContainerId                          :: TFloat    AS ContainerId
            , COALESCE (tmpContainer.ExpirationDate, NULL)      :: TDateTime AS ExpirationDate
            , COALESCE (tmpPartion.BranchDate, NULL)            :: TDateTime AS OperDate_Income
            , COALESCE (tmpPartion.Invnumber, NULL)             :: TVarChar  AS Invnumber_Income
@@ -120,9 +120,7 @@ BEGIN
        FROM tmpMI_Child AS MovementItem
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
-            LEFT JOIN tmpMIFloat_ContainerId AS MIFloat_ContainerId
-                                             ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
-            LEFT JOIN tmpContainer ON tmpContainer.ContainerId = MIFloat_ContainerId.ContainerId
+            LEFT JOIN tmpContainer ON tmpContainer.Id = MovementItem.Id
             LEFT JOIN tmpPartion ON tmpPartion.Id= tmpContainer.MovementId_Income
        ;
 END;
@@ -137,3 +135,4 @@ $BODY$
 
 -- тест
 -- select * from gpSelect_MovementItem_Check_Child(inMovementId := 3959328 ,  inSession := '3'
+select * from gpSelect_MovementItem_Check_Child(inMovementId := 22245296 ,  inSession := '3');

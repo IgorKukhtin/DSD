@@ -46,7 +46,7 @@ BEGIN
                                    , Container.ObjectId
                                    , Container.WhereObjectId
                                    , Container.Amount
-                            HAVING (Container.Amount -  SUM (COALESCE (MIContainer.Amount, 0)) ) <> 0)
+                            HAVING (Container.Amount -  SUM (COALESCE (MIContainer.Amount, 0)) ) > 0)
          , tmpContainerIncome AS (SELECT Container.ContainerId
                                        , Container.GoodsID
                                        , Container.UnitId
@@ -101,5 +101,4 @@ $BODY$
 */
 
 -- тест
---
-SELECT * FROM gpSelect_Farmak_CRMWhBalance(13648288 , '3')
+-- SELECT * FROM gpSelect_Farmak_CRMWhBalance(13648288 , '3')

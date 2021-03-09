@@ -126,6 +126,13 @@ inherited PromoBonusForm: TPromoBonusForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
+          object isLearnWeek: TcxGridDBColumn
+            Caption = #1059#1095#1072#1089'-'#1102#1090' '#1085#1072' '#1101#1090#1086#1081' '#1085#1077#1076#1077#1083#1077
+            DataBinding.FieldName = 'isLearnWeek'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'

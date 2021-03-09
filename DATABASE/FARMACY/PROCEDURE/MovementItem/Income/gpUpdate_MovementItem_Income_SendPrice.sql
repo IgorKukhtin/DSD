@@ -171,17 +171,26 @@ BEGIN
                                   OR COALESCE(Price_Top.ValueData,False) = True
                                   OR COALESCE(Price_PercentMarkup.ValueData, 0) <> 0)
                            ),
-         PromoBonus AS (SELECT MovementItem.Id                     AS Id
-                             , MovementItem.ObjectId               AS GoodsId
-                             , MovementItem.Amount                 AS Amount
-                        FROM MovementItem
-                        WHERE MovementItem.MovementId = (SELECT MAX(Movement.id) FROM Movement
-                                                         WHERE Movement.OperDate <= CURRENT_DATE
-                                                           AND Movement.DescId = zc_Movement_PromoBonus()
-                                                           AND Movement.StatusId = zc_Enum_Status_Complete())
-                          AND MovementItem.DescId = zc_MI_Master()
-                          AND MovementItem.isErased = False
-                          AND MovementItem.Amount > 0)
+         PromoBonus AS (SELECT PromoBonus.Id                            AS Id
+                             , PromoBonus.GoodsId                   AS GoodsId
+                             , PromoBonus.Amount                        AS Amount
+                        FROM gpSelect_PromoBonus_GoodsWeek (inSession) AS PromoBonus),
+         tmpGoodsDiscount AS (SELECT ObjectLink_BarCode_Goods.ChildObjectId                     AS GoodsId
+                                    , MAX(COALESCE(ObjectFloat_MaxPrice.ValueData, 0))::TFloat   AS MaxPrice 
+                               FROM Object AS Object_BarCode
+                                    INNER JOIN ObjectLink AS ObjectLink_BarCode_Goods
+                                                          ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
+                                                         AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
+                                   -- INNER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = ObjectLink_BarCode_Goods.ChildObjectId
+
+                                    INNER JOIN ObjectFloat AS ObjectFloat_MaxPrice
+                                                           ON ObjectFloat_MaxPrice.ObjectId = Object_BarCode.Id
+                                                          AND ObjectFloat_MaxPrice.DescId = zc_ObjectFloat_BarCode_MaxPrice()
+                                                                           
+                               WHERE Object_BarCode.DescId = zc_Object_BarCode()
+                                 AND Object_BarCode.isErased = False
+                                 AND COALESCE(ObjectFloat_MaxPrice.ValueData, 0) > 0
+                               GROUP BY ObjectLink_BarCode_Goods.ChildObjectId)
      --  если стоит свойство подразделнеия не учитывать ТОП , тогда при расчете цены берем обычную наценку!!! 05,09,2019
      SELECT COUNT(lpInsertUpdate_MovementItemFloat
                         (zc_MIFloat_PriceSale(), MovementItem_Income_View.Id,
@@ -198,7 +207,8 @@ BEGIN
                                                ELSE CASE WHEN View_Price.Fix = TRUE AND View_Price.Price <> 0
                                                          THEN View_Price.Price ELSE Object_Goods_Retail.Price
                                                     END
-                                          END)                                                        -- Цена у товара (фиксированная)
+                                          END                                                      -- Цена у товара (фиксированная)
+                                        ,  tmpGoodsDiscount.MaxPrice)  
                          ))
          FROM MarginCondition, MovementItem_Income_View, MovementItem_Income
               LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem_Income.GoodsId
@@ -208,6 +218,8 @@ BEGIN
                          --            AND (View_Price.isTop  = TRUE OR View_Price.Fix = TRUE OR View_Price.PercentMarkup <> 0)
 
               LEFT JOIN PromoBonus ON PromoBonus.GoodsId = MovementItem_Income.GoodsId
+
+              LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsId = MovementItem_Income.GoodsId
 
          WHERE MarginCondition.MinPrice < MovementItem_Income.PriceWithVAT AND MovementItem_Income.PriceWithVAT <= MarginCondition.MaxPrice
            AND MovementItem_Income.GoodsId = MovementItem_Income_View.GoodsId

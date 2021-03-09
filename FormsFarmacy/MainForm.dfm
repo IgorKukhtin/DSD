@@ -4196,6 +4196,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Check_SP_ForDPSS: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1057#1055' '#1076#1083#1103' '#1044#1055#1057#1057
+      FormName = 'TReport_Check_SP_ForDPSSForm'
+      FormNameParam.Value = 'TReport_Check_SP_ForDPSSForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4330,6 +4341,9 @@ inherited MainForm: TMainForm
         end
         object N117: TMenuItem
           Action = actReport_CheckSP
+        end
+        object N281: TMenuItem
+          Action = actReport_Check_SP_ForDPSS
         end
         object N13031: TMenuItem
           Action = actReport_SaleSP

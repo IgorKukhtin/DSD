@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   System.Win.ComObj, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGridExportLink, cxGraphics, Math,
   cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore, System.RegularExpressions,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, cxPCdxBarPopupMenu, cxStyles,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, cxPCdxBarPopupMenu, cxStyles, System.IOUtils,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
   cxContainer, Vcl.ComCtrls, dxCore, cxSpinEdit, Vcl.StdCtrls,
   cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls,
@@ -63,9 +63,11 @@ type
   private
     { Private declarations }
 
-    SavePath: String;
-    UseId: Integer;
-    MakerId: Integer;
+    FSavePath: String;
+    FUseId: Integer;
+    FMakerId: Integer;
+    FOKPO: Integer;
+    FName: String;
 
     glRecipient: String;
 
@@ -200,11 +202,13 @@ procedure TMainForm.btnSendEmailClick(Sender: TObject);
   var ZipFile: TZipFile; Ini: TIniFile; I : Integer;
 begin
 
-  if not FileExists(SavePath + FileName[0, 0]) and
-     not FileExists(SavePath + FileName[1, 0]) and
-     not FileExists(SavePath + FileName[2, 0]) and
-     not FileExists(SavePath + FileName[3, 0]) and
-     not FileExists(SavePath + FileName[4, 0]) then Exit;
+  if not FileExists(FSavePath + FileName[0, 0]) and
+     not FileExists(FSavePath + FileName[1, 0]) and
+     not FileExists(FSavePath + FileName[2, 0]) and
+     not FileExists(FSavePath + FileName[3, 0]) and
+     not FileExists(FSavePath + FileName[4, 0]) then Exit;
+
+  ForceDirectories(FSavePath + 'Archive/');
 
   Add_Log('Начало отправки данных');
 
@@ -214,10 +218,10 @@ begin
     try
       for I := 0 to 4 do
       begin
-        if FileExists(SavePath + FileName[I, 0]) then
+        if FileExists(FSavePath + FileName[I, 0]) then
         begin
-          ZipFile.Open(SavePath + FileName [I, 1], zmWrite);
-          ZipFile.Add(SavePath + FileName[I, 0]);
+          ZipFile.Open(FSavePath + FileName [I, 1], zmWrite);
+          ZipFile.Add(FSavePath + FileName[I, 0]);
           ZipFile.Close;
         end;
       end;
@@ -238,9 +242,9 @@ begin
        qryMailParam.FieldByName('Mail_User').AsString,
        glRecipient,
        qryMailParam.FieldByName('Mail_From').AsString,
-       IntToStr(UseId) + ':' + FormatDateTime('YYYY-MM-DD', Now) + ':10:Не болей',
+       IntToStr(FOKPO) + ':' + FormatDateTime('YYYY-MM-DD', Now) + ':' + IntToStr(FUseId) + ':' + FName,
        '',
-       [SavePath + FileName[0, 1], SavePath + FileName[1, 1], SavePath + FileName[2, 1], SavePath + FileName[3, 1], SavePath + FileName[4, 1]]) then
+       [FSavePath + FileName[0, 1], FSavePath + FileName[1, 1], FSavePath + FileName[2, 1], FSavePath + FileName[3, 1], FSavePath + FileName[4, 1]]) then
   begin
 
     Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'ExportForFarmak.ini');
@@ -248,8 +252,8 @@ begin
       Ini.WriteDate('Options', 'Date', Date);
       DateStart.Date := Ini.ReadDate('Options', 'Date', Date);
 
-      Ini.WriteInteger('Options', 'UseId', UseId + 1);
-      UseId := Ini.ReadInteger('Options', 'UseId', 1);
+      Ini.WriteInteger('Options', 'UseId', FUseId + 1);
+      FUseId := Ini.ReadInteger('Options', 'UseId', 1);
 
     finally
       Ini.free;
@@ -258,8 +262,12 @@ begin
     try
       for I := 0 to 4 do
       begin
-        if FileExists(SavePath + FileName[I, 0]) then DeleteFile(SavePath + FileName[I, 0]);
-        if FileExists(SavePath + FileName[I, 1]) then DeleteFile(SavePath + FileName[I, 1]);
+        if FileExists(FSavePath + FileName[I, 0]) then
+        begin
+          TFile.Copy(FSavePath + FileName[I, 0], FSavePath + 'Archive/' + IntToStr(DayOfWeek(Date)) + '_' + FileName[I, 0], True);
+          if FileExists(FSavePath + FileName[I, 1]) then DeleteFile(FSavePath + FileName[I, 0]);
+        end;
+        if FileExists(FSavePath + FileName[I, 1]) then DeleteFile(FSavePath + FileName[I, 1]);
       end;
     except
       on E: Exception do
@@ -278,7 +286,7 @@ var
 begin
 
   qryReport_Upload.Close;
-  qryReport_Upload.SQL.Text := 'SELECT * FROM gpSelect_Farmak_CRMWhBalance (' + IntToStr(MakerId) + ', ''3'')';
+  qryReport_Upload.SQL.Text := 'SELECT * FROM gpSelect_Farmak_CRMWhBalance (' + IntToStr(FMakerId) + ', ''3'')';
   try
     qryReport_Upload.Open;
     OpenFormatSQL;
@@ -294,14 +302,14 @@ begin
   if not qryReport_Upload.Active then Exit;
   if qryUnit.IsEmpty then Exit;
   Add_Log('Начало выгрузки остатков');
-  if not ForceDirectories(SavePath) then
+  if not ForceDirectories(FSavePath) then
   Begin
     Add_Log('Не могу создать директорию выгрузки');
     exit;
   end;
 
   CRMWhBalance := NewCRMWhBalance;
-  CRMWhBalance.User := UseId;
+  CRMWhBalance.User := FOKPO;
   CRMWhBalance.Scheme.Request := 'SET';
   CRMWhBalance.Scheme.Name := 'CRMWhBalance';
 
@@ -315,7 +323,7 @@ begin
     end;
     with f.Add do
     begin
-      Name := 'WarehouseId';
+      Name := 'WarehoFUseId';
       Type_ := 'String';
     end;
     with f.Add do
@@ -355,7 +363,7 @@ begin
       with R.Add do
       begin
         F.Add(qryReport_Upload.FieldByName('PharmacyId').AsString);
-        F.Add(qryReport_Upload.FieldByName('WarehouseId').AsString);
+        F.Add(qryReport_Upload.FieldByName('WarehoFUseId').AsString);
         F.Add(FormatDateTime('YYYY-MM-DD''T''00:00:00', Date));
         D.Name := 'CRMWhBalanceLine';
         while not qryReport_Upload.Eof and (qryReport_Upload.FieldByName('PharmacyId').AsInteger = nID) do
@@ -373,7 +381,7 @@ begin
   end;
 
   CRMWhBalance.OwnerDocument.Encoding := 'windows-1251';
-  CRMWhBalance.OwnerDocument.SaveToFile(SavePath + FileName[2, 0]);
+  CRMWhBalance.OwnerDocument.SaveToFile(FSavePath + FileName[2, 0]);
 
 end;
 
@@ -383,7 +391,7 @@ var
 begin
 
   qryReport_Upload.Close;
-  qryReport_Upload.SQL.Text := 'SELECT * FROM gpSelect_Farmak_CRMDespatch (' + IntToStr(MakerId) + ', :Date' + ', ''3'')';
+  qryReport_Upload.SQL.Text := 'SELECT * FROM gpSelect_Farmak_CRMDespatch (' + IntToStr(FMakerId) + ', :Date' + ', ''3'')';
   qryReport_Upload.Params.ParamByName('Date').Value := DateStart.Date;
   try
     qryReport_Upload.Open;
@@ -400,14 +408,14 @@ begin
   if not qryReport_Upload.Active then Exit;
   if qryUnit.IsEmpty then Exit;
   Add_Log('Начало выгрузки расходов');
-  if not ForceDirectories(SavePath) then
+  if not ForceDirectories(FSavePath) then
   Begin
     Add_Log('Не могу создать директорию выгрузки');
     exit;
   end;
 
   CRMDespatch := NewCRMDespatch;
-  CRMDespatch.User := UseId;
+  CRMDespatch.User := FOKPO;
   CRMDespatch.Scheme.Request := 'SET';
   CRMDespatch.Scheme.Name := 'CRMDespatch';
 
@@ -426,7 +434,7 @@ begin
     end;
     with f.Add do
     begin
-      Name := 'WarehouseId';
+      Name := 'WarehoFUseId';
       Type_ := 'String';
     end;
     with f.Add do
@@ -487,7 +495,7 @@ begin
       begin
         F.Add(FormatDateTime('YYYY-MM-DD''T''00:00:00', qryReport_Upload.FieldByName('DocumentDate').AsDateTime));
         F.Add(qryReport_Upload.FieldByName('DocumentNumber').AsString);
-        F.Add(qryReport_Upload.FieldByName('WarehouseId').AsString);
+        F.Add(qryReport_Upload.FieldByName('WarehoFUseId').AsString);
         F.Add(qryReport_Upload.FieldByName('PharmacyId').AsString);
         F.Add(qryReport_Upload.FieldByName('PharmacistId').AsString);
         F.Add(qryReport_Upload.FieldByName('CompanyId').AsString);
@@ -509,7 +517,7 @@ begin
   end;
 
   CRMDespatch.OwnerDocument.Encoding := 'windows-1251';
-  CRMDespatch.OwnerDocument.SaveToFile(SavePath + FileName[4, 0]);end;
+  CRMDespatch.OwnerDocument.SaveToFile(FSavePath + FileName[4, 0]);end;
 
 procedure TMainForm.btnExecuteGoodsClick(Sender: TObject);
 var
@@ -517,7 +525,7 @@ var
 begin
 
   qryReport_Upload.Close;
-  qryReport_Upload.SQL.Text := 'SELECT * FROM gpSelect_Farmak_CRMWare (' + IntToStr(MakerId) + ', ''3'')';
+  qryReport_Upload.SQL.Text := 'SELECT * FROM gpSelect_Farmak_CRMWare (' + IntToStr(FMakerId) + ', ''3'')';
   try
     qryReport_Upload.Open;
     OpenFormatSQL;
@@ -533,14 +541,14 @@ begin
   if not qryReport_Upload.Active then Exit;
   if qryUnit.IsEmpty then Exit;
   Add_Log('Начало выгрузки таваров');
-  if not ForceDirectories(SavePath) then
+  if not ForceDirectories(FSavePath) then
   Begin
     Add_Log('Не могу создать директорию выгрузки');
     exit;
   end;
 
   CRMWare := NewCRMWare;
-  CRMWare.User := UseId;
+  CRMWare.User := FOKPO;
   CRMWare.Scheme.Request := 'SET';
   CRMWare.Scheme.Name := 'CRMWare';
 
@@ -584,7 +592,7 @@ begin
   end;
 
   CRMWare.OwnerDocument.Encoding := 'windows-1251';
-  CRMWare.OwnerDocument.SaveToFile(SavePath + FileName[1, 0]);
+  CRMWare.OwnerDocument.SaveToFile(FSavePath + FileName[1, 0]);
 end;
 
 procedure TMainForm.btnExecuteUnitClick(Sender: TObject);
@@ -593,7 +601,7 @@ var
 begin
   if qryUnit.IsEmpty then Exit;
   Add_Log('Начало выгрузки аптек');
-  if not ForceDirectories(SavePath) then
+  if not ForceDirectories(FSavePath) then
   Begin
     Add_Log('Не могу создать директорию выгрузки');
     exit;
@@ -602,7 +610,7 @@ begin
   // обычный отчет
 
   CRMPharmacy := NewCRMPharmacy;
-  CRMPharmacy.User := UseId;
+  CRMPharmacy.User := FOKPO;
   CRMPharmacy.Scheme.Request := 'SET';
   CRMPharmacy.Scheme.Name := 'CRMPharmacy';
 
@@ -656,7 +664,7 @@ begin
       with R.Add do
       begin
         F.Add(qryUnit.FieldByName('PharmacyId').AsString);
-        F.Add(qryUnit.FieldByName('CompanyId').AsString);
+        F.Add(IntToStr(FOKPO));
         F.Add(qryUnit.FieldByName('PharmacyName').AsString);
         F.Add(qryUnit.FieldByName('PharmacyAddress').AsString);
         D.Name := 'CRMPharmacist';
@@ -674,7 +682,7 @@ begin
   end;
 
   CRMPharmacy.OwnerDocument.Encoding := 'windows-1251';
-  CRMPharmacy.OwnerDocument.SaveToFile(SavePath + FileName[0, 0]);
+  CRMPharmacy.OwnerDocument.SaveToFile(FSavePath + FileName[0, 0]);
 end;
 
 procedure TMainForm.btnExecuteWhReceiptClick(Sender: TObject);
@@ -683,7 +691,7 @@ var
 begin
 
   qryReport_Upload.Close;
-  qryReport_Upload.SQL.Text := 'SELECT * FROM gpSelect_Farmak_CRMWhReceipt (' + IntToStr(MakerId) + ', :Date' + ', ''3'')';
+  qryReport_Upload.SQL.Text := 'SELECT * FROM gpSelect_Farmak_CRMWhReceipt (' + IntToStr(FMakerId) + ', :Date' + ', ''3'')';
   qryReport_Upload.Params.ParamByName('Date').Value := DateStart.Date;
   try
     qryReport_Upload.Open;
@@ -700,14 +708,14 @@ begin
   if not qryReport_Upload.Active then Exit;
   if qryUnit.IsEmpty then Exit;
   Add_Log('Начало выгрузки приходов');
-  if not ForceDirectories(SavePath) then
+  if not ForceDirectories(FSavePath) then
   Begin
     Add_Log('Не могу создать директорию выгрузки');
     exit;
   end;
 
   CRMWhReceipt := NewCRMWhReceipt;
-  CRMWhReceipt.User := UseId;
+  CRMWhReceipt.User := FOKPO;
   CRMWhReceipt.Scheme.Request := 'SET';
   CRMWhReceipt.Scheme.Name := 'CRMWhReceipt';
 
@@ -726,7 +734,7 @@ begin
     end;
     with f.Add do
     begin
-      Name := 'WarehouseId';
+      Name := 'WarehoFUseId';
       Type_ := 'String';
     end;
     with f.Add do
@@ -777,7 +785,7 @@ begin
       begin
         F.Add(FormatDateTime('YYYY-MM-DD''T''00:00:00', qryReport_Upload.FieldByName('DocumentDate').AsDateTime));
         F.Add(qryReport_Upload.FieldByName('DocumentNumber').AsString);
-        F.Add(qryReport_Upload.FieldByName('WarehouseId').AsString);
+        F.Add(qryReport_Upload.FieldByName('WarehoFUseId').AsString);
         F.Add(qryReport_Upload.FieldByName('PharmacyId').AsString);
         F.Add(qryReport_Upload.FieldByName('CompanyId').AsString);
         F.Add(qryReport_Upload.FieldByName('SrcCodeId').AsString);
@@ -797,7 +805,7 @@ begin
   end;
 
   CRMWhReceipt.OwnerDocument.Encoding := 'windows-1251';
-  CRMWhReceipt.OwnerDocument.SaveToFile(SavePath + FileName[3, 0]);
+  CRMWhReceipt.OwnerDocument.SaveToFile(FSavePath + FileName[3, 0]);
 
 end;
 
@@ -813,18 +821,24 @@ begin
   Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'ExportForFarmak.ini');
 
   try
-    SavePath := Trim(Ini.ReadString('Options', 'Path', ExtractFilePath(Application.ExeName)));
-    if SavePath[Length(SavePath)] <> '\' then SavePath := SavePath + '\';
-    Ini.WriteString('Options', 'Path', SavePath);
+    FSavePath := Trim(Ini.ReadString('Options', 'Path', ExtractFilePath(Application.ExeName)));
+    if FSavePath[Length(FSavePath)] <> '\' then FSavePath := FSavePath + '\';
+    Ini.WriteString('Options', 'Path', FSavePath);
 
-    UseId := Ini.ReadInteger('Options', 'UseId', 1);
-    Ini.WriteInteger('Options', 'UseId', UseId);
+    FUseId := Ini.ReadInteger('Options', 'UseId', 1);
+    Ini.WriteInteger('Options', 'UseId', FUseId);
 
-    MakerId := Ini.ReadInteger('Options', 'MakerId', 13648288);
-    Ini.WriteInteger('Options', 'MakerId', MakerId);
+    FMakerId := Ini.ReadInteger('Options', 'MakerId', 13648288);
+    Ini.WriteInteger('Options', 'MakerId', FMakerId);
 
     DateStart.Date := Ini.ReadDate('Options', 'Date', Date);
     Ini.WriteDate('Options', 'Date', DateStart.Date);
+
+    FOKPO := Ini.ReadInteger('Options', 'OKPO', 39244174);
+    Ini.WriteInteger('Options', 'OKPO', FOKPO);
+
+    FName := Ini.ReadString('Options', 'Name', 'ТОВ Не болей');
+    Ini.WriteString('Options', 'Name', FName);
 
     ZConnection1.Database := Ini.ReadString('Connect', 'DataBase', 'farmacy');
     Ini.WriteString('Connect', 'DataBase', ZConnection1.Database);
@@ -890,6 +904,7 @@ begin
     if not ((ParamCount >= 1) and (CompareText(ParamStr(1), 'manual') = 0)) then
     begin
       btnAll.Enabled := false;
+      btnExecuteUnit.Enabled := false;
       btnExecuteGoods.Enabled := false;
       btnExecuteBalance.Enabled := false;
       btnExecuteWhReceipt.Enabled := false;

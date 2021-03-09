@@ -682,6 +682,14 @@
             Options.Editing = False
             Width = 83
           end
+          object isLearnWeek: TcxGridDBColumn
+            Caption = #1059#1095#1072#1089'-'#1102#1090' '#1085#1072' '#1101#1090#1086#1081' '#1085#1077#1076#1077#1083#1077
+            DataBinding.FieldName = 'isLearnWeek'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
+          end
         end
       end
     end

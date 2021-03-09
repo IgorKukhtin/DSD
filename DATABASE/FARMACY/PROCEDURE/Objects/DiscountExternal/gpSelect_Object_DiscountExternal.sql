@@ -67,6 +67,8 @@ BEGIN
                                               INNER JOIN ObjectLink AS ObjectLink_DiscountExternal
                                                                     ON ObjectLink_DiscountExternal.ObjectId = ObjectLink_Unit.ObjectId
                                                                    AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountExternalTools_DiscountExternal()
+                                              INNER JOIN Object AS Object_DiscountExternalTools ON Object_DiscountExternalTools.ID = ObjectLink_Unit.ObjectId
+                                                               AND Object_DiscountExternalTools.isErased = False
                                          WHERE ObjectLink_Unit.DescId        = zc_ObjectLink_DiscountExternalTools_Unit()
                                            AND ObjectLink_Unit.ChildObjectId = vbUnitId
                                         ) AND Object_DiscountExternal.isErased = False
@@ -85,3 +87,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Object_DiscountExternal ('3')
+
+select * from gpSelect_Object_DiscountExternal( inSession := '3991136');

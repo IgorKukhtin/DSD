@@ -68,6 +68,7 @@ type
     GoodsGroupPromoName: TcxGridDBColumn;
     actReport_Reprice_PromoBonus: TdsdOpenForm;
     dxBarButton5: TdxBarButton;
+    isLearnWeek: TcxGridDBColumn;
   private
     { Private declarations }
   public

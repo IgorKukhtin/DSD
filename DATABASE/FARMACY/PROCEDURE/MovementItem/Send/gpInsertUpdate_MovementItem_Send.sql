@@ -244,6 +244,10 @@ BEGIN
                                                                      AND MovementItemContainer.MovementDescId = zc_Movement_Send() 
                                                                      AND MovementItemContainer.Amount > 0
                                                                      AND MovementItemContainer.OperDate >= CURRENT_DATE - (vHT_SUN::TVarChar||' day')::INTERVAL
+                                     INNER JOIN MovementBoolean AS MovementBoolean_SUN
+                                                                ON MovementBoolean_SUN.MovementId = MovementItemContainer.MovementId
+                                                               AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+                                                               AND MovementBoolean_SUN.ValueData = TRUE
                                 WHERE Container.WhereObjectId = vbFromId 
                                   AND Container.ObjectId = inGoodsId  
                                   AND Container.DescId = zc_Container_Count()
