@@ -454,11 +454,16 @@ CREATE OR REPLACE FUNCTION zc_Movement_PromoBonus() RETURNS Integer AS $BODY$BEG
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_PromoBonus', 'Корректировка цены реализации с учетом бонуса' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PromoBonus');
 
+CREATE OR REPLACE FUNCTION zc_Movement_ProfitLossResult() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_ProfitLossResult'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_ProfitLossResult', 'Корректировка цены реализации с учетом бонуса' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_ProfitLossResult');
+
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 09.03.21         * zc_Movement_ProfitLossResult
  16.02.21                                                                                     * zc_Movement_PromoBonus
  11.02.21                                                                                     * zc_Movement_FinalSUA
  31.11.20         * zc_Movement_ReestrIncome

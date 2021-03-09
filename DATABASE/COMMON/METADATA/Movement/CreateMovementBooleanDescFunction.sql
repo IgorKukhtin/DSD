@@ -277,10 +277,15 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_ConfirmedMarketing() RETURNS integ
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_ConfirmedMarketing', 'Подтверждено маркетингом'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_ConfirmedMarketing');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_isCorrective() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_isCorrective'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_isCorrective', 'Признак - корректировка предыдущего периода (да/нет)'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_isCorrective');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 09.03.21         * zc_MovementBoolean_isCorrective
  15.02.21                                                                                    * zc_MovementBoolean_ConfirmedMarketing
  01.02.21                                                                                    * zc_MovementBoolean_BanFiscalSale
  27.01.21         * zc_MovementBoolean_is20202
