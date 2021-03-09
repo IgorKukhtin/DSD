@@ -124,16 +124,9 @@ inherited ProfitLossResultForm: TProfitLossResultForm
           object AccountName: TcxGridDBColumn [1]
             Caption = #1057#1095#1077#1090
             DataBinding.FieldName = 'AccountName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actAssetChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 300
           end
           object Amount: TcxGridDBColumn [2]
@@ -153,6 +146,7 @@ inherited ProfitLossResultForm: TProfitLossResultForm
             Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 149
           end
           inherited colIsErased: TcxGridDBColumn
