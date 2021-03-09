@@ -1,26 +1,26 @@
 inherited ProfitLossResultForm: TProfitLossResultForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1087#1088#1080#1073#1099#1083#1080' ('#1092#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1088#1077#1079#1091#1083#1100#1090#1072#1090')>'
-  ClientHeight = 525
+  ClientHeight = 470
   ClientWidth = 694
   ExplicitWidth = 710
-  ExplicitHeight = 563
+  ExplicitHeight = 508
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 131
+    Top = 116
     Width = 694
-    Height = 394
+    Height = 354
     ExplicitTop = 126
     ExplicitWidth = 864
     ExplicitHeight = 399
-    ClientRectBottom = 394
+    ClientRectBottom = 354
     ClientRectRight = 694
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 864
       ExplicitHeight = 375
       inherited cxGrid: TcxGrid
         Width = 694
-        Height = 370
+        Height = 330
         ExplicitLeft = 176
         ExplicitTop = 216
         ExplicitWidth = 874
@@ -130,7 +130,7 @@ inherited ProfitLossResultForm: TProfitLossResultForm
             Width = 300
           end
           object Amount: TcxGridDBColumn [2]
-            Caption = #1050#1086#1083'-'#1074#1086
+            Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -144,6 +144,7 @@ inherited ProfitLossResultForm: TProfitLossResultForm
             DataBinding.FieldName = 'ContainerId'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.;-,0.; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -153,16 +154,32 @@ inherited ProfitLossResultForm: TProfitLossResultForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
+          object BranchName: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083
+            DataBinding.FieldName = 'BranchName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 109
+          end
+          object ProfitLossName: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1100#1103
+            DataBinding.FieldName = 'ProfitLossName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 149
+          end
         end
       end
     end
   end
   inherited DataPanel: TPanel
     Width = 694
-    Height = 105
+    Height = 90
     TabOrder = 3
-    ExplicitWidth = 864
-    ExplicitHeight = 105
+    ExplicitWidth = 694
+    ExplicitHeight = 90
     inherited edInvNumber: TcxTextEdit
       Left = 16
       Top = 24
@@ -221,10 +238,11 @@ inherited ProfitLossResultForm: TProfitLossResultForm
       Properties.Buttons = <
         item
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       TabOrder = 7
-      Width = 199
+      Width = 204
     end
     object cxLabel22: TcxLabel
       Left = 189
@@ -258,10 +276,23 @@ inherited ProfitLossResultForm: TProfitLossResultForm
   inherited ActionList: TActionList
     Left = 55
     Top = 303
+    object actRefreshMI: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = True
+    end
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    object actPrintNoGroup: TdsdPrintAction [8]
+    object actPrintNoGroup: TdsdPrintAction [9]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <
@@ -338,7 +369,7 @@ inherited ProfitLossResultForm: TProfitLossResultForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [14]
+    object actGoodsKindChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -794,6 +825,33 @@ inherited ProfitLossResultForm: TProfitLossResultForm
       ShortCut = 45
       ImageIndex = 0
     end
+    object actInsert_MI: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_MI
+      StoredProcList = <
+        item
+          StoredProc = spInsert_MI
+        end>
+      Caption = 'actInsert_MI'
+    end
+    object macInsert_MI: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsert_MI
+        end
+        item
+          Action = actRefreshMI
+        end>
+      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1089#1090#1088#1086#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1087#1086#1083#1085#1077#1085#1099
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1089#1090#1088#1086#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1089#1090#1088#1086#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 27
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -869,14 +927,6 @@ inherited ProfitLossResultForm: TProfitLossResultForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertRecordGoods'
-        end
-        item
-          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -886,6 +936,18 @@ inherited ProfitLossResultForm: TProfitLossResultForm
         item
           Visible = True
           ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -941,7 +1003,7 @@ inherited ProfitLossResultForm: TProfitLossResultForm
       Category = 0
     end
     object bbInsertRecordGoods: TdxBarButton
-      Action = InsertRecordGoods
+      Action = macInsert_MI
       Category = 0
     end
   end
@@ -1451,6 +1513,7 @@ inherited ProfitLossResultForm: TProfitLossResultForm
   object GuidesAccount: TdsdGuides
     KeyField = 'Id'
     LookupControl = edAccount
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TAccount_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1474,7 +1537,32 @@ inherited ProfitLossResultForm: TProfitLossResultForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 336
-    Top = 8
+    Left = 288
+    Top = 16
+  end
+  object spInsert_MI: TdsdStoredProc
+    StoredProcName = 'gpInsert_MI_ProfitLossResult'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAccountId'
+        Value = ''
+        Component = GuidesAccount
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 250
+    Top = 304
   end
 end

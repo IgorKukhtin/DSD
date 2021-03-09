@@ -60,6 +60,12 @@ type
     bbInsertRecordGoods: TdxBarButton;
     ContainerId: TcxGridDBColumn;
     cbisCorrective: TcxCheckBox;
+    spInsert_MI: TdsdStoredProc;
+    actInsert_MI: TdsdExecStoredProc;
+    macInsert_MI: TMultiAction;
+    actRefreshMI: TdsdDataSetRefresh;
+    ProfitLossName: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
   private
     { Private declarations }
   public

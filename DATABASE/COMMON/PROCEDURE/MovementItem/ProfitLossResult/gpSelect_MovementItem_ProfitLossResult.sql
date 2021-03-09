@@ -10,6 +10,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ProfitLossResult(
 RETURNS TABLE (Id Integer, AccountId Integer, AccountCode Integer, AccountName TVarChar
              , ContainerId TFloat
              , Amount TFloat
+             , BranchId Integer, BranchName TVarChar
+             , ProfitLossId Integer, ProfitLossName TVarChar
              , isErased Boolean
               )
 AS
@@ -32,6 +34,11 @@ BEGIN
 
            , MIFloat_ContainerId.ValueData :: TFloat AS ContainerId
            , MovementItem.Amount           :: TFloat AS Amount
+           
+           , Object_Branch.Id            :: Integer  AS BranchId
+           , Object_Branch.ValueData     :: TVarChar AS BranchName
+           , Object_ProfitLoss.Id        :: Integer  AS ProfitLossId
+           , Object_ProfitLoss.ValueData :: TVarChar AS ProfitLossName
            , MovementItem.isErased                   AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -43,7 +50,17 @@ BEGIN
              
             LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
                                         ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
-                                       AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId() 
+                                       AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+            
+            LEFT JOIN ContainerLinkObject AS CLO_ProfitLoss
+                                          ON CLO_ProfitLoss.ContainerId = CAST (MIFloat_ContainerId.ValueData AS NUMERIC (16,0))
+                                         AND CLO_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss()
+            LEFT JOIN Object AS Object_ProfitLoss ON Object_ProfitLoss.Id = CLO_ProfitLoss.ObjectId
+
+            LEFT JOIN ContainerLinkObject AS CLO_Branch
+                                          ON CLO_Branch.ContainerId = CAST (MIFloat_ContainerId.ValueData AS NUMERIC (16,0))
+                                         AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
+            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = CLO_Branch.ObjectId
             ;
 
 END;

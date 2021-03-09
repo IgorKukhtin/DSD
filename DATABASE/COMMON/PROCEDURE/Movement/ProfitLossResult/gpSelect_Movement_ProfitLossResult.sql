@@ -42,7 +42,7 @@ BEGIN
                                JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate 
                                             AND Movement.DescId = zc_Movement_ProfitLossResult()
                                             AND Movement.StatusId = tmpStatus.StatusId
-                               JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+                               --JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
                          )
 
 
