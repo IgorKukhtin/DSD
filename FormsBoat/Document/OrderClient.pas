@@ -247,6 +247,10 @@ type
     cxGridLevel1: TcxGridLevel;
     Panel3: TPanel;
     cxSplitter1: TcxSplitter;
+    cxLabel17: TcxLabel;
+    edInsertDate: TcxDateEdit;
+    cxLabel18: TcxLabel;
+    edInsertName: TcxButtonEdit;
   private
   public
   end;

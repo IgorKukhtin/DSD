@@ -3,7 +3,7 @@ object OrderClientForm: TOrderClientForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'>'
   ClientHeight = 497
-  ClientWidth = 1209
+  ClientWidth = 1349
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,12 @@ object OrderClientForm: TOrderClientForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1209
+    Width = 1349
     Height = 97
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 1209
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -252,37 +253,75 @@ object OrderClientForm: TOrderClientForm
       Top = 5
       Caption = 'CIN Nr.'
     end
+    object cxLabel17: TcxLabel
+      Left = 1198
+      Top = 5
+      Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
+    end
+    object edInsertDate: TcxDateEdit
+      Left = 1198
+      Top = 23
+      EditValue = 42132d
+      Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+      Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+      Properties.Kind = ckDateTime
+      Properties.ReadOnly = True
+      TabOrder = 30
+      Width = 146
+    end
+    object cxLabel18: TcxLabel
+      Left = 1198
+      Top = 45
+      Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+    end
+    object edInsertName: TcxButtonEdit
+      Left = 1198
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 32
+      Width = 146
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 123
-    Width = 1209
+    Width = 1349
     Height = 374
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 1209
     ClientRectBottom = 374
-    ClientRectRight = 1209
+    ClientRectRight = 1349
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 1209
       object Panel1: TPanel
         Left = 0
         Top = 0
-        Width = 1209
+        Width = 1349
         Height = 165
         Align = alClient
         Caption = 'Panel1'
         TabOrder = 0
+        ExplicitWidth = 1209
         object cxGrid: TcxGrid
           Left = 1
           Top = 1
-          Width = 1207
+          Width = 1347
           Height = 163
           Align = alClient
           TabOrder = 0
+          ExplicitWidth = 1207
           object cxGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
@@ -559,38 +598,42 @@ object OrderClientForm: TOrderClientForm
       object cxTopSplitter: TcxSplitter
         Left = 0
         Top = 165
-        Width = 1209
+        Width = 1349
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel4
+        ExplicitWidth = 1209
       end
       object Panel4: TPanel
         Left = 0
         Top = 173
-        Width = 1209
+        Width = 1349
         Height = 177
         Align = alBottom
         Caption = 'Panel4'
         TabOrder = 2
+        ExplicitWidth = 1209
         object PanelProdColorItems: TPanel
           Left = 1
           Top = 1
-          Width = 607
+          Width = 747
           Height = 175
           Align = alClient
           BevelEdges = [beLeft]
           BevelOuter = bvNone
           TabOrder = 0
+          ExplicitWidth = 607
           object cxGridProdColorItems: TcxGrid
             Left = 0
             Top = 17
-            Width = 607
+            Width = 747
             Height = 158
             Align = alClient
             TabOrder = 0
             LookAndFeel.NativeStyle = True
             LookAndFeel.SkinName = 'UserSkin'
+            ExplicitWidth = 607
             object cxGridDBTableViewProdColorItems: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = ProdColorItemsDS
@@ -1005,17 +1048,18 @@ object OrderClientForm: TOrderClientForm
           object Panel2: TPanel
             Left = 0
             Top = 0
-            Width = 607
+            Width = 747
             Height = 17
             Align = alTop
             Caption = 'Items Boat Structure'
             Color = clLime
             ParentBackground = False
             TabOrder = 1
+            ExplicitWidth = 607
           end
         end
         object PanelProdOptItems: TPanel
-          Left = 616
+          Left = 756
           Top = 1
           Width = 592
           Height = 175
@@ -1023,6 +1067,7 @@ object OrderClientForm: TOrderClientForm
           BevelEdges = [beLeft]
           BevelOuter = bvNone
           TabOrder = 1
+          ExplicitLeft = 616
           object cxGridProdOptItems: TcxGrid
             Left = 0
             Top = 17
@@ -1492,12 +1537,13 @@ object OrderClientForm: TOrderClientForm
           end
         end
         object cxSplitter1: TcxSplitter
-          Left = 608
+          Left = 748
           Top = 1
           Width = 8
           Height = 175
           AlignSplitter = salRight
           Control = PanelProdOptItems
+          ExplicitLeft = 608
         end
       end
     end
@@ -2884,6 +2930,20 @@ object OrderClientForm: TOrderClientForm
         Value = Null
         Component = edCIN
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsertName'
+        Value = Null
+        Component = edInsertName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsertDate'
+        Value = Null
+        Component = edInsertDate
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     PackSize = 1

@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
              , ProductId Integer, ProductName TVarChar, BrandId Integer, BrandName TVarChar, CIN TVarChar
              , Comment TVarChar
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
+             , InsertId Integer, InsertName TVarChar, InsertDate TDateTime
               )
 AS
 $BODY$
@@ -57,10 +58,16 @@ BEGIN
              , 0                         AS MovementId_Invoice
              , CAST ('' as TVarChar)     AS InvNumber_Invoice
              , CAST ('' as TVarChar)     AS Comment_Invoice
+           
+             , Object_Insert.Id                AS InsertId
+             , Object_Insert.ValueData         AS InsertName
+             , CURRENT_TIMESTAMP  ::TDateTime  AS InsertDate
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
                                      ON ObjectFloat_TaxKind_Value.ObjectId = zc_Enum_TaxKind_Basis()
-                                    AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value();
+                                    AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
+               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
+          ;
 
      ELSE
 
@@ -96,6 +103,10 @@ BEGIN
           , Movement_Invoice.Id                       AS MovementId_Invoice
           , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice
           , MovementString_Comment_Invoice.ValueData AS Comment_Invoice
+
+          , Object_Insert.Id                     AS InsertId
+          , Object_Insert.ValueData              AS InsertName
+          , MovementDate_Insert.ValueData        AS InsertDate
 
         FROM Movement AS Movement_OrderClient 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_OrderClient.StatusId
@@ -152,6 +163,14 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment_Invoice
                                      ON MovementString_Comment_Invoice.MovementId = Movement_Invoice.Id
                                     AND MovementString_Comment_Invoice.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementDate AS MovementDate_Insert
+                                   ON MovementDate_Insert.MovementId = Movement_OrderClient.Id
+                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+            LEFT JOIN MovementLinkObject AS MLO_Insert
+                                         ON MLO_Insert.MovementId = Movement_OrderClient.Id
+                                        AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
 
             --
             LEFT JOIN ObjectString AS ObjectString_CIN
