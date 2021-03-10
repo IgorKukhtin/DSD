@@ -14,53 +14,44 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, dsdGuides, cxButtonEdit, cxCurrencyEdit, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, cxPCdxBarPopupMenu,
-  dxSkinsdxBarPainter, cxCheckBox;
+  dxSkinsdxBarPainter, cxCheckBox, dsdExportToXLSAction;
 
 type
   TReport_Check_SP_ForDPSSForm = class(TAncestorReportForm)
     dxBarButton1: TdxBarButton;
     IntenalSPName: TcxGridDBColumn;
-    actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     BrandSPName: TcxGridDBColumn;
     PriceSP: TcxGridDBColumn;
-    actRefreshIsPartion: TdsdDataSetRefresh;
     CountSP: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    actRefreshPartionPrice: TdsdDataSetRefresh;
     KindOutSPName: TcxGridDBColumn;
-    actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     NumLine: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edJuridical: TcxButtonEdit;
     GuidesJuridical: TdsdGuides;
-    actPrint_152: TdsdPrintAction;
     bbPrint1: TdxBarButton;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
-    actPrintInvoice: TdsdPrintAction;
-    actSaveMovement: TdsdExecStoredProc;
-    macPrintInvoice: TMultiAction;
     bbPrintInvoice: TdxBarButton;
-    actGetReportNameSP: TdsdExecStoredProc;
-    mactPrint_Pact: TMultiAction;
-    actPrintPact: TdsdPrintAction;
     FormParams: TdsdFormParams;
     bbPrint_Pact: TdxBarButton;
-    actPrintDepartment: TdsdPrintAction;
-    actPrintDepartment_152: TdsdPrintAction;
-    macPrintInvoiceDepartment: TMultiAction;
-    actPrintInvoiceDepartment: TdsdPrintAction;
     bbPrintDepartment: TdxBarButton;
     bbPrintDepartment_152: TdxBarButton;
     bbPrintInvoiceDepartment: TdxBarButton;
-    actPrintPactDepartment: TdsdPrintAction;
-    mactPrint_PactDepartment: TMultiAction;
     bbPrint_PactDepartment: TdxBarButton;
-    actGetReportNameSPDepartmen: TdsdExecStoredProc;
     Markup: TcxGridDBColumn;
     PriceWithVAT: TcxGridDBColumn;
+    actExecForDPSS: TdsdExecStoredProc;
+    actPrintForDPSS: TdsdExportToXLS;
+    dxBarButton2: TdxBarButton;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrintItem: TdsdStoredProc;
+    spSelectPrintHeader: TdsdStoredProc;
+    PrintSignCDS: TClientDataSet;
+    spSelectPrintSign: TdsdStoredProc;
   private
     { Private declarations }
   public

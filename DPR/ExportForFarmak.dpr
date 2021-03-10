@@ -7,7 +7,8 @@ uses
   Farmak_CRMWareXML in '..\FormsFarmacy\MainUnitService\ExportForFarmak\Farmak\Farmak_CRMWareXML.pas',
   Farmak_CRMWhBalanceXML in '..\FormsFarmacy\MainUnitService\ExportForFarmak\Farmak\Farmak_CRMWhBalanceXML.pas',
   Farmak_CRMDespatchXML in '..\FormsFarmacy\MainUnitService\ExportForFarmak\Farmak\Farmak_CRMDespatchXML.pas',
-  Farmak_CRMWhReceiptXML in '..\FormsFarmacy\MainUnitService\ExportForFarmak\Farmak\Farmak_CRMWhReceiptXML.pas';
+  Farmak_CRMWhReceiptXML in '..\FormsFarmacy\MainUnitService\ExportForFarmak\Farmak\Farmak_CRMWhReceiptXML.pas',
+  Farmak_CRMClientXML in '..\FormsFarmacy\MainUnitService\ExportForFarmak\Farmak\Farmak_CRMClientXML.pas';
 
 {$R *.res}
 

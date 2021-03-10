@@ -54,6 +54,7 @@ BEGIN
                                                                 AND MIContainer.OperDate >= DATE_TRUNC ('DAY',inDateStart) - INTERVAL '7 DAY'
                                                                 AND MIContainer.OperDate <= CURRENT_DATE
                                                                 AND MIContainer.MovementDescId  = zc_Movement_Income()
+                                                                AND MIContainer.Amount <> 0
 
                             WHERE Container.DescId = zc_Container_Count())
          , tmpObjectHistory AS (SELECT *
@@ -135,5 +136,4 @@ $BODY$
 */
 
 -- тест
---
-SELECT * FROM gpSelect_Farmak_CRMWhReceipt(13648288 , '01.03.2021', '3')
+-- SELECT * FROM gpSelect_Farmak_CRMWhReceipt(13648288 , '01.03.2021', '3')

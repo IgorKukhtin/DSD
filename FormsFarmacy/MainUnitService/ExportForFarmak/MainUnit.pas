@@ -50,6 +50,8 @@ type
     btnExecuteDespatch: TButton;
     qryMailParam: TZQuery;
     DateStart: TcxDateEdit;
+    btnExecuteClient: TButton;
+    Label1: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnSendEmailClick(Sender: TObject);
@@ -60,6 +62,7 @@ type
     procedure btnExecuteBalanceClick(Sender: TObject);
     procedure btnExecuteWhReceiptClick(Sender: TObject);
     procedure btnExecuteDespatchClick(Sender: TObject);
+    procedure btnExecuteClientClick(Sender: TObject);
   private
     { Private declarations }
 
@@ -92,9 +95,10 @@ implementation
 {$R *.dfm}
 
 uses Farmak_CRMPharmacyXML, Farmak_CRMWareXML, Farmak_CRMWhBalanceXML,
-     Farmak_CRMDespatchXML, Farmak_CRMWhReceiptXML;
+     Farmak_CRMDespatchXML, Farmak_CRMWhReceiptXML, Farmak_CRMClientXML;
 
-const FileName : array [0..4, 0..1] of string = (('CRMPharmacy.xml', 'CRMPharmacy.zip'),
+const FileName : array [0..5, 0..1] of string = (('CRMClient.xml', 'CRMClient.zip'),
+                                                 ('CRMPharmacy.xml', 'CRMPharmacy.zip'),
                                                  ('CRMWare.xml', 'CRMWare.zip'),
                                                  ('CRMWhBalance.xml', 'CRMWhBalance.zip'),
                                                  ('CRMWhReceipt.xml', 'CRMWhReceipt.zip'),
@@ -170,6 +174,9 @@ begin
       Add_Log('');
       Add_Log('---- Отправка всех данных');
 
+      btnExecuteClientClick(Nil);
+      Application.ProcessMessages;
+
       // Экспорт аптек
       btnExecuteUnitClick(Nil);
       Application.ProcessMessages;
@@ -206,7 +213,8 @@ begin
      not FileExists(FSavePath + FileName[1, 0]) and
      not FileExists(FSavePath + FileName[2, 0]) and
      not FileExists(FSavePath + FileName[3, 0]) and
-     not FileExists(FSavePath + FileName[4, 0]) then Exit;
+     not FileExists(FSavePath + FileName[4, 0]) and
+     not FileExists(FSavePath + FileName[5, 0]) then Exit;
 
   ForceDirectories(FSavePath + 'Archive/');
 
@@ -216,7 +224,7 @@ begin
     ZipFile := TZipFile.Create;
 
     try
-      for I := 0 to 4 do
+      for I := 0 to 5 do
       begin
         if FileExists(FSavePath + FileName[I, 0]) then
         begin
@@ -244,7 +252,8 @@ begin
        qryMailParam.FieldByName('Mail_From').AsString,
        IntToStr(FOKPO) + ':' + FormatDateTime('YYYY-MM-DD', Now) + ':' + IntToStr(FUseId) + ':' + FName,
        '',
-       [FSavePath + FileName[0, 1], FSavePath + FileName[1, 1], FSavePath + FileName[2, 1], FSavePath + FileName[3, 1], FSavePath + FileName[4, 1]]) then
+       [FSavePath + FileName[0, 1], FSavePath + FileName[1, 1], FSavePath + FileName[2, 1],
+        FSavePath + FileName[3, 1], FSavePath + FileName[4, 1], FSavePath + FileName[5, 1]]) then
   begin
 
     Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'ExportForFarmak.ini');
@@ -260,7 +269,7 @@ begin
     end;
 
     try
-      for I := 0 to 4 do
+      for I := 0 to 5 do
       begin
         if FileExists(FSavePath + FileName[I, 0]) then
         begin
@@ -323,7 +332,7 @@ begin
     end;
     with f.Add do
     begin
-      Name := 'WarehoFUseId';
+      Name := 'WarehouseId';
       Type_ := 'String';
     end;
     with f.Add do
@@ -363,7 +372,7 @@ begin
       with R.Add do
       begin
         F.Add(qryReport_Upload.FieldByName('PharmacyId').AsString);
-        F.Add(qryReport_Upload.FieldByName('WarehoFUseId').AsString);
+        F.Add(qryReport_Upload.FieldByName('WarehouseId').AsString);
         F.Add(FormatDateTime('YYYY-MM-DD''T''00:00:00', Date));
         D.Name := 'CRMWhBalanceLine';
         while not qryReport_Upload.Eof and (qryReport_Upload.FieldByName('PharmacyId').AsInteger = nID) do
@@ -381,8 +390,78 @@ begin
   end;
 
   CRMWhBalance.OwnerDocument.Encoding := 'windows-1251';
-  CRMWhBalance.OwnerDocument.SaveToFile(FSavePath + FileName[2, 0]);
+  CRMWhBalance.OwnerDocument.SaveToFile(FSavePath + FileName[3, 0]);
 
+end;
+
+procedure TMainForm.btnExecuteClientClick(Sender: TObject);
+var
+  CRMClient: IXMLCRMClientType;
+begin
+
+  qryReport_Upload.Close;
+  qryReport_Upload.SQL.Text := 'SELECT * FROM gpSelect_Farmak_CRMClient (' + IntToStr(FMakerId) + ', ''3'')';
+  try
+    qryReport_Upload.Open;
+    OpenFormatSQL;
+  except
+    on E: Exception do
+    begin
+      Add_Log('Ошибка открытия списка клиентов: ' + E.Message);
+      Close;
+      Exit;
+    end;
+  end;
+
+  if not qryReport_Upload.Active then Exit;
+  if qryUnit.IsEmpty then Exit;
+  Add_Log('Начало выгрузки клиентов');
+  if not ForceDirectories(FSavePath) then
+  Begin
+    Add_Log('Не могу создать директорию выгрузки');
+    exit;
+  end;
+
+  CRMClient := NewCRMClient;
+  CRMClient.User := FOKPO;
+  CRMClient.Scheme.Request := 'SET';
+  CRMClient.Scheme.Name := 'CRMClient';
+
+  with CRMClient.Scheme.Data.S.D do
+  begin
+    Name := 'CRMClient';
+    with f.Add do
+    begin
+      Name := 'CompanyId';
+      Type_ := 'String';
+    end;
+    with f.Add do
+    begin
+      Name := 'CompanyName';
+      Type_ := 'String';
+    end;
+    with f.Add do
+    begin
+      Name := 'CompanyAddress';
+      Type_ := 'String';
+    end;
+  end;
+
+  CRMClient.Scheme.Data.O.D.Name := 'CRMClient';
+  qryReport_Upload.First;
+  while not qryReport_Upload.Eof do
+  begin
+    with CRMClient.Scheme.Data.O.D.R.Add do
+    begin
+      Add(qryReport_Upload.FieldByName('CompanyId').AsString);
+      Add(qryReport_Upload.FieldByName('CompanyName').AsString);
+      Add(qryReport_Upload.FieldByName('CompanyAddress').AsString);
+    end;
+    qryReport_Upload.Next;
+  end;
+
+  CRMClient.OwnerDocument.Encoding := 'windows-1251';
+  CRMClient.OwnerDocument.SaveToFile(FSavePath + FileName[0, 0]);
 end;
 
 procedure TMainForm.btnExecuteDespatchClick(Sender: TObject);
@@ -434,7 +513,7 @@ begin
     end;
     with f.Add do
     begin
-      Name := 'WarehoFUseId';
+      Name := 'WarehouseId';
       Type_ := 'String';
     end;
     with f.Add do
@@ -495,7 +574,7 @@ begin
       begin
         F.Add(FormatDateTime('YYYY-MM-DD''T''00:00:00', qryReport_Upload.FieldByName('DocumentDate').AsDateTime));
         F.Add(qryReport_Upload.FieldByName('DocumentNumber').AsString);
-        F.Add(qryReport_Upload.FieldByName('WarehoFUseId').AsString);
+        F.Add(qryReport_Upload.FieldByName('WarehouseId').AsString);
         F.Add(qryReport_Upload.FieldByName('PharmacyId').AsString);
         F.Add(qryReport_Upload.FieldByName('PharmacistId').AsString);
         F.Add(qryReport_Upload.FieldByName('CompanyId').AsString);
@@ -517,7 +596,7 @@ begin
   end;
 
   CRMDespatch.OwnerDocument.Encoding := 'windows-1251';
-  CRMDespatch.OwnerDocument.SaveToFile(FSavePath + FileName[4, 0]);end;
+  CRMDespatch.OwnerDocument.SaveToFile(FSavePath + FileName[5, 0]);end;
 
 procedure TMainForm.btnExecuteGoodsClick(Sender: TObject);
 var
@@ -592,7 +671,7 @@ begin
   end;
 
   CRMWare.OwnerDocument.Encoding := 'windows-1251';
-  CRMWare.OwnerDocument.SaveToFile(FSavePath + FileName[1, 0]);
+  CRMWare.OwnerDocument.SaveToFile(FSavePath + FileName[2, 0]);
 end;
 
 procedure TMainForm.btnExecuteUnitClick(Sender: TObject);
@@ -682,7 +761,7 @@ begin
   end;
 
   CRMPharmacy.OwnerDocument.Encoding := 'windows-1251';
-  CRMPharmacy.OwnerDocument.SaveToFile(FSavePath + FileName[0, 0]);
+  CRMPharmacy.OwnerDocument.SaveToFile(FSavePath + FileName[1, 0]);
 end;
 
 procedure TMainForm.btnExecuteWhReceiptClick(Sender: TObject);
@@ -734,7 +813,7 @@ begin
     end;
     with f.Add do
     begin
-      Name := 'WarehoFUseId';
+      Name := 'WarehouseId';
       Type_ := 'String';
     end;
     with f.Add do
@@ -785,7 +864,7 @@ begin
       begin
         F.Add(FormatDateTime('YYYY-MM-DD''T''00:00:00', qryReport_Upload.FieldByName('DocumentDate').AsDateTime));
         F.Add(qryReport_Upload.FieldByName('DocumentNumber').AsString);
-        F.Add(qryReport_Upload.FieldByName('WarehoFUseId').AsString);
+        F.Add(qryReport_Upload.FieldByName('WarehouseId').AsString);
         F.Add(qryReport_Upload.FieldByName('PharmacyId').AsString);
         F.Add(qryReport_Upload.FieldByName('CompanyId').AsString);
         F.Add(qryReport_Upload.FieldByName('SrcCodeId').AsString);
@@ -805,7 +884,7 @@ begin
   end;
 
   CRMWhReceipt.OwnerDocument.Encoding := 'windows-1251';
-  CRMWhReceipt.OwnerDocument.SaveToFile(FSavePath + FileName[3, 0]);
+  CRMWhReceipt.OwnerDocument.SaveToFile(FSavePath + FileName[4, 0]);
 
 end;
 
@@ -904,6 +983,7 @@ begin
     if not ((ParamCount >= 1) and (CompareText(ParamStr(1), 'manual') = 0)) then
     begin
       btnAll.Enabled := false;
+      btnExecuteClient.Enabled := false;
       btnExecuteUnit.Enabled := false;
       btnExecuteGoods.Enabled := false;
       btnExecuteBalance.Enabled := false;

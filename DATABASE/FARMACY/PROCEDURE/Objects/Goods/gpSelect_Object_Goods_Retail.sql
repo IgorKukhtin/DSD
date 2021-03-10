@@ -45,6 +45,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , isSupplementSUN1 boolean
              , isExceptionUKTZED boolean
              , isPresent boolean
+             , isOnlySP boolean
              , SummaWages TFloat, PercentWages TFloat, SummaWagesStore TFloat, PercentWagesStore TFloat
              , UnitSupplementSUN1OutId Integer, UnitSupplementSUN1OutName TVarChar
               ) AS
@@ -341,6 +342,7 @@ BEGIN
            , Object_Goods_Main.isSupplementSUN1                                  AS isSupplementSUN1
            , Object_Goods_Main.isExceptionUKTZED                                 AS isExceptionUKTZED
            , Object_Goods_Main.isPresent                                         AS isPresent
+           , Object_Goods_Main.isOnlySP                                          AS isOnlySP
            , Object_Goods_Retail.SummaWages                                      AS SummaWages
            , Object_Goods_Retail.PercentWages                                    AS PercentWages
            , Object_Goods_Retail.SummaWagesStore                                 AS SummaWagesStore

@@ -860,10 +860,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Hardware_BarcodeScanner() RETURNS In
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Hardware(), 'zc_ObjectBoolean_Hardware_BarcodeScanner', 'Сканнер ш/к' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Hardware_BarcodeScanner');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Goods_OnlySP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_OnlySP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Goods_OnlySP', 'Только для СП "Доступные лики"' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_OnlySP');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 10.03.21                                                                                                          * zc_ObjectBoolean_Goods_OnlySP
  04.02.21                                                                                                          * zc_ObjectBoolean_Hardware_...
  02.02.21                                                                                                          * zc_ObjectBoolean_Contract_MorionCodeLoad, zc_ObjectBoolean_Contract_BarCodeLoad
  31.01.21                                                                                                          * zc_ObjectBoolean_Unit_CheckUKTZED
