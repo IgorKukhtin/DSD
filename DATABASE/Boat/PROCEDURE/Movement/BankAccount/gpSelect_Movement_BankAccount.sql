@@ -33,6 +33,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDa
              , InvNumberPartner_Invoice TVarChar
              , ReceiptNumber_Invoice TVarChar
              , Comment_Invoice TVarChar
+             , InsertName TVarChar, InsertDate TDateTime
+             , UpdateName TVarChar, UpdateDate TDateTime
               )
 AS
 $BODY$
@@ -175,7 +177,10 @@ BEGIN
            , tmpInvoice_Params.ReceiptNumber       AS ReceiptNumber_Invoice
            , tmpInvoice_Params.Comment             AS Comment_Invoice
            
-
+           , Object_Insert.ValueData              AS InsertName
+           , MovementDate_Insert.ValueData        AS InsertDate
+           , Object_Update.ValueData              AS UpdateName
+           , MovementDate_Update.ValueData        AS UpdateDate
        FROM tmpMovement
             LEFT JOIN Movement ON Movement.id = tmpMovement.Id
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpMovement.StatusId
@@ -188,6 +193,22 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId = Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+
+            LEFT JOIN MovementDate AS MovementDate_Insert
+                                   ON MovementDate_Insert.MovementId = Movement.Id
+                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+            LEFT JOIN MovementLinkObject AS MLO_Insert
+                                         ON MLO_Insert.MovementId = Movement.Id
+                                        AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
+
+            LEFT JOIN MovementDate AS MovementDate_Update
+                                   ON MovementDate_Update.MovementId = Movement.Id
+                                  AND MovementDate_Update.DescId = zc_MovementDate_Update()
+            LEFT JOIN MovementLinkObject AS MLO_Update
+                                         ON MLO_Update.MovementId = Movement.Id
+                                        AND MLO_Update.DescId = zc_MovementLinkObject_Update()
+            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 
@@ -206,8 +227,8 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
                                  ON ObjectLink_BankAccount_Bank.ObjectId = Object_BankAccount.Id
                                 AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
-            LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
-            
+            LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId  
+
             -- из док. —чет
             LEFT JOIN tmpInvoice_Params ON tmpInvoice_Params.MovementId = Movement_Invoice.Id
 

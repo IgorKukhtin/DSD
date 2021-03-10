@@ -10,92 +10,31 @@ inherited ProfitLossResultForm: TProfitLossResultForm
     Top = 116
     Width = 694
     Height = 354
-    ExplicitTop = 126
-    ExplicitWidth = 864
-    ExplicitHeight = 399
+    ExplicitTop = 116
+    ExplicitWidth = 694
+    ExplicitHeight = 354
     ClientRectBottom = 354
     ClientRectRight = 694
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 864
-      ExplicitHeight = 375
+      ExplicitWidth = 694
+      ExplicitHeight = 330
       inherited cxGrid: TcxGrid
         Width = 694
         Height = 330
-        ExplicitLeft = 176
-        ExplicitTop = 216
-        ExplicitWidth = 874
-        ExplicitHeight = 370
+        ExplicitWidth = 694
+        ExplicitHeight = 330
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
               Column = Amount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
               Column = Amount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = #1057#1090#1088#1086#1082': ,0'
@@ -107,6 +46,7 @@ inherited ProfitLossResultForm: TProfitLossResultForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsView.GroupByBox = True
           OptionsView.GroupSummaryLayout = gslStandard
           Styles.Content = nil
           Styles.Inactive = nil
@@ -287,6 +227,7 @@ inherited ProfitLossResultForm: TProfitLossResultForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     inherited actRefresh: TdsdDataSetRefresh
@@ -1285,8 +1226,8 @@ inherited ProfitLossResultForm: TProfitLossResultForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProfitLossResult_SetErased'
-    Left = 598
-    Top = 400
+    Left = 654
+    Top = 264
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProfitLossResult_SetUnErased'
