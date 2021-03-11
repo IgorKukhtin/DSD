@@ -221,7 +221,7 @@ begin
         B := DataSets[0].DataSet.GetBookmark;
      try
         if DataSets[0].DataSet is TClientDataSet then begin
-           FStringStream := TStringStream.Create(String(TStorageFactory.GetStorage.ExecuteProc(GetXML)));
+           FStringStream := GetStringStream(String(TStorageFactory.GetStorage.ExecuteProc(GetXML)));
            TClientDataSet(DataSets[0].DataSet).LoadFromStream(FStringStream);
         end;
      finally

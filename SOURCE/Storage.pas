@@ -4,7 +4,7 @@ unit Storage;
 
 interface
 
-uses SysUtils;
+uses SysUtils, System.Classes;
 
 type
 
@@ -50,10 +50,11 @@ type
 
   function ConvertXMLParamToStrings(XMLParam: String): String;
   function GetXMLParam_gConnectHost(XMLParam: String): String;
+  function GetStringStream(AValue: String): TStringStream;
 
 implementation
 
-uses IdHTTP, Xml.XMLDoc, XMLIntf, System.Classes, ZLibEx, idGlobal, UtilConst, System.Variants,
+uses IdHTTP, Xml.XMLDoc, XMLIntf, ZLibEx, idGlobal, UtilConst, System.Variants,
      UtilConvert, MessagesUnit, Dialogs, StrUtils, IDComponent, SimpleGauge,
      Forms, Log, IdStack, IdExceptionCore, SyncObjS, CommonData, System.AnsiStrings,
      Datasnap.DBClient, System.Contnrs;
@@ -100,7 +101,9 @@ type
     IdHTTP: TIdHTTP;
     FSendList: TStringList;
     FReceiveStream: TStringStream;
-    Str: AnsiString;//RawByteString;
+    FReceiveStreamUTF8: TStringStream;
+    FReceiveStreamBytes: TBytesStream;
+    Str: String;//RawByteString;
     XMLDocument: IXMLDocument;
     isArchive: boolean;
     // критичесая секция нужна из-за таймера
@@ -108,7 +111,8 @@ type
     FReportList: TStringList;
     FReportLocalList: TStringList;
     FConnectionList: TConnectionList;
-    function PrepareStr: AnsiString;
+    function PrepareStr: String;
+    procedure PrepareStream(AStream: TBytesStream);
     function ExecuteProc(pData: String; pExecOnServer: boolean = false;
       AMaxAtempt: Byte = 10; ANeedShowException: Boolean = True): Variant;
     procedure ProcessErrorCode(pData: String; ProcedureParam: String);
@@ -174,7 +178,7 @@ begin
         NodeParam := NodeFun.ChildNodes.Get(J);
         T := NodeParam.Attributes['DataType'];
         Q := '';
-        if (T = 'ftString') or (T = 'ftBlob') or (T = 'ftDateTime') or (T = 'ftDate') then
+        if (T = 'ftString') or (T = 'ftWideString') or (T = 'ftBlob') or (T = 'ftDateTime') or (T = 'ftDate') then
           Q := '''';
         S := S + NodeParam.NodeName + ':= ' + Q + NodeParam.Attributes['Value'] + Q + ', ';
       end;
@@ -213,7 +217,7 @@ begin
     DataSet := TClientDataSet.Create(nil);
     Stream := nil;
     try
-      Stream := TStringStream.Create(String(TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [ASession]))));
+      Stream := GetStringStream(String(TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [ASession]))));
       DataSet.LoadFromStream(Stream);
       if not DataSet.IsEmpty then
         while not DataSet.Eof do
@@ -248,7 +252,7 @@ begin
     DataSet := TClientDataSet.Create(nil);
     Stream := nil;
     try
-      Stream := TStringStream.Create(String(TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [ASession]))));
+      Stream := GetStringStream(String(TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [ASession]))));
       DataSet.LoadFromStream(Stream);
       if not DataSet.IsEmpty then
         while not DataSet.Eof do
@@ -311,12 +315,20 @@ begin
 
     Instance.IdHTTP := TIdHTTP.Create(nil);
 //    Instance.IdHTTP.ConnectTimeout := 5000;
-    Instance.IdHTTP.Response.CharSet := 'windows-1251';// 'Content-Type: text/xml; charset=utf-8'
+    if dsdProject = prBoat then
+      Instance.IdHTTP.Response.CharSet := 'utf-8'// 'Content-Type: text/xml; charset=utf-8'
+    else
+      Instance.IdHTTP.Response.CharSet := 'windows-1251';
     Instance.IdHTTP.Request.Connection:='keep-alive';
     Instance.IdHTTP.OnWorkBegin := IdHTTPWork.IdHTTPWorkBegin;
     Instance.IdHTTP.OnWork := IdHTTPWork.IdHTTPWork;
     Instance.FSendList := TStringList.Create;
     Instance.FReceiveStream := TStringStream.Create('');
+    if dsdProject = prBoat then
+    begin
+      Instance.FReceiveStreamUTF8 := TStringStream.Create('', TEncoding.UTF8);
+      Instance.FReceiveStreamBytes := TBytesStream.Create;
+    end;
     Instance.XMLDocument := TXMLDocument.Create(nil);
     Instance.FCriticalSection := TCriticalSection.Create;
   end;
@@ -345,7 +357,7 @@ begin
   end;
 end;
 
-function TStorage.PrepareStr: AnsiString;
+function TStorage.PrepareStr: String;
 begin
   if isArchive then
   begin
@@ -356,6 +368,41 @@ begin
     Logger.AddToLog(' TStorage.PrepareStr ... Result := Str');
     Result := Str;
   end;
+  if dsdProject <> prBoat then
+    Result := AnsiString(Result);
+end;
+
+procedure TStorage.PrepareStream(AStream: TBytesStream);
+var FTempStream: TBytesStream;
+    FPos: int64;
+begin
+  FTempStream := TBytesStream.Create;
+  FPos := AStream.Position;
+  try
+    ZDecompressStream(AStream, FTempStream);
+    AStream.Bytes[FPos - 2] := Ord('f');
+    AStream.Size := FPos;
+    FTempStream.Position := 0;
+    FTempStream.SaveToStream(AStream);
+    AStream.SaveToFile('receive_unpacked.bin');
+  finally
+    FTempStream.Free;
+    AStream.Position := FPos;
+  end;
+end;
+
+function ReadStringFromTBytesStream(AStream: TBytesStream; ALength: integer): AnsiString;
+begin
+  SetLength(Result, ALength);
+  AStream.Read(Result[1], SizeOf(Byte)*ALength);
+end;
+
+function CheckIfTBytesStreamStartsWith(AStream: TBytesStream; AString: AnsiString): boolean;
+var SavePos: int64;
+begin
+  SavePos := AStream.Position;
+  Result := SameText(ReadStringFromTBytesStream(AStream, Length(AString)), AString);
+  AStream.Position := SavePos;
 end;
 
 procedure TStorage.ProcessErrorCode(pData: String; ProcedureParam: String);
@@ -391,7 +438,7 @@ end;
 
 function PrepareValue(Value, DataType: string): string;
 begin
-  if (DataType = 'ftBlob') or (DataType = 'ftString') or (DataType = 'ftBoolean') then
+  if (DataType = 'ftBlob') or (DataType = 'ftString') or (DataType = 'ftWideString') or (DataType = 'ftBoolean') then
      result := chr(39) + Value + chr(39);
   if (DataType = 'ftFloat') or (DataType = 'ftInteger') then
      result := Value;
@@ -495,7 +542,7 @@ var
 iii : Integer;
   ResultType: string;
   AttemptCount: Integer;
-  ok: Boolean;
+  ok, isBinary: Boolean;
   CType: TConnectionType;
   CString, DString: string;
   function LastAttempt: Boolean;
@@ -528,8 +575,15 @@ begin
 
     FSendList.Clear;
     FSendList.Add('XML=' + '<?xml version="1.0" encoding="windows-1251"?>' + pData);
+    if dsdProject = prBoat then
+      FSendList.Add('ENC=UTF8');
     Logger.AddToLog(pData);
     FReceiveStream.Clear;
+    if dsdProject = prBoat then
+    begin
+      FReceiveStreamUTF8.Clear;
+      FReceiveStreamBytes.Clear;
+    end;
     IdHTTPWork.FExecOnServer := pExecOnServer;
     AttemptCount := 0;
     ok := False;
@@ -582,9 +636,37 @@ begin
    else
    begin
       Logger.AddToLog(' try ... AttemptCount = ' + IntToStr(AttemptCount));
+      if dsdProject = prBoat then
+      begin
+        idHTTP.Post(CString + GetAddConnectString(pExecOnServer), FSendList, FReceiveStreamBytes,
+            {$IFDEF DELPHI103RIO} IndyTextEncoding(IdTextEncodingType.encUTF8) {$ELSE} TIdTextEncoding.UTF8 {$ENDIF});
+        FReceiveStreamBytes.Position := 0;
+        //FReceiveStreamBytes.SaveToFile('receive.bin');
+        FReceiveStreamBytes.Position := ResultTypeLenght;
+        // uncompress if compressed
+        if SameText(Trim(ReadStringFromTBytesStream(FReceiveStreamBytes, 2)), 't') then
+          PrepareStream(FReceiveStreamBytes);
 
-            idHTTP.Post(CString + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream,
+        if CheckIfTBytesStreamStartsWith(FReceiveStreamBytes, '<?xml version="1.0"')
+           or
+           CheckIfTBytesStreamStartsWith(FReceiveStreamBytes, '<Result ')
+           or
+           CheckIfTBytesStreamStartsWith(FReceiveStreamBytes, '<error ') then
+        begin
+          FReceiveStreamBytes.SaveToStream(FReceiveStreamUTF8);
+          isBinary := false;
+        end
+        else
+        begin
+          FReceiveStreamBytes.SaveToStream(FReceiveStream);
+          isBinary := true;
+        end;
+      end
+      else
+      begin
+        idHTTP.Post(CString + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream,
               {$IFDEF DELPHI103RIO} IndyTextEncoding(1251) {$ELSE} TIdTextEncoding.GetEncoding(1251) {$ENDIF});
+      end;
    end;
 
       Logger.AddToLog(' ok ...');
@@ -692,7 +774,15 @@ begin
     // Определяем тип возвращаемого результата
     if Ok then
     begin
-      DString := FReceiveStream.DataString;
+      if dsdProject = prBoat then
+      begin
+        if isBinary then
+          DString := FReceiveStream.DataString
+        else
+          DString := FReceiveStreamUTF8.DataString;
+      end
+      else
+        DString := FReceiveStream.DataString;
 
       Logger.AddToLog(' TStorage.ExecuteProc( ... if Ok then Length = ' + IntToStr(Length(DString)) + ' ...');
 
@@ -872,6 +962,14 @@ end;
 procedure TConnectionList.SetConnection(Index: Integer; const Value: TConnection);
 begin
   inherited SetItem(Index, Value);
+end;
+
+function GetStringStream(AValue: String): TStringStream;
+begin
+  if (dsdProject = prBoat) and SameText(Copy(AValue, 1, 19), '<?xml version="1.0"') then
+    Result := TStringStream.Create(AValue, TEncoding.UTF8)
+  else
+    Result := TStringStream.Create(AValue);
 end;
 
 initialization
