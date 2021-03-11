@@ -1,0 +1,214 @@
+<?php
+ ini_set("display_errors", 1);
+ error_reporting(E_ALL);
+ set_error_handler(function($errno, $errstr, $errfile, $errline ){
+    throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
+ });
+ $res = '';
+
+try {
+ 
+ include_once "createparamsarray.php";
+ include_once "getfieldtype.php";
+ include_once "filldataset.php";
+ include_once "init.php";
+
+ function PrepareStr($str)
+ {
+   global $isArchive;
+   if (($isArchive) && (strlen($str) > 100))
+   {
+ 
+     return 't ' . gzcompress($str);
+   }
+   else
+   {
+     return 'f ' . $str;
+   }
+ };
+ 
+ function savetofile($value, $filename = 'response.txt') {
+    $file = $filename;
+    file_put_contents($file, $value); 
+ }
+ 
+ $isUTF8 = isset($_POST["ENC"]) && strtoupper($_POST["ENC"]) == 'UTF8';
+ if ($isUTF8) {
+    $encoding = 'UTF-8';
+ }
+ else {
+    $encoding = 'WIN-1251';
+ }
+
+ set_time_limit (0);
+ 
+// Соединение, выбор базы данных
+
+$dbconn = pg_connect($connectstring)
+    or die('Could not connect: ' . pg_last_error());
+if ($isUTF8) {
+    $query = 'set client_encoding=Utf8';
+}
+else {
+    $query = 'set client_encoding=WIN1251';
+}
+$result = pg_query_params($query, array());
+pg_free_result($result);
+
+
+if ($isUTF8) {
+    $doc = new DOMDocument('1.0','utf-8');
+}
+else {
+    $doc = new DOMDocument('1.0','windows-1251');
+}
+savetofile($_POST["XML"], 'request.xml');
+$doc->loadXML($_POST["XML"],LIBXML_PARSEHUGE);
+
+$Session = $doc->documentElement->getAttribute('Session');
+$AutoWidht = ($doc->documentElement->getAttribute('AutoWidth') == 'true');
+$StoredProcNode = $doc->documentElement->firstChild;
+$StoredProcName = $StoredProcNode->nodeName;
+$OutputType = $StoredProcNode->getAttribute('OutputType');
+$DataSetType = $StoredProcNode->getAttribute('DataSetType');
+  
+$ParamName = '';
+$ParamValues = array();
+
+CreateParamsArray($StoredProcNode->childNodes, $Session, $ParamValues, $ParamName);
+
+// Выполнение SQL запроса
+if ($OutputType=='otMultiDataSet')
+{
+   pg_query('BEGIN;'); 
+   $query = 'select * from '.$StoredProcName.'('.$ParamName.')';
+}
+else
+{
+   $query = 'select * from '.$StoredProcName.'('.$ParamName.')';
+};
+
+                 
+if ($OutputType=='otMultiExecute')
+{
+  $data = $doc->documentElement->childNodes->Item(1);
+  // выполняем процедуру со всеми параметрами из $data
+  foreach ($data->childNodes as $dataitem) {
+      $i = 0;
+      // заполняем прорцедуру параметрами из $dataitem
+      foreach($dataitem->childNodes as $param) {
+         if ($param->getAttribute('Value') == 'NULL') 
+         { 
+             $ParamValues[$i] = NULL;
+         }
+         else
+         {
+             $ParamValues[$i] = iconv ('utf-8', 'windows-1251', $param->getAttribute('Value'));
+         };
+         $i = $i + 1;
+      };
+     $result = pg_send_query_params ($dbconn, $query, $ParamValues);
+     $result = pg_get_result($dbconn);
+     $result_error = pg_result_error($result);
+     if ($result_error != false)
+     {
+         $res = '<error ';                                                   
+         $res .= 'ErrorCode = "'.pg_result_error_field($result, PGSQL_DIAG_SQLSTATE).'"'.' ErrorMessage = "'.htmlspecialchars($result_error, ENT_COMPAT, $encoding).'"';
+         $res .= ' />';
+         echo 'error        '.PrepareStr($res);
+     };
+  };
+} 
+else
+{
+     $result = pg_send_query_params ($dbconn, $query, $ParamValues);
+     $result = pg_get_result($dbconn);
+     $result_error = pg_result_error($result);
+};
+          
+if ($result_error != false)
+{
+     $res = '<error ';                                                   
+     $res .= 'ErrorCode = "'.pg_result_error_field($result, PGSQL_DIAG_SQLSTATE).'"'.' ErrorMessage = "'.htmlspecialchars($result_error, ENT_COMPAT, $encoding).'"';
+     $res .= ' />';
+     echo 'error        '.PrepareStr($res);
+}
+else
+{
+  if ($OutputType=='otResult')
+  {// Вывод результатов в XML
+    $res = "<Result";
+    $i = 0;
+    while ($line = pg_fetch_array($result, null, PGSQL_ASSOC)) {
+        foreach ($line as $col_value) {
+           if (pg_field_type($result, $i) == 'timestamptz')
+           {
+              $res .=  ' ' . pg_field_name($result, $i) . '="' . str_replace(' ', 'T', $col_value) . '"';
+           }
+           else
+           {
+              $res .=  ' ' . pg_field_name($result, $i) . '="' . htmlspecialchars($col_value, ENT_COMPAT, $encoding) . '"';
+           };
+           $i = $i + 1;
+        }
+    }
+    $res .= "/>";
+    echo 'Result       '.PrepareStr($res);
+  };
+
+  if ($OutputType=='otBlob')
+  {// Вывод результатов в XML
+    $line = pg_fetch_array($result, null, PGSQL_ASSOC);
+        foreach ($line as $col_value) {
+            $res =  $col_value;
+        }
+    echo 'Result       '.PrepareStr($res);
+  };
+  
+  if ($OutputType=='otDataSet')
+  {
+     $res = FillDataSet($result, $DataSetType, $AutoWidht);
+     // возвращаем результат
+     savetofile($res);
+     echo 'DataSet      '.PrepareStr($res);
+     
+  };
+   
+  if ($OutputType=='otMultiDataSet')
+  { 
+    $res = '';
+    $CursorsClose = '';
+    $XMLStructure = '<DataSets>';
+    while ($line = pg_fetch_array($result, null, PGSQL_ASSOC)) 
+    {   
+        // Выполняем FETCH для каждого курсора
+        foreach ($line as $col_value) {
+           $query = 'FETCH ALL "'.$col_value.'";';       
+           $CursorsClose .= 'CLOSE "'.$col_value.'";';
+        };
+        $result_cursor = pg_query($query);
+        $DataSetStr = FillDataSet($result_cursor, $DataSetType, $AutoWidht, true);
+        $res .= $DataSetStr;
+        $XMLStructure .= '<DataSet length = "'.strlen($DataSetStr).'"/>';
+    };
+    $XMLStructure .= '</DataSets>';
+    // Закроем транзакцию
+        
+    pg_query($CursorsClose . 'COMMIT; END;');
+    echo 'MultiDataSet ' . PrepareStr(sprintf("%010d", strlen($XMLStructure)) . $XMLStructure . $res);  
+  };
+  // Очистка результата
+  pg_free_result($result);
+};
+
+// Закрытие соединения
+pg_close($dbconn);
+  
+} catch(Exception $e) {
+    $res = '<error ';                                                   
+    $res .= 'ErrorCode = ""'.' ErrorMessage = "'.htmlspecialchars($e->getMessage(), ENT_COMPAT, $encoding).' on line '. $e->getLine().' in file '. $e->getFile().'"';
+    $res .= ' />';
+    echo 'error        '.PrepareStr($res);
+}
+
+?>

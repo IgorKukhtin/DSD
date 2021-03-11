@@ -9,23 +9,25 @@ inherited ProtocolForm: TProtocolForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 82
+    Top = 84
     Width = 933
-    Height = 277
-    ExplicitTop = 82
+    Height = 275
+    ExplicitTop = 84
     ExplicitWidth = 933
-    ExplicitHeight = 277
-    ClientRectBottom = 277
-    ClientRectRight = 933
+    ExplicitHeight = 275
+    ClientRectBottom = 271
+    ClientRectRight = 929
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 933
-      ExplicitHeight = 277
+      ExplicitLeft = 4
+      ExplicitTop = 4
+      ExplicitWidth = 925
+      ExplicitHeight = 267
       inherited cxGrid: TcxGrid
         Width = 521
-        Height = 277
+        Height = 267
         Align = alLeft
         ExplicitWidth = 521
-        ExplicitHeight = 277
+        ExplicitHeight = 267
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.CellAutoHeight = True
           Styles.Content = nil
@@ -74,14 +76,14 @@ inherited ProtocolForm: TProtocolForm
         Left = 521
         Top = 0
         Width = 4
-        Height = 277
+        Height = 267
         Control = cxGrid
       end
       object cxGridProtocolData: TcxGrid
         Left = 525
         Top = 0
-        Width = 408
-        Height = 277
+        Width = 400
+        Height = 267
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 2
@@ -257,7 +259,7 @@ inherited ProtocolForm: TProtocolForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -392,11 +394,11 @@ inherited ProtocolForm: TProtocolForm
     Params = <>
     Left = 592
     Top = 127
-    object ProtocolDataCDSFieldName: TStringField
+    object ProtocolDataCDSFieldName: TWideStringField
       FieldName = 'FieldName'
       Size = 100
     end
-    object ProtocolDataCDSFieldValue: TStringField
+    object ProtocolDataCDSFieldValue: TWideStringField
       FieldName = 'FieldValue'
       Size = 255
     end

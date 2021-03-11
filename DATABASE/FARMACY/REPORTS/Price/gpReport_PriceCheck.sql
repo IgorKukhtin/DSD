@@ -124,6 +124,7 @@ BEGIN
             isTop                 Boolean Not Null Default False,
             isPromoBonus          Boolean Not Null Default False,
             PromoBonus            TFloat,
+            isLearnWeek           Boolean Not Null Default False,
             PercentMarkup         TFloat,
             PriceTop              TFloat,
             isSP                  Boolean Not Null Default False,
@@ -147,10 +148,13 @@ BEGIN
     -- Собираем товары
     
     WITH 
-    PromoBonus AS (SELECT MovementItem.Id                            AS Id
-                        , MovementItem.ObjectId                      AS GoodsId
-                        , MovementItem.Amount                        AS Amount
+    tmpPromoBonus_GoodsWeek AS (SELECT * FROM gpSelect_PromoBonus_GoodsWeek(inSession := inSession)),
+    PromoBonus AS (SELECT MovementItem.Id                               AS Id
+                        , MovementItem.ObjectId                         AS GoodsId
+                        , MovementItem.Amount                           AS Amount
+                        , COALESCE (tmpPromoBonus_GoodsWeek.ID, 0) <> 0 AS isLearnWeek
                    FROM MovementItem
+                        LEFT JOIN tmpPromoBonus_GoodsWeek ON tmpPromoBonus_GoodsWeek.ID = MovementItem.Id 
                    WHERE MovementItem.MovementId = (SELECT MAX(Movement.id) FROM Movement 
                                                     WHERE Movement.OperDate <= CURRENT_DATE   
                                                       AND Movement.DescId = zc_Movement_PromoBonus() 
@@ -159,7 +163,7 @@ BEGIN
                      AND MovementItem.isErased = False
                      AND MovementItem.Amount > 0)
                          
-    INSERT INTO tmpResult (GoodsId, GoodsCode, GoodsName, isResolution_224, isTop, isPromoBonus, PromoBonus, PercentMarkup, PriceTop, isSP, isPromo,
+    INSERT INTO tmpResult (GoodsId, GoodsCode, GoodsName, isResolution_224, isTop, isPromoBonus, PromoBonus, isLearnWeek, PercentMarkup, PriceTop, isSP, isPromo,
                            UnitCount, BadPriceCount, isBadPriceUser, BadPricePlus, BadPriceMinus, PriceAverage, PriceMin, PriceMax)
     SELECT tmpUnitPrice.GoodsId
          , Object_Goods.ObjectCode       AS GoodsCode
@@ -168,6 +172,7 @@ BEGIN
          , Object_Goods_Retail.IsTop
          , COALESCE (SUM(PromoBonus.Amount), 0) > 0  AS isPromoBonus
          , Max(PromoBonus.Amount)                    AS PromoBonus
+         , COALESCE(PromoBonus.isLearnWeek, False)   AS isLearnWeek
          , CASE WHEN Object_Goods_Retail.IsTop = TRUE THEN Object_Goods_Retail.PercentMarkup END
          , CASE WHEN Object_Goods_Retail.IsTop = TRUE THEN Object_Goods_Retail.Price END
          , False
@@ -186,7 +191,7 @@ BEGIN
                                       AND Object_Goods_Retail.RetailId = 4
          LEFT JOIN PromoBonus ON PromoBonus.GoodsId = Object_Goods_Retail.Id
     GROUP BY tmpUnitPrice.GoodsId, Object_Goods.ObjectCode, Object_Goods.Name, Object_Goods.isResolution_224
-           , Object_Goods_Retail.IsTop, Object_Goods_Retail.PercentMarkup, Object_Goods_Retail.Price
+           , Object_Goods_Retail.IsTop, PromoBonus.isLearnWeek, Object_Goods_Retail.PercentMarkup, Object_Goods_Retail.Price
     HAVING (MIN(tmpUnitPrice.Price) * (100.0 + inPercent) / 100.0) < MAX(tmpUnitPrice.Price)
     ORDER BY tmpUnitPrice.GoodsId;
 

@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpReport_SaleExternal_OrderSale(
 )
 RETURNS TABLE (FromName TVarChar
              , PartnerId_from Integer, PartnerName_from TVarChar
-             , PartnerRealId Integer, PartnerRealName TVarChar
+             , PartnerRealId Integer
+             , PartnerRealName TVarChar
              , GoodsPropertyName TVarChar
              , AmountKg TFloat, AmountKg_1 TFloat, AmountKg_2 TFloat, AmountKg_3 TFloat, AmountKg_avg TFloat
              , SummWithVAT TFloat, SummWithVAT_1 TFloat, SummWithVAT_2 TFloat, SummWithVAT_3 TFloat, SummWithVAT_avg TFloat
@@ -309,7 +310,7 @@ BEGIN
                       , tmp.SummWithVAT                  --- »того
                       , tmp.SummWithVAT_avg              --ср в мес€ц, кг
                       , CASE WHEN COALESCE (tmp.TotalSummWithVAT_avg,0) <> 0 THEN tmp.SummWithVAT_avg / tmp.TotalSummWithVAT_avg *100 ELSE 0 END  AS PartSum -- расчет от среднего
-                 FROM (SELECT Movement.FromName
+                 FROM (SELECT MAX (Movement.FromName) AS FromName
                             , Movement.PartnerId_from
                             , Movement.PartnerName_from
                             , Movement.PartnerRealId
@@ -319,30 +320,31 @@ BEGIN
                             , SUM (CASE WHEN Movement.OperDate BETWEEN vbStartDate_2 AND vbStartDate_3 - INTERVAL '1 DAY' THEN tmpMI.AmountKg END) AS AmountKg_2
                             , SUM (CASE WHEN Movement.OperDate BETWEEN vbStartDate_3 AND vbEndDate                        THEN tmpMI.AmountKg END) AS AmountKg_3
                             , SUM (tmpMI.AmountKg)    AS AmountKg
-                            , SUM (tmpMI.AmountKg)/Movement.CountMonth  AS AmountKg_avg
-                            , SUM ((SUM(tmpMI.AmountKg)/Movement.CountMonth)) OVER (PARTITION BY Movement.PartnerRealId) AS TotalAmountKg_avg
+                            , SUM (tmpMI.AmountKg)/SUM (Movement.CountMonth)  AS AmountKg_avg
+                            , SUM ((SUM(tmpMI.AmountKg)/SUM (Movement.CountMonth))) OVER (PARTITION BY Movement.PartnerRealId) AS TotalAmountKg_avg
                             -- дл€ сумм
                             , SUM (CASE WHEN Movement.OperDate BETWEEN vbStartDate   AND vbStartDate_2 - INTERVAL '1 DAY' THEN tmpMI.SummWithVAT END) AS SummWithVAT_1
                             , SUM (CASE WHEN Movement.OperDate BETWEEN vbStartDate_2 AND vbStartDate_3 - INTERVAL '1 DAY' THEN tmpMI.SummWithVAT END) AS SummWithVAT_2
                             , SUM (CASE WHEN Movement.OperDate BETWEEN vbStartDate_3 AND vbEndDate                        THEN tmpMI.SummWithVAT END) AS SummWithVAT_3
                             , SUM (tmpMI.SummWithVAT)    AS SummWithVAT
-                            , SUM (tmpMI.SummWithVAT)/Movement.CountMonth  AS SummWithVAT_avg
-                            , SUM ((SUM(tmpMI.SummWithVAT)/Movement.CountMonth)) OVER (PARTITION BY Movement.PartnerRealId) AS TotalSummWithVAT_avg
+                            , SUM (tmpMI.SummWithVAT)/SUM (Movement.CountMonth)  AS SummWithVAT_avg
+                            , SUM ((SUM(tmpMI.SummWithVAT)/SUM (Movement.CountMonth))) OVER (PARTITION BY Movement.PartnerRealId) AS TotalSummWithVAT_avg
                        FROM tmpMovementAll_SE AS Movement
                             INNER JOIN tmpMI ON tmpMI.MovementId = Movement.Id
-                       GROUP BY Movement.FromName
-                              , Movement.PartnerId_from
+                       GROUP BY /*Movement.FromName
+                              , */
+                                Movement.PartnerId_from
                               , Movement.PartnerName_from
                               , Movement.PartnerRealId
                               , Movement.PartnerRealName
                               , Movement.GoodsPropertyName
-                              , Movement.CountMonth
+                             -- , Movement.CountMonth
                         ) AS tmp
                  )
 
        -- –езультат
        SELECT
-             tmpData.FromName
+             tmpData.FromName       ::TVarChar
            , tmpData.PartnerId_from
            , tmpData.PartnerName_from
            , tmpData.PartnerRealId

@@ -38,6 +38,7 @@ type
     function myFloatToStr(aValue: Double) : String;
     function myStrToFloat(aValue: String) : Double;
     function GetBeforeSale : boolean;
+    function GetPrepared : boolean;
     procedure SetBeforeSale(Values: boolean);
   public
     // так криво будем хранить "текущие" параметры-Main
@@ -72,6 +73,7 @@ type
                                var lMsg : string) :Boolean;
 
     property isBeforeSale : boolean read GetBeforeSale write SetBeforeSale;
+    property isPrepared : boolean read GetPrepared;
 
 //    property Discont : Currency read FDiscont;
 //    property DiscontАbsolute : Currency read FDiscontАbsolute;
@@ -427,7 +429,7 @@ begin
 
   try
     if lDiscountExternalId > 0 then
-      if gCode in [1, 14] then
+      if gService = 'CardService' then
       begin
         aSaleRequest := CardSaleRequest.Create;
         //
@@ -597,7 +599,7 @@ begin
         ResItem := nil;
       end else
 
-      if (gCode in [2, 15]) and (gUserName <> '') then
+      if (gService = 'AbbottCard') and (gUserName <> '') then
       begin
         CheckCDS.First;
         while not CheckCDS.Eof do
@@ -643,10 +645,7 @@ begin
               RESTRequest.AddParameter('token', gExternalUnit, TRESTRequestParameterKind.pkGETorPOST);
               RESTRequest.AddParameter('request_format', 'xml', TRESTRequestParameterKind.pkGETorPOST);
               RESTRequest.AddParameter('response_format', 'xml', TRESTRequestParameterKind.pkGETorPOST);
-              case gCode of
-                 2 : RESTRequest.AddParameter('project_id', '1', TRESTRequestParameterKind.pkGETorPOST);
-                15 : RESTRequest.AddParameter('project_id', '2', TRESTRequestParameterKind.pkGETorPOST);
-              end;
+              RESTRequest.AddParameter('project_id', gPort, TRESTRequestParameterKind.pkGETorPOST);
               RESTRequest.AddParameter('data', '<?xml version="1.0"?>'+
                                                '<request><Operation>2</Operation>'+
                                                        '<PharmCard>' + gUserName + '</PharmCard>'+
@@ -720,7 +719,7 @@ begin
           CheckCDS.Next;
 
         end; // while
-      end else if gCode in [2, 15] then
+      end else if gService = 'AbbottCard' then
       begin
         Result:= True //!!!все ОК и Чек можно сохранить!!!
 
@@ -728,7 +727,7 @@ begin
       else
 
       //если программа Medicard
-      if gCode in [3, 5, 6, 7, 8, 9, 11, 12, 13] then
+      if gService = 'AbbottCard' then
       begin
 
         if (FIdCasual = '') or (FSupplier = 0) or (FBarCode_find = '') then
@@ -889,7 +888,7 @@ begin
 
       //если Штрих-код нашелся и программа Здоровье от Байер card
       else
-      if (gCode in [4, 10]) and (gUserName <> '') then
+      if (gService = 'ServiceXap') and (gUserName <> '') then
       begin
         CheckCDS.First;
         while not CheckCDS.Eof do
@@ -935,10 +934,7 @@ begin
               RESTRequest.AddParameter('token', gExternalUnit, TRESTRequestParameterKind.pkGETorPOST);
               RESTRequest.AddParameter('request_format', 'xml', TRESTRequestParameterKind.pkGETorPOST);
               RESTRequest.AddParameter('response_format', 'xml', TRESTRequestParameterKind.pkGETorPOST);
-              case gCode of
-                4  : RESTRequest.AddParameter('project_id', '3', TRESTRequestParameterKind.pkGETorPOST);
-                10 : RESTRequest.AddParameter('project_id', '4', TRESTRequestParameterKind.pkGETorPOST);
-              end;
+              RESTRequest.AddParameter('project_id', gPort, TRESTRequestParameterKind.pkGETorPOST);
               RESTRequest.AddParameter('data', '<?xml version="1.0"?>'+
                                                '<request><Operation>2</Operation>'+
                                                        '<PharmCard>' + gUserName + '</PharmCard>'+
@@ -1029,7 +1025,7 @@ begin
 
         Result:= True;
 
-      end else if gCode in [4, 16] then
+      end else if gService = 'ServiceXap' then
 
         Result:= True //!!!все ОК и Чек можно сохранить!!!
       ;
@@ -1317,8 +1313,7 @@ begin
       then lPriceSale:= CheckCDS.FieldByName('PriceSale').asFloat
       else lPriceSale:= CheckCDS.FieldByName('Price').asFloat;
       //
-      if (lDiscountExternalId > 0) and ((gCode in [1, 14, 16]) or (gCode in [2, 15]) and (gUserName <> '') or (gCode in [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])) and
-         (CheckCDS.FieldByName('Amount').AsFloat > 0)
+      if (lDiscountExternalId > 0) and (CheckCDS.FieldByName('Amount').AsFloat > 0)
       then
         //поиск Штрих-код
         with spGet_BarCode do begin
@@ -1331,7 +1326,7 @@ begin
           BarCode_find := '';
 
       //если Штрих-код нашелся и программа ЗАРАДИ ЖИТТЯ
-      if (BarCode_find <> '') and (gCode in [1, 14]) then
+      if (BarCode_find <> '') and (gService = 'CardService') then
       begin
 
           //получение номера и даты прихода
@@ -1515,7 +1510,7 @@ begin
       end // if BarCode_find <> ''
 
       //если Штрих-код нашелся и программа Abbott card
-      else if (BarCode_find <> '') and (gCode in [2, 15]) then
+      else if (BarCode_find <> '') and (gService = 'AbbottCard') then
       begin
 
           //получение кода дистрибьюторов
@@ -1543,10 +1538,7 @@ begin
               RESTRequest.AddParameter('token', gExternalUnit, TRESTRequestParameterKind.pkGETorPOST);
               RESTRequest.AddParameter('request_format', 'xml', TRESTRequestParameterKind.pkGETorPOST);
               RESTRequest.AddParameter('response_format', 'xml', TRESTRequestParameterKind.pkGETorPOST);
-              case gCode of
-                 2 : RESTRequest.AddParameter('project_id', '1', TRESTRequestParameterKind.pkGETorPOST);
-                15 : RESTRequest.AddParameter('project_id', '2', TRESTRequestParameterKind.pkGETorPOST);
-              end;
+              RESTRequest.AddParameter('project_id', gPort, TRESTRequestParameterKind.pkGETorPOST);
               RESTRequest.AddParameter('data', '<?xml version="1.0"?>'+
                                                '<request><Operation>1</Operation>'+
                                                        '<PharmCard>' + gUserName + '</PharmCard>'+
@@ -1640,7 +1632,7 @@ begin
       end // if BarCode_find <> ''
 
       //если Штрих-код нашелся и программа Medicard card
-      else  if (BarCode_find <> '') and (gCode in [3, 5, 6, 7, 8, 9, 11, 12, 13]) then
+      else  if (BarCode_find <> '') and (gService = 'Medicard') then
       begin
 
           if CheckCDS.FieldByName('Amount').AsInteger <> CheckCDS.FieldByName('Amount').AsCurrency then
@@ -1830,7 +1822,7 @@ begin
       end
 
       //если Штрих-код нашелся и программа Здоровье от Байер card
-      else if (BarCode_find <> '') and (gCode in [4, 10]) and (gUserName <> '') then
+      else if (BarCode_find <> '') and (gService = 'ServiceXap') and (gUserName <> '') then
       begin
 
           //получение кода дистрибьюторов
@@ -1858,10 +1850,7 @@ begin
               RESTRequest.AddParameter('token', gExternalUnit, TRESTRequestParameterKind.pkGETorPOST);
               RESTRequest.AddParameter('request_format', 'xml', TRESTRequestParameterKind.pkGETorPOST);
               RESTRequest.AddParameter('response_format', 'xml', TRESTRequestParameterKind.pkGETorPOST);
-              case gCode of
-                4  : RESTRequest.AddParameter('project_id', '3', TRESTRequestParameterKind.pkGETorPOST);
-                10 : RESTRequest.AddParameter('project_id', '4', TRESTRequestParameterKind.pkGETorPOST);
-              end;
+              RESTRequest.AddParameter('project_id', gPort, TRESTRequestParameterKind.pkGETorPOST);
               RESTRequest.AddParameter('data', '<?xml version="1.0"?>'+
                                                '<request><Operation>1</Operation>'+
                                                        '<PharmCard>' + gUserName + '</PharmCard>'+
@@ -2022,13 +2011,8 @@ begin
 
       end // if BarCode_find <> ''
 
-      //если Штрих-код нашелся и программа Medicard card
-      else if (BarCode_find <> '') and (gCode = 4) then
-      begin
-
-      end else
         // иначе - обнуляем скидку
-      if (gCode <> 2) or (gUserName <> '') then
+      else if (gService <> 'AbbottCard') or (gUserName <> '') then
       begin
                // на всяк случай - с условием
                if CheckCDS.FieldByName('PriceSale').asFloat > 0
@@ -2077,12 +2061,20 @@ end;
 
 function TDiscountServiceForm.GetBeforeSale : boolean;
 begin
-  if (gCode in [3, 5, 6, 7, 8, 9, 11, 12, 13]) and (FIdCasual <> '')  then
+  if (gService <> 'Medicard') then
   begin
-    Result := True;
-  end else if (gCode in [16]) and (FSupplier <> 0) then
+    Result := (FIdCasual <> '');
+  end else if (gCode in [16])  then
   begin
-    Result := True;
+    Result := (FSupplier <> 0);
+  end else Result := True;
+end;
+
+function TDiscountServiceForm.GetPrepared : boolean;
+begin
+  if (gService <> 'Medicard') then
+  begin
+    Result := (FIdCasual <> '');
   end else Result := False;
 end;
 

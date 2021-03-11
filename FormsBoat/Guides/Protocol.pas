@@ -44,8 +44,6 @@ type
     dsdXMLTransform: TdsdXMLTransform;
     ProtocolDataCDS: TClientDataSet;
     ProtocolDataDS: TDataSource;
-    ProtocolDataCDSFieldName: TStringField;
-    ProtocolDataCDSFieldValue: TStringField;
     cxSplitter: TcxSplitter;
     cxGridProtocolData: TcxGrid;
     cxGridViewProtocolData: TcxGridDBTableView;
@@ -53,6 +51,8 @@ type
     cxGridDBColumn2: TcxGridDBColumn;
     cxGridLevelProtocolData: TcxGridLevel;
     FormParams: TdsdFormParams;
+    ProtocolDataCDSFieldName: TWideStringField;
+    ProtocolDataCDSFieldValue: TWideStringField;
   private
     { Private declarations }
   public

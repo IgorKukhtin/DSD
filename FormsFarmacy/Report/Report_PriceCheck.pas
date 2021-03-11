@@ -92,6 +92,7 @@ type
     cbManagerUnitsOnly: TcxCheckBox;
     isPromoBonus: TcxGridDBColumn;
     PromoBonus: TcxGridDBColumn;
+    isLearnWeek: TcxGridDBColumn;
   private
   public
   end;

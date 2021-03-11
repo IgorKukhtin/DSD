@@ -1349,6 +1349,10 @@ CREATE OR REPLACE FUNCTION zc_Object_MedicKashtan() RETURNS Integer AS $BODY$BEG
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_MedicKashtan', 'ФИО врача (МИС «Каштан»)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MedicKashtan');
 
+CREATE OR REPLACE FUNCTION zc_Object_DiscountExternalSupplier() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_DiscountExternalSupplier'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_DiscountExternalSupplier', 'Поставщики для проектов дисконтных карт' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_DiscountExternalSupplier');
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1365,6 +1369,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 11.03.21                                                                                        * zc_Object_DiscountExternalSupplier
  05.03.21                                                                                        * zc_Object_MemberKashtan, zc_Object_MedicKashtan
  16.02.21                                                                                        * zc_Object_InstructionsKind, zc_Object_Instructions
  23.11.20         * zc_Object_ContractConditionPartner

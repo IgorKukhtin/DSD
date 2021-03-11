@@ -88,6 +88,7 @@ uses
 {$R *.res}
 
 begin
+  dsdProject := prBoat;
   Application.Initialize;
   ConnectionPath := '..\INIT\Boat_init.php';
   Logger.Enabled := FindCmdLineSwitch('log');

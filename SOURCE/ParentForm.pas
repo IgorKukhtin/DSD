@@ -596,6 +596,7 @@ initialization
   RegisterClass (TPopupMenu);
   RegisterClass (TPanel);
   RegisterClass (TStringField);
+  RegisterClass (TWideStringField);
   RegisterClass (TWebBrowser);
 
   // Библиотека DevExpress

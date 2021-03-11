@@ -2477,9 +2477,20 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Instructions_InstructionsKind() RETURNS
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Instructions_InstructionsKind', 'Связь с разделами инструкций', zc_Object_Instructions(), zc_Object_InstructionsKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Instructions_InstructionsKind');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_DiscountExternalSupplier_DiscountExternal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_DiscountExternalSupplier_DiscountExternal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_DiscountExternalSupplier_DiscountExternal', 'Связь с проектом (дисконтные карты)', zc_Object_DiscountExternalSupplier(), zc_Object_DiscountExternal() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_DiscountExternalSupplier_DiscountExternal');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_DiscountExternalSupplier_Juridical() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_DiscountExternalSupplier_Juridical'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_DiscountExternalSupplier_Juridical', 'Связь с юридическим лицом', zc_Object_DiscountExternalSupplier(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_DiscountExternalSupplier_Juridical');
+
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 11.03.21                                                                                      * zc_ObjectLink_DiscountExternalSupplier_...
  16.02.21                                                                                      * zc_ObjectLink_Instructions_InstructionsKind
  28.01.21                                                                                      * zc_ObjectLink_Goods_UnitSupplementSUN1Out
  18.01.21         * zc_ObjectLink_ReportBonus_ContractMaster

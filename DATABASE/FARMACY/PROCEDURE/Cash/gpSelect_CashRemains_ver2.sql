@@ -41,6 +41,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                NotTransferTime boolean,
                NDSKindId Integer,
                isPresent boolean,
+               isOnlySP boolean,
                DistributionPromoID Integer,
                Color_IPE Integer
 
@@ -906,6 +907,7 @@ BEGIN
           , COALESCE (Object_Goods_Main.isNotTransferTime, False)  AS NotTransferTime
           , COALESCE(CashSessionSnapShot.NDSKindId, Object_Goods_Main.NDSKindId) AS NDSKindId
           , Object_Goods_Main.isPresent                                          AS isPresent
+          , Object_Goods_Main.isOnlySP                                           AS isOnlySP
           , tmpDistributionPromo.DistributionPromoID                             AS DistributionPromoID
           , 0                                                      AS Color_IPE
 
