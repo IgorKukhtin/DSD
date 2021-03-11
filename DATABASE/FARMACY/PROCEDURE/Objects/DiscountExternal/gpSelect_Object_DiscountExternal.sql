@@ -10,6 +10,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Service TVarChar
              , Port TVarChar
              , isGoodsForProject Boolean
+             , isOneSupplier Boolean
+             , isTwoPackages Boolean
              , isErased Boolean
               ) AS
 $BODY$
@@ -43,6 +45,8 @@ BEGIN
         , ObjectString_Service.ValueData           AS Service
         , ObjectString_Port.ValueData              AS Port
         , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False)  AS isGoodsForProject
+        , COALESCE(ObjectBoolean_OneSupplier.ValueData, False)      AS isOneSupplier
+        , COALESCE(ObjectBoolean_TwoPackages.ValueData, False)      AS isTwoPackages
 
         , Object_DiscountExternal.isErased
 
@@ -59,6 +63,12 @@ BEGIN
       LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsForProject
                               ON ObjectBoolean_GoodsForProject.ObjectId = Object_DiscountExternal.Id 
                              AND ObjectBoolean_GoodsForProject.DescId = zc_ObjectBoolean_DiscountExternal_GoodsForProject()
+      LEFT JOIN ObjectBoolean AS ObjectBoolean_OneSupplier
+                              ON ObjectBoolean_OneSupplier.ObjectId = Object_DiscountExternal.Id 
+                             AND ObjectBoolean_OneSupplier.DescId = zc_ObjectBoolean_DiscountExternal_OneSupplier()
+      LEFT JOIN ObjectBoolean AS ObjectBoolean_TwoPackages
+                              ON ObjectBoolean_TwoPackages.ObjectId = Object_DiscountExternal.Id 
+                             AND ObjectBoolean_TwoPackages.DescId = zc_ObjectBoolean_DiscountExternal_TwoPackages()
    WHERE Object_DiscountExternal.DescId = zc_Object_DiscountExternal()
      AND (vbUnitId = 0
        OR COALESCE (ObjectString_URL.ValueData, '') = ''

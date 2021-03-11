@@ -785,6 +785,8 @@ type
     N280: TMenuItem;
     actReport_Check_SP_ForDPSS: TdsdOpenForm;
     N281: TMenuItem;
+    actDiscountExternalSupplier: TdsdOpenForm;
+    N282: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

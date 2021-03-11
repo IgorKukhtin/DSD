@@ -196,12 +196,19 @@ end;
 
 procedure TLoadFormTest.LoadDiscountFormTest;
 begin
-{
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountExternalSupplierEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDiscountExternalSupplierEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountExternalSupplierForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDiscountExternalSupplierForm');
+
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountExternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountExternalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountExternalEditForm');
 
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountExternal_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountExternal_ObjectForm');
 
@@ -222,13 +229,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save
     (GetForm('TDiscountExternalJuridicalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountExternalJuridicalEditForm');
-}
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBarCodeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBarCodeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBarCodeEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBarCodeEditForm');
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountCardForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountCardForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountCardEditForm'));

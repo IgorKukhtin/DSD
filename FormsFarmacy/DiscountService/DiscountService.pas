@@ -727,7 +727,7 @@ begin
       else
 
       //если программа Medicard
-      if gService = 'AbbottCard' then
+      if gService = 'Medicard' then
       begin
 
         if (FIdCasual = '') or (FSupplier = 0) or (FBarCode_find = '') then
