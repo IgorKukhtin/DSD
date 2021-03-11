@@ -2585,7 +2585,7 @@ begin
       exit;
     end;
 
-    if (DiscountServiceForm.gCode in [2, 15]) then
+    if (DiscountServiceForm.gCode <> 0) then
     begin
       ShowMessage
         ('Применен дисконт.'#13#10'Для променениея ручной скидки обнулите чек и набрать позиции заново..');
@@ -2898,7 +2898,7 @@ begin
     exit;
   end;
 
-  if not DiscountServiceForm.isBeforeSale and (DiscountServiceForm.gCode in [3, 5, 6, 7, 8, 9, 11, 12, 13, 16]) then
+  if not DiscountServiceForm.isBeforeSale and (DiscountServiceForm.gCode <> 0) then
   begin
     ShowMessage('По дисконтрой программе не запрошена возможность продажи!');
     exit;
@@ -2981,38 +2981,6 @@ begin
           exit;
         end;
 
-//        if UnitConfigCDS.FindField('DiscountExternalId').AsInteger <> 0 then
-//        begin
-//          if (DiscountServiceForm.gCode = UnitConfigCDS.FindField('DiscountExternalCode').AsInteger) then
-//          begin
-//            if FieldByName('DiscountExternalID').AsInteger <> UnitConfigCDS.FindField('DiscountExternalId').AsInteger then
-//            begin
-//              ShowMessage('Ошибка.Товар <' + FieldByName('GoodsName').AsString + '> не участвует в дисконтной программе ' + UnitConfigCDS.FindField('DiscountExternalName').AsString + '!');
-//              exit;
-//            end;
-//          end else if FieldByName('DiscountExternalID').AsInteger <> 0 then
-//          begin
-//            ShowMessage('Ошибка.Товар <' + FieldByName('GoodsName').AsString + '> предназначен для дисконтной программе ' + UnitConfigCDS.FindField('DiscountExternalName').AsString + '!');
-//            exit;
-//          end;
-//        end;
-
-//        if UnitConfigCDS.FindField('DiscountExternalId').AsInteger <> 0 then
-//        begin
-//          if (DiscountServiceForm.gCode = UnitConfigCDS.FindField('DiscountExternalCode').AsInteger) then
-//          begin
-//            if FieldByName('DiscountExternalID').AsInteger <> UnitConfigCDS.FindField('DiscountExternalId').AsInteger then
-//            begin
-//              ShowMessage('Ошибка.Товар <' + FieldByName('GoodsName').AsString + '> не участвует в дисконтной программе ' + UnitConfigCDS.FindField('DiscountExternalName').AsString + '!');
-//              exit;+
-//            end;
-//          end else if FieldByName('DiscountExternalID').AsInteger <> 0 then
-//          begin
-//            ShowMessage('Ошибка.Товар <' + FieldByName('GoodsName').AsString + '> предназначен для дисконтной программе ' + UnitConfigCDS.FindField('DiscountExternalName').AsString + '!');
-//            exit;
-//          end;
-//        end;
-
         if DiscountServiceForm.gCode <> 0 then
         begin
           if RemainsCDS.FieldByName('GoodsDiscountId').AsInteger <> DiscountServiceForm.gDiscountExternalId then
@@ -3032,6 +3000,12 @@ begin
         end else if RemainsCDS.FieldByName('isGoodsForProject').AsBoolean and (RemainsCDS.FieldByName('GoodsDiscountId').AsInteger <> 0) then
         begin
           ShowMessage('Ошибка.Товар <' + FieldByName('GoodsName').AsString + '> предназначен для дисконтной программе ' + RemainsCDS.FindField('GoodsDiscountName').AsString + '!');
+          exit;
+        end;
+
+        if RemainsCDS.FieldByName('isOnlySP').AsBoolean and (FormParams.ParamByName('HelsiID').Value <> '') then
+        begin
+          ShowMessage('Ошибка.Товар <' + FieldByName('GoodsName').AsString + '> предназначен для программы "Доступні ліки"!');
           exit;
         end;
 
@@ -4099,7 +4073,7 @@ begin
     exit;
   end;
 
-  if (DiscountServiceForm.gCode in [2, 15]) then
+  if (DiscountServiceForm.gService = 'AbbottCard') then
   begin
     ShowMessage
       ('Применен дисконт.'#13#10'Для променениея программы лояльности обнулите чек и набрать позиции заново..');
@@ -4244,8 +4218,7 @@ begin
           (RemainsCDS.FieldByName('PriceSaleSP').asCurrency -
           RemainsCDS.FieldByName('PriceSP').asCurrency);
       end
-      else if (DiscountServiceForm.gCode in [2, 4, 10, 15, 16]) and edPrice.Visible and
-        (abs(edPrice.Value) > 0.0001) then
+      else if (DiscountServiceForm.gCode <> 0) and edPrice.Visible and (abs(edPrice.Value) > 0.0001) then
       begin
         // на всяк случай - УСТАНОВИМ скидку еще разок
         CheckCDS.FieldByName('PriceSale').asCurrency :=
@@ -4257,25 +4230,6 @@ begin
           CheckCDS.FieldByName('Amount').asCurrency *
           (RemainsCDS.FieldByName('Price').asCurrency - edPrice.Value);
       end
-//      else if (DiscountServiceForm.gCode in [5]) and
-//        (DiscountServiceForm.Discont > 0.0001) then
-//      begin
-//        CheckCDS.FieldByName('Price').asCurrency :=
-//          GetPrice(IfZero(CheckCDS.FieldByName('PricePartionDate').asCurrency,
-//          CheckCDS.FieldByName('PriceSale').asCurrency),
-//          DiscountServiceForm.Discont);
-//        CheckCDS.FieldByName('ChangePercent').asCurrency :=
-//          DiscountServiceForm.Discont;
-//        CheckCDS.FieldByName('Summ').asCurrency :=
-//          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
-//          CheckCDS.FieldByName('Price').asCurrency,
-//          FormParams.ParamByName('RoundingDown').Value);
-//        CheckCDS.FieldByName('SummChangePercent').asCurrency :=
-//          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
-//          CheckCDS.FieldByName('PriceSale').asCurrency,
-//          FormParams.ParamByName('RoundingDown').Value) -
-//          CheckCDS.FieldByName('Summ').asCurrency;
-//      end
       else if (FormParams.ParamByName('LoyaltyChangeSumma').Value = 0) and
         (Self.FormParams.ParamByName('PromoCodeID').Value > 0) and
         CheckIfGoodsIdInPromo(Self.FormParams.ParamByName('PromoCodeID').Value,
@@ -4671,7 +4625,7 @@ begin
     exit;
   end;
 
-  if (DiscountServiceForm.gCode in [2, 15]) then
+  if (DiscountServiceForm.gService = 'AbbottCard') then
   begin
     ShowMessage
       ('Применен дисконт.'#13#10'Для променениея программы лояльности обнулите чек и набрать позиции заново..');
@@ -5270,7 +5224,7 @@ begin
     exit;
   end;
 
-  if DiscountServiceForm.isBeforeSale and not (DiscountServiceForm.gCode in [16]) then
+  if DiscountServiceForm.isPrepared then
   begin
     ShowMessage('В текущем чеке запрошена возможность продажи. Произведите продажу или очистите чек!');
     exit;
@@ -5336,7 +5290,7 @@ begin
   pnlDiscount.Visible := DiscountExternalId > 0;
   lblDiscountExternalName.Caption := '  ' + DiscountExternalName + '  ';
   lblDiscountCardNumber.Caption := '  ' + DiscountCardNumber + '  ';
-  lblPrice.Visible := (DiscountServiceForm.gCode in [2, 4, 10, 15]) and
+  lblPrice.Visible := (DiscountServiceForm.gService = 'AbbottCard') and
     (DiscountServiceForm.gUserName = '');
   edPrice.Visible := lblPrice.Visible;
   lblAmount.Visible := lblPrice.Visible;
@@ -5476,7 +5430,7 @@ begin
     exit;
   end;
 
-  if (DiscountServiceForm.gCode in [2, 15]) then
+  if (DiscountServiceForm.gService = 'AbbottCard') then
   begin
     ShowMessage
       ('Применен дисконт.'#13#10'Для променениея скидка через сайт обнулите чек и набрать позиции заново..');
@@ -7298,50 +7252,24 @@ begin
         end;
       end;
 
-  //    if UnitConfigCDS.FindField('DiscountExternalId').AsInteger <> 0 then
-  //    begin
-  //      if (DiscountServiceForm.gCode = UnitConfigCDS.FindField('DiscountExternalCode').AsInteger) then
-  //      begin
-  //        if SourceClientDataSet.FieldByName('DiscountExternalID').AsInteger <> UnitConfigCDS.FindField('DiscountExternalId').AsInteger then
-  //        begin
-  //          ShowMessage('Ошибка.Выбранный код товара не участвует в дисконтной программе ' + UnitConfigCDS.FindField('DiscountExternalName').AsString + '!');
-  //          exit;
-  //        end;
-  //      end else if SourceClientDataSet.FieldByName('DiscountExternalID').AsInteger <> 0 then
-  //      begin
-  //        ShowMessage('Ошибка.Выбранный код товара предназначен для дисконтной программе ' + UnitConfigCDS.FindField('DiscountExternalName').AsString + '!');
-  //        exit;
-  //      end;
-  //    end;
-
-  //    if DiscountServiceForm.gCode = 3 then
-  //    begin
-  //      if SourceClientDataSet.FieldByName('GoodsDiscountId').AsInteger <> UnitConfigCDS.FindField('GoodsDiscountId').AsInteger then
-  //      begin
-  //        ShowMessage('Ошибка.Выбранный код товара не участвует в дисконтной программе ' + UnitConfigCDS.FindField('GoodsDiscountName').AsString + '!');
-  //        exit;
-  //      end;
-  //    end else if SourceClientDataSet.FieldByName('GoodsDiscountId').AsInteger = UnitConfigCDS.FindField('GoodsDiscountId').AsInteger then
-  //    begin
-  //      ShowMessage('Ошибка.Выбранный код товара предназначен для дисконтной программе ' + UnitConfigCDS.FindField('GoodsDiscountName').AsString + '!');
-  //      exit;
-  //    end;
-
-
-        if DiscountServiceForm.gCode <> 0 then
+      if DiscountServiceForm.gCode <> 0 then
+      begin
+        if RemainsCDS.FieldByName('GoodsDiscountId').AsInteger <> DiscountServiceForm.gDiscountExternalId then
         begin
-          if RemainsCDS.FieldByName('GoodsDiscountId').AsInteger <> DiscountServiceForm.gDiscountExternalId then
-          begin
-            ShowMessage('Ошибка.Товар <' + SourceClientDataSet.FieldByName('GoodsName').AsString + '> не участвует в дисконтной программе ' + FormParams.ParamByName('DiscountExternalName').Value + '!');
-            exit;
-          end;
-        end else if SourceClientDataSet.FieldByName('isGoodsForProject').AsBoolean and (SourceClientDataSet.FieldByName('GoodsDiscountId').AsInteger <> 0) then
-        begin
-          ShowMessage('Ошибка.Товар <' + SourceClientDataSet.FieldByName('GoodsName').AsString + '> предназначен для дисконтной программе ' + SourceClientDataSet.FindField('GoodsDiscountName').AsString + '!');
+          ShowMessage('Ошибка.Товар <' + SourceClientDataSet.FieldByName('GoodsName').AsString + '> не участвует в дисконтной программе ' + FormParams.ParamByName('DiscountExternalName').Value + '!');
           exit;
         end;
+      end else if SourceClientDataSet.FieldByName('isGoodsForProject').AsBoolean and (SourceClientDataSet.FieldByName('GoodsDiscountId').AsInteger <> 0) then
+      begin
+        ShowMessage('Ошибка.Товар <' + SourceClientDataSet.FieldByName('GoodsName').AsString + '> предназначен для дисконтной программе ' + SourceClientDataSet.FindField('GoodsDiscountName').AsString + '!');
+        exit;
+      end;
+    end;
 
-
+    if RemainsCDS.FieldByName('isOnlySP').AsBoolean and (FormParams.ParamByName('HelsiID').Value <> '') then
+    begin
+      ShowMessage('Ошибка.Товар <' + SourceClientDataSet.FieldByName('GoodsName').AsString + '> предназначен для программы "Доступні ліки"!');
+      exit;
     end;
 
     //
@@ -7379,23 +7307,13 @@ begin
         // цена СО скидкой
         lPrice := SourceClientDataSet.FieldByName('PriceSP').asCurrency;
       end
-      else if (DiscountServiceForm.gCode in [2, 4, 10, 15, 16]) and edPrice.Visible and
-        (abs(edPrice.Value) > 0.0001) then
+      else if (DiscountServiceForm.gCode <> 0) and edPrice.Visible and (abs(edPrice.Value) > 0.0001) then
       begin
         // цена БЕЗ скидки
         lPriceSale := SourceClientDataSet.FieldByName('Price').asCurrency;
         // цена СО скидкой
         lPrice := edPrice.Value;
       end
-  //    else if (DiscountServiceForm.gCode in [5]) and
-  //      (DiscountServiceForm.Discont > 0.0001) then
-  //    begin
-  //      // цена БЕЗ скидки
-  //      lPriceSale := SourceClientDataSet.FieldByName('Price').asCurrency;
-  //      // цена СО скидкой
-  //      lPrice := GetPrice(SourceClientDataSet.FieldByName('Price').asCurrency,
-  //       DiscountServiceForm.Discont);
-  //    end
       else if (FormParams.ParamByName('LoyaltyChangeSumma').Value = 0) and
         (Self.FormParams.ParamByName('PromoCodeID').Value > 0) and
         CheckIfGoodsIdInPromo(Self.FormParams.ParamByName('PromoCodeID').Value,
@@ -9517,8 +9435,7 @@ begin
             (RemainsCDS.FieldByName('PriceSaleSP').asCurrency -
             RemainsCDS.FieldByName('PriceSP').asCurrency);
         end
-        else if (DiscountServiceForm.gCode in [2, 4, 10, 15, 16]) and edPrice.Visible and
-          (abs(edPrice.Value) > 0.0001) then
+        else if (DiscountServiceForm.gCode <> 0) and edPrice.Visible and (abs(edPrice.Value) > 0.0001) then
         begin
           // на всяк случай - УСТАНОВИМ скидку еще разок
           CheckCDS.FieldByName('PriceSale').asCurrency :=
@@ -9530,27 +9447,6 @@ begin
             CheckCDS.FieldByName('Amount').asCurrency *
             (RemainsCDS.FieldByName('Price').asCurrency - edPrice.Value);
         end
-//        else if (DiscountServiceForm.gCode in [5]) and
-//          (DiscountServiceForm.Discont > 0.0001) then
-//        begin
-//          // на всяк случай - УСТАНОВИМ скидку еще разок
-//          CheckCDS.FieldByName('PriceSale').asCurrency :=
-//            RemainsCDS.FieldByName('Price').asCurrency;
-//          CheckCDS.FieldByName('Price').asCurrency :=
-//            GetPrice(IfZero(RemainsCDS.FieldByName('PricePartionDate')
-//            .asCurrency, RemainsCDS.FieldByName('Price').asCurrency),
-//            DiscountServiceForm.Discont);
-//          // и УСТАНОВИМ скидку
-//          CheckCDS.FieldByName('ChangePercent').asCurrency :=
-//            DiscountServiceForm.Discont;
-//          CheckCDS.FieldByName('SummChangePercent').asCurrency :=
-//            GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
-//            CheckCDS.FieldByName('PriceSale').asCurrency,
-//            FormParams.ParamByName('RoundingDown').Value) -
-//            GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
-//            CheckCDS.FieldByName('Price').asCurrency,
-//            FormParams.ParamByName('RoundingDown').Value);
-//        end
         else if (FormParams.ParamByName('LoyaltyChangeSumma').Value = 0) and
           (Self.FormParams.ParamByName('PromoCodeID').Value > 0) and
           CheckIfGoodsIdInPromo(Self.FormParams.ParamByName('PromoCodeID')
@@ -11241,7 +11137,7 @@ begin
       ('Ошибка. Не заполнено количество.'#13#10'Должно быть или дробь:'#13#10'Количество продажи / Количество в упаковке');
   end;
 
-  if DiscountServiceForm.isBeforeSale and not (DiscountServiceForm.gCode in [16]) then
+  if DiscountServiceForm.isPrepared then
   begin
     ShowMessage('В текущем чеке запрошена возможность продажи. Произведите продажу или очистите чек!');
     exit;
