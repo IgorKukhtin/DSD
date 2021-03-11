@@ -1880,6 +1880,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
         Name = 'inMask'
         Value = False
         DataType = ftBoolean
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item

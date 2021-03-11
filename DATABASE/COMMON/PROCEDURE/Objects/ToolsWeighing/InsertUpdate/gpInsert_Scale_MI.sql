@@ -258,9 +258,18 @@ BEGIN
      -- определили !!!только для SPEC!!!
      IF vbMovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut())
         AND (inBranchCode BETWEEN 301 AND 310 -- Dnepr-SPEC-Zapch
-          OR inBranchCode BETWEEN 201 AND 210 -- Dnepr-OBV
             )
         AND inBoxCount > 0
+     THEN
+         -- !!!т.к. Криво - передаем цену через этот параметр!!!
+         vbPrice_301:= inBoxCount;
+         inBoxCount:= 0;
+     ELSE
+     -- определили !!!только для SPEC!!!
+     IF vbMovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut())
+        AND (inBranchCode BETWEEN 201 AND 210 -- Dnepr-OBV
+            )
+        AND inBoxCount > 0 AND inBoxCount <> 1
      THEN
          -- !!!т.к. Криво - передаем цену через этот параметр!!!
          vbPrice_301:= inBoxCount;
