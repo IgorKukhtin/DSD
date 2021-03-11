@@ -4,10 +4,9 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
   ClientWidth = 1073
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -154
-  ExplicitTop = -81
+  ExplicitTop = -113
   ExplicitWidth = 1089
-  ExplicitHeight = 574
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -723,6 +722,9 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintTax_Client: TdsdPrintAction
       Category = 'DSDLib'
@@ -764,6 +766,9 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -802,6 +807,9 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Bill: TdsdPrintAction
       Category = 'DSDLib'
@@ -840,6 +848,9 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actSPPrintSaleProcName: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -920,6 +931,9 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object mactPrint_TTN: TMultiAction
       Category = 'DSDLib'
@@ -976,7 +990,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate_TransportGoods_calc'
           DataType = ftDateTime
@@ -1029,6 +1043,9 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -1406,7 +1423,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1693,8 +1710,14 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMask'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime
@@ -1718,7 +1741,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
       end
       item
         Name = 'OperDate_TransportGoods'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate_TransportGoods'
         DataType = ftDateTime

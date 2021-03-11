@@ -282,7 +282,7 @@ BEGIN
                         SELECT tmp.BusinessId
                              , tmp.ContainerId
                              , tmp.AccountId
-                             , 0 AS ContainerId_inf
+                             , tmp.ContainerId AS ContainerId_inf
                              , 0 AS ObjectIntId_inf
                              , 0 AS AccountId_inf
                              , 0 AS ContainerId_ProfitLoss
@@ -553,8 +553,7 @@ BEGIN
          , View_Contract_InvNumber.InvNumber AS ContractName
 
          , Object_Direction.Id             AS ObjectId_Direction
-         , Object_Direction.ObjectCode     AS ObjectCode_Direction
-       --, tmpReport.ContainerId_inf :: Integer AS ObjectCode_Direction
+         , CASE WHEN inUserId = 5 THEN tmpReport.ContainerId_inf ELSE Object_Direction.ObjectCode END :: Integer AS ObjectCode_Direction
          , (COALESCE (Object_Bank.ValueData || ' * ', '') || Object_Direction.ValueData || COALESCE (' * ' || Object_Currency.ValueData, '')) :: TVarChar AS ObjectName_Direction
          , Object_Destination.ObjectCode   AS ObjectCode_Destination
          , Object_Destination.ValueData    AS ObjectName_Destination

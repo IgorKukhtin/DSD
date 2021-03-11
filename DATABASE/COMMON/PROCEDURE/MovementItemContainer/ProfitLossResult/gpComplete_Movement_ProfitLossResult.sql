@@ -16,12 +16,13 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_ProfitLossResult());
 
 
-   
-     -- !!!проводки!!!
-     PERFORM lpComplete_Movement (inMovementId:= inMovementId
-                                , inDescId    := zc_Movement_ProfitLossResult()
-                                , inUserId    := vbUserId
-                                 );
+     -- создаются временные таблицы - для формирование данных для проводок
+     PERFORM lpComplete_Movement_Finance_CreateTemp();
+
+     -- проводим Документ
+     PERFORM lpComplete_Movement_ProfitLossResult (inMovementId := inMovementId
+                                                 , inUserId     := vbUserId
+                                                  );
 
 END;
 $BODY$

@@ -4,9 +4,8 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
   ClientWidth = 1043
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitTop = -55
   ExplicitWidth = 1059
-  ExplicitHeight = 574
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -539,7 +538,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
         end
         item
           Name = 'inMask'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
@@ -584,7 +583,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
         end
         item
           Name = 'inMask'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
@@ -610,7 +609,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
         end
         item
           Name = 'inMask'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
@@ -800,6 +799,9 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintTax_Client: TdsdPrintAction
       Category = 'DSDLib'
@@ -841,6 +843,9 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -883,6 +888,9 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Bill: TdsdPrintAction
       Category = 'DSDLib'
@@ -921,6 +929,9 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actSPPrintSaleProcName: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1001,6 +1012,9 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object mactPrint_TTN: TMultiAction
       Category = 'DSDLib'
@@ -1057,7 +1071,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate_TransportGoods_calc'
           DataType = ftDateTime
@@ -1111,6 +1125,9 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -1538,7 +1555,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1860,8 +1877,14 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMask'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime
@@ -1885,7 +1908,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
       end
       item
         Name = 'OperDate_TransportGoods'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate_TransportGoods'
         DataType = ftDateTime

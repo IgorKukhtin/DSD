@@ -381,7 +381,8 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = MovementLinkMovement_TransportGoods.MovementId
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+            -- !!!Склад Реализации!!!
+            LEFT JOIN Object AS Object_From ON Object_From.Id = CASE WHEN Movement_Sale.DescId = zc_Movement_TransferDebtOut() THEN 8459 ELSE MovementLinkObject_From.ObjectId END 
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = MovementLinkMovement_TransportGoods.MovementId

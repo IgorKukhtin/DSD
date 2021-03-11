@@ -125,23 +125,27 @@ BEGIN
 
    UNION SELECT 11, 'dimension' :: TVarChar AS FieldType, 'Форма оплаты' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'PaidKindName' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
                  'Object' :: TVarChar, 'ObjectPaidKind' :: TVarChar, 'PaidKindId' :: TVarChar, 'ValueData' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
-   UNION SELECT 12, 'dimension' :: TVarChar AS FieldType, 'Филиал' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'BranchName' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
+
+   UNION SELECT 12, 'dimension' :: TVarChar AS FieldType, 'ФО (бонус)' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'PaidKindName_bonus' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
+                 'Object' :: TVarChar, 'ObjectPaidKind_bonus' :: TVarChar, 'PaidKindId_bonus' :: TVarChar, 'ValueData' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
+
+   UNION SELECT 13, 'dimension' :: TVarChar AS FieldType, 'Филиал' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'BranchName' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
                  'Object' :: TVarChar, 'ObjectBranch' :: TVarChar, 'BranchId' :: TVarChar, 'ValueData' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
-   UNION SELECT 13, 'dimension' :: TVarChar AS FieldType, 'Регион' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'AreaName' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
+   UNION SELECT 14, 'dimension' :: TVarChar AS FieldType, 'Регион' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'AreaName' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
                  'Object' :: TVarChar, 'ObjectArea' :: TVarChar, 'AreaId' :: TVarChar, 'ValueData' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
-   UNION SELECT 14, 'dimension' :: TVarChar AS FieldType, 'Торговая сеть' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'RetailName' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
+   UNION SELECT 15, 'dimension' :: TVarChar AS FieldType, 'Торговая сеть' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'RetailName' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
                  'Object' :: TVarChar, 'ObjectRetail' :: TVarChar, 'RetailId' :: TVarChar, 'ValueData' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
-   UNION SELECT 15, 'dimension' :: TVarChar AS FieldType, 'Юридическое лицо' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'JuridicalName' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
+   UNION SELECT 16, 'dimension' :: TVarChar AS FieldType, 'Юридическое лицо' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'JuridicalName' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
                  'Object' :: TVarChar, 'ObjectJuridical' :: TVarChar, 'JuridicalId' :: TVarChar, 'ValueData' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
-   UNION SELECT 16, 'dimension' :: TVarChar AS FieldType, 'Контрагент' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'PartnerName' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
+   UNION SELECT 17, 'dimension' :: TVarChar AS FieldType, 'Контрагент' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'PartnerName' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
                  'Object' :: TVarChar, 'ObjectPartner' :: TVarChar, 'PartnerId' :: TVarChar, 'ValueData' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
-   UNION SELECT 17, 'dimension' :: TVarChar AS FieldType, 'Признак торговой точки' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'PartnerTagName' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
+   UNION SELECT 18, 'dimension' :: TVarChar AS FieldType, 'Признак торговой точки' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'PartnerTagName' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
                  'Object' :: TVarChar, 'ObjectPartnerTag' :: TVarChar, 'PartnerTagId' :: TVarChar, 'ValueData' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
-   UNION SELECT 18, 'dimension' :: TVarChar AS FieldType, 'Группа признак договора' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'ContractTagGroupName' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
+   UNION SELECT 19, 'dimension' :: TVarChar AS FieldType, 'Группа признак договора' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'ContractTagGroupName' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
                  'Object' :: TVarChar, 'ObjectContractTagGroup' :: TVarChar, 'ContractTagGroupId' :: TVarChar, 'ValueData' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
-   UNION SELECT 19, 'dimension' :: TVarChar AS FieldType, 'Признак договора' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'ContractTagName' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
+   UNION SELECT 20, 'dimension' :: TVarChar AS FieldType, 'Признак договора' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'ContractTagName' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
                  'Object' :: TVarChar, 'ObjectContractTag' :: TVarChar, 'ContractTagId' :: TVarChar, 'ValueData' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
-   UNION SELECT 20, 'dimension' :: TVarChar AS FieldType, 'УП статья' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'InfoMoneyName' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
+   UNION SELECT 21, 'dimension' :: TVarChar AS FieldType, 'УП статья' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'InfoMoneyName' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
                  'Object' :: TVarChar, 'ObjectInfoMoney' :: TVarChar, 'InfoMoneyId' :: TVarChar, 'ValueData' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
 
    UNION SELECT 31, 'dimension' :: TVarChar AS FieldType, 'ФИО (супервайзер)' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'PersonalName' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 

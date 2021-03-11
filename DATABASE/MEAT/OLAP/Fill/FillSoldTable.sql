@@ -20,7 +20,7 @@ BEGIN
   --
   INSERT INTO SoldTable (OperDate
                        , AccountId
-                       , BranchId, JuridicalGroupId, JuridicalId, PartnerId, InfoMoneyId, PaidKindId, RetailId, RetailReportId
+                       , BranchId, JuridicalGroupId, JuridicalId, PartnerId, InfoMoneyId, PaidKindId, PaidKindId_bonus, RetailId, RetailReportId
                        , AreaId, PartnerTagId
                        , ContractId, ContractTagId, ContractTagGroupId
                        , PersonalId, UnitId_Personal, BranchId_Personal, PersonalTradeId, UnitId_PersonalTrade
@@ -40,7 +40,7 @@ BEGIN
                         )
 
    WITH tmpPartnerAddress AS (SELECT * FROM Object_Partner_Address_View)
-      , tmpAnalyzer AS (SELECT Constant_ProfitLoss_AnalyzerId_View.* FROM Constant_ProfitLoss_AnalyzerId_View) 
+      , tmpAnalyzer AS (SELECT Constant_ProfitLoss_AnalyzerId_View.* FROM Constant_ProfitLoss_AnalyzerId_View)
       , tmpOperation_SaleReturn
                      AS (SELECT MIContainer.OperDate
                               , CLO_Juridical.ObjectId                AS JuridicalId
@@ -115,12 +115,13 @@ BEGIN
                                 , MIContainer.ObjectId_Analyzer
                                 , MIContainer.ObjectIntId_Analyzer
                         )
-       
+
           , tmpBonus AS (SELECT MovementItemContainer.OperDate  AS OperDate
                               , CLO_Juridical.ObjectId          AS JuridicalId
                               , 0                               AS PartnerId
                               , CLO_InfoMoney.ObjectId          AS InfoMoneyId
-                              , CLO_PaidKind.ObjectId           AS PaidKindId
+                              , COALESCE (ObjectLink_Contract_PaidKind.ChildObjectId, CLO_PaidKind.ObjectId) AS PaidKindId
+                              , CLO_PaidKind.ObjectId           AS PaidKindId_bonus
                               , 0                               AS BranchId
                               , COALESCE (MILinkObject_ContractChild.ObjectId, CLO_Contract.ObjectId) AS ContractId
 
@@ -138,13 +139,9 @@ BEGIN
                               , 0 AS GoodsId
                               , 0 AS GoodsKindId
 
-                            --, COALESCE (MILinkObject_ContractConditionKind.ObjectId,0)                  AS ContractConditionKindId
-                            --, COALESCE (MILinkObject_BonusKind.ObjectId,0)                              AS BonusKindId
-                            --, COALESCE (MIFloat_BonusValue.ValueData,0)                                 AS BonusTax
-
-                              , 0 AS ContractConditionKindId
-                              , 0 AS BonusKindId
-                              , 0 AS BonusTax
+                              , COALESCE (MILinkObject_ContractConditionKind.ObjectId,0)                  AS ContractConditionKindId
+                              , COALESCE (MILinkObject_BonusKind.ObjectId,0)                              AS BonusKindId
+                              , COALESCE (MIFloat_BonusValue.ValueData,0)                                 AS BonusTax
 
                               , SUM (CASE WHEN MILinkObject_ContractChild.ObjectId > 0 OR MovementBoolean_isLoad.ValueData = TRUE
                                              --THEN COALESCE (MovementItem.Amount, -1 * MovementItemContainer.Amount)
@@ -171,9 +168,25 @@ BEGIN
                               LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractChild
                                                                ON MILinkObject_ContractChild.MovementItemId = MovementItemContainer.MovementItemId
                                                               AND MILinkObject_ContractChild.DescId = zc_MILinkObject_ContractChild()
+                              LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
+                                                   ON ObjectLink_Contract_PaidKind.ObjectId = MILinkObject_ContractChild.ObjectId
+                                                  AND ObjectLink_Contract_PaidKind.DescId   = zc_ObjectLink_Contract_PaidKind()
                               LEFT JOIN MovementBoolean AS MovementBoolean_isLoad
                                                         ON MovementBoolean_isLoad.MovementId =  Movement.Id
                                                        AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
+
+                              LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                    AND MovementItem.DescId     = zc_MI_Master()
+                                                    AND MovementItem.isErased   = FALSE
+                              LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractConditionKind
+                                                               ON MILinkObject_ContractConditionKind.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()
+                              LEFT JOIN MovementItemLinkObject AS MILinkObject_BonusKind
+                                                               ON MILinkObject_BonusKind.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_BonusKind.DescId = zc_MILinkObject_BonusKind()
+                              LEFT JOIN MovementItemFloat AS MIFloat_BonusValue
+                                                          ON MIFloat_BonusValue.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_BonusValue.DescId = zc_MIFloat_BonusValue()
 
 /*                            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                     AND MovementItem.DescId = zc_MI_Child()
@@ -193,12 +206,6 @@ BEGIN
                               LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
                                                                ON MILinkObject_Branch.MovementItemId = MovementItem.Id
                                                               AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
-                              LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractConditionKind
-                                                               ON MILinkObject_ContractConditionKind.MovementItemId = MovementItem.Id
-                                                              AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()
-                              LEFT JOIN MovementItemLinkObject AS MILinkObject_BonusKind
-                                                               ON MILinkObject_BonusKind.MovementItemId = MovementItem.Id
-                                                              AND MILinkObject_BonusKind.DescId = zc_MILinkObject_BonusKind()
 
                               LEFT JOIN MovementItemDate AS MIDate_OperDate
                                                          ON MIDate_OperDate.MovementItemId = MovementItem.Id
@@ -206,10 +213,6 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                           ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                                          AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
-
-                              LEFT JOIN MovementItemFloat AS MIFloat_BonusValue
-                                                          ON MIFloat_BonusValue.MovementItemId = MovementItem.Id
-                                                         AND MIFloat_BonusValue.DescId = zc_MIFloat_BonusValue()
 
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                                            ON MovementLinkObject_PaidKind.MovementId = MIFloat_MovementId.ValueData :: Integer
@@ -230,25 +233,26 @@ BEGIN
                               --, MILinkObject_Goods.ObjectId
                               --, MILinkObject_GoodsKind.ObjectId
 
-                              --, MILinkObject_ContractConditionKind
-                              --, MILinkObject_BonusKind.ObjectId
-                              --, MIFloat_BonusValue.ValueData
-
+                                , MILinkObject_ContractConditionKind.ObjectId
+                                , MILinkObject_BonusKind.ObjectId
+                                , MIFloat_BonusValue.ValueData
+                                , ObjectLink_Contract_PaidKind.ChildObjectId
                         UNION ALL
                          SELECT MovementItemContainer.OperDate  AS OperDate
                               , CLO_Juridical.ObjectId          AS JuridicalId
                               , CLO_Partner.ObjectId            AS PartnerId
                               , CLO_InfoMoney.ObjectId          AS InfoMoneyId
-                              , CLO_PaidKind.ObjectId           AS PaidKindId
+                              , COALESCE (ObjectLink_Contract_PaidKind.ChildObjectId, CLO_PaidKind.ObjectId) AS PaidKindId
+                              , CLO_PaidKind.ObjectId           AS PaidKindId_bonus
                               , CLO_Branch.ObjectId             AS BranchId
                               , COALESCE (MILinkObject_ContractChild.ObjectId, CLO_Contract.ObjectId) AS ContractId
 
                               , 0 AS GoodsId
                               , 0 AS GoodsKindId
 
-                              , 0 AS ContractConditionKindId
-                              , 0 AS BonusKindId
-                              , 0 AS BonusTax
+                              , COALESCE (MILinkObject_ContractConditionKind.ObjectId,0)                  AS ContractConditionKindId
+                              , COALESCE (MILinkObject_BonusKind.ObjectId,0)                              AS BonusKindId
+                              , COALESCE (MIFloat_BonusValue.ValueData,0)                                 AS BonusTax
 
                               , SUM (CASE WHEN MILinkObject_ContractChild.ObjectId > 0 OR MovementBoolean_isLoad.ValueData = TRUE
                                                THEN -1 * MovementItemContainer.Amount
@@ -279,10 +283,25 @@ BEGIN
                               LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractChild
                                                                ON MILinkObject_ContractChild.MovementItemId = MovementItemContainer.MovementItemId
                                                               AND MILinkObject_ContractChild.DescId = zc_MILinkObject_ContractChild()
+                              LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
+                                                   ON ObjectLink_Contract_PaidKind.ObjectId = MILinkObject_ContractChild.ObjectId
+                                                  AND ObjectLink_Contract_PaidKind.DescId   = zc_ObjectLink_Contract_PaidKind()
                               LEFT JOIN MovementBoolean AS MovementBoolean_isLoad
                                                         ON MovementBoolean_isLoad.MovementId =  Movement.Id
                                                        AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
 
+                              LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                    AND MovementItem.DescId     = zc_MI_Master()
+                                                    AND MovementItem.isErased   = FALSE
+                              LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractConditionKind
+                                                               ON MILinkObject_ContractConditionKind.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()
+                              LEFT JOIN MovementItemLinkObject AS MILinkObject_BonusKind
+                                                               ON MILinkObject_BonusKind.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_BonusKind.DescId = zc_MILinkObject_BonusKind()
+                              LEFT JOIN MovementItemFloat AS MIFloat_BonusValue
+                                                          ON MIFloat_BonusValue.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_BonusValue.DescId = zc_MIFloat_BonusValue()
 
                          WHERE Movement.DescId = zc_Movement_ProfitLossService()
                          GROUP BY MovementItemContainer.OperDate
@@ -292,14 +311,20 @@ BEGIN
                                 , CLO_PaidKind.ObjectId
                                 , CLO_Branch.ObjectId
                                 , MILinkObject_ContractChild.ObjectId, CLO_Contract.ObjectId
+
+                                , MILinkObject_ContractConditionKind.ObjectId
+                                , MILinkObject_BonusKind.ObjectId
+                                , MIFloat_BonusValue.ValueData
+                                , ObjectLink_Contract_PaidKind.ChildObjectId
                         )
-          , tmpOperation_all AS 
+          , tmpOperation_all AS
            (SELECT tmpOperation_SaleReturn.OperDate
 
                  , tmpOperation_SaleReturn.JuridicalId
                  , tmpOperation_SaleReturn.PartnerId
                  , tmpOperation_SaleReturn.InfoMoneyId
                  , tmpOperation_SaleReturn.PaidKindId
+                 , 0 AS PaidKindId_bonus
                  , tmpOperation_SaleReturn.BranchId
                  , tmpOperation_SaleReturn.ContractId
 
@@ -357,6 +382,7 @@ BEGIN
                  , tmpBonus.PartnerId
                  , tmpBonus.InfoMoneyId
                  , tmpBonus.PaidKindId
+                 , tmpBonus.PaidKindId_bonus
                  , tmpBonus.BranchId
                  , tmpBonus.ContractId
 
@@ -401,13 +427,14 @@ BEGIN
 
             FROM tmpBonus)
 
-          , tmpOperation AS 
+          , tmpOperation AS
            (SELECT tmpOperation_all.OperDate
 
                  , tmpOperation_all.JuridicalId
                  , tmpOperation_all.PartnerId
                  , tmpOperation_all.InfoMoneyId
                  , tmpOperation_all.PaidKindId
+                 , tmpOperation_all.PaidKindId_bonus
                  , tmpOperation_all.BranchId
                  , tmpOperation_all.ContractId
 
@@ -457,6 +484,7 @@ BEGIN
                    , tmpOperation_all.PartnerId
                    , tmpOperation_all.InfoMoneyId
                    , tmpOperation_all.PaidKindId
+                   , tmpOperation_all.PaidKindId_bonus
                    , tmpOperation_all.BranchId
                    , tmpOperation_all.ContractId
 
@@ -478,11 +506,12 @@ BEGIN
            , tmpResult.PartnerId
            , tmpResult.InfoMoneyId
            , tmpResult.PaidKindId
+           , tmpResult.PaidKindId_bonus
            , ObjectLink_Juridical_Retail.ChildObjectId             AS RetailId
            , ObjectLink_Juridical_RetailReport.ChildObjectId       AS RetailReportId
-           , View_Partner_Address.AreaId                
-           , View_Partner_Address.PartnerTagId          
-           , tmpResult.ContractId 
+           , View_Partner_Address.AreaId
+           , View_Partner_Address.PartnerTagId
+           , tmpResult.ContractId
            , ObjectLink_Contract_ContractTag.ChildObjectId         AS ContractTagId
            , ObjectLink_ContractTag_ContractTagGroup.ChildObjectId AS ContractTagGroupId
 
@@ -503,13 +532,13 @@ BEGIN
            , tmpResult.GoodsKindId
            , ObjectLink_Goods_Measure.ChildObjectId                AS MeasureId
 
-           , View_Partner_Address.RegionId              
-           , View_Partner_Address.ProvinceId            
-           , View_Partner_Address.CityKindId            
-           , View_Partner_Address.CityId                
-           , View_Partner_Address.ProvinceCityId        
-           , View_Partner_Address.StreetKindId          
-           , View_Partner_Address.StreetId              
+           , View_Partner_Address.RegionId
+           , View_Partner_Address.ProvinceId
+           , View_Partner_Address.CityKindId
+           , View_Partner_Address.CityId
+           , View_Partner_Address.ProvinceCityId
+           , View_Partner_Address.StreetKindId
+           , View_Partner_Address.StreetId
 
            , tmpResult.Actions_AmountPartner_Weight AS Actions_Weight
            , tmpResult.Actions_AmountPartner_Sh     AS Actions_Sh
@@ -549,7 +578,7 @@ BEGIN
            , (tmpResult.Sale_SummCost_40200 + tmpResult.Return_SummCost_40200) AS SaleReturn_SummCost_40200 -- !!!Á‰ÂÒ¸ ÒÛÏÏ‡!!!
            , (tmpResult.Sale_AmountPartner_Weight - tmpResult.Return_AmountPartner_Weight)   AS SaleReturn_Amount_Weight
            , (tmpResult.Sale_AmountPartner_Sh - tmpResult.Return_AmountPartner_Sh)           AS SaleReturn_Amount_Sh
-      
+
            , (tmpResult.BonusBasis)   AS BonusBasis
            , (tmpResult.Bonus)        AS Bonus
 
@@ -566,6 +595,7 @@ BEGIN
                  , tmpOperation.PartnerId
                  , tmpOperation.InfoMoneyId
                  , tmpOperation.PaidKindId
+                 , tmpOperation.PaidKindId_bonus
                  , tmpOperation.BranchId
                  , tmpOperation.ContractId
 
@@ -628,6 +658,7 @@ BEGIN
                    , tmpOperation.PartnerId
                    , tmpOperation.InfoMoneyId
                    , tmpOperation.PaidKindId
+                   , tmpOperation.PaidKindId_bonus
                    , tmpOperation.BranchId
                    , tmpOperation.ContractId
 
@@ -710,6 +741,7 @@ BEGIN
            , 0                                                     AS PartnerId
            , CLO_InfoMoney.ObjectId                                AS InfoMoneyId
            , CLO_PaidKind.ObjectId                                 AS PaidKindId
+           , 0                                                     AS PaidKindId_bonus
            , ObjectLink_Juridical_Retail.ChildObjectId             AS RetailId
            , ObjectLink_Juridical_RetailReport.ChildObjectId       AS RetailReportId
            , 0 AS AreaId
@@ -774,7 +806,7 @@ BEGIN
                                AND ObjectLink_ContractTag_ContractTagGroup.DescId = zc_ObjectLink_ContractTag_ContractTagGroup()
     WHERE Movement.DescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_SendDebt())
     GROUP BY MovementItemContainer.OperDate
-           , CLO_PaidKind.ObjectId 
+           , CLO_PaidKind.ObjectId
            , CLO_Juridical.ObjectId
            , CLO_Juridical.ObjectId
            , CLO_Contract.ObjectId
@@ -811,7 +843,7 @@ BEGIN
 
     END IF;
 
-  
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -821,9 +853,9 @@ ALTER FUNCTION FillSoldTable (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
  12.01.15                                        * all
- 26.11.14                         *  
- 25.11.14                                        * add Sale_SummCost Return_SummCost 
- 19.11.14                         * add 
+ 26.11.14                         *
+ 25.11.14                                        * add Sale_SummCost Return_SummCost
+ 19.11.14                         * add
 */
 /*
 SELECT object_p.ValueData, object_g.ValueData, object_gk.ValueData, sum (Sale_Summ)
@@ -838,4 +870,4 @@ group by object_p.ValueData, object_g.ValueData , object_gk.ValueData
 */
 -- ÚÂÒÚ
 -- SELECT * FROM SoldTable where OperDate = '03.09.2015'
--- SELECT * FROM FillSoldTable ('01.03.2020', '31.03.2020', zfCalc_UserAdmin()) 
+-- SELECT * FROM FillSoldTable ('01.01.2021', '31.01.2021', zfCalc_UserAdmin())

@@ -1,5 +1,5 @@
 -- Function: gpInsertUpdate_MovementItem_ProfitLossResult()
-¶http://main.ant-logistics.com/AntLogistics/AntService.svc/DEX_User_Edit?type=login&format=xml&Session_Ident=EB38E1C9-6181-4B15-B59A-A9A2054A4C17&Type=add&User_Name=avramenko@dariya&Nick_Name=Авраменко Дарья&New_User_Pass=51
+
 DROP FUNCTION IF EXISTS gpInsert_MI_ProfitLossResult (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_MI_ProfitLossResult(
@@ -36,7 +36,8 @@ BEGIN
                                   FROM Container 
                                        LEFT JOIN MovementItemContainer AS MIContainer
                                                                        ON MIContainer.ContainerId = Container.Id
-                                                                      AND MIContainer.OperDate >= vbOperDate
+                                                                      -- !!!на конец дня!!!
+                                                                      AND MIContainer.OperDate > vbOperDate
                                   WHERE Container.DescId = zc_Container_Summ()
                                     AND Container.ObjectId = zc_Enum_Account_100301()
                                     --AND COALESCE (Container.Amount,0) <> 0

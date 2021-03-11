@@ -284,8 +284,44 @@ end if;*/
                 (SELECT Container.ObjectId AS AccountId
                       , Container.Id AS ContainerId
                       -- , Container.ParentId
-                      , COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  1 * MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
-                      , COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
+                      , COALESCE (SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                             AND MIContainer.AccountId      = zc_Enum_Account_100301()
+                                             AND MIContainer.isActive = TRUE
+                                                 THEN 1 * MIContainer.Amount
+
+                                            WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                             AND MIContainer.AccountId = zc_Enum_Account_100301()
+                                             AND MIContainer.isActive = FALSE
+                                                 THEN 0
+
+                                            WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                             AND MIContainer.MovementDescId = zc_Movement_ProfitLossResult()
+                                                 THEN 0
+
+                                            WHEN MIContainer.Amount > 0
+                                             AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                 THEN  1 * MIContainer.Amount
+                                            ELSE 0
+                                       END), 0) AS AmountDebet
+                      , COALESCE (SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                             AND MIContainer.AccountId = zc_Enum_Account_100301()
+                                             AND MIContainer.isActive = TRUE
+                                                 THEN 0
+
+                                            WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                             AND MIContainer.AccountId = zc_Enum_Account_100301()
+                                             AND MIContainer.isActive = FALSE
+                                                 THEN -1 * MIContainer.Amount
+
+                                            WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                             AND MIContainer.MovementDescId = zc_Movement_ProfitLossResult()
+                                                 THEN -1 * MIContainer.Amount
+
+                                            WHEN MIContainer.Amount < 0
+                                             AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                 THEN -1 * MIContainer.Amount
+                                            ELSE 0
+                                       END), 0) AS AmountKredit
                       -- , COALESCE (SUM (CASE WHEN  MIContainer.isActive = TRUE  AND COALESCE (MIContainer.AccountId, 0) <> zc_Enum_Account_100301()  AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  1 * MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
                       -- , COALESCE (SUM (CASE WHEN (MIContainer.isActive = FALSE OR  COALESCE (MIContainer.AccountId, 0) =  zc_Enum_Account_100301()) AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
                       , COALESCE (Container.Amount,0) - COALESCE (SUM (MIContainer.Amount), 0) AS AmountRemainsStart
@@ -293,6 +329,7 @@ end if;*/
                       LEFT JOIN MovementItemContainer AS MIContainer
                                                       ON MIContainer.Containerid = Container.Id
                                                      AND MIContainer.OperDate >= inStartDate
+                                                   --AND MIContainer.MovementDescId <> zc_Movement_ProfitLossResult()
                  WHERE Container.DescId = zc_Container_Summ()
                  GROUP BY Container.ObjectId
                         , COALESCE (Container.Amount,0)

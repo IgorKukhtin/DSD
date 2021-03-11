@@ -163,7 +163,7 @@ BEGIN
                                                         , inUserId             := vbUserId
                                                          )
      WHERE _tmpMI.Day_diff > 0 OR _tmpMI.MovementItemId > 0
-       AND _tmpMI.MovementItemId_2 = 0
+     --AND _tmpMI.MovementItemId_2 = 0
      ;
                                                          
                                                               -- сохраняем элементы
@@ -181,7 +181,7 @@ BEGIN
          --, lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCompensationRecalc(), _tmpMI.MovementItemId, (_tmpMI.Day_diff * _tmpMI.AmountCompensation))
      FROM _tmpMI
      WHERE _tmpMI.Day_diff > 0
-       AND _tmpMI.MovementItemId_2 = 0
+     --AND _tmpMI.MovementItemId_2 = 0
     ;
 
 

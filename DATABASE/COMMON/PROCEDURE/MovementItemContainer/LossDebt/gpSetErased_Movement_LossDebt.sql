@@ -15,6 +15,7 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_LossDebt());
 
      IF inMovementId = 123096 -- № 15 от 31.12.2013
+     OR inMovementId = 19270690 -- № 259 от 28.02.2021
      THEN
          RAISE EXCEPTION 'Ошибка.Документ не может быть удален.';
      END IF;
