@@ -3,7 +3,7 @@ object IncomeForm: TIncomeForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
   ClientHeight = 455
-  ClientWidth = 1038
+  ClientWidth = 1191
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,12 @@ object IncomeForm: TIncomeForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1038
+    Width = 1191
     Height = 97
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 1038
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -98,7 +99,7 @@ object IncomeForm: TIncomeForm
     end
     object edVATPercent: TcxCurrencyEdit
       Left = 404
-      Top = 64
+      Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 0
@@ -239,29 +240,66 @@ object IncomeForm: TIncomeForm
       TabOrder = 26
       Width = 175
     end
+    object cxLabel12: TcxLabel
+      Left = 1040
+      Top = 5
+      Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
+    end
+    object edInsertDate: TcxDateEdit
+      Left = 1040
+      Top = 23
+      EditValue = 42132d
+      Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+      Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+      Properties.Kind = ckDateTime
+      Properties.ReadOnly = True
+      TabOrder = 28
+      Width = 146
+    end
+    object cxLabel13: TcxLabel
+      Left = 1040
+      Top = 45
+      Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+    end
+    object edInsertName: TcxButtonEdit
+      Left = 1040
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 30
+      Width = 146
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 123
-    Width = 1038
+    Width = 1191
     Height = 332
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 1038
     ClientRectBottom = 332
-    ClientRectRight = 1038
+    ClientRectRight = 1191
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 1038
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1038
+        Width = 1191
         Height = 308
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1038
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -659,16 +697,15 @@ object IncomeForm: TIncomeForm
     object cxTabSheetCost: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitWidth = 1310
       object GridCost: TcxGrid
         Left = 0
         Top = 0
-        Width = 1038
+        Width = 1191
         Height = 308
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1310
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = CostDS
@@ -2544,6 +2581,20 @@ object IncomeForm: TIncomeForm
         Value = Null
         Component = GuidesInvoice
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsertDate'
+        Value = Null
+        Component = edInsertDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsertName'
+        Value = Null
+        Component = edInsertName
         DataType = ftString
         MultiSelectSeparator = ','
       end>

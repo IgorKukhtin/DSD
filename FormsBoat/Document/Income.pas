@@ -175,6 +175,10 @@ type
     OperPrice_cost: TcxGridDBColumn;
     TotalSumm_cost: TcxGridDBColumn;
     Summ_cost: TcxGridDBColumn;
+    cxLabel12: TcxLabel;
+    edInsertDate: TcxDateEdit;
+    cxLabel13: TcxLabel;
+    edInsertName: TcxButtonEdit;
   private
   public
   end;

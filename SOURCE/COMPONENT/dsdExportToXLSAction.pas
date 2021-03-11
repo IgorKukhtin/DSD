@@ -117,21 +117,27 @@ type
   private
     FTitleDataSet: TDataSet;
     FItemsDataSet: TDataSet;
+    FSignDataSet: TDataSet;
     FOrientation : TdsdOrientationType;
     FTitle: String;
     FFileName: String;
     FFileNameParam: TdsdParam;
     FTitleHeight : Currency;
+    FSignHeight : Currency;
     FTitleFont: TFont;
     FHeaderFont: TFont;
+    FSignFont: TFont;
     FFooter : boolean;
+    FNumberColumn : boolean;
     FColumnParams : TdsdColumnParams;
     FFileType : TdsdFileType;
     FSheetName : string;
     procedure SetTitleFont(Value: TFont);
     procedure SetHeaderFont(Value: TFont);
+    procedure SetSignFont(Value: TFont);
     procedure SetItemsDataSet(const Value: TDataSet);
     procedure SetTitleDataSet(const Value: TDataSet);
+    procedure SetSignDataSet(const Value: TDataSet);
     procedure SetFileName(const Value: string);
     function GetFileName: string;
   protected
@@ -144,17 +150,21 @@ type
   published
     property ItemsDataSet: TDataSet read FItemsDataSet write SetItemsDataSet;
     property TitleDataSet: TDataSet read FTitleDataSet write SetTitleDataSet;
+    property SignDataSet: TDataSet read FSignDataSet write SetSignDataSet;
     property Title: String read FTitle write FTitle;
     property FileName: string read GetFileName write SetFileName;
     property FileNameParam: TdsdParam read FFileNameParam write FFileNameParam;
     property TitleHeight : Currency read FTitleHeight write FTitleHeight;
+    property SignHeight : Currency read FSignHeight write FSignHeight;
     property Orientation : TdsdOrientationType read FOrientation write FOrientation default orPortrait;
     property TitleFont: TFont read FTitleFont write SetTitleFont;
     property HeaderFont: TFont read FHeaderFont write SetHeaderFont;
+    property SignFont: TFont read FSignFont write SetSignFont;
     property Footer : boolean  read FFooter write FFooter default True;
     property ColumnParams : TdsdColumnParams read FColumnParams write FColumnParams;
     property FileType : TdsdFileType read FFileType write FFileType default ftOpenXMLWorkbook;
     property SheetName : string read FSheetName write FSheetName;
+    property NumberColumn : boolean read FNumberColumn write FNumberColumn default False;
 
     property Caption;
     property Hint;
@@ -408,20 +418,24 @@ begin
   FColumnParams := TdsdColumnParams.Create(Self, TdsdColumnParam);
   FTitleFont := TFont.Create;
   FHeaderFont := TFont.Create;
+  FSignFont := TFont.Create;
   FFileNameParam := TdsdParam.Create(nil);
   FFileNameParam.DataType := ftString;
   FFileNameParam.Value := '';
   FFileName := '';
   FTitleHeight := 1;
+  FSignHeight := 1;
   FFooter := True;
   FFileType := ftOpenXMLWorkbook;
   FSheetName := '';
+  FNumberColumn := False;
 end;
 
 destructor TdsdExportToXLS.Destroy;
 begin
   FTitleFont.Free;
   FHeaderFont.Free;
+  FSignFont.Free;
   FColumnParams.Free;
   FFileNameParam.Free;
   inherited;
@@ -437,6 +451,11 @@ begin
   FTitleDataSet := Value;
 end;
 
+procedure TdsdExportToXLS.SetSignDataSet(const Value: TDataSet);
+begin
+  FSignDataSet := Value;
+end;
+
 procedure TdsdExportToXLS.SetTitleFont(Value: TFont);
 begin
   FTitleFont.Assign(Value);
@@ -445,6 +464,11 @@ end;
 procedure TdsdExportToXLS.SetHeaderFont(Value: TFont);
 begin
   FHeaderFont.Assign(Value);
+end;
+
+procedure TdsdExportToXLS.SetSignFont(Value: TFont);
+begin
+  FSignFont.Assign(Value);
 end;
 
 procedure TdsdExportToXLS.SetFileName(const Value: string);
@@ -493,9 +517,11 @@ function TdsdExportToXLS.LocalExecute: Boolean;
  var xlApp, xlBook, xlSheet, xlRange: OLEVariant;
      nTitleCount,  // Строк заголовка отчета
      nHeadGrid,    // Начало шапки грида
+     nHeadCount,   // Строк шапки грида
      nDataStart,   // Начало данных
      nDataCount,   // Количество строк данных
      nColumnCount, // Количество колонок
+     nSignCount,   // Количество строк подписи
      I, J, L, P : Integer;
      nCurr : Extended;
      cFileName, S : string;
@@ -579,8 +605,10 @@ begin
 
     nTitleCount := 0;
     nHeadGrid := 1;
+    nHeadCount := 1;
     nDataStart := 1;
     nDataCount := 0;
+    nSignCount := 0;
 
     if FColumnParams.Count > 0 then
       nColumnCount := FColumnParams.Count
@@ -671,9 +699,36 @@ begin
         xlRange.HorizontalAlignment := xlCenter;
         xlRange.VerticalAlignment := xlCenter;
         xlRange.WrapText:=true;
+        xlRange.Font.Name := FHeaderFont.Name;
+        xlRange.Font.Size := FHeaderFont.Size;
+        xlRange.Font.Color := FHeaderFont.Color;
+        xlRange.Font.Bold := fsBold in FHeaderFont.Style;
+        xlRange.Font.Italic := fsItalic in FHeaderFont.Style;
+        xlRange.Font.Underline := fsUnderline in FHeaderFont.Style;
       end;
     end;
     Inc(nDataStart);
+
+      // Номерация столбцов
+    if FNumberColumn then
+    begin
+      for I := 0 to nColumnCount - 1 do
+      begin
+        xlRange := xlSheet.Cells[nDataStart, I + 1];
+        xlRange.Value := IntToStr(I + 1);
+        xlRange.HorizontalAlignment := xlCenter;
+        xlRange.VerticalAlignment := xlCenter;
+        xlRange.WrapText:=true;
+        xlRange.Font.Name := FHeaderFont.Name;
+        xlRange.Font.Size := FHeaderFont.Size;
+        xlRange.Font.Color := FHeaderFont.Color;
+        xlRange.Font.Bold := fsBold in FHeaderFont.Style;
+        xlRange.Font.Italic := fsItalic in FHeaderFont.Style;
+        xlRange.Font.Underline := fsUnderline in FHeaderFont.Style;
+      end;
+      Inc(nDataStart);
+      Inc(nHeadCount);
+    end;
 
       // Данные
     FItemsDataSet.First;
@@ -736,7 +791,7 @@ begin
     end;
 
       // Рисуем рамку вокруг шапки
-    xlRange := xlSheet.Range[xlSheet.Cells[nHeadGrid, 1], xlSheet.Cells[nHeadGrid, nColumnCount]];
+    xlRange := xlSheet.Range[xlSheet.Cells[nHeadGrid, 1], xlSheet.Cells[nHeadGrid + nHeadCount - 1, nColumnCount]];
     xlRange.Borders[xlEdgeLeft].Weight := xlMedium;
     xlRange.Borders[xlEdgeTop].Weight := xlMedium;
     xlRange.Borders[xlEdgeRight].Weight := xlMedium;
@@ -763,9 +818,11 @@ begin
         xlRange := xlSheet.Range[xlSheet.Cells[nDataStart, I + 1], xlSheet.Cells[nDataStart + nDataCount - 1, I + 1]];
 
         case FColumnParams.Items[I].DataType of
-//          ftDate, ftTime, ftDateTime : xlRange.Value := '';
-          ftFloat, ftCurrency, ftBCD : xlRange.NumberFormat := '#' + GetThousandSeparator + '##0' + FormatSettings.DecimalSeparator +
-                                                               CharReplay('0', FColumnParams.Items[I].DecimalPlace);
+          ftDate, ftTime, ftDateTime : xlRange.Value := '';
+          ftFloat, ftCurrency, ftBCD : if FColumnParams.Items[I].DecimalPlace > 0 then
+                                          xlRange.NumberFormat := '#' + GetThousandSeparator + '##0' + FormatSettings.DecimalSeparator +
+                                                               CharReplay('0', FColumnParams.Items[I].DecimalPlace)
+                                       else xlRange.NumberFormat := 'General';
         end;
 
         if FColumnParams.Items[I].CalcColumn <> ccNone then
@@ -791,8 +848,12 @@ begin
           xlRange.VerticalAlignment := xlCenter;
           xlRange.HorizontalAlignment := xlRight;
           if FColumnParams.Items[I].DataType in [ftFloat, ftCurrency, ftBCD] then
-            xlRange.NumberFormat := '#' + GetThousandSeparator + '##0' + FormatSettings.DecimalSeparator +
-                                    CharReplay('0', FColumnParams.Items[I].DecimalPlace);
+          begin
+            if FColumnParams.Items[I].DecimalPlace > 0 then
+               xlRange.NumberFormat := '#' + GetThousandSeparator + '##0' + FormatSettings.DecimalSeparator +
+                                    CharReplay('0', FColumnParams.Items[I].DecimalPlace)
+            else xlRange.NumberFormat := 'General';
+          end;
           case FColumnParams.Items[I].Kind of
             skSumma : xlRange.FormulaR1C1 := '=SUM(R[-' + IntToStr(nDataCount) + ']C[' + IntToStr(I - J + 1) + ']:R[-1]C[' + IntToStr(I - J + 1) + '])';
             skMax : xlRange.FormulaR1C1 := '=MAX(R[-' + IntToStr(nDataCount) + ']C[' + IntToStr(I - J + 1) + ']:R[-1]C[' + IntToStr(I - J + 1) + '])';
@@ -853,6 +914,33 @@ begin
       xlRange.Borders[xlEdgeBottom].Weight := xlMedium;
       xlRange.Borders[xlInsideVertical].Weight := xlThin;
       xlRange.Borders[xlInsideHorizontal].Weight := xlThin;
+    end;
+
+      // Подпись отчета
+    if Assigned(FSignDataSet) and FSignDataSet.Active and (FSignDataSet.RecordCount > 0) then
+    begin
+      FSignDataSet.First;
+      while not FSignDataSet.Eof do
+      begin
+        Inc(nSignCount);
+
+        xlSheet.Rows[nDataStart + nDataCount + nSignCount].RowHeight := xlSheet.Rows[nDataStart + nDataCount + nSignCount].RowHeight * FSignHeight;
+        xlRange := xlSheet.Range[xlSheet.Cells[nDataStart + nDataCount + nSignCount, 1], xlSheet.Cells[nDataStart + nDataCount + nSignCount, nColumnCount]];
+        xlRange.Merge;
+        xlRange := xlSheet.Cells[nDataStart + nDataCount + nSignCount, 1];
+        xlRange.Value := FSignDataSet.Fields.Fields[0].AsString;
+        xlRange.HorizontalAlignment := xlCenter;
+        xlRange.VerticalAlignment := xlCenter;
+        xlRange.WrapText:=true;
+        xlRange.Font.Name := FSignFont.Name;
+        xlRange.Font.Size := FSignFont.Size;
+        xlRange.Font.Color := FSignFont.Color;
+        xlRange.Font.Bold := fsBold in FSignFont.Style;
+        xlRange.Font.Italic := fsItalic in FSignFont.Style;
+        xlRange.Font.Underline := fsUnderline in FSignFont.Style;
+
+        FSignDataSet.Next;
+      end;
     end;
 
      // Переименовываем лист

@@ -48,31 +48,38 @@ object MainForm: TMainForm
     Height = 31
     Align = alTop
     TabOrder = 0
-    object btnSendEmail: TButton
-      Left = 775
-      Top = 0
-      Width = 113
-      Height = 25
-      Caption = #1055#1086#1089#1083#1072#1090#1100' '#1085#1072' EMAIL'
-      TabOrder = 3
-      OnClick = btnSendEmailClick
+    object Label1: TLabel
+      Left = 104
+      Top = 8
+      Width = 68
+      Height = 13
+      Caption = #1054#1090#1087#1088'. '#1089' '#1076#1072#1090#1099
     end
-    object btnExecuteWhReceipt: TButton
-      Left = 554
+    object btnSendEmail: TButton
+      Left = 803
       Top = 0
       Width = 106
       Height = 25
-      Caption = #1069#1082#1089#1087#1086#1088#1090' '#1087#1088#1080#1093#1086#1076#1086#1074
-      TabOrder = 2
+      Caption = #1055#1086#1089#1083#1072#1090#1100' '#1085#1072' EMAIL'
+      TabOrder = 5
+      OnClick = btnSendEmailClick
+    end
+    object btnExecuteWhReceipt: TButton
+      Left = 614
+      Top = 0
+      Width = 70
+      Height = 25
+      Caption = #1055#1088#1080#1093#1086#1076#1099
+      TabOrder = 4
       OnClick = btnExecuteWhReceiptClick
     end
     object btnExecuteBalance: TButton
-      Left = 441
+      Left = 538
       Top = 0
-      Width = 107
+      Width = 70
       Height = 25
-      Caption = #1069#1082#1089#1087#1086#1088#1090' '#1086#1089#1090#1072#1090#1082#1086#1074
-      TabOrder = 1
+      Caption = #1054#1089#1090#1072#1090#1082#1080
+      TabOrder = 3
       OnClick = btnExecuteBalanceClick
     end
     object btnAll: TButton
@@ -81,43 +88,52 @@ object MainForm: TMainForm
       Width = 75
       Height = 25
       Caption = #1042#1089#1077' !'
-      TabOrder = 4
+      TabOrder = 6
       OnClick = btnAllClick
     end
     object btnExecuteGoods: TButton
-      Left = 330
+      Left = 462
       Top = 0
-      Width = 105
+      Width = 70
       Height = 25
-      Caption = #1069#1082#1089#1087#1086#1088#1090' '#1090#1086#1074#1072#1088#1086#1074
-      TabOrder = 0
+      Caption = #1058#1086#1074#1072#1088#1099
+      TabOrder = 2
       OnClick = btnExecuteGoodsClick
     end
     object btnExecuteUnit: TButton
-      Left = 218
+      Left = 386
       Top = 0
-      Width = 106
+      Width = 70
       Height = 25
-      Caption = #1069#1082#1089#1087#1086#1088#1090' '#1072#1087#1090#1077#1082
-      TabOrder = 5
+      Caption = #1040#1087#1090#1077#1082#1080
+      TabOrder = 1
       OnClick = btnExecuteUnitClick
     end
     object btnExecuteDespatch: TButton
-      Left = 666
+      Left = 690
       Top = 0
-      Width = 106
+      Width = 70
       Height = 25
-      Caption = #1069#1082#1089#1087#1086#1088#1090' '#1088#1072#1089#1093#1086#1076#1086#1074
-      TabOrder = 6
+      Caption = #1056#1072#1089#1093#1086#1076#1099
+      TabOrder = 7
       OnClick = btnExecuteDespatchClick
     end
     object DateStart: TcxDateEdit
-      Left = 120
+      Left = 184
       Top = 4
       EditValue = 42339d
       Properties.ShowTime = False
-      TabOrder = 7
+      TabOrder = 8
       Width = 85
+    end
+    object btnExecuteClient: TButton
+      Left = 310
+      Top = 0
+      Width = 70
+      Height = 25
+      Caption = #1050#1083#1080#1077#1085#1090#1099
+      TabOrder = 0
+      OnClick = btnExecuteClientClick
     end
   end
   object cxGrid: TcxGrid

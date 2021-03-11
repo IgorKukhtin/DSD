@@ -269,6 +269,11 @@ type
     dxBarButton9: TdxBarButton;
     spSetUnitSupplementSUN1Out: TdsdStoredProc;
     spClearUnitSupplementSUN1Out: TdsdStoredProc;
+    isOnlySP: TcxGridDBColumn;
+    gpUpdate_isOnlySP_Revert: TdsdStoredProc;
+    maUpdate_isOnlySP: TMultiAction;
+    actExecUpdate_isOnlySP: TdsdExecStoredProc;
+    dxBarButton10: TdxBarButton;
   private
     { Private declarations }
   public

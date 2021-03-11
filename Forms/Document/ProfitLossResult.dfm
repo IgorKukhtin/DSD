@@ -1,30 +1,28 @@
 inherited ProfitLossResultForm: TProfitLossResultForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1087#1088#1080#1073#1099#1083#1080' ('#1092#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1088#1077#1079#1091#1083#1100#1090#1072#1090')>'
   ClientHeight = 470
-  ClientWidth = 694
-  ExplicitWidth = 710
+  ClientWidth = 823
+  ExplicitWidth = 839
   ExplicitHeight = 508
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 116
-    Width = 694
+    Width = 823
     Height = 354
-    ExplicitTop = 126
-    ExplicitWidth = 864
-    ExplicitHeight = 399
+    ExplicitTop = 116
+    ExplicitWidth = 823
+    ExplicitHeight = 354
     ClientRectBottom = 354
-    ClientRectRight = 694
+    ClientRectRight = 823
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 864
-      ExplicitHeight = 375
+      ExplicitWidth = 823
+      ExplicitHeight = 330
       inherited cxGrid: TcxGrid
-        Width = 694
+        Width = 823
         Height = 330
-        ExplicitLeft = 176
-        ExplicitTop = 216
-        ExplicitWidth = 874
-        ExplicitHeight = 370
+        ExplicitWidth = 823
+        ExplicitHeight = 330
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -35,30 +33,12 @@ inherited ProfitLossResultForm: TProfitLossResultForm
             item
               Format = ',0.####'
               Kind = skSum
+              Column = Amount_kredit
             end
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
+              Column = Amount_debet
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -67,47 +47,26 @@ inherited ProfitLossResultForm: TProfitLossResultForm
               Column = Amount
             end
             item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = AccountName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_kredit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_debet
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsView.GroupSummaryLayout = gslStandard
+          OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -129,17 +88,7 @@ inherited ProfitLossResultForm: TProfitLossResultForm
             Options.Editing = False
             Width = 300
           end
-          object Amount: TcxGridDBColumn [2]
-            Caption = #1057#1091#1084#1084#1072
-            DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 100
-          end
-          object ContainerId: TcxGridDBColumn [3]
+          object ContainerId: TcxGridDBColumn [2]
             Caption = #1069#1083#1077#1084#1077#1085#1090
             DataBinding.FieldName = 'ContainerId'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -149,6 +98,38 @@ inherited ProfitLossResultForm: TProfitLossResultForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 149
+          end
+          object Amount_kredit: TcxGridDBColumn [3]
+            Caption = #1050#1088#1077#1076#1080#1090
+            DataBinding.FieldName = 'Amount_kredit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object Amount_debet: TcxGridDBColumn [4]
+            Caption = #1044#1077#1073#1077#1090
+            DataBinding.FieldName = 'Amount_debet'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object Amount: TcxGridDBColumn [5]
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
           end
           inherited colIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
@@ -162,6 +143,31 @@ inherited ProfitLossResultForm: TProfitLossResultForm
             Options.Editing = False
             Width = 109
           end
+          object JuridicalBasisName: TcxGridDBColumn
+            Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalBasisName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+            Options.Editing = False
+            Width = 129
+          end
+          object BusinessName: TcxGridDBColumn
+            Caption = #1041#1080#1079#1085#1077#1089#1089
+            DataBinding.FieldName = 'BusinessName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 109
+          end
+          object ProfitLossCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1057#1090#1072#1090#1100#1080
+            DataBinding.FieldName = 'ProfitLossCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 149
+          end
           object ProfitLossName: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1100#1103
             DataBinding.FieldName = 'ProfitLossName'
@@ -170,15 +176,45 @@ inherited ProfitLossResultForm: TProfitLossResultForm
             Options.Editing = False
             Width = 149
           end
+          object ProfitLossGroupCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1075#1088#1091#1087#1087#1072')'
+            DataBinding.FieldName = 'ProfitLossGroupCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object ProfitLossGroupName: TcxGridDBColumn
+            Caption = #1054#1055#1080#1059' '#1075#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'ProfitLossGroupName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 155
+          end
+          object ProfitLossDirectionCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077')'
+            DataBinding.FieldName = 'ProfitLossDirectionCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object ProfitLossDirectionName: TcxGridDBColumn
+            Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'ProfitLossDirectionName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 167
+          end
         end
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 694
+    Width = 823
     Height = 90
     TabOrder = 3
-    ExplicitWidth = 694
+    ExplicitWidth = 823
     ExplicitHeight = 90
     inherited edInvNumber: TcxTextEdit
       Left = 16
@@ -287,6 +323,7 @@ inherited ProfitLossResultForm: TProfitLossResultForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     inherited actRefresh: TdsdDataSetRefresh
@@ -1285,8 +1322,8 @@ inherited ProfitLossResultForm: TProfitLossResultForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProfitLossResult_SetErased'
-    Left = 598
-    Top = 400
+    Left = 654
+    Top = 264
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProfitLossResult_SetUnErased'

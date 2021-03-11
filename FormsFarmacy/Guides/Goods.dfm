@@ -1,24 +1,24 @@
 inherited GoodsForm: TGoodsForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1089#1077#1090#1080
   ClientHeight = 443
-  ClientWidth = 1166
+  ClientWidth = 1165
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 1182
+  ExplicitWidth = 1181
   ExplicitHeight = 482
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1166
+    Width = 1165
     Height = 417
     ExplicitWidth = 1166
     ExplicitHeight = 417
     ClientRectBottom = 417
-    ClientRectRight = 1166
+    ClientRectRight = 1165
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1166
       ExplicitHeight = 417
       inherited cxGrid: TcxGrid
-        Width = 1166
+        Width = 1165
         Height = 417
         ExplicitWidth = 1166
         ExplicitHeight = 417
@@ -661,6 +661,14 @@ inherited GoodsForm: TGoodsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 86
+          end
+          object isOnlySP: TcxGridDBColumn
+            Caption = #1058#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1057#1055' "'#1044#1086#1089#1090#1091#1087#1085#1110' '#1083#1110#1082#1080'"'
+            DataBinding.FieldName = 'isOnlySP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 72
           end
         end
       end
@@ -2322,6 +2330,31 @@ inherited GoodsForm: TGoodsForm
         end>
       Caption = 'actExecClearUnitSupplementSUN1Out'
     end
+    object maUpdate_isOnlySP: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actExecUpdate_isOnlySP
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1058#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1057#1055' "'#1044#1086#1089#1090#1091#1087#1085#1110' '#1083#1110#1082#1080'"?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1058#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1057#1055' "'#1044#1086#1089#1090#1091#1087#1085#1110' '#1083#1110#1082#1080'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1058#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1057#1055' "'#1044#1086#1089#1090#1091#1087#1085#1110' '#1083#1110#1082#1080'"'
+      ImageIndex = 79
+    end
+    object actExecUpdate_isOnlySP: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = gpUpdate_isOnlySP_Revert
+      StoredProcList = <
+        item
+          StoredProc = gpUpdate_isOnlySP_Revert
+        end>
+      Caption = 'actExecClearUnitSupplementSUN1Out'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -2619,6 +2652,10 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton10'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton3'
         end
         item
@@ -2767,6 +2804,10 @@ inherited GoodsForm: TGoodsForm
     end
     object dxBarButton9: TdxBarButton
       Action = actClearUnitSupplementSUN1Out
+      Category = 0
+    end
+    object dxBarButton10: TdxBarButton
+      Action = maUpdate_isOnlySP
       Category = 0
     end
   end
@@ -4577,5 +4618,31 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 344
     Top = 376
+  end
+  object gpUpdate_isOnlySP_Revert: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_isOnlySP_Revert'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsMainId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsMainId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOnlySP'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isOnlySP'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 600
+    Top = 368
   end
 end

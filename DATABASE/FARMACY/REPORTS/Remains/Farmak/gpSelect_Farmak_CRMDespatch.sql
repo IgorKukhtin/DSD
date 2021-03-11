@@ -54,6 +54,7 @@ BEGIN
                                                                 AND MIContainer.OperDate >= DATE_TRUNC ('DAY', inDateStart) - INTERVAL '7 DAY'
                                                                 AND MIContainer.OperDate <= CURRENT_DATE
                                                                 AND MIContainer.MovementDescId IN (zc_Movement_Check(), zc_Movement_ReturnIn(), zc_Movement_Sale())
+                                                                AND MIContainer.Amount <> 0
 
                             WHERE Container.DescId = zc_Container_Count())
          , tmpMovementProtocol AS (SELECT MovementProtocol.MovementId

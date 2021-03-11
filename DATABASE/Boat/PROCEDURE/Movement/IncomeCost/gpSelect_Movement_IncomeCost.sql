@@ -24,10 +24,12 @@ RETURNS TABLE (Id Integer, MasterMovementId integer, InvNumber Integer, MasterIn
                -- Ñóììà Ñ÷åò áåç ÍÄÑ
              , AmountCost_Master TFloat
                -- Ñóììà Ñ÷åò ñ ÍÄÑ
-             , AmountCostVAT_Master TFloat
+             --, AmountCostVAT_Master TFloat
                --
              , ObjectCode Integer, ObjectName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+             , InsertName TVarChar, InsertDate TDateTime
+             , UpdateName TVarChar, UpdateDate TDateTime
               )
 AS
 $BODY$
@@ -160,8 +162,29 @@ BEGIN
                , tmpMI_master.InfoMoneyCode :: Integer
                , tmpMI_master.InfoMoneyName :: TVarChar
                , tmpMI_master.InfoMoneyName_all :: TVarChar
+
+               , Object_Insert.ValueData              AS InsertName
+               , MovementDate_Insert.ValueData        AS InsertDate
+               , Object_Update.ValueData              AS UpdateName
+               , MovementDate_Update.ValueData        AS UpdateDate
          FROM tmpMovement
               LEFT JOIN tmpMI_master ON tmpMI_master.MovementId_master = tmpMovement.MovementId_master
+
+              LEFT JOIN MovementDate AS MovementDate_Insert
+                                     ON MovementDate_Insert.MovementId = tmpMovement.Id
+                                    AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+              LEFT JOIN MovementLinkObject AS MLO_Insert
+                                           ON MLO_Insert.MovementId = tmpMovement.Id
+                                          AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+              LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
+
+              LEFT JOIN MovementDate AS MovementDate_Update
+                                     ON MovementDate_Update.MovementId = tmpMovement.Id
+                                    AND MovementDate_Update.DescId = zc_MovementDate_Update()
+              LEFT JOIN MovementLinkObject AS MLO_Update
+                                           ON MLO_Update.MovementId = tmpMovement.Id
+                                          AND MLO_Update.DescId = zc_MovementLinkObject_Update()
+              LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
       ;
 
 END;
@@ -175,4 +198,4 @@ $BODY$
 */
 
 -- òåñò
--- SELECT * FROM gpSelect_Movement_IncomeCost (inStartDate:= '01.01.2018', inEndDate:= '01.01.2018', inIsErased:= FALSE, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_IncomeCost (inStartDate:= '01.01.2018', inEndDate:= '01.01.2018', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
