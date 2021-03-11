@@ -397,6 +397,7 @@ uses
   TransferDebtIn in '..\..\Forms\Document\TransferDebtIn.pas' {TransferDebtInForm: TParentForm},
   TransferDebtInJournal in '..\..\Forms\Document\TransferDebtInJournal.pas' {TransferDebtInJournalForm: TParentForm},
   TransferDebtOut in '..\..\Forms\Document\TransferDebtOut.pas' {TransferDebtOutForm: TParentForm},
+  TransferDebtOutJournal in '..\..\Forms\Document\TransferDebtOutJournal.pas' {TransferDebtOutJournalForm: TParentForm},
   EdiTest in '..\SOURCE\EDI\EdiTest.pas',
   ComDocXML in '..\..\SOURCE\EDI\ComDocXML.pas',
   DeclarXML in '..\..\SOURCE\EDI\DeclarXML.pas',
@@ -1239,8 +1240,7 @@ uses
   Report_Account_noBalance in '..\..\Forms\Report\Report_Account_noBalance.pas' {Report_Account_noBalanceForm: TParentForm},
   Report_AccountMotion_noBalance in '..\..\Forms\Report\Report_AccountMotion_noBalance.pas' {Report_AccountMotion_noBalanceForm: TParentForm},
   ProfitLossResult in '..\..\Forms\Document\ProfitLossResult.pas' {ProfitLossResultForm: TParentForm},
-  ProfitLossResultJournal in '..\..\Forms\Document\ProfitLossResultJournal.pas' {ProfitLossResultJournalForm: TParentForm},
-  TransferDebtOutJournal in '..\..\Forms\Document\TransferDebtOutJournal.pas' {TransferDebtOutJournalForm: TParentForm};
+  ProfitLossResultJournal in '..\..\Forms\Document\ProfitLossResultJournal.pas' {ProfitLossResultJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

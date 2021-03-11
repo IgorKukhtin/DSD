@@ -1153,6 +1153,10 @@
 				<Form>TransferDebtOutForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\TransferDebtOutJournal.pas">
+				<Form>TransferDebtOutJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\SOURCE\EDI\EdiTest.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\ComDocXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\DeclarXML.pas"/>
@@ -4242,14 +4246,12 @@
 				<Form>Report_AccountMotion_noBalanceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ProfitLossResultJournal.pas">
-				<Form>ProfitLossResultJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\TransferDebtOutJournal.pas">
-				<Form>TransferDebtOutJournalForm</Form>
 			<DCCReference Include="..\..\Forms\Document\ProfitLossResult.pas">
 				<Form>ProfitLossResultForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ProfitLossResultJournal.pas">
+				<Form>ProfitLossResultJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
