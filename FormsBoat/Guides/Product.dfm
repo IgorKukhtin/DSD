@@ -3131,6 +3131,7 @@ object ProductForm: TProductForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079
       ShortCut = 115
       ImageIndex = 28
       FormName = 'TOrderClientForm'
@@ -3856,10 +3857,10 @@ object ProductForm: TProductForm
     OutputType = otMultiDataSet
     Params = <
       item
-        Name = 'inProductId'
+        Name = 'inMovementId_OrderClient'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Id'
+        ComponentItem = 'MovementId_OrderClient'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -3913,10 +3914,10 @@ object ProductForm: TProductForm
     OutputType = otMultiDataSet
     Params = <
       item
-        Name = 'inProductId'
+        Name = 'inMovementId_OrderClient'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Id'
+        ComponentItem = 'MovementId_OrderClient'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

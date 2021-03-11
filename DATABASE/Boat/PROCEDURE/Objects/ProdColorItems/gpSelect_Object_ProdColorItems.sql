@@ -40,6 +40,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MeasureName TVarChar
              , EKPrice TFloat, EKPriceWVAT TFloat, EKPrice_summ TFloat, EKPriceWVAT_summ TFloat
              , BasisPrice TFloat, BasisPriceWVAT TFloat, Basis_summ TFloat, BasisWVAT_summ TFloat
+             , Amount TFloat
               )
 AS
 $BODY$
@@ -347,6 +348,8 @@ BEGIN
                THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
                ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
           END) ::TFloat  AS BasisWVAT_summ
+       
+        , Object_ProdColorItems.Value_Receipt ::TFloat AS Amount
 
      FROM tmpRes AS Object_ProdColorItems
           LEFT JOIN ObjectString AS ObjectString_Comment
