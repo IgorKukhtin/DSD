@@ -104,6 +104,7 @@ type
     edRetail: TcxButtonEdit;
     GuidesRetail: TdsdGuides;
     WeightTotal: TcxGridDBColumn;
+    CodeSticker: TcxGridDBColumn;
   private
     { Private declarations }
   public

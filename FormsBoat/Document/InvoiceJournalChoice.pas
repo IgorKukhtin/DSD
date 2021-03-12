@@ -68,6 +68,9 @@ type
     bbb: TdxBarButton;
     bbExecuteDialog: TdxBarButton;
     VATPercent: TcxGridDBColumn;
+    GuidesClient: TdsdGuides;
+    cxLabel6: TcxLabel;
+    edClient: TcxButtonEdit;
   private
     { Private declarations }
   public

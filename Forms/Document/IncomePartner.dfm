@@ -3,7 +3,7 @@ object IncomePartnerForm: TIncomePartnerForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102')>'
   ClientHeight = 462
-  ClientWidth = 1080
+  ClientWidth = 1184
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object IncomePartnerForm: TIncomePartnerForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1080
+    Width = 1184
     Height = 100
     Align = alTop
     BevelOuter = bvNone
@@ -62,10 +62,10 @@ object IncomePartnerForm: TIncomePartnerForm
         end>
       Properties.ReadOnly = False
       TabOrder = 3
-      Width = 193
+      Width = 286
     end
     object edTo: TcxButtonEdit
-      Left = 467
+      Left = 565
       Top = 23
       Properties.Buttons = <
         item
@@ -82,19 +82,19 @@ object IncomePartnerForm: TIncomePartnerForm
       Caption = #1054#1090' '#1082#1086#1075#1086
     end
     object cxLabel4: TcxLabel
-      Left = 467
+      Left = 565
       Top = 5
       Caption = #1050#1086#1084#1091
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 797
+      Left = 893
       Top = 23
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 9
       Width = 129
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 941
+      Left = 1031
       Top = 23
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -128,7 +128,7 @@ object IncomePartnerForm: TIncomePartnerForm
       Width = 81
     end
     object edChangePercent: TcxCurrencyEdit
-      Left = 668
+      Left = 764
       Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -139,12 +139,12 @@ object IncomePartnerForm: TIncomePartnerForm
       Width = 124
     end
     object cxLabel7: TcxLabel
-      Left = 941
+      Left = 1031
       Top = 5
       Caption = '% '#1053#1044#1057
     end
     object cxLabel8: TcxLabel
-      Left = 668
+      Left = 764
       Top = 45
       Caption = '% (-)'#1057#1082'. (+)'#1053#1072#1094'. '#1055#1054#1057#1058'.'
     end
@@ -211,12 +211,12 @@ object IncomePartnerForm: TIncomePartnerForm
       Width = 157
     end
     object cxLabel12: TcxLabel
-      Left = 941
+      Left = 1031
       Top = 45
       Caption = #1050#1091#1088#1089
     end
     object edCurrencyValue: TcxCurrencyEdit
-      Left = 941
+      Left = 1031
       Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -227,12 +227,12 @@ object IncomePartnerForm: TIncomePartnerForm
       Width = 40
     end
     object cxLabel14: TcxLabel
-      Left = 990
+      Left = 1080
       Top = 45
       Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
     end
     object edCurrencyDocument: TcxButtonEdit
-      Left = 990
+      Left = 1080
       Top = 63
       Properties.Buttons = <
         item
@@ -245,12 +245,12 @@ object IncomePartnerForm: TIncomePartnerForm
       Width = 77
     end
     object cxLabel15: TcxLabel
-      Left = 990
+      Left = 1080
       Top = 5
       Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1089#1090'.)'
     end
     object edCurrencyPartner: TcxButtonEdit
-      Left = 990
+      Left = 1080
       Top = 23
       Properties.Buttons = <
         item
@@ -261,12 +261,12 @@ object IncomePartnerForm: TIncomePartnerForm
       Width = 77
     end
     object cxLabel16: TcxLabel
-      Left = 797
+      Left = 893
       Top = 45
       Caption = '% (-)'#1057#1082'. (+)'#1053#1072#1094'. '#1055#1054#1050#1059#1055'.'
     end
     object edChangePercentTo: TcxCurrencyEdit
-      Left = 797
+      Left = 893
       Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -277,12 +277,12 @@ object IncomePartnerForm: TIncomePartnerForm
       Width = 132
     end
     object cxLabel17: TcxLabel
-      Left = 467
+      Left = 565
       Top = 45
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKindTo: TcxButtonEdit
-      Left = 467
+      Left = 565
       Top = 63
       Properties.Buttons = <
         item
@@ -294,12 +294,12 @@ object IncomePartnerForm: TIncomePartnerForm
       Width = 77
     end
     object cxLabel18: TcxLabel
-      Left = 547
+      Left = 645
       Top = 45
       Caption = #1044#1086#1075#1086#1074#1086#1088
     end
     object edContractTo: TcxButtonEdit
-      Left = 547
+      Left = 645
       Top = 63
       Properties.Buttons = <
         item
@@ -311,18 +311,35 @@ object IncomePartnerForm: TIncomePartnerForm
       TabOrder = 34
       Width = 113
     end
+    object cxLabel13: TcxLabel
+      Left = 467
+      Top = 45
+      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+    end
+    object edPriceList: TcxButtonEdit
+      Left = 467
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 36
+      Width = 90
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 126
-    Width = 1080
+    Width = 1184
     Height = 336
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 336
-    ClientRectRight = 1080
+    ClientRectRight = 1184
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -330,7 +347,7 @@ object IncomePartnerForm: TIncomePartnerForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1080
+        Width = 1184
         Height = 312
         Align = alClient
         TabOrder = 0
@@ -575,7 +592,7 @@ object IncomePartnerForm: TIncomePartnerForm
     end
   end
   object cbCalcAmountPartner: TcxCheckBox
-    Left = 668
+    Left = 764
     Top = 23
     Hint = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
     Caption = #1040#1074#1090#1086#1084' '#1050#1086#1083'. '#1091' '#1087#1086#1089#1090'.'
@@ -1266,7 +1283,8 @@ object IncomePartnerForm: TIncomePartnerForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 504
+    Left = 600
+    Top = 8
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -1350,7 +1368,7 @@ object IncomePartnerForm: TIncomePartnerForm
       end
       item
         Name = 'inMIId_Invoice'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1442,6 +1460,8 @@ object IncomePartnerForm: TIncomePartnerForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 6
       end>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 347
     Top = 337
   end
@@ -1495,19 +1515,17 @@ object IncomePartnerForm: TIncomePartnerForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPriceWithVAT'
-        Value = 'False'
+        Name = 'outPriceWithVAT'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inVATPercent'
+        Name = 'outVATPercent'
         Value = 0.000000000000000000
         Component = edVATPercent
         DataType = ftFloat
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -1554,6 +1572,22 @@ object IncomePartnerForm: TIncomePartnerForm
         Name = 'inPersonalPackerId'
         Value = ''
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPriceListId'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListName'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -1605,7 +1639,7 @@ object IncomePartnerForm: TIncomePartnerForm
       end
       item
         Name = 'inisIncome'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1691,7 +1725,7 @@ object IncomePartnerForm: TIncomePartnerForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1764,7 +1798,7 @@ object IncomePartnerForm: TIncomePartnerForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -1911,6 +1945,21 @@ object IncomePartnerForm: TIncomePartnerForm
         Value = Null
         Component = edChangePercentTo
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListId'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListName'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -2308,7 +2357,7 @@ object IncomePartnerForm: TIncomePartnerForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 488
+    Left = 656
     Top = 48
   end
   object ContractGuidesTo: TdsdGuides
@@ -2390,7 +2439,7 @@ object IncomePartnerForm: TIncomePartnerForm
       end
       item
         Name = 'inIsCalcAmountPartner'
-        Value = 'True'
+        Value = True
         Component = cbCalcAmountPartner
         DataType = ftBoolean
         ParamType = ptInput
@@ -2407,7 +2456,7 @@ object IncomePartnerForm: TIncomePartnerForm
       end
       item
         Name = 'inMIId_Invoice'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2471,5 +2520,68 @@ object IncomePartnerForm: TIncomePartnerForm
     PackSize = 1
     Left = 150
     Top = 359
+  end
+  object GuidesPriceList: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPriceList
+    FormNameParam.Value = 'TPriceList_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPriceList_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPriceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = False
+        Component = edPriceWithVAT
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VATPercent'
+        Value = 0.000000000000000000
+        Component = edVATPercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId'
+        Value = ''
+        Component = CurrencyPartnerGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName'
+        Value = ''
+        Component = CurrencyPartnerGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 500
+    Top = 48
   end
 end

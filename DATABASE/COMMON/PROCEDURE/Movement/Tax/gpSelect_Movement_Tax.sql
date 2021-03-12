@@ -142,7 +142,7 @@ BEGIN
            , CASE WHEN COALESCE (ObjectString_Retail_OKPO.ValueData, '') <> '' THEN TRUE ELSE FALSE END AS isOKPO_Retail
            , MovementString_Comment.ValueData         AS Comment
 
-           , COALESCE (Object_PersonalSigning.PersonalName, COALESCE (Object_PersonalBookkeeper_View.PersonalName, ''))  ::TVarChar    AS PersonalSigningName
+           , COALESCE (Object_PersonalSigning.PersonalName, COALESCE (ObjectString_PersonalBookkeeper.ValueData, Object_PersonalBookkeeper_View.PersonalName, ''))  ::TVarChar    AS PersonalSigningName
 
            , Object_ReestrKind.Id                     AS ReestrKindId
            , Object_ReestrKind.ValueData              AS ReestrKindName
@@ -266,6 +266,9 @@ BEGIN
                                  ON ObjectLink_Branch_PersonalBookkeeper.ObjectId = Object_Branch.Id
                                 AND ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
             LEFT JOIN Object_Personal_View AS Object_PersonalBookkeeper_View ON Object_PersonalBookkeeper_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId                     
+            LEFT JOIN ObjectString AS ObjectString_PersonalBookkeeper
+                                   ON ObjectString_PersonalBookkeeper.ObjectId = Object_Branch.Id
+                                  AND ObjectString_PersonalBookkeeper.DescId = zc_objectString_Branch_PersonalBookkeeper()
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                            ON MovementLinkMovement_Master.MovementChildId = Movement.Id

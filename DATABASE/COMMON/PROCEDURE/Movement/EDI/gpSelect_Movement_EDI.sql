@@ -142,7 +142,7 @@ BEGIN
            , MovementDate_DateRegistered.ValueData          AS DateRegistered
            , MovementString_InvNumberRegistered.ValueData   AS InvNumberRegistered
 
-           , COALESCE (Object_PersonalSigning.ValueData, COALESCE (Object_PersonalBookkeeper.ValueData, ''))  ::TVarChar    AS PersonalSigningName
+           , COALESCE (Object_PersonalSigning.ValueData, COALESCE (ObjectString_PersonalBookkeeper.ValueData, Object_PersonalBookkeeper.ValueData, ''))  ::TVarChar    AS PersonalSigningName
 
            , CASE WHEN (MovementLinkMovement_Sale.MovementId IS NOT NULL OR MovementLinkMovement_MasterEDI.MovementId IS NOT NULL)
                    AND (COALESCE (MovementFloat_TotalCountPartner.ValueData, 0) <> COALESCE (MovementFloat_TotalCountPartner_Sale.ValueData, 0)
@@ -328,6 +328,10 @@ BEGIN
                                  ON ObjectLink_Branch_PersonalBookkeeper.ObjectId = Object_Branch.Id
                                 AND ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
             LEFT JOIN Object AS Object_PersonalBookkeeper ON Object_PersonalBookkeeper.Id = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId                     
+
+            LEFT JOIN ObjectString AS ObjectString_PersonalBookkeeper
+                                   ON ObjectString_PersonalBookkeeper.ObjectId = Object_Branch.Id
+                                  AND ObjectString_PersonalBookkeeper.DescId = zc_objectString_Branch_PersonalBookkeeper()  
 
        WHERE Movement.DescId = zc_Movement_EDI()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate

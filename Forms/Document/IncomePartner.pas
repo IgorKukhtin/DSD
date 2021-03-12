@@ -149,6 +149,9 @@ type
     bbAddMask: TdxBarButton;
     actAddMask: TdsdExecStoredProc;
     actGoodsChoiceForm: TOpenChoiceForm;
+    cxLabel13: TcxLabel;
+    edPriceList: TcxButtonEdit;
+    GuidesPriceList: TdsdGuides;
   private
   public
   end;

@@ -4,6 +4,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
   ClientWidth = 1028
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1044
   ExplicitHeight = 394
   PixelsPerInch = 96
@@ -300,6 +301,22 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
     end
     inherited deEnd: TcxDateEdit
       EditValue = 44197d
+    end
+    object cxLabel6: TcxLabel
+      Left = 430
+      Top = 7
+      Caption = 'Kunden:'
+    end
+    object edClient: TcxButtonEdit
+      Left = 475
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 5
+      Width = 230
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -927,15 +944,50 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 120
+    Left = 96
+    Top = 155
   end
   inherited MasterCDS: TClientDataSet
     Left = 64
     Top = 155
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Invoice'
-    Top = 131
+    StoredProcName = 'gpSelect_Movement_InvoiceChoice'
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41640d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 41640d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inClientId'
+        Value = Null
+        Component = GuidesClient
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 16
+    Top = 107
   end
   inherited BarManager: TdxBarManager
     Left = 128
@@ -1046,6 +1098,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
         Component = PeriodChoice
       end
       item
+        Component = edClient
       end>
   end
   inherited spMovementComplete: TdsdStoredProc
@@ -1083,6 +1136,23 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
         Name = 'isCopy'
         Value = Null
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterClientId'
+        Value = Null
+        Component = GuidesClient
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterClientName'
+        Value = Null
+        Component = GuidesClient
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
   end
@@ -1154,5 +1224,32 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
     PackSize = 1
     Left = 631
     Top = 232
+  end
+  object GuidesClient: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edClient
+    FormNameParam.Value = 'TClientForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TClientForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesClient
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesClient
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 560
+    Top = 3
   end
 end

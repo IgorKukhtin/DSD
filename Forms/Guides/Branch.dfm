@@ -119,6 +119,13 @@ object BranchForm: TBranchForm
         HeaderAlignmentVert = vaCenter
         Width = 200
       end
+      object PersonalBookkeeper_sign: TcxGridDBColumn
+        Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088') '#1087#1086#1076#1087#1080#1089#1072#1085#1090
+        DataBinding.FieldName = 'PersonalBookkeeper_sign'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 200
+      end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -837,6 +844,8 @@ object BranchForm: TBranchForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 224
     Top = 272
   end
@@ -874,6 +883,15 @@ object BranchForm: TBranchForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'PersonalBookkeeperId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalBookkeeper_sign'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'PersonalBookkeeper_sign'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

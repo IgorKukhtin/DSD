@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , JuridicalName_From TVarChar, OKPO_From TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , PersonalPackerName TVarChar
+             , PriceListName TVarChar
              , CurrencyDocumentName TVarChar, CurrencyPartnerName TVarChar
              , Comment TVarChar
              , MovementId_Transport Integer, InvNumber_Transport TVarChar, OperDate_Transport TDateTime, InvNumber_Transport_Full TVarChar
@@ -105,6 +106,8 @@ BEGIN
            , View_InfoMoney.InfoMoneyCode
            , View_InfoMoney.InfoMoneyName
            , Object_Member.ValueData                     AS PersonalPackerName
+
+           , Object_PriceList.ValueData                  AS PriceListName
 
            , Object_CurrencyDocument.ValueData           AS CurrencyDocumentName
            , Object_CurrencyPartner.ValueData            AS CurrencyPartnerName
@@ -236,6 +239,11 @@ BEGIN
                                          ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
                                         AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
             LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
+                                         ON MovementLinkObject_PriceList.MovementId = Movement.Id
+                                        AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
 
             LEFT JOIN MovementBoolean AS MovementBoolean_isIncome
                                       ON MovementBoolean_isIncome.MovementId = Movement.Id

@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PersonalId Integer, PersonalName TVarChar
              , PersonalStoreId Integer, PersonalStoreName TVarChar
              , PersonalBookkeeperId Integer, PersonalBookkeeperName TVarChar
+             , PersonalBookkeeper_sign TVarChar
 
              , PersonalDriverId Integer, PersonalDriverName TVarChar
              , Member1Id Integer, Member1Name TVarChar
@@ -50,6 +51,8 @@ BEGIN
 
         , Object_PersonalBookkeeper_View.PersonalId    AS PersonalBookkeeperId
         , Object_PersonalBookkeeper_View.PersonalName  AS PersonalBookkeeperName
+        
+        , ObjectString_PersonalBookkeeper.ValueData ::TVarChar AS PersonalBookkeeper_sign
 
         , Object_PersonalDriver.Id         AS PersonalDriverId
         , Object_PersonalDriver.ValueData  AS PersonalDriverName 
@@ -85,7 +88,10 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_PlaceOf
                                ON ObjectString_PlaceOf.ObjectId = Object_Branch.Id
                               AND ObjectString_PlaceOf.DescId = zc_objectString_Branch_PlaceOf()       
-
+        LEFT JOIN ObjectString AS ObjectString_PersonalBookkeeper
+                               ON ObjectString_PersonalBookkeeper.ObjectId = Object_Branch.Id
+                              AND ObjectString_PersonalBookkeeper.DescId = zc_objectString_Branch_PersonalBookkeeper()   
+                              
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Medoc
                                 ON ObjectBoolean_Medoc.ObjectId = Object_Branch.Id
                                AND ObjectBoolean_Medoc.DescId = zc_ObjectBoolean_Branch_Medoc()    
@@ -159,6 +165,7 @@ ALTER FUNCTION gpSelect_Object_Branch(TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.03.21         * PersonalBookkeeper
  21.12.15         * add Unit, UnitReturn
  20.12.15         * add Personal, PersonalStore, PlaceOf
  28.04.15         * add PartionDoc

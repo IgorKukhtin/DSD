@@ -616,8 +616,8 @@ end if;
                                                   , inOperDate              := inOperDate
                                                   , inOperDatePartner       := inOperDate
                                                   , inInvNumberPartner      := ''
-                                                  , inPriceWithVAT          := PriceWithVAT
-                                                  , inVATPercent            := VATPercent
+                                                  --, inPriceWithVAT          := PriceWithVAT -- определяются по прайлисту 
+                                                  --, inVATPercent            := VATPercent
                                                   , inChangePercent         := ChangePercent
                                                   , inFromId                := FromId
                                                   , inToId                  := ToId
@@ -1768,6 +1768,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 11.03.21         *
  13.11.15                                        *
  04.07.15                                        * !!!Проверка что документ один!!!
  27.05.15                                        * add vbIsTax

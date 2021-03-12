@@ -42,7 +42,6 @@ type
     dsdFormClose: TdsdFormClose;
     edInvNumber: TcxTextEdit;
     cxLabel2: TcxLabel;
-    cxLabel19: TcxLabel;
     cbIsMedoc: TcxCheckBox;
     cbisPartionDoc: TcxCheckBox;
     cxLabel3: TcxLabel;
