@@ -69,6 +69,54 @@ BEGIN
                                     AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
                                  );
 
+     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE ('tmpPersonalServiceList_check'))
+     THEN
+         -- Оптимизация
+         CREATE TEMP TABLE tmpPersonalServiceList_check ON COMMIT DROP AS 
+            WITH tmpUserAll_check AS (SELECT UserId FROM Constant_User_LevelMax01_View WHERE UserId = vbUserId /*AND UserId <> 9464*/) -- Документы-меню (управленцы) AND <> Рудик Н.В. + ЗП просмотр ВСЕ
+            SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+            FROM ObjectLink AS ObjectLink_User_Member
+                 INNER JOIN ObjectLink AS ObjectLink_MemberPersonalServiceList
+                                       ON ObjectLink_MemberPersonalServiceList.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                      AND ObjectLink_MemberPersonalServiceList.DescId        = zc_ObjectLink_MemberPersonalServiceList_Member()
+                 INNER JOIN Object AS Object_MemberPersonalServiceList
+                                   ON Object_MemberPersonalServiceList.Id       = ObjectLink_MemberPersonalServiceList.ObjectId
+                                  AND Object_MemberPersonalServiceList.isErased = FALSE
+                 LEFT JOIN ObjectBoolean ON ObjectBoolean.ObjectId = ObjectLink_MemberPersonalServiceList.ObjectId
+                                        AND ObjectBoolean.DescId   = zc_ObjectBoolean_MemberPersonalServiceList_All()
+                 LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList
+                                      ON ObjectLink_PersonalServiceList.ObjectId = ObjectLink_MemberPersonalServiceList.ObjectId
+                                     AND ObjectLink_PersonalServiceList.DescId   = zc_ObjectLink_MemberPersonalServiceList_PersonalServiceList()
+                 LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+                                                               AND (Object_PersonalServiceList.Id    = ObjectLink_PersonalServiceList.ChildObjectId
+                                                                 OR ObjectBoolean.ValueData          = TRUE)
+            WHERE ObjectLink_User_Member.ObjectId = vbUserId
+              AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+           UNION
+            SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+            FROM ObjectLink AS ObjectLink_User_Member
+                 INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_Member
+                                       ON ObjectLink_PersonalServiceList_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                      AND ObjectLink_PersonalServiceList_Member.DescId        = zc_ObjectLink_PersonalServiceList_Member()
+                 LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+                                                               AND Object_PersonalServiceList.Id     = ObjectLink_PersonalServiceList_Member.ObjectId
+            WHERE ObjectLink_User_Member.ObjectId = vbUserId
+              AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+           UNION
+            -- Админ и другие видят ВСЕХ
+            SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+            FROM Object AS Object_PersonalServiceList
+            WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+              AND EXISTS (SELECT 1 FROM tmpUserAll_check)
+           UNION
+            -- Админ и другие видят ВСЕХ
+            SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+            FROM Object AS Object_PersonalServiceList
+            WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+              AND EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceAdmin())
+           ;
+     END IF;
+
      -- Результат
      RETURN QUERY
        WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE)
@@ -261,10 +309,10 @@ BEGIN
             , MIFloat_SummAddOth.ValueData              AS SummAddOth
             , MIFloat_SummAddOthRecalc.ValueData        AS SummAddOthRecalc
 
-            , MIFloat_SummCompensation.ValueData        ::TFloat AS SummCompensation
-            , MIFloat_SummCompensationRecalc.ValueData  ::TFloat AS SummCompensationRecalc
-            , MIFloat_DayCompensation.ValueData         ::TFloat AS DayCompensation
-            , MIFloat_PriceCompensation.ValueData       ::TFloat AS PriceCompensation
+            , CASE WHEN tmpPersonalServiceList_check.PersonalServiceListId > 0 OR tmpAll.PersonalServiceListId IS NULL THEN MIFloat_SummCompensation.ValueData        ELSE 0 END ::TFloat AS SummCompensation
+            , CASE WHEN tmpPersonalServiceList_check.PersonalServiceListId > 0 OR tmpAll.PersonalServiceListId IS NULL THEN MIFloat_SummCompensationRecalc.ValueData  ELSE 0 END ::TFloat AS SummCompensationRecalc
+            , MIFloat_DayCompensation.ValueData AS DayCompensation
+            , CASE WHEN tmpPersonalServiceList_check.PersonalServiceListId > 0 OR tmpAll.PersonalServiceListId IS NULL THEN MIFloat_PriceCompensation.ValueData       ELSE 0 END ::TFloat AS PriceCompensation
             
             , MIFloat_DayVacation.ValueData             ::TFloat AS DayVacation
             , MIFloat_DayHoliday.ValueData              ::TFloat AS DayHoliday
@@ -277,6 +325,8 @@ BEGIN
             , COALESCE (ObjectBoolean_BankOut.ValueData, FALSE) :: Boolean   AS isBankOut
             , MIDate_BankOut.ValueData                          :: TDateTime AS BankOutDate
        FROM tmpAll
+            LEFT JOIN tmpPersonalServiceList_check ON tmpPersonalServiceList_check.PersonalServiceListId = tmpAll.PersonalServiceListId
+       
             LEFT JOIN tmpMIContainer_all ON tmpMIContainer_all.MovementItemId = tmpAll.MovementItemId
                                         AND tmpMIContainer_all.Ord            = 1 -- !!!только 1-ый!!!
 
