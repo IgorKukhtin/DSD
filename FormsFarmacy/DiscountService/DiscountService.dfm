@@ -17,7 +17,7 @@ object DiscountServiceForm: TDiscountServiceForm
   TextHeight = 16
   object HTTPRIO: THTTPRIO
     Converter.Options = [soSendMultiRefObj, soTryAllSchema, soRootRefNodesToBody, soCacheMimeResponse, soUTF8EncodeXML]
-    Left = 64
+    Left = 40
     Top = 16
   end
   object spGet_BarCode: TdsdStoredProc
@@ -44,8 +44,8 @@ object DiscountServiceForm: TDiscountServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 208
-    Top = 24
+    Left = 120
+    Top = 8
   end
   object spGet_DiscountExternal: TdsdStoredProc
     StoredProcName = 'gpGet_Object_DiscountExternal_Unit'
@@ -97,6 +97,18 @@ object DiscountServiceForm: TDiscountServiceForm
         Name = 'ExternalUnit'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isOneSupplier'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isTwoPackages'
+        Value = Null
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -239,7 +251,35 @@ object DiscountServiceForm: TDiscountServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 208
-    Top = 112
+    Left = 120
+    Top = 120
+  end
+  object spGet_DiscountCard_Goods_Amount: TdsdStoredProc
+    StoredProcName = 'gpGet_DiscountCard_Goods_Amount'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDiscountCard'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmount'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 256
+    Top = 104
   end
 end

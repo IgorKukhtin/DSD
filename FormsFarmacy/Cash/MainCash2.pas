@@ -7072,6 +7072,13 @@ begin
     exit;
   end;
 
+  if (Frac(nAmount) <> 0) and (DiscountServiceForm.gCode <> 0) then
+  begin
+    ShowMessage('Деление медикамента для дисконтных программ запрещено!');
+    exit;
+  end;
+
+
   if Assigned(SourceClientDataSet.FindField('GoodsId')) then
     nId := SourceClientDataSet.FieldByName('GoodsId').AsInteger
   else nId := SourceClientDataSet.FieldByName('Id').AsInteger;

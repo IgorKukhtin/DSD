@@ -131,4 +131,4 @@ ALTER FUNCTION gpGet_Goods_Juridical_value (Integer, Integer, TFloat, TVarChar) 
 --  select * from gpGet_Goods_Juridical_value(inDiscountExternal := 2807930 , inGoodsId := 12673 , inAmount := 1 ,  inSession := '3');
 
 --select * from gpGet_Goods_Juridical_value_Ol(inDiscountExternal := 15466976 , inGoodsId := 2431326 , inAmount := 2 ,  inSession := '3');
-select * from gpGet_Goods_Juridical_value(inDiscountExternal := 14629849 , inGoodsId := 13283934 , inAmount := 1 ,  inSession := '3');
+select * from gpGet_Goods_Juridical_value(inDiscountExternal := 15682957 , inGoodsId := 14131833 , inAmount := 1 ,  inSession := '3');
