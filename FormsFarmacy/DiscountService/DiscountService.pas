@@ -44,12 +44,15 @@ type
     // так криво будем хранить "текущие" параметры-Main
     gURL, gService, gPort, gUserName, gPassword, gCardNumber, gExternalUnit: string;
     gDiscountExternalId, gCode: Integer;
+    gisOneSupplier, gisTwoPackages : Boolean;
     // обнулим "нужные" параметры-Item
     //procedure pSetParamItemNull;
     // попробуем обновить "нужные" параметры-Main
     procedure pGetDiscountExternal (lDiscountExternalId : Integer; lCardNumber : String);
     // проверка карты + сохраним "текущие" параметры-Main
-    function fCheckCard (var lMsg : string; lURL, lService, lPort, lUserName, lPassword, lCardNumber : string; lDiscountExternalId : Integer) :Boolean;
+    function fCheckCard (var lMsg : string; lURL, lService, lPort, lUserName, lPassword, lCardNumber : string;
+                         lisOneSupplier, lisTwoPackages : Boolean;
+                         lDiscountExternalId : Integer) :Boolean;
     // получили Дисконт + сохраним "текущие" параметры-Item
     //function fGetSale (var lMsg : string; var lPrice, lChangePercent, lSummChangePercent : Currency;
     //                                    lCardNumber : string; lDiscountExternalId, lGoodsId : Integer; lQuantity, lPriceSale : Currency;
@@ -276,7 +279,9 @@ begin
 end;}
 
 // проверка карты + сохраним "текущие" параметры-Main
-function TDiscountServiceForm.fCheckCard (var lMsg : string; lURL, lService, lPort, lUserName, lPassword, lCardNumber : string; lDiscountExternalId : Integer) :Boolean;
+function TDiscountServiceForm.fCheckCard (var lMsg : string; lURL, lService, lPort, lUserName, lPassword, lCardNumber : string;
+                                          lisOneSupplier, lisTwoPackages : Boolean;
+                                          lDiscountExternalId : Integer) :Boolean;
 begin
   Result:=false;
   lMsg:='';
@@ -311,12 +316,14 @@ begin
      begin
           // сохранили
           gDiscountExternalId:= lDiscountExternalId;
-          gURL        := lURL;
-          gService    := lService;
-          gPort       := lPort;
-          gUserName   := lUserName;
-          gPassword   := lPassword;
-          gCardNumber := lCardNumber;
+          gURL           := lURL;
+          gService       := lService;
+          gPort          := lPort;
+          gUserName      := lUserName;
+          gPassword      := lPassword;
+          gCardNumber    := lCardNumber;
+          gisOneSupplier := lisOneSupplier;
+          gisTwoPackages := lisTwoPackages;
      end
      else
      begin
@@ -329,6 +336,8 @@ begin
           gUserName   := '';
           gPassword   := '';
           gCardNumber := '';
+          gisOneSupplier := False;
+          gisTwoPackages := False;
      end;
 end;
 
@@ -352,22 +361,26 @@ begin
          gCode       := lCode;
          if lCode > 0 then
          begin
-               gURL          := ParamByName('URL').Value;
-               gService      := ParamByName('Service').Value;
-               gPort         := ParamByName('Port').Value;
-               gUserName     := ParamByName('UserName').Value;
-               gPassword     := ParamByName('Password').Value;
-               gCardNumber   := lCardNumber;
-               gExternalUnit := ParamByName('ExternalUnit').AsString;
+               gURL           := ParamByName('URL').Value;
+               gService       := ParamByName('Service').Value;
+               gPort          := ParamByName('Port').Value;
+               gUserName      := ParamByName('UserName').Value;
+               gPassword      := ParamByName('Password').Value;
+               gCardNumber    := lCardNumber;
+               gExternalUnit  := ParamByName('ExternalUnit').AsString;
+               gisOneSupplier := ParamByName('isOneSupplier').Value;
+               gisTwoPackages := ParamByName('isTwoPackages').Value;
          end
          else begin
-               gURL          := '';
-               gService      := '';
-               gPort         := '';
-               gUserName     := '';
-               gPassword     := '';
-               gCardNumber   := '';
-               gExternalUnit := '';
+               gURL           := '';
+               gService       := '';
+               gPort          := '';
+               gUserName      := '';
+               gPassword      := '';
+               gCardNumber    := '';
+               gExternalUnit  := '';
+               gisOneSupplier := False;
+               gisTwoPackages := False;
                ShowMessage ('Ошибка.Для аптеки не настроена работа с Проектами дисконтных карт.')
          end;
       end
@@ -375,14 +388,16 @@ begin
      begin
           //обнулим параметры-Main
           gDiscountExternalId:= 0;
-          gCode         := 0;
-          gURL          := '';
-          gService      := '';
-          gPort         := '';
-          gUserName     := '';
-          gPassword     := '';
-          gCardNumber   := '';
-          gExternalUnit := '';
+          gCode          := 0;
+          gURL           := '';
+          gService       := '';
+          gPort          := '';
+          gUserName      := '';
+          gPassword      := '';
+          gCardNumber    := '';
+          gExternalUnit  := '';
+          gisOneSupplier := False;
+          gisTwoPackages := False;
      end;
 end;
 
@@ -1324,6 +1339,17 @@ begin
         end
       else
           BarCode_find := '';
+
+      // Проверим чтоб количество было целое
+      if (BarCode_find <> '') and (CheckCDS.FieldByName('Amount').AsCurrency <> Int(CheckCDS.FieldByName('Amount').AsFloat)) then
+      begin
+        ShowMessage ('Ошибка. Количество должно быть кратное 1.' + #10+ #13
+        + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
+        + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+        //ошибка
+        lMsg:='Error';
+        exit;
+      end;
 
       //если Штрих-код нашелся и программа ЗАРАДИ ЖИТТЯ
       if (BarCode_find <> '') and (gService = 'CardService') then

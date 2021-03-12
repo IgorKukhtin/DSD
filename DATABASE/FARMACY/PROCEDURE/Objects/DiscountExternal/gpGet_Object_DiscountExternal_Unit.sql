@@ -7,12 +7,14 @@ CREATE OR REPLACE FUNCTION gpGet_Object_DiscountExternal_Unit(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , URL          TVarChar
-             , Service      TVarChar
-             , Port         TVarChar
-             , UserName     TVarChar
-             , Password     TVarChar
-             , ExternalUnit TVarChar
+             , URL                TVarChar
+             , Service            TVarChar
+             , Port               TVarChar
+             , UserName           TVarChar
+             , Password           TVarChar
+             , ExternalUnit       TVarChar
+             , isOneSupplier      Boolean 
+             , isTwoPackages      Boolean
               )
 AS
 $BODY$
@@ -45,6 +47,8 @@ BEGIN
            , CASE WHEN COALESCE (ObjectBoolean_NotUseAPI.ValueData, False) = TRUE THEN '' ELSE ObjectString_User.ValueData END::TVarChar  AS UserName
            , CASE WHEN COALESCE (ObjectBoolean_NotUseAPI.ValueData, False) = TRUE THEN '' ELSE ObjectString_Password.ValueData END::TVarChar         AS Password
            , CASE WHEN COALESCE (ObjectBoolean_NotUseAPI.ValueData, False) = TRUE THEN '' ELSE ObjectString_ExternalUnit.ValueData END::TVarChar     AS ExternalUnit
+           , COALESCE(ObjectBoolean_OneSupplier.ValueData, False)      AS isOneSupplier
+           , COALESCE(ObjectBoolean_TwoPackages.ValueData, False)      AS isTwoPackages
 
        FROM Object AS Object_DiscountExternal
             LEFT JOIN ObjectString AS ObjectString_URL
@@ -77,6 +81,12 @@ BEGIN
                                     ON ObjectBoolean_NotUseAPI.ObjectId = ObjectLink_DiscountExternal.ObjectId
                                    AND ObjectBoolean_NotUseAPI.DescId = zc_ObjectBoolean_DiscountExternalTools_NotUseAPI()
 
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_OneSupplier
+                                    ON ObjectBoolean_OneSupplier.ObjectId = Object_DiscountExternal.Id
+                                   AND ObjectBoolean_OneSupplier.DescId = zc_ObjectBoolean_DiscountExternal_OneSupplier()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_TwoPackages
+                                    ON ObjectBoolean_TwoPackages.ObjectId = Object_DiscountExternal.Id
+                                   AND ObjectBoolean_TwoPackages.DescId = zc_ObjectBoolean_DiscountExternal_TwoPackages()
        WHERE Object_DiscountExternal.Id = inId;
 
 END;
@@ -86,10 +96,12 @@ ALTER FUNCTION gpGet_Object_DiscountExternal_Unit (Integer, TVarChar) OWNER TO p
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.  Шаблий О.В.
+ 12.03.21                                                                     *
  29.05.17                                                       * ExternalUnit
  12.08.16                                        *
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_DiscountExternal_Unit (2488964, zfCalc_UserAdmin())
+-- 
+SELECT * FROM gpGet_Object_DiscountExternal_Unit (15466976   , zfCalc_UserAdmin())

@@ -1655,6 +1655,7 @@ begin
       DiscountServiceForm.gService, DiscountServiceForm.gPort,
       DiscountServiceForm.gUserName, DiscountServiceForm.gPassword,
       FormParams.ParamByName('DiscountCardNumber').Value,
+      DiscountServiceForm.gisOneSupplier,DiscountServiceForm.gisTwoPackages,
       FormParams.ParamByName('DiscountExternalId').Value) then
     begin
       // обнулим, пусть фармацевт начнет заново

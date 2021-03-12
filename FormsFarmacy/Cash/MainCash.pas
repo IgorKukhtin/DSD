@@ -17,7 +17,8 @@ uses
   ActiveX,  Math,
   VKDBFDataSet, FormStorage, CommonData, ParentForm, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, LocalStorage,
-  cxDataControllerConditionalFormattingRulesManagerDialog, System.Actions;
+  cxDataControllerConditionalFormattingRulesManagerDialog, System.Actions,
+  dxDateRanges;
 
 type
   THeadRecord = record
@@ -668,6 +669,8 @@ begin
                                                ,DiscountServiceForm.gUserName
                                                ,DiscountServiceForm.gPassword
                                                ,FormParams.ParamByName('DiscountCardNumber').Value
+                                               ,DiscountServiceForm.gisOneSupplier
+                                               ,DiscountServiceForm.gisTwoPackages
                                                ,FormParams.ParamByName('DiscountExternalId').Value
                                                )
          then begin

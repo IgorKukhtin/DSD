@@ -27,7 +27,6 @@ object DiscountExternalForm: TDiscountExternalForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 822
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -108,16 +107,16 @@ object DiscountExternalForm: TDiscountExternalForm
         Width = 74
       end
       object isOneSupplier: TcxGridDBColumn
-        Caption = #1054#1076#1080#1085' '#1087#1086#1089#1090#1072#1074#1097#1080#1082' '#1074' '#1095#1077#1082#1077
+        Caption = #1062#1077#1083#1099#1077' '#1091#1087#1072#1082#1086#1074#1082#1080' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
         DataBinding.FieldName = 'isOneSupplier'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1042' '#1095#1077#1082' '#1090#1086#1074#1072#1088' '#1086#1076#1085#1086#1075#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+        HeaderHint = #1042' '#1095#1077#1082' '#1090#1086#1074#1072#1088' '#1087#1088#1086#1074#1086#1076#1080#1090#1100' '#1094#1077#1083#1099#1084#1080' '#1091#1087#1072#1082#1086#1074#1082#1072#1084#1080' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
         Options.Editing = False
-        Width = 77
+        Width = 100
       end
       object isTwoPackages: TcxGridDBColumn
-        Caption = '2 '#1091#1087#1072#1082#1086#1074#1082#1080
+        Caption = '2 '#1091#1087#1072#1082#1086#1074#1082#1080' '#1087#1086' '#1082#1072#1088#1090#1077
         DataBinding.FieldName = 'isTwoPackages'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
