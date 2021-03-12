@@ -42,6 +42,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , SalePriceWVAT  TFloat
                --
              , Sale_summ TFloat, SaleWVAT_summ TFloat
+             
+             --
+             , Amount TFloat
 
              , InsertName TVarChar
              , InsertDate TDateTime
@@ -513,6 +516,7 @@ BEGIN
          , tmpRes.SalePriceWVAT                  :: TFloat AS SalePriceWVAT
          , (tmpRes.SalePrice     * CASE WHEN tmpRes.ProdColorPatternId > 0 THEN 1 ELSE tmpRes.Value END) :: TFloat AS Sale_summ
          , (tmpRes.SalePriceWVAT * CASE WHEN tmpRes.ProdColorPatternId > 0 THEN 1 ELSE tmpRes.Value END) :: TFloat AS SaleWVAT_summ
+         , tmpRes.Value ::TFloat AS Amount
 
          , Object_Insert.ValueData            ::TVarChar  AS InsertName
          , ObjectDate_Insert.ValueData        ::TDateTime AS InsertDate

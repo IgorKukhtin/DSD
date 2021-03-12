@@ -3,8 +3,8 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_Product_AgilisPrint (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Product_AgilisPrint(
-    IN inProductId       Integer   ,   -- 
-    IN inSession         TVarChar      -- сессия пользователя
+    IN inMovementId_OrderClient       Integer   ,   -- 
+    IN inSession                      TVarChar      -- сессия пользователя
 )
 RETURNS SETOF refcursor
 AS
@@ -12,23 +12,86 @@ $BODY$
     DECLARE vbUserId Integer;
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
+
+    DECLARE vbProductId    Integer;
+    DECLARE vbOperDate_OrderClient   TDateTime;
+    DECLARE vbInvNumber_OrderClient  TVarChar;
+    DECLARE vbPriceWithVAT Boolean;
+    DECLARE vbVATPercent   TFloat;
+    DECLARE vbDiscountTax  TFloat;    
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
+     
+     -- данные из документа заказа
+     SELECT MovementBoolean_PriceWithVAT.ValueData  AS PriceWithVAT
+          , MovementFloat_VATPercent.ValueData      AS VATPercent
+          , MovementFloat_DiscountTax.ValueData     AS DiscountTax
+          , Movement_OrderClient.OperDate
+          , Movement_OrderClient.InvNumber
+     INTO
+         vbPriceWithVAT
+       , vbVATPercent
+       , vbDiscountTax
+       , vbOperDate_OrderClient
+       , vbInvNumber_OrderClient
+     FROM Movement AS Movement_OrderClient
+         LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                   ON MovementBoolean_PriceWithVAT.MovementId = Movement_OrderClient.Id
+                                  AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+         LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                 ON MovementFloat_VATPercent.MovementId = Movement_OrderClient.Id
+                                AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+         LEFT JOIN MovementFloat AS MovementFloat_DiscountTax
+                                 ON MovementFloat_DiscountTax.MovementId = Movement_OrderClient.Id
+                                AND MovementFloat_DiscountTax.DescId = zc_MovementFloat_DiscountTax()
+     WHERE Movement_OrderClient.Id = inMovementId_OrderClient  -- по идее должен быть один док. заказа, но малоли
+       AND Movement_OrderClient.DescId = zc_Movement_OrderClient();
 
+     -- данные из документа заказа
+     CREATE TEMP TABLE tmpOrderClient ON COMMIT DROP AS (SELECT MovementItem.ObjectId       AS GoodsId
+                                                              , Object_Goods.DescId         AS GoodsDesc
+                                                              , Object_Goods.ValueData      AS GoodsName
+                                                              , MovementItem.Amount         AS Amount
+                                                              , MIFloat_OperPrice.ValueData AS OperPrice
+                                                              , CASE WHEN vbPriceWithVAT THEN MIFloat_OperPrice.ValueData
+                                                                                         ELSE (MIFloat_OperPrice.ValueData * (1 + vbVATPercent/100))::TFloat
+                                                                END AS OperPriceWithVAT
+                                                         FROM MovementItem
+                                                              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+                                                              LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
+                                                                                          ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
+                                                                                         AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()
+                                                         WHERE MovementItem.MovementId = inMovementId_OrderClient
+                                                           AND MovementItem.DescId     = zc_MI_Master()
+                                                           AND MovementItem.isErased   = FALSE
+                                                         );
+
+     --ищем лодку в строчной части документа, если присутствует, значит продаем лодку, соотв. нужно показать все опции по ней
+     SELECT tmpOrderClient.GoodsId
+    INTO vbProductId
+     FROM tmpOrderClient
+     WHERE tmpOrderClient.GoodsDesc = zc_Object_Product()
+     LIMIT 1;
+     
+     -- данные по лодкe
      CREATE TEMP TABLE tmpProduct ON COMMIT DROP AS (SELECT tmp.*
                                                      FROM gpSelect_Object_Product (inIsShowAll:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
-                                                     WHERE tmp.Id = inProductId
+                                                     WHERE tmp.Id = vbProductId
                                                      );
+     -- выбор данных по опциям
      CREATE TEMP TABLE tmpProdOptItems ON COMMIT DROP AS (SELECT tmp.*
-                                                     FROM gpSelect_Object_ProdOptItems (inIsShowAll:= FALSE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
-                                                     WHERE tmp.ProductId = inProductId
-                                                     );
+                                                          FROM gpSelect_Object_ProdOptItems (inIsShowAll:= FALSE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
+                                                          WHERE tmp.ProductId = vbProductId
+                                                         );
+
      -- Результат
      OPEN Cursor1 FOR
 
        -- Результат
        SELECT tmpProduct.*
+            , (COALESCE (tmpProduct.basiswvat_summ1,0)  + COALESCE (tmpOrder.SaleWVAT_summ,0)) AS Summ_total
+            ,  COALESCE (tmpOrder.SaleWVAT_summ,0) :: TFloat AS SaleWVAT_summ_order
             , LEFT (tmpProduct.CIN, 8) ::TVarChar AS PatternCIN
             , EXTRACT (YEAR FROM tmpProduct.DateBegin)  ::TVarChar AS YearBegin
             , '' ::TVarChar AS ModelGroupName
@@ -47,18 +110,18 @@ BEGIN
             , 'steuerfreie innergem. Lieferung gemab §4 Nr.1b i.V.m. §6a UStG' ::TVarChar AS Text1   --**
             , 'special discount'                    ::TVarChar AS Text2
             , 'Sie wurden beraten von M.Starchenko' ::TVarChar AS Text3
-            
+
             , COALESCE (ObjectString_TaxNumber.ValueData,'') ::TVarChar AS TaxNumber
             , '' ::TVarChar AS Angebot
             , '' ::TVarChar AS Seite   
-            
+
             , 'Agilis Jettenders GmbH'||Chr(13)||Chr(10)||'Lohfeld Str.2'||Chr(13)||Chr(10)||' 52428 Julich' ::TVarChar AS Footer1              --*
             , 'Bankverbindung'||Chr(13)||Chr(10)||'Aachener Bank eG'||Chr(13)||Chr(10)||'IBAN: DE56390601800154560009'||Chr(13)||Chr(10)||'BIC: GENODED1AAC' ::TVarChar AS Footer2
             , 'Geschaftsfuhrer:Starchenko Maxym'||Chr(13)||Chr(10)||Chr(13)||Chr(10)||'Amtsgericht Duren HRB 8163'||Chr(13)||Chr(10)||'Ust.-ID: DE326730388' ::TVarChar AS Footer3   --***
             , 'Tel: +49 (0)2461 340 333-15'||Chr(13)||Chr(10)||'Fax: +49 (0)2461 340 333 13'||Chr(13)||Chr(10)||'Email: info@agilis-jettenders.com'||Chr(13)||Chr(10)||'WEB: www.agilis-jettenders.com' ::TVarChar AS Footer4
-            
-            
 
+            , vbOperDate_OrderClient  AS OperDate_Order
+            , vbInvNumber_OrderClient AS InvNumber_Order
        FROM tmpProduct
           LEFT JOIN ObjectFloat AS ObjectFloat_Power
                                 ON ObjectFloat_Power.ObjectId = tmpProduct.EngineId
@@ -69,6 +132,7 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_TaxNumber
                                  ON ObjectString_TaxNumber.ObjectId = tmpProduct.ClientId
                                 AND ObjectString_TaxNumber.DescId = zc_ObjectString_Client_TaxNumber()
+          LEFT JOIN (SELECT SUM (tmp.Amount * tmp.OperPriceWithVAT) AS SaleWVAT_summ FROM tmpOrderClient AS tmp WHERE tmp.GoodsDesc <> zc_Object_Product()) AS tmpOrder ON 1 = 1
        ;
 
      RETURN NEXT Cursor1;
@@ -76,8 +140,29 @@ BEGIN
      OPEN Cursor2 FOR
 
        -- Результат
-       SELECT *
+       SELECT tmpProdOptItems.ProdOptionsName AS GoodsName
+            , tmpProdOptItems.Article
+            , tmpProdOptItems.ProdColorName
+            , tmpProdOptItems.Amount
+            , tmpProdOptItems.SalePriceWVAT
+            , tmpProdOptItems.SaleWVAT_summ
        FROM tmpProdOptItems
+     UNION
+       SELECT tmp.GoodsName                  AS GoodsName
+            , ObjectString_Article.ValueData AS Article
+            , Object_ProdColor.ValueData     AS ProdColorName
+            , tmp.Amount                          ::TFloat AS Amount
+            , tmp.OperPriceWithVAT                ::TFloat AS SalePriceWVAT
+            , (tmp.Amount * tmp.OperPriceWithVAT) ::TFloat AS SaleWVAT_summ
+       FROM tmpOrderClient AS tmp
+            LEFT JOIN ObjectString AS ObjectString_Article
+                                   ON ObjectString_Article.ObjectId = tmp.GoodsId
+                                  AND ObjectString_Article.DescId = zc_ObjectString_Article()
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_ProdColor
+                                 ON ObjectLink_Goods_ProdColor.ObjectId = tmp.GoodsId
+                                AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
+            LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
+       WHERE tmp.GoodsDesc <> zc_Object_Product()
        ;
 
      RETURN NEXT Cursor2;
