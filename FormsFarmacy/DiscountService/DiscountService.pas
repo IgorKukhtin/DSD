@@ -801,7 +801,7 @@ begin
                 FAmountPackages := ParamByName('outAmount').AsFloat;
               end;
 
-              if (FAmountPackages + CheckCDS.FieldByName('GoodsId').AsInteger) <> 2 then
+              if (FAmountPackages + CheckCDS.FieldByName('Amount').AsCurrency) <> 2 then
               begin
                 ShowMessage ('Ошибка По карте в целом должно быть отпущено 2 упаковки товара.' + #10+ #13
                   + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
@@ -837,8 +837,8 @@ begin
                              '  <price>' + CurrToStrXML(CheckCDS.FieldByName('PriceSale').AsCurrency) + '</price>'#13#10 +
                              '  <qty>' + CurrToStrXML(CheckCDS.FieldByName('Amount').AsCurrency + FAmountPackages) + '</qty>'#13#10 +
                              '  <rezerv>' + CurrToStrXML(Max(0, CheckCDS.FieldByName('Remains').AsCurrency - CheckCDS.FieldByName('Amount').AsCurrency)) + '</rezerv>'#13#10 +
-                             '  <discont_percent>' + CurrToStrXML(FDiscont) + '</discont_percent>'#13#10 +
-                             '  <discont_value>' + CurrToStrXML(IfThen(gisTwoPackages and (FAmountPackages = 1), CheckCDS.FieldByName('SummChangePercent').AsCurrency * 2, CheckCDS.FieldByName('SummChangePercent').AsCurrency))) + '</discont_value>'#13#10 +
+                             '  <discont_percent>' + CurrToStrXML(IfThen(gisTwoPackages and (FAmountPackages = 1), FDiscont / 2, FDiscont)) + '</discont_percent>'#13#10 +
+                             '  <discont_value>' + CurrToStrXML(CheckCDS.FieldByName('SummChangePercent').AsCurrency) + '</discont_value>'#13#10 +
                              '  <sale_date>' + FormatDateTime('yyyy-mm-dd hh:nn:ss', Now) + '</sale_date >'#13#10 +
                              '  <login>' + gUserName + '</login>'#13#10 +
                              '  <password>' + gPassword + '</password>'#13#10 +

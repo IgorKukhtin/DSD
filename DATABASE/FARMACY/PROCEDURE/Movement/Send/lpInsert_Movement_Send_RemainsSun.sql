@@ -141,6 +141,7 @@ BEGIN
      -- все Подразделения для схемы SUN
      DELETE FROM _tmpUnit_SUN;
      DELETE FROM _tmpUnit_SunExclusion;
+     DELETE FROM _tmpGoods_PromoUnit;
      -- баланс по Аптекам - если не соответствует, соотв приход или расход блокируется
      IF inStep = 1
      THEN
@@ -218,7 +219,63 @@ BEGIN
               )
        ;
 
+     -- Маркетинговый план для точек
+      WITH tmpUserUnit AS (SELECT COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId) AS UnitId
+                                , Count(*)                                                                   AS CountUser
+                           FROM Movement
+                                  
+                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.id
+                                                        AND MovementItem.DescId = zc_MI_Master()
 
+                                 LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                                      ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
+                                                     AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+   
+                                 LEFT JOIN ObjectLink AS ObjectLink_Member_Unit
+                                                      ON ObjectLink_Member_Unit.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                                     AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit()
+
+                                 LEFT JOIN ObjectLink AS ObjectLink_Member_Position
+                                                      ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                                     AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
+
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                                  ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                                                            
+                           WHERE Movement.DescId = zc_Movement_EmployeeSchedule()
+                             AND Movement.OperDate = DATE_TRUNC ('MONTH', inOperDate)
+                             AND ObjectLink_Member_Position.ChildObjectId = 1672498
+                           GROUP BY COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId))
+
+      INSERT INTO _tmpGoods_PromoUnit
+      SELECT OL_UnitCategory.Objectid                AS UnitId
+           , MI_Goods.Objectid                       AS GoodsId
+           , MI_Goods.Amount * tmpUserUnit.CountUser AS Amount
+
+      FROM Movement
+
+           INNER JOIN MovementLinkObject AS MovementLinkObject_UnitCategory
+                                         ON MovementLinkObject_UnitCategory.MovementId = Movement.Id
+                                        AND MovementLinkObject_UnitCategory.DescId = zc_MovementLinkObject_UnitCategory()
+           INNER JOIN ObjectLink AS OL_UnitCategory
+                                 ON OL_UnitCategory.DescId = zc_ObjectLink_Unit_Category()
+                                AND OL_UnitCategory.ChildObjectId = MovementLinkObject_UnitCategory.ObjectId
+                                
+           INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = OL_UnitCategory.Objectid
+
+           INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
+                                              AND MI_Goods.DescId = zc_MI_Master()
+                                              AND MI_Goods.isErased = FALSE
+                                              AND MI_Goods.Amount > 0
+                                            
+                                                          
+           INNER JOIN tmpUserUnit ON tmpUserUnit.UnitId = OL_UnitCategory.Objectid
+
+      WHERE Movement.StatusId = zc_Enum_Status_Complete()
+        AND Movement.DescId = zc_Movement_PromoUnit()
+        AND Movement.OperDate = DATE_TRUNC ('MONTH', inOperDate);
+                
      -- находим максимальный
      vbDayIncome_max := (SELECT MAX (_tmpUnit_SUN.DayIncome)  FROM _tmpUnit_SUN);
 
@@ -1858,7 +1915,7 @@ BEGIN
                     -- инче берем ост "основного"
                     ELSE _tmpRemains_Partion.Amount
                END */
-             , _tmpRemains_Partion.Amount - _tmpRemains_Partion.Layout AS Amount
+             , FLOOR(_tmpRemains_Partion.Amount - _tmpRemains_Partion.Layout - COALESCE(_tmpGoods_PromoUnit.Amount, 0)) AS Amount
 
                -- для получения дробной части, нужен весь ост.
 /*             , CASE -- если у парного ост = 0, не отдаем
@@ -1896,11 +1953,14 @@ BEGIN
              -- товар есть среди парных
              LEFT JOIN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun
                        ) AS _tmpGoods_SUN_PairSun_find ON _tmpGoods_SUN_PairSun_find.GoodsId_PairSun = _tmpRemains_Partion.GoodsId
+                       
+             LEFT JOIN _tmpGoods_PromoUnit ON _tmpGoods_PromoUnit.UnitId = _tmpRemains_Partion.UnitId
+                                          AND _tmpGoods_PromoUnit.GoodsId = _tmpRemains_Partion.GoodsId
 
         WHERE -- !!!Отключили парные!!!
               COALESCE ( _tmpGoods_SUN_PairSun_find.GoodsId_PairSun, 0) = 0
 
-          AND (_tmpRemains_Partion.Amount - _tmpRemains_Partion.Layout) > 0
+          AND FLOOR(_tmpRemains_Partion.Amount - _tmpRemains_Partion.Layout - COALESCE(_tmpGoods_PromoUnit.Amount, 0)) > 0
 
 /*          CASE -- если у парного ост = 0, не отдаем
                     WHEN _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0 AND COALESCE (_tmpRemains_Partion_PairSun.Amount, 0) <= 0
@@ -2121,7 +2181,7 @@ BEGIN
      --
      -- курсор1 - все остатки, СРОК МИНУС сколько уже распределили
      OPEN curPartion_next FOR
-        SELECT _tmpRemains_Partion.UnitId AS UnitId_from, _tmpRemains_Partion.GoodsId, _tmpRemains_Partion.Amount - _tmpRemains_Partion.Layout - COALESCE (tmp.Amount, 0) AS Amount, _tmpRemains_Partion.Amount_sun, COALESCE (_tmpGoods_SUN.KoeffSUN, 0)
+        SELECT _tmpRemains_Partion.UnitId AS UnitId_from, _tmpRemains_Partion.GoodsId, FLOOR(_tmpRemains_Partion.Amount - _tmpRemains_Partion.Layout - COALESCE (tmp.Amount, 0) - COALESCE(_tmpGoods_PromoUnit.Amount, 0)) AS Amount, _tmpRemains_Partion.Amount_sun, COALESCE (_tmpGoods_SUN.KoeffSUN, 0)
         FROM _tmpRemains_Partion
              -- сколько уже ушло после распределения - 1
              LEFT JOIN (SELECT _tmpResult_Partion.UnitId_from, _tmpResult_Partion.GoodsId, SUM (_tmpResult_Partion.Amount) AS Amount FROM _tmpResult_Partion GROUP BY _tmpResult_Partion.UnitId_from, _tmpResult_Partion.GoodsId
@@ -2136,6 +2196,11 @@ BEGIN
 
              -- товары для Кратность
              LEFT JOIN _tmpGoods_SUN ON _tmpGoods_SUN.GoodsId = _tmpRemains_Partion.GoodsId
+
+             LEFT JOIN _tmpGoods_PromoUnit ON _tmpGoods_PromoUnit.UnitId = _tmpRemains_Partion.UnitId
+                                          AND _tmpGoods_PromoUnit.GoodsId = _tmpRemains_Partion.GoodsId
+
+        WHERE FLOOR(_tmpRemains_Partion.Amount - _tmpRemains_Partion.Layout - COALESCE (tmp.Amount, 0) - COALESCE(_tmpGoods_PromoUnit.Amount, 0)) > 0
         ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
        ;
      -- начало цикла по курсору1
