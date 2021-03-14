@@ -99,11 +99,11 @@ type
     edContract: TcxButtonEdit;
     cxLabel10: TcxLabel;
     edPaidKind: TcxButtonEdit;
-    ContractGuides: TdsdGuides;
-    PaidKindGuides: TdsdGuides;
+    GuidesContract: TdsdGuides;
+    GuidesPaidKind: TdsdGuides;
     cxLabel13: TcxLabel;
     edPacker: TcxButtonEdit;
-    PackerGuides: TdsdGuides;
+    GuidesPacker: TdsdGuides;
     SetErased: TdsdUpdateErased;
     SetUnErased: TdsdUpdateErased;
     actShowErased: TBooleanStoredProcAction;
@@ -114,7 +114,7 @@ type
     spErasedMIMaster: TdsdStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;
     IsErased: TcxGridDBColumn;
-    StatusGuides: TdsdGuides;
+    GuidesStatus: TdsdGuides;
     spChangeStatus: TdsdStoredProc;
     UnCompleteMovement: TChangeGuidesStatus;
     CompleteMovement: TChangeGuidesStatus;
@@ -131,10 +131,10 @@ type
     edCurrencyValue: TcxCurrencyEdit;
     cxLabel14: TcxLabel;
     edCurrencyDocument: TcxButtonEdit;
-    CurrencyDocumentGuides: TdsdGuides;
+    GuidesCurrencyDocument: TdsdGuides;
     cxLabel15: TcxLabel;
     edCurrencyPartner: TcxButtonEdit;
-    CurrencyPartnerGuides: TdsdGuides;
+    GuidesCurrencyPartner: TdsdGuides;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
     MovementItemProtocolOpenForm: TdsdOpenForm;
@@ -158,7 +158,7 @@ type
     Amount_diff: TcxGridDBColumn;
     cxLabel25: TcxLabel;
     edInvNumberTransport: TcxButtonEdit;
-    TransportChoiceGuides: TdsdGuides;
+    GuidesTransportChoice: TdsdGuides;
     HeaderSaver2: THeaderSaver;
     spInsertUpdateMovement_Params: TdsdStoredProc;
     cxTabSheetCost: TcxTabSheet;
@@ -192,14 +192,14 @@ type
     actInvoiceJournalDetailChoiceForm: TOpenChoiceForm;
     cxLabel19: TcxLabel;
     edInvNumberInvoice: TcxButtonEdit;
-    InvoiceGuides: TdsdGuides;
+    GuidesInvoice: TdsdGuides;
     spUpdateOrder: TdsdStoredProc;
     HeaderSaver3: THeaderSaver;
     cxLabel17: TcxLabel;
     edInvNumberOrder: TcxButtonEdit;
-    OrderGuides: TdsdGuides;
+    GuidesOrder: TdsdGuides;
     edJuridicalFrom: TcxButtonEdit;
-    JuridicalFromGuides: TdsdGuides;
+    GuidesJuridicalFrom: TdsdGuides;
     InsertRecordGoods: TInsertRecord;
     bbInsertRecordGoods: TdxBarButton;
     spSelectPrintSticker: TdsdStoredProc;
@@ -223,6 +223,9 @@ type
     macOpenFormTransport: TMultiAction;
     bbOpenFormTransport: TdxBarButton;
     bbOpenFormService: TdxBarButton;
+    cxLabel18: TcxLabel;
+    edPriceList: TcxButtonEdit;
+    GuidesPriceList: TdsdGuides;
   private
   public
   end;

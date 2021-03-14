@@ -355,6 +355,15 @@ object IncomeJournalForm: TIncomeJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object PriceListName: TcxGridDBColumn
+        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+        DataBinding.FieldName = 'PriceListName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object TotalCount_unit: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076' '#1080#1090#1086#1075')'
         DataBinding.FieldName = 'TotalCount_unit'
@@ -932,7 +941,7 @@ object IncomeJournalForm: TIncomeJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -997,7 +1006,7 @@ object IncomeJournalForm: TIncomeJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','

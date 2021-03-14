@@ -1,9 +1,9 @@
-object DiscountExternalForm: TDiscountExternalForm
+object DiscountExternalSupplierForm: TDiscountExternalSupplierForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082'  <'#1055#1088#1086#1077#1082#1090#1099' ('#1076#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1082#1072#1088#1090#1099')>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082'  <'#1055#1086#1089#1090#1072#1074#1097#1080#1082#1080' '#1076#1083#1103' '#1087#1088#1086#1077#1082#1090#1086#1074' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1093' '#1082#1072#1088#1090'>'
   ClientHeight = 332
-  ClientWidth = 938
+  ClientWidth = 703
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object DiscountExternalForm: TDiscountExternalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 938
+    Width = 703
     Height = 306
     Align = alClient
     TabOrder = 0
@@ -37,7 +37,6 @@ object DiscountExternalForm: TDiscountExternalForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = Name
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -57,37 +56,44 @@ object DiscountExternalForm: TDiscountExternalForm
         Options.Editing = False
         Width = 37
       end
-      object Name: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'Name'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 200
-      end
-      object URL: TcxGridDBColumn
-        DataBinding.FieldName = 'URL'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 250
-      end
       object Service: TcxGridDBColumn
         Caption = #1057#1077#1088#1074#1080#1089
         DataBinding.FieldName = 'Service'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1084#1091' '#1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1089#1086#1086#1073#1097#1077#1085#1080#1077' '#1086#1073' '#1086#1096#1080#1073#1082#1077' '#1087#1088#1080' '#1079#1072#1075#1088#1091#1079#1082#1077' '#1076#1072#1085#1085#1099#1093' '#1089' '#1087'/'#1103' '#9
         Options.Editing = False
-        Width = 99
+        Width = 57
       end
-      object Port: TcxGridDBColumn
-        Caption = #1055#1086#1088#1090
-        DataBinding.FieldName = 'Port'
+      object DiscountExternalCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1055#1088#1086#1077#1082#1090#1072
+        DataBinding.FieldName = 'DiscountExternalCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object DiscountExternalName: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1055#1088#1086#1077#1082#1090#1072
+        DataBinding.FieldName = 'DiscountExternalName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 311
+      end
+      object JuridicalName: TcxGridDBColumn
+        Caption = #1070#1088'. '#1083#1080#1094#1086' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
+        DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 80
+        Width = 158
+      end
+      object SupplierID: TcxGridDBColumn
+        Caption = 'ID - '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1074' '#1087#1088#1086#1077#1082#1090#1077
+        DataBinding.FieldName = 'SupplierID'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 94
       end
       object Id: TcxGridDBColumn
         DataBinding.FieldName = 'Id'
@@ -97,32 +103,6 @@ object DiscountExternalForm: TDiscountExternalForm
         Options.Editing = False
         VisibleForCustomization = False
         Width = 55
-      end
-      object isGoodsForProject: TcxGridDBColumn
-        Caption = #1058#1086#1074#1072#1088' '#1076#1083#1103' '#1087#1088#1086#1077#1082#1090#1072
-        DataBinding.FieldName = 'isGoodsForProject'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1058#1086#1074#1072#1088' '#1090#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1087#1088#1086#1077#1082#1090#1072' ('#1076#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1082#1072#1088#1090#1099')'
-        Width = 74
-      end
-      object isOneSupplier: TcxGridDBColumn
-        Caption = #1062#1077#1083#1099#1077' '#1091#1087#1072#1082#1086#1074#1082#1080' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
-        DataBinding.FieldName = 'isOneSupplier'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1042' '#1095#1077#1082' '#1090#1086#1074#1072#1088' '#1087#1088#1086#1074#1086#1076#1080#1090#1100' '#1094#1077#1083#1099#1084#1080' '#1091#1087#1072#1082#1086#1074#1082#1072#1084#1080' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
-        Options.Editing = False
-        Width = 100
-      end
-      object isTwoPackages: TcxGridDBColumn
-        Caption = '2 '#1091#1087#1072#1082#1086#1074#1082#1080' '#1087#1086' '#1082#1072#1088#1090#1077
-        DataBinding.FieldName = 'isTwoPackages'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = '2 '#1091#1087#1072#1082#1086#1074#1082#1080' '#1087#1086' '#1082#1072#1088#1090#1077' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' '#1085#1072' '#1074#1090#1086#1088#1091#1102' '#1087#1088#1086#1076#1072#1078#1091
-        Options.Editing = False
-        Width = 71
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -299,6 +279,13 @@ object DiscountExternalForm: TDiscountExternalForm
       Action = ProtocolOpenForm
       Category = 0
     end
+    object dxBarButton1: TdxBarButton
+      Caption = #1050#1072#1089#1089#1086#1074#1099#1077' '#1095#1077#1082#1080' '#1087#1086' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1084' '#1087#1088#1086#1077#1082#1090#1072#1084
+      Category = 0
+      Hint = #1050#1072#1089#1089#1086#1074#1099#1077' '#1095#1077#1082#1080' '#1087#1086' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1084' '#1087#1088#1086#1077#1082#1090#1072#1084
+      Visible = ivAlways
+      ImageIndex = 28
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -324,8 +311,8 @@ object DiscountExternalForm: TDiscountExternalForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TDiscountExternalEditForm'
-      FormNameParam.Value = 'TDiscountExternalEditForm'
+      FormName = 'TDiscountExternalSupplierEditForm'
+      FormNameParam.Value = 'TDiscountExternalSupplierEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -345,8 +332,8 @@ object DiscountExternalForm: TDiscountExternalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TDiscountExternalEditForm'
-      FormNameParam.Value = 'TDiscountExternalEditForm'
+      FormName = 'TDiscountExternalSupplierEditForm'
+      FormNameParam.Value = 'TDiscountExternalSupplierEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -403,44 +390,50 @@ object DiscountExternalForm: TDiscountExternalForm
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Id'
+          ComponentItem = 'DiscountExternalId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Name'
+          ComponentItem = 'DiscountExternalName'
           DataType = ftString
           MultiSelectSeparator = ','
         end
         item
-          Name = 'URL'
+          Name = 'UserName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'URL'
+          ComponentItem = 'UserName'
           DataType = ftString
           MultiSelectSeparator = ','
         end
         item
-          Name = 'Service'
+          Name = 'Password'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Service'
+          ComponentItem = 'Password'
           DataType = ftString
           MultiSelectSeparator = ','
         end
         item
-          Name = 'Port'
+          Name = 'UnitId'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Port'
+          ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
       ImageIndex = 7
     end
     object dsdGridToExcel: TdsdGridToExcel
@@ -484,7 +477,7 @@ object DiscountExternalForm: TDiscountExternalForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_DiscountExternal'
+    StoredProcName = 'gpSelect_Object_DiscountExternalSupplier'
     DataSet = MasterCDS
     DataSets = <
       item

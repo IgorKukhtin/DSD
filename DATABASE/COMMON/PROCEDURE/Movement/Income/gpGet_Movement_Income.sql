@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ToId Integer, ToName TVarChar, ToParentId Integer
              , PaidKindId Integer, PaidKindName TVarChar, ContractId Integer, ContractName TVarChar
              , PersonalPackerId Integer, PersonalPackerName TVarChar
+             , PriceListId Integer, PriceListName TVarChar
              , CurrencyDocumentId Integer, CurrencyDocumentName TVarChar
              , CurrencyPartnerId Integer, CurrencyPartnerName TVarChar
              , PaidKindToId Integer, PaidKindToName TVarChar
@@ -70,6 +71,9 @@ BEGIN
              , 0                     AS PersonalPackerId
              , CAST ('' as TVarChar) AS PersonalPackerName
 
+             , CAST (0  AS Integer)  AS PriceListId
+             , CAST ('' AS TVarChar) AS PriceListName
+
              , ObjectCurrency.Id      AS CurrencyDocumentId	-- „Ì
              , ObjectCurrency.ValueData  AS CurrencyDocumentName
            
@@ -121,7 +125,7 @@ BEGIN
              , MovementDate_OperDatePartner.ValueData    AS OperDatePartner
              , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
 
-             , MovementBoolean_PriceWithVAT.ValueData      AS PriceWithVAT
+             , MovementBoolean_PriceWithVAT.ValueData  ::Boolean    AS PriceWithVAT
              , MovementFloat_VATPercent.ValueData          AS VATPercent
              , MovementFloat_ChangePercent.ValueData       AS ChangePercent
 
@@ -142,6 +146,11 @@ BEGIN
              , View_Contract_InvNumber.InvNumber     AS ContractName
              , Object_Member.Id                      AS PersonalPackerId
              , Object_Member.ValueData               AS PersonalPackerName
+
+             --, COALESCE (Object_PriceList.Id,        (SELECT tmp.PriceListId   FROM lfGet_Object_Partner_PriceList (inContractId:= View_Contract_InvNumber.ContractId, inPartnerId:= MovementLinkObject_From.ObjectId, inOperDate:= MovementDate_OperDatePartner.ValueData) AS tmp)) AS PriceListId
+             --, COALESCE (Object_PriceList.ValueData, (SELECT tmp.PriceListName FROM lfGet_Object_Partner_PriceList (inContractId:= View_Contract_InvNumber.ContractId, inPartnerId:= MovementLinkObject_From.ObjectId, inOperDate:= MovementDate_OperDatePartner.ValueData) AS tmp)) AS PriceListName
+             , Object_PriceList.Id        AS PriceListId
+             , Object_PriceList.ValueData AS PriceListName
 
              , COALESCE (Object_CurrencyDocument.Id, ObjectCurrencycyDocumentInf.Id)                AS CurrencyDocumentId
              , COALESCE (Object_CurrencyDocument.ValueData, ObjectCurrencycyDocumentInf.ValueData)  AS CurrencyDocumentName
@@ -261,6 +270,11 @@ BEGIN
                                         AND MovementLinkObject_ContractTo.DescId = zc_MovementLinkObject_ContractTo()
             LEFT JOIN Object_Contract_InvNumber_View AS View_ContractTo_InvNumber ON View_ContractTo_InvNumber.ContractId = MovementLinkObject_ContractTo.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
+                                         ON MovementLinkObject_PriceList.MovementId = Movement.Id
+                                        AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
+
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
                                            ON MovementLinkMovement_Transport.MovementId = Movement.Id
                                           AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
@@ -280,6 +294,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 11.03.21         * add PriceList
  30.01.16         * inOperDate
  23.07.14         * add zc_MovementFloat_CurrencyValue
                         zc_MovementLinkObject_CurrencyDocument

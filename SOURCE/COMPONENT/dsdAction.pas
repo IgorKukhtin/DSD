@@ -1862,6 +1862,18 @@ begin
         end;
       end;
     end;
+
+    // Проверяем если не влазит в Xls меняем на Xlsx
+    if (TcxGrid(FGrid).ViewCount > 0) and (ExportType = cxegExportToExcel) then
+    begin
+      if (TcxGridDBTableView(TcxGrid(FGrid).Views[0]).ColumnCount >= 256) or
+         (TcxGrid(FGrid).Views[0].DataController.RecordCount >= 65536) then
+      begin
+        ExportType := cxegExportToXlsx;
+        FileName := StringReplace(FileName, '.xls', '.xlsx', [rfReplaceAll]);
+      end;
+    end;
+
     case ExportType of
       cxegExportToHtml:
         ExportGridToHTML(FileName, TcxGrid(FGrid), IsCtrlPressed);
@@ -3851,7 +3863,12 @@ begin
                 ReplaceDescriptor:=Doc.createReplaceDescriptor;
                 ReplaceDescriptor.setSearchString('%' + FDataSet.Fields.Fields[0].AsString + '%');
                 ReplaceDescriptor.setReplaceString(FDataSet.Fields.Fields[1].AsString);
-                Doc.replaceAll(ReplaceDescriptor);              end;              FDataSet.Next;            end;          end;
+                Doc.replaceAll(ReplaceDescriptor);
+              end;
+              FDataSet.Next;
+            end;
+          end;
+
           SaveParams := VarArrayCreate([0, -1], varVariant);
           Doc.StoreAsUrl(ConvertToURL(ExtractFilePath(ParamStr(0)) + FFileName),SaveParams);
         end;

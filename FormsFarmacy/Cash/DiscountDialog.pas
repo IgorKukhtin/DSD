@@ -69,6 +69,8 @@ begin
                                                ,DiscountServiceForm.gUserName
                                                ,DiscountServiceForm.gPassword
                                                ,trim (edCardNumber.Text)
+                                               ,DiscountServiceForm.gisOneSupplier
+                                               ,DiscountServiceForm.gisTwoPackages
                                                ,Key
                                                )
              then ModalResult := mrOk;

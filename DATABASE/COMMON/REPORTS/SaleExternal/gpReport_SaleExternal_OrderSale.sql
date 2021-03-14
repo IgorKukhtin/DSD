@@ -162,8 +162,8 @@ BEGIN
                                       , Object_PartnerReal.Id          AS PartnerRealId 
                                       , Object_PartnerReal.ValueData   AS PartnerRealName
                                       , Object_PartnerReal.DescId      AS PartnerRealDescId
-                                      , MIN (tmpMovement.OperDate) OVER (PARTITION BY Object_From.Id, Object_PartnerFrom.Id, Object_PartnerReal.Id) AS OperDate_min
-                                      , MAX (tmpMovement.OperDate) OVER (PARTITION BY Object_From.Id, Object_PartnerFrom.Id, Object_PartnerReal.Id) AS OperDate_max
+                                      , MIN (tmpMovement.OperDate) OVER (PARTITION BY Object_PartnerFrom.Id, Object_PartnerReal.Id) AS OperDate_min
+                                      , MAX (tmpMovement.OperDate) OVER (PARTITION BY Object_PartnerFrom.Id, Object_PartnerReal.Id) AS OperDate_max
                                  FROM tmpMovement_SE AS tmpMovement
                                       LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                                    ON MovementLinkObject_From.MovementId = tmpMovement.Id
@@ -320,15 +320,15 @@ BEGIN
                             , SUM (CASE WHEN Movement.OperDate BETWEEN vbStartDate_2 AND vbStartDate_3 - INTERVAL '1 DAY' THEN tmpMI.AmountKg END) AS AmountKg_2
                             , SUM (CASE WHEN Movement.OperDate BETWEEN vbStartDate_3 AND vbEndDate                        THEN tmpMI.AmountKg END) AS AmountKg_3
                             , SUM (tmpMI.AmountKg)    AS AmountKg
-                            , SUM (tmpMI.AmountKg)/SUM (Movement.CountMonth)  AS AmountKg_avg
-                            , SUM ((SUM(tmpMI.AmountKg)/SUM (Movement.CountMonth))) OVER (PARTITION BY Movement.PartnerRealId) AS TotalAmountKg_avg
+                            , SUM (tmpMI.AmountKg)/MAX (Movement.CountMonth)  AS AmountKg_avg
+                            , SUM ((SUM(tmpMI.AmountKg)/MAX (Movement.CountMonth))) OVER (PARTITION BY Movement.PartnerRealId) AS TotalAmountKg_avg
                             -- для сумм
                             , SUM (CASE WHEN Movement.OperDate BETWEEN vbStartDate   AND vbStartDate_2 - INTERVAL '1 DAY' THEN tmpMI.SummWithVAT END) AS SummWithVAT_1
                             , SUM (CASE WHEN Movement.OperDate BETWEEN vbStartDate_2 AND vbStartDate_3 - INTERVAL '1 DAY' THEN tmpMI.SummWithVAT END) AS SummWithVAT_2
                             , SUM (CASE WHEN Movement.OperDate BETWEEN vbStartDate_3 AND vbEndDate                        THEN tmpMI.SummWithVAT END) AS SummWithVAT_3
                             , SUM (tmpMI.SummWithVAT)    AS SummWithVAT
-                            , SUM (tmpMI.SummWithVAT)/SUM (Movement.CountMonth)  AS SummWithVAT_avg
-                            , SUM ((SUM(tmpMI.SummWithVAT)/SUM (Movement.CountMonth))) OVER (PARTITION BY Movement.PartnerRealId) AS TotalSummWithVAT_avg
+                            , SUM (tmpMI.SummWithVAT)/MAX (Movement.CountMonth)  AS SummWithVAT_avg
+                            , SUM ((SUM(tmpMI.SummWithVAT)/MAX (Movement.CountMonth))) OVER (PARTITION BY Movement.PartnerRealId) AS TotalSummWithVAT_avg
                        FROM tmpMovementAll_SE AS Movement
                             INNER JOIN tmpMI ON tmpMI.MovementId = Movement.Id
                        GROUP BY /*Movement.FromName

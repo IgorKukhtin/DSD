@@ -1545,7 +1545,7 @@ inherited MainCashForm2: TMainCashForm2
     object lblDiscountCardNumber: TLabel
       Left = 379
       Top = 1
-      Width = 110
+      Width = 116
       Height = 19
       Align = alLeft
       AutoSize = False
@@ -1558,7 +1558,7 @@ inherited MainCashForm2: TMainCashForm2
       ParentFont = False
     end
     object lblPrice: TLabel
-      Left = 489
+      Left = 495
       Top = 1
       Width = 74
       Height = 19
@@ -1570,6 +1570,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitLeft = 489
       ExplicitHeight = 13
     end
     object lblAmount: TLabel

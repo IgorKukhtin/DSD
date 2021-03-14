@@ -24,6 +24,7 @@ type
     RESTRequest: TRESTRequest;
     RESTClient: TRESTClient;
     spGet_Goods_CodeRazom: TdsdStoredProc;
+    spGet_DiscountCard_Goods_Amount: TdsdStoredProc;
     procedure FormCreate(Sender: TObject);
   private
     FIdCasual : string;
@@ -34,6 +35,7 @@ type
     FSIdAlter : String;
     FInvoiceNumber : String;
     FInvoiceDate : TDateTime;
+    FAmountPackages : Currency;
 
     function myFloatToStr(aValue: Double) : String;
     function myStrToFloat(aValue: String) : Double;
@@ -44,12 +46,15 @@ type
     // так криво будем хранить "текущие" параметры-Main
     gURL, gService, gPort, gUserName, gPassword, gCardNumber, gExternalUnit: string;
     gDiscountExternalId, gCode: Integer;
+    gisOneSupplier, gisTwoPackages : Boolean;
     // обнулим "нужные" параметры-Item
     //procedure pSetParamItemNull;
     // попробуем обновить "нужные" параметры-Main
     procedure pGetDiscountExternal (lDiscountExternalId : Integer; lCardNumber : String);
     // проверка карты + сохраним "текущие" параметры-Main
-    function fCheckCard (var lMsg : string; lURL, lService, lPort, lUserName, lPassword, lCardNumber : string; lDiscountExternalId : Integer) :Boolean;
+    function fCheckCard (var lMsg : string; lURL, lService, lPort, lUserName, lPassword, lCardNumber : string;
+                         lisOneSupplier, lisTwoPackages : Boolean;
+                         lDiscountExternalId : Integer) :Boolean;
     // получили Дисконт + сохраним "текущие" параметры-Item
     //function fGetSale (var lMsg : string; var lPrice, lChangePercent, lSummChangePercent : Currency;
     //                                    lCardNumber : string; lDiscountExternalId, lGoodsId : Integer; lQuantity, lPriceSale : Currency;
@@ -276,7 +281,9 @@ begin
 end;}
 
 // проверка карты + сохраним "текущие" параметры-Main
-function TDiscountServiceForm.fCheckCard (var lMsg : string; lURL, lService, lPort, lUserName, lPassword, lCardNumber : string; lDiscountExternalId : Integer) :Boolean;
+function TDiscountServiceForm.fCheckCard (var lMsg : string; lURL, lService, lPort, lUserName, lPassword, lCardNumber : string;
+                                          lisOneSupplier, lisTwoPackages : Boolean;
+                                          lDiscountExternalId : Integer) :Boolean;
 begin
   Result:=false;
   lMsg:='';
@@ -311,12 +318,14 @@ begin
      begin
           // сохранили
           gDiscountExternalId:= lDiscountExternalId;
-          gURL        := lURL;
-          gService    := lService;
-          gPort       := lPort;
-          gUserName   := lUserName;
-          gPassword   := lPassword;
-          gCardNumber := lCardNumber;
+          gURL           := lURL;
+          gService       := lService;
+          gPort          := lPort;
+          gUserName      := lUserName;
+          gPassword      := lPassword;
+          gCardNumber    := lCardNumber;
+          gisOneSupplier := lisOneSupplier;
+          gisTwoPackages := lisTwoPackages;
      end
      else
      begin
@@ -329,6 +338,8 @@ begin
           gUserName   := '';
           gPassword   := '';
           gCardNumber := '';
+          gisOneSupplier := False;
+          gisTwoPackages := False;
      end;
 end;
 
@@ -352,22 +363,26 @@ begin
          gCode       := lCode;
          if lCode > 0 then
          begin
-               gURL          := ParamByName('URL').Value;
-               gService      := ParamByName('Service').Value;
-               gPort         := ParamByName('Port').Value;
-               gUserName     := ParamByName('UserName').Value;
-               gPassword     := ParamByName('Password').Value;
-               gCardNumber   := lCardNumber;
-               gExternalUnit := ParamByName('ExternalUnit').AsString;
+               gURL           := ParamByName('URL').Value;
+               gService       := ParamByName('Service').Value;
+               gPort          := ParamByName('Port').Value;
+               gUserName      := ParamByName('UserName').Value;
+               gPassword      := ParamByName('Password').Value;
+               gCardNumber    := lCardNumber;
+               gExternalUnit  := ParamByName('ExternalUnit').AsString;
+               gisOneSupplier := ParamByName('isOneSupplier').Value;
+               gisTwoPackages := ParamByName('isTwoPackages').Value;
          end
          else begin
-               gURL          := '';
-               gService      := '';
-               gPort         := '';
-               gUserName     := '';
-               gPassword     := '';
-               gCardNumber   := '';
-               gExternalUnit := '';
+               gURL           := '';
+               gService       := '';
+               gPort          := '';
+               gUserName      := '';
+               gPassword      := '';
+               gCardNumber    := '';
+               gExternalUnit  := '';
+               gisOneSupplier := False;
+               gisTwoPackages := False;
                ShowMessage ('Ошибка.Для аптеки не настроена работа с Проектами дисконтных карт.')
          end;
       end
@@ -375,14 +390,16 @@ begin
      begin
           //обнулим параметры-Main
           gDiscountExternalId:= 0;
-          gCode         := 0;
-          gURL          := '';
-          gService      := '';
-          gPort         := '';
-          gUserName     := '';
-          gPassword     := '';
-          gCardNumber   := '';
-          gExternalUnit := '';
+          gCode          := 0;
+          gURL           := '';
+          gService       := '';
+          gPort          := '';
+          gUserName      := '';
+          gPassword      := '';
+          gCardNumber    := '';
+          gExternalUnit  := '';
+          gisOneSupplier := False;
+          gisTwoPackages := False;
      end;
 end;
 
@@ -727,7 +744,7 @@ begin
       else
 
       //если программа Medicard
-      if gService = 'AbbottCard' then
+      if gService = 'Medicard' then
       begin
 
         if (FIdCasual = '') or (FSupplier = 0) or (FBarCode_find = '') then
@@ -772,6 +789,29 @@ begin
                 exit;
             end;
 
+            if gisTwoPackages then
+            begin
+              FAmountPackages := 0;
+              with spGet_DiscountCard_Goods_Amount do
+              begin
+                ParamByName('inDiscountCard').Value  := gCardNumber;
+                ParamByName('inGoodsId').Value  := CheckCDS.FieldByName('GoodsId').AsInteger;
+                ParamByName('outAmount').Value := 0;
+                Execute;
+                FAmountPackages := ParamByName('outAmount').AsFloat;
+              end;
+
+              if (FAmountPackages + CheckCDS.FieldByName('Amount').AsCurrency) <> 2 then
+              begin
+                ShowMessage ('Ошибка По карте в целом должно быть отпущено 2 упаковки товара.' + #10+ #13
+                  + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
+                  + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+                //ошибка
+                lMsg:='Error';
+                exit;
+              end;
+            end else FAmountPackages := 0;
+
             try
 
               RESTClient.BaseURL := gURL;
@@ -795,9 +835,9 @@ begin
                              '  <card_code>' + gCardNumber + '</card_code>'#13#10 +
                              '  <product_code>' + FBarCode_find + '</product_code>'#13#10 +
                              '  <price>' + CurrToStrXML(CheckCDS.FieldByName('PriceSale').AsCurrency) + '</price>'#13#10 +
-                             '  <qty>' + CurrToStrXML(CheckCDS.FieldByName('Amount').AsCurrency) + '</qty>'#13#10 +
+                             '  <qty>' + CurrToStrXML(CheckCDS.FieldByName('Amount').AsCurrency + FAmountPackages) + '</qty>'#13#10 +
                              '  <rezerv>' + CurrToStrXML(Max(0, CheckCDS.FieldByName('Remains').AsCurrency - CheckCDS.FieldByName('Amount').AsCurrency)) + '</rezerv>'#13#10 +
-                             '  <discont_percent>' + CurrToStrXML(FDiscont) + '</discont_percent>'#13#10 +
+                             '  <discont_percent>' + CurrToStrXML(IfThen(gisTwoPackages and (FAmountPackages = 1), FDiscont / 2, FDiscont)) + '</discont_percent>'#13#10 +
                              '  <discont_value>' + CurrToStrXML(CheckCDS.FieldByName('SummChangePercent').AsCurrency) + '</discont_value>'#13#10 +
                              '  <sale_date>' + FormatDateTime('yyyy-mm-dd hh:nn:ss', Now) + '</sale_date >'#13#10 +
                              '  <login>' + gUserName + '</login>'#13#10 +
@@ -1286,6 +1326,7 @@ begin
   Result:= false;
   lMsg  := '';
   cExchangeHistory := '';
+  FAmountPackages := 0;
   //Если пусто - ничего не делаем
   CheckCDS.DisableControls;
   CheckCDS.filtered := False;
@@ -1324,6 +1365,18 @@ begin
         end
       else
           BarCode_find := '';
+
+      // Проверим чтоб количество было целое
+      if (BarCode_find <> '') and (CheckCDS.FieldByName('Amount').AsInteger <> CheckCDS.FieldByName('Amount').AsCurrency) then
+      begin
+          ShowMessage ('Количество должно быть целым.' + #10+ #13
+          + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
+          + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+           //ошибка
+          lMsg:='Error';
+          exit;
+      end;
+
 
       //если Штрих-код нашелся и программа ЗАРАДИ ЖИТТЯ
       if (BarCode_find <> '') and (gService = 'CardService') then
@@ -1635,26 +1688,6 @@ begin
       else  if (BarCode_find <> '') and (gService = 'Medicard') then
       begin
 
-          if CheckCDS.FieldByName('Amount').AsInteger <> CheckCDS.FieldByName('Amount').AsCurrency then
-          begin
-              ShowMessage ('Количество должно быть целым.' + #10+ #13
-              + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
-              + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
-               //ошибка
-              lMsg:='Error';
-              exit;
-          end;
-
-          if (CheckCDS.FieldByName('Amount').AsInteger <> 2) and (gCode in [12]) then
-          begin
-              ShowMessage ('По условиям программы количество должно быть 2 уп.' + #10+ #13
-              + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
-              + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
-               //ошибка
-              lMsg:='Error';
-              exit;
-          end;
-
           if FIdCasual <> '' then
           begin
             ShowMessage('В текущем чеке запрошена возможность продажи. Произведите продажу или очистите чек!');
@@ -1672,6 +1705,48 @@ begin
              FSupplier := Trunc(ParamByName('outCodeRazom').AsFloat);
              FSIdAlter := '';
              FInvoiceNumber := ParamByName('outInvoiceNumber').Value;
+          end;
+
+          if gisTwoPackages then
+          begin
+            FAmountPackages := 0;
+            with spGet_DiscountCard_Goods_Amount do
+            begin
+              ParamByName('inDiscountCard').Value  := gCardNumber;
+              ParamByName('inGoodsId').Value  := CheckCDS.FieldByName('GoodsId').AsInteger;
+              ParamByName('outAmount').Value := 0;
+              Execute;
+              FAmountPackages := ParamByName('outAmount').AsFloat;
+            end;
+
+            if FAmountPackages = 0 then
+            begin
+              FIdCasual := GenerateIdCasual;
+              ShowMessage ('Информация. По карте первая продажа. Скидка будет при продаже второй упаковки.' + #10+ #13
+                + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
+                + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+              lMsg:='';
+              Exit;
+            end else if FAmountPackages <> 1 then
+            begin
+              ShowMessage ('Ошибка По карте продажа уже осуществлена.' + #10+ #13
+                + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
+                + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+              //ошибка
+              lMsg:='Error';
+              exit;
+            end;
+
+            if CheckCDS.FieldByName('Amount').AsCurrency <> 1 then
+            begin
+              ShowMessage ('Ошибка По карте продажа 1 упаковки уже осуществлена.' + #10+ #13
+                + 'Можно отпустить только 1 вторую упаковку со скидкой.' + #10+ #13
+                + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
+                + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+              //ошибка
+              lMsg:='Error';
+              exit;
+            end;
           end;
 
           if CodeRazom <> 0 then
@@ -1701,7 +1776,7 @@ begin
                              '  <card_code>' + gCardNumber + '</card_code>'#13#10 +
                              '  <product_code>' + BarCode_find + '</product_code>'#13#10 +
                              '  <price>' + CurrToStrXML(CheckCDS.FieldByName('PriceSale').AsCurrency) + '</price>'#13#10 +
-                             '  <qty>' + CurrToStrXML(CheckCDS.FieldByName('Amount').AsCurrency) + '</qty>'#13#10 +
+                             '  <qty>' + CurrToStrXML(CheckCDS.FieldByName('Amount').AsCurrency + FAmountPackages) + '</qty>'#13#10 +
                              '  <login>' + gUserName + '</login>'#13#10 +
                              '  <password>' + gPassword + '</password>'#13#10 +
                              '</data>'));
@@ -1736,14 +1811,14 @@ begin
                     if Assigned(XMLNode) then
                     begin
                       FDiscont := XMLNode.NodeValue;
-                    //  if gCode in [12] then FDiscont := FDiscont / 2;
+                      if gisTwoPackages and (FAmountPackages = 1) then FDiscont := FDiscont * 2;
                     end;
 
                     XMLNode := XMLData.ChildNodes.FindNode('discont_absolute');
                     if Assigned(XMLNode) then
                     begin
                       FDiscontАbsolute := XMLNode.NodeValue;
-                     // if gCode in [12] then FDiscontАbsolute := FDiscontАbsolute / 2;
+                     if gisTwoPackages and (FAmountPackages = 1) then FDiscontАbsolute := FDiscontАbsolute * 2;
                     end;
 
                     XMLNode := XMLData.ChildNodes.FindNode('error');
@@ -2061,7 +2136,7 @@ end;
 
 function TDiscountServiceForm.GetBeforeSale : boolean;
 begin
-  if (gService <> 'Medicard') then
+  if (gService = 'Medicard') then
   begin
     Result := (FIdCasual <> '');
   end else if (gCode in [16])  then
@@ -2072,7 +2147,7 @@ end;
 
 function TDiscountServiceForm.GetPrepared : boolean;
 begin
-  if (gService <> 'Medicard') then
+  if (gService = 'Medicard') then
   begin
     Result := (FIdCasual <> '');
   end else Result := False;

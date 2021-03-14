@@ -304,15 +304,15 @@ order by 4*/
            -- , 'Неграш О.В.'::TVarChar                    AS N10
            , CASE WHEN Object_PersonalSigning.PersonalName <> ''
                   THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1, FALSE)
-                  ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> ''
-                            THEN zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1, FALSE)
+                  ELSE CASE WHEN COALESCE (ObjectString_PersonalBookkeeper.ValueData, Object_PersonalBookkeeper_View.PersonalName,'') <> ''
+                            THEN zfConvert_FIO (COALESCE (ObjectString_PersonalBookkeeper.ValueData, Object_PersonalBookkeeper_View.PersonalName,''), 1, FALSE)
                             ELSE 'Рудик Н.В.'
                        END
              END                            :: TVarChar AS N10
            , CASE WHEN Object_PersonalSigning.PersonalName <> ''
                   THEN UPPER (zfConvert_FIO (Object_PersonalSigning.PersonalName, 1, TRUE))
-                  ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> ''
-                            THEN UPPER (zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1, TRUE))
+                  ELSE CASE WHEN COALESCE (ObjectString_PersonalBookkeeper.ValueData, Object_PersonalBookkeeper_View.PersonalName,'') <> ''
+                            THEN UPPER (zfConvert_FIO (COALESCE (ObjectString_PersonalBookkeeper.ValueData, Object_PersonalBookkeeper_View.PersonalName,''), 1, TRUE))
                             ELSE UPPER ('Н. В. Рудик' )
                        END
              END                            :: TVarChar AS N10_ifin
@@ -445,14 +445,14 @@ order by 4*/
            , OH_JuridicalDetails_From.NumberVAT         AS NumberVAT_From
            , CASE WHEN Object_PersonalSigning.PersonalName <> ''
                   THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1, FALSE)
-                  ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> ''
-                            THEN zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1, FALSE)
+                  ELSE CASE WHEN COALESCE (ObjectString_PersonalBookkeeper.ValueData, Object_PersonalBookkeeper_View.PersonalName,'') <> ''
+                            THEN zfConvert_FIO (COALESCE (ObjectString_PersonalBookkeeper.ValueData, Object_PersonalBookkeeper_View.PersonalName,''), 1, FALSE)
                             ELSE 'Рудик Н.В.'
                        END
               END                           :: TVarChar AS AccounterName_From
            , CASE WHEN Object_PersonalSigning.PersonalName <> ''
                   THEN PersonalSigning_INN.ValueData
-                  ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> ''
+                  ELSE CASE WHEN COALESCE (ObjectString_PersonalBookkeeper.ValueData, Object_PersonalBookkeeper_View.PersonalName,'') <> ''
                             THEN PersonalBookkeeper_INN.ValueData
                             ELSE '2649713447'
                        END
@@ -584,6 +584,9 @@ order by 4*/
                                  ON ObjectLink_Branch_PersonalBookkeeper.ObjectId = MovementLinkObject_Branch.ObjectId
                                 AND ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
             LEFT JOIN Object_Personal_View AS Object_PersonalBookkeeper_View ON Object_PersonalBookkeeper_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId
+            LEFT JOIN ObjectString AS ObjectString_PersonalBookkeeper
+                                   ON ObjectString_PersonalBookkeeper.ObjectId = MovementLinkObject_Branch.ObjectId
+                                  AND ObjectString_PersonalBookkeeper.DescId = zc_objectString_Branch_PersonalBookkeeper()
 
             LEFT JOIN ObjectString AS PersonalBookkeeper_INN
                                    ON PersonalBookkeeper_INN.ObjectId = Object_PersonalBookkeeper_View.MemberId

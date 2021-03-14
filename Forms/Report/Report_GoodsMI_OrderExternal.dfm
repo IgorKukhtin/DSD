@@ -731,6 +731,12 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             Options.Editing = False
             Width = 100
           end
+          object CodeSticker: TcxGridDBColumn
+            Caption = #1050#1086#1076' PLU'
+            DataBinding.FieldName = 'CodeSticker'
+            Visible = False
+            Width = 60
+          end
         end
       end
     end

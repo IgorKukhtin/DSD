@@ -137,6 +137,18 @@ BEGIN
                                                                      AND MovementItemContainer.descid = zc_Container_Count()
                                                                      AND MovementItemContainer.Amount < 0
 
+/*                                      LEFT JOIN MovementItemContainer AS MICPD
+                                                                      ON MICPD.movementitemid =  MovementItemContainer.movementitemid
+                                                                     AND MICPD.descid = zc_Container_CountPartionDate()
+                                                                     AND MICPD.Amount < 0
+
+                                      LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = MICPD.ContainerId
+                                                                   AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+
+                                      LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                                           ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId 
+                                                          AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+*/
                                       LEFT JOIN tmpListGodsMarket ON tmpListGodsMarket.GoodsId = MovementItem.ObjectId
                                                                  AND tmpListGodsMarket.StartDate_Promo <= Movement.OperDate
                                                                  AND tmpListGodsMarket.EndDate_Promo >= Movement.OperDate
@@ -191,12 +203,12 @@ BEGIN
 
                                      SUM(CASE WHEN Movement.statusid <> zc_Enum_Status_Complete() AND
                                                    COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = FALSE THEN movementitem_Child.Amount  END)::TFloat AS AmountDischarged,
-                                     SUM(CASE WHEN COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = TRUE THEN - MovementItemContainer.Amount  END)::TFloat AS AmountDeferred,
-                                     SUM(CASE WHEN Movement.statusid = zc_Enum_Status_Complete() THEN - MovementItemContainer.Amount  END)::TFloat AS AmountComplete,
-                                     SUM(- MovementItemContainer.Amount)::TFloat AS Amount,
+                                     SUM(CASE WHEN COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = TRUE THEN - COALESCE(MICPD.Amount, MovementItemContainer.Amount)  END)::TFloat AS AmountDeferred,
+                                     SUM(CASE WHEN Movement.statusid = zc_Enum_Status_Complete() THEN - COALESCE(MICPD.Amount, MovementItemContainer.Amount)  END)::TFloat AS AmountComplete,
+                                     SUM(- COALESCE(MICPD.Amount, MovementItemContainer.Amount))::TFloat    AS Amount,
                                      Null::TFloat                                                          AS AmountLoss,
                                      tmpListGodsMarket.MakerId,
-                                     COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) AS ExpirationDate
+                                     COALESCE (ObjectDate_ExpirationDate.ValueData, ObjectDate_ExpirationDate_Child.ValueData, MIDate_ExpirationDate.ValueData, zc_DateEnd()) AS ExpirationDate
 
                                FROM Movement
 
@@ -214,11 +226,35 @@ BEGIN
                                                           AND movementitem_Child.parentid = movementitem.id
                                                           AND movementitem_Child.amount > 0
                                                           AND movementitem_Child.DescId = zc_MI_Child()
-                                                        AND movementitem_Child.iserased = False
+                                                          AND movementitem_Child.iserased = False
+
+                                    LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                                ON MIFloat_ContainerId.MovementItemId = movementitem_Child.Id
+                                                               AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+
+                                    LEFT JOIN ContainerLinkObject AS CLO_Child
+                                                                  ON CLO_Child.ContainerId = MIFloat_ContainerId.ValueData::Integer
+                                                                 AND CLO_Child.DescId = zc_ContainerLinkObject_PartionGoods()
+
+                                    LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate_Child
+                                                         ON ObjectDate_ExpirationDate_Child.ObjectId = CLO_Child.ObjectId 
+                                                        AND ObjectDate_ExpirationDate_Child.DescId = zc_ObjectDate_PartionGoods_Value()
 
                                     LEFT JOIN MovementItemContainer ON MovementItemContainer.movementitemid =  COALESCE(movementitem_Child.ID, movementitem.id)
                                                                    AND MovementItemContainer.descid = zc_Container_Count()
                                                                    AND MovementItemContainer.Amount < 0
+
+                                    LEFT JOIN MovementItemContainer AS MICPD
+                                                                    ON MICPD.movementitemid =  MovementItemContainer.movementitemid
+                                                                   AND MICPD.descid = zc_Container_CountPartionDate()
+                                                                   AND MICPD.Amount < 0
+
+                                    LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = MICPD.ContainerId
+                                                                 AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+
+                                    LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                                         ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId 
+                                                        AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
 
                                     LEFT JOIN tmpListGodsMarket ON tmpListGodsMarket.GoodsId = MovementItem.ObjectId
                                                                AND tmpListGodsMarket.StartDate_Promo <= Movement.OperDate
@@ -261,7 +297,7 @@ BEGIN
                                  AND COALESCE(MovementLinkObject_PartionDateKind.ObjectId, 0) = zc_Enum_PartionDateKind_0()
                                  AND (MovementLinkObject_Unit.ObjectId = inUnitID OR inUnitID = 0)
                                GROUP BY MovementLinkObject_Unit.ObjectId, MovementItem.ObjectId, MovementItemContainer.ContainerId,
-                                        tmpListGodsMarket.MakerId, COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())
+                                        tmpListGodsMarket.MakerId, COALESCE (ObjectDate_ExpirationDate.ValueData, ObjectDate_ExpirationDate_Child.ValueData, MIDate_ExpirationDate.ValueData, zc_DateEnd())
                                UNION ALL
                                SELECT tmpMovementItemLoss.UnitID                   AS UnitID,
                                       tmpMovementItemLoss.GoodsID                  AS GoodsID,
@@ -275,22 +311,6 @@ BEGIN
                                       tmpMovementItemLoss.ExpirationDate           AS ExpirationDate
                                FROM tmpMovementItemLoss)
 
-      ,   tmpContainerPD AS (SELECT tmpContainerId.ContainerId,
-                                    Min(COALESCE(ObjectDate_ExpirationDate.ValueData, zc_DateEnd()))  AS ExpirationDate
-                             FROM (SELECT DISTINCT ContainerId FROM tmpMovementItem) AS tmpContainerId
-
-                                  INNER JOIN Container ON Container.ParentId = tmpContainerId.ContainerId
-                                                      AND Container.DescId  = zc_Container_CountPartionDate()
-
-                                  LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
-                                                               AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
-
-                                  LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
-                                                       ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId
-                                                      AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
-
-                            GROUP BY tmpContainerId.ContainerId
-                            )
       ,   tmpMovementItemSum AS (SELECT Movement.UnitId,
                                        Movement.GoodsId,
 
@@ -303,15 +323,13 @@ BEGIN
                                        SUM(COALESCE(Movement.Amount, 0) +
                                            COALESCE(Movement.AmountLoss, 0))::TFloat                         AS Amount,
                                        Movement.MakerId,
-                                       COALESCE(tmpContainerPD.ExpirationDate, Movement.ExpirationDate)      AS ExpirationDate
+                                       Movement.ExpirationDate                                               AS ExpirationDate
 
                                  FROM tmpMovementItem AS Movement
 
                                       LEFT JOIN AnalysisContainer ON AnalysisContainer.Id = Movement.ContainerId
 
-                                      LEFT JOIN tmpContainerPD ON tmpContainerPD.ContainerId = Movement.ContainerId
-
-                                 GROUP BY Movement.UnitId, Movement.GoodsId, Movement.MakerId, COALESCE(tmpContainerPD.ExpirationDate, Movement.ExpirationDate))
+                                 GROUP BY Movement.UnitId, Movement.GoodsId, Movement.MakerId, Movement.ExpirationDate)
 
       ,   tmpContainer AS (SELECT tmpContainerId.UnitID
                                 , tmpContainerId.GoodsId
@@ -381,4 +399,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpReport_StockTiming_Remainder(inOperDate :=  '15.01.2020', inUnitID := 0, inMakerId := 0, inSession := '3')
 
-select * from gpReport_StockTiming_Remainder(inOperDate := ('02.06.2020')::TDateTime , inUnitId := 0 , inMakerId := 0 ,  inSession := '3');
+select * from gpReport_StockTiming_Remainder(inOperDate := ('11.03.2021')::TDateTime , inUnitId := 377606 , inMakerId := 0 ,  inSession := '3');

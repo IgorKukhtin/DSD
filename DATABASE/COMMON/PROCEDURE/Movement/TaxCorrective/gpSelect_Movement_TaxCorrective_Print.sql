@@ -473,12 +473,15 @@ BEGIN
     , tmpPersonalBookkeeper AS (SELECT ObjectLink_Branch_PersonalBookkeeper.ObjectId AS BranchId
                                      , Object_PersonalBookkeeper_View.MemberId
                                      , PersonalBookkeeper_INN.ValueData AS PersonalBookkeeper_INN
-                                     , Object_PersonalBookkeeper_View.PersonalName AS PersonalName
+                                     , COALESCE (ObjectString_PersonalBookkeeper.ValueData, Object_PersonalBookkeeper_View.PersonalName) ::TVarChar AS PersonalName
                                 FROM ObjectLink AS ObjectLink_Branch_PersonalBookkeeper
                                      LEFT JOIN Object_Personal_View AS Object_PersonalBookkeeper_View ON Object_PersonalBookkeeper_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId
                                      LEFT JOIN ObjectString AS PersonalBookkeeper_INN
                                                             ON PersonalBookkeeper_INN.ObjectId = Object_PersonalBookkeeper_View.MemberId
                                                            AND PersonalBookkeeper_INN.DescId = zc_ObjectString_Member_INN()
+                                     LEFT JOIN ObjectString AS ObjectString_PersonalBookkeeper
+                                                            ON ObjectString_PersonalBookkeeper.ObjectId = ObjectLink_Branch_PersonalBookkeeper.ObjectId
+                                                           AND ObjectString_PersonalBookkeeper.DescId = zc_objectString_Branch_PersonalBookkeeper()
                                 WHERE ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
                                 )
 

@@ -1,4 +1,4 @@
-unit DiscountExternal;
+unit DiscountExternalSupplier;
 
 interface
 
@@ -23,11 +23,10 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TDiscountExternalForm = class(TParentForm)
+  TDiscountExternalSupplierForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     Code: TcxGridDBColumn;
-    Name: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     MasterDS: TDataSource;
     MasterCDS: TClientDataSet;
@@ -55,13 +54,15 @@ type
     isErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    Port: TcxGridDBColumn;
+    SupplierID: TcxGridDBColumn;
     Id: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    DiscountExternalCode: TcxGridDBColumn;
+    DiscountExternalName: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
-    isGoodsForProject: TcxGridDBColumn;
-    isOneSupplier: TcxGridDBColumn;
-    isTwoPackages: TcxGridDBColumn;
+    dxBarButton1: TdxBarButton;
+    Service: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -73,5 +74,5 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TDiscountExternalForm);
+  RegisterClass(TDiscountExternalSupplierForm);
 end.

@@ -1,9 +1,9 @@
-﻿object BranchEditForm: TBranchEditForm
+﻿object DiscountExternalSupplierEditForm: TDiscountExternalSupplierEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1060#1080#1083#1080#1072#1083'>'
-  ClientHeight = 295
-  ClientWidth = 336
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100'  <'#1055#1086#1089#1090#1072#1074#1097#1080#1082#1080' '#1076#1083#1103' '#1087#1088#1086#1077#1082#1090#1086#1074' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1093' '#1082#1072#1088#1090'>'
+  ClientHeight = 252
+  ClientWidth = 375
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,113 +16,90 @@
   AddOnFormData.Params = dsdFormParams
   PixelsPerInch = 96
   TextHeight = 13
-  object edName: TcxTextEdit
-    Left = 21
-    Top = 76
-    TabOrder = 0
-    Width = 284
-  end
   object cxLabel1: TcxLabel
-    Left = 21
-    Top = 55
-    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+    Left = 40
+    Top = 51
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1088#1086#1077#1082#1090#1072
   end
   object cxButton1: TcxButton
-    Left = 40
-    Top = 263
+    Left = 74
+    Top = 210
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
     ModalResult = 8
-    TabOrder = 2
+    TabOrder = 1
   end
   object cxButton2: TcxButton
-    Left = 200
-    Top = 263
+    Left = 224
+    Top = 210
     Width = 75
     Height = 25
     Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
-    TabOrder = 3
+    TabOrder = 2
   end
   object Код: TcxLabel
-    Left = 21
-    Top = 10
+    Left = 40
+    Top = 5
     Caption = #1050#1086#1076
   end
   object ceCode: TcxCurrencyEdit
-    Left = 21
-    Top = 31
+    Left = 40
+    Top = 26
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    TabOrder = 5
-    Width = 130
+    TabOrder = 4
+    Width = 296
   end
-  object edInvNumber: TcxTextEdit
-    Left = 159
-    Top = 31
+  object cxLabel5: TcxLabel
+    Left = 40
+    Top = 152
+    Caption = 'ID - '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1074' '#1087#1088#1086#1077#1082#1090#1077
+  end
+  object edJuridical: TcxButtonEdit
+    Left = 40
+    Top = 118
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
     TabOrder = 6
-    Width = 146
+    Width = 296
   end
-  object cxLabel2: TcxLabel
-    Left = 159
-    Top = 10
-    Caption = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#1082#1086#1076
+  object cxLabel7: TcxLabel
+    Left = 40
+    Top = 97
+    Caption = #1070#1088'. '#1083#1080#1094#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082
   end
-  object cbIsMedoc: TcxCheckBox
-    Left = 21
-    Top = 106
-    Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1085#1072#1083#1086#1075#1086#1074#1099#1093' '#1080#1079' '#1084#1077#1076#1082#1072
+  object edDiscountExternal: TcxButtonEdit
+    Left = 40
+    Top = 70
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
     TabOrder = 8
-    Width = 180
+    Width = 296
   end
-  object cbisPartionDoc: TcxCheckBox
-    Left = 21
-    Top = 133
-    Caption = #1055#1072#1088#1090#1080#1086#1085#1085#1099#1081' '#1091#1095#1077#1090' '#1076#1086#1083#1075#1086#1074' '#1085#1072#1083
+  object ceSupplierID: TcxCurrencyEdit
+    Left = 40
+    Top = 175
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
     TabOrder = 9
-    Width = 180
-  end
-  object cxLabel3: TcxLabel
-    Left = 21
-    Top = 159
-    Caption = #1054#1089#1085#1086#1074#1085#1086#1081' '#1089#1082#1083#1072#1076
-  end
-  object edUnit: TcxButtonEdit
-    Left = 21
-    Top = 181
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 11
-    Width = 284
-  end
-  object cxLabel4: TcxLabel
-    Left = 21
-    Top = 206
-    Caption = #1057#1082#1083#1072#1076' '#1074#1086#1079#1074#1088#1072#1090#1086#1074
-  end
-  object edUnitReturn: TcxButtonEdit
-    Left = 21
-    Top = 228
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 13
-    Width = 284
+    Width = 90
   end
   object ActionList: TActionList
-    Left = 256
-    Top = 24
+    Left = 272
+    Top = 20
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -130,8 +107,6 @@
       StoredProcList = <
         item
           StoredProc = spGet
-        end
-        item
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -147,7 +122,7 @@
         item
           StoredProc = spInsertUpdate
         end>
-      Caption = #1054#1082
+      Caption = 'Ok'
     end
     object dsdFormClose: TdsdFormClose
       Category = 'DSDLib'
@@ -156,7 +131,7 @@
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Branch'
+    StoredProcName = 'gpInsertUpdate_Object_DiscountExternalSupplier'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -176,56 +151,31 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inName'
-        Value = ''
-        Component = edName
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inInvNumber'
+        Name = 'inDiscountExternalId'
         Value = Null
-        Component = edInvNumber
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsMedoc'
-        Value = Null
-        Component = cbIsMedoc
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisPartionDoc'
-        Value = Null
-        Component = cbisPartionDoc
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUnitId'
-        Value = Null
-        Component = UnitGuides
+        Component = GuidesDiscountExternal
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inUnitReturnId'
+        Name = 'inJuridicalId'
         Value = Null
-        Component = UnitReturnGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSupplierID'
+        Value = Null
+        Component = ceSupplierID
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 293
-    Top = 61
+    Left = 304
+    Top = 165
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -235,11 +185,11 @@
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 48
+    Left = 272
     Top = 72
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_Branch'
+    StoredProcName = 'gpGet_Object_DiscountExternalSupplier'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -252,72 +202,54 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Name'
-        Value = ''
-        Component = edName
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvNumber'
+        Name = 'DiscountExternalId'
         Value = Null
-        Component = edInvNumber
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'IsMedoc'
-        Value = Null
-        Component = cbIsMedoc
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'IsPartionDoc'
-        Value = Null
-        Component = cbisPartionDoc
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitId'
-        Value = Null
-        Component = UnitGuides
+        Component = GuidesDiscountExternal
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UnitName'
+        Name = 'DiscountExternalName'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesDiscountExternal
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UnitReturnId'
+        Name = 'JuridicalId'
         Value = Null
-        Component = UnitReturnGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UnitReturnName'
+        Name = 'JuridicalName'
         Value = Null
-        Component = UnitReturnGuides
+        Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SupplierID'
+        Value = ''
+        Component = ceSupplierID
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 224
-    Top = 98
+    Left = 320
+    Top = 16
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 160
+    Top = 23
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -328,71 +260,70 @@
           'Left'
           'Top'
           'Width')
-      end
-      item
-        Properties.Strings = (
-          'Width')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 296
-    Top = 133
+    Left = 328
+    Top = 64
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Top = 8
-  end
-  object UnitGuides: TdsdGuides
+  object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edUnit
-    FormNameParam.Value = 'TUnit_ObjectForm'
+    LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnit_ObjectForm'
+    FormName = 'TJuridicalForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 128
-    Top = 165
+    Left = 193
+    Top = 115
   end
-  object UnitReturnGuides: TdsdGuides
+  object GuidesDiscountExternal: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edUnitReturn
-    FormNameParam.Value = 'TUnit_ObjectForm'
+    LookupControl = edDiscountExternal
+    FormNameParam.Value = 'TDiscountExternal_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnit_ObjectForm'
+    FormName = 'TDiscountExternal_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = UnitReturnGuides
+        Component = GuidesDiscountExternal
         ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = UnitReturnGuides
+        Component = GuidesDiscountExternal
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 192
-    Top = 213
+    Left = 177
+    Top = 67
   end
 end

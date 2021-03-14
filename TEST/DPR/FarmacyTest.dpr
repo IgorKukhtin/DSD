@@ -1013,7 +1013,9 @@ uses
   MemberKashtan in '..\..\FormsFarmacy\Guides\MemberKashtan.pas' {MemberKashtanForm: TParentForm},
   MedicKashtan in '..\..\FormsFarmacy\Guides\MedicKashtan.pas' {MedicKashtanForm: TParentForm},
   Report_Check_SP_ForDPSSDialog in '..\..\FormsFarmacy\Report\Report_Check_SP_ForDPSSDialog.pas' {Report_Check_SP_ForDPSSDialogForm: TParentForm},
-  Report_Check_SP_ForDPSS in '..\..\FormsFarmacy\Report\Report_Check_SP_ForDPSS.pas' {Report_Check_SP_ForDPSSForm: TParentForm};
+  Report_Check_SP_ForDPSS in '..\..\FormsFarmacy\Report\Report_Check_SP_ForDPSS.pas' {Report_Check_SP_ForDPSSForm: TParentForm},
+  Medoc_J1201011 in '..\..\SOURCE\MeDOC\Medoc_J1201011.pas',
+  Medoc_J1201211 in '..\..\SOURCE\MeDOC\Medoc_J1201211.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

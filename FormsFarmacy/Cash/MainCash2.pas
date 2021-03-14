@@ -1655,6 +1655,7 @@ begin
       DiscountServiceForm.gService, DiscountServiceForm.gPort,
       DiscountServiceForm.gUserName, DiscountServiceForm.gPassword,
       FormParams.ParamByName('DiscountCardNumber').Value,
+      DiscountServiceForm.gisOneSupplier,DiscountServiceForm.gisTwoPackages,
       FormParams.ParamByName('DiscountExternalId').Value) then
     begin
       // обнулим, пусть фармацевт начнет заново
@@ -3003,7 +3004,7 @@ begin
           exit;
         end;
 
-        if RemainsCDS.FieldByName('isOnlySP').AsBoolean and (FormParams.ParamByName('HelsiID').Value <> '') then
+        if RemainsCDS.FieldByName('isOnlySP').AsBoolean and (FormParams.ParamByName('HelsiID').Value = '') then
         begin
           ShowMessage('Ошибка.Товар <' + FieldByName('GoodsName').AsString + '> предназначен для программы "Доступні ліки"!');
           exit;
@@ -7071,6 +7072,13 @@ begin
     exit;
   end;
 
+  if (Frac(nAmount) <> 0) and (DiscountServiceForm.gCode <> 0) then
+  begin
+    ShowMessage('Деление медикамента для дисконтных программ запрещено!');
+    exit;
+  end;
+
+
   if Assigned(SourceClientDataSet.FindField('GoodsId')) then
     nId := SourceClientDataSet.FieldByName('GoodsId').AsInteger
   else nId := SourceClientDataSet.FieldByName('Id').AsInteger;
@@ -7266,7 +7274,7 @@ begin
       end;
     end;
 
-    if RemainsCDS.FieldByName('isOnlySP').AsBoolean and (FormParams.ParamByName('HelsiID').Value <> '') then
+    if RemainsCDS.FieldByName('isOnlySP').AsBoolean and (FormParams.ParamByName('HelsiID').Value = '') then
     begin
       ShowMessage('Ошибка.Товар <' + SourceClientDataSet.FieldByName('GoodsName').AsString + '> предназначен для программы "Доступні ліки"!');
       exit;

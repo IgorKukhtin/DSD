@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_Movement_Income_Partner()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income_Partner (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income_Partner (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income_Partner (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income_Partner (Integer, TVarChar, TDateTime,TDateTime, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income_Partner(
@@ -12,8 +13,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income_Partner(
     IN inOperDatePartner     TDateTime , -- Дата накладной у контрагента
     IN inInvNumberPartner    TVarChar  , -- Номер накладной у контрагента
 
-    IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
-    IN inVATPercent          TFloat    , -- % НДС
+   OUT outPriceWithVAT       Boolean   , -- Цена с НДС (да/нет)
+   OUT outVATPercent         TFloat    , -- % НДС
     IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки 
 
     IN inFromId              Integer   , -- От кого (в документе)
@@ -21,6 +22,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income_Partner(
     IN inPaidKindId          Integer   , -- Виды форм оплаты 
     IN inContractId          Integer   , -- Договора
     IN inPersonalPackerId    Integer   , -- Сотрудник (заготовитель)
+ INOUT ioPriceListId         Integer    , -- Прайс лист
+   OUT outPriceListName      TVarChar   , -- Прайс лист
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
     IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
    OUT outCurrencyValue      TFloat    , -- курс валюты
@@ -42,21 +45,20 @@ BEGIN
 
      
      -- сохранили <Документ>
-     SELECT tmp.ioId, tmp.ioCurrencyValue
-            INTO ioId, outCurrencyValue
+     SELECT tmp.ioId, tmp.ioCurrencyValue, tmp.ioPriceListId, tmp.outPriceListName, tmp.outPriceWithVAT, tmp.outVATPercent
+            INTO ioId, outCurrencyValue, ioPriceListId, outPriceListName, outPriceWithVAT, outVATPercent
      FROM lpInsertUpdate_Movement_Income (ioId                := ioId
                                         , inInvNumber         := inInvNumber
                                         , inOperDate          := inOperDate
                                         , inOperDatePartner   := inOperDatePartner
                                         , inInvNumberPartner  := inInvNumberPartner
-                                        , inPriceWithVAT      := inPriceWithVAT
-                                        , inVATPercent        := inVATPercent
                                         , inChangePercent     := inChangePercent
                                         , inFromId            := inFromId
                                         , inToId              := inToId
                                         , inPaidKindId        := inPaidKindId
                                         , inContractId        := inContractId
                                         , inPersonalPackerId  := inPersonalPackerId
+                                        , ioPriceListId       := ioPriceListId
                                         , inCurrencyDocumentId:= inCurrencyDocumentId
                                         , inCurrencyPartnerId := inCurrencyPartnerId
                                         , ioCurrencyValue     := NULL :: TFloat
@@ -82,6 +84,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 11.03.21         *
  29.06.15         *
 */
 

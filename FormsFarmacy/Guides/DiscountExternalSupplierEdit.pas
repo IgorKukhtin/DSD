@@ -1,4 +1,4 @@
-unit DiscountExternalEdit;
+unit DiscountExternalSupplierEdit;
 
 interface
 
@@ -14,8 +14,7 @@ uses
   dxSkinsDefaultPainters, cxCheckBox;
 
 type
-  TDiscountExternalEditForm = class(TParentForm)
-    edName: TcxTextEdit;
+  TDiscountExternalSupplierEditForm = class(TParentForm)
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
     cxButton2: TcxButton;
@@ -30,15 +29,13 @@ type
     spGet: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
-    cxLabel3: TcxLabel;
-    ceService: TcxTextEdit;
-    cxLabel2: TcxLabel;
-    ceURL: TcxTextEdit;
-    cxLabel4: TcxLabel;
-    cePort: TcxTextEdit;
-    cbGoodsForProject: TcxCheckBox;
-    cbOneSupplier: TcxCheckBox;
-    cbTwoPackages: TcxCheckBox;
+    cxLabel5: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    cxLabel7: TcxLabel;
+    GuidesJuridical: TdsdGuides;
+    edDiscountExternal: TcxButtonEdit;
+    GuidesDiscountExternal: TdsdGuides;
+    ceSupplierID: TcxCurrencyEdit;
   private
     { Private declarations }
   public
@@ -49,6 +46,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TDiscountExternalEditForm);
+  RegisterClass(TDiscountExternalSupplierEditForm);
 
 end.

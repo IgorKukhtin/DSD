@@ -691,11 +691,15 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
         item
           Name = 'PriceListId'
           Value = 0
+          Component = MasterCDS
+          ComponentItem = 'PriceListId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'PriceListName'
           Value = ''
+          Component = MasterCDS
+          ComponentItem = 'PriceListName'
           DataType = ftString
           MultiSelectSeparator = ','
         end

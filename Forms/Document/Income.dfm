@@ -90,6 +90,7 @@ object IncomeForm: TIncomeForm
       Left = 271
       Top = 64
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
       TabOrder = 9
       Width = 130
     end
@@ -100,6 +101,7 @@ object IncomeForm: TIncomeForm
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
+      Properties.ReadOnly = True
       TabOrder = 10
       Width = 40
     end
@@ -149,12 +151,12 @@ object IncomeForm: TIncomeForm
       Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
     end
     object cxLabel9: TcxLabel
-      Left = 688
+      Left = 722
       Top = 5
       Caption = #1044#1086#1075#1086#1074#1086#1088
     end
     object edContract: TcxButtonEdit
-      Left = 688
+      Left = 722
       Top = 23
       Properties.Buttons = <
         item
@@ -164,7 +166,7 @@ object IncomeForm: TIncomeForm
         end>
       Properties.ReadOnly = True
       TabOrder = 4
-      Width = 113
+      Width = 137
     end
     object cxLabel10: TcxLabel
       Left = 603
@@ -181,15 +183,15 @@ object IncomeForm: TIncomeForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 77
+      Width = 112
     end
     object cxLabel13: TcxLabel
-      Left = 603
+      Left = 722
       Top = 45
       Caption = #1047#1072#1075#1086#1090#1086#1074#1080#1090#1077#1083#1100
     end
     object edPacker: TcxButtonEdit
-      Left = 603
+      Left = 722
       Top = 63
       Properties.Buttons = <
         item
@@ -198,7 +200,7 @@ object IncomeForm: TIncomeForm
         end>
       Properties.ReadOnly = True
       TabOrder = 11
-      Width = 198
+      Width = 137
     end
     object cxLabel11: TcxLabel
       Left = 9
@@ -228,12 +230,12 @@ object IncomeForm: TIncomeForm
       Width = 157
     end
     object cxLabel12: TcxLabel
-      Left = 925
+      Left = 982
       Top = 45
       Caption = #1050#1091#1088#1089
     end
     object edCurrencyValue: TcxCurrencyEdit
-      Left = 925
+      Left = 982
       Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -243,12 +245,12 @@ object IncomeForm: TIncomeForm
       Width = 62
     end
     object cxLabel14: TcxLabel
-      Left = 807
+      Left = 865
       Top = 45
       Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
     end
     object edCurrencyDocument: TcxButtonEdit
-      Left = 808
+      Left = 865
       Top = 63
       Properties.Buttons = <
         item
@@ -260,12 +262,12 @@ object IncomeForm: TIncomeForm
       Width = 111
     end
     object cxLabel15: TcxLabel
-      Left = 808
+      Left = 865
       Top = 5
       Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
     end
     object edCurrencyPartner: TcxButtonEdit
-      Left = 808
+      Left = 865
       Top = 23
       Properties.Buttons = <
         item
@@ -305,18 +307,35 @@ object IncomeForm: TIncomeForm
       Width = 145
     end
     object cxLabel21: TcxLabel
-      Left = 925
+      Left = 982
       Top = 5
       Caption = #1053#1086#1084#1080#1085#1072#1083
     end
     object edParValue: TcxCurrencyEdit
-      Left = 925
+      Left = 982
       Top = 23
       EditValue = 1.000000000000000000
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
       TabOrder = 36
       Width = 62
+    end
+    object cxLabel18: TcxLabel
+      Left = 601
+      Top = 45
+      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+    end
+    object edPriceList: TcxButtonEdit
+      Left = 601
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 38
+      Width = 114
     end
   end
   object cxPageControl: TcxPageControl
@@ -326,7 +345,7 @@ object IncomeForm: TIncomeForm
     Height = 314
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheetCost
+    Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 314
     ClientRectRight = 1056
@@ -1071,7 +1090,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'inInvoiceId'
         Value = Null
-        Component = InvoiceGuides
+        Component = GuidesInvoice
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1421,6 +1440,7 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetCost
       MoveParams = <>
+      Enabled = False
       StoredProc = spSelect_IncomeCost_byParent
       StoredProcList = <
         item
@@ -1441,7 +1461,6 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -1462,7 +1481,6 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -1591,7 +1609,6 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -1602,7 +1619,6 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spErasedMIMaster
       StoredProcList = <
         item
@@ -1622,7 +1638,6 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spUnErasedMIMaster
       StoredProcList = <
         item
@@ -1655,7 +1670,7 @@ object IncomeForm: TIncomeForm
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 11
       Status = mtUncomplete
-      Guides = StatusGuides
+      Guides = GuidesStatus
     end
     object CompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
@@ -1673,7 +1688,7 @@ object IncomeForm: TIncomeForm
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 12
       Status = mtComplete
-      Guides = StatusGuides
+      Guides = GuidesStatus
     end
     object DeleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
@@ -1691,13 +1706,12 @@ object IncomeForm: TIncomeForm
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       ImageIndex = 13
       Status = mtDelete
-      Guides = StatusGuides
+      Guides = GuidesStatus
     end
     object actMIContainer: TdsdOpenForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       ImageIndex = 57
@@ -1720,6 +1734,7 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetCost
       MoveParams = <>
+      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1079#1072#1090#1088#1072#1090'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1079#1072#1090#1088#1072#1090'>'
       ImageIndex = 57
@@ -1742,7 +1757,6 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       ImageIndex = 34
@@ -1868,7 +1882,6 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       StoredProc = spInsertMaskMIMaster
       StoredProcList = <
@@ -1920,7 +1933,6 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
       View = cxGridDBTableView
@@ -1948,6 +1960,7 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetCost
       MoveParams = <>
+      Enabled = False
       StoredProc = spComplete_IncomeCost
       StoredProcList = <
         item
@@ -1963,6 +1976,7 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetCost
       MoveParams = <>
+      Enabled = False
       StoredProc = spSetErased_IncomeCost
       StoredProcList = <
         item
@@ -1978,6 +1992,7 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetCost
       MoveParams = <>
+      Enabled = False
       StoredProc = spUnComplete_IncomeCost
       StoredProcList = <
         item
@@ -2196,6 +2211,7 @@ object IncomeForm: TIncomeForm
       Category = 'OpenForm'
       TabSheet = cxTabSheetCost
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = actCheckDescService
@@ -2211,6 +2227,7 @@ object IncomeForm: TIncomeForm
       Category = 'OpenForm'
       TabSheet = cxTabSheetCost
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = actCheckDescTransport
@@ -2494,19 +2511,17 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPriceWithVAT'
+        Name = 'outPriceWithVAT'
         Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inVATPercent'
+        Name = 'outVATPercent'
         Value = 0.000000000000000000
         Component = edVATPercent
         DataType = ftFloat
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -2536,7 +2551,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'inPaidKindId'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2544,7 +2559,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'inContractId'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2552,15 +2567,31 @@ object IncomeForm: TIncomeForm
       item
         Name = 'inPersonalPackerId'
         Value = ''
-        Component = PackerGuides
+        Component = GuidesPacker
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioPriceListId'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPriceListName'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inCurrencyDocumentId'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2568,7 +2599,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'inCurrencyPartnerId'
         Value = ''
-        Component = CurrencyPartnerGuides
+        Component = GuidesCurrencyPartner
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2598,8 +2629,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 418
-    Top = 256
+    Left = 218
+    Top = 296
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -2658,6 +2689,9 @@ object IncomeForm: TIncomeForm
       end
       item
         Control = edParValue
+      end
+      item
+        Control = edPriceList
       end>
     GetStoredProc = spGet
     Left = 248
@@ -2780,14 +2814,14 @@ object IncomeForm: TIncomeForm
       item
         Name = 'ContractId'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'ContractName'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2795,14 +2829,14 @@ object IncomeForm: TIncomeForm
       item
         Name = 'PaidKindId'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2810,14 +2844,14 @@ object IncomeForm: TIncomeForm
       item
         Name = 'PersonalPackerId'
         Value = ''
-        Component = PackerGuides
+        Component = GuidesPacker
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalPackerName'
         Value = ''
-        Component = PackerGuides
+        Component = GuidesPacker
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2825,14 +2859,14 @@ object IncomeForm: TIncomeForm
       item
         Name = 'CurrencyDocumentId'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyDocumentName'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2840,14 +2874,14 @@ object IncomeForm: TIncomeForm
       item
         Name = 'CurrencyPartnerId'
         Value = ''
-        Component = CurrencyPartnerGuides
+        Component = GuidesCurrencyPartner
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyPartnerName'
         Value = ''
-        Component = CurrencyPartnerGuides
+        Component = GuidesCurrencyPartner
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2855,14 +2889,14 @@ object IncomeForm: TIncomeForm
       item
         Name = 'StatusCode'
         Value = ''
-        Component = StatusGuides
+        Component = GuidesStatus
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
         Value = ''
-        Component = StatusGuides
+        Component = GuidesStatus
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2877,14 +2911,14 @@ object IncomeForm: TIncomeForm
       item
         Name = 'MovementId_Transport'
         Value = Null
-        Component = TransportChoiceGuides
+        Component = GuidesTransportChoice
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber_Transport'
         Value = Null
-        Component = TransportChoiceGuides
+        Component = GuidesTransportChoice
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2892,14 +2926,14 @@ object IncomeForm: TIncomeForm
       item
         Name = 'InvoiceId'
         Value = Null
-        Component = InvoiceGuides
+        Component = GuidesInvoice
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'InvoiceName'
         Value = Null
-        Component = InvoiceGuides
+        Component = GuidesInvoice
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2907,14 +2941,14 @@ object IncomeForm: TIncomeForm
       item
         Name = 'MovementId_Order'
         Value = Null
-        Component = OrderGuides
+        Component = GuidesOrder
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber_Order'
         Value = Null
-        Component = OrderGuides
+        Component = GuidesOrder
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2922,14 +2956,14 @@ object IncomeForm: TIncomeForm
       item
         Name = 'JuridicalId_From'
         Value = Null
-        Component = JuridicalFromGuides
+        Component = GuidesJuridicalFrom
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName_From'
         Value = Null
-        Component = JuridicalFromGuides
+        Component = GuidesJuridicalFrom
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2939,6 +2973,21 @@ object IncomeForm: TIncomeForm
         Value = Null
         Component = edParValue
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListId'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListName'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -2964,6 +3013,8 @@ object IncomeForm: TIncomeForm
       end
       item
         Guides = GuidesTo
+      end
+      item
       end>
     ActionItemList = <
       item
@@ -2972,7 +3023,7 @@ object IncomeForm: TIncomeForm
     Left = 144
     Top = 224
   end
-  object ContractGuides: TdsdGuides
+  object GuidesContract: TdsdGuides
     KeyField = 'Id'
     LookupControl = edContract
     FormNameParam.Value = 'TContractForm'
@@ -2984,7 +3035,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'Key'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -2993,7 +3044,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -3002,7 +3053,7 @@ object IncomeForm: TIncomeForm
     Left = 728
     Top = 8
   end
-  object PaidKindGuides: TdsdGuides
+  object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
@@ -3014,7 +3065,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'Key'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -3023,7 +3074,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -3031,7 +3082,7 @@ object IncomeForm: TIncomeForm
       end>
     Left = 624
   end
-  object PackerGuides: TdsdGuides
+  object GuidesPacker: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPacker
     FormNameParam.Value = 'TPersonal_ObjectForm'
@@ -3043,7 +3094,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'Key'
         Value = ''
-        Component = PackerGuides
+        Component = GuidesPacker
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -3052,7 +3103,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PackerGuides
+        Component = GuidesPacker
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -3111,7 +3162,7 @@ object IncomeForm: TIncomeForm
     Left = 398
     Top = 408
   end
-  object StatusGuides: TdsdGuides
+  object GuidesStatus: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceStatus
     FormNameParam.Value = ''
@@ -3138,7 +3189,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'inStatusCode'
         Value = ''
-        Component = StatusGuides
+        Component = GuidesStatus
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3174,14 +3225,14 @@ object IncomeForm: TIncomeForm
       item
         Name = 'PaidKindId'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -3189,14 +3240,14 @@ object IncomeForm: TIncomeForm
       item
         Name = 'Key'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -3211,20 +3262,37 @@ object IncomeForm: TIncomeForm
       item
         Name = 'CurrencyId'
         Value = Null
-        Component = CurrencyPartnerGuides
+        Component = GuidesCurrencyPartner
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyName'
         Value = Null
-        Component = CurrencyPartnerGuides
+        Component = GuidesCurrencyPartner
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListId'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListName'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 296
-    Top = 16
+    Left = 320
+    Top = 8
   end
   object spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TotalSumm'
@@ -3251,7 +3319,7 @@ object IncomeForm: TIncomeForm
     Left = 492
     Top = 260
   end
-  object CurrencyDocumentGuides: TdsdGuides
+  object GuidesCurrencyDocument: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCurrencyDocument
     FormNameParam.Value = 'TCurrency_ObjectForm'
@@ -3263,7 +3331,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'Key'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3271,16 +3339,16 @@ object IncomeForm: TIncomeForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 824
+    Left = 784
     Top = 64
   end
-  object CurrencyPartnerGuides: TdsdGuides
+  object GuidesCurrencyPartner: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCurrencyPartner
     FormNameParam.Value = 'TCurrency_ObjectForm'
@@ -3292,7 +3360,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'Key'
         Value = ''
-        Component = CurrencyPartnerGuides
+        Component = GuidesCurrencyPartner
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -3301,13 +3369,14 @@ object IncomeForm: TIncomeForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = CurrencyPartnerGuides
+        Component = GuidesCurrencyPartner
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 840
+    Left = 904
+    Top = 80
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -3478,7 +3547,7 @@ object IncomeForm: TIncomeForm
     Left = 150
     Top = 343
   end
-  object TransportChoiceGuides: TdsdGuides
+  object GuidesTransportChoice: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInvNumberTransport
     Key = '0'
@@ -3491,7 +3560,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'Key'
         Value = '0'
-        Component = TransportChoiceGuides
+        Component = GuidesTransportChoice
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -3500,7 +3569,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'InvNumber_Full'
         Value = ''
-        Component = TransportChoiceGuides
+        Component = GuidesTransportChoice
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -3554,7 +3623,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'inMovementId_Transport'
         Value = '0'
-        Component = TransportChoiceGuides
+        Component = GuidesTransportChoice
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3695,7 +3764,7 @@ object IncomeForm: TIncomeForm
     Left = 728
     Top = 347
   end
-  object InvoiceGuides: TdsdGuides
+  object GuidesInvoice: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInvNumberInvoice
     Key = '0'
@@ -3708,7 +3777,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'Key'
         Value = '0'
-        Component = InvoiceGuides
+        Component = GuidesInvoice
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -3717,7 +3786,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'InvNumber_Full'
         Value = ''
-        Component = InvoiceGuides
+        Component = GuidesInvoice
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -3743,7 +3812,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'ContractId'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3751,7 +3820,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'ContractName'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -3760,7 +3829,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'PaidKindId'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3768,7 +3837,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'PaidKindName'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -3777,7 +3846,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'CurrencyDocumentId'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3785,7 +3854,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'CurrencyDocumentName'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -3834,7 +3903,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'inMovementId_Order'
         Value = '0'
-        Component = OrderGuides
+        Component = GuidesOrder
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3857,7 +3926,7 @@ object IncomeForm: TIncomeForm
     Left = 368
     Top = 225
   end
-  object OrderGuides: TdsdGuides
+  object GuidesOrder: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInvNumberOrder
     Key = '0'
@@ -3870,7 +3939,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'Key'
         Value = '0'
-        Component = OrderGuides
+        Component = GuidesOrder
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -3879,7 +3948,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'InvNumber_Full'
         Value = ''
-        Component = OrderGuides
+        Component = GuidesOrder
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -3888,22 +3957,22 @@ object IncomeForm: TIncomeForm
       item
         Name = 'MasterJuridicalId'
         Value = ''
-        Component = JuridicalFromGuides
+        Component = GuidesJuridicalFrom
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
         Value = ''
-        Component = JuridicalFromGuides
+        Component = GuidesJuridicalFrom
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 852
-    Top = 152
+    Top = 104
   end
-  object JuridicalFromGuides: TdsdGuides
+  object GuidesJuridicalFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridicalFrom
     FormNameParam.Name = 'TJuridical_ObjectForm'
@@ -3913,7 +3982,7 @@ object IncomeForm: TIncomeForm
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 409
+    Left = 441
     Top = 48
   end
   object spSelectPrintSticker: TdsdStoredProc
@@ -3984,5 +4053,68 @@ object IncomeForm: TIncomeForm
     PackSize = 1
     Left = 920
     Top = 256
+  end
+  object GuidesPriceList: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPriceList
+    FormNameParam.Value = 'TPriceList_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPriceList_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPriceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = False
+        Component = edPriceWithVAT
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VATPercent'
+        Value = 0.000000000000000000
+        Component = edVATPercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId'
+        Value = ''
+        Component = GuidesCurrencyDocument
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName'
+        Value = ''
+        Component = GuidesCurrencyDocument
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 636
+    Top = 56
   end
 end

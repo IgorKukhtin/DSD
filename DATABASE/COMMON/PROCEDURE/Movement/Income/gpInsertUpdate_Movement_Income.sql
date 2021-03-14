@@ -3,7 +3,8 @@
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime,TDateTime, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -13,8 +14,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
     IN inOperDatePartner     TDateTime , -- Дата накладной у контрагента
     IN inInvNumberPartner    TVarChar  , -- Номер накладной у контрагента
 
-    IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
-    IN inVATPercent          TFloat    , -- % НДС
+   OUT outPriceWithVAT       Boolean   , -- Цена с НДС (да/нет)
+   OUT outVATPercent         TFloat    , -- % НДС
     IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки 
 
     IN inFromId              Integer   , -- От кого (в документе)
@@ -22,6 +23,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
     IN inPaidKindId          Integer   , -- Виды форм оплаты 
     IN inContractId          Integer   , -- Договора
     IN inPersonalPackerId    Integer   , -- Сотрудник (заготовитель)
+ INOUT ioPriceListId         Integer    , -- Прайс лист
+   OUT outPriceListName      TVarChar   , -- Прайс лист
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
     IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
  INOUT ioCurrencyValue       TFloat    , -- курс валюты
@@ -41,21 +44,20 @@ BEGIN
 
      
      -- сохранили <Документ>
-     SELECT tmp.ioId, tmp.ioCurrencyValue, tmp.ioParValue
-            INTO ioId, ioCurrencyValue, ioParValue
+     SELECT tmp.ioId, tmp.ioCurrencyValue, tmp.ioParValue, tmp.ioPriceListId, tmp.outPriceListName, COALESCE (tmp.outPriceWithVAT,FALSE) , tmp.outVATPercent
+            INTO ioId, ioCurrencyValue, ioParValue, ioPriceListId, outPriceListName, outPriceWithVAT, outVATPercent
      FROM lpInsertUpdate_Movement_Income (ioId                := ioId
                                         , inInvNumber         := inInvNumber
                                         , inOperDate          := inOperDate
                                         , inOperDatePartner   := inOperDatePartner
                                         , inInvNumberPartner  := inInvNumberPartner
-                                        , inPriceWithVAT      := inPriceWithVAT
-                                        , inVATPercent        := inVATPercent
                                         , inChangePercent     := inChangePercent
                                         , inFromId            := inFromId
                                         , inToId              := inToId
                                         , inPaidKindId        := inPaidKindId
                                         , inContractId        := inContractId
                                         , inPersonalPackerId  := inPersonalPackerId
+                                        , ioPriceListId       := ioPriceListId
                                         , inCurrencyDocumentId:= inCurrencyDocumentId
                                         , inCurrencyPartnerId := inCurrencyPartnerId
                                         , ioCurrencyValue     := ioCurrencyValue
@@ -73,6 +75,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 11.03.21         *
  22.11.18         *
  29.05.15                                        * lpInsertUpdate_Movement_Income
  06.09.14                                        * add lpInsert_MovementProtocol

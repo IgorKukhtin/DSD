@@ -319,16 +319,18 @@ end;
 
 procedure TLoadFormTest.LoadBranchFormTest;
 begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBranchForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBranchForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBranch_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBranch_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBranchEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBranchEditForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBranch_TTNDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBranch_TTNDialogForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadBranchJuridicalFormTest;
@@ -397,20 +399,20 @@ end;
 
 procedure TLoadFormTest.LoadContractFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionValueForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoiceForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoicePartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoicePartnerForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoicePartnerOrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoicePartnerOrderForm');
 
@@ -451,7 +453,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TContractTagGroupForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractTagGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractTagGroupEditForm');
-  }
+
 end;
 
 procedure TLoadFormTest.LoadContractKindFormTest;
@@ -875,16 +877,15 @@ end;
 
 procedure TLoadFormTest.LoadIncomeFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncome20202Form'));
   TdsdFormStorageFactory.GetStorage.Load('TIncome20202Form');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncome20202JournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncome20202JournalForm');
   exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
-  exit;
-
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
   {
@@ -897,12 +898,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePartionGoodsJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePartionGoodsJournalForm');
   //
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePartnerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePartnerJournalForm');
+  exit;
   //
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalChoiceForm');
 end;
@@ -2061,10 +2064,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleExternalDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleExternalDialogForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceNoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceNoForm');
-  {exit;
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderInternalBasis_OlapForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderInternalBasis_OlapForm');
@@ -2253,14 +2256,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AccountMotionDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_AccountMotionDialogForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Account_noBalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Account_noBalanceForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AccountMotion_noBalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_AccountMotion_noBalanceForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportHoursWorkForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TransportHoursWorkForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportHoursWorkDialogForm'));
@@ -2405,24 +2408,24 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusTestForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusTestForm');
- }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusForm');
   //exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusDialogForm');
   exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckContractInMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckContractInMovementForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_OrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_OrderExternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_OrderExternalDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_OrderExternalDialogForm');
   exit;
-    }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_OrderExternal_SaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_OrderExternal_SaleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_OrderExternal_SaleDialogForm'));

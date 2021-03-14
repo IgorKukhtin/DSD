@@ -36,6 +36,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , AmountKredit TFloat
              , BranchName TVarChar, ContainerId Integer
              , CurrencyId Integer, CurrencyName TVarChar
+             , PriceListId Integer, PriceListName TVarChar
              , isErased Boolean
               )
 AS
@@ -149,6 +150,9 @@ BEGIN
 
        , Object_Currency.Id         AS CurrencyId 
        , Object_Currency.ValueData  AS CurrencyName
+
+       , Object_PriceList.Id             AS PriceListId 
+       , Object_PriceList.ValueData      AS PriceListName
 
        , Object_Partner.isErased
 
@@ -289,6 +293,11 @@ BEGIN
          LEFT JOIN ObjectFloat AS Partner_GPSE
                                ON Partner_GPSE.ObjectId = Object_Partner.Id
                               AND Partner_GPSE.DescId = zc_ObjectFloat_Partner_GPSE() 
+        -- прайс
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
+                             ON ObjectLink_Contract_PriceList.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
+        LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = ObjectLink_Contract_PriceList.ChildObjectId
 
    WHERE Object_Partner.DescId = zc_Object_Partner()
      AND ((Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция

@@ -1,7 +1,7 @@
 -- Function: lpInsertUpdate_Movement_Income_Value()
 
 -- DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income_Value (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income_Value (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income_Value (Integer, TVarChar, TDateTime,TDateTime, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income_Value(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -11,8 +11,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income_Value(
     IN inOperDatePartner     TDateTime , -- Дата накладной у контрагента
     IN inInvNumberPartner    TVarChar  , -- Номер накладной у контрагента
 
-    IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
-    IN inVATPercent          TFloat    , -- % НДС
+    --IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
+    --IN inVATPercent          TFloat    , -- % НДС
     IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки 
 
     IN inFromId              Integer   , -- От кого (в документе)
@@ -37,14 +37,13 @@ BEGIN
                                         , inOperDate          := inOperDate
                                         , inOperDatePartner   := inOperDatePartner
                                         , inInvNumberPartner  := inInvNumberPartner
-                                        , inPriceWithVAT      := inPriceWithVAT
-                                        , inVATPercent        := inVATPercent
                                         , inChangePercent     := inChangePercent
                                         , inFromId            := inFromId
                                         , inToId              := inToId
                                         , inPaidKindId        := inPaidKindId
                                         , inContractId        := inContractId
                                         , inPersonalPackerId  := inPersonalPackerId
+                                        , ioPriceListId       := Null  ::Integer
                                         , inCurrencyDocumentId:= inCurrencyDocumentId
                                         , inCurrencyPartnerId := inCurrencyPartnerId
                                         , ioCurrencyValue     := inCurrencyValue
@@ -59,6 +58,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 11.03.21         *
  29.05.15                                        *
 */
 

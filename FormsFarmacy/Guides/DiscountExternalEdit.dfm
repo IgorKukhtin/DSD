@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100'  <'#1055#1088#1086#1077#1082#1090' ('#1076#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1082#1072#1088#1090#1099')>'
-  ClientHeight = 336
+  ClientHeight = 374
   ClientWidth = 388
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 82
-    Top = 292
+    Top = 324
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 232
-    Top = 292
+    Top = 324
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -96,11 +96,27 @@
   end
   object cbGoodsForProject: TcxCheckBox
     Left = 40
-    Top = 254
+    Top = 249
     Hint = #1058#1086#1074#1072#1088' '#1090#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1087#1088#1086#1077#1082#1090#1072' ('#1076#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1082#1072#1088#1090#1099')'
     Caption = #1058#1086#1074#1072#1088' '#1090#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1087#1088#1086#1077#1082#1090#1072' ('#1076#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1082#1072#1088#1090#1099')'
     TabOrder = 12
-    Width = 313
+    Width = 340
+  end
+  object cbOneSupplier: TcxCheckBox
+    Left = 40
+    Top = 270
+    Hint = #1042' '#1095#1077#1082' '#1090#1086#1074#1072#1088' '#1087#1088#1086#1074#1086#1076#1080#1090#1100' '#1094#1077#1083#1099#1084#1080' '#1091#1087#1072#1082#1086#1074#1082#1072#1084#1080' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+    Caption = #1042' '#1095#1077#1082' '#1090#1086#1074#1072#1088' '#1087#1088#1086#1074#1086#1076#1080#1090#1100' '#1094#1077#1083#1099#1084#1080' '#1091#1087#1072#1082#1086#1074#1082#1072#1084#1080' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+    TabOrder = 13
+    Width = 340
+  end
+  object cbTwoPackages: TcxCheckBox
+    Left = 40
+    Top = 292
+    Hint = #1058#1086#1074#1072#1088' '#1090#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1087#1088#1086#1077#1082#1090#1072' ('#1076#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1082#1072#1088#1090#1099')'
+    Caption = '2 '#1091#1087#1072#1082#1086#1074#1082#1080' '#1087#1086' '#1082#1072#1088#1090#1077' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' '#1085#1072' '#1074#1090#1086#1088#1091#1102' '#1087#1088#1086#1076#1072#1078#1091
+    TabOrder = 14
+    Width = 340
   end
   object ActionList: TActionList
     Left = 272
@@ -194,6 +210,22 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOneSupplier'
+        Value = Null
+        Component = cbOneSupplier
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisTwoPackages'
+        Value = Null
+        Component = cbTwoPackages
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 328
@@ -261,6 +293,20 @@
         Name = 'isGoodsForProject'
         Value = Null
         Component = cbGoodsForProject
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isOneSupplier'
+        Value = Null
+        Component = cbOneSupplier
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isTwoPackages'
+        Value = Null
+        Component = cbTwoPackages
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

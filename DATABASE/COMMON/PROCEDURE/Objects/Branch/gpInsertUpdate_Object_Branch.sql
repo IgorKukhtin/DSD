@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_Branch (Integer, Integer, TVarChar, TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Branch (Integer, Integer, TVarChar,  TVarChar, Boolean, Boolean, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Branch (Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Branch(
  INOUT ioId                     Integer,       -- ключ объекта <Филиал>
@@ -73,6 +73,7 @@ BEGIN
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Branch_InvNumber(), ioId, inInvNumber);
+
    -- сохранили связь с <>
    --PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Branch_PersonalBookkeeper(), ioId, inPersonalBookkeeperId);
 
