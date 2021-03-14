@@ -3472,17 +3472,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\CheckLiki24_Search.pas">
 				<Form>CheckLiki24_SearchForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\CheckLiki24.pas">
 				<Form>CheckLiki24Form</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\CheckDelayLiki24.pas">
 				<Form>CheckDelayLiki24Form</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementCheckSiteDialog.pas">
@@ -3495,7 +3492,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\System\ClearDefaultUnit.pas">
 				<Form>ClearDefaultUnitForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Check_QuantityComparison.pas">
@@ -3613,6 +3609,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201011.pas"/>
 			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201211.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Check_PromoBonusEstimate.pas">
+				<Form>Report_Check_PromoBonusEstimateForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

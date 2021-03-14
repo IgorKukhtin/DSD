@@ -24,7 +24,8 @@ $BODY$
    DECLARE vbDivisionPartiesId Integer;
    DECLARE vbAmount TFloat;
    DECLARE vbAmount_remains TFloat;
-   DECLARE vbDiscountExternalCode Integer;
+   DECLARE vbDiscountExternalId Integer;
+   DECLARE vbisOneSupplier Boolean;
 
    DECLARE curRemains refcursor;
    DECLARE curSale refcursor;
@@ -115,8 +116,11 @@ BEGIN
 
 
     -- Определить
-    SELECT OperDate, MovementLinkObject_Unit.ObjectId, COALESCE(Object_DiscountExternal.ObjectCode, 0)
-    INTO vbOperDate, vbUnitId, vbDiscountExternalCode
+    SELECT Movement.OperDate
+         , MovementLinkObject_Unit.ObjectId
+         , COALESCE(ObjectLink_DiscountExternal.ChildObjectId, 0)
+         , COALESCE(ObjectBoolean_TwoPackages.ValueData, False) 
+    INTO vbOperDate, vbUnitId, vbDiscountExternalId, vbisOneSupplier
     FROM Movement
 
          LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -130,7 +134,10 @@ BEGIN
          LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
                               ON ObjectLink_DiscountExternal.ObjectId = MovementLinkObject_DiscountCard.ObjectId
                              AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountCard_Object()
-         LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = ObjectLink_DiscountExternal.ChildObjectId
+
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_TwoPackages
+                                 ON ObjectBoolean_TwoPackages.ObjectId = ObjectLink_DiscountExternal.ChildObjectId
+                                AND ObjectBoolean_TwoPackages.DescId = zc_ObjectBoolean_DiscountExternal_TwoPackages()
 
     WHERE Movement.Id = inMovementId;
 
@@ -185,6 +192,27 @@ BEGIN
          AND COALESCE (MIChild.Id, 0) = 0;
 
     -- предварительно сохранили остаток
+    WITH
+         tmpSupplier AS (SELECT ObjectLink_Juridical.ChildObjectId     AS JuridicalId
+                              , ObjectFloat_SupplierID.ValueData::Integer   AS SupplierID
+                         FROM Object AS Object_DiscountExternalSupplier
+                              LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
+                                                   ON ObjectLink_DiscountExternal.ObjectId = Object_DiscountExternalSupplier.Id
+                                                  AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountExternalSupplier_DiscountExternal()
+
+                              LEFT JOIN ObjectLink AS ObjectLink_Juridical
+                                                   ON ObjectLink_Juridical.ObjectId = Object_DiscountExternalSupplier.Id
+                                                  AND ObjectLink_Juridical.DescId = zc_ObjectLink_DiscountExternalSupplier_Juridical()
+
+                              LEFT JOIN ObjectFloat AS ObjectFloat_SupplierID
+                                                    ON ObjectFloat_SupplierID.ObjectId = Object_DiscountExternalSupplier.Id
+                                                   AND ObjectFloat_SupplierID.DescId = zc_ObjectFloat_DiscountExternalSupplier_SupplierID()
+
+                         WHERE Object_DiscountExternalSupplier.DescId = zc_Object_DiscountExternalSupplier()
+                           AND Object_DiscountExternalSupplier.isErased = False
+                           AND ObjectLink_DiscountExternal.ChildObjectId = vbDiscountExternalId
+                         )
+
     INSERT INTO _tmpItem_remains (MovementItemId_partion, GoodsId, ContainerId, NDSKindId, DivisionPartiesId, Amount, OperDate)
        SELECT CASE WHEN Movement.DescId = zc_Movement_Inventory() AND MIFloat_MovementItem.ValueData > 0 THEN MIFloat_MovementItem.ValueData :: Integer ELSE MovementItem.Id END AS MovementItemId_partion
             , Container.ObjectId AS GoodsId
@@ -240,20 +268,10 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = COALESCE (MI_Income_find.MovementId,MovementItem.MovementId)
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
 
-            LEFT JOIN ObjectFloat AS ObjectFloat_CodeMedicard
-                                  ON ObjectFloat_CodeMedicard.ObjectId = MovementLinkObject_From.ObjectId
-                                 AND ObjectFloat_CodeMedicard.DescId = zc_ObjectFloat_Juridical_CodeMedicard()
-            LEFT JOIN ObjectFloat AS ObjectFloat_CodeOrangeCard
-                                  ON ObjectFloat_CodeOrangeCard.ObjectId = MovementLinkObject_From.ObjectId
-                                 AND ObjectFloat_CodeOrangeCard.DescId = zc_ObjectFloat_Juridical_CodeOrangeCard()
+            LEFT JOIN tmpSupplier ON tmpSupplier.JuridicalId = MovementLinkObject_From.ObjectId
 
        WHERE COALESCE (PDContainer.id, 0) = 0
-         AND (vbDiscountExternalCode NOT IN (6, 7, 8, 9, 12, 13, 15, 16)
-           OR vbDiscountExternalCode IN (6, 12, 13) AND COALESCE(ObjectFloat_CodeMedicard.ValueData, 0) = 1
-           OR vbDiscountExternalCode IN (7, 8)  AND COALESCE(ObjectFloat_CodeMedicard.ValueData, 0) IN (1, 3)
-           OR vbDiscountExternalCode IN (7, 8, 9)  AND COALESCE(ObjectFloat_CodeMedicard.ValueData, 0) IN (1, 2, 3)
-           OR vbDiscountExternalCode IN (15)  AND COALESCE(ObjectFloat_CodeOrangeCard.ValueData, 0) <> 0
-           OR vbDiscountExternalCode IN (16)  AND COALESCE(MovementLinkObject_From.ObjectId, 0) = 59611)
+         AND (vbDiscountExternalId = 0 OR COALESCE(tmpSupplier.SupplierID, 0) <> 0)
        ;
 
     -- Проверим что б БЫЛ остаток в целом

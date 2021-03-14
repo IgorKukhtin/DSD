@@ -30,6 +30,7 @@ function iniLocalUnitNameSave(AFarmacyName: string): string;
 //Возвращает GUID
 function iniLocalGUIDGet: string;
 function iniLocalGUIDSave(AGUID: string): string;
+function iniLocalGUIDNew: string;
 
 function iniCashSerialNumber: String;
 //возвращает номер налоговой группы для FP320
@@ -47,7 +48,7 @@ function iniLocalCashRegisterGet: string;
 function iniLocalCashRegisterSave(ACashRegister: string): string;
 
 //Запись информации о старте программы
-procedure InitCashSession;
+procedure InitCashSession(ACheckCashSession : Boolean);
 function UpdateOption : Boolean;
 procedure AutomaticUpdateProgram;
 
@@ -284,6 +285,20 @@ begin
   End;
 end;
 
+function iniLocalGUIDNew: string;
+var
+  f: TIniFile;
+  G: TGUID;
+begin
+  CreateGUID(G);
+  Result := GUIDToString(G);
+  f := TIniFile.Create(ExtractFilePath(Application.ExeName)+'ini\'+FileName);
+  try
+    f.WriteString('Common','CashSessionGUID',Result);
+  finally
+    f.Free;
+  end;
+end;
 
 function iniCashSerialNumber: String;
 begin
@@ -348,10 +363,32 @@ begin
   End;
 end;
 
-procedure InitCashSession;
+procedure CheckCashSession;
 var
   sp : TdsdStoredProc;
 begin
+  sp := TdsdStoredProc.Create(nil);
+  try
+    try
+      sp.OutputType := otResult;
+      sp.StoredProcName := 'gpGet_CashSession_Busy';
+      sp.Params.Clear;
+      sp.Params.AddParam('inCashSessionId', ftString, ptInput, iniLocalGUIDGet);
+      sp.Params.AddParam('outisBusy', ftBoolean, ptOutput, False);
+      sp.Execute;
+      if sp.Params.ParamByName('outisBusy').Value then iniLocalGUIDNew;
+    except
+    end;
+  finally
+    freeAndNil(sp);
+  end;
+end;
+
+procedure InitCashSession(ACheckCashSession : Boolean);
+var
+  sp : TdsdStoredProc;
+begin
+  if ACheckCashSession then CheckCashSession;
   sp := TdsdStoredProc.Create(nil);
   try
     try

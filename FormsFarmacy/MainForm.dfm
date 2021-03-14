@@ -4218,6 +4218,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Check_PromoBonusEstimate: TdsdOpenForm
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
+      MoveParams = <>
+      Caption = #1055#1086#1090#1077#1085#1094#1080#1072#1083#1100#1085#1091#1102' '#1087#1088#1086#1076#1072#1078#1091' '#1089' '#1091#1095#1105#1090#1086#1084' '#1073#1086#1085#1091#1089#1086#1074
+      FormName = 'TReport_Check_PromoBonusEstimateForm'
+      FormNameParam.Value = 'TReport_Check_PromoBonusEstimateForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5194,6 +5205,10 @@ inherited MainForm: TMainForm
       end
       object N280: TMenuItem
         Action = actReport_Check_PromoBonusLosses
+      end
+      object N283: TMenuItem
+        Action = actReport_Check_PromoBonusEstimate
+        Caption = #1055#1086#1090#1077#1085#1094#1080#1072#1083#1100#1085#1099#1077' '#1087#1088#1086#1076#1072#1078#1099' '#1089' '#1091#1095#1105#1090#1086#1084' '#1073#1086#1085#1091#1089#1086#1074
       end
       object N133: TMenuItem
         Caption = '-'

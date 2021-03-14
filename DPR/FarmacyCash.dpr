@@ -199,7 +199,7 @@ begin
     begin
       if not gc_User.Local then
       Begin
-        InitCashSession;
+        InitCashSession(True);
         IniUtils.AutomaticUpdateProgram;
         if not FindCmdLineSwitch('skipcheckconnect') then TUpdater.AutomaticCheckConnect;
       End

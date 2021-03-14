@@ -6182,7 +6182,7 @@ var LocalVersionInfo, BaseVersionInfo: TVersionInfo; Step : Integer;
               Exit;
             end;
           end;
-          InitCashSession;
+          InitCashSession(False);
           TUpdater.AutomaticUpdateProgramStart;
         end;
       end else ShowMessage('Обновление на данный момент отстутствует...');

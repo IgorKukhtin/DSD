@@ -1015,7 +1015,8 @@ uses
   Report_Check_SP_ForDPSSDialog in '..\..\FormsFarmacy\Report\Report_Check_SP_ForDPSSDialog.pas' {Report_Check_SP_ForDPSSDialogForm: TParentForm},
   Report_Check_SP_ForDPSS in '..\..\FormsFarmacy\Report\Report_Check_SP_ForDPSS.pas' {Report_Check_SP_ForDPSSForm: TParentForm},
   Medoc_J1201011 in '..\..\SOURCE\MeDOC\Medoc_J1201011.pas',
-  Medoc_J1201211 in '..\..\SOURCE\MeDOC\Medoc_J1201211.pas';
+  Medoc_J1201211 in '..\..\SOURCE\MeDOC\Medoc_J1201211.pas',
+  Report_Check_PromoBonusEstimate in '..\..\FormsFarmacy\Report\Report_Check_PromoBonusEstimate.pas' {Report_Check_PromoBonusEstimateForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
