@@ -5,7 +5,7 @@ uses Classes, SysUtils;
 Type
 
   TdsdMovementStatus = (mtUncomplete, mtComplete, mtDelete);
-  TdsdProject = (prProject, prFarmacy, prBoutique);
+  TdsdProject = (prProject, prFarmacy, prBoutique, prBoat);
 
 var
   dsdProject: TdsdProject;

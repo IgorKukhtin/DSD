@@ -251,7 +251,7 @@ uses
 {$R DevExpressRus.res}
 
 begin
-  ConnectionPath := '..\INIT\ProjectBoat.php';
+  ConnectionPath := '..\INIT\Boat_init.php';
   EnumPath := '..\DATABASE\Boat\METADATA\Enum\';
   CreateStructurePath := '..\DATABASE\Boat\STRUCTURE\';
   LocalViewPath := '..\DATABASE\Boat\View\';
@@ -259,6 +259,7 @@ begin
   LocalProcessPath := '..\DATABASE\Boat\PROCESS\';
 
   dsdProject := prBoat;
+  //dsdProject := prProject;
 
   if FindCmdLineSwitch('realProjectBoat', true)
   then gc_AdminPassword := 'qsxqsxw1'

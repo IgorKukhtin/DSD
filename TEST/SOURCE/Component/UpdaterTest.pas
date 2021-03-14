@@ -12,6 +12,7 @@ type
   published
     procedure ProcedureLoad; override;
     procedure UpdateMainProgram;
+    procedure UpdateMain64Program;
     procedure UpdateScale;
     procedure UpdateScaleCeh;
     procedure UpdateFarmacyCash;
@@ -76,6 +77,15 @@ begin
   if FileExists(ExtractFileDir(ParamStr(0)) + '\Upgrader4.exe')
   then SaveFile(ExtractFileDir(ParamStr(0)) + '\Upgrader4.exe');
   SaveFile(ExtractFileDir(ParamStr(0)) + '\' + gc_ProgramName);
+end;
+
+procedure TUpdaterTest.UpdateMain64Program;
+begin
+  if FileExists(ExtractFileDir(ParamStr(0)) + '\_64\bin\' + gc_ProgramName)
+  then
+      SaveFile(ExtractFileDir(ParamStr(0)) + '\_64\bin\' + gc_ProgramName)
+  else
+      SaveFile(ExtractFileDir(ParamStr(0)) + '\' + gc_ProgramName);
 end;
 
 procedure TUpdaterTest.UpdateMobile;

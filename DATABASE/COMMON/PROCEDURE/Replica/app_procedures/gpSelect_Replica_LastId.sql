@@ -23,6 +23,22 @@ BEGIN
                                           WHERE Id BETWEEN inId_start AND inId_start + inRec_count
                                          )
                 );
+                
+    -- если кол-во записей слишком много
+    IF inRec_count * 2 < (SELECT COUNT(Id) FROM _replica.table_update_data WHERE Id BETWEEN inId_start AND vbId_End)
+       OR EXISTS (SELECT 1
+                  FROM _replica.table_update_data
+                  WHERE Id BETWEEN inId_start AND vbId_End
+                      OR table_name ILIKE 'soldtable'
+                      OR operation ILIKE 'INSERT')
+    THEN
+        -- разорвем транзакцию
+        vbId_End:= (SELECT MAX (Id)
+                    FROM (SELECT Id FROM _replica.table_update_data WHERE Id BETWEEN inId_start AND vbId_End ORDER BY Id LIMIT (inRec_count / 2) :: Integer + 1
+                         ) AS tmp
+                   );
+    END IF;
+
 
     -- могли не найти, т.к. следующий Id за границей диапазона
     IF COALESCE (vbId_End, 0) = 0 AND EXISTS (SELECT Id FROM _replica.table_update_data WHERE Id >= inId_start)

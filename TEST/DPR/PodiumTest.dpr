@@ -336,7 +336,9 @@ uses
   ReturnInPodiumItemEdit in '..\..\FormsBoutique\Document\ReturnInPodiumItemEdit.pas' {ReturnInPodiumItemEditForm: TParentForm},
   ReturnInPodiumJournal in '..\..\FormsBoutique\Document\ReturnInPodiumJournal.pas' {ReturnInPodiumJournalForm: TParentForm},
   ReturnInPodium in '..\..\FormsBoutique\Document\ReturnInPodium.pas' {ReturnInPodiumForm: TParentForm},
-  dsdTranslator in '..\..\SOURCE\COMPONENT\dsdTranslator.pas';
+  dsdTranslator in '..\..\SOURCE\COMPONENT\dsdTranslator.pas',
+  Medoc_J1201011 in '..\..\SOURCE\MeDOC\Medoc_J1201011.pas',
+  Medoc_J1201211 in '..\..\SOURCE\MeDOC\Medoc_J1201211.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
