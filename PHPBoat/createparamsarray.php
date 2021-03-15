@@ -31,6 +31,7 @@
  $i = 0;
 
 foreach($ParamNodes as $node) {
+       global $isUTF8;
        $ParamType = GetParamType($node->getAttribute('DataType'));
 
        if (($ParamType == 'TDateTime')  and  ($node->getAttribute('Value') == 'NULL')) 
@@ -39,7 +40,12 @@ foreach($ParamNodes as $node) {
        }
        else
        {
-          $ParamArray[$i] = $node->getAttribute('Value');
+          if ($isUTF8) {
+              $ParamArray[$i] = $node->getAttribute('Value');
+          }
+          else {
+              $ParamArray[$i] = iconv ('utf-8', 'windows-1251', $node->getAttribute('Value'));
+          }
        };
 
        $i = $i + 1;

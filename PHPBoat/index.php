@@ -102,7 +102,12 @@ if ($OutputType=='otMultiExecute')
          }
          else
          {
-             $ParamValues[$i] = $param->getAttribute('Value');
+            if ($isUTF8) {
+                $ParamValues[$i] = $param->getAttribute('Value');
+            }
+            else {
+                $ParamValues[$i] = iconv ('utf-8', 'windows-1251', $param->getAttribute('Value'));
+            }
          };
          $i = $i + 1;
       };
