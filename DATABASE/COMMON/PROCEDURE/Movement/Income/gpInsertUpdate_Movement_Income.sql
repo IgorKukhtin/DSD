@@ -45,7 +45,7 @@ BEGIN
 
      
      -- сохранили <Документ>
-     SELECT tmp.ioId, tmp.ioCurrencyValue, tmp.ioParValue, tmp.ioPriceListId, tmp.outPriceListName, COALESCE (tmp.outPriceWithVAT,FALSE) , tmp.outVATPercent
+     SELECT tmp.ioId, tmp.ioCurrencyValue, tmp.ioParValue, tmp.ioPriceListId, tmp.outPriceListName, COALESCE (tmp.ioPriceWithVAT,FALSE) , tmp.ioVATPercent
             INTO ioId, ioCurrencyValue, ioParValue, ioPriceListId, outPriceListName, ioPriceWithVAT, ioVATPercent
      FROM lpInsertUpdate_Movement_Income (ioId                := ioId
                                         , inInvNumber         := inInvNumber
