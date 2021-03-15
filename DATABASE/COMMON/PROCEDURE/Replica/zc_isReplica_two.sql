@@ -7,7 +7,7 @@ RETURNS Boolean
 AS
 $BODY$
 BEGIN 
-     RETURN TRUE;
+     RETURN FALSE;
 END;
 $BODY$
   LANGUAGE PLPGSQL IMMUTABLE;
@@ -18,5 +18,20 @@ $BODY$
  20.02.21                                        *
 */
 
+-- truncate table _replica.table_update_data_two
+-- SELECT min (Id) , max (Id) , max (Id)   - min (Id) FROM _replica.table_update_data_two 
+-- SELECT min (Id) , max (Id) , max (Id)   - min (Id) FROM _replica.table_update_data
+/*insert into _replica.table_update_data
+ SELECT * FROM _replica.table_update_data_two
+ where id >= (select max(Id) from _replica.table_update_data) + 1
+and  Id <= ...
+order by Id
+limit 100000000
+*/
+
+-- select last_value + 1001 from _replica.table_update_data_two_id_seq
+-- alter sequence if exists _replica.table_update_data_id_seq restart with 4162328153;
+
+
 -- тест
-SELECT _replica.zc_isReplica_two();
+-- SELECT _replica.zc_isReplica_two();

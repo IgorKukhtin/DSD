@@ -160,7 +160,7 @@ BEGIN
 
                                   , CASE WHEN Object_Contract.IsErased = FALSE AND COALESCE (ObjectLink_Contract_ContractStateKind.ChildObjectId, 0) <> zc_Enum_ContractStateKind_Close() THEN COALESCE (ContractCondition_CreditLimit.DelayCreditLimit, 0) ELSE 0 END AS DelayCreditLimit
 
-                                  , View_Contract_ContractKey.ContractId_Key AS ContractId
+                                  , COALESCE (View_Contract_ContractKey.ContractId_Key, CLO_Contract.ObjectId) AS ContractId
                                   , ContractCondition_DefermentPayment.ContractConditionKindId
                                   , CLO_InfoMoney.ObjectId AS InfoMoneyId
                                   , CLO_PaidKind.ObjectId  AS PaidKindId
@@ -193,9 +193,10 @@ BEGIN
 
                                  -- !!!Группируем Договора!!!
                                  LEFT JOIN tmpObject_Contract_ContractKey_View AS View_Contract_ContractKey ON View_Contract_ContractKey.ContractId = CLO_Contract.ObjectId
+                                                                                                           AND inSession <> '5'
 
                                  LEFT JOIN tmpContractCondition AS ContractCondition_DefermentPayment
-                                                                ON ContractCondition_DefermentPayment.ContractId = View_Contract_ContractKey.ContractId_Key
+                                                                ON ContractCondition_DefermentPayment.ContractId = COALESCE (View_Contract_ContractKey.ContractId_Key, CLO_Contract.ObjectId)
 
                                  LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = CLO_Contract.ObjectId
                                  LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
