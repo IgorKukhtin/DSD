@@ -5,6 +5,8 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime,TDateTime, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
+
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -14,8 +16,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
     IN inOperDatePartner     TDateTime , -- Дата накладной у контрагента
     IN inInvNumberPartner    TVarChar  , -- Номер накладной у контрагента
 
-   OUT outPriceWithVAT       Boolean   , -- Цена с НДС (да/нет)
-   OUT outVATPercent         TFloat    , -- % НДС
+ INOUT ioPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
+ INOUT ioVATPercent          TFloat    , -- % НДС
     IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки 
 
     IN inFromId              Integer   , -- От кого (в документе)
@@ -64,7 +66,7 @@ BEGIN
          SELECT Object_PriceList.ValueData                             AS PriceListName
               , COALESCE (ObjectBoolean_PriceWithVAT.ValueData, FALSE) AS PriceWithVAT
               , ObjectFloat_VATPercent.ValueData                       AS VATPercent
-                INTO outPriceListName, outPriceWithVAT, outVATPercent
+                INTO outPriceListName, ioPriceWithVAT, ioVATPercent
          FROM Object AS Object_PriceList
               LEFT JOIN ObjectBoolean AS ObjectBoolean_PriceWithVAT
                                       ON ObjectBoolean_PriceWithVAT.ObjectId = Object_PriceList.Id
@@ -95,9 +97,9 @@ BEGIN
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
 
      -- сохранили свойство <Цена с НДС (да/нет)>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), ioId, outPriceWithVAT);
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), ioId, ioPriceWithVAT);
      -- сохранили свойство <% НДС>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, outVATPercent);
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, ioVATPercent);
      -- сохранили свойство <(-)% Скидки (+)% Наценки >
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
 

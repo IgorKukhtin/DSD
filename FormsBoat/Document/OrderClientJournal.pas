@@ -89,7 +89,7 @@ type
     bbMIContainer: TdxBarButton;
     MovementProtocolOpenForm: TdsdOpenForm;
     bbMovementProtocol: TdxBarButton;
-    spSelectPrint: TdsdStoredProc;
+    spSelectPrintOld: TdsdStoredProc;
     bbPrint: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
@@ -109,6 +109,13 @@ type
     bbPrintSticker: TdxBarButton;
     actPrintStickerTermo: TdsdPrintAction;
     bbPrintStickerTermo: TdxBarButton;
+    PrintItemsColorCDS: TClientDataSet;
+    spSelectPrint: TdsdStoredProc;
+    spSelectPrintStructure: TdsdStoredProc;
+    spSelectPrintTender: TdsdStoredProc;
+    actPrintTender: TdsdPrintAction;
+    actPrintStructure: TdsdPrintAction;
+    actPrintAgilis: TdsdPrintAction;
   private
   public
   end;

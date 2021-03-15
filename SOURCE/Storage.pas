@@ -574,7 +574,10 @@ begin
      AMaxAtempt := 4;   // для отчетов через локальный сервер 3 прохода
 
     FSendList.Clear;
-    FSendList.Add('XML=' + '<?xml version="1.0" encoding="windows-1251"?>' + pData);
+    if dsdProject = prBoat then
+      FSendList.Add('XML=' + '<?xml version="1.0" encoding="utf-8"?>' + pData)
+    else
+      FSendList.Add('XML=' + '<?xml version="1.0" encoding="windows-1251"?>' + pData);
     if dsdProject = prBoat then
       FSendList.Add('ENC=UTF8');
     Logger.AddToLog(pData);

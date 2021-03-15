@@ -548,6 +548,8 @@ object PriceListForm: TPriceListForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 320
     Top = 208
   end

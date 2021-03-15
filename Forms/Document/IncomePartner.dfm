@@ -2206,6 +2206,39 @@ object IncomePartnerForm: TIncomePartnerForm
         Component = edChangePercentTo
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListId'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListName'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = Null
+        Component = edPriceWithVAT
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VATPercent'
+        Value = Null
+        Component = edVATPercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 336
     Top = 8

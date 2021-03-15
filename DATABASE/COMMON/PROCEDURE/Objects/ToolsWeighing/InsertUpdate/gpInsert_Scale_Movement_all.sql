@@ -616,8 +616,8 @@ end if;
                                                   , inOperDate              := inOperDate
                                                   , inOperDatePartner       := inOperDate
                                                   , inInvNumberPartner      := ''
-                                                  --, inPriceWithVAT          := PriceWithVAT -- определ€ютс€ по прайлисту 
-                                                  --, inVATPercent            := VATPercent
+                                                  , inPriceWithVAT          := PriceWithVAT -- определ€ютс€ по прайлисту 
+                                                  , inVATPercent            := VATPercent
                                                   , inChangePercent         := ChangePercent
                                                   , inFromId                := FromId
                                                   , inToId                  := ToId

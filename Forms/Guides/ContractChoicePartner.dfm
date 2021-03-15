@@ -196,6 +196,30 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
             Options.Editing = False
             Width = 60
           end
+          object PriceListName: TcxGridDBColumn
+            Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+            DataBinding.FieldName = 'PriceListName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object PriceWithVAT: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'PriceWithVAT'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object VATPercent: TcxGridDBColumn
+            Caption = '% '#1053#1044#1057
+            DataBinding.FieldName = 'VATPercent'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
           object Code: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'Code'
@@ -716,6 +740,22 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Component = MasterCDS
           ComponentItem = 'CurrencyName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceWithVAT'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PriceWithVAT'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'VATPercent'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'VATPercent'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
     end

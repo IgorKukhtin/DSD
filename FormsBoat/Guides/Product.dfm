@@ -3895,8 +3895,8 @@ object ProductForm: TProductForm
   object PrintItemsColorCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 876
-    Top = 190
+    Left = 844
+    Top = 142
   end
   object spSelectPrintTender: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Product_TendersPrint'
