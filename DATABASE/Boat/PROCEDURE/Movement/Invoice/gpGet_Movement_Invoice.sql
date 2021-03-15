@@ -142,8 +142,17 @@ BEGIN
                                     AND MovementLinkObject_InfoMoney.DescId = zc_MovementLinkObject_InfoMoney()
         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MovementLinkObject_InfoMoney.ObjectId
 
-        LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
+        /*LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
                                      ON MovementLinkObject_Product.MovementId = Movement.Id
+                                    AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
+        LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId*/
+        --Лодку показываем из док. Заказ информативно
+        LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Invoice
+                                       ON MovementLinkMovement_Invoice.MovementChildId = Movement.Id
+                                      AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
+        LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Invoice.MovementId
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
+                                     ON MovementLinkObject_Product.MovementId = Movement_Order.Id
                                     AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
         LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId
 
@@ -157,7 +166,9 @@ BEGIN
                                     AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
-       WHERE Movement.Id = inMovementId;
+       WHERE Movement.Id = inMovementId
+         AND Movement_Order.StatusId <> zc_Enum_Status_Erased()
+         AND Movement_Order.DescId = zc_Movement_OrderClient();
 
    END IF;  
   
