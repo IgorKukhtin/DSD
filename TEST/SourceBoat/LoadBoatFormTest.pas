@@ -258,18 +258,19 @@ end;
 
 procedure TLoadFormTest.LoadInvoiceFormTest;
 begin
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInvoiceJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInvoiceForm');
- }
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInvoiceJournalChoiceForm');
   exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_PeriodDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovement_PeriodDialogForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadIncomeFormTest;

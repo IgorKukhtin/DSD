@@ -93,10 +93,20 @@ BEGIN
                     AND MovementLinkObject.DescId IN ( zc_MovementLinkObject_Object()
                                                      , zc_MovementLinkObject_Unit()
                                                      , zc_MovementLinkObject_InfoMoney()
-                                                     , zc_MovementLinkObject_Product()
+                                                     --, zc_MovementLinkObject_Product()
                                                      , zc_MovementLinkObject_PaidKind()
                                                       )
                   )
+
+     , tmpMLM AS (SELECT MovementLinkMovement.*
+                  FROM MovementLinkMovement
+                      LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Invoice.MovementId
+                  WHERE MovementLinkMovement.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                    AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Invoice()
+                    AND Movement_Order.StatusId <> zc_Enum_Status_Erased()
+                    AND Movement_Order.DescId = zc_Movement_OrderClient()
+                  )
+
 
     -- Результат
     SELECT     
@@ -191,14 +201,11 @@ BEGIN
                         AND MovementLinkObject_InfoMoney.DescId = zc_MovementLinkObject_InfoMoney()
         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MovementLinkObject_InfoMoney.ObjectId
 
-        LEFT JOIN tmpMLO AS MovementLinkObject_Product
+        /*LEFT JOIN tmpMLO AS MovementLinkObject_Product
                          ON MovementLinkObject_Product.MovementId = Movement.Id
                         AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
-        LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId
+        LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId*/
 
-        LEFT JOIN ObjectString AS ObjectString_CIN
-                               ON ObjectString_CIN.ObjectId = Object_Product.Id
-                              AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
 
         LEFT JOIN tmpMLO AS MovementLinkObject_Unit
                          ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -225,6 +232,19 @@ BEGIN
                                      ON MLO_Update.MovementId = Movement.Id
                                     AND MLO_Update.DescId = zc_MovementLinkObject_Update()
         LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
+
+        --Лодку показываем из док. Заказ
+        LEFT JOIN tmpMLM AS MovementLinkMovement_Invoice
+                         ON MovementLinkMovement_Invoice.MovementChildId = Movement.Id
+                        AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
+                                     ON MovementLinkObject_Product.MovementId = MovementLinkMovement_Invoice.MovementId
+                                    AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
+        LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId
+
+        LEFT JOIN ObjectString AS ObjectString_CIN
+                               ON ObjectString_CIN.ObjectId = Object_Product.Id
+                              AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
 ;
 
 END;
@@ -238,4 +258,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Invoice (inStartDate:= '01.08.2021', inEndDate:= '01.08.2021', inIsErased := FALSE, inSession:= zfCalc_UserAdmin());
+-- select * from gpSelect_Movement_Invoice(inStartDate := ('01.01.2021')::TDateTime , inEndDate := ('18.02.2021')::TDateTime , inIsErased := 'False' ,  inSession := zfCalc_UserAdmin());

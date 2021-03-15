@@ -2,6 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Invoice (Integer, TVarChar, TDateTime, TDateTime, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Invoice (Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Invoice (Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Invoice(
  INOUT ioId               Integer  ,  --
@@ -17,7 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Invoice(
     IN inObjectId         Integer  ,  -- 
     IN inUnitId           Integer  ,  -- 
     IN inInfoMoneyId      Integer  ,  -- 
-    IN inProductId        Integer  ,  -- 
+    --IN inProductId        Integer  ,  -- 
     IN inPaidKindId       Integer  ,  -- 
     IN inSession          TVarChar     -- сессия пользователя
 )
@@ -56,7 +58,7 @@ BEGIN
                                            , inObjectId         := inObjectId
                                            , inUnitId           := inUnitId
                                            , inInfoMoneyId      := inInfoMoneyId
-                                           , inProductId        := inProductId
+                                           --, inProductId        := inProductId
                                            , inPaidKindId       := inPaidKindId
                                            , inUserId           := vbUserId
                                            );

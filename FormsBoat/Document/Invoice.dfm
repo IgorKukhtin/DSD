@@ -3,7 +3,7 @@
   ClientHeight = 465
   ClientWidth = 351
   ExplicitWidth = 357
-  ExplicitHeight = 490
+  ExplicitHeight = 493
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -161,6 +161,7 @@
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
@@ -359,14 +360,6 @@
         Name = 'ininfomoneyid'
         Value = ''
         Component = GuidesInfoMoney
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inProductId'
-        Value = ''
-        Component = GuidesProduct
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -684,6 +677,7 @@
   object GuidesProduct: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceProduct
+    DisableGuidesOpen = True
     Key = '0'
     FormNameParam.Value = 'TProductForm'
     FormNameParam.DataType = ftString
