@@ -1,14 +1,8 @@
 <?php
   include_once "getfieldtype.php";
-  
-  function savetofile_dataset($value) {
-    $file = 'response_dataset.txt';
-    file_put_contents($file, $value); 
-  }
 
   function ClientDataSetFillDataSetBinary($dataset)
   {
-     global $isUTF8;
      $header = pack('C', hexdec('96')).pack('C', hexdec('19')).pack('C', hexdec('E0')).pack('C', hexdec('BD'));
      $header .= pack('I', 1);
      $header .= pack('I', hexdec('18'));
@@ -32,32 +26,15 @@
 
         for ($i = 0; $i <= ($fieldcount-1)/4 ; $i++)
             {$res .= pack('C', 0); }; //StatusBits
-
         $i = 0;
-
         foreach ($line as $col_value) 
         {
           $typeint = $type[$i];
           switch ($typeint) 
            {
                 case 1043: // Varchar
-                   if ($isUTF8) {
-                        if (!mb_detect_encoding($col_value, 'UTF-8', true)) {
-                            $col_value = mb_convert_encoding($col_value, "UTF-8", "windows-1251"); 
-                        }
-                        $col_value = mb_convert_encoding($col_value, 'UTF-16LE', 'UTF-8');
-                        $len = strlen($col_value);
-                        if ($len < 255) {
-                            $res .= pack('C', $len);  
-                        } else {
-                            $res .= pack('S', $len);  
-                        }
-                        $res .= $col_value;
-                   }
-                   else {
-                        $res .= pack('S', strlen($col_value)); 
-                        $res .= $col_value;
-                   }
+                   $res .= pack('S', strlen($col_value)); 
+                   $res .= $col_value;
                    break;
                 case 23:   // Integer
                    $res .= pack('L', $col_value);
@@ -84,8 +61,7 @@
 //                case 1184: // datetime TimeZone //strtotime($col_value) + (62135694000) * 1000
 //                   $res .= pack('d', 1000000000000);
 //                   break;
-           }; 
-         
+           };            
           $i++;                                       
         };
      };      
@@ -97,12 +73,12 @@
          $fieldlist .= PostgresTypeToClientDataSetBinary($type[$i], 255); // тип и размер типа
      };
      $fieldlist .= pack('S', 0);// количество свойств вообще
+     
      return $header.$fieldlistheader.pack('S', strlen($fieldlist) + 24).$fieldlist.$res;
   }; 
 	
   function ClientDataSetFillDataSetBinaryAutoWidth($dataset)
   {
-     global $isUTF8;
      $header = pack('C', hexdec('96')).pack('C', hexdec('19')).pack('C', hexdec('E0')).pack('C', hexdec('BD'));
      $header .= pack('I', 1);
      $header .= pack('I', hexdec('18'));
@@ -137,22 +113,8 @@
                    $len = strlen($col_value);
                    if ($len > $maxlen[$i])
                            {$maxlen[$i] = $len;};
-                   if ($isUTF8) {
-                        if (!mb_detect_encoding($col_value, 'UTF-8', true)) {
-                            $col_value = mb_convert_encoding($col_value, "UTF-8", "windows-1251"); 
-                        }
-                        $col_value = mb_convert_encoding($col_value, 'UTF-16LE', 'UTF-8');
-                        if ($len < 255) {
-                            $res .= pack('C', $len);  
-                        } else {
-                            $res .= pack('S', $len);  
-                        }
-                        $res .= $col_value;
-                   }
-                   else {
-                        $res .= pack('S', $len); 
-                        $res .= $col_value;
-                   }
+                   $res .= pack('S', $len); 
+                   $res .= $col_value;
                    break;
                 case 23:   // Integer
                    $res .= pack('L', $col_value);
@@ -192,19 +154,12 @@
      };
      $fieldlist .= pack('S', 0);// количество свойств вообще
      
-     return $header.$fieldlistheader.pack(S, strlen($fieldlist) + 24).$fieldlist.$res;
+     return $header.$fieldlistheader.pack('S', strlen($fieldlist) + 24).$fieldlist.$res;
   }; 
 
   function ClientDataSetFillDataSet($dataset)
   {
-     global $isUTF8;
-     global $encoding;
-     if ($isUTF8) {
-        $res = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>  <DATAPACKET Version="2.0"><METADATA><FIELDS>';
-     }
-     else {
-        $res = '<?xml version="1.0" standalone="yes"?>  <DATAPACKET Version="2.0"><METADATA><FIELDS>'; 
-     }
+     $res = '<?xml version="1.0" standalone="yes"?>  <DATAPACKET Version="2.0"><METADATA><FIELDS>';
 
      $fieldcount = pg_num_fields($dataset);
      // Информация о полях запроса
@@ -226,7 +181,7 @@
            }
 	   else
            {
-              $res .= ' '.$fieldname[$i].'="'.htmlspecialchars($col_value, ENT_COMPAT, $encoding).'"';
+              $res .= ' '.$fieldname[$i].'="'.htmlspecialchars($col_value, ENT_COMPAT, 'WIN-1251').'"';
            }; 
            $i++;
         }
@@ -234,7 +189,7 @@
      };      
 
      $res .= '</ROWDATA></DATAPACKET>';
-
+    
      return $res;
 
   }; 
@@ -242,15 +197,9 @@
 
   function ClientDataSetFillDataSetAutoWidth($dataset)
   {
-     global $isUTF8;
-     global $encoding;
-     if ($isUTF8) {
-        $header = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>  <DATAPACKET Version="2.0"><METADATA><FIELDS>';
-     }
-     else {
-        $header = '<?xml version="1.0" standalone="yes"?>  <DATAPACKET Version="2.0"><METADATA><FIELDS>';
-     }
-     
+
+     $header = '<?xml version="1.0" standalone="yes"?>  <DATAPACKET Version="2.0"><METADATA><FIELDS>';
+
      $fieldcount = pg_num_fields($dataset);
      // Информация о полях запроса
      for ($i = 0; $i < $fieldcount; $i++) {
@@ -280,7 +229,7 @@
                       $maxlenght[$i] = $len;
                   };
               };
-              $res .= ' '.$fieldname[$i].'="'.htmlspecialchars($col_value, ENT_COMPAT, $encoding).'"';
+              $res .= ' '.$fieldname[$i].'="'.htmlspecialchars($col_value, ENT_COMPAT, 'WIN-1251').'"';
            }; 
            $i++;
         }
@@ -309,9 +258,9 @@
      $fieldcount = pg_num_fields($dataset);
      // Информация о полях запроса
      for ($i = 0; $i < $fieldcount; $i++) {
-        $fieldName = pg_field_name($dataset, $i);
-        $fieldnames .= '"'.$fieldName.'",';
-        $res .= PHP_EOL.'"'.$fieldName.'='.getfieldtypememtable($dataset, $i).',""'.$fieldName.'"","""",10,Data,"""""';
+         $fieldName = pg_field_name($dataset, $i);
+         $fieldnames .= '"'.$fieldName.'",';
+         $res .= PHP_EOL.'"'.$fieldName.'='.getfieldtypememtable($dataset, $i).',""'.$fieldName.'"","""",10,Data,"""""';
      };
      $res .= PHP_EOL."@@TABLEDEF END@@";
      $res .= PHP_EOL.$fieldnames;
@@ -328,24 +277,20 @@
   };
 
 
-  function FillDataSet($dataset, $DataSetType, $AutoWidth, $ForceXML = false)
+  function FillDataSet($dataset, $DataSetType, $AutoWidth)
   {
-      if ($ForceXML) {
-          $isDateField = true;
-      }
-      else {
-          $isDateField = false;
-          $fieldcount = pg_num_fields($dataset);
-          for ($i = 0; $i < $fieldcount; $i++) 
-          {
-            $type = pg_field_type_oid($dataset, $i);      
-            if ( ($type == 1114) or ($type == 1184) ) 
-                { 
-                   $isDateField = true; 
-                   break; 
-                };
-          };
+      $isDateField = false;
+      $fieldcount = pg_num_fields($dataset);
+      for ($i = 0; $i < $fieldcount; $i++) 
+      {
+        $type = pg_field_type_oid($dataset, $i);      
+        if ( ($type == 1114) or ($type == 1184) ) 
+            { 
+               $isDateField = true; 
+               break; 
+            };
       };
+
 
       if ($AutoWidth)
       {

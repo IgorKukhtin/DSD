@@ -1,13 +1,4 @@
 <?php
- ini_set("display_errors", 1);
- error_reporting(E_ALL);
- set_error_handler(function($errno, $errstr, $errfile, $errline ){
-    throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
- });
- $res = '';
-
-try {
- 
  include_once "createparamsarray.php";
  include_once "getfieldtype.php";
  include_once "filldataset.php";
@@ -26,43 +17,30 @@ try {
      return 'f ' . $str;
    }
  };
- 
- function savetofile($value, $filename = 'response.txt') {
-    $file = $filename;
-    file_put_contents($file, $value); 
- }
- 
- $isUTF8 = isset($_POST["ENC"]) && strtoupper($_POST["ENC"]) == 'UTF8';
- if ($isUTF8) {
-    $encoding = 'UTF-8';
- }
- else {
-    $encoding = 'WIN-1251';
- }
 
  set_time_limit (0);
+
+function myLog($log) {
+    //file_put_contents('./log_'.date("j.n.Y").'.log', $log.PHP_EOL, FILE_APPEND);
+}
+
+//if(!isset($_POST["XML"]))
+//    exit;
+
+
+//myLog($_POST["XML"]);
  
 // Соединение, выбор базы данных
-
-$dbconn = pg_connect($connectstring)
+//echo 1;
+$dbconn = pg_pconnect($connectstring)
     or die('Could not connect: ' . pg_last_error());
-if ($isUTF8) {
-    $query = 'set client_encoding=Utf8';
-}
-else {
-    $query = 'set client_encoding=WIN1251';
-}
-$result = pg_query($dbconn, $query);
-if($result)
-    pg_free_result($result);
+//echo 2;
+$query = 'set client_encoding=WIN1251';
+$result = pg_query_params($query, array());
+pg_free_result($result);
 
 
-if ($isUTF8) {
-    $doc = new DOMDocument('1.0');
-}
-else {
-    $doc = new DOMDocument('1.0','windows-1251');
-}
+$doc = new DOMDocument('1.0','windows-1251');
 $doc->loadXML($_POST["XML"],LIBXML_PARSEHUGE);
 
 $Session = $doc->documentElement->getAttribute('Session');
@@ -80,7 +58,7 @@ CreateParamsArray($StoredProcNode->childNodes, $Session, $ParamValues, $ParamNam
 // Выполнение SQL запроса
 if ($OutputType=='otMultiDataSet')
 {
-   pg_query($dbconn, 'BEGIN;');
+   pg_query('BEGIN;'); 
    $query = 'select * from '.$StoredProcName.'('.$ParamName.')';
 }
 else
@@ -103,12 +81,7 @@ if ($OutputType=='otMultiExecute')
          }
          else
          {
-            if ($isUTF8) {
-                $ParamValues[$i] = $param->getAttribute('Value');
-            }
-            else {
-                $ParamValues[$i] = iconv ('utf-8', 'windows-1251', $param->getAttribute('Value'));
-            }
+             $ParamValues[$i] = iconv ('utf-8', 'windows-1251', $param->getAttribute('Value'));
          };
          $i = $i + 1;
       };
@@ -118,9 +91,10 @@ if ($OutputType=='otMultiExecute')
      if ($result_error != false)
      {
          $res = '<error ';                                                   
-         $res .= 'ErrorCode = "'.pg_result_error_field($result, PGSQL_DIAG_SQLSTATE).'"'.' ErrorMessage = "'.htmlspecialchars($result_error, ENT_COMPAT, $encoding).'"';
+         $res .= 'ErrorCode = "'.pg_result_error_field($result, PGSQL_DIAG_SQLSTATE).'"'.' ErrorMessage = "'.htmlspecialchars($result_error, ENT_COMPAT, 'WIN-1251').'"';
          $res .= ' />';
          echo 'error        '.PrepareStr($res);
+	 myLog('error        '.PrepareStr($res));
      };
   };
 } 
@@ -134,24 +108,26 @@ else
 if ($result_error != false)
 {
      $res = '<error ';                                                   
-     $res .= 'ErrorCode = "'.pg_result_error_field($result, PGSQL_DIAG_SQLSTATE).'"'.' ErrorMessage = "'.htmlspecialchars($result_error, ENT_COMPAT, $encoding).'"';
+     $res .= 'ErrorCode = "'.pg_result_error_field($result, PGSQL_DIAG_SQLSTATE).'"'.' ErrorMessage = "'.htmlspecialchars($result_error, ENT_COMPAT, 'WIN-1251').'"';
      $res .= ' />';
      echo 'error        '.PrepareStr($res);
+     myLog('error        '.PrepareStr($res));
 }
 else
 {
   if ($OutputType=='otResult')
-  {// Вывод результатов в XML
-    $res = "<Result";
+  {
+      // Вывод результатов в XML
       $fieldcount = pg_num_fields($result);
       for ($i = 0; $i < $fieldcount; $i++) {
-          $fieldtype[$i] = pg_field_type($result, $i);
           $fieldname[$i] = pg_field_name($result, $i);
+          $type[$i] = pg_field_type($result, $i);
       };
+    $res = "<Result";
+    $i = 0;
     while ($line = pg_fetch_array($result, null, PGSQL_ASSOC)) {
-        $i = 0;
         foreach ($line as $col_value) {
-           if (strtoupper($fieldtype[$i]) == 'TIMESTAMPTZ')
+           if (strtoupper($type[$i]) == 'TIMESTAMPTZ')
            {
               $res .=  ' ' . $fieldname[$i] . '="' . str_replace(' ', 'T', $col_value) . '"';
            }
@@ -159,11 +135,12 @@ else
            {
               $res .=  ' ' . $fieldname[$i] . '="' . htmlspecialchars($col_value, ENT_COMPAT, 'WIN-1251') . '"';
            };
-           $i++;
+           $i = $i + 1;
         }
     }
     $res .= "/>";
     echo 'Result       '.PrepareStr($res);
+    myLog('Result       '.PrepareStr($res));
   };
 
   if ($OutputType=='otBlob')
@@ -173,15 +150,15 @@ else
             $res =  $col_value;
         }
     echo 'Result       '.PrepareStr($res);
+    myLog('Result       '.PrepareStr($res));
   };
   
   if ($OutputType=='otDataSet')
   {
      $res = FillDataSet($result, $DataSetType, $AutoWidht);
      // возвращаем результат
-     savetofile($res);
      echo 'DataSet      '.PrepareStr($res);
-     
+     myLog('DataSet      '.PrepareStr($res));	
   };
    
   if ($OutputType=='otMultiDataSet')
@@ -197,15 +174,15 @@ else
            $CursorsClose .= 'CLOSE "'.$col_value.'";';
         };
         $result_cursor = pg_query($query);
-        $DataSetStr = FillDataSet($result_cursor, $DataSetType, $AutoWidht, true);
+        $DataSetStr = FillDataSet($result_cursor, $DataSetType, $AutoWidht);
         $res .= $DataSetStr;
         $XMLStructure .= '<DataSet length = "'.strlen($DataSetStr).'"/>';
     };
     $XMLStructure .= '</DataSets>';
     // Закроем транзакцию
-        
     pg_query($CursorsClose . 'COMMIT; END;');
-    echo 'MultiDataSet ' . PrepareStr(sprintf("%010d", strlen($XMLStructure)) . $XMLStructure . $res);  
+    echo 'MultiDataSet ' . PrepareStr(sprintf("%010d", strlen($XMLStructure)) . $XMLStructure . $res);
+    myLog('MultiDataSet ' . PrepareStr(sprintf("%010d", strlen($XMLStructure)) . $XMLStructure . $res));
   };
   // Очистка результата
   pg_free_result($result);
@@ -214,11 +191,4 @@ else
 // Закрытие соединения
 pg_close($dbconn);
   
-} catch(Exception $e) {
-    $res = '<error ';                                                   
-    $res .= 'ErrorCode = ""'.' ErrorMessage = "'.htmlspecialchars($e->getMessage(), ENT_COMPAT, $encoding).' on line '. $e->getLine().' in file '. $e->getFile().'"';
-    $res .= ' />';
-    echo 'error        '.PrepareStr($res);
-}
-
 ?>

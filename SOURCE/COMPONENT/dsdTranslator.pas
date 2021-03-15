@@ -176,7 +176,7 @@ begin
     // Отправка названия в базу
   sp := TdsdStoredProc.Create(Application);
   try
-    sp.OutputType := otDataSet;
+    sp.OutputType := otResult;
     sp.DataSet := FTranslatorCDS;
     sp.StoredProcName := 'gpUpdate_Object_User_Language';
     sp.Params.AddParam('inLanguageCode ', ftInteger, ptInput, ALanguage);
