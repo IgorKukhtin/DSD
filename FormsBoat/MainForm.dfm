@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 805
   KeyPreview = True
   ExplicitWidth = 821
-  ExplicitHeight = 223
+  ExplicitHeight = 226
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -1425,9 +1425,6 @@ inherited MainForm: TMainForm
         inherited miMovementProtocol: TMenuItem
           Enabled = False
           Visible = False
-        end
-        inherited miUserProtocol: TMenuItem
-          Enabled = False
         end
       end
     end

@@ -100,8 +100,8 @@ BEGIN
 
      , tmpMLM AS (SELECT MovementLinkMovement.*
                   FROM MovementLinkMovement
-                      LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Invoice.MovementId
-                  WHERE MovementLinkMovement.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                      LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement.MovementId
+                  WHERE MovementLinkMovement.MovementChildId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                     AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Invoice()
                     AND Movement_Order.StatusId <> zc_Enum_Status_Erased()
                     AND Movement_Order.DescId = zc_Movement_OrderClient()

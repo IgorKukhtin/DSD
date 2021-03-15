@@ -4,7 +4,7 @@ inherited UserProtocolForm: TUserProtocolForm
   ClientWidth = 937
   AddOnFormData.isSingle = False
   ExplicitWidth = 953
-  ExplicitHeight = 358
+  ExplicitHeight = 357
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -156,11 +156,12 @@ inherited UserProtocolForm: TUserProtocolForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
+    Left = 120
     Top = 95
   end
   inherited BarManager: TdxBarManager
-    Left = 144
-    Top = 103
+    Left = 168
+    Top = 95
     DockControlHeights = (
       0
       0

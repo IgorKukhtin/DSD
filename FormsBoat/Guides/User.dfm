@@ -148,8 +148,6 @@ object UserForm: TUserForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitLeft = 4
-      ExplicitTop = 0
       object RoleGridView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = RoleDS
@@ -523,7 +521,7 @@ object UserForm: TUserForm
           Name = 'UnitName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'UnitName'
+          ComponentItem = 'UnitName_Personal'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -743,6 +741,7 @@ object UserForm: TUserForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 248
     Top = 232
@@ -785,6 +784,7 @@ object UserForm: TUserForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 344
     Top = 136
@@ -858,6 +858,7 @@ object UserForm: TUserForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 472
     Top = 216
