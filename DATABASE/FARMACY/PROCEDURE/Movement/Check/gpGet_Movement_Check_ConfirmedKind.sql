@@ -68,9 +68,9 @@ BEGIN
                                          AND MovementItem.isErased   = FALSE
                              GROUP BY tmpMov.Id, tmpMov.UnitId, MovementItem.ObjectId
                              )
-             , tmpMI AS (SELECT tmpMI_all.UnitId, tmpMI_all.GoodsId, SUM (tmpMI_all.Amount) AS Amount
+             , tmpMI AS (SELECT tmpMI_all.MovementId, tmpMI_all.UnitId, tmpMI_all.GoodsId, SUM (tmpMI_all.Amount) AS Amount
                          FROM tmpMI_all
-                         GROUP BY tmpMI_all.UnitId, tmpMI_all.GoodsId
+                         GROUP BY tmpMI_all.MovementId, tmpMI_all.UnitId, tmpMI_all.GoodsId
                         )
              , tmpMov_Complete AS (SELECT Movement.Id
                                         , Movement.InvNumber
@@ -89,7 +89,8 @@ BEGIN
                                            AND MovementItem.isErased   = FALSE
                                GROUP BY tmpMov_Complete.UnitId, MovementItem.ObjectId
                               )
-             , tmpRemains AS (SELECT tmpMI.GoodsId
+             , tmpRemains AS (SELECT tmpMI.MovementId
+                                   , tmpMI.GoodsId
                                    , tmpMI.UnitId
                                    , tmpMI.Amount           AS Amount_mi
                                    , (COALESCE (SUM (Container.Amount), 0) - COALESCE (MAX (tmpComplete.Amount), 0)) AS Amount_remains
@@ -100,7 +101,8 @@ BEGIN
                                                       AND Container.Amount <> 0
                                    LEFT JOIN tmpComplete ON tmpComplete.GoodsId = tmpMI.GoodsId
                                                         AND tmpComplete.UnitId = tmpMI.UnitId
-                              GROUP BY tmpMI.GoodsId
+                              GROUP BY tmpMI.MovementId
+                                     , tmpMI.GoodsId
                                      , tmpMI.UnitId
                                      , tmpMI.Amount
                               HAVING (COALESCE (SUM (Container.Amount), 0) - COALESCE (MAX (tmpComplete.Amount), 0)) < tmpMI.Amount
@@ -108,8 +110,9 @@ BEGIN
              , tmpErr AS (SELECT DISTINCT tmpMov.Id AS MovementId
                           FROM tmpMov
                                INNER JOIN tmpMI_all ON tmpMI_all.MovementId = tmpMov.Id
-                               INNER JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI_all.GoodsId
-                                                    AND tmpRemains.UnitId  = tmpMI_all.UnitId
+                               INNER JOIN tmpRemains ON tmpRemains.MovementId = tmpMI_all.MovementId
+                                                    AND tmpRemains.GoodsId    = tmpMI_all.GoodsId
+                                                    AND tmpRemains.UnitId     = tmpMI_all.UnitId
                          )
              , tmpMovementLinkObject AS (SELECT * FROM MovementLinkObject
                                           WHERE MovementLinkObject.MovementId in (select tmpMov.ID from tmpMov))
@@ -153,5 +156,5 @@ $BODY$
 */
 
 -- тест
--- 
-SELECT * FROM gpGet_Movement_Check_ConfirmedKind (inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Movement_Check_ConfirmedKind (inSession:= zfCalc_UserAdmin())
+select * from gpGet_Movement_Check_ConfirmedKind( inSession := '3');

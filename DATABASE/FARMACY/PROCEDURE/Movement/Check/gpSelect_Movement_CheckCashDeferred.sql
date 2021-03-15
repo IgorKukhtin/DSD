@@ -91,28 +91,41 @@ BEGIN
                                   AND MovementItem.isErased   = FALSE
                       GROUP BY tmpMov.Id, tmpMov.UnitId, MovementItem.ObjectId
                      )
-          , tmpMI AS (SELECT tmpMI_all.UnitId, tmpMI_all.GoodsId, SUM (tmpMI_all.Amount) AS Amount
+          , tmpMI AS (SELECT tmpMI_all.MovementId, tmpMI_all.UnitId, tmpMI_all.GoodsId, SUM (tmpMI_all.Amount) AS Amount
                       FROM tmpMI_all
-                      GROUP BY tmpMI_all.UnitId, tmpMI_all.GoodsId
+                      GROUP BY tmpMI_all.MovementId, tmpMI_all.UnitId, tmpMI_all.GoodsId
                      )
-          , tmpRemains AS (SELECT tmpMI.GoodsId
+          , tmpMIConfirmedKind AS (SELECT tmpMI_all.UnitId, tmpMI_all.GoodsId, SUM (tmpMI_all.Amount) AS Amount
+                                   FROM tmpMI_all
+                                        INNER JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKind
+                                                                      ON MovementLinkObject_ConfirmedKind.MovementId = tmpMI_all.MovementId
+                                                                     AND MovementLinkObject_ConfirmedKind.DescId = zc_MovementLinkObject_ConfirmedKind()
+                                                                     AND MovementLinkObject_ConfirmedKind.ObjectId = zc_Enum_ConfirmedKind_Complete() 
+                                   GROUP BY tmpMI_all.UnitId, tmpMI_all.GoodsId
+                                  )
+          , tmpRemains AS (SELECT tmpMI.MovementId
+                                , tmpMI.GoodsId
                                 , tmpMI.UnitId
                                 , tmpMI.Amount           AS Amount_mi
-                                , COALESCE (SUM (Container.Amount), 0) AS Amount_remains
+                                , COALESCE (SUM (Container.Amount), 0) - COALESCE (Max (tmpMIConfirmedKind.Amount), 0) AS Amount_remains
                            FROM tmpMI
+                                LEFT JOIN tmpMIConfirmedKind ON tmpMIConfirmedKind.GoodsId = tmpMI.GoodsId
+                                                            AND tmpMIConfirmedKind.UnitId = tmpMI.UnitId
                                 LEFT JOIN Container ON Container.DescId = zc_Container_Count()
                                                    AND Container.ObjectId = tmpMI.GoodsId
                                                    AND Container.WhereObjectId = tmpMI.UnitId
                                                    AND Container.Amount <> 0
-                           GROUP BY tmpMI.GoodsId
+                           GROUP BY tmpMI.MovementId
+                                  , tmpMI.GoodsId
                                   , tmpMI.UnitId
                                   , tmpMI.Amount
-                           HAVING COALESCE (SUM (Container.Amount), 0) < tmpMI.Amount
+                           HAVING (COALESCE (SUM (Container.Amount), 0) - COALESCE (MAX (tmpMIConfirmedKind.Amount), 0)) < tmpMI.Amount
                           )
           , tmpErr AS (SELECT DISTINCT tmpMov.Id AS MovementId
                        FROM tmpMov
                             INNER JOIN tmpMI_all ON tmpMI_all.MovementId = tmpMov.Id
-                            INNER JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI_all.GoodsId
+                            INNER JOIN tmpRemains ON tmpRemains.MovementId = tmpMI_all.MovementId
+                                                 AND tmpRemains.GoodsId = tmpMI_all.GoodsId
                                                  AND tmpRemains.UnitId  = tmpMI_all.UnitId
                       )
 
@@ -353,25 +366,38 @@ BEGIN
                             AND MovementItem.DescId     = zc_MI_Master()
                             AND MovementItem.isErased   = FALSE
                      )
-          , tmpMI AS (SELECT tmpMov.UnitId, tmpMI_all.ObjectId AS GoodsId, SUM (tmpMI_all.Amount) AS Amount
+          , tmpMI AS (SELECT tmpMI_all.MovementId, tmpMov.UnitId, tmpMI_all.ObjectId AS GoodsId, SUM (tmpMI_all.Amount) AS Amount
                       FROM tmpMI_all
                            INNER JOIN tmpMov ON tmpMov.ID = tmpMI_all.MovementId
                       WHERE tmpMov.CommentError <> '' OR tmpMov.ConfirmedKindId = zc_Enum_ConfirmedKind_UnComplete()
-                      GROUP BY tmpMov.UnitId, tmpMI_all.ObjectId
+                      GROUP BY tmpMI_all.MovementId, tmpMov.UnitId, tmpMI_all.ObjectId
                      )
-          , tmpRemains AS (SELECT tmpMI.GoodsId
+          , tmpMIConfirmedKind AS (SELECT tmpMov.UnitId, tmpMI_all.ObjectId AS GoodsId, SUM (tmpMI_all.Amount) AS Amount
+                                   FROM tmpMI_all
+                                        INNER JOIN tmpMov ON tmpMov.ID = tmpMI_all.MovementId
+                                        INNER JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKind
+                                                                      ON MovementLinkObject_ConfirmedKind.MovementId = tmpMI_all.MovementId
+                                                                     AND MovementLinkObject_ConfirmedKind.DescId = zc_MovementLinkObject_ConfirmedKind()
+                                                                     AND MovementLinkObject_ConfirmedKind.ObjectId = zc_Enum_ConfirmedKind_Complete() 
+                                   GROUP BY tmpMov.UnitId, tmpMI_all.ObjectId
+                                  )
+          , tmpRemains AS (SELECT tmpMI.MovementId
+                                , tmpMI.GoodsId
                                 , tmpMI.UnitId
                                 , tmpMI.Amount           AS Amount_mi
-                                , COALESCE (SUM (Container.Amount), 0) AS Amount_remains
+                                , COALESCE (SUM (Container.Amount), 0) - COALESCE (Max (tmpMIConfirmedKind.Amount), 0) AS Amount_remains
                            FROM tmpMI
+                                LEFT JOIN tmpMIConfirmedKind ON tmpMIConfirmedKind.GoodsId = tmpMI.GoodsId
+                                                            AND tmpMIConfirmedKind.UnitId = tmpMI.UnitId
                                 LEFT JOIN Container ON Container.DescId = zc_Container_Count()
                                                    AND Container.ObjectId = tmpMI.GoodsId
                                                    AND Container.WhereObjectId = tmpMI.UnitId
                                                    AND Container.Amount <> 0
-                           GROUP BY tmpMI.GoodsId
+                           GROUP BY tmpMI.MovementId
+                                  , tmpMI.GoodsId
                                   , tmpMI.UnitId
                                   , tmpMI.Amount
-                           HAVING COALESCE (SUM (Container.Amount), 0) < tmpMI.Amount
+                           HAVING (COALESCE (SUM (Container.Amount), 0) - COALESCE (MAX (tmpMIConfirmedKind.Amount), 0)) < tmpMI.Amount
                           )
           , tmpMovementBoolean AS (SELECT * FROM MovementBoolean WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMI_all.MovementId FROM tmpMI_all)
                           )
@@ -521,8 +547,9 @@ BEGIN
           LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
                                ON ObjectFloat_NDSKind_NDS.ObjectId = COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods_Main.NDSKindId)
 
-          LEFT JOIN tmpRemains ON tmpRemains.GoodsId = MovementItem.ObjectId
-                              AND tmpRemains.UnitId  = Movement.UnitId
+          LEFT JOIN tmpRemains ON tmpRemains.MovementId = MovementItem.MovementId
+                              AND tmpRemains.GoodsId    = MovementItem.ObjectId
+                              AND tmpRemains.UnitId     = Movement.UnitId
 
           --“ипы срок/не срок
           LEFT JOIN tmpMILinkObject AS MI_PartionDateKind
@@ -554,4 +581,6 @@ ALTER FUNCTION gpSelect_Movement_CheckCashDeferred (Integer, TVarChar) OWNER TO 
 
 -- тест
 --
-SELECT * FROM gpSelect_Movement_CheckCashDeferred (inType := 3, inSession:= '3')
+--SELECT * FROM gpSelect_Movement_CheckCashDeferred (inType := 3, inSession:= '3')
+
+select * from gpSelect_Movement_CheckCashDeferred(inType := 1 ,  inSession := '3');

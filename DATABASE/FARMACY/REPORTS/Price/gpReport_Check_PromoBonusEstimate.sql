@@ -46,7 +46,7 @@ BEGIN
                                  INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
 
                              WHERE Movement.DescId = zc_Movement_Reprice()
-                               AND Movement.OperDate BETWEEN '22.02.2021'::TDateTime AND CURRENT_DATE)
+                               AND Movement.OperDate BETWEEN inStartDate AND CURRENT_DATE)
 
           , tmpMIAll AS (SELECT Movement.Id
                               , Movement.OperDate + INTERVAL '1 DAY'                AS OperDate
@@ -78,10 +78,17 @@ BEGIN
                                                              ON MIBoolean_ClippedReprice.MovementItemId = MovementItem.Id
                                                             AND MIBoolean_ClippedReprice.DescId         = zc_MIBoolean_ClippedReprice()
                           )
-          , tmpProcent AS (SELECT SUM(tmpMIAll.PriceNew) / SUM(tmpMIAll.PriceOld) AS Proc
-                           FROM tmpMIAll
-                           WHERE tmpMIAll.isPromoBonus = True
-                             AND tmpMIAll.PriceNew < tmpMIAll.PriceOld)
+          , tmpProcentGoods AS (SELECT tmpMIAll.GoodsId
+                                     , Min(tmpMIAll.PriceNew) / Max(tmpMIAll.PriceOld) AS Proc
+                                FROM tmpMIAll
+                                WHERE tmpMIAll.isPromoBonus = True
+                                  AND tmpMIAll.PriceNew < tmpMIAll.PriceOld
+                                  AND tmpMIAll.PriceNew > 0                                
+                                GROUP BY tmpMIAll.GoodsId
+                                HAVING (Min(tmpMIAll.PriceNew) / Max(tmpMIAll.PriceOld)) > 0.5)
+          , tmpProcent AS (SELECT sum(tmpProcentGoods.Proc) / Count(*) AS Proc
+                           FROM tmpProcentGoods
+                             )
           , tmpPromoBonus AS (SELECT MovementItem.Id
                                   , MovementItem.ObjectId                      AS GoodsId
                                   , Object_Maker.ValueData                     AS MakerName
@@ -228,11 +235,11 @@ BEGIN
          , tmpMIC.AmountCheck::TFloat                                  AS AmountCheck
          , tmpMIC.AmountCheckSum::TFloat                               AS AmountCheckSum
          , Round(COALESCE(tmpPrice.PriceOld, tmpMIC.Price), 2)::TFloat AS PriceOld
-         , Round(COALESCE(tmpPrice.PriceOld, tmpMIC.Price) * CASE WHEN tmpProcent.Proc < 1 THEN tmpProcent.Proc ELSE 1 END, 2)::TFloat
+         , Round(COALESCE(tmpPrice.PriceOld, tmpMIC.Price) * CASE WHEN COALESCE(tmpProcentGoods.Proc, tmpProcent.Proc) < 1 THEN COALESCE(tmpProcentGoods.Proc, tmpProcent.Proc) ELSE 1 END, 2)::TFloat
 
          , Round(tmpMIC.AmountCheck * Round(COALESCE(tmpPrice.PriceOld, tmpMIC.Price), 2), 2)::TFloat    AS AmountCheckSumOld
-         , Round(tmpMIC.AmountCheck * Round(COALESCE(tmpPrice.PriceOld, tmpMIC.Price) * CASE WHEN tmpProcent.Proc < 1 THEN tmpProcent.Proc ELSE 1 END, 2), 2)::TFloat AS AmountCheckSumNew
-         , (Round(tmpMIC.AmountCheck * Round(COALESCE(tmpPrice.PriceOld, tmpMIC.Price) * CASE WHEN tmpProcent.Proc < 1 THEN tmpProcent.Proc ELSE 1 END, 2), 2) -
+         , Round(tmpMIC.AmountCheck * Round(COALESCE(tmpPrice.PriceOld, tmpMIC.Price) * CASE WHEN COALESCE(tmpProcentGoods.Proc, tmpProcent.Proc) < 1 THEN COALESCE(tmpProcentGoods.Proc, tmpProcent.Proc) ELSE 1 END, 2), 2)::TFloat AS AmountCheckSumNew
+         , (Round(tmpMIC.AmountCheck * Round(COALESCE(tmpPrice.PriceOld, tmpMIC.Price) * CASE WHEN COALESCE(tmpProcentGoods.Proc, tmpProcent.Proc) < 1 THEN COALESCE(tmpProcentGoods.Proc, tmpProcent.Proc) ELSE 1 END, 2), 2) -
             Round(tmpMIC.AmountCheck * Round(COALESCE(tmpPrice.PriceOld, tmpMIC.Price), 2), 2))::TFloat   AS Delta
     FROM tmpMIC
 
@@ -240,6 +247,8 @@ BEGIN
                            AND tmpPrice.GoodsId =  tmpMIC.GoodsId
                            AND tmpPrice.OperDate <=  tmpMIC.OperDate
                            AND tmpPrice.DateEnd >  tmpMIC.OperDate
+
+         LEFT JOIN tmpProcentGoods ON tmpProcentGoods.GoodsId =  tmpMIC.GoodsId
 
          LEFT JOIN tmpProcent ON 1 = 1
 
