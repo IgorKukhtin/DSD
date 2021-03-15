@@ -90,7 +90,7 @@ object IncomeForm: TIncomeForm
       Left = 271
       Top = 64
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
-      Properties.ReadOnly = True
+      Properties.ReadOnly = False
       TabOrder = 9
       Width = 130
     end
@@ -101,7 +101,7 @@ object IncomeForm: TIncomeForm
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
-      Properties.ReadOnly = True
+      Properties.ReadOnly = False
       TabOrder = 10
       Width = 40
     end
@@ -2511,17 +2511,19 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outPriceWithVAT'
+        Name = 'ioPriceWithVAT'
         Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outVATPercent'
+        Name = 'ioVATPercent'
         Value = 0.000000000000000000
         Component = edVATPercent
         DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -3288,6 +3290,22 @@ object IncomeForm: TIncomeForm
         Component = GuidesPriceList
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VATPercent'
+        Value = Null
+        Component = edVATPercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = Null
+        Component = edPriceWithVAT
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

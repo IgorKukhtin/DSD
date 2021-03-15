@@ -5,6 +5,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime,TDateTime, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -14,8 +15,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
     IN inOperDatePartner     TDateTime , -- Дата накладной у контрагента
     IN inInvNumberPartner    TVarChar  , -- Номер накладной у контрагента
 
-   OUT outPriceWithVAT       Boolean   , -- Цена с НДС (да/нет)
-   OUT outVATPercent         TFloat    , -- % НДС
+ INOUT ioPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
+ INOUT ioVATPercent          TFloat    , -- % НДС
     IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки 
 
     IN inFromId              Integer   , -- От кого (в документе)
@@ -45,12 +46,14 @@ BEGIN
      
      -- сохранили <Документ>
      SELECT tmp.ioId, tmp.ioCurrencyValue, tmp.ioParValue, tmp.ioPriceListId, tmp.outPriceListName, COALESCE (tmp.outPriceWithVAT,FALSE) , tmp.outVATPercent
-            INTO ioId, ioCurrencyValue, ioParValue, ioPriceListId, outPriceListName, outPriceWithVAT, outVATPercent
+            INTO ioId, ioCurrencyValue, ioParValue, ioPriceListId, outPriceListName, ioPriceWithVAT, ioVATPercent
      FROM lpInsertUpdate_Movement_Income (ioId                := ioId
                                         , inInvNumber         := inInvNumber
                                         , inOperDate          := inOperDate
                                         , inOperDatePartner   := inOperDatePartner
                                         , inInvNumberPartner  := inInvNumberPartner
+                                        , ioPriceWithVAT      := ioPriceWithVAT
+                                        , ioVATPercent        := ioVATPercent
                                         , inChangePercent     := inChangePercent
                                         , inFromId            := inFromId
                                         , inToId              := inToId

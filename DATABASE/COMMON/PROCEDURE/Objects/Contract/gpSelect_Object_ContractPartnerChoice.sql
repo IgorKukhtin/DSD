@@ -37,6 +37,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , BranchName TVarChar, ContainerId Integer
              , CurrencyId Integer, CurrencyName TVarChar
              , PriceListId Integer, PriceListName TVarChar
+             , VATPercent TFloat, PriceWithVAT Boolean
              , isErased Boolean
               )
 AS
@@ -153,6 +154,9 @@ BEGIN
 
        , Object_PriceList.Id             AS PriceListId 
        , Object_PriceList.ValueData      AS PriceListName
+       , COALESCE (ObjectFloat_VATPercent.ValueData,20)        ::TFloat  AS VATPercent
+       , COALESCE (ObjectBoolean_PriceWithVAT.ValueData,FALSE) ::Boolean AS PriceWithVAT
+
 
        , Object_Partner.isErased
 
@@ -297,7 +301,14 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
                              ON ObjectLink_Contract_PriceList.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
-        LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = ObjectLink_Contract_PriceList.ChildObjectId
+        LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = COALESCE (ObjectLink_Contract_PriceList.ChildObjectId, zc_PriceList_Basis())
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_PriceWithVAT
+                                ON ObjectBoolean_PriceWithVAT.ObjectId = Object_PriceList.Id
+                               AND ObjectBoolean_PriceWithVAT.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()
+        LEFT JOIN ObjectFloat AS ObjectFloat_VATPercent
+                              ON ObjectFloat_VATPercent.ObjectId = Object_PriceList.Id
+                             AND ObjectFloat_VATPercent.DescId = zc_ObjectFloat_PriceList_VATPercent()
 
    WHERE Object_Partner.DescId = zc_Object_Partner()
      AND ((Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
@@ -429,6 +440,11 @@ BEGIN
 
        , Object_Currency.Id         AS CurrencyId 
        , Object_Currency.ValueData  AS CurrencyName 
+
+       , Object_PriceList.Id             AS PriceListId 
+       , Object_PriceList.ValueData      AS PriceListName
+       , COALESCE (ObjectFloat_VATPercent.ValueData,20)        ::TFloat  AS VATPercent
+       , COALESCE (ObjectBoolean_PriceWithVAT.ValueData,FALSE) ::Boolean AS PriceWithVAT
 
        , Object_Partner.isErased
 
@@ -573,6 +589,19 @@ BEGIN
          LEFT JOIN tmpOB_isBranchAll AS ObjectBoolean_isBranchAll
                                      ON ObjectBoolean_isBranchAll.ObjectId = Object_Juridical.Id
                                  -- AND ObjectBoolean_isBranchAll.DescId   = zc_ObjectBoolean_Juridical_isBranchAll()
+
+        -- прайс
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
+                             ON ObjectLink_Contract_PriceList.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
+        LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = COALESCE (ObjectLink_Contract_PriceList.ChildObjectId, zc_PriceList_Basis())
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_PriceWithVAT
+                                ON ObjectBoolean_PriceWithVAT.ObjectId = Object_PriceList.Id
+                               AND ObjectBoolean_PriceWithVAT.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()
+        LEFT JOIN ObjectFloat AS ObjectFloat_VATPercent
+                              ON ObjectFloat_VATPercent.ObjectId = Object_PriceList.Id
+                             AND ObjectFloat_VATPercent.DescId = zc_ObjectFloat_PriceList_VATPercent()
 
    WHERE Object_Partner.DescId = zc_Object_Partner()
      AND Object_Partner.isErased = FALSE

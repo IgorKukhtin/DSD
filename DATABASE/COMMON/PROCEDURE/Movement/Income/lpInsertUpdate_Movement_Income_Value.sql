@@ -2,6 +2,7 @@
 
 -- DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income_Value (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income_Value (Integer, TVarChar, TDateTime,TDateTime, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income_Value (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income_Value(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -11,8 +12,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income_Value(
     IN inOperDatePartner     TDateTime , -- Дата накладной у контрагента
     IN inInvNumberPartner    TVarChar  , -- Номер накладной у контрагента
 
-    --IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
-    --IN inVATPercent          TFloat    , -- % НДС
+    IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
+    IN inVATPercent          TFloat    , -- % НДС
     IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки 
 
     IN inFromId              Integer   , -- От кого (в документе)
@@ -37,6 +38,8 @@ BEGIN
                                         , inOperDate          := inOperDate
                                         , inOperDatePartner   := inOperDatePartner
                                         , inInvNumberPartner  := inInvNumberPartner
+                                        , ioPriceWithVAT      := inPriceWithVAT
+                                        , ioVATPercent        := inVATPercent
                                         , inChangePercent     := inChangePercent
                                         , inFromId            := inFromId
                                         , inToId              := inToId

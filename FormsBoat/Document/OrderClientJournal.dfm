@@ -557,7 +557,31 @@ object OrderClientJournalForm: TOrderClientJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintSticker'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintStickerTermo'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -633,7 +657,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
       Category = 0
     end
     object bbPrint: TdxBarButton
-      Action = actPrint
+      Action = actPrintTender
       Category = 0
     end
     object bbShowErased: TdxBarButton
@@ -641,11 +665,11 @@ object OrderClientJournalForm: TOrderClientJournalForm
       Category = 0
     end
     object bbPrintSticker: TdxBarButton
-      Action = actPrintSticker
+      Action = actPrintAgilis
       Category = 0
     end
     object bbPrintStickerTermo: TdxBarButton
-      Action = actPrintStickerTermo
+      Action = actPrintStructure
       Category = 0
     end
   end
@@ -689,10 +713,10 @@ object OrderClientJournalForm: TOrderClientJournalForm
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
-      StoredProc = spSelectPrint
+      StoredProc = spSelectPrintOld
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrintOld
         end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
@@ -1205,6 +1229,153 @@ object OrderClientJournalForm: TOrderClientJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrintAgilis: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' Agilis'
+      Hint = #1055#1077#1095#1072#1090#1100' Agilis'
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintProduct_Agilis'
+      ReportNameParam.Value = 'PrintProduct_Agilis'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintStructure: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintStructure
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintStructure
+        end>
+      Caption = 'Print Structure'
+      Hint = 'Print Structure'
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'NPP;ProdColorGroupName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintProduct_Structure'
+      ReportNameParam.Value = 'PrintProduct_Structure'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintTender: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintTender
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintTender
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' Tender'
+      Hint = #1055#1077#1095#1072#1090#1100' Tender'
+      ImageIndex = 18
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsColorCDS
+          UserName = 'frxDBDChild'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintProduct_Tender'
+      ReportNameParam.Value = 'PrintProduct_Tender'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_OrderClient'
@@ -1406,7 +1577,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
     Left = 240
     Top = 288
   end
-  object spSelectPrint: TdsdStoredProc
+  object spSelectPrintOld: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Income_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
@@ -1483,5 +1654,86 @@ object OrderClientJournalForm: TOrderClientJournalForm
     PackSize = 1
     Left = 233
     Top = 346
+  end
+  object PrintItemsColorCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 532
+    Top = 318
+  end
+  object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Product_AgilisPrint'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 664
+    Top = 216
+  end
+  object spSelectPrintStructure: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Product_StructurePrint'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inProductId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'ProductId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 664
+    Top = 264
+  end
+  object spSelectPrintTender: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Product_TendersPrint'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsColorCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 648
+    Top = 312
   end
 end
