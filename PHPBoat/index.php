@@ -57,12 +57,11 @@ pg_free_result($result);
 
 
 if ($isUTF8) {
-    $doc = new DOMDocument('1.0','utf-8');
+    $doc = new DOMDocument('1.0');
 }
 else {
     $doc = new DOMDocument('1.0','windows-1251');
 }
-savetofile($_POST["XML"], 'request.xml');
 $doc->loadXML($_POST["XML"],LIBXML_PARSEHUGE);
 
 $Session = $doc->documentElement->getAttribute('Session');
@@ -103,7 +102,7 @@ if ($OutputType=='otMultiExecute')
          }
          else
          {
-             $ParamValues[$i] = iconv ('utf-8', 'windows-1251', $param->getAttribute('Value'));
+             $ParamValues[$i] = $param->getAttribute('Value');
          };
          $i = $i + 1;
       };

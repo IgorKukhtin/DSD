@@ -39,7 +39,7 @@ foreach($ParamNodes as $node) {
        }
        else
        {
-          $ParamArray[$i] = iconv ('utf-8', 'windows-1251', $node->getAttribute('Value'));
+          $ParamArray[$i] = $node->getAttribute('Value');
        };
 
        $i = $i + 1;
