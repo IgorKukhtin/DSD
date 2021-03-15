@@ -186,11 +186,11 @@
 
      $fieldlist = '';
      for ($i = 0; $i < $fieldcount; $i++) {
-         $fieldlist .= pack('C', strlen($fieldname[$i])); // длина названия
+         $fieldlist .= pack(C, strlen($fieldname[$i])); // длина названия
          $fieldlist .= $fieldname[$i];  // название
          $fieldlist .= PostgresTypeToClientDataSetBinary($type[$i], $maxlen[$i]); // тип и размер типа
      };
-     $fieldlist .= pack('S', 0);// количество свойств вообще
+     $fieldlist .= pack(S, 0);// количество свойств вообще
      
      return $header.$fieldlistheader.pack(S, strlen($fieldlist) + 24).$fieldlist.$res;
   }; 
@@ -209,9 +209,8 @@
      $fieldcount = pg_num_fields($dataset);
      // Информация о полях запроса
      for ($i = 0; $i < $fieldcount; $i++) {
-        $type[$i] = pg_field_type($dataset, $i);
         $fieldname[$i] = pg_field_name($dataset, $i);
-        $res .= '<FIELD attrname="'.$fieldname[$i].'"'.GetFieldType2($type[$i]).'/>';
+        $res .= '<FIELD attrname="'.pg_field_name($dataset, $i).'"'.getfieldtype($dataset, $i).'/>';
      };
      $res .= '</FIELDS></METADATA><ROWDATA>';
 
@@ -220,7 +219,7 @@
         $i = 0;
         $res .= '<ROW';
         foreach ($line as $col_value) {
-           if(strtoupper($type[$i])== 'TIMESTAMPTZ')//if (pg_field_type($dataset, $i) == 'timestamptz')
+           if (pg_field_type($dataset, $i) == 'timestamptz')
            {
               $res .= ' '.$fieldname[$i].'="'.str_replace(' ', 'T', $col_value).'"';
            }
@@ -266,7 +265,7 @@
         $i = 0;
         $res .= '<ROW';
         foreach ($line as $col_value) {
-           if (strtoupper($type[$i])== 'TIMESTAMPTZ')
+           if (pg_field_type($dataset, $i) == 'timestamptz')
            {
               $res .= ' '.$fieldname[$i].'="'.str_replace(' ', 'T', $col_value).'"';
            }
@@ -309,9 +308,8 @@
      $fieldcount = pg_num_fields($dataset);
      // Информация о полях запроса
      for ($i = 0; $i < $fieldcount; $i++) {
-        $fieldName = pg_field_name($dataset, $i);
-        $fieldnames .= '"'.$fieldName.'",';
-        $res .= PHP_EOL.'"'.$fieldName.'='.getfieldtypememtable($dataset, $i).',""'.$fieldName.'"","""",10,Data,"""""';
+        $fieldnames .= '"'.pg_field_name($dataset, $i).'",';
+        $res .= PHP_EOL.'"'.pg_field_name($dataset, $i).'='.getfieldtypememtable($dataset, $i).',""'.pg_field_name($dataset, $i).'"","""",10,Data,"""""';
      };
      $res .= PHP_EOL."@@TABLEDEF END@@";
      $res .= PHP_EOL.$fieldnames;
