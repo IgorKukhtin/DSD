@@ -3,8 +3,8 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_Product_StructurePrint (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Product_StructurePrint(
-    IN inProductId       Integer   ,   -- 
-    IN inSession         TVarChar      -- сессия пользователя
+    IN inMovementId_OrderClient       Integer   ,   -- 
+    IN inSession                      TVarChar      -- сессия пользователя
 )
 RETURNS SETOF refcursor
 AS
@@ -12,17 +12,75 @@ $BODY$
     DECLARE vbUserId Integer;
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
+
+    DECLARE vbProductId    Integer;
+    DECLARE vbOperDate_OrderClient   TDateTime;
+    DECLARE vbInvNumber_OrderClient  TVarChar;
+    DECLARE vbPriceWithVAT Boolean;
+    DECLARE vbVATPercent   TFloat;
+    DECLARE vbDiscountTax  TFloat;  
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
+     SELECT MovementBoolean_PriceWithVAT.ValueData  AS PriceWithVAT
+          , MovementFloat_VATPercent.ValueData      AS VATPercent
+          , MovementFloat_DiscountTax.ValueData     AS DiscountTax
+          , Movement_OrderClient.OperDate
+          , Movement_OrderClient.InvNumber
+     INTO
+         vbPriceWithVAT
+       , vbVATPercent
+       , vbDiscountTax
+       , vbOperDate_OrderClient
+       , vbInvNumber_OrderClient
+     FROM Movement AS Movement_OrderClient
+         LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                   ON MovementBoolean_PriceWithVAT.MovementId = Movement_OrderClient.Id
+                                  AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+         LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                 ON MovementFloat_VATPercent.MovementId = Movement_OrderClient.Id
+                                AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+         LEFT JOIN MovementFloat AS MovementFloat_DiscountTax
+                                 ON MovementFloat_DiscountTax.MovementId = Movement_OrderClient.Id
+                                AND MovementFloat_DiscountTax.DescId = zc_MovementFloat_DiscountTax()
+     WHERE Movement_OrderClient.Id = inMovementId_OrderClient  -- по идее должен быть один док. заказа, но малоли
+       AND Movement_OrderClient.DescId = zc_Movement_OrderClient();
+
+     -- данные из документа заказа
+     CREATE TEMP TABLE tmpOrderClient ON COMMIT DROP AS (SELECT MovementItem.ObjectId       AS GoodsId
+                                                              , Object_Goods.DescId         AS GoodsDesc
+                                                              , Object_Goods.ValueData      AS GoodsName
+                                                              , MovementItem.Amount         AS Amount
+                                                              , MIFloat_OperPrice.ValueData AS OperPrice
+                                                              , CASE WHEN vbPriceWithVAT THEN MIFloat_OperPrice.ValueData
+                                                                                         ELSE (MIFloat_OperPrice.ValueData * (1 + vbVATPercent/100))::TFloat
+                                                                END AS OperPriceWithVAT
+                                                         FROM MovementItem
+                                                              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+                                                              LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
+                                                                                          ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
+                                                                                         AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()
+                                                         WHERE MovementItem.MovementId = inMovementId_OrderClient
+                                                           AND MovementItem.DescId     = zc_MI_Master()
+                                                           AND MovementItem.isErased   = FALSE
+                                                         );
+
+     --ищем лодку в строчной части документа, если присутствует, значит продаем лодку, соотв. нужно показать все опции по ней
+     SELECT tmpOrderClient.GoodsId
+    INTO vbProductId
+     FROM tmpOrderClient
+     WHERE tmpOrderClient.GoodsDesc = zc_Object_Product()
+     LIMIT 1;
+     
+ 
      CREATE TEMP TABLE tmpProduct ON COMMIT DROP AS (SELECT tmp.*
                                                      FROM gpSelect_Object_Product (inIsShowAll:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
-                                                     WHERE tmp.Id = inProductId
+                                                     WHERE tmp.Id = vbProductId
                                                      );
      CREATE TEMP TABLE tmpProdColorItems ON COMMIT DROP AS (SELECT tmp.*
                                                             FROM gpSelect_Object_ProdColorItems (inIsShowAll:= FALSE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
-                                                            WHERE tmp.ProductId = inProductId
+                                                            WHERE tmp.ProductId = vbProductId
                                                             );
      -- Результат
      OPEN Cursor1 FOR
@@ -81,7 +139,9 @@ BEGIN
                            JOIN ObjectLink AS ObjectLink_GoodsPhoto_Goods
                                            ON ObjectLink_GoodsPhoto_Goods.ObjectId = Object_GoodsPhoto.Id
                                           AND ObjectLink_GoodsPhoto_Goods.DescId   = zc_ObjectLink_GoodsPhoto_Goods()
-                                          AND ObjectLink_GoodsPhoto_Goods.ChildObjectId IN (SELECT DISTINCT tmpProdColorItems.GoodsId FROM tmpProdColorItems)
+                                          AND ObjectLink_GoodsPhoto_Goods.ChildObjectId IN (SELECT DISTINCT tmpProdColorItems.GoodsId FROM tmpProdColorItems
+                                                                                        --UNION SELECT DISTINCT tmpOrderClient.GoodsId FROM tmpOrderClient
+                                                                                            )
                      WHERE Object_GoodsPhoto.DescId   = zc_Object_GoodsPhoto()
                        AND Object_GoodsPhoto.isErased = FALSE
                    )
@@ -109,7 +169,7 @@ BEGIN
                               AND tmpPhoto3.Ord = 3
             LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data3
                                  ON ObjectBlob_GoodsPhoto_Data3.ObjectId = tmpPhoto3.PhotoId
-                                 */
+                                 */       
        ;
 
      RETURN NEXT Cursor2;

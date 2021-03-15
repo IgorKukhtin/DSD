@@ -3881,10 +3881,10 @@ object ProductForm: TProductForm
     OutputType = otMultiDataSet
     Params = <
       item
-        Name = 'inProductId'
+        Name = 'inMovementId_OrderClient'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Id'
+        ComponentItem = 'MovementId_OrderClient'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

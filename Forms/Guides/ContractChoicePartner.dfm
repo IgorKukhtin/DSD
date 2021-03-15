@@ -1310,7 +1310,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 344
-    Top = 168
+    Left = 168
+    Top = 192
   end
 end

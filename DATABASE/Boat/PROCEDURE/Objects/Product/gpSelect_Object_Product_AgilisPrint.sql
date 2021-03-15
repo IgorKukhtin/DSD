@@ -45,7 +45,7 @@ BEGIN
          LEFT JOIN MovementFloat AS MovementFloat_DiscountTax
                                  ON MovementFloat_DiscountTax.MovementId = Movement_OrderClient.Id
                                 AND MovementFloat_DiscountTax.DescId = zc_MovementFloat_DiscountTax()
-     WHERE Movement_OrderClient.Id = inMovementId_OrderClient  -- по идее должен быть один док. заказа, но малоли
+     WHERE Movement_OrderClient.Id = inMovementId_OrderClient
        AND Movement_OrderClient.DescId = zc_Movement_OrderClient();
 
      -- данные из документа заказа
