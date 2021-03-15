@@ -1515,17 +1515,19 @@ object IncomePartnerForm: TIncomePartnerForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outPriceWithVAT'
+        Name = 'ioPriceWithVAT'
         Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outVATPercent'
+        Name = 'ioVATPercent'
         Value = 0.000000000000000000
         Component = edVATPercent
         DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

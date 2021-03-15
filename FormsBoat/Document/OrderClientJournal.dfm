@@ -658,6 +658,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
     end
     object bbPrint: TdxBarButton
       Action = actPrintTender
+      Caption = 'Print Tender'
       Category = 0
     end
     object bbShowErased: TdxBarButton
@@ -1698,10 +1699,10 @@ object OrderClientJournalForm: TOrderClientJournalForm
     OutputType = otMultiDataSet
     Params = <
       item
-        Name = 'inProductId'
+        Name = 'inMovementId_OrderClient'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'ProductId'
+        ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

@@ -55,7 +55,7 @@ type
     actUpdateMasterDS: TdsdUpdateDataSet;
     spInsertUpdateMIMaster: TdsdStoredProc;
     actPrint: TdsdPrintAction;
-    bbPrint: TdxBarButton;
+    bbPrintAgilis: TdxBarButton;
     bbShowAll: TdxBarButton;
     bbStatic: TdxBarStatic;
     actShowAll: TBooleanStoredProcAction;
@@ -98,7 +98,7 @@ type
     bbMovementItemProtocol: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
-    spSelectPrint: TdsdStoredProc;
+    spSelectPrintOld: TdsdStoredProc;
     bbCalcAmountPartner: TdxBarControlContainerItem;
     actGoodsKindChoice: TOpenChoiceForm;
     spInsertMaskMIMaster: TdsdStoredProc;
@@ -251,6 +251,15 @@ type
     edInsertDate: TcxDateEdit;
     cxLabel18: TcxLabel;
     edInsertName: TcxButtonEdit;
+    PrintItemsColorCDS: TClientDataSet;
+    spSelectPrint: TdsdStoredProc;
+    spSelectPrintStructure: TdsdStoredProc;
+    spSelectPrintTender: TdsdStoredProc;
+    actPrintAgilis: TdsdPrintAction;
+    actPrintStructure: TdsdPrintAction;
+    actPrintTender: TdsdPrintAction;
+    bbPrintStructure: TdxBarButton;
+    bbPrintTender: TdxBarButton;
   private
   public
   end;
