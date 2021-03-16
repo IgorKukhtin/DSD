@@ -57,7 +57,7 @@ BEGIN
 
             LEFT JOIN ObjectLink AS ObjectLink_TaxKind
                                  ON ObjectLink_TaxKind.ObjectId = Object_ClientPartner.Id
-                                AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
+                                AND ObjectLink_TaxKind.DescId IN (zc_ObjectLink_Client_TaxKind(),zc_ObjectLink_Partner_TaxKind())
             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId 
   
             LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
