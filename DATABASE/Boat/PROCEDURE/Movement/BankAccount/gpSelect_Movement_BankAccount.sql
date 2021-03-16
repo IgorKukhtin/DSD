@@ -175,7 +175,7 @@ BEGIN
            , ObjectDesc.ItemName
 
            , Movement_Invoice.Id AS MovementId_Invoice
-           , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full
+           , ('№ ' || Movement_Invoice.InvNumber || ' от ' || zfConvert_DateToString (Movement_Invoice.OperDate) :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full
            , CASE WHEN tmpInvoice_Params.Amount > 0 AND MovementLinkMovement_Invoice.Ord = 1 THEN tmpInvoice_Params.Amount      ELSE 0 END::TFloat AS AmountIn_Invoice
            , CASE WHEN tmpInvoice_Params.Amount < 0 AND MovementLinkMovement_Invoice.Ord = 1 THEN -1 * tmpInvoice_Params.Amount ELSE 0 END::TFloat AS AmountOut_Invoice
            --, (COALESCE (MovementItem.Amount,0) + COALESCE (tmpInvoice_Params.Amount,0))          ::TFloat AS Amount_diff
