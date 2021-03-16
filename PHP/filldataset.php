@@ -205,6 +205,7 @@
      for ($i = 0; $i < $fieldcount; $i++) {
         $fieldname[$i] = pg_field_name($dataset, $i);
         $type[$i] = pg_field_type($dataset, $i);
+        $type_oid[$i] = pg_field_type_oid($dataset, $i);
         $maxlenght[$i] = 1;
      };
      
@@ -221,7 +222,7 @@
            }
 	   else
            {
-              if (pg_field_type_oid($dataset, $i) == 1043)
+              if ($type_oid[$i] == 1043)
               {
                   $len = strlen($col_value);
                   if ($len > $maxlenght[$i]) 
