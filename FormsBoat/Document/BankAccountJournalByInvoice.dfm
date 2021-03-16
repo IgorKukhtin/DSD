@@ -1,28 +1,28 @@
-inherited InvoiceJournalForm: TInvoiceJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1057#1095#1077#1090#1072'>'
+inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
   ClientHeight = 356
-  ClientWidth = 1028
+  ClientWidth = 819
   AddOnFormData.RefreshAction = actRefreshStart
-  AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1044
+  AddOnFormData.Params = FormParams
+  ExplicitWidth = 835
   ExplicitHeight = 394
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1028
+    Width = 819
     Height = 299
     TabOrder = 3
-    ExplicitWidth = 1028
+    ExplicitWidth = 819
     ExplicitHeight = 299
     ClientRectBottom = 299
-    ClientRectRight = 1028
+    ClientRectRight = 819
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1028
+      ExplicitWidth = 819
       ExplicitHeight = 299
       inherited cxGrid: TcxGrid
-        Width = 1028
+        Width = 819
         Height = 299
-        ExplicitWidth = 1028
+        ExplicitWidth = 819
         ExplicitHeight = 299
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -39,52 +39,25 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = AmountIn_NotVAT
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = AmountOut_NotVAT
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = AmountIn_VAT
+              Column = Amount_diff
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = AmountOut_VAT
+              Column = AmountIn_Invoice
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = AmountIn_BankAccount
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = AmountOut_BankAccount
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = AmountIn_rem
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = AmountOut_rem
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = Amount_BankAccount
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = Amount_rem
+              Column = AmountOut_Invoice
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -104,47 +77,21 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = AmountOut_NotVAT
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = AmountIn_VAT
+              Column = Amount_diff
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = AmountOut_VAT
+              Column = AmountIn_Invoice
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = AmountIn_BankAccount
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = AmountOut_BankAccount
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = AmountIn_rem
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = AmountOut_rem
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = Amount_BankAccount
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = Amount_rem
+              Column = AmountOut_Invoice
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -161,297 +108,189 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Width = 69
           end
           inherited colInvNumber: TcxGridDBColumn
-            Caption = 'Interne Nr'
+            Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 63
           end
-          object InvNumberPartner: TcxGridDBColumn [2]
-            Caption = 'Externe Nr'
-            DataBinding.FieldName = 'InvNumberPartner'
+          object InvNumberParent: TcxGridDBColumn [2]
+            Caption = #8470' '#1076#1086#1082'. ('#1074#1085'.)'
+            DataBinding.FieldName = 'InvNumberParent'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1083#1080#1077#1085#1090#1072
+            HeaderHint = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' ('#1074#1085#1077#1096#1085#1080#1081')'
             Options.Editing = False
-            Width = 55
-          end
-          object ReceiptNumber: TcxGridDBColumn [3]
-            Caption = 'Quittung Nr'
-            DataBinding.FieldName = 'ReceiptNumber'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1082#1074#1080#1090#1072#1085#1094#1080#1080
-            Options.Editing = False
-            Width = 70
+            Width = 56
           end
           inherited colOperDate: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 70
+            Width = 48
           end
-          object PlanDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PlanDate'
-            FooterAlignmentHorz = taCenter
+          object BankAccountName: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
+            DataBinding.FieldName = 'BankAccountName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 101
+          end
+          object BankName: TcxGridDBColumn
+            Caption = #1041#1072#1085#1082
+            DataBinding.FieldName = 'BankName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 86
           end
           object AmountIn: TcxGridDBColumn
-            Caption = 'Debet'
+            Caption = #1044#1077#1073#1077#1090
             DataBinding.FieldName = 'AmountIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1080#1093#1086#1076' '#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             Options.Editing = False
-            Width = 70
+            Width = 55
           end
           object AmountOut: TcxGridDBColumn
-            Caption = 'Kredit'
+            Caption = #1050#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'AmountOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1056#1072#1089#1093#1086#1076' '#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             Options.Editing = False
-            Width = 70
+            Width = 55
           end
-          object AmountIn_VAT: TcxGridDBColumn
-            Caption = 'Debet Vat'
-            DataBinding.FieldName = 'AmountIn_VAT'
+          object Amount_diff: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. '#1089#1091#1084#1084#1072
+            DataBinding.FieldName = 'Amount_diff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1080#1093#1086#1076' '#1057#1091#1084#1084#1072' '#1053#1044#1057
-            Width = 70
-          end
-          object AmountOut_VAT: TcxGridDBColumn
-            Caption = 'Kredit Vat'
-            DataBinding.FieldName = 'AmountOut_VAT'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1056#1072#1089#1093#1086#1076' '#1057#1091#1084#1084#1072' '#1053#1044#1057
-            Width = 70
-          end
-          object AmountIn_BankAccount: TcxGridDBColumn
-            Caption = 'Debet (Payment)'
-            DataBinding.FieldName = 'AmountIn_BankAccount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1087#1083#1072#1090#1072' '#1055#1088#1080#1093#1086#1076' '#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
-            Options.Editing = False
-            Width = 70
-          end
-          object AmountOut_BankAccount: TcxGridDBColumn
-            Caption = 'Kredit (Payment)'
-            DataBinding.FieldName = 'AmountOut_BankAccount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1087#1083#1072#1090#1072' '#1056#1072#1089#1093#1086#1076' '#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
-            Options.Editing = False
-            Width = 70
-          end
-          object Amount_BankAccount: TcxGridDBColumn
-            Caption = 'Total (Payment)'
-            DataBinding.FieldName = 'Amount_BankAccount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1048#1090#1086#1075#1086' '#1054#1087#1083#1072#1090#1072
-            Options.Editing = False
-            Width = 70
-          end
-          object Amount_rem: TcxGridDBColumn
-            Caption = 'Total (balance)'
-            DataBinding.FieldName = 'Amount_rem'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1048#1090#1086#1075#1086' '#1054#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1089#1095#1077#1090#1091
-            Options.Editing = False
-            Width = 70
-          end
-          object AmountIn_rem: TcxGridDBColumn
-            Caption = 'Debet (balance)'
-            DataBinding.FieldName = 'AmountIn_rem'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1089#1095#1077#1090#1091' '#1055#1088#1080#1093#1086#1076
-            Options.Editing = False
-            Width = 70
-          end
-          object AmountOut_rem: TcxGridDBColumn
-            Caption = 'Kredit (balance)'
-            DataBinding.FieldName = 'AmountOut_rem'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1089#1095#1077#1090#1091' '#1056#1072#1089#1093#1086#1076
-            Options.Editing = False
-            Width = 70
-          end
-          object VATPercent: TcxGridDBColumn
-            Caption = '% '#1053#1044#1057
-            DataBinding.FieldName = 'VATPercent'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
-            Width = 60
-          end
-          object AmountIn_NotVAT: TcxGridDBColumn
-            Caption = 'Debet no_Vat'
-            DataBinding.FieldName = 'AmountIn_NotVAT'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1080#1093#1086#1076' '#1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
-            Width = 70
-          end
-          object AmountOut_NotVAT: TcxGridDBColumn
-            Caption = 'Kredit no_Vat'
-            DataBinding.FieldName = 'AmountOut_NotVAT'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1056#1072#1089#1093#1086#1076' '#1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
-            Width = 70
-          end
-          object PaidKindName: TcxGridDBColumn
-            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 52
+            Width = 55
           end
-          object DescName: TcxGridDBColumn
+          object isDiff: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'.'
+            DataBinding.FieldName = 'isDiff'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 51
+          end
+          object MoneyPlaceName: TcxGridDBColumn
+            Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
+            DataBinding.FieldName = 'MoneyPlaceName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 103
+          end
+          object ItemName: TcxGridDBColumn
             Caption = #1069#1083#1077#1084#1077#1085#1090
-            DataBinding.FieldName = 'DescName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object ObjectName: TcxGridDBColumn
-            Caption = 'Lieferanten / Kunden'
-            DataBinding.FieldName = 'ObjectName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1086#1089#1090#1072#1074#1097#1080#1082' / '#1050#1083#1080#1077#1085#1090
-            Options.Editing = False
-            Width = 128
-          end
-          object UnitCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
-            DataBinding.FieldName = 'UnitCode'
+            DataBinding.FieldName = 'ItemName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
           end
-          object UnitName: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-            DataBinding.FieldName = 'UnitName'
+          object InvNumber_Invoice_Full: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
+            DataBinding.FieldName = 'InvNumber_Invoice_Full'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actInvoiceJournalDetailChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object AmountIn_Invoice: TcxGridDBColumn
+            Caption = 'Debet (Invoice)'
+            DataBinding.FieldName = 'AmountIn_Invoice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object AmountOut_Invoice: TcxGridDBColumn
+            Caption = 'Kredit (Invoice)'
+            DataBinding.FieldName = 'AmountOut_Invoice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object ObjectName_Invoice: TcxGridDBColumn
+            Caption = 'Lieferanten / Kunden (Invoice)'
+            DataBinding.FieldName = 'ObjectName_Invoice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1089#1090#1072#1074#1097#1080#1082' / '#1050#1083#1080#1077#1085#1090
+            Options.Editing = False
+            Width = 128
+          end
+          object DescName_Invoice: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090' (Invoice)'
+            DataBinding.FieldName = 'DescName_Invoice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object UnitName_Invoice: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' (Invoice)'
+            DataBinding.FieldName = 'UnitName_Invoice'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 101
           end
-          object InfoMoneyCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1059#1055
-            DataBinding.FieldName = 'InfoMoneyCode'
+          object InfoMoneyCode_Invoice: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055' (Invoice)'
+            DataBinding.FieldName = 'InfoMoneyCode_Invoice'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 33
           end
-          object InfoMoneyGroupName: TcxGridDBColumn
-            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-            DataBinding.FieldName = 'InfoMoneyGroupName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object InfoMoneyDestinationName: TcxGridDBColumn
-            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
-            DataBinding.FieldName = 'InfoMoneyDestinationName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object InfoMoneyName: TcxGridDBColumn
-            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-            DataBinding.FieldName = 'InfoMoneyName'
+          object InfoMoneyName_Invoice: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' (Invoice)'
+            DataBinding.FieldName = 'InfoMoneyName_Invoice'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 83
           end
-          object InfoMoneyName_all: TcxGridDBColumn
-            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
-            DataBinding.FieldName = 'InfoMoneyName_all'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object ProductCIN: TcxGridDBColumn
-            Caption = 'CIN Nr.'
-            DataBinding.FieldName = 'ProductCIN'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 100
-          end
-          object ProductCode: TcxGridDBColumn
-            Caption = 'Interne Nr (Boat)'
-            DataBinding.FieldName = 'ProductCode'
+          object ProductCode_Invoice: TcxGridDBColumn
+            Caption = 'Interne Nr (Boat) (Invoice)'
+            DataBinding.FieldName = 'ProductCode_Invoice'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -459,18 +298,43 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Options.Editing = False
             Width = 43
           end
-          object ProductName: TcxGridDBColumn
-            Caption = 'Boat'
-            DataBinding.FieldName = 'ProductName'
+          object ProductName_Invoice: TcxGridDBColumn
+            Caption = 'Boat (Invoice)'
+            DataBinding.FieldName = 'ProductName_Invoice'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = 'Product'
             Options.Editing = False
             Width = 78
           end
-          object Comment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-            DataBinding.FieldName = 'Comment'
+          object ProductCIN_Invoice: TcxGridDBColumn
+            Caption = 'CIN Nr. (Invoice)'
+            DataBinding.FieldName = 'ProductCIN_Invoice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object PaidKindName_Invoice: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099' (Invoice)'
+            DataBinding.FieldName = 'PaidKindName_Invoice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 56
+          end
+          object ReceiptNumber_Invoice: TcxGridDBColumn
+            Caption = 'Quittung Nr (Invoice)'
+            DataBinding.FieldName = 'ReceiptNumber_Invoice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1082#1074#1080#1090#1072#1085#1094#1080#1080
+            Options.Editing = False
+            Width = 55
+          end
+          object Comment_Invoice: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' (Invoice)'
+            DataBinding.FieldName = 'Comment_Invoice'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -508,24 +372,58 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Options.Editing = False
             Width = 78
           end
-          object Color_Pay: TcxGridDBColumn
-            DataBinding.FieldName = 'Color_Pay'
-            Visible = False
-            VisibleForCustomization = False
-            Width = 30
-          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1028
-    ExplicitWidth = 1028
+    Width = 819
+    ExplicitWidth = 819
     inherited deStart: TcxDateEdit
-      EditValue = 44197d
+      Left = 685
+      Top = 0
+      EditValue = 43101d
+      Visible = False
+      ExplicitLeft = 685
+      ExplicitTop = 0
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 44197d
+      Left = 710
+      Top = 6
+      EditValue = 43101d
+      Visible = False
+      ExplicitLeft = 710
+      ExplicitTop = 6
+    end
+    inherited cxLabel1: TcxLabel
+      Left = 588
+      Top = 1
+      Visible = False
+      ExplicitLeft = 588
+      ExplicitTop = 1
+    end
+    inherited cxLabel2: TcxLabel
+      Left = 600
+      Top = 7
+      Visible = False
+      ExplicitLeft = 600
+      ExplicitTop = 7
+    end
+    object cxLabel6: TcxLabel
+      Left = 14
+      Top = 8
+      Caption = #1057#1095#1077#1090':'
+    end
+    object edInvoice: TcxButtonEdit
+      Left = 53
+      Top = 6
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 5
+      Width = 236
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -570,8 +468,10 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     object actUpdateMoneyPlace: TdsdDataSetRefresh [3]
       Category = 'Update'
       MoveParams = <>
+      StoredProc = spUpdateJuridical
       StoredProcList = <
         item
+          StoredProc = spUpdateJuridical
         end>
       Caption = 'actUpdateContract'
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -580,11 +480,15 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       RefreshOnTabSetChanges = True
     end
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TInvoiceForm'
-      FormNameParam.Value = 'TInvoiceForm'
+      FormName = 'TBankAccountMovementForm'
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_Value'
           Value = Null
           MultiSelectSeparator = ','
         end
@@ -597,12 +501,19 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         end>
     end
     inherited actInsertMask: TdsdInsertUpdateAction
-      FormName = 'TInvoiceForm'
-      FormNameParam.Value = 'TInvoiceForm'
+      FormName = 'TBankAccountMovementForm'
+      FormNameParam.Value = 'TBankAccountMovementForm'
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_Value'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end
         item
@@ -614,8 +525,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TInvoiceForm'
-      FormNameParam.Value = 'TInvoiceForm'
+      FormName = 'TBankAccountMovementForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -623,6 +533,13 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_Value'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end
         item
@@ -722,8 +639,10 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     object actUpdateContract: TdsdDataSetRefresh [20]
       Category = 'Update'
       MoveParams = <>
+      StoredProc = spUpdateContract
       StoredProcList = <
         item
+          StoredProc = spUpdateContract
         end>
       Caption = 'actUpdateContract'
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -870,8 +789,10 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
           ToParam.MultiSelectSeparator = ','
         end>
       PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isCopy
       StoredProcList = <
         item
+          StoredProc = spUpdate_isCopy
         end>
       Caption = 'actIsCopy'
     end
@@ -908,8 +829,10 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
           ToParam.MultiSelectSeparator = ','
         end>
       PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isCopy
       StoredProcList = <
         item
+          StoredProc = spUpdate_isCopy
         end>
       Caption = 'actIsCopyTrue'
     end
@@ -979,8 +902,10 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Invoice
       StoredProcList = <
         item
+          StoredProc = spUpdate_Invoice
         end>
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
@@ -1041,8 +966,9 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect
       StoredProcList = <
+        item
+        end
         item
           StoredProc = spSelect
         end>
@@ -1068,50 +994,29 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
       ImageIndex = 43
     end
-    object actOpenBankAccountJournalByInvoice: TdsdOpenForm
-      Category = 'OpenForm'
-      MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
-      ImageIndex = 25
-      FormName = 'TBankAccountJournalByInvoiceForm'
-      FormNameParam.Value = 'TBankAccountJournalByInvoiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'MovementId_Invoice'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InvNumberFull_Invoice'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'InvNumber_Full'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          Component = actShowErased
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
   end
   inherited MasterDS: TDataSource
     Top = 115
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Invoice'
+    StoredProcName = 'gpSelect_Movement_BankAccount_byInvoice'
+    Params = <
+      item
+        Name = 'inMovementId_Invoice'
+        Value = 41640d
+        Component = GuidesInvoice
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     Top = 131
   end
   inherited BarManager: TdxBarManager
@@ -1126,7 +1031,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -1160,23 +1065,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenBankAccountJournalByInvoice'
         end
         item
           Visible = True
@@ -1189,6 +1078,18 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint1'
         end
         item
           Visible = True
@@ -1228,22 +1129,14 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       Action = mactIsCopy
       Category = 0
     end
+    object bb: TdxBarButton
+      Action = macUpdateContract
+      Category = 0
+    end
     object bbUpdateMoneyPlace: TdxBarButton
       Action = macUpdateMoneyPlace
       Category = 0
     end
-    object bbOpenBankAccountJournalByInvoice: TdxBarButton
-      Action = actOpenBankAccountJournalByInvoice
-      Category = 0
-    end
-  end
-  inherited DBViewAddOn: TdsdDBViewAddOn
-    ColorRuleList = <
-      item
-        ValueColumn = Color_Pay
-        ColorValueList = <>
-      end>
-    Left = 248
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -1254,13 +1147,13 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       end>
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Invoice'
+    StoredProcName = 'gpComplete_Movement_BankAccount'
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_Invoice'
+    StoredProcName = 'gpUnComplete_Movement_BankAccount'
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_Invoice'
+    StoredProcName = 'gpSetErased_Movement_BankAccount'
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -1289,12 +1182,27 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         Value = Null
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_Invoice'
+        Value = Null
+        Component = GuidesInvoice
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberFull_Invoice'
+        Value = Null
+        Component = GuidesInvoice
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   inherited spMovementReComplete: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_Invoice'
-    Left = 464
-    Top = 128
+    StoredProcName = 'gpReComplete_Movement_BankAccount'
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
@@ -1303,6 +1211,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     Top = 262
   end
   object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpReport_BankAccount'
     DataSet = PrintItemsCDS
     DataSets = <
       item
@@ -1359,5 +1268,162 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     PackSize = 1
     Left = 631
     Top = 232
+  end
+  object spUpdate_isCopy: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_isCopy'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsCopy'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isCopy'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsCopy'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isCopy'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 464
+    Top = 243
+  end
+  object spUpdate_Invoice: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementLink_Invoice'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId '
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Invoice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Invoice'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMovementId_Invoice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Invoice'
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 792
+    Top = 153
+  end
+  object spUpdateContract: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_BankAccount_Contract'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId '
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ContractId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        DataType = ftString
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 904
+    Top = 169
+  end
+  object spUpdateJuridical: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_BankAccount_MoneyPlace'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId '
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMoneyPlaceId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'MoneyPlaceId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ContractId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 896
+    Top = 217
+  end
+  object GuidesInvoice: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvoice
+    FormNameParam.Value = 'TInvoiceJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInvoiceJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesInvoice
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInvoice
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 168
+    Top = 65531
   end
 end

@@ -1,4 +1,4 @@
-unit InvoiceJournal;
+unit BankAccountJournalByInvoice;
 
 interface
 
@@ -27,54 +27,48 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TInvoiceJournalForm = class(TAncestorJournalForm)
-    ObjectName: TcxGridDBColumn;
-    ProductName: TcxGridDBColumn;
-    InfoMoneyName: TcxGridDBColumn;
-    UnitName: TcxGridDBColumn;
-    PaidKindName: TcxGridDBColumn;
+  TBankAccountJournalByInvoiceForm = class(TAncestorJournalForm)
+    BankName: TcxGridDBColumn;
+    BankAccountName: TcxGridDBColumn;
+    MoneyPlaceName: TcxGridDBColumn;
     AmountIn: TcxGridDBColumn;
-    InfoMoneyCode: TcxGridDBColumn;
-    InfoMoneyGroupName: TcxGridDBColumn;
-    InfoMoneyDestinationName: TcxGridDBColumn;
-    InvNumberPartner: TcxGridDBColumn;
-    Comment: TcxGridDBColumn;
-    DescName: TcxGridDBColumn;
+    AmountOut: TcxGridDBColumn;
+    InvNumberParent: TcxGridDBColumn;
     actInsertProfitLossService: TdsdInsertUpdateAction;
     bbAddBonus: TdxBarButton;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    InfoMoneyName_all: TcxGridDBColumn;
     actPrint1: TdsdPrintAction;
     bbPrint1: TdxBarButton;
+    spUpdate_isCopy: TdsdStoredProc;
     actIsCopy: TdsdExecStoredProc;
     bbisCopy: TdxBarButton;
     mactInsertProfitLossService: TMultiAction;
     actIsCopyTrue: TdsdExecStoredProc;
     actMasterPost: TDataSetPost;
     mactIsCopy: TMultiAction;
-    UnitCode: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    InvNumber_Invoice_Full: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
     actInvoiceJournalDetailChoiceForm: TOpenChoiceForm;
+    spUpdate_Invoice: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     actRefreshStart: TdsdDataSetRefresh;
+    spUpdateContract: TdsdStoredProc;
     macUpdateContract: TMultiAction;
     actUpdateContract: TdsdDataSetRefresh;
+    bb: TdxBarButton;
     actChoiceContract: TOpenChoiceForm;
+    spUpdateJuridical: TdsdStoredProc;
     actChoiceMoneyPlace: TOpenChoiceForm;
     actUpdateMoneyPlace: TdsdDataSetRefresh;
     macUpdateMoneyPlace: TMultiAction;
     bbUpdateMoneyPlace: TdxBarButton;
-    AmountIn_NotVAT: TcxGridDBColumn;
-    AmountOut_NotVAT: TcxGridDBColumn;
-    AmountIn_VAT: TcxGridDBColumn;
-    AmountOut_VAT: TcxGridDBColumn;
-    VATPercent: TcxGridDBColumn;
-    Color_Pay: TcxGridDBColumn;
-    actOpenBankAccountJournalByInvoice: TdsdOpenForm;
-    bbOpenBankAccountJournalByInvoice: TdxBarButton;
+    cxLabel6: TcxLabel;
+    edInvoice: TcxButtonEdit;
+    GuidesInvoice: TdsdGuides;
   private
     { Private declarations }
   public
@@ -86,6 +80,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TInvoiceJournalForm);
+  RegisterClass(TBankAccountJournalByInvoiceForm);
 
 end.
