@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDa
              , Comment TVarChar
              , BankAccountId Integer, BankAccountName TVarChar, BankName TVarChar
              , MoneyPlaceCode Integer, MoneyPlaceName TVarChar, ItemName TVarChar
-             , InvNumber_Invoice_Full TVarChar
+             , MovementId_Invoice Integer, InvNumber_Invoice_Full TVarChar
              , AmountIn_Invoice TFloat
              , AmountOut_Invoice TFloat
              , Amount_diff TFloat
@@ -174,6 +174,7 @@ BEGIN
            , Object_MoneyPlace.ValueData       AS MoneyPlaceName
            , ObjectDesc.ItemName
 
+           , Movement_Invoice.Id AS MovementId_Invoice
            , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full
            , CASE WHEN tmpInvoice_Params.Amount > 0 AND MovementLinkMovement_Invoice.Ord = 1 THEN tmpInvoice_Params.Amount      ELSE 0 END::TFloat AS AmountIn_Invoice
            , CASE WHEN tmpInvoice_Params.Amount < 0 AND MovementLinkMovement_Invoice.Ord = 1 THEN -1 * tmpInvoice_Params.Amount ELSE 0 END::TFloat AS AmountOut_Invoice

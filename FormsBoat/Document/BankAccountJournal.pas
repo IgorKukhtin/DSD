@@ -66,6 +66,7 @@ type
     actUpdateMoneyPlace: TdsdDataSetRefresh;
     macUpdateMoneyPlace: TMultiAction;
     bbUpdateMoneyPlace: TdxBarButton;
+    actOpenInvoiceForm: TdsdOpenForm;
   private
     { Private declarations }
   public
