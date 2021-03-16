@@ -32,7 +32,7 @@ function myLog($log) {
  
 // Соединение, выбор базы данных
 //echo 1;
-$dbconn = pg_pconnect($connectstring)
+$dbconn = pg_connect($connectstring)
     or die('Could not connect: ' . pg_last_error());
 //echo 2;
 $query = 'set client_encoding=WIN1251';
