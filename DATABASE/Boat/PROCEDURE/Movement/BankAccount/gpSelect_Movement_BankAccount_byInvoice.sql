@@ -170,15 +170,17 @@ BEGIN
            , ObjectDesc.ItemName
 
            , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full
-           , CASE WHEN tmpInvoice_Params.Amount > 0 AND MovementLinkMovement_Invoice.Ord = 1 THEN tmpInvoice_Params.Amount      ELSE 0 END::TFloat AS AmountIn_Invoice
-           , CASE WHEN tmpInvoice_Params.Amount < 0 AND MovementLinkMovement_Invoice.Ord = 1 THEN -1 * tmpInvoice_Params.Amount ELSE 0 END::TFloat AS AmountOut_Invoice
+           , CASE WHEN tmpInvoice_Params.Amount > 0 AND tmpMovement.Ord = 1 THEN tmpInvoice_Params.Amount      ELSE 0 END::TFloat AS AmountIn_Invoice
+           , CASE WHEN tmpInvoice_Params.Amount < 0 AND tmpMovement.Ord = 1 THEN -1 * tmpInvoice_Params.Amount ELSE 0 END::TFloat AS AmountOut_Invoice
            --, (COALESCE (MovementItem.Amount,0) + COALESCE (tmpInvoice_Params.Amount,0))          ::TFloat AS Amount_diff
-           , CASE WHEN MovementLinkMovement_Invoice.Ord = 1 OR MovementLinkMovement_Invoice.Ord IS NULL
+           , CASE WHEN tmpMovement.Ord = 1 OR tmpMovement.MovementId_Invoice IS NULL
                   THEN (COALESCE (MovementItem.SumIn,0) - COALESCE (MovementItem.SumOut,0) + COALESCE (tmpInvoice_Params.Amount,0))
                   ELSE 0
              END     ::TFloat  AS Amount_diff
 
-           , CASE WHEN COALESCE (MovementItem.Amount,0) + COALESCE (tmpInvoice_Params.Amount,0) <> 0 THEN TRUE ELSE FALSE END ::Boolean AS isDiff
+           --, CASE WHEN COALESCE (MovementItem.Amount,0) + COALESCE (tmpInvoice_Params.Amount,0) <> 0 THEN TRUE ELSE FALSE END ::Boolean AS isDiff
+           , CASE WHEN (COALESCE (MovementItem.SumIn,0) - COALESCE (MovementItem.SumOut,0) + COALESCE (tmpInvoice_Params.Amount,0)) <> 0 
+                  THEN TRUE ELSE FALSE END ::Boolean AS isDiff
 
            , tmpInvoice_Params.ObjectName          AS ObjectName_Invoice
            , tmpInvoice_Params.DescName            AS DescName_Invoice
