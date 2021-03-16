@@ -305,14 +305,14 @@ order by 4*/
            , CASE WHEN Object_PersonalSigning.PersonalName <> ''
                   THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1, FALSE)
                   ELSE CASE WHEN COALESCE (ObjectString_PersonalBookkeeper.ValueData, Object_PersonalBookkeeper_View.PersonalName,'') <> ''
-                            THEN zfConvert_FIO (COALESCE (ObjectString_PersonalBookkeeper.ValueData, Object_PersonalBookkeeper_View.PersonalName,''), 1, FALSE)
+                            THEN COALESCE (ObjectString_PersonalBookkeeper.ValueData, zfConvert_FIO ( Object_PersonalBookkeeper_View.PersonalName, 1, FALSE),'')
                             ELSE 'Рудик Н.В.'
                        END
              END                            :: TVarChar AS N10
            , CASE WHEN Object_PersonalSigning.PersonalName <> ''
                   THEN UPPER (zfConvert_FIO (Object_PersonalSigning.PersonalName, 1, TRUE))
                   ELSE CASE WHEN COALESCE (ObjectString_PersonalBookkeeper.ValueData, Object_PersonalBookkeeper_View.PersonalName,'') <> ''
-                            THEN UPPER (zfConvert_FIO (COALESCE (ObjectString_PersonalBookkeeper.ValueData, Object_PersonalBookkeeper_View.PersonalName,''), 1, TRUE))
+                            THEN UPPER (COALESCE (ObjectString_PersonalBookkeeper.ValueData, zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1, TRUE),'') )
                             ELSE UPPER ('Н. В. Рудик' )
                        END
              END                            :: TVarChar AS N10_ifin
@@ -446,7 +446,7 @@ order by 4*/
            , CASE WHEN Object_PersonalSigning.PersonalName <> ''
                   THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1, FALSE)
                   ELSE CASE WHEN COALESCE (ObjectString_PersonalBookkeeper.ValueData, Object_PersonalBookkeeper_View.PersonalName,'') <> ''
-                            THEN zfConvert_FIO (COALESCE (ObjectString_PersonalBookkeeper.ValueData, Object_PersonalBookkeeper_View.PersonalName,''), 1, FALSE)
+                            THEN COALESCE (ObjectString_PersonalBookkeeper.ValueData, zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1, FALSE),'')
                             ELSE 'Рудик Н.В.'
                        END
               END                           :: TVarChar AS AccounterName_From

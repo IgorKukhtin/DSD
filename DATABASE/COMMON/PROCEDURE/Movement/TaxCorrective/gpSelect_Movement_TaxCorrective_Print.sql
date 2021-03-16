@@ -473,7 +473,7 @@ BEGIN
     , tmpPersonalBookkeeper AS (SELECT ObjectLink_Branch_PersonalBookkeeper.ObjectId AS BranchId
                                      , Object_PersonalBookkeeper_View.MemberId
                                      , PersonalBookkeeper_INN.ValueData AS PersonalBookkeeper_INN
-                                     , COALESCE (ObjectString_PersonalBookkeeper.ValueData, Object_PersonalBookkeeper_View.PersonalName) ::TVarChar AS PersonalName
+                                     , COALESCE (ObjectString_PersonalBookkeeper.ValueData, zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1, TRUE) ) ::TVarChar AS PersonalName
                                 FROM ObjectLink AS ObjectLink_Branch_PersonalBookkeeper
                                      LEFT JOIN Object_Personal_View AS Object_PersonalBookkeeper_View ON Object_PersonalBookkeeper_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId
                                      LEFT JOIN ObjectString AS PersonalBookkeeper_INN
@@ -795,7 +795,7 @@ BEGIN
            , CASE WHEN tmpPersonalSigning.PersonalName <> ''
                   THEN zfConvert_FIO (tmpPersonalSigning.PersonalName, 1, FALSE)
                   ELSE CASE WHEN tmpPersonalBookkeeper.PersonalName <> ''
-                            THEN zfConvert_FIO (tmpPersonalBookkeeper.PersonalName, 1, FALSE)
+                            THEN tmpPersonalBookkeeper.PersonalName            --zfConvert_FIO (tmpPersonalBookkeeper.PersonalName, 1, FALSE)
                             ELSE 'Рудик Н.В.'
                        END
              END                                                :: TVarChar AS N10
@@ -803,7 +803,7 @@ BEGIN
            , CASE WHEN tmpPersonalSigning.PersonalName <> ''
                   THEN UPPER (zfConvert_FIO (tmpPersonalSigning.PersonalName, 1, TRUE))
                   ELSE CASE WHEN tmpPersonalBookkeeper.PersonalName <> ''
-                            THEN UPPER (zfConvert_FIO (tmpPersonalBookkeeper.PersonalName, 1, TRUE))
+                            THEN UPPER (tmpPersonalBookkeeper.PersonalName)    --UPPER (zfConvert_FIO (tmpPersonalBookkeeper.PersonalName, 1, TRUE))
                             ELSE UPPER ('Н. В. Рудик')
                        END
              END                            :: TVarChar AS N10_ifin
@@ -920,7 +920,7 @@ BEGIN
            , CASE WHEN tmpPersonalSigning.PersonalName <> ''
                   THEN zfConvert_FIO (tmpPersonalSigning.PersonalName, 1, FALSE)
                   ELSE CASE WHEN COALESCE (tmpPersonalBookkeeper.PersonalName,'') <> ''
-                            THEN zfConvert_FIO (tmpPersonalBookkeeper.PersonalName, 1, FALSE)
+                            THEN tmpPersonalBookkeeper.PersonalName                    --zfConvert_FIO (tmpPersonalBookkeeper.PersonalName, 1, FALSE)
                             ELSE 'Рудик Н.В.' /*'А.В. Марухно'*/
                        END
              END                                                :: TVarChar AS AccounterName_To
