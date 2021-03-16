@@ -569,6 +569,10 @@ begin
   if ProccessingEmail then
     Exit;
 
+  //если надо перезапустить
+  if (Hour_onSendEmail >= 21) and (Hour >=4) then Hour_onSendEmail:= 0;
+
+
   //если уже сделали отправку Email, тогда не надо (отправляем каждые 2 часа)
   if (Hour_onSendEmail + 2 >= Hour) and (Hour_onSendEmail >= 0) then
     Exit;

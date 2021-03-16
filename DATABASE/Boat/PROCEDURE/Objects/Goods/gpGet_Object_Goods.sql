@@ -103,7 +103,8 @@ BEGIN
             , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , ObjectString_Comment.ValueData      AS Comment
 
-            , ObjectDate_PartnerDate.ValueData  :: TDateTime AS PartnerDate
+--          , COALESCE (ObjectDate_PartnerDate.ValueData, CURRENT_DATE)  :: TDateTime AS PartnerDate
+            , ObjectDate_PartnerDate.ValueData              :: TDateTime AS PartnerDate
             , COALESCE (ObjectBoolean_Arc.ValueData, FALSE) :: Boolean AS isArc
 
             , ObjectFloat_Min.ValueData          AS AmountMin

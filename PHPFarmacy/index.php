@@ -20,7 +20,7 @@
 
  set_time_limit (0);
  
-// Соединение, выбор базы данных
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 
 $dbconn = pg_connect($connectstring)
     or die('Could not connect: ' . pg_last_error());
@@ -45,7 +45,7 @@ $ParamValues = array();
 
 CreateParamsArray($StoredProcNode->childNodes, $Session, $ParamValues, $ParamName);
 
-// Выполнение SQL запроса
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ SQL пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 if ($OutputType=='otMultiDataSet')
 {
    pg_query($dbconn, 'BEGIN;');
@@ -60,10 +60,10 @@ else
 if ($OutputType=='otMultiExecute')
 {
   $data = $doc->documentElement->childNodes->Item(1);
-  // выполняем процедуру со всеми параметрами из $data
+  // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ $data
   foreach ($data->childNodes as $dataitem) {
       $i = 0;
-      // заполняем прорцедуру параметрами из $dataitem
+      // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ $dataitem
       foreach($dataitem->childNodes as $param) {
          if ($param->getAttribute('Value') == 'NULL') 
          { 
@@ -104,7 +104,7 @@ if ($result_error != false)
 else
 {
   if ($OutputType=='otResult')
-  {// Вывод результатов в XML
+  {// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ XML
     $res = "<Result";
       $fieldcount = pg_num_fields($result);
       for ($i = 0; $i < $fieldcount; $i++) {
@@ -130,7 +130,7 @@ else
   };
 
   if ($OutputType=='otBlob')
-  {// Вывод результатов в XML
+  {// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ XML
     $line = pg_fetch_array($result, null, PGSQL_ASSOC);
         foreach ($line as $col_value) {
             $res =  $col_value;
@@ -141,7 +141,7 @@ else
   if ($OutputType=='otDataSet')
   {
      $res = FillDataSet($result, $DataSetType, $AutoWidht);
-     // возвращаем результат
+     // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
      echo 'DataSet      '.PrepareStr($res);
   };
    
@@ -152,7 +152,7 @@ else
     $XMLStructure = '<DataSets>';
     while ($line = pg_fetch_array($result, null, PGSQL_ASSOC)) 
     {   
-        // Выполняем FETCH для каждого курсора
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ FETCH пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         foreach ($line as $col_value) {
            $query = 'FETCH ALL "'.$col_value.'";';       
            $CursorsClose .= 'CLOSE "'.$col_value.'";';
@@ -163,15 +163,15 @@ else
         $XMLStructure .= '<DataSet length = "'.strlen($DataSetStr).'"/>';
     };
     $XMLStructure .= '</DataSets>';
-    // Закроем транзакцию
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     pg_query($CursorsClose . 'COMMIT; END;');
     echo 'MultiDataSet ' . PrepareStr(sprintf("%010d", strlen($XMLStructure)) . $XMLStructure . $res);
   };
-  // Очистка результата
+  // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
   pg_free_result($result);
 };
 
-// Закрытие соединения
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 pg_close($dbconn);
   
 ?>

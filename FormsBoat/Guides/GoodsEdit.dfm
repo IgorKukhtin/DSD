@@ -437,7 +437,6 @@
       Styles.Header = dmMain.cxHeaderStyle
       TabOrder = 0
       DataController.DataSource = PhotoDS
-      ExplicitHeight = 205
       Version = 1
       object colFileName: TcxDBEditorRow
         Options.CanAutoHeight = False
@@ -529,7 +528,6 @@
         Align = alLeft
         Properties.ReadOnly = True
         TabOrder = 0
-        ExplicitLeft = 305
         Height = 180
         Width = 170
       end
@@ -539,7 +537,6 @@
         Align = alLeft
         Properties.ReadOnly = True
         TabOrder = 1
-        ExplicitLeft = 153
         Height = 180
         Width = 170
       end
@@ -1100,7 +1097,7 @@
       end
       item
         Name = 'EmpfPrice'
-        Value = 0
+        Value = 0.000000000000000000
         Component = edEmpfPrice
         DataType = ftFloat
         MultiSelectSeparator = ','
@@ -2058,18 +2055,8 @@
   object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGrid1DBTableView1
-    OnDblClickActionList = <
-      item
-      end
-      item
-      end>
-    ActionItemList = <
-      item
-        ShortCut = 13
-      end
-      item
-        ShortCut = 13
-      end>
+    OnDblClickActionList = <>
+    ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>

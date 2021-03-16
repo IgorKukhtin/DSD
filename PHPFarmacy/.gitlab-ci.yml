@@ -1,0 +1,6 @@
+deploy:
+  script:
+    - cd /var/www/farmacy && git pull origin master
+    # - chown -R gitlab-runner:www-data /var/www/farmacy
+  tags:
+    - farmacy.nb.local

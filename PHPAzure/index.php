@@ -36,8 +36,9 @@ $dbconn = pg_pconnect($connectstring)
     or die('Could not connect: ' . pg_last_error());
 //echo 2;
 $query = 'set client_encoding=WIN1251';
-$result = pg_query_params($query, array());
-pg_free_result($result);
+$result = pg_query($dbconn, $query);
+if($result)
+    pg_free_result($result);
 
 
 $doc = new DOMDocument('1.0','windows-1251');
@@ -58,7 +59,7 @@ CreateParamsArray($StoredProcNode->childNodes, $Session, $ParamValues, $ParamNam
 // Выполнение SQL запроса
 if ($OutputType=='otMultiDataSet')
 {
-   pg_query('BEGIN;'); 
+   pg_query($dbconn, 'BEGIN;');
    $query = 'select * from '.$StoredProcName.'('.$ParamName.')';
 }
 else
@@ -116,16 +117,15 @@ if ($result_error != false)
 else
 {
   if ($OutputType=='otResult')
-  {
-      // Вывод результатов в XML
+  {// Вывод результатов в XML
+    $res = "<Result";
       $fieldcount = pg_num_fields($result);
       for ($i = 0; $i < $fieldcount; $i++) {
           $fieldname[$i] = pg_field_name($result, $i);
-          $type[$i] = pg_field_type($result, $i);
+          $type[$i]      = pg_field_type($result, $i);
       };
-    $res = "<Result";
-    $i = 0;
     while ($line = pg_fetch_array($result, null, PGSQL_ASSOC)) {
+        $i = 0;
         foreach ($line as $col_value) {
            if (strtoupper($type[$i]) == 'TIMESTAMPTZ')
            {
@@ -135,7 +135,7 @@ else
            {
               $res .=  ' ' . $fieldname[$i] . '="' . htmlspecialchars($col_value, ENT_COMPAT, 'WIN-1251') . '"';
            };
-           $i = $i + 1;
+           $i++;
         }
     }
     $res .= "/>";

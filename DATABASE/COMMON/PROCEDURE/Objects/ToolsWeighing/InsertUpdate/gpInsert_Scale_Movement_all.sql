@@ -762,7 +762,7 @@ end if;
                                                THEN lpInsertUpdate_Movement_Inventory
                                                    (ioId                    := 0
                                                   , inInvNumber             := CAST (NEXTVAL ('movement_Inventory_seq') AS TVarChar)
-                                                  , inOperDate              := inOperDate - INTERVAL '1 DAY'
+                                                  , inOperDate              := CASE WHEN inBranchCode = 102 THEN inOperDate ELSE inOperDate - INTERVAL '1 DAY' END :: TDateTime
                                                   , inFromId                := FromId
                                                   , inToId                  := ToId
                                                   , inGoodsGroupId          := 0

@@ -140,10 +140,10 @@ function PostgresTypeToClientDataSetBinary($type, $size)
         $res = pack('S', 8).pack('S', 8).pack('S', 16).pack('S', 0);
         break;
 //     case 1184: // datetime
-  //      $res = pack('S', 8).pack('S', 8).pack('S', 16).pack('S', 0);
+  //      $res = pack('S', 8).pack('S', 8).pack(S, 16).pack(S, 0);
     //    break;
 //     case 1114: // datetime
-  //      $res = pack('S', 8).pack('S', 8).pack('S', 16).pack('S', 0);
+  //      $res = pack('S', 8).pack('S', 8).pack(S, 16).pack(S, 0);
     //    break;
    }
    return $res;

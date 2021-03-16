@@ -109,10 +109,31 @@ where T.table_name ILIKE 'movementitemcontainer'
    OR T.table_name ILIKE 'resourseitemprotocol'*/
 
 -- where T.table_name ILIKE 'MovementItemLinkObject'
-where T.table_name ILIKE 'movementitemprotocol_arc'
---   OR T.table_name ILIKE 'movementitemprotocol'
-   OR T.table_name ILIKE 'movementprotocol'
-   OR T.table_name ILIKE 'movementprotocol_arc'
+-- where T.table_name ILIKE 'soldtable'
+--   OR T.table_name ILIKE 'MovementItemProtocol_arc'
+
+-- wms-1
+-- where T.table_name ILIKE 'objectprotocol'
+--    OR T.table_name ILIKE 'movementitemprotocol'
+--   OR T.table_name ILIKE 'movementprotocol'
+
+-- truncate table resourseprotocol
+-- truncate table resourseitemprotocol
+
+ where  T.table_name ILIKE 'userprotocol'
+/*   OR T.table_name ILIKE 'wms_from_host_error'
+   OR T.table_name ILIKE 'wms_mi_incoming'
+   OR T.table_name ILIKE 'wms_mi_weighingproduction'
+   OR T.table_name ILIKE 'wms_movement_weighingproduction'
+   OR T.table_name ILIKE 'wms_movement_weighingproduction22'
+   OR T.table_name ILIKE 'wms_object_goodsbygoodskind'
+   OR T.table_name ILIKE 'wms_to_host_error'
+   OR T.table_name ILIKE 'wms_to_host_message'
+*/
+
+-- cloud   
+-- where T.table_name ILIKE '_micontainer_20_03_2020_test'
+--   OR T.table_name ILIKE 'loginprotocol'
 
 
     group by T.table_name, B.table_name

@@ -52,8 +52,9 @@ if ($isUTF8) {
 else {
     $query = 'set client_encoding=WIN1251';
 }
-$result = pg_query_params($query, array());
-pg_free_result($result);
+$result = pg_query($dbconn, $query);
+if($result)
+    pg_free_result($result);
 
 
 if ($isUTF8) {
@@ -79,7 +80,7 @@ CreateParamsArray($StoredProcNode->childNodes, $Session, $ParamValues, $ParamNam
 // Выполнение SQL запроса
 if ($OutputType=='otMultiDataSet')
 {
-   pg_query('BEGIN;'); 
+   pg_query($dbconn, 'BEGIN;');
    $query = 'select * from '.$StoredProcName.'('.$ParamName.')';
 }
 else
@@ -142,18 +143,23 @@ else
   if ($OutputType=='otResult')
   {// Вывод результатов в XML
     $res = "<Result";
-    $i = 0;
+      $fieldcount = pg_num_fields($result);
+      for ($i = 0; $i < $fieldcount; $i++) {
+          $fieldtype[$i] = pg_field_type($result, $i);
+          $fieldname[$i] = pg_field_name($result, $i);
+      };
     while ($line = pg_fetch_array($result, null, PGSQL_ASSOC)) {
+        $i = 0;
         foreach ($line as $col_value) {
-           if (pg_field_type($result, $i) == 'timestamptz')
+           if (strtoupper($fieldtype[$i]) == 'TIMESTAMPTZ')
            {
-              $res .=  ' ' . pg_field_name($result, $i) . '="' . str_replace(' ', 'T', $col_value) . '"';
+              $res .=  ' ' . $fieldname[$i] . '="' . str_replace(' ', 'T', $col_value) . '"';
            }
            else
            {
-              $res .=  ' ' . pg_field_name($result, $i) . '="' . htmlspecialchars($col_value, ENT_COMPAT, $encoding) . '"';
+              $res .=  ' ' . $fieldname[$i] . '="' . htmlspecialchars($col_value, ENT_COMPAT, 'WIN-1251') . '"';
            };
-           $i = $i + 1;
+           $i++;
         }
     }
     $res .= "/>";

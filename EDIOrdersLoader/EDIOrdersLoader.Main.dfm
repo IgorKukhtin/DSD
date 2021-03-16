@@ -56,7 +56,6 @@ object MainForm: TMainForm
     ScrollBars = ssVertical
     TabOrder = 2
     WordWrap = False
-    ExplicitHeight = 315
   end
   object Panel: TPanel
     Left = 0
@@ -158,9 +157,6 @@ object MainForm: TMainForm
     Align = alBottom
     TabOrder = 3
     Visible = False
-    ExplicitLeft = -644
-    ExplicitTop = 356
-    ExplicitWidth = 1366
     object ExportXmlGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ExportDS
