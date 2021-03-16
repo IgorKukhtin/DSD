@@ -210,7 +210,6 @@ uses
   ReceiptProdModel in '..\..\FormsBoat\Guides\ReceiptProdModel.pas' {ReceiptProdModelForm: TParentForm},
   TranslateMessage in '..\..\FormsBoat\Guides\TranslateMessage.pas' {TranslateMessageForm: TParentForm},
   ProdColor in '..\..\FormsBoat\Guides\ProdColor.pas' {ProdColorForm: TParentForm},
-  InvoiceJournal in '..\..\FormsBoat\Document\InvoiceJournal.pas' {InvoiceJournalForm: TParentForm},
   Movement_PeriodDialog in '..\..\FormsBoat\Document\Movement_PeriodDialog.pas' {Movement_PeriodDialogForm: TParentForm},
   Invoice in '..\..\FormsBoat\Document\Invoice.pas' {InvoiceForm: TParentForm},
   PaidKind in '..\..\FormsBoat\Kind\PaidKind.pas' {PaidKindForm: TParentForm},
@@ -245,7 +244,8 @@ uses
   Report_Balance in '..\..\FormsBoat\Report\Report_Balance.pas' {Report_BalanceForm: TParentForm},
   Report_BalanceDialog in '..\..\FormsBoat\Report\Report_BalanceDialog.pas' {Report_BalanceDialogForm: TParentForm},
   Report_Goods_RemainsCurrentDialog in '..\..\FormsBoat\Report\Report_Goods_RemainsCurrentDialog.pas' {Report_Goods_RemainsCurrentDialogForm: TParentForm},
-  Report_Goods_RemainsCurrent in '..\..\FormsBoat\Report\Report_Goods_RemainsCurrent.pas' {Report_Goods_RemainsCurrentForm: TParentForm};
+  Report_Goods_RemainsCurrent in '..\..\FormsBoat\Report\Report_Goods_RemainsCurrent.pas' {Report_Goods_RemainsCurrentForm: TParentForm},
+  InvoiceJournal in '..\..\FormsBoat\Document\InvoiceJournal.pas' {InvoiceJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

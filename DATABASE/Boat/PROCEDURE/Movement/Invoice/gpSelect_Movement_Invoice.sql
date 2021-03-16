@@ -23,6 +23,15 @@ RETURNS TABLE (Id              Integer
              , AmountOut_VAT    TFloat
              , VATPercent      TFloat             
 
+             -- оплата
+             , AmountIn_BankAccount  TFloat
+             , AmountOut_BankAccount TFloat
+             , Amount_BankAccount    TFloat --итого оплата
+             -- остаток по счету
+             , AmountIn_rem  TFloat
+             , AmountOut_rem TFloat
+             , Amount_rem    TFloat
+
              , ObjectId        Integer
              , ObjectName      TVarChar
              , DescName        TVarChar
@@ -40,6 +49,7 @@ RETURNS TABLE (Id              Integer
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
+             , Color_Pay Integer
               )
 
 AS
@@ -98,15 +108,32 @@ BEGIN
                                                       )
                   )
 
-     , tmpMLM AS (SELECT MovementLinkMovement.*
-                  FROM MovementLinkMovement
-                      LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement.MovementId
-                  WHERE MovementLinkMovement.MovementChildId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                    AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Invoice()
-                    AND Movement_Order.StatusId <> zc_Enum_Status_Erased()
-                    AND Movement_Order.DescId = zc_Movement_OrderClient()
-                  )
+     , tmpMLM_OrderClient AS (SELECT MovementLinkMovement.*
+                              FROM MovementLinkMovement
+                                  INNER JOIN Movement AS Movement_Order
+                                                      ON Movement_Order.Id = MovementLinkMovement.MovementId
+                                                     AND Movement_Order.StatusId <> zc_Enum_Status_Erased()
+                                                     AND Movement_Order.DescId = zc_Movement_OrderClient()
+                              WHERE MovementLinkMovement.MovementChildId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Invoice()
+                              )
 
+     , tmpMLM_BankAccount AS (SELECT MovementLinkMovement.MovementChildId
+                                   , SUM (CASE WHEN MovementItem.Amount > 0 THEN MovementItem.Amount      ELSE 0 END) ::TFloat AS AmountIn
+                                   , SUM (CASE WHEN MovementItem.Amount < 0 THEN -1 * MovementItem.Amount ELSE 0 END) ::TFloat AS AmountOut
+                              FROM MovementLinkMovement
+                                  INNER JOIN Movement AS Movement_BankAccount
+                                                      ON Movement_BankAccount.Id = MovementLinkMovement.MovementId
+                                                     AND Movement_BankAccount.StatusId = zc_Enum_Status_Complete()   ---<> zc_Enum_Status_Erased()
+                                                     AND Movement_BankAccount.DescId = zc_Movement_BankAccount()
+                                  INNER JOIN MovementItem ON MovementItem.MovementId = Movement_BankAccount.Id
+                                                         AND MovementItem.DescId = zc_MI_Master()
+                                                         AND MovementItem.isErased = FALSE
+                                                         AND COALESCE (MovementItem.Amount,0) <> 0
+                              WHERE MovementLinkMovement.MovementChildId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Invoice()
+                              GROUP BY MovementLinkMovement.MovementChildId
+                              )
 
     -- –езультат
     SELECT     
@@ -129,6 +156,16 @@ BEGIN
       , CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * zfCalc_Summ_VAT (MovementFloat_Amount.ValueData, MovementFloat_VATPercent.ValueData) ELSE 0 END::TFloat AS AmountOut_VAT
 
       , MovementFloat_VATPercent.ValueData    ::TFloat      AS VATPercent
+
+      -- оплата
+      , tmpMLM_BankAccount.AmountIn  ::TFloat AS AmountIn_BankAccount
+      , tmpMLM_BankAccount.AmountOut ::TFloat AS AmountOut_BankAccount
+      , (COALESCE (tmpMLM_BankAccount.AmountIn,0) - COALESCE (tmpMLM_BankAccount.AmountOut,0)) ::TFloat AS Amount_BankAccount
+      -- остаток по счету
+      , (COALESCE (CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END,0) - COALESCE (tmpMLM_BankAccount.AmountIn,0))  ::TFloat AS AmountIn_rem
+      , (COALESCE (CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END,0) - COALESCE (tmpMLM_BankAccount.AmountOut,0)) ::TFloat AS AmountOut_rem
+      , ((COALESCE (CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END,0) - COALESCE (tmpMLM_BankAccount.AmountIn,0))
+       - (COALESCE (CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END,0) - COALESCE (tmpMLM_BankAccount.AmountOut,0)) ) ::TFloat AS Amount_rem
 
       , Object_Object.Id                                    AS ObjectId
       , Object_Object.ValueData                             AS ObjectName
@@ -163,6 +200,15 @@ BEGIN
       , Object_Update.ValueData                    AS UpdateName
       , MovementDate_Update.ValueData              AS UpdateDate
 
+      -- подсветить если счет не оплачен + подсветить красным - если оплата больше чем сумма счета + добавить кнопку - в новой форме показать все оплаты дл€ этого счета
+      , CASE WHEN (COALESCE (CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END,0) > COALESCE (tmpMLM_BankAccount.AmountOut,0)) AND COALESCE (tmpMLM_BankAccount.AmountOut,0)<>0
+               OR (COALESCE (CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END,0) > COALESCE (tmpMLM_BankAccount.AmountIn,0))  AND COALESCE (tmpMLM_BankAccount.AmountIn,0)<>0
+             THEN zc_Color_Blue()
+             WHEN (COALESCE (CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END,0) < COALESCE (tmpMLM_BankAccount.AmountOut,0)) AND COALESCE (tmpMLM_BankAccount.AmountOut,0)<>0
+               OR (COALESCE (CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END,0) < COALESCE (tmpMLM_BankAccount.AmountIn,0))  AND COALESCE (tmpMLM_BankAccount.AmountIn,0)<>0
+             THEN zc_Color_Red()
+             ELSE zc_Color_Black()
+        END ::Integer AS Color_Pay
     FROM tmpMovement AS Movement
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
         
@@ -234,9 +280,9 @@ BEGIN
         LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
 
         --Ћодку показываем из док. «аказ
-        LEFT JOIN tmpMLM AS MovementLinkMovement_Invoice
-                         ON MovementLinkMovement_Invoice.MovementChildId = Movement.Id
-                        AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
+        LEFT JOIN tmpMLM_OrderClient AS MovementLinkMovement_Invoice
+                                     ON MovementLinkMovement_Invoice.MovementChildId = Movement.Id
+                                   -- AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
         LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
                                      ON MovementLinkObject_Product.MovementId = MovementLinkMovement_Invoice.MovementId
                                     AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
@@ -245,6 +291,10 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_CIN
                                ON ObjectString_CIN.ObjectId = Object_Product.Id
                               AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
+
+        -- оплаты из документа BankAccount
+        LEFT JOIN tmpMLM_BankAccount ON tmpMLM_BankAccount.MovementChildId = Movement.Id
+
 ;
 
 END;

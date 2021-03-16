@@ -73,6 +73,7 @@ type
     AmountIn_VAT: TcxGridDBColumn;
     AmountOut_VAT: TcxGridDBColumn;
     VATPercent: TcxGridDBColumn;
+    Color_Pay: TcxGridDBColumn;
   private
     { Private declarations }
   public
