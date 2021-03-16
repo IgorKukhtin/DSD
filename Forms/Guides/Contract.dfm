@@ -818,14 +818,16 @@
   end
   object cxGridContractCondition: TcxGrid
     Left = 0
-    Top = 363
+    Top = 358
     Width = 476
-    Height = 257
+    Height = 262
     Align = alLeft
     TabOrder = 1
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitTop = 363
+    ExplicitHeight = 257
     object cxGridDBTableViewContractCondition: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ContractConditionDS
@@ -1072,22 +1074,25 @@
   end
   object Panel: TPanel
     Left = 724
-    Top = 363
+    Top = 358
     Width = 492
-    Height = 257
+    Height = 262
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 5
+    ExplicitTop = 363
+    ExplicitHeight = 257
     object cxGridPartner: TcxGrid
       Left = 0
       Top = 0
       Width = 317
-      Height = 257
+      Height = 262
       Align = alClient
       TabOrder = 0
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
+      ExplicitHeight = 257
       object cxGridDBTableViewPartner: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSourcePartner
@@ -1164,12 +1169,13 @@
       Left = 322
       Top = 0
       Width = 170
-      Height = 257
+      Height = 262
       Align = alRight
       TabOrder = 1
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
+      ExplicitHeight = 257
       object cxGridDBTableViewGoods: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSourceGoods
@@ -1291,37 +1297,43 @@
       Left = 317
       Top = 0
       Width = 5
-      Height = 257
+      Height = 262
       AlignSplitter = salRight
       Control = cxGridGoods
+      ExplicitHeight = 257
     end
   end
   object cxTopSplitter: TcxSplitter
     Left = 0
-    Top = 358
+    Top = 353
     Width = 1216
     Height = 5
     AlignSplitter = salTop
     Control = cxGrid
+    ExplicitTop = 358
   end
   object cxRightSplitter: TcxSplitter
     Left = 720
-    Top = 363
+    Top = 358
     Width = 4
-    Height = 257
+    Height = 262
     AlignSplitter = salRight
     Control = Panel
+    ExplicitTop = 363
+    ExplicitHeight = 257
   end
   object CCPartner: TcxGrid
     Left = 481
-    Top = 363
+    Top = 358
     Width = 239
-    Height = 257
+    Height = 262
     Align = alClient
-    TabOrder = 10
+    TabOrder = 9
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitTop = 363
+    ExplicitHeight = 257
     object cxGridDBTableViewCCPartner: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = CCPartnerDS
@@ -1396,18 +1408,12 @@
   end
   object cxSplitter2: TcxSplitter
     Left = 476
-    Top = 363
+    Top = 358
     Width = 5
-    Height = 257
+    Height = 262
     Control = cxGridContractCondition
-  end
-  object cxSplitter3: TcxSplitter
-    Left = 0
-    Top = 353
-    Width = 1216
-    Height = 5
-    AlignSplitter = salTop
-    Control = cxGrid
+    ExplicitTop = 363
+    ExplicitHeight = 257
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -3477,7 +3483,7 @@
       end
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = CDSContractCondition
         ComponentItem = 'StartDate'
         DataType = ftDateTime
@@ -3984,7 +3990,7 @@
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'EndDate'
         DataType = ftDateTime
@@ -3993,7 +3999,7 @@
       end
       item
         Name = 'inEndDate_Term'
-        Value = 'NULL'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'EndDate_Term'
         DataType = ftDateTime

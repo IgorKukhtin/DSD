@@ -60,7 +60,6 @@ type
     tmContractName: TcxGridDBColumn;
     tmisErased: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
-    cxRightSplitter: TcxSplitter;
     MasterCDS_TM: TClientDataSet;
     MasterDS_TM: TDataSource;
     spSelect_TM: TdsdStoredProc;

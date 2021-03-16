@@ -6,8 +6,9 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
   AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -590
   ExplicitWidth = 1379
-  ExplicitHeight = 563
+  ExplicitHeight = 560
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -24,7 +25,7 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
       ExplicitHeight = 468
       inherited cxGrid: TcxGrid
         Top = 175
-        Width = 1358
+        Width = 1363
         Height = 293
         ExplicitTop = 175
         ExplicitWidth = 1358
@@ -827,21 +828,13 @@ inherited ContractGoodsChoiceForm: TContractGoodsChoiceForm
           GridView = cxGridDBTableView1
         end
       end
-      object cxRightSplitter: TcxSplitter
-        Left = 1358
-        Top = 175
-        Width = 5
-        Height = 293
-        AlignSplitter = salRight
-        Control = cxGrid1
-      end
       object cxTopSplitter: TcxSplitter
         Left = 0
         Top = 170
         Width = 1363
         Height = 5
         AlignSplitter = salTop
-        Control = cxGrid
+        Control = cxGrid1
       end
     end
   end

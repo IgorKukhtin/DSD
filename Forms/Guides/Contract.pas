@@ -249,7 +249,6 @@ type
     CCPartnerCDS: TClientDataSet;
     cxSplitter1: TcxSplitter;
     cxSplitter2: TcxSplitter;
-    cxSplitter3: TcxSplitter;
     dsdDBViewAddOnCCPartner: TdsdDBViewAddOn;
     spInsertUpdateCCPartner: TdsdStoredProc;
     spSelectCCPartner: TdsdStoredProc;
