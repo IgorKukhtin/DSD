@@ -1064,7 +1064,7 @@ begin
      if Component is TcxCheckBox then
         (Component as TcxCheckBox).Checked := StrToBool(FValue);
      if Component is TcxDateEdit then
-        if TryStrToDateTime(VarToStr(FValue), DT) then (Component as TcxDateEdit).Date := FValue
+        if TryStrToDateTime(VarToStr(FValue), DT) then (Component as TcxDateEdit).Date := DT
         else
         begin
           if not VarIsNull(FValue) AND (VarToStr(FValue) <> '') AND (VarToStr(FValue) <> '0') AND (VarToStr(FValue) <> 'NULL') then
