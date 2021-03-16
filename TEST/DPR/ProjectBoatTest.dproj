@@ -675,10 +675,6 @@
 				<Form>ProdColorForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\InvoiceJournal.pas">
-				<Form>InvoiceJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Document\Movement_PeriodDialog.pas">
 				<Form>Movement_PeriodDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -811,6 +807,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Report\Report_Goods_RemainsCurrent.pas">
 				<Form>Report_Goods_RemainsCurrentForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Document\InvoiceJournal.pas">
+				<Form>InvoiceJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

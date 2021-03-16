@@ -55,6 +55,36 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
               Format = ',0.00##'
               Kind = skSum
               Column = AmountOut_VAT
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = AmountIn_BankAccount
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = AmountOut_BankAccount
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = AmountIn_rem
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = AmountOut_rem
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Amount_BankAccount
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Amount_rem
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -85,6 +115,36 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
               Format = ',0.00##'
               Kind = skSum
               Column = AmountOut_VAT
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = AmountIn_BankAccount
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = AmountOut_BankAccount
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = AmountIn_rem
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = AmountOut_rem
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Amount_BankAccount
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Amount_rem
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -162,6 +222,106 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Options.Editing = False
             Width = 70
           end
+          object AmountIn_VAT: TcxGridDBColumn
+            Caption = 'Debet Vat'
+            DataBinding.FieldName = 'AmountIn_VAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1093#1086#1076' '#1057#1091#1084#1084#1072' '#1053#1044#1057
+            Width = 70
+          end
+          object AmountOut_VAT: TcxGridDBColumn
+            Caption = 'Kredit Vat'
+            DataBinding.FieldName = 'AmountOut_VAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1093#1086#1076' '#1057#1091#1084#1084#1072' '#1053#1044#1057
+            Width = 70
+          end
+          object AmountIn_BankAccount: TcxGridDBColumn
+            Caption = 'Debet (Payment)'
+            DataBinding.FieldName = 'AmountIn_BankAccount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1087#1083#1072#1090#1072' '#1055#1088#1080#1093#1086#1076' '#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountOut_BankAccount: TcxGridDBColumn
+            Caption = 'Kredit (Payment)'
+            DataBinding.FieldName = 'AmountOut_BankAccount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1087#1083#1072#1090#1072' '#1056#1072#1089#1093#1086#1076' '#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            Options.Editing = False
+            Width = 70
+          end
+          object Amount_BankAccount: TcxGridDBColumn
+            Caption = 'Total (Payment)'
+            DataBinding.FieldName = 'Amount_BankAccount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1054#1087#1083#1072#1090#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object Amount_rem: TcxGridDBColumn
+            Caption = 'Total (balance)'
+            DataBinding.FieldName = 'Amount_rem'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1054#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1089#1095#1077#1090#1091
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountIn_rem: TcxGridDBColumn
+            Caption = 'Debet (balance)'
+            DataBinding.FieldName = 'AmountIn_rem'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1089#1095#1077#1090#1091' '#1055#1088#1080#1093#1086#1076
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountOut_rem: TcxGridDBColumn
+            Caption = 'Kredit (balance)'
+            DataBinding.FieldName = 'AmountOut_rem'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1089#1095#1077#1090#1091' '#1056#1072#1089#1093#1086#1076
+            Options.Editing = False
+            Width = 70
+          end
           object VATPercent: TcxGridDBColumn
             Caption = '% '#1053#1044#1057
             DataBinding.FieldName = 'VATPercent'
@@ -192,28 +352,6 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1056#1072#1089#1093#1086#1076' '#1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
-            Width = 70
-          end
-          object AmountIn_VAT: TcxGridDBColumn
-            Caption = 'Debet Vat'
-            DataBinding.FieldName = 'AmountIn_VAT'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1080#1093#1086#1076' '#1057#1091#1084#1084#1072' '#1053#1044#1057
-            Width = 70
-          end
-          object AmountOut_VAT: TcxGridDBColumn
-            Caption = 'Kredit Vat'
-            DataBinding.FieldName = 'AmountOut_VAT'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1056#1072#1089#1093#1086#1076' '#1057#1091#1084#1084#1072' '#1053#1044#1057
             Width = 70
           end
           object PaidKindName: TcxGridDBColumn
@@ -369,6 +507,12 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 78
+          end
+          object Color_Pay: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_Pay'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 30
           end
         end
       end
@@ -1042,6 +1186,14 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       Action = macUpdateMoneyPlace
       Category = 0
     end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        ValueColumn = Color_Pay
+        ColorValueList = <>
+      end>
+    Left = 248
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
