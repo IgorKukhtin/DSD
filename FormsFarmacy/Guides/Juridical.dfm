@@ -224,6 +224,13 @@ inherited JuridicalForm: TJuridicalForm
             Options.Editing = False
             Width = 76
           end
+          object isPriorityReprice: TcxGridDBColumn
+            Caption = #1055#1088#1080#1086#1088#1080#1090#1077#1090#1085#1099#1081' '#1087#1086#1089#1090#1072#1074#1097#1080#1082' '#1087#1088#1080' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
+            DataBinding.FieldName = 'isPriorityReprice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 102
+          end
           object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'

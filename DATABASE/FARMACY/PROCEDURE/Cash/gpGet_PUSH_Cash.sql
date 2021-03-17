@@ -383,7 +383,8 @@ BEGIN
    END IF;
 
      -- Коллеги, ожидайте, на вас следует перемещение по СУН!. после отправлено
-   IF EXISTS(SELECT 1
+   IF vbPositionCode = 2 AND 
+      EXISTS(SELECT 1
              FROM  Movement
                    INNER JOIN MovementBoolean AS MovementBoolean_SUN
                                               ON MovementBoolean_SUN.MovementId = Movement.Id
@@ -427,6 +428,7 @@ BEGIN
    IF date_part('HOUR',    CURRENT_TIME)::Integer = 16
      AND date_part('MINUTE',  CURRENT_TIME)::Integer >= 00
      AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 20
+     AND vbPositionCode = 2
    THEN
       IF EXISTS(SELECT 1
                 FROM  Movement

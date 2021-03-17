@@ -560,9 +560,16 @@
   end
   object cbUseReprice: TcxCheckBox [16]
     Left = 8
-    Top = 289
+    Top = 288
     Caption = #1059#1095#1072#1089#1090#1074#1091#1102#1090' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
     TabOrder = 20
+    Width = 270
+  end
+  object cbPriorityReprice: TcxCheckBox [17]
+    Left = 8
+    Top = 307
+    Caption = #1055#1088#1080#1086#1088#1080#1090#1077#1090#1085#1099#1081' '#1087#1086#1089#1090#1072#1074#1097#1080#1082' '#1087#1088#1080' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
+    TabOrder = 21
     Width = 270
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1115,6 +1122,13 @@
         Component = cbUseReprice
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPriorityReprice'
+        Value = Null
+        Component = cbPriorityReprice
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 56
@@ -1281,6 +1295,7 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 184
     Top = 48
@@ -1295,6 +1310,7 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 240
     Top = 192
@@ -1322,7 +1338,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = JuridicalDetailsCDS
         ComponentItem = 'StartDate'
         DataType = ftDateTime
@@ -1331,7 +1347,7 @@
       end
       item
         Name = 'inDecisionDate'
-        Value = 'NULL'
+        Value = Null
         Component = JuridicalDetailsCDS
         ComponentItem = 'DecisionDate'
         DataType = ftDateTime

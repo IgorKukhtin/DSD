@@ -987,6 +987,27 @@ type
     property SecondaryShortCuts;
   end;
 
+  TdsdDblClickAction = class(TdsdCustomAction)
+    procedure OnDblClick(Sender: TObject);
+  private
+    FComponent: TComponent;
+    FAction: TCustomAction;
+    FOnDblClick: TNotifyEvent;
+    procedure SetComponent(const Value: TComponent);
+  protected
+    procedure Notification(AComponent: TComponent;
+      Operation: TOperation); override;
+  public
+  published
+    property Caption;
+    property Hint;
+    property ShortCut;
+    property ImageIndex;
+    property SecondaryShortCuts;
+    property Action: TCustomAction read FAction write FAction;
+    property Component: TComponent read FComponent write SetComponent;
+  end;
+
 procedure Register;
 
 implementation
@@ -1041,6 +1062,8 @@ begin
   RegisterActions('DSDLib', [TdsdOpenStaticForm], TdsdOpenStaticForm);
   RegisterActions('DSDLib', [TdsdSetDefaultParams], TdsdSetDefaultParams);
   RegisterActions('DSDLib', [TdsdFTP], TdsdFTP);
+  RegisterActions('DSDLib', [TdsdDblClickAction], TdsdDblClickAction);
+
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);
   RegisterActions('DSDLibExport', [TdsdExportToXML], TdsdExportToXML);
@@ -4257,6 +4280,65 @@ begin
     FIdFTP.Disconnect;
   end;
 
+end;
+
+  {TdsdDblClickAction}
+
+procedure TdsdDblClickAction.Notification(AComponent: TComponent; Operation: TOperation);
+begin
+  inherited;
+  if csDestroying in ComponentState then
+    exit;
+  if AComponent = FComponent then
+    FComponent := nil;
+  if AComponent = FAction then
+    FAction := nil;
+end;
+
+procedure TdsdDblClickAction.OnDblClick(Sender: TObject);
+begin
+  if Assigned(FOnDblClick) then FOnDblClick(Sender);
+
+  if Assigned(FAction) then
+     if FAction.Enabled then
+        FAction.Execute;
+end;
+
+procedure TdsdDblClickAction.SetComponent(const Value: TComponent);
+ var
+    CommonMethod: TMethod;
+    PropInfo: PPropInfo;
+begin
+
+  if Assigned(FComponent) then
+  begin
+    PropInfo := GetPropInfo(FComponent.ClassInfo, 'OnDblClick');
+    CommonMethod.Data := FComponent;
+    if Assigned(FOnDblClick) then
+    begin
+      CommonMethod.Code := Pointer(@FOnDblClick);
+    end else CommonMethod.Code := Nil;
+    SetMethodProp(FComponent, PropInfo, CommonMethod);
+    FComponent := Value;
+  end;
+
+  if Assigned(Value) then
+  begin
+
+    PropInfo := GetPropInfo(Value.ClassInfo, 'OnDblClick');
+    if PropInfo <> nil then
+    begin
+      FComponent := Value;
+
+      FOnDblClick := TNotifyEvent(GetMethodProp(FComponent, PropInfo));
+      CommonMethod.Data := Pointer(Self);
+      CommonMethod.Code := MethodAddress('OnDblClick');
+      SetMethodProp(FComponent, PropInfo, CommonMethod);
+    end else
+    begin
+      ShowMessage('Класс ' + Value.ClassName + ' не имеет метода с именем OnDblClick.')
+    end;
+  end;
 end;
 
 initialization

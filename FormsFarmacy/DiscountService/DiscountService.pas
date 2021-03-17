@@ -801,7 +801,12 @@ begin
                 FAmountPackages := ParamByName('outAmount').AsFloat;
               end;
 
-              if (FAmountPackages + CheckCDS.FieldByName('Amount').AsCurrency) <> 2 then
+              if (FAmountPackages = 0) and (CheckCDS.FieldByName('Amount').AsCurrency = 1) then
+              begin
+                lMsg:='';
+                Result:= True;
+                exit;
+              end else if (FAmountPackages + CheckCDS.FieldByName('Amount').AsCurrency) <> 2 then
               begin
                 ShowMessage ('Ошибка По карте в целом должно быть отпущено 2 упаковки товара.' + #10+ #13
                   + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
@@ -1719,15 +1724,16 @@ begin
               FAmountPackages := ParamByName('outAmount').AsFloat;
             end;
 
-            if FAmountPackages = 0 then
+            if (FAmountPackages = 0) and (CheckCDS.FieldByName('Amount').AsCurrency = 1) then
             begin
               FIdCasual := GenerateIdCasual;
               ShowMessage ('Информация. По карте первая продажа. Скидка будет при продаже второй упаковки.' + #10+ #13
                 + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
                 + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+              FBarCode_find := BarCode_find;
               lMsg:='';
               Exit;
-            end else if FAmountPackages <> 1 then
+            end else if FAmountPackages > 1 then
             begin
               ShowMessage ('Ошибка По карте продажа уже осуществлена.' + #10+ #13
                 + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
@@ -1737,7 +1743,7 @@ begin
               exit;
             end;
 
-            if CheckCDS.FieldByName('Amount').AsCurrency <> 1 then
+            if (FAmountPackages = 1) and (CheckCDS.FieldByName('Amount').AsCurrency <> 1) then
             begin
               ShowMessage ('Ошибка По карте продажа 1 упаковки уже осуществлена.' + #10+ #13
                 + 'Можно отпустить только 1 вторую упаковку со скидкой.' + #10+ #13

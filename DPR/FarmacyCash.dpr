@@ -138,7 +138,8 @@ uses
   UnitTreeCash in '..\FormsFarmacy\Cash\UnitTreeCash.pas' {UnitTreeCashForm: TParentForm},
   LikiDniproReceiptDialog in '..\FormsFarmacy\Cash\LikiDniproReceiptDialog.pas' {LikiDniproReceiptDialogForm: TParentForm},
   EnterRecipeNumber1303 in '..\FormsFarmacy\Cash\EnterRecipeNumber1303.pas' {EnterRecipeNumber1303Form},
-  LikiDniproReceipt in '..\FormsFarmacy\Cash\LikiDniproReceipt.pas';
+  LikiDniproReceipt in '..\FormsFarmacy\Cash\LikiDniproReceipt.pas',
+  ListGoodsBadTiming in '..\FormsFarmacy\Cash\ListGoodsBadTiming.pas' {ListGoodsBadTimingForm: TParentForm};
 
 {$R *.res}
 

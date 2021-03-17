@@ -130,6 +130,7 @@ type
     cbUseReprice: TcxCheckBox;
     ceCodeOrangeCard: TcxCurrencyEdit;
     cxLabel27: TcxLabel;
+    cbPriorityReprice: TcxCheckBox;
   private
     { Private declarations }
   public

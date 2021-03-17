@@ -1,7 +1,7 @@
 -- Function: gpInsertUpdate_Object_Juridical()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, Boolean, Boolean, 
-  TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Boolean, TVarChar);
+  TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
@@ -22,6 +22,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
     IN inCodeMedicard            Integer   ,    -- Код в системе "Medicard"
     IN inCodeOrangeCard          Integer   ,    -- Код в системе "Оранж Кард"
     IN inisUseReprice            boolean   ,    -- Участвуют в автопереоценке
+    IN inisPriorityReprice       boolean   ,    -- Приоритетный поставщик при переоценке
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS Integer AS
@@ -70,6 +71,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_Deferred(), ioId, inisDeferred);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_UseReprice(), ioId, inisUseReprice);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_PriorityReprice(), ioId, inisPriorityReprice);
 
    -- сохранили свойство <Полное название поставщика для клиент банка>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Juridical_CBName(), ioId, inCBName);

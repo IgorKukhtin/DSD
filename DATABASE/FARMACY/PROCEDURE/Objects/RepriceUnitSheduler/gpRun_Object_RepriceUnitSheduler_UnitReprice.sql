@@ -274,7 +274,9 @@ BEGIN
            Reprice = True
            AND (PriceDiff <= vbPercentRepriceMax
            AND PriceDiff >= (- vbPercentRepriceMin + COALESCE(AddPercentRepriceMin, 0))
-            OR IsTop_Goods = TRUE
+            OR IsTop_Goods = TRUE 
+           AND PriceDiff <= 50
+           AND PriceDiff >= -50
            AND COALESCE (tmpGoodsSP.GoodsId, 0) = 0
            AND isResolution_224 = FALSE)
            AND isUseReprice = TRUE                   AS idRepriceMain,

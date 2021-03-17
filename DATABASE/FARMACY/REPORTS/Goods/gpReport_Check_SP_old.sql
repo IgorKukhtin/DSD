@@ -142,6 +142,8 @@ BEGIN
                   WHERE OL_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical();
     END IF;
 
+  --raise notice 'Value: %', 1; 
+  
     -- Результат
     RETURN QUERY
           WITH
@@ -317,6 +319,7 @@ BEGIN
                                 , MovementFloat_TotalSumm.ValueData  AS TotalSumm_Check
                                 , Object_Insert.ValueData            AS InsertName_Check
                                 , MovementDate_Insert.ValueData      AS InsertDate_Check
+                                , MLM_Child.MovementChildId          AS Movement_Invoice 
                           FROM tmpMovement_All AS Movement_Check
                                LEFT JOIN tmpMovementString_MedicSP AS MovementString_MedicSP
                                                                    ON MovementString_MedicSP.MovementId = Movement_Check.Id
@@ -336,8 +339,18 @@ BEGIN
                                                        ON MLO_Insert.MovementId = Movement_Check.Id
                                                       AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
                                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
+
+                               LEFT JOIN MovementLinkMovement AS MLM_Child
+                                      ON MLM_Child.MovementId = Movement_Check.Id
+                                     AND MLM_Child.descId = zc_MovementLinkMovement_Child()
                           )
 
+        , tmpMovement_Invoice AS (SELECT Movement_Invoice.Id
+                                       , Movement_Invoice.InvNumber                 :: TVarChar    AS InvNumber_Invoice 
+                                       , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full
+                                       , Movement_Invoice.OperDate                                 AS OperDate_Invoice
+                                  FROM  Movement AS Movement_Invoice 
+                                  WHERE Movement_Invoice.Id in (SELECT Movement_Invoice FROM tmpMovement))
         , tmpMov AS (SELECT Movement_Check.Id                                         AS Id 
                           , Movement_Check.OperDate
                           , date_trunc ('day', Movement_Check.OperDate) AS OperDate_Calc
@@ -347,9 +360,9 @@ BEGIN
                           , Movement_Check.HospitalId
                           , Movement_Check.MedicSPName
                           , Movement_Check.OperDateSP
-                          , Movement_Invoice.InvNumber                 :: TVarChar    AS InvNumber_Invoice 
-                          , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full
-                          , Movement_Invoice.OperDate                                 AS OperDate_Invoice
+                          , Movement_Invoice.InvNumber_Invoice
+                          , Movement_Invoice.InvNumber_Invoice_Full
+                          , Movement_Invoice.OperDate_Invoice  
 
                           , Movement_Check.TotalSumm_Check
                           , Movement_Check.InsertName_Check
@@ -357,11 +370,9 @@ BEGIN
 
                      FROM tmpMovement AS Movement_Check
                           -- счет
-                          LEFT JOIN MovementLinkMovement AS MLM_Child
-                                 ON MLM_Child.MovementId = Movement_Check.Id
-                                AND MLM_Child.descId = zc_MovementLinkMovement_Child()
-                          LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Child.MovementChildId
+                          LEFT JOIN tmpMovement_Invoice AS Movement_Invoice ON Movement_Invoice.Id = Movement_Check.Movement_Invoice
                      )
+
 
         , tmpMI_Check AS (SELECT MI_Check.*
                           FROM MovementItem AS MI_Check
@@ -371,9 +382,14 @@ BEGIN
                             AND MI_Check.isErased = FALSE
                           )
 
+        , tmpMIC AS (SELECT DISTINCT MovementItemContainer.ContainerId, MovementItemContainer.MovementItemId
+                                FROM MovementItemContainer 
+                                WHERE MovementItemContainer.MovementId = 0 --IN (SELECT tmpMovement_All.Id FROM tmpMovement_All)
+                                  AND MovementItemContainer.DescId = zc_MIContainer_Count())                      
+
         , tmpMI_CheckIncome AS (SELECT MovementItemContainer.MovementItemId AS Id
                                       ,COALESCE (MI_Income_find.Id, MI_Income.Id) AS MI_IncomeId
-                                FROM MovementItemContainer 
+                                FROM tmpMIC AS MovementItemContainer 
                                       
                                      LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
                                                                    ON ContainerLinkObject_MovementItem.Containerid = MovementItemContainer.ContainerId
@@ -387,8 +403,6 @@ BEGIN
                                                                 AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
                                      -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
                                      LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
-                                WHERE MovementItemContainer.MovementId IN (SELECT tmpMovement_All.Id FROM tmpMovement_All)
-                                  AND MovementItemContainer.DescId = zc_MIContainer_Count()
                                 )
         , tmpMI_CheckPriceWithVAT AS (SELECT MI_Check.Id
                                            , Max(MIFloat_PriceWithVAT.ValueData) AS PriceWithVAT
@@ -732,8 +746,8 @@ BEGIN
              , Object_PartnerMedical.Id            AS HospitalId
              , CASE WHEN tmpData.MovementId_err <> 0 THEN COALESCE (tmp_err.InvNumber, '' )  || ' - ' || COALESCE (tmp_err.UnitName, '') ELSE Object_PartnerMedical.ValueData END :: TVarChar AS HospitalName
 
-             , Object_Goods.ObjectCode             AS GoodsCode
-             , Object_Goods.ValueData              AS GoodsName
+             , Object_Goods_Main.ObjectCode        AS GoodsCode
+             , Object_Goods_Main.Name              AS GoodsName
              , tmpGoodsSP.IntenalSPName
              , tmpGoodsSP.BrandSPName
              , tmpGoodsSP.KindOutSPName
@@ -869,7 +883,6 @@ BEGIN
              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId and Object_Juridical.DescId = zc_Object_Juridical()
              LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = tmpData.HospitalId and Object_PartnerMedical.DescId = zc_Object_PartnerMedical()
 
-             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsMainId
              LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = tmpData.GoodsMainId
              LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
                                    ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods_Main.NDSKindId
@@ -903,3 +916,5 @@ $BODY$
 -- select * from gpReport_Check_SP(inStartDate := ('01.03.2018')::TDateTime , inEndDate := ('15.03.2018')::TDateTime , inJuridicalId := 393052 , inUnitId := 0 , inHospitalId := 4474509 ,  inSession := '3');
 -- select * from gpReport_Check_SP22(inStartDate := ('01.09.2018')::TDateTime , inEndDate := ('09.09.2018')::TDateTime, inJuridicalId := 393054 , inUnitId := 0 , inHospitalId := 3751525 ,  inSession := '3');
 
+
+select * from gpReport_Check_SP(inStartDate := ('01.03.2021')::TDateTime , inEndDate := ('15.03.2021')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inJuridicalMedicId := 0 ,  inSession := '3');
