@@ -26,7 +26,6 @@ object IncomeForm: TIncomeForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1038
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -284,14 +283,12 @@ object IncomeForm: TIncomeForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 1038
     ClientRectBottom = 332
     ClientRectRight = 1191
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 1038
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -299,7 +296,6 @@ object IncomeForm: TIncomeForm
         Height = 308
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1038
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -697,7 +693,6 @@ object IncomeForm: TIncomeForm
     object cxTabSheetCost: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitWidth = 1310
       object GridCost: TcxGrid
         Left = 0
         Top = 0
@@ -705,7 +700,6 @@ object IncomeForm: TIncomeForm
         Height = 308
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1310
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = CostDS
@@ -3069,6 +3063,21 @@ object IncomeForm: TIncomeForm
         Component = ceComment_Invoice
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterClientId'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterClientName'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 916
