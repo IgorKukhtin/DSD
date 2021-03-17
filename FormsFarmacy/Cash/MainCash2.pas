@@ -557,6 +557,7 @@ type
     edCommentPosition: TcxTextEdit;
     bbPositionNext: TcxButton;
     cbMorionFilter: TcxCheckBox;
+    MultiplicitySale: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -7029,7 +7030,7 @@ end;
 procedure TMainCashForm2.InsertUpdateBillCheckItems;
 var
   lQuantity, lPrice, lPriceSale, lChangePercent, lSummChangePercent,
-    nAmount, nAmountPS, nAmountPSM: Currency;
+    nAmount, nAmountPS, nAmountPSM, nAmountM: Currency;
   lMsg: String;
   lGoodsId_bySoldRegim, lTypeDiscount, nRecNo, nId, nGoodsPairSun, nGoodsPairSunMainId: Integer;
   nMultiplicity: Currency;
@@ -7078,6 +7079,15 @@ begin
     exit;
   end;
 
+  if (SourceClientDataSet.FieldByName('MultiplicitySale').AsInteger > 0) and (Frac(nAmount) <> 0) then
+  begin
+    nAmountM := Frac(Frac(Abs(nAmount)) * SourceClientDataSet.FieldByName('MultiplicitySale').AsInteger);
+    if (nAmountM > 0.002) and (nAmountM < 0.998) then
+    begin
+      ShowMessage('Деление медикамента разрешено на ' + SourceClientDataSet.FieldByName('MultiplicitySale').AsString + ' частей!');
+      exit;
+    end;
+  end;
 
   if Assigned(SourceClientDataSet.FindField('GoodsId')) then
     nId := SourceClientDataSet.FieldByName('GoodsId').AsInteger
@@ -7769,6 +7779,8 @@ begin
             SourceClientDataSet.FieldByName('GoodsPairSunId').AsVariant;
           CheckCDS.FieldByName('GoodsPairSunMainId').AsVariant :=
             SourceClientDataSet.FieldByName('GoodsPairSunMainId').AsVariant;
+          CheckCDS.FieldByName('MultiplicitySale').AsVariant :=
+            SourceClientDataSet.FieldByName('MultiplicitySale').AsVariant;
           CheckCDS.FieldByName('isPresent').AsVariant :=
             FormParams.ParamByName('AddPresent').Value;
 

@@ -334,6 +334,8 @@ BEGIN
           , tmpJuridicalArea.AreaName          AS AreaName
           , COALESCE (GoodsPromo.GoodsId, 0) = _tmpMinPrice_RemainsList.ObjectId_retail  AS isJuridicalPromo
 
+          , COALESCE (ObjectBoolean_PriorityReprice.ValueData, FALSE) AS isPriorityReprice
+
         FROM -- Остатки + коды ...
              _tmpMinPrice_RemainsList
              -- товары в прайс-листе (поставщика)
@@ -375,6 +377,10 @@ BEGIN
             -- Поставщик
             INNER JOIN Object AS Juridical ON Juridical.Id = LastPriceList_find_View.JuridicalId
 
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_PriorityReprice
+                                    ON ObjectBoolean_PriorityReprice.ObjectId = Juridical.Id
+                                   AND ObjectBoolean_PriorityReprice.DescId = zc_ObjectBoolean_Juridical_PriorityReprice()
+
             -- Дней отсрочки по договору
             LEFT JOIN ObjectFloat AS ObjectFloat_Deferment
                                   ON ObjectFloat_Deferment.ObjectId = LastPriceList_find_View.ContractId
@@ -388,6 +394,11 @@ BEGIN
             OR Object_JuridicalGoods.IsPromo                  = FALSE
               )
        )
+  , tmpMinPrice_PriorityReprice as (SELECT DISTINCT tmpMinPrice_RemainsPrice.GoodsId
+                                    FROM tmpMinPrice_RemainsPrice
+                                    WHERE isPriorityReprice = True
+                                    )
+       
 
    -- данные по % кредитных средств из справочника
   , tmpCostCredit AS (SELECT * FROM gpSelect_Object_RetailCostCredit(inRetailId := inObjectId, inShowAll := FALSE, inisErased := FALSE, inSession := inUserId :: TVarChar) AS tmp)
@@ -487,7 +498,12 @@ BEGIN
                                             ORDER BY tmpMinPrice_RemainsPrice.Price DESC) AS Ord
 
         FROM tmpMinPrice_RemainsPrice
+        
+             LEFT JOIN tmpMinPrice_PriorityReprice ON tmpMinPrice_PriorityReprice.GoodsId  = tmpMinPrice_RemainsPrice.GoodsId
+                                                  
         WHERE  COALESCE (tmpMinPrice_RemainsPrice.JuridicalIsPriceClose, FALSE) <> TRUE
+          AND (tmpMinPrice_RemainsPrice.isPriorityReprice = True OR COALESCE (tmpMinPrice_PriorityReprice.GoodsId , 0) = 0)
+        
 
        ) AS ddd
        -- Установки для ценовых групп (если товар с острочкой - тогда этот процент уравновешивает товары с оплатой по факту)
@@ -594,5 +610,4 @@ ALTER FUNCTION lpSelectMinPrice_AllGoods (Integer, Integer, Integer) OWNER TO po
 -- SELECT * FROM lpSelectMinPrice_AllGoods (183292, 4, 3) WHERE GoodsCode = 8969 -- "Аптека_1 пр_Правды_6"
 -- SELECT * FROM lpSelectMinPrice_AllGoods (183292, 4, 3) 
 
--- 
-SELECT * FROM lpSelectMinPrice_AllGoods (183292, -4, 3); 
+-- SELECT * FROM lpSelectMinPrice_AllGoods (183292 , -4, 3); 

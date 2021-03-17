@@ -137,6 +137,12 @@ end;
 function TCashFP320.CloseReceiptEx(out CheckId: String): boolean;
 begin
   Result := CloseReceipt;
+  pData := 0;
+  pString := Password + ';3;';
+  FPrinter.DirectIO($E2, pData, pString);
+  if ReservedWordInt <> 0 then
+    CheckId := IntToStr(ReservedWordInt)
+  else CheckId := '';
 end;
 
 function TCashFP320.GetLastCheckId: Integer;

@@ -20,7 +20,6 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , PercentMarkup TFloat, Price TFloat
              , CountPrice TFloat
              , Color_calc Integer
-             , RetailCode Integer, RetailName TVarChar
              , isPromo boolean
              , isMarketToday Boolean
              , isNotMarion Boolean
@@ -48,6 +47,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , isOnlySP boolean
              , SummaWages TFloat, PercentWages TFloat, SummaWagesStore TFloat, PercentWagesStore TFloat
              , UnitSupplementSUN1OutId Integer, UnitSupplementSUN1OutName TVarChar
+             , Multiplicity Integer
               ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -290,8 +290,6 @@ BEGIN
                   WHEN Object_Goods_Retail.isFirst = TRUE THEN zc_Color_GreenL()
                   ELSE zc_Color_White() END                                           AS Color_calc   --10965163
 
-           , Object_Goods_Main.ObjectCode                                             AS RetailCode
-           , Object_Goods_Main.Name                                                   AS RetailName
            , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END   AS isPromo
 
            , CASE WHEN DATE_TRUNC ('DAY', Object_Goods_Main.LastPrice) = CURRENT_DATE THEN TRUE ELSE FALSE END AS isMarketToday
@@ -349,6 +347,7 @@ BEGIN
            , Object_Goods_Retail.PercentWagesStore                               AS PercentWagesStore
            , Object_Goods_Main.UnitSupplementSUN1OutId 
            , Object_UnitSupplementSUN1Out.ValueData                              AS UnitSupplementSUN1OutName
+           , Object_Goods_Main.Multiplicity
 
       FROM Object_Goods_Retail
 

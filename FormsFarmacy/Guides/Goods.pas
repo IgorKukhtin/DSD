@@ -274,6 +274,12 @@ type
     maUpdate_isOnlySP: TMultiAction;
     actExecUpdate_isOnlySP: TdsdExecStoredProc;
     dxBarButton10: TdxBarButton;
+    Multiplicity: TcxGridDBColumn;
+    actUpdate_Multiplicity: TMultiAction;
+    actExecUpfdate_Multiplicity: TdsdExecStoredProc;
+    astExecuteDialogMultiplicity: TExecuteDialog;
+    dxBarButton11: TdxBarButton;
+    spUpdate_Multiplicity: TdsdStoredProc;
   private
     { Private declarations }
   public
