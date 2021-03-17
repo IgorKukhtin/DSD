@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
     IN inOperDatePartner     TDateTime , -- Дата накладной у контрагента
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , --
-    IN inDiscountTax       TFloat    , --
+    IN inDiscountTax         TFloat    , --
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому
     IN inPaidKindId          Integer   , -- ФО
@@ -24,10 +24,13 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbInvNumberPoint Integer;
+   DECLARE vbMovementId_Invoice Integer;
+   DECLARE vbisComplete_Invoice Boolean;
 BEGIN
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
+
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Income(), inInvNumber, inOperDate, NULL, inUserId);
@@ -40,7 +43,6 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
      -- сохранили связь с <ФО>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
-
 
      -- сохранили значение <НДС>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, inVATPercent);
@@ -55,9 +57,72 @@ BEGIN
      -- сохранили <Примечание>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
+     --- находим сохраненный счет
+     vbMovementId_Invoice := (SELECT MovementLinkMovement.MovementChildId
+                              FROM MovementLinkMovement
+                              WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Invoice()
+                                AND MovementLinkMovement.MovementId = ioId
+                              );
+     --если счет меняется то нужно в старом удалить ссылку на тек документ 
+     IF COALESCE (vbMovementId_Invoice,0) <> COALESCE (inMovementId_Invoice,0) AND COALESCE (vbMovementId_Invoice,0) <> 0
+     THEN
+         vbisComplete_Invoice := FALSE;
+         -- Распроводим Документ
+         IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = vbMovementId_Invoice AND Movement.StatusId = zc_Enum_Status_Complete())
+         THEN
+             PERFORM lpUnComplete_Movement (inMovementId := vbMovementId_Invoice
+                                          , inUserId     := inUserId);
+             vbisComplete_Invoice := TRUE;
+         END IF;
+
+         PERFORM lpInsertUpdate_Movement (Movement.Id, zc_Movement_Invoice(), Movement.InvNumber, Movement.OperDate, NULL, inUserId)
+         FROM Movement
+         WHERE Movement.Id = vbMovementId_Invoice
+           AND Movement.DescId = zc_Movement_Invoice();
+
+         --если документ счет был проведен нужно его провести
+         IF vbisComplete_Invoice = TRUE
+         THEN
+              -- 5.3. проводим Документ
+              IF inUserId = lpCheckRight (inUserId ::TVarChar, zc_Enum_Process_Complete_Invoice())
+              THEN
+                   PERFORM lpComplete_Movement_Invoice (inMovementId := vbMovementId_Invoice
+                                                      , inUserId     := inUserId);
+              END IF;
+         END IF;
+     END IF;
+
      -- сохранили связь с документом <Счет>
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), ioId, inMovementId_Invoice);
 
+     --сохранили связь документа <Счет> с документом <Приход> сохраняем ParentId в счете
+     IF COALESCE (inMovementId_Invoice,0) <> 0
+     THEN
+         vbisComplete_Invoice := FALSE;
+          -- Распроводим Документ
+         IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId_Invoice AND Movement.StatusId = zc_Enum_Status_Complete())
+         THEN
+             PERFORM lpUnComplete_Movement (inMovementId := inMovementId_Invoice
+                                          , inUserId     := inUserId);
+             vbisComplete_Invoice := TRUE;
+         END IF;
+     
+         PERFORM lpInsertUpdate_Movement (Movement.Id, zc_Movement_Invoice(), Movement.InvNumber, Movement.OperDate, ioId, inUserId)
+         FROM Movement
+         WHERE Movement.Id = inMovementId_Invoice
+           AND Movement.DescId = zc_Movement_Invoice();
+
+         --если документ счет был проведен нужно его провести
+         IF vbisComplete_Invoice = TRUE
+         THEN
+              -- 5.3. проводим Документ
+              IF inUserId = lpCheckRight (inUserId ::TVarChar, zc_Enum_Process_Complete_Invoice())
+              THEN
+                   PERFORM lpComplete_Movement_Invoice (inMovementId := inMovementId_Invoice
+                                                      , inUserId     := inUserId);
+              END IF;
+         END IF;
+     END IF;     
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
