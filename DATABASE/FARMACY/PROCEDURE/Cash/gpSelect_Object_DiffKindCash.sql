@@ -42,7 +42,7 @@ BEGIN
                  ELSE ObjectFloat_DiffKind_MaxOrderAmount.ValueData END::TFloat  AS MaxOrderUnitAmount
           , ObjectFloat_DiffKind_MaxOrderAmount.ValueData                        AS MaxOrderAmount
           , ObjectFloat_DiffKind_MaxOrderAmountSecond.ValueData                  AS MaxOrderAmountSecond
-          , ObjectFloat_DiffKind_DaysForSale.ValueData::Integer  AS DaysForSale
+          , 0 /*ObjectFloat_DiffKind_DaysForSale.ValueData::Integer*/            AS DaysForSale
           , COALESCE(ObjectBoolean_DiffKind_LessYear.ValueData, FALSE)           AS isLessYear
      FROM Object AS Object_DiffKind
           LEFT JOIN ObjectFloat AS ObjectFloat_DiffKind_MaxOrderAmount

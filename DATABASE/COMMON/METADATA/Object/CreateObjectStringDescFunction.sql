@@ -791,6 +791,12 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_JuridicalOrderFinance_Comment() RETUR
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_JuridicalOrderFinance_Comment', zc_object_JuridicalOrderFinance(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_JuridicalOrderFinance_Comment');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_PersonalServiceList_ContentType() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PersonalServiceList_ContentType'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_PersonalServiceList_ContentType', zc_Object_PersonalServiceList(), ' Content-Type' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PersonalServiceList_ContentType');
+CREATE OR REPLACE FUNCTION zc_ObjectString_PersonalServiceList_OnFlowType() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PersonalServiceList_OnFlowType'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_PersonalServiceList_OnFlowType', zc_Object_PersonalServiceList(), 'Вид начисления в банке' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PersonalServiceList_OnFlowType');
 
 
 ---!!! Аптека
@@ -1214,6 +1220,8 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 18.03.21         * zc_ObjectString_PersonalServiceList_OnFlowType
+                    zc_ObjectString_PersonalServiceList_ContentType
  16.02.21                                                                                                         * zc_ObjectString_Instructions_FileName  
  27.01.21                                                                                                         * zc_ObjectString_Hardware_ComputerName  
  02.11.20         * zc_ObjectString_GoodsPropertyValue_ArticleExternal

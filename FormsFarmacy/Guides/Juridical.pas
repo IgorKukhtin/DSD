@@ -40,6 +40,7 @@ type
     CBAccount: TcxGridDBColumn;
     CBPurposePayment: TcxGridDBColumn;
     isUseReprice: TcxGridDBColumn;
+    isPriorityReprice: TcxGridDBColumn;
   private
     { Private declarations }
   public

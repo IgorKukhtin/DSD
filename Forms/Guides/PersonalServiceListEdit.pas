@@ -64,6 +64,16 @@ type
     edCompensation: TcxCurrencyEdit;
     cbRecalc: TcxCheckBox;
     edisBankOut: TcxCheckBox;
+    cxLabel12: TcxLabel;
+    edBankAccount: TcxButtonEdit;
+    GuidesBankAccount: TdsdGuides;
+    GuidesPSLExportKind: TdsdGuides;
+    cxLabel9: TcxLabel;
+    edPSLExportKind: TcxButtonEdit;
+    edContentType: TcxTextEdit;
+    cxLabel10: TcxLabel;
+    edOnFlowType: TcxTextEdit;
+    cxLabel11: TcxLabel;
   private
     { Private declarations }
   public

@@ -14,19 +14,19 @@ inherited WagesUserForm: TWagesUserForm
     Width = 654
     Height = 302
     TabOrder = 0
-    ExplicitTop = 144
+    ExplicitTop = 147
     ExplicitWidth = 654
-    ExplicitHeight = 305
+    ExplicitHeight = 302
     ClientRectBottom = 302
     ClientRectRight = 654
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 654
-      ExplicitHeight = 305
+      ExplicitHeight = 302
       inherited cxGrid: TcxGrid
         Width = 654
         Height = 176
         ExplicitWidth = 654
-        ExplicitHeight = 179
+        ExplicitHeight = 176
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.Footer = False
           Styles.Content = nil
@@ -85,7 +85,6 @@ inherited WagesUserForm: TWagesUserForm
         Align = alBottom
         ShowCaption = False
         TabOrder = 1
-        ExplicitTop = 179
         object ceTotal: TcxCurrencyEdit
           Left = 157
           Top = 6
@@ -167,21 +166,6 @@ inherited WagesUserForm: TWagesUserForm
           Style.Font.Style = []
           Style.IsFontAssigned = True
         end
-        object ceMarketing: TcxCurrencyEdit
-          Left = 157
-          Top = 61
-          ParentFont = False
-          Properties.DecimalPlaces = 2
-          Properties.DisplayFormat = ',0.00;-,0.00;;'
-          Style.Font.Charset = DEFAULT_CHARSET
-          Style.Font.Color = clWindowText
-          Style.Font.Height = -16
-          Style.Font.Name = 'Tahoma'
-          Style.Font.Style = []
-          Style.IsFontAssigned = True
-          TabOrder = 6
-          Width = 156
-        end
         object cxLabel5: TcxLabel
           Left = 8
           Top = 61
@@ -206,7 +190,7 @@ inherited WagesUserForm: TWagesUserForm
           Style.Font.Name = 'Tahoma'
           Style.Font.Style = []
           Style.IsFontAssigned = True
-          TabOrder = 8
+          TabOrder = 7
           Width = 156
         end
         object cxLabel6: TcxLabel
@@ -233,7 +217,7 @@ inherited WagesUserForm: TWagesUserForm
           Style.Font.Name = 'Tahoma'
           Style.Font.Style = []
           Style.IsFontAssigned = True
-          TabOrder = 10
+          TabOrder = 9
           Width = 156
         end
         object cxLabel7: TcxLabel
@@ -260,7 +244,7 @@ inherited WagesUserForm: TWagesUserForm
           Style.Font.Name = 'Tahoma'
           Style.Font.Style = []
           Style.IsFontAssigned = True
-          TabOrder = 12
+          TabOrder = 11
           Width = 156
         end
         object cxLabel21: TcxLabel
@@ -287,7 +271,7 @@ inherited WagesUserForm: TWagesUserForm
           Style.Font.Name = 'Tahoma'
           Style.Font.Style = []
           Style.IsFontAssigned = True
-          TabOrder = 14
+          TabOrder = 13
           Width = 156
         end
         object cxLabel25: TcxLabel
@@ -301,6 +285,31 @@ inherited WagesUserForm: TWagesUserForm
           Style.Font.Name = 'Tahoma'
           Style.Font.Style = []
           Style.IsFontAssigned = True
+        end
+        object cxButton1: TcxButton
+          Left = 311
+          Top = 62
+          Width = 12
+          Height = 27
+          Action = actListGoodsBadTiming
+          SpeedButtonOptions.CanBeFocused = False
+          SpeedButtonOptions.Transparent = True
+          TabOrder = 15
+        end
+        object ceMarketing: TcxCurrencyEdit
+          Left = 157
+          Top = 61
+          ParentFont = False
+          Properties.DecimalPlaces = 2
+          Properties.DisplayFormat = ',0.00;-,0.00;;'
+          Style.Font.Charset = DEFAULT_CHARSET
+          Style.Font.Color = clWindowText
+          Style.Font.Height = -16
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = []
+          Style.IsFontAssigned = True
+          TabOrder = 16
+          Width = 156
         end
       end
     end
@@ -628,7 +637,7 @@ inherited WagesUserForm: TWagesUserForm
       GuiParams = <
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'inOperDate'
           DataType = ftDateTime
@@ -637,6 +646,18 @@ inherited WagesUserForm: TWagesUserForm
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actListGoodsBadTiming: TdsdOpenStaticForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1088#1086#1095#1082#1072' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
+      Hint = #1055#1088#1086#1089#1088#1086#1095#1082#1072' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
+      FormName = 'TListGoodsBadTimingForm'
+      FormNameParam.Value = 'TListGoodsBadTimingForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource
@@ -652,7 +673,7 @@ inherited WagesUserForm: TWagesUserForm
     Params = <
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -739,7 +760,7 @@ inherited WagesUserForm: TWagesUserForm
     Params = <
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
@@ -755,7 +776,7 @@ inherited WagesUserForm: TWagesUserForm
     Params = <
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -764,7 +785,7 @@ inherited WagesUserForm: TWagesUserForm
       end
       item
         Name = 'OperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -833,7 +854,7 @@ inherited WagesUserForm: TWagesUserForm
       end
       item
         Name = 'DateTimeTest'
-        Value = 'NULL'
+        Value = Null
         Component = edDateTimeTest
         DataType = ftDateTime
         MultiSelectSeparator = ','

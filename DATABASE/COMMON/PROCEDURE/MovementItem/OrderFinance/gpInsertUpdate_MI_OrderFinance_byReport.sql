@@ -174,8 +174,8 @@ BEGIN
                                              , inJuridicalId   := _tmpData.JuridicalId
                                              , inContractId    := _tmpData.ContractId
                                              , inBankAccountId := _tmpData.BankAccountId
-                                             , inAmountRemains := COALESCE (_tmpReport.Remains,0)                 ::TFloat
-                                             , inAmountPartner := COALESCE (_tmpReport.DefermentPaymentRemains,0) ::TFloat
+                                             , inAmountRemains := (COALESCE (_tmpReport.KreditRemains,0) - COALESCE (_tmpReport.DebetRemains,0)) ::TFloat
+                                             , inAmountPartner := CASE WHEN COALESCE (_tmpReport.DefermentPaymentRemains,0) < 0 THEN 0 ELSE COALESCE (_tmpReport.DefermentPaymentRemains,0) END ::TFloat
                                              , inComment       := _tmpData.Comment                                ::TVarChar
                                              , inUserId        := vbUserId
                                               )

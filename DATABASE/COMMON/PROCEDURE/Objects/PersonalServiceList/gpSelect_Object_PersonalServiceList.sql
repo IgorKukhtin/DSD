@@ -14,6 +14,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MemberHeadManagerId Integer, MemberHeadManagerName TVarChar
              , MemberManagerId Integer, MemberManagerName TVarChar
              , MemberBookkeeperId Integer, MemberBookkeeperName TVarChar
+             , BankAccountId Integer, BankAccountName TVarChar
+             , PSLExportKindId Integer, PSLExportKindName TVarChar
+             , ContentType TVarChar
+             , OnFlowType TVarChar
              , Compensation TFloat, CompensationName TVarChar
              , isSecond Boolean
              , isRecalc Boolean
@@ -58,7 +62,15 @@ BEGIN
            , Object_MemberManager.ValueData       AS MemberManagerName
            , Object_MemberBookkeeper.Id           AS MemberBookkeeperId
            , Object_MemberBookkeeper.ValueData    AS MemberBookkeeperName
-           
+
+           , Object_BankAccount.Id                AS BankAccountId
+           , Object_BankAccount.ValueData         AS BankAccountName
+           , Object_PSLExportKind.Id              AS PSLExportKindId
+           , Object_PSLExportKind.ValueData       AS PSLExportKindName
+
+           , ObjectString_ContentType.ValueData ::TVarChar   AS ContentType
+           , ObjectString_OnFlowType.ValueData  ::TVarChar   AS OnFlowType
+
            , COALESCE (ObjectFloat_Compensation.ValueData, 0) :: TFloat   AS Compensation
            , (CASE COALESCE (ObjectFloat_Compensation.ValueData, 0)
                    WHEN 1 THEN 'январь'
@@ -140,6 +152,23 @@ BEGIN
                                 ON ObjectLink_PersonalServiceList_MemberBookkeeper.ObjectId = Object_PersonalServiceList.Id 
                                AND ObjectLink_PersonalServiceList_MemberBookkeeper.DescId = zc_ObjectLink_PersonalServiceList_MemberBookkeeper()
            LEFT JOIN Object AS Object_MemberBookkeeper ON Object_MemberBookkeeper.Id = ObjectLink_PersonalServiceList_MemberBookkeeper.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_BankAccount
+                                ON ObjectLink_PersonalServiceList_BankAccount.ObjectId = Object_PersonalServiceList.Id 
+                               AND ObjectLink_PersonalServiceList_BankAccount.DescId = zc_ObjectLink_PersonalServiceList_BankAccount()
+           LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = ObjectLink_PersonalServiceList_BankAccount.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_PSLExportKind
+                                ON ObjectLink_PersonalServiceList_PSLExportKind.ObjectId = Object_PersonalServiceList.Id 
+                               AND ObjectLink_PersonalServiceList_PSLExportKind.DescId = zc_ObjectLink_PersonalServiceList_PSLExportKind()
+           LEFT JOIN Object AS Object_PSLExportKind ON Object_PSLExportKind.Id = ObjectLink_PersonalServiceList_PSLExportKind.ChildObjectId
+
+           LEFT JOIN ObjectString AS ObjectString_ContentType 
+                                  ON ObjectString_ContentType.ObjectId = Object_PersonalServiceList.Id 
+                                 AND ObjectString_ContentType.DescId = zc_ObjectString_PersonalServiceList_ContentType()
+           LEFT JOIN ObjectString AS ObjectString_OnFlowType 
+                                  ON ObjectString_OnFlowType.ObjectId = Object_PersonalServiceList.Id 
+                                 AND ObjectString_OnFlowType.DescId = zc_ObjectString_PersonalServiceList_OnFlowType()
 
    WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
       AND (ObjectLink_PersonalServiceList_Branch.ChildObjectId = vbBranchId_Constraint

@@ -1243,7 +1243,8 @@ uses
   ProfitLossResultJournal in '..\..\Forms\Document\ProfitLossResultJournal.pas' {ProfitLossResultJournalForm: TParentForm},
   Medoc_J1201012 in '..\..\SOURCE\MeDOC\Medoc_J1201012.pas',
   Medoc_J1201112 in '..\..\SOURCE\MeDOC\Medoc_J1201112.pas',
-  Medoc_J1201212 in '..\..\SOURCE\MeDOC\Medoc_J1201212.pas';
+  Medoc_J1201212 in '..\..\SOURCE\MeDOC\Medoc_J1201212.pas',
+  PSLExportKind in '..\..\Forms\Kind\PSLExportKind.pas' {PSLExportKindForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -19,7 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Invoice(
     IN inObjectId         Integer  ,  -- 
     IN inUnitId           Integer  ,  -- 
     IN inInfoMoneyId      Integer  ,  -- 
-    --IN inProductId        Integer  ,  -- 
+    --IN inProductId        Integer  ,  --
     IN inPaidKindId       Integer  ,  -- 
     IN inSession          TVarChar     -- сессия пользователя
 )

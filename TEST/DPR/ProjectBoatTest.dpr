@@ -245,7 +245,8 @@ uses
   Report_BalanceDialog in '..\..\FormsBoat\Report\Report_BalanceDialog.pas' {Report_BalanceDialogForm: TParentForm},
   Report_Goods_RemainsCurrentDialog in '..\..\FormsBoat\Report\Report_Goods_RemainsCurrentDialog.pas' {Report_Goods_RemainsCurrentDialogForm: TParentForm},
   Report_Goods_RemainsCurrent in '..\..\FormsBoat\Report\Report_Goods_RemainsCurrent.pas' {Report_Goods_RemainsCurrentForm: TParentForm},
-  InvoiceJournal in '..\..\FormsBoat\Document\InvoiceJournal.pas' {InvoiceJournalForm: TParentForm};
+  InvoiceJournal in '..\..\FormsBoat\Document\InvoiceJournal.pas' {InvoiceJournalForm: TParentForm},
+  BankAccountJournalByInvoice in '..\..\FormsBoat\Document\BankAccountJournalByInvoice.pas' {BankAccountJournalByInvoiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

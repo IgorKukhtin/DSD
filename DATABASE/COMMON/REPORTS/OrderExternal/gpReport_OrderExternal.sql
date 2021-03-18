@@ -144,6 +144,7 @@ BEGIN
                              , CASE WHEN inIsByDoc = TRUE THEN COALESCE (MovementString_Comment.ValueData,'') ELSE '' END ::TVarChar AS Comment
                              
                              , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_From.ObjectId), COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_From.ObjectId)) AS GoodsPropertyId
+                             , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)      AS GoodsPropertyId_basis
                         FROM Movement
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -256,7 +257,7 @@ BEGIN
                             , MIFloat_Price.ValueData
                             , ObjectLink_Partner_Juridical.ChildObjectId
                             , ObjectLink_Juridical_Retail.ChildObjectId
-, MovementLinkObject_Partner.ObjectId
+                            , MovementLinkObject_Partner.ObjectId
                             , CASE WHEN inIsByDoc = TRUE THEN MovementDate_OperDatePartner.ValueData ELSE Null END
                             , CASE WHEN inIsByDoc = TRUE THEN (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) ELSE Null END
                             , CASE WHEN inIsByDoc = TRUE THEN COALESCE (MovementString_Comment.ValueData,'') ELSE '' END
@@ -279,6 +280,7 @@ BEGIN
                             , tmpMovement2.OperDatePartner_sale
                             , tmpMovement2.Comment
                             , tmpMovement2.GoodsPropertyId
+                            , tmpMovement2.GoodsPropertyId_basis
                 
                             , SUM (Amount1 + Amount2 + tmpMovement2.AmountSecond1 + tmpMovement2.AmountSecond2) AS Amount
                             , SUM (Amount1 + Amount2 )                                AS AmountZakaz
@@ -322,6 +324,7 @@ BEGIN
                               , tmpMovement2.OperDatePartner_sale
                               , tmpMovement2.Comment
                               , tmpMovement2.GoodsPropertyId
+                              , tmpMovement2.GoodsPropertyId_basis
                       )
      -- выбираем для заказов документы продажи и перемещения по цене 
      , tmpMLM AS (SELECT MovementLinkMovement.*
@@ -367,7 +370,28 @@ BEGIN
                                                                   ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
                                        )
-
+     , tmpObject_GoodsPropertyValue_basis AS (SELECT tmpGoodsProperty.GoodsPropertyId
+                                                   , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                    AS GoodsId
+                                                   , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0)  AS GoodsKindId
+                                                   , ObjectString_CodeSticker.ValueData                                   AS CodeSticker
+                                              FROM (SELECT DISTINCT tmpMovement.GoodsPropertyId_basis AS GoodsPropertyId
+                                                    FROM tmpMovement
+                                                    WHERE tmpMovement.GoodsPropertyId_basis <> 0
+                                                   ) AS tmpGoodsProperty
+                                                   INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                                                         ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                                                        AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                                                   INNER JOIN ObjectString AS ObjectString_CodeSticker
+                                                                           ON ObjectString_CodeSticker.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                          AND ObjectString_CodeSticker.DescId = zc_ObjectString_GoodsPropertyValue_CodeSticker()
+                                                                          AND COALESCE (ObjectString_CodeSticker.ValueData,'') <> ''
+                                                   LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                                                        ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                       AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                                                   LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                                                        ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                       AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                                             )
 
        -- Результат
        SELECT
@@ -455,8 +479,9 @@ BEGIN
            
            , tmpMovement.Comment ::TVarChar
            
-           , tmpObject_GoodsPropertyValue.CodeSticker ::TVarChar
-
+           --, COALESCE (tmpObject_GoodsPropertyValue.CodeSticker, tmpObject_GoodsPropertyValue_basis.CodeSticker)  ::TVarChar AS CodeSticker
+           --временно классификатор Алан
+           , tmpObject_GoodsPropertyValue_basis.CodeSticker  ::TVarChar AS CodeSticker
        FROM tmpMovement
           LEFT JOIN Movement ON Movement.Id = tmpMovement.MovementId
           LEFT JOIN MovementString AS MovementString_InvNumberPartner
@@ -526,6 +551,12 @@ BEGIN
           LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsPropertyId = tmpMovement.GoodsPropertyId
                                                 AND tmpObject_GoodsPropertyValue.GoodsId = tmpMovement.GoodsId
                                                 AND tmpObject_GoodsPropertyValue.GoodsKindId = tmpMovement.GoodsKindId
+          LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsPropertyId = tmpMovement.GoodsPropertyId_basis
+                                                      AND tmpObject_GoodsPropertyValue_basis.GoodsId = tmpMovement.GoodsId
+                                                      AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = tmpMovement.GoodsKindId
+
+
+
          ;
 
 END;

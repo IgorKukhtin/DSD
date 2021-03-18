@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, --OKPO TVarChar,
                Percent TFloat, PayOrder TFloat,
                isLoadBarcode Boolean,
                isDeferred Boolean,
-               isUseReprice Boolean,
+               isUseReprice Boolean, isPriorityReprice Boolean,
                CBName TVarChar, CBMFO TVarChar, CBAccount TVarChar, CBPurposePayment TVarChar,
                isErased boolean,
                
@@ -118,6 +118,7 @@ BEGIN
            , COALESCE (ObjectBoolean_LoadBarcode.ValueData, FALSE)     AS isLoadBarcode
            , COALESCE (ObjectBoolean_Deferred.ValueData, FALSE)        AS isDeferred
            , COALESCE (ObjectBoolean_UseReprice.ValueData, FALSE)      AS isUseReprice
+           , COALESCE (ObjectBoolean_PriorityReprice.ValueData, FALSE) AS isPriorityReprice
            
            , ObjectString_CBName.ValueData             AS CBName 
            , ObjectString_CBMFO.ValueData              AS CBMFO
@@ -173,6 +174,9 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_UseReprice
                                    ON ObjectBoolean_UseReprice.ObjectId = Object_Juridical.Id
                                   AND ObjectBoolean_UseReprice.DescId = zc_ObjectBoolean_Juridical_UseReprice()
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_PriorityReprice
+                                   ON ObjectBoolean_PriorityReprice.ObjectId = Object_Juridical.Id
+                                  AND ObjectBoolean_PriorityReprice.DescId = zc_ObjectBoolean_Juridical_PriorityReprice()
 
            LEFT JOIN ObjectString AS ObjectString_CBName
                                   ON ObjectString_CBName.ObjectId = Object_Juridical.Id

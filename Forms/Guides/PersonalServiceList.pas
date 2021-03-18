@@ -79,6 +79,10 @@ type
     isPersonalOut: TcxGridDBColumn;
     macUpdate_PersonalOut: TMultiAction;
     isBankOut: TcxGridDBColumn;
+    BankAccountName: TcxGridDBColumn;
+    PSLExportKindName: TcxGridDBColumn;
+    ContentType: TcxGridDBColumn;
+    OnFlowType: TcxGridDBColumn;
   private
     { Private declarations }
   public

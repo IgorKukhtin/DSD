@@ -2879,7 +2879,7 @@ object OrderClientForm: TOrderClientForm
         Control = edProduct
       end
       item
-        Control = edProduct
+        Control = ceInvoice
       end
       item
       end

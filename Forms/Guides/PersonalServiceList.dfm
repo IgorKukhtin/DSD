@@ -97,7 +97,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 38
+        Width = 57
       end
       object MemberName: TcxGridDBColumn
         Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100') '
@@ -212,6 +212,41 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 85
+      end
+      object BankAccountName: TcxGridDBColumn
+        Caption = #1056'/'#1089#1095#1077#1090
+        DataBinding.FieldName = 'BankAccountName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
+        Options.Editing = False
+        Width = 70
+      end
+      object PSLExportKindName: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1074#1099#1075#1088'. '#1074#1077#1076'-'#1090#1080' '#1074' '#1073#1072#1085#1082
+        DataBinding.FieldName = 'PSLExportKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1058#1080#1087' '#1074#1099#1075#1088#1091#1079#1082#1080' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1074' '#1073#1072#1085#1082
+        Options.Editing = False
+        Width = 89
+      end
+      object ContentType: TcxGridDBColumn
+        Caption = 'Content-Type'
+        DataBinding.FieldName = 'ContentType'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 86
+      end
+      object OnFlowType: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1085#1072#1095'. '#1074' '#1073#1072#1085#1082#1077
+        DataBinding.FieldName = 'OnFlowType'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1080#1076' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1074' '#1073#1072#1085#1082#1077
+        Options.Editing = False
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel

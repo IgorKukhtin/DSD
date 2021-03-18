@@ -305,10 +305,10 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
     object cxLabel6: TcxLabel
       Left = 430
       Top = 7
-      Caption = 'Kunden:'
+      Caption = 'Lieferanten / Kunden:'
     end
     object edClient: TcxButtonEdit
-      Left = 475
+      Left = 539
       Top = 5
       Properties.Buttons = <
         item
@@ -1099,6 +1099,9 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
       end
       item
         Component = edClient
+      end
+      item
+        Component = GuidesClient
       end>
   end
   inherited spMovementComplete: TdsdStoredProc
@@ -1228,10 +1231,10 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
   object GuidesClient: TdsdGuides
     KeyField = 'Id'
     LookupControl = edClient
-    FormNameParam.Value = 'TClientForm'
+    FormNameParam.Value = 'TUnion_ClientPartnerForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TClientForm'
+    FormName = 'TUnion_ClientPartnerForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -1249,7 +1252,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 560
+    Left = 624
     Top = 3
   end
 end

@@ -1068,6 +1068,44 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
       ImageIndex = 43
     end
+    object actOpenBankAccountJournalByInvoice: TdsdOpenForm
+      Category = 'OpenForm'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
+      ImageIndex = 25
+      FormName = 'TBankAccountJournalByInvoiceForm'
+      FormNameParam.Value = 'TBankAccountJournalByInvoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MovementId_Invoice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberFull_Invoice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber_Full'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          Component = actShowErased
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 115
@@ -1134,6 +1172,18 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenBankAccountJournalByInvoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -1178,12 +1228,12 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       Action = mactIsCopy
       Category = 0
     end
-    object bb: TdxBarButton
-      Action = macUpdateContract
-      Category = 0
-    end
     object bbUpdateMoneyPlace: TdxBarButton
       Action = macUpdateMoneyPlace
+      Category = 0
+    end
+    object bbOpenBankAccountJournalByInvoice: TdxBarButton
+      Action = actOpenBankAccountJournalByInvoice
       Category = 0
     end
   end

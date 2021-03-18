@@ -1107,6 +1107,10 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPSLExportKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPSLExportKindForm');
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChangeInvnumberDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChangeInvnumberDialogForm');
   exit;

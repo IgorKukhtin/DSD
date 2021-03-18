@@ -62,7 +62,6 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     macUpdateContract: TMultiAction;
     actUpdateContract: TdsdDataSetRefresh;
-    bb: TdxBarButton;
     actChoiceContract: TOpenChoiceForm;
     actChoiceMoneyPlace: TOpenChoiceForm;
     actUpdateMoneyPlace: TdsdDataSetRefresh;
@@ -74,6 +73,8 @@ type
     AmountOut_VAT: TcxGridDBColumn;
     VATPercent: TcxGridDBColumn;
     Color_Pay: TcxGridDBColumn;
+    actOpenBankAccountJournalByInvoice: TdsdOpenForm;
+    bbOpenBankAccountJournalByInvoice: TdxBarButton;
   private
     { Private declarations }
   public

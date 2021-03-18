@@ -226,6 +226,10 @@ end;
 
 procedure TLoadFormTest.LoadBankAccountMovementFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountJournalByInvoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankAccountJournalByInvoiceForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountMovementForm'));
@@ -263,11 +267,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TInvoiceJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInvoiceForm');
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInvoiceJournalChoiceForm');
   exit;
-
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_PeriodDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovement_PeriodDialogForm');
   }

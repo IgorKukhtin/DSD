@@ -7,7 +7,9 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integ
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
+
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PersonalServiceList(
@@ -21,10 +23,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PersonalServiceList(
     IN inMemberHeadManagerId   Integer   ,     -- Физ лица(исполнительный директор)
     IN inMemberManagerId       Integer   ,     -- Физ лица(директор)
     IN inMemberBookkeeperId    Integer   ,     -- Физ лица(бухгалтер)
+    IN inBankAccountId         Integer   ,     --
+    IN inPSLExportKindId       Integer   ,     --
     IN inCompensation          TFloat    ,     -- месяц компенсации
     IN inisSecond              Boolean   ,     -- 
     IN inisRecalc              Boolean   ,     -- 
     IN inisBankOut             Boolean   ,     -- 
+    IN inContentType           TVarChar   ,     --
+    IN inOnFlowType            TVarChar   ,     --
    -- IN inMemberId            Integer   ,     -- Физ лица(пользователь)
     IN inSession               TVarChar        -- сессия пользователя
 )
@@ -69,6 +75,16 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PersonalServiceList_MemberBookkeeper(), ioId, inMemberBookkeeperId);
 
    -- сохранили св-во 
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PersonalServiceList_BankAccount(), ioId, inBankAccountId);
+   -- сохранили св-во 
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PersonalServiceList_PSLExportKind(), ioId, inPSLExportKindId);
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_PersonalServiceList_OnFlowType(), ioId, inOnFlowType);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_PersonalServiceList_ContentType(), ioId, inContentType);
+
+   -- сохранили св-во 
    --PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PersonalServiceList_Member(), ioId, inMemberId);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_PersonalServiceList_Second(), ioId, inisSecond);
@@ -85,13 +101,12 @@ BEGIN
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpInsertUpdate_Object_PersonalServiceList (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.03.21         * 
  17.11.20         * add inisBankOut
  17.02.20         * add inisRecalc
  27.01.20         * add inCompensation

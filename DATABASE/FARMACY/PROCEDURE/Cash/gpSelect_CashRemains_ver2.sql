@@ -43,7 +43,8 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                isPresent boolean,
                isOnlySP boolean,
                DistributionPromoID Integer,
-               Color_IPE Integer
+               Color_IPE Integer, 
+               MultiplicitySale TFloat
 
              , PartionDateKindId_check   Integer
              , Price_check               TFloat
@@ -910,6 +911,7 @@ BEGIN
           , Object_Goods_Main.isOnlySP                                           AS isOnlySP
           , tmpDistributionPromo.DistributionPromoID                             AS DistributionPromoID
           , 0                                                      AS Color_IPE
+          , Object_Goods_Main.Multiplicity                         AS MultiplicitySale
 
           , CashSessionSnapShot.PartionDateKindId   AS PartionDateKindId_check
           , CashSessionSnapShot.Price               AS Price_check

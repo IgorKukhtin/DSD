@@ -684,6 +684,7 @@ initialization
   RegisterClass (TdsdProperties—hange);
   RegisterClass (TdsdSetDefaultParams);
   RegisterClass (TdsdFTP);
+  RegisterClass (TdsdDblClickAction);
 
   RegisterClass (TExecuteDialog);
   RegisterClass (TFileDialogAction);

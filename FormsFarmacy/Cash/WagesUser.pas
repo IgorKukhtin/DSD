@@ -14,7 +14,7 @@ uses
   dxSkinsdxBarPainter, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxTextEdit, cxLabel, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls,
   cxGridBandedTableView, cxGridDBBandedTableView, DataModul, cxCurrencyEdit,
-  cxMemo;
+  cxMemo, cxButtonEdit, Vcl.StdCtrls, cxButtons;
 
 type
   TWagesUserForm = class(TAncestorDBGridForm)
@@ -40,7 +40,6 @@ type
     AmountAccrued: TcxGridDBColumn;
     Formula: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
-    ceMarketing: TcxCurrencyEdit;
     cxLabel5: TcxLabel;
     ceHolidaysHospital: TcxCurrencyEdit;
     cxLabel6: TcxLabel;
@@ -85,6 +84,9 @@ type
     cxLabel26: TcxLabel;
     ceIntentionalPeresort: TcxCurrencyEdit;
     cxLabel27: TcxLabel;
+    actListGoodsBadTiming: TdsdOpenStaticForm;
+    cxButton1: TcxButton;
+    ceMarketing: TcxCurrencyEdit;
   private
     { Private declarations }
   public

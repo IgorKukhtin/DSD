@@ -22,8 +22,19 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , OperDate_OrderClient  TDateTime
              , InvNumber_OrderClient TVarChar
              , StatusCode_OrderClient Integer
-             , StatusName_OrderClient TVarChar 
+             , StatusName_OrderClient TVarChar
+             , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummVAT TFloat
              , isBasicConf Boolean, isProdColorPattern Boolean
+             
+             , MovementId_Invoice Integer  
+             , OperDate_Invoice   TDateTime
+             , InvNumber_Invoice  TVarChar 
+             , StatusCode_Invoice Integer  
+             , StatusName_Invoice TVarChar 
+             , AmountIn_Invoice TFloat
+             , AmountOut_Invoice TFloat
+             , AmountIn_BankAccount TFloat
+             , AmountOut_BankAccount TFloat
               ) AS
 $BODY$
 BEGIN
@@ -69,9 +80,24 @@ BEGIN
            , CAST ('' AS TVarChar)     AS InvNumber_OrderClient
            , CAST (0 AS Integer)       AS StatusCode_OrderClient
            , CAST ('' AS TVarChar)     AS StatusName_OrderClient
-             
+
+           , CAST (0 AS TFloat)        AS TotalSummMVAT
+           , CAST (0 AS TFloat)        AS TotalSummPVAT
+           , CAST (0 AS TFloat)        AS TotalSumm
+           , CAST (0 AS TFloat)        AS TotalSummVAT
+
            , CAST (TRUE AS Boolean)    AS isBasicConf
            , CAST (TRUE AS Boolean)    AS isProdColorPattern
+
+           , CAST (0 AS Integer)       AS MovementId_Invoice
+           , CAST (NULL AS TDateTime)  AS OperDate_Invoice
+           , CAST ('' AS TVarChar)     AS InvNumber_Invoice
+           , CAST (0 AS Integer)       AS StatusCode_Invoice
+           , CAST ('' AS TVarChar)     AS StatusName_Invoice
+           , CAST (0 AS TFloat)        AS AmountIn_Invoice
+           , CAST (0 AS TFloat)        AS AmountOut_Invoice
+           , CAST (0 AS TFloat)        AS AmountIn_BankAccount
+           , CAST (0 AS TFloat)        AS AmountOut_BankAccount
        ;
    ELSE
      RETURN QUERY
@@ -103,6 +129,50 @@ BEGIN
                         WHERE Movement.Id = inMovementId_OrderClient
                           AND Movement.DescId = zc_Movement_OrderClient()
                           )
+   -- данные из док счет
+   , tmpInvoice AS (SELECT  MovementLinkMovement_Invoice.MovementId AS MovementId_OrderClient
+                          , Movement.Id                   AS MovementId_Invoice
+                          , Movement.OperDate             AS OperDate_Invoice
+                          , Movement.InvNumber ::TVarChar AS InvNumber_Invoice
+                          , Object_Status.ObjectCode      AS StatusCode_Invoice
+                          , Object_Status.ValueData       AS StatusName_Invoice
+
+                            -- с НДС
+                          , CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END::TFloat AS AmountIn
+                          , CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END::TFloat AS AmountOut
+
+                    FROM MovementLinkMovement AS MovementLinkMovement_Invoice
+                         INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Invoice.MovementChildId
+                                            AND Movement.DescId = zc_Movement_Invoice()
+                                            AND Movement.StatusId <> zc_Enum_Status_Erased()
+                         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+                         LEFT JOIN MovementFloat AS MovementFloat_Amount
+                                                    ON MovementFloat_Amount.MovementId = Movement.Id
+                                                   AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+
+                    WHERE MovementLinkMovement_Invoice.MovementId IN (SELECT DISTINCT tmpOrderClient.MovementId FROM tmpOrderClient)
+                      AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
+                    )
+     -- данные по оплате счета
+     , tmpBankAccount AS (SELECT MovementLinkMovement.MovementChildId AS MovementId_Invoice
+                               , SUM (CASE WHEN MovementItem.Amount > 0 THEN MovementItem.Amount      ELSE 0 END) ::TFloat AS AmountIn
+                               , SUM (CASE WHEN MovementItem.Amount < 0 THEN -1 * MovementItem.Amount ELSE 0 END) ::TFloat AS AmountOut
+                          FROM MovementLinkMovement
+                              INNER JOIN Movement AS Movement_BankAccount
+                                                  ON Movement_BankAccount.Id = MovementLinkMovement.MovementId
+                                                 AND Movement_BankAccount.StatusId = zc_Enum_Status_Complete()   ---<> zc_Enum_Status_Erased()
+                                                 AND Movement_BankAccount.DescId = zc_Movement_BankAccount()
+                              INNER JOIN MovementItem ON MovementItem.MovementId = Movement_BankAccount.Id
+                                                     AND MovementItem.DescId = zc_MI_Master()
+                                                     AND MovementItem.isErased = FALSE
+                                                     AND COALESCE (MovementItem.Amount,0) <> 0
+                          WHERE MovementLinkMovement.MovementChildId IN (SELECT DISTINCT tmpInvoice.MovementId_Invoice FROM tmpInvoice)
+                            AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Invoice()
+                          GROUP BY MovementLinkMovement.MovementChildId
+                          )
+
+
      SELECT
            Object_Product.Id             AS Id
          , Object_Product.ObjectCode     AS Code
@@ -140,9 +210,27 @@ BEGIN
          , tmpOrderClient.StatusCode :: Integer    AS StatusCode_OrderClient
          , tmpOrderClient.StatusName :: TVarChar   AS StatusName_OrderClient
 
+         , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
+         , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
+         , MovementFloat_TotalSumm.ValueData          AS TotalSumm
+         , (COALESCE (MovementFloat_TotalSummPVAT.ValueData,0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData,0)) :: TFloat AS TotalSummVAT
+
          , COALESCE (ObjectBoolean_BasicConf.ValueData, FALSE) :: Boolean AS isBasicConf
          , CAST (FALSE AS Boolean)          AS isProdColorPattern
 
+         , tmpInvoice.MovementId_Invoice :: Integer    AS MovementId_Invoice
+         , tmpInvoice.OperDate_Invoice   :: TDateTime  AS OperDate_Invoice
+         , tmpInvoice.InvNumber_Invoice  :: TVarChar   AS InvNumber_Invoice
+         , tmpInvoice.StatusCode_Invoice :: Integer    AS StatusCode_Invoice
+         , tmpInvoice.StatusName_Invoice :: TVarChar   AS StatusName_Invoice
+
+         , tmpInvoice.AmountIn   ::TFloat AS AmountIn_Invoice
+         , tmpInvoice.AmountOut  ::TFloat AS AmountOut_Invoice
+         
+         , tmpBankAccount.AmountIn   ::TFloat AS AmountIn_BankAccount
+         , tmpBankAccount.AmountOut  ::TFloat AS AmountOut_BankAccount
+         
+         
      FROM Object AS Object_Product
           LEFT JOIN ObjectBoolean AS ObjectBoolean_BasicConf
                                   ON ObjectBoolean_BasicConf.ObjectId = Object_Product.Id
@@ -220,6 +308,19 @@ BEGIN
           LEFT JOIN Object AS Object_Engine ON Object_Engine.Id = ObjectLink_Engine.ChildObjectId
 
           LEFT JOIN tmpOrderClient ON 1=1
+
+          LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
+                                  ON MovementFloat_TotalSummMVAT.MovementId = tmpOrderClient.MovementId
+                                 AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
+          LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
+                                  ON MovementFloat_TotalSummPVAT.MovementId = tmpOrderClient.MovementId
+                                 AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
+          LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                  ON MovementFloat_TotalSumm.MovementId = tmpOrderClient.MovementId
+                                 AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+          LEFT JOIN tmpInvoice ON tmpInvoice.MovementId_OrderClient = tmpOrderClient.MovementId
+          LEFT JOIN tmpBankAccount ON tmpBankAccount.MovementId_Invoice = tmpInvoice.MovementId_Invoice
        WHERE Object_Product.Id = inId;
    END IF;
 

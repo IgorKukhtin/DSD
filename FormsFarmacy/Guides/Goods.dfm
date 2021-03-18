@@ -10,17 +10,17 @@ inherited GoodsForm: TGoodsForm
   inherited PageControl: TcxPageControl
     Width = 1165
     Height = 417
-    ExplicitWidth = 1166
+    ExplicitWidth = 1165
     ExplicitHeight = 417
     ClientRectBottom = 417
     ClientRectRight = 1165
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1166
+      ExplicitWidth = 1165
       ExplicitHeight = 417
       inherited cxGrid: TcxGrid
         Width = 1165
         Height = 417
-        ExplicitWidth = 1166
+        ExplicitWidth = 1165
         ExplicitHeight = 417
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -353,7 +353,7 @@ inherited GoodsForm: TGoodsForm
           end
           object RetailCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1058#1086#1088#1075#1086#1074#1086#1081' '#1089#1077#1090#1080
-            DataBinding.FieldName = 'RetailCode'
+            DataBinding.FieldName = 'Code'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -363,7 +363,7 @@ inherited GoodsForm: TGoodsForm
           end
           object RetailName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1058#1086#1088#1075#1086#1074#1086#1081' '#1089#1077#1090#1080
-            DataBinding.FieldName = 'RetailName'
+            DataBinding.FieldName = 'Name'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -669,6 +669,17 @@ inherited GoodsForm: TGoodsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 72
+          end
+          object Multiplicity: TcxGridDBColumn
+            Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1088#1080' '#1087#1088#1086#1076#1072#1078#1080' ('#1084#1080#1085#1080#1084#1072#1083#1100#1085#1099#1081' '#1076#1077#1083#1080#1090#1077#1083#1100')'
+            DataBinding.FieldName = 'Multiplicity'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###; ; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
           end
         end
       end
@@ -2355,6 +2366,61 @@ inherited GoodsForm: TGoodsForm
         end>
       Caption = 'actExecClearUnitSupplementSUN1Out'
     end
+    object actUpdate_Multiplicity: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = astExecuteDialogMultiplicity
+      ActionList = <
+        item
+          Action = actExecUpfdate_Multiplicity
+        end>
+      View = cxGridDBTableView
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1088#1080' '#1087#1088#1080#1076#1072#1078#1077'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1088#1080' '#1087#1088#1080#1076#1072#1078#1077'"'
+      ImageIndex = 43
+    end
+    object actExecUpfdate_Multiplicity: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Multiplicity
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Multiplicity
+        end>
+      Caption = 'actExecUpfdate_Multiplicity'
+    end
+    object astExecuteDialogMultiplicity: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteDialogUpdate_PercentWagesStore'
+      FormName = 'TSummaDialogForm'
+      FormNameParam.Value = 'TSummaDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Summa'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Multiplicity'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = 
+            #1057#1090#1072#1090#1080#1095#1080#1089#1082#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1079#1072' 1 '#1077#1076#1080#1085#1080#1094#1091' '#1087#1088#1080#1077#1084#1072' '#1090#1086#1074#1072#1088#1072' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076#1083#1103' '#1082 +
+            #1083#1072#1076#1086#1074#1097#1080#1082#1072
+          Component = FormParams
+          ComponentItem = 'MultiplicityLabel'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -2669,6 +2735,10 @@ inherited GoodsForm: TGoodsForm
         item
           Visible = True
           ItemName = 'dxBarButton7'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton11'
         end>
     end
     object bbUpdateInvisibleSUN: TdxBarButton
@@ -2808,6 +2878,10 @@ inherited GoodsForm: TGoodsForm
     end
     object dxBarButton10: TdxBarButton
       Action = maUpdate_isOnlySP
+      Category = 0
+    end
+    object dxBarButton11: TdxBarButton
+      Action = actUpdate_Multiplicity
       Category = 0
     end
   end
@@ -3179,6 +3253,18 @@ inherited GoodsForm: TGoodsForm
       item
         Name = 'UnitSupplementSUN1'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Multiplicity'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MultiplicityLabel'
+        Value = #1042#1074#1077#1076#1080#1090#1077' "'#1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1088#1080' '#1087#1088#1080#1076#1072#1078#1077'"'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 240
@@ -4644,5 +4730,31 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 600
     Top = 368
+  end
+  object spUpdate_Multiplicity: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_Multiplicity'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsMainId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsMainId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMultiplicity'
+        Value = 0.000000000000000000
+        Component = FormParams
+        ComponentItem = 'Multiplicity'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 624
+    Top = 144
   end
 end

@@ -15,6 +15,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MemberHeadManagerId Integer, MemberHeadManagerName TVarChar
              , MemberManagerId Integer, MemberManagerName TVarChar
              , MemberBookkeeperId Integer, MemberBookkeeperName TVarChar
+             , BankAccountId Integer, BankAccountName TVarChar
+             , PSLExportKindId Integer, PSLExportKindName TVarChar
+             , ContentType TVarChar
+             , OnFlowType TVarChar
              , Compensation TFloat
              , isSecond Boolean
              , isRecalc Boolean
@@ -52,6 +56,13 @@ BEGIN
            , 0                      AS MemberBookkeeperId
            , CAST ('' as TVarChar)  AS MemberBookkeeperName
            
+           , 0                      AS BankAccountId
+           , CAST ('' as TVarChar)  AS BankAccountName
+           , 0                      AS PSLExportKindId
+           , CAST ('' as TVarChar)  AS PSLExportKindName
+           , CAST ('' as TVarChar)  AS ContentType
+           , CAST ('' as TVarChar)  AS OnFlowType
+                      
            , CAST (0 AS TFloat)     AS Compensation
 
            , CAST(FALSE AS Boolean) AS isSecond
@@ -84,6 +95,16 @@ BEGIN
            , Object_MemberManager.ValueData       AS MemberManagerName
            , Object_MemberBookkeeper.Id           AS MemberBookkeeperId
            , Object_MemberBookkeeper.ValueData    AS MemberBookkeeperName
+
+
+           , Object_BankAccount.Id             AS BankAccountId
+           , Object_BankAccount.ValueData      AS BankAccountName
+           , Object_PSLExportKind.Id           AS PSLExportKindId
+           , Object_PSLExportKind.ValueData    AS PSLExportKindName
+
+           , ObjectString_ContentType.ValueData ::TVarChar   AS ContentType
+           , ObjectString_OnFlowType.ValueData  ::TVarChar   AS OnFlowType
+
            
            , COALESCE (ObjectFloat_Compensation.ValueData, 0) :: TFloat AS Compensation
 
@@ -150,6 +171,23 @@ BEGIN
                                AND ObjectLink_PersonalServiceList_MemberBookkeeper.DescId = zc_ObjectLink_PersonalServiceList_MemberBookkeeper()
            LEFT JOIN Object AS Object_MemberBookkeeper ON Object_MemberBookkeeper.Id = ObjectLink_PersonalServiceList_MemberBookkeeper.ChildObjectId
 
+           LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_BankAccount
+                                ON ObjectLink_PersonalServiceList_BankAccount.ObjectId = Object_PersonalServiceList.Id 
+                               AND ObjectLink_PersonalServiceList_BankAccount.DescId = zc_ObjectLink_PersonalServiceList_BankAccount()
+           LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = ObjectLink_PersonalServiceList_BankAccount.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_PSLExportKind
+                                ON ObjectLink_PersonalServiceList_PSLExportKind.ObjectId = Object_PersonalServiceList.Id 
+                               AND ObjectLink_PersonalServiceList_PSLExportKind.DescId = zc_ObjectLink_PersonalServiceList_PSLExportKind()
+           LEFT JOIN Object AS Object_PSLExportKind ON Object_PSLExportKind.Id = ObjectLink_PersonalServiceList_PSLExportKind.ChildObjectId
+
+           LEFT JOIN ObjectString AS ObjectString_ContentType 
+                                  ON ObjectString_ContentType.ObjectId = Object_PersonalServiceList.Id 
+                                 AND ObjectString_ContentType.DescId = zc_ObjectString_PersonalServiceList_ContentType()
+           LEFT JOIN ObjectString AS ObjectString_OnFlowType 
+                                  ON ObjectString_OnFlowType.ObjectId = Object_PersonalServiceList.Id 
+                                 AND ObjectString_OnFlowType.DescId = zc_ObjectString_PersonalServiceList_OnFlowType()
+
        WHERE Object_PersonalServiceList.Id = inId;
    END IF; 
   
@@ -163,6 +201,7 @@ ALTER FUNCTION gpGet_Object_PersonalServiceList(integer, TVarChar) OWNER TO post
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 18.08.21         *
  17.11.20         * add isBankOut
  17.01.20         * add isRecalc
  27.01.20         * add Compensation

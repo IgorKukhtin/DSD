@@ -910,7 +910,13 @@ SELECT 'zc_Object_AssetType', 'Тип (ОС)' WHERE NOT EXISTS (SELECT * FROM ObjectD
 CREATE OR REPLACE FUNCTION zc_Object_ContractConditionPartner() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ContractConditionPartner'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc(Code, ItemName)
 SELECT 'zc_Object_ContractConditionPartner', 'Контрагенты в условиях к договору' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ContractConditionPartner');
-zc_Object_ContractConditionPartner
+
+
+
+CREATE OR REPLACE FUNCTION zc_Object_PSLExportKind() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_PSLExportKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_PSLExportKind', 'Типы выгрузки ведомости в банк' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PSLExportKind');
+
 
 
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

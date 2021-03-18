@@ -410,10 +410,20 @@ AS
              zc_Movement_Sale()
            , CAST ('Tax' AS TVarChar)
            , CAST ('01.03.2021' AS TDateTime)
-           , CAST ('01.01.2214' AS TDateTime)
+           , CAST ('15.03.2021' AS TDateTime)
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_Tax0321' AS TVarChar)           
+      UNION
+--налоговая c 16.03.2021
+      SELECT
+             zc_Movement_Sale()
+           , CAST ('Tax' AS TVarChar)
+           , CAST ('16.03.2021' AS TDateTime)
+           , CAST ('01.01.2214' AS TDateTime)
+           , CAST (0 AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintMovement_Tax160321' AS TVarChar)           
 
       UNION
 --коррект
@@ -482,10 +492,20 @@ AS
              zc_movement_TaxCorrective()
            , CAST ('TaxCorrective' AS TVarChar)
            , CAST ('01.03.2021' AS TDateTime)
-           , CAST ('01.01.2214' AS TDateTime)
+           , CAST ('15.03.2021' AS TDateTime)
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_TaxCorrective0321' AS TVarChar)
+      UNION
+--коррект  c 16.03.2021
+      SELECT
+             zc_movement_TaxCorrective()
+           , CAST ('TaxCorrective' AS TVarChar)
+           , CAST ('16.03.2021' AS TDateTime)
+           , CAST ('01.01.2214' AS TDateTime)
+           , CAST (0 AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintMovement_TaxCorrective160321' AS TVarChar)
 /*
 -- Новая форма налоговой
       UNION
