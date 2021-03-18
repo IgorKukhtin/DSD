@@ -1016,6 +1016,16 @@ BEGIN
    PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoStateKind_Return(),    inDescId:= zc_Object_PromoStateKind(), inCode:= 6, inName:= 'Вернули для исправлений', inEnumName:= 'zc_Enum_PromoStateKind_Return');
 END $$;
 
+
+DO $$
+BEGIN 
+     -- !!!  Типы выгрузки ведомости в банк
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PSLExportKind_XML(),   inDescId:= zc_Object_PSLExportKind(), inCode:= 1, inName:= 'XML', inEnumName:= 'zc_Enum_PSLExportKind_XML');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PSLExportKind_iBank(), inDescId:= zc_Object_PSLExportKind(), inCode:= 2, inName:= 'iBank', inEnumName:= 'zc_Enum_PSLExportKind_iBank');
+END $$;
+
+
+
 /* Закомментил, т.к. 1 раз добавили и харэ
 --Загрузка в Документ <Ведомость начисления зарплаты>
 DO $$

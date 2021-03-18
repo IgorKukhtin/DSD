@@ -1324,6 +1324,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_PersonalServiceList_MemberBookkeeper() 
   INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_PersonalServiceList_MemberBookkeeper', 'Связь Ведомости начисления с Физ лицом (бухгалтер)', zc_Object_PersonalServiceList(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PersonalServiceList_MemberBookkeeper');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_PersonalServiceList_BankAccount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PersonalServiceList_BankAccount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_PersonalServiceList_BankAccount', 'Связь Ведомости начисления с Расчетные счета', zc_Object_PersonalServiceList(), zc_Object_BankAccount() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PersonalServiceList_BankAccount');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_PersonalServiceList_PSLExportKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PersonalServiceList_PSLExportKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_PersonalServiceList_PSLExportKind', 'Связь Ведомости начисления с Тип выгрузки ведомости в банк', zc_Object_PersonalServiceList(), zc_Object_PSLExportKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PersonalServiceList_PSLExportKind');
+
+---
 CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsQuality_Goods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsQuality_Goods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
   INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_GoodsQuality_Goods', 'Связь Параметры качественного удостоверения с Товаром', zc_Object_GoodsQuality(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsQuality_Goods');
@@ -2490,6 +2499,8 @@ SELECT 'zc_ObjectLink_DiscountExternalSupplier_Juridical', 'Связь с юридическим 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 18.03.21         * zc_ObjectLink_PersonalServiceList_PSLExportKind
+                    zc_ObjectLink_PersonalServiceList_BankAccount
  11.03.21                                                                                      * zc_ObjectLink_DiscountExternalSupplier_...
  16.02.21                                                                                      * zc_ObjectLink_Instructions_InstructionsKind
  28.01.21                                                                                      * zc_ObjectLink_Goods_UnitSupplementSUN1Out

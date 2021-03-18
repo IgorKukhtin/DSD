@@ -99,6 +99,12 @@ type
     actComplete: TdsdChangeMovementStatus;
     actSetErased: TdsdChangeMovementStatus;
     ceStatus: TcxButtonEdit;
+    cxLabel19: TcxLabel;
+    edTotalSummPVAT: TcxCurrencyEdit;
+    cxLabel20: TcxLabel;
+    edTotalSummMVAT: TcxCurrencyEdit;
+    cxLabel21: TcxLabel;
+    edTotalSummVAT: TcxCurrencyEdit;
   private
     { Private declarations }
   public

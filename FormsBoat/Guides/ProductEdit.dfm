@@ -327,8 +327,8 @@ object ProductEditForm: TProductEditForm
     Width = 114
   end
   object Panel1: TPanel
-    Left = 507
-    Top = 200
+    Left = 553
+    Top = 26
     Width = 63
     Height = 49
     Caption = 'Panel1'
@@ -364,6 +364,45 @@ object ProductEditForm: TProductEditForm
     Properties.ReadOnly = True
     TabOrder = 46
     Width = 216
+  end
+  object cxLabel19: TcxLabel
+    Left = 331
+    Top = 195
+    Caption = #1057#1091#1084#1084#1072' c '#1053#1044#1057
+  end
+  object edTotalSummPVAT: TcxCurrencyEdit
+    Left = 331
+    Top = 215
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 48
+    Width = 80
+  end
+  object cxLabel20: TcxLabel
+    Left = 418
+    Top = 195
+    Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
+  end
+  object edTotalSummMVAT: TcxCurrencyEdit
+    Left = 418
+    Top = 215
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 50
+    Width = 80
+  end
+  object cxLabel21: TcxLabel
+    Left = 504
+    Top = 195
+    Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
+  end
+  object edTotalSummVAT: TcxCurrencyEdit
+    Left = 504
+    Top = 215
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 52
+    Width = 66
   end
   object ActionList: TActionList
     Left = 232
@@ -896,6 +935,27 @@ object ProductEditForm: TProductEditForm
         Component = GuidesStatus
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSummMVAT'
+        Value = Null
+        Component = edTotalSummMVAT
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSummPVAT'
+        Value = Null
+        Component = edTotalSummPVAT
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSummVAT'
+        Value = Null
+        Component = edTotalSummVAT
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1
