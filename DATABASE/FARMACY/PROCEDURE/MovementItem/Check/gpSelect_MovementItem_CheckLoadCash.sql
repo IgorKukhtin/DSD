@@ -46,7 +46,7 @@ RETURNS TABLE (Id Integer
              , DivisionPartiesId Integer
              , DivisionPartiesName TVarChar
              , isPresent Boolean
-             , MultiplicitySale Integer
+             , MultiplicitySale TFloat
               )
 AS
 $BODY$

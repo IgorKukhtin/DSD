@@ -1064,14 +1064,14 @@ inherited MainCashForm2: TMainCashForm2
           Width = 71
         end
         object MultiplicitySale: TcxGridDBColumn
-          Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1088#1080' '#1087#1088#1080#1076#1072#1078#1077
+          Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1088#1080' '#1087#1088#1086#1076#1072#1078#1080' ('#1084#1080#1085#1080#1084#1072#1083#1100#1085#1099#1081' '#1076#1077#1083#1080#1090#1077#1083#1100')'
           DataBinding.FieldName = 'MultiplicitySale'
           PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 0
-          Properties.DisplayFormat = ',0; ;'
+          Properties.DecimalPlaces = 3
+          Properties.DisplayFormat = ',0.###; ;'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
-          Width = 75
+          Width = 117
         end
       end
       object MainGridLevel: TcxGridLevel
@@ -6973,7 +6973,7 @@ inherited MainCashForm2: TMainCashForm2
       end
       item
         Name = 'MultiplicitySale'
-        DataType = ftInteger
+        DataType = ftFloat
       end>
     IndexDefs = <
       item

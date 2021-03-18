@@ -435,18 +435,18 @@ begin
 
   for I := 0 to 9 do
   begin
-    pData := I;
-    pString := Password + ';1;';
+    pData := 0;
+    pString := Password + ';' + IntToStr(I) + ';';
     FPrinter.DirectIO($23, pData, pString);
     if Trim(FPrinter.ReservedWord) <> '' then Result := Result + Centr(FPrinter.ReservedWord) + #13#10;
   end;
 
-  pData := I;
+  pData := 0;
   pString := Password + ';';
   FPrinter.DirectIO($42, pData, pString);
   S := 'ЗН ' + FPrinter.ReservedWord;
 
-  pData := I;
+  pData := 0;
   pString := Password + ';';
   FPrinter.DirectIO($44, pData, pString);
   S := S + '  ФН ' + FPrinter.ReservedWord + #13#10;
@@ -463,22 +463,22 @@ begin
 
   pData := 0;
   pString := Password + ';2;0;0;';
-  FPrinter.DirectIO($E2, pData, pString);
+  FPrinter.DirectIO($E0, pData, pString);
   nSum[0] := ReservedWordCurr;
 
   pData := 0;
   pString := Password + ';2;1;0;';
-  FPrinter.DirectIO($E2, pData, pString);
+  FPrinter.DirectIO($E0, pData, pString);
   nSum[1] := ReservedWordCurr;
 
   pData := 1;
   pString := Password + ';2;0;0;';
-  FPrinter.DirectIO($E2, pData, pString);
+  FPrinter.DirectIO($E0, pData, pString);
   nSum[2] := ReservedWordCurr;
 
   pData := 1;
   pString := Password + ';2;1;0;';
-  FPrinter.DirectIO($E2, pData, pString);
+  FPrinter.DirectIO($E0, pData, pString);
   nSum[3] := ReservedWordCurr;
 
   Result := Result + '  Готівка  ' + Str(nSum[2], 13) + Str(nSum[0], 13) + #13#10;
@@ -489,17 +489,17 @@ begin
 
   pData := 0;
   pString := Password + ';3;1;0;';
-  FPrinter.DirectIO($E2, pData, pString);
+  FPrinter.DirectIO($E0, pData, pString);
   nSum[0] := ReservedWordCurr;
 
   pData := 1;
   pString := Password + ';3;1;0;';
-  FPrinter.DirectIO($E2, pData, pString);
+  FPrinter.DirectIO($E0, pData, pString);
   nSum[1] := ReservedWordCurr;
 
   pData := 0;
   pString := Password + ';3;0;0;';
-  FPrinter.DirectIO($E2, pData, pString);
+  FPrinter.DirectIO($E0, pData, pString);
   nSum[2] := ReservedWordCurr;
 
   Result := Result + '  ------         Видача     Внесок'#13#10;
@@ -511,32 +511,32 @@ begin
 
     pData := 0;
     pString := Password + ';0;0;0;';
-    FPrinter.DirectIO($E2, pData, pString);
+    FPrinter.DirectIO($E0, pData, pString);
     nSum[0] := ReservedWordCurr;
 
     pData := 0;
     pString := Password + ';0;1;0;';
-    FPrinter.DirectIO($E2, pData, pString);
+    FPrinter.DirectIO($E0, pData, pString);
     nSum[1] := ReservedWordCurr;
 
     pData := 0;
     pString := Password + ';0;2;0;';
-    FPrinter.DirectIO($E2, pData, pString);
+    FPrinter.DirectIO($E0, pData, pString);
     nSum[2] := ReservedWordCurr;
 
     pData := 0;
     pString := Password + ';1;0;0;';
-    FPrinter.DirectIO($E2, pData, pString);
+    FPrinter.DirectIO($E0, pData, pString);
     nSum[3] := ReservedWordCurr;
 
     pData := 0;
     pString := Password + ';1;1;0;';
-    FPrinter.DirectIO($E2, pData, pString);
+    FPrinter.DirectIO($E0, pData, pString);
     nSum[4] := ReservedWordCurr;
 
     pData := 0;
     pString := Password + ';1;2;0;';
-    FPrinter.DirectIO($E2, pData, pString);
+    FPrinter.DirectIO($E0, pData, pString);
     nSum[5] := ReservedWordCurr;
 
     if nTotal = (nSum[0] + nSum[1] + nSum[2]) then Break;
@@ -555,32 +555,32 @@ begin
 
   pData := 1;
   pString := Password + ';0;0;0;';
-  FPrinter.DirectIO($E2, pData, pString);
+  FPrinter.DirectIO($E0, pData, pString);
   nSum[0] := ReservedWordCurr;
 
   pData := 1;
   pString := Password + ';0;1;0;';
-  FPrinter.DirectIO($E2, pData, pString);
+  FPrinter.DirectIO($E0, pData, pString);
   nSum[1] := ReservedWordCurr;
 
   pData := 1;
   pString := Password + ';0;2;0;';
-  FPrinter.DirectIO($E2, pData, pString);
+  FPrinter.DirectIO($E0, pData, pString);
   nSum[2] := ReservedWordCurr;
 
   pData := 1;
   pString := Password + ';1;0;0;';
-  FPrinter.DirectIO($E2, pData, pString);
+  FPrinter.DirectIO($E0, pData, pString);
   nSum[3] := ReservedWordCurr;
 
   pData := 1;
   pString := Password + ';1;1;0;';
-  FPrinter.DirectIO($E2, pData, pString);
+  FPrinter.DirectIO($E0, pData, pString);
   nSum[4] := ReservedWordCurr;
 
   pData := 1;
   pString := Password + ';1;2;0;';
-  FPrinter.DirectIO($E2, pData, pString);
+  FPrinter.DirectIO($E0, pData, pString);
   nSum[5] := ReservedWordCurr;
 
   Result := Result + '  ВІД. A   ' + Str(nSum[3], 13) + Str(nSum[0], 13) + #13#10;
@@ -593,16 +593,16 @@ begin
   Result := Result + '  Чеків повернення ' + IntToStr(ReservedWordInt) + #13#10;
 
   pData := 0;
-  pString := Password + ';2;';
+  pString := Password + ';0;';
   FPrinter.DirectIO($48, pData, pString);
   nSum[0] := ReservedWordCurr;
 
-  pData := 1;
-  pString := Password + ';2;';
+  pData := 0;
+  pString := Password + ';1;';
   FPrinter.DirectIO($48, pData, pString);
   nSum[1] := ReservedWordCurr;
 
-  pData := 2;
+  pData := 0;
   pString := Password + ';2;';
   FPrinter.DirectIO($48, pData, pString);
   nSum[2] := ReservedWordCurr;

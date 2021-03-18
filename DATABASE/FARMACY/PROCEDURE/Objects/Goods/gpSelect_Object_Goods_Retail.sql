@@ -47,7 +47,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , isOnlySP boolean
              , SummaWages TFloat, PercentWages TFloat, SummaWagesStore TFloat, PercentWagesStore TFloat
              , UnitSupplementSUN1OutId Integer, UnitSupplementSUN1OutName TVarChar
-             , Multiplicity Integer
+             , Multiplicity TFloat
               ) AS
 $BODY$
   DECLARE vbUserId Integer;

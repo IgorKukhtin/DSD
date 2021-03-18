@@ -44,7 +44,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                isOnlySP boolean,
                DistributionPromoID Integer,
                Color_IPE Integer, 
-               MultiplicitySale Integer
+               MultiplicitySale TFloat
 
              , PartionDateKindId_check   Integer
              , Price_check               TFloat

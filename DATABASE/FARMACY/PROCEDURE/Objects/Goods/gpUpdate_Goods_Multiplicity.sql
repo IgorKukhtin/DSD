@@ -1,10 +1,10 @@
 -- Function: gpUpdate_Goods_Multiplicity()
 
-DROP FUNCTION IF EXISTS gpUpdate_Goods_Multiplicity(Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Goods_Multiplicity(Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Goods_Multiplicity(
     IN inGoodsMainId             Integer   ,   -- ключ объекта <Товар>
-    IN inMultiplicity            Integer  ,    -- Дополнение СУН1
+    IN inMultiplicity            TFloat  ,    -- Дополнение СУН1
     IN inSession                 TVarChar      -- текущий пользователь
 )
 RETURNS VOID AS
@@ -16,6 +16,11 @@ BEGIN
 
    IF COALESCE(inGoodsMainId, 0) = 0 THEN
       RETURN;
+   END IF;
+   
+   IF CEIL(1.0 / inMultiplicity) <> (1.0 / inMultiplicity)
+   THEN
+      RAISE EXCEPTION 'Ошибка. Введенное значение не кратно 1.';
    END IF;
 
    vbUserId := lpGetUserBySession (inSession);

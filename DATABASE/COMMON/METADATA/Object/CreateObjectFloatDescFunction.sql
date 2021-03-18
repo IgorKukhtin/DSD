@@ -1929,9 +1929,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_Multiplicity() RETURNS Integer A
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_Multiplicity', 'Кратность при придаже' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_Multiplicity');
 
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Juridical_ExpirationDateMonth() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Juridical_ExpirationDateMonth'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Juridical(), 'zc_ObjectFloat_Juridical_ExpirationDateMonth', 'Брать в переоценку товар со сроком более месяцев' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Juridical_ExpirationDateMonth');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 18.03.21                                                                                      * zc_ObjectFloat_Juridical_ExpirationDateMonth
  17.03.21                                                                                      * zc_ObjectFloat_Goods_Multiplicity
  11.03.21                                                                                      * zc_ObjectFloat_DiscountExternalSupplier_SupplierID
  01.03.21                                                                                      * zc_ObjectFloat_PartnerMedical_LikiDniproId

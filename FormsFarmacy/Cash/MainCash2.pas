@@ -7079,12 +7079,12 @@ begin
     exit;
   end;
 
-  if (SourceClientDataSet.FieldByName('MultiplicitySale').AsInteger > 0) and (Frac(nAmount) <> 0) then
+  if (SourceClientDataSet.FieldByName('MultiplicitySale').AsCurrency > 0) and (Frac(nAmount) <> 0) then
   begin
-    nAmountM := Frac(Frac(Abs(nAmount)) * SourceClientDataSet.FieldByName('MultiplicitySale').AsInteger);
-    if (nAmountM > 0.002) and (nAmountM < 0.998) then
+    nAmountM := Frac(Abs(nAmount) / SourceClientDataSet.FieldByName('MultiplicitySale').AsCurrency);
+    if nAmountM <> 0 then
     begin
-      ShowMessage('Деление медикамента разрешено на ' + SourceClientDataSet.FieldByName('MultiplicitySale').AsString + ' частей!');
+      ShowMessage('Деление медикамента разрешено кратно ' + SourceClientDataSet.FieldByName('MultiplicitySale').AsString + ' !');
       exit;
     end;
   end;
