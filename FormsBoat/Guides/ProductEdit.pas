@@ -105,6 +105,26 @@ type
     edTotalSummMVAT: TcxCurrencyEdit;
     cxLabel21: TcxLabel;
     edTotalSummVAT: TcxCurrencyEdit;
+    ceStatusInvoice: TcxButtonEdit;
+    cxLabel22: TcxLabel;
+    cxLabel23: TcxLabel;
+    edOperDateInvoice: TcxDateEdit;
+    cxLabel24: TcxLabel;
+    edInvNumberInvoice: TcxTextEdit;
+    cxLabel25: TcxLabel;
+    ceAmountInInvoice: TcxCurrencyEdit;
+    ceAmountOutInvoice: TcxCurrencyEdit;
+    cxLabel26: TcxLabel;
+    cxLabel27: TcxLabel;
+    ceAmountInBankAccount: TcxCurrencyEdit;
+    ceAmountOutBankAccount: TcxCurrencyEdit;
+    cxLabel28: TcxLabel;
+    GuidesStatusInvoice: TdsdGuides;
+    spChangeStatusInvoice: TdsdStoredProc;
+    UnCompleteMovementInvoice: TChangeGuidesStatus;
+    CompleteMovementInvoice: TChangeGuidesStatus;
+    DeleteMovementInvoice: TChangeGuidesStatus;
+    spInsertUpdate_Invoice_byProduct: TdsdStoredProc;
   private
     { Private declarations }
   public

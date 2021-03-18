@@ -60,6 +60,13 @@ BEGIN
                                AND ObjectLink_PersonalServiceList_BankAccount.DescId = zc_ObjectLink_PersonalServiceList_BankAccount()
            LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = ObjectLink_PersonalServiceList_BankAccount.ChildObjectId
 
+           LEFT JOIN ObjectString AS ObjectString_ContentType 
+                                  ON ObjectString_ContentType.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
+                                 AND ObjectString_ContentType.DescId = zc_ObjectString_PersonalServiceList_ContentType()
+           LEFT JOIN ObjectString AS ObjectString_OnFlowType 
+                                  ON ObjectString_OnFlowType.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
+                                 AND ObjectString_OnFlowType.DescId = zc_ObjectString_PersonalServiceList_OnFlowType()
+
            LEFT JOIN ObjectString AS ObjectString_MFO
                                   ON ObjectString_MFO.ObjectId = Object_Bank.Id
                                  AND ObjectString_MFO.DescId = zc_ObjectString_Bank_MFO()
@@ -139,7 +146,7 @@ BEGIN
      THEN
 	-- *** Шапка файла
 	-- Тип документа (из ТЗ)
-	INSERT INTO _tmpResult (NPP, RowData) VALUES (-100, 'Content-Type=' ||vbContentType);               --(-100, 'Content-Type=doc/pay_sheet');
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-100, 'Content-Type='||vbContentType);                --(-100, 'Content-Type=doc/pay_sheet');
 	-- Пустая строка
 	INSERT INTO _tmpResult (NPP, RowData) VALUES (-95, '');
 	-- Дата документа

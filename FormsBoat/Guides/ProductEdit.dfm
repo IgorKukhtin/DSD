@@ -362,7 +362,7 @@ object ProductEditForm: TProductEditForm
       end>
     Properties.Images = dmMain.ImageList
     Properties.ReadOnly = True
-    TabOrder = 46
+    TabOrder = 43
     Width = 216
   end
   object cxLabel19: TcxLabel
@@ -375,7 +375,7 @@ object ProductEditForm: TProductEditForm
     Top = 215
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
-    TabOrder = 48
+    TabOrder = 45
     Width = 80
   end
   object cxLabel20: TcxLabel
@@ -388,7 +388,7 @@ object ProductEditForm: TProductEditForm
     Top = 215
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
-    TabOrder = 50
+    TabOrder = 47
     Width = 80
   end
   object cxLabel21: TcxLabel
@@ -401,8 +401,115 @@ object ProductEditForm: TProductEditForm
     Top = 215
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
-    TabOrder = 52
+    TabOrder = 49
     Width = 66
+  end
+  object ceStatusInvoice: TcxButtonEdit
+    Left = 331
+    Top = 261
+    Properties.Buttons = <
+      item
+        Action = CompleteMovementInvoice
+        Kind = bkGlyph
+      end
+      item
+        Action = UnCompleteMovementInvoice
+        Default = True
+        Kind = bkGlyph
+      end
+      item
+        Action = DeleteMovementInvoice
+        Kind = bkGlyph
+      end>
+    Properties.Images = dmMain.ImageList
+    Properties.ReadOnly = True
+    TabOrder = 51
+    Width = 239
+  end
+  object cxLabel22: TcxLabel
+    Left = 331
+    Top = 241
+    Caption = #1057#1090#1072#1090#1091#1089' (Invoice)'
+  end
+  object cxLabel23: TcxLabel
+    Left = 456
+    Top = 285
+    Caption = #1044#1072#1090#1072' (Invoice)'
+  end
+  object edOperDateInvoice: TcxDateEdit
+    Left = 456
+    Top = 305
+    EditValue = 42160d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 53
+    Width = 114
+  end
+  object cxLabel24: TcxLabel
+    Left = 331
+    Top = 285
+    Caption = #8470' '#1076#1086#1082'. (Invoice)'
+  end
+  object edInvNumberInvoice: TcxTextEdit
+    Left = 331
+    Top = 305
+    Properties.ReadOnly = True
+    TabOrder = 55
+    Width = 114
+  end
+  object cxLabel25: TcxLabel
+    Left = 331
+    Top = 330
+    Caption = 'Debet (Invoice)'
+  end
+  object ceAmountInInvoice: TcxCurrencyEdit
+    Left = 331
+    Top = 350
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 57
+    Width = 114
+  end
+  object ceAmountOutInvoice: TcxCurrencyEdit
+    Left = 456
+    Top = 350
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 59
+    Width = 114
+  end
+  object cxLabel26: TcxLabel
+    Left = 456
+    Top = 330
+    Caption = 'Kredit (Invoice)'
+  end
+  object cxLabel27: TcxLabel
+    Left = 331
+    Top = 375
+    Caption = 'Debet (BankAccount)'
+  end
+  object ceAmountInBankAccount: TcxCurrencyEdit
+    Left = 331
+    Top = 393
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    Properties.ReadOnly = True
+    TabOrder = 62
+    Width = 114
+  end
+  object ceAmountOutBankAccount: TcxCurrencyEdit
+    Left = 456
+    Top = 393
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    Properties.ReadOnly = True
+    TabOrder = 65
+    Width = 114
+  end
+  object cxLabel28: TcxLabel
+    Left = 456
+    Top = 377
+    Caption = 'Kredit (BankAccount)'
   end
   object ActionList: TActionList
     Left = 232
@@ -428,12 +535,33 @@ object ProductEditForm: TProductEditForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdate
+        end
+        item
+          StoredProc = spInsertUpdate_Invoice_byProduct
         end>
       Caption = 'Ok'
     end
     object actFormClose: TdsdFormClose
       MoveParams = <>
       PostDataSetBeforeExecute = False
+    end
+    object UnCompleteMovementInvoice: TChangeGuidesStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spChangeStatusInvoice
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatusInvoice
+        end
+        item
+        end
+        item
+        end>
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 11
+      Status = mtUncomplete
+      Guides = GuidesStatusInvoice
     end
     object actGetCIN: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -447,6 +575,24 @@ object ProductEditForm: TProductEditForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object CompleteMovementInvoice: TChangeGuidesStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spChangeStatusInvoice
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatusInvoice
+        end
+        item
+        end
+        item
+        end>
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 12
+      Status = mtComplete
+      Guides = GuidesStatusInvoice
     end
     object UnCompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
@@ -465,6 +611,24 @@ object ProductEditForm: TProductEditForm
       ImageIndex = 11
       Status = mtUncomplete
       Guides = GuidesStatus
+    end
+    object DeleteMovementInvoice: TChangeGuidesStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spChangeStatusInvoice
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatusInvoice
+        end
+        item
+        end
+        item
+        end>
+      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      ImageIndex = 13
+      Status = mtDelete
+      Guides = GuidesStatusInvoice
     end
     object CompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
@@ -706,6 +870,12 @@ object ProductEditForm: TProductEditForm
       end
       item
         Name = 'inMovementId_OrderClient'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Invoice'
         Value = Null
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -956,6 +1126,70 @@ object ProductEditForm: TProductEditForm
         Value = Null
         Component = edTotalSummVAT
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Invoice'
+        Value = Null
+        Component = edInvNumberInvoice
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate_Invoice'
+        Value = Null
+        Component = edOperDateInvoice
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StatusCode_Invoice'
+        Value = Null
+        Component = GuidesStatusInvoice
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StatusName_Invoice'
+        Value = Null
+        Component = GuidesStatusInvoice
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountIn_Invoice'
+        Value = Null
+        Component = ceAmountInInvoice
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountOut_Invoice'
+        Value = Null
+        Component = ceAmountOutInvoice
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountIn_BankAccount'
+        Value = Null
+        Component = ceAmountInBankAccount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountOut_BankAccount'
+        Value = Null
+        Component = ceAmountOutBankAccount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_Invoice'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMovementId_Invoice'
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -1312,8 +1546,8 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 524
-    Top = 14
+    Left = 532
+    Top = 62
   end
   object GuidesStatus: TdsdGuides
     KeyField = 'Id'
@@ -1323,8 +1557,8 @@ object ProductEditForm: TProductEditForm
     FormNameParam.MultiSelectSeparator = ','
     PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 471
-    Top = 14
+    Left = 455
+    Top = 30
   end
   object BarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -1378,5 +1612,107 @@ object ProductEditForm: TProductEditForm
       Action = UnCompleteMovement
       Category = 0
     end
+  end
+  object GuidesStatusInvoice: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceStatusInvoice
+    DisableGuidesOpen = True
+    FormNameParam.Value = ''
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    PositionDataSet = 'ClientDataSet'
+    Params = <>
+    Left = 423
+    Top = 246
+  end
+  object spChangeStatusInvoice: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Status_Invoice'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMovementId_Invoice'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStatusCode'
+        Value = ''
+        Component = GuidesStatusInvoice
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 460
+    Top = 254
+  end
+  object spInsertUpdate_Invoice_byProduct: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_Invoice_byProduct'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMovementId_Invoice'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumber'
+        Value = 0.000000000000000000
+        Component = edInvNumberInvoice
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = edOperDateInvoice
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMovementId_OrderClient'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inClientId'
+        Value = ''
+        Component = GuidesClient
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountIn'
+        Value = 'False'
+        Component = ceAmountInInvoice
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountOut'
+        Value = 'False'
+        Component = ceAmountOutInvoice
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 456
+    Top = 416
   end
 end
