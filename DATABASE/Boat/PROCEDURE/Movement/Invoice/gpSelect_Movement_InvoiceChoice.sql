@@ -98,9 +98,11 @@ BEGIN
                                                      , zc_MovementLinkObject_PaidKind()
                                                       )
                   )
-
+     --Лодку показываем из док. Заказ
      , tmpMLM AS (SELECT MovementLinkMovement.*
                   FROM MovementLinkMovement
+                       INNER JOIN Movement ON Movement.Id = MovementLinkMovement.MovementChildId
+                                          AND Movement.DescId = zc_Movement_OrderClient()
                   WHERE MovementLinkMovement.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                     AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Invoice()
                   )
@@ -202,6 +204,7 @@ BEGIN
         LEFT JOIN tmpMLM AS MovementLinkMovement_Invoice
                          ON MovementLinkMovement_Invoice.MovementChildId = Movement.Id
                         AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
+        
         LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
                                      ON MovementLinkObject_Product.MovementId = MovementLinkMovement_Invoice.MovementId
                                     AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
