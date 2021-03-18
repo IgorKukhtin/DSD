@@ -171,4 +171,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_ReportCollation_byUser (inStartDate := '24.01.2017', inEndDate:= '24.01.2017', inSession := '9459');
+-- SELECT * FROM gpSelect_ReportCollation_byUser (inStartDate := '24.01.2017', inEndDate:= '24.01.2017', inSession := '5');

@@ -119,8 +119,8 @@ BEGIN
 
     vbIsCLO_Member:= EXISTS (SELECT 1 FROM _tmpLocation WHERE DescId <> zc_ContainerLinkObject_Unit());
 
-
-    IF inStartDate < inEndDate - INTERVAL '2 MONTH' AND inUserId NOT IN (5, 9459, 106594) AND COALESCE (inGoodsId, 0) = 0
+    -- Дмитриева О.В.
+    IF inStartDate < inEndDate - INTERVAL '2 MONTH' AND inUserId NOT IN (zfCalc_UserAdmin() :: Integer, zfCalc_UserMain(), 106594) AND COALESCE (inGoodsId, 0) = 0
     THEN
         RAISE EXCEPTION 'Ошибка. Заданный период не может быть больше чем 2 мес.';
     END IF;

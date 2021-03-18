@@ -59,7 +59,7 @@ $BODY$
 */
 BEGIN
 
-IF inUserId in (zfCalc_UserAdmin() :: Integer/*, zc_Enum_Process_Auto_PrimeCost()*/, 9459)
+IF inUserId in (zfCalc_UserAdmin() :: Integer, zfCalc_UserMain()/*, zc_Enum_Process_Auto_PrimeCost()*/)
  OR ('01.10.2017' <= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
      AND
      '01.10.2017' <= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())

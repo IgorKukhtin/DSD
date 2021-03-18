@@ -299,7 +299,8 @@ order by 4*/
                   WHEN Movement.OperDate < '01.03.2017' THEN 'J1201008'
                   WHEN vbOperDate_begin  < '01.12.2018' THEN 'J1201009'
                   WHEN vbOperDate_begin  < '01.03.2021' THEN 'J1201010'
-                  ELSE 'J1201011'
+                  WHEN vbOperDate_begin  < '16.03.2021' THEN 'J1201011'
+                  ELSE 'J1201012'
              END ::TVarChar AS CHARCODE
            -- , 'Неграш О.В.'::TVarChar                    AS N10
            , CASE WHEN Object_PersonalSigning.PersonalName <> ''
@@ -498,7 +499,7 @@ order by 4*/
                     OR vbCalcNDSPayer_INN <> ''
                     OR (vbOperDate_begin >= '01.12.2018' AND COALESCE (ObjectString_Retail_OKPO.ValueData, OH_JuridicalDetails_To.OKPO) = '100000000000')
                        THEN '0'
-             END AS NotNDSPayerC1
+              END AS NotNDSPayerC1
              -- 2 - (зазначається відповідний тип причини)
            , CASE WHEN vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
                        THEN '7'

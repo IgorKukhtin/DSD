@@ -357,7 +357,7 @@ BEGIN
      END IF;
 
 
-    IF inSession = '5' OR EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete())
+    IF (1=0 AND inSession = '5') OR EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete())
     THEN
         RAISE EXCEPTION 'Ошибка.Документ в статусе <%>. Проверка: <%> <%>.'
           , lfGet_Object_ValueData_sh (zc_Enum_Status_Complete())
@@ -613,7 +613,7 @@ BEGIN
 
     IF inSession = '5'
     THEN
-        RAISE EXCEPTION 'Ошибка.Admin <%> <%> <%> <%>'
+        RAISE EXCEPTION 'Ошибка.Admin <%> <%> <%>   <%> <%>   <%> <%> <%>'
           , (SELECT DISTINCT MIF.ValueData
              FROM MovementItem
                   LEFT JOIN MovementItemFloat AS MIF
@@ -646,7 +646,19 @@ BEGIN
              -- ORDER BY MovementItem.Id
            --LIMIT 1
             )
-          , vbMonthPromo
+
+          , zfConvert_DateToString (vbStartDate)
+          , zfConvert_DateToString (vbEndDate)
+
+          , (SELECT STRING_AGG (zfConvert_FloatToString (Price3_cost), ' ; ')
+             FROM _tmpData
+            )
+          , (SELECT STRING_AGG (zfConvert_FloatToString (PriceSale_cost), ' ; ')
+             FROM _tmpData
+            )
+          , (SELECT STRING_AGG (zfConvert_FloatToString (Price_cost), ' ; ')
+             FROM _tmpData
+            )
             ;
     END IF;
 

@@ -123,4 +123,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementGoodsBarCode_byUser (inStartDate := '01.10.2018', inEndDate:= '15.10.2018', inSession := '9459');
+-- SELECT * FROM gpSelect_MovementGoodsBarCode_byUser (inStartDate := '01.10.2018', inEndDate:= '15.10.2018', inSession := '5');

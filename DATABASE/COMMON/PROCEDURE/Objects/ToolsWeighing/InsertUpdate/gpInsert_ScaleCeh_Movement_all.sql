@@ -357,7 +357,7 @@ BEGIN
                                                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                                                                   AND MovementLinkObject_To.ObjectId = MovementLinkObject_To_find.ObjectId
                                 WHERE Movement.DescId = zc_Movement_Inventory()
-                                  AND Movement.OperDate = inOperDate - INTERVAL '1 DAY'
+                                  AND Movement.OperDate = CASE WHEN inBranchCode = 102 THEN inOperDate ELSE inOperDate - INTERVAL '1 DAY' END
                                   AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
                                )
            THEN
@@ -380,7 +380,7 @@ BEGIN
                                                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                                                                   AND MovementLinkObject_To.ObjectId = MovementLinkObject_To_find.ObjectId
                                 WHERE Movement.DescId = zc_Movement_Inventory()
-                                  AND Movement.OperDate = inOperDate - INTERVAL '1 DAY'
+                                  AND Movement.OperDate = CASE WHEN inBranchCode = 102 THEN inOperDate ELSE inOperDate - INTERVAL '1 DAY' END
                                   AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
                                 ORDER BY Movement.Id ASC
                                 LIMIT 1
@@ -402,7 +402,7 @@ BEGIN
                                                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                                                                   AND MovementLinkObject_To.ObjectId = MovementLinkObject_To_find.ObjectId
                                 WHERE Movement.DescId = zc_Movement_Inventory()
-                                  AND Movement.OperDate = inOperDate - INTERVAL '1 DAY'
+                                  AND Movement.OperDate = CASE WHEN inBranchCode = 102 THEN inOperDate ELSE inOperDate - INTERVAL '1 DAY' END
                                   AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
                                 ORDER BY Movement.Id DESC
                                 LIMIT 1
@@ -428,7 +428,7 @@ BEGIN
                                                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                                                                   AND MovementLinkObject_To.ObjectId = MovementLinkObject_To_find.ObjectId
                                 WHERE Movement.DescId = zc_Movement_Inventory()
-                                  AND Movement.OperDate = inOperDate - INTERVAL '1 DAY'
+                                  AND Movement.OperDate = CASE WHEN inBranchCode = 102 THEN inOperDate ELSE inOperDate - INTERVAL '1 DAY' END
                                   AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
                                );
      END IF;
@@ -1240,7 +1240,7 @@ BEGIN
                                                        AND MovementLinkObject_From.ObjectId = MovementLinkObject_From_find.ObjectId
                       WHERE Movement.Id <> vbMovementId_begin
                         AND Movement.DescId = zc_Movement_Inventory()
-                        AND Movement.OperDate = inOperDate - INTERVAL '1 DAY'
+                        AND Movement.OperDate = CASE WHEN inBranchCode = 102 THEN inOperDate ELSE inOperDate - INTERVAL '1 DAY' END
                         AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
                     )
           THEN
@@ -1256,10 +1256,10 @@ BEGIN
                                                        AND MovementLinkObject_From.ObjectId = MovementLinkObject_From_find.ObjectId
                       WHERE Movement.Id <> vbMovementId_begin
                         AND Movement.DescId = zc_Movement_Inventory()
-                        AND Movement.OperDate = inOperDate - INTERVAL '1 DAY'
+                        AND Movement.OperDate = CASE WHEN inBranchCode = 102 THEN inOperDate ELSE inOperDate - INTERVAL '1 DAY' END
                         AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
                     )
-                  , DATE (inOperDate - INTERVAL '1 DAY');
+                  , zfConvert_DateToString (CASE WHEN inBranchCode = 102 THEN inOperDate ELSE inOperDate - INTERVAL '1 DAY' END);
           END IF;
 
           -- !!!Проверка что элемент один!!!

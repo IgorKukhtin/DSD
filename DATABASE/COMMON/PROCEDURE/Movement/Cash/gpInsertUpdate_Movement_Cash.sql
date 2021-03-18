@@ -47,7 +47,7 @@ BEGIN
 
      -- Заработная плата
      IF EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMoneyPlaceId AND Object.DescId = zc_Object_Personal())
-     AND inSession IN ('5', '9459')
+     AND inSession IN (zfCalc_UserAdmin(), zfCalc_UserMain() :: TVarChar)
      THEN
          -- !!!замена!!!
          inMoneyPlaceId:= (WITH tmpServiceDate AS (SELECT lpInsertFind_Object_ServiceDate (inOperDate:= DATE_TRUNC ('MONTH', inServiceDate)) AS ServiceDateId)
@@ -106,7 +106,7 @@ BEGIN
 
      -- проверка
      IF COALESCE (inMovementId_Invoice, 0) = 0 AND EXISTS (SELECT 1 FROM Object_InfoMoney_View AS View_InfoMoney WHERE View_InfoMoney.InfoMoneyId = inInfoMoneyId AND View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000()) -- Инвестиции
-        AND inSession <> '9459' -- Малахова Т.Н.
+        AND inSession <> zfCalc_UserMain() :: TVarChar
      THEN
         RAISE EXCEPTION 'Ошибка.Для УП статьи <%> необходимо заполнить значение <№ док. Счет>.', lfGet_Object_ValueData (inInfoMoneyId);
      END IF;

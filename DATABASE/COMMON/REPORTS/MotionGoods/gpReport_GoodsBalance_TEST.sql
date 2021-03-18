@@ -1324,4 +1324,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_GoodsBalance_TEST (inStartDate:= '01.09.2017', inEndDate:= '01.09.2017', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId:= 1860, inGoodsId:= 0, inIsInfoMoney:= TRUE, inIsAllMO:= TRUE, inIsAllAuto:= TRUE, inSession:= '5');
--- SELECT * FROM gpReport_GoodsBalance_TEST (inStartDate:= '01.10.2017', inEndDate:= '31.10.2017', inAccountGroupId:= 9015, inUnitGroupId:= 8432, inLocationId:= 0, inGoodsGroupId:= 1832, inGoodsId:= 0, inIsInfoMoney:= False, inIsAllMO:= False, inIsAllAuto:= False, inSession:= '9459');
+-- SELECT * FROM gpReport_GoodsBalance_TEST (inStartDate:= '01.10.2017', inEndDate:= '31.10.2017', inAccountGroupId:= 9015, inUnitGroupId:= 8432, inLocationId:= 0, inGoodsGroupId:= 1832, inGoodsId:= 0, inIsInfoMoney:= False, inIsAllMO:= False, inIsAllAuto:= False, inSession:= '5');

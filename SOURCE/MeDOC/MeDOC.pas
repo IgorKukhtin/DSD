@@ -20,6 +20,7 @@ type
 
     procedure CreateJ1201010XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
     procedure CreateJ1201011XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
+    procedure CreateJ1201012XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
 
   public
     procedure CreateXMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string; FIsMedoc : Boolean);
@@ -37,6 +38,7 @@ type
 
     procedure CreateJ1201210XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
     procedure CreateJ1201211XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
+    procedure CreateJ1201212XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
   public
     procedure CreateXMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string; FIsMedoc : Boolean);
   end;
@@ -81,6 +83,7 @@ uses VCL.ActnList, StrUtils, SysUtils, Dialogs, DateUtils, MeDocXML
    , IFIN_J1201009, IFIN_J1201209
    , Medoc_J1201010, Medoc_J1201210
    , Medoc_J1201011, Medoc_J1201211
+   , Medoc_J1201012, Medoc_J1201212
    , CommonData
    ;
 
@@ -1719,6 +1722,448 @@ begin
 
 end;
 
+procedure TMedoc.CreateJ1201012XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
+var
+  ZVIT: Medoc_J1201012.IXMLDeclarContent;
+  i: integer;
+const
+  NS = 'xsi';
+  NS_URI = 'http://www.w3.org/2001/XMLSchema-instance';
+  TaxDateFormat = 'YYYYMMDD';
+begin
+  ZVIT := Medoc_J1201012.NewDECLAR;
+
+
+  ZVIT.DeclareNamespace(NS, NS_URI);
+  //J1201012.xsd
+  ZVIT.SetAttributeNS('noNamespaceSchemaLocation', NS_URI, Copy(HeaderDataSet.FieldByName('CHARCODE').AsString, 1, 8) + '.xsd');
+
+  ZVIT.DECLARHEAD.TIN := HeaderDataSet.FieldByName('OKPO_From').AsString;
+  //J1201012
+  ZVIT.DECLARHEAD.C_DOC := Copy(HeaderDataSet.FieldByName('CHARCODE').AsString, 1, 3); // J12
+  ZVIT.DECLARHEAD.C_DOC_SUB := Copy(HeaderDataSet.FieldByName('CHARCODE').AsString, 4, 3); //010
+  ZVIT.DECLARHEAD.C_DOC_VER := Copy(HeaderDataSet.FieldByName('CHARCODE').AsString, 7, 2); // 10
+
+  //Номер нового отчётного (уточняющего) документа - Для первого поданного (отчётного) документа значение данного элемента равняется 0. Для каждого последующего нового отчётного (уточняющего) документа этого же типа для данного отчётного периода значение увеличивается на единицу
+  ZVIT.DECLARHEAD.C_DOC_TYPE := 0;
+  //Номер документа в периоде	- Значение данного элемента содержит порядковый номер каждого однотипного документа в данном периоде.
+  ZVIT.DECLARHEAD.C_DOC_CNT := HeaderDataSet.FieldByName('InvNumberPartner').AsInteger;
+
+  //Код области	- Код области, на территории которой расположена налоговая инспекция, в которую подаётся оригинал либо копия документа. Заполняется согласно справочнику SPR_STI.XML.
+  ZVIT.DECLARHEAD.C_REG := 4;
+  //Код области	- Код области, на территории которой расположена налоговая инспекция, в которую подаётся оригинал либо копия документа. Заполняется согласно справочнику SPR_STI.XML.
+  ZVIT.DECLARHEAD.C_RAJ := 63;
+
+  //Отчётный месяц	Отчётным месяцем считается последний месяц в отчётном периоде (для месяцев - порядковый номер месяца, для квартала - 3,6,9,12 месяц, полугодия - 6 и 12, для года - 12)я 9 місяців – 9, для року – 12)
+  ZVIT.DECLARHEAD.PERIOD_MONTH := StrToInt(Copy(FormatDateTime('ddmmyyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime), 3, 2));
+  //Тип отчётного периода	1-месяц, 2-квартал, 3-полугодие, 4-девять мес., 5-год
+  ZVIT.DECLARHEAD.PERIOD_TYPE := 1;
+  //Отчётный год	Формат YYYY
+  ZVIT.DECLARHEAD.PERIOD_YEAR := StrToInt(Copy(FormatDateTime('ddmmyyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime), 5, 4));
+
+  //Код инспекции, в которую подаётся оригинал документа	Код выбирается из справочника инспекций. вычисляется по формуле: C_REG*100+C_RAJ.
+  ZVIT.DECLARHEAD.C_STI_ORIG := 463;
+  //Состояние документа	1-отчётный документ, 2-новый отчётный документ ,3-уточняющий документ
+  ZVIT.DECLARHEAD.C_DOC_STAN := 1;
+  //Перечень связанных документов. Элемент является узловым, в себе содержит элементы DOC	Для основного документа содержит ссылку на дополнение, для дополнения - ссылку на основной.
+  ZVIT.DECLARHEAD.LINKED_DOCS.SetAttributeNS('nil', NS_URI, true);
+  //Дата заполнения документа	Формат ddmmyyyy
+  ZVIT.DECLARHEAD.D_FILL := FormatDateTime('ddmmyyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime);
+  //Сигнатура программного обеспечения	Идентификатор ПО, с помощью которого сформирован отчёт
+  ZVIT.DECLARHEAD.SOFTWARE := 'MEDOC';
+
+  // Зведена податкова накладна
+  if HeaderDataSet.FieldByName('TaxKind').asString = '4'
+  then
+      ZVIT.DECLARBODY.R01G1 := StrToInt(HeaderDataSet.FieldByName('TaxKind').AsString);
+  // else
+  begin
+      // ZVIT.DECLARBODY.ChildNodes['R01G1'].SetAttributeNS('nil', NS_URI, true);
+      // Складена на операції, звільнені від оподаткування
+      //****ZVIT.DECLARBODY.ChildNodes['R03G10S'].SetAttributeNS('nil', NS_URI, true);
+      // Не підлягає виданню отримувачу (покупцю) з причини
+      //ZVIT.DECLARBODY.ChildNodes['HORIG1'].SetAttributeNS('nil', NS_URI, true);
+      //Зазначається відповідний тип причини
+      //ZVIT.DECLARBODY.ChildNodes['HTYPR'].SetAttributeNS('nil', NS_URI, true);
+
+      if HeaderDataSet.FieldByName('isNotNDSPayer').asBoolean then
+      begin
+         // Не видається покупцю
+         ZVIT.DECLARBODY.HORIG1 := 1;
+         // Не видається покупцю (тип причини)
+         ZVIT.DECLARBODY.HTYPR := HeaderDataSet.FieldByName('NotNDSPayerC1').asString + HeaderDataSet.FieldByName('NotNDSPayerC2').asString;
+      end;
+  end;
+
+  ZVIT.DECLARBODY.HFILL :=FormatDateTime('ddmmyyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime);
+  ZVIT.DECLARBODY.HNUM := HeaderDataSet.FieldByName('InvNumberPartner').AsInteger;
+
+  ZVIT.DECLARBODY.ChildNodes['HNUM1'].SetAttributeNS('nil', NS_URI, true);
+
+  ZVIT.DECLARBODY.HNAMESEL := HeaderDataSet.FieldByName('JuridicalName_From').AsString;
+  ZVIT.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_To').AsString;
+
+  ZVIT.DECLARBODY.HKSEL := HeaderDataSet.FieldByName('INN_From').AsString;
+  ZVIT.DECLARBODY.ChildNodes['HNUM2'].SetAttributeNS('nil', NS_URI, true);
+  ZVIT.DECLARBODY.HTINSEL:= HeaderDataSet.FieldByName('OKPO_From').AsString;
+  // код
+  if HeaderDataSet.FieldByName('Code_From').AsString <> ''
+  then ZVIT.DECLARBODY.HKS := StrToInt(HeaderDataSet.FieldByName('Code_From').AsString)
+  else ZVIT.DECLARBODY.ChildNodes['HKS'].SetAttributeNS('nil', NS_URI, true);
+
+  ZVIT.DECLARBODY.HKBUY := HeaderDataSet.FieldByName('INN_To').AsString;
+  // № Філії покупця
+  if HeaderDataSet.FieldByName('InvNumberBranch_To').AsString <> ''
+  then ZVIT.DECLARBODY.HFBUY := StrToInt(HeaderDataSet.FieldByName('InvNumberBranch_To').AsString)
+  else ZVIT.DECLARBODY.ChildNodes['HFBUY'].SetAttributeNS('nil', NS_URI, true);
+
+  ZVIT.DECLARBODY.HTINBUY := HeaderDataSet.FieldByName('OKPO_To').AsString;
+  // код
+  if HeaderDataSet.FieldByName('Code_To').AsString <> ''
+  then ZVIT.DECLARBODY.HKB := StrToInt(HeaderDataSet.FieldByName('Code_To').AsString)
+  else ZVIT.DECLARBODY.ChildNodes['HKB'].SetAttributeNS('nil', NS_URI, true);
+
+  // Загальна сума коштів, що підлягають сплаті з урахуванням податку на додану вартість
+  ZVIT.DECLARBODY.R04G11  := ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
+
+  // Загальна сума податку на додану вартість, у тому числі:
+  if (HeaderDataSet.FieldByName('VATPercent').AsFloat < 100)
+  then ZVIT.DECLARBODY.R03G11  := ReplaceStr(FormatFloat('0.00####', HeaderDataSet.FieldByName('SummVAT').AsFloat), FormatSettings.DecimalSeparator, '.')
+  else ZVIT.DECLARBODY.ChildNodes['R03G11'].SetAttributeNS('nil', NS_URI, true);
+  // Загальна сума податку на додану вартість за основною ставкою
+  if (HeaderDataSet.FieldByName('VATPercent').AsFloat < 100)
+  then ZVIT.DECLARBODY.R03G7   := ReplaceStr(FormatFloat('0.00####', HeaderDataSet.FieldByName('SummVAT').AsFloat), FormatSettings.DecimalSeparator, '.')
+  else ZVIT.DECLARBODY.ChildNodes['R03G7'].SetAttributeNS('nil', NS_URI, true);
+  // Загальна сума податку на додану вартість за ставкою 7%
+  ZVIT.DECLARBODY.ChildNodes['R03G109'].SetAttributeNS('nil', NS_URI, true);
+  // Усього обсяги постачання за основною ставкою (код ставки 20)
+  if (HeaderDataSet.FieldByName('VATPercent').AsFloat < 100)
+  then ZVIT.DECLARBODY.R01G7 := ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT').AsFloat), FormatSettings.DecimalSeparator, '.')
+  else ZVIT.DECLARBODY.ChildNodes['R01G7'].SetAttributeNS('nil', NS_URI, true);;
+
+  // Загальна сума податку на додану вартість за ставкою 7%
+  ZVIT.DECLARBODY.ChildNodes['R01G109'].SetAttributeNS('nil', NS_URI, true);
+  // Усього обсяги постачання при експорті товарів за ставкою 0% (код ставки 901)
+  if (HeaderDataSet.FieldByName('VATPercent').AsFloat < 100)
+  then ZVIT.DECLARBODY.ChildNodes['R01G9'].SetAttributeNS('nil', NS_URI, true)
+  else ZVIT.DECLARBODY.R01G9 := ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
+  // Усього обсяги постачання на митній території України за ставкою 0% (код ставки 902)
+  ZVIT.DECLARBODY.ChildNodes['R01G8'].SetAttributeNS('nil', NS_URI, true);
+  // Усього обсяги операцій, звільнених від оподаткування (код ставки 903)
+  ZVIT.DECLARBODY.ChildNodes['R01G10'].SetAttributeNS('nil', NS_URI, true);
+  // Дані щодо зворотної (заставної) тари
+  ZVIT.DECLARBODY.ChildNodes['R02G11'].SetAttributeNS('nil', NS_URI, true);
+
+  with ItemsDataSet do
+  begin
+     First;
+     i := 1;
+     while not EOF do
+     begin
+          if (FieldByName('Amount').AsFloat <> 0) and (FieldByName('PriceNoVAT').AsFloat <> 0)then
+          begin
+          //Номенклатура поставки товарів
+          with ZVIT.DECLARBODY.RXXXXG3S.Add do
+          begin
+            ROWNUM := i;
+            //Nil_ := false;
+            NodeValue := FieldByName('GoodsName').AsString;
+          end;
+          //
+          inc(i);
+          //
+          end;
+          //
+          Next;
+
+     end;
+     //
+     //
+     First;
+     i := 1;
+     while not EOF do
+     begin
+          if (FieldByName('Amount').AsFloat <> 0) and (FieldByName('PriceNoVAT').AsFloat <> 0)then
+          begin
+          //Код товару згідно з УКТ ЗЕД
+          with ZVIT.DECLARBODY.RXXXXG4.Add do
+          begin
+            ROWNUM := i;
+            //Nil_ := true;
+            NodeValue := FieldByName('GoodsCodeUKTZED').AsString;
+          end;
+          //
+          inc(i);
+          //
+          end;
+          //
+          Next;
+
+     end;
+     //
+     //
+     First;
+     i := 1;
+     while not EOF do
+     begin
+          if (FieldByName('Amount').AsFloat <> 0) and (FieldByName('PriceNoVAT').AsFloat <> 0)then
+          begin
+          //ChkColumn
+          with ZVIT.DECLARBODY.RXXXXG32.Add do
+          begin
+            ROWNUM := i;
+            SetAttributeNS('nil', NS_URI, true);
+          end;
+          //
+          inc(i);
+          //
+          end;
+          //
+          Next;
+
+     end;
+     //
+     //
+     First;
+     i := 1;
+     while not EOF do
+     begin
+          if (FieldByName('Amount').AsFloat <> 0) and (FieldByName('PriceNoVAT').AsFloat <> 0)then
+          begin
+          //DKPPColumn
+          with ZVIT.DECLARBODY.RXXXXG33.Add do
+          begin
+            ROWNUM := i;
+            SetAttributeNS('nil', NS_URI, true);
+          end;
+          //
+          inc(i);
+          //
+          end;
+          //
+          Next;
+
+     end;
+     //
+     //
+     First;
+     i := 1;
+     while not EOF do
+     begin
+          if (FieldByName('Amount').AsFloat <> 0) and (FieldByName('PriceNoVAT').AsFloat <> 0)then
+          begin
+          //Одиниця виміру товару
+          with ZVIT.DECLARBODY.RXXXXG4S.Add do
+          begin
+            ROWNUM := i;
+            //Nil_ := false;
+            NodeValue := FieldByName('MeasureName').AsString;
+          end;
+          //
+          inc(i);
+          //
+          end;
+          //
+          Next;
+
+     end;
+     //
+     //
+     First;
+     i := 1;
+     while not EOF do
+     begin
+          if (FieldByName('Amount').AsFloat <> 0) and (FieldByName('PriceNoVAT').AsFloat <> 0)then
+          begin
+          //Одиниця виміру товару/послуги (код)
+          with ZVIT.DECLARBODY.RXXXXG105_2S.Add do
+          begin
+            ROWNUM := i;
+            //Nil_ := false;
+            NodeValue := FieldByName('MeasureCode').AsString;
+          end;
+          //
+          inc(i);
+          //
+          end;
+          //
+          Next;
+     end;
+     //
+     //
+     First;
+     i := 1;
+     while not EOF do
+     begin
+          if (FieldByName('Amount').AsFloat <> 0) and (FieldByName('PriceNoVAT').AsFloat <> 0)then
+          begin
+          //Кількість
+          with ZVIT.DECLARBODY.RXXXXG5.Add do
+          begin
+            ROWNUM := i;
+            //Nil_ := false;
+            NodeValue := ReplaceStr(FormatFloat('0.####', FieldByName('Amount').AsFloat), FormatSettings.DecimalSeparator, '.');
+          end;
+          //
+          inc(i);
+          //
+          end;
+          //
+          Next;
+
+     end;
+     //
+     //
+     First;
+     i := 1;
+     while not EOF do
+     begin
+          if (FieldByName('Amount').AsFloat <> 0) and (FieldByName('PriceNoVAT').AsFloat <> 0)then
+          begin
+          //Ціна постачання одиниці товару\послуги
+          with ZVIT.DECLARBODY.RXXXXG6.Add do
+          begin
+            ROWNUM := i;
+            NodeValue := ReplaceStr(FormatFloat('0.00', FieldByName('PriceNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
+          end;
+          //
+          inc(i);
+          //
+          end;
+          //
+          Next;
+
+     end;
+     //
+     //
+     First;
+     i := 1;
+     while not EOF do
+     begin
+          if (FieldByName('Amount').AsFloat <> 0) and (FieldByName('PriceNoVAT').AsFloat <> 0)then
+          begin
+          //20
+          with ZVIT.DECLARBODY.RXXXXG008.Add do
+          begin
+            ROWNUM := i;
+            //Nil_ := false;
+            //NodeValue := '20';
+            NodeValue := ReplaceStr(FormatFloat('0.##', HeaderDataSet.FieldByName('VATPercent').AsFloat), FormatSettings.DecimalSeparator, '.');
+          end;
+          //
+          inc(i);
+          //
+          end;
+          //
+          Next;
+
+     end;
+     //
+     //
+     First;
+     i := 1;
+     while not EOF do
+     begin
+          if (FieldByName('Amount').AsFloat <> 0) and (FieldByName('PriceNoVAT').AsFloat <> 0)then
+          begin
+          //
+          with ZVIT.DECLARBODY.RXXXXG009.Add do
+          begin
+            ROWNUM := i;
+            SetAttributeNS('nil', NS_URI, true);
+          end;
+          //
+          inc(i);
+          //
+          end;
+          //
+          Next;
+     end;
+     //
+     //
+     First;
+     i := 1;
+     while not EOF do
+     begin
+          if (FieldByName('Amount').AsFloat <> 0) and (FieldByName('PriceNoVAT').AsFloat <> 0)then
+          begin
+          //Обсяги постачання (база оподаткування) без урахування податку на додану вартість
+          with ZVIT.DECLARBODY.RXXXXG010.Add do
+          begin
+            ROWNUM := i;
+            //Nil_ := false;
+            NodeValue := ReplaceStr(FormatFloat('0.00', FieldByName('AmountSummNoVAT_12').AsFloat), FormatSettings.DecimalSeparator, '.');
+          end;
+          //
+          inc(i);
+          //
+          end;
+          //
+          Next;
+     end;
+     //
+     //
+     First;
+     i := 1;
+     while not EOF do
+     begin
+          if (FieldByName('Amount').AsFloat <> 0) and (FieldByName('PriceNoVAT').AsFloat <> 0)
+          then
+          begin
+          //Сума податку на додану вартість
+          with ZVIT.DECLARBODY.RXXXXG11_10.Add do
+          begin
+            ROWNUM := i;
+            //Nil_ := false;
+            if (HeaderDataSet.FieldByName('VATPercent').AsFloat < 100)
+            then NodeValue := ReplaceStr(FormatFloat('0.00####', FieldByName('SummVAT').AsFloat), FormatSettings.DecimalSeparator, '.')
+            else SetAttributeNS('nil', NS_URI, true);
+          end;
+          //
+          inc(i);
+          //
+          end;
+          //
+          Next;
+     end;
+     //
+     //
+     First;
+     i := 1;
+     while not EOF do
+     begin
+          if (FieldByName('Amount').AsFloat <> 0) and (FieldByName('PriceNoVAT').AsFloat <> 0)then
+          begin
+          //
+          with ZVIT.DECLARBODY.RXXXXG011.Add do
+          begin
+            ROWNUM := i;
+            SetAttributeNS('nil', NS_URI, true);
+          end;
+          //
+          inc(i);
+          //
+          end;
+          //
+          Next;
+     end;
+     //
+     //
+     // Close;
+  end;
+
+  ZVIT.DECLARBODY.HBOS := HeaderDataSet.FieldByName('N10').AsString;
+  ZVIT.DECLARBODY.HKBOS := HeaderDataSet.FieldByName('AccounterINN_From').AsString;
+  ZVIT.DECLARBODY.ChildNodes['R003G10S'].SetAttributeNS('nil', NS_URI, true);
+
+
+  HeaderDataSet.Close;
+  ItemsDataSet.Close;
+
+  ZVIT.OwnerDocument.Encoding :='WINDOWS-1251';
+  ZVIT.OwnerDocument.SaveToFile(FileName);
+
+end;
 
 procedure TMedoc.CreateJ1201007XMLFile(HeaderDataSet, ItemsDataSet: TDataSet;
   FileName: string);
@@ -1860,7 +2305,11 @@ begin
        CreateJ1201009XMLFile_IFIN(HeaderDataSet, ItemsDataSet, FileName)
    else
 
-   // так для Медка - 2021
+   // так для Медка - 2021 - с 16.03
+   if HeaderDataSet.FieldByName('OperDate_begin').asDateTime >= StrToDateTime( '16.03.2021', F) then
+       CreateJ1201012XMLFile(HeaderDataSet, ItemsDataSet, FileName)
+   else
+   // так для Медка - 2021 - до 16.03
    if HeaderDataSet.FieldByName('OperDate_begin').asDateTime >= StrToDateTime( '01.03.2021', F)
    then
        CreateJ1201011XMLFile(HeaderDataSet, ItemsDataSet, FileName)
@@ -3071,6 +3520,221 @@ begin
 
 end;
 
+procedure TMedocCorrective.CreateJ1201212XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
+var
+  ZVIT: Medoc_J1201212.IXMLDeclarContent;
+  i: integer;
+const
+  NS = 'xsi';
+  NS_URI = 'http://www.w3.org/2001/XMLSchema-instance';
+  TaxDateFormat = 'YYYYMMDD';
+begin
+  ZVIT := Medoc_J1201212.NewDECLAR;
+
+  ZVIT.DeclareNamespace(NS, NS_URI);
+  //F1201212.xsd
+  ZVIT.SetAttributeNS('noNamespaceSchemaLocation', NS_URI, Copy(HeaderDataSet.FieldByName('CHARCODE').AsString, 1, 8) + '.xsd');
+
+  ZVIT.DECLARHEAD.TIN := HeaderDataSet.FieldByName('OKPO_To').AsString;
+  //F1201212
+  ZVIT.DECLARHEAD.C_DOC := Copy(HeaderDataSet.FieldByName('CHARCODE').AsString, 1, 3); // F12
+  ZVIT.DECLARHEAD.C_DOC_SUB := Copy(HeaderDataSet.FieldByName('CHARCODE').AsString, 4, 3); //012
+  ZVIT.DECLARHEAD.C_DOC_VER := Copy(HeaderDataSet.FieldByName('CHARCODE').AsString, 7, 2); // 10
+
+  //Номер нового отчётного (уточняющего) документа - Для первого поданного (отчётного) документа значение данного элемента равняется 0. Для каждого последующего нового отчётного (уточняющего) документа этого же типа для данного отчётного периода значение увеличивается на единицу
+  ZVIT.DECLARHEAD.C_DOC_TYPE := 0;
+  //Номер документа в периоде	- Значение данного элемента содержит порядковый номер каждого однотипного документа в данном периоде.
+  ZVIT.DECLARHEAD.C_DOC_CNT := HeaderDataSet.FieldByName('InvNumberPartner').AsInteger;
+
+  //Код области	- Код области, на территории которой расположена налоговая инспекция, в которую подаётся оригинал либо копия документа. Заполняется согласно справочнику SPR_STI.XML.
+  ZVIT.DECLARHEAD.C_REG := 4;
+  //Код области	- Код области, на территории которой расположена налоговая инспекция, в которую подаётся оригинал либо копия документа. Заполняется согласно справочнику SPR_STI.XML.
+  ZVIT.DECLARHEAD.C_RAJ := 63;
+
+  //Отчётный месяц	Отчётным месяцем считается последний месяц в отчётном периоде (для месяцев - порядковый номер месяца, для квартала - 3,6,9,12 месяц, полугодия - 6 и 12, для года - 12)я 9 місяців – 9, для року – 12)
+  ZVIT.DECLARHEAD.PERIOD_MONTH := StrToInt(Copy(FormatDateTime('ddmmyyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime), 3, 2));
+  //Тип отчётного периода	1-месяц, 2-квартал, 3-полугодие, 4-девять мес., 5-год
+  ZVIT.DECLARHEAD.PERIOD_TYPE := 1;
+  //Отчётный год	Формат YYYY
+  ZVIT.DECLARHEAD.PERIOD_YEAR := StrToInt(Copy(FormatDateTime('ddmmyyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime), 5, 4));
+
+  //Код инспекции, в которую подаётся оригинал документа	Код выбирается из справочника инспекций. вычисляется по формуле: C_REG*100+C_RAJ.
+  ZVIT.DECLARHEAD.C_STI_ORIG := 463;
+  //Состояние документа	1-отчётный документ, 2-новый отчётный документ ,3-уточняющий документ
+  ZVIT.DECLARHEAD.C_DOC_STAN := 1;
+  //Перечень связанных документов. Элемент является узловым, в себе содержит элементы DOC	Для основного документа содержит ссылку на дополнение, для дополнения - ссылку на основной.
+  ZVIT.DECLARHEAD.LINKED_DOCS.SetAttributeNS('nil', NS_URI, true);
+  //Дата заполнения документа	Формат ddmmyyyy
+  ZVIT.DECLARHEAD.D_FILL := FormatDateTime('ddmmyyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime);
+  //Сигнатура программного обеспечения	Идентификатор ПО, с помощью которого сформирован отчёт
+  ZVIT.DECLARHEAD.SOFTWARE := 'MEDOC';
+
+
+  if HeaderDataSet.FieldByName('ERPN2').asString <> '' then
+     // Підлягає реєстрації в ЄРПН покупцем
+     ZVIT.DECLARBODY.HERPN := 1;
+  if HeaderDataSet.FieldByName('ERPN').asString <> '' then
+     // Підлягає реєстрації в ЄРПН постачальником (продавцем)
+     ZVIT.DECLARBODY.HERPN0  := 1;
+
+  if HeaderDataSet.FieldByName('TaxKind').asString = '4' then
+     // Зведена податкова накладна
+     ZVIT.DECLARBODY.R01G1 := StrToInt(HeaderDataSet.FieldByName('TaxKind').AsString);
+  // Складена на операції, звільнені від оподаткування
+  //****ZVIT.DECLARBODY.ChildNodes['R03G10S'].SetAttributeNS('nil', NS_URI, true);
+
+  if HeaderDataSet.FieldByName('isNotNDSPayer').asBoolean then
+  begin
+     // Не видається покупцю
+     ZVIT.DECLARBODY.HORIG1 := 1;
+     // Не видається покупцю (тип причини)
+     ZVIT.DECLARBODY.HTYPR := HeaderDataSet.FieldByName('NotNDSPayerC1').asString + HeaderDataSet.FieldByName('NotNDSPayerC2').asString;
+  end;
+
+  // ІПН підприємства - Продавец
+  ZVIT.DECLARBODY.HKSEL := HeaderDataSet.FieldByName('INN_To').AsString;
+  // Найменування підприємства - Продавец
+  ZVIT.DECLARBODY.HNAMESEL := HeaderDataSet.FieldByName('JuridicalName_To').AsString;
+  // Податковий номер платника податку або серія та/або номер паспорта (постачальник)
+  ZVIT.DECLARBODY.HTINSEL := HeaderDataSet.FieldByName('OKPO_To').AsString;
+  // код
+  if HeaderDataSet.FieldByName('Code_To').AsString <> ''
+  then ZVIT.DECLARBODY.HKS := StrToInt(HeaderDataSet.FieldByName('Code_To').AsString)
+  else ZVIT.DECLARBODY.ChildNodes['HKS'].SetAttributeNS('nil', NS_URI, true);
+
+  // Дата складання РК
+  ZVIT.DECLARBODY.HFILL := FormatDateTime('ddmmyyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime);
+  // Порядковий номер РК
+  ZVIT.DECLARBODY.HNUM := StrToInt(HeaderDataSet.FieldByName('InvNumberPartner').AsString);
+  // Порядковий номер РК (код діяльності)
+  ZVIT.DECLARBODY.ChildNodes['HNUM1'].SetAttributeNS('nil', NS_URI, true);
+  // Числовий номер філії продавця
+  ZVIT.DECLARBODY.ChildNodes['HNUM2'].SetAttributeNS('nil', NS_URI, true);
+
+  // Дата складання ПН, яка коригується
+  ZVIT.DECLARBODY.HPODFILL := FormatDateTime('ddmmyyyy', HeaderDataSet.FieldByName('OperDate_Child').AsDateTime);
+  // Номер податкової накладної, що коригується
+  ZVIT.DECLARBODY.HPODNUM := StrToInt(HeaderDataSet.FieldByName('InvNumber_Child').AsString);
+  ZVIT.DECLARBODY.ChildNodes['HPODNUM1'].SetAttributeNS('nil', NS_URI, true);
+  ZVIT.DECLARBODY.ChildNodes['HPODNUM2'].SetAttributeNS('nil', NS_URI, true);
+
+  // Найменування підприємства - Покупатель
+  ZVIT.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_From').AsString;
+  // ІПН підприємства - Покупатель
+  ZVIT.DECLARBODY.HKBUY := HeaderDataSet.FieldByName('INN_From').AsString;
+  // Код філії покупця
+  if HeaderDataSet.FieldByName('InvNumberBranch_From').AsString <> ''
+  then ZVIT.DECLARBODY.HFBUY := StrToInt(HeaderDataSet.FieldByName('InvNumberBranch_From').AsString)
+  else ZVIT.DECLARBODY.ChildNodes['HFBUY'].SetAttributeNS('nil', NS_URI, true);
+  // Податковий номер платника податку або серія та/або номер паспорта (покупець)
+  ZVIT.DECLARBODY.HTINBUY := HeaderDataSet.FieldByName('OKPO_From').AsString;
+  // код
+  if HeaderDataSet.FieldByName('Code_From').AsString <> ''
+  then ZVIT.DECLARBODY.HKB := StrToInt(HeaderDataSet.FieldByName('Code_From').AsString)
+  else ZVIT.DECLARBODY.ChildNodes['HKB'].SetAttributeNS('nil', NS_URI, true);
+
+     // !!!!
+     if (gc_User.Session = '5') or (gc_User.Session = '81241') then begin
+  ZVIT.DECLARBODY.R001G03 := ReplaceStr(FormatFloat('0.00####', -1 * 0), FormatSettings.DecimalSeparator, '.');
+  ZVIT.DECLARBODY.R02G9   := ReplaceStr(FormatFloat('0.00####', -1 * 0), FormatSettings.DecimalSeparator, '.');
+     end
+     else begin
+  ZVIT.DECLARBODY.R001G03 := ReplaceStr(FormatFloat('0.00####', -1 * HeaderDataSet.FieldByName('TotalSummVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
+  ZVIT.DECLARBODY.R02G9   := ReplaceStr(FormatFloat('0.00####', -1 * HeaderDataSet.FieldByName('TotalSummVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
+     end;
+
+  ZVIT.DECLARBODY.ChildNodes['R02G111'].SetAttributeNS('nil', NS_URI, true);
+     // !!!!
+     if (gc_User.Session = '5') or (gc_User.Session = '81241') then
+  ZVIT.DECLARBODY.R01G9   := ReplaceStr(FormatFloat('0.00', -1 * 0), FormatSettings.DecimalSeparator, '.')
+     else
+  ZVIT.DECLARBODY.R01G9   := ReplaceStr(FormatFloat('0.00', -1 * HeaderDataSet.FieldByName('TotalSummMVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
+
+  ZVIT.DECLARBODY.ChildNodes['R01G111'].SetAttributeNS('nil', NS_URI, true);
+  ZVIT.DECLARBODY.ChildNodes['R006G03'].SetAttributeNS('nil', NS_URI, true);
+  ZVIT.DECLARBODY.ChildNodes['R007G03'].SetAttributeNS('nil', NS_URI, true);
+  ZVIT.DECLARBODY.ChildNodes['R01G11'].SetAttributeNS('nil', NS_URI, true);
+
+  with ItemsDataSet do begin
+     First;
+     i := 1;
+     // !!!!
+     if (gc_User.Session <> '5') and (gc_User.Session <> '81241') then
+
+     while not EOF do begin
+        if HeaderDataSet.FieldByName('MovementId').AsString = HeaderDataSet.FieldByName('inMovementId').AsString
+        then begin
+
+          //
+          // with ZVIT.DECLARBODY.RXXXXG001.Add do begin ROWNUM := I; NodeValue := IntToStr(I); end;
+          //Номер рядка ПН, що коригується
+          with ZVIT.DECLARBODY.RXXXXG001.Add do begin ROWNUM := I; NodeValue := FieldByName('LineNum').AsString; end;
+          // Причина коригування (код причини)
+          with ZVIT.DECLARBODY.RXXXXG21.Add do begin ROWNUM := I; NodeValue := FieldByName('KindCode').AsString; end;
+          // Причина коригування (№ з/п групи коригування)
+          with ZVIT.DECLARBODY.RXXXXG22.Add do begin ROWNUM := I; NodeValue := FieldByName('LineNum_order').AsString; end;
+          // Номенклатура товарів
+          with ZVIT.DECLARBODY.RXXXXG3S.Add do begin ROWNUM := I; NodeValue := FieldByName('GoodsName').AsString; end;
+          // Ознака імпортованого товару
+          with ZVIT.DECLARBODY.RXXXXG32.Add do begin ROWNUM := I; SetAttributeNS('nil', NS_URI, true); end;
+          // Послуги згідно з ДКПП
+          with ZVIT.DECLARBODY.RXXXXG33.Add do begin ROWNUM := I; SetAttributeNS('nil', NS_URI, true); end;
+          // Код товару згідно з УКТ ЗЕД
+          with ZVIT.DECLARBODY.RXXXXG4.Add do begin ROWNUM := I; NodeValue := FieldByName('GoodsCodeUKTZED').AsString; end;
+          // Одиниця виміру/Умовне позначення
+          with ZVIT.DECLARBODY.RXXXXG4S.Add do begin ROWNUM := I; NodeValue := FieldByName('MeasureName').AsString; end;
+          // Одиниця виміру/Умовне позначення
+          with ZVIT.DECLARBODY.RXXXXG105_2S.Add do begin ROWNUM := I; NodeValue := FieldByName('MeasureCode').AsString; end;
+
+           if FieldByName('Price_for_PriceCor').AsFloat <> 0 then
+          begin
+              //Коригування
+              with ZVIT.DECLARBODY.RXXXXG7.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.####', -1 * FieldByName('Price_for_PriceCor').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
+              //Коригування
+              with ZVIT.DECLARBODY.RXXXXG8.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.####', FieldByName('Amount_for_PriceCor').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
+          end
+          else
+          begin
+              //Кількість
+              with ZVIT.DECLARBODY.RXXXXG5.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.####', -1 * FieldByName('Amount').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
+              //Ціна постачання одиниці товару\послуги
+              with ZVIT.DECLARBODY.RXXXXG6.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.00', FieldByName('Price').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
+          end;
+
+          // Код ставки
+          with ZVIT.DECLARBODY.RXXXXG008.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.00', FieldByName('VatPercent').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
+          // Код пільги
+          with ZVIT.DECLARBODY.RXXXXG009.Add do begin ROWNUM := I; SetAttributeNS('nil', NS_URI, true); end;
+
+          //Обсяги постачання (база оподаткування) без урахування податку на додану вартість
+          with ZVIT.DECLARBODY.RXXXXG010.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.00', -1 * FieldByName('AmountSumm').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
+
+          //Сума податку на додану вартість
+          with ZVIT.DECLARBODY.RXXXXG11_10.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.00####', -1 * FieldByName('SummVat').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
+
+          //Код виду діяльності сільськогосподарського товаровиробника
+          with ZVIT.DECLARBODY.RXXXXG011.Add do begin ROWNUM := I; SetAttributeNS('nil', NS_URI, true); end;
+
+          inc(i);
+
+         end;
+         Next;
+     end;
+     // Close;
+  end;
+
+  ZVIT.DECLARBODY.HBOS := HeaderDataSet.FieldByName('N10').AsString;
+  ZVIT.DECLARBODY.HKBOS := HeaderDataSet.FieldByName('AccounterINN_To').AsString;
+  ZVIT.DECLARBODY.ChildNodes['R003G10S'].SetAttributeNS('nil', NS_URI, true);
+
+  HeaderDataSet.Close;
+  ItemsDataSet.Close;
+
+  ZVIT.OwnerDocument.Encoding :='WINDOWS-1251';
+  ZVIT.OwnerDocument.SaveToFile(FileName);
+
+end;
+
 procedure TMedocCorrective.CreateJ1201209XMLFile_IFIN(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
 var
   ZVIT: IFIN_J1201209.IXMLDeclarContent;
@@ -3382,7 +4046,11 @@ begin
        CreateJ1201209XMLFile_IFIN(HeaderDataSet, ItemsDataSet, FileName)
    else
 
-   // так для Медка - 2021
+   // так для Медка - 2021 - с 16.03
+   if HeaderDataSet.FieldByName('OperDate_begin').asDateTime >= StrToDateTime( '16.03.2021', F) then
+      CreateJ1201212XMLFile(HeaderDataSet, ItemsDataSet, FileName)
+   else
+   // так для Медка - 2021 - до 16.03
    if HeaderDataSet.FieldByName('OperDate_begin').asDateTime >= StrToDateTime( '01.03.2021', F) then
       CreateJ1201211XMLFile(HeaderDataSet, ItemsDataSet, FileName)
    else

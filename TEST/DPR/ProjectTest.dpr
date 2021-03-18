@@ -1240,7 +1240,10 @@ uses
   Report_Account_noBalance in '..\..\Forms\Report\Report_Account_noBalance.pas' {Report_Account_noBalanceForm: TParentForm},
   Report_AccountMotion_noBalance in '..\..\Forms\Report\Report_AccountMotion_noBalance.pas' {Report_AccountMotion_noBalanceForm: TParentForm},
   ProfitLossResult in '..\..\Forms\Document\ProfitLossResult.pas' {ProfitLossResultForm: TParentForm},
-  ProfitLossResultJournal in '..\..\Forms\Document\ProfitLossResultJournal.pas' {ProfitLossResultJournalForm: TParentForm};
+  ProfitLossResultJournal in '..\..\Forms\Document\ProfitLossResultJournal.pas' {ProfitLossResultJournalForm: TParentForm},
+  Medoc_J1201012 in '..\..\SOURCE\MeDOC\Medoc_J1201012.pas',
+  Medoc_J1201112 in '..\..\SOURCE\MeDOC\Medoc_J1201112.pas',
+  Medoc_J1201212 in '..\..\SOURCE\MeDOC\Medoc_J1201212.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -70,13 +70,6 @@ BEGIN
 
   
 
-  /*  IF inStartDate < inEndDate - INTERVAL '2 MONTH' AND inUserId NOT IN (5, 9459, 106594) AND COALESCE (inGoodsId, 0) = 0
-    THEN
-        RAISE EXCEPTION 'Ошибка. Заданный период не может быть больше чем 2 мес.';
-    END IF;
-*/
-
-
     -- таблица -
     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE ('_tmpListContainer'))
     THEN

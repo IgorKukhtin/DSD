@@ -28,13 +28,24 @@ BEGIN
     IF inRec_count * 2 < (SELECT COUNT(Id) FROM _replica.table_update_data WHERE Id BETWEEN inId_start AND vbId_End)
        OR EXISTS (SELECT 1
                   FROM _replica.table_update_data
-                  WHERE Id BETWEEN inId_start AND vbId_End
-                      OR table_name ILIKE 'soldtable'
-                      OR operation  ILIKE 'INSERT')
+                     --INNER JOIN soldtable ON soldtable.Id = _replica.zfCalc_WordText_Split_replica (table_update_data.pk_values, 1) :: BigInt
+                  WHERE table_update_data.Id BETWEEN inId_start AND vbId_End
+                    AND table_update_data.table_name ILIKE 'soldtable'
+                    AND table_update_data.operation  NOT ILIKE 'DELETE')
     THEN
         -- разорвем транзакцию
-        vbId_End:= (SELECT MAX (Id)
-                    FROM (SELECT Id FROM _replica.table_update_data WHERE Id BETWEEN inId_start AND vbId_End ORDER BY Id LIMIT (inRec_count / 2) :: Integer + 1
+        vbId_End:= (SELECT MAX (tmp.Id)
+                    FROM (SELECT table_update_data.Id
+                          FROM _replica.table_update_data
+                               LEFT JOIN soldtable ON soldtable.Id = CASE WHEN table_update_data.table_name ILIKE 'soldtable'
+                                                                           AND table_update_data.operation  NOT ILIKE 'DELETE'
+                                                                               THEN CAST (_replica.zfCalc_WordText_Split_replica (table_update_data.pk_values, 1) AS BigInt)
+                                                                          ELSE NULL
+                                                                     END
+                          WHERE table_update_data.Id BETWEEN inId_start AND vbId_End + inRec_count
+                            AND (soldtable.Id > 0 OR table_update_data.table_name NOT ILIKE 'soldtable' OR table_update_data.operation ILIKE 'DELETE')
+                          ORDER BY table_update_data.Id
+                          LIMIT (inRec_count / 2) :: Integer + 1
                          ) AS tmp
                    );
     END IF;
@@ -141,9 +152,9 @@ BEGIN
     END IF;*/
 
     -- Результат
-    IF vbId_End > 4168550334
+    IF vbId_End > 4198017509
     THEN
-         RETURN 4168550334;
+         RETURN 4198017509;
     ELSE
          RETURN vbId_End;
     END IF;
@@ -176,3 +187,4 @@ $BODY$
          , (SELECT Id_end FROM tmpRes) - (SELECT Id_start FROM tmpParams) + 1 AS Rec_count_calc
          , (SELECT Rec_count      FROM tmpParams) AS Rec_count
 */
+-- SELECT _replica.gpSelect_Replica_LastId (4167545902, 100000) -- 4167192256 
