@@ -167,7 +167,7 @@ BEGIN
                                  END) AS AmountKg
       
                           , SUM (CASE WHEN ObjectLink_Measure.ChildObjectId <> zc_Measure_Sh()
-                                      THEN CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,1) <> 0 THEN MovementItem.Amount / COALESCE (ObjectFloat_Weight.ValueData,1) ELSE 0 END
+                                      THEN CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,1) <> 0 THEN MovementItem.Amount / COALESCE (ObjectFloat_Weight.ValueData,1) ELSE MovementItem.Amount END
                                       ELSE MovementItem.Amount
                                  END) AS AmountSh
                           , SUM (SUM(CASE WHEN ObjectLink_Measure.ChildObjectId = zc_Measure_Sh()
