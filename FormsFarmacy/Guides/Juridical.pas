@@ -41,6 +41,7 @@ type
     CBPurposePayment: TcxGridDBColumn;
     isUseReprice: TcxGridDBColumn;
     isPriorityReprice: TcxGridDBColumn;
+    ExpirationDateMonth: TcxGridDBColumn;
   private
     { Private declarations }
   public

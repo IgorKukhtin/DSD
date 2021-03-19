@@ -286,16 +286,6 @@ inherited WagesUserForm: TWagesUserForm
           Style.Font.Style = []
           Style.IsFontAssigned = True
         end
-        object cxButton1: TcxButton
-          Left = 311
-          Top = 62
-          Width = 12
-          Height = 27
-          Action = actListGoodsBadTiming
-          SpeedButtonOptions.CanBeFocused = False
-          SpeedButtonOptions.Transparent = True
-          TabOrder = 15
-        end
         object ceMarketing: TcxCurrencyEdit
           Left = 157
           Top = 61
@@ -308,7 +298,7 @@ inherited WagesUserForm: TWagesUserForm
           Style.Font.Name = 'Tahoma'
           Style.Font.Style = []
           Style.IsFontAssigned = True
-          TabOrder = 16
+          TabOrder = 15
           Width = 156
         end
       end
@@ -658,6 +648,13 @@ inherited WagesUserForm: TWagesUserForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
+    end
+    object actDblClickMarketing: TdsdDblClickAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actDblClickMarketing'
+      Action = actListGoodsBadTiming
+      Component = ceMarketing
     end
   end
   inherited MasterDS: TDataSource

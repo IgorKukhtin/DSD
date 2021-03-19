@@ -85,8 +85,8 @@ type
     ceIntentionalPeresort: TcxCurrencyEdit;
     cxLabel27: TcxLabel;
     actListGoodsBadTiming: TdsdOpenStaticForm;
-    cxButton1: TcxButton;
     ceMarketing: TcxCurrencyEdit;
+    actDblClickMarketing: TdsdDblClickAction;
   private
     { Private declarations }
   public

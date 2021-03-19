@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, --OKPO TVarChar,
                isDeferred Boolean,
                isUseReprice Boolean, isPriorityReprice Boolean,
                CBName TVarChar, CBMFO TVarChar, CBAccount TVarChar, CBPurposePayment TVarChar,
+               ExpirationDateMonth Integer, 
                isErased boolean,
                
                StartDate TDateTime, 
@@ -124,6 +125,7 @@ BEGIN
            , ObjectString_CBMFO.ValueData              AS CBMFO
            , ObjectString_CBAccount.ValueData          AS CBAccount
            , ObjectString_CBPurposePayment.ValueData   AS CBPurposePayment
+           , ObjectFloat_ExpirationDateMonth.ValueData::Integer AS ExpirationDateMonth
 
            , Object_Juridical.isErased           AS isErased
            
@@ -149,6 +151,10 @@ BEGIN
            LEFT JOIN ObjectFloat AS ObjectFloat_Percent
                                  ON ObjectFloat_Percent.ObjectId = Object_Juridical.Id
                                 AND ObjectFloat_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_ExpirationDateMonth
+                                 ON ObjectFloat_ExpirationDateMonth.ObjectId = Object_Juridical.Id
+                                AND ObjectFloat_ExpirationDateMonth.DescId = zc_ObjectFloat_Juridical_ExpirationDateMonth()
 
            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                 ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id

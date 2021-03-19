@@ -18,9 +18,12 @@ BEGIN
       RETURN;
    END IF;
    
-   IF CEIL(1.0 / inMultiplicity) <> (1.0 / inMultiplicity)
+   IF inMultiplicity <> 0
    THEN
-      RAISE EXCEPTION 'ќшибка. ¬веденное значение не кратно 1.';
+     IF CEIL(1.0 / inMultiplicity) <> (1.0 / inMultiplicity)
+     THEN
+        RAISE EXCEPTION 'ќшибка. ¬веденное значение не кратно 1.';
+     END IF;
    END IF;
 
    vbUserId := lpGetUserBySession (inSession);

@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                PayOrder TFloat,
                isLoadBarcode Boolean,
                isDeferred Boolean,
-               isUseReprice Boolean, isPriorityReprice Boolean,
+               isUseReprice Boolean, isPriorityReprice Boolean, ExpirationDateMonth Integer, 
                CBName TVarChar, CBMFO TVarChar, CBAccount TVarChar, CBAccountOld TVarChar, CBPurposePayment TVarChar,
                CodeRazom Integer, CodeMedicard Integer, CodeOrangeCard Integer,
                isErased boolean) AS
@@ -41,6 +41,7 @@ BEGIN
            , FALSE                   AS isDeferred
            , FALSE                   AS isUseReprice
            , FALSE                   AS isPriorityReprice
+           , 0::Integer              AS ExpirationDateMonth
            
            , CAST ('' as TVarChar)   AS CBName 
            , CAST ('' as TVarChar)   AS CBMFO
@@ -71,6 +72,7 @@ BEGIN
            , COALESCE (ObjectBoolean_Deferred.ValueData, FALSE)        AS isDeferred
            , COALESCE (ObjectBoolean_UseReprice.ValueData, FALSE)      AS isUseReprice
            , COALESCE (ObjectBoolean_PriorityReprice.ValueData, FALSE) AS isPriorityReprice
+           , ObjectFloat_ExpirationDateMonth.ValueData::Integer        AS ExpirationDateMonth
            
            , ObjectString_CBName.ValueData             AS CBName 
            , ObjectString_CBMFO.ValueData              AS CBMFO
@@ -92,6 +94,9 @@ BEGIN
            LEFT JOIN ObjectFloat AS ObjectFloat_PayOrder
                                  ON ObjectFloat_PayOrder.ObjectId = Object_Juridical.Id
                                 AND ObjectFloat_PayOrder.DescId = zc_ObjectFloat_Juridical_PayOrder()
+           LEFT JOIN ObjectFloat AS ObjectFloat_ExpirationDateMonth
+                                 ON ObjectFloat_ExpirationDateMonth.ObjectId = Object_Juridical.Id
+                                AND ObjectFloat_ExpirationDateMonth.DescId = zc_ObjectFloat_Juridical_ExpirationDateMonth()
 
            LEFT JOIN ObjectFloat AS ObjectFloat_CodeRazom
                                  ON ObjectFloat_CodeRazom.ObjectId = Object_Juridical.Id

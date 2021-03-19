@@ -25,13 +25,13 @@
   end
   object edName: TcxTextEdit [2]
     Left = 5
-    Top = 61
+    Top = 60
     TabOrder = 0
     Width = 273
   end
   object cxLabel1: TcxLabel [3]
     Left = 5
-    Top = 43
+    Top = 42
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1075#1086' '#1083#1080#1094#1072
   end
   object Код: TcxLabel [4]
@@ -45,11 +45,11 @@
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 2
-    Width = 273
+    Width = 174
   end
   object cbisCorporate: TcxCheckBox [6]
-    Left = 8
-    Top = 134
+    Left = 185
+    Top = 19
     Caption = #1053#1072#1096#1077' '#1102#1088'.'#1083'.'
     TabOrder = 1
     Width = 93
@@ -503,12 +503,12 @@
   end
   object cxLabel19: TcxLabel [8]
     Left = 5
-    Top = 84
+    Top = 81
     Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
   end
   object ceRetail: TcxButtonEdit [9]
     Left = 5
-    Top = 102
+    Top = 99
     Properties.Buttons = <
       item
         Default = True
@@ -520,24 +520,24 @@
   end
   object cePercent: TcxCurrencyEdit [10]
     Left = 8
-    Top = 180
+    Top = 145
     Properties.DisplayFormat = ',0.##'
     TabOrder = 12
     Width = 270
   end
   object cxLabel2: TcxLabel [11]
     Left = 8
-    Top = 159
+    Top = 124
     Caption = '% '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' '#1085#1072#1094#1077#1085#1082#1080
   end
   object cxLabel3: TcxLabel [12]
     Left = 8
-    Top = 206
+    Top = 169
     Caption = #1054#1095#1077#1088#1077#1076#1100' '#1087#1083#1072#1090#1077#1078#1072':'
   end
   object cePayOrder: TcxCurrencyEdit [13]
     Left = 8
-    Top = 226
+    Top = 189
     Properties.AssignedValues.MinValue = True
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
@@ -562,7 +562,7 @@
     Left = 8
     Top = 288
     Caption = #1059#1095#1072#1089#1090#1074#1091#1102#1090' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
-    TabOrder = 20
+    TabOrder = 19
     Width = 270
   end
   object cbPriorityReprice: TcxCheckBox [17]
@@ -571,6 +571,20 @@
     Caption = #1055#1088#1080#1086#1088#1080#1090#1077#1090#1085#1099#1081' '#1087#1086#1089#1090#1072#1074#1097#1080#1082' '#1087#1088#1080' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
     TabOrder = 21
     Width = 270
+  end
+  object ceExpirationDateMonth: TcxCurrencyEdit [18]
+    Left = 8
+    Top = 232
+    Properties.AssignedValues.MinValue = True
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 22
+    Width = 270
+  end
+  object cxLabel28: TcxLabel [19]
+    Left = 8
+    Top = 212
+    Caption = #1042' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1091' '#1089#1088#1086#1082#1080' '#1073#1086#1083#1077#1077' '#1084#1077#1089#1103#1094#1077#1074
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 467
@@ -970,6 +984,13 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inExpirationDateMonth'
+        Value = Null
+        Component = ceExpirationDateMonth
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
@@ -1136,6 +1157,12 @@
         Value = Null
         Component = cbPriorityReprice
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ExpirationDateMonth'
+        Value = Null
+        Component = ceExpirationDateMonth
         MultiSelectSeparator = ','
       end>
     PackSize = 1
