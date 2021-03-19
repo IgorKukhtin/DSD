@@ -13,7 +13,8 @@ uses
   cxDBData, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   Datasnap.DBClient, cxGridLevel, cxGridCustomView, cxGrid, cxCurrencyEdit,
   dxSkinsdxBarPainter, dxBar, cxSpinEdit, dxBarExtItems, cxBarEditItem,
-  cxBlobEdit, cxCheckBox, cxNavigator, RegularExpressions;
+  cxBlobEdit, cxCheckBox, cxNavigator, RegularExpressions, dxDateRanges,
+  System.Actions;
 
 type
   TListGoodsBadTimingForm = class(TAncestorBaseForm)
@@ -44,10 +45,14 @@ type
     bbClear: TdxBarButton;
     actExportExel: TdsdGridToExcel;
     bbExportExel: TdxBarButton;
+    actAddOne: TAction;
+    DBViewAddOn: TdsdDBViewAddOn;
     procedure ListGoodsBadTimingCDSBeforePost(DataSet: TDataSet);
     procedure ParentFormDestroy(Sender: TObject);
     procedure actClearExecute(Sender: TObject);
     procedure ListGoodsBadTimingCDSAfterOpen(DataSet: TDataSet);
+    procedure actAddOneExecute(Sender: TObject);
+    procedure actSendExecute(Sender: TObject);
   private
     { Private declarations }
     FIsLoad : boolean;
@@ -58,7 +63,18 @@ implementation
 
 {$R *.dfm}
 
-uses LocalWorkUnit, CommonData {, MainCash2};
+uses LocalWorkUnit, CommonData, MainCash2;
+
+procedure TListGoodsBadTimingForm.actAddOneExecute(Sender: TObject);
+begin
+  if ListGoodsBadTimingCDS.FieldByName('Remount').AsCurrency > ListGoodsBadTimingCDS.FieldByName('AmountCheck').AsCurrency then
+  begin
+    ListGoodsBadTimingCDS.Edit;
+    ListGoodsBadTimingCDS.FieldByName('AmountCheck').AsCurrency := ListGoodsBadTimingCDS.FieldByName('AmountCheck').AsCurrency +
+      Min(1, ListGoodsBadTimingCDS.FieldByName('Remount').AsCurrency - ListGoodsBadTimingCDS.FieldByName('AmountCheck').AsCurrency);
+    ListGoodsBadTimingCDS.Post;
+  end;
+end;
 
 procedure TListGoodsBadTimingForm.actClearExecute(Sender: TObject);
   var nPos : integer;
@@ -85,9 +101,15 @@ begin
   end;
 end;
 
+procedure TListGoodsBadTimingForm.actSendExecute(Sender: TObject);
+begin
+  inherited;
+//
+end;
+
 procedure TListGoodsBadTimingForm.ListGoodsBadTimingCDSAfterOpen(
   DataSet: TDataSet);
-  var List : TStringList; I : Integer; Res: TArray<string>;
+  var List : TStringList; I, nRecNo : Integer; Res: TArray<string>;
 
   function StrToVar(AStr : String) : Variant;
   begin
@@ -97,29 +119,62 @@ procedure TListGoodsBadTimingForm.ListGoodsBadTimingCDSAfterOpen(
 
 begin
   inherited;
-  if not FileExists(ExtractFilePath(ParamStr(0)) + 'GoodsBadTiming.dat') then Exit;
-  List := TStringList.Create;
-  ListGoodsBadTimingCDS.DisableControls;
+
   try
-    FIsLoad := True;
-    List.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'GoodsBadTiming.dat');
-    for I := 0 to List.Count - 1 do
+    nRecNo := MainCashForm.RemainsCDS.RecNo;
+    MainCashForm.RemainsCDS.DisableControls;
+    MainCashForm.RemainsCDS.Filtered := false;
+    ListGoodsBadTimingCDS.First;
+    while not ListGoodsBadTimingCDS.Eof do
     begin
-       Res := TRegEx.Split(List.Strings[I], ';');
-       if High(Res) <> 5 then Continue;
-       if ListGoodsBadTimingCDS.Locate('ID;PartionDateKindId;DivisionPartiesID;DiscountExternalID;NDSKindId',
-          VarArrayOf([StrToInt(Res[0]), StrToVar(Res[2]), StrToVar(Res[3]), StrToVar(Res[4]), StrToVar(Res[5])]), []) then
-       begin
-         ListGoodsBadTimingCDS.Edit;
-         ListGoodsBadTimingCDS.FieldByName('AmountCheck').AsCurrency := Min(ListGoodsBadTimingCDS.FieldByName('Remount').AsCurrency, StrToCurr(Res[1]));
-         ListGoodsBadTimingCDS.Post;
-       end;
+      if not MainCashForm.RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
+                VarArrayOf([ListGoodsBadTimingCDS.FieldByName('Id').AsInteger,
+                            ListGoodsBadTimingCDS.FieldByName('PartionDateKindId').AsVariant,
+                            ListGoodsBadTimingCDS.FieldByName('NDSKindId').AsVariant,
+                            ListGoodsBadTimingCDS.FieldByName('DiscountExternalID').AsVariant,
+                            ListGoodsBadTimingCDS.FieldByName('DivisionPartiesID').AsVariant]), []) then
+      begin
+        ListGoodsBadTimingCDS.Edit;
+        ListGoodsBadTimingCDS.FieldByName('Price').AsVariant := MainCashForm.RemainsCDS.FieldByName('Price').AsVariant;
+        ListGoodsBadTimingCDS.Post;
+      end;
+      ListGoodsBadTimingCDS.Next;
     end;
   finally
-    FIsLoad := False;
-    ListGoodsBadTimingCDS.First;
-    ListGoodsBadTimingCDS.EnableControls;
-    List.Free;
+    MainCashForm.RemainsCDS.Filtered := True;
+    MainCashForm.RemainsCDS.RecNo := nRecNo;
+    MainCashForm.RemainsCDS.EnableControls;
+  end;
+
+  if MainCashForm.FormParams.ParamByName('isCorrectMarketing').Value then
+  begin
+
+  end else
+  begin
+    if not FileExists(ExtractFilePath(ParamStr(0)) + 'GoodsBadTiming.dat') then Exit;
+    List := TStringList.Create;
+    ListGoodsBadTimingCDS.DisableControls;
+    try
+      FIsLoad := True;
+      List.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'GoodsBadTiming.dat');
+      for I := 0 to List.Count - 1 do
+      begin
+         Res := TRegEx.Split(List.Strings[I], ';');
+         if High(Res) <> 5 then Continue;
+         if ListGoodsBadTimingCDS.Locate('ID;PartionDateKindId;DivisionPartiesID;DiscountExternalID;NDSKindId',
+            VarArrayOf([StrToInt(Res[0]), StrToVar(Res[2]), StrToVar(Res[3]), StrToVar(Res[4]), StrToVar(Res[5])]), []) then
+         begin
+           ListGoodsBadTimingCDS.Edit;
+           ListGoodsBadTimingCDS.FieldByName('AmountCheck').AsCurrency := Min(ListGoodsBadTimingCDS.FieldByName('Remount').AsCurrency, StrToCurr(Res[1]));
+           ListGoodsBadTimingCDS.Post;
+         end;
+      end;
+    finally
+      FIsLoad := False;
+      ListGoodsBadTimingCDS.First;
+      ListGoodsBadTimingCDS.EnableControls;
+      List.Free;
+    end;
   end;
 end;
 

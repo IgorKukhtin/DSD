@@ -38,17 +38,31 @@ object AmountDialogForm: TAmountDialogForm
   end
   object ceNotSalePastDay: TcxCurrencyEdit
     Left = 41
-    Top = 61
+    Top = 76
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 3
     Properties.DisplayFormat = ',0.000'
     TabOrder = 2
     Width = 249
   end
-  object cxLabel6: TcxLabel
+  object cxMemo1: TcxMemo
+    AlignWithMargins = True
     Left = 41
-    Top = 30
-    Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+    Top = 23
+    TabStop = False
+    Enabled = False
+    Lines.Strings = (
+      #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086)
+    Properties.ReadOnly = True
+    Style.BorderStyle = ebsNone
+    Style.Color = clBtnFace
+    Style.Edges = [bLeft, bTop, bRight, bBottom]
+    Style.Shadow = False
+    StyleDisabled.BorderStyle = ebsNone
+    StyleDisabled.TextColor = clWindowText
+    TabOrder = 3
+    Height = 47
+    Width = 249
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 158
@@ -75,6 +89,13 @@ object AmountDialogForm: TAmountDialogForm
         Component = ceNotSalePastDay
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Label'
+        Value = Null
+        Component = cxMemo1
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 38

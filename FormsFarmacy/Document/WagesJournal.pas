@@ -22,6 +22,7 @@ type
     ExecuteDialog: TExecuteDialog;
     bbmacPrint: TdxBarButton;
     OperDate: TcxGridDBColumn;
+    DateCalculation: TcxGridDBColumn;
   private
     { Private declarations }
   public

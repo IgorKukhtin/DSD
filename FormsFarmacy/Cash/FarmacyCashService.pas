@@ -82,6 +82,8 @@ type
     //***15.01.20
     MEDICKID   : integer;        //ФИО врача (МИС «Каштан»)
     MEMBERKID   : integer;       //ФИО пациента (МИС «Каштан»)
+    //***19.03.21
+    ISCORRMARK  : boolean;       //Корректировка суммы маркетинг в ЗП по подразделению
 
   end;
   TBodyRecord = record
@@ -1427,6 +1429,8 @@ begin
                 // ***05.03.21
                 MEDICKID := FieldByName('MEDICKID').AsInteger;
                 MEMBERKID := FieldByName('MEMBERKID').AsInteger;
+                //***19.03.21
+                ISCORRMARK := FieldByName('ISCORRMARK').AsBoolean;
 
                 FNeedSaveVIP := (MANAGER <> 0);
               end;
@@ -1593,8 +1597,10 @@ begin
                   // ***15.01.20
                   dsdSave.Params.AddParam('inMedicKashtanID', ftInteger, ptInput, Head.MEDICKID);
                   dsdSave.Params.AddParam('inMemberKashtanID', ftInteger, ptInput, Head.MEMBERKID);
+                  //***19.03.21
+                  dsdSave.Params.AddParam('inMemberKashtanID', ftInteger, ptInput, Head.MEMBERKID);
                   // ***24.01.17
-                  dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
+                  dsdSave.Params.AddParam('isCorrectMarketing', ftBoolean, ptInput, Head.ISCORRMARK);
 
                   Add_Log('Start Execute gpInsertUpdate_Movement_Check_ver2');
                   Add_Log('      ' + String(Head.UID));

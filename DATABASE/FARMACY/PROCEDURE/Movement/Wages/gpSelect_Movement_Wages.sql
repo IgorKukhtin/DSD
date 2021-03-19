@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer
 
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
+             , DateCalculation TDateTime
               )
 
 AS
@@ -46,6 +47,7 @@ BEGIN
           , MovementDate_Insert.ValueData            AS InsertDate
           , Object_Update.ValueData                  AS UpdateName
           , MovementDate_Update.ValueData            AS UpdateDate
+          , MovementDate_Calculation.ValueData       AS DateCalculation
         FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -58,6 +60,10 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_Update
                                    ON MovementDate_Update.MovementId = Movement.Id
                                   AND MovementDate_Update.DescId = zc_MovementDate_Update()
+
+            LEFT JOIN MovementDate AS MovementDate_Calculation
+                                   ON MovementDate_Calculation.MovementId = Movement.Id
+                                  AND MovementDate_Calculation.DescId = zc_MovementDate_Calculation()
 
             LEFT JOIN MovementLinkObject AS MLO_Insert
                                          ON MLO_Insert.MovementId = Movement.Id

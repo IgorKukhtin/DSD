@@ -9,7 +9,8 @@ uses
   cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod,
   dsdGuides, cxDropDownEdit, cxCalendar, cxTextEdit, cxMaskEdit, cxButtonEdit,
   cxPropertiesStore, dsdAddOn, dsdDB, cxLabel, dxSkinsCore,
-  dxSkinsDefaultPainters, cxCheckBox, dsdAction, Vcl.ActnList, cxCurrencyEdit;
+  dxSkinsDefaultPainters, cxCheckBox, dsdAction, Vcl.ActnList, cxCurrencyEdit,
+  cxMemo;
 
 type
   TAmountDialogForm = class(TParentForm)
@@ -23,7 +24,7 @@ type
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     ceNotSalePastDay: TcxCurrencyEdit;
-    cxLabel6: TcxLabel;
+    cxMemo1: TcxMemo;
   private
     { Private declarations }
   public

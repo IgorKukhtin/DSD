@@ -2859,23 +2859,21 @@ end;
 
 procedure TLoadFormTest.LoadSystemFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TClearDefaultUnitForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TClearDefaultUnitForm');
-  Exit;
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSummaDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSummaDialogForm');
-  Exit;
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIntegerDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TIntegerDialogForm');
-  Exit;
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TGoodsDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAmountDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAmountDialogForm');
   Exit;
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TClearDefaultUnitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TClearDefaultUnitForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSummaDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSummaDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIntegerDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIntegerDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGlobalConstForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGlobalConstForm');

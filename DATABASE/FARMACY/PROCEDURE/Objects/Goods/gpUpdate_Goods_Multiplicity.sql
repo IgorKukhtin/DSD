@@ -18,14 +18,14 @@ BEGIN
       RETURN;
    END IF;
    
-   IF inMultiplicity <> 0
+/*   IF inMultiplicity <> 0
    THEN
-     IF CEIL(1.0 / inMultiplicity) <> (1.0 / inMultiplicity)
+     IF CEIL(1.0 / inMultiplicity) <> (1.0 / inMultiplicity) OR 
      THEN
         RAISE EXCEPTION 'Ошибка. Введенное значение не кратно 1.';
      END IF;
    END IF;
-
+*/
    vbUserId := lpGetUserBySession (inSession);
    
    -- сохранили свойство <Дополнение СУН1>

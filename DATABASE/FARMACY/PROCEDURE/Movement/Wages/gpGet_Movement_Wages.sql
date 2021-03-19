@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer
              , StatusCode Integer
              , StatusName TVarChar
              , EndDate TDateTime
+             , DateCalculation TDateTime
              )
 AS
 $BODY$
@@ -51,6 +52,7 @@ BEGIN
           , Object_Status.Code               	                              AS StatusCode
           , Object_Status.Name                             	                  AS StatusName
           , (vbOperDate + INTERVAL '1 MONTH' - INTERVAL '1 DAY')::TDateTime   AS OperDate
+          , Null::TDateTime                                                   AS DateCalculation
 
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
     ELSE
@@ -62,7 +64,7 @@ BEGIN
           , Object_Status.ObjectCode                                                 AS StatusCode
           , Object_Status.ValueData                                                  AS StatusName
           , (Movement.OperDate + INTERVAL '1 MONTH' - INTERVAL '1 DAY')::TDateTime   AS OperDate
-
+          , MovementDate_Calculation.ValueData       AS DateCalculation
         FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -72,6 +74,10 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_Update
                                    ON MovementDate_Update.MovementId = Movement.Id
                                   AND MovementDate_Update.DescId = zc_MovementDate_Update()
+
+            LEFT JOIN MovementDate AS MovementDate_Calculation
+                                   ON MovementDate_Calculation.MovementId = Movement.Id
+                                  AND MovementDate_Calculation.DescId = zc_MovementDate_Calculation()
 
             LEFT JOIN MovementLinkObject AS MLO_Insert
                                          ON MLO_Insert.MovementId = Movement.Id
@@ -99,4 +105,3 @@ ALTER FUNCTION gpGet_Movement_Wages (Integer, TDateTime, TVarChar) OWNER TO post
 */
 
 -- select * from gpGet_Movement_Wages(inMovementId := 0 , inOperDate := ('30.07.2018')::TDateTime ,  inSession := '3');
-

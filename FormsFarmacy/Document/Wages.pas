@@ -117,6 +117,8 @@ type
     actWagesMoneyBoxSun: TdsdOpenForm;
     dxBarButton18: TdxBarButton;
     PenaltySUN: TcxGridDBBandedColumn;
+    deDateCalculation: TcxDateEdit;
+    cxLabel3: TcxLabel;
   private
     { Private declarations }
   public

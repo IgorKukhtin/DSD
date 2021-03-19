@@ -10,9 +10,9 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
   TextHeight = 13
   object ListGoodsBadTimingGrid: TcxGrid [0]
     Left = 0
-    Top = 26
+    Top = 28
     Width = 721
-    Height = 385
+    Height = 383
     Align = alClient
     TabOrder = 0
     object ListGoodsBadTimingGridDBTableView: TcxGridDBTableView
@@ -60,7 +60,6 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'GoodsCode'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 55
       end
@@ -68,7 +67,6 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 177
       end
@@ -85,7 +83,6 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 86
       end
@@ -106,7 +103,6 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
         Properties.DecimalPlaces = 3
         Properties.DisplayFormat = ',0.###;-,0.###; ;'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
       end
       object AmountCheck: TcxGridDBColumn
@@ -116,7 +112,6 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
         Properties.DecimalPlaces = 3
         Properties.DisplayFormat = ',0.###;-,0.###; ;'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Styles.Content = dmMain.cxHeaderL1Style
       end
       object SummaCheck: TcxGridDBColumn
@@ -125,7 +120,6 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Width = 66
       end
       object PartionDateKindName: TcxGridDBColumn
@@ -134,7 +128,6 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
         PropertiesClassName = 'TcxTextEditProperties'
         Properties.Alignment.Horz = taLeftJustify
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 126
       end
@@ -168,6 +161,7 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
       Caption = #1054#1087#1091#1089#1090#1080#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1086#1077' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1095#1077#1082
       Hint = #1054#1087#1091#1089#1090#1080#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1086#1077' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1095#1077#1082
       ImageIndex = 30
+      OnExecute = actSendExecute
     end
     object actClear: TAction
       Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1074#1089#1077' '#1074#1074#1077#1076#1077#1085#1085#1099#1077' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072
@@ -182,6 +176,10 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
+    end
+    object actAddOne: TAction
+      Caption = 'actAddOne'
+      OnExecute = actAddOneExecute
     end
   end
   object ListGoodsBadTimingDS: TDataSource
@@ -219,10 +217,11 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
     UseSystemFont = True
     Left = 64
     Top = 64
+    PixelsPerInch = 96
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManager1Bar1: TdxBar
       Caption = 'Custom 1'
@@ -327,5 +326,23 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
     PackSize = 1
     Left = 64
     Top = 144
+  end
+  object DBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = ListGoodsBadTimingGridDBTableView
+    OnDblClickActionList = <
+      item
+        Action = actAddOne
+      end>
+    ActionItemList = <>
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    Left = 432
+    Top = 232
   end
 end

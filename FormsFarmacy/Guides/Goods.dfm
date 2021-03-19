@@ -2395,13 +2395,13 @@ inherited GoodsForm: TGoodsForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'actExecuteDialogUpdate_PercentWagesStore'
-      FormName = 'TSummaDialogForm'
-      FormNameParam.Value = 'TSummaDialogForm'
+      FormName = 'TAmountDialogForm'
+      FormNameParam.Value = 'TAmountDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'Summa'
+          Name = 'Amount'
           Value = Null
           Component = FormParams
           ComponentItem = 'Multiplicity'

@@ -486,6 +486,21 @@ inherited WagesForm: TWagesForm
       ExplicitTop = 22
       ExplicitHeight = 22
     end
+    object deDateCalculation: TcxDateEdit
+      Left = 398
+      Top = 22
+      EditValue = 42132d
+      Properties.AssignedValues.DisplayFormat = True
+      Properties.Kind = ckDateTime
+      Properties.ReadOnly = True
+      TabOrder = 6
+      Width = 155
+    end
+    object cxLabel3: TcxLabel
+      Left = 398
+      Top = 4
+      Caption = #1044#1072#1090#1072' '#1088#1072#1089#1095#1077#1090#1072
+    end
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
@@ -558,7 +573,7 @@ inherited WagesForm: TWagesForm
       GuiParams = <
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'inOperDate'
           DataType = ftDateTime
@@ -676,6 +691,7 @@ inherited WagesForm: TWagesForm
       FileNameParam.DataType = ftString
       FileNameParam.MultiSelectSeparator = ','
       TitleHeight = 1.000000000000000000
+      SignHeight = 1.000000000000000000
       TitleFont.Charset = DEFAULT_CHARSET
       TitleFont.Color = clWindowText
       TitleFont.Height = -11
@@ -686,6 +702,11 @@ inherited WagesForm: TWagesForm
       HeaderFont.Height = -11
       HeaderFont.Name = 'Tahoma'
       HeaderFont.Style = []
+      SignFont.Charset = DEFAULT_CHARSET
+      SignFont.Color = clWindowText
+      SignFont.Height = -11
+      SignFont.Name = 'Tahoma'
+      SignFont.Style = []
       ColumnParams = <
         item
           Caption = #1044#1077#1085#1100' '#1088#1072#1089#1095#1077#1090#1072
@@ -831,6 +852,7 @@ inherited WagesForm: TWagesForm
       FileNameParam.DataType = ftString
       FileNameParam.MultiSelectSeparator = ','
       TitleHeight = 1.000000000000000000
+      SignHeight = 1.000000000000000000
       TitleFont.Charset = DEFAULT_CHARSET
       TitleFont.Color = clWindowText
       TitleFont.Height = -11
@@ -841,6 +863,11 @@ inherited WagesForm: TWagesForm
       HeaderFont.Height = -11
       HeaderFont.Name = 'Tahoma'
       HeaderFont.Style = []
+      SignFont.Charset = DEFAULT_CHARSET
+      SignFont.Color = clWindowText
+      SignFont.Height = -11
+      SignFont.Name = 'Tahoma'
+      SignFont.Style = []
       ColumnParams = <
         item
           Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
@@ -1524,61 +1551,10 @@ inherited WagesForm: TWagesForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TotalSumm'
+        Name = 'DateCalculation'
         Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ClientsByBankId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ClientsByBankName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Comment'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountAccount'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AccountNumber'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountPayment'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'DatePayment'
-        Value = Null
-        DataType = ftFloat
+        Component = deDateCalculation
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 176
@@ -1647,41 +1623,9 @@ inherited WagesForm: TWagesForm
     Top = 312
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 534
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 526
     Top = 280
   end
@@ -1840,7 +1784,7 @@ inherited WagesForm: TWagesForm
     Params = <
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -1905,6 +1849,7 @@ inherited WagesForm: TWagesForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = -1
       end>
+    ShowFieldImageList = <>
     SearchAsFilter = False
     PropertiesCellList = <>
     Left = 318
