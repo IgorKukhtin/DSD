@@ -44,8 +44,9 @@ BEGIN
     IF COALESCE (ioId) = 0
     THEN
     -- сохранили <Документ>
+    inInvNumber := NEXTVAL ('movement_Invoice_seq')    :: TVarChar;
     ioId := lpInsertUpdate_Movement_Invoice (ioId               := 0                                   ::Integer
-                                           , inInvNumber        := CAST (NEXTVAL ('movement_Invoice_seq') AS TVarChar)
+                                           , inInvNumber        := inInvNumber                         :: TVarChar
                                            , inOperDate         := inOperDate
                                            , inPlanDate         := Null                                ::TDateTime
                                            , inVATPercent       := ObjectFloat_TaxKind_Value.ValueData ::TFloat
