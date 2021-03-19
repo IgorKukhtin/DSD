@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox, cxSplitter;
+  cxImageComboBox, cxSplitter, cxBlobEdit;
 
 type
   TOrderClientForm = class(TParentForm)
@@ -260,6 +260,26 @@ type
     actPrintTender: TdsdPrintAction;
     bbPrintStructure: TdxBarButton;
     bbPrintTender: TdxBarButton;
+    cxTabSheet1: TcxTabSheet;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    GoodsGroupNameFull_ch3: TcxGridDBColumn;
+    GoodsGroupName_ch3: TcxGridDBColumn;
+    Article_ch3: TcxGridDBColumn;
+    GoodsCode_ch3: TcxGridDBColumn;
+    GoodsName_ch3: TcxGridDBColumn;
+    MeasureName_ch3: TcxGridDBColumn;
+    Amount_ch3: TcxGridDBColumn;
+    OperPrice_ch3: TcxGridDBColumn;
+    CountForPrice_ch3: TcxGridDBColumn;
+    isErased_ch3: TcxGridDBColumn;
+    cxGridLevel3: TcxGridLevel;
+    UnitName_ch3: TcxGridDBColumn;
+    AmountPartner_ch3: TcxGridDBColumn;
+    spSelectMI_Child: TdsdStoredProc;
+    ChildCDS: TClientDataSet;
+    ChildDS: TDataSource;
+    actDBViewAddOnChild: TdsdDBViewAddOn;
   private
   public
   end;
