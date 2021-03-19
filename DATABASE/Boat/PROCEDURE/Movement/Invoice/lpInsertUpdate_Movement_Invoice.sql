@@ -37,6 +37,7 @@ BEGIN
         inReceiptNumber := NULL;
     END IF;
      
+     
     -- сохранили <Документ>
     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Invoice(), inInvNumber, inOperDate, NULL, 0);
     

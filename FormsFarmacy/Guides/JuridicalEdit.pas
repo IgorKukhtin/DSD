@@ -131,6 +131,8 @@ type
     ceCodeOrangeCard: TcxCurrencyEdit;
     cxLabel27: TcxLabel;
     cbPriorityReprice: TcxCheckBox;
+    ceExpirationDateMonth: TcxCurrencyEdit;
+    cxLabel28: TcxLabel;
   private
     { Private declarations }
   public

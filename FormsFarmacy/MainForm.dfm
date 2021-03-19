@@ -4894,9 +4894,6 @@ inherited MainForm: TMainForm
       object N273: TMenuItem
         Action = actReport_GoodsRemainsUKTZED
       end
-      object N279: TMenuItem
-        Action = actReport_HammerTimeSUN
-      end
       object N178: TMenuItem
         Caption = '-'
       end
@@ -5051,6 +5048,9 @@ inherited MainForm: TMainForm
       end
       object N254: TMenuItem
         Action = actReport_ChangeCommentsSUN
+      end
+      object N279: TMenuItem
+        Action = actReport_HammerTimeSUN
       end
     end
     object N40: TMenuItem [7]

@@ -167,7 +167,7 @@ BEGIN
                                  END) AS AmountKg
       
                           , SUM (CASE WHEN ObjectLink_Measure.ChildObjectId <> zc_Measure_Sh()
-                                      THEN CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,1) <> 0 THEN MovementItem.Amount / COALESCE (ObjectFloat_Weight.ValueData,1) ELSE 0 END
+                                      THEN CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,1) <> 0 THEN MovementItem.Amount / COALESCE (ObjectFloat_Weight.ValueData,1) ELSE MovementItem.Amount END
                                       ELSE MovementItem.Amount
                                  END) AS AmountSh
                           , SUM (SUM(CASE WHEN ObjectLink_Measure.ChildObjectId = zc_Measure_Sh()
@@ -179,7 +179,7 @@ BEGIN
                                                 AND MovementItem.DescId     = zc_MI_Master()
                                                 AND MovementItem.isErased   = FALSE
                          --INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
-      
+
                          LEFT JOIN ObjectLink AS ObjectLink_Measure
                                               ON ObjectLink_Measure.ObjectId = MovementItem.ObjectId
                                              AND ObjectLink_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -197,11 +197,11 @@ BEGIN
    -- на РЦ и на контрагентов
      , tmpReport_1 AS (SELECT tmp.PartnerId
                             , tmp.ContractId
-                            , SUM (COALESCE (tmp.Sale_Summ,0))    AS Sale_Summ
-                            , SUM (COALESCE (tmp.Return_Summ,0))  AS Return_Summ
-                            , SUM (COALESCE (tmp.SaleReturn_Summ,0)) AS SaleReturn_Summ
-                            , SUM (COALESCE (tmp.Sale_Weight,0))               AS Sale_Weight
-                            , SUM (COALESCE (tmp.Return_Weight,0))             AS Return_Weight 
+                            , SUM (COALESCE (tmp.Sale_Summ,0))         AS Sale_Summ
+                            , SUM (COALESCE (tmp.Return_Summ,0))       AS Return_Summ
+                            , SUM (COALESCE (tmp.SaleReturn_Summ,0))   AS SaleReturn_Summ
+                            , SUM (COALESCE (tmp.Sale_Weight,0))       AS Sale_Weight
+                            , SUM (COALESCE (tmp.Return_Weight,0))     AS Return_Weight 
                             , SUM (COALESCE (tmp.SaleReturn_Weight,0)) AS SaleReturn_Weight
 
                        FROM (SELECT tmp.PartnerId AS PartnerId

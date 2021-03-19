@@ -1,31 +1,32 @@
 inherited Report_SaleExternal_OrderSaleForm: TReport_SaleExternal_OrderSaleForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1089#1077#1090#1103#1084'>'
-  ClientHeight = 483
+  ClientHeight = 485
   ClientWidth = 1240
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -197
   ExplicitWidth = 1256
-  ExplicitHeight = 521
+  ExplicitHeight = 523
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 87
     Width = 1240
-    Height = 396
+    Height = 398
     TabOrder = 3
-    ExplicitTop = 58
+    ExplicitTop = 87
     ExplicitWidth = 1240
-    ExplicitHeight = 425
-    ClientRectBottom = 396
+    ExplicitHeight = 396
+    ClientRectBottom = 398
     ClientRectRight = 1240
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1240
-      ExplicitHeight = 425
+      ExplicitHeight = 396
       inherited cxGrid: TcxGrid
         Width = 1240
-        Height = 396
+        Height = 398
         ExplicitWidth = 1240
-        ExplicitHeight = 425
+        ExplicitHeight = 396
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -292,7 +293,7 @@ inherited Report_SaleExternal_OrderSaleForm: TReport_SaleExternal_OrderSaleForm
             Width = 80
           end
           object SummWithVAT_1: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086', '#1075#1088#1085' (1 '#1084#1077#1089'.)'
+            Caption = #1057#1091#1084#1084#1072', '#1075#1088#1085' (1 '#1084#1077#1089'.)'
             DataBinding.FieldName = 'SummWithVAT_1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -312,7 +313,7 @@ inherited Report_SaleExternal_OrderSaleForm: TReport_SaleExternal_OrderSaleForm
             Width = 80
           end
           object SummWithVAT_2: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086', '#1075#1088#1085' (2 '#1084#1077#1089'.)'
+            Caption = #1057#1091#1084#1084#1072', '#1075#1088#1085' (2 '#1084#1077#1089'.)'
             DataBinding.FieldName = 'SummWithVAT_2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -332,7 +333,7 @@ inherited Report_SaleExternal_OrderSaleForm: TReport_SaleExternal_OrderSaleForm
             Width = 80
           end
           object SummWithVAT_3: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086', '#1075#1088#1085' (3 '#1084#1077#1089'.)'
+            Caption = #1057#1091#1084#1084#1072', '#1075#1088#1085' (3 '#1084#1077#1089'.)'
             DataBinding.FieldName = 'SummWithVAT_3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -442,6 +443,15 @@ inherited Report_SaleExternal_OrderSaleForm: TReport_SaleExternal_OrderSaleForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object PriceListName: TcxGridDBColumn
+            Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+            DataBinding.FieldName = 'PriceListName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
         end
       end

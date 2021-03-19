@@ -253,6 +253,10 @@ BEGIN
                                     ON ObjectFloat_Contract_Percent.ObjectId = LoadPriceList.ContractId
                                    AND ObjectFloat_Contract_Percent.DescId = zc_ObjectFloat_Contract_Percent()
 
+              LEFT JOIN ObjectFloat AS ObjectFloat_ExpirationDateMonth
+                                    ON ObjectFloat_ExpirationDateMonth.ObjectId = LoadPriceList.JuridicalId
+                                   AND ObjectFloat_ExpirationDateMonth.DescId = zc_ObjectFloat_Juridical_ExpirationDateMonth()
+
               LEFT JOIN Object_MarginCategoryLink_View AS Object_MarginCategoryLink
                                                        ON (Object_MarginCategoryLink.UnitId = vbUnitId)
                                                       AND Object_MarginCategoryLink.JuridicalId = LoadPriceList.JuridicalId
@@ -280,7 +284,10 @@ BEGIN
              
        WHERE COALESCE (tmpContractSettings.isErased, False) = False
          AND COALESCE (JuridicalSettings.isPriceCloseOrder, TRUE) = False
-         AND tmpMainJuridicalArea.MainJuridicalId = vbJuridicalId;
+         AND tmpMainJuridicalArea.MainJuridicalId = vbJuridicalId
+         AND (COALESCE(ObjectFloat_ExpirationDateMonth.ValueData::Integer, 0) = 0 
+          OR COALESCE(LoadPriceListItem.ExpirationDate, zc_DateEnd()) > 
+             CURRENT_DATE + (COALESCE(ObjectFloat_ExpirationDateMonth.ValueData::Integer, 0)::tvarchar||' MONTH')::INTERVAL);
 
      ANALYSE _GoodsPriceAll;
 
@@ -386,4 +393,3 @@ $BODY$
 
 -- тест 
 SELECT * FROM gpSelect_CashGoods('3');
-

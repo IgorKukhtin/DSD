@@ -1,7 +1,7 @@
 -- Function: gpInsertUpdate_Object_Juridical()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, Boolean, Boolean, 
-  TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
+  TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Boolean, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
@@ -23,6 +23,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
     IN inCodeOrangeCard          Integer   ,    -- Код в системе "Оранж Кард"
     IN inisUseReprice            boolean   ,    -- Участвуют в автопереоценке
     IN inisPriorityReprice       boolean   ,    -- Приоритетный поставщик при переоценке
+    IN inExpirationDateMonth     Integer   ,    -- Брать в переоценку товар со сроком более месяцев
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS Integer AS
@@ -54,6 +55,9 @@ BEGIN
    
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Juridical_Percent(), ioId, inPercent);
+      
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Juridical_ExpirationDateMonth(), ioId, inExpirationDateMonth);
    
    -- сохранили свойство <Очередь платежа>
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Juridical_PayOrder(), ioId, inPayOrder);

@@ -94,17 +94,6 @@ BEGIN
        CREATE TEMP TABLE _tmpGoods_Sun_exception_UKTZED   (UnitId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
      END IF;
 
-     -- 2.1. вся статистика продаж - OVER
-     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpSale_over'))
-     THEN
-       CREATE TEMP TABLE _tmpSale_over   (UnitId Integer, GoodsId Integer, Amount_t1 TFloat, Summ_t1 TFloat, Amount_t2 TFloat, Summ_t2 TFloat) ON COMMIT DROP;
-     END IF;
-     -- 2.2. NotSold
-     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpSale_not'))
-     THEN
-       CREATE TEMP TABLE _tmpSale_not (UnitId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
-     END IF;
-
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpRemains_all_UKTZED'))
      THEN
@@ -127,9 +116,6 @@ BEGIN
      DELETE FROM _tmpGoods_SUN_UKTZED;
      -- все Подразделения для схемы SUN
      DELETE FROM _tmpUnit_SUN_UKTZED;
-     DELETE FROM _tmpSale_over;
-     DELETE FROM _tmpSale_not;
-
      -- Исключения по техническим переучетам по Аптекам - если есть в непроведенных ТП то исключаем из распределения
      DELETE FROM _tmpGoods_TP_exception_UKTZED;
      -- Уже использовано в текущем СУН
@@ -264,114 +250,12 @@ BEGIN
              INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = tmpRemains.GoodsId;
 
 
-     -- 2.1. вся статистика продаж
-     INSERT INTO _tmpSale_over (UnitId, GoodsId, Amount_t1, Summ_t1, Amount_t2, Summ_t2)
-        SELECT tmp.UnitId
-             , tmp.GoodsId
-               -- у отправителя в разрезе T1=60 дней OR T1=30 дней
-             , SUM (tmp.Amount_t1) AS Amount_t1, SUM (tmp.Summ_t1) AS Summ_t1
-               -- у получателя в разрезе T2=45
-             , SUM (tmp.Amount_t2) AS Amount_t2, SUM (tmp.Summ_t2) AS Summ_t2
-        FROM (-- zc_Movement_Check
-              SELECT MIContainer.WhereObjectId_analyzer          AS UnitId
-                   , MIContainer.ObjectId_analyzer               AS GoodsId
-                   , SUM (CASE WHEN MIContainer.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN_UKTZED.Value_T1 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND MIContainer.OperDate < inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount_t1
-                   , SUM (CASE WHEN MIContainer.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN_UKTZED.Value_T1 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND MIContainer.OperDate < inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ_t1
-                   , SUM (CASE WHEN MIContainer.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN_UKTZED.Value_T2 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND MIContainer.OperDate < inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount_t2
-                   , SUM (CASE WHEN MIContainer.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN_UKTZED.Value_T2 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND MIContainer.OperDate < inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ_t2
-              FROM MovementItemContainer AS MIContainer
-                   INNER JOIN _tmpUnit_SUN_UKTZED ON _tmpUnit_SUN_UKTZED.UnitId = MIContainer.WhereObjectId_analyzer
-                   INNER JOIN _tmpGoods_SUN_UKTZED ON _tmpGoods_SUN_UKTZED.GoodsId = MIContainer.ObjectId_analyzer
-                   LEFT JOIN MovementBoolean AS MB_NotMCS
-                                             ON MB_NotMCS.MovementId = MIContainer.MovementId
-                                            AND MB_NotMCS.DescId     = zc_MovementBoolean_NotMCS()
-                                            AND MB_NotMCS.ValueData  = TRUE
-              WHERE MIContainer.DescId         = zc_MIContainer_Count()
-                AND MIContainer.MovementDescId = zc_Movement_Check()
-                AND MIContainer.OperDate >= inOperDate + INTERVAL '0 DAY' - ((vbPeriod_t_max :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND MIContainer.OperDate < inOperDate
-              GROUP BY MIContainer.ObjectId_analyzer
-                     , MIContainer.WhereObjectId_analyzer
-              HAVING SUM (CASE WHEN MIContainer.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN_UKTZED.Value_T1 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND MIContainer.OperDate < inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END) <> 0
-                  OR SUM (CASE WHEN MIContainer.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN_UKTZED.Value_T2 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND MIContainer.OperDate < inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END) <> 0
 
-             UNION ALL
-              -- zc_Movement_Sale
-              SELECT MLO_Unit.ObjectId      AS UnitId
-                   , MovementItem.ObjectId  AS GoodsId
-                   , SUM (CASE WHEN Movement.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN_UKTZED.Value_T1 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND Movement.OperDate < inOperDate THEN COALESCE (MovementItem.Amount, 0)                                    ELSE 0 END) AS Amount_t1
-                   , SUM (CASE WHEN Movement.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN_UKTZED.Value_T1 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND Movement.OperDate < inOperDate THEN COALESCE (MovementItem.Amount, 0) * COALESCE (MIF_Price.ValueData,0) ELSE 0 END) AS Summ_t1
-                   , SUM (CASE WHEN Movement.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN_UKTZED.Value_T2 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND Movement.OperDate < inOperDate THEN COALESCE (MovementItem.Amount, 0)                                    ELSE 0 END) AS Amount_t2
-                   , SUM (CASE WHEN Movement.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN_UKTZED.Value_T2 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND Movement.OperDate < inOperDate THEN COALESCE (MovementItem.Amount, 0) * COALESCE (MIF_Price.ValueData,0) ELSE 0 END) AS Summ_t2
-              FROM Movement
-                   INNER JOIN MovementLinkObject AS MLO_Unit
-                                                 ON MLO_Unit.MovementId = Movement.Id
-                                                AND MLO_Unit.DescId     = zc_MovementLinkObject_Unit()
-                   INNER JOIN _tmpUnit_SUN_UKTZED ON _tmpUnit_SUN_UKTZED.UnitId     = MLO_Unit.ObjectId
-                   LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                         AND MovementItem.DescId     = zc_MI_Master()
-                                         AND MovementItem.isErased   = FALSE
-                   INNER JOIN _tmpGoods_SUN_UKTZED ON _tmpGoods_SUN_UKTZED.GoodsId = MovementItem.ObjectId
-                   LEFT JOIN MovementItemFloat AS MIF_Price
-                                               ON MIF_Price.MovementItemId = Movement.Id
-                                              AND MIF_Price.DescId     = zc_MIFloat_Price()
-              WHERE Movement.OperDate >= inOperDate + INTERVAL '0 DAY' - ((vbPeriod_t_max :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND Movement.OperDate < inOperDate
-                AND Movement.DescId   = zc_Movement_Sale()
-                AND Movement.StatusId = zc_Enum_Status_Complete()
-              GROUP BY MLO_Unit.ObjectId
-                     , MovementItem.ObjectId
-              HAVING SUM (CASE WHEN Movement.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN_UKTZED.Value_T1 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND Movement.OperDate < inOperDate THEN COALESCE (MovementItem.Amount, 0) ELSE 0 END) <> 0
-                  OR SUM (CASE WHEN Movement.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN_UKTZED.Value_T2 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND Movement.OperDate < inOperDate THEN COALESCE (MovementItem.Amount, 0) ELSE 0 END) <> 0
-             ) AS tmp
-        GROUP BY tmp.UnitId
-               , tmp.GoodsId
-       ;
-
-
-     -- 2.2. NotSold
-     INSERT INTO _tmpSale_not (UnitId, GoodsId, Amount)
-        WITH -- список для NotSold
-             tmpContainer AS (SELECT Container.Id               AS ContainerId
-                                   , Container.WhereObjectId    AS UnitId
-                                   , Container.ObjectId         AS GoodsId
-                                   , Container.Amount           AS Amount
-                              FROM -- !!!только для таких Аптек!!!
-                                   _tmpUnit_SUN_UKTZED
-                                   INNER JOIN _tmpGoods_SUN_UKTZED ON 1 = 1
-                                   INNER JOIN Container ON Container.WhereObjectId = _tmpUnit_SUN_UKTZED.UnitId
-                                                       AND Container.Amount        <> 0
-                                                       AND Container.DescId        = zc_Container_Count()
-                                                       AND Container.ObjectId      = _tmpGoods_SUN_UKTZED.GoodsId
-                             )
-             -- так можно определить NotSold
-           , tmpNotSold_all AS (SELECT tmpContainer.UnitID
-                                     , tmpContainer.GoodsID
-                                     , SUM (tmpContainer.Amount) AS Amount
-                                FROM tmpContainer
-                                     LEFT JOIN MovementItemContainer AS MIContainer
-                                                                     ON MIContainer.WhereObjectId_Analyzer = tmpContainer.UnitId
-                                                                    AND MIContainer.ObjectId_Analyzer      = tmpContainer.GoodsID
-                                                                    AND MIContainer.DescId                 = zc_MIContainer_Count()
-                                                                    AND MIContainer.OperDate               >= inOperDate - INTERVAL '250 DAY'
-                                                                    AND MIContainer.Amount                 <> 0
-                                                                    AND MIContainer.MovementDescId         = zc_Movement_Check()
-                                WHERE MIContainer.ObjectId_Analyzer IS NULL
-                                GROUP BY tmpContainer.UnitID
-                                       , tmpContainer.GoodsID
-                                HAVING SUM (tmpContainer.Amount) > 0
-                               )
-        -- Результат
-        SELECT tmpNotSold_all.UnitId
-             , tmpNotSold_all.GoodsId
-             , tmpNotSold_all.Amount
-        FROM tmpNotSold_all
-       ;
-
-
-     -- 2.4. все остатки, продажи => расчет кол-ва ПОТРЕБНОСТЬ у получателя
+     -- 2.4. все остатки у ПОЛУЧАТЕЛЯ, продажи => расчет кол-ва ПОТРЕБНОСТЬ
      WITH -- приход - UnComplete - за последние +/-7 дней для Date_Branch
-         tmpMI_Income AS (SELECT MovementLinkObject_To.ObjectId  AS UnitId
-                                , MovementItem.ObjectId          AS GoodsId
-                                , SUM (MovementItem.Amount)      AS Amount
+         tmpMI_Income AS (SELECT MovementLinkObject_To.ObjectId AS UnitId
+                               , MovementItem.ObjectId          AS GoodsId
+                               , SUM (MovementItem.Amount)      AS Amount
                            FROM Movement
                                 INNER JOIN MovementDate AS MovementDate_Branch
                                                         ON MovementDate_Branch.MovementId = Movement.Id
@@ -386,7 +270,7 @@ BEGIN
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId     = zc_MI_Master()
                                                        AND MovementItem.isErased   = FALSE
-                                INNER JOIN _tmpGoods_SUN_UKTZED ON _tmpGoods_SUN_UKTZED.GoodsId = MovementItem.ObjectId  
+                                INNER JOIN _tmpGoods_SUN_UKTZED ON _tmpGoods_SUN_UKTZED.GoodsId = MovementItem.ObjectId
                            WHERE Movement.DescId   = zc_Movement_Income()
                              AND Movement.StatusId = zc_Enum_Status_UnComplete()
                            GROUP BY MovementLinkObject_To.ObjectId, MovementItem.ObjectId
@@ -414,19 +298,19 @@ BEGIN
                                                          ON MovementItem.MovementId = Movement.Id
                                                         AND MovementItem.DescId     = zc_MI_Master()
                                                         AND MovementItem.isErased   = FALSE
-                                 INNER JOIN _tmpGoods_SUN_UKTZED ON _tmpGoods_SUN_UKTZED.GoodsId = MovementItem.ObjectId  
+                                 INNER JOIN _tmpGoods_SUN_UKTZED ON _tmpGoods_SUN_UKTZED.GoodsId = MovementItem.ObjectId
                                  -- таким образом - попробуем "восстановить" картину - что б открыть отчет "задним" числом - для теста
-                                 LEFT JOIN MovementBoolean AS MB_SUN_v2
-                                                           ON MB_SUN_v2.MovementId = Movement.Id
-                                                          AND MB_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
-                                                          AND MB_SUN_v2.ValueData  = TRUE
+                                 LEFT JOIN MovementBoolean AS MB_SUN_v4
+                                                           ON MB_SUN_v4.MovementId = Movement.Id
+                                                          AND MB_SUN_v4.DescId     = zc_MovementBoolean_SUN_v4()
+                                                          AND MB_SUN_v4.ValueData  = TRUE
                                                           AND Movement.OperDate    >= inOperDate
                             WHERE Movement.OperDate >= inOperDate - INTERVAL '30 DAY' AND Movement.OperDate < inOperDate + INTERVAL '30 DAY'
                            -- AND Movement.OperDate >= CURRENT_DATE - INTERVAL '14 DAY' AND Movement.OperDate < CURRENT_DATE + INTERVAL '14 DAY'
                               AND Movement.DescId   = zc_Movement_Send()
                               AND Movement.StatusId = zc_Enum_Status_UnComplete()
                            -- AND COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = FALSE
-                              AND MB_SUN_v2.MovementId IS NULL
+                              AND MB_SUN_v4.MovementId IS NULL
                             GROUP BY MovementLinkObject_To.ObjectId, MovementItem.ObjectId
                             HAVING SUM (MovementItem.Amount) <> 0
                            )
@@ -453,19 +337,19 @@ BEGIN
                                                          ON MovementItem.MovementId = Movement.Id
                                                         AND MovementItem.DescId     = zc_MI_Master()
                                                         AND MovementItem.isErased   = FALSE
-                                 INNER JOIN _tmpGoods_SUN_UKTZED ON _tmpGoods_SUN_UKTZED.GoodsId = MovementItem.ObjectId  
+                                 INNER JOIN _tmpGoods_SUN_UKTZED ON _tmpGoods_SUN_UKTZED.GoodsId = MovementItem.ObjectId
                                  -- таким образом - попробуем "восстановить" картину - что б открыть отчет "задним" числом - для теста
-                                 LEFT JOIN MovementBoolean AS MB_SUN_v2
-                                                           ON MB_SUN_v2.MovementId = Movement.Id
-                                                          AND MB_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
-                                                          AND MB_SUN_v2.ValueData  = TRUE
+                                 LEFT JOIN MovementBoolean AS MB_SUN_v4
+                                                           ON MB_SUN_v4.MovementId = Movement.Id
+                                                          AND MB_SUN_v4.DescId     = zc_MovementBoolean_SUN_v4()
+                                                          AND MB_SUN_v4.ValueData  = TRUE
                                                           AND Movement.OperDate    >= inOperDate
                          -- WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '30 DAY' AND Movement.OperDate < CURRENT_DATE + INTERVAL '30 DAY'
                             WHERE Movement.OperDate >= inOperDate - INTERVAL '14 DAY' AND Movement.OperDate < inOperDate + INTERVAL '14 DAY'
                               AND Movement.DescId   = zc_Movement_Send()
                               AND Movement.StatusId = zc_Enum_Status_UnComplete()
                               AND MovementBoolean_Deferred.MovementId IS NULL
-                              AND MB_SUN_v2.MovementId IS NULL
+                              AND MB_SUN_v4.MovementId IS NULL
                             GROUP BY MovementLinkObject_From.ObjectId, MovementItem.ObjectId
                             HAVING SUM (MovementItem.Amount) <> 0
                            )
@@ -486,7 +370,7 @@ BEGIN
                                        INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                               AND MovementItem.DescId     = zc_MI_Master()
                                                               AND MovementItem.isErased   = FALSE
-                                       INNER JOIN _tmpGoods_SUN_UKTZED ON _tmpGoods_SUN_UKTZED.GoodsId = MovementItem.ObjectId  
+                                       INNER JOIN _tmpGoods_SUN_UKTZED ON _tmpGoods_SUN_UKTZED.GoodsId = MovementItem.ObjectId
 
                                   WHERE Movement.DescId   = zc_Movement_OrderExternal()
                                     AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -528,7 +412,7 @@ BEGIN
                                  INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovementCheck.MovementId
                                                         AND MovementItem.DescId     = zc_MI_Master()
                                                         AND MovementItem.isErased   = FALSE
-                                 INNER JOIN _tmpGoods_SUN_UKTZED ON _tmpGoods_SUN_UKTZED.GoodsId = MovementItem.ObjectId  
+                                 INNER JOIN _tmpGoods_SUN_UKTZED ON _tmpGoods_SUN_UKTZED.GoodsId = MovementItem.ObjectId
                             GROUP BY tmpMovementCheck.UnitId, MovementItem.ObjectId
                            )
           -- остатки
@@ -538,24 +422,12 @@ BEGIN
                          FROM Container
                               -- !!!только для таких Аптек!!!
                               INNER JOIN _tmpUnit_SUN_UKTZED ON _tmpUnit_SUN_UKTZED.UnitId = Container.WhereObjectId
-                              INNER JOIN _tmpGoods_SUN_UKTZED ON _tmpGoods_SUN_UKTZED.GoodsId = Container.ObjectId  
+                              INNER JOIN _tmpGoods_SUN_UKTZED ON _tmpGoods_SUN_UKTZED.GoodsId = Container.ObjectId
                          WHERE Container.DescId = zc_Container_Count()
                            AND Container.Amount <> 0
                          GROUP BY Container.WhereObjectId
                                 , Container.ObjectId
                         )
-          -- MCS_isClose
-        , tmpPrice_MCS_isClose AS (SELECT MCS_isClose.*
-                                   FROM ObjectLink AS OL_Price_Unit
-                                        -- !!!только для таких Аптек!!!
-                                        INNER JOIN _tmpUnit_SUN_UKTZED ON _tmpUnit_SUN_UKTZED.UnitId = OL_Price_Unit.ChildObjectId
-                                        --
-                                        INNER JOIN ObjectBoolean AS MCS_isClose
-                                                                 ON MCS_isClose.ObjectId  = OL_Price_Unit.ObjectId
-                                                                AND MCS_isClose.DescId    = zc_ObjectBoolean_Price_MCSIsClose()
-                                                                AND MCS_isClose.ValueData = TRUE
-                                   WHERE OL_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                                  )
           -- цены
         , tmpPrice AS (SELECT OL_Price_Unit.ChildObjectId       AS UnitId
                             , OL_Price_Goods.ChildObjectId      AS GoodsId
@@ -568,13 +440,14 @@ BEGIN
                        FROM ObjectLink AS OL_Price_Unit
                             -- !!!только для таких Аптек!!!
                             INNER JOIN _tmpUnit_SUN_UKTZED ON _tmpUnit_SUN_UKTZED.UnitId = OL_Price_Unit.ChildObjectId
-                            -- 25.05.20 -- временно отключил - 21.05.20
-                            LEFT JOIN tmpPrice_MCS_isClose AS MCS_isClose
-                                                           ON MCS_isClose.ObjectId  = OL_Price_Unit.ObjectId
+                            LEFT JOIN ObjectBoolean AS MCS_isClose
+                                                    ON MCS_isClose.ObjectId  = OL_Price_Unit.ObjectId
+                                                   AND MCS_isClose.DescId    = zc_ObjectBoolean_Price_MCSIsClose()
+                                                   AND MCS_isClose.ValueData = TRUE
                             LEFT JOIN ObjectLink AS OL_Price_Goods
                                                  ON OL_Price_Goods.ObjectId = OL_Price_Unit.ObjectId
                                                 AND OL_Price_Goods.DescId   = zc_ObjectLink_Price_Goods()
-                            INNER JOIN _tmpGoods_SUN_UKTZED ON _tmpGoods_SUN_UKTZED.GoodsId = OL_Price_Goods.ChildObjectId 
+                            INNER JOIN _tmpGoods_SUN_UKTZED ON _tmpGoods_SUN_UKTZED.GoodsId = OL_Price_Goods.ChildObjectId
                             INNER JOIN Object AS Object_Goods
                                               ON Object_Goods.Id       = OL_Price_Goods.ChildObjectId
                                              AND Object_Goods.isErased = FALSE
@@ -634,64 +507,129 @@ BEGIN
                               FROM tmpPrice
                                    FULL JOIN tmpGoodsCategory ON tmpGoodsCategory.GoodsId = tmpPrice.GoodsId
                                                              AND tmpGoodsCategory.UnitId  = tmpPrice.UnitId
-
-                                   LEFT JOIN ObjectBoolean AS Unit_PharmacyItem
-                                                           ON Unit_PharmacyItem.ObjectId  = COALESCE (tmpPrice.UnitId,  tmpGoodsCategory.UnitId)
-                                                          AND Unit_PharmacyItem.DescId    = zc_ObjectBoolean_Unit_PharmacyItem()
                               WHERE COALESCE (tmpGoodsCategory.Value, 0) <> 0
                                  OR COALESCE (tmpPrice.MCSValue, 0) <> 0
                                  OR COALESCE (tmpPrice.Price, 0) <> 0
                              )
-     -- 2.5. Результат: все остатки, продажи => расчет кол-во ПОТРЕБНОСТЬ у получателя: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
-     INSERT INTO  _tmpRemains_all_UKTZED (UnitId, GoodsId, Price, MCS, AmountResult, AmountRemains, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve, AmountUse)
-        --
+     -- 2.5. Результат: все остатки у ПОЛУЧАТЕЛЯ, продажи => расчет кол-во ПОТРЕБНОСТЬ: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
+     INSERT INTO  _tmpRemains_all_UKTZED (UnitId, GoodsId, Price, MCS, AmountResult, AmountRemains, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve)
         SELECT tmpObject_Price.UnitId
              , tmpObject_Price.GoodsId
              , tmpObject_Price.Price
              , tmpObject_Price.MCSValue
-             , CASE WHEN 1.0 <= FLOOR (-- продажи у у получателя в разрезе T2=45
-                                       (COALESCE (_tmpSale_over.Amount_t2, 0)
-                                        -- МИНУС остаток
-                                      - CASE WHEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) /*- COALESCE (tmpMI_Send_out.Amount, 0)*/
-                                                 + COALESCE (tmpMI_Send_in.Amount, 0)
-                                                 + COALESCE (tmpMI_Income.Amount, 0)
-                                                 + COALESCE (tmpMI_OrderExternal.Amount, 0)
-                                                  ) > 0
-                                             THEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) /*- COALESCE (tmpMI_Send_out.Amount, 0)*/
-                                                 + COALESCE (tmpMI_Send_in.Amount, 0)
-                                                 + COALESCE (tmpMI_Income.Amount, 0)
-                                                 + COALESCE (tmpMI_OrderExternal.Amount, 0)
-                                                  )
-                                             ELSE 0
-                                        END
-                                        -- МИНУС все что "сейчас" отправлено по ВСЕ SUN-кроме текущего - уменьшаем "потребность"
-                                      - COALESCE (tmpSUN_oth.Amount, 0)
-                                       )
-                                       -- делим на кратность
-                                     / COALESCE (_tmpGoods_SUN_UKTZED.KoeffSUN, 1)
-                                      ) * COALESCE (_tmpGoods_SUN_UKTZED.KoeffSUN, 1)
-                         THEN -- округляем ВВНИЗ
-                              FLOOR (-- продажи у у получателя в разрезе T2=45
-                                     (COALESCE (_tmpSale_over.Amount_t2, 0)
-                                      -- МИНУС остаток
-                                      - CASE WHEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) /*- COALESCE (tmpMI_Send_out.Amount, 0)*/
-                                                 + COALESCE (tmpMI_Send_in.Amount, 0)
-                                                 + COALESCE (tmpMI_Income.Amount, 0)
-                                                 + COALESCE (tmpMI_OrderExternal.Amount, 0)
-                                                  ) > 0
-                                             THEN  (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) /*- COALESCE (tmpMI_Send_out.Amount, 0)*/
-                                                 + COALESCE (tmpMI_Send_in.Amount, 0)
-                                                 + COALESCE (tmpMI_Income.Amount, 0)
-                                                 + COALESCE (tmpMI_OrderExternal.Amount, 0)
-                                                  )
-                                             ELSE 0
-                                        END
-                                        -- МИНУС все что "сейчас" отправлено по ВСЕ SUN-кроме текущего - уменьшаем "потребность"
-                                      - COALESCE (tmpSUN_oth.Amount, 0)
-                                     )
-                                     -- делим на кратность
-                                   / COALESCE (_tmpGoods_SUN_UKTZED.KoeffSUN, 1)
-                                    ) * COALESCE (_tmpGoods_SUN_UKTZED.KoeffSUN, 1)
+             , -- расчет ПОТРЕБНОСТЬ
+               CASE -- если НТЗ_МИН = 0 ИЛИ ост <= НТЗ_МИН
+                    WHEN COALESCE (tmpObject_Price.MCSValue_min, 0) = 0 OR (COALESCE (tmpRemains.Amount, 0) <= COALESCE (tmpObject_Price.MCSValue_min, 0))
+                         THEN CASE -- для такого НТЗ
+                                   WHEN tmpObject_Price.MCSValue >= 0.1 AND tmpObject_Price.MCSValue < 10
+                                   -- и 1 >= НТЗ - "остаток"
+                                    AND 1 >= ROUND ((tmpObject_Price.MCSValue
+                                                     -- МИНУС остаток - "отложено" + "перемещ" + "приход" + "заявка"
+                                                   - CASE WHEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0)
+                                                              + COALESCE (tmpMI_Send_in.Amount, 0)
+                                                              + COALESCE (tmpMI_Income.Amount, 0)
+                                                              + COALESCE (tmpMI_OrderExternal.Amount, 0)
+                                                               ) > 0
+                                                          THEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0)
+                                                              + COALESCE (tmpMI_Send_in.Amount, 0)
+                                                              + COALESCE (tmpMI_Income.Amount, 0)
+                                                              + COALESCE (tmpMI_OrderExternal.Amount, 0)
+                                                               )
+                                                          ELSE 0
+                                                     END
+                                                     -- МИНУС все что "сейчас" отправлено по ВСЕ SUN-кроме текущего - уменьшаем "потребность"
+                                                   - COALESCE (tmpSUN_oth.Amount, 0)
+                                                    )
+                                                    -- делим на кратность
+                                                  / COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
+                                                   ) * COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
+                                        THEN -- округляем ВВЕРХ
+                                             CEIL ((tmpObject_Price.MCSValue
+                                                    -- МИНУС остаток - "отложено" + "перемещ" + "приход" + "заявка"
+                                                  - CASE WHEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0)
+                                                             + COALESCE (tmpMI_Send_in.Amount, 0)
+                                                             + COALESCE (tmpMI_Income.Amount, 0)
+                                                             + COALESCE (tmpMI_OrderExternal.Amount, 0)
+                                                              ) > 0
+                                                         THEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0)
+                                                             + COALESCE (tmpMI_Send_in.Amount, 0)
+                                                             + COALESCE (tmpMI_Income.Amount, 0)
+                                                             + COALESCE (tmpMI_OrderExternal.Amount, 0)
+                                                              )
+                                                         ELSE 0
+                                                    END
+                                                    -- МИНУС все что "сейчас" отправлено по ВСЕ SUN-кроме текущего - уменьшаем "потребность"
+                                                  - COALESCE (tmpSUN_oth.Amount, 0)
+                                                   )
+                                                   -- делим на кратность
+                                                 / COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
+                                                  ) * COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
+                                   -- для такого НТЗ
+                                   WHEN tmpObject_Price.MCSValue >= 10
+                                   -- и 1 >= НТЗ - "остаток"
+                                    AND 1 >= CEIL ((tmpObject_Price.MCSValue
+                                                    -- МИНУС остаток - "отложено" + "перемещ" + "приход" + "заявка"
+                                                  - CASE WHEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0)
+                                                             + COALESCE (tmpMI_Send_in.Amount, 0)
+                                                             + COALESCE (tmpMI_Income.Amount, 0)
+                                                             + COALESCE (tmpMI_OrderExternal.Amount, 0)
+                                                              ) > 0
+                                                         THEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0)
+                                                             + COALESCE (tmpMI_Send_in.Amount, 0)
+                                                             + COALESCE (tmpMI_Income.Amount, 0)
+                                                             + COALESCE (tmpMI_OrderExternal.Amount, 0)
+                                                              )
+                                                         ELSE 0
+                                                    END
+                                                    -- МИНУС все что "сейчас" отправлено по ВСЕ SUN-кроме текущего - уменьшаем "потребность"
+                                                  - COALESCE (tmpSUN_oth.Amount, 0)
+                                                   )
+                                                   -- делим на кратность
+                                                 / COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
+                                                  ) * COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
+                                        THEN -- округляем
+                                             ROUND ((tmpObject_Price.MCSValue
+                                                     -- МИНУС остаток - "отложено" + "перемещ" + "приход" + "заявка"
+                                                   - CASE WHEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0)
+                                                              + COALESCE (tmpMI_Send_in.Amount, 0)
+                                                              + COALESCE (tmpMI_Income.Amount, 0)
+                                                              + COALESCE (tmpMI_OrderExternal.Amount, 0)
+                                                               ) > 0
+                                                          THEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0)
+                                                              + COALESCE (tmpMI_Send_in.Amount, 0)
+                                                              + COALESCE (tmpMI_Income.Amount, 0)
+                                                              + COALESCE (tmpMI_OrderExternal.Amount, 0)
+                                                               )
+                                                          ELSE 0
+                                                     END
+                                                     -- МИНУС все что "сейчас" отправлено по ВСЕ SUN-кроме текущего - уменьшаем "потребность"
+                                                   - COALESCE (tmpSUN_oth.Amount, 0)
+                                                    )
+                                                    -- делим на кратность
+                                                  / COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
+                                                   ) * COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
+                                   ELSE -- округляем ВВНИЗ
+                                        FLOOR ((tmpObject_Price.MCSValue
+                                                -- МИНУС остаток - "отложено" + "перемещ" + "приход" + "заявка"
+                                              - CASE WHEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0)
+                                                         + COALESCE (tmpMI_Send_in.Amount, 0)
+                                                         + COALESCE (tmpMI_Income.Amount, 0)
+                                                         + COALESCE (tmpMI_OrderExternal.Amount, 0)
+                                                          ) > 0
+                                                     THEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0)
+                                                         + COALESCE (tmpMI_Send_in.Amount, 0)
+                                                         + COALESCE (tmpMI_Income.Amount, 0)
+                                                         + COALESCE (tmpMI_OrderExternal.Amount, 0)
+                                                          )
+                                                     ELSE 0
+                                                END
+                                                -- МИНУС все что "сейчас" отправлено по ВСЕ SUN-кроме текущего - уменьшаем "потребность"
+                                              - COALESCE (tmpSUN_oth.Amount, 0)
+                                               )
+                                               -- делим на кратность
+                                             / COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
+                                              ) * COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
+                              END
                     ELSE 0
                END AS AmountResult
                -- остаток
@@ -706,8 +644,11 @@ BEGIN
              , COALESCE (tmpMI_OrderExternal.Amount,0)  AS AmountOrderExternal
                -- отложенные Чеки + не проведенные с CommentError
              , COALESCE (tmpMI_Reserve.Amount, 0)       AS AmountReserve
-             , 0                                        AS AmountUse
         FROM tmpObject_Price
+             -- Исключения по техническим переучетам
+             LEFT JOIN _tmpGoods_TP_exception_UKTZED AS tmpGoods_TP_exception
+                                              ON tmpGoods_TP_exception.UnitId  = tmpObject_Price.UnitId
+                                             AND tmpGoods_TP_exception.GoodsId = tmpObject_Price.GoodsId
              LEFT JOIN tmpRemains AS tmpRemains
                                   ON tmpRemains.UnitId  = tmpObject_Price.UnitId
                                  AND tmpRemains.GoodsId = tmpObject_Price.GoodsId
@@ -721,15 +662,14 @@ BEGIN
                                                 AND tmpMI_OrderExternal.GoodsId = tmpObject_Price.GoodsId
              LEFT JOIN tmpMI_Reserve ON tmpMI_Reserve.UnitId  = tmpObject_Price.UnitId
                                     AND tmpMI_Reserve.GoodsId = tmpObject_Price.GoodsId
-             LEFT JOIN _tmpSale_over ON _tmpSale_over.UnitId  = tmpObject_Price.UnitId
-                                    AND _tmpSale_over.GoodsId = tmpObject_Price.GoodsId
 
              -- товары для Кратность
-             LEFT JOIN _tmpGoods_SUN_UKTZED ON _tmpGoods_SUN_UKTZED.GoodsId  = tmpObject_Price.GoodsId
+             LEFT JOIN _tmpGoods_SUN_UKTZED AS _tmpGoods_SUN 
+                                            ON _tmpGoods_SUN.GoodsId  = tmpObject_Price.GoodsId
 
              -- все что "сейчас" отправлено по ВСЕ SUN-кроме текущего - уменьшаем "потребность"
              LEFT JOIN (SELECT _tmpGoods_Sun_exception_UKTZED.UnitId, _tmpGoods_Sun_exception_UKTZED.GoodsId, SUM (_tmpGoods_Sun_exception_UKTZED.Amount) AS Amount
-                        FROM _tmpGoods_Sun_exception_UKTZED 
+                        FROM _tmpGoods_Sun_exception_UKTZED
                         GROUP BY _tmpGoods_Sun_exception_UKTZED.UnitId, _tmpGoods_Sun_exception_UKTZED.GoodsId
                        ) AS tmpSUN_oth
                          ON tmpSUN_oth.UnitId    = tmpObject_Price.UnitId
@@ -753,7 +693,17 @@ BEGIN
                                    AND OL_Goods_ConditionsKeep.DescId   = zc_ObjectLink_Goods_ConditionsKeep()
                LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = OL_Goods_ConditionsKeep.ChildObjectId
              */
-       ;       
+        WHERE 
+          -- Исключения по техническим переучетам
+          COALESCE (tmpGoods_TP_exception.GoodsId, 0) = 0
+       ;
+       
+ raise notice 'Value 06: %', (select Count(*) from _tmpRemains_all_UKTZED 
+                                  LEFT JOIN _tmpGoods_SUN_UKTZED ON _tmpGoods_SUN_UKTZED.GoodsID = _tmpRemains_all_UKTZED.GoodsId
+
+                                  LEFT JOIN _tmpUnit_SUN_UKTZED ON _tmpUnit_SUN_UKTZED.UnitId = _tmpRemains_all_UKTZED.UnitId
+
+                              WHERE _tmpUnit_SUN_UKTZED.isOutUKTZED_SUN1 = False);
        
 
 /*     -- 2.2. Подправили места где передача после округление больше чем остаток
@@ -844,9 +794,6 @@ BEGIN
 
      END LOOP; -- финиш цикла по курсору1
      CLOSE curPartion_next; -- закрыли курсор1
-
-
- raise notice 'Value 06: %', (select Count(*) from _tmpResult_UKTZED );
  
      -- Результат
      RETURN QUERY

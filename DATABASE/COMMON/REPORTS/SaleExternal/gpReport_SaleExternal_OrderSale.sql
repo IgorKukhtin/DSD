@@ -19,9 +19,9 @@ RETURNS TABLE (FromName TVarChar
              , PartKg TFloat, PartSum TFloat
              , TotalSumm_calc TFloat
              , TotalWeight_calc TFloat
-             
              , TotalSumm TFloat
              , TotalWeight TFloat
+             , PriceListName TVarChar
               )
 AS
 $BODY$
@@ -60,16 +60,37 @@ BEGIN
                            WHERE ObjectLink_Retail_GoodsProperty.ObjectId = inRetailId --310854 --inRetailId
                              AND ObjectLink_Retail_GoodsProperty.DescId = zc_ObjectLink_Retail_GoodsProperty()
                            );
-     -- определяем прайс юр.лица по сети
-     vbPriceListId := COALESCE((SELECT MAX (ObjectLink_Juridical_PriceList.ChildObjectId) AS PriceList
+
+     -- нужно брать прайс из договора zc_ObjectLink_Contract_PriceList только не все договора, а те которые по ГП  - zc_Enum_InfoMoney_30101()
+     vbPriceListId := COALESCE((SELECT MAX (ObjectLink_Contract_PriceList.ChildObjectId) AS PriceList
                                 FROM ObjectLink AS ObjectLink_Juridical_Retail
-                                     INNER JOIN ObjectLink AS ObjectLink_Juridical_PriceList
-                                                          ON ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
-                                                         AND ObjectLink_Juridical_PriceList.ObjectId = ObjectLink_Juridical_Retail.ObjectId
-                                                         AND COALESCE (ObjectLink_Juridical_PriceList.ChildObjectId,0) <> 0
+                                  LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                                       ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Juridical_Retail.ObjectId
+                                                      AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                                  INNER JOIN Object AS Object_Contract
+                                                    ON Object_Contract.Id = ObjectLink_Contract_Juridical.ObjectId
+                                                   AND Object_Contract.ValueData <> '-'
+                                                   AND Object_Contract.isErased =false
+                                  INNER JOIN ObjectLink AS ObjectLink_Contract_ContractKind
+                                                        ON ObjectLink_Contract_ContractKind.ObjectId = ObjectLink_Contract_Juridical.ObjectId
+                                                       AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
+                                                       AND  ObjectLink_Contract_ContractKind.ChildObjectId <> zc_Enum_ContractStateKind_Close()
+
+                                  INNER JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                                        ON ObjectLink_Contract_InfoMoney.ObjectId = ObjectLink_Contract_Juridical.ObjectId
+                                                       AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+                                                       AND ObjectLink_Contract_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30101()
+                                                     
+                                  INNER JOIN ObjectLink AS ObjectLink_Contract_PriceList
+                                                  ON ObjectLink_Contract_PriceList.ObjectId = ObjectLink_Contract_Juridical.ObjectId
+                                                 AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
+                                                 AND COALESCE (ObjectLink_Contract_PriceList.ChildObjectId,0) <> 0
+                                  INNER JOIN Object ON Object.Id = ObjectLink_Contract_PriceList.ChildObjectId 
+                                                   AND Object.ValueData NOT ILIKE '%кулинария%'
+                 
                                 WHERE ObjectLink_Juridical_Retail.ChildObjectId = inRetailId -- 310854--
                                   AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail())
-                              , zc_PriceList_Basis() );
+                                , zc_PriceList_Basis() );
 
      SELECT ObjectBoolean_PriceWithVAT.ValueData AS PriceWithVAT
           , ObjectFloat_VATPercent.ValueData     AS VATPercent
@@ -372,10 +393,14 @@ BEGIN
            
            , COALESCE (tmpReport.Sale_Summ, tmpReport_ret.Sale_Summ)     :: TFloat AS TotalSumm
            , COALESCE (tmpReport.Sale_Weight, tmpReport_ret.Sale_Weight) :: TFloat AS TotalWeight
+           
+           , Object_PriceList.ValueData ::TVarChar AS PriceListName
          
        FROM tmpData
             LEFT JOIN tmpReport_1 AS tmpReport ON tmpReport.PartnerId = tmpData.PartnerRealId
             LEFT JOIN tmpReport_2 AS tmpReport_ret ON tmpReport_ret.PartnerId = tmpData.PartnerRealId
+            
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = vbPriceListId
        ;
 
 END;
