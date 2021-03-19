@@ -229,6 +229,7 @@ from (
              , CLO_InfoMoney.ObjectId AS InfoMoneyId
              , CLO_PaidKind.ObjectId  AS PaidKindId
              , CLO_Partner.ObjectId   AS PartnerId
+           --, MIN (CLO_Branch.ObjectId)    AS BranchId
              , CLO_Branch.ObjectId    AS BranchId
              , ObjectLink_Juridical_JuridicalGroup.ChildObjectId AS JuridicalGroupId
         FROM
