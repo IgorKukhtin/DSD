@@ -19,12 +19,19 @@ BEGIN
 
 
      -- –ÂÁÛÎ¸Ú‡Ú
-     SELECT CASE WHEN ObjectLink_PersonalServiceList_Bank.ChildObjectId = 76968 -- œ¿“ "¡¿Õ  ¬Œ—“Œ "
+     SELECT CASE WHEN ObjectLink_PersonalServiceList_Bank.ChildObjectId = 6314382 -- œ¿“ "¡¿Õ  ¬Œ—“Œ " -- 76968
+                  AND ObjectLink_PersonalServiceList_PSLExportKind.ChildObjectId = zc_Enum_PSLExportKind_iBank()
                       THEN 'Vostok_'
+                 WHEN ObjectLink_PersonalServiceList_PSLExportKind.ChildObjectId = zc_Enum_PSLExportKind_iBank()
+                      THEN 'Raiffeisen_'
                  WHEN ObjectLink_PersonalServiceList_Bank.ChildObjectId = 76970 -- œ¿“ "Œ“œ ¡¿Õ "
+
                       THEN 'OTP_'
             END AS FileNamePrefix
-          , CASE WHEN ObjectLink_PersonalServiceList_Bank.ChildObjectId = 76968 -- œ¿“ "¡¿Õ  ¬Œ—“Œ "
+          , CASE WHEN ObjectLink_PersonalServiceList_Bank.ChildObjectId = 6314382 -- œ¿“ "¡¿Õ  ¬Œ—“Œ "
+                  AND ObjectLink_PersonalServiceList_PSLExportKind.ChildObjectId = zc_Enum_PSLExportKind_iBank()
+                      THEN '.txt'
+                 WHEN ObjectLink_PersonalServiceList_PSLExportKind.ChildObjectId = zc_Enum_PSLExportKind_iBank()
                       THEN '.txt'
                  WHEN ObjectLink_PersonalServiceList_Bank.ChildObjectId = 76970 -- œ¿“ "Œ“œ ¡¿Õ "
                       THEN '.xml'
@@ -36,8 +43,11 @@ BEGIN
                                         ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
                                        AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
            LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Bank
-                                ON ObjectLink_PersonalServiceList_Bank.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId 
+                                ON ObjectLink_PersonalServiceList_Bank.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
                                AND ObjectLink_PersonalServiceList_Bank.DescId = zc_ObjectLink_PersonalServiceList_Bank()
+           LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_PSLExportKind
+                                ON ObjectLink_PersonalServiceList_PSLExportKind.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
+                               AND ObjectLink_PersonalServiceList_PSLExportKind.DescId = zc_ObjectLink_PersonalServiceList_PSLExportKind ()
      WHERE Movement.Id = inMovementId
     ;
 

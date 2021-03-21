@@ -70,11 +70,10 @@ BEGIN
                                   INNER JOIN Object AS Object_Contract
                                                     ON Object_Contract.Id = ObjectLink_Contract_Juridical.ObjectId
                                                    AND Object_Contract.ValueData <> '-'
-                                                   AND Object_Contract.isErased =false
-                                  INNER JOIN ObjectLink AS ObjectLink_Contract_ContractKind
-                                                        ON ObjectLink_Contract_ContractKind.ObjectId = ObjectLink_Contract_Juridical.ObjectId
-                                                       AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
-                                                       AND  ObjectLink_Contract_ContractKind.ChildObjectId <> zc_Enum_ContractStateKind_Close()
+                                                   AND Object_Contract.isErased =FALSE
+                                  LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
+                                                       ON ObjectLink_Contract_ContractKind.ObjectId = ObjectLink_Contract_Juridical.ObjectId
+                                                      AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
 
                                   INNER JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
                                                         ON ObjectLink_Contract_InfoMoney.ObjectId = ObjectLink_Contract_Juridical.ObjectId
@@ -89,8 +88,10 @@ BEGIN
                                                    AND Object.ValueData NOT ILIKE '%кулинария%'
                  
                                 WHERE ObjectLink_Juridical_Retail.ChildObjectId = inRetailId -- 310854--
-                                  AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail())
-                                , zc_PriceList_Basis() );
+                                  AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                  AND COALESCE (ObjectLink_Contract_ContractKind.ChildObjectId, 0) <> zc_Enum_ContractStateKind_Close()
+                               )
+                             , zc_PriceList_Basis());
 
      SELECT ObjectBoolean_PriceWithVAT.ValueData AS PriceWithVAT
           , ObjectFloat_VATPercent.ValueData     AS VATPercent
