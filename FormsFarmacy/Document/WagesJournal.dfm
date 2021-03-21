@@ -1,30 +1,30 @@
 inherited WagesJournalForm: TWagesJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' "'#1047'/'#1055' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074'"'
   ClientHeight = 491
-  ClientWidth = 650
+  ClientWidth = 782
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.AddOnFormRefresh.SelfList = 'Wages'
   AddOnFormData.AddOnFormRefresh.DataSet = MasterCDS
   AddOnFormData.AddOnFormRefresh.KeyField = 'Id'
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
   AddOnFormData.AddOnFormRefresh.GetStoredProc = spGet_Movement_Wages
-  ExplicitWidth = 666
+  ExplicitWidth = 798
   ExplicitHeight = 530
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 650
+    Width = 782
     Height = 434
     TabOrder = 3
     ExplicitWidth = 650
     ExplicitHeight = 434
     ClientRectBottom = 434
-    ClientRectRight = 650
+    ClientRectRight = 782
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 650
       ExplicitHeight = 434
       inherited cxGrid: TcxGrid
-        Width = 650
+        Width = 782
         Height = 434
         ExplicitWidth = 650
         ExplicitHeight = 434
@@ -112,12 +112,20 @@ inherited WagesJournalForm: TWagesJournalForm
             Options.Editing = False
             Width = 78
           end
+          object DateCalculation: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1088#1072#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'DateCalculation'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 106
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 650
+    Width = 782
     ExplicitWidth = 650
     inherited deStart: TcxDateEdit
       Properties.DisplayFormat = 'mmmm yyyy'
@@ -347,7 +355,7 @@ inherited WagesJournalForm: TWagesJournalForm
       end
       item
         Name = 'OperDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end

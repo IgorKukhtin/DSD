@@ -166,6 +166,9 @@ BEGIN
                   AND MIMaster.ObjectID = Calculation.UserId
                   AND MIMaster.DescId = zc_MI_Master()
     ORDER BY Calculation.UserId, Calculation.OperDate;
+    
+    -- сохранили свойство <Дата расчета>
+    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Calculation(), inMovementId, CURRENT_TIMESTAMP);    
 
       -- Пересчитали итоговые суммы
     PERFORM lpInsertUpdate_Movement_Wages_TotalSumm (inMovementId);

@@ -743,10 +743,6 @@
 				<Form>TaxKindEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\OrderClient.pas">
-				<Form>OrderClientForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Document\OrderClientJournal.pas">
 				<Form>OrderClientJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -817,6 +813,12 @@
 				<Form>BankAccountJournalByInvoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Document\OrderClient.pas">
+				<Form>OrderClientForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201012.pas"/>
+			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201212.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -798,7 +798,7 @@ type
       APartionDateKindId: Integer; AConfirmationCodeSP: string;
       ALoyaltySignID: Integer; ALoyaltySMID: Integer; ALoyaltySMSumma: Currency;
       ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone,
-      ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
+      ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer; AisCorrectMarketing : Boolean;
       ANeedComplete: Boolean; FiscalCheckNumber: String;
       out AUID: String): Boolean;
 
@@ -1450,6 +1450,7 @@ begin
   FormParams.ParamByName('MedicKashtanName').Value := '';
   FormParams.ParamByName('MemberKashtanId').Value := 0;
   FormParams.ParamByName('MemberKashtanName').Value := '';
+  FormParams.ParamByName('isCorrectMarketing').Value := False;
 
   ClearFilterAll;
 
@@ -3391,6 +3392,8 @@ begin
         // ***05.03.21
         FormParams.ParamByName('MedicKashtanId').Value,
         FormParams.ParamByName('MemberKashtanId').Value,
+        // ***19.03.21
+        FormParams.ParamByName('isCorrectMarketing').Value,
 
         True, // NeedComplete
         CheckNumber, // FiscalCheckNumber
@@ -5068,6 +5071,8 @@ begin
       // ***05.03.21
     , FormParams.ParamByName('MedicKashtanId').Value
     , FormParams.ParamByName('MemberKashtanId').Value
+    // ***19.03.21
+    , FormParams.ParamByName('isCorrectMarketing').Value
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
@@ -5174,6 +5179,8 @@ begin
     // ***05.03.21
     , FormParams.ParamByName('MedicKashtanId').Value
     , FormParams.ParamByName('MemberKashtanId').Value
+    // ***19.03.21
+    , FormParams.ParamByName('isCorrectMarketing').Value
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
@@ -5986,6 +5993,8 @@ begin
     // ***05.03.21
     , FormParams.ParamByName('MedicKashtanId').Value
     , FormParams.ParamByName('MemberKashtanId').Value
+    // ***19.03.21
+    , FormParams.ParamByName('isCorrectMarketing').Value
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
@@ -7081,8 +7090,11 @@ begin
 
   if (SourceClientDataSet.FieldByName('MultiplicitySale').AsCurrency > 0) and (Frac(nAmount) <> 0) then
   begin
-    nAmountM := Frac(Abs(nAmount) / SourceClientDataSet.FieldByName('MultiplicitySale').AsCurrency);
-    if nAmountM <> 0 then
+    nAmountM := Abs(nAmount) / SourceClientDataSet.FieldByName('MultiplicitySale').AsCurrency;
+    nAmountM := Frac(nAmountM);
+    if (nAmountM <> 0) and (Frac(1 / SourceClientDataSet.FieldByName('MultiplicitySale').AsCurrency) = 0) or
+       (nAmountM <> 0) and (RoundTo((Frac(Abs(nAmount)) - RoundTo(SourceClientDataSet.FieldByName('MultiplicitySale').AsCurrency * Trunc(Frac(Abs(nAmount)) /
+                             SourceClientDataSet.FieldByName('MultiplicitySale').AsCurrency), - 3)), -3) <> 0.001)  then
     begin
       ShowMessage('Деление медикамента разрешено кратно ' + SourceClientDataSet.FieldByName('MultiplicitySale').AsString + ' !');
       exit;
@@ -8572,6 +8584,7 @@ begin
   FormParams.ParamByName('MedicKashtanName').Value := '';
   FormParams.ParamByName('MemberKashtanId').Value := 0;
   FormParams.ParamByName('MemberKashtanName').Value := '';
+  FormParams.ParamByName('isCorrectMarketing').Value := False;
 
   FiscalNumber := '';
   pnlVIP.Visible := false;
@@ -9946,7 +9959,7 @@ function TMainCashForm2.SaveLocal(ADS: TClientDataSet; AManagerId: Integer;
   APartionDateKindId: Integer; AConfirmationCodeSP: string;
   ALoyaltySignID: Integer; ALoyaltySMID: Integer; ALoyaltySMSumma: Currency;
   ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone,
-  ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
+  ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer; AisCorrectMarketing : Boolean;
   ANeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 var
   NextVIPId: Integer;
@@ -10317,6 +10330,8 @@ begin
         FLocalDataBaseHead.FieldByName('MEDICKID').Value := AMedicKashtanId;
         // ФИО пациента (МИС «Каштан»)
         FLocalDataBaseHead.FieldByName('MEMBERKID').Value := AMemberKashtanId;
+        // Корректировка суммы маркетинг в ЗП по подразделению
+        FLocalDataBaseHead.FieldByName('ISCORRMARK').Value := AisCorrectMarketing;
         FLocalDataBaseHead.Post;
       End;
     except

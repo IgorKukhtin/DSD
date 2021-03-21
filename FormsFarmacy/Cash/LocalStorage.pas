@@ -92,6 +92,8 @@ begin
       //***05.03.21
       AddIntField(LocalDataBaseHead,  'MEDICKID');     //ФИО врача (МИС «Каштан»)
       AddIntField(LocalDataBaseHead,  'MEMBERKID');    //ФИО пациента (МИС «Каштан»)
+      //***10.03.21
+      AddBoolField(LocalDataBaseHead, 'ISCORRMARK');   //Корректировка суммы маркетинг в ЗП по подразделению
 
       LocalDataBaseHead.CreateTable;
     end
@@ -155,8 +157,10 @@ begin
         //***04.12.20
         if FindField('DISTPROMO') = nil then AddStrField(LFieldDefs, 'DISTPROMO', 254);
         //***05.03.21
-        if FindField('MEDICKID') = nil then AddIntField(LFieldDefs,  'MEDICKID');      //ФИО врача (МИС «Каштан»)
-        if FindField('MEMBERKID') = nil then AddIntField(LFieldDefs,  'MEMBERKID');    //ФИО пациента (МИС «Каштан»)
+        if FindField('MEDICKID') = nil then AddIntField(LFieldDefs,    'MEDICKID');      //ФИО врача (МИС «Каштан»)
+        if FindField('MEMBERKID') = nil then AddIntField(LFieldDefs,   'MEMBERKID');    //ФИО пациента (МИС «Каштан»)
+        //***10.03.21
+        if FindField('ISCORRMARK') = nil then AddBoolField(LFieldDefs, 'ISCORRMARK');    //Корректировка суммы маркетинг в ЗП по подразделению
 
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -230,8 +234,11 @@ begin
         (FindField('BUYERFS') = nil) or
         (FindField('BUYERFSP') = nil) or
         (FindField('DISTPROMO') = nil) or
+        //***05.03.21
         (FindField('MEDICKID') = nil) or
-        (FindField('MEMBERKID') = nil));
+        (FindField('MEMBERKID') = nil) or
+        //***10.03.21
+        (FindField('ISCORRMARK') = nil));
 
       Close;
 

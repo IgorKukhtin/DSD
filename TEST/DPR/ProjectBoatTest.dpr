@@ -227,7 +227,6 @@ uses
   IncomeJournal in '..\..\FormsBoat\Document\IncomeJournal.pas' {IncomeJournalForm: TParentForm},
   IncomeJournalChoice in '..\..\FormsBoat\Document\IncomeJournalChoice.pas' {IncomeJournalChoiceForm: TParentForm},
   TaxKindEdit in '..\..\FormsBoat\Kind\TaxKindEdit.pas' {TaxKindEditForm: TParentForm},
-  OrderClient in '..\..\FormsBoat\Document\OrderClient.pas' {OrderClientForm: TParentForm},
   OrderClientJournal in '..\..\FormsBoat\Document\OrderClientJournal.pas' {OrderClientJournalForm: TParentForm},
   Medoc_J1201011 in '..\..\SOURCE\MeDOC\Medoc_J1201011.pas',
   Medoc_J1201211 in '..\..\SOURCE\MeDOC\Medoc_J1201211.pas',
@@ -246,7 +245,10 @@ uses
   Report_Goods_RemainsCurrentDialog in '..\..\FormsBoat\Report\Report_Goods_RemainsCurrentDialog.pas' {Report_Goods_RemainsCurrentDialogForm: TParentForm},
   Report_Goods_RemainsCurrent in '..\..\FormsBoat\Report\Report_Goods_RemainsCurrent.pas' {Report_Goods_RemainsCurrentForm: TParentForm},
   InvoiceJournal in '..\..\FormsBoat\Document\InvoiceJournal.pas' {InvoiceJournalForm: TParentForm},
-  BankAccountJournalByInvoice in '..\..\FormsBoat\Document\BankAccountJournalByInvoice.pas' {BankAccountJournalByInvoiceForm: TParentForm};
+  BankAccountJournalByInvoice in '..\..\FormsBoat\Document\BankAccountJournalByInvoice.pas' {BankAccountJournalByInvoiceForm: TParentForm},
+  OrderClient in '..\..\FormsBoat\Document\OrderClient.pas' {OrderClientForm: TParentForm},
+  Medoc_J1201012 in '..\..\SOURCE\MeDOC\Medoc_J1201012.pas',
+  Medoc_J1201212 in '..\..\SOURCE\MeDOC\Medoc_J1201212.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

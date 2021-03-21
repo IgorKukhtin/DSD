@@ -1068,7 +1068,7 @@ inherited MainCashForm2: TMainCashForm2
           DataBinding.FieldName = 'MultiplicitySale'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 3
-          Properties.DisplayFormat = ',0.###; ;'
+          Properties.DisplayFormat = ',0.###;-,0.###;  ;'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 117
@@ -6762,6 +6762,12 @@ inherited MainCashForm2: TMainCashForm2
         Name = 'MemberKashtanName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isCorrectMarketing'
+        Value = Null
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 32
