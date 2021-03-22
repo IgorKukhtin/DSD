@@ -19,20 +19,59 @@ $BODY$
    DECLARE i Integer; -- автонумерация
    DECLARE e Text;
    DECLARE er Text;
+
+   DECLARE vbPSLExportKindId Integer;
+   DECLARE vbBankName TVarChar;
+   DECLARE vbMFO TVarChar;
+   DECLARE vbBankAccountId Integer;
+   DECLARE vbBankAccountName TVarChar;
+   DECLARE vbContentType TVarChar;
+   DECLARE vbOnFlowType TVarChar;
 BEGIN
      -- *** Временная таблица для сбора результата
      CREATE TEMP TABLE _tmpResult (NPP Integer, RowData Text, errStr TVarChar) ON COMMIT DROP;
 
 
-     -- определили БАНК
-     vbBankId:= (SELECT ObjectLink_PersonalServiceList_Bank.ChildObjectId
-                 FROM MovementLinkObject AS MovementLinkObject_PersonalServiceList
-                       LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Bank
-                                            ON ObjectLink_PersonalServiceList_Bank.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
-                                           AND ObjectLink_PersonalServiceList_Bank.DescId = zc_ObjectLink_PersonalServiceList_Bank()
-                 WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
-                   AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
-                );
+     -- определили данные из ведомости начисления
+     SELECT Object_Bank.Id                 AS BankId             -- БАНК
+          , Object_Bank.ValueData          AS BankName           -- БАНК
+          , ObjectString_MFO.ValueData     AS MFO                -
+          , Object_BankAccount.Id          AS BankAccountId      -- р/счет
+          , Object_BankAccount.ValueData   AS BankAccountName    -- р/счет
+          , ObjectLink_PersonalServiceList_PSLExportKind.ChildObjectId AS PSLExportKindId    -- Тип выгрузки ведомости в банк
+          , ObjectString_ContentType.ValueData ::TVarChar   AS ContentType  -- Content-Type
+          , ObjectString_OnFlowType.ValueData  ::TVarChar   AS OnFlowType   -- Вид начисления в банке
+   INTO vbBankId, vbBankName, vbMFO
+      , vbBankAccountId, vbBankAccountName
+      , vbPSLExportKindId, vbContentType, vbOnFlowType
+     FROM MovementLinkObject AS MovementLinkObject_PersonalServiceList
+           LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Bank
+                                ON ObjectLink_PersonalServiceList_Bank.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
+                               AND ObjectLink_PersonalServiceList_Bank.DescId = zc_ObjectLink_PersonalServiceList_Bank()
+           LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_PersonalServiceList_Bank.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_PSLExportKind
+                                ON ObjectLink_PersonalServiceList_PSLExportKind.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
+                               AND ObjectLink_PersonalServiceList_PSLExportKind.DescId = zc_ObjectLink_PersonalServiceList_PSLExportKind()
+
+           LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_BankAccount
+                                ON ObjectLink_PersonalServiceList_BankAccount.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId 
+                               AND ObjectLink_PersonalServiceList_BankAccount.DescId = zc_ObjectLink_PersonalServiceList_BankAccount()
+           LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = ObjectLink_PersonalServiceList_BankAccount.ChildObjectId
+
+           LEFT JOIN ObjectString AS ObjectString_ContentType 
+                                  ON ObjectString_ContentType.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
+                                 AND ObjectString_ContentType.DescId = zc_ObjectString_PersonalServiceList_ContentType()
+           LEFT JOIN ObjectString AS ObjectString_OnFlowType 
+                                  ON ObjectString_OnFlowType.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
+                                 AND ObjectString_OnFlowType.DescId = zc_ObjectString_PersonalServiceList_OnFlowType()
+
+           LEFT JOIN ObjectString AS ObjectString_MFO
+                                  ON ObjectString_MFO.ObjectId = Object_Bank.Id
+                                 AND ObjectString_MFO.DescId = zc_ObjectString_Bank_MFO()
+
+     WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
+       AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList();
 
      -- ВЫплата Карта БН (ввод) - 2ф.
      IF EXISTS (SELECT 1
@@ -108,7 +147,8 @@ BEGIN
 
 
      -- ПАТ "БАНК ВОСТОК"
-     IF vbBankId = 76968
+     --IF vbBankId = 76968
+     IF vbPSLExportKindId = zc_Enum_PSLExportKind_iBank()
      THEN
         -- !!! замена !!!
         inAmount:= (SELECT SUM (COALESCE (gpSelect.SummCardRecalc, 0) + COALESCE (gpSelect.SummHosp, 0))
@@ -119,7 +159,7 @@ BEGIN
      
 	-- *** Шапка файла
 	-- Тип документа (из ТЗ)
-	INSERT INTO _tmpResult (NPP, RowData) VALUES (-100, 'Content-Type=doc/pay_sheet');
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-100, 'Content-Type='||vbContentType);                --(-100, 'Content-Type=doc/pay_sheet');
 	-- Пустая строка
 	INSERT INTO _tmpResult (NPP, RowData) VALUES (-95, '');
 	-- Дата документа
@@ -131,11 +171,11 @@ BEGIN
 	-- Код ЕГРПОУ клиента
 	INSERT INTO _tmpResult (NPP, RowData) VALUES (-75, 'CLN_OKPO=24447183');
 	-- Счет списания
-	INSERT INTO _tmpResult (NPP, RowData) VALUES (-70, 'PAYER_ACCOUNT=UA823071230000026007010192834'); -- 26007010192834
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-70, 'PAYER_ACCOUNT='||vbBankAccountName);            --(-70, 'PAYER_ACCOUNT=UA823071230000026007010192834'); -- 26007010192834
 	-- МФО банка плтельщика
-	INSERT INTO _tmpResult (NPP, RowData) VALUES (-68, 'PAYER_BANK_MFO=307123');
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-68, 'PAYER_BANK_MFO='||vbMFO);                       --(-68, 'PAYER_BANK_MFO=307123');
 	-- найменування обслуговуючого банку
-	INSERT INTO _tmpResult (NPP, RowData) VALUES (-60, 'PAYER_BANK_NAME=ПАТ "БАНК ВОСТОК"');
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-60, 'PAYER_BANK_NAME='||vbBankName);                 --(-60, 'PAYER_BANK_NAME=ПАТ "БАНК ВОСТОК"');
 
         -- номер рахунка клiєнта для списання комiсiї за РКО
       --INSERT INTO _tmpResult (NPP, RowData) VALUES (-46, 'PAYER_COMMISSION_ACCOUNT=UA823071230000026007010192834');
@@ -145,7 +185,7 @@ BEGIN
       --INSERT INTO _tmpResult (NPP, RowData) VALUES (-44, 'PAYER_COMMISSION_BANK_NAME=ПАТ "БАНК ВОСТОК"');
 
 	-- Тип документа импорта
-	INSERT INTO _tmpResult (NPP, RowData) VALUES (-41, 'ONFLOW_TYPE=Виплата заробітної плати');
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-41, 'ONFLOW_TYPE='||vbOnFlowType);                   --(-41, 'ONFLOW_TYPE=Виплата заробітної плати');
 
 	-- Сумма зачисления
 	INSERT INTO _tmpResult (NPP, RowData) VALUES (-35, 'AMOUNT='||ROUND(inAmount::numeric, 2));
