@@ -165,6 +165,31 @@ BEGIN
        PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpUpdate_MovementItem_RemainingAdjustment', True, text_var1::TVarChar, vbUserId);
     END;
 
+    -- Перерасчет ЗП каждый час
+    BEGIN
+      IF date_part('HOUR',  CURRENT_TIME)::Integer >= '9' AND date_part('HOUR',  CURRENT_TIME)::Integer <= 21 AND
+         EXISTS(SELECT Movement.ID
+                FROM Movement
+                     LEFT JOIN MovementDate AS MovementDate_Calculation
+                                            ON MovementDate_Calculation.MovementId = Movement.Id
+                                           AND MovementDate_Calculation.DescId = zc_MovementDate_Calculation()
+                WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE)
+                  AND Movement.DescId = zc_Movement_Wages()
+                  AND (MovementDate_Calculation.ValueData IS NULL)
+                   OR MovementDate_Calculation.ValueData + INTERVAL '1 HOUR' <= CURRENT_TIMESTAMP)
+      THEN
+         PERFORM gpInsertUpdate_Movement_Wages_CalculationAll(inMovementId := (SELECT Movement.ID
+                                                                               FROM Movement
+                                                                               WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE)
+                                                                                 AND Movement.DescId = zc_Movement_Wages())
+                                                           ,  inSession := zfCalc_UserAdmin());
+      END IF;
+    EXCEPTION
+       WHEN others THEN
+         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+       PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpInsertUpdate_Movement_Wages_CalculationAll', True, text_var1::TVarChar, vbUserId);
+    END;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

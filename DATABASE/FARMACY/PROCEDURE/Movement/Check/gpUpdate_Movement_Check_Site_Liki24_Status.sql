@@ -11,6 +11,7 @@ RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbStatusId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_...());
@@ -20,19 +21,28 @@ BEGIN
     END IF;
 
     vbUserId := lpGetUserBySession (inSession);
+    
 
     IF COALESCE(inMovementId, 0) = 0
     THEN
         RAISE EXCEPTION 'Документ не записан.';
     END IF;
     
+    SELECT StatusId
+    INTO vbStatusId
+    FROM Movement
+    WHERE Id = inMovementId;
+
         -- сохранили Статус заказа
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_BookingStatus(), inMovementId, inBookingStatus);
     
     IF inBookingStatus = 'Cancelled'
     THEN
       -- Удалили документ
-      PERFORM gpSetErased_Movement_Check (inMovementId:= inMovementId, inSession:= inSession);
+      IF vbStatusId = zc_Enum_Status_UnComplete()
+      THEN
+        PERFORM gpSetErased_Movement_Check (inMovementId:= inMovementId, inSession:= inSession);
+      END IF;
     ELSE
 
       IF inBookingStatus = 'PreApproved'

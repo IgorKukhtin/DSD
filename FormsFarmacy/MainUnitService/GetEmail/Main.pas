@@ -282,6 +282,8 @@ begin
          Execute;
          DataSet.First;
          while not DataSet.EOF do begin
+
+             AddToLog('Отправка файла в ошибки: ' + DataSet.FieldByName('MailFrom').AsString + ' -> ' + DataSet.FieldByName('MailTo').AsString);
             {FormParams.ParamByName('Host').Value       :=DataSet.FieldByName('Host').AsString;
             FormParams.ParamByName('Port').Value       :=DataSet.FieldByName('Port').AsInteger;
             FormParams.ParamByName('UserName').Value   :=DataSet.FieldByName('UserName').AsString;
@@ -873,11 +875,11 @@ begin
                       except on E: Exception do
                         begin
                           AddToLog(E.Message);
-                          fError_SendEmail(FieldByName('Id').AsInteger
+                          {fError_SendEmail(FieldByName('Id').AsInteger
                                             , FieldByName('ContactPersonId').AsInteger
                                             , searchResult_save.TimeStamp
                                             , FieldByName('JuridicalMail').AsString
-                                            , searchResult_save.Name);
+                                            , searchResult_save.Name);}
                         end
                       end;
            end;//1.if ... !!!только для zc_Enum_EmailKind_InPrice!!!
@@ -1081,11 +1083,11 @@ begin
                       except on E: Exception do //а здесь уже ошибка
                         begin
                              AddToLog('Exception (fBeginMMO): '+ E.Message + '???'+actExecuteImportSettings.ExternalParams.ParamByName('outMsgText').Value);
-                             fError_SendEmail(FieldByName('Id').AsInteger
+                             {fError_SendEmail(FieldByName('Id').AsInteger
                                             , FieldByName('ContactPersonId').AsInteger
                                             , msgDate
                                             , FieldByName('JuridicalMail').AsString + ' * ' + FieldByName('Mail').AsString
-                                            , '???'+actExecuteImportSettings.ExternalParams.ParamByName('outMsgText').Value);
+                                            , '???'+actExecuteImportSettings.ExternalParams.ParamByName('outMsgText').Value)};
                         end;
                       end;
            end;//2.if ... !!!только для zc_Enum_EmailKind_IncomeMMO!!!
@@ -1163,6 +1165,8 @@ begin
                                     StrCopyFolder:='cmd.exe /c move ' + chr(34) + FieldByName('DirectoryImport').AsString + '\*.mmo' + chr(34) + ' ' + chr(34) + mailFolder + chr(34);
                                     WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
 
+                                    AddToLog('Exception (fBeginMMO_all): Отправка файла в ошибки');
+
                                     //а здесь уже ошибка
                                     fError_SendEmail(FieldByName('Id').AsInteger
                                                    , FieldByName('ContactPersonId').AsInteger
@@ -1178,11 +1182,11 @@ begin
                       except on E: Exception do //а здесь уже ошибка
                         begin
                              AddToLog('Exception (fBeginMMO_all): '+ E.Message);
-                             fError_SendEmail(FieldByName('Id').AsInteger
-                                            , FieldByName('ContactPersonId').AsInteger
-                                            , now
-                                            , FieldByName('JuridicalMail').AsString + ' * ' + FieldByName('Mail').AsString
-                                            , '???'+actExecuteImportSettings.ExternalParams.ParamByName('outMsgText').Value);
+//                             fError_SendEmail(FieldByName('Id').AsInteger
+//                                            , FieldByName('ContactPersonId').AsInteger
+//                                            , now
+//                                            , FieldByName('JuridicalMail').AsString + ' * ' + FieldByName('Mail').AsString
+//                                            , '???'+actExecuteImportSettings.ExternalParams.ParamByName('outMsgText').Value);
                         end;
                       end;
            end;//2.if ... !!!только для zc_Enum_EmailKind_IncomeMMO!!!

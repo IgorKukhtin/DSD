@@ -13,8 +13,9 @@ RETURNS TABLE (Id Integer,
                PartionDateKindName  TVarChar,
                Price TFloat,
                AmountSend TFloat,
+               AmountReserve TFloat,
                Amount TFloat,
-               Remount TFloat,
+               Remains TFloat,
                AmountCheck TFloat,
                SummaCheck TFloat,
                DivisionPartiesId Integer,
@@ -22,7 +23,8 @@ RETURNS TABLE (Id Integer,
                DiscountExternalID Integer,
                DiscountExternalName  TVarChar,
                NDSKindId  Integer,
-               AccommodationName TVarChar 
+               AccommodationName TVarChar,
+               CheckList TVarChar
                )
 
 AS
@@ -239,6 +241,90 @@ BEGIN
                         WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
                           AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                         )
+         -- Отложенные чеки
+       , tmpMovementCheck AS (SELECT Movement.Id
+                                   , Movement.InvNumber
+                                   , Movement.OperDate
+                              FROM Movement
+                              WHERE Movement.DescId = zc_Movement_Check()
+                                AND Movement.StatusId = zc_Enum_Status_UnComplete())
+       , tmpMovReserveId AS (SELECT DISTINCT Movement.Id
+                                           , Movement.InvNumber
+                                           , Movement.OperDate
+                             FROM tmpMovementCheck AS Movement
+                                   INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                 ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                                AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                                AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                             )
+       , tmpMovReserveAll AS (
+                             SELECT Movement.Id
+                                  , Movement.InvNumber
+                                  , Movement.OperDate
+                             FROM MovementBoolean AS MovementBoolean_Deferred
+                                  INNER JOIN tmpMovReserveId AS Movement ON Movement.Id     = MovementBoolean_Deferred.MovementId
+                             WHERE MovementBoolean_Deferred.DescId    = zc_MovementBoolean_Deferred()
+                               AND MovementBoolean_Deferred.ValueData = TRUE
+                             UNION ALL
+                             SELECT Movement.Id
+                                  , Movement.InvNumber
+                                  , Movement.OperDate
+                             FROM MovementString AS MovementString_CommentError
+                                  INNER JOIN tmpMovReserveId AS Movement ON Movement.Id     = MovementString_CommentError.MovementId
+                             WHERE MovementString_CommentError.DescId = zc_MovementString_CommentError()
+                               AND MovementString_CommentError.ValueData <> ''
+                             )
+       , tmpReserve AS (SELECT MovementItemMaster.ObjectId                                           AS GoodsId
+                             , COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods_Main.NDSKindId) AS NDSKindId
+                             , COALESCE(MILinkObject_DiscountExternal.ObjectId, 0)                   AS DiscountExternalId
+                             , COALESCE(MILinkObject_DivisionParties.ObjectId, 0)                    AS DivisionPartiesId
+                             , COALESCE(MILinkObject_PartionDateKind.ObjectId, 0)                    AS PartionDateKindId
+                             , SUM(COALESCE (MovementItemChild.Amount, MovementItemMaster.Amount))   AS Amount
+                             , STRING_AGG(Movement.InvNumber||' от '||zfConvert_DateShortToString(Movement.OperDate), ',') AS CheckList
+                        FROM tmpMovReserveAll AS Movement
+
+                             INNER JOIN MovementItem AS MovementItemMaster
+                                                     ON MovementItemMaster.MovementId = Movement.Id
+                                                    AND MovementItemMaster.DescId     = zc_MI_Master()
+                                                    AND MovementItemMaster.isErased   = FALSE
+                                                    AND MovementItemMaster.ObjectId  IN (SELECT DISTINCT tmpGoodsRemains.ObjectId FROM tmpGoodsRemains)
+
+                             LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItemMaster.ObjectId
+                             LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
+
+                             LEFT JOIN MovementItemLinkObject AS MILinkObject_NDSKind
+                                                              ON MILinkObject_NDSKind.MovementItemId = MovementItemMaster.Id
+                                                             AND MILinkObject_NDSKind.DescId = zc_MILinkObject_NDSKind()
+
+                             LEFT JOIN MovementItemLinkObject AS MILinkObject_DiscountExternal
+                                                              ON MILinkObject_DiscountExternal.MovementItemId = MovementItemMaster.Id
+                                                             AND MILinkObject_DiscountExternal.DescId         = zc_MILinkObject_DiscountExternal()
+
+                             LEFT JOIN MovementItemLinkObject AS MILinkObject_DivisionParties
+                                                              ON MILinkObject_DivisionParties.MovementItemId = MovementItemMaster.Id
+                                                             AND MILinkObject_DivisionParties.DescId         = zc_MILinkObject_DivisionParties()
+
+                             LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionDateKind
+                                                              ON MILinkObject_PartionDateKind.MovementItemId = MovementItemMaster.Id
+                                                             AND MILinkObject_PartionDateKind.DescId         = zc_MILinkObject_PartionDateKind()
+
+                             LEFT JOIN MovementItem AS MovementItemChild
+                                                    ON MovementItemChild.MovementId = Movement.Id
+                                                   AND MovementItemChild.ParentId = MovementItemMaster.Id
+                                                   AND MovementItemChild.DescId     = zc_MI_Child()
+                                                   AND MovementItemChild.Amount     > 0
+                                                   AND MovementItemChild.isErased   = FALSE
+
+                             LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                         ON MIFloat_ContainerId.MovementItemId = MovementItemChild.Id
+                                                        AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+
+                        GROUP BY MovementItemMaster.ObjectId
+                               , COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods_Main.NDSKindId)
+                               , MILinkObject_DiscountExternal.ObjectId
+                               , MILinkObject_DivisionParties.ObjectId
+                               , MILinkObject_PartionDateKind.ObjectId
+                        )
 
     SELECT GoodsRemains.ObjectId                                             AS Id
          , Object_Goods_Main.ObjectCode
@@ -248,6 +334,7 @@ BEGIN
          , Object_PartionDateKind.ValueData                                  AS PartionDateKindName
          , COALESCE(tmpObject_Price.Price,0)::TFloat                         AS Price
          , GoodsRemains.AmountSend::TFloat                                   AS AmountSend
+         , COALESCE(tmpReserve.Amount, 0)::TFloat                            AS AmountReserve
          , GoodsRemains.Amount::TFloat                                       AS Amount
          , GoodsRemains.Remains::TFloat                                      AS Remains
          , 0::TFloat                                                         AS AmountCheck
@@ -258,7 +345,8 @@ BEGIN
          , Object_DiscountExternal.ValueData                                 AS DiscountExternalName
          , GoodsRemains.NDSKindId
          , Object_Accommodation.ValueData                                    AS AccommodationName
-    FROM  tmpGoodsRemains AS GoodsRemains
+         , tmpReserve.CheckList::TVarChar                                    AS CheckList
+    FROM  tmpGoodsRemains AS GoodsRemains 
 
         LEFT OUTER JOIN tmpObject_Price ON tmpObject_Price.GoodsId = GoodsRemains.ObjectId
 
@@ -273,6 +361,12 @@ BEGIN
                                          ON Accommodation.UnitId = vbUnitId
                                         AND Accommodation.GoodsId = GoodsRemains.ObjectId
         LEFT JOIN Object AS Object_Accommodation  ON Object_Accommodation.ID = Accommodation.AccommodationId
+        
+        LEFT JOIN tmpReserve ON tmpReserve.GoodsId = GoodsRemains.ObjectId
+                            AND tmpReserve.PartionDateKindId = COALESCE(GoodsRemains.PartionDateKindId, 0)  
+                            AND tmpReserve.DivisionPartiesId = COALESCE(GoodsRemains.DivisionPartiesId, 0) 
+                            AND tmpReserve.DiscountExternalID = COALESCE(GoodsRemains.DiscountExternalID, 0) 
+                            AND tmpReserve.NDSKindId = GoodsRemains.NDSKindId  
         
     WHERE GoodsRemains.ExpirationDate <= CURRENT_DATE + INTERVAL '30 DAY';
 

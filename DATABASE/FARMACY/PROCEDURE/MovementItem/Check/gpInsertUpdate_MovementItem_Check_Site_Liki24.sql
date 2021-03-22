@@ -20,6 +20,7 @@ $BODY$
    DECLARE vbIsInsert   Boolean;
    DECLARE vbSiteDiscount TFloat;
    DECLARE vbPriceSale TFloat;
+   DECLARE vbStatusId Integer;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -47,6 +48,16 @@ BEGIN
       FROM MovementItemString
       WHERE MovementItemString.DescId = zc_MIString_ItemId()
         AND MovementItemString.ValueData = inItemId;
+    END IF;
+
+    SELECT StatusId
+    INTO vbStatusId
+    FROM Movement
+    WHERE Id = inMovementId;
+
+    IF vbStatusId <> zc_Enum_Status_UnComplete()
+    THEN
+      RETURN;
     END IF;
 
     -- !!!только так - определяется <Торговая сеть>!!!

@@ -2,19 +2,20 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
   BorderIcons = [biSystemMenu]
   Caption = #1055#1088#1086#1089#1088#1086#1095#1082#1072' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
   ClientHeight = 411
-  ClientWidth = 721
+  ClientWidth = 1029
   OnDestroy = ParentFormDestroy
-  ExplicitWidth = 737
+  ExplicitWidth = 1045
   ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   object ListGoodsBadTimingGrid: TcxGrid [0]
     Left = 0
     Top = 28
-    Width = 721
+    Width = 1029
     Height = 383
     Align = alClient
     TabOrder = 0
+    ExplicitWidth = 721
     object ListGoodsBadTimingGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ListGoodsBadTimingDS
@@ -38,12 +39,17 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
         item
           Format = ',0.###;-,0.###; ;'
           Kind = skSum
-          Column = Remount
+          Column = Remains
         end
         item
           Format = ',0.##;-,0.##; ;'
           Kind = skSum
           Column = SummaCheck
+        end
+        item
+          Format = ',0.###;-,0.###; ;'
+          Kind = skSum
+          Column = AmountReserve
         end>
       DataController.Summary.SummaryGroups = <>
       OptionsData.CancelOnExit = False
@@ -96,9 +102,19 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
         Options.Editing = False
         Width = 77
       end
-      object Remount: TcxGridDBColumn
+      object AmountReserve: TcxGridDBColumn
+        Caption = #1042' '#1042#1048#1055' '#1095#1077#1082#1072#1093
+        DataBinding.FieldName = 'AmountReserve'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.###;-,0.###; ;'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 71
+      end
+      object Remains: TcxGridDBColumn
         Caption = #1054#1089#1090#1072#1090#1086#1082
-        DataBinding.FieldName = 'Remount'
+        DataBinding.FieldName = 'Remains'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 3
         Properties.DisplayFormat = ',0.###;-,0.###; ;'
@@ -130,6 +146,13 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 126
+      end
+      object CheckList: TcxGridDBColumn
+        Caption = #1042#1048#1055' '#1095#1077#1082#1080
+        DataBinding.FieldName = 'CheckList'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 129
       end
     end
     object ListGoodsBadTimingGridLevel: TcxGridLevel

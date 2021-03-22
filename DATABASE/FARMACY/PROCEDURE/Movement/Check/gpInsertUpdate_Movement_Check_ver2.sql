@@ -14,6 +14,7 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ ЧЕК>
@@ -55,6 +56,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
     IN inMedicKashtanID      Integer   , -- ФИО врача (МИС «Каштан») 
     IN inMemberKashtanID     Integer   , -- ФИО пациента (МИС «Каштан»)
     IN inUserSession	     TVarChar  , -- сессия пользователя под которой создан чек в программе
+    IN isCorrectMarketing    Boolean   , -- Корректировка суммы маркетинга в ЗП по подразделению
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -331,7 +333,12 @@ BEGIN
     THEN
       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_MemberKashtan(), ioId, inMemberKashtanID);            
     END IF;
-
+    
+    -- сохранили отметку <Корректировка суммы маркетинга в ЗП по подразделению>
+    IF COALESCE(isCorrectMarketing, False) = True
+    THEN
+      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_CorrectMarketing(), ioId, isCorrectMarketing);
+    END IF;
 
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
@@ -351,6 +358,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Подмогильный В.В.   Шаблий О.В.
+ 22.03.21                                                                                                         * add isCorrectMarketing
  15.01.20                                                                                                         * add inLoyaltySM...
  07.11.19                                                                                                         * add inLoyaltySignID
  15.05.19                                                                                                         * add inPartionDateKindID, inConfirmationCodeSP

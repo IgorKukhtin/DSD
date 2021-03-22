@@ -563,7 +563,8 @@ BEGIN
        END IF;
     END IF;
 
-    IF COALESCE(inCommentTRID, 0) = 14883299 AND COALESCE (vbDaySaleForSUN, 0) > 0
+    IF COALESCE(inCommentTRID, 0) = 14883299 AND COALESCE (vbDaySaleForSUN, 0) > 0 AND
+       NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
     THEN
       IF EXISTS(SELECT 1
                 FROM Movement

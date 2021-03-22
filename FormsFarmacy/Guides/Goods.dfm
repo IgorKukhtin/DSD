@@ -681,6 +681,14 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 90
           end
+          object isMultiplicityError: TcxGridDBColumn
+            Caption = #1055#1086#1075#1088#1077#1096#1085#1086#1089#1090#1100' '#1076#1083#1103' '#1082#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1088#1080' '#1087#1088#1086#1076#1072#1078#1080
+            DataBinding.FieldName = 'isMultiplicityError'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 88
+          end
         end
       end
     end
@@ -2359,10 +2367,10 @@ inherited GoodsForm: TGoodsForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = gpUpdate_isOnlySP_Revert
+      StoredProc = spUpdate_isOnlySP_Revert
       StoredProcList = <
         item
-          StoredProc = gpUpdate_isOnlySP_Revert
+          StoredProc = spUpdate_isOnlySP_Revert
         end>
       Caption = 'actExecClearUnitSupplementSUN1Out'
     end
@@ -2420,6 +2428,31 @@ inherited GoodsForm: TGoodsForm
         end>
       isShowModal = True
       OpenBeforeShow = True
+    end
+    object maUpdate_isMultiplicityError: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actExecUpdate_isMultiplicityError
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1075#1088#1077#1096#1085#1086#1089#1090#1100' '#1076#1083#1103' '#1082#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1088#1080' '#1087#1088#1086#1076#1072#1078#1080'"?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1075#1088#1077#1096#1085#1086#1089#1090#1100' '#1076#1083#1103' '#1082#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1088#1080' '#1087#1088#1086#1076#1072#1078#1080'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1075#1088#1077#1096#1085#1086#1089#1090#1100' '#1076#1083#1103' '#1082#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1088#1080' '#1087#1088#1086#1076#1072#1078#1080'"'
+      ImageIndex = 79
+    end
+    object actExecUpdate_isMultiplicityError: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isMultiplicityError_Revert
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isMultiplicityError_Revert
+        end>
+      Caption = 'actExecUpdate_isMultiplicityError'
     end
   end
   inherited MasterDS: TDataSource
@@ -2722,6 +2755,10 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton12'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton3'
         end
         item
@@ -2882,6 +2919,10 @@ inherited GoodsForm: TGoodsForm
     end
     object dxBarButton11: TdxBarButton
       Action = actUpdate_Multiplicity
+      Category = 0
+    end
+    object dxBarButton12: TdxBarButton
+      Action = maUpdate_isMultiplicityError
       Category = 0
     end
   end
@@ -4705,7 +4746,7 @@ inherited GoodsForm: TGoodsForm
     Left = 344
     Top = 376
   end
-  object gpUpdate_isOnlySP_Revert: TdsdStoredProc
+  object spUpdate_isOnlySP_Revert: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_isOnlySP_Revert'
     DataSets = <>
     OutputType = otResult
@@ -4756,5 +4797,31 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 624
     Top = 144
+  end
+  object spUpdate_isMultiplicityError_Revert: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_isMultiplicityError_Revert'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsMainId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsMainId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOnlySP'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isOnlySP'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 48
+    Top = 216
   end
 end

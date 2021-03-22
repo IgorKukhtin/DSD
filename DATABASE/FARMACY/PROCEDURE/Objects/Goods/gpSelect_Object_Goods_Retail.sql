@@ -47,7 +47,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , isOnlySP boolean
              , SummaWages TFloat, PercentWages TFloat, SummaWagesStore TFloat, PercentWagesStore TFloat
              , UnitSupplementSUN1OutId Integer, UnitSupplementSUN1OutName TVarChar
-             , Multiplicity TFloat
+             , Multiplicity TFloat, isMultiplicityError boolean
               ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -348,6 +348,7 @@ BEGIN
            , Object_Goods_Main.UnitSupplementSUN1OutId 
            , Object_UnitSupplementSUN1Out.ValueData                              AS UnitSupplementSUN1OutName
            , Object_Goods_Main.Multiplicity
+           , Object_Goods_Main.isMultiplicityError
 
       FROM Object_Goods_Retail
 

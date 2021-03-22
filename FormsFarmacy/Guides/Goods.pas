@@ -270,7 +270,7 @@ type
     spSetUnitSupplementSUN1Out: TdsdStoredProc;
     spClearUnitSupplementSUN1Out: TdsdStoredProc;
     isOnlySP: TcxGridDBColumn;
-    gpUpdate_isOnlySP_Revert: TdsdStoredProc;
+    spUpdate_isOnlySP_Revert: TdsdStoredProc;
     maUpdate_isOnlySP: TMultiAction;
     actExecUpdate_isOnlySP: TdsdExecStoredProc;
     dxBarButton10: TdxBarButton;
@@ -280,6 +280,11 @@ type
     astExecuteDialogMultiplicity: TExecuteDialog;
     dxBarButton11: TdxBarButton;
     spUpdate_Multiplicity: TdsdStoredProc;
+    isMultiplicityError: TcxGridDBColumn;
+    maUpdate_isMultiplicityError: TMultiAction;
+    actExecUpdate_isMultiplicityError: TdsdExecStoredProc;
+    spUpdate_isMultiplicityError_Revert: TdsdStoredProc;
+    dxBarButton12: TdxBarButton;
   private
     { Private declarations }
   public
