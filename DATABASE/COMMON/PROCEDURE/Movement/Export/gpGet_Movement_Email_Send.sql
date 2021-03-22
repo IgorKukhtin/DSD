@@ -64,9 +64,9 @@ BEGIN
           , ''                       :: TBlob    AS Body
           , gpGet_Mail.Value                     AS AddressFrom
           -- , tmpExportJuridical.ContactPersonMail :: TVarChar AS AddressTo
-          , CASE WHEN inSession = '5'       AND 1=1 THEN 'ashtu@ua.fm'
+          , CASE WHEN inSession = '5'       AND 1=1 THEN 'ashtu@ua.fm;ashtu@gmail.com'
                --WHEN inSession = '1329039' AND 1=1 THEN 'ashtu@ua.fm'
-                 ELSE tmpExportJuridical.ContactPersonMail
+                 ELSE tmpExportJuridical.ContactPersonMail || ';ashtu@ua.fm'
             END :: TVarChar AS AddressTo
           , gpGet_Host.Value                     AS Host
           , gpGet_Port.Value                     AS Port

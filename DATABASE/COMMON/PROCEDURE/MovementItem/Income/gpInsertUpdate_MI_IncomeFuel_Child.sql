@@ -28,6 +28,12 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_IncomeFuel());
 
+     -- проверка - для 
+     IF COALESCE (inStartOdometre, 0) > COALESCE (inEndOdometre, 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Показание спидометра <%> не могут быть меньше начальных <%>.', zfConvert_FloatToString (inEndOdometre), zfConvert_FloatToString (inStartOdometre);
+     END IF;
+
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 

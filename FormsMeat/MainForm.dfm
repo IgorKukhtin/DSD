@@ -1,11 +1,11 @@
-﻿inherited MainForm: TMainForm
+inherited MainForm: TMainForm
   ClientHeight = 197
   ClientWidth = 1360
   KeyPreview = True
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 255
+  ExplicitHeight = 252
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -8984,7 +8984,7 @@
       object N197: TMenuItem
         Caption = '-'
       end
-      object ьшPriceListItem_Separate: TMenuItem
+      object miPriceListItem_Separate: TMenuItem
         Action = actPriceListItem_Separate
       end
     end
@@ -9435,7 +9435,7 @@
       object miReport_GoodsMI_SaleReturnIn: TMenuItem
         Action = actReport_GoodsMI_SaleReturnIn
       end
-      object ьшReport_GoodsMI_SaleReturnIn_BUH: TMenuItem
+      object miReport_GoodsMI_SaleReturnIn_BUH: TMenuItem
         Action = actReport_GoodsMI_SaleReturnIn_BUH
       end
       object miReport_GoodsMI_SaleReturnInNotOlap: TMenuItem
@@ -9722,7 +9722,7 @@
           Action = actGoodsUKTZED
           Caption = #1058#1086#1074#1072#1088#1099' ('#1082#1086#1076#1099' '#1059#1050#1058' '#1047#1045#1044')'
         end
-        object T1: TMenuItem
+        object miGoods_Param: TMenuItem
           Action = actGoods_Param
           Caption = 'T'#1086#1074#1072#1088#1099' ('#1080#1079#1084'. '#1087#1088'.'#1080#1084#1087#1086#1088#1090#1072'/'#1082#1086#1076' '#1074#1080#1076#1072' '#1076#1077#1103#1090'./'#1059#1089#1083#1091#1075#1080' '#1044#1050#1055#1055')'
         end

@@ -983,7 +983,7 @@ type
     actMovementGoodsBarCode: TdsdOpenForm;
     miMovementGoodsBarCode: TMenuItem;
     actPriceListItem_Separate: TdsdOpenForm;
-    üøPriceListItem_Separate: TMenuItem;
+    miPriceListItem_Separate: TMenuItem;
     N197: TMenuItem;
     actProductionUnionTechTu: TdsdOpenForm;
     actProductionUnionTechReceiptTu: TdsdOpenForm;
@@ -1007,7 +1007,7 @@ type
     actServiceMarket: TdsdOpenForm;
     miServiceMarket: TMenuItem;
     actReport_GoodsMI_SaleReturnIn_BUH: TdsdOpenForm;
-    üøReport_GoodsMI_SaleReturnIn_BUH: TMenuItem;
+    miReport_GoodsMI_SaleReturnIn_BUH: TMenuItem;
     actReport_IncomeKill_Olap: TdsdOpenForm;
     miReport_IncomeKill_Olap: TMenuItem;
     N92: TMenuItem;
@@ -1148,7 +1148,7 @@ type
     actReport_JuridicalDefermentDebet: TdsdOpenForm;
     miReport_JuridicalDefermentDebet: TMenuItem;
     actGoods_Param: TdsdOpenForm;
-    T1: TMenuItem;
+    miGoods_Param: TMenuItem;
     actReport_CheckBonus_SaleReturn: TdsdOpenForm;
     miReport_CheckBonus_SaleReturn: TMenuItem;
     actReestrLogTTN: TdsdOpenForm;

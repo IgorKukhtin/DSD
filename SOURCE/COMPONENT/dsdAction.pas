@@ -2377,7 +2377,9 @@ begin
     begin
       FTimer := TTimer.Create(Self);
       FTimer.Name := 'Timer';
-      FTimer.Interval := 300000;
+      if Self.Name = 'actRefreshMsg'
+      then FTimer.Interval := 255007
+      else FTimer.Interval := 300007;
       FTimer.OnTimer := Self.OnTimer;
       FTimer.OnTimer(Self);
     end
