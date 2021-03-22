@@ -657,7 +657,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
       Category = 0
     end
     object bbPrint: TdxBarButton
-      Action = actPrintTender
+      Action = actPrintOrderConfirmation
       Caption = 'Print Tender'
       Category = 0
     end
@@ -666,7 +666,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
       Category = 0
     end
     object bbPrintSticker: TdxBarButton
-      Action = actPrintAgilis
+      Action = actPrintOffer
       Category = 0
     end
     object bbPrintStickerTermo: TdxBarButton
@@ -1230,7 +1230,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintAgilis: TdsdPrintAction
+    object actPrintOffer: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1243,13 +1243,13 @@ object OrderClientJournalForm: TOrderClientJournalForm
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
-      StoredProc = spSelectPrint
+      StoredProc = spSelectPrintOffer
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrintOffer
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' Agilis'
-      Hint = #1055#1077#1095#1072#1090#1100' Agilis'
+      Caption = #1055#1077#1095#1072#1090#1100' Offer'
+      Hint = 'Print Offer'
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -1269,8 +1269,8 @@ object OrderClientJournalForm: TOrderClientJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintProduct_Agilis'
-      ReportNameParam.Value = 'PrintProduct_Agilis'
+      ReportName = 'PrintProduct_Offer'
+      ReportNameParam.Value = 'PrintProduct_Offer'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1326,7 +1326,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintTender: TdsdPrintAction
+    object actPrintOrderConfirmation: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1339,13 +1339,13 @@ object OrderClientJournalForm: TOrderClientJournalForm
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
-      StoredProc = spSelectPrintTender
+      StoredProc = spSelectPrintOrderConfirmation
       StoredProcList = <
         item
-          StoredProc = spSelectPrintTender
+          StoredProc = spSelectPrintOrderConfirmation
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' Tender'
-      Hint = #1055#1077#1095#1072#1090#1100' Tender'
+      Caption = #1055#1077#1095#1072#1090#1100' OrderConfirmation'
+      Hint = 'Print OrderConfirmation'
       ImageIndex = 18
       DataSets = <
         item
@@ -1368,8 +1368,8 @@ object OrderClientJournalForm: TOrderClientJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintProduct_Tender'
-      ReportNameParam.Value = 'PrintProduct_Tender'
+      ReportName = 'PrintProduct_OrderConfirmation'
+      ReportNameParam.Value = 'PrintProduct_OrderConfirmation'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1662,8 +1662,8 @@ object OrderClientJournalForm: TOrderClientJournalForm
     Left = 532
     Top = 318
   end
-  object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Product_AgilisPrint'
+  object spSelectPrintOffer: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Product_OfferPrint'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -1710,8 +1710,8 @@ object OrderClientJournalForm: TOrderClientJournalForm
     Left = 664
     Top = 264
   end
-  object spSelectPrintTender: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Product_TendersPrint'
+  object spSelectPrintOrderConfirmation: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Product_OrderConfirmationPrint'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

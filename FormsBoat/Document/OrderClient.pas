@@ -252,12 +252,12 @@ type
     cxLabel18: TcxLabel;
     edInsertName: TcxButtonEdit;
     PrintItemsColorCDS: TClientDataSet;
-    spSelectPrint: TdsdStoredProc;
+    spSelectPrintOffer: TdsdStoredProc;
     spSelectPrintStructure: TdsdStoredProc;
-    spSelectPrintTender: TdsdStoredProc;
+    spSelectPrintOrderConfirmation: TdsdStoredProc;
     actPrintAgilis: TdsdPrintAction;
     actPrintStructure: TdsdPrintAction;
-    actPrintTender: TdsdPrintAction;
+    actPrintOrderConfirmation: TdsdPrintAction;
     bbPrintStructure: TdxBarButton;
     bbPrintTender: TdxBarButton;
     cxTabSheet1: TcxTabSheet;
@@ -280,6 +280,21 @@ type
     ChildCDS: TClientDataSet;
     ChildDS: TDataSource;
     actDBViewAddOnChild: TdsdDBViewAddOn;
+    cxTabSheet2: TcxTabSheet;
+    cxGridInfo: TcxGrid;
+    cxGridDBTableViewInfo: TcxGridDBTableView;
+    Text_Info: TcxGridDBColumn;
+    cxGridLevel4: TcxGridLevel;
+    dsdDBViewAddOnInfo: TdsdDBViewAddOn;
+    InfoCDS: TClientDataSet;
+    InfoDS: TDataSource;
+    spSelectMovement_Info: TdsdStoredProc;
+    spUpdateMovementInfo: TdsdStoredProc;
+    CodeInfo: TcxGridDBColumn;
+    InsertRecordInfo: TInsertRecord;
+    actUpdateDataSetInfoDS: TdsdUpdateDataSet;
+    bbInsertRecordInfo: TdxBarButton;
+    actRefreshInfo: TdsdDataSetRefresh;
   private
   public
   end;

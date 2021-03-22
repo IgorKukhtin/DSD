@@ -1,8 +1,9 @@
--- Function: gpSelect_Object_Product_AgilisPrint ()
+-- Function: gpSelect_Object_Product_OfferPrint ()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Product_AgilisPrint (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Product_OfferPrint (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_Product_AgilisPrint(
+CREATE OR REPLACE FUNCTION gpSelect_Object_Product_OfferPrint(
     IN inMovementId_OrderClient       Integer   ,   -- 
     IN inSession                      TVarChar      -- сессия пользователя
 )
@@ -98,27 +99,27 @@ BEGIN
             , ObjectFloat_Power.ValueData               ::TFloat   AS EnginePower
             , ObjectFloat_Volume.ValueData              ::TFloat   AS EngineVolume
             --
-            , 'info@agilis-jettenders.com' ::TVarChar AS Mail
-            , 'www.agilis-jettenders.com'  ::TVarChar AS WWW
-            , 'Agilis Jettenders GmbH'     ::TVarChar AS Name_main
-            , 'Lohfeld Str. 2'             ::TVarChar AS Street_main
-            , '52428 Julich'               ::TVarChar AS City_main                                   --*
-            , 'Adriatic Wave d.o.o'        ::TVarChar AS Name_Firma
-            , 'Via Niccoloa Tommasea 11'   ::TVarChar AS Street_Firma
-            , '52210 ROVINJ'               ::TVarChar AS City_Firma
-            , 'KROATIEN'                   ::TVarChar AS Country_Firma
-            , 'steuerfreie innergem. Lieferung gemab §4 Nr.1b i.V.m. §6a UStG' ::TVarChar AS Text1   --**
-            , 'special discount'                    ::TVarChar AS Text2
-            , 'Sie wurden beraten von M.Starchenko' ::TVarChar AS Text3
+            , tmpInfo.Mail          ::TVarChar AS Mail
+            , tmpInfo.WWW           ::TVarChar AS WWW
+            , tmpInfo.Name_main     ::TVarChar AS Name_main
+            , tmpInfo.Street_main   ::TVarChar AS Street_main
+            , tmpInfo.City_main     ::TVarChar AS City_main                                   --*
+            , tmpInfo.Name_Firma    ::TVarChar AS Name_Firma
+            , tmpInfo.Street_Firma  ::TVarChar AS Street_Firma
+            , tmpInfo.City_Firma    ::TVarChar AS City_Firma
+            , tmpInfo.Country_Firma ::TVarChar AS Country_Firma
+            , tmpInfo.Text_tax      ::TVarChar AS Text1   --**
+            , tmpInfo.Text_discount ::TVarChar AS Text2
+            , tmpInfo.Text_sign     ::TVarChar AS Text3
 
             , COALESCE (ObjectString_TaxNumber.ValueData,'') ::TVarChar AS TaxNumber
             , '' ::TVarChar AS Angebot
             , '' ::TVarChar AS Seite   
 
-            , 'Agilis Jettenders GmbH'||Chr(13)||Chr(10)||'Lohfeld Str.2'||Chr(13)||Chr(10)||' 52428 Julich' ::TVarChar AS Footer1              --*
-            , 'Bankverbindung'||Chr(13)||Chr(10)||'Aachener Bank eG'||Chr(13)||Chr(10)||'IBAN: DE56390601800154560009'||Chr(13)||Chr(10)||'BIC: GENODED1AAC' ::TVarChar AS Footer2
-            , 'Geschaftsfuhrer:Starchenko Maxym'||Chr(13)||Chr(10)||Chr(13)||Chr(10)||'Amtsgericht Duren HRB 8163'||Chr(13)||Chr(10)||'Ust.-ID: DE326730388' ::TVarChar AS Footer3   --***
-            , 'Tel: +49 (0)2461 340 333-15'||Chr(13)||Chr(10)||'Fax: +49 (0)2461 340 333 13'||Chr(13)||Chr(10)||'Email: info@agilis-jettenders.com'||Chr(13)||Chr(10)||'WEB: www.agilis-jettenders.com' ::TVarChar AS Footer4
+            , tmpInfo.Footer1       ::TVarChar AS Footer1              --*
+            , tmpInfo.Footer2       ::TVarChar AS Footer2
+            , tmpInfo.Footer3       ::TVarChar AS Footer3   --***
+            , tmpInfo.Footer4       ::TVarChar AS Footer4
 
             , vbOperDate_OrderClient  AS OperDate_Order
             , vbInvNumber_OrderClient AS InvNumber_Order
@@ -133,6 +134,8 @@ BEGIN
                                  ON ObjectString_TaxNumber.ObjectId = tmpProduct.ClientId
                                 AND ObjectString_TaxNumber.DescId = zc_ObjectString_Client_TaxNumber()
           LEFT JOIN (SELECT SUM (tmp.Amount * tmp.OperPriceWithVAT) AS SaleWVAT_summ FROM tmpOrderClient AS tmp WHERE tmp.GoodsDesc <> zc_Object_Product()) AS tmpOrder ON 1 = 1
+          
+          LEFT JOIN Object_Product_PrintInfo_View AS tmpInfo ON 1=1
        ;
 
      RETURN NEXT Cursor1;
