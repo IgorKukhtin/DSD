@@ -1538,6 +1538,9 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -1938,7 +1941,6 @@ object OrderClientForm: TOrderClientForm
           Images = dmMain.SortImageList
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsData.Appending = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = False
@@ -2137,14 +2139,6 @@ object OrderClientForm: TOrderClientForm
         end
         item
           BeginGroup = True
-          Visible = True
-          ItemName = 'bbInsertRecordInfo'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
           Visible = True
           ItemName = 'bbStatic'
         end
@@ -2481,6 +2475,7 @@ object OrderClientForm: TOrderClientForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh

@@ -34,7 +34,7 @@ BEGIN
                                   AND MovementBlob_Info.DescId = zc_MovementBlob_Info1()
         WHERE Movement_OrderClient.Id = inMovementId
           AND Movement_OrderClient.DescId = zc_Movement_OrderClient()
-          AND COALESCE (MovementBlob_Info.ValueData,'') <> ''
+          --AND COALESCE (MovementBlob_Info.ValueData,'') <> ''
       UNION 
         SELECT 
             Movement_OrderClient.Id
@@ -48,7 +48,7 @@ BEGIN
                                   AND MovementBlob_Info.DescId = zc_MovementBlob_Info2()
         WHERE Movement_OrderClient.Id = inMovementId
           AND Movement_OrderClient.DescId = zc_Movement_OrderClient()
-          AND COALESCE (MovementBlob_Info.ValueData,'') <> ''
+          --AND COALESCE (MovementBlob_Info.ValueData,'') <> ''
       UNION 
         SELECT 
             Movement_OrderClient.Id
@@ -62,7 +62,7 @@ BEGIN
                                   AND MovementBlob_Info.DescId = zc_MovementBlob_Info3()
         WHERE Movement_OrderClient.Id = inMovementId
           AND Movement_OrderClient.DescId = zc_Movement_OrderClient()
-          AND COALESCE (MovementBlob_Info.ValueData,'') <> ''
+          --AND COALESCE (MovementBlob_Info.ValueData,'') <> ''
 
           ;
 
