@@ -35,7 +35,7 @@ BEGIN
      -- определили данные из ведомости начисления
      SELECT Object_Bank.Id                 AS BankId             -- БАНК
           , Object_Bank.ValueData          AS BankName           -- БАНК
-          , ObjectString_MFO.ValueData     AS MFO                -
+          , ObjectString_MFO.ValueData     AS MFO                --
           , Object_BankAccount.Id          AS BankAccountId      -- р/счет
           , Object_BankAccount.ValueData   AS BankAccountName    -- р/счет
           , ObjectLink_PersonalServiceList_PSLExportKind.ChildObjectId AS PSLExportKindId    -- Тип выгрузки ведомости в банк
