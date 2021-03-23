@@ -11,15 +11,25 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_FinalSUA(
 RETURNS TABLE (Id Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
-             , Remains TFloat, Amount TFloat, SendSUN TFloat
+             , Remains TFloat, Amount TFloat, SendSUN TFloat, AmountOI TFloat
+             , Price TFloat
+             , isTop boolean, isClose boolean, MCSIsClose boolean
+             , isPromoBonus  Boolean, isLearnWeek Boolean
              , isErased Boolean)
  AS
 $BODY$
     DECLARE vbUserId   Integer;
+    DECLARE vbCalculation TDateTime;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_FinalSUA());
     vbUserId:= lpGetUserBySession (inSession);
+    
+    SELECT MovementDate_Calculation.ValueData
+    INTO vbCalculation
+    FROM MovementDate AS MovementDate_Calculation
+    WHERE MovementDate_Calculation.MovementId = inMovementId
+      AND MovementDate_Calculation.DescId = zc_MovementDate_Calculation();
 
         -- Результат такой
         RETURN QUERY
@@ -56,28 +66,121 @@ BEGIN
                                     GROUP BY MI_Master.GoodsId
                                            , MI_Master.UnitId
                                     )
+                 , tmpObject_Price AS (
+                        SELECT CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                                     AND ObjectFloat_Goods_Price.ValueData > 0
+                                    THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
+                                    ELSE ROUND (Price_Value.ValueData, 2)
+                               END :: TFloat                           AS Price
+                             , MCS_Value.ValueData                     AS MCSValue
+                             , COALESCE (ObjectBoolean_Price_MCSIsClose.ValueData, False) AS MCSIsClose
+                             , Price_Goods.ChildObjectId               AS GoodsId
+                             , ObjectLink_Price_Unit.ChildObjectId     AS UnitId
+                        FROM ObjectLink AS ObjectLink_Price_Unit
+                           LEFT JOIN ObjectLink AS Price_Goods
+                                                ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                               AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                           LEFT JOIN ObjectFloat AS Price_Value
+                                                 ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                           LEFT JOIN ObjectFloat AS MCS_Value
+                                                 ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+                           LEFT JOIN ObjectBoolean AS ObjectBoolean_Price_MCSIsClose
+                                                   ON ObjectBoolean_Price_MCSIsClose.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                  AND ObjectBoolean_Price_MCSIsClose.DescId   = zc_ObjectBoolean_Price_MCSIsClose()
+                           -- Фикс цена для всей Сети
+                           LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
+                                                  ON ObjectFloat_Goods_Price.ObjectId = Price_Goods.ChildObjectId
+                                                 AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
+                           LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                                   ON ObjectBoolean_Goods_TOP.ObjectId = Price_Goods.ChildObjectId
+                                                  AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
+                        WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
+                          AND ObjectLink_Price_Unit.ChildObjectId IN (SELECT MI_Master.UnitId FROM MI_Master)
+                        )
+               , tmpPromoBonus_GoodsWeek AS (SELECT * FROM gpSelect_PromoBonus_GoodsWeek(inSession := inSession))
+               , PromoBonus AS (SELECT MovementItem.Id                               AS Id
+                                     , MovementItem.ObjectId                         AS GoodsId
+                                     , MovementItem.Amount                           AS Amount
+                                     , COALESCE (tmpPromoBonus_GoodsWeek.ID, 0) <> 0 AS isLearnWeek
+                                FROM MovementItem
+                                     LEFT JOIN tmpPromoBonus_GoodsWeek ON tmpPromoBonus_GoodsWeek.ID = MovementItem.Id 
+                                WHERE MovementItem.MovementId = (SELECT MAX(Movement.id) FROM Movement 
+                                                                 WHERE Movement.OperDate <= CURRENT_DATE   
+                                                                   AND Movement.DescId = zc_Movement_PromoBonus() 
+                                                                   AND Movement.StatusId = zc_Enum_Status_Complete())
+                                  AND MovementItem.DescId = zc_MI_Master()
+                                  AND MovementItem.isErased = False
+                                  AND MovementItem.Amount > 0)
+               , tmpOrderInternal AS (SELECT Movement.id                          AS ID 
+                                           , MovementLinkObject_Unit.ObjectId     AS UnitId 
+                                      FROM Movement 
+                                      
+                                           INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                        ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                                       AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                                       AND MovementLinkObject_Unit.ObjectId IN (SELECT MI_Master.UnitId FROM MI_Master) 
+                                                                       
+                                      WHERE Movement.OperDate = vbCalculation
+                                        AND Movement.DescId = zc_Movement_OrderInternal() 
+                                        AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                      )
+               , tmpOIList AS (SELECT Movement.UnitId                           AS UnitId 
+                                    , MovementItem.ObjectId                     AS GoodsId
+                                    , SUM(MovementItemFloat.ValueData)::TFloat  AS Amount
+                               FROM tmpOrderInternal AS Movement 
+                                      
+                                    INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                           AND MovementItem.DescId     = zc_MI_Master()
+                                                                        
+                                    INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id
+                                                                AND MovementItemFloat.DescId     = zc_MIFloat_AmountSUA()
+                                                                
+                               GROUP BY Movement.UnitId
+                                      , MovementItem.ObjectId
+                                      )
 
 
                SELECT MI_Master.Id                                      AS Id
                     , MI_Master.GoodsId                                 AS GoodsId
-                    , Object_Goods.ObjectCode                           AS GoodsCode
-                    , Object_Goods.ValueData                            AS GoodsName
+                    , Object_Goods_Main.ObjectCode                      AS UnitCode
+                    , Object_Goods_Main.Name                            AS UnitName
                     , Object_Unit.Id                                    AS UnitId
                     , Object_Unit.ObjectCode                            AS UnitCode
                     , Object_Unit.ValueData                             AS UnitName
                     , Container.Amount                                  AS Remains
                     , MI_Master.Amount                                  AS Amount
                     , MI_Master.SendSUN                                 AS SendSUN
+                    , tmpOIList.Amount                                  AS AmountOI
+                    , tmpObject_Price.Price                             AS Price
+                    , Object_Goods_Retail.isTop                         AS isTop
+                    , Object_Goods_Main.isClose                         AS isClose
+                    , COALESCE(tmpObject_Price.MCSIsClose, False)       AS MCSIsClose
+                    , COALESCE(PromoBonus.Amount, 0) > 0                AS isPromoBonus  
+                    , COALESCE(PromoBonus.isLearnWeek, FALSE)           AS isLearnWeek
                     , COALESCE(MI_Master.IsErased, False)               AS isErased
                FROM MI_Master
 
-                   LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MI_Master.GoodsId
                    LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MI_Master.UnitId
+
+                   -- получается GoodsMainId
+                   LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MI_Master.GoodsId
+                   LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
 
                    LEFT JOIN tmpContainer AS Container
                                           ON Container.GoodsId = MI_Master.GoodsId
                                          AND Container.UnitId = MI_Master.UnitId
+                                         
+                   LEFT JOIN tmpObject_Price ON tmpObject_Price.GoodsId = MI_Master.GoodsId
+                                            AND tmpObject_Price.UnitId = MI_Master.UnitId
 
+                   -- Маркетинговый бонус
+                   LEFT JOIN PromoBonus ON PromoBonus.GoodsId = MI_Master.GoodsId
+                   
+                   -- Внешний заказ
+                   LEFT JOIN tmpOIList ON tmpOIList.GoodsId = MI_Master.GoodsId
+                                      AND tmpOIList.UnitId = MI_Master.UnitId
                    ;
 END;
 $BODY$
@@ -89,4 +192,4 @@ $BODY$
  11.02.21                                                      *
 */
 -- 
-select * from gpSelect_MovementItem_FinalSUA(inMovementId := 0 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_FinalSUA(inMovementId := 22613940 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

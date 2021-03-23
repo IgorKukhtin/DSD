@@ -47,6 +47,7 @@ RETURNS TABLE (Id Integer
              , DivisionPartiesName TVarChar
              , isPresent Boolean
              , MultiplicitySale TFloat
+             , isMultiplicityError boolean
               )
 AS
 $BODY$
@@ -319,6 +320,7 @@ BEGIN
            , Object_DivisionParties.ValueData                                    AS DivisionPartiesName 
            , MovementItem.isPresent                                              AS isPresent
            , Object_Goods_Main.Multiplicity                                      AS MultiplicitySale
+           , Object_Goods_Main.isMultiplicityError                               AS isMultiplicityError
            
            FROM tmpMI AS MovementItem
 

@@ -57,6 +57,12 @@ type
     SendSUN: TcxGridDBColumn;
     edCalculation: TcxDateEdit;
     cxLabel3: TcxLabel;
+    isTop: TcxGridDBColumn;
+    isClose: TcxGridDBColumn;
+    MCSIsClose: TcxGridDBColumn;
+    isPromoBonus: TcxGridDBColumn;
+    isLearnWeek: TcxGridDBColumn;
+    AmountOI: TcxGridDBColumn;
   private
     { Private declarations }
   public

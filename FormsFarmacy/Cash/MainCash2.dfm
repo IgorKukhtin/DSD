@@ -294,8 +294,6 @@ inherited MainCashForm2: TMainCashForm2
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 328
-    ExplicitHeight = 162
     object MainGrid: TcxGrid
       Left = 0
       Top = 21
@@ -303,7 +301,6 @@ inherited MainCashForm2: TMainCashForm2
       Height = 87
       Align = alClient
       TabOrder = 0
-      ExplicitHeight = 108
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnCanFocusRecord = MainGridDBTableViewCanFocusRecord
@@ -1088,7 +1085,6 @@ inherited MainCashForm2: TMainCashForm2
       Height = 33
       Align = alBottom
       TabOrder = 1
-      ExplicitTop = 129
       object ShapeState: TShape
         Left = 810
         Top = 13
@@ -1376,7 +1372,6 @@ inherited MainCashForm2: TMainCashForm2
     ParentBackground = False
     TabOrder = 3
     Visible = False
-    ExplicitTop = 39
     object Label1: TLabel
       Left = 1
       Top = 1
@@ -1512,7 +1507,6 @@ inherited MainCashForm2: TMainCashForm2
     ParentBackground = False
     TabOrder = 4
     Visible = False
-    ExplicitTop = 61
     object Label3: TLabel
       Left = 1
       Top = 1
@@ -1765,7 +1759,6 @@ inherited MainCashForm2: TMainCashForm2
     ParentBackground = False
     TabOrder = 6
     Visible = False
-    ExplicitTop = 82
     object Panel2: TPanel
       Left = 1
       Top = 1
@@ -1905,7 +1898,6 @@ inherited MainCashForm2: TMainCashForm2
     ParentBackground = False
     TabOrder = 7
     Visible = False
-    ExplicitTop = 118
     object Label8: TLabel
       Left = 1
       Top = 1
@@ -2031,7 +2023,6 @@ inherited MainCashForm2: TMainCashForm2
     TabOrder = 8
     Visible = False
     OnClick = actSetSiteDiscountExecute
-    ExplicitTop = 181
     object Label9: TLabel
       Left = 1
       Top = 1
@@ -2092,7 +2083,6 @@ inherited MainCashForm2: TMainCashForm2
     ParentBackground = False
     TabOrder = 9
     Visible = False
-    ExplicitTop = 223
     object Label16: TLabel
       Left = 1
       Top = 1
@@ -2153,7 +2143,6 @@ inherited MainCashForm2: TMainCashForm2
     ParentBackground = False
     TabOrder = 10
     Visible = False
-    ExplicitTop = 202
     object Label18: TLabel
       Left = 1
       Top = 1
@@ -2193,7 +2182,6 @@ inherited MainCashForm2: TMainCashForm2
     ParentBackground = False
     TabOrder = 11
     Visible = False
-    ExplicitTop = 307
     DesignSize = (
       964
       21)
@@ -2268,7 +2256,6 @@ inherited MainCashForm2: TMainCashForm2
     ParentBackground = False
     TabOrder = 12
     Visible = False
-    ExplicitTop = 21
     object Label21: TLabel
       Left = 1
       Top = 1
@@ -2347,7 +2334,6 @@ inherited MainCashForm2: TMainCashForm2
     ParentBackground = False
     TabOrder = 13
     Visible = False
-    ExplicitTop = 139
     object Label23: TLabel
       Left = 1
       Top = 1
@@ -2427,7 +2413,6 @@ inherited MainCashForm2: TMainCashForm2
     ParentBackground = False
     TabOrder = 14
     Visible = False
-    ExplicitTop = 160
     DesignSize = (
       964
       21)
@@ -2549,7 +2534,6 @@ inherited MainCashForm2: TMainCashForm2
     ParentBackground = False
     TabOrder = 15
     Visible = False
-    ExplicitTop = 244
     DesignSize = (
       964
       63)
@@ -2636,9 +2620,6 @@ inherited MainCashForm2: TMainCashForm2
     ParentBackground = False
     TabOrder = 16
     Visible = False
-    ExplicitLeft = 1
-    ExplicitTop = 1
-    ExplicitWidth = 962
     object lblInfo: TLabel
       Left = 1
       Top = 1
@@ -7029,6 +7010,10 @@ inherited MainCashForm2: TMainCashForm2
       item
         Name = 'MultiplicitySale'
         DataType = ftFloat
+      end
+      item
+        Name = 'isMultiplicityError'
+        DataType = ftBoolean
       end>
     IndexDefs = <
       item

@@ -76,24 +76,93 @@ BEGIN
                                     AND Movement.StatusId = zc_Enum_Status_Complete()
                                     AND MovementDate_Calculation.ValueData = inOperDate
                                  )
+                 , MI_Master AS (SELECT MovementItem.ObjectId                   AS GoodsId
+                                      , SUM(MovementItem.Amount)                AS Amount
+                                      , SUM(MIFloat_SendSUN.ValueData)          AS SendSUN
+                                 FROM MovementItem
+
+                                     INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                                       ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                                      AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                                                                      AND MILinkObject_Unit.ObjectId = inUnitId
+
+                                     LEFT JOIN MovementItemFloat AS MIFloat_SendSUN
+                                                                 ON MIFloat_SendSUN.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_SendSUN.DescId = zc_MIFloat_SendSUN()
+
+                                 WHERE MovementItem.MovementId in (SELECT tmpFinalSUA.Id FROM tmpFinalSUA)
+                                   AND MovementItem.DescId = zc_MI_Master()
+                                   AND MovementItem.isErased = False
+                                   AND MovementItem.Amount > 0
+                                  GROUP BY MovementItem.ObjectId 
+                                 )
+                 , tmpContainer AS (SELECT MI_Master.GoodsId                  AS GoodsId
+                                         , Sum(Container.Amount)::TFloat      AS Amount
+                                    FROM MI_Master
+                                      
+                                         INNER JOIN Container ON Container.DescId = zc_Container_Count()
+                                                             AND Container.ObjectId = MI_Master.GoodsId
+                                                             AND Container.WhereObjectId = inUnitId
+                                                             AND Container.Amount <> 0
+                                                             
+                                    GROUP BY MI_Master.GoodsId
+                                    )
+                 , tmpObject_Price AS (
+                        SELECT CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                                     AND ObjectFloat_Goods_Price.ValueData > 0
+                                    THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
+                                    ELSE ROUND (Price_Value.ValueData, 2)
+                               END :: TFloat                           AS Price
+                             , MCS_Value.ValueData                     AS MCSValue
+                             , COALESCE (ObjectBoolean_Price_MCSIsClose.ValueData, False) AS MCSIsClose
+                             , Price_Goods.ChildObjectId               AS GoodsId
+                             , ObjectLink_Price_Unit.ChildObjectId     AS UnitId
+                        FROM ObjectLink AS ObjectLink_Price_Unit
+                           LEFT JOIN ObjectLink AS Price_Goods
+                                                ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                               AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                           LEFT JOIN ObjectFloat AS Price_Value
+                                                 ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                           LEFT JOIN ObjectFloat AS MCS_Value
+                                                 ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+                           LEFT JOIN ObjectBoolean AS ObjectBoolean_Price_MCSIsClose
+                                                   ON ObjectBoolean_Price_MCSIsClose.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                  AND ObjectBoolean_Price_MCSIsClose.DescId   = zc_ObjectBoolean_Price_MCSIsClose()
+                           -- Фикс цена для всей Сети
+                           LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
+                                                  ON ObjectFloat_Goods_Price.ObjectId = Price_Goods.ChildObjectId
+                                                 AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
+                           LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                                   ON ObjectBoolean_Goods_TOP.ObjectId = Price_Goods.ChildObjectId
+                                                  AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
+                        WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
+                          AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
+                        )
+                 , tmpOrderInternalAll AS (SELECT * FROM gpSelect_MovementItem_OrderInternal_Master(inMovementId := inMovementId 
+                                                                                                  , inShowAll    := True 
+                                                                                                  , inIsErased   := False 
+                                                                                                  , inIsLink     := False
+                                                                                                  , inSession    := inSession))
+                                 
                   -- строки финальный СУН
-                SELECT MovementItem.ObjectId                                              AS GoodsId
-                     , SUM(MovementItem.Amount - COALESCE (MIFloat_SendSUN.ValueData, 0)) AS Amount
+                SELECT MI_Master.GoodsId                                                                                     AS GoodsId
+                     , CEIL(MI_Master.Amount - COALESCE (MI_Master.SendSUN, 0) - COALESCE (Container.Amount, 0))            AS Amount
 
-                FROM tmpFinalSUA
-                     INNER JOIN MovementItem ON MovementItem.MovementId = tmpFinalSUA.Id
-                                            AND MovementItem.DescId     = zc_MI_Master()
-                                            AND MovementItem.isErased   = FALSE
-                                              
-                     INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                                       ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                                      AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
-                                                      AND MILinkObject_Unit.ObjectId = inUnitId
-
-                     LEFT JOIN MovementItemFloat AS MIFloat_SendSUN
-                                                 ON MIFloat_SendSUN.MovementItemId = MovementItem.Id
-                                                AND MIFloat_SendSUN.DescId = zc_MIFloat_SendSUN()
-                GROUP BY MovementItem.ObjectId 
+                FROM MI_Master
+                
+                     LEFT JOIN tmpContainer AS Container
+                                            ON Container.GoodsId = MI_Master.GoodsId
+                                           
+                     LEFT JOIN tmpObject_Price ON tmpObject_Price.GoodsId = MI_Master.GoodsId
+                     
+                     LEFT JOIN tmpOrderInternalAll ON tmpOrderInternalAll.GoodsId = MI_Master.GoodsId
+                
+                WHERE CEIL(MI_Master.Amount - COALESCE (MI_Master.SendSUN, 0) - COALESCE (Container.Amount, 0)) > 0
+                  AND COALESCE(tmpObject_Price.MCSIsClose, FALSE) = False
+                  AND COALESCE(tmpOrderInternalAll.ContractId, 0) <> 0
+                  AND COALESCE(tmpOrderInternalAll.PartionGoodsDate, CURRENT_DATE) > CURRENT_DATE + INTERVAL '1 YEAR'
                 ;
                 
      IF NOT EXISTS(SELECT * FROM _tmpFinalSUA_MI)

@@ -1319,17 +1319,80 @@ BEGIN
        AND COALESCE(_tmpUnit_SUN_SUA.Limit_N, 0) > 0
        AND _tmpRemains_Partion_SUA.Amount_save - _tmpRemains_Partion_SUA.Amount < COALESCE(_tmpUnit_SUN_SUA.Limit_N, 0);
 
-     -- 4. ќстатки по которым есть ѕќ“–≈ЅЌќ—“№ и PI (—верх запас)
+               WITH
+                   MI_Master AS (SELECT MovementItem.ObjectId                   AS GoodsId
+                                      , MILinkObject_Unit.ObjectId              AS UnitId
+                                      , SUM(MovementItem.Amount)                AS Amount
+                                 FROM MovementItem
+
+                                     LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                                      ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                                     AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+
+                                 WHERE MovementItem.MovementId = vbMovementId
+                                   AND MovementItem.DescId = zc_MI_Master()
+                                   AND MovementItem.isErased = False
+                                   AND MovementItem.Amount > 0
+                                 GROUP BY MovementItem.ObjectId
+                                        , MILinkObject_Unit.ObjectId
+                                 )
+                 , tmpContainer AS (SELECT MI_Master.GoodsId                  AS GoodsId
+                                         , MI_Master.UnitId                   AS UnitId
+                                         , Sum(Container.Amount)::TFloat      AS Amount
+                                    FROM MI_Master
+                                      
+                                         INNER JOIN Container ON Container.DescId = zc_Container_Count()
+                                                             AND Container.ObjectId = MI_Master.GoodsId
+                                                             AND Container.WhereObjectId = MI_Master.UnitId
+                                                             AND Container.Amount <> 0
+                                    GROUP BY MI_Master.GoodsId
+                                           , MI_Master.UnitId
+                                    )
+                 , tmpObject_Price AS (
+                        SELECT CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                                     AND ObjectFloat_Goods_Price.ValueData > 0
+                                    THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
+                                    ELSE ROUND (Price_Value.ValueData, 2)
+                               END :: TFloat                           AS Price
+                             , MCS_Value.ValueData                     AS MCSValue
+                             , COALESCE (ObjectBoolean_Price_MCSIsClose.ValueData, False) AS MCSIsClose
+                             , Price_Goods.ChildObjectId               AS GoodsId
+                             , ObjectLink_Price_Unit.ChildObjectId     AS UnitId
+                        FROM ObjectLink AS ObjectLink_Price_Unit
+                           LEFT JOIN ObjectLink AS Price_Goods
+                                                ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                               AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                           LEFT JOIN ObjectFloat AS Price_Value
+                                                 ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                           LEFT JOIN ObjectFloat AS MCS_Value
+                                                 ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+                           LEFT JOIN ObjectBoolean AS ObjectBoolean_Price_MCSIsClose
+                                                   ON ObjectBoolean_Price_MCSIsClose.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                  AND ObjectBoolean_Price_MCSIsClose.DescId   = zc_ObjectBoolean_Price_MCSIsClose()
+                           -- ‘икс цена дл€ всей —ети
+                           LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
+                                                  ON ObjectFloat_Goods_Price.ObjectId = Price_Goods.ChildObjectId
+                                                 AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
+                           LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                                   ON ObjectBoolean_Goods_TOP.ObjectId = Price_Goods.ChildObjectId
+                                                  AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
+                        WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
+                          AND ObjectLink_Price_Unit.ChildObjectId IN (SELECT MI_Master.UnitId FROM MI_Master)
+                        )
+
+     -- 4. ќстатки по которым есть ѕќ“–≈ЅЌќ—“№ и —”ј
      INSERT INTO _tmpRemains_calc_SUA (UnitId, GoodsId, Price, MCS, AmountResult, AmountRemains, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve
                                  , AmountSun_real, AmountSun_summ, AmountSun_summ_save, AmountSun_unit, AmountSun_unit_save, AmountUse)
-        SELECT MILinkObject_Unit.ObjectId    AS UnitId
-             , MovementItem.ObjectId         AS GoodsId
+        SELECT MovementItem.UnitId          AS UnitId
+             , MovementItem.GoodsId         AS GoodsId
                -- ÷ена
              , _tmpRemains_SUA.Price
                -- Ќ“«
              , _tmpRemains_SUA.MCS
-               -- ѕќ“–≈ЅЌќ—“№ у получател€ - что перемещено
-             , MovementItem.Amount - COALESCE (tmpSUN_oth.Amount, 0) AS AmountResult
+               -- ѕќ“–≈ЅЌќ—“№ у получател€ - что перемещено - остаток
+             , CEIL(MovementItem.Amount - COALESCE (tmpSUN_oth.Amount, 0) - COALESCE (Container.Amount, 0)) AS AmountResult
                --
              , _tmpRemains_SUA.AmountRemains
              , _tmpRemains_SUA.AmountIncome
@@ -1351,41 +1414,43 @@ BEGIN
              , COALESCE (_tmpRemains_Partion_SUA.Amount_save, 0) AS AmountSun_unit_save
              , 0                                                 AS AmountUse
 
-        FROM MovementItem
+        FROM MI_Master AS MovementItem
 
-             INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                               ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                              AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
 
-             LEFT JOIN _tmpRemains_SUA ON _tmpRemains_SUA.UnitId  = MILinkObject_Unit.ObjectId
-                                       AND _tmpRemains_SUA.GoodsId = MovementItem.ObjectId
+             LEFT JOIN _tmpRemains_SUA ON _tmpRemains_SUA.UnitId  = MovementItem.UnitId
+                                       AND _tmpRemains_SUA.GoodsId = MovementItem.GoodsId
 
              -- итого у ќ“ѕ–ј¬»“≈Ћя - PI (—верх запас) которые будем распредел€ть - здесь и парные и обычные
              LEFT JOIN (SELECT _tmpRemains_Partion_SUA.GoodsId, SUM (_tmpRemains_Partion_SUA.Amount) AS Amount, SUM (_tmpRemains_Partion_SUA.Amount_save) AS Amount_save, SUM (_tmpRemains_Partion_SUA.Amount_real) AS Amount_real
                          FROM _tmpRemains_Partion_SUA
                          GROUP BY _tmpRemains_Partion_SUA.GoodsId
-                         ) AS tmpRemains_Partion_sum ON tmpRemains_Partion_sum.GoodsId = MovementItem.ObjectId
+                         ) AS tmpRemains_Partion_sum ON tmpRemains_Partion_sum.GoodsId = MovementItem.GoodsId
 
              -- PI (—верх запас) на этой аптеке, тогда перемещени€ с других аптек не будет, т.е. этот јвтозаказ не учитываем
-             LEFT JOIN _tmpRemains_Partion_SUA ON _tmpRemains_Partion_SUA.UnitId  = MILinkObject_Unit.ObjectId
-                                              AND _tmpRemains_Partion_SUA.GoodsId = MovementItem.ObjectId
+             LEFT JOIN _tmpRemains_Partion_SUA ON _tmpRemains_Partion_SUA.UnitId  = MovementItem.UnitId
+                                              AND _tmpRemains_Partion_SUA.GoodsId = MovementItem.GoodsId
              -- если товар среди парных
              LEFT JOIN (SELECT DISTINCT _tmpGoods_SUN_PairSun_SUA.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun_SUA
-                       ) AS _tmpGoods_SUN_PairSun_find ON _tmpGoods_SUN_PairSun_find.GoodsId_PairSun = MovementItem.ObjectId
+                       ) AS _tmpGoods_SUN_PairSun_find ON _tmpGoods_SUN_PairSun_find.GoodsId_PairSun = MovementItem.GoodsId
 
              -- все что "сейчас" отправлено по ¬—≈ SUN-кроме текущего - уменьшаем "потребность"
              LEFT JOIN (SELECT _tmpGoods_Sun_exception_SUA.UnitId_to, _tmpGoods_Sun_exception_SUA.GoodsId, SUM (_tmpGoods_Sun_exception_SUA.Amount) AS Amount
                         FROM _tmpGoods_Sun_exception_SUA
                         GROUP BY _tmpGoods_Sun_exception_SUA.UnitId_to, _tmpGoods_Sun_exception_SUA.GoodsId
                        ) AS tmpSUN_oth
-                         ON tmpSUN_oth.UnitId_to = MILinkObject_Unit.ObjectId
-                        AND tmpSUN_oth.GoodsId   = MovementItem.ObjectId
+                         ON tmpSUN_oth.UnitId_to = MovementItem.UnitId
+                        AND tmpSUN_oth.GoodsId   = MovementItem.GoodsId
+                        
+             LEFT JOIN tmpContainer AS Container
+                                    ON Container.UnitId = MovementItem.UnitId
+                                   AND Container.GoodsId   = MovementItem.GoodsId  
 
-        WHERE MovementItem.MovementId = vbMovementId
-          AND MovementItem.DescId = zc_MI_Master()
-          AND MovementItem.isErased = False
-          AND (MovementItem.Amount - COALESCE (tmpSUN_oth.Amount, 0)) >= 1
+             LEFT JOIN tmpObject_Price ON tmpObject_Price.UnitId = MovementItem.UnitId
+                                      AND tmpObject_Price.GoodsId   = MovementItem.GoodsId  
+
+        WHERE CEIL(MovementItem.Amount - COALESCE (tmpSUN_oth.Amount, 0) - COALESCE (Container.Amount, 0)) >= 1
           AND _tmpGoods_SUN_PairSun_find.GoodsId_PairSun IS NULL
+          AND COALESCE (tmpObject_Price.MCSIsClose, False) = False
      ;
 
 
@@ -1530,4 +1595,4 @@ $BODY$
 --
 -- SELECT * FROM lpInsert_Movement_Send_RemainsSun_SUA (inOperDate:= CURRENT_DATE + INTERVAL '1 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 
--- select * from gpReport_Movement_Send_RemainsSun_SUA(inOperDate := ('28.12.2020')::TDateTime ,  inSession := '3');
+-- select * from gpReport_Movement_Send_RemainsSun_SUA(inOperDate := ('22.03.2021')::TDateTime ,  inSession := '3');

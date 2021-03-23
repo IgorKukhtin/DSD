@@ -1774,6 +1774,9 @@ inherited OrderInternalForm: TOrderInternalForm
         end
         item
           StoredProc = spPUSHEVip
+        end
+        item
+          StoredProc = spPUSHSUA
         end>
       Caption = 'actPUSHInfo'
       PUSHMessageType = pmtInformation
@@ -1972,7 +1975,11 @@ inherited OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateFinalSUA'
         end
         item
           Visible = True
@@ -2139,7 +2146,7 @@ inherited OrderInternalForm: TOrderInternalForm
       Action = actReportSendDefSUN
       Category = 0
     end
-    object dxBarButton1: TdxBarButton
+    object bbUpdateFinalSUA: TdxBarButton
       Action = actUpdateFinalSUA
       Category = 0
     end
@@ -3207,5 +3214,39 @@ inherited OrderInternalForm: TOrderInternalForm
     PackSize = 1
     Left = 896
     Top = 432
+  end
+  object spPUSHSUA: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSHSUA_OrderInternal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 682
+    Top = 424
   end
 end

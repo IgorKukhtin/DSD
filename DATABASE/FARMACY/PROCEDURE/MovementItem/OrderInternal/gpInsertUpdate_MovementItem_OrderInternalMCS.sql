@@ -434,7 +434,7 @@ BEGIN
                                         ON MIFloat_ListDiff.MovementItemId = MovementItemSaved.Id
                                        AND MIFloat_ListDiff.DescId = zc_MIFloat_ListDiff()
             LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSUA
-                                              ON MIFloat_AmountSUA.MovementItemId = MovementItem.Id
+                                              ON MIFloat_AmountSUA.MovementItemId = MovementItemSaved.Id
                                              AND MIFloat_AmountSUA.DescId         = zc_MIFloat_AmountSUA()
 
             INNER JOIN Object_Goods_View AS Object_Goods

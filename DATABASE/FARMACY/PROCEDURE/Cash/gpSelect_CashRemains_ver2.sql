@@ -44,12 +44,13 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                isOnlySP boolean,
                DistributionPromoID Integer,
                Color_IPE Integer, 
-               MultiplicitySale TFloat
+               MultiplicitySale TFloat,
+               isMultiplicityError boolean,
 
-             , PartionDateKindId_check   Integer
-             , Price_check               TFloat
-             , PriceWithVAT_check        TFloat
-             , PartionDateDiscount_check TFloat
+               PartionDateKindId_check   Integer,
+               Price_check               TFloat,
+               PriceWithVAT_check        TFloat,
+               PartionDateDiscount_check TFloat
               )
 AS
 $BODY$
@@ -912,6 +913,7 @@ BEGIN
           , tmpDistributionPromo.DistributionPromoID                             AS DistributionPromoID
           , 0                                                      AS Color_IPE
           , Object_Goods_Main.Multiplicity                         AS MultiplicitySale
+          , Object_Goods_Main.isMultiplicityError                  AS isMultiplicityError
 
           , CashSessionSnapShot.PartionDateKindId   AS PartionDateKindId_check
           , CashSessionSnapShot.Price               AS Price_check

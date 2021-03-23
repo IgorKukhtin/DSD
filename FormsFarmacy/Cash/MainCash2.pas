@@ -7069,6 +7069,12 @@ begin
     exit;
   end;
 
+  if FormParams.ParamByName('isCorrectMarketing').Value then
+  begin
+    ShowMessage('Чек по корректировки суммы маркетинга в ЗП по подразделению редактировать запрещено!');
+    exit;
+  end;
+
   nAmount := GetAmount;
   if nAmount = 0 then
     exit;
@@ -7105,7 +7111,7 @@ begin
     nAmountM := Abs(nAmount) / SourceClientDataSet.FieldByName('MultiplicitySale').AsCurrency;
     nAmountM := Frac(nAmountM);
 
-    if (nAmountM <> 0) and (Frac(SourceClientDataSet.FieldByName('Remains').AsCurrency - nAmount) <> 0)  then
+    if (nAmountM <> 0) and ((not SourceClientDataSet.FieldByName('isMultiplicityError').AsBoolean) or (Frac(SourceClientDataSet.FieldByName('Remains').AsCurrency - nAmount) <> 0))  then
     begin
       if (nAmount > 0) and (Frac(SourceClientDataSet.FieldByName('Remains').AsCurrency - nAmount) <> 0) then
       begin
@@ -7811,6 +7817,8 @@ begin
             SourceClientDataSet.FieldByName('GoodsPairSunMainId').AsVariant;
           CheckCDS.FieldByName('MultiplicitySale').AsVariant :=
             SourceClientDataSet.FieldByName('MultiplicitySale').AsVariant;
+          CheckCDS.FieldByName('isMultiplicityError').AsVariant :=
+            SourceClientDataSet.FieldByName('isMultiplicityError').AsVariant;
           CheckCDS.FieldByName('isPresent').AsVariant :=
             FormParams.ParamByName('AddPresent').Value;
 

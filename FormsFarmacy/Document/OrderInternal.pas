@@ -146,10 +146,11 @@ type
     DiscountName: TcxGridDBColumn;
     actUpdateFinalSUA: TdsdExecStoredProc;
     spUpdateFinalSUA: TdsdStoredProc;
-    dxBarButton1: TdxBarButton;
+    bbUpdateFinalSUA: TdxBarButton;
     AmountSUA: TcxGridDBColumn;
     FinalSUA: TcxGridDBColumn;
     FinalSUASend: TcxGridDBColumn;
+    spPUSHSUA: TdsdStoredProc;
   private
     { Private declarations }
   public

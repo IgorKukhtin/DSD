@@ -12,17 +12,17 @@ inherited FinalSUAForm: TFinalSUAForm
     Width = 797
     Height = 427
     ExplicitTop = 133
-    ExplicitWidth = 750
+    ExplicitWidth = 797
     ExplicitHeight = 427
     ClientRectBottom = 427
     ClientRectRight = 797
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 750
+      ExplicitWidth = 797
       ExplicitHeight = 403
       inherited cxGrid: TcxGrid
         Width = 797
         Height = 403
-        ExplicitWidth = 750
+        ExplicitWidth = 797
         ExplicitHeight = 403
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -124,6 +124,11 @@ inherited FinalSUAForm: TFinalSUAForm
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
               Column = SendSUN
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = AmountOI
             end>
           OptionsBehavior.IncSearch = True
           OptionsData.CancelOnExit = True
@@ -196,6 +201,57 @@ inherited FinalSUAForm: TFinalSUAForm
             Options.Editing = False
             Width = 81
           end
+          object AmountOI: TcxGridDBColumn
+            Caption = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'AmountOI'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object isTop: TcxGridDBColumn
+            Caption = #1058#1054#1055' ('#1087#1086' '#1089#1077#1090#1080')'
+            DataBinding.FieldName = 'isTop'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 66
+          end
+          object isClose: TcxGridDBColumn
+            Caption = #1047#1072#1082#1088#1099#1090' '#1087#1086' '#1089#1077#1090#1080
+            DataBinding.FieldName = 'isClose'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 66
+          end
+          object MCSIsClose: TcxGridDBColumn
+            Caption = #1059#1073#1080#1090'  '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084
+            DataBinding.FieldName = 'MCSIsClose'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 66
+          end
+          object isPromoBonus: TcxGridDBColumn
+            Caption = #1052#1072#1088#1082'.  '#1073#1086#1085#1091#1089
+            DataBinding.FieldName = 'isPromoBonus'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 66
+          end
+          object isLearnWeek: TcxGridDBColumn
+            Caption = #1059#1095#1072#1089'-'#1102#1090' '#1085#1072' '#1101#1090#1086#1081' '#1085#1077#1076#1077#1083#1077
+            DataBinding.FieldName = 'isLearnWeek'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 66
+          end
         end
       end
     end
@@ -204,7 +260,7 @@ inherited FinalSUAForm: TFinalSUAForm
     Width = 797
     Height = 107
     TabOrder = 3
-    ExplicitWidth = 750
+    ExplicitWidth = 797
     ExplicitHeight = 107
     inherited edInvNumber: TcxTextEdit
       Left = 9
