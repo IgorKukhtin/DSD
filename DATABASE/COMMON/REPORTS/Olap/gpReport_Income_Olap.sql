@@ -39,6 +39,8 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
              , TradeMarkName TVarChar
              , GoodsTagName TVarChar
              , GoodsPlatformName TVarChar
+             
+             , PartnerName TVarChar
              )   
 AS
 $BODY$
@@ -391,6 +393,8 @@ BEGIN
             , tmpGoodsParam.GoodsTagName
             , tmpGoodsParam.GoodsPlatformName
 
+            , Object_Partner.ValueData ::TVarChar AS PartnerName
+
         FROM tmpOperationGroup
 
              LEFT JOIN Movement ON Movement.Id = tmpOperationGroup.MovementId
@@ -410,6 +414,8 @@ BEGIN
              LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
                                   ON ObjectDate_PartionGoods_Value.ObjectId = tmpOperationGroup.PartionGoodsId
                                  AND ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
+
+             LEFT JOIN Object AS Object_Partner on Object_Partner.Id = tmpOperationGroup.PartnerId
         ;
          
 END;

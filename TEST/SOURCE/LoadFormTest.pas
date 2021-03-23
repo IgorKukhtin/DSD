@@ -2056,13 +2056,13 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleExternal_OrderSaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleExternal_OrderSaleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleExternal_OrderSaleDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleExternal_OrderSaleDialogForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleExternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleExternalDialogForm'));
@@ -2131,13 +2131,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionSeparate_CheckPriceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionSeparate_CheckPriceDialogForm');
   exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Income_OlapForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Income_OlapForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Income_OlapDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Income_OlapDialogForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_OlapForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_OlapForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_OlapDialogForm'));
