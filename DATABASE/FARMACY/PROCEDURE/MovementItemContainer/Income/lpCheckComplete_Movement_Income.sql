@@ -28,6 +28,7 @@ BEGIN
                 FROM MovementBoolean AS MovementBoolean_UseNDSKind
                 WHERE MovementBoolean_UseNDSKind.MovementId = inMovementId
                   AND MovementBoolean_UseNDSKind.DescId = zc_MovementBoolean_UseNDSKind()), FALSE) = FALSE
+     AND inMovementId not in (22086918, 22076213, 22099026, 22157039)
    THEN
      -- Проверяем у всех ли товаров совпадает НДС. 
      vbGoodsId:= (SELECT MovementItem.ObjectId

@@ -54,6 +54,9 @@ type
     bbMIChildProtocolOpenForm: TdxBarButton;
     dxBarButton1: TdxBarButton;
     UnitName: TcxGridDBColumn;
+    SendSUN: TcxGridDBColumn;
+    edCalculation: TcxDateEdit;
+    cxLabel3: TcxLabel;
   private
     { Private declarations }
   public

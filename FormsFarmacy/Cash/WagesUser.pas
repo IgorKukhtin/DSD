@@ -87,6 +87,9 @@ type
     actListGoodsBadTiming: TdsdOpenStaticForm;
     ceMarketing: TcxCurrencyEdit;
     actDblClickMarketing: TdsdDblClickAction;
+    deDateCalculation: TcxDateEdit;
+    cxLabel28: TcxLabel;
+    actFormClose: TdsdFormClose;
   private
     { Private declarations }
   public

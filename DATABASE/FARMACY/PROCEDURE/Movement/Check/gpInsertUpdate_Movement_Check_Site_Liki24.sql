@@ -18,6 +18,7 @@ $BODY$
    DECLARE vbIsInsert Boolean;
 
    DECLARE vbInvNumber Integer;
+   DECLARE vbStatusId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_...());
@@ -70,6 +71,20 @@ BEGIN
         INTO vbInvNumber
         FROM Movement
         WHERE Movement.Id = ioId;
+                
+    END IF;
+
+    IF vbIsInsert = FALSE
+    THEN
+      SELECT StatusId
+      INTO vbStatusId
+      FROM Movement
+      WHERE Id = ioId;
+
+      IF vbStatusId <> zc_Enum_Status_UnComplete()
+      THEN
+        RETURN;
+      END IF;
     END IF;
 
 

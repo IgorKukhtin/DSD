@@ -1,26 +1,26 @@
 inherited FinalSUAForm: TFinalSUAForm
   Caption = #1048#1090#1086#1075#1086#1074#1099#1081' '#1057#1059#1040
   ClientHeight = 560
-  ClientWidth = 750
+  ClientWidth = 797
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 766
+  ExplicitWidth = 813
   ExplicitHeight = 599
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 133
-    Width = 750
+    Width = 797
     Height = 427
     ExplicitTop = 133
     ExplicitWidth = 750
     ExplicitHeight = 427
     ClientRectBottom = 427
-    ClientRectRight = 750
+    ClientRectRight = 797
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 750
       ExplicitHeight = 403
       inherited cxGrid: TcxGrid
-        Width = 750
+        Width = 797
         Height = 403
         ExplicitWidth = 750
         ExplicitHeight = 403
@@ -119,6 +119,11 @@ inherited FinalSUAForm: TFinalSUAForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = SendSUN
             end>
           OptionsBehavior.IncSearch = True
           OptionsData.CancelOnExit = True
@@ -180,12 +185,23 @@ inherited FinalSUAForm: TFinalSUAForm
             Styles.Header = dmMain.cxHeaderL1Style
             Width = 95
           end
+          object SendSUN: TcxGridDBColumn
+            Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074'. '#1074' '#1087#1077#1088#1077#1084#1077#1097'.'
+            DataBinding.FieldName = 'SendSUN'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 81
+          end
         end
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 750
+    Width = 797
     Height = 107
     TabOrder = 3
     ExplicitWidth = 750
@@ -239,16 +255,16 @@ inherited FinalSUAForm: TFinalSUAForm
       Top = 64
       Properties.ReadOnly = False
       TabOrder = 7
-      Width = 498
+      Width = 371
     end
     object cxLabel10: TcxLabel
       Left = 221
-      Top = 0
+      Top = 4
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076'.'
     end
     object edInsertName: TcxButtonEdit
       Left = 221
-      Top = 18
+      Top = 22
       Properties.Buttons = <
         item
           Default = True
@@ -261,12 +277,12 @@ inherited FinalSUAForm: TFinalSUAForm
     end
     object cxLabel12: TcxLabel
       Left = 345
-      Top = 0
+      Top = 4
       Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076'.'
     end
     object edInsertdate: TcxDateEdit
       Left = 345
-      Top = 18
+      Top = 22
       EditValue = 42485d
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
@@ -275,12 +291,12 @@ inherited FinalSUAForm: TFinalSUAForm
     end
     object cxLabel11: TcxLabel
       Left = 474
-      Top = 0
+      Top = 4
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1082#1086#1088#1088'.'
     end
     object edUpdateName: TcxButtonEdit
       Left = 474
-      Top = 18
+      Top = 22
       Properties.Buttons = <
         item
           Default = True
@@ -293,17 +309,30 @@ inherited FinalSUAForm: TFinalSUAForm
     end
     object cxLabel13: TcxLabel
       Left = 599
-      Top = 0
+      Top = 4
       Caption = #1044#1072#1090#1072' '#1082#1086#1088#1088'.'
     end
     object edUpdateDate: TcxDateEdit
       Left = 599
-      Top = 18
+      Top = 22
       EditValue = 42485d
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
       TabOrder = 15
       Width = 120
+    end
+    object edCalculation: TcxDateEdit
+      Left = 598
+      Top = 64
+      EditValue = 42485d
+      Properties.ReadOnly = True
+      TabOrder = 16
+      Width = 120
+    end
+    object cxLabel3: TcxLabel
+      Left = 598
+      Top = 46
+      Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081'.'
     end
   end
   inherited ActionList: TActionList
@@ -671,6 +700,13 @@ inherited FinalSUAForm: TFinalSUAForm
         Name = 'UpdateDate'
         Value = Null
         Component = edUpdateDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Calculation'
+        Value = Null
+        Component = edCalculation
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>

@@ -10,7 +10,7 @@ RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId     Integer;
-
+   DECLARE vbMovementId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
@@ -55,12 +55,28 @@ BEGIN
      -- 5. распределяем-1 остатки - по всем аптекам
      CREATE TEMP TABLE _tmpResult_SUA   (UnitId_from Integer, UnitId_to Integer, GoodsId Integer, Amount TFloat, MovementId Integer, MovementItemId Integer) ON COMMIT DROP;
 
+     IF NOT EXISTS(SELECT Movement.id
+                   FROM Movement
+                   WHERE Movement.OperDate = inOperDate - ((date_part('DOW', inOperDate)::Integer - 1)::TVarChar||' DAY')::INTERVAL
+                     AND Movement.DescId = zc_Movement_FinalSUA()
+                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                   )
+     THEN
+       RETURN;
+     END IF;
 
+     SELECT Movement.id
+     INTO vbMovementId
+     FROM Movement
+     WHERE Movement.OperDate = inOperDate - ((date_part('DOW', inOperDate)::Integer - 1)::TVarChar||' DAY')::INTERVAL
+       AND Movement.DescId = zc_Movement_FinalSUA()
+       AND Movement.StatusId = zc_Enum_Status_Complete();
+       
      -- !!!1 - сформировали данные во временные табл!!!
      PERFORM lpInsert_Movement_Send_RemainsSun_SUA (inOperDate:= inOperDate
-                                                         , inDriverId:= 0 -- vbDriverId_1
-                                                         , inUserId  := vbUserId
-                                                          );
+                                                  , inDriverId:= 0 -- vbDriverId_1
+                                                  , inUserId  := vbUserId
+                                                   );
 
      -- создали документы
      UPDATE _tmpResult_SUA SET MovementId = tmp.MovementId
@@ -68,7 +84,7 @@ BEGIN
                 , tmp.UnitId_to
                 , gpInsertUpdate_Movement_Send (ioId               := 0
                                               , inInvNumber        := CAST (NEXTVAL ('Movement_Send_seq') AS TVarChar)
-                                              , inOperDate         := inOperDate
+                                              , inOperDate         := CURRENT_DATE
                                               , inFromId           := UnitId_from
                                               , inToId             := UnitId_to
                                               , inComment          := 'Товар по СУА'
@@ -119,8 +135,29 @@ BEGIN
                                   )
      FROM (SELECT DISTINCT _tmpResult_SUA.MovementId FROM _tmpResult_SUA WHERE _tmpResult_SUA.MovementId > 0
           ) AS tmp;
+    
+     -- 9. Cохранили количество <Сформировано в перемещение>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SendSUN(), MovementItem.Id, COALESCE(SUM(_tmpResult_SUA.Amount), 0))
+     FROM MovementItem
 
-    -- RAISE EXCEPTION '<ok>';
+         LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                          ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                         AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                                         
+         LEFT JOIN _tmpResult_SUA ON _tmpResult_SUA.UnitId_to = MILinkObject_Unit.ObjectId 
+                                 AND _tmpResult_SUA.GoodsId = MovementItem.ObjectId
+                                 AND _tmpResult_SUA.MovementItemId > 0
+
+     WHERE MovementItem.MovementId = vbMovementId
+       AND MovementItem.DescId = zc_MI_Master()
+       AND MovementItem.isErased = False
+     GROUP BY MovementItem.Id, MovementItem.ObjectId, MILinkObject_Unit.ObjectId
+     HAVING SUM(_tmpResult_SUA.Amount) > 0;
+             
+     -- 10. сохранили свойство <Дата перемещений>
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Calculation(), vbMovementId, CURRENT_DATE);
+
+     -- RAISE EXCEPTION '<ok>';
 
 END;
 $BODY$
@@ -133,5 +170,6 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsert_Movement_Send_RemainsSun_SUA (inOperDate:= CURRENT_DATE + INTERVAL '1 DAY', inSession:= zfCalc_UserAdmin()) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
+-- 
+SELECT * FROM gpInsert_Movement_Send_RemainsSun_SUA (inOperDate:= CURRENT_DATE - INTERVAL '1 DAY', inSession:= zfCalc_UserAdmin()) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 

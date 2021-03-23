@@ -59,9 +59,9 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-    LoadReportFromFile('PrintProduct_Tender', ReportPath + '\PrintProduct_Tender.fr3');
+    LoadReportFromFile('PrintProduct_OrderConfirmation', ReportPath + '\PrintProduct_OrderConfirmation.fr3');
     LoadReportFromFile('PrintProduct_Structure', ReportPath + '\PrintProduct_Structure.fr3');
-    LoadReportFromFile('PrintProduct_Agilis', ReportPath + '\PrintProduct_Agilis.fr3');
+    LoadReportFromFile('PrintProduct_Offer', ReportPath + '\PrintProduct_Offer.fr3');
 //  LoadReportFromFile('Анализ продаж1', ReportPath + '\Анализ продаж1.fr3');
 //  LoadReportFromFile('Анализ продаж (группа)', ReportPath + '\Анализ продаж (группа).fr3');
 //  LoadReportFromFile('Анализ продаж (линия_группа)', ReportPath + '\Анализ продаж (линия_группа).fr3');

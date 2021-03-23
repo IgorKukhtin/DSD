@@ -42,6 +42,7 @@ type
     bbDeferredYes: TdxBarButton;
     bbDeferredNo: TdxBarButton;
     dxBarButton1: TdxBarButton;
+    Calculation: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -110,12 +110,12 @@ type
     actPrintStickerTermo: TdsdPrintAction;
     bbPrintStickerTermo: TdxBarButton;
     PrintItemsColorCDS: TClientDataSet;
-    spSelectPrint: TdsdStoredProc;
+    spSelectPrintOffer: TdsdStoredProc;
     spSelectPrintStructure: TdsdStoredProc;
-    spSelectPrintTender: TdsdStoredProc;
-    actPrintTender: TdsdPrintAction;
+    spSelectPrintOrderConfirmation: TdsdStoredProc;
+    actPrintOrderConfirmation: TdsdPrintAction;
     actPrintStructure: TdsdPrintAction;
-    actPrintAgilis: TdsdPrintAction;
+    actPrintOffer: TdsdPrintAction;
   private
   public
   end;

@@ -876,9 +876,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Juridical_PriorityReprice() RETURNS 
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Juridical(), 'zc_ObjectBoolean_Juridical_PriorityReprice', 'Приоритетный поставщик при переоценке' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Juridical_PriorityReprice');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Goods_MultiplicityError() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_MultiplicityError'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Goods_MultiplicityError', 'Погрешность для кратности при продажи' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_MultiplicityError');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 22.03.21                                                                                                          * zc_ObjectBoolean_Goods_MultiplicityError
  17.03.21                                                                                                          * zc_ObjectBoolean_Juridical_PriorityReprice
  11.03.21                                                                                                          * zc_ObjectBoolean_DiscountExternal_...
  10.03.21                                                                                                          * zc_ObjectBoolean_Goods_OnlySP

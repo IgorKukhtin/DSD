@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
              , SummaTechnicalRediscount TFloat, SummaMoneyBox TFloat, SummaFullCharge TFloat, SummaMoneyBoxUsed TFloat
              , SummaTotal TFloat
              , PasswordEHels TVarChar
+             , DateCalculation TDateTime
               )
 AS
 $BODY$
@@ -275,9 +276,14 @@ BEGIN
                  , tmpAdditionalExpenses.SummaFullCharge        AS SummaFullCharge
                  , tmpAdditionalExpenses.SummaMoneyBoxUsed      AS SummaMoneyBoxUsed
                  , tmpAdditionalExpenses.SummaTotal             AS SummaTotal
-                 , ObjectString_PasswordEHels.ValueData          AS UserPassword
+                 , ObjectString_PasswordEHels.ValueData         AS UserPassword
+                 , MovementDate_Calculation.ValueData           AS DateCalculation
             FROM  MovementItem
             
+                  LEFT JOIN MovementDate AS MovementDate_Calculation
+                                         ON MovementDate_Calculation.MovementId = vbMovementId
+                                        AND MovementDate_Calculation.DescId = zc_MovementDate_Calculation()
+
                   LEFT JOIN MovementItem AS MIAmount
                                          ON MIAmount.MovementId = vbMovementMaxId
                                         AND MIAmount.ObjectId = vbUserId
@@ -349,4 +355,3 @@ $BODY$
  28.08.19                                                        *
 */
 -- select * from gpGet_MovementItem_WagesUser(inOperDate := ('01.03.2020')::TDateTime ,  inSession := '3');
-

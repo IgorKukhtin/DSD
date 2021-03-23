@@ -261,6 +261,21 @@ inherited OrderInternalForm: TOrderInternalForm
               Format = ',0.####'
               Kind = skSum
               Column = SendSUNAmount_save
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = AmountSUA
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = FinalSUA
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = FinalSUASend
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
@@ -845,6 +860,39 @@ inherited OrderInternalForm: TOrderInternalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 88
+          end
+          object AmountSUA: TcxGridDBColumn
+            Caption = #1042' '#1079#1072#1082#1072#1079' '#1087#1086' '#1057#1059#1040
+            DataBinding.FieldName = 'AmountSUA'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 66
+          end
+          object FinalSUA: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086#1074#1099#1081' '#1057#1059#1040
+            DataBinding.FieldName = 'FinalSUA'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
+          end
+          object FinalSUASend: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086#1074#1099#1081' '#1057#1059#1040' '#1074' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+            DataBinding.FieldName = 'FinalSUASend'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
           end
         end
       end
@@ -1785,6 +1833,26 @@ inherited OrderInternalForm: TOrderInternalForm
         end>
       isShowModal = False
     end
+    object actUpdateFinalSUA: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateFinalSUA
+      StoredProcList = <
+        item
+          StoredProc = spUpdateFinalSUA
+        end
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectChild
+        end>
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1048#1090#1086#1075#1086#1074#1086#1084#1091' '#1057#1059#1040
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1048#1090#1086#1075#1086#1074#1086#1084#1091' '#1057#1059#1040
+      ImageIndex = 79
+      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1048#1090#1086#1075#1086#1074#1086#1084#1091' '#1057#1059#1040'?'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -1901,6 +1969,10 @@ inherited OrderInternalForm: TOrderInternalForm
         item
           Visible = True
           ItemName = 'bbUpdateListDiff'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end
         item
           Visible = True
@@ -2065,6 +2137,10 @@ inherited OrderInternalForm: TOrderInternalForm
     end
     object bbReportSendDefSUN: TdxBarButton
       Action = actReportSendDefSUN
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actUpdateFinalSUA
       Category = 0
     end
   end
@@ -2932,7 +3008,7 @@ inherited OrderInternalForm: TOrderInternalForm
       end>
     PackSize = 1
     Left = 896
-    Top = 392
+    Top = 376
   end
   object GuidesOrderInternaPromo: TdsdGuides
     KeyField = 'Id'
@@ -3098,5 +3174,38 @@ inherited OrderInternalForm: TOrderInternalForm
     PackSize = 1
     Left = 802
     Top = 416
+  end
+  object spUpdateFinalSUA: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_OrderInternal_FinalSUA'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 896
+    Top = 432
   end
 end

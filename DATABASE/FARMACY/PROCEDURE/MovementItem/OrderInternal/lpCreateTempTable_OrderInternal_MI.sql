@@ -46,6 +46,7 @@ BEGIN
              , SendSUNAmount    TFloat
              , SendDefSUNAmount TFloat
              , RemainsSUN       TFloat
+             , AmountSUA        TFloat
              , isClose          Boolean
              , isFirst          Boolean
              , isSecond         Boolean
@@ -154,6 +155,10 @@ BEGIN
                               FROM tmpMIF
                               WHERE tmpMIF.DescId = zc_MIFloat_ListDiff()
                              )
+        , tmpMIF_AmountSUA AS (SELECT tmpMIF.*
+                               FROM tmpMIF
+                               WHERE tmpMIF.DescId = zc_MIFloat_AmountSUA()
+                             )
         , tmpMIF_AmountReal AS (SELECT tmpMIF.*
                                 FROM tmpMIF
                                 WHERE tmpMIF.DescId = zc_MIFloat_AmountReal()
@@ -212,6 +217,7 @@ BEGIN
             , MIFloat_SendSUN.ValueData    :: TFloat  AS SendSUNAmount
             , MIFloat_SendDefSUN.ValueData :: TFloat  AS SendDefSUNAmount
             , MIFloat_RemainsSUN.ValueData :: TFloat  AS RemainsSUN
+            , MIFloat_AmountSUA.ValueData          AS AmountSUA
 
             , COALESCE(MIBoolean_Close.ValueData, False)              AS isClose
             , COALESCE(MIBoolean_First.ValueData, False)              AS isFirst
@@ -266,6 +272,7 @@ BEGIN
               LEFT JOIN tmpMIF_Send           AS MIFloat_Send           ON MIFloat_Send.MovementItemId           = MovementItem.Id
               LEFT JOIN tmpMIF_AmountDeferred AS MIFloat_AmountDeferred ON MIFloat_AmountDeferred.MovementItemId = MovementItem.Id
               LEFT JOIN tmpMIF_ListDiff       AS MIFloat_ListDiff       ON MIFloat_ListDiff.MovementItemId       = MovementItem.Id
+              LEFT JOIN tmpMIF_AmountSUA      AS MIFloat_AmountSUA      ON MIFloat_AmountSUA.MovementItemId      = MovementItem.Id
               LEFT JOIN tmpMIF_AmountReal     AS MIFloat_AmountReal     ON MIFloat_AmountReal.MovementItemId     = MovementItem.Id
               LEFT JOIN tmpMIF_SendSUN        AS MIFloat_SendSUN        ON MIFloat_SendSUN.MovementItemId        = MovementItem.Id
               LEFT JOIN tmpMIF_SendDefSUN     AS MIFloat_SendDefSUN     ON MIFloat_SendDefSUN.MovementItemId     = MovementItem.Id
@@ -279,7 +286,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 22.03.21                                                                     *
  01.11.18         *
  31.08.18         *
  20.03.18         *

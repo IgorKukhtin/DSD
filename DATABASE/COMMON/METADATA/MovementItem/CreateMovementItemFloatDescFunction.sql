@@ -1439,10 +1439,15 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_RealWeightMsg() RETURNS Integer AS $BODY$B
 INSERT INTO MovementItemFloatDesc(Code, ItemName)
   SELECT 'zc_MIFloat_RealWeightMsg', 'Фактический вес после массажера' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_RealWeightMsg');
   
+CREATE OR REPLACE FUNCTION zc_MIFloat_AmountSUA() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountSUA'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_AmountSUA', 'Количество по СУА' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountSUA');
+  
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 22.03.21                                                                                                     * zc_MIFloat_AmountSUA
  27.01.21         * zc_MIFloat_PartionNumStart
                     zc_MIFloat_PartionNumEnd
  03.12.20         * zc_MIFloat_AmountPrIn

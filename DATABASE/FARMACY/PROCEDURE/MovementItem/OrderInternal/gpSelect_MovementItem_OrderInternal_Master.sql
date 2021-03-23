@@ -104,6 +104,11 @@ RETURNS TABLE (Id                    Integer
              , isDefault             Boolean
              
              , DiscountName          TVarChar
+             
+             , AmountSUA             TFloat
+             , FinalSUA              TFloat
+             , FinalSUASend          TFloat
+
              )
 AS
 $BODY$
@@ -764,6 +769,36 @@ BEGIN
                      GROUP BY MI_Send.ObjectId
                      HAVING SUM (MI_Send.Amount) <> 0
                     )
+    -- документ финальный СУН
+   , tmpFinalSUA AS (SELECT Movement.id
+                     FROM Movement
+                          LEFT JOIN MovementDate AS MovementDate_Calculation
+                                                 ON MovementDate_Calculation.MovementId = Movement.Id
+                                                AND MovementDate_Calculation.DescId = zc_MovementDate_Calculation()
+                     WHERE Movement.OperDate = vbOperDate - ((date_part('DOW', vbOperDate)::Integer - 1)::TVarChar||' DAY')::INTERVAL
+                       AND Movement.DescId = zc_Movement_FinalSUA()
+                       AND Movement.StatusId = zc_Enum_Status_Complete()
+                       AND MovementDate_Calculation.ValueData = vbOperDate
+                     )
+    -- строки финальный СУН
+   , tmpFinalSUAList AS (SELECT MovementItem.ObjectId                                              AS GoodsId
+                             , SUM(MovementItem.Amount)                                            AS FinalSUA
+                             , COALESCE (SUM(MIFloat_SendSUN.ValueData), 0)                        AS FinalSUASend
+
+                        FROM tmpFinalSUA
+                             INNER JOIN MovementItem ON MovementItem.MovementId = tmpFinalSUA.Id
+                                                    AND MovementItem.DescId     = zc_MI_Master()
+                                                    AND MovementItem.isErased   = FALSE
+                                                                      
+                             INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                               ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                                                              AND MILinkObject_Unit.ObjectId = vbUnitId
+
+                             LEFT JOIN MovementItemFloat AS MIFloat_SendSUN
+                                                         ON MIFloat_SendSUN.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_SendSUN.DescId = zc_MIFloat_SendSUN()
+                        GROUP BY MovementItem.ObjectId)    
                     
        -- Результат 1
        SELECT
@@ -839,9 +874,9 @@ BEGIN
                                MIFloat_AmountManual.ValueData
                                -- округлили ВВЕРХ AllLot
                              , CEIL ((
-                                      CASE WHEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= COALESCE (tmpMI.ListDiffAmount, 0)
+                                      CASE WHEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= (COALESCE (tmpMI.ListDiffAmount, 0) + COALESCE (tmpMI.AmountSUA, 0))
                                            THEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
-                                           ELSE COALESCE (tmpMI.ListDiffAmount, 0)                                                   -- кол-во отказов
+                                           ELSE (COALESCE (tmpMI.ListDiffAmount, 0) + COALESCE (tmpMI.AmountSUA, 0))                -- кол-во отказов + СУА
                                       END
                                      ) / COALESCE (tmpMI.MinimumLot, 1)
                                     ) * COALESCE (tmpMI.MinimumLot, 1)
@@ -857,6 +892,8 @@ BEGIN
                                        + COALESCE (MIFloat_AmountSecond.ValueData, 0)
                                          -- кол-во отказов
                                        + COALESCE (tmpMI.ListDiffAmount, 0)
+                                         -- кол-во СУА
+                                       + COALESCE (tmpMI.AmountSUA, 0)
                                         ) / COALESCE (tmpMI.MinimumLot, 1)
                                        ) * COALESCE (tmpMI.MinimumLot, 1)
                                  )
@@ -927,6 +964,11 @@ BEGIN
            , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean        AS isDefault
 
            , tmpMI.DiscountName
+           
+           , tmpMI.AmountSUA                                                 AS AmountSUA
+           , tmpFinalSUAList.FinalSUA::TFloat                                AS FinalSUA
+           , tmpFinalSUAList.FinalSUASend::TFloat                            AS FinalSUASend
+
        FROM tmpMI        --_tmpOrderInternal_MI AS
             LEFT JOIN tmpOneJuridical ON tmpOneJuridical.MIMasterId = tmpMI.MovementItemId
 
@@ -974,6 +1016,8 @@ BEGIN
                                           AND tmpLoadPriceList_NDS.JuridicalId = tmpMI.JuridicalId
                                           
             LEFT JOIN tmpSendSun ON tmpSendSun.GoodsId = tmpMI.GoodsId
+
+            LEFT JOIN tmpFinalSUAList ON tmpFinalSUAList.GoodsId = tmpMI.GoodsId  
            ;
 
 
@@ -1758,6 +1802,10 @@ BEGIN
                             FROM tmpMIF
                             WHERE tmpMIF.DescId = zc_MIFloat_ListDiff()
                            )
+      , tmpMIF_AmountSUA AS (SELECT tmpMIF.*
+                            FROM tmpMIF
+                            WHERE tmpMIF.DescId = zc_MIFloat_AmountSUA()
+                           )
         , tmpMIF_AmountReal AS (SELECT tmpMIF.*
                                 FROM tmpMIF
                                 WHERE tmpMIF.DescId = zc_MIFloat_AmountReal()
@@ -1868,15 +1916,16 @@ BEGIN
                                     ) / COALESCE (MovementItem.MinimumLot, 1)
                                    ) * COALESCE(MovementItem.MinimumLot, 1)                    AS CalcAmountAll
                              */
-                            , CEIL (( CASE WHEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= COALESCE (MIFloat_ListDiff.ValueData, 0)
+                            , CEIL (( CASE WHEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= (COALESCE (MIFloat_ListDiff.ValueData, 0) + COALESCE (MIFloat_AmountSUA.ValueData, 0))
                                           THEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
-                                          ELSE COALESCE (MIFloat_ListDiff.ValueData, 0)                                                   -- кол-во отказов
+                                          ELSE (COALESCE (MIFloat_ListDiff.ValueData, 0) + COALESCE (MIFloat_AmountSUA.ValueData, 0))     -- кол-во отказов + СУА
                                      END
                                      ) / COALESCE (MovementItem.MinimumLot, 1)
                                    ) * COALESCE(MovementItem.MinimumLot, 1)                    AS CalcAmountAll
 
                             , MIFloat_AmountManual.ValueData                                   AS AmountManual
                             , MIFloat_ListDiff.ValueData                                       AS ListDiffAmount
+                            , MIFloat_AmountSUA.ValueData                                      AS AmountSUA
 
                             , MIFloat_AmountReal.ValueData :: TFloat  AS AmountReal
                             , MIFloat_SendSUN.ValueData    :: TFloat  AS SendSUNAmount
@@ -1918,6 +1967,7 @@ BEGIN
                             LEFT JOIN tmpMIF_AmountSecond AS MIFloat_AmountSecond ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                             LEFT JOIN tmpMIF_AmountManual AS MIFloat_AmountManual ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
                             LEFT JOIN tmpMIF_ListDiff     AS MIFloat_ListDiff     ON MIFloat_ListDiff.MovementItemId    = MovementItem.Id
+                            LEFT JOIN tmpMIF_AmountSUA    AS MIFloat_AmountSUA     ON MIFloat_AmountSUA.MovementItemId    = MovementItem.Id
                             LEFT JOIN tmpMIF_AmountReal     AS MIFloat_AmountReal     ON MIFloat_AmountReal.MovementItemId     = MovementItem.Id
                             LEFT JOIN tmpMIF_SendSUN        AS MIFloat_SendSUN        ON MIFloat_SendSUN.MovementItemId        = MovementItem.Id
                             LEFT JOIN tmpMIF_SendDefSUN     AS MIFloat_SendDefSUN     ON MIFloat_SendDefSUN.MovementItemId     = MovementItem.Id
@@ -1960,6 +2010,7 @@ BEGIN
                        , tmpMI_all_MinLot.CalcAmountAll
                        , tmpMI_all_MinLot.AmountManual
                        , tmpMI_all_MinLot.ListDiffAmount
+                       , tmpMI_all_MinLot.AmountSUA
                        , tmpMI_all_MinLot.AmountReal
                        , tmpMI_all_MinLot.SendSUNAmount
                        , tmpMI_all_MinLot.SendDefSUNAmount
@@ -2044,6 +2095,7 @@ BEGIN
                          , NULLIF (COALESCE (tmpMI.AmountManual, tmpMI.CalcAmountAll), 0)   AS CalcAmountAll
                          , tmpMI.Price * COALESCE (tmpMI.AmountManual, tmpMI.CalcAmountAll) AS SummAll
                          , tmpMI.ListDiffAmount
+                         , tmpMI.AmountSUA
                          , tmpMI.AmountReal
                          , tmpMI.SendSUNAmount
                          , tmpMI.SendDefSUNAmount
@@ -2473,6 +2525,36 @@ BEGIN
                      GROUP BY MI_Send.ObjectId
                      HAVING SUM (MI_Send.Amount) <> 0
                     )
+    -- документ финальный СУН
+   , tmpFinalSUA AS (SELECT Movement.id
+                     FROM Movement
+                          LEFT JOIN MovementDate AS MovementDate_Calculation
+                                                 ON MovementDate_Calculation.MovementId = Movement.Id
+                                                AND MovementDate_Calculation.DescId = zc_MovementDate_Calculation()
+                     WHERE Movement.OperDate = vbOperDate - ((date_part('DOW', vbOperDate)::Integer - 1)::TVarChar||' DAY')::INTERVAL
+                       AND Movement.DescId = zc_Movement_FinalSUA()
+                       AND Movement.StatusId = zc_Enum_Status_Complete()
+                       AND MovementDate_Calculation.ValueData = vbOperDate
+                     )
+    -- строки финальный СУН
+   , tmpFinalSUAList AS (SELECT MovementItem.ObjectId                                              AS GoodsId
+                             , SUM(MovementItem.Amount)                                            AS FinalSUA
+                             , COALESCE (SUM(MIFloat_SendSUN.ValueData), 0)                        AS FinalSUASend
+
+                        FROM tmpFinalSUA
+                             INNER JOIN MovementItem ON MovementItem.MovementId = tmpFinalSUA.Id
+                                                    AND MovementItem.DescId     = zc_MI_Master()
+                                                    AND MovementItem.isErased   = FALSE
+                                                                      
+                             INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                               ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                                                              AND MILinkObject_Unit.ObjectId = vbUnitId
+
+                             LEFT JOIN MovementItemFloat AS MIFloat_SendSUN
+                                                         ON MIFloat_SendSUN.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_SendSUN.DescId = zc_MIFloat_SendSUN()
+                        GROUP BY MovementItem.ObjectId)    
 
        -- Результат 1
        SELECT
@@ -2595,6 +2677,10 @@ BEGIN
            , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean     AS isDefault
 
            , tmpGoodsMain.DiscountName
+
+           , tmpMI.AmountSUA                                              AS AmountSUA
+           , tmpFinalSUAList.FinalSUA::TFloat                             AS FinalSUA
+           , tmpFinalSUAList.FinalSUASend::TFloat                         AS FinalSUASend
        FROM tmpData AS tmpMI
             LEFT JOIN tmpPriceView AS Object_Price_View ON tmpMI.GoodsId                    = Object_Price_View.GoodsId
             LEFT JOIN tmpRemains   AS Remains           ON Remains.ObjectId                 = tmpMI.GoodsId
@@ -2634,6 +2720,7 @@ BEGIN
             LEFT JOIN tmpLoadPriceList_NDS ON tmpLoadPriceList_NDS.PartnerGoodsId = tmpMI.PartnerGoodsId
                                           AND tmpLoadPriceList_NDS.JuridicalId = tmpMI.JuridicalId
                                           
+            LEFT JOIN tmpFinalSUAList ON tmpFinalSUAList.GoodsId = tmpMI.GoodsId  
 
 /*            LEFT JOIN tmpObjectLink_Area AS ObjectLink_Goods_Area
                                  ON ObjectLink_Goods_Area.ObjectId = tmpMI.PartnerGoodsId
@@ -3420,6 +3507,10 @@ BEGIN
                             FROM tmpMIF
                             WHERE tmpMIF.DescId = zc_MIFloat_ListDiff()
                            )
+      , tmpMIF_AmountSUA AS (SELECT tmpMIF.*
+                             FROM tmpMIF
+                             WHERE tmpMIF.DescId = zc_MIFloat_AmountSUA()
+                            )
       , tmpMILinkObject AS (SELECT MILinkObject.*
                             FROM MovementItemLinkObject AS MILinkObject
 --                              INNER JOIN  (SELECT tmpMI_Master.Id from tmpMI_Master) AS test ON test.ID = MILinkObject.MovementItemId
@@ -3515,15 +3606,16 @@ BEGIN
 */
 --27.01.2020 Люба просит чтоб в расчет ложилась не сумма а большее из "Спец + Авто" и "Отказы" - поскольку сумма этих колонок приводит к затоварке аптек
                             , CEIL ((                                -- Спецзаказ + Количество дополнительное                        -- кол-во отказов
-                                     CASE WHEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= COALESCE (MIFloat_ListDiff.ValueData, 0)
+                                     CASE WHEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= (COALESCE (MIFloat_ListDiff.ValueData, 0) + COALESCE (MIFloat_AmountSUA.ValueData, 0))
                                           THEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
-                                          ELSE COALESCE (MIFloat_ListDiff.ValueData, 0)                                                   -- кол-во отказов
+                                          ELSE (COALESCE (MIFloat_ListDiff.ValueData, 0) + COALESCE (MIFloat_AmountSUA.ValueData, 0))     -- кол-во отказов + СУА
                                      END
                                     ) / COALESCE (MovementItem.MinimumLot, 1)
                                    ) * COALESCE (MovementItem.MinimumLot, 1)                   AS CalcAmountAll
 
                             , MIFloat_AmountManual.ValueData                                   AS AmountManual
                             , MIFloat_ListDiff.ValueData                                       AS ListDiffAmount
+                            , MIFloat_AmountSUA.ValueData                                      AS AmountSUA
                             , MovementItem.isErased
                             , COALESCE (PriceList.GoodsId, MinPrice.GoodsId)                   AS GoodsId_MinLot
                        FROM tmpMI_Master AS MovementItem
@@ -3558,7 +3650,8 @@ BEGIN
                             LEFT JOIN tmpMIF_Summ AS MIFloat_Summ ON MIFloat_Summ.MovementItemId = MovementItem.Id
                             LEFT JOIN tmpMIF_AmountSecond AS MIFloat_AmountSecond ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                             LEFT JOIN tmpMIF_AmountManual AS MIFloat_AmountManual ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
-                            LEFT JOIN tmpMIF_ListDiff     AS MIFloat_ListDiff     ON MIFloat_ListDiff.MovementItemId    = MovementItem.Id
+                            LEFT JOIN tmpMIF_ListDiff     AS MIFloat_ListDiff     ON MIFloat_ListDiff.MovementItemId     = MovementItem.Id
+                            LEFT JOIN tmpMIF_AmountSUA    AS MIFloat_AmountSUA    ON MIFloat_AmountSUA.MovementItemId    = MovementItem.Id
      --LIMIT 2
                        )
 
@@ -3597,6 +3690,7 @@ BEGIN
                        , tmpMI_all_MinLot.CalcAmountAll
                        , tmpMI_all_MinLot.AmountManual
                        , tmpMI_all_MinLot.ListDiffAmount
+                       , tmpMI_all_MinLot.AmountSUA
                        , tmpMI_all_MinLot.isErased
                   FROM tmpMI_all_MinLot
 
@@ -3677,6 +3771,7 @@ BEGIN
                          , NULLIF (COALESCE (tmpMI.AmountManual, tmpMI.CalcAmountAll), 0)   AS CalcAmountAll
                          , tmpMI.Price * COALESCE (tmpMI.AmountManual, tmpMI.CalcAmountAll) AS SummAll
                          , tmpMI.ListDiffAmount
+                         , tmpMI.AmountSUA
                     FROM tmpGoods
                          FULL JOIN tmpMI ON tmpMI.GoodsId = tmpGoods.GoodsId
                    )
@@ -4096,6 +4191,36 @@ BEGIN
                      GROUP BY MI_Send.ObjectId
                      HAVING SUM (MI_Send.Amount) <> 0
                     )
+    -- документ финальный СУН
+   , tmpFinalSUA AS (SELECT Movement.id
+                     FROM Movement
+                          LEFT JOIN MovementDate AS MovementDate_Calculation
+                                                 ON MovementDate_Calculation.MovementId = Movement.Id
+                                                AND MovementDate_Calculation.DescId = zc_MovementDate_Calculation()
+                     WHERE Movement.OperDate = vbOperDate - ((date_part('DOW', vbOperDate)::Integer - 1)::TVarChar||' DAY')::INTERVAL
+                       AND Movement.DescId = zc_Movement_FinalSUA()
+                       AND Movement.StatusId = zc_Enum_Status_Complete()
+                       AND MovementDate_Calculation.ValueData = vbOperDate
+                     )
+    -- строки финальный СУН
+   , tmpFinalSUAList AS (SELECT MovementItem.ObjectId                                              AS GoodsId
+                             , SUM(MovementItem.Amount)                                            AS FinalSUA
+                             , COALESCE (SUM(MIFloat_SendSUN.ValueData), 0)                        AS FinalSUASend
+
+                        FROM tmpFinalSUA
+                             INNER JOIN MovementItem ON MovementItem.MovementId = tmpFinalSUA.Id
+                                                    AND MovementItem.DescId     = zc_MI_Master()
+                                                    AND MovementItem.isErased   = FALSE
+                                                                      
+                             INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                               ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                                                              AND MILinkObject_Unit.ObjectId = vbUnitId
+
+                             LEFT JOIN MovementItemFloat AS MIFloat_SendSUN
+                                                         ON MIFloat_SendSUN.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_SendSUN.DescId = zc_MIFloat_SendSUN()
+                        GROUP BY MovementItem.ObjectId)    
 
        -- Результат 1
        SELECT
@@ -4219,6 +4344,10 @@ BEGIN
            , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean     AS isDefault
            
            , tmpGoodsMain.DiscountName
+
+           , tmpMI.AmountSUA                                              AS AmountSUA
+           , tmpFinalSUAList.FinalSUA::TFloat                             AS FinalSUA
+           , tmpFinalSUAList.FinalSUASend::TFloat                         AS FinalSUASend
        FROM tmpData AS tmpMI
             LEFT JOIN tmpPriceView AS Object_Price_View ON tmpMI.GoodsId                    = Object_Price_View.GoodsId
             LEFT JOIN tmpRemains   AS Remains           ON Remains.ObjectId                 = tmpMI.GoodsId
@@ -4256,6 +4385,8 @@ BEGIN
             
             LEFT JOIN tmpLoadPriceList_NDS ON tmpLoadPriceList_NDS.PartnerGoodsId = tmpMI.PartnerGoodsId
                                           AND tmpLoadPriceList_NDS.JuridicalId = tmpMI.JuridicalId
+                                          
+            LEFT JOIN tmpFinalSUAList ON tmpFinalSUAList.GoodsId = tmpMI.GoodsId  
 
 /*            LEFT JOIN tmpObjectLink_Area AS ObjectLink_Goods_Area
                                  ON ObjectLink_Goods_Area.ObjectId = tmpMI.PartnerGoodsId
@@ -4343,4 +4474,4 @@ where Movement.DescId = zc_Movement_OrderInternal()
 
 -- select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 22029712   , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
 
-select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 22196197 , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 22630094  , inShowAll := 'True' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');

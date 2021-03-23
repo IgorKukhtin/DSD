@@ -558,6 +558,8 @@ type
     bbPositionNext: TcxButton;
     cbMorionFilter: TcxCheckBox;
     MultiplicitySale: TcxGridDBColumn;
+    pnlInfo: TPanel;
+    lblInfo: TLabel;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -805,7 +807,6 @@ type
     // проверили что есть остаток
     function fCheck_RemainsError: Boolean;
 
-    property SoldRegim: Boolean read FSoldRegim write SetSoldRegim;
     procedure Thread_Exception(var Msg: TMessage); message UM_THREAD_EXCEPTION;
     procedure ConnectionModeChange(var Msg: TMessage);
       message UM_LOCAL_CONNECTION;
@@ -888,6 +889,9 @@ type
     procedure AddDistributionPromo(AID : Integer; AAmount, ASumm : Currency);
     function ShowDistributionPromo : Boolean;
     function SetMorionCodeFilter : boolean;
+    procedure ClearAll;
+
+    property SoldRegim: Boolean read FSoldRegim write SetSoldRegim;
   end;
 
 var
@@ -1328,7 +1332,8 @@ begin
       SoldRegim := True;
       lcName.Text := RemainsCDS.FieldByName('GoodsName').AsString;
       edAmount.Enabled := True;
-      edAmount.Text := '1';
+      if RemainsCDS.FieldByName('Remains').asCurrency > 1 then edAmount.Text := '1'
+      else edAmount.Text := RemainsCDS.FieldByName('Remains').AsString;
       ActiveControl := edAmount;
     end
   end
@@ -1356,7 +1361,8 @@ begin
       SoldRegim := false;
       lcName.Text := CheckCDS.FieldByName('GoodsName').AsString;
       edAmount.Enabled := True;
-      edAmount.Text := '-1';
+      if CheckCDS.FieldByName('Amount').asCurrency > 1 then edAmount.Text := '-1'
+      else edAmount.Text := '-' + CheckCDS.FieldByName('Amount').AsString;
       ActiveControl := edAmount;
     end;
   End;
@@ -1491,6 +1497,7 @@ begin
   pnlPosition.Visible := False;
   cbMorionFilter.Enabled := True;
   cbMorionFilter.Checked := False;
+  pnlInfo.Visible := False;
 
   MainGridDBTableView.DataController.Filter.Clear;
   CheckGridDBTableView.DataController.Filter.Clear;
@@ -6027,6 +6034,7 @@ procedure TMainCashForm2.actSoldExecute(Sender: TObject);
 begin
   SoldRegim := not SoldRegim;
   edAmount.Enabled := false;
+  edAmount.Text := '';
   lcName.Text := '';
   if isScaner = True then
     ActiveControl := ceScaner
@@ -6281,6 +6289,7 @@ end;
 procedure TMainCashForm2.ceAmountExit(Sender: TObject);
 begin
   edAmount.Enabled := false;
+  edAmount.Text := '';
   lcName.Text := '';
 end;
 
@@ -6680,6 +6689,7 @@ end;
 procedure TMainCashForm2.edAmountExit(Sender: TObject);
 begin
   edAmount.Enabled := false;
+  edAmount.Text := '';
   lcName.Text := '';
 end;
 
@@ -6845,6 +6855,8 @@ begin
   FSaveCheckToMemData := false;
   FShowMessageCheckConnection := True;
   mdCheck.Active := True;
+  edAmount.Enabled := False;
+  edAmount.Text := '';
   isScaner := false;
   difUpdate := True;
   FPUSHStart := True;
@@ -7092,12 +7104,18 @@ begin
   begin
     nAmountM := Abs(nAmount) / SourceClientDataSet.FieldByName('MultiplicitySale').AsCurrency;
     nAmountM := Frac(nAmountM);
-    if (nAmountM <> 0) and (Frac(1 / SourceClientDataSet.FieldByName('MultiplicitySale').AsCurrency) = 0) or
-       (nAmountM <> 0) and (RoundTo((Frac(Abs(nAmount)) - RoundTo(SourceClientDataSet.FieldByName('MultiplicitySale').AsCurrency * Trunc(Frac(Abs(nAmount)) /
-                             SourceClientDataSet.FieldByName('MultiplicitySale').AsCurrency), - 3)), -3) <> 0.001)  then
+
+    if (nAmountM <> 0) and (Frac(SourceClientDataSet.FieldByName('Remains').AsCurrency - nAmount) <> 0)  then
     begin
-      ShowMessage('Деление медикамента разрешено кратно ' + SourceClientDataSet.FieldByName('MultiplicitySale').AsString + ' !');
-      exit;
+      if (nAmount > 0) and (Frac(SourceClientDataSet.FieldByName('Remains').AsCurrency - nAmount) <> 0) then
+      begin
+        ShowMessage('Деление медикамента разрешено кратно ' + SourceClientDataSet.FieldByName('MultiplicitySale').AsString + ' !');
+        exit;
+      end else if (nAmount < 0) and (Frac(SourceClientDataSet.FieldByName('Amount').AsCurrency - nAmount) <> 0) then
+      begin
+        ShowMessage('Деление медикамента разрешено кратно ' + SourceClientDataSet.FieldByName('MultiplicitySale').AsString + ' !');
+        exit;
+      end;
     end;
   end;
 
@@ -8284,9 +8302,15 @@ begin
   begin
     edAmount.Enabled := True;
     if SoldRegim then
-      edAmount.Text := '1'
+    begin
+      if RemainsCDS.FieldByName('Remains').asCurrency > 1 then edAmount.Text := '1'
+      else edAmount.Text := RemainsCDS.FieldByName('Remains').AsString;
+    end
     else
-      edAmount.Text := '-1';
+    begin
+      if CheckCDS.FieldByName('Amount').asCurrency > 1 then edAmount.Text := '-1'
+      else edAmount.Text := '-' + CheckCDS.FieldByName('Amount').AsString;
+    end;
     ActiveControl := edAmount;
   end;
   if Key = VK_Tab then
@@ -8619,7 +8643,7 @@ begin
   pnlPosition.Visible := false;
   cbMorionFilter.Enabled := True;
   cbMorionFilter.Checked := False;
-
+  pnlInfo.Visible := False;
 
   pnlLoyaltySaveMoney.Visible := false;
   lblLoyaltySMBuyer.Caption := '';
@@ -10566,12 +10590,12 @@ begin
   if SoldRegim then
   begin
     actSold.Caption := 'Продажа';
-    edAmount.Text := '1';
+    //edAmount.Text := '1'
   end
   else
   begin
     actSold.Caption := 'Возврат';
-    edAmount.Text := '-1';
+    //edAmount.Text := '-1';
   end;
 end;
 
@@ -11827,6 +11851,12 @@ begin
 
 end;
 
+procedure TMainCashForm2.ClearAll;
+begin
+  UpdateRemainsFromCheck;
+  CheckCDS.EmptyDataSet;
+  NewCheck(True);
+end;
 
 
 { TSaveRealThread }

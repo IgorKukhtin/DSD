@@ -38,7 +38,7 @@ type
     spListGoodsBadTiming: TdsdStoredProc;
     ExpirationDate: TcxGridDBColumn;
     PartionDateKindName: TcxGridDBColumn;
-    Remount: TcxGridDBColumn;
+    Remains: TcxGridDBColumn;
     AmountCheck: TcxGridDBColumn;
     SummaCheck: TcxGridDBColumn;
     actClear: TAction;
@@ -47,6 +47,8 @@ type
     bbExportExel: TdxBarButton;
     actAddOne: TAction;
     DBViewAddOn: TdsdDBViewAddOn;
+    AmountReserve: TcxGridDBColumn;
+    CheckList: TcxGridDBColumn;
     procedure ListGoodsBadTimingCDSBeforePost(DataSet: TDataSet);
     procedure ParentFormDestroy(Sender: TObject);
     procedure actClearExecute(Sender: TObject);
@@ -67,11 +69,11 @@ uses LocalWorkUnit, CommonData, MainCash2;
 
 procedure TListGoodsBadTimingForm.actAddOneExecute(Sender: TObject);
 begin
-  if ListGoodsBadTimingCDS.FieldByName('Remount').AsCurrency > ListGoodsBadTimingCDS.FieldByName('AmountCheck').AsCurrency then
+  if ListGoodsBadTimingCDS.FieldByName('Remains').AsCurrency > ListGoodsBadTimingCDS.FieldByName('AmountCheck').AsCurrency then
   begin
     ListGoodsBadTimingCDS.Edit;
     ListGoodsBadTimingCDS.FieldByName('AmountCheck').AsCurrency := ListGoodsBadTimingCDS.FieldByName('AmountCheck').AsCurrency +
-      Min(1, ListGoodsBadTimingCDS.FieldByName('Remount').AsCurrency - ListGoodsBadTimingCDS.FieldByName('AmountCheck').AsCurrency);
+      Min(1, ListGoodsBadTimingCDS.FieldByName('Remains').AsCurrency - ListGoodsBadTimingCDS.FieldByName('AmountCheck').AsCurrency);
     ListGoodsBadTimingCDS.Post;
   end;
 end;
@@ -102,9 +104,102 @@ begin
 end;
 
 procedure TListGoodsBadTimingForm.actSendExecute(Sender: TObject);
+  var nPos, nRecNo : integer;
 begin
   inherited;
-//
+  MainCashForm.ClearAll;
+
+  // Проверим наличие
+  ListGoodsBadTimingCDS.DisableControls;
+  nRecNo := MainCashForm.RemainsCDS.RecNo;
+  MainCashForm.RemainsCDS.DisableControls;
+  MainCashForm.RemainsCDS.Filtered := false;
+  nPos := ListGoodsBadTimingCDS.RecNo;
+  try
+    ListGoodsBadTimingCDS.First;
+    while not ListGoodsBadTimingCDS.Eof do
+    begin
+      if ListGoodsBadTimingCDS.FieldByName('AmountCheck').AsCurrency > 0 then
+      begin
+        if (ListGoodsBadTimingCDS.FieldByName('AmountCheck').AsCurrency > ListGoodsBadTimingCDS.FieldByName('Remains').AsCurrency) then
+        begin
+          ShowMessage('Товар <' + ListGoodsBadTimingCDS.FieldByName('GoodsName').AsString + '> выбрано больше чем есть в наличии...');
+          Exit;
+        end;
+
+        if (ListGoodsBadTimingCDS.FieldByName('AmountCheck').AsCurrency > (ListGoodsBadTimingCDS.FieldByName('Remains').AsCurrency -
+          ListGoodsBadTimingCDS.FieldByName('AmountSend').AsCurrency - ListGoodsBadTimingCDS.FieldByName('AmountReserve').AsCurrency)) then
+        begin
+          if ListGoodsBadTimingCDS.FieldByName('AmountSend').AsCurrency > 0 then
+            ShowMessage('Товар <' + ListGoodsBadTimingCDS.FieldByName('GoodsName').AsString + '> отложен в перемещении на склад отложки. Необходимо снять его отложку...')
+          else ShowMessage('Товар <' + ListGoodsBadTimingCDS.FieldByName('GoodsName').AsString + '> отложен в чеках ' +
+          ListGoodsBadTimingCDS.FieldByName('CheckList').AsString + '. Необходимо убрать из чеков...');
+          Exit;
+        end;
+
+        if not MainCashForm.RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
+                  VarArrayOf([ListGoodsBadTimingCDS.FieldByName('Id').AsInteger,
+                              ListGoodsBadTimingCDS.FieldByName('PartionDateKindId').AsVariant,
+                              ListGoodsBadTimingCDS.FieldByName('NDSKindId').AsVariant,
+                              ListGoodsBadTimingCDS.FieldByName('DiscountExternalID').AsVariant,
+                              ListGoodsBadTimingCDS.FieldByName('DivisionPartiesID').AsVariant]), []) then
+        begin
+          ShowMessage('Товар <' + ListGoodsBadTimingCDS.FieldByName('GoodsName').AsString + '> Не найден в товарах для продажи...');
+          Exit;
+        end else if ListGoodsBadTimingCDS.FieldByName('AmountCheck').AsCurrency > MainCashForm.RemainsCDS.FieldByName('Remains').AsCurrency then
+        begin
+          ShowMessage('Товар <' + ListGoodsBadTimingCDS.FieldByName('GoodsName').AsString + '> выбрано больше чем в кассе проверьте возмодно он отложен...');
+          Exit;
+        end;
+      end;
+
+      ListGoodsBadTimingCDS.Next;
+    end;
+  finally
+    MainCashForm.RemainsCDS.Filtered := True;
+    MainCashForm.RemainsCDS.RecNo := nRecNo;
+    MainCashForm.RemainsCDS.EnableControls;
+    ListGoodsBadTimingCDS.RecNo := nPos;
+    ListGoodsBadTimingCDS.EnableControls;
+  end;
+
+  // Опустим в кассу
+  ListGoodsBadTimingCDS.DisableControls;
+  nPos := ListGoodsBadTimingCDS.RecNo;
+  try
+    ListGoodsBadTimingCDS.First;
+    while not ListGoodsBadTimingCDS.Eof do
+    begin
+
+      if ListGoodsBadTimingCDS.FieldByName('AmountCheck').AsCurrency > 0 then
+      begin
+        if MainCashForm.RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
+              VarArrayOf([ListGoodsBadTimingCDS.FieldByName('Id').AsInteger,
+                          ListGoodsBadTimingCDS.FieldByName('PartionDateKindId').AsVariant,
+                          ListGoodsBadTimingCDS.FieldByName('NDSKindId').AsVariant,
+                          ListGoodsBadTimingCDS.FieldByName('DiscountExternalID').AsVariant,
+                          ListGoodsBadTimingCDS.FieldByName('DivisionPartiesID').AsVariant]), []) then
+        begin
+           MainCashForm.SoldRegim := True;
+           MainCashForm.edAmount.Text := ListGoodsBadTimingCDS.FieldByName('AmountCheck').AsString;
+           MainCashForm.actInsertUpdateCheckItemsExecute(Sender);
+        end;
+      end;
+
+      ListGoodsBadTimingCDS.Next;
+    end;
+
+    MainCashForm.FormParams.ParamByName('isCorrectMarketing').Value := True;
+    actClearExecute(Sender);
+    MainCashForm.pnlInfo.Visible := True;
+    MainCashForm.lblInfo.Caption := 'Корректировка суммы маркетинга в ЗП по подразделению';
+    Close;
+  finally
+    ListGoodsBadTimingCDS.RecNo := nPos;
+    ListGoodsBadTimingCDS.EnableControls;
+  end;
+
+
 end;
 
 procedure TListGoodsBadTimingForm.ListGoodsBadTimingCDSAfterOpen(
@@ -127,7 +222,7 @@ begin
     ListGoodsBadTimingCDS.First;
     while not ListGoodsBadTimingCDS.Eof do
     begin
-      if not MainCashForm.RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
+      if MainCashForm.RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
                 VarArrayOf([ListGoodsBadTimingCDS.FieldByName('Id').AsInteger,
                             ListGoodsBadTimingCDS.FieldByName('PartionDateKindId').AsVariant,
                             ListGoodsBadTimingCDS.FieldByName('NDSKindId').AsVariant,
@@ -135,7 +230,9 @@ begin
                             ListGoodsBadTimingCDS.FieldByName('DivisionPartiesID').AsVariant]), []) then
       begin
         ListGoodsBadTimingCDS.Edit;
-        ListGoodsBadTimingCDS.FieldByName('Price').AsVariant := MainCashForm.RemainsCDS.FieldByName('Price').AsVariant;
+        if MainCashForm.RemainsCDS.FieldByName('PricePartionDate').AsCurrency = 0 then
+          ListGoodsBadTimingCDS.FieldByName('Price').AsVariant := MainCashForm.RemainsCDS.FieldByName('Price').AsVariant
+        else ListGoodsBadTimingCDS.FieldByName('Price').AsVariant := MainCashForm.RemainsCDS.FieldByName('PricePartionDate').AsVariant;
         ListGoodsBadTimingCDS.Post;
       end;
       ListGoodsBadTimingCDS.Next;
@@ -148,6 +245,30 @@ begin
 
   if MainCashForm.FormParams.ParamByName('isCorrectMarketing').Value then
   begin
+    try
+      nRecNo := MainCashForm.CheckCDS.RecNo;
+      MainCashForm.CheckCDS.DisableControls;
+      MainCashForm.CheckCDS.First;
+      while not MainCashForm.CheckCDS.Eof do
+      begin
+        if ListGoodsBadTimingCDS.Locate('ID;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
+                  VarArrayOf([MainCashForm.CheckCDS.FieldByName('GoodsId').AsInteger,
+                              MainCashForm.CheckCDS.FieldByName('PartionDateKindId').AsVariant,
+                              MainCashForm.CheckCDS.FieldByName('NDSKindId').AsVariant,
+                              MainCashForm.CheckCDS.FieldByName('DiscountExternalID').AsVariant,
+                              MainCashForm.CheckCDS.FieldByName('DivisionPartiesID').AsVariant]), []) then
+        begin
+          ListGoodsBadTimingCDS.Edit;
+          ListGoodsBadTimingCDS.FieldByName('AmountCheck').AsVariant := MainCashForm.CheckCDS.FieldByName('Amount').AsVariant;
+          ListGoodsBadTimingCDS.Post;
+        end;
+        MainCashForm.CheckCDS.Next;
+      end;
+    finally
+      ListGoodsBadTimingCDS.First;
+      MainCashForm.CheckCDS.RecNo := nRecNo;
+      MainCashForm.CheckCDS.EnableControls;
+    end;
 
   end else
   begin
@@ -165,7 +286,7 @@ begin
             VarArrayOf([StrToInt(Res[0]), StrToVar(Res[2]), StrToVar(Res[3]), StrToVar(Res[4]), StrToVar(Res[5])]), []) then
          begin
            ListGoodsBadTimingCDS.Edit;
-           ListGoodsBadTimingCDS.FieldByName('AmountCheck').AsCurrency := Min(ListGoodsBadTimingCDS.FieldByName('Remount').AsCurrency, StrToCurr(Res[1]));
+           ListGoodsBadTimingCDS.FieldByName('AmountCheck').AsCurrency := Min(ListGoodsBadTimingCDS.FieldByName('Remains').AsCurrency, StrToCurr(Res[1]));
            ListGoodsBadTimingCDS.Post;
          end;
       end;
@@ -185,7 +306,7 @@ begin
 
   if not FIsLoad then
   begin
-    if Dataset['AmountCheck'] > Dataset['Remount'] then
+    if Dataset['AmountCheck'] > Dataset['Remains'] then
     begin
       raise Exception.Create('Количество больше остатка...');
       Exit;
@@ -197,9 +318,11 @@ begin
       Exit;
     end;
 
-    if Dataset['AmountCheck'] > (Dataset['Remount'] - Dataset['AmountSend']) then
+    if Dataset['AmountCheck'] > (Dataset['Remains'] - Dataset['AmountSend'] - Dataset['AmountReserve']) then
     begin
-      ShowMessage('Товар отложен в перемещении на склад отложки перед опуском надо будет отменить отложку...');
+      if Dataset['AmountSend'] > 0 then
+        ShowMessage('Товар отложен в перемещении на склад отложки перед опуском надо будет отменить отложку...')
+      else ShowMessage('Товар отложен в чеках ' + Dataset['CheckList']  + ' перед опуском необходимо убрать из чеков...');
     end;
   end;
 

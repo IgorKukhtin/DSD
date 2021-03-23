@@ -1550,7 +1550,6 @@ $BODY$
  07.02.19         * если isBonusClose = true бонусы не учитываем
  02.11.18         *
  19.10.18         * isPriceClose замена на isPriceCloseOrder
- 10.09.18         * add Remains_Diff --не хватает с учетом отлож. чеков
  31.08.18         * add Reserved
  09.04.18                                                                    * оптимизация
  02.10.17         * add area

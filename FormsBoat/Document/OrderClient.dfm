@@ -1538,6 +1538,9 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -1840,6 +1843,135 @@ object OrderClientForm: TOrderClientForm
         end
       end
     end
+    object cxTabSheet2: TcxTabSheet
+      Caption = 'Info'
+      ImageIndex = 2
+      object cxGridInfo: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 1349
+        Height = 350
+        Align = alClient
+        TabOrder = 0
+        LookAndFeel.NativeStyle = True
+        LookAndFeel.SkinName = 'UserSkin'
+        object cxGridDBTableViewInfo: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = InfoDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
+          OptionsView.CellAutoHeight = True
+          OptionsView.Footer = True
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.HeaderHeight = 40
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object CodeInfo: TcxGridDBColumn
+            Caption = #8470
+            DataBinding.FieldName = 'CodeInfo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 30
+          end
+          object Text_Info: TcxGridDBColumn
+            Caption = 'Info'
+            DataBinding.FieldName = 'Text_Info'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 962
+          end
+        end
+        object cxGridLevel4: TcxGridLevel
+          GridView = cxGridDBTableViewInfo
+        end
+      end
+    end
   end
   object cxLabel6: TcxLabel
     Left = 785
@@ -1948,8 +2080,8 @@ object OrderClientForm: TOrderClientForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 22
-    Top = 183
+    Left = 6
+    Top = 231
     DockControlHeights = (
       0
       0
@@ -2203,7 +2335,11 @@ object OrderClientForm: TOrderClientForm
       Category = 0
     end
     object bbPrintTender: TdxBarButton
-      Action = actPrintTender
+      Action = actPrintOrderConfirmation
+      Category = 0
+    end
+    object bbInsertRecordInfo: TdxBarButton
+      Action = InsertRecordInfo
       Category = 0
     end
   end
@@ -2220,12 +2356,12 @@ object OrderClientForm: TOrderClientForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 89
-    Top = 184
+    Top = 224
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 51
-    Top = 183
+    Left = 59
+    Top = 215
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -2298,6 +2434,21 @@ object OrderClientForm: TOrderClientForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actUpdateDataSetInfoDS: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMovementInfo
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMovementInfo
+        end
+        item
+          StoredProc = spSelectMovement_Info
+        end>
+      Caption = 'actUpdateInfoDS'
+      DataSource = InfoDS
+    end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
@@ -2312,6 +2463,20 @@ object OrderClientForm: TOrderClientForm
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
+    end
+    object actRefreshInfo: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectMovement_Info
+      StoredProcList = <
+        item
+          StoredProc = spSelectMovement_Info
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -2332,6 +2497,9 @@ object OrderClientForm: TOrderClientForm
         end
         item
           StoredProc = spSelectMI_Child
+        end
+        item
+          StoredProc = spSelectMovement_Info
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -2686,7 +2854,7 @@ object OrderClientForm: TOrderClientForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintTender: TdsdPrintAction
+    object actPrintOrderConfirmation: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -2699,13 +2867,13 @@ object OrderClientForm: TOrderClientForm
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
-      StoredProc = spSelectPrintTender
+      StoredProc = spSelectPrintOrderConfirmation
       StoredProcList = <
         item
-          StoredProc = spSelectPrintTender
+          StoredProc = spSelectPrintOrderConfirmation
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' Tender'
-      Hint = 'Print Tender'
+      Caption = #1055#1077#1095#1072#1090#1100' OrderConfirmation'
+      Hint = 'Print OrderConfirmation'
       ImageIndex = 18
       DataSets = <
         item
@@ -2728,8 +2896,8 @@ object OrderClientForm: TOrderClientForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintProduct_Tender'
-      ReportNameParam.Value = 'PrintProduct_Tender'
+      ReportName = 'PrintProduct_OrderConfirmation'
+      ReportNameParam.Value = 'PrintProduct_OrderConfirmation'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -2860,13 +3028,13 @@ object OrderClientForm: TOrderClientForm
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
-      StoredProc = spSelectPrint
+      StoredProc = spSelectPrintOffer
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrintOffer
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' Agilis'
-      Hint = #1055#1077#1095#1072#1090#1100' Agilis'
+      Caption = #1055#1077#1095#1072#1090#1100' Offer'
+      Hint = 'Print Offer'
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -2886,14 +3054,26 @@ object OrderClientForm: TOrderClientForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintProduct_Agilis'
-      ReportNameParam.Value = 'PrintProduct_Agilis'
+      ReportName = 'PrintProduct_Offer'
+      ReportNameParam.Value = 'PrintProduct_Offer'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object InsertRecordInfo: TInsertRecord
+      Category = 'DSDLib'
+      TabSheet = cxTabSheet2
+      MoveParams = <>
+      Enabled = False
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableViewInfo
+      Params = <>
+      Caption = 'Add Info'
+      Hint = 'Add Info'
+      ImageIndex = 0
     end
   end
   object MasterDS: TDataSource
@@ -3011,8 +3191,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 382
-    Top = 207
+    Left = 358
+    Top = 223
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 734
@@ -4291,8 +4471,8 @@ object OrderClientForm: TOrderClientForm
     Left = 1004
     Top = 158
   end
-  object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Product_AgilisPrint'
+  object spSelectPrintOffer: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Product_OfferPrint'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -4339,8 +4519,8 @@ object OrderClientForm: TOrderClientForm
     Left = 1104
     Top = 168
   end
-  object spSelectPrintTender: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Product_TendersPrint'
+  object spSelectPrintOrderConfirmation: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Product_OrderConfirmationPrint'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -4433,5 +4613,99 @@ object OrderClientForm: TOrderClientForm
     PropertiesCellList = <>
     Left = 728
     Top = 208
+  end
+  object dsdDBViewAddOnInfo: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewInfo
+    OnDblClickActionList = <
+      item
+      end
+      item
+      end>
+    ActionItemList = <
+      item
+        ShortCut = 13
+      end
+      item
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <
+      item
+        ColorValueList = <>
+      end>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    Left = 888
+    Top = 224
+  end
+  object InfoCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 840
+    Top = 279
+  end
+  object InfoDS: TDataSource
+    DataSet = InfoCDS
+    Left = 894
+    Top = 279
+  end
+  object spSelectMovement_Info: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_OrderClient_Info'
+    DataSet = InfoCDS
+    DataSets = <
+      item
+        DataSet = InfoCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 944
+    Top = 263
+  end
+  object spUpdateMovementInfo: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_OrderClient_Info'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCodeInfo'
+        Value = ''
+        Component = InfoCDS
+        ComponentItem = 'CodeInfo'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inText_Info'
+        Value = ''
+        Component = InfoCDS
+        ComponentItem = 'Text_Info'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 938
+    Top = 192
   end
 end
