@@ -42,9 +42,9 @@ type
     procedure LoadMemberFormTest;
     procedure LoadMeasureFormTest;
     procedure LoadModelEtiketenFormTest;
+    procedure LoadOrderClientFormTest;
     procedure LoadPersonalFormTest;
     procedure LoadPartnerFormTest;
-    procedure LoadOrderClientFormTest;
     procedure LoadPLZFormTest;
     procedure LoadPositionFormTest;
     procedure LoadProdColorFormTest;
@@ -147,6 +147,14 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementProtocol_InfoForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementProtocol_InfoForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementProtocolForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementProtocolForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemProtocolForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolForm');
+  exit;
 //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectDescForm'));
   TdsdFormStorageFactory.GetStorage.Load('TObjectDescForm');

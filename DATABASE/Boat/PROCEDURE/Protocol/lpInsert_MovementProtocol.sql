@@ -79,6 +79,13 @@ BEGIN
          LEFT JOIN Movement ON Movement.Id = MovementLinkMovement.MovementChildId
          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
     WHERE MovementLinkMovement.MovementId = inMovementId
+   UNION
+    SELECT '<Field FieldName = "' || zfStrToXmlStr (MovementBlobDesc.ItemName) || '" FieldValue = "' || COALESCE (MovementBlob.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
+         , 9 AS GroupId
+         , MovementBlob.DescId
+    FROM MovementBlob
+         INNER JOIN MovementBlobDesc ON MovementBlobDesc.Id = MovementBlob.DescId
+    WHERE MovementBlob.MovementId = inMovementId
    ) AS D
     ORDER BY D.GroupId, D.DescId
    ) AS D

@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderClient_Info(
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar
-             , CodeInfo Integer, Text_Info TBlob
+             , CodeInfo Integer, DescInfo TVarChar, Text_Info TBlob
              
               )
 AS
@@ -26,6 +26,7 @@ BEGIN
             Movement_OrderClient.Id
           , Movement_OrderClient.InvNumber
           , 1 ::Integer AS CodeInfo
+          , 'Information  1' ::TVarChar AS DescInfo
           , COALESCE (MovementBlob_Info.ValueData,'') :: TBlob AS Text_Info
 
         FROM Movement AS Movement_OrderClient 
@@ -40,6 +41,7 @@ BEGIN
             Movement_OrderClient.Id
           , Movement_OrderClient.InvNumber
           , 2 ::Integer AS CodeInfo
+          , 'Information  2' ::TVarChar AS DescInfo
           , COALESCE (MovementBlob_Info.ValueData,'') :: TBlob AS Text_Info
 
         FROM Movement AS Movement_OrderClient 
@@ -54,6 +56,7 @@ BEGIN
             Movement_OrderClient.Id
           , Movement_OrderClient.InvNumber
           , 3 ::Integer AS CodeInfo
+          , 'Information  3' ::TVarChar AS DescInfo
           , COALESCE (MovementBlob_Info.ValueData,'') :: TBlob AS Text_Info
 
         FROM Movement AS Movement_OrderClient 

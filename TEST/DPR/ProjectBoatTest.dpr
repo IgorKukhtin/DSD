@@ -248,7 +248,10 @@ uses
   BankAccountJournalByInvoice in '..\..\FormsBoat\Document\BankAccountJournalByInvoice.pas' {BankAccountJournalByInvoiceForm: TParentForm},
   OrderClient in '..\..\FormsBoat\Document\OrderClient.pas' {OrderClientForm: TParentForm},
   Medoc_J1201012 in '..\..\SOURCE\MeDOC\Medoc_J1201012.pas',
-  Medoc_J1201212 in '..\..\SOURCE\MeDOC\Medoc_J1201212.pas';
+  Medoc_J1201212 in '..\..\SOURCE\MeDOC\Medoc_J1201212.pas',
+  MovementProtocol in '..\..\FormsBoat\System\MovementProtocol.pas' {MovementProtocolForm: TParentForm},
+  MovementItemProtocol in '..\..\FormsBoat\System\MovementItemProtocol.pas' {MovementItemProtocolForm: TParentForm},
+  MovementProtocol_Info in '..\..\FormsBoat\System\MovementProtocol_Info.pas' {MovementProtocol_InfoForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

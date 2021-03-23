@@ -1538,9 +1538,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -2192,6 +2189,14 @@ object OrderClientForm: TOrderClientForm
         end
         item
           Visible = True
+          ItemName = 'bbProtocolInfoOpen'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExel'
         end
         item
@@ -2340,6 +2345,10 @@ object OrderClientForm: TOrderClientForm
     end
     object bbInsertRecordInfo: TdxBarButton
       Action = InsertRecordInfo
+      Category = 0
+    end
+    object bbProtocolInfoOpen: TdxBarButton
+      Action = actMovementProtocolInfoOpenForm
       Category = 0
     end
   end
@@ -2679,6 +2688,54 @@ object OrderClientForm: TOrderClientForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actMovementProtocolInfoOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = cxTabSheet2
+      MoveParams = <>
+      Enabled = False
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1048#1085#1092#1086#1088#1084#1072#1094#1080#1080'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1048#1085#1092#1086#1088#1084#1072#1094#1080#1080'>'
+      ImageIndex = 34
+      FormName = 'TMovementProtocol_InfoForm'
+      FormNameParam.Value = 'TMovementProtocol_InfoForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inCodeInfo'
+          Value = Null
+          Component = InfoCDS
+          ComponentItem = 'CodeInfo'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inDescInfo'
+          Value = Null
+          Component = InfoCDS
+          ComponentItem = 'DescInfo'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -3374,8 +3431,8 @@ object OrderClientForm: TOrderClientForm
       item
       end>
     GetStoredProc = spGet
-    Left = 544
-    Top = 89
+    Left = 568
+    Top = 65
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_OrderClient'

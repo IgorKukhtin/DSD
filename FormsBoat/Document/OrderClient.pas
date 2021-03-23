@@ -295,6 +295,8 @@ type
     actUpdateDataSetInfoDS: TdsdUpdateDataSet;
     bbInsertRecordInfo: TdxBarButton;
     actRefreshInfo: TdsdDataSetRefresh;
+    actMovementProtocolInfoOpenForm: TdsdOpenForm;
+    bbProtocolInfoOpen: TdxBarButton;
   private
   public
   end;

@@ -819,6 +819,18 @@
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201012.pas"/>
 			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201212.pas"/>
+			<DCCReference Include="..\..\FormsBoat\System\MovementProtocol.pas">
+				<Form>MovementProtocolForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\System\MovementItemProtocol.pas">
+				<Form>MovementItemProtocolForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\System\MovementProtocol_Info.pas">
+				<Form>MovementProtocol_InfoForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
