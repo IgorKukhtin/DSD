@@ -49,6 +49,8 @@ BEGIN
                    + COALESCE (MIFloat_AmountSecond.ValueData, 0)
                      -- кол-во отказов
                    + COALESCE (MIFloat_ListDiff.ValueData, 0)
+                     -- кол-во СУА
+                   + COALESCE (MIFloat_AmountSUA.ValueData, 0)
                     ) / COALESCE (vbMinimumLot, 1)
                    ) * COALESCE (vbMinimumLot, 1)
         INTO
@@ -61,6 +63,9 @@ BEGIN
             LEFT OUTER JOIN MovementItemFloat AS MIFloat_ListDiff
                                               ON MIFloat_ListDiff.MovementItemId = MovementItem.Id
                                              AND MIFloat_ListDiff.DescId         = zc_MIFloat_ListDiff()
+            LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSUA
+                                              ON MIFloat_AmountSUA.MovementItemId = MovementItem.Id
+                                             AND MIFloat_AmountSUA.DescId         = zc_MIFloat_AmountSUA()
         WHERE MovementItem.Id = ioId;
 
     END IF;
@@ -83,7 +88,8 @@ LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 22.03.21                                                                     *
  23.10.14                         *
 */
 

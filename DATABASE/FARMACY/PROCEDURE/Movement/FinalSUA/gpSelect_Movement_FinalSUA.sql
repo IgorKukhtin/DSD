@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
+             , Calculation TDateTime
               )
 
 AS
@@ -64,6 +65,8 @@ BEGIN
            , Object_Update.ValueData              AS UpdateName
            , MovementDate_Update.ValueData        AS UpdateDate
 
+           , MovementDate_Calculation.ValueData   AS Calculation
+
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_FinalSUA() AND Movement.StatusId = tmpStatus.StatusId
@@ -97,6 +100,9 @@ BEGIN
                                         AND MLO_Update.DescId = zc_MovementLinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId 
 
+            LEFT JOIN MovementDate AS MovementDate_Calculation
+                                   ON MovementDate_Calculation.MovementId = Movement.Id
+                                  AND MovementDate_Calculation.DescId = zc_MovementDate_Calculation()
        ;
 
 END;

@@ -144,6 +144,12 @@ type
     spSelectChild: TdsdStoredProc;
     spPUSHEVip: TdsdStoredProc;
     DiscountName: TcxGridDBColumn;
+    actUpdateFinalSUA: TdsdExecStoredProc;
+    spUpdateFinalSUA: TdsdStoredProc;
+    dxBarButton1: TdxBarButton;
+    AmountSUA: TcxGridDBColumn;
+    FinalSUA: TcxGridDBColumn;
+    FinalSUASend: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_FinalSUA(
 RETURNS TABLE (Id Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
-             , Remains TFloat, Amount TFloat
+             , Remains TFloat, Amount TFloat, SendSUN TFloat
              , isErased Boolean)
  AS
 $BODY$
@@ -28,12 +28,17 @@ BEGIN
                                       , MovementItem.ObjectId                   AS GoodsId
                                       , MILinkObject_Unit.ObjectId              AS UnitId
                                       , MovementItem.Amount                     AS Amount
+                                      , MIFloat_SendSUN.ValueData               AS SendSUN
                                       , MovementItem.isErased                   AS isErased
                                  FROM MovementItem
 
                                      LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                                                       ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                                                      AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+
+                                     LEFT JOIN MovementItemFloat AS MIFloat_SendSUN
+                                                                 ON MIFloat_SendSUN.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_SendSUN.DescId = zc_MIFloat_SendSUN()
 
                                  WHERE MovementItem.MovementId = inMovementId
                                    AND MovementItem.DescId = zc_MI_Master()
@@ -62,6 +67,7 @@ BEGIN
                     , Object_Unit.ValueData                             AS UnitName
                     , Container.Amount                                  AS Remains
                     , MI_Master.Amount                                  AS Amount
+                    , MI_Master.SendSUN                                 AS SendSUN
                     , COALESCE(MI_Master.IsErased, False)               AS isErased
                FROM MI_Master
 

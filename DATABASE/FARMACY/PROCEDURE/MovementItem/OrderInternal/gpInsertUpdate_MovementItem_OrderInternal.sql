@@ -73,6 +73,8 @@ BEGIN
                                + COALESCE (MIFloat_AmountSecond.ValueData, 0)
                                  -- кол-во отказов
                                + COALESCE (MIFloat_ListDiff.ValueData, 0)
+                                 -- кол-во СУА
+                               + COALESCE (MIFloat_AmountSUA.ValueData, 0)
                                 ) / COALESCE (vbMinimumLot, 1)
                                ) * COALESCE (vbMinimumLot, 1)
                          ) * inPrice) :: TFloat AS outSummAll
@@ -86,6 +88,8 @@ BEGIN
                               + COALESCE (MIFloat_AmountSecond.ValueData, 0)
                                  -- кол-во отказов
                               + COALESCE (MIFloat_ListDiff.ValueData, 0)
+                                -- кол-во СУА
+                              + COALESCE (MIFloat_AmountSUA.ValueData, 0)
                                ) / COALESCE (vbMinimumLot, 1)
                               ) * COALESCE (vbMinimumLot, 1)
                         ) :: TFloat AS outCalcAmountAll
@@ -107,6 +111,9 @@ BEGIN
              LEFT OUTER JOIN MovementItemFloat AS MIFloat_ListDiff
                                                ON MIFloat_ListDiff.MovementItemId = MovementItem.Id
                                               AND MIFloat_ListDiff.DescId = zc_MIFloat_ListDiff()
+             LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSUA
+                                               ON MIFloat_AmountSUA.MovementItemId = MovementItem.Id
+                                              AND MIFloat_AmountSUA.DescId         = zc_MIFloat_AmountSUA()
 
              LEFT JOIN MovementItemString AS MIString_Maker 
                                           ON MIString_Maker.MovementItemId = MovementItem.Id
@@ -162,12 +169,14 @@ BEGIN
         (CEIL((MovementItem.Amount
              + COALESCE (MIFloat_AmountSecond.ValueData, 0)
              + COALESCE (MIFloat_ListDiff.ValueData, 0)
+             + COALESCE (MIFloat_AmountSUA.ValueData, 0)
               ) / COALESCE (vbMinimumLot, 1)
              ) * COALESCE (vbMinimumLot, 1)) :: TFloat
       , COALESCE (MIFloat_AmountManual.ValueData
                 , CEIL((MovementItem.Amount
                       + COALESCE (MIFloat_AmountSecond.ValueData, 0)
                       + COALESCE (MIFloat_ListDiff.ValueData, 0)
+                      + COALESCE (MIFloat_AmountSUA.ValueData, 0)
                        ) / COALESCE (vbMinimumLot, 1)
                       ) * COALESCE(vbMinimumLot, 1)
                  ) :: TFloat
@@ -185,6 +194,9 @@ BEGIN
         LEFT OUTER JOIN MovementItemFloat AS MIFloat_ListDiff
                                           ON MIFloat_ListDiff.MovementItemId = MovementItem.Id
                                          AND MIFloat_ListDiff.DescId = zc_MIFloat_ListDiff()
+        LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSUA
+                                          ON MIFloat_AmountSUA.MovementItemId = MovementItem.Id
+                                         AND MIFloat_AmountSUA.DescId = zc_MIFloat_AmountSUA()
     WHERE MovementItem.Id = inId;
     
     IF (coalesce(vbCalcAmount,0) <> coalesce(inAmountManual,0)) or (COALESCE(vbCalcAmountAll,0) <> COALESCE(inAmountManual,0))
@@ -228,6 +240,7 @@ BEGIN
                  , CEIL ((inAmount
                         + COALESCE (MIFloat_AmountSecond.ValueData, 0)
                         + COALESCE(MIFloat_ListDiff.ValueData,0)
+                        + COALESCE (MIFloat_AmountSUA.ValueData, 0)
                          ) / COALESCE (vbMinimumLot, 1)
                         ) * COALESCE (vbMinimumLot, 1)
                   ) :: TFloat AS outCalcAmountAll
@@ -235,6 +248,7 @@ BEGIN
                   , CEIL ((inAmount
                          + COALESCE (MIFloat_AmountSecond.ValueData, 0)
                          + COALESCE(MIFloat_ListDiff.ValueData,0)
+                         + COALESCE (MIFloat_AmountSUA.ValueData, 0)
                           ) / COALESCE (vbMinimumLot, 1)
                          ) * COALESCE (vbMinimumLot, 1)
                    ) * inPrice) :: TFloat AS outSummAll
@@ -262,6 +276,9 @@ BEGIN
         LEFT OUTER JOIN MovementItemFloat AS MIFloat_ListDiff
                                           ON MIFloat_ListDiff.MovementItemId = MovementItem.Id
                                          AND MIFloat_ListDiff.DescId = zc_MIFloat_ListDiff()
+        LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSUA
+                                          ON MIFloat_AmountSUA.MovementItemId = MovementItem.Id
+                                         AND MIFloat_AmountSUA.DescId         = zc_MIFloat_AmountSUA()
 
         LEFT JOIN MovementItemString AS MIString_Maker 
                                      ON MIString_Maker.MovementItemId = MovementItem.Id
@@ -306,7 +323,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 22.03.21                                                                     * add AmountSUA
  02.11.18         * add ListDiff
  30.08.17         *
  30.03.16                                        * add ошибка лайт

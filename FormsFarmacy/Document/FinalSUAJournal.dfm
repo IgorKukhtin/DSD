@@ -187,6 +187,13 @@ inherited FinalSUAJournalForm: TFinalSUAJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 169
           end
+          object Calculation: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1084#1077#1097'.'
+            DataBinding.FieldName = 'Calculation'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 79
+          end
           object lInsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'

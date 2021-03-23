@@ -22,6 +22,11 @@ BEGIN
        RAISE EXCEPTION 'Выполненние операции вам запрещено, обратитесь к системному администратору';
      END IF;
 
+     IF EXISTS (SELECT 1 FROM MovementDate  WHERE MovementId = inMovementId AND DescId = zc_MovementDate_Calculation())
+     THEN
+       RAISE EXCEPTION 'По документу сформированы перемещения в СУН изменение статуса запрешено.';
+     END IF;
+    
      -- проверка - если <Master> Проведен, то <Ошибка>
      PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
 

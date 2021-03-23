@@ -420,6 +420,8 @@ BEGIN
                                                                       + COALESCE (MIFloat_AmountSecond.ValueData, 0)
                                                                         -- кол-во отказов
                                                                       + COALESCE (MIFloat_ListDiff.ValueData, 0)
+                                                                        -- кол-во СУА
+                                                                      + COALESCE (MIFloat_AmountSUA.ValueData, 0)
                                                                        ) / COALESCE (CASE WHEN Object_Goods.MinimumLot = 0 THEN 1 ELSE Object_Goods.MinimumLot END, 1)
                                                                       )
                                                                * COALESCE (CASE WHEN Object_Goods.MinimumLot = 0 THEN 1 ELSE Object_Goods.MinimumLot END, 1)
@@ -431,6 +433,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_ListDiff
                                         ON MIFloat_ListDiff.MovementItemId = MovementItemSaved.Id
                                        AND MIFloat_ListDiff.DescId = zc_MIFloat_ListDiff()
+            LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSUA
+                                              ON MIFloat_AmountSUA.MovementItemId = MovementItem.Id
+                                             AND MIFloat_AmountSUA.DescId         = zc_MIFloat_AmountSUA()
 
             INNER JOIN Object_Goods_View AS Object_Goods
                                          ON Object_Goods.Id = MovementItemSaved.ObjectId
@@ -508,7 +513,8 @@ LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 22.03.21                                                                                      *
  03.12.18         *
  02.11.18         *
  12.06.17         *

@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Comment TVarChar
              , InsertId Integer, InsertName TVarChar, InsertDate TDateTime
              , UpdateId Integer, UpdateName TVarChar, UpdateDate TDateTime
+             , Calculation TDateTime
               )
 AS
 $BODY$
@@ -52,6 +53,7 @@ BEGIN
              , NULL  ::Integer                                  AS UpdateId
              , NULL  ::TVarChar                                 AS UpdateName
              , Null  :: TDateTime                               AS UpdateDate
+             , Null  :: TDateTime                               AS Calculation
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
                LEFT JOIN Object AS Object_Unit ON Object_Insert.Id = vbUnitId;
@@ -72,6 +74,7 @@ BEGIN
            , Object_Update.Id                     AS UpdateId
            , Object_Update.ValueData              AS UpdateName
            , MovementDate_Update.ValueData        AS UpdateDate
+           , MovementDate_Calculation.ValueData   AS Calculation
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -99,6 +102,10 @@ BEGIN
                                          ON MLO_Update.MovementId = Movement.Id
                                         AND MLO_Update.DescId = zc_MovementLinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId 
+
+            LEFT JOIN MovementDate AS MovementDate_Calculation
+                                   ON MovementDate_Calculation.MovementId = Movement.Id
+                                  AND MovementDate_Calculation.DescId = zc_MovementDate_Calculation()
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_FinalSUA();
