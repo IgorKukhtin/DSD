@@ -192,7 +192,7 @@ begin
     MainCashForm.FormParams.ParamByName('isCorrectMarketing').Value := True;
     actClearExecute(Sender);
     MainCashForm.pnlInfo.Visible := True;
-    MainCashForm.lblInfo.Caption := 'Корректировка суммы маркетинга в ЗП по подразделению';
+    MainCashForm.lblInfo.Caption := 'Корректировка суммы маркетинга в ЗП по сотруднику';
     Close;
   finally
     ListGoodsBadTimingCDS.RecNo := nPos;

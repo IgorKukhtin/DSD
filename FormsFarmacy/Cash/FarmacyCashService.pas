@@ -1422,10 +1422,10 @@ begin
                 LOYALTYSM := FieldByName('LOYALTYSM').AsInteger;
                 LOYALSMSUM := FieldByName('LOYALSMSUM').AsCurrency;
                 // ***11.10.20
-                MEDICFS := FieldByName('MEDICFS').AsString;
-                BUYERFS := FieldByName('BUYERFS').AsString;
-                BUYERFSP := FieldByName('BUYERFSP').AsString;
-                DISTPROMO := FieldByName('DISTPROMO').AsString;
+                MEDICFS := trim(FieldByName('MEDICFS').AsString);
+                BUYERFS := trim(FieldByName('BUYERFS').AsString);
+                BUYERFSP := trim(FieldByName('BUYERFSP').AsString);
+                DISTPROMO := trim(FieldByName('DISTPROMO').AsString);
                 // ***05.03.21
                 MEDICKID := FieldByName('MEDICKID').AsInteger;
                 MEMBERKID := FieldByName('MEMBERKID').AsInteger;
@@ -1598,9 +1598,9 @@ begin
                   dsdSave.Params.AddParam('inMedicKashtanID', ftInteger, ptInput, Head.MEDICKID);
                   dsdSave.Params.AddParam('inMemberKashtanID', ftInteger, ptInput, Head.MEMBERKID);
                   //***19.03.21
-                  dsdSave.Params.AddParam('inMemberKashtanID', ftInteger, ptInput, Head.MEMBERKID);
-                  // ***24.01.17
                   dsdSave.Params.AddParam('isCorrectMarketing', ftBoolean, ptInput, Head.ISCORRMARK);
+                  // ***24.01.17
+                  dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
 
                   Add_Log('Start Execute gpInsertUpdate_Movement_Check_ver2');
                   Add_Log('      ' + String(Head.UID));

@@ -4812,10 +4812,10 @@ inherited GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisOnlySP'
+        Name = 'inisMultiplicityError'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'isOnlySP'
+        ComponentItem = 'isMultiplicityError'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

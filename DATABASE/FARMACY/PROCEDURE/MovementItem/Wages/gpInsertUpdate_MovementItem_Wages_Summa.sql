@@ -185,7 +185,8 @@ BEGIN
 
       SELECT (MovementItem.Amount + 
               COALESCE (MIFloat_HolidaysHospital.ValueData, 0) + 
-              COALESCE (MIFloat_Marketing.ValueData, 0) +
+              CASE WHEN COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0) > 0
+                   THEN 0 ELSE COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0)  END +
               COALESCE (MIFloat_Director.ValueData, 0) +
               COALESCE (MIFloat_IlliquidAssets.ValueData, 0) +
               COALESCE (MIFloat_PenaltySUN.ValueData, 0) - 
@@ -200,6 +201,10 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_Marketing
                                         ON MIFloat_Marketing.MovementItemId = MovementItem.Id
                                        AND MIFloat_Marketing.DescId = zc_MIFloat_Marketing()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_MarketingRepayment
+                                        ON MIFloat_MarketingRepayment.MovementItemId = MovementItem.Id
+                                       AND MIFloat_MarketingRepayment.DescId = zc_MIFloat_MarketingRepayment()
 
             LEFT JOIN MovementItemFloat AS MIFloat_Director
                                         ON MIFloat_Director.MovementItemId = MovementItem.Id

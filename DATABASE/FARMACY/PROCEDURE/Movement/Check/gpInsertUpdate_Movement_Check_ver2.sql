@@ -55,8 +55,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
     IN inDistributionPromoList TVarChar  , -- Раздача акционных материалов.
     IN inMedicKashtanID      Integer   , -- ФИО врача (МИС «Каштан») 
     IN inMemberKashtanID     Integer   , -- ФИО пациента (МИС «Каштан»)
-    IN inUserSession	     TVarChar  , -- сессия пользователя под которой создан чек в программе
     IN isCorrectMarketing    Boolean   , -- Корректировка суммы маркетинга в ЗП по подразделению
+    IN inUserSession	     TVarChar  , -- сессия пользователя под которой создан чек в программе
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer

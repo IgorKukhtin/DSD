@@ -117,6 +117,14 @@ BEGIN
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                   , inUserId     := vbUserId);
 
+    IF EXISTS(SELECT * FROM MovementBoolean AS MovementBoolean_CorrectMarketing
+              WHERE MovementBoolean_CorrectMarketing.ValueData = True
+                AND MovementBoolean_CorrectMarketing.MovementId = inMovementId
+                AND MovementBoolean_CorrectMarketing.DescId = zc_MovementBoolean_CorrectMarketing()) 
+    THEN
+      PERFORM gpInsertUpdate_MovementItem_WagesMarketingRepayment (inMovementID := inMovementId, inSession:= zfCalc_UserAdmin());
+    END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
