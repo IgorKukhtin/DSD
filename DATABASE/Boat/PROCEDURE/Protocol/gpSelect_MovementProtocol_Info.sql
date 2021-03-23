@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementProtocol_Info(
 )
 RETURNS TABLE (OperDate TDateTime
              , UserName TVarChar
-             , TextInfo TVarChar
+             , TextInfo Text
              , ProtocolData Text
              )
 AS
@@ -40,7 +40,7 @@ BEGIN
    -- данные по изменению параметров Информация
  , tmpProtocol AS (SELECT tmpProtocolALL.OperDate
                         , Object_User.ValueData
-                        , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Информация 1"] /@FieldValue', tmpProtocolALL.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS TextInfo
+                        , REPLACE(REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Информация 1"] /@FieldValue', tmpProtocolALL.ProtocolData :: XML) AS TEXT), '{', ''), '}',''), '"','')   AS TextInfo
                         , tmpProtocolALL.ProtocolData::Text
                         , ROW_NUMBER() OVER(ORDER BY tmpProtocolALL.OperDate) AS ord
                    FROM tmpProtocolALL
@@ -49,7 +49,7 @@ BEGIN
                 UNION
                    SELECT tmpProtocolALL.OperDate
                         , Object_User.ValueData
-                        , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Информация 2"] /@FieldValue', tmpProtocolALL.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS TextInfo
+                        , REPLACE(REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Информация 2"] /@FieldValue', tmpProtocolALL.ProtocolData :: XML) AS TEXT), '{', ''), '}',''), '"','')   AS TextInfo
                         , tmpProtocolALL.ProtocolData::Text
                         , ROW_NUMBER() OVER(ORDER BY tmpProtocolALL.OperDate) AS ord
                    FROM tmpProtocolALL
@@ -58,7 +58,7 @@ BEGIN
                 UNION
                    SELECT tmpProtocolALL.OperDate
                         , Object_User.ValueData
-                        , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Информация 3"] /@FieldValue', tmpProtocolALL.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS TextInfo
+                        , REPLACE(REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Информация 3"] /@FieldValue', tmpProtocolALL.ProtocolData :: XML) AS TEXT), '{', ''), '}',''), '"','')   AS TextInfo
                         , tmpProtocolALL.ProtocolData::Text
                         , ROW_NUMBER() OVER(ORDER BY tmpProtocolALL.OperDate) AS ord
                    FROM tmpProtocolALL
@@ -68,7 +68,7 @@ BEGIN
    -- Изменения
    SELECT tt1.OperDate
         , tt1.ValueData ::TVarChar AS UserName
-        , tt1.TextInfo  ::TVarChar
+        , tt1.TextInfo  ::Text
         , tt1.ProtocolData::Text
    FROM tmpProtocol AS tt1
         LEFT JOIN tmpProtocol AS tt2 ON tt2.ord = tt1.ord-1
@@ -95,4 +95,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementProtocol_Info (inMovementId:=  78, inCodeInfo:= 3, inSession := '5');
+-- SELECT * FROM gpSelect_MovementProtocol_Info (inMovementId:=  78, inCodeInfo:= 1, inSession := '5');
+

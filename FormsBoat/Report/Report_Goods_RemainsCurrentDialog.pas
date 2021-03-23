@@ -42,6 +42,9 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     actRefresh: TdsdDataSetRefresh;
     cbRemains: TcxCheckBox;
+    cxLabel5: TcxLabel;
+    edGoodsGroup: TcxButtonEdit;
+    GuidesGoodsGroup: TdsdGuides;
   private
     { Private declarations }
   public

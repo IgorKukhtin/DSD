@@ -12,9 +12,9 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   TextHeight = 13
   inherited Panel: TPanel [0]
     Width = 1131
-    Height = 33
+    Height = 60
     ExplicitWidth = 1131
-    ExplicitHeight = 33
+    ExplicitHeight = 60
     inherited deStart: TcxDateEdit
       Left = 22
       Top = 38
@@ -123,21 +123,21 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     end
   end
   inherited PageControl: TcxPageControl [1]
-    Top = 59
+    Top = 86
     Width = 1131
-    Height = 474
+    Height = 447
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 1131
     ExplicitHeight = 474
-    ClientRectBottom = 474
+    ClientRectBottom = 447
     ClientRectRight = 1131
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1131
       ExplicitHeight = 474
       inherited cxGrid: TcxGrid
         Width = 1131
-        Height = 398
+        Height = 371
         ExplicitWidth = 1131
         ExplicitHeight = 398
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -543,12 +543,13 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       end
       object ExportXmlGrid: TcxGrid
         Left = 0
-        Top = 398
+        Top = 371
         Width = 1131
         Height = 76
         Align = alBottom
         TabOrder = 1
         Visible = False
+        ExplicitTop = 398
         object ExportXmlGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS
@@ -605,6 +606,23 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       AnchorX = 566
       AnchorY = 15
     end
+  end
+  object edGoodsGroup: TcxButtonEdit [3]
+    Left = 143
+    Top = 32
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 200
+  end
+  object cxLabel5: TcxLabel [4]
+    Left = 52
+    Top = 33
+    Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -862,6 +880,23 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           Value = Null
           Component = cbPartner
           DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupId'
+          Value = Null
+          Component = GuidesGoodsGroup
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = Null
+          Component = GuidesGoodsGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -1673,6 +1708,14 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsGroupId'
+        Value = Null
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsPartion'
         Value = Null
         Component = cbPartion
@@ -1845,8 +1888,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     Top = 168
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 0
-    Top = 65528
+    Left = 8
+    Top = 8
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -1857,6 +1900,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         Component = GuidesPartner
       end
       item
+        Component = GuidesGoodsGroup
       end
       item
       end
@@ -1923,8 +1967,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 182
-    Top = 158
+    Left = 470
+    Top = 14
   end
   object GuidesGoodsPrint: TdsdGuides
     KeyField = 'Ord'
@@ -2553,5 +2597,36 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     PackSize = 1
     Left = 384
     Top = 434
+  end
+  object GuidesGoodsGroup: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsGroup
+    Key = '0'
+    FormNameParam.Value = 'TGoodsGroupForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsGroupForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 198
+    Top = 22
   end
 end

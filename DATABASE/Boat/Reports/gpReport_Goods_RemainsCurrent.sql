@@ -2,11 +2,13 @@
 
 DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent (Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent (Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent (Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Goods_RemainsCurrent(
     IN inUnitId           Integer  ,  -- Подразделение / группа
     --IN inBrandId          Integer  ,  -- Торговая марка
     IN inPartnerId        Integer  ,  -- Поставщик
+    IN inGoodsGroupId     Integer  ,  -- группа товара
     IN inIsPartion        Boolean  ,  -- показать <Документ партия №> (Да/Нет)
     IN inIsPartner        Boolean  ,  -- показать Поставщика (Да/Нет)
     IN inIsRemains        Boolean  ,  -- Показать с остатком = 0
@@ -81,17 +83,35 @@ BEGIN
         --
         INSERT INTO _tmpUnit (UnitId)
           SELECT lfSelect.UnitId
-          FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect
-         ;
+          FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect;
     ELSE
         --
         INSERT INTO _tmpUnit (UnitId)
           SELECT Object_Unit.Id
           FROM Object AS Object_Unit
           WHERE Object_Unit.DescId = zc_Object_Unit()
-            AND Object_Unit.isErased = FALSE
-         ;
+            AND Object_Unit.isErased = FALSE;
     END IF;
+
+
+    -- Ограничения по товару
+    CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
+    IF inGoodsGroupId <> 0 
+    THEN 
+        INSERT INTO _tmpGoods (GoodsId)
+           SELECT lfSelect.GoodsId
+           FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect;
+    ELSE 
+        INSERT INTO _tmpGoods (GoodsId)
+           SELECT Object_Goods.Id
+           FROM Object AS Object_Goods
+           WHERE Object_Goods.DescId = zc_Object_Goods()
+            AND Object_Goods.isErased = FALSE;
+    END IF;
+
+    -- !!!!!!!!!!!!!!!!!!!!!!!
+    ANALYZE _tmpGoods;
+    ANALYZE _tmpUnit;
 
     -- Результат
     RETURN QUERY
@@ -99,11 +119,13 @@ BEGIN
                                 , tmp.ValuePrice
                            FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
                                                                     , inOperDate   := CURRENT_DATE) AS tmp
+                                INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = tmp.GoodsId
                            )
    --остатки
    , tmpContainer_All AS (SELECT Container.*
                           FROM Container
                                INNER JOIN _tmpUnit ON _tmpUnit.UnitId = Container.WhereObjectId
+                               INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = Container.ObjectId
                            WHERE Container.DescId = zc_Container_Count()
                             AND (COALESCE(Container.Amount,0) <> 0 OR inIsRemains = TRUE)
                           )
@@ -419,6 +441,6 @@ $BODY$
 */
 -- тест
 -- SELECT * FROM gpReport_Goods_RemainsCurrent (inUnitId:= 1531,  inPartnerId:= 0, inisPartion:= FALSE, inisPartner:= FALSE, inIsRemains:= FALSE, inSession:= zfCalc_UserAdmin())
--- select * from gpReport_Goods_RemainsCurrent (inUnitId := 0 , inPartnerId := 0 , inIsPartion := 'True' , inIsPartner := 'False', inIsRemains := 'False' ,  inSession := '2');
+-- select * from gpReport_Goods_RemainsCurrent (inUnitId := 0 , inPartnerId := 0 ,inGoodsGroupId:=0, inIsPartion := 'True' , inIsPartner := 'False', inIsRemains := 'False' ,  inSession := '2');
 
 --select * from Object_PartionGoods limit 10

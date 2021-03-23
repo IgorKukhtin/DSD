@@ -137,6 +137,9 @@ type
     ExportEmailDS: TDataSource;
     spGet_Export_Email: TdsdStoredProc;
     actGet_Export_Email: TdsdExecStoredProc;
+    edGoodsGroup: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    GuidesGoodsGroup: TdsdGuides;
   private
     { Private declarations }
   public

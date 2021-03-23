@@ -601,7 +601,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReceiptGoodsEditForm');
   end;
 
-   procedure TLoadFormTest.LoadReceiptServiceFormTest;
+procedure TLoadFormTest.LoadReceiptServiceFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptServiceForm');
