@@ -18,8 +18,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
     inherited deStart: TcxDateEdit
       Left = 73
       Top = 38
-      EditValue = 42736d
-      Visible = False
+      EditValue = 44197d
       ExplicitLeft = 73
       ExplicitTop = 38
       ExplicitWidth = 84
@@ -27,8 +26,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
     end
     inherited deEnd: TcxDateEdit
       Left = 73
-      EditValue = 42736d
-      Visible = False
+      EditValue = 44197d
       ExplicitLeft = 73
       ExplicitWidth = 84
       Width = 84
@@ -36,7 +34,6 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
     inherited cxLabel1: TcxLabel
       Left = 13
       Caption = #1055#1077#1088#1080#1086#1076' '#1089':'
-      Visible = False
       ExplicitLeft = 13
       ExplicitWidth = 54
     end
@@ -44,7 +41,6 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       Left = 6
       Top = 39
       Caption = #1055#1077#1088#1080#1086#1076' '#1087#1086':'
-      Visible = False
       ExplicitLeft = 6
       ExplicitTop = 39
       ExplicitWidth = 61
@@ -146,7 +142,6 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_in
             end
             item
               Format = ',0.####'
@@ -192,7 +187,6 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_in
             end
             item
               Format = ',0.####'
@@ -356,7 +350,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             Width = 45
           end
           object Amount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076' ('#1087#1088#1086#1074#1086#1076#1082#1080')'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -378,19 +372,6 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-            Options.Editing = False
-            Width = 55
-          end
-          object Amount_in: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076
-            DataBinding.FieldName = 'Amount_in'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Options.Editing = False
             Width = 55
           end
@@ -654,6 +635,16 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         Component = cbPartner
         Properties.Strings = (
           'Checked')
+      end
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
       end>
   end
   inherited ActionList: TActionList
@@ -1883,7 +1874,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 96
-    Top = 16
+    Top = 72
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -1897,6 +1888,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         Component = GuidesGoodsGroup
       end
       item
+        Component = PeriodChoice
       end
       item
       end

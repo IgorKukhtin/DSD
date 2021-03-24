@@ -65,7 +65,6 @@ type
     mactGoodsPrintList_Print: TMultiAction;
     bbGoodsPrintList_Print: TdxBarButton;
     UnitName_in: TcxGridDBColumn;
-    Amount_in: TcxGridDBColumn;
     actRefreshIsPeriodYear: TdsdDataSetRefresh;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;

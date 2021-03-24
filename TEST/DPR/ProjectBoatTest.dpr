@@ -278,7 +278,6 @@ begin
   Application.Initialize;
   gc_isSetDefault := true;
   Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TReport_MovementIncomeForm, Report_MovementIncomeForm);
   Application.Run;
   DUnitTestRunner.RunRegisteredTests;
 end.

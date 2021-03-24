@@ -184,7 +184,7 @@ BEGIN
                      , Object_PartionGoods.TaxKindId
                      , Object_PartionGoods.TaxValue AS TaxKindValue
  
-                     , Object_PartionGoods.MovementId
+                     , tmpMIContainer.MovementId
 
                      , COALESCE (tmpMIContainer.Amount, 0) AS Amount  -- из проводок
                      , COALESCE (tmpRemains.Amount, 0)     AS Remains
