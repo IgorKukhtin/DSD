@@ -1,4 +1,4 @@
--- Function:  gpReport_Goods_Income()
+-- Function:  gpReport_MovementIncome()
 
 DROP FUNCTION IF EXISTS gpReport_MovementIncome (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
@@ -485,4 +485,4 @@ $BODY$
  24.03.21         *
 */
 -- тест
--- select * from gpReport_Goods_Income (inStartDate :='01.01.2121', inEndDate :='01.01.2121', inUnitId := 0 , inPartnerId := 0 ,inGoodsGroupId:=0, inIsPartion := 'True' , inIsPartner := 'False', inSession := '2');
+-- select * from gpReport_MovementIncome (inStartDate :='01.01.2121', inEndDate :='01.01.2121', inUnitId := 0 , inPartnerId := 0 ,inGoodsGroupId:=0, inIsPartion := 'True' , inIsPartner := 'False', inSession := '2');
