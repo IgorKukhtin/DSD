@@ -237,7 +237,7 @@ BEGIN
                                 ON ObjectFloat_TaxKind_Value.ObjectId = zc_Enum_TaxKind_Basis() -- ObjectLink_Goods_TaxKind.ChildObjectId
                                AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
 
-          LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
+         -- LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
          ;
 
 END;

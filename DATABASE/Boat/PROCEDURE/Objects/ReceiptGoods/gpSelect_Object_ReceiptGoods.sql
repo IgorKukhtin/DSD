@@ -70,35 +70,6 @@ BEGIN
                                                * CAST (ObjectFloat_EKPrice.ValueData
                                                       * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))) :: TFloat AS EKPriceWVAT_summ_colPat
 
-                                       /*
-                                        , SUM (CASE WHEN ObjectLink_ProdColorPattern.ChildObjectId IS NULL THEN 1 ELSE 0 END
-                                               * ObjectFloat_Value.ValueData
-                                               * CASE WHEN vbPriceWithVAT = FALSE
-                                                      THEN COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0)
-                                                      ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
-                                                 END)  :: TFloat AS Basis_summ_goods
-
-                                        , SUM (CASE WHEN ObjectLink_ProdColorPattern.ChildObjectId IS NULL THEN 1 ELSE 0 END
-                                               * ObjectFloat_Value.ValueData
-                                               * CASE WHEN vbPriceWithVAT = FALSE
-                                                       THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
-                                                       ELSE COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0) 
-                                                  END) ::TFloat BasisWVAT_summ_goods
-
-                                        , SUM (CASE WHEN COALESCE (ObjectLink_ProdColorPattern.ChildObjectId,0)<>0 THEN 1 ELSE 0 END
-                                               * ObjectFloat_Value.ValueData
-                                               * CASE WHEN vbPriceWithVAT = FALSE
-                                                      THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
-                                                      ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
-                                                 END)  :: TFloat AS Basis_summ_colPat
-
-                                        , SUM (CASE WHEN COALESCE (ObjectLink_ProdColorPattern.ChildObjectId,0)<>0 THEN 1 ELSE 0 END
-                                               * ObjectFloat_Value.ValueData
-                                               * CASE WHEN vbPriceWithVAT = FALSE
-                                                       THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
-                                                       ELSE COALESCE (tmpPriceBasis.ValuePrice, 0) 
-                                                  END) ::TFloat BasisWVAT_summ_colPat
-                                       */
                                    FROM Object AS Object_ReceiptGoodsChild
                             
                                         LEFT JOIN ObjectFloat AS ObjectFloat_Value
@@ -134,20 +105,10 @@ BEGIN
                                                               ON ObjectFloat_ReceiptService_SalePrice.ObjectId = Object_Goods.Id
                                                              AND ObjectFloat_ReceiptService_SalePrice.DescId = zc_ObjectFloat_ReceiptService_SalePrice()
 
-                                        LEFT JOIN ObjectLink AS ObjectLink_Goods_TaxKind
-                                                             ON ObjectLink_Goods_TaxKind.ObjectId = Object_Goods.Id
-                                                            AND ObjectLink_Goods_TaxKind.DescId = zc_ObjectLink_Goods_TaxKind()
-                                        LEFT JOIN ObjectLink AS ObjectLink_ReceiptService_TaxKind
-                                                             ON ObjectLink_ReceiptService_TaxKind.ObjectId = Object_Goods.Id
-                                                            AND ObjectLink_ReceiptService_TaxKind.DescId = zc_ObjectLink_ReceiptService_TaxKind()
-                                        LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = COALESCE (ObjectLink_Goods_TaxKind.ChildObjectId, ObjectLink_ReceiptService_TaxKind.ChildObjectId)
-                              
                                         LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                                              ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
+                                                              ON ObjectFloat_TaxKind_Value.ObjectId = zc_Enum_TaxKind_Basis() --
                                                              AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
-                              
-                                        LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
-                              
+                             
                                    WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
                                      AND Object_ReceiptGoodsChild.isErased = FALSE
                                    GROUP BY ObjectLink_ReceiptGoods.ChildObjectId
@@ -281,11 +242,6 @@ BEGIN
                                 ON ObjectFloat_EmpfPrice.ObjectId = Object_Goods.Id
                                AND ObjectFloat_EmpfPrice.DescId   = zc_ObjectFloat_Goods_EmpfPrice()
 
-/*          LEFT JOIN ObjectLink AS ObjectLink_Goods_TaxKind
-                               ON ObjectLink_Goods_TaxKind.ObjectId = Object_Goods.Id
-                              AND ObjectLink_Goods_TaxKind.DescId = zc_ObjectLink_Goods_TaxKind()
-          LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_Goods_TaxKind.ChildObjectId
-*/
           LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
                                 ON ObjectFloat_TaxKind_Value.ObjectId = zc_Enum_TaxKind_Basis() --Object_TaxKind.Id
                                AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()

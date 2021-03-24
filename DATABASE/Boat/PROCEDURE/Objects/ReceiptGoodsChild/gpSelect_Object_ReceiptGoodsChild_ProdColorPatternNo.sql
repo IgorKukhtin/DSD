@@ -191,20 +191,11 @@ BEGIN
                                 ON ObjectFloat_ReceiptService_SalePrice.ObjectId = Object_Object.Id
                                AND ObjectFloat_ReceiptService_SalePrice.DescId = zc_ObjectFloat_ReceiptService_SalePrice()
 
-/*
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_TaxKind
-                               ON ObjectLink_Goods_TaxKind.ObjectId = Object_Object.Id
-                              AND ObjectLink_Goods_TaxKind.DescId = zc_ObjectLink_Goods_TaxKind()
-          LEFT JOIN ObjectLink AS ObjectLink_ReceiptService_TaxKind
-                               ON ObjectLink_ReceiptService_TaxKind.ObjectId = Object_Object.Id
-                              AND ObjectLink_ReceiptService_TaxKind.DescId = zc_ObjectLink_ReceiptService_TaxKind()
-          LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = COALESCE (ObjectLink_Goods_TaxKind.ChildObjectId, ObjectLink_ReceiptService_TaxKind.ChildObjectId)
-*/
           LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                ON ObjectFloat_TaxKind_Value.ObjectId = zc_Enum_TaxKind_Basis() --Object_TaxKind.Id
+                                ON ObjectFloat_TaxKind_Value.ObjectId = zc_Enum_TaxKind_Basis()
                                AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
 
-          LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Object.Id
+          --LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Object.Id
 
      WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
       AND (Object_ReceiptGoodsChild.isErased = FALSE OR inIsErased = TRUE)
