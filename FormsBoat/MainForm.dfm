@@ -1143,7 +1143,6 @@ inherited MainForm: TMainForm
       Caption = #1054#1090#1095#1077#1090#1099' ('#1089#1082#1083#1072#1076')'
       object miReport_Income: TMenuItem
         Action = actReport_Income
-        Enabled = False
       end
       object miReport_Send: TMenuItem
         Action = actReport_Send
