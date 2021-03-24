@@ -21,12 +21,10 @@ RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
              , ProdColorName TVarChar
              , MeasureName TVarChar
              , EKPrice TFloat, EKPriceWVAT TFloat
-             , BasisPrice TFloat, BasisPriceWVAT TFloat
-
              , EKPrice_summ TFloat
              , EKPriceWVAT_summ TFloat
-             , Basis_summ TFloat
-             , BasisWVAT_summ TFloat
+             --, BasisPrice TFloat, BasisPriceWVAT TFloat
+             --, Basis_summ TFloat, BasisWVAT_summ TFloat
              , Color_value Integer
              , Color_Level Integer
               )
@@ -83,6 +81,11 @@ BEGIN
          , CAST (COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0)
               * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS EKPriceWVAT-- расчет входной цены с НДС, до 4 знаков
 
+         , (ObjectFloat_Value.ValueData * COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0)) :: TFloat AS EKPrice_summ
+         , (ObjectFloat_Value.ValueData
+              * CAST (COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0)
+                     * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))) :: TFloat AS EKPriceWVAT_summ
+/*
           -- расчет базовой цены без НДС, до 2 знаков
         , CASE WHEN vbPriceWithVAT = FALSE
                THEN COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0)
@@ -95,11 +98,6 @@ BEGIN
                ELSE COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0)
           END ::TFloat  AS BasisPriceWVAT
 
-        , (ObjectFloat_Value.ValueData * COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0)) :: TFloat AS EKPrice_summ
-        , (ObjectFloat_Value.ValueData
-             * CAST (COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0)
-                    * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))) :: TFloat AS EKPriceWVAT_summ
-                    
         , (ObjectFloat_Value.ValueData
             * CASE WHEN vbPriceWithVAT = FALSE
                    THEN COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0)
@@ -112,6 +110,7 @@ BEGIN
                     ELSE COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0) 
                END) ::TFloat BasisWVAT_summ
 
+*/
         , 15138790 /*zc_Color_Pink()*/     ::Integer                  AS Color_value                          --  фон для Value
         , CASE WHEN ObjectDesc.Id = zc_Object_ReceiptService() THEN 15073510  -- малиновый
                ELSE  zc_Color_Blue() --zc_Color_Black()
@@ -192,6 +191,7 @@ BEGIN
                                 ON ObjectFloat_ReceiptService_SalePrice.ObjectId = Object_Object.Id
                                AND ObjectFloat_ReceiptService_SalePrice.DescId = zc_ObjectFloat_ReceiptService_SalePrice()
 
+/*
           LEFT JOIN ObjectLink AS ObjectLink_Goods_TaxKind
                                ON ObjectLink_Goods_TaxKind.ObjectId = Object_Object.Id
                               AND ObjectLink_Goods_TaxKind.DescId = zc_ObjectLink_Goods_TaxKind()
@@ -199,9 +199,9 @@ BEGIN
                                ON ObjectLink_ReceiptService_TaxKind.ObjectId = Object_Object.Id
                               AND ObjectLink_ReceiptService_TaxKind.DescId = zc_ObjectLink_ReceiptService_TaxKind()
           LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = COALESCE (ObjectLink_Goods_TaxKind.ChildObjectId, ObjectLink_ReceiptService_TaxKind.ChildObjectId)
-
+*/
           LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
+                                ON ObjectFloat_TaxKind_Value.ObjectId = zc_Enum_TaxKind_Basis() --Object_TaxKind.Id
                                AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
 
           LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Object.Id
