@@ -90,7 +90,8 @@ inherited WagesUserForm: TWagesUserForm
           Top = 6
           ParentFont = False
           Properties.DecimalPlaces = 2
-          Properties.DisplayFormat = ',0.00;-,0.00;;'
+          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+          Properties.ReadOnly = True
           Style.Font.Charset = DEFAULT_CHARSET
           Style.Font.Color = clWindowText
           Style.Font.Height = -16
@@ -117,7 +118,8 @@ inherited WagesUserForm: TWagesUserForm
           Top = 58
           ParentFont = False
           Properties.DecimalPlaces = 2
-          Properties.DisplayFormat = ',0.00;-,0.00;;'
+          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+          Properties.ReadOnly = True
           Style.Font.Charset = DEFAULT_CHARSET
           Style.Font.Color = clWindowText
           Style.Font.Height = -16
@@ -144,7 +146,8 @@ inherited WagesUserForm: TWagesUserForm
           Top = 110
           ParentFont = False
           Properties.DecimalPlaces = 2
-          Properties.DisplayFormat = ',0.00;-,0.00;;'
+          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+          Properties.ReadOnly = True
           Style.Font.Charset = DEFAULT_CHARSET
           Style.Font.Color = clWindowText
           Style.Font.Height = -16
@@ -183,7 +186,8 @@ inherited WagesUserForm: TWagesUserForm
           Top = 32
           ParentFont = False
           Properties.DecimalPlaces = 2
-          Properties.DisplayFormat = ',0.00;-,0.00;;'
+          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+          Properties.ReadOnly = True
           Style.Font.Charset = DEFAULT_CHARSET
           Style.Font.Color = clWindowText
           Style.Font.Height = -16
@@ -210,7 +214,8 @@ inherited WagesUserForm: TWagesUserForm
           Top = 110
           ParentFont = False
           Properties.DecimalPlaces = 2
-          Properties.DisplayFormat = ',0.00;-,0.00;;'
+          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+          Properties.ReadOnly = True
           Style.Font.Charset = DEFAULT_CHARSET
           Style.Font.Color = clWindowText
           Style.Font.Height = -16
@@ -237,7 +242,8 @@ inherited WagesUserForm: TWagesUserForm
           Top = 6
           ParentFont = False
           Properties.DecimalPlaces = 2
-          Properties.DisplayFormat = ',0.00;-,0.00;;'
+          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+          Properties.ReadOnly = True
           Style.Font.Charset = DEFAULT_CHARSET
           Style.Font.Color = clWindowText
           Style.Font.Height = -16
@@ -264,7 +270,8 @@ inherited WagesUserForm: TWagesUserForm
           Top = 32
           ParentFont = False
           Properties.DecimalPlaces = 2
-          Properties.DisplayFormat = ',0.00;-,0.00;;'
+          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+          Properties.ReadOnly = True
           Style.Font.Charset = DEFAULT_CHARSET
           Style.Font.Color = clWindowText
           Style.Font.Height = -16
@@ -291,7 +298,8 @@ inherited WagesUserForm: TWagesUserForm
           Top = 58
           ParentFont = False
           Properties.DecimalPlaces = 2
-          Properties.DisplayFormat = ',0.00;-,0.00;;'
+          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+          Properties.ReadOnly = True
           Style.Font.Charset = DEFAULT_CHARSET
           Style.Font.Color = clWindowText
           Style.Font.Height = -16
@@ -318,7 +326,8 @@ inherited WagesUserForm: TWagesUserForm
           Top = 84
           ParentFont = False
           Properties.DecimalPlaces = 2
-          Properties.DisplayFormat = ',0.00;-,0.00;;'
+          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+          Properties.ReadOnly = True
           Style.Font.Charset = DEFAULT_CHARSET
           Style.Font.Color = clWindowText
           Style.Font.Height = -16
@@ -413,6 +422,7 @@ inherited WagesUserForm: TWagesUserForm
       Top = 63
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
+      Properties.ReadOnly = True
       TabOrder = 10
       Width = 65
     end
@@ -426,6 +436,7 @@ inherited WagesUserForm: TWagesUserForm
       Top = 63
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
+      Properties.ReadOnly = True
       TabOrder = 12
       Width = 65
     end
@@ -439,6 +450,7 @@ inherited WagesUserForm: TWagesUserForm
       Top = 63
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
+      Properties.ReadOnly = True
       TabOrder = 14
       Width = 65
     end
@@ -454,6 +466,7 @@ inherited WagesUserForm: TWagesUserForm
       ParentShowHint = False
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
+      Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 16
       Width = 65
@@ -471,6 +484,7 @@ inherited WagesUserForm: TWagesUserForm
       Top = 103
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
+      Properties.ReadOnly = True
       TabOrder = 18
       Width = 65
     end
@@ -489,6 +503,7 @@ inherited WagesUserForm: TWagesUserForm
       Top = 83
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
+      Properties.ReadOnly = True
       TabOrder = 21
       Width = 65
     end
@@ -516,6 +531,7 @@ inherited WagesUserForm: TWagesUserForm
       ParentShowHint = False
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
+      Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 25
       Width = 65
@@ -535,6 +551,7 @@ inherited WagesUserForm: TWagesUserForm
       ParentShowHint = False
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
+      Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 27
       Width = 65
@@ -554,6 +571,7 @@ inherited WagesUserForm: TWagesUserForm
       ParentShowHint = False
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
+      Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 29
       Width = 65
@@ -572,6 +590,7 @@ inherited WagesUserForm: TWagesUserForm
       ParentShowHint = False
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
+      Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 31
       Width = 65
@@ -593,6 +612,7 @@ inherited WagesUserForm: TWagesUserForm
       ParentShowHint = False
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
+      Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 33
       Width = 65
@@ -609,6 +629,7 @@ inherited WagesUserForm: TWagesUserForm
       ParentShowHint = False
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
+      Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 35
       Width = 65

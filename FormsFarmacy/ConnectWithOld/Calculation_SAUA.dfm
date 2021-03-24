@@ -59,7 +59,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           Align = alClient
           ItemHeight = 13
           TabOrder = 1
-          ExplicitHeight = 95
         end
         object cxLabel9: TcxLabel
           Left = 1
@@ -67,8 +66,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           Align = alBottom
           Caption = #1042#1099#1073#1088#1072#1085#1086' 0'
           Properties.Alignment.Horz = taLeftJustify
-          ExplicitTop = 1
-          ExplicitWidth = 7
         end
       end
       object Panel5: TPanel
@@ -97,7 +94,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           Align = alClient
           ItemHeight = 13
           TabOrder = 1
-          ExplicitHeight = 109
         end
         object cxLabel10: TcxLabel
           Left = 1
@@ -105,8 +101,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           Align = alBottom
           Caption = #1042#1099#1073#1088#1072#1085#1086' 0'
           Properties.Alignment.Horz = taLeftJustify
-          ExplicitTop = 1
-          ExplicitWidth = 7
         end
       end
     end
@@ -535,6 +529,7 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
     object actScheduleNearestSUN1: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      BeforeAction = actInsert_FinalSUAProtocol
       ActionList = <
         item
           Action = actExecactScheduleNearestSUN1
@@ -555,6 +550,30 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           StoredProc = spScheduleNearestSUN1
         end>
       Caption = 'actExecactScheduleNearestSUN1'
+    end
+    object actInsert_FinalSUAProtocol: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_FinalSUAProtocol
+      StoredProcList = <
+        item
+          StoredProc = spInsert_FinalSUAProtocol
+        end>
+      Caption = 'actInsert_FinalSUAProtocol'
+    end
+    object actFinalSUAProtocol: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1087#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1081
+      Hint = #1055#1088#1086#1090#1086#1082#1086#1083' '#1087#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1081
+      ImageIndex = 34
+      FormName = 'TReport_FinalSUAProtocolForm'
+      FormNameParam.Value = 'TReport_FinalSUAProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
     end
   end
   object dxBarManager: TdxBarManager
@@ -615,6 +634,14 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
+          ItemName = 'bbFinalSUAProtocol'
+        end
+        item
           Visible = True
           ItemName = 'bbStaticText'
         end
@@ -724,6 +751,10 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
       Action = actGridToExcel
       Category = 0
     end
+    object bbFinalSUAProtocol: TdxBarButton
+      Action = actFinalSUAProtocol
+      Category = 0
+    end
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -794,6 +825,8 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
       item
         Name = 'inRecipientList'
         Value = Null
+        Component = FormParams
+        ComponentItem = 'RecipientList'
         DataType = ftWideString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -801,6 +834,8 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
       item
         Name = 'inAssortmentList'
         Value = Null
+        Component = FormParams
+        ComponentItem = 'AssortmentList'
         DataType = ftWideString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -896,5 +931,119 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
     PackSize = 1
     Left = 56
     Top = 448
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'RecipientList'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AssortmentList'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    Left = 200
+    Top = 448
+  end
+  object spInsert_FinalSUAProtocol: TdsdStoredProc
+    StoredProcName = 'gpInsert_Object_FinalSUAProtocol'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDateStart'
+        Value = 42370d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateEnd'
+        Value = 42370d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRecipientList'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'RecipientList'
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAssortmentList'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'AssortmentList'
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inThreshold'
+        Value = 1.000000000000000000
+        Component = ceThreshold
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDaysStock'
+        Value = 10.000000000000000000
+        Component = ceDaysStock
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCountPharmacies'
+        Value = 1.000000000000000000
+        Component = ceCountPharmacies
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inResolutionParameter'
+        Value = 1.000000000000000000
+        Component = ceResolutionParameter
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisGoodsClose'
+        Value = True
+        Component = cbGoodsClose
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMCSIsClose'
+        Value = False
+        Component = cbMCSIsClose
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotCheckNoMCS'
+        Value = False
+        Component = cbNotCheckNoMCS
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 56
+    Top = 520
   end
 end

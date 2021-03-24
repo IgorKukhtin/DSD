@@ -87,6 +87,7 @@ type
     CheckSourceKindName: TcxGridDBColumn;
     MedicForSaleName: TcxGridDBColumn;
     BuyerForSaleName: TcxGridDBColumn;
+    isCorrectMarketing: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -238,8 +238,8 @@ BEGIN
                  , MIFloat_HolidaysHospital.ValueData AS HolidaysHospital
                  , CASE WHEN COALESCE(MIFloat_Marketing.ValueData, 0) > 0 THEN MIFloat_Marketing.ValueData
                         WHEN COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0) > 0
-                        THEN 0 ELSE COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0) END::TFloat AS Marketing
-                 , CASE WHEN COALESCE(MIFloat_Marketing.ValueData, 0) > 0 THEN 0
+                        THEN Null ELSE COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0) END::TFloat AS Marketing
+                 , CASE WHEN COALESCE(MIFloat_Marketing.ValueData, 0) > 0 THEN Null
                         WHEN COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0) > 0
                         THEN - MIFloat_Marketing.ValueData ELSE MIFloat_MarketingRepayment.ValueData END::TFloat                             AS MarketingRepayment
                  , MIFloat_Director.ValueData         AS Director

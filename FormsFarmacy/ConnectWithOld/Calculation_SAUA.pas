@@ -86,6 +86,11 @@ type
     spScheduleNearestSUN1: TdsdStoredProc;
     cxLabel9: TcxLabel;
     cxLabel10: TcxLabel;
+    FormParams: TdsdFormParams;
+    spInsert_FinalSUAProtocol: TdsdStoredProc;
+    actInsert_FinalSUAProtocol: TdsdExecStoredProc;
+    actFinalSUAProtocol: TdsdOpenForm;
+    bbFinalSUAProtocol: TdxBarButton;
     procedure ParentFormCreate(Sender: TObject);
     procedure ParentFormClose(Sender: TObject; var Action: TCloseAction);
     procedure actCalculationExecute(Sender: TObject);
@@ -146,8 +151,8 @@ begin
      Exit;
    end;
 
-   spCalculation.ParamByName('inRecipientList').Value := cRecipient;
-   spCalculation.ParamByName('inAssortmentList').Value := cAssortment;
+   FormParams.ParamByName('RecipientList').Value := cRecipient;
+   FormParams.ParamByName('AssortmentList').Value := cAssortment;
    spCalculation.Execute;
 end;
 
