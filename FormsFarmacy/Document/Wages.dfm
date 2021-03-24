@@ -238,7 +238,7 @@ inherited WagesForm: TWagesForm
             Position.RowIndex = 0
           end
           object MarketingRepayment: TcxGridDBBandedColumn
-            Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075' '#1087#1086#1075#1072#1096#1077#1085#1080#1077
+            Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075' '#1087#1086#1075#1072#1096#1077#1085#1080#1077' '#1095#1077#1088#1077#1079' '#1095#1077#1082
             DataBinding.FieldName = 'MarketingRepayment'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'

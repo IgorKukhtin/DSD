@@ -2484,7 +2484,7 @@ begin
       if FUpdatePUSH = 0 then
       begin
         BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)),
-                           GetBinaryPlatfotmSuffics(ParamStr(0)));
+                           GetBinaryPlatfotmSuffics(ParamStr(0), ''));
         LocalVersionInfo := UnilWin.GetFileVersion(ParamStr(0));
         if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
            ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then
@@ -6180,7 +6180,7 @@ var LocalVersionInfo, BaseVersionInfo: TVersionInfo; Step : Integer;
     try
       Application.ProcessMessages;
       BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)),
-                         GetBinaryPlatfotmSuffics(ParamStr(0)));
+                         GetBinaryPlatfotmSuffics(ParamStr(0), ''));
       LocalVersionInfo := UnilWin.GetFileVersion(ParamStr(0));
       if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
          ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then
