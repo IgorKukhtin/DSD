@@ -141,16 +141,18 @@ BEGIN
 
                  , MIFloat_HolidaysHospital.ValueData AS HolidaysHospital
                  , MIFloat_Marketing.ValueData        AS Marketing
-                 , CASE WHEN COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0) > 0
-                        THEN - MIFloat_Marketing.ValueData ELSE MIFloat_MarketingRepayment.ValueData  END::TFloat                                AS MarketingRepayment
+                 , CASE WHEN COALESCE(MIFloat_Marketing.ValueData, 0) > 0 THEN 0
+                        WHEN COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0) > 0
+                        THEN - MIFloat_Marketing.ValueData ELSE MIFloat_MarketingRepayment.ValueData END::TFloat      AS MarketingRepayment
                  , MIFloat_Director.ValueData         AS Director
                  , MIFloat_IlliquidAssets.ValueData   AS IlliquidAssets
                  , MIFloat_PenaltySUN.ValueData       AS PenaltySUN
                  , MIF_AmountCard.ValueData           AS AmountCard
                  , (MovementItem.Amount +
                     COALESCE (MIFloat_HolidaysHospital.ValueData, 0) +
-                    CASE WHEN COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0) > 0
-                         THEN 0 ELSE COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0) END +
+                    CASE WHEN COALESCE(MIFloat_Marketing.ValueData, 0) > 0 THEN COALESCE(MIFloat_Marketing.ValueData, 0)
+                         WHEN COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0) > 0
+                         THEN 0 ELSE COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0)  END +
                     COALESCE (MIFloat_Director.ValueData, 0) +
                     COALESCE (MIFloat_IlliquidAssets.ValueData, 0) +
                     COALESCE (MIFloat_PenaltySUN.ValueData, 0) -
@@ -335,7 +337,8 @@ BEGIN
 
                  , MIFloat_HolidaysHospital.ValueData AS HolidaysHospital
                  , MIFloat_Marketing.ValueData        AS Marketing
-                 , CASE WHEN COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0) > 0
+                 , CASE WHEN COALESCE(MIFloat_Marketing.ValueData, 0) > 0 THEN 0
+                        WHEN COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0) > 0
                         THEN - MIFloat_Marketing.ValueData ELSE MIFloat_MarketingRepayment.ValueData END::TFloat      AS MarketingRepayment
                  , MIFloat_Director.ValueData         AS Director
                  , MIFloat_IlliquidAssets.ValueData   AS IlliquidAssets
@@ -343,7 +346,8 @@ BEGIN
                  , MIF_AmountCard.ValueData           AS AmountCard
                  , (MovementItem.Amount +
                     COALESCE (MIFloat_HolidaysHospital.ValueData, 0) +
-                    CASE WHEN COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0) > 0
+                    CASE WHEN COALESCE(MIFloat_Marketing.ValueData, 0) > 0 THEN COALESCE(MIFloat_Marketing.ValueData, 0)
+                         WHEN COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0) > 0
                          THEN 0 ELSE COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0)  END +
                     COALESCE (MIFloat_Director.ValueData, 0) +
                     COALESCE (MIFloat_IlliquidAssets.ValueData, 0) +

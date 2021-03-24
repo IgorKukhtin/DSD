@@ -185,7 +185,8 @@ BEGIN
 
       SELECT (MovementItem.Amount + 
               COALESCE (MIFloat_HolidaysHospital.ValueData, 0) + 
-              CASE WHEN COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0) > 0
+              CASE WHEN COALESCE(MIFloat_Marketing.ValueData, 0) > 0 THEN COALESCE(MIFloat_Marketing.ValueData, 0)
+                   WHEN COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0) > 0
                    THEN 0 ELSE COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0)  END +
               COALESCE (MIFloat_Director.ValueData, 0) +
               COALESCE (MIFloat_IlliquidAssets.ValueData, 0) +
