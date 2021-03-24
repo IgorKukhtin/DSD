@@ -91,7 +91,7 @@ type
     cxLabel28: TcxLabel;
     actFormClose: TdsdFormClose;
     cxLabel29: TcxLabel;
-    cxCurrencyEdit1: TcxCurrencyEdit;
+    ceMarketingRepayment: TcxCurrencyEdit;
   private
     { Private declarations }
   public

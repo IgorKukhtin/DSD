@@ -458,9 +458,22 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_Hardware_Update() RETURNS Integer AS $B
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Hardware(), 'zc_ObjectDate_Hardware_Update', 'Дата изменения' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Hardware_Update');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_FinalSUAProtocol_OperDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_FinalSUAProtocol_OperDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_FinalSUAProtocol(), 'zc_ObjectDate_FinalSUAProtocol_OperDate', 'Дата и время формирования документа' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_FinalSUAProtocol_OperDate');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_FinalSUAProtocol_DateStart() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Hardware_Update'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_FinalSUAProtocol(), 'zc_ObjectDate_FinalSUAProtocol_DateStart', 'Начало периода' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_FinalSUAProtocol_DateStart');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_FinalSUAProtocol_DateEnd() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_FinalSUAProtocol_DateEnd'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_FinalSUAProtocol(), 'zc_ObjectDate_FinalSUAProtocol_DateEnd', 'Окончание периода' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_FinalSUAProtocol_DateEnd');
+
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 24.03.21                                                                                     * zc_ObjectDate_FinalSUAProtocol_...
  04.02.21                                                                                     * zc_ObjectDate_Hardware_Update
  06.11.20         * zc_ObjectDate_ContractGoods_Start
                     zc_ObjectDate_ContractGoods_End

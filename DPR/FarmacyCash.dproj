@@ -356,35 +356,28 @@
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\ChoosingRelatedProduct.pas">
             <Form>ChoosingRelatedProductForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\EditFromDirectory.pas">
             <Form>EditFromDirectoryForm</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TParentForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\HardwareDialog.pas">
             <Form>HardwareDialogForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\UnitTreeCash.pas">
             <Form>UnitTreeCashForm</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TParentForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\LikiDniproReceiptDialog.pas">
             <Form>LikiDniproReceiptDialogForm</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TParentForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\EnterRecipeNumber1303.pas">
             <Form>EnterRecipeNumber1303Form</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\LikiDniproReceipt.pas"/>
         <DCCReference Include="..\FormsFarmacy\Cash\ListGoodsBadTiming.pas">
             <Form>ListGoodsBadTimingForm</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TParentForm</DesignClass>
         </DCCReference>
         <BuildConfiguration Include="Release">

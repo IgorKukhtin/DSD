@@ -15,7 +15,6 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
     Height = 383
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 721
     object ListGoodsBadTimingGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ListGoodsBadTimingDS
@@ -148,7 +147,7 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
         Width = 126
       end
       object CheckList: TcxGridDBColumn
-        Caption = #1042#1048#1055' '#1095#1077#1082#1080
+        Caption = #1053#1086#1084#1077#1088' '#1042#1048#1055' '#1095#1077#1082#1072
         DataBinding.FieldName = 'CheckList'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False

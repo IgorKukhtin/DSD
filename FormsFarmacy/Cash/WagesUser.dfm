@@ -26,7 +26,7 @@ inherited WagesUserForm: TWagesUserForm
         Width = 654
         Height = 150
         ExplicitWidth = 654
-        ExplicitHeight = 169
+        ExplicitHeight = 150
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.Footer = False
           Styles.Content = nil
@@ -313,7 +313,7 @@ inherited WagesUserForm: TWagesUserForm
           Style.Font.Style = []
           Style.IsFontAssigned = True
         end
-        object cxCurrencyEdit1: TcxCurrencyEdit
+        object ceMarketingRepayment: TcxCurrencyEdit
           Left = 182
           Top = 84
           ParentFont = False
@@ -855,6 +855,13 @@ inherited WagesUserForm: TWagesUserForm
         Name = 'Marketing'
         Value = Null
         Component = ceMarketing
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MarketingRepayment'
+        Value = Null
+        Component = ceMarketingRepayment
         DataType = ftFloat
         MultiSelectSeparator = ','
       end

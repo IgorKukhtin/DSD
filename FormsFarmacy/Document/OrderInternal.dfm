@@ -1853,7 +1853,7 @@ inherited OrderInternalForm: TOrderInternalForm
         end>
       Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1048#1090#1086#1075#1086#1074#1086#1084#1091' '#1057#1059#1040
       Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1048#1090#1086#1075#1086#1074#1086#1084#1091' '#1057#1059#1040
-      ImageIndex = 79
+      ImageIndex = 80
       QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1048#1090#1086#1075#1086#1074#1086#1084#1091' '#1057#1059#1040'?'
     end
   end
@@ -1979,14 +1979,6 @@ inherited OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdateFinalSUA'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -2012,6 +2004,14 @@ inherited OrderInternalForm: TOrderInternalForm
         item
           Visible = True
           ItemName = 'bbDeleteLink'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateFinalSUA'
         end
         item
           Visible = True
