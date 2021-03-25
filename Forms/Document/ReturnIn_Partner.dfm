@@ -2,10 +2,8 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')>'
   ClientHeight = 637
   ClientWidth = 1242
-  ExplicitLeft = -469
-  ExplicitTop = -215
   ExplicitWidth = 1258
-  ExplicitHeight = 672
+  ExplicitHeight = 675
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -366,9 +364,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -4696,7 +4691,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDescName'
+        Name = 'inTypeName'
         Value = 'zc_Movement_ReturnIn'
         DataType = ftString
         ParamType = ptInput
@@ -5249,8 +5244,8 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDescName'
-        Value = 'zc_Movement_PriceCorrective'
+        Name = 'inTypeName'
+        Value = 'zc_Movement_ReturnIn_Corr'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
