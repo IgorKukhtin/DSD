@@ -66,6 +66,8 @@ BEGIN
    -- сохранили
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_FinalSUAProtocol_NotCheckNoMCS(), vbId, inIsNotCheckNoMCS);
 
+   -- сохранили связь с <Пользователи>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_FinalSUAProtocol_User(), vbId, vbUserId);
 
 END;
 $BODY$

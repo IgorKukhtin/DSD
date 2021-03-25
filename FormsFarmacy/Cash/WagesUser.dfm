@@ -711,7 +711,14 @@ inherited WagesUserForm: TWagesUserForm
       FormNameParam.Value = 'TListGoodsBadTimingForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'Marketing'
+          Value = Null
+          Component = ceMarketing
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
       isShowModal = False
     end
     object actDblClickMarketing: TdsdDblClickAction
