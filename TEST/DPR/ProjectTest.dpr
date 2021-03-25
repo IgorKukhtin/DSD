@@ -1244,7 +1244,8 @@ uses
   Medoc_J1201112 in '..\..\SOURCE\MeDOC\Medoc_J1201112.pas',
   Medoc_J1201212 in '..\..\SOURCE\MeDOC\Medoc_J1201212.pas',
   PSLExportKind in '..\..\Forms\Kind\PSLExportKind.pas' {PSLExportKindForm: TParentForm},
-  Report_SaleExternal_OrderSale in '..\..\Forms\Report\Report_SaleExternal_OrderSale.pas' {Report_SaleExternal_OrderSaleForm: TParentForm};
+  Report_SaleExternal_OrderSale in '..\..\Forms\Report\Report_SaleExternal_OrderSale.pas' {Report_SaleExternal_OrderSaleForm: TParentForm},
+  GoodsByGoodsKind_Norm in '..\..\Forms\Guides\GoodsByGoodsKind_Norm.pas' {GoodsByGoodsKind_NormForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
