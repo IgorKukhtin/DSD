@@ -3,7 +3,6 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
   ClientHeight = 673
   ClientWidth = 960
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitTop = -137
   ExplicitWidth = 976
   ExplicitHeight = 712
   PixelsPerInch = 96
@@ -265,8 +264,35 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 46
             Position.BandIndex = 2
             Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object Layout_From: TcxGridDBBandedColumn
+            Caption = #1042#1099#1082#1083#1072#1076#1082#1072
+            DataBinding.FieldName = 'Layout_From'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+            Position.BandIndex = 2
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object PromoUnit_From: TcxGridDBBandedColumn
+            Caption = #1052#1072#1088#1082'. '#1087#1083#1072#1085' '#1090#1086#1095#1082#1080
+            DataBinding.FieldName = 'PromoUnit_From'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 56
+            Position.BandIndex = 2
+            Position.ColIndex = 2
             Position.RowIndex = 0
           end
           object AmountRemains_From: TcxGridDBBandedColumn
@@ -278,8 +304,9 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 54
             Position.BandIndex = 2
-            Position.ColIndex = 1
+            Position.ColIndex = 3
             Position.RowIndex = 0
           end
           object AmountSalesDey_From: TcxGridDBBandedColumn
@@ -292,7 +319,7 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Position.BandIndex = 2
-            Position.ColIndex = 2
+            Position.ColIndex = 4
             Position.RowIndex = 0
           end
           object AmountSalesMonth_From: TcxGridDBBandedColumn
@@ -305,7 +332,7 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Position.BandIndex = 2
-            Position.ColIndex = 3
+            Position.ColIndex = 5
             Position.RowIndex = 0
           end
           object AverageSalesMonth_From: TcxGridDBBandedColumn
@@ -318,7 +345,7 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Position.BandIndex = 2
-            Position.ColIndex = 4
+            Position.ColIndex = 6
             Position.RowIndex = 0
           end
           object Need_From: TcxGridDBBandedColumn
@@ -331,7 +358,7 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Position.BandIndex = 2
-            Position.ColIndex = 5
+            Position.ColIndex = 7
             Position.RowIndex = 0
           end
           object Delt_From: TcxGridDBBandedColumn
@@ -344,7 +371,7 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Position.BandIndex = 2
-            Position.ColIndex = 6
+            Position.ColIndex = 8
             Position.RowIndex = 0
           end
           object MCS_To: TcxGridDBBandedColumn

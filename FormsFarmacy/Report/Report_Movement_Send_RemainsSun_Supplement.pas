@@ -79,6 +79,8 @@ type
     Delta_To: TcxGridDBBandedColumn;
     Summa_From: TcxGridDBBandedColumn;
     Summa_To: TcxGridDBBandedColumn;
+    Layout_From: TcxGridDBBandedColumn;
+    PromoUnit_From: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

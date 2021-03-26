@@ -985,11 +985,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_CorrectMarketingForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_CorrectMarketingForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FinalSUAProtocolForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FinalSUAProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_FinalSUAProtocolForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_PromoBonusEstimateForm'));
@@ -1278,24 +1278,21 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_expressDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSun_expressDialogForm');
-
+ }
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSunOutForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSunOutForm');
-
+  {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSunOut_express_v2Form'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSunOut_express_v2Form');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_expressv2DialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSun_expressv2DialogForm');
     exit;
 
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSunForm'));
+}    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSunForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSunForm');
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSunDialogForm'));
+ {   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSunDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSunDialogForm');
 
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSunOutForm'));
-    TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSunOutForm');
-    exit;
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDate0Form'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionDate0Form');

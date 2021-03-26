@@ -502,18 +502,6 @@
             Options.Editing = False
             Width = 55
           end
-          object Layout: TcxGridDBColumn
-            Caption = #1042#1099#1082#1083'.'
-            DataBinding.FieldName = 'Layout'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = ',0; ,0; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1099#1082#1083#1072#1076#1082#1072
-            Options.Editing = False
-            Width = 59
-          end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
@@ -1660,12 +1648,24 @@
             Caption = #1042#1099#1082#1083'.'
             DataBinding.FieldName = 'Layout'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0; ,0; ;'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1099#1082#1083#1072#1076#1082#1072
             Options.Editing = False
             Width = 45
+          end
+          object chPromoUnit: TcxGridDBColumn
+            Caption = #1052#1072#1088#1082'. '#1087#1083#1072#1085' '#1090#1086#1095#1082#1080
+            DataBinding.FieldName = 'PromoUnit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 51
           end
           object chAmountRemains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
@@ -3213,6 +3213,7 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 632
     Top = 312
@@ -3244,6 +3245,7 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 128
     Top = 432
@@ -3318,6 +3320,7 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 656
     Top = 600
@@ -3333,6 +3336,7 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 216
     Top = 544
