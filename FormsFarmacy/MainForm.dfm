@@ -4229,6 +4229,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Check_CorrectMarketing: TdsdOpenForm
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
+      MoveParams = <>
+      Caption = #1063#1077#1082#1080' '#1089' '#1075#1072#1083#1086#1095#1082#1086#1081' '#1087#1086#1075#1072#1096#1077#1085#1080#1103' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+      FormName = 'TReport_Check_CorrectMarketingForm'
+      FormNameParam.Value = 'TReport_Check_CorrectMarketingForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5209,6 +5220,9 @@ inherited MainForm: TMainForm
       object N283: TMenuItem
         Action = actReport_Check_PromoBonusEstimate
         Caption = #1055#1086#1090#1077#1085#1094#1080#1072#1083#1100#1085#1099#1077' '#1087#1088#1086#1076#1072#1078#1099' '#1089' '#1091#1095#1105#1090#1086#1084' '#1073#1086#1085#1091#1089#1086#1074
+      end
+      object N284: TMenuItem
+        Action = actReport_Check_CorrectMarketing
       end
       object N133: TMenuItem
         Caption = '-'

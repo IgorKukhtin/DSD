@@ -986,10 +986,13 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FinalSUAProtocolForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_CorrectMarketingForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_CorrectMarketingForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FinalSUAProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_FinalSUAProtocolForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_PromoBonusEstimateForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_PromoBonusEstimateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_PromoBonusEstimateForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_PromoBonusLossesForm'));

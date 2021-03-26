@@ -20,6 +20,8 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , StockRatio TFloat
 
              , MCS_From TFloat
+             , Layout_From TFloat
+             , PromoUnit_From TFloat
              , Price_From TFloat
              , AmountRemains_From TFloat
              , AmountSalesDey_From TFloat
@@ -65,13 +67,25 @@ BEGIN
      -- все Товары для схемы SUN Supplement
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpGoods_SUN_Supplement'))
      THEN
-       CREATE TEMP TABLE _tmpGoods_SUN_Supplement   (GoodsId Integer, KoeffSUN TFloat, UnitOutId Integer) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpGoods_SUN_Supplement (GoodsId Integer, KoeffSUN TFloat, UnitOutId Integer) ON COMMIT DROP;
      END IF;
 
      -- все Подразделения для схемы SUN Supplement
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpUnit_SUN_Supplement'))
      THEN
-       CREATE TEMP TABLE _tmpUnit_SUN_Supplement   (UnitId Integer, DeySupplSun1 Integer, MonthSupplSun1 Integer, isSUN_Supplement_in Boolean, isSUN_Supplement_out Boolean) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpUnit_SUN_Supplement (UnitId Integer, DeySupplSun1 Integer, MonthSupplSun1 Integer, isSUN_Supplement_in Boolean, isSUN_Supplement_out Boolean) ON COMMIT DROP;
+     END IF;
+
+     -- Выкладки
+     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpGoodsLayout_SUN_Supplement'))
+     THEN
+       CREATE TEMP TABLE _tmpGoodsLayout_SUN_Supplement (GoodsId Integer, UnitId Integer, Layout TFloat) ON COMMIT DROP;
+     END IF;
+
+     -- Маркетинговый план для точек
+     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpGoods_PromoUnit_Supplement'))
+     THEN
+       CREATE TEMP TABLE _tmpGoods_PromoUnit_Supplement (UnitId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
      END IF;
 
      -- Исключения по техническим переучетам по Аптекам - если есть в непроведенных ТП то исключаем из распределения
@@ -108,6 +122,10 @@ BEGIN
      DELETE FROM _tmpGoods_SUN_Supplement;
      -- все Подразделения для схемы SUN
      DELETE FROM _tmpUnit_SUN_Supplement;
+     -- Выкладки
+     DELETE FROM _tmpGoodsLayout_SUN_Supplement;
+     -- Маркетинговый план для точек
+     DELETE FROM _tmpGoods_PromoUnit_Supplement;
      -- Исключения по техническим переучетам по Аптекам - если есть в непроведенных ТП то исключаем из распределения
      DELETE FROM _tmpGoods_TP_exception_Supplement;
      -- Уже использовано в текущем СУН
@@ -252,6 +270,131 @@ BEGIN
              LEFT JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsId = Object_Goods_Retail.ID
         WHERE Object_Goods_Retail.RetailID = vbObjectId
           AND COALESCE(_tmpGoods_SUN_Supplement.GoodsId, 0) = 0;
+
+     -- Выкладки
+     WITH tmpLayoutMovement AS (SELECT Movement.Id                                             AS Id
+                                     , COALESCE(MovementBoolean_PharmacyItem.ValueData, FALSE) AS isPharmacyItem
+                                FROM Movement
+                                     LEFT JOIN MovementBoolean AS MovementBoolean_PharmacyItem
+                                                               ON MovementBoolean_PharmacyItem.MovementId = Movement.Id
+                                                              AND MovementBoolean_PharmacyItem.DescId = zc_MovementBoolean_PharmacyItem()
+                                WHERE Movement.DescId = zc_Movement_Layout()
+                                  AND Movement.StatusId = zc_Enum_Status_Complete()
+                               )
+        , tmpLayout AS (SELECT Movement.ID                        AS Id
+                             , MovementItem.ObjectId              AS GoodsId
+                             , MovementItem.Amount                AS Amount
+                             , Movement.isPharmacyItem            AS isPharmacyItem
+                        FROM tmpLayoutMovement AS Movement
+                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                    AND MovementItem.DescId = zc_MI_Master()
+                                                    AND MovementItem.isErased = FALSE
+                                                    AND MovementItem.Amount > 0
+                       )
+        , tmpLayoutUnit AS (SELECT Movement.ID                        AS Id
+                                 , MovementItem.ObjectId              AS UnitId
+                                 , MovementItem.Amount                AS Amount
+                            FROM tmpLayoutMovement AS Movement
+                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                        AND MovementItem.DescId = zc_MI_Child()
+                                                        AND MovementItem.isErased = FALSE
+                                                        AND MovementItem.Amount > 0
+                           )
+                               
+        , tmpLayoutUnitCount AS (SELECT tmpLayoutUnit.ID                  AS Id
+                                      , count(*)                          AS CountUnit
+                                 FROM tmpLayoutUnit
+                                 GROUP BY tmpLayoutUnit.ID
+                                 )
+        , tmpLayoutAll AS (SELECT _tmpGoods_SUN_Supplement.GoodsId              AS GoodsId
+                                , _tmpUnit_SUN_Supplement.UnitId                AS UnitId
+                                , tmpLayout.Amount                              AS Amount
+                           FROM _tmpGoods_SUN_Supplement
+                           
+                                INNER JOIN _tmpUnit_SUN_Supplement ON 1 = 1
+                                
+                                LEFT JOIN ObjectBoolean AS Unit_PharmacyItem
+                                                        ON Unit_PharmacyItem.ObjectId  = _tmpUnit_SUN_Supplement.UnitId
+                                                       AND Unit_PharmacyItem.DescId    = zc_ObjectBoolean_Unit_PharmacyItem()
+                                 
+                                INNER JOIN tmpLayout ON tmpLayout.GoodsId = _tmpGoods_SUN_Supplement.GoodsId
+
+                                LEFT JOIN tmpLayoutUnit ON tmpLayoutUnit.Id     = tmpLayout.Id
+                                                       AND tmpLayoutUnit.UnitId = _tmpUnit_SUN_Supplement.UnitId
+
+                                LEFT JOIN tmpLayoutUnitCount ON tmpLayoutUnitCount.Id     = tmpLayout.Id
+                                 
+                           WHERE (tmpLayoutUnit.UnitId = _tmpUnit_SUN_Supplement.UnitId OR COALESCE (tmpLayoutUnitCount.CountUnit, 0) > 0)
+                             AND (COALESCE (Unit_PharmacyItem.ValueData, False) = False OR tmpLayout.isPharmacyItem = True)
+                           )
+                                                              
+     INSERT INTO  _tmpGoodsLayout_SUN_Supplement (GoodsId, UnitId, Layout) 
+     SELECT tmpLayoutAll.GoodsId               AS GoodsId
+          , tmpLayoutAll.UnitId                AS UnitId
+          , MAX (tmpLayoutAll.Amount):: TFloat AS Amount
+      FROM tmpLayoutAll      
+      GROUP BY tmpLayoutAll.GoodsId
+             , tmpLayoutAll.UnitId;
+      
+     -- Маркетинговый план для точек
+      WITH tmpUserUnit AS (SELECT COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId) AS UnitId
+                                , Count(*)                                                                   AS CountUser
+                           FROM Movement
+                                  
+                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.id
+                                                        AND MovementItem.DescId = zc_MI_Master()
+
+                                 LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                                      ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
+                                                     AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+   
+                                 LEFT JOIN ObjectLink AS ObjectLink_Member_Unit
+                                                      ON ObjectLink_Member_Unit.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                                     AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit()
+
+                                 LEFT JOIN ObjectLink AS ObjectLink_Member_Position
+                                                      ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                                     AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
+
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                                  ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                                                            
+                           WHERE Movement.DescId = zc_Movement_EmployeeSchedule()
+                             AND Movement.OperDate = DATE_TRUNC ('MONTH', inOperDate)
+                             AND ObjectLink_Member_Position.ChildObjectId = 1672498
+                           GROUP BY COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId))
+
+      INSERT INTO _tmpGoods_PromoUnit_Supplement
+      SELECT OL_UnitCategory.Objectid                AS UnitId
+           , MI_Goods.Objectid                       AS GoodsId
+           , MI_Goods.Amount * tmpUserUnit.CountUser AS Amount
+
+      FROM Movement
+
+           INNER JOIN MovementLinkObject AS MovementLinkObject_UnitCategory
+                                         ON MovementLinkObject_UnitCategory.MovementId = Movement.Id
+                                        AND MovementLinkObject_UnitCategory.DescId = zc_MovementLinkObject_UnitCategory()
+           INNER JOIN ObjectLink AS OL_UnitCategory
+                                 ON OL_UnitCategory.DescId = zc_ObjectLink_Unit_Category()
+                                AND OL_UnitCategory.ChildObjectId = MovementLinkObject_UnitCategory.ObjectId
+                                
+           INNER JOIN _tmpUnit_SUN_Supplement ON _tmpUnit_SUN_Supplement.UnitId = OL_UnitCategory.Objectid
+
+           INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
+                                              AND MI_Goods.DescId = zc_MI_Master()
+                                              AND MI_Goods.isErased = FALSE
+                                              AND MI_Goods.Amount > 0
+                                            
+           INNER JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsId = MI_Goods.Objectid 
+                                                          
+           INNER JOIN tmpUserUnit ON tmpUserUnit.UnitId = OL_UnitCategory.Objectid
+
+      WHERE Movement.StatusId = zc_Enum_Status_Complete()
+        AND Movement.DescId = zc_Movement_PromoUnit()
+        AND Movement.OperDate = DATE_TRUNC ('MONTH', inOperDate);
+      
+ --raise notice 'Value 05: %', (select Count(*) from _tmpGoods_PromoUnit_Supplement);      
 
      -- 1. все остатки
      --
@@ -484,12 +627,16 @@ BEGIN
              , - CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
                  CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
                       THEN - _tmpRemains_all_Supplement.AmountRemains
-                      ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
+                      ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains 
+                                                            + COALESCE(_tmpGoodsLayout_SUN_Supplement.Layout, 0) 
+                                                            + COALESCE(_tmpGoods_PromoUnit_Supplement.Amount, 0))::Integer
                       END
                  ELSE
                  FLOOR (CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
                              THEN - _tmpRemains_all_Supplement.AmountRemains
-                             ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
+                             ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains 
+                                                                   + COALESCE(_tmpGoodsLayout_SUN_Supplement.Layout, 0) 
+                                                                   + COALESCE(_tmpGoods_PromoUnit_Supplement.Amount, 0))::Integer
                              END / COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)) * COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
                  END AS Need
              , COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
@@ -499,15 +646,25 @@ BEGIN
 
             LEFT JOIN _tmpUnit_SUN_Supplement ON _tmpUnit_SUN_Supplement.UnitId = _tmpRemains_all_Supplement.UnitId
             
+            LEFT JOIN _tmpGoodsLayout_SUN_Supplement ON _tmpGoodsLayout_SUN_Supplement.GoodsID = _tmpRemains_all_Supplement.GoodsId
+                                                    AND _tmpGoodsLayout_SUN_Supplement.UnitId = _tmpRemains_all_Supplement.UnitId  
+
+            LEFT JOIN _tmpGoods_PromoUnit_Supplement ON _tmpGoods_PromoUnit_Supplement.GoodsID = _tmpRemains_all_Supplement.GoodsId
+                                                    AND _tmpGoods_PromoUnit_Supplement.UnitId = _tmpRemains_all_Supplement.UnitId  
+                        
        WHERE CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
                  CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
                       THEN - _tmpRemains_all_Supplement.AmountRemains
-                      ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
+                      ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains 
+                                                            + COALESCE(_tmpGoodsLayout_SUN_Supplement.Layout, 0) 
+                                                            + COALESCE(_tmpGoods_PromoUnit_Supplement.Amount, 0))::Integer
                       END
                  ELSE
                  FLOOR (CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
                              THEN - _tmpRemains_all_Supplement.AmountRemains
-                             ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
+                             ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains 
+                                                                   + COALESCE(_tmpGoodsLayout_SUN_Supplement.Layout, 0) 
+                                                                   + COALESCE(_tmpGoods_PromoUnit_Supplement.Amount, 0))::Integer
                              END / COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)) * COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
                  END < 0
          AND _tmpUnit_SUN_Supplement.isSUN_Supplement_out = True
@@ -619,6 +776,9 @@ BEGIN
             , _tmpStockRatio_all_Supplement.StockRatio
 
             , tmpRemains_all_From.MCS                    AS MCS_From
+            , _tmpGoodsLayout_SUN_Supplement.Layout      AS Layout_From
+            , _tmpGoods_PromoUnit_Supplement.Amount      AS PromoUnit_From
+            
             , tmpRemains_all_From.Price                  AS Price_From
             , tmpRemains_all_From.AmountRemains          AS AmountRemains_From
             , tmpRemains_all_From.AmountSalesDay         AS AmountSalesDay_From
@@ -660,6 +820,12 @@ BEGIN
                                                 AND tmpRemains_all_To.GoodsId = _tmpResult_Supplement.GoodsId
             LEFT JOIN Object AS Object_Unit_To  ON Object_Unit_To.Id  = tmpRemains_all_To.UnitId
 
+            LEFT JOIN _tmpGoodsLayout_SUN_Supplement ON _tmpGoodsLayout_SUN_Supplement.GoodsID = _tmpResult_Supplement.GoodsId
+                                                    AND _tmpGoodsLayout_SUN_Supplement.UnitId = _tmpResult_Supplement.UnitId_from
+
+            LEFT JOIN _tmpGoods_PromoUnit_Supplement ON _tmpGoods_PromoUnit_Supplement.GoodsID = _tmpResult_Supplement.GoodsId
+                                                    AND _tmpGoods_PromoUnit_Supplement.UnitId = _tmpResult_Supplement.UnitId_from 
+
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpRemains_all_To.GoodsId
        ORDER BY Object_Goods.Id
               , Object_Unit_From.ValueData
@@ -678,4 +844,4 @@ $BODY$
 
 -- SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '4 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 
--- select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('28.12.2020')::TDateTime ,  inSession := '3');
+-- select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('29.03.2021')::TDateTime ,  inSession := '3');

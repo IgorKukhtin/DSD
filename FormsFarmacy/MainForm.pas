@@ -789,6 +789,8 @@ type
     N282: TMenuItem;
     actReport_Check_PromoBonusEstimate: TdsdOpenForm;
     N283: TMenuItem;
+    actReport_Check_CorrectMarketing: TdsdOpenForm;
+    N284: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
