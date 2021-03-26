@@ -30,8 +30,9 @@ $BODY$
    DECLARE vbEndTime TDateTime;  
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ImportSettings());
-   vbUserId := lpGetUserBySession (inSession); 
+   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ImportSettings());
+   -- vbUserId := lpGetUserBySession (inSession); 
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_User());
 
    -- Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
    vbCode_calc:= lfGet_ObjectCode (inCode, zc_Object_ImportSettings());

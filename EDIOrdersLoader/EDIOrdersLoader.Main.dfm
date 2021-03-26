@@ -10832,6 +10832,43 @@ object MainForm: TMainForm
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
       ImageIndex = 53
     end
+    object mactExport_xls: TMultiAction
+      Category = 'Export_Email'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Export_Email
+        end
+        item
+          Action = actGet_Export_FileName
+        end
+        item
+          Action = actSelect_Export_xls
+        end
+        item
+          Action = actExport_Grid
+        end
+        item
+          Action = actSMTPFile
+        end
+        item
+          Action = actUpdate_isMail
+        end>
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
+      ImageIndex = 53
+    end
+    object actSelect_Export_xls: TdsdExecStoredProc
+      Category = 'Export_Email'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelect_Export_xls
+      StoredProcList = <
+        item
+          StoredProc = spSelect_Export_xls
+        end>
+      Caption = 'actSelect_Export'
+    end
   end
   object spHeaderOrder: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_EDIOrder'
@@ -11281,5 +11318,25 @@ object MainForm: TMainForm
     PackSize = 1
     Left = 352
     Top = 384
+  end
+  object spSelect_Export_xls: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Email_xls_Send'
+    DataSet = ExportCDS
+    DataSets = <
+      item
+        DataSet = ExportCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_sendEmail'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 528
+    Top = 386
   end
 end

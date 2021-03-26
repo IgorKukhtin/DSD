@@ -84,6 +84,9 @@ type
     cbEmail: TCheckBox;
     Send_EmailCDS: TClientDataSet;
     spSelectSend_Email: TdsdStoredProc;
+    mactExport_xls: TMultiAction;
+    spSelect_Export_xls: TdsdStoredProc;
+    actSelect_Export_xls: TdsdExecStoredProc;
     procedure TrayIconClick(Sender: TObject);
     procedure AppMinimize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -447,7 +450,9 @@ begin
           Application.ProcessMessages;
           // Попробовали отправить
           try
-              mactExport.Execute;
+              if FieldByName('isExcel').AsBoolean = TRUE
+              then mactExport_xls.Execute
+              else mactExport.Execute;
               //
               Application.ProcessMessages;
               // Сохранили что отправка прошла

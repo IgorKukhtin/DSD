@@ -66,21 +66,33 @@ BEGIN
                  || '_' || zfConvert_DateTimeToStringY (COALESCE (tmpProtocol.OperDate, CURRENT_TIMESTAMP) :: TDateTime)
                  || '_' || Movement.InvNumber
 
+                 -- Logistik
+                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Logistik41750857())
+                      THEN 'Doc_Alan'
+                 || '_' || zfConvert_DateShortToString (MovementDate_OperDatePartner.ValueData)
+                 || '_' || Movement.InvNumber
+
             END AS outFileName
 
           , CASE WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Mida35273055(), zc_Enum_ExportKind_Brusn34604386(), zc_Enum_ExportKind_Glad2514900150())
                       THEN 'xml'
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Vez37171990(), zc_Enum_ExportKind_Dakort39135074(), zc_Enum_ExportKind_Avion40110917())
                       THEN 'csv'
+                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Logistik41750857())
+                      THEN 'xls'
             END AS outDefaultFileExt
           , CASE WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Mida35273055(), zc_Enum_ExportKind_Brusn34604386(), zc_Enum_ExportKind_Glad2514900150())
                       THEN FALSE
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Vez37171990(), zc_Enum_ExportKind_Dakort39135074(), zc_Enum_ExportKind_Avion40110917())
                       THEN TRUE
+                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Logistik41750857())
+                      THEN FALSE
             END AS outEncodingANSI
             
           , CASE WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Glad2514900150()
                       THEN 'cxegExportToTextUTF8'
+                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Logistik41750857())
+                      THEN 'cxegExportToExcel'
                  ELSE 'cxegExportToText'
             END AS outExportType
 

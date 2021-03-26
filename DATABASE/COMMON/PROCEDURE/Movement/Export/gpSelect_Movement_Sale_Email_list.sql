@@ -12,6 +12,7 @@ RETURNS TABLE (MovementId Integer
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , JuridicalName_To TVarChar, OKPO_To TVarChar
              , RetailName TVarChar
+             , isExcel Boolean
               )
 AS
 $BODY$
@@ -28,12 +29,21 @@ BEGIN
         WITH tmpExportJuridical AS (SELECT DISTINCT tmp.PartnerId, tmp.ExportKindId
                                     FROM lpSelect_Object_ExportJuridical_list() AS tmp
                                     -- только для этого
-                                    WHERE tmp.ExportKindId = zc_Enum_ExportKind_Glad2514900150()
+                                    WHERE tmp.ExportKindId IN (zc_Enum_ExportKind_Glad2514900150()
+                                                              )
+                                   UNION
+                                    SELECT DISTINCT tmp.PartnerId, tmp.ExportKindId
+                                    FROM lpSelect_Object_ExportJuridical_list() AS tmp
+                                    -- только для этого
+                                    WHERE tmp.ExportKindId IN (zc_Enum_ExportKind_Logistik41750857()
+                                                              )
+                                      AND inSession = '5'
                                    )
                   , tmpMovement AS (SELECT Movement.Id AS MovementId
                                          , Movement.InvNumber
                                          , Movement.OperDate
                                          , MovementLinkObject_To.ObjectId AS ToId
+                                         , tmpExportJuridical.ExportKindId
                                     FROM Movement
                                          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                                       ON MovementLinkObject_To.MovementId = Movement.Id
@@ -70,6 +80,8 @@ BEGIN
              , Object_JuridicalTo.ValueData                      AS JuridicalName_To
              , ObjectHistory_JuridicalDetails_View.OKPO          AS OKPO_To
              , Object_Retail.ValueData                           AS RetailName
+             
+             , CASE WHEN tmpMovProtocol.ExportKindId = zc_Enum_ExportKind_Logistik41750857() THEN TRUE ELSE FALSE END :: Boolean AS isExcel
 
         FROM tmpMovProtocol
              LEFT JOIN MovementDate AS MovementDate_OperDatePartner

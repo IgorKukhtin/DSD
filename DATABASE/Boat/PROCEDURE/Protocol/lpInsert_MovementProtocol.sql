@@ -80,7 +80,7 @@ BEGIN
          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
     WHERE MovementLinkMovement.MovementId = inMovementId
    UNION
-    SELECT '<Field FieldName = "' || zfStrToXmlStr (MovementBlobDesc.ItemName) || '" FieldValue = "' || COALESCE (MovementBlob.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
+    SELECT '<Field FieldName = "' || zfStrToXmlStr (MovementBlobDesc.ItemName) || '" FieldValue = "' || COALESCE (MovementBlob.ValueData, 'NULL') || '"/>' AS FieldXML 
          , 9 AS GroupId
          , MovementBlob.DescId
     FROM MovementBlob

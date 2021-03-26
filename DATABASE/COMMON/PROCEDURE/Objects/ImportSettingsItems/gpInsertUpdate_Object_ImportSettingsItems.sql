@@ -20,8 +20,9 @@ $BODY$
 
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ImportTypeItems());
-   vbUserId := lpGetUserBySession (inSession); 
+   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ImportTypeItems());
+   -- vbUserId := lpGetUserBySession (inSession); 
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_User());
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_ImportSettingsItems(), 0, inName);

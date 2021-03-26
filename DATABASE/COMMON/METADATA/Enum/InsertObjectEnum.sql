@@ -945,12 +945,13 @@ DO $$
 BEGIN
 
      -- !!! Типы экспорта для почты
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ExportKind_Mida35273055() ,  inDescId:= zc_Object_ExportKind(), inCode:= 1, inName:= 'Мида - формат XML'    ,    inEnumName:= 'zc_Enum_ExportKind_Mida35273055');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ExportKind_Vez37171990()  ,  inDescId:= zc_Object_ExportKind(), inCode:= 2, inName:= 'Везунчик - формат CSV',    inEnumName:= 'zc_Enum_ExportKind_Vez37171990');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ExportKind_Brusn34604386(),  inDescId:= zc_Object_ExportKind(), inCode:= 3, inName:= 'Брусничка - формат CSV',   inEnumName:= 'zc_Enum_ExportKind_Brusn34604386');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ExportKind_Dakort39135074(), inDescId:= zc_Object_ExportKind(), inCode:= 4, inName:= 'Дакорт - формат CSV',      inEnumName:= 'zc_Enum_ExportKind_Dakort39135074');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ExportKind_Glad2514900150(), inDescId:= zc_Object_ExportKind(), inCode:= 5, inName:= 'ФОП Гладкий - формат XML', inEnumName:= 'zc_Enum_ExportKind_Glad2514900150');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ExportKind_Avion40110917(),  inDescId:= zc_Object_ExportKind(), inCode:= 6, inName:= 'Авіон+ ТОВ - формат CSV',  inEnumName:= 'zc_Enum_ExportKind_Avion40110917');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ExportKind_Mida35273055(),    inDescId:= zc_Object_ExportKind(), inCode:= 1, inName:= 'Мида - формат XML',          inEnumName:= 'zc_Enum_ExportKind_Mida35273055');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ExportKind_Vez37171990(),     inDescId:= zc_Object_ExportKind(), inCode:= 2, inName:= 'Везунчик - формат CSV',      inEnumName:= 'zc_Enum_ExportKind_Vez37171990');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ExportKind_Brusn34604386(),   inDescId:= zc_Object_ExportKind(), inCode:= 3, inName:= 'Брусничка - формат CSV',     inEnumName:= 'zc_Enum_ExportKind_Brusn34604386');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ExportKind_Dakort39135074(),  inDescId:= zc_Object_ExportKind(), inCode:= 4, inName:= 'Дакорт - формат CSV',        inEnumName:= 'zc_Enum_ExportKind_Dakort39135074');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ExportKind_Glad2514900150(),  inDescId:= zc_Object_ExportKind(), inCode:= 5, inName:= 'ФОП Гладкий - формат XML',   inEnumName:= 'zc_Enum_ExportKind_Glad2514900150');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ExportKind_Avion40110917(),   inDescId:= zc_Object_ExportKind(), inCode:= 6, inName:= 'Авіон+ ТОВ - формат CSV',    inEnumName:= 'zc_Enum_ExportKind_Avion40110917');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ExportKind_Logistik41750857(),inDescId:= zc_Object_ExportKind(), inCode:= 7, inName:= 'ЧСПМ ЛОГІСТИК - формат XLS', inEnumName:= 'zc_Enum_ExportKind_Logistik41750857');
 
 END $$;
 

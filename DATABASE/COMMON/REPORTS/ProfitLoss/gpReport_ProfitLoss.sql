@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpReport_ProfitLoss (TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_ProfitLoss(
-    IN inStartDate   TDateTime , -- 
+    IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
     IN inSession     TVarChar    -- сессия пользователя
 )
@@ -28,7 +28,7 @@ RETURNS TABLE (ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar, P
              , Amount_Ch  TFloat    -- Черкассы
              , Amount_Lv  TFloat    -- Львов
              , Amount_0   TFloat    -- без филиала
-             
+
              , ProfitLossGroup_dop Integer   -- дополнительная группировка
               )
 AS
@@ -48,7 +48,7 @@ BEGIN
 
 
      -- Результат
-     RETURN QUERY 
+     RETURN QUERY
                             -- ??? как сделать что б не попали операции переброски накопленной прибыль прошлого месяца в долг по прибыли???
       WITH /*tmpContainer AS (SELECT ReportContainerLink.ReportContainerId
                                  -- , ReportContainerLink.ChildContainerId   AS ContainerId_inf
@@ -88,11 +88,11 @@ BEGIN
                                         ELSE MIContainer.WhereObjectId_Analyzer
                                    END AS UnitId_ProfitLoss
 
-                                 , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(), zc_Movement_PersonalService()) 
+                                 , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(), zc_Movement_PersonalService())
                                              THEN MIContainer.ObjectIntId_Analyzer
-                                        WHEN MIContainer.MovementDescId IN (zc_Movement_Sale()) 
+                                        WHEN MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_SendOnPrice(), zc_Movement_Loss(), zc_Movement_Send(), zc_Movement_Inventory())
                                              THEN MIContainer.ObjectId_Analyzer
-                                        WHEN MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_Service()) 
+                                        WHEN MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_MobileBills())
                                              THEN MovementItem_1.ObjectId -- MIContainer.ObjectId_Analyzer
                                         ELSE 0
                                    END AS ObjectId_inf
@@ -101,11 +101,11 @@ BEGIN
                                  , MIContainer.MovementDescId
                                  , MILinkObject_InfoMoney.ObjectId AS InfoMoney_inf
 
-                            FROM MovementItemContainer AS MIContainer 
+                            FROM MovementItemContainer AS MIContainer
                                  LEFT JOIN MovementItem AS MovementItem_1
                                                                   ON MovementItem_1.Id = MIContainer.MovementItemId
                                                                  AND MovementItem_1.DescId = zc_MI_Master()
-                                                                 AND MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_Service(), zc_Movement_MobileBills())
+                                                                 AND MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_Service(), zc_Movement_PersonalService(), zc_Movement_ProfitLossService(), zc_Movement_MobileBills(), zc_Movement_TransportService(), zc_Movement_PersonalReport(), zc_Movement_LossPersonal(), zc_Movement_LossDebt())
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                                   ON MILinkObject_InfoMoney.MovementItemId = MovementItem_1.Id
                                                                  AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
@@ -125,11 +125,11 @@ BEGIN
                                      END
                                    , MIContainer.WhereObjectId_Analyzer
                                    , MIContainer.MovementDescId
-                                   , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(), zc_Movement_PersonalService()) 
+                                   , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(), zc_Movement_PersonalService())
                                                THEN MIContainer.ObjectIntId_Analyzer
-                                          WHEN MIContainer.MovementDescId IN (zc_Movement_Sale()) 
+                                          WHEN MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_SendOnPrice(), zc_Movement_Loss(), zc_Movement_Send(), zc_Movement_Inventory())
                                                THEN MIContainer.ObjectId_Analyzer
-                                          WHEN MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_Service()) 
+                                          WHEN MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_MobileBills())
                                                THEN MovementItem_1.ObjectId -- MIContainer.ObjectId_Analyzer
                                           ELSE 0
                                      END
@@ -185,7 +185,7 @@ BEGIN
                                   WHEN ContainerLinkObject_Personal.ObjectId <> 0 THEN ContainerLinkObject_Personal.ObjectId
                                   WHEN ContainerLinkObject_Unit.ObjectId <> 0 THEN ContainerLinkObject_Unit.ObjectId
                                   ELSE ContainerLinkObject_Car.ObjectId
-                             END*/ 
+                             END*/
                              tmpProfitLoss.DirectionId
                            , tmpProfitLoss.MovementDescId
                            , SUM (tmpProfitLoss.Amount) AS Amount
@@ -281,8 +281,8 @@ BEGIN
            , MovementDesc.ItemName         AS MovementDescName
 
            , tmpReport.Amount :: TFloat AS Amount
-           
-           , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Днепр%'     THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Dn 
+
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Днепр%'     THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Dn
            , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Харьков%'   THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Kh
            , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Одесса%'    THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Od
            , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Запорожье%' THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Zp
@@ -292,14 +292,14 @@ BEGIN
            , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Черкассы%'  THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Ch
            , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Львов%'     THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Lv
            , CASE WHEN COALESCE (Object_Branch_ProfitLoss.ValueData,'') =''  THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_0
-           
+
            -- доп.группа для промежуточного итога   "итого сумма у покупателя"
            ,  CASE WHEN ProfitLossDirectionId IN (9221, 9222, 565318, 9223) THEN 1 ELSE 2 END ProfitLossGroup_dop
 
       FROM Object_ProfitLoss_View AS View_ProfitLoss
 
            LEFT JOIN tmpReport ON tmpReport.ProfitLossId = View_ProfitLoss.ProfitLossId
-           
+
            LEFT JOIN Object AS Object_Business          ON Object_Business.Id = tmpReport.BusinessId
            LEFT JOIN Object AS Object_JuridicalBasis    ON Object_JuridicalBasis.Id = tmpReport.JuridicalId_Basis
            LEFT JOIN Object AS Object_Unit_ProfitLoss   ON Object_Unit_ProfitLoss.Id = tmpReport.UnitId_ProfitLoss
@@ -313,7 +313,7 @@ BEGIN
 
            LEFT JOIN MovementDesc ON MovementDesc.Id = tmpReport.MovementDescId
 
-      WHERE View_ProfitLoss.ProfitLossCode <> 90101 -- 
+      WHERE View_ProfitLoss.ProfitLossCode <> 90101 --
 
      UNION ALL
       SELECT
@@ -354,8 +354,8 @@ BEGIN
            , MovementDesc.ItemName         AS MovementDescName
 
            , tmpReport.Amount :: TFloat AS Amount
-           
-           , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Днепр%'     THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Dn 
+
+           , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Днепр%'     THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Dn
            , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Харьков%'   THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Kh
            , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Одесса%'    THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Od
            , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Запорожье%' THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Zp
@@ -365,7 +365,7 @@ BEGIN
            , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Черкассы%'  THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Ch
            , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Львов%'     THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Lv
            , CASE WHEN COALESCE (Object_Branch_ProfitLoss.ValueData,'') =''  THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_0
-           
+
            -- доп.группа для промежуточного итога   "итого сумма у покупателя"
            ,  CASE WHEN ProfitLossDirectionId IN (9221, 9222, 565318, 9223) THEN 1 ELSE 2 END ProfitLossGroup_dop
 
@@ -373,7 +373,7 @@ BEGIN
 
            LEFT JOIN Object_ProfitLoss_View AS View_ProfitLoss ON View_ProfitLoss.ProfitLossId = tmpReport.ProfitLossId
            LEFT JOIN Object AS Object_ProfitLoss ON Object_ProfitLoss.Id = tmpReport.ProfitLossId
-           
+
            LEFT JOIN Object AS Object_Business          ON Object_Business.Id = tmpReport.BusinessId
            LEFT JOIN Object AS Object_JuridicalBasis    ON Object_JuridicalBasis.Id = tmpReport.JuridicalId_Basis
            LEFT JOIN Object AS Object_Unit_ProfitLoss   ON Object_Unit_ProfitLoss.Id = tmpReport.UnitId_ProfitLoss
@@ -389,7 +389,7 @@ BEGIN
 
       WHERE View_ProfitLoss.ProfitLossId IS NULL
       ;
-  
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

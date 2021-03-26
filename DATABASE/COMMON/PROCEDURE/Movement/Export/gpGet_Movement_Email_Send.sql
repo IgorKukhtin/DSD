@@ -59,6 +59,8 @@ BEGIN
                                                                         )
      SELECT CASE WHEN tmp.outExportKindId = zc_Enum_ExportKind_Glad2514900150()
                       THEN tmp.outFileName || '.xml'
+                 WHEN tmp.outExportKindId = zc_Enum_ExportKind_Logistik41750857()
+                      THEN tmp.outFileName || '.xls'
                  ELSE tmp.outFileName
             END :: TVarChar AS Subject
           , ''                       :: TBlob    AS Body
@@ -129,3 +131,4 @@ $BODY$
 -- SELECT * FROM gpGet_Movement_Email_Send (inMovementId:= 3376510, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Mida35273055()
 -- SELECT * FROM gpGet_Movement_Email_Send (inMovementId:= 3252496, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Vez37171990()
 -- SELECT * FROM gpGet_Movement_Email_Send (inMovementId:= 15595974, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Glad2514900150()
+-- SELECT * FROM gpGet_Movement_Email_Send (inMovementId:= 19371076, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Logistik41750857()
