@@ -10,6 +10,7 @@ type
      class procedure UpdateConnectReport (Connection: string; Restart : boolean = True);
      class procedure UpdateConnectReportLocal (Connection: string; Restart : boolean = True);
      class procedure UpdateProgram;
+     class function ProgramLoadSuffics(aFileName: string) : String;
   public
      class procedure AutomaticCheckConnect;
      class procedure AutomaticUpdateProgram;
@@ -326,7 +327,7 @@ var LocalVersionInfo, BaseVersionInfo: TVersionInfo;
 begin
   try
     Application.ProcessMessages;
-    BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)), GetBinaryPlatfotmSuffics(ParamStr(0)));
+    BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)), GetBinaryPlatfotmSuffics(ParamStr(0), ''));
     LocalVersionInfo := UnilWin.GetFileVersion(ParamStr(0));
     if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
        ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then
@@ -496,34 +497,59 @@ begin
   end;
 end;
 
+class function TUpdater.ProgramLoadSuffics(aFileName: string) : String;
+  var StoredProc: TdsdStoredProc;
+begin
+  Result := '';
+  // Если не 64 то нет смысла выполнять
+  if not IsWow64 then Exit;
+  StoredProc := TdsdStoredProc.Create(nil);
+  try
+    //основное подключение из базы
+    if GetFilePlatfotm64(aFileName) then
+      StoredProc.Params.AddParam('inConstName', ftString, ptInput, 'zc_Enum_GlobalConst_Program64')
+    else StoredProc.Params.AddParam('inConstName', ftString, ptInput, 'zc_Enum_GlobalConst_Program32');
+    StoredProc.Params.AddParam('gpGetConstName', ftString, ptOutput, '');
+    StoredProc.OutputType := otResult;
+    StoredProc.StoredProcName := 'gpGetConstName';
+    try
+      StoredProc.Execute;
+    except
+    end;
+    // На какую версию обновлять
+    Result := StoredProc.ParamByName('gpGetConstName').AsString;
+  finally
+    StoredProc.Free;
+  end;
+end;
 
 class procedure TUpdater.UpdateProgram;
 var S : String;
 begin
-  //1.
+  //1. Для кассы обновляем сервис
   S:= ExtractFileName(ParamStr(0));
   if (UpperCase(S) = UpperCase('FarmacyCash.exe'))
     // and (not FileExists(ExtractFilePath(ParamStr(0)) + 'FarmacyCashServise.exe'))
     // Пусть FarmacyCashServise.exe обновляеться всегда, а то не обновляют
   then
      FileWriteString(ExtractFilePath(ParamStr(0)) + 'FarmacyCashServise.exe', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('FarmacyCashServise.exe'),
-        GetBinaryPlatfotmSuffics(ExtractFilePath(ParamStr(0)) + 'FarmacyCashServise.exe')));
+        GetBinaryPlatfotmSuffics(ExtractFilePath(ParamStr(0)) + 'FarmacyCashServise.exe', '')));
 
-  //2.
-  FileWriteString(ParamStr(0)+'.uTMP', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName(ParamStr(0)), GetBinaryPlatfotmSuffics(ParamStr(0))));
+  //2. Загружаем TXT в uTMP нужной разрядности
+  FileWriteString(ParamStr(0)+'.uTMP', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName(ParamStr(0)), GetBinaryPlatfotmSuffics(ParamStr(0), ProgramLoadSuffics(ParamStr(0)))));
 
-  //3.
+  //3. Загружаем Upgrader если надо
   if (not FileExists(ExtractFilePath(ParamStr(0)) + 'Upgrader4.exe')) or (GetFileSizeByName(ExtractFilePath(ParamStr(0)) + 'Upgrader4.exe') = 0)
   then
      FileWriteString(ExtractFilePath(ParamStr(0)) + 'Upgrader4.exe', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('Upgrader4.exe'),
-       GetBinaryPlatfotmSuffics(ExtractFilePath(ParamStr(0)) + 'Upgrader4.exe')));
+       GetBinaryPlatfotmSuffics(ExtractFilePath(ParamStr(0)) + 'Upgrader4.exe', '')));
 
-  //4.
+  //4. midas.dll грузим если надо
   if (gc_ProgramName <> 'FDemo.exe') and (not FileExists(ExtractFilePath(ParamStr(0)) + 'midas.dll'))
   then
      FileWriteString(ExtractFilePath(ParamStr(0)) + 'midas.dll', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('midas.dll'), ''));
 
-  //5.
+  //5. Запускаем Upgrader для замени EXE
   Execute(ExtractFilePath(ParamStr(0)) + 'Upgrader4.exe ' + ParamStr(0), ExtractFileDir(ParamStr(0)));
 
   ShowMessage('Программа успешно обновлена. Нажмите кнопку для перезапуска');

@@ -106,8 +106,8 @@
         <DCC_DebugInformation>0</DCC_DebugInformation>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-        <VerInfo_Keys>CompanyName=;FileVersion=1.1.12.191;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
-        <VerInfo_Build>191</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileVersion=1.1.12.192;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Build>192</VerInfo_Build>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <VerInfo_Release>12</VerInfo_Release>
@@ -356,35 +356,28 @@
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\ChoosingRelatedProduct.pas">
             <Form>ChoosingRelatedProductForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\EditFromDirectory.pas">
             <Form>EditFromDirectoryForm</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TParentForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\HardwareDialog.pas">
             <Form>HardwareDialogForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\UnitTreeCash.pas">
             <Form>UnitTreeCashForm</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TParentForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\LikiDniproReceiptDialog.pas">
             <Form>LikiDniproReceiptDialogForm</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TParentForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\EnterRecipeNumber1303.pas">
             <Form>EnterRecipeNumber1303Form</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\LikiDniproReceipt.pas"/>
         <DCCReference Include="..\FormsFarmacy\Cash\ListGoodsBadTiming.pas">
             <Form>ListGoodsBadTimingForm</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TParentForm</DesignClass>
         </DCCReference>
         <BuildConfiguration Include="Release">

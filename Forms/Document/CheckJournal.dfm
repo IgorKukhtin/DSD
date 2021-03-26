@@ -474,6 +474,14 @@ inherited CheckJournalForm: TCheckJournalForm
             Options.Editing = False
             Width = 95
           end
+          object isCorrectMarketing: TcxGridDBColumn
+            Caption = #1050#1086#1088#1088'-'#1082#1072' '#1089#1091#1084#1084#1099' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+            DataBinding.FieldName = 'isCorrectMarketing'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 92
+          end
         end
       end
     end
@@ -728,7 +736,7 @@ inherited CheckJournalForm: TCheckJournalForm
       ImageIndex = 3
       FormName = 'TCheckPrintDialogForm'
       FormNameParam.Value = 'TCheckPrintDialogForm'
-      FormNameParam.DataType = ftDateTime
+      FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptInputOutput
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

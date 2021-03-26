@@ -48,6 +48,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , CheckSourceKindName TVarChar
              , MedicForSaleName TVarChar
              , BuyerForSaleName TVarChar
+             , isCorrectMarketing Boolean
               )
 AS
 $BODY$
@@ -148,6 +149,7 @@ BEGIN
            
            , Object_MedicForSale.ValueData                                AS MedicForSaleName
            , Object_BuyerForSale.ValueData                                AS BuyerForSaleName
+           , COALESCE(MovementBoolean_CorrectMarketing.ValueData, False)  AS isCorrectMarketing
 
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
@@ -381,6 +383,9 @@ BEGIN
                                         AND MovementLinkObject_BuyerForSale.DescId = zc_MovementLinkObject_BuyerForSale()
             LEFT JOIN Object AS Object_BuyerForSale ON Object_BuyerForSale.Id = MovementLinkObject_BuyerForSale.ObjectId
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_CorrectMarketing
+                                      ON MovementBoolean_CorrectMarketing.MovementId = Movement_Check.Id
+                                     AND MovementBoolean_CorrectMarketing.DescId = zc_MovementBoolean_CorrectMarketing()
       ;
 
 END;

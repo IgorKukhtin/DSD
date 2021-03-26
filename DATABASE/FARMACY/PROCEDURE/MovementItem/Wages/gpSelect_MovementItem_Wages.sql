@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Wages(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
-             , HolidaysHospital TFloat, Marketing TFloat, Director TFloat, IlliquidAssets TFloat, PenaltySUN TFloat
+             , HolidaysHospital TFloat, Marketing TFloat, MarketingRepayment TFloat, Director TFloat, IlliquidAssets TFloat, PenaltySUN TFloat
              , AmountCard TFloat, AmountHand TFloat
              , MemberCode Integer, MemberName TVarChar, PositionName TVarChar
              , isManagerPharmacy boolean
@@ -94,6 +94,7 @@ BEGIN
 
                  , Null::TFloat                       AS HolidaysHospital
                  , Null::TFloat                       AS Marketing
+                 , Null::TFloat                       AS MarketingRepayment
                  , Null::TFloat                       AS Director
                  , Null::TFloat                       AS IlliquidAssets
                  , Null::TFloat                       AS PenaltySUN
@@ -140,13 +141,18 @@ BEGIN
 
                  , MIFloat_HolidaysHospital.ValueData AS HolidaysHospital
                  , MIFloat_Marketing.ValueData        AS Marketing
+                 , CASE WHEN COALESCE(MIFloat_Marketing.ValueData, 0) > 0 THEN 0
+                        WHEN COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0) > 0
+                        THEN - MIFloat_Marketing.ValueData ELSE MIFloat_MarketingRepayment.ValueData END::TFloat      AS MarketingRepayment
                  , MIFloat_Director.ValueData         AS Director
                  , MIFloat_IlliquidAssets.ValueData   AS IlliquidAssets
                  , MIFloat_PenaltySUN.ValueData       AS PenaltySUN
                  , MIF_AmountCard.ValueData           AS AmountCard
                  , (MovementItem.Amount +
                     COALESCE (MIFloat_HolidaysHospital.ValueData, 0) +
-                    COALESCE (MIFloat_Marketing.ValueData, 0) +
+                    CASE WHEN COALESCE(MIFloat_Marketing.ValueData, 0) > 0 THEN COALESCE(MIFloat_Marketing.ValueData, 0)
+                         WHEN COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0) > 0
+                         THEN 0 ELSE COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0)  END +
                     COALESCE (MIFloat_Director.ValueData, 0) +
                     COALESCE (MIFloat_IlliquidAssets.ValueData, 0) +
                     COALESCE (MIFloat_PenaltySUN.ValueData, 0) -
@@ -210,6 +216,10 @@ BEGIN
                                               ON MIFloat_Marketing.MovementItemId = MovementItem.Id
                                              AND MIFloat_Marketing.DescId = zc_MIFloat_Marketing()
 
+                  LEFT JOIN MovementItemFloat AS MIFloat_MarketingRepayment
+                                              ON MIFloat_MarketingRepayment.MovementItemId = MovementItem.Id
+                                             AND MIFloat_MarketingRepayment.DescId = zc_MIFloat_MarketingRepayment()
+
                   LEFT JOIN MovementItemFloat AS MIFloat_Director
                                               ON MIFloat_Director.MovementItemId = MovementItem.Id
                                              AND MIFloat_Director.DescId = zc_MIFloat_Director()
@@ -254,6 +264,7 @@ BEGIN
 
                  , Null::TFloat                       AS HolidaysHospital
                  , Null::TFloat                       AS Marketing
+                 , Null::TFloat                       AS MarketingRepayment
                  , Null::TFloat                       AS Director
                  , Null::TFloat                       AS IlliquidAssets
                  , Null::TFloat                       AS PenaltySUN
@@ -326,13 +337,18 @@ BEGIN
 
                  , MIFloat_HolidaysHospital.ValueData AS HolidaysHospital
                  , MIFloat_Marketing.ValueData        AS Marketing
+                 , CASE WHEN COALESCE(MIFloat_Marketing.ValueData, 0) > 0 THEN 0
+                        WHEN COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0) > 0
+                        THEN - MIFloat_Marketing.ValueData ELSE MIFloat_MarketingRepayment.ValueData END::TFloat      AS MarketingRepayment
                  , MIFloat_Director.ValueData         AS Director
                  , MIFloat_IlliquidAssets.ValueData   AS IlliquidAssets
                  , MIFloat_PenaltySUN.ValueData       AS PenaltySUN
                  , MIF_AmountCard.ValueData           AS AmountCard
                  , (MovementItem.Amount +
                     COALESCE (MIFloat_HolidaysHospital.ValueData, 0) +
-                    COALESCE (MIFloat_Marketing.ValueData, 0) +
+                    CASE WHEN COALESCE(MIFloat_Marketing.ValueData, 0) > 0 THEN COALESCE(MIFloat_Marketing.ValueData, 0)
+                         WHEN COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0) > 0
+                         THEN 0 ELSE COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0)  END +
                     COALESCE (MIFloat_Director.ValueData, 0) +
                     COALESCE (MIFloat_IlliquidAssets.ValueData, 0) +
                     COALESCE (MIFloat_PenaltySUN.ValueData, 0) -
@@ -396,6 +412,10 @@ BEGIN
                                               ON MIFloat_Marketing.MovementItemId = MovementItem.Id
                                              AND MIFloat_Marketing.DescId = zc_MIFloat_Marketing()
 
+                  LEFT JOIN MovementItemFloat AS MIFloat_MarketingRepayment
+                                              ON MIFloat_MarketingRepayment.MovementItemId = MovementItem.Id
+                                             AND MIFloat_MarketingRepayment.DescId = zc_MIFloat_MarketingRepayment()
+
                   LEFT JOIN MovementItemFloat AS MIFloat_Director
                                               ON MIFloat_Director.MovementItemId = MovementItem.Id
                                              AND MIFloat_Director.DescId = zc_MIFloat_Director()
@@ -440,6 +460,7 @@ BEGIN
 
                  , Null::TFloat                       AS HolidaysHospital
                  , Null::TFloat                       AS Marketing
+                 , Null::TFloat                       AS MarketingRepayment                 
                  , Null::TFloat                       AS Director
                  , Null::TFloat                       AS IlliquidAssets
                  , Null::TFloat                       AS PenaltySUN

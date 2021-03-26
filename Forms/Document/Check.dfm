@@ -7,20 +7,20 @@ inherited CheckForm: TCheckForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 242
+    Top = 261
     Width = 804
-    Height = 238
+    Height = 219
     ExplicitTop = 242
     ExplicitWidth = 804
     ExplicitHeight = 238
-    ClientRectBottom = 238
+    ClientRectBottom = 219
     ClientRectRight = 804
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 804
       ExplicitHeight = 214
       inherited cxGrid: TcxGrid
         Width = 804
-        Height = 214
+        Height = 195
         ExplicitWidth = 804
         ExplicitHeight = 214
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -279,9 +279,9 @@ inherited CheckForm: TCheckForm
   end
   inherited DataPanel: TPanel
     Width = 804
-    Height = 216
+    Height = 235
     ExplicitWidth = 804
-    ExplicitHeight = 216
+    ExplicitHeight = 235
     inherited edInvNumber: TcxTextEdit
       Left = 7
       Top = 14
@@ -592,6 +592,17 @@ inherited CheckForm: TCheckForm
       Left = 700
       Top = 178
       Caption = #1055#1088'. '#1085#1072#1082'. '#1085#1072#1082#1086#1087#1083#1077#1085
+    end
+    object cbCorrectMarketing: TcxCheckBox
+      Left = 8
+      Top = 213
+      Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1089#1091#1084#1084#1099' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072' '#1074' '#1047#1055' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
+      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1089#1091#1084#1084#1099' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 44
+      Width = 208
     end
   end
   object edInvNumberOrder: TcxTextEdit [2]
@@ -1195,7 +1206,7 @@ inherited CheckForm: TCheckForm
       GuiParams = <
         item
           Name = 'inOperDate'
-          Value = '0'
+          Value = Null
           Component = edOperDate
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -1305,7 +1316,7 @@ inherited CheckForm: TCheckForm
         end
         item
           Name = 'MasterOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = edOperDate
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -2264,7 +2275,7 @@ inherited CheckForm: TCheckForm
       end
       item
         Name = 'Amount'
-        Value = 0c
+        Value = 0.000000000000000000
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -2285,7 +2296,7 @@ inherited CheckForm: TCheckForm
       end
       item
         Name = 'Price'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -2475,7 +2486,7 @@ inherited CheckForm: TCheckForm
       end
       item
         Name = 'OperDateSP'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDateSP
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -2658,6 +2669,13 @@ inherited CheckForm: TCheckForm
         Component = edLoyaltySMSumma
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isCorrectMarketing'
+        Value = Null
+        Component = cbCorrectMarketing
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 397
@@ -2703,41 +2721,9 @@ inherited CheckForm: TCheckForm
     Top = 325
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Top = 346
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 406
     Top = 325
   end
@@ -2804,7 +2790,7 @@ inherited CheckForm: TCheckForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -3103,7 +3089,7 @@ inherited CheckForm: TCheckForm
         MultiSelectSeparator = ','
       end>
     Left = 104
-    Top = 176
+    Top = 216
   end
   object spUpdateBankPOSTerminal: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Check_BankPOSTerminal'

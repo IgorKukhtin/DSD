@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , Height TFloat, Length TFloat, Width TFloat
              , NormInDays TFloat
              , DaysQ TFloat
+             , NormRem TFloat, NormOut TFloat
              , isOrder Boolean, isScaleCeh Boolean, isNotMobile Boolean
              , GoodsSubId Integer, GoodsSubCode Integer, GoodsSubName TVarChar, MeasureSubName TVarChar
              , GoodsKindSubId Integer, GoodsKindSubName TVarChar
@@ -174,6 +175,9 @@ BEGIN
            , COALESCE (ObjectFloat_Width.ValueData,0)           ::TFloat  AS Width
            , COALESCE (ObjectFloat_NormInDays.ValueData,0)      ::TFloat  AS NormInDays
            , COALESCE (ObjectFloat_DaysQ.ValueData,0)           ::TFloat  AS DaysQ
+           
+           , COALESCE (ObjectFloat_NormRem.ValueData,0)         ::TFloat  AS NormRem
+           , COALESCE (ObjectFloat_NormOut.ValueData,0)         ::TFloat  AS NormOut
 
            , COALESCE (ObjectBoolean_Order.ValueData, False)           AS isOrder
            , COALESCE (ObjectBoolean_ScaleCeh.ValueData, False)        AS isScaleCeh
@@ -302,6 +306,12 @@ BEGIN
                                   ON ObjectFloat_DaysQ.ObjectId = Object_GoodsByGoodsKind_View.Id
                                  AND ObjectFloat_DaysQ.DescId = zc_ObjectFloat_GoodsByGoodsKind_DaysQ()
 
+            LEFT JOIN ObjectFloat AS ObjectFloat_NormRem
+                                  ON ObjectFloat_NormRem.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                 AND ObjectFloat_NormRem.DescId = zc_ObjectFloat_GoodsByGoodsKind_NormRem()
+            LEFT JOIN ObjectFloat AS ObjectFloat_NormOut
+                                  ON ObjectFloat_NormOut.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                 AND ObjectFloat_NormOut.DescId = zc_ObjectFloat_GoodsByGoodsKind_NormOut()
  --
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Order
                                     ON ObjectBoolean_Order.ObjectId = Object_GoodsByGoodsKind_View.Id
@@ -424,7 +434,6 @@ BEGIN
             LEFT JOIN (SELECT DISTINCT tmpCodeCalc.CodeCalc_Sh , tmpCodeCalc.Count1 FROM tmpCodeCalc WHERE tmpCodeCalc.CodeCalc_Sh  IS NOT NULL) AS tmpCodeCalc_1 ON tmpCodeCalc_1.CodeCalc_Sh = Object_GoodsByGoodsKind_View.CodeCalc_Sh
             LEFT JOIN (SELECT DISTINCT tmpCodeCalc.CodeCalc_Nom, tmpCodeCalc.Count2 FROM tmpCodeCalc WHERE tmpCodeCalc.CodeCalc_Nom IS NOT NULL) AS tmpCodeCalc_2 ON tmpCodeCalc_2.CodeCalc_Nom = Object_GoodsByGoodsKind_View.CodeCalc_Nom
             LEFT JOIN (SELECT DISTINCT tmpCodeCalc.CodeCalc_Ves, tmpCodeCalc.Count3 FROM tmpCodeCalc WHERE tmpCodeCalc.CodeCalc_Ves IS NOT NULL) AS tmpCodeCalc_3 ON tmpCodeCalc_3.CodeCalc_Ves = Object_GoodsByGoodsKind_View.CodeCalc_Ves
-            
       ;
 
 END;
@@ -436,6 +445,7 @@ ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 25.03.21        *
  19.02.21        * DaysQ
  10.04.20        *
  13.03.19        * NormInDays

@@ -1122,7 +1122,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDescName'
+        Name = 'inTypeName'
         Value = 'zc_Movement_PriceCorrective'
         DataType = ftString
         ParamType = ptInput
@@ -1224,7 +1224,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1387,7 +1387,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDescName'
+        Name = 'inTypeName'
         Value = 'zc_Movement_ReturnIn'
         DataType = ftString
         ParamType = ptInput

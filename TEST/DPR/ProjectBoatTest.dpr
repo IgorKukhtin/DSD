@@ -251,7 +251,9 @@ uses
   Medoc_J1201212 in '..\..\SOURCE\MeDOC\Medoc_J1201212.pas',
   MovementProtocol in '..\..\FormsBoat\System\MovementProtocol.pas' {MovementProtocolForm: TParentForm},
   MovementItemProtocol in '..\..\FormsBoat\System\MovementItemProtocol.pas' {MovementItemProtocolForm: TParentForm},
-  MovementProtocol_Info in '..\..\FormsBoat\System\MovementProtocol_Info.pas' {MovementProtocol_InfoForm: TParentForm};
+  MovementProtocol_Info in '..\..\FormsBoat\System\MovementProtocol_Info.pas' {MovementProtocol_InfoForm: TParentForm},
+  Report_MovementIncome in '..\..\FormsBoat\Report\Report_MovementIncome.pas' {Report_MovementIncomeForm: TParentForm},
+  Report_MovementIncomeDialog in '..\..\FormsBoat\Report\Report_MovementIncomeDialog.pas' {Report_MovementIncomeDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

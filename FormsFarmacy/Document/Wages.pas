@@ -119,6 +119,7 @@ type
     PenaltySUN: TcxGridDBBandedColumn;
     deDateCalculation: TcxDateEdit;
     cxLabel3: TcxLabel;
+    MarketingRepayment: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

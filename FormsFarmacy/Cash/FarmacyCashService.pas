@@ -1422,10 +1422,10 @@ begin
                 LOYALTYSM := FieldByName('LOYALTYSM').AsInteger;
                 LOYALSMSUM := FieldByName('LOYALSMSUM').AsCurrency;
                 // ***11.10.20
-                MEDICFS := FieldByName('MEDICFS').AsString;
-                BUYERFS := FieldByName('BUYERFS').AsString;
-                BUYERFSP := FieldByName('BUYERFSP').AsString;
-                DISTPROMO := FieldByName('DISTPROMO').AsString;
+                MEDICFS := trim(FieldByName('MEDICFS').AsString);
+                BUYERFS := trim(FieldByName('BUYERFS').AsString);
+                BUYERFSP := trim(FieldByName('BUYERFSP').AsString);
+                DISTPROMO := trim(FieldByName('DISTPROMO').AsString);
                 // ***05.03.21
                 MEDICKID := FieldByName('MEDICKID').AsInteger;
                 MEMBERKID := FieldByName('MEMBERKID').AsInteger;
@@ -1598,9 +1598,9 @@ begin
                   dsdSave.Params.AddParam('inMedicKashtanID', ftInteger, ptInput, Head.MEDICKID);
                   dsdSave.Params.AddParam('inMemberKashtanID', ftInteger, ptInput, Head.MEMBERKID);
                   //***19.03.21
-                  dsdSave.Params.AddParam('inMemberKashtanID', ftInteger, ptInput, Head.MEMBERKID);
-                  // ***24.01.17
                   dsdSave.Params.AddParam('isCorrectMarketing', ftBoolean, ptInput, Head.ISCORRMARK);
+                  // ***24.01.17
+                  dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
 
                   Add_Log('Start Execute gpInsertUpdate_Movement_Check_ver2');
                   Add_Log('      ' + String(Head.UID));
@@ -2638,12 +2638,12 @@ begin
     try
       try
 
-        BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion('FarmacyCash.exe', GetBinaryPlatfotmSuffics(ExtractFileDir(ParamStr(0)) + '\FarmacyCash.exe'));
+        BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion('FarmacyCash.exe', GetBinaryPlatfotmSuffics(ExtractFileDir(ParamStr(0)) + '\FarmacyCash.exe', ''));
         LocalVersionInfo := UnilWin.GetFileVersion(ExtractFileDir(ParamStr(0)) + '\FarmacyCash.exe');
         if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
            ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then OldProgram := True;
 
-        BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)), GetBinaryPlatfotmSuffics(ParamStr(0)));
+        BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)), GetBinaryPlatfotmSuffics(ParamStr(0), ''));
         LocalVersionInfo := UnilWin.GetFileVersion(ParamStr(0));
         if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
            ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then OldServise := True;
@@ -2762,12 +2762,12 @@ begin
   OldProgram := False;
   OldServise := False;
   try
-    BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion('FarmacyCash.exe', GetBinaryPlatfotmSuffics(ExtractFileDir(ParamStr(0)) + '\FarmacyCash.exe'));
+    BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion('FarmacyCash.exe', GetBinaryPlatfotmSuffics(ExtractFileDir(ParamStr(0)) + '\FarmacyCash.exe', ''));
     LocalVersionInfo := UnilWin.GetFileVersion(ExtractFileDir(ParamStr(0)) + '\FarmacyCash.exe');
     if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
        ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then OldProgram := True;
 
-    BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)), GetBinaryPlatfotmSuffics(ParamStr(0)));
+    BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)), GetBinaryPlatfotmSuffics(ParamStr(0), ''));
     LocalVersionInfo := UnilWin.GetFileVersion(ParamStr(0));
     if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
        ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then OldServise := True;

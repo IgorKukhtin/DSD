@@ -2484,7 +2484,7 @@ begin
       if FUpdatePUSH = 0 then
       begin
         BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)),
-                           GetBinaryPlatfotmSuffics(ParamStr(0)));
+                           GetBinaryPlatfotmSuffics(ParamStr(0), ''));
         LocalVersionInfo := UnilWin.GetFileVersion(ParamStr(0));
         if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
            ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then
@@ -6180,7 +6180,7 @@ var LocalVersionInfo, BaseVersionInfo: TVersionInfo; Step : Integer;
     try
       Application.ProcessMessages;
       BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)),
-                         GetBinaryPlatfotmSuffics(ParamStr(0)));
+                         GetBinaryPlatfotmSuffics(ParamStr(0), ''));
       LocalVersionInfo := UnilWin.GetFileVersion(ParamStr(0));
       if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
          ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then
@@ -7071,7 +7071,7 @@ begin
 
   if FormParams.ParamByName('isCorrectMarketing').Value then
   begin
-    ShowMessage('Чек по корректировки суммы маркетинга в ЗП по подразделению редактировать запрещено!');
+    ShowMessage('Чек по корректировки суммы маркетинга в ЗП по сотруднику редактировать запрещено!');
     exit;
   end;
 
@@ -7111,16 +7111,22 @@ begin
     nAmountM := Abs(nAmount) / SourceClientDataSet.FieldByName('MultiplicitySale').AsCurrency;
     nAmountM := Frac(nAmountM);
 
-    if (nAmountM <> 0) and ((not SourceClientDataSet.FieldByName('isMultiplicityError').AsBoolean) or (Frac(SourceClientDataSet.FieldByName('Remains').AsCurrency - nAmount) <> 0))  then
+    if (nAmountM <> 0) then
     begin
-      if (nAmount > 0) and (Frac(SourceClientDataSet.FieldByName('Remains').AsCurrency - nAmount) <> 0) then
+      if (nAmount > 0) then
       begin
-        ShowMessage('Деление медикамента разрешено кратно ' + SourceClientDataSet.FieldByName('MultiplicitySale').AsString + ' !');
-        exit;
-      end else if (nAmount < 0) and (Frac(SourceClientDataSet.FieldByName('Amount').AsCurrency - nAmount) <> 0) then
+        if not SourceClientDataSet.FieldByName('isMultiplicityError').AsBoolean or (Frac(SourceClientDataSet.FieldByName('Remains').AsCurrency - nAmount) <> 0) then
+        begin
+          ShowMessage('Деление медикамента разрешено кратно ' + SourceClientDataSet.FieldByName('MultiplicitySale').AsString + ' !');
+          exit;
+        end;
+      end else if (nAmount < 0) then
       begin
-        ShowMessage('Деление медикамента разрешено кратно ' + SourceClientDataSet.FieldByName('MultiplicitySale').AsString + ' !');
-        exit;
+        if not SourceClientDataSet.FieldByName('isMultiplicityError').AsBoolean or (Frac(SourceClientDataSet.FieldByName('Amount').AsCurrency - nAmount) <> 0) then
+        begin
+          ShowMessage('Деление медикамента разрешено кратно ' + SourceClientDataSet.FieldByName('MultiplicitySale').AsString + ' !');
+          exit;
+        end;
       end;
     end;
   end;
@@ -10254,8 +10260,10 @@ begin
           AMedicForSale, // ФИО врача (на продажу)
           ABuyerForSale, // ФИО покупателя (на продажу)
           ABuyerForSalePhone, // Телефон покупателя (на продажу)
-          ADistributionPromoList // Раздача акционных материалов.
-
+          ADistributionPromoList, // Раздача акционных материалов.
+          AMedicKashtanId,        // ФИО врача (МИС «Каштан»)
+          AMemberKashtanId,       // ФИО пациента (МИС «Каштан»)
+          AisCorrectMarketing     // Корректировка суммы маркетинг в ЗП по подразделению
           ]));
       End
       else

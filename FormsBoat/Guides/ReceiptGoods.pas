@@ -138,10 +138,6 @@ type
     EKPriceWVAT_ch2: TcxGridDBColumn;
     EKPrice_summ_ch2: TcxGridDBColumn;
     EKPriceWVAT_summ_ch2: TcxGridDBColumn;
-    Basis_summ_ch2: TcxGridDBColumn;
-    BasisWVAT_summ_2: TcxGridDBColumn;
-    BasisPrice_ch2: TcxGridDBColumn;
-    BasisPriceWVAT_ch2: TcxGridDBColumn;
     Comment_ch2: TcxGridDBColumn;
     isErased_ch2: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;

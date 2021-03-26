@@ -49,12 +49,20 @@ type
     DBViewAddOn: TdsdDBViewAddOn;
     AmountReserve: TcxGridDBColumn;
     CheckList: TcxGridDBColumn;
+    FormParams: TdsdFormParams;
+    dxBarContainerItem1: TdxBarContainerItem;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    edMarketing: TcxCurrencyEdit;
+    Label12: TLabel;
+    actCheckSumm: TAction;
     procedure ListGoodsBadTimingCDSBeforePost(DataSet: TDataSet);
     procedure ParentFormDestroy(Sender: TObject);
     procedure actClearExecute(Sender: TObject);
     procedure ListGoodsBadTimingCDSAfterOpen(DataSet: TDataSet);
     procedure actAddOneExecute(Sender: TObject);
     procedure actSendExecute(Sender: TObject);
+    procedure actCheckSummExecute(Sender: TObject);
   private
     { Private declarations }
     FIsLoad : boolean;
@@ -76,6 +84,15 @@ begin
       Min(1, ListGoodsBadTimingCDS.FieldByName('Remains').AsCurrency - ListGoodsBadTimingCDS.FieldByName('AmountCheck').AsCurrency);
     ListGoodsBadTimingCDS.Post;
   end;
+end;
+
+procedure TListGoodsBadTimingForm.actCheckSummExecute(Sender: TObject);
+begin
+  inherited;
+
+  if FormParams.ParamByName('Marketing').Value >= 0 then
+    raise Exception.Create('Погашение чеками можно только на сумму штрафа...');
+
 end;
 
 procedure TListGoodsBadTimingForm.actClearExecute(Sender: TObject);
@@ -192,7 +209,9 @@ begin
     MainCashForm.FormParams.ParamByName('isCorrectMarketing').Value := True;
     actClearExecute(Sender);
     MainCashForm.pnlInfo.Visible := True;
-    MainCashForm.lblInfo.Caption := 'Корректировка суммы маркетинга в ЗП по подразделению';
+    MainCashForm.lblInfo.Caption := 'Корректировка суммы маркетинга в ЗП по сотруднику';
+    if ((RoundTo(ListGoodsBadTimingGridDBTableView.DataController.Summary.FooterSummaryValues[ListGoodsBadTimingGridDBTableView.DataController.Summary.FooterSummaryItems.IndexOfItemLink(SummaCheck)], -2) +
+      edMarketing.Value) >= 0) then ShowMessage('Достигнут 0 в сумме штрафа по маркетингу.');
     Close;
   finally
     ListGoodsBadTimingCDS.RecNo := nPos;
@@ -304,7 +323,15 @@ procedure TListGoodsBadTimingForm.ListGoodsBadTimingCDSBeforePost(
 begin
   inherited;
 
-  if not FIsLoad then
+  if Dataset['AmountCheck'] = Null then Dataset['AmountCheck'] := 0;
+
+  if Dataset['AmountCheck'] < 0 then
+  begin
+    raise Exception.Create('Количество должно быть положительное...');
+    Exit;
+  end;
+
+  if not FIsLoad and (Dataset['AmountCheck'] > 0) then
   begin
     if Dataset['AmountCheck'] > Dataset['Remains'] then
     begin
@@ -333,6 +360,8 @@ procedure TListGoodsBadTimingForm.ParentFormDestroy(Sender: TObject);
   var List : TStringList;
 begin
   inherited;
+
+  if not ListGoodsBadTimingCDS.Active then Exit;
 
   List := TStringList.Create;
   ListGoodsBadTimingCDS.DisableControls;

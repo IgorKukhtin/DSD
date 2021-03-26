@@ -44,8 +44,12 @@ procedure FileWriteString(const FileName: String; Data: AnsiString);
 function Execute(const CommandLine, WorkingDirectory : string) : integer;
 {ищем файлы в директории}
 function FilesInDir(sMask, sDirPath: String; var iFilesCount: Integer; var saFound: TStrings; bRecurse: Boolean = True): Integer;
+// Функция проверяет разрядность EXE файлам
+function GetFilePlatfotm64(aFileName: string): boolean;
 {Функция возвращает суффикс к 64 разрядным EXE файлам}
-function GetBinaryPlatfotmSuffics(aFileName: string): string;
+function GetBinaryPlatfotmSuffics(aFileName, aSuffics: string): string;
+// Функция возвращает разрядность системы
+function IsWow64: BOOL;
 
 implementation
 
@@ -218,18 +222,56 @@ Begin
   End;
 End;
 
-// Функция возвращает суффикс к 64 разрядным EXE файлам
-function GetBinaryPlatfotmSuffics(aFileName: string): string;
+// Функция проверяет разрядность EXE файлам
+function GetFilePlatfotm64(aFileName: string): boolean;
 var
   bt: Cardinal;
 begin
-  Result := '';
+  Result := False;
+  // Если не 64 то нет смысла выполнять
+  if not IsWow64 then Exit;
+
+  // Если EXE 64 то дописуем
   if (POS('.exe', LowerCase(aFileName)) > 0) then
   begin
   if FileExists(aFileName) then
     if GetBinaryType(PWideChar(aFileName), bt) then
-      if bt = 6 then Result := '.win64';
+      if bt = 6 then Result := True;
   end;
+end;
+
+// Функция возвращает суффикс к 64 разрядным EXE файлам
+function GetBinaryPlatfotmSuffics(aFileName, aSuffics: string): string;
+var
+  bt: Cardinal;
+begin
+  Result := '';
+  // Если не 64 то нет смысла выполнять
+  if not IsWow64 then Exit;
+
+  if aSuffics <> '' then
+  begin
+    if LowerCase(aSuffics) = 'win64' then Result := '.win64';
+    Exit;
+  end;
+
+  // Если EXE 64 то дописуем .win64
+  if GetFilePlatfotm64(aFileName) then Result := '.win64';
+end;
+
+// Функция возвращает разрядность системы
+function IsWow64: BOOL;
+type
+  TIsWow64Process = function(hProcess: THandle;
+    var Wow64Process: BOOL): BOOL; stdcall;
+var
+  IsWow64Process: TIsWow64Process;
+begin
+  Result := False;
+  @IsWow64Process := GetProcAddress(GetModuleHandle(kernel32),
+    'IsWow64Process');
+  if Assigned(@IsWow64Process) then
+    IsWow64Process(GetCurrentProcess, Result);
 end;
 
 end.

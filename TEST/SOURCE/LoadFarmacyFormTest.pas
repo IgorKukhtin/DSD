@@ -452,12 +452,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberSPChoiceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberSPChoiceDialogForm');
 
-
+ }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalUserForm');
-
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceDeferredCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceDeferredCheckForm');
   exit;
@@ -985,10 +985,14 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_PromoBonusEstimateForm'));
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FinalSUAProtocolForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_FinalSUAProtocolForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_PromoBonusEstimateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_PromoBonusEstimateForm');
 
-  {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_PromoBonusLossesForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_PromoBonusLossesForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_PromoBonusLossesForm');
 
 
@@ -1977,8 +1981,8 @@ begin
 
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesJournalForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TWagesJournalForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TWagesForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWagesForm');
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesAdditionalExpensesForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TWagesAdditionalExpensesForm');
 //

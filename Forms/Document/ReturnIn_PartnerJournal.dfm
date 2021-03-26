@@ -452,7 +452,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-                    object MemberExpName_calc: TcxGridDBColumn
+          object MemberExpName_calc: TcxGridDBColumn
             Caption = #1069#1082#1089#1087#1077#1076#1080#1090#1086#1088' ('#1079#1072#1103#1074#1082#1072') '#1088#1072#1089#1095#1077#1090
             DataBinding.FieldName = 'MemberExpName_calc'
             HeaderAlignmentHorz = taCenter
@@ -1236,7 +1236,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         end
         item
           Name = 'IsPartnerDate'
-          Value = 'False'
+          Value = False
           Component = edIsPartnerDate
           DataType = ftBoolean
           ParamType = ptInput
@@ -1481,7 +1481,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
       end
       item
         Name = 'inIsPartnerDate'
-        Value = 'False'
+        Value = False
         Component = edIsPartnerDate
         DataType = ftBoolean
         ParamType = ptInput
@@ -1742,7 +1742,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
       end
       item
         Name = 'inStartDateSale'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1845,7 +1845,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
       end
       item
         Name = 'inStartDateSale'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1860,7 +1860,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
       end
       item
         Name = 'inIsLastComplete'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1929,7 +1929,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2097,7 +2097,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2150,7 +2150,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDescName'
+        Name = 'inTypeName'
         Value = 'zc_Movement_ReturnIn'
         DataType = ftString
         ParamType = ptInput
@@ -2233,8 +2233,8 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDescName'
-        Value = 'zc_Movement_PriceCorrective'
+        Name = 'inTypeName'
+        Value = 'zc_Movement_ReturnIn_Corr'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

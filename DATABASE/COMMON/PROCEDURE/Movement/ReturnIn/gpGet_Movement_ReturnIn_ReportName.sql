@@ -1,11 +1,12 @@
 -- Function: gpGet_Movement_ReturnIn_ReportName()
 
 -- DROP FUNCTION IF EXISTS gpGet_Movement_ReturnIn_ReportName (Integer, TVarChar);
--- DROP FUNCTION IF EXISTS gpGet_Movement_ReturnIn_ReportName (Integer, TVarChar, TVarChar);
+--
+ DROP FUNCTION IF EXISTS gpGet_Movement_ReturnIn_ReportName (Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_ReturnIn_ReportName (
     IN inMovementId         Integer  , -- ключ Документа
-    IN inDescName           TVarChar , --
+    IN inTypeName           TVarChar , --
     IN inSession            TVarChar   -- сессия пользователя
 )
 RETURNS TVarChar
@@ -18,7 +19,10 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Sale());
 
        SELECT
-            COALESCE (PrintForms_View.PrintFormName, PrintForms_View_Default.PrintFormName)
+            CASE WHEN inTypeName = 'zc_Movement_ReturnIn_Corr' AND COALESCE (PrintForms_View.PrintFormName, PrintForms_View_Default.PrintFormName) = 'PrintMovement_ReturnIn'  -- вызов печати КОРЕГУЮЧА ТОВАРНА НАКЛАДНА
+                     THEN 'PrintMovement_ReturnIn_corr'
+                 ELSE COALESCE (PrintForms_View.PrintFormName, PrintForms_View_Default.PrintFormName)
+            END
        INTO vbPrintFormName
        FROM Movement
 
@@ -61,6 +65,7 @@ ALTER FUNCTION gpGet_Movement_ReturnIn_ReportName (Integer, TVarChar, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.A.
+ 25.03.21         * rename inTypeName
  23.10.15         * add inDescName
  12.06.14                                        * add COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_From.ObjectId)
  23.04.14                                                        * + PrintMovement_ReturnIn32049199

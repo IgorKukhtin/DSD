@@ -461,6 +461,11 @@ BEGIN
 -- КОНСТАНТА НИЖЕ НЕ СТАВИТСЯ АВТОМАТОМ!!! 
 --     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_ConnectParam(),  inDescId:= zc_Object_GlobalConst(), inCode:= 3, inName:= 'http://farmacy.neboley.dp.ua/index.php', inEnumName:= 'zc_Enum_GlobalConst_ConnectParam');
 --     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_ConnectReportParam(),  inDescId:= zc_Object_GlobalConst(), inCode:= 3, inName:= 'http://farmacy.neboley.dp.ua/index.php', inEnumName:= 'zc_Enum_GlobalConst_ConnectReportParam');
+
+
+-- Константы на какую разрядность обновлять версию программы
+--     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_Program32(),  inDescId:= zc_Object_GlobalConst(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_GlobalConst_Program32'), inName:= 'Win32', inEnumName:= 'zc_Enum_GlobalConst_Program32');
+--     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_Program64(),  inDescId:= zc_Object_GlobalConst(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_GlobalConst_Program64'), inName:= 'Win64', inEnumName:= 'zc_Enum_GlobalConst_Program64');
      
 END $$;
 

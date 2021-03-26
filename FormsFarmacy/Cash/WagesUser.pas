@@ -90,6 +90,8 @@ type
     deDateCalculation: TcxDateEdit;
     cxLabel28: TcxLabel;
     actFormClose: TdsdFormClose;
+    cxLabel29: TcxLabel;
+    ceMarketingRepayment: TcxCurrencyEdit;
   private
     { Private declarations }
   public

@@ -4,6 +4,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   ClientWidth = 1114
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitTop = -5
   ExplicitWidth = 1130
   ExplicitHeight = 573
   PixelsPerInch = 96
@@ -24,6 +25,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       inherited cxGrid: TcxGrid
         Width = 1114
         Height = 374
+        ExplicitTop = -6
         ExplicitWidth = 1114
         ExplicitHeight = 374
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1343,7 +1345,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         end
         item
           Name = 'IsPartnerDate'
-          Value = 'False'
+          Value = False
           Component = edIsPartnerDate
           DataType = ftBoolean
           ParamType = ptInput
@@ -1501,7 +1503,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       end
       item
         Name = 'inIsPartnerDate'
-        Value = 'False'
+        Value = False
         Component = edIsPartnerDate
         DataType = ftBoolean
         ParamType = ptInput
@@ -1762,7 +1764,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       end
       item
         Name = 'inStartDateSale'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1865,7 +1867,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       end
       item
         Name = 'inStartDateSale'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1880,7 +1882,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       end
       item
         Name = 'inIsLastComplete'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1948,7 +1950,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2116,7 +2118,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2169,7 +2171,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDescName'
+        Name = 'inTypeName'
         Value = 'zc_Movement_ReturnIn'
         DataType = ftString
         ParamType = ptInput
@@ -2184,8 +2186,8 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 584
-    Top = 376
+    Left = 544
+    Top = 352
   end
   object spChecked: TdsdStoredProc
     StoredProcName = 'gpUpdateMovement_Checked'
@@ -2252,8 +2254,8 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDescName'
-        Value = 'zc_Movement_PriceCorrective'
+        Name = 'inTypeName'
+        Value = 'zc_Movement_ReturnIn_Corr'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

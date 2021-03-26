@@ -3613,6 +3613,10 @@
 				<Form>Report_Check_PromoBonusEstimateForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_FinalSUAProtocol.pas">
+				<Form>Report_FinalSUAProtocolForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

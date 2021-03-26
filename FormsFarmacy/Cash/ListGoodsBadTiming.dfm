@@ -4,18 +4,33 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
   ClientHeight = 411
   ClientWidth = 1029
   OnDestroy = ParentFormDestroy
+  AddOnFormData.isFreeAtClosing = True
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1045
   ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
-  object ListGoodsBadTimingGrid: TcxGrid [0]
+  object Label12: TLabel [0]
+    Left = 786
+    Top = 4
+    Width = 65
+    Height = 13
+    Align = alCustom
+    Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075':  '
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+  end
+  object ListGoodsBadTimingGrid: TcxGrid [1]
     Left = 0
     Top = 28
     Width = 1029
     Height = 383
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 721
     object ListGoodsBadTimingGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ListGoodsBadTimingDS
@@ -136,6 +151,7 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 66
       end
       object PartionDateKindName: TcxGridDBColumn
@@ -148,7 +164,7 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
         Width = 126
       end
       object CheckList: TcxGridDBColumn
-        Caption = #1042#1048#1055' '#1095#1077#1082#1080
+        Caption = #1053#1086#1084#1077#1088' '#1042#1048#1055' '#1095#1077#1082#1072
         DataBinding.FieldName = 'CheckList'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
@@ -159,6 +175,14 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
       Caption = #1040#1083#1100#1090' (24 '#1087#1086#1079') "*"'
       GridView = ListGoodsBadTimingGridDBTableView
     end
+  end
+  object edMarketing: TcxCurrencyEdit [2]
+    Left = 831
+    Top = 1
+    Properties.DisplayFormat = ',0.00;-,0.00'
+    Properties.ReadOnly = True
+    TabOrder = 5
+    Width = 74
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
@@ -173,6 +197,7 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
     Left = 183
     Top = 279
     inherited actRefresh: TdsdDataSetRefresh
+      BeforeAction = actCheckSumm
       StoredProc = spListGoodsBadTiming
       StoredProcList = <
         item
@@ -203,6 +228,10 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
     object actAddOne: TAction
       Caption = 'actAddOne'
       OnExecute = actAddOneExecute
+    end
+    object actCheckSumm: TAction
+      Caption = 'actCheckSumm'
+      OnExecute = actCheckSummExecute
     end
   end
   object ListGoodsBadTimingDS: TDataSource
@@ -264,15 +293,11 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarButton2'
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
@@ -293,6 +318,18 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
         item
           Visible = True
           ItemName = 'bbExportExel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem2'
         end>
       OneOnRow = True
       Row = 0
@@ -337,6 +374,26 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
       Action = actExportExel
       Category = 0
     end
+    object dxBarContainerItem1: TdxBarContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <>
+    end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = Label12
+    end
+    object dxBarControlContainerItem2: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edMarketing
+    end
   end
   object spListGoodsBadTiming: TdsdStoredProc
     StoredProcName = 'gpSelect_CashGoodsBadTiming'
@@ -367,5 +424,17 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
     PropertiesCellList = <>
     Left = 432
     Top = 232
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Marketing'
+        Value = Null
+        Component = edMarketing
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    Left = 728
+    Top = 152
   end
 end

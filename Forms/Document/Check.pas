@@ -189,6 +189,7 @@ type
     actSetPrice: TdsdExecStoredProc;
     spUpdatePrice: TdsdStoredProc;
     dxBarButton15: TdxBarButton;
+    cbCorrectMarketing: TcxCheckBox;
   private
     { Private declarations }
   public
