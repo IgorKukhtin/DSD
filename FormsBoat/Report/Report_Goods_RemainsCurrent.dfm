@@ -127,19 +127,19 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     Width = 1131
     Height = 447
     TabOrder = 3
-    ExplicitTop = 59
+    ExplicitTop = 86
     ExplicitWidth = 1131
-    ExplicitHeight = 474
+    ExplicitHeight = 447
     ClientRectBottom = 447
     ClientRectRight = 1131
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1131
-      ExplicitHeight = 474
+      ExplicitHeight = 447
       inherited cxGrid: TcxGrid
         Width = 1131
         Height = 371
         ExplicitWidth = 1131
-        ExplicitHeight = 398
+        ExplicitHeight = 371
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -278,6 +278,15 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 50
+          end
+          object PartNumber: TcxGridDBColumn
+            Caption = 'S/N'
+            DataBinding.FieldName = 'PartNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1077#1088#1080#1081#1085#1099#1081' '#8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091
+            Options.Editing = False
+            Width = 100
           end
           object Article: TcxGridDBColumn
             Caption = 'Artikel Nr'
@@ -539,6 +548,14 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Options.Editing = False
             Width = 120
           end
+          object MovementItemId: TcxGridDBColumn
+            Caption = 'PartionId'
+            DataBinding.FieldName = 'MovementItemId'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 30
+          end
         end
       end
       object ExportXmlGrid: TcxGrid
@@ -549,7 +566,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         Align = alBottom
         TabOrder = 1
         Visible = False
-        ExplicitTop = 398
         object ExportXmlGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS
@@ -1485,7 +1501,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           Name = 'GoodsName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsNameFull'
+          ComponentItem = 'GoodsName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

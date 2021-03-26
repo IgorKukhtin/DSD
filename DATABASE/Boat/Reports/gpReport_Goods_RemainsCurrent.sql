@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpReport_Goods_RemainsCurrent(
     IN inIsRemains        Boolean  ,  -- Показать с остатком = 0
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (PartionId            Integer
+RETURNS TABLE (MovementItemId       Integer
              , MovementId_Partion   Integer
              , InvNumber_Partion    TVarChar
              , InvNumberAll_Partion TVarChar
@@ -26,7 +26,7 @@ RETURNS TABLE (PartionId            Integer
              , PartnerName          TVarChar
              --, BrandName            TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , Article TVarChar
+             , Article TVarChar, PartNumber TVarChar
              , GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar, MeasureName TVarChar
 
              , GoodsTagName         TVarChar
@@ -36,6 +36,8 @@ RETURNS TABLE (PartionId            Integer
              , GoodsSizeId          Integer
              , GoodsSizeName        TVarChar
              , GoodsSizeName_real   TVarChar
+             , PriceListId_Basis    Integer
+             , PriceListName_Basis  TVarChar
 
              , Amount_in               TFloat -- Итого кол-во Приход от поставщика
              , OperPrice               TFloat -- Цена вх. 
@@ -136,7 +138,8 @@ BEGIN
                                 )
    -- Остатки + Партии
    , tmpContainer AS (SELECT Container.WhereObjectId        AS UnitId
-                           , Container.PartionId            AS PartionId
+                           --, Container.PartionId            AS PartionId
+                           , Object_PartionGoods.MovementItemId
                            , Container.ObjectId             AS GoodsId
                            , COALESCE (Container.Amount, 0) AS Remains
                            --, Object_PartionGoods.BrandId
@@ -199,7 +202,7 @@ BEGIN
 
        , tmpData_All AS (SELECT tmpContainer.UnitId
                               , tmpContainer.GoodsId
-                              , CASE WHEN inisPartion = TRUE THEN tmpContainer.PartionId        ELSE 0  END AS PartionId
+                              , CASE WHEN inisPartion = TRUE THEN tmpContainer.MovementItemId   ELSE 0  END AS MovementItemId
                               , CASE WHEN inisPartion = TRUE THEN tmpContainer.MovementId       ELSE 0  END AS MovementId_Partion
                               , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE '' END AS DescName_Partion
                               , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE '' END AS InvNumber_Partion
@@ -250,7 +253,7 @@ BEGIN
                                                         AND inisPartion            = TRUE
                          GROUP BY tmpContainer.UnitId
                                 , tmpContainer.GoodsId
-                                , CASE WHEN inisPartion = TRUE THEN tmpContainer.PartionId        ELSE 0 END
+                                , CASE WHEN inisPartion = TRUE THEN tmpContainer.MovementItemId   ELSE 0 END
                                 , CASE WHEN inisPartion = TRUE THEN tmpContainer.MovementId       ELSE 0  END
                                 , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE '' END
                                 , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE '' END
@@ -278,7 +281,7 @@ BEGIN
 
        , tmpData AS (SELECT tmpData_All.UnitId
                           , tmpData_All.GoodsId
-                          , tmpData_All.PartionId
+                          , tmpData_All.MovementItemId
                           , tmpData_All.MovementId_Partion
                           , tmpData_All.DescName_Partion
                           , tmpData_All.InvNumber_Partion
@@ -314,7 +317,7 @@ BEGIN
                           LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = tmpData_All.GoodsSizeId
                      GROUP BY tmpData_All.UnitId
                             , tmpData_All.GoodsId
-                            , tmpData_All.PartionId
+                            , tmpData_All.MovementItemId
                             , tmpData_All.MovementId_Partion
                             , tmpData_All.DescName_Partion
                             , tmpData_All.InvNumber_Partion
@@ -341,10 +344,16 @@ BEGIN
                             , tmpData_All.CostPrice
               )
 
+       , tmpMIString AS (SELECT *
+                         FROM MovementItemString AS MIString_PartNumber
+                         WHERE MIString_PartNumber.MovementItemId (SELECT DISTINCT tmpData.MovementItemId FROM tmpData)
+                           AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+                         ) 
 
+                                                  
         -- Результат
         SELECT
-             tmpData.PartionId                      AS PartionId
+             tmpData.MovementItemId                 AS MovementItemId
            , tmpData.MovementId_Partion             AS MovementId_Partion
            , tmpData.InvNumber_Partion :: TVarChar  AS InvNumber_Partion
            , zfCalc_PartionMovementName (0, '', tmpData.InvNumber_Partion, tmpData.OperDate_Partion) AS InvNumberAll_Partion
@@ -361,6 +370,7 @@ BEGIN
            , Object_Goods.ObjectCode        AS GoodsCode
            , Object_Goods.ValueData         AS GoodsName
            , ObjectString_Article.ValueData AS Article
+           , MIString_PartNumber.ValueData  AS PartNumber
            , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_GoodsGroup.ValueData    AS GoodsGroupName
            , Object_Measure.ValueData       AS MeasureName
@@ -373,6 +383,9 @@ BEGIN
            , tmpData.GoodsSizeId            AS GoodsSizeId
            , tmpData.GoodsSizeName      ::TVarChar AS GoodsSizeName
            , tmpData.GoodsSizeName_real ::TVarChar AS GoodsSizeName_real
+           
+           , Object_PriceList_Basis.Id         ::Integer  AS PriceListId_Basis
+           , Object_PriceList_Basis.ValueData  ::TVarChar AS PriceListName_Basis
 
              -- Итого кол-во Приход от поставщика
            , tmpData.Amount_in    :: TFloat AS Amount_in
@@ -427,6 +440,10 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Article
                                    ON ObjectString_Article.ObjectId = tmpData.GoodsId
                                   AND ObjectString_Article.DescId = zc_ObjectString_Article()
+            
+            LEFT JOIN Object AS Object_PriceList_Basis ON Object_PriceList_Basis.Id = zc_PriceList_Basis()
+            LEFT JOIN tmpMIString AS MIString_PartNumber
+                                  ON MIString_PartNumber.MovementItemId = tmpData.MovementItemId
            ;
 
 
