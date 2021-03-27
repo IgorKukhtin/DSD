@@ -20,14 +20,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
     IN inOperPrice           TFloat    , -- Цена прихода
     IN inOperPriceList       TFloat    , -- Цена продажи
     IN inCountForPrice       TFloat    , -- Цена за кол.
-    IN inTaxKindValue        TFloat    , -- Значение НДС (!информативно!)
+    --IN inTaxKindValue        TFloat    , -- Значение НДС (!информативно!)
     IN inGoodsGroupId        Integer   , -- Группа товара
     IN inGoodsTagId          Integer   , -- Категория
     IN inGoodsTypeId         Integer   , -- Тип детали 
     IN inGoodsSizeId         Integer   , -- Размер
     IN inProdColorId         Integer   , -- Цвет
     IN inMeasureId           Integer   , -- Единица измерения
-    IN inTaxKindId           Integer   , -- Тип НДС (!информативно!)                                            
+    --IN inTaxKindId           Integer   , -- Тип НДС (!информативно!)                                            
     IN inPartNumber          TVarChar  , --№ по тех паспорту
     IN inComment             TVarChar  , --
     IN inSession             TVarChar    -- сессия пользователя

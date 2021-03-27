@@ -1,463 +1,453 @@
--- Function:  gpReport_Goods_RemainsCurrent()
+-- Function: gpReport_Supply()
 
-DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent (Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent (Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent (Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Supply (TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_Goods_RemainsCurrent(
-    IN inUnitId           Integer  ,  -- Подразделение / группа
-    --IN inBrandId          Integer  ,  -- Торговая марка
-    IN inPartnerId        Integer  ,  -- Поставщик
-    IN inGoodsGroupId     Integer  ,  -- группа товара
-    IN inIsPartion        Boolean  ,  -- показать <Документ партия №> (Да/Нет)
-    IN inIsPartner        Boolean  ,  -- показать Поставщика (Да/Нет)
-    IN inIsRemains        Boolean  ,  -- Показать с остатком = 0
-    IN inSession          TVarChar    -- сессия пользователя
+CREATE OR REPLACE FUNCTION gpReport_Supply(
+    IN inStartDate1          TDateTime , --
+    IN inEndDate1            TDateTime , --
+    IN inStartDate2          TDateTime , --
+    IN inEndDate2            TDateTime , --
+    IN inStartDate3          TDateTime , --
+    IN inEndDate3            TDateTime , --
+    IN inUnitGroupId         Integer,    -- группа подразделений / подразделение
+    IN inGoodsGroupId        Integer,    -- группа товара
+    IN inGoodsId             Integer,    -- товар
+    IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (MovementItemId       Integer
-             , MovementId_Partion   Integer
-             , InvNumber_Partion    TVarChar
-             , InvNumberAll_Partion TVarChar
-             , OperDate_Partion     TDateTime
-             , DescName_Partion     TVarChar
-             , UnitId               Integer
-             , UnitName             TVarChar
-             , UnitName_in          TVarChar
-             , PartnerName          TVarChar
-             --, BrandName            TVarChar
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , Article TVarChar, PartNumber TVarChar
-             , GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar, MeasureName TVarChar
-
-             , GoodsTagName         TVarChar
-             , GoodsTypeName        TVarChar
-             , ProdColorName        TVarChar
-             , TaxKindName          TVarChar
-             , GoodsSizeId          Integer
-             , GoodsSizeName        TVarChar
-             , GoodsSizeName_real   TVarChar
-             , PriceListId_Basis    Integer
-             , PriceListName_Basis  TVarChar
-
-             , Amount_in               TFloat -- Итого кол-во Приход от поставщика
-             , OperPrice               TFloat -- Цена вх. 
-             , CountForPrice           TFloat -- Кол. в цене вх.
-             , OperPriceList           TFloat -- Цена по прайсу   
-             , OperPrice_cost          TFloat -- сумма затраты
-             , CostPrice               TFloat -- Цена вх + затрата
-             , Remains                 TFloat -- Кол-во - остаток
-             , TotalSummEKPrice        TFloat -- Сумма по входным ценам
-             , TotalSummPriceList      TFloat -- Сумма по прайсу
-             , Summ_Cost               TFloat -- Сумма затрат
-             , TotalSumm_Cost          TFloat -- Сумма вх+ затраты
-             , PriceTax                TFloat -- % скидки !!!НА!!! zc_DateEnd
-                    
-             , Comment_in       TVarChar
-             , DiscountTax_in   TFloat
-             , VATPercent_in    TFloat
-           
-              ) 
+RETURNS TABLE ( GoodsId Integer
+              , GoodsCode Integer
+              , GoodsName TVarChar
+              , GoodsKindId Integer
+              , GoodsKindName TVarChar
+              , LocationId Integer
+              , LocationCode Integer
+              , LocationName TVarChar
+              , GoodsGroupId Integer
+              , GoodsGroupName TVarChar
+              , GoodsGroupNameFull TVarChar
+              , InfoMoneyGroupName TVarChar
+              , InfoMoneyDestinationName TVarChar
+              , InfoMoneyId Integer
+              , InfoMoneyCode Integer
+              , InfoMoneyName TVarChar
+              , InfoMoneyName_all TVarChar
+              , NormRem            TFloat -- Норма
+              , NormOut            TFloat
+              , RemainsStart1      TFloat -- Остатки на начало каждого периода
+              , RemainsStart2      TFloat
+              , RemainsStart3      TFloat
+              , CountIncome1       TFloat -- Приходы за периоды
+              , CountIncome2       TFloat
+              , CountIncome3       TFloat
+              , CountProductionIn1 TFloat -- Потребление за периоды
+              , CountProductionIn2 TFloat
+              , CountProductionIn3 TFloat
+              , MoneySumm1         TFloat -- Оплата за периоды
+              , MoneySumm2         TFloat
+              , MoneySumm3         TFloat
+              
+              )
 AS
 $BODY$
-   DECLARE vbUserId      Integer;
-   DECLARE vbIsOperPrice Boolean;
-   DECLARE vbPriceListName_Basis TVarChar;
 BEGIN
-    -- проверка прав пользователя на вызов процедуры
-    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_...());
-    vbUserId:= lpGetUserBySession (inSession);
 
-    -- Получили - показывать ЛИ цену ВХ.
-    --vbIsOperPrice:= lpCheckOperPrice_visible (vbUserId) OR vbUserId = 1078646;
-
-    -- для возможности изменениея цен добавояем прайс лист Базис
-    vbPriceListName_Basis := (SELECT Object.ValueData FROM Object WHERE Object.Id = zc_PriceList_Basis()) ::TVarChar;
-
-    -- !!!замена!!!
-    IF inIsPartion = TRUE THEN
-       inIsPartner:= TRUE;
-    END IF;
-
-    -- список подразделений
-    CREATE TEMP TABLE _tmpUnit (UnitId Integer) ON COMMIT DROP;
-    IF COALESCE (inUnitId, 0) <> 0
+    CREATE TEMP TABLE _tmpLocation (LocationId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpGoods (GoodsId Integer) ON COMMIT DROP;
+    -- группа подразделений или подразделение
+    IF inUnitGroupId <> 0
     THEN
-        --
-        INSERT INTO _tmpUnit (UnitId)
-          SELECT lfSelect.UnitId
-          FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect;
+        INSERT INTO _tmpLocation (LocationId)
+           SELECT lfSelect_Object_Unit_byGroup.UnitId AS LocationId
+           FROM lfSelect_Object_Unit_byGroup (inUnitGroupId) AS lfSelect_Object_Unit_byGroup
+          ;
     ELSE
-        --
-        INSERT INTO _tmpUnit (UnitId)
-          SELECT Object_Unit.Id
-          FROM Object AS Object_Unit
-          WHERE Object_Unit.DescId = zc_Object_Unit()
-            AND Object_Unit.isErased = FALSE;
+        INSERT INTO _tmpLocation (LocationId)
+           SELECT Object.Id AS LocationId
+           FROM Object
+           WHERE Object.DescId = zc_Object_Unit()
+             AND Object.isErased = False
+           ;
     END IF;
 
-
-    -- Ограничения по товару
-    CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
-    IF inGoodsGroupId <> 0 
-    THEN 
-        INSERT INTO _tmpGoods (GoodsId)
-           SELECT lfSelect.GoodsId
-           FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect;
+    -- группа товаров или товар или все товары из проводок
+    IF inGoodsGroupId <> 0 AND COALESCE (inGoodsId, 0) = 0
+    THEN
+        INSERT INTO tmpGoods (GoodsId)
+           SELECT lfSelect.GoodsId 
+           FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect
+           ;
     ELSE 
-        INSERT INTO _tmpGoods (GoodsId)
-           SELECT Object_Goods.Id
-           FROM Object AS Object_Goods
-           WHERE Object_Goods.DescId = zc_Object_Goods()
-            AND Object_Goods.isErased = FALSE;
+        INSERT INTO tmpGoods (GoodsId)
+           SELECT Object.Id
+           FROM Object
+           WHERE Object.DescId = zc_Object_Goods()
+             AND Object.isErased = False
+             AND (Object.Id = inGoodsId OR inGoodsId = 0) 
+           ;
     END IF;
+
+    --сначала выбираем проводки во временную таблицу
+    CREATE TEMP TABLE _tmpContainer (ContainerId Integer, LocationId Integer, GoodsId Integer, GoodsKindId Integer, Amount TFloat) ON COMMIT DROP;
+    INSERT INTO _tmpContainer (ContainerId, LocationId, GoodsId, GoodsKindId, Amount)
+           SELECT CLO_Unit.ContainerId
+                , _tmpLocation.LocationId
+                , tmpGoods.GoodsId
+                , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
+                , COALESCE (Container.Amount,0)        AS Amount
+           FROM _tmpLocation
+                INNER JOIN ContainerLinkObject AS CLO_Unit
+                                               ON CLO_Unit.ObjectId = _tmpLocation.LocationId
+                                              AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                LEFT JOIN Container ON Container.Id = CLO_Unit.ContainerId
+                                   AND Container.DescId = zc_Container_Count()
+
+                INNER JOIN tmpGoods ON tmpGoods.GoodsId = Container.ObjectId
+                
+                LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                              ON CLO_GoodsKind.ContainerId = Container.Id
+                                             AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+          ;
 
     -- !!!!!!!!!!!!!!!!!!!!!!!
-    ANALYZE _tmpGoods;
-    ANALYZE _tmpUnit;
+    ANALYZE _tmpContainer;
 
     -- Результат
     RETURN QUERY
-    WITH tmpPriceBasis AS (SELECT tmp.GoodsId
-                                , tmp.ValuePrice
-                           FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
-                                                                    , inOperDate   := CURRENT_DATE) AS tmp
-                                INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = tmp.GoodsId
-                           )
-   --остатки
-   , tmpContainer_All AS (SELECT Container.*
-                          FROM Container
-                               INNER JOIN _tmpUnit ON _tmpUnit.UnitId = Container.WhereObjectId
-                               INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = Container.ObjectId
-                           WHERE Container.DescId = zc_Container_Count()
-                            AND (COALESCE(Container.Amount,0) <> 0 OR inIsRemains = TRUE)
-                          )
-
-   , tmpObject_PartionGoods AS (SELECT Object_PartionGoods.*
-                                FROM Object_PartionGoods
-                                WHERE Object_PartionGoods.ObjectId IN (SELECT DISTINCT tmpContainer_All.ObjectId FROM tmpContainer_All)
-                                )
-   -- Остатки + Партии
-   , tmpContainer AS (SELECT Container.WhereObjectId        AS UnitId
-                           --, Container.PartionId            AS PartionId
-                           , Object_PartionGoods.MovementItemId
-                           , Container.ObjectId             AS GoodsId
-                           , COALESCE (Container.Amount, 0) AS Remains
-                           --, Object_PartionGoods.BrandId
-                           , Object_PartionGoods.FromId AS PartnerId
-
-                           , Object_PartionGoods.GoodsSizeId
-                           , Object_PartionGoods.MeasureId
-                           , Object_PartionGoods.GoodsGroupId
-                           , Object_PartionGoods.GoodsTagId
-                           , Object_PartionGoods.GoodsTypeId
-                           , Object_PartionGoods.ProdColorId
-                           , Object_PartionGoods.TaxKindId
-                           , Object_PartionGoods.TaxValue AS TaxKindValue
-
-                           , Object_PartionGoods.MovementId
-                             -- Если есть права видеть Цену вх.
-                           --, CASE WHEN vbIsOperPrice = TRUE THEN Object_PartionGoods.OperPrice ELSE 0 END AS OperPrice
-                           , Object_PartionGoods.EKPrice
-                           , Object_PartionGoods.CountForPrice
-
-                           , COALESCE (tmpPriceBasis.ValuePrice, Object_PartionGoods.OperPriceList) AS OperPriceList
-
-                             -- Цена без НДС затраты
-                           , Object_PartionGoods.CostPrice     ::TFloat
-                             -- Цена вх. с затратами без НДС
-                           , (Object_PartionGoods.EKPrice / Object_PartionGoods.CountForPrice + COALESCE (Object_PartionGoods.CostPrice,0) ) ::TFloat AS OperPrice_cost
-              
-                           , Object_PartionGoods.Amount     AS Amount_in
-                           , Object_PartionGoods.UnitId     AS UnitId_in
-                           
-                             --  № п/п - только для = 1 возьмем Amount_in
-                           , ROW_NUMBER() OVER (PARTITION BY Container.PartionId ORDER BY CASE WHEN Container.WhereObjectId = Object_PartionGoods.UnitId THEN 0 ELSE 1 END ASC) AS Ord
-
-                      FROM tmpContainer_All AS Container
-                           INNER JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = Container.PartionId
-                                                         AND Object_PartionGoods.ObjectId        = Container.ObjectId
-                                                         AND (Object_PartionGoods.isErased      = FALSE
-                                                           OR Object_PartionGoods.Amount        > 0
-                                                             )
-                            -- цена из Прайс-листа
-                           LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Container.ObjectId
-
-                      WHERE (Object_PartionGoods.FromId = inPartnerId  OR inPartnerId = 0)
+          WITH 
+          --
+          tmpNorm AS (SELECT Object_GoodsByGoodsKind_View.*
+                           , COALESCE (ObjectFloat_NormRem.ValueData,0)         ::TFloat  AS NormRem
+                           , COALESCE (ObjectFloat_NormOut.ValueData,0)         ::TFloat  AS NormOut
+                      FROM Object_GoodsByGoodsKind_View
+                           LEFT JOIN ObjectFloat AS ObjectFloat_NormRem
+                                                 ON ObjectFloat_NormRem.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                AND ObjectFloat_NormRem.DescId = zc_ObjectFloat_GoodsByGoodsKind_NormRem()
+                           LEFT JOIN ObjectFloat AS ObjectFloat_NormOut
+                                                 ON ObjectFloat_NormOut.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                AND ObjectFloat_NormOut.DescId = zc_ObjectFloat_GoodsByGoodsKind_NormOut()
+                      WHERE COALESCE (ObjectFloat_NormRem.ValueData,0) <> 0
+                         OR COALESCE (ObjectFloat_NormOut.ValueData,0) <> 0
                       )
---
-       , tmpMovementString AS (SELECT MovementString.*
-                               FROM MovementString
-                               WHERE MovementString.MovementId IN (SELECT DISTINCT tmpContainer.MovementId FROM tmpContainer)
-                                 AND MovementString.DescId = zc_MovementString_Comment()
-                                 AND inisPartion = TRUE
-                              )
-       , tmpMovementFloat AS (SELECT MovementFloat.*
-                               FROM MovementFloat
-                               WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpContainer.MovementId FROM tmpContainer)
-                                 AND MovementFloat.DescId IN (zc_MovementFloat_DiscountTax()
-                                                            , zc_MovementFloat_VATPercent()
-                                                            )
-                                 AND inisPartion = TRUE
-                               )
+        --
+        , tmpMIContainer AS (SELECT _tmpContainer.ContainerId
+                                  , _tmpContainer.LocationId
+                                  , _tmpContainer.GoodsId
+                                  , _tmpContainer.GoodsKindId
+                                  , CASE WHEN MIContainer.MovementDescId = zc_Movement_Income() THEN MIContainer.MovementId ELSE 0 END AS MovementId_income
+                                  
+                                   -- Приход
+                                 , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income()
+                                              AND MIContainer.OperDate BETWEEN inStartDate1 AND inEndDate1
+                                                  THEN MIContainer.Amount
+                                             ELSE 0
+                                        END) AS CountIncome1
+                                 , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income()
+                                              AND MIContainer.OperDate BETWEEN inStartDate2 AND inEndDate2
+                                                  THEN MIContainer.Amount
+                                             ELSE 0
+                                        END) AS CountIncome2
+                                 , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income()
+                                              AND MIContainer.OperDate BETWEEN inStartDate3 AND inEndDate3
+                                                  THEN MIContainer.Amount
+                                             ELSE 0
+                                        END) AS CountIncome3
+                                 --потребление
+                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                               AND MIContainer.OperDate BETWEEN inStartDate1 AND inEndDate1
+                                              AND MIContainer.isActive = TRUE
+                                                  THEN MIContainer.Amount
+                                             ELSE 0
+                                        END) AS CountProductionIn1
+                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                               AND MIContainer.OperDate BETWEEN inStartDate2 AND inEndDate2
+                                              AND MIContainer.isActive = TRUE
+                                                  THEN MIContainer.Amount
+                                             ELSE 0
+                                        END) AS CountProductionIn2
+                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                               AND MIContainer.OperDate BETWEEN inStartDate3 AND inEndDate3
+                                              AND MIContainer.isActive = TRUE
+                                                  THEN MIContainer.Amount
+                                             ELSE 0
+                                        END) AS CountProductionIn3
+                                 ---
+                                 /*, SUM (CASE WHEN _tmpContainer.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset())
+                                              -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                              AND MIContainer.MovementDescId IN (zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                              AND MIContainer.isActive = FALSE
+                                                  THEN -1 * MIContainer.Amount
+                                             ELSE 0
+                                        END) AS CountProductionOut*/
 
-       , tmpData_All AS (SELECT tmpContainer.UnitId
-                              , tmpContainer.GoodsId
-                              , CASE WHEN inisPartion = TRUE THEN tmpContainer.MovementItemId   ELSE 0  END AS MovementItemId
-                              , CASE WHEN inisPartion = TRUE THEN tmpContainer.MovementId       ELSE 0  END AS MovementId_Partion
-                              , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE '' END AS DescName_Partion
-                              , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE '' END AS InvNumber_Partion
-                              , CASE WHEN inisPartion = TRUE THEN Movement_Partion.OperDate     ELSE zc_DateStart() END AS OperDate_Partion
-                              , CASE WHEN inisPartner = TRUE THEN tmpContainer.PartnerId        ELSE 0  END AS PartnerId
-                              , tmpContainer.GoodsSizeId
-                              --, tmpContainer.BrandId
-                              , tmpContainer.MeasureId
-                              , tmpContainer.GoodsGroupId
-                              , tmpContainer.GoodsTagId
-                              , tmpContainer.GoodsTypeId
-                              , tmpContainer.ProdColorId
-                              , tmpContainer.TaxKindId
-                              , tmpContainer.TaxKindValue
-                              , tmpContainer.EKPrice
-                              , tmpContainer.OperPriceList
-                              , tmpContainer.OperPrice_cost
-                              , tmpContainer.CostPrice
-                              , tmpContainer.CountForPrice
-                              , tmpContainer.UnitId_in
+                                
+                                         -- ***REMAINS***
+                                 , -1 * SUM (CASE WHEN MIContainer.OperDate >= inStartDate1 THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS RemainsStart1
+                                 , -1 * SUM (CASE WHEN MIContainer.OperDate >= inStartDate2 THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS RemainsStart2
+                                 , -1 * SUM (CASE WHEN MIContainer.OperDate >= inStartDate3 THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS RemainsStart3
 
-                                --  только для Ord = 1
-                              , SUM (CASE WHEN tmpContainer.Ord = 1 THEN tmpContainer.Amount_in ELSE 0 END) AS Amount_in
-                              --, SUM (CASE WHEN tmpContainer.Ord = 1 THEN zfCalc_SummIn (tmpContainer.Amount_in, tmpContainer.EKPrice, tmpContainer.CountForPrice) ELSE 0 END) AS TotalSummEKPrice
-                              , SUM (tmpContainer.Remains)         AS Remains
-                              , SUM (zfCalc_SummIn        (tmpContainer.Remains, tmpContainer.EKPrice, tmpContainer.CountForPrice)) AS TotalSummEKPrice
-                              , SUM (zfCalc_SummPriceList (tmpContainer.Remains, tmpContainer.OperPriceList))                       AS TotalSummPriceList
+                             FROM _tmpContainer
+                                  INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = _tmpContainer.ContainerId
+                                                                                 AND MIContainer.OperDate BETWEEN inStartDate1 AND inEndDate3
+                             GROUP BY _tmpContainer.ContainerId
+                                    , _tmpContainer.LocationId
+                                    , _tmpContainer.GoodsId
+                                    , _tmpContainer.GoodsKindId
+                                    , CASE WHEN MIContainer.MovementDescId = zc_Movement_Income() THEN MIContainer.MovementId ELSE 0 END
+                             HAVING SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income()
+                                               AND MIContainer.OperDate BETWEEN inStartDate1 AND inEndDate1
+                                                   THEN MIContainer.Amount
+                                              ELSE 0
+                                         END) <> 0
+                                 OR SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income()
+                                               AND MIContainer.OperDate BETWEEN inStartDate2 AND inEndDate2
+                                                   THEN MIContainer.Amount
+                                              ELSE 0
+                                         END) <> 0
+                                 OR SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income()
+                                               AND MIContainer.OperDate BETWEEN inStartDate3 AND inEndDate3
+                                                   THEN MIContainer.Amount
+                                              ELSE 0
+                                         END) <> 0
+                                  --потребление
+                                 OR SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                                AND MIContainer.OperDate BETWEEN inStartDate1 AND inEndDate1
+                                                AND MIContainer.isActive = TRUE
+                                                   THEN MIContainer.Amount
+                                              ELSE 0
+                                         END) <> 0
+                                 OR SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                                AND MIContainer.OperDate BETWEEN inStartDate2 AND inEndDate2
+                                                AND MIContainer.isActive = TRUE
+                                                   THEN MIContainer.Amount
+                                              ELSE 0
+                                         END) <> 0
+                                 OR SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                                AND MIContainer.OperDate BETWEEN inStartDate3 AND inEndDate3
+                                                AND MIContainer.isActive = TRUE
+                                                   THEN MIContainer.Amount
+                                              ELSE 0
+                                         END) <> 0
+                                        
+                                    -- ***REMAINS***
+                                 OR SUM (MIContainer.Amount) <> 0
 
-                              , MS_Comment.ValueData                        AS Comment_in
-                              , COALESCE (MF_DiscountTax.ValueData, 0)      AS DiscountTax_in
-                              , COALESCE (MF_VATPercent.ValueData, 0)       AS VATPercent_in
+                            UNION ALL
+                             --для расчета остатков
+                             SELECT _tmpContainer.ContainerId
+                                  , _tmpContainer.LocationId
+                                  , _tmpContainer.GoodsId
+                                  , _tmpContainer.GoodsKindId
+                                  , 0 AS MovementId_income
 
-                         FROM tmpContainer
-                              LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id = tmpContainer.MovementId
-                              LEFT JOIN MovementDesc AS MovementDesc_Partion ON MovementDesc_Partion.Id = Movement_Partion.DescId
+                                    -- ***COUNT***
+                                  , 0 AS CountIncome1
+                                  , 0 AS CountIncome2
+                                  , 0 AS CountIncome3
+                                  , 0 AS CountProductionIn1
+                                  , 0 AS CountProductionIn2
+                                  , 0 AS CountProductionIn3
 
-                              LEFT JOIN tmpMovementString AS MS_Comment
-                                                          ON MS_Comment.MovementId = tmpContainer.MovementId
-                                                         AND MS_Comment.DescId = zc_MovementString_Comment()
-                                                         AND inisPartion = TRUE
-                              LEFT JOIN tmpMovementFloat AS MF_DiscountTax
-                                                         ON MF_DiscountTax.MovementId = tmpContainer.MovementId
-                                                        AND MF_DiscountTax.DescId     = zc_MovementFloat_DiscountTax()
-                                                        AND inisPartion                 = TRUE
-                              LEFT JOIN tmpMovementFloat AS MF_VATPercent
-                                                         ON MF_VATPercent.MovementId = tmpContainer.MovementId
-                                                        AND MF_VATPercent.DescId     = zc_MovementFloat_VATPercent()
-                                                        AND inisPartion            = TRUE
-                         GROUP BY tmpContainer.UnitId
-                                , tmpContainer.GoodsId
-                                , CASE WHEN inisPartion = TRUE THEN tmpContainer.MovementItemId   ELSE 0 END
-                                , CASE WHEN inisPartion = TRUE THEN tmpContainer.MovementId       ELSE 0  END
-                                , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE '' END
-                                , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE '' END
-                                , CASE WHEN inisPartion = TRUE THEN Movement_Partion.OperDate     ELSE zc_DateStart() END
-                                , CASE WHEN inisPartner = TRUE THEN tmpContainer.PartnerId        ELSE 0  END
-                                , tmpContainer.GoodsSizeId
-                                --, tmpContainer.BrandId
-                                , tmpContainer.MeasureId
-                                , tmpContainer.GoodsGroupId
-                                , tmpContainer.GoodsTagId
-                                , tmpContainer.GoodsTypeId
-                                , tmpContainer.ProdColorId
-                                , tmpContainer.TaxKindId
-                                , tmpContainer.TaxKindValue
-                                , tmpContainer.EKPrice
-                                , tmpContainer.OperPriceList
-                                , tmpContainer.UnitId_in
-                                , MS_Comment.ValueData
-                                , MF_DiscountTax.ValueData
-                                , MF_VATPercent.ValueData
-                                , tmpContainer.CountForPrice
-                                , tmpContainer.OperPrice_cost
-                                , tmpContainer.CostPrice
-                  )
+                                    -- ***REMAINS***
+                                 , _tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS RemainsStart1
+                                 , _tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS RemainsStart2
+                                 , _tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS RemainsStart3
+                             FROM _tmpContainer
+                                  LEFT JOIN MovementItemContainer AS MIContainer
+                                                                  ON MIContainer.ContainerId = _tmpContainer.ContainerId
+                                                                 AND MIContainer.OperDate > inEndDate3
 
-       , tmpData AS (SELECT tmpData_All.UnitId
-                          , tmpData_All.GoodsId
-                          , tmpData_All.MovementItemId
-                          , tmpData_All.MovementId_Partion
-                          , tmpData_All.DescName_Partion
-                          , tmpData_All.InvNumber_Partion
-                          , tmpData_All.OperDate_Partion
-                          , tmpData_All.PartnerId
-                          , Object_GoodsSize.Id        AS GoodsSizeId
-                          , Object_GoodsSize.ValueData AS GoodsSizeName_real
-                          , STRING_AGG (Object_GoodsSize.ValueData, ', ' ORDER BY CASE WHEN LENGTH (Object_GoodsSize.ValueData) = 1 THEN '0' ELSE '' END || Object_GoodsSize.ValueData) AS GoodsSizeName
-                          --, tmpData_All.BrandId
-                          , tmpData_All.MeasureId
-                          , tmpData_All.GoodsGroupId
-                          , tmpData_All.GoodsTagId
-                          , tmpData_All.GoodsTypeId
-                          , tmpData_All.ProdColorId
-                          , tmpData_All.TaxKindId
-                          
-                          , tmpData_All.EKPrice
-                          , tmpData_All.OperPriceList
-                          , tmpData_All.OperPrice_cost
-                          , tmpData_All.CostPrice
-                          , tmpData_All.CountForPrice
+                             GROUP BY _tmpContainer.ContainerId
+                                    , _tmpContainer.LocationId
+                                    , _tmpContainer.GoodsId
+                                    , _tmpContainer.GoodsKindId
+                                    , _tmpContainer.Amount
+                             HAVING _tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
+                            )
+        -- оплата идет по уп статье, у приходов товара есть договор а у него zc_ObjectLink_Contract_InfoMoney  --вот самая верхняя группировка - InfoMoney
+        , tmpInfoMoney AS (SELECT DISTINCT ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
+                           FROM (SELECT DISTINCT tmpMIContainer.MovementId_income FROM tmpMIContainer) AS tmp
+                                INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                              ON MovementLinkObject_Contract.MovementId = tmp.MovementId_income
+                                                             AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                INNER JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                                      ON ObjectLink_Contract_InfoMoney.ObjectId = MovementLinkObject_Contract.ObjectId
+                                                     AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+                           )
+        , View_InfoMoney AS (SELECT * FROM Object_InfoMoney_View)
+         -- оплаты по статьям
+        , tmpMoney AS (SELECT tmpInfoMoney.InfoMoneyId
+                            --, CLO_Unit.ObjectId AS LocationId
+                            , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate1 AND inEndDate1 
+                                        THEN MIContainer.Amount
+                                        ELSE 0
+                                   END) AS MoneySumm1
+                            , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate2 AND inEndDate2 
+                                        THEN MIContainer.Amount
+                                        ELSE 0
+                                   END) AS MoneySumm2
+                            , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate3 AND inEndDate3 
+                                        THEN MIContainer.Amount
+                                        ELSE 0
+                                   END) AS MoneySumm3
+                       FROM tmpInfoMoney
+                           INNER JOIN ContainerLinkObject AS CLO_InfoMoney 
+                                                          ON CLO_InfoMoney.ObjectId = tmpInfoMoney.InfoMoneyId
+                                                         AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+                           /*INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                          ON CLO_Unit.ContainerId = CLO_InfoMoney.ContainerId
+                                                         AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                           INNER JOIN _tmpLocation ON _tmpLocation.LocationId = CLO_Unit.ObjectId
+                           */
 
-                          , tmpData_All.UnitId_in
-                          , tmpData_All.Comment_in
-                          , tmpData_All.DiscountTax_in
-                          , tmpData_All.VATPercent_in
+                           INNER JOIN MovementItemContainer AS MIContainer
+                                                            ON MIContainer.ContainerId = CLO_InfoMoney.ContainerId
+                                                           AND MIContainer.OperDate BETWEEN inStartDate1 AND inEndDate3
+                                                           AND MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount())
+                       GROUP BY tmpInfoMoney.InfoMoneyId
+                              --, CLO_Unit.ObjectId
+                       HAVING SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate1 AND inEndDate1 
+                                        THEN MIContainer.Amount
+                                        ELSE 0
+                                   END) <> 0
+                           OR SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate2 AND inEndDate2 
+                                        THEN MIContainer.Amount
+                                        ELSE 0
+                                   END) <> 0
+                           OR SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate3 AND inEndDate3 
+                                        THEN MIContainer.Amount
+                                        ELSE 0
+                                   END) <> 0
+                       
+                       )
 
-                          , SUM (tmpData_All.Amount_in)          AS Amount_in
-                          , SUM (tmpData_All.Remains)            AS Remains
-                          , SUM (tmpData_All.TotalSummEKPrice) AS TotalSummEKPrice
-                          , SUM (tmpData_All.TotalSummPriceList) AS TotalSummPriceList
-                     FROM tmpData_All
-                          LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = tmpData_All.GoodsSizeId
-                     GROUP BY tmpData_All.UnitId
-                            , tmpData_All.GoodsId
-                            , tmpData_All.MovementItemId
-                            , tmpData_All.MovementId_Partion
-                            , tmpData_All.DescName_Partion
-                            , tmpData_All.InvNumber_Partion
-                            , tmpData_All.OperDate_Partion
-                            , tmpData_All.PartnerId
-                            , Object_GoodsSize.Id
-                            , Object_GoodsSize.ValueData
-                           -- , tmpData_All.BrandId
-                            , tmpData_All.MeasureId
-                            , tmpData_All.GoodsGroupId
-                            , tmpData_All.GoodsTagId
-                            , tmpData_All.GoodsTypeId
-                            , tmpData_All.ProdColorId
-                            , tmpData_All.TaxKindId
-                            , tmpData_All.TaxKindValue
-                            , tmpData_All.OperPriceList
-                            , tmpData_All.UnitId_in
-                            , tmpData_All.Comment_in
-                            , tmpData_All.DiscountTax_in
-                            , tmpData_All.VATPercent_in
-                            , tmpData_All.EKPrice
-                            , tmpData_All.CountForPrice
-                            , tmpData_All.OperPrice_cost
-                            , tmpData_All.CostPrice
-              )
+        --объединяем таблицу товаров с оплатами
+        , tmpData AS ( SELECT 0 AS InfoMoneyId
+                            , tmpMIContainer.LocationId
+                            , tmpMIContainer.GoodsId
+                            , tmpMIContainer.GoodsKindId
+                            
+                            , SUM (tmpMIContainer.CountIncome1)       AS CountIncome1
+                            , SUM (tmpMIContainer.CountIncome2)       AS CountIncome2
+                            , SUM (tmpMIContainer.CountIncome3)       AS CountIncome3
+                            , SUM (tmpMIContainer.CountProductionIn1) AS CountProductionIn1
+                            , SUM (tmpMIContainer.CountProductionIn2) AS CountProductionIn2
+                            , SUM (tmpMIContainer.CountProductionIn3) AS CountProductionIn3
 
-       , tmpMIString AS (SELECT *
-                         FROM MovementItemString AS MIString_PartNumber
-                         WHERE MIString_PartNumber.MovementItemId (SELECT DISTINCT tmpData.MovementItemId FROM tmpData)
-                           AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
-                         ) 
+                            , SUM (tmpMIContainer.RemainsStart1) AS RemainsStart1
+                            , SUM (tmpMIContainer.RemainsStart2) AS RemainsStart2
+                            , SUM (tmpMIContainer.RemainsStart3) AS RemainsStart3
+                            
+                            , 0 AS MoneySumm1
+                            , 0 AS MoneySumm2
+                            , 0 AS MoneySumm3
+                       FROM tmpMIContainer
+                       GROUP BY tmpMIContainer.LocationId
+                            , tmpMIContainer.GoodsId
+                            , tmpMIContainer.GoodsKindId
+                     UNION ALL
+                       SELECT tmpMoney.InfoMoneyId
+                            , 0 AS LocationId
+                            , 0 AS GoodsId
+                            , 0 AS GoodsKindId
+                            
+                            , 0 AS CountIncome1
+                            , 0 AS CountIncome2
+                            , 0 AS CountIncome3
+                            , 0 AS CountProductionIn1
+                            , 0 AS CountProductionIn2
+                            , 0 AS CountProductionIn3
 
-                                                  
-        -- Результат
-        SELECT
-             tmpData.MovementItemId                 AS MovementItemId
-           , tmpData.MovementId_Partion             AS MovementId_Partion
-           , tmpData.InvNumber_Partion :: TVarChar  AS InvNumber_Partion
-           , zfCalc_PartionMovementName (0, '', tmpData.InvNumber_Partion, tmpData.OperDate_Partion) AS InvNumberAll_Partion
-           , CASE WHEN tmpData.OperDate_Partion = zc_DateStart() THEN NULL ELSE tmpData.OperDate_Partion END  :: TDateTime AS OperDate_Partion
-           , tmpData.DescName_Partion  :: TVarChar  AS DescName_Partion
+                            , 0 AS RemainsStart1
+                            , 0 AS RemainsStart2
+                            , 0 AS RemainsStart3
+                            
+                            , tmpMoney.MoneySumm1
+                            , tmpMoney.MoneySumm2
+                            , tmpMoney.MoneySumm3
+                       FROM tmpMoney
+                      )
+        
+         -- Результат
+         SELECT Object_Goods.Id                            AS GoodsId
+              , Object_Goods.ObjectCode                    AS GoodsCode
+              , Object_Goods.ValueData     :: TVarChar     AS GoodsName
+              , Object_GoodsKind.Id        :: Integer      AS GoodsKindId
+              , Object_GoodsKind.ValueData :: TVarChar     AS GoodsKindName
 
-           , Object_Unit.Id                 AS UnitId
-           , Object_Unit.ValueData          AS UnitName
-           , Object_Unit_in.ValueData       AS UnitName_in
-           , Object_Partner.ValueData       AS PartnerName
-           --, Object_Brand.ValueData         AS BrandName
+              , Object_Location.Id         :: Integer      AS LocationId
+              , Object_Location.ObjectCode :: Integer      AS LocationCode
+              , Object_Location.ValueData  :: TVarChar     AS LocationName
+              , Object_GoodsGroup.Id                       AS GoodsGroupId
+              , Object_GoodsGroup.ValueData                AS GoodsGroupName
+              , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
 
-           , Object_Goods.Id                AS GoodsId
-           , Object_Goods.ObjectCode        AS GoodsCode
-           , Object_Goods.ValueData         AS GoodsName
-           , ObjectString_Article.ValueData AS Article
-           , MIString_PartNumber.ValueData  AS PartNumber
-           , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-           , Object_GoodsGroup.ValueData    AS GoodsGroupName
-           , Object_Measure.ValueData       AS MeasureName
+              , Object_InfoMoney_View.InfoMoneyGroupName
+              , Object_InfoMoney_View.InfoMoneyDestinationName
+              , Object_InfoMoney_View.InfoMoneyId
+              , Object_InfoMoney_View.InfoMoneyCode
+              , Object_InfoMoney_View.InfoMoneyName
+              , Object_InfoMoney_View.InfoMoneyName_all
 
-           , Object_GoodsTag.ValueData      AS GoodsTagName
-           , Object_GoodsType.ValueData     AS GoodsTypeName
-           , Object_ProdColor.ValueData     AS ProdColorName
-           , Object_TaxKind.ValueData       AS TaxKindName
+              , tmpNorm.NormRem            ::TFloat
+              , tmpNorm.NormOut            ::TFloat
 
-           , tmpData.GoodsSizeId            AS GoodsSizeId
-           , tmpData.GoodsSizeName      ::TVarChar AS GoodsSizeName
-           , tmpData.GoodsSizeName_real ::TVarChar AS GoodsSizeName_real
-           
-           , Object_PriceList_Basis.Id         ::Integer  AS PriceListId_Basis
-           , Object_PriceList_Basis.ValueData  ::TVarChar AS PriceListName_Basis
+              , tmpData.RemainsStart1      ::TFloat
+              , tmpData.RemainsStart2      ::TFloat
+              , tmpData.RemainsStart3      ::TFloat
+              , tmpData.CountIncome1       ::TFloat
+              , tmpData.CountIncome2       ::TFloat
+              , tmpData.CountIncome3       ::TFloat
+              , tmpData.CountProductionIn1 ::TFloat
+              , tmpData.CountProductionIn2 ::TFloat
+              , tmpData.CountProductionIn3 ::TFloat
+              , tmpData.MoneySumm1         ::TFloat
+              , tmpData.MoneySumm2         ::TFloat
+              , tmpData.MoneySumm3         ::TFloat
+        
+         FROM tmpData
+         
+              LEFT JOIN View_InfoMoney AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = tmpData.InfoMoneyId
 
-             -- Итого кол-во Приход от поставщика
-           , tmpData.Amount_in    :: TFloat AS Amount_in
+              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
+              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpData.GoodsKindId
+              LEFT JOIN Object AS Object_Location ON Object_Location.Id = tmpData.LocationId
 
-           , CASE WHEN tmpData.Amount_in  <> 0 THEN tmpData.TotalSummEKPrice / tmpData.Amount_in
-                  ELSE 0
-             END :: TFloat AS OperPrice
-           , COALESCE (tmpData.CountForPrice,1)   :: TFloat AS CountForPrice
+              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                   ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                  AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+              LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
-             -- Цена по прайсу
-           , tmpData.OperPriceList :: TFloat
+              LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
+                                     ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
+                                    AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
-           , tmpData.OperPrice_cost   :: TFloat
-           , tmpData.CostPrice        :: TFloat
-
-             -- Кол-во - остаток
-           , tmpData.Remains                 :: TFloat AS Remains
-             -- Сумма по входным ценам
-           , tmpData.TotalSummEKPrice      :: TFloat AS TotalSummEKPrice
-             -- Сумма по прайсу - 
-           , tmpData.TotalSummPriceList      :: TFloat AS TotalSummPriceList
-           
-           , (tmpData.Remains * tmpData.CostPrice ) :: TFloat AS Summ_Cost
-           , (tmpData.Remains * tmpData.OperPrice_cost ) :: TFloat AS TotalSumm_cost
-
-             -- % наценки 
-           , CAST (CASE WHEN  tmpData.OperPrice_cost <> 0
-                        THEN (100 * tmpData.OperPriceList / tmpData.OperPrice_cost - 100)
-                        ELSE 0
-                   END AS NUMERIC (16, 0)) :: TFloat AS PriceTax
-
-           , tmpData.Comment_in       :: TVarChar
-           , tmpData.DiscountTax_in   :: TFloat
-           , tmpData.VATPercent_in    :: TFloat
-
-        FROM tmpData
-            LEFT JOIN Object AS Object_Unit    ON Object_Unit.Id    = tmpData.UnitId
-            LEFT JOIN Object AS Object_Unit_in ON Object_Unit_in.Id = tmpData.UnitId_in
-            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpData.PartnerId
-            LEFT JOIN Object AS Object_Goods   ON Object_Goods.Id   = tmpData.GoodsId
-
-            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = tmpData.GoodsGroupId
-            LEFT JOIN Object AS Object_Measure    ON Object_Measure.Id    = tmpData.MeasureId
-            LEFT JOIN Object AS Object_GoodsTag   ON Object_GoodsTag.Id   = tmpData.GoodsTagId
-            LEFT JOIN Object AS Object_GoodsType  ON Object_GoodsType.Id  = tmpData.GoodsTypeId
-            LEFT JOIN Object AS Object_ProdColor  ON Object_ProdColor.Id  = tmpData.ProdColorId
-            LEFT JOIN Object AS Object_TaxKind    ON Object_TaxKind.Id    = tmpData.TaxKindId
-
-            LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
-                                   ON ObjectString_GoodsGroupFull.ObjectId = tmpData.GoodsId
-                                  AND ObjectString_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
-            LEFT JOIN ObjectString AS ObjectString_Article
-                                   ON ObjectString_Article.ObjectId = tmpData.GoodsId
-                                  AND ObjectString_Article.DescId = zc_ObjectString_Article()
-            
-            LEFT JOIN Object AS Object_PriceList_Basis ON Object_PriceList_Basis.Id = zc_PriceList_Basis()
-            LEFT JOIN tmpMIString AS MIString_PartNumber
-                                  ON MIString_PartNumber.MovementItemId = tmpData.MovementItemId
-           ;
-
+              LEFT JOIN tmpNorm ON tmpNorm.GoodsId = tmpData.GoodsId
+                               AND COALESCE (tmpNorm.GoodsKindId, 0) = COALESCE (tmpData.GoodsKindId, 0)
+      ;
 
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 
-/*
+/*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 04.03.21         *
+ 25.03.21         *
 */
--- тест
--- SELECT * FROM gpReport_Goods_RemainsCurrent (inUnitId:= 1531,  inPartnerId:= 0, inisPartion:= FALSE, inisPartner:= FALSE, inIsRemains:= FALSE, inSession:= zfCalc_UserAdmin())
--- select * from gpReport_Goods_RemainsCurrent (inUnitId := 0 , inPartnerId := 0 ,inGoodsGroupId:=0, inIsPartion := 'True' , inIsPartner := 'False', inIsRemains := 'False' ,  inSession := '2');
 
---select * from Object_PartionGoods limit 10
+-- тест
+--
+/*
+select * from gpReport_Supply(
+     inStartDate1  :='01.02.2021' ::        TDateTime , --
+     inEndDate1    :='02.02.2021' ::        TDateTime , --
+     inStartDate2  :='01.02.2021' ::        TDateTime , --
+     inEndDate2    :='02.02.2021' ::        TDateTime , --
+     inStartDate3  :='01.03.2021' ::        TDateTime , --
+     inEndDate3    :='02.03.2021' ::        TDateTime , --
+     inUnitGroupId    := 0::     Integer,    -- группа подразделений / подразделение
+     inGoodsGroupId   := 1918::     Integer,    -- группа товара
+     inGoodsId        := 2064::     Integer,    -- товар
+     inSession        := '5' ::     TVarChar    -- сессия пользователя
+)
+*/

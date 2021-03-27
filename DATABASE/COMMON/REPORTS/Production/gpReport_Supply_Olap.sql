@@ -1,9 +1,8 @@
--- Function: gpReport_Supply()
+-- Function: gpReport_Supply_Olap()
 
-DROP FUNCTION IF EXISTS gpReport_Supply (TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Supply (TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Supply_Olap (TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_Supply(
+CREATE OR REPLACE FUNCTION gpReport_Supply_Olap(
     IN inStartDate1          TDateTime , --
     IN inEndDate1            TDateTime , --
     IN inStartDate2          TDateTime , --
@@ -16,7 +15,8 @@ CREATE OR REPLACE FUNCTION gpReport_Supply(
     IN inisGoodsKind         Boolean,    -- по видам товара
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS TABLE ( GoodsId Integer
+RETURNS TABLE ( MonthDate TVarChar
+              , GoodsId Integer
               , GoodsCode Integer
               , GoodsName TVarChar
               , GoodsKindName TVarChar
@@ -35,27 +35,13 @@ RETURNS TABLE ( GoodsId Integer
               , InfoMoneyName_all TVarChar
               , NormRem                   TFloat -- Норма
               , NormOut                   TFloat
-              , RemainsStart1             TFloat -- Остатки на начало каждого периода
-              , RemainsStart2             TFloat
-              , RemainsStart3             TFloat
-              , RemainsStart1_Weight      TFloat -- Остатки на начало каждого периода
-              , RemainsStart2_Weight      TFloat
-              , RemainsStart3_Weight      TFloat
-              , CountIncome1              TFloat -- Приходы за периоды
-              , CountIncome2              TFloat
-              , CountIncome3              TFloat
-              , CountIncome1_Weight       TFloat -- Приходы за периоды
-              , CountIncome2_Weight       TFloat
-              , CountIncome3_Weight       TFloat
-              , CountProduction1          TFloat -- Потребление за периоды
-              , CountProduction2          TFloat
-              , CountProduction3          TFloat
-              , CountProduction1_Weight   TFloat -- Потребление за периоды
-              , CountProduction2_Weight   TFloat
-              , CountProduction3_Weight   TFloat
-              , MoneySumm1                TFloat -- Оплата за периоды
-              , MoneySumm2                TFloat
-              , MoneySumm3                TFloat
+              , RemainsStart             TFloat -- Остатки на начало каждого периода
+              , RemainsStart_Weight      TFloat
+              , CountIncome              TFloat -- Приходы за периоды
+              , CountIncome_Weight       TFloat
+              , CountProduction          TFloat
+              , CountProduction_Weight   TFloat -- Потребление за периоды
+              , MoneySumm                TFloat -- Оплата за периоды
               
               )
 AS
@@ -336,7 +322,7 @@ BEGIN
                             , tmpMIContainer.LocationId
                             , tmpMIContainer.GoodsId
                             , CASE WHEN inisGoodsKind = TRUE THEN tmpMIContainer.GoodsKindId ELSE 0 END AS GoodsKindId
-                            , STRING_AGG (Object_GoodsKind.ValueData, ',') ::TVarChar AS GoodsKindName
+                            , STRING_AGG (DISTINCT Object_GoodsKind.ValueData, ',') ::TVarChar AS GoodsKindName
                             
                             , SUM (tmpMIContainer.CountIncome1)       AS CountIncome1
                             , SUM (tmpMIContainer.CountIncome2)       AS CountIncome2
