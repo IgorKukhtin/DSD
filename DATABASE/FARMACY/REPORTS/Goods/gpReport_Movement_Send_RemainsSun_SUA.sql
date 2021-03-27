@@ -8,8 +8,10 @@ CREATE OR REPLACE FUNCTION gpReport_Movement_Send_RemainsSun_SUA(
 )
 RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , UnitId_From Integer, UnitName_From TVarChar
+             , Remains_From TFloat, Layout_From TFloat, PromoUnit_From TFloat
 
              , UnitId_To Integer, UnitName_To TVarChar
+             , Remains_To TFloat
              , Amount TFloat
              , Summa_From TFloat
              , Summa_To TFloat
@@ -29,9 +31,13 @@ BEGIN
          , Result.GoodsName
          , Result.UnitId_From 
          , Result.UnitName_From 
+         , Result.PromoUnit_From
+         , Result.Layout_From
+         , Result.PromoUnit_From
 
          , Result.UnitId_To 
          , Result.UnitName_To 
+         , Result.Remains_To 
          , Result.Amount 
          , Round(Result.Amount * Result.Price_From, 2)::TFloat 
          , Round(Result.Amount * Result.Price_To, 2)::TFloat 

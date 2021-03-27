@@ -1,27 +1,27 @@
 inherited Report_Movement_Send_RemainsSun_SUAForm: TReport_Movement_Send_RemainsSun_SUAForm
   Caption = #1054#1090#1095#1077#1090' <'#1057#1059#1053' '#1087#1086' '#1057#1059#1040'>'
   ClientHeight = 673
-  ClientWidth = 960
+  ClientWidth = 1016
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 976
+  ExplicitWidth = 1032
   ExplicitHeight = 712
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 960
+    Width = 1016
     Height = 614
     TabOrder = 2
     ExplicitTop = 59
     ExplicitWidth = 960
     ExplicitHeight = 614
     ClientRectBottom = 614
-    ClientRectRight = 960
+    ClientRectRight = 1016
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 960
       ExplicitHeight = 614
       inherited cxGrid: TcxGrid
-        Width = 960
+        Width = 1016
         Height = 614
         ExplicitWidth = 960
         ExplicitHeight = 614
@@ -94,7 +94,14 @@ inherited Report_Movement_Send_RemainsSun_SUAForm: TReport_Movement_Send_Remains
           OptionsView.HeaderHeight = 50
           Bands = <
             item
-              Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+              Caption = #1058#1086#1074#1072#1088
+            end
+            item
+              Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1077#1083#1100
+              Width = 360
+            end
+            item
+              Caption = #1055#1086#1083#1091#1095#1072#1090#1077#1083#1100
             end>
           object GoodsCode: TcxGridDBBandedColumn
             Caption = #1050#1086#1076
@@ -125,8 +132,44 @@ inherited Report_Movement_Send_RemainsSun_SUAForm: TReport_Movement_Send_Remains
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 127
-            Position.BandIndex = 0
+            Position.BandIndex = 1
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object Remains_From: TcxGridDBBandedColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1086#1090#1087#1088#1072#1074#1080#1090'.'
+            DataBinding.FieldName = 'Remains_From'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Position.BandIndex = 1
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object Layout_From: TcxGridDBBandedColumn
+            Caption = #1042#1099#1082#1083'.'
+            DataBinding.FieldName = 'Layout_From'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Position.BandIndex = 1
             Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object PromoUnit_From: TcxGridDBBandedColumn
+            Caption = #1052#1072#1088#1082'. '#1087#1083#1072#1085' '#1090#1086#1095#1082#1080
+            DataBinding.FieldName = 'PromoUnit_From'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Position.BandIndex = 1
+            Position.ColIndex = 3
             Position.RowIndex = 0
           end
           object UnitName_To: TcxGridDBBandedColumn
@@ -135,9 +178,9 @@ inherited Report_Movement_Send_RemainsSun_SUAForm: TReport_Movement_Send_Remains
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 155
-            Position.BandIndex = 0
-            Position.ColIndex = 3
+            Width = 150
+            Position.BandIndex = 2
+            Position.ColIndex = 0
             Position.RowIndex = 0
           end
           object Amount: TcxGridDBBandedColumn
@@ -149,8 +192,8 @@ inherited Report_Movement_Send_RemainsSun_SUAForm: TReport_Movement_Send_Remains
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Position.BandIndex = 0
-            Position.ColIndex = 4
+            Position.BandIndex = 2
+            Position.ColIndex = 1
             Position.RowIndex = 0
           end
           object Summa_From: TcxGridDBBandedColumn
@@ -163,8 +206,8 @@ inherited Report_Movement_Send_RemainsSun_SUAForm: TReport_Movement_Send_Remains
             HeaderHint = #1057#1091#1084#1084#1072' '#1074' '#1094#1077#1085#1072#1093' '#1086#1090#1087#1088#1072#1074#1080#1077#1083#1103
             Options.Editing = False
             Width = 82
-            Position.BandIndex = 0
-            Position.ColIndex = 5
+            Position.BandIndex = 2
+            Position.ColIndex = 2
             Position.RowIndex = 0
           end
           object Summa_To: TcxGridDBBandedColumn
@@ -177,8 +220,20 @@ inherited Report_Movement_Send_RemainsSun_SUAForm: TReport_Movement_Send_Remains
             HeaderHint = #1057#1091#1084#1084#1072' '#1074' '#1094#1077#1085#1072#1093' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
             Options.Editing = False
             Width = 79
-            Position.BandIndex = 0
-            Position.ColIndex = 6
+            Position.BandIndex = 2
+            Position.ColIndex = 3
+            Position.RowIndex = 0
+          end
+          object Remains_To: TcxGridDBBandedColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1086#1083#1091#1095#1072#1090'.'
+            DataBinding.FieldName = 'Remains_To'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Position.BandIndex = 2
+            Position.ColIndex = 4
             Position.RowIndex = 0
           end
         end
@@ -189,7 +244,7 @@ inherited Report_Movement_Send_RemainsSun_SUAForm: TReport_Movement_Send_Remains
     end
   end
   inherited Panel: TPanel
-    Width = 960
+    Width = 1016
     Height = 33
     TabOrder = 4
     ExplicitWidth = 960

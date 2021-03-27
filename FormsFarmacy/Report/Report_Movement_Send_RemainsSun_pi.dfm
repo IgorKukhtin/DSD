@@ -4,7 +4,7 @@ inherited Report_Movement_Send_RemainsSun_piForm: TReport_Movement_Send_RemainsS
   ClientWidth = 960
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 976
-  ExplicitHeight = 708
+  ExplicitHeight = 712
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -692,6 +692,7 @@ inherited Report_Movement_Send_RemainsSun_piForm: TReport_Movement_Send_RemainsS
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitTop = 390
         object cxGridDBTableViewPartion: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PartionDS
@@ -1035,6 +1036,26 @@ inherited Report_Movement_Send_RemainsSun_piForm: TReport_Movement_Send_RemainsS
             HeaderHint = #1053#1058#1047' '#1074' '#1040#1087#1090#1077#1082#1077' "'#1054#1090' '#1082#1086#1075#1086'" '#1089' '#1091#1095#1077#1090#1086#1084' '#1079#1085#1072#1095#1077#1085#1080#1103' '#1074' '#1072#1089#1089#1086#1088#1090'. '#1084#1072#1090#1088#1080#1094#1077
             Width = 45
           end
+          object chLayout: TcxGridDBColumn
+            Caption = #1042#1099#1082#1083'.'
+            DataBinding.FieldName = 'Layout'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object chPromoUnit: TcxGridDBColumn
+            Caption = #1052#1072#1088#1082'. '#1087#1083#1072#1085' '#1090#1086#1095#1082#1080
+            DataBinding.FieldName = 'PromoUnit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
           object chAmount_notSold_summ: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1057#1074#1077#1088#1093#1079#1072#1087#1072#1089
             DataBinding.FieldName = 'Amount_notSold_summ'
@@ -1307,7 +1328,7 @@ inherited Report_Movement_Send_RemainsSun_piForm: TReport_Movement_Send_RemainsS
         end
         item
           Name = 'IsDetail'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1362,7 +1383,7 @@ inherited Report_Movement_Send_RemainsSun_piForm: TReport_Movement_Send_RemainsS
         end
         item
           Name = 'isPartion'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1428,7 +1449,7 @@ inherited Report_Movement_Send_RemainsSun_piForm: TReport_Movement_Send_RemainsS
         end
         item
           Name = 'IsDetail'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1483,7 +1504,7 @@ inherited Report_Movement_Send_RemainsSun_piForm: TReport_Movement_Send_RemainsS
         end
         item
           Name = 'isPartion'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1795,6 +1816,8 @@ inherited Report_Movement_Send_RemainsSun_piForm: TReport_Movement_Send_RemainsS
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 632
     Top = 312
   end
@@ -1821,7 +1844,7 @@ inherited Report_Movement_Send_RemainsSun_piForm: TReport_Movement_Send_RemainsS
     Params = <
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput

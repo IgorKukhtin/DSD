@@ -95,6 +95,10 @@ BEGIN
      -- все Подразделения для схемы SUN
      CREATE TEMP TABLE _tmpUnit_SUN   (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, Value_T1 TFloat, Value_T2 TFloat, DayIncome Integer, DaySendSUN Integer, DaySendSUNAll Integer, Limit_N TFloat, isLock_CheckMSC Boolean, isLock_CloseGd Boolean, isLock_ClosePL Boolean) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpUnit_SUN_a (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, Value_T1 TFloat, Value_T2 TFloat, DayIncome Integer, DaySendSUN Integer, DaySendSUNAll Integer, Limit_N TFloat, isLock_CheckMSC Boolean, isLock_CloseGd Boolean, isLock_ClosePL Boolean) ON COMMIT DROP;
+     -- Выкладка
+     CREATE TEMP TABLE _tmpGoods_Layout  (UnitId Integer, GoodsId Integer, Layout TFloat) ON COMMIT DROP;
+     -- Маркетинговый план для точек
+     CREATE TEMP TABLE _tmpGoods_PromoUnit  (UnitId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
      -- баланс по Аптекам - если не соответствует, соотв приход или расход блокируется
      CREATE TEMP TABLE _tmpUnit_SUN_balance   (UnitId Integer, Summ_out TFloat, Summ_in TFloat, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpUnit_SUN_balance_a (UnitId Integer, Summ_out TFloat, Summ_in TFloat, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
@@ -176,6 +180,8 @@ BEGIN
                                  , AmountSun_unit_save TFloat -- инф.=0, сроковые на этой аптеке, без учета изменения
                                  , Price               TFloat -- Цена
                                  , MCS                 TFloat -- НТЗ
+                                 , Layout              TFloat -- Выкладка
+                                 , PromoUnit           TFloat -- Марк. план длч точки
                                  , Summ_min            TFloat -- информативно - мнимальн сумма
                                  , Summ_max            TFloat -- информативно - максимальн сумма
                                  , Unit_count          TFloat -- информативно - кол-во таких накл.
@@ -218,6 +224,8 @@ BEGIN
                            , AmountSun_unit_save
                            , Price
                            , MCS
+                           , Layout
+                           , PromoUnit
                            , Summ_min
                            , Summ_max
                            , Unit_count
@@ -262,6 +270,8 @@ BEGIN
                , tmp.AmountSun_unit_save
                , COALESCE (tmp.Price, 0) :: TFloat AS Price
                , COALESCE (tmp.MCS, 0)     :: TFloat AS MCS
+               , COALESCE (tmp.Layout, 0)     :: TFloat AS Layout
+               , COALESCE (tmp.PromoUnit, 0)  :: TFloat AS PromoUnit
                , tmp.Summ_min
                , tmp.Summ_max
                , tmp.Unit_count
@@ -556,6 +566,9 @@ BEGIN
                  --
                , tmpRemains_Partion_sum.Amount_sale
                , tmpRemains_Partion_sum.MCSValue AS MCS
+                  -- Выкладка
+               , _tmpGoods_Layout.Layout
+               , _tmpGoods_PromoUnit.Amount
                , _tmpRemains.AmountResult
                , _tmpRemains.AmountRemains
                  -- отложенные Чеки + не проведенные с CommentError
@@ -582,6 +595,12 @@ BEGIN
                LEFT JOIN _tmpRemains_all_a AS _tmpRemains
                                            ON _tmpRemains.UnitId  = tmp.UnitId_from
                                           AND _tmpRemains.GoodsId = tmp.GoodsId
+
+               LEFT JOIN _tmpGoods_PromoUnit ON _tmpGoods_PromoUnit.UnitId = tmp.UnitId_from
+                                            AND _tmpGoods_PromoUnit.GoodsId = tmp.GoodsId
+
+               LEFT JOIN _tmpGoods_Layout ON _tmpGoods_Layout.UnitId = tmp.UnitId_from
+                                         AND _tmpGoods_Layout.GoodsId = tmp.GoodsId
 
           ;
      RETURN NEXT Cursor2;
@@ -682,4 +701,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Movement_Send_RemainsSun_pi (inOperDate:= CURRENT_DATE + INTERVAL '1 DAY', inSession:= '3'); -- FETCH ALL "<unnamed portal 1>";
+-- SELECT * FROM gpReport_Movement_Send_RemainsSun_pi (inOperDate:= CURRENT_DATE + INTERVAL '2 DAY', inSession:= '3'); -- FETCH ALL "<unnamed portal 1>";

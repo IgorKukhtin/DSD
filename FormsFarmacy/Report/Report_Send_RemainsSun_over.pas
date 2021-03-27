@@ -76,6 +76,8 @@ type
     spSendSUN: TdsdStoredProc;
     actSendSUN: TdsdExecStoredProc;
     mactSendSUN: TMultiAction;
+    chPromoUnit: TcxGridDBColumn;
+    chLayout: TcxGridDBColumn;
   private
     { Private declarations }
   public

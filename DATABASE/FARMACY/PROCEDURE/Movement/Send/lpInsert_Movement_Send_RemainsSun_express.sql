@@ -31,6 +31,8 @@ RETURNS TABLE (UnitId Integer, UnitName TVarChar
            --, AmountSun_unit_save TFloat -- ***инф.=0, сроковые на этой аптеке, без учета изменения
              , Price               TFloat -- Цена
              , MCS                 TFloat -- НТЗ
+             , Layout              TFloat -- Выкладка
+             , PromoUnit           TFloat -- Марк. план длч точки
              , Summ_min            TFloat -- информативно - мнимальн сумма
              , Summ_max            TFloat -- информативно - максимальн сумма
              , Unit_count          TFloat -- информативно - кол-во таких накл.
@@ -116,6 +118,8 @@ BEGIN
 
      -- все Подразделения для схемы SUN-v2
      DELETE FROM _tmpUnit_SUN;
+     DELETE FROM _tmpGoods_Layout;
+     DELETE FROM _tmpGoods_PromoUnit;
      -- 1. все остатки, продажи => получаем ВСЕ кол-ва EXPRESS
      DELETE FROM _tmpRemains_all;
      DELETE FROM _tmpRemains;
@@ -150,7 +154,7 @@ BEGIN
         WHERE (OB.ValueData = TRUE
           --OR OB.ObjectId in (183292, 9771036) -- select * from object where Id in (183292, 9771036)
               )
-          AND OB.DescId = zc_ObjectBoolean_Unit_SUN_v3()
+          AND OB.DescId = zc_ObjectBoolean_Unit_SUN()  --_v3()
           -- если указан день недели - проверим его
         --AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = '')
       /*UNION 
@@ -190,6 +194,125 @@ BEGIN
        */
        ;
 
+     -- Выкладки
+     WITH tmpLayoutMovement AS (SELECT Movement.Id                                             AS Id
+                                     , COALESCE(MovementBoolean_PharmacyItem.ValueData, FALSE) AS isPharmacyItem
+                                FROM Movement
+                                     LEFT JOIN MovementBoolean AS MovementBoolean_PharmacyItem
+                                                               ON MovementBoolean_PharmacyItem.MovementId = Movement.Id
+                                                              AND MovementBoolean_PharmacyItem.DescId = zc_MovementBoolean_PharmacyItem()
+                                WHERE Movement.DescId = zc_Movement_Layout()
+                                  AND Movement.StatusId = zc_Enum_Status_Complete()
+                               )
+        , tmpLayout AS (SELECT Movement.ID                        AS Id
+                             , MovementItem.ObjectId              AS GoodsId
+                             , MovementItem.Amount                AS Amount
+                             , Movement.isPharmacyItem            AS isPharmacyItem
+                        FROM tmpLayoutMovement AS Movement
+                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                    AND MovementItem.DescId = zc_MI_Master()
+                                                    AND MovementItem.isErased = FALSE
+                                                    AND MovementItem.Amount > 0
+                       )
+        , tmpLayoutUnit AS (SELECT Movement.ID                        AS Id
+                                 , MovementItem.ObjectId              AS UnitId
+                                 , MovementItem.Amount                AS Amount
+                            FROM tmpLayoutMovement AS Movement
+                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                        AND MovementItem.DescId = zc_MI_Child()
+                                                        AND MovementItem.isErased = FALSE
+                                                        AND MovementItem.Amount > 0
+                           )
+                               
+        , tmpLayoutUnitCount AS (SELECT tmpLayoutUnit.ID                  AS Id
+                                      , count(*)                          AS CountUnit
+                                 FROM tmpLayoutUnit
+                                 GROUP BY tmpLayoutUnit.ID
+                                 )
+        , tmpLayoutAll AS (SELECT tmpLayout.GoodsId                  AS GoodsId
+                                , _tmpUnit_SUN.UnitId                AS UnitId
+                                , tmpLayout.Amount                              AS Amount
+                           FROM tmpLayout
+                           
+                                INNER JOIN _tmpUnit_SUN ON 1 = 1
+                                
+                                LEFT JOIN ObjectBoolean AS Unit_PharmacyItem
+                                                        ON Unit_PharmacyItem.ObjectId  = _tmpUnit_SUN.UnitId
+                                                       AND Unit_PharmacyItem.DescId    = zc_ObjectBoolean_Unit_PharmacyItem()
+                                 
+                                LEFT JOIN tmpLayoutUnit ON tmpLayoutUnit.Id     = tmpLayout.Id
+                                                       AND tmpLayoutUnit.UnitId = _tmpUnit_SUN.UnitId
+
+                                LEFT JOIN tmpLayoutUnitCount ON tmpLayoutUnitCount.Id     = tmpLayout.Id
+                                 
+                           WHERE (tmpLayoutUnit.UnitId = _tmpUnit_SUN.UnitId OR COALESCE (tmpLayoutUnitCount.CountUnit, 0) > 0)
+                             AND (COALESCE (Unit_PharmacyItem.ValueData, False) = False OR tmpLayout.isPharmacyItem = True)
+                           )
+                                                              
+     INSERT INTO _tmpGoods_Layout (GoodsId, UnitId, Layout) 
+     SELECT tmpLayoutAll.GoodsId               AS GoodsId
+          , tmpLayoutAll.UnitId                AS UnitId
+          , MAX (tmpLayoutAll.Amount):: TFloat AS Amount
+      FROM tmpLayoutAll      
+      GROUP BY tmpLayoutAll.GoodsId
+             , tmpLayoutAll.UnitId;
+
+     -- Маркетинговый план для точек
+      WITH tmpUserUnit AS (SELECT COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId) AS UnitId
+                                , Count(*)                                                                   AS CountUser
+                           FROM Movement
+                                  
+                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.id
+                                                        AND MovementItem.DescId = zc_MI_Master()
+
+                                 LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                                      ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
+                                                     AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+   
+                                 LEFT JOIN ObjectLink AS ObjectLink_Member_Unit
+                                                      ON ObjectLink_Member_Unit.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                                     AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit()
+
+                                 LEFT JOIN ObjectLink AS ObjectLink_Member_Position
+                                                      ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                                     AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
+
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                                  ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                                                            
+                           WHERE Movement.DescId = zc_Movement_EmployeeSchedule()
+                             AND Movement.OperDate = DATE_TRUNC ('MONTH', inOperDate)
+                             AND ObjectLink_Member_Position.ChildObjectId = 1672498
+                           GROUP BY COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId))
+
+      INSERT INTO _tmpGoods_PromoUnit
+      SELECT OL_UnitCategory.Objectid                AS UnitId
+           , MI_Goods.Objectid                       AS GoodsId
+           , MI_Goods.Amount * tmpUserUnit.CountUser AS Amount
+
+      FROM Movement
+
+           INNER JOIN MovementLinkObject AS MovementLinkObject_UnitCategory
+                                         ON MovementLinkObject_UnitCategory.MovementId = Movement.Id
+                                        AND MovementLinkObject_UnitCategory.DescId = zc_MovementLinkObject_UnitCategory()
+           INNER JOIN ObjectLink AS OL_UnitCategory
+                                 ON OL_UnitCategory.DescId = zc_ObjectLink_Unit_Category()
+                                AND OL_UnitCategory.ChildObjectId = MovementLinkObject_UnitCategory.ObjectId
+                                
+           INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = OL_UnitCategory.Objectid
+
+           INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
+                                              AND MI_Goods.DescId = zc_MI_Master()
+                                              AND MI_Goods.isErased = FALSE
+                                              AND MI_Goods.Amount > 0
+                                            
+                                                          
+           INNER JOIN tmpUserUnit ON tmpUserUnit.UnitId = OL_UnitCategory.Objectid
+
+      WHERE Movement.StatusId = zc_Enum_Status_Complete()
+        AND Movement.DescId = zc_Movement_PromoUnit()
+        AND Movement.OperDate = DATE_TRUNC ('MONTH', inOperDate);
 
      -- 1.1. вся статистика продаж
      -- CREATE TEMP TABLE _tmpSale_express (DayOrd Integer, DayOrd_real Integer, UnitId Integer, GoodsId Integer, Amount TFloat, Amount_sum TFloat, Summ TFloat) ON COMMIT DROP;
@@ -720,7 +843,11 @@ BEGIN
      -- 6.1.1. распределяем-1 остатки EXPRESS (Сверх запас) - по всем аптекам
      -- курсор1 - все остатки, EXPRESS (Сверх запас) + EXPRESS (Сверх запас) без корректировки
      OPEN curPartion FOR
-        SELECT _tmpRemains_Partion.UnitId AS UnitId_from, _tmpRemains_Partion.GoodsId, _tmpRemains_Partion.AmountResult, _tmpRemains_Partion.AmountRemains, _tmpGoods_express.KoeffSUN
+        SELECT _tmpRemains_Partion.UnitId AS UnitId_from
+             , _tmpRemains_Partion.GoodsId
+             , _tmpRemains_Partion.AmountResult - COALESCE(_tmpGoods_Layout.Layout, 0) - COALESCE(_tmpGoods_PromoUnit.Amount, 0)
+             , _tmpRemains_Partion.AmountRemains
+             , _tmpGoods_express.KoeffSUN
         FROM _tmpRemains_Partion
              -- начинаем с аптек, где расход может быть максимальным
              INNER JOIN (SELECT _tmpSumm_limit.UnitId_from, MAX (_tmpSumm_limit.Summ) AS Summ FROM _tmpSumm_limit
@@ -730,6 +857,14 @@ BEGIN
                         ) AS tmpSumm_limit ON tmpSumm_limit.UnitId_from = _tmpRemains_Partion.UnitId
              -- все товары для статистики продаж - express
              INNER JOIN _tmpGoods_express ON _tmpGoods_express.GoodsId = _tmpRemains_Partion.GoodsId
+
+             LEFT JOIN _tmpGoods_PromoUnit ON _tmpGoods_PromoUnit.UnitId = _tmpRemains_Partion.UnitId
+                                          AND _tmpGoods_PromoUnit.GoodsId = _tmpRemains_Partion.GoodsId
+                                          
+             LEFT JOIN _tmpGoods_Layout ON _tmpGoods_Layout.UnitId = _tmpRemains_Partion.UnitId
+                                       AND _tmpGoods_Layout.GoodsId = _tmpRemains_Partion.GoodsId
+
+        WHERE _tmpRemains_Partion.AmountResult - COALESCE(_tmpGoods_Layout.Layout, 0) - COALESCE(_tmpGoods_PromoUnit.Amount, 0) > 0
         ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
        ;
      -- начало цикла по курсору1
@@ -885,6 +1020,9 @@ BEGIN
             , _tmpRemains_calc.Price
               -- НТЗ
             , _tmpRemains_calc.MCS
+              -- Выкладка
+            , _tmpGoods_Layout.Layout
+            , _tmpGoods_PromoUnit.Amount
 
               -- информативно - "возможна" мнимальн сумма
             , tmpSumm.Summ_min   :: TFloat AS Summ_min
@@ -975,6 +1113,13 @@ BEGIN
 
             LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId        = _tmpRemains_calc.UnitId
 
+
+            LEFT JOIN _tmpGoods_PromoUnit ON _tmpGoods_PromoUnit.UnitId = _tmpRemains.UnitId
+                                         AND _tmpGoods_PromoUnit.GoodsId = _tmpRemains.GoodsId
+
+            LEFT JOIN _tmpGoods_Layout ON _tmpGoods_Layout.UnitId = _tmpRemains.UnitId
+                                      AND _tmpGoods_Layout.GoodsId = _tmpRemains.GoodsId
+
        -- ORDER BY Object_Goods.ObjectCode, Object_Unit.ValueData
        ORDER BY Object_Goods.ValueData, Object_Unit.ValueData
        -- ORDER BY Object_Unit.ValueData, Object_Goods.ValueData
@@ -982,6 +1127,7 @@ BEGIN
       ;
 
     -- RAISE EXCEPTION '<ok>';
+
 
 
 END;

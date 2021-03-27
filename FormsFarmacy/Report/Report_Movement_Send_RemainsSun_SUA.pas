@@ -60,6 +60,10 @@ type
     Amount: TcxGridDBBandedColumn;
     Summa_From: TcxGridDBBandedColumn;
     Summa_To: TcxGridDBBandedColumn;
+    Remains_From: TcxGridDBBandedColumn;
+    Layout_From: TcxGridDBBandedColumn;
+    PromoUnit_From: TcxGridDBBandedColumn;
+    Remains_To: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public
