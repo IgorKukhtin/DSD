@@ -488,7 +488,6 @@ object IncomeForm: TIncomeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
-            Options.Editing = False
             Width = 80
           end
           object OperPriceWithVAT: TcxGridDBColumn

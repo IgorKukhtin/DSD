@@ -21,6 +21,8 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , StockRatio TFloat
 
              , MCS_From TFloat
+             , Layout_From TFloat
+             , PromoUnit_From TFloat
              , AmountRemains_From TFloat
              , AmountSalesDey_From TFloat
              , AmountSalesMonth_From TFloat
@@ -66,6 +68,8 @@ BEGIN
          , Result.StockRatio 
 
          , Result.MCS_From 
+         , Result.Layout_From
+         , Result.PromoUnit_From
          , Result.AmountRemains_From 
          , Result.AmountSalesDey_From 
          , Result.AmountSalesMonth_From 
@@ -90,10 +94,10 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий 0.В.
- 17.06.20                                                     *
+ 26.03.21                                                       *
+ 17.06.20                                                       *
 */
 
 -- SELECT * FROM gpReport_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '0 DAY', inSession:= '3');
 
-SELECT * FROM gpReport_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '0 DAY', inSession:= '3');
-
+SELECT * FROM gpReport_Movement_Send_RemainsSun_Supplement (inOperDate:= ('29.03.2021')::TDateTime, inSession:= '3');

@@ -140,6 +140,7 @@ type
     edGoodsGroup: TcxButtonEdit;
     cxLabel5: TcxLabel;
     GuidesGoodsGroup: TdsdGuides;
+    MovementItemId: TcxGridDBColumn;
   private
     { Private declarations }
   public

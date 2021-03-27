@@ -103,7 +103,8 @@ BEGIN
      FROM (SELECT DISTINCT _tmpResult_Supplement.MovementId FROM _tmpResult_Supplement WHERE _tmpResult_Supplement.MovementId > 0
           ) AS tmp;
 
- --    RAISE EXCEPTION '<ok>';
+     --raise notice 'Value 05: %', (select Count(*) from _tmpResult_Supplement WHERE _tmpResult_Supplement.MovementId > 0);      
+     --RAISE EXCEPTION '<ok>';
 
 END;
 $BODY$
@@ -116,6 +117,6 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '1 DAY', inSession:= zfCalc_UserAdmin()) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
+-- SELECT * FROM gpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inSession:= zfCalc_UserAdmin()) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 
 

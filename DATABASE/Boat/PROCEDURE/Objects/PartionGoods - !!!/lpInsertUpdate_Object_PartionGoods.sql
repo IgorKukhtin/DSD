@@ -291,12 +291,13 @@ BEGIN
                                        , GoodsGroupId, GoodsTagId, GoodsTypeId, GoodsSizeId, ProdColorId, MeasureId, TaxKindId, TaxValue
                                        , isErased, isArc)
                                  VALUES (inMovementItemId, inMovementId, vbMovementDescId, inFromId, inUnitId, inOperDate, inObjectId
-                                       , 0 /*inAmount*/, inEKPrice, inCountForPrice, inEmpfPrice, 0
+                                       , 0 /*inAmount*/, inEKPrice, inCountForPrice, 0, inEmpfPrice
                                          -- "сложно" получили цену
-                                       , inOperPriceList /*CASE WHEN vbRePrice_exists = TRUE
-                                                 THEN (SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (zc_DateEnd() - INTERVAL '1 DAY', zc_PriceList_Basis(), inObjectId) AS tmp)
-                                              ELSE inOperPriceList
-                                         END*/
+                                       , inOperPriceList
+                                                           /*CASE WHEN vbRePrice_exists = TRUE
+                                                                    THEN (SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (zc_DateEnd() - INTERVAL '1 DAY', zc_PriceList_Basis(), inObjectId) AS tmp)
+                                                                 ELSE inOperPriceList
+                                                            END*/
                                        , inGoodsGroupId, zfConvert_IntToNull (inGoodsTagId), zfConvert_IntToNull (inGoodsTypeId)
                                        , zfConvert_IntToNull (inGoodsSizeId), zfConvert_IntToNull (inProdColorId), inMeasureId
                                        , inTaxKindId, inTaxKindValue

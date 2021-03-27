@@ -2060,6 +2060,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SupplyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SupplyForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SupplyDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SupplyDialogForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleExternal_OrderSaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleExternal_OrderSaleForm');

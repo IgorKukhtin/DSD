@@ -256,6 +256,30 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 70
           end
+          object NormRem: TcxGridDBColumn
+            Caption = #1053#1086#1088#1084'. '#1086#1089#1090', '#1090#1086#1085#1085
+            DataBinding.FieldName = 'NormRem'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1086#1088#1084#1072#1090#1080#1074#1085#1099#1077' '#1086#1089#1090#1072#1090#1082#1080', '#1090#1086#1085#1085
+            Options.Editing = False
+            Width = 80
+          end
+          object NormOut: TcxGridDBColumn
+            Caption = #1053#1086#1088#1084'. '#1087#1086#1090#1088#1077#1073#1083'./'#1084#1077#1089'., '#1090#1086#1085#1085
+            DataBinding.FieldName = 'NormOut'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1086#1088#1084#1072#1090#1080#1074#1085#1086#1077' '#1087#1086#1090#1088#1077#1073#1083#1077#1085#1080#1077' '#1074' '#1084#1077#1089#1103#1094', '#1090#1086#1085#1085
+            Options.Editing = False
+            Width = 80
+          end
           object GoodsCode_basis: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1094#1077#1093')'
             DataBinding.FieldName = 'GoodsCode_basis'

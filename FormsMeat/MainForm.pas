@@ -1251,6 +1251,8 @@ type
     miProfitLossResult: TMenuItem;
     actGoodsByGoodsKind_Norm: TdsdOpenForm;
     miGoodsByGoodsKind_Norm: TMenuItem;
+    actReport_Supply: TdsdOpenForm;
+    miReport_Supply: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

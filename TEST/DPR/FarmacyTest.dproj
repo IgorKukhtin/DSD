@@ -3617,6 +3617,10 @@
 				<Form>Report_FinalSUAProtocolForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Check_CorrectMarketing.pas">
+				<Form>Report_Check_CorrectMarketingForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
