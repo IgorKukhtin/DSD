@@ -1,18 +1,18 @@
--- Function: Считаем Сумму со Скидкой - Округление до 2-х знаков
+-- Function: Считаем Сумму с НДС и со Скидкой - Округление до 2-х знаков
 
 DROP FUNCTION IF EXISTS zfCalc_SummWVATDiscountTax (TFloat, TFloat);
 
 CREATE OR REPLACE FUNCTION zfCalc_SummWVATDiscountTax(
-    IN inSumm          TFloat, -- Сумма
+    IN inSumm          TFloat, -- Сумма без НДС
     IN inDiscountTax   TFloat, -- % скидки
-    IN inTaxKindValue  TFloat  -- 
+    IN inTaxKindValue  TFloat  -- % НДС
 )
 RETURNS TFloat
 AS
 $BODY$
 BEGIN
      -- округлили до 2-х знаков
-     RETURN CAST (zfCalc_SummDiscountTax (inSumm, inDiscountTax) * (1 + inTaxKindValue/100) AS NUMERIC (16, 2));
+     RETURN CAST (zfCalc_SummWVAT (zfCalc_SummDiscountTax (inSumm, inDiscountTax), inTaxKindValue) AS NUMERIC (16, 2));
                 
 END;
 $BODY$

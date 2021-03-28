@@ -27,7 +27,7 @@ BEGIN
           , Movement_OrderClient.InvNumber
           , 1 ::Integer AS CodeInfo
           , 'Information  1' ::TVarChar AS DescInfo
-          , COALESCE (MovementBlob_Info.ValueData,'') :: TBlob AS Text_Info
+          , CASE WHEN TRIM (COALESCE (MovementBlob_Info.ValueData,'')) = '' THEN CHR (13) || CHR (13) || CHR (13) ELSE MovementBlob_Info.ValueData END :: TBlob AS Text_Info
 
         FROM Movement AS Movement_OrderClient 
             LEFT JOIN MovementBlob AS MovementBlob_Info
@@ -42,7 +42,7 @@ BEGIN
           , Movement_OrderClient.InvNumber
           , 2 ::Integer AS CodeInfo
           , 'Information  2' ::TVarChar AS DescInfo
-          , COALESCE (MovementBlob_Info.ValueData,'') :: TBlob AS Text_Info
+          , CASE WHEN TRIM (COALESCE (MovementBlob_Info.ValueData,'')) = '' THEN CHR (13) || CHR (13) || CHR (13) ELSE MovementBlob_Info.ValueData END :: TBlob AS Text_Info
 
         FROM Movement AS Movement_OrderClient 
             LEFT JOIN MovementBlob AS MovementBlob_Info
@@ -57,7 +57,7 @@ BEGIN
           , Movement_OrderClient.InvNumber
           , 3 ::Integer AS CodeInfo
           , 'Information  3' ::TVarChar AS DescInfo
-          , COALESCE (MovementBlob_Info.ValueData,'') :: TBlob AS Text_Info
+          , CASE WHEN TRIM (COALESCE (MovementBlob_Info.ValueData,'')) = '' THEN CHR (13) || CHR (13) || CHR (13) ELSE MovementBlob_Info.ValueData END :: TBlob AS Text_Info
 
         FROM Movement AS Movement_OrderClient 
             LEFT JOIN MovementBlob AS MovementBlob_Info

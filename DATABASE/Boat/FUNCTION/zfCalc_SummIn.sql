@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS zfCalc_SummIn (TFloat, TFloat, TFloat);
 
 CREATE OR REPLACE FUNCTION zfCalc_SummIn(
     IN inAmount        TFloat, -- Кол-во
-    IN inOperPrice     TFloat, -- Цена Входная, в валюте
+    IN inOperPrice     TFloat, -- Цена Входная
     IN inCountForPrice TFloat  -- Цена за количество
 )
 RETURNS TFloat

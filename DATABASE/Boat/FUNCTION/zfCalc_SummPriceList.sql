@@ -4,19 +4,19 @@ DROP FUNCTION IF EXISTS zfCalc_SummPriceList (TFloat, TFloat);
 
 CREATE OR REPLACE FUNCTION zfCalc_SummPriceList(
     IN inAmount        TFloat, -- Кол-во
-    IN inOperPriceList TFloat  -- Цена по прайсу, в ГРН
+    IN inOperPriceList TFloat  -- Цена по прайсу
 )
 RETURNS TFloat
 AS
 $BODY$
 BEGIN
 
-    -- Округление до 0 знаков
+    -- Округление до 2-х знаков
     RETURN CASE WHEN ABS (inOperPriceList) < 1
                 THEN CAST (COALESCE (inAmount, 0) * COALESCE (inOperPriceList, 0)
                            AS NUMERIC (16, 2))
                 ELSE CAST (COALESCE (inAmount, 0) * COALESCE (inOperPriceList, 0)
-                           AS NUMERIC (16, 0))
+                           AS NUMERIC (16, 2))
            END;
 
 END;

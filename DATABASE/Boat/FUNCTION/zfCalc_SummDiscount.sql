@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS zfCalc_SummDiscount (TFloat, TFloat);
 
 CREATE OR REPLACE FUNCTION zfCalc_SummDiscount(
-    IN inSumm        TFloat, -- Сумма
+    IN inSumm        TFloat, -- Сумма без скидки
     IN inDiscountTax TFloat  -- % скидки
 )
 RETURNS TFloat
@@ -11,8 +11,8 @@ AS
 $BODY$
 BEGIN
      -- округлили до 2-х знаков
-     RETURN CAST (COALESCE (inSumm, 0.0) * COALESCE (inDiscountTax, 0.0) / 100 AS NUMERIC (16, 2));
-                
+     RETURN inSumm - zfCalc_SummDiscountTax (inSumm, inDiscountTax);
+
 END;
 $BODY$
   LANGUAGE PLPGSQL IMMUTABLE;

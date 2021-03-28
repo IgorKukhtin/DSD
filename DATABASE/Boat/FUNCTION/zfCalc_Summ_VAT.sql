@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS zfCalc_Summ_VAT (TFloat, TFloat);
 
 CREATE OR REPLACE FUNCTION zfCalc_Summ_VAT(
     IN inSumm          TFloat, -- Ñóììà ñ ÍÄÑ
-    IN inTaxKindValue  TFloat  -- 
+    IN inTaxKindValue  TFloat  -- % ÍÄÑ
 )
 RETURNS TFloat
 AS
