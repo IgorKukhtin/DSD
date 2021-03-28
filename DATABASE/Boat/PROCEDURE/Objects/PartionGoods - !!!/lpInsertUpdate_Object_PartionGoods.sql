@@ -341,7 +341,7 @@ BEGIN
          PERFORM gpInsertUpdate_ObjectHistory_PriceListItemLast (ioId         := NULL                  -- сам найдет нужный Id
                                                                , inPriceListId:= zc_PriceList_Basis()  -- !!!Базовый Прайс!!!
                                                                , inGoodsId    := inObjectId
-                                                               , inOperDate   := zc_DateStart()
+                                                               , inOperDate   := inOperDate
                                                                , ioPriceNoVAT := inOperPriceList
                                                                , ioPriceWVAT  := 0
                                                                , inIsLast     := TRUE

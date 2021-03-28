@@ -104,7 +104,9 @@ uses
   GuideArticleLoss in '..\ScaleCeh\GuideArticleLoss.pas' {GuideArticleLossForm},
   dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas',
   Medoc_J1201011 in '..\SOURCE\MeDOC\Medoc_J1201011.pas',
-  Medoc_J1201211 in '..\SOURCE\MeDOC\Medoc_J1201211.pas';
+  Medoc_J1201211 in '..\SOURCE\MeDOC\Medoc_J1201211.pas',
+  Medoc_J1201012 in '..\SOURCE\MeDOC\Medoc_J1201012.pas',
+  Medoc_J1201212 in '..\SOURCE\MeDOC\Medoc_J1201212.pas';
 
 {$R *.res}
 
