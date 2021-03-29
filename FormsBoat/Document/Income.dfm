@@ -2127,15 +2127,6 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inTaxKindValue'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'TaxKindValue'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inGoodsGroupId'
         Value = Null
         Component = MasterCDS
@@ -2184,14 +2175,6 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inTaxKindId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'TaxKindId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inPartNumber'
         Value = Null
         Component = MasterCDS
@@ -2208,7 +2191,8 @@ object IncomeForm: TIncomeForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end>
+      end
+      >
     PackSize = 1
     Left = 150
     Top = 287

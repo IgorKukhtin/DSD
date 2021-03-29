@@ -6,6 +6,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income(Integer, Integer, Int
                                                          , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                          , Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                          , TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income(Integer, Integer, Integer, Integer, TDateTime, Integer, Integer
+                                                         , TFloat, TFloat, TFloat, TFloat, TFloat
+                                                         , Integer, Integer, Integer, Integer, Integer, Integer
+                                                         , TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -20,14 +24,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
     IN inOperPrice           TFloat    , -- Цена прихода
     IN inOperPriceList       TFloat    , -- Цена продажи
     IN inCountForPrice       TFloat    , -- Цена за кол.
-    IN inTaxKindValue        TFloat    , -- Значение НДС (!информативно!)
+    --IN inTaxKindValue        TFloat    , -- Значение НДС (!информативно!)
     IN inGoodsGroupId        Integer   , -- Группа товара
     IN inGoodsTagId          Integer   , -- Категория
     IN inGoodsTypeId         Integer   , -- Тип детали 
     IN inGoodsSizeId         Integer   , -- Размер
     IN inProdColorId         Integer   , -- Цвет
     IN inMeasureId           Integer   , -- Единица измерения
-    IN inTaxKindId           Integer   , -- Тип НДС (!информативно!)                                            
+    --IN inTaxKindId           Integer   , -- Тип НДС (!информативно!)                                            
     IN inPartNumber          TVarChar  , --№ по тех паспорту
     IN inComment             TVarChar  , --
     IN inSession             TVarChar    -- сессия пользователя
@@ -40,6 +44,8 @@ $BODY$
    DECLARE vbFromId Integer;
    DECLARE vbToId Integer;
    DECLARE vbOperDate TDateTime;
+   DECLARE vbTaxKindId Integer;
+   DECLARE vbTaxKindValue TFloat;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -48,9 +54,11 @@ BEGIN
 
      -- из шапки
      SELECT Movement.OperDate
-          , MovementLinkObject_To.ObjectId   AS ToId
-          , MovementLinkObject_From.ObjectId AS FromId
-   INTO vbOperDate, vbToId, vbFromId
+          , MovementLinkObject_To.ObjectId     AS ToId
+          , MovementLinkObject_From.ObjectId   AS FromId
+          , OF_TaxKind_Value.ObjectId          AS TaxKindId
+          , MovementFloat_VATPercent.ValueData AS TaxKindValue
+   INTO vbOperDate, vbToId, vbFromId, vbTaxKindId, vbTaxKindValue
      FROM Movement
       LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                    ON MovementLinkObject_To.MovementId = Movement.Id
@@ -58,9 +66,21 @@ BEGIN
       LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                    ON MovementLinkObject_From.MovementId = Movement.Id
                                   AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+      LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                              ON MovementFloat_VATPercent.MovementId = Movement.Id
+                             AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+      LEFT JOIN ObjectFloat AS OF_TaxKind_Value
+                            ON OF_TaxKind_Value.ValueData = MovementFloat_VATPercent.ValueData
+                           AND OF_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
      WHERE Movement.Id = inMovementId
      ;
 
+     --проверка если не нашли TaxKindId - выдается ошибка
+     IF COALESCE (vbTaxKindId,0) = 0 
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не определен Тип НДС.';
+     END IF;
+     
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
@@ -103,8 +123,8 @@ BEGIN
                                                      , inGoodsSizeId       := inGoodsSizeId        ::Integer       -- Размер
                                                      , inProdColorId       := inProdColorId        ::Integer       -- Цвет
                                                      , inMeasureId         := inMeasureId          ::Integer       -- Единица измерения
-                                                     , inTaxKindId         := inTaxKindId          ::Integer       -- Тип НДС (!информативно!)
-                                                     , inTaxKindValue      := inTaxKindValue       ::TFloat        -- Значение НДС (!информативно!)
+                                                     , inTaxKindId         := vbTaxKindId          ::Integer       -- Тип НДС (!информативно!)
+                                                     , inTaxKindValue      := vbTaxKindValue       ::TFloat        -- Значение НДС (!информативно!)
                                                      , inUserId            := vbUserId             ::Integer       --
                                                  );
 
