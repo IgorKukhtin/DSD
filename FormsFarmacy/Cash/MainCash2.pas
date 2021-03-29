@@ -2984,9 +2984,10 @@ begin
         if (FieldByName('PartionDateKindId').AsInteger <> 0) and
           (FieldByName('AmountMonth').AsInteger = 0) and
           not(actSpecCorr.Checked or actSpec.Checked) and
-          (FieldByName('Amount').AsCurrency <> 0) then
+          (FieldByName('Amount').AsCurrency <> 0) and
+          (FormParams.ParamByName('isCorrectMarketing').Value = False) then
         begin
-          ShowMessage('Ошибка.В чеке использован прсроченный товар '#13#10 +
+          ShowMessage('Ошибка.В чеке использован просроченный товар '#13#10 +
             FieldByName('GoodsName').AsString);
           exit;
         end;

@@ -90,7 +90,7 @@ BEGIN
                                      , MI_Income.MovementId                                       AS MovementId_Income
                                      , tmp.GoodsId
                                      , tmp.Amount
-                                     , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) AS ExpirationDate        --
+                                     , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())   AS ExpirationDate        --
                                      , COALESCE (MI_Income_find.Id,MI_Income.Id)                  AS MovementItemId_Income
                                      , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)  AS MovementItemMovementId_Income
                                 FROM tmpContainer_all AS tmp
@@ -165,11 +165,11 @@ BEGIN
                                 , COALESCE(tmpContainer_term.ExpirationDateIn, tmpContainer_term.ExpirationDate)  AS ExpirationDate
                                 , ROUND(CASE WHEN MovementBoolean_PriceWithVAT.ValueData THEN MIFloat_Price.ValueData
                                        ELSE (MIFloat_Price.ValueData * (1 + ObjectFloat_NDSKind_NDS.ValueData / 100)) END, 2)::TFloat  AS PriceWithVAT
-                                , tmpContainer_term.ExpirationDate                                                                     AS ExpirationDateIncome
+                                , tmpContainer_term.ExpirationDate                                                AS ExpirationDateIncome
                            FROM (SELECT DISTINCT tmpContainer_term.GoodsId
                                  FROM tmpContainer_term
                                  -- !!!ограничили!!!
-                                 WHERE tmpContainer_term.ExpirationDate <= vbDate180
+                                 WHERE tmpContainer_term.ExpirationDateIn <= vbDate180 OR tmpContainer_term.ExpirationDate <= vbDate180
                                 ) AS tmpContainer
                                 LEFT JOIN tmpContainer_term        ON tmpContainer_term.GoodsId = tmpContainer.GoodsId
                                  -- !!!отбросили!!!
@@ -198,7 +198,7 @@ BEGIN
                , tmpContainer.ExpirationDateIncome
           FROM tmpContainer
          ;
-
+         
     -- собрали мастер
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpMaster'))
      THEN
@@ -415,4 +415,6 @@ $BODY$
  05.04.19         *
 */
 
-select * from gpInsert_MI_SendPartionDate(inMovementId := 20202202 , inUnitId := 3457773 , inOperDate := ('10.09.2020')::TDateTime ,  inSession := '3');
+-- select * from gpInsert_MI_SendPartionDate(inMovementId := 20202202 , inUnitId := 3457773 , inOperDate := ('10.09.2020')::TDateTime ,  inSession := '3');
+
+-- select * from gpInsert_MI_SendPartionDate(inMovementId := 22700177 , inUnitId := 13311246 , inOperDate := ('27.03.2021')::TDateTime ,  inSession := '3');

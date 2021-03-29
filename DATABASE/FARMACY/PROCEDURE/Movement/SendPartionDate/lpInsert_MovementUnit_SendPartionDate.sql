@@ -18,7 +18,6 @@
      INTO vbDate180
      FROM lpSelect_PartionDateKind_SetDate ();
 
-
       IF NOT EXISTS(
             WITH
             -- просрочка
@@ -65,24 +64,53 @@
                                                                        ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
                                                                       AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
                                  )
-            -- остатки - все партии, если есть хоть один <= vbDate180
+            -- остатки - нашли Срок c перемещений
+          , tmpContainer_In AS (SELECT tmp.ContainerId
+                                       , tmp.MovementId_Income
+                                       , tmp.GoodsId
+                                       , tmp.ExpirationDate
+                                       , MIC_Send.DescId                          AS MIC_DescId
+                                       , MIC_Send.MovementDescId                  AS MIC_MovementDescId
+                                       , MIC_Send.MovementItemId                  AS MIC_MovementItemId
+                                  FROM tmpContainer_term AS tmp
+                                       INNER JOIN MovementItemContainer AS MIC_Send
+                                                                        ON MIC_Send.ContainerId = tmp.ContainerId
+                                                                       AND MIC_Send.Amount > 0
+                                 )
+          , tmpContainer_Send AS (SELECT tmp.ContainerId
+                                       , MAX(COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd()))      AS ExpirationDateIn
+                                  FROM tmpContainer_In AS tmp
+                                       INNER JOIN MovementItemContainer AS MIC_Send
+                                                                        ON MIC_Send.MovementItemId = tmp.MIC_MovementItemId
+                                                                       AND MIC_Send.DescId = zc_Container_CountPartionDate()
+                                                                       AND MIC_Send.Amount < 0
+                                       LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = MIC_Send.ContainerId
+                                                                    AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+                                       LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                                            ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId
+                                                           AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+                                  WHERE tmp.MIC_DescId = zc_MIContainer_Count()
+                                    AND tmp.MIC_MovementDescId = zc_Movement_Send()
+                                  GROUP BY tmp.ContainerId
+                                 )            -- остатки - все партии, если есть хоть один <= vbDate180
           , tmpContainer AS (SELECT tmpContainer_term.ContainerId
                                   , tmpContainer_term.MovementId_Income
                                   , tmpContainer_term.GoodsId
                                   , tmpContainer_term.ExpirationDate
                              FROM (SELECT DISTINCT tmpContainer_term.ContainerId
                                    FROM tmpContainer_term
-                                   -- !!!ограничили!!!
-                                   WHERE tmpContainer_term.ExpirationDate <= vbDate180
+                                   LEFT JOIN tmpContainer_Send ON tmpContainer_Send.ContainerId = tmpContainer_term.ContainerId
+                                    -- !!!ограничили!!!
+                                   WHERE COALESCE(tmpContainer_Send.ExpirationDateIn, tmpContainer_term.ExpirationDate) <= vbDate180
                                   ) AS tmpContainer
                                   LEFT JOIN tmpContainer_term        ON tmpContainer_term.ContainerId = tmpContainer.ContainerId
                             )
+
             SELECT 1
             FROM tmpContainer)
     THEN
       RETURN;
     END IF;
-
 
     SELECT gpInsertUpdate_Movement_SendPartionDate(ioId                := 0,
                                                    inInvNumber         := CAST (NEXTVAL ('Movement_SendPartionDate_seq') AS TVarChar),
@@ -138,4 +166,4 @@
  18.06.19                                                         *
    */
 
-  -- тест
+  -- тест SELECT * FROM gpInsert_MovementUnit_SendPartionDate (inSession:= '3')    
