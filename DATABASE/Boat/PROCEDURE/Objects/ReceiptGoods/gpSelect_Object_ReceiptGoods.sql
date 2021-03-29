@@ -39,23 +39,38 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
               )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbPriceWithVAT Boolean;
+   DECLARE vbUserId             Integer;
+   DECLARE vbPriceWithVAT_pl    Boolean;
+   DECLARE vbTaxKindValue_basis TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_ReceiptGoods());
      vbUserId:= lpGetUserBySession (inSession);
 
+
      -- Признак в Базовом Прайсе
-     vbPriceWithVAT:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = zc_PriceList_Basis() AND ObjectBoolean.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT());
+     vbPriceWithVAT_pl:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = zc_PriceList_Basis() AND ObjectBoolean.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT());
+     -- !!!Базовый % НДС!!!
+     vbTaxKindValue_basis:= (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = zc_Enum_TaxKind_Basis() AND OFl.DescId = zc_ObjectFloat_TaxKind_Value());
 
-
+     -- Результат
      RETURN QUERY
      WITH -- Цены в Базовом Прайсе
-          tmpPriceBasis AS (SELECT tmp.GoodsId
-                                 , tmp.ValuePrice
+          tmpPriceBasis AS (SELECT lfSelect.GoodsId
+                                   -- Цена продажи без НДС
+                                 , CASE WHEN vbPriceWithVAT_pl = FALSE
+                                        THEN COALESCE (lfSelect.ValuePrice, 0)
+                                        -- расчет
+                                        ELSE zfCalc_Summ_NoVAT (lfSelect.ValuePrice, vbTaxKindValue_basis)
+                                   END ::TFloat  AS ValuePrice
+                                   -- Цена продажи с НДС
+                                 , CASE WHEN vbPriceWithVAT_pl = TRUE
+                                        THEN COALESCE (lfSelect.ValuePrice, 0)
+                                        -- расчет
+                                        ELSE zfCalc_SummWVAT (lfSelect.ValuePrice, vbTaxKindValue_basis)
+                                   END ::TFloat  AS ValuePriceWVAT
                             FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
-                                                                     , inOperDate   := CURRENT_DATE) AS tmp
+                                                                     , inOperDate   := CURRENT_DATE) AS lfSelect
                            )
           -- ВСЕ Элементы сборки Узлов
         , tmpReceiptGoodsChild_all AS (-- Элементы сборки Узлов - Товар
@@ -139,16 +154,9 @@ BEGIN
         , (COALESCE (tmpReceiptGoodsChild.EKPriceWVAT_summ_colPat,0) + COALESCE (tmpReceiptGoodsChild.EKPriceWVAT_summ_goods,0)) ::TFloat AS EKPriceWVAT_summ
 
           -- Цена продажи без ндс
-        , CASE WHEN vbPriceWithVAT = FALSE
-               THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
-               ELSE zfCalc_Summ_NoVAT (tmpPriceBasis.ValuePrice, ObjectFloat_TaxKind_Value.ValueData)
-          END ::TFloat  AS BasisPrice
-
+        , COALESCE (tmpPriceBasis.ValuePrice, 0)     ::TFloat AS BasisPrice
           -- Цена продажи с ндс
-        , CASE WHEN vbPriceWithVAT = FALSE
-               THEN zfCalc_SummWVAT (tmpPriceBasis.ValuePrice, ObjectFloat_TaxKind_Value.ValueData)
-               ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
-          END ::TFloat  AS BasisPriceWVAT
+        , COALESCE (tmpPriceBasis.ValuePriceWVAT, 0) ::TFloat AS BasisPriceWVAT
 
      FROM Object AS Object_ReceiptGoods
           LEFT JOIN ObjectString AS ObjectString_Code
@@ -220,10 +228,6 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_EmpfPrice
                                 ON ObjectFloat_EmpfPrice.ObjectId = Object_Goods.Id
                                AND ObjectFloat_EmpfPrice.DescId   = zc_ObjectFloat_Goods_EmpfPrice()
-
-          LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                ON ObjectFloat_TaxKind_Value.ObjectId = zc_Enum_TaxKind_Basis() --Object_TaxKind.Id
-                               AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
 
           LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
 

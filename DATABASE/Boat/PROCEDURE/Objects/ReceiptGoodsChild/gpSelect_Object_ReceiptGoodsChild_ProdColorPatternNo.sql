@@ -35,25 +35,19 @@ RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
               )
 AS
 $BODY$
-   DECLARE vbUserId       Integer;
-   DECLARE vbPriceWithVAT Boolean;
+   DECLARE vbUserId Integer;
+   DECLARE vbTaxKindValue_basis TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_ReceiptGoodsChild());
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- Определили
-     vbPriceWithVAT:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = zc_PriceList_Basis() AND ObjectBoolean.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT());
 
+     -- !!!Базовый % НДС!!!
+     vbTaxKindValue_basis:= (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = zc_Enum_TaxKind_Basis() AND OFl.DescId = zc_ObjectFloat_TaxKind_Value());
 
-
+     -- Результат
      RETURN QUERY
-     WITH tmpPriceBasis AS (SELECT tmp.GoodsId
-                                 , tmp.ValuePrice
-                            FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
-                                                                     , inOperDate   := CURRENT_DATE) AS tmp
-                           )
-     --
      SELECT 
            Object_ReceiptGoodsChild.Id              AS Id
          , ROW_NUMBER() OVER (PARTITION BY Object_ReceiptGoods.Id ORDER BY Object_ReceiptGoodsChild.Id ASC) :: Integer AS NPP
@@ -85,13 +79,13 @@ BEGIN
            -- Цена вх. без НДС - Товар/Услуги
          , COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0) :: TFloat AS EKPrice
            -- расчет Цена вх. с НДС, до 2-х знаков - Товар/Услуги
-         , zfCalc_SummWVAT (COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData), ObjectFloat_TaxKind_Value.ValueData) AS EKPriceWVAT
+         , zfCalc_SummWVAT (COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData), vbTaxKindValue_basis) AS EKPriceWVAT
 
            -- Сумма вх. без НДС, до 2-х знаков - Товар/Услуги
          , zfCalc_SummIn (ObjectFloat_Value.ValueData, COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData), 1) AS EKPrice_summ
            -- Сумма вх. с НДС, до 2-х знаков - Товар/Услуги
          , zfCalc_SummWVAT (zfCalc_SummIn (ObjectFloat_Value.ValueData, COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData), 1)
-                          , ObjectFloat_TaxKind_Value.ValueData) AS EKPriceWVAT_summ
+                          , vbTaxKindValue_basis) AS EKPriceWVAT_summ
 
         , 15138790 /*zc_Color_Pink()*/     ::Integer                  AS Color_value                          --  фон для Value
         , CASE WHEN ObjectDesc.Id = zc_Object_ReceiptService() THEN 15073510  -- малиновый
@@ -170,11 +164,6 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptService_EKPrice
                                 ON ObjectFloat_ReceiptService_EKPrice.ObjectId = Object_Object.Id
                                AND ObjectFloat_ReceiptService_EKPrice.DescId   = zc_ObjectFloat_ReceiptService_EKPrice()
-          -- !!!Базовый НДС!!!
-          LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                ON ObjectFloat_TaxKind_Value.ObjectId = zc_Enum_TaxKind_Basis()
-                               AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()
-
 
      WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
       AND (Object_ReceiptGoodsChild.isErased = FALSE OR inIsErased = TRUE)

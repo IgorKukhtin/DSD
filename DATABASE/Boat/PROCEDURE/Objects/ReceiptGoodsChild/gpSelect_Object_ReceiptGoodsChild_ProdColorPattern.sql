@@ -40,15 +40,15 @@ RETURNS TABLE (Id Integer, ReceiptGoodsId Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbPriceWithVAT Boolean;
+   DECLARE vbTaxKindValue_basis TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_ReceiptGoodsChild());
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- Определили
-     vbPriceWithVAT:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = zc_PriceList_Basis() AND ObjectBoolean.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT());
 
+     -- !!!Базовый % НДС!!!
+     vbTaxKindValue_basis:= (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = zc_Enum_TaxKind_Basis() AND OFl.DescId = zc_ObjectFloat_TaxKind_Value());
 
      -- Результат
      RETURN QUERY
@@ -142,13 +142,13 @@ BEGIN
             -- Цена вх. без НДС
           , ObjectFloat_EKPrice.ValueData                                                                 AS EKPrice
             -- Цена вх. с НДС, до 2-х знаков
-          , zfCalc_SummWVAT (ObjectFloat_EKPrice.ValueData, ObjectFloat_TaxKind_Value.ValueData)          AS EKPriceWVAT
+          , zfCalc_SummWVAT (ObjectFloat_EKPrice.ValueData, vbTaxKindValue_basis)                         AS EKPriceWVAT
 
             -- Сумма вх. без НДС, до 2-х знаков
           , zfCalc_SummIn (tmpProdColorPattern.Value, ObjectFloat_EKPrice.ValueData, 1)                   AS EKPrice_summ
             -- Сумма вх. с НДС, до 2-х знаков
           , zfCalc_SummWVAT (zfCalc_SummIn (tmpProdColorPattern.Value, ObjectFloat_EKPrice.ValueData, 1)
-                           , ObjectFloat_TaxKind_Value.ValueData)                                         AS EKPriceWVAT_summ
+                           , vbTaxKindValue_basis)                                                        AS EKPriceWVAT_summ
 
      FROM tmpProdColorPattern
           LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = tmpProdColorPattern.ProdColorPatternId
@@ -200,12 +200,6 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
                                 ON ObjectFloat_EKPrice.ObjectId = Object_Goods.Id
                                AND ObjectFloat_EKPrice.DescId   = zc_ObjectFloat_Goods_EKPrice()
-          -- !!!Базовый НДС!!!
-          LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                ON ObjectFloat_TaxKind_Value.ObjectId = zc_Enum_TaxKind_Basis()
-                               AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()
-
-         -- LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
          ;
 
 END;
