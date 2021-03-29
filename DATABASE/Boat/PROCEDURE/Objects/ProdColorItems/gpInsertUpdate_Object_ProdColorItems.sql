@@ -1,21 +1,18 @@
 -- Function: gpInsertUpdate_Object_ProdColorItems()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorItems (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorItems (Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorItems (Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorItems (Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorItems (Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdColorItems (Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdColorItems(
- INOUT ioId                  Integer   ,    -- ключ объекта <Лодки>
-    IN inCode                Integer   ,    -- Код объекта 
-    IN inProductId           Integer   ,
-    IN inGoodsId             Integer   ,
-    IN inProdColorPatternId  Integer   ,
-    IN inComment             TVarChar  ,
-    IN inIsEnabled           Boolean   , 
- INOUT ioIsProdOptions       Boolean   ,    -- добавить как опцию
-    IN inSession             TVarChar       -- сессия пользователя
+ INOUT ioId                     Integer   ,    -- ключ объекта <Лодки>
+    IN inCode                   Integer   ,    -- Код объекта 
+    IN inProductId              Integer   ,
+    IN inGoodsId                Integer   ,
+    IN inProdColorPatternId     Integer   ,
+    IN inMovementId_OrderClient Integer   ,
+    IN inComment                TVarChar  ,
+    IN inIsEnabled              Boolean   , 
+ INOUT ioIsProdOptions          Boolean   ,    -- добавить как опцию
+    IN inSession                TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
 AS
@@ -41,6 +38,14 @@ BEGIN
    IF COALESCE (inProdColorPatternId, 0) = 0
    THEN
        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Элемент не установлен.'
+                                             , inProcedureName := 'gpInsertUpdate_Object_ProdColorItems'
+                                             , inUserId        := vbUserId
+                                              );
+   END IF;
+   -- Проверка
+   IF COALESCE (inMovementId_OrderClient, 0) = 0
+   THEN
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Документ <Заказ Клиента> не установлен.'
                                              , inProcedureName := 'gpInsertUpdate_Object_ProdColorItems'
                                              , inUserId        := vbUserId
                                               );
@@ -99,6 +104,9 @@ BEGIN
     
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdColorItems_ProdColorPattern(), ioId, inProdColorPatternId);
+
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdColorItems_OrderClient(), ioId, inMovementId_OrderClient);
 
    END IF;
 

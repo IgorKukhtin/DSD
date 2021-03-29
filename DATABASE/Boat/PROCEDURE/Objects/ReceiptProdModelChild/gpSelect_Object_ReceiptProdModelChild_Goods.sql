@@ -1,6 +1,7 @@
 -- Function: gpSelect_Object_ReceiptProdModelChild_Goods()
 
---DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptProdModelChild_Goods (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptProdModelChild (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptProdModelChild_Goods (Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptProdModelChild_Goods (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptProdModelChild_Goods(

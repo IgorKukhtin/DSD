@@ -6,22 +6,24 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Int
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptItems(
- INOUT ioId                   Integer   , -- Ключ
-    IN inCode                 Integer   , -- Код
-    IN inProductId            Integer   ,
-    IN inProdOptionsId        Integer   ,
-    IN inProdOptPatternId     Integer   ,
-    IN inProdColorPatternId   Integer   ,
- INOUT ioGoodsId              Integer   ,
-   OUT outGoodsName           TVarChar  ,
-    IN inPriceIn              TFloat    ,
-    IN inPriceOut             TFloat    ,
-    IN inDiscountTax          TFloat    ,
-    IN inPartNumber           TVarChar  ,
-    IN inComment              TVarChar  ,
-    IN inSession              TVarChar    -- сессия пользователя
+ INOUT ioId                     Integer   , -- Ключ
+    IN inCode                   Integer   , -- Код
+    IN inProductId              Integer   ,
+    IN inProdOptionsId          Integer   ,
+    IN inProdOptPatternId       Integer   ,
+    IN inProdColorPatternId     Integer   ,
+    IN inMovementId_OrderClient Integer   ,
+ INOUT ioGoodsId                Integer   ,
+   OUT outGoodsName             TVarChar  ,
+    IN inPriceIn                TFloat    ,
+    IN inPriceOut               TFloat    ,
+    IN inDiscountTax            TFloat    ,
+    IN inPartNumber             TVarChar  ,
+    IN inComment                TVarChar  ,
+    IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
 AS
@@ -43,6 +45,15 @@ BEGIN
                                              , inUserId        := vbUserId
                                               );
    END IF;
+   -- Проверка
+   IF COALESCE (inMovementId_OrderClient, 0) = 0
+   THEN
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Документ <Заказ Клиента> не установлен.'
+                                             , inProcedureName := 'gpInsertUpdate_Object_ProdOptItems'
+                                             , inUserId        := vbUserId
+                                              );
+   END IF;
+
    -- Проверка/Поиск
    IF COALESCE (inProdOptPatternId, 0) = 0
    THEN
@@ -92,15 +103,16 @@ BEGIN
         END IF;
 
         -- сохраняем в Items Boat Structure
-        PERFORM gpInsertUpdate_Object_ProdColorItems(ioId                  := tmp.Id
-                                                   , inCode                := tmp.Code
-                                                   , inProductId           := inProductId
-                                                   , inGoodsId             := ioGoodsId
-                                                   , inProdColorPatternId  := tmp.ProdColorPatternId
-                                                   , inComment             := '' :: TVarChar
-                                                   , inIsEnabled           := TRUE :: Boolean
-                                                   , ioIsProdOptions       := CASE WHEN tmp.GoodsId_Receipt <> ioGoodsId THEN TRUE ELSE FALSE END
-                                                   , inSession             := inSession
+        PERFORM gpInsertUpdate_Object_ProdColorItems(ioId                     := tmp.Id
+                                                   , inCode                   := tmp.Code
+                                                   , inProductId              := inProductId
+                                                   , inGoodsId                := ioGoodsId
+                                                   , inProdColorPatternId     := tmp.ProdColorPatternId
+                                                   , inMovementId_OrderClient := inMovementId_OrderClient
+                                                   , inComment                := '' :: TVarChar
+                                                   , inIsEnabled              := TRUE :: Boolean
+                                                   , ioIsProdOptions          := CASE WHEN tmp.GoodsId_Receipt <> ioGoodsId THEN TRUE ELSE FALSE END
+                                                   , inSession                := inSession
                                                    )
                                                    
         FROM gpSelect_Object_ProdColorItems (FALSE,FALSE,FALSE, inSession) as tmp
@@ -162,6 +174,10 @@ BEGIN
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptItems_Goods(), ioId, ioGoodsId);
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_OrderClient(), ioId, inMovementId_OrderClient);
+
 
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
