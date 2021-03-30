@@ -4240,6 +4240,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_PromoBonusDisco: TdsdOpenForm
+      Category = #1041#1040#1048
+      MoveParams = <>
+      Caption = #1044#1080#1089#1082#1086#1090#1077#1082#1072' '#1087#1086' '#1084#1072#1088#1082#1077#1090' '#1073#1086#1085#1091#1089#1072#1084
+      FormName = 'TReport_Check_PromoBonusDiscoForm'
+      FormNameParam.Value = 'TReport_Check_PromoBonusDiscoForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5084,6 +5095,9 @@ inherited MainForm: TMainForm
       end
       object N229: TMenuItem
         Action = actReport_PharmacyPerformance
+      end
+      object N285: TMenuItem
+        Action = actReport_PromoBonusDisco
       end
       object N138: TMenuItem
         Caption = '-'

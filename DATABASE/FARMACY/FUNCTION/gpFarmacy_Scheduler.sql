@@ -167,7 +167,7 @@ BEGIN
 
     -- Перерасчет ЗП каждый час
     BEGIN
-      IF date_part('HOUR',  CURRENT_TIME)::Integer >= '9' AND date_part('HOUR',  CURRENT_TIME)::Integer <= 21 AND
+      IF date_part('HOUR',  CURRENT_TIME)::Integer >= 9 AND date_part('HOUR',  CURRENT_TIME)::Integer <= 21 AND
          EXISTS(SELECT Movement.ID
                 FROM Movement
                      LEFT JOIN MovementDate AS MovementDate_Calculation
@@ -190,6 +190,33 @@ BEGIN
        PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpInsertUpdate_Movement_Wages_CalculationAll', True, text_var1::TVarChar, vbUserId);
     END;
 
+    -- Сброс 5 категории через 30 дней
+    BEGIN
+      IF date_part('HOUR',  CURRENT_TIME)::Integer < 1 AND date_part('HOUR',  CURRENT_TIME)::Integer <= 21
+      THEN
+          PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_PartionGoods_Cat_5(), ContainerLinkObject.ObjectId , False)
+          FROM Container
+               INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                             AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+                                                        
+               INNER JOIN ObjectBoolean AS ObjectBoolean_PartionGoods_Cat_5
+                                        ON ObjectBoolean_PartionGoods_Cat_5.ObjectId = ContainerLinkObject.ObjectId    
+                                       AND ObjectBoolean_PartionGoods_Cat_5.DescID = zc_ObjectBoolean_PartionGoods_Cat_5()
+                                       AND ObjectBoolean_PartionGoods_Cat_5.ValueData = True
+                                                     
+               INNER JOIN ObjectDate AS ObjectDate_PartionGoods_Cat_5
+                                     ON ObjectDate_PartionGoods_Cat_5.ObjectId = ContainerLinkObject.ObjectId    
+                                    AND ObjectDate_PartionGoods_Cat_5.DescId =zc_ObjectDate_PartionGoods_Cat_5() 
+
+          WHERE Container.DescId = zc_Container_CountPartionDate()
+            AND Container.Amount <> 0
+            AND ObjectDate_PartionGoods_Cat_5.ValueData < CURRENT_DATE - INTERVAL '30 DAY';      
+      END IF;
+    EXCEPTION
+       WHEN others THEN
+         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+       PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run zc_ObjectBoolean_PartionGoods_Cat_5', True, text_var1::TVarChar, vbUserId);
+    END;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -204,4 +231,3 @@ $BODY$
 
 -- SELECT * FROM Log_Run_Schedule_Function order by Log_Run_Schedule_Function.DateInsert desc
 -- SELECT * FROM gpFarmacy_Scheduler (inSession := zfCalc_UserAdmin())
-

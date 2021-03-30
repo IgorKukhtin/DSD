@@ -1018,7 +1018,9 @@ uses
   Medoc_J1201211 in '..\..\SOURCE\MeDOC\Medoc_J1201211.pas',
   Report_Check_PromoBonusEstimate in '..\..\FormsFarmacy\Report\Report_Check_PromoBonusEstimate.pas' {Report_Check_PromoBonusEstimateForm: TParentForm},
   Report_FinalSUAProtocol in '..\..\FormsFarmacy\Report\Report_FinalSUAProtocol.pas' {Report_FinalSUAProtocolForm: TParentForm},
-  Report_Check_CorrectMarketing in '..\..\FormsFarmacy\Report\Report_Check_CorrectMarketing.pas' {Report_Check_CorrectMarketingForm: TParentForm};
+  Report_Check_CorrectMarketing in '..\..\FormsFarmacy\Report\Report_Check_CorrectMarketing.pas' {Report_Check_CorrectMarketingForm: TParentForm},
+  Report_Check_PromoBonusDiscoDialog in '..\..\FormsFarmacy\Report\Report_Check_PromoBonusDiscoDialog.pas' {Report_Check_PromoBonusDiscoDialogForm: TParentForm},
+  Report_Check_PromoBonusDisco in '..\..\FormsFarmacy\Report\Report_Check_PromoBonusDisco.pas' {Report_Check_PromoBonusDiscoForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

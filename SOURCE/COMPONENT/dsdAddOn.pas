@@ -259,6 +259,85 @@ type
     property Image: TcxImage read FImage write FImage;
   end;
 
+  // Поля для отрисовки графика при движении по гриду
+  TdsdChartColumn = class(TCollectionItem)
+  private
+    FColumn: TcxGridColumn;
+    FTitle: String;
+  public
+    procedure Assign(Source: TPersistent); override;
+    function GetDisplayName: string; override;
+  published
+    // Какую ячейку раскрашивать. Если ColorColumn не указан, то будет меняться цвет у всей строки
+    property Column: TcxGridColumn read FColumn write FColumn;
+    // Название позиции
+    property Title: String read FTitle write FTitle;
+  end;
+
+  // Series вариантов отрисовки графика при движении по гриду
+  TdsdChartSeries = class(TCollectionItem)
+  private
+    FChartColumnList: TCollection;
+    FSeriesName: String;
+  public
+    constructor Create(Collection: TCollection); override;
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
+    function GetDisplayName: string; override;
+  published
+    property ColumnList: TCollection read FChartColumnList write FChartColumnList;
+    // Поле в FChartDataSet с названиями колонок Series
+    property SeriesName: String read FSeriesName write FSeriesName;
+  end;
+
+  // Вариант отрисовки графика при движении по гриду
+  TdsdChartVariant = class(TCollectionItem)
+  private
+    FChartSeriesList: TOwnedCollection;
+    FHeaderName: String;
+  public
+    constructor Create(Collection: TCollection); override;
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
+    function GetDisplayName: string; override;
+  published
+    property Series: TOwnedCollection read FChartSeriesList write FChartSeriesList;
+    // Название колонок DataGroups
+    property HeaderName: String read FHeaderName write FHeaderName;
+  end;
+
+  // Отрисовка графика при движении по гриду
+  TdsdChartView = class(TCollectionItem)
+  private
+    FChartView: TcxGridDBChartView;
+    FDisplayedDataComboBox : TcxComboBox;
+    FChartVariantList: TOwnedCollection;
+
+    FChartCDS : TClientDataSet;
+    FChartDS: TDataSource;
+    FDisplayedIndex : Integer;
+    FisShowTitle: boolean;
+
+    FOnChange: TNotifyEvent;
+    procedure SetDisplayedDataComboBox(Value : TcxComboBox);
+    procedure OnChangeDisplayedData(Sender: TObject);
+  public
+    constructor Create(Collection: TCollection); override;
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
+  published
+    function GetDisplayName: string; override;
+    // ChartView графика
+    property ChartView: TcxGridDBChartView read FChartView write FChartView;
+    // Данные для формирования графика.
+    property VariantList: TOwnedCollection read FChartVariantList write FChartVariantList;
+    // ComboBox c выбором набора отображаемых данных
+    property DisplayedDataComboBox : TcxComboBox read FDisplayedDataComboBox write SetDisplayedDataComboBox;
+    // Скрыть заголовок диаграммы
+    property isShowTitle: boolean read FisShowTitle write FisShowTitle default True;
+  end;
+
+
   // Добавляет ряд функционала на GridView
   // 1. Быстрая установка фильтров
   // 2. Рисование иконок сортировки
@@ -284,6 +363,7 @@ type
     FPropertiesCellList: TCollection;
     FSummaryItemList: TOwnedCollection;
     FShowFieldImageList: TOwnedCollection;
+    FChartList: TOwnedCollection;
     FGridFocusedItemChangedEvent: TcxGridFocusedItemChangedEvent;
     FSearchAsFilter: boolean;
     FKeepSelectColor: boolean;
@@ -355,6 +435,8 @@ type
     // Перемещаться только по редактируемым ячейкам по Enter
     // В случае достижения конца колонок и наличия следующей записи перейти на нее и cпозиционироваться на редактируемой ячейке
     property OnlyEditingCellOnEnter: boolean read FOnlyEditingCellOnEnter write SetOnlyEditingCellOnEnter;
+    // Правила разукрашивания грида
+    property ChartList: TOwnedCollection read FChartList write FChartList;
     // Правила разукрашивания грида
     property ColorRuleList: TCollection read FColorRuleList write FColorRuleList;
     // Дополнительные установки для колонок
@@ -1092,7 +1174,6 @@ type
     property EditRepository: TcxEditRepository read FEditRepository write FEditRepository;
   end;
 
-
   procedure Register;
 
 implementation
@@ -1298,6 +1379,7 @@ begin
   FPropertiesCellList := TCollection.Create(TPropertiesCell);
   FSummaryItemList := TOwnedCollection.Create(Self, TSummaryItemAddOn);
   FShowFieldImageList := TOwnedCollection.Create(Self, TShowFieldImage);
+  FChartList := TOwnedCollection.Create(Self, TdsdChartView);
 
   SearchAsFilter := true;
   FKeepSelectColor := false;
@@ -1307,12 +1389,130 @@ begin
 end;
 
 procedure TdsdDBViewAddOn.OnAfterOpen(ADataSet: TDataSet);
+  var I, J : Integer;
 begin
   if Assigned(Self.FView) then
      if Assigned(Self.FView.Control) then
         TcxGrid(Self.FView.Control).EndUpdate;
   if Assigned(FAfterOpen) then
      FAfterOpen(ADataSet);
+
+   // Пересоздаем диаграммы диаграммы
+   for i := 0 to FChartList.Count - 1 do
+   begin
+     if Assigned(TdsdChartView(FChartList.Items[I]).FChartView) then
+     with TdsdChartView(FChartList.Items[I]) do
+     begin
+
+       FChartView.BeginUpdate;
+
+       //  Очтстием перед перестроеемем
+       if FChartCDS.Active then
+       begin
+         FChartView.DataController.DataSource := Nil;
+         FChartView.ClearSeries;
+         FChartView.ClearDataGroups;
+         if FChartCDS.Active then FChartCDS.Close;
+         FChartCDS.FieldDefs.Clear;
+         if Assigned(FDisplayedDataComboBox) then
+         begin
+           try
+             DisplayedDataComboBox.Properties.OnChange := Nil;
+             FDisplayedDataComboBox.Properties.Items.Clear;
+             FDisplayedDataComboBox.Text := '';
+           finally
+             FDisplayedDataComboBox.Properties.OnChange := OnChangeDisplayedData;
+           end;
+         end;
+       end;
+
+       if Assigned(DisplayedDataComboBox) and (FChartVariantList.Count > 0) and Assigned(FView) and
+          Assigned(TcxDBDataController(FView.DataController).DataSource) then
+       begin
+         try
+           DisplayedDataComboBox.Properties.OnChange := Nil;
+
+
+           for J := 0 to FChartVariantList.Count - 1 do
+           begin
+             DisplayedDataComboBox.Properties.Items.Add(TdsdChartVariant(FChartVariantList.Items[J]).HeaderName);
+           end;
+
+           if FDisplayedIndex < 0 then FDisplayedIndex := 0;
+
+           DisplayedDataComboBox.ItemIndex := FDisplayedIndex;
+
+           if FisShowTitle then FChartView.Title.Text := DisplayedDataComboBox.Properties.Items[FDisplayedIndex]
+           else FChartView.Title.Text := '';
+         finally
+           FDisplayedDataComboBox.Properties.OnChange := OnChangeDisplayedData;
+         end;
+       end else
+       begin
+         FDisplayedIndex := -1;
+         FChartView.Title.Text := '';
+       end;
+
+       FChartView.DataController.DataSource := FChartDS;
+       if FDisplayedIndex >= 0 then  with TdsdChartVariant(FChartVariantList.Items[FDisplayedIndex]) do
+       try
+
+         // Добавляем поля
+         FChartCDS.FieldDefs.Add('GroupsFielddName',      ftString, 20);
+
+         // Строим диограмму
+         with FChartView.CreateDataGroup do
+         begin
+           DisplayText := ''; //HeaderName;
+           DataBinding.FieldName := 'GroupsFielddName';
+         end;
+
+         for J := 0 to FChartSeriesList.Count - 1 do
+         begin
+
+           with FChartView.CreateSeries do
+           begin
+             if TdsdChartSeries(FChartSeriesList.Items[J]).ColumnList.Count > 0 then
+             begin
+
+               DisplayText := TdsdChartSeries(FChartSeriesList.Items[J]).SeriesName;
+               DataBinding.FieldName := 'SeriesList_' + IntToStr(J);
+
+               if (TdsdChartSeries(FChartSeriesList.Items[J]).ColumnList.Count > 0) and
+                 Assigned(TdsdChartColumn(TdsdChartSeries(FChartSeriesList.Items[J]).ColumnList.Items[0]).Column)  then
+               begin
+                 case TcxDBDataController(FView.DataController).DataSource.DataSet.FindField(TcxGridDBBandedColumn(
+                   TdsdChartColumn(TdsdChartSeries(FChartSeriesList.Items[J]).ColumnList.Items[0]).Column).DataBinding.FieldName).DataType of
+                   ftInteger : FChartCDS.FieldDefs.Add('SeriesList_' + IntToStr(J), ftInteger, 0);
+                   else FChartCDS.FieldDefs.Add('SeriesList_' + IntToStr(J), ftFloat, 0);
+                 end;
+               end else FChartCDS.FieldDefs.Add('SeriesList_' + IntToStr(J), ftFloat, 0);
+             end;
+           end;
+         end;
+
+
+         if FChartCDS.FieldDefs.Count > 1 then FChartCDS.CreateDataSet;
+
+           // Строки в FChartCDS диаграмму
+         if FChartCDS.Active then
+         begin
+
+           for J := 0 to TdsdChartSeries(FChartSeriesList.Items[0]).ColumnList.Count - 1 do
+           begin
+             FChartCDS.Last;
+             FChartCDS.Append;
+             FChartCDS.FieldByName('GroupsFielddName').AsString := TdsdChartColumn(TdsdChartSeries(FChartSeriesList.Items[0]).ColumnList.Items[j]).FTitle;
+             FChartCDS.Post;
+           end;
+         end;
+       finally
+         FChartView.EndUpdate;
+       end;
+     end;
+   end;
+
+   if FChartList.Count > 0 then OnAfterScroll(ADataSet);
 end;
 
 procedure TdsdDBViewAddOn.OnBeforeOpen(ADataSet: TDataSet);
@@ -1735,6 +1935,7 @@ begin
   FreeAndNil(FPropertiesCellList);
   FreeAndNil(FSummaryItemList);
   FreeAndNil(FShowFieldImageList);
+  FreeAndNil(FChartList);
   FMemoryStream.Free;
   inherited;
 end;
@@ -1972,8 +2173,8 @@ end;
 
 procedure TdsdDBViewAddOn.OnAfterScroll(DataSet: TDataSet);
   var Item: TCollectionItem;
-      Data : AnsiString; Len : Integer;
-      Graphic: TGraphic; Ext: string;
+      Data : AnsiString; Len, I, J : Integer;
+      Graphic: TGraphic; Ext, FieldName: string;
       GraphicClass: TGraphicClass;
 begin
   if Assigned(FAfterScroll) then FAfterScroll(DataSet);
@@ -2022,6 +2223,41 @@ begin
       end;
     except
     end;
+
+  for i := 0 to FChartList.Count - 1 do
+    if TdsdChartView(FChartList.Items[I]).FChartCDS.Active then
+  with TdsdChartView(FChartList.Items[I]) do
+  begin
+
+   if FDisplayedIndex >= 0 then  with TdsdChartVariant(FChartVariantList.Items[FDisplayedIndex]) do
+   begin
+      FChartView.BeginUpdate;
+      try
+        FChartCDS.First;
+        while not FChartCDS.Eof do
+        begin
+          FChartCDS.Edit;
+
+          for J := 0 to FChartSeriesList.Count - 1 do
+          if (TdsdChartSeries(FChartSeriesList.Items[J]).ColumnList.Count >= FChartCDS.RecNo) and
+             Assigned(TdsdChartColumn(TdsdChartSeries(FChartSeriesList.Items[J]).ColumnList.Items[FChartCDS.RecNo - 1]).Column) then
+          begin
+
+            FieldName := TcxGridDBBandedColumn(TdsdChartColumn(TdsdChartSeries(FChartSeriesList.Items[J]).ColumnList.Items[FChartCDS.RecNo - 1]).Column).DataBinding.FieldName;
+
+            if Assigned(DataSet) and Assigned(DataSet.FindField(FieldName)) then
+              FChartCDS.FindField('SeriesList_' + IntToStr(J)).AsVariant := DataSet.FieldByName(FieldName).AsVariant
+            else FChartCDS.FindField('SeriesList_' + IntToStr(J)).AsVariant := 0;
+          end;
+
+          FChartCDS.Post;
+          FChartCDS.Next;
+        end;
+      finally
+        FChartView.EndUpdate;
+      end;
+   end;
+  end;
 end;
 
 procedure TdsdDBViewAddOn.OnKeyPress(Sender: TObject; var Key: Char);
@@ -5873,9 +6109,172 @@ begin
       FChartView.EndUpdate;
     end;
   end;
+end;
 
+{ TdsdChartColumn }
+
+procedure TdsdChartColumn.Assign(Source: TPersistent);
+begin
+  if Source is TdsdChartColumn then
+    with TdsdChartColumn(Source) do
+    begin
+      Self.FColumn := FColumn;
+      Self.FTitle := FTitle;
+    end
+  else
+    inherited Assign(Source);
+end;
+
+function TdsdChartColumn.GetDisplayName: string;
+begin
+  result := inherited;
+  if Assigned(FColumn) then
+     result := FColumn.Name
+end;
+
+{ TdsdChartSeries }
+
+constructor TdsdChartSeries.Create(Collection: TCollection);
+begin
+  inherited;
+  FChartColumnList := TCollection.Create(TdsdChartColumn);
+  FSeriesName:= '';
+end;
+
+destructor TdsdChartSeries.Destroy;
+begin
+  FreeAndNil(FChartColumnList);
+  inherited;
+end;
+
+procedure TdsdChartSeries.Assign(Source: TPersistent);
+begin
+  if Source is TdsdChartSeries then
+    with TdsdChartSeries(Source) do
+    begin
+      Self.FChartColumnList.Assign(FChartColumnList);
+      Self.FSeriesName := FSeriesName;
+    end
+  else
+    inherited Assign(Source);
+end;
+
+function TdsdChartSeries.GetDisplayName: string;
+begin
+  result := inherited;
+  if FSeriesName <> '' then
+     result := FSeriesName
+end;
+
+{ TdsdChartVariant }
+
+constructor TdsdChartVariant.Create(Collection: TCollection);
+begin
+  inherited;
+  FChartSeriesList := TOwnedCollection.Create(Self, TdsdChartSeries);
+  FHeaderName:= '';
+end;
+
+destructor TdsdChartVariant.Destroy;
+begin
+  FreeAndNil(FChartSeriesList);
+  inherited;
+end;
+
+procedure TdsdChartVariant.Assign(Source: TPersistent);
+begin
+  if Source is TdsdChartVariant then
+    with TdsdChartVariant(Source) do
+    begin
+      Self.FChartSeriesList.Assign(FChartSeriesList);
+      Self.FHeaderName := FHeaderName;
+    end
+  else
+    inherited Assign(Source);
+end;
+
+function TdsdChartVariant.GetDisplayName: string;
+begin
+  result := inherited;
+  if FHeaderName <> '' then
+     result := FHeaderName
+end;
+
+{ TdsdChartView }
+
+constructor TdsdChartView.Create(Collection: TCollection);
+begin
+  inherited;
+  FChartCDS := TClientDataSet.Create(Nil);
+  FChartDS := TDataSource.Create(Nil);
+  FChartDS.DataSet := FChartCDS;
+  FisShowTitle := True;
+  FChartVariantList := TOwnedCollection.Create(Self, TdsdChartVariant);
+  FDisplayedIndex := -1;
+end;
+
+destructor TdsdChartView.Destroy;
+begin
+  FreeAndNil(FChartDS);
+  FreeAndNil(FChartCDS);
+  FreeAndNil(FChartVariantList);
+  inherited;
+end;
+
+procedure TdsdChartView.Assign(Source: TPersistent);
+begin
+  if Source is TdsdChartView then
+    with TdsdChartView(Source) do
+    begin
+      Self.ChartView := ChartView;
+      Self.FChartVariantList.Assign(FChartVariantList);
+      Self.DisplayedDataComboBox := DisplayedDataComboBox;
+      Self.FDisplayedIndex := FDisplayedIndex;
+      Self.FisShowTitle := FisShowTitle;
+    end
+  else
+    inherited Assign(Source);
+end;
+
+function TdsdChartView.GetDisplayName: string;
+begin
+  result := inherited;
+  if Assigned(FChartView) then
+     result := FChartView.Name
+end;
+
+procedure TdsdChartView.SetDisplayedDataComboBox(Value : TcxComboBox);
+begin
+  if Assigned(DisplayedDataComboBox) then DisplayedDataComboBox.Properties.OnChange := FOnChange;
+
+  FDisplayedDataComboBox := Value;
+  if Assigned(DisplayedDataComboBox) then
+  begin
+    FOnChange := FDisplayedDataComboBox.Properties.OnChange;
+    FDisplayedDataComboBox.Properties.OnChange := OnChangeDisplayedData;
+  end;
 
 end;
 
+procedure TdsdChartView.OnChangeDisplayedData(Sender: TObject);
+begin
+   if Assigned(DisplayedDataComboBox) then
+   begin
+     if DisplayedDataComboBox.ItemIndex >= 0 then
+     begin
+       FDisplayedIndex := DisplayedDataComboBox.ItemIndex;
+       try
+         DisplayedDataComboBox.Properties.OnChange := Nil;
+         if Collection.Owner is TdsdDBViewAddOn then
+           if Assigned(TcxDBDataController(TdsdDBViewAddOn(Collection.Owner).FView.DataController).DataSource) then
+             if Assigned(TcxDBDataController(TdsdDBViewAddOn(Collection.Owner).FView.DataController).DataSource.DataSet) then
+           TdsdDBViewAddOn(Collection.Owner).onAfterOpen(TcxDBDataController(TdsdDBViewAddOn(Collection.Owner).FView.DataController).DataSource.DataSet);
+       finally
+         FDisplayedDataComboBox.Properties.OnChange := OnChangeDisplayedData;
+       end;
+     end;
+     TCrossDBViewReportAddOn(Collection.Owner).View.Control.SetFocus;
+   end;
+end;
 
 end.

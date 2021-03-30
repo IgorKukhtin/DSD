@@ -50,11 +50,9 @@ type
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     AmountDeferred: TcxGridDBColumn;
-    AmountComplete: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     Price: TcxGridDBColumn;
     SummaDeferred: TcxGridDBColumn;
-    SummaComplete: TcxGridDBColumn;
     Summa: TcxGridDBColumn;
     edMaker: TcxButtonEdit;
     cxLabel4: TcxLabel;
@@ -64,6 +62,8 @@ type
     Remains: TcxGridDBColumn;
     AmountLoss: TcxGridDBColumn;
     AmountDischarged: TcxGridDBColumn;
+    Amount5: TcxGridDBColumn;
+    AmountUnit: TcxGridDBColumn;
   private
     { Private declarations }
   public
