@@ -497,7 +497,7 @@ BEGIN
                                       )
                    -- находим для продаж - сколько уже привязано в возвратах
                  , tmpMI_ReturnIn_find AS (SELECT tmpMI_sale.MovementItemId
-                                                , SUM (MovementItem.Amount) AS Amount
+                                                , SUM (CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() AND tmpMI_sale.Amount = MovementItem.Amount THEN 0 ELSE MovementItem.Amount END) AS Amount
                                            FROM tmpMI_sale
                                                 INNER JOIN MovementItemFloat AS MIFloat_MovementItemId
                                                                              ON MIFloat_MovementItemId.ValueData = tmpMI_sale.MovementItemId
@@ -902,7 +902,7 @@ BEGIN
             -- || ' ' || DATE (vbEndDate) :: TVarChar
                      ;
 
-if inUserId = 5 AND 1=0
+if inUserId = 5 AND 1=1
 then
     RAISE EXCEPTION 'Admin - Errr _end   % %', outMessageText, (SELECT MAX (_tmpResult_ReturnIn_Auto.Amount) :: TVarChar || ' _ ' || MIN (_tmpResult_ReturnIn_Auto.Amount) :: TVarChar FROM _tmpResult_ReturnIn_Auto);
     -- 'Повторите действие через 3 мин.'
