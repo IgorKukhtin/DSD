@@ -41,12 +41,14 @@ RETURNS TABLE (ModelId Integer, ModelName TVarChar
               )
 AS
 $BODY$
-   DECLARE vbPriceWithVAT Boolean;
+   DECLARE vbPriceWithVAT_pl Boolean;
+   DECLARE vbTaxKindValue_basis TFloat;
 BEGIN
 
-     -- Определили
-     vbPriceWithVAT:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = zc_PriceList_Basis() AND ObjectBoolean.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT());
-
+     -- Признак в Базовом Прайсе
+     vbPriceWithVAT_pl:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = zc_PriceList_Basis() AND ObjectBoolean.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT());
+     -- !!!Базовый % НДС!!!
+     vbTaxKindValue_basis:= (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = zc_Enum_TaxKind_Basis() AND OFl.DescId = zc_ObjectFloat_TaxKind_Value());
 
      -- Результат
      RETURN QUERY
@@ -222,18 +224,20 @@ BEGIN
              -- Цена вх. без НДС
             , COALESCE (ObjectFloat_EKPrice_parent.ValueData, ObjectFloat_ReceiptService_EKPrice_parent.ValueData, 0) :: TFloat AS EKPrice_parent
               -- Цена вх. с НДС
-            , CAST (COALESCE (ObjectFloat_EKPrice_parent.ValueData, ObjectFloat_ReceiptService_EKPrice_parent.ValueData, 0)
-                 * (1 + (COALESCE (ObjectFloat_TaxKind_Value_parent.ValueData, 0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS EKPriceWVAT_parent
+            , zfCalc_SummWVAT (COALESCE (ObjectFloat_EKPrice_parent.ValueData, ObjectFloat_ReceiptService_EKPrice_parent.ValueData, 0)
+                              , COALESCE (ObjectFloat_TaxKind_Value_parent.ValueData, 0))  ::TFloat AS EKPriceWVAT_parent
 
              -- Цена продажи без ндс
-           , CASE WHEN vbPriceWithVAT = FALSE
+           , CASE WHEN vbPriceWithVAT_pl = FALSE
                    THEN COALESCE (tmpPriceBasis_parent.ValuePrice, ObjectFloat_ReceiptService_SalePrice_parent.ValueData, 0)
-                   ELSE CAST (COALESCE (tmpPriceBasis_parent.ValuePrice, ObjectFloat_ReceiptService_SalePrice_parent.ValueData, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value_parent.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                   ELSE zfCalc_Summ_NoVAT (COALESCE (tmpPriceBasis_parent.ValuePrice, ObjectFloat_ReceiptService_SalePrice_parent.ValueData, 0)
+                                         , vbTaxKindValue_basis)
              END ::TFloat  AS BasisPrice_parent
 
              -- Цена продажи с ндс
-           , CASE WHEN vbPriceWithVAT = FALSE
-                   THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+           , CASE WHEN vbPriceWithVAT_pl = FALSE
+                   THEN zfCalc_SummWVAT (COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0)
+                                       , vbTaxKindValue_basis)
                    ELSE COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0)
              END ::TFloat  AS BasisPriceWVAT_parent
 
@@ -248,30 +252,32 @@ BEGIN
              -- Цена вх. без НДС
             , COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0) :: TFloat AS EKPrice
               -- Цена вх. с НДС
-            , CAST (COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0)
-                 * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS EKPriceWVAT
+            , zfCalc_SummWVAT ( COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0)
+                              , COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) )  ::TFloat AS EKPriceWVAT
 
              -- Цена продажи без ндс
-           , CASE WHEN vbPriceWithVAT = FALSE
+           , CASE WHEN vbPriceWithVAT_pl = FALSE
                    THEN COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0)
-                   ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                   ELSE zfCalc_Summ_NoVAT (COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0)
+                                          , vbTaxKindValue_basis)
              END ::TFloat  AS BasisPrice
 
              -- Цена продажи с ндс
-           , CASE WHEN vbPriceWithVAT = FALSE
-                   THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+           , CASE WHEN vbPriceWithVAT_pl = FALSE
+                   THEN zfCalc_SummWVAT (COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0)
+                                       , vbTaxKindValue_basis)
                    ELSE COALESCE (tmpPriceBasis.ValuePrice, ObjectFloat_ReceiptService_SalePrice.ValueData, 0)
              END ::TFloat  AS BasisPriceWVAT
 
              -- Цена продажи без ндс - ОПЦИЯ
-           , CASE WHEN vbPriceWithVAT = FALSE
+           , CASE WHEN vbPriceWithVAT_pl = FALSE
                    THEN ObjectFloat_SalePrice_opt.ValueData
-                   ELSE CAST (ObjectFloat_SalePrice_opt.ValueData * ( 1 - COALESCE (ObjectFloat_TaxKind_Value_opt.ValueData,0) / 100)  AS NUMERIC (16, 2))
+                   ELSE zfCalc_Summ_NoVAT (ObjectFloat_SalePrice_opt.ValueData, vbTaxKindValue_basis)
              END ::TFloat  AS SalePrice_opt
 
              -- Цена продажи с ндс - ОПЦИЯ
-           , CASE WHEN vbPriceWithVAT = FALSE
-                   THEN CAST (ObjectFloat_SalePrice_opt.ValueData * ( 1 + COALESCE (ObjectFloat_TaxKind_Value_opt.ValueData,0) / 100)  AS NUMERIC (16, 2))
+           , CASE WHEN vbPriceWithVAT_pl = FALSE
+                   THEN zfCalc_SummWVAT (ObjectFloat_SalePrice_opt.ValueData, vbTaxKindValue_basis)
                    ELSE ObjectFloat_SalePrice_opt.ValueData
              END ::TFloat  AS SalePriceWVAT_opt
 

@@ -76,10 +76,10 @@ BEGIN
            , CAST ('' AS TVarChar)     AS ClientId
 
            , CAST (0 AS Integer)       AS MovementId_OrderClient
-           , CAST (NULL AS TDateTime)  AS OperDate_OrderClient
-           , CAST ('' AS TVarChar)     AS InvNumber_OrderClient
-           , CAST (0 AS Integer)       AS StatusCode_OrderClient
-           , CAST ('' AS TVarChar)     AS StatusName_OrderClient
+           , CAST (CURRENT_DATE AS TDateTime)  AS OperDate_OrderClient
+           , CAST (NEXTVAL ('movement_OrderClient_seq') AS TVarChar) AS InvNumber_OrderClient
+           , Object_Status.Code        AS StatusCode_OrderClient
+           , Object_Status.Name        AS StatusName_OrderClient
 
            , CAST (0 AS TFloat)        AS TotalSummMVAT
            , CAST (0 AS TFloat)        AS TotalSummPVAT
@@ -92,12 +92,13 @@ BEGIN
            , CAST (0 AS Integer)       AS MovementId_Invoice
            , CAST (NULL AS TDateTime)  AS OperDate_Invoice
            , CAST ('' AS TVarChar)     AS InvNumber_Invoice
-           , CAST (0 AS Integer)       AS StatusCode_Invoice
-           , CAST ('' AS TVarChar)     AS StatusName_Invoice
+           , Object_Status.Code        AS StatusCode_Invoice
+           , Object_Status.Name        AS StatusName_Invoice
            , CAST (0 AS TFloat)        AS AmountIn_Invoice
            , CAST (0 AS TFloat)        AS AmountOut_Invoice
            , CAST (0 AS TFloat)        AS AmountIn_BankAccount
            , CAST (0 AS TFloat)        AS AmountOut_BankAccount
+       FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
        ;
    ELSE
      RETURN QUERY
