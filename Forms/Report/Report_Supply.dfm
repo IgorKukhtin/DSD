@@ -710,6 +710,7 @@ inherited Report_SupplyForm: TReport_SupplyForm
       Caption = #1055#1086' '#1074#1080#1076#1072#1084' '#1090#1086#1074#1072#1088#1072
       Hint = #1055#1086' '#1074#1080#1076#1072#1084' '#1090#1086#1074#1072#1088#1072
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object ExecuteDialog: TExecuteDialog

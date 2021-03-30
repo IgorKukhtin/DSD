@@ -1247,7 +1247,9 @@ uses
   Report_SaleExternal_OrderSale in '..\..\Forms\Report\Report_SaleExternal_OrderSale.pas' {Report_SaleExternal_OrderSaleForm: TParentForm},
   GoodsByGoodsKind_Norm in '..\..\Forms\Guides\GoodsByGoodsKind_Norm.pas' {GoodsByGoodsKind_NormForm: TParentForm},
   Report_Supply in '..\..\Forms\Report\Report_Supply.pas' {Report_SupplyForm: TParentForm},
-  Report_SupplyDialog in '..\..\Forms\Report\Report_SupplyDialog.pas' {Report_SupplyDialogForm: TParentForm};
+  Report_SupplyDialog in '..\..\Forms\Report\Report_SupplyDialog.pas' {Report_SupplyDialogForm: TParentForm},
+  Report_Supply_Olap in '..\..\Forms\Report\Report_Supply_Olap.pas' {Report_Supply_OlapForm: TParentForm},
+  Report_Supply_OlapDialog in '..\..\Forms\Report\Report_Supply_OlapDialog.pas' {Report_Supply_OlapDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

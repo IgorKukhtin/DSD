@@ -144,15 +144,13 @@ BEGIN
             -- Цена вх. без НДС
           , ObjectFloat_EKPrice.ValueData   ::TFloat   AS EKPrice
             -- Цена вх. с НДС
-          , CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
-               * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS EKPriceWVAT
+          , zfCalc_SummWVAT (COALESCE (ObjectFloat_EKPrice.ValueData, 0), ObjectFloat_TaxKind_Value.ValueData) ::TFloat AS EKPriceWVAT
 
             -- Сумма вх. без НДС
-          , (tmpProdColorPattern.Value * ObjectFloat_EKPrice.ValueData)   ::TFloat   AS EKPrice_summ
+          , zfCalc_SummIn (tmpProdColorPattern.Value, ObjectFloat_EKPrice.ValueData, 1)   ::TFloat AS EKPrice_summ
             -- Сумма вх. с НДС
-          , CAST (tmpProdColorPattern.Value
-               * COALESCE (ObjectFloat_EKPrice.ValueData, 0)
-               * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))  ::TFloat AS EKPriceWVAT_summ
+          , zfCalc_SummWVAT (zfCalc_SummIn (tmpProdColorPattern.Value, ObjectFloat_EKPrice.ValueData, 1)
+                           , ObjectFloat_TaxKind_Value.ValueData)  ::TFloat AS EKPriceWVAT_summ
 
      FROM tmpProdColorPattern
           LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = tmpProdColorPattern.ProdColorPatternId

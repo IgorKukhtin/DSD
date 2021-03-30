@@ -71,9 +71,7 @@ BEGIN
                              -- Цена вх. без НДС
                            , COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0) :: TFloat AS EKPrice
                              -- Цена вх. с НДС
-                           , CAST (COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0)
-                                  * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2)) :: TFloat AS EKPriceWVAT
-
+                           , zfCalc_SummWVAT ( COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0), ObjectFloat_TaxKind_Value.ValueData) AS EKPriceWVAT
                       FROM Object AS Object_ReceiptProdModelChild
                            LEFT JOIN ObjectLink AS ObjectLink_Object
                                                 ON ObjectLink_Object.ObjectId = Object_ReceiptProdModelChild.Id
@@ -112,11 +110,10 @@ BEGIN
         , tmpReceiptGoodsChild AS
                      (SELECT tmpReceiptProdModelChild.ReceiptProdModelChildId
                              -- Сумма вх. без НДС
-                           , (tmpReceiptProdModelChild.Value * COALESCE (ObjectFloat_Value.ValueData, 0) * COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0)) :: TFloat AS EKPrice_summ
+                           , zfCalc_SummIn (tmpReceiptProdModelChild.Value * COALESCE (ObjectFloat_Value.ValueData, 0), COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0),1) :: TFloat AS EKPrice_summ
                              -- Сумма вх. с НДС
-                           , (tmpReceiptProdModelChild.Value * COALESCE (ObjectFloat_Value.ValueData, 0)
-                                  * CAST (COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0)
-                                         * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))) :: TFloat AS EKPriceWVAT_summ
+                           , zfCalc_SummWVAT (zfCalc_SummIn (tmpReceiptProdModelChild.Value * COALESCE (ObjectFloat_Value.ValueData, 0), COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0),1)
+                                            , ObjectFloat_TaxKind_Value.ValueData)  AS EKPriceWVAT_summ
                       FROM tmpReceiptProdModelChild
                            -- нашли его в сборке узлов
                            INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods_Object
@@ -217,6 +214,7 @@ BEGIN
          , tmpChild.EKPriceWVAT_summ
 
           -- Цена продажи без ндс
+
         , COALESCE (tmpPriceBasis.ValuePrice, 0)     ::TFloat AS BasisPrice
           -- Цена продажи с ндс
         , COALESCE (tmpPriceBasis.ValuePriceWVAT, 0) ::TFloat AS BasisPriceWVAT
