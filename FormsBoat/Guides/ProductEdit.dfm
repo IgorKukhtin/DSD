@@ -246,16 +246,16 @@ object ProductEditForm: TProductEditForm
     Width = 273
   end
   object edDiscountNextTax: TcxCurrencyEdit
-    Left = 456
+    Left = 418
     Top = 168
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 30
-    Width = 114
+    Width = 80
   end
   object cxLabel15: TcxLabel
-    Left = 456
-    Top = 148
+    Left = 418
+    Top = 149
     Hint = '% '#1089#1082'. ('#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081')'
     Caption = '% '#1089#1082'. ('#1076#1086#1087'.)'
     ParentShowHint = False
@@ -264,7 +264,7 @@ object ProductEditForm: TProductEditForm
   object cxLabel16: TcxLabel
     Left = 331
     Top = 148
-    Caption = '% '#1089#1082'. ('#1086#1089#1085#1086#1074#1085#1086#1081')'
+    Caption = '% '#1089#1082'. ('#1086#1089#1085'-'#1086#1081')'
   end
   object edClienttext: TcxLabel
     Left = 331
@@ -292,7 +292,7 @@ object ProductEditForm: TProductEditForm
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 35
-    Width = 114
+    Width = 79
   end
   object cxLabel8: TcxLabel
     Left = 331
@@ -470,7 +470,7 @@ object ProductEditForm: TProductEditForm
     TabOrder = 56
     Width = 114
   end
-  object ceAmountOutInvoice: TcxCurrencyEdit
+  object ceAmountInInvoiceAll: TcxCurrencyEdit
     Left = 456
     Top = 350
     Properties.DecimalPlaces = 2
@@ -481,7 +481,7 @@ object ProductEditForm: TProductEditForm
   object cxLabel26: TcxLabel
     Left = 456
     Top = 330
-    Caption = 'Kredit (Invoice)'
+    Caption = 'Debet (Invoice All)'
   end
   object cxLabel27: TcxLabel
     Left = 331
@@ -497,7 +497,7 @@ object ProductEditForm: TProductEditForm
     TabOrder = 61
     Width = 114
   end
-  object ceAmountOutBankAccount: TcxCurrencyEdit
+  object ceAmountInBankAccountAll: TcxCurrencyEdit
     Left = 456
     Top = 393
     Properties.DecimalPlaces = 2
@@ -509,7 +509,23 @@ object ProductEditForm: TProductEditForm
   object cxLabel28: TcxLabel
     Left = 456
     Top = 377
-    Caption = 'Kredit (BankAccount)'
+    Caption = 'Debet (BankAccount All)'
+  end
+  object cxLabel29: TcxLabel
+    Left = 504
+    Top = 149
+    Caption = '% '#1053#1044#1057
+  end
+  object edVATPercentOrderClient: TcxCurrencyEdit
+    Left = 504
+    Top = 168
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    Properties.ReadOnly = True
+    TabOrder = 68
+    Width = 66
   end
   object ActionList: TActionList
     Left = 232
@@ -912,7 +928,7 @@ object ProductEditForm: TProductEditForm
       item
         Name = 'inAmountOut_Invoice'
         Value = Null
-        Component = ceAmountOutInvoice
+        Component = ceAmountInInvoiceAll
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1169,6 +1185,13 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'VATPercent_OrderClient'
+        Value = Null
+        Component = edVATPercentOrderClient
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'TotalSummMVAT'
         Value = Null
         Component = edTotalSummMVAT
@@ -1226,9 +1249,9 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AmountOut_Invoice'
+        Name = 'AmountIn_InvoiceAll'
         Value = Null
-        Component = ceAmountOutInvoice
+        Component = ceAmountInInvoiceAll
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -1240,9 +1263,9 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AmountOut_BankAccount'
+        Name = 'AmountIn_BankAccountAll'
         Value = Null
-        Component = ceAmountOutBankAccount
+        Component = ceAmountInBankAccountAll
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -1709,71 +1732,6 @@ object ProductEditForm: TProductEditForm
       end>
     PackSize = 1
     Left = 476
-    Top = 262
-  end
-  object spInsertUpdate_Invoice_byProduct: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_Invoice_byProduct'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'inMovementId_Invoice'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inInvNumber'
-        Value = 0.000000000000000000
-        Component = edInvNumberInvoice
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDate'
-        Value = Null
-        Component = edOperDateInvoice
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId_OrderClient'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'inMovementId_OrderClient'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inClientId'
-        Value = ''
-        Component = GuidesClient
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountIn'
-        Value = 'False'
-        Component = ceAmountInInvoice
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountOut'
-        Value = 'False'
-        Component = ceAmountOutInvoice
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 456
-    Top = 416
+    Top = 222
   end
 end

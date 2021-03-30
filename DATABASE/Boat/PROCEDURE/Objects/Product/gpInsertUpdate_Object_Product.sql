@@ -292,12 +292,13 @@ BEGIN
                                       , inUserId     := vbUserId);
      END IF;
 
-    IF COALESCE (inMovementId_Invoice) = 0
+    IF COALESCE (inMovementId_Invoice) = 0 AND COALESCE (vbAmount,0) <> 0  -- создаем новый документ только если сумма не 0
     THEN
         -- сохранили <ƒокумент>
         inInvNumber_Invoice := NEXTVAL ('movement_Invoice_seq')    :: TVarChar;
         inMovementId_Invoice := lpInsertUpdate_Movement_Invoice (ioId               := 0                                   ::Integer
-                                                               , inInvNumber        := inInvNumber_Invoice                         :: TVarChar
+                                                               , ParentId           := inMovementId_OrderClient
+                                                               , inInvNumber        := inInvNumber_Invoice                 :: TVarChar
                                                                , inOperDate         := inOperDate_Invoice
                                                                , inPlanDate         := Null                                ::TDateTime
                                                                , inVATPercent       := ObjectFloat_TaxKind_Value.ValueData ::TFloat
@@ -326,8 +327,9 @@ BEGIN
 
         WHERE Object_Client.Id = inClientId;
         -- сохранили ParentId
-        PERFORM lpInsertUpdate_Movement (inMovementId_Invoice, zc_Movement_Invoice(), inInvNumber_Invoice, inOperDate_Invoice, inMovementId_OrderClient, vbUserId);
+        --PERFORM lpInsertUpdate_Movement (inMovementId_Invoice, zc_Movement_Invoice(), inInvNumber_Invoice, inOperDate_Invoice, inMovementId_OrderClient, vbUserId);
     ELSE
+        
         -- пересохранили дату документа
         PERFORM lpInsertUpdate_Movement (inMovementId_Invoice, zc_Movement_Invoice(), inInvNumber_Invoice, inOperDate_Invoice, inMovementId_OrderClient, vbUserId);
         --сохранили сумму 

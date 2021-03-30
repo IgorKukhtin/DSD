@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , InvNumber_OrderClient TVarChar
              , StatusCode_OrderClient Integer
              , StatusName_OrderClient TVarChar
+             , VATPercent_OrderClient TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummVAT TFloat
              , isBasicConf Boolean, isProdColorPattern Boolean
              
@@ -32,9 +33,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , StatusCode_Invoice Integer  
              , StatusName_Invoice TVarChar 
              , AmountIn_Invoice TFloat
-             , AmountOut_Invoice TFloat
+             , AmountIn_InvoiceAll TFloat
              , AmountIn_BankAccount TFloat
-             , AmountOut_BankAccount TFloat
+             , AmountIn_BankAccountAll TFloat
               ) AS
 $BODY$
 BEGIN
@@ -80,6 +81,7 @@ BEGIN
            , CAST (NEXTVAL ('movement_OrderClient_seq') AS TVarChar) AS InvNumber_OrderClient
            , Object_Status.Code        AS StatusCode_OrderClient
            , Object_Status.Name        AS StatusName_OrderClient
+           , CAST (0 AS TFloat)        AS VATPercent_OrderClient
 
            , CAST (0 AS TFloat)        AS TotalSummMVAT
            , CAST (0 AS TFloat)        AS TotalSummPVAT
@@ -95,9 +97,9 @@ BEGIN
            , Object_Status.Code        AS StatusCode_Invoice
            , Object_Status.Name        AS StatusName_Invoice
            , CAST (0 AS TFloat)        AS AmountIn_Invoice
-           , CAST (0 AS TFloat)        AS AmountOut_Invoice
+           , CAST (0 AS TFloat)        AS AmountIn_InvoiceAll
            , CAST (0 AS TFloat)        AS AmountIn_BankAccount
-           , CAST (0 AS TFloat)        AS AmountOut_BankAccount
+           , CAST (0 AS TFloat)        AS AmountIn_BankAccountAll
        FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
        ;
    ELSE
@@ -112,6 +114,7 @@ BEGIN
                              , Movement.Id                AS MovementId
                              , MovementFloat_DiscountTax.ValueData        AS DiscountTax
                              , MovementFloat_DiscountNextTax.ValueData    AS DiscountNextTax
+                             , MovementFloat_VATPercent.ValueData         AS VATPercent
                         FROM Movement
                              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
                      
@@ -119,6 +122,10 @@ BEGIN
                                                           ON MovementLinkObject_From.MovementId = Movement.Id
                                                          AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                              LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+                             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                                     ON MovementFloat_VATPercent.MovementId = Movement.Id
+                                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
 
                              LEFT JOIN MovementFloat AS MovementFloat_DiscountTax
                                                      ON MovementFloat_DiscountTax.MovementId = Movement.Id
@@ -130,35 +137,48 @@ BEGIN
                         WHERE Movement.Id = inMovementId_OrderClient
                           AND Movement.DescId = zc_Movement_OrderClient()
                           )
-   -- данные из док счет
-   , tmpInvoice AS (SELECT  MovementLinkMovement_Invoice.MovementId AS MovementId_OrderClient
-                          , Movement.Id                   AS MovementId_Invoice
-                          , Movement.OperDate             AS OperDate_Invoice
-                          , Movement.InvNumber ::TVarChar AS InvNumber_Invoice
-                          , Object_Status.ObjectCode      AS StatusCode_Invoice
-                          , Object_Status.ValueData       AS StatusName_Invoice
+   -- первый счет
+   , tmpInvoice_First AS (SELECT Movement.Id
+                               , Movement.OperDate
+                               , Movement.InvNumber
+                               , Object_Status.ObjectCode AS StatusCode
+                               , Object_Status.ValueData  AS StatusName
+                               , CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END::TFloat AS AmountIn
+                          FROM Movement
+                               LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-                            -- с НДС
+                               INNER JOIN MovementFloat AS MovementFloat_Amount
+                                                        ON MovementFloat_Amount.MovementId = Movement.Id
+                                                       AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+                                                       AND MovementFloat_Amount.ValueData > 0
+
+                          WHERE Movement.ParentId = (SELECT tmpOrderClient.MovementId FROM tmpOrderClient LIMIT 1) -- по идее должен быть 1 док. заказ
+                            AND Movement.StatusId <> zc_Enum_Status_Erased()
+                          )
+
+   -- данные всех док счет
+   , tmpInvoice AS (SELECT  MovementLinkMovement_Invoice.MovementId AS MovementId_OrderClient
+                          , Movement.Id                             AS MovementId_Invoice
+                          -- с НДС
                           , CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END::TFloat AS AmountIn
-                          , CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END::TFloat AS AmountOut
 
                     FROM MovementLinkMovement AS MovementLinkMovement_Invoice
                          INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Invoice.MovementChildId
                                             AND Movement.DescId = zc_Movement_Invoice()
                                             AND Movement.StatusId <> zc_Enum_Status_Erased()
-                         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-                         LEFT JOIN MovementFloat AS MovementFloat_Amount
-                                                    ON MovementFloat_Amount.MovementId = Movement.Id
-                                                   AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+                         INNER JOIN MovementFloat AS MovementFloat_Amount
+                                                  ON MovementFloat_Amount.MovementId = Movement.Id
+                                                 AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+                                                 AND MovementFloat_Amount.ValueData > 0
 
                     WHERE MovementLinkMovement_Invoice.MovementId IN (SELECT DISTINCT tmpOrderClient.MovementId FROM tmpOrderClient)
                       AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
                     )
-     -- данные по оплате счета
+     -- данные по оплате счетов
      , tmpBankAccount AS (SELECT MovementLinkMovement.MovementChildId AS MovementId_Invoice
-                               , SUM (CASE WHEN MovementItem.Amount > 0 THEN MovementItem.Amount      ELSE 0 END) ::TFloat AS AmountIn
-                               , SUM (CASE WHEN MovementItem.Amount < 0 THEN -1 * MovementItem.Amount ELSE 0 END) ::TFloat AS AmountOut
+                               , SUM (MovementItem.Amount)   ::TFloat AS AmountIn
+                               --, SUM (CASE WHEN MovementItem.Amount < 0 THEN -1 * MovementItem.Amount ELSE 0 END) ::TFloat AS AmountOut
                           FROM MovementLinkMovement
                               INNER JOIN Movement AS Movement_BankAccount
                                                   ON Movement_BankAccount.Id = MovementLinkMovement.MovementId
@@ -167,7 +187,7 @@ BEGIN
                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement_BankAccount.Id
                                                      AND MovementItem.DescId = zc_MI_Master()
                                                      AND MovementItem.isErased = FALSE
-                                                     AND COALESCE (MovementItem.Amount,0) <> 0
+                                                     AND COALESCE (MovementItem.Amount,0) > 0
                           WHERE MovementLinkMovement.MovementChildId IN (SELECT DISTINCT tmpInvoice.MovementId_Invoice FROM tmpInvoice)
                             AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Invoice()
                           GROUP BY MovementLinkMovement.MovementChildId
@@ -182,6 +202,7 @@ BEGIN
          , ObjectFloat_Hours.ValueData      AS Hours
          , tmpOrderClient.DiscountTax       AS DiscountTax
          , tmpOrderClient.DiscountNextTax   AS DiscountNextTax
+
          , ObjectDate_DateStart.ValueData   AS DateStart
          , ObjectDate_DateBegin.ValueData   AS DateBegin
          , ObjectDate_DateSale.ValueData    AS DateSale
@@ -210,6 +231,7 @@ BEGIN
          , tmpOrderClient.InvNumber  :: TVarChar   AS InvNumber_OrderClient
          , tmpOrderClient.StatusCode :: Integer    AS StatusCode_OrderClient
          , tmpOrderClient.StatusName :: TVarChar   AS StatusName_OrderClient
+         , tmpOrderClient.VATPercent :: TFloat     AS VATPercent_OrderClient
 
          , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
          , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
@@ -219,17 +241,17 @@ BEGIN
          , COALESCE (ObjectBoolean_BasicConf.ValueData, FALSE) :: Boolean AS isBasicConf
          , CAST (FALSE AS Boolean)          AS isProdColorPattern
 
-         , tmpInvoice.MovementId_Invoice :: Integer    AS MovementId_Invoice
-         , tmpInvoice.OperDate_Invoice   :: TDateTime  AS OperDate_Invoice
-         , tmpInvoice.InvNumber_Invoice  :: TVarChar   AS InvNumber_Invoice
-         , tmpInvoice.StatusCode_Invoice :: Integer    AS StatusCode_Invoice
-         , tmpInvoice.StatusName_Invoice :: TVarChar   AS StatusName_Invoice
+         , tmpInvoice_First.Id           :: Integer    AS MovementId_Invoice
+         , tmpInvoice_First.OperDate     :: TDateTime  AS OperDate_Invoice
+         , tmpInvoice_First.InvNumber    :: TVarChar   AS InvNumber_Invoice
+         , tmpInvoice_First.StatusCode   :: Integer    AS StatusCode_Invoice
+         , tmpInvoice_First.StatusName   :: TVarChar   AS StatusName_Invoice
 
-         , tmpInvoice.AmountIn   ::TFloat AS AmountIn_Invoice
-         , tmpInvoice.AmountOut  ::TFloat AS AmountOut_Invoice
+         , tmpInvoice_First.AmountIn     ::TFloat AS AmountIn_Invoice
+         , tmpInvoice.AmountIn           ::TFloat AS AmountIn_InvoiceAll
          
-         , tmpBankAccount.AmountIn   ::TFloat AS AmountIn_BankAccount
-         , tmpBankAccount.AmountOut  ::TFloat AS AmountOut_BankAccount
+         , tmpBankAccount_First.AmountIn ::TFloat AS AmountIn_BankAccount
+         , tmpBankAccount.AmountIn       ::TFloat AS AmountIn_BankAccountAll
          
          
      FROM Object AS Object_Product
@@ -319,9 +341,16 @@ BEGIN
           LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                   ON MovementFloat_TotalSumm.MovementId = tmpOrderClient.MovementId
                                  AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-
-          LEFT JOIN tmpInvoice ON tmpInvoice.MovementId_OrderClient = tmpOrderClient.MovementId
-          LEFT JOIN tmpBankAccount ON tmpBankAccount.MovementId_Invoice = tmpInvoice.MovementId_Invoice
+          -- данные первого счета
+          LEFT JOIN tmpInvoice_First ON 1 = 1
+          -- оплата по первому счету
+          LEFT JOIN (SELECT tmpBankAccount.MovementId_Invoice, SUM (tmpBankAccount.AmountIn) AS AmountIn
+                     FROM tmpBankAccount
+                     GROUP BY tmpBankAccount.MovementId_Invoice
+                     ) AS tmpBankAccount_first ON tmpBankAccount_first.MovementId_Invoice = tmpInvoice_First.Id
+          LEFT JOIN (SELECT SUM (tmpInvoice.AmountIn) AS AmountIn FROM tmpInvoice) AS tmpInvoice ON 1 = 1
+          
+          LEFT JOIN (SELECT SUM (tmpBankAccount.AmountIn) AS AmountIn FROM tmpBankAccount) AS tmpBankAccount ON 1 = 1
        WHERE Object_Product.Id = inId;
    END IF;
 
@@ -338,3 +367,6 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpGet_Object_Product(0, 0,'2')
+
+
+--select * from gpGet_Object_Product(inId := 2539 , inMovementId_OrderClient := 80 ,  inSession := '5');

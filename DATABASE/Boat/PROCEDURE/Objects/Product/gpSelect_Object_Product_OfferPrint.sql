@@ -74,7 +74,7 @@ BEGIN
      FROM tmpOrderClient
      WHERE tmpOrderClient.GoodsDesc = zc_Object_Product()
      LIMIT 1;
-     
+
      -- данные по лодкe
      CREATE TEMP TABLE tmpProduct ON COMMIT DROP AS (SELECT tmp.*
                                                      FROM gpSelect_Object_Product (inIsShowAll:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp

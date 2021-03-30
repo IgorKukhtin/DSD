@@ -60,7 +60,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
   --------
-     --- находим сохраненный счет
+ 
+ /*    --- находим сохраненный счет
      vbMovementId_Invoice := (SELECT MovementLinkMovement.MovementChildId
                               FROM MovementLinkMovement
                               WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Invoice()
@@ -109,7 +110,7 @@ BEGIN
                                           , inUserId     := inUserId);
              vbisComplete_Invoice := TRUE;
          END IF;
-     
+
          PERFORM lpInsertUpdate_Movement (Movement.Id, zc_Movement_Invoice(), Movement.InvNumber, Movement.OperDate, ioId, inUserId)
          FROM Movement
          WHERE Movement.Id = inMovementId_Invoice
@@ -125,9 +126,9 @@ BEGIN
                                                       , inUserId     := inUserId);
               END IF;
          END IF;
-     END IF;     
+     END IF;
   -----------
-
+*/
      -- пересчитали »тоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
