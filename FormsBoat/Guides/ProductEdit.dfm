@@ -304,7 +304,7 @@ object ProductEditForm: TProductEditForm
     Top = 63
     Caption = #8470' '#1076#1086#1082'.'
   end
-  object edInvNumber: TcxTextEdit
+  object edInvNumberOrderClient: TcxTextEdit
     Left = 331
     Top = 81
     Properties.ReadOnly = True
@@ -316,11 +316,11 @@ object ProductEditForm: TProductEditForm
     Top = 63
     Caption = #1044#1072#1090#1072
   end
-  object edOperDate: TcxDateEdit
+  object edOperDateOrderClient: TcxDateEdit
     Left = 456
     Top = 81
     EditValue = 42160d
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 40
@@ -401,7 +401,7 @@ object ProductEditForm: TProductEditForm
     Top = 215
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
-    TabOrder = 49
+    TabOrder = 48
     Width = 66
   end
   object ceStatusInvoice: TcxButtonEdit
@@ -467,7 +467,7 @@ object ProductEditForm: TProductEditForm
     Top = 350
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
-    TabOrder = 57
+    TabOrder = 56
     Width = 114
   end
   object ceAmountOutInvoice: TcxCurrencyEdit
@@ -494,7 +494,7 @@ object ProductEditForm: TProductEditForm
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     Properties.ReadOnly = True
-    TabOrder = 62
+    TabOrder = 61
     Width = 114
   end
   object ceAmountOutBankAccount: TcxCurrencyEdit
@@ -535,9 +535,6 @@ object ProductEditForm: TProductEditForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdate
-        end
-        item
-          StoredProc = spInsertUpdate_Invoice_byProduct
         end>
       Caption = 'Ok'
     end
@@ -855,6 +852,70 @@ object ProductEditForm: TProductEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMovementId_OrderClient'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumber_OrderClient'
+        Value = Null
+        Component = edInvNumberOrderClient
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate_OrderClient'
+        Value = Null
+        Component = edOperDateOrderClient
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Invoice'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMovementId_Invoice'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumber_Invoice'
+        Value = Null
+        Component = edInvNumberInvoice
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate_Invoice'
+        Value = Null
+        Component = edOperDateInvoice
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountIn_Invoice'
+        Value = Null
+        Component = ceAmountInInvoice
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountOut_Invoice'
+        Value = Null
+        Component = ceAmountOutInvoice
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 96
@@ -1081,14 +1142,14 @@ object ProductEditForm: TProductEditForm
       item
         Name = 'InvNumber_OrderClient'
         Value = Null
-        Component = edInvNumber
+        Component = edInvNumberOrderClient
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate_OrderClient'
         Value = Null
-        Component = edOperDate
+        Component = edOperDateOrderClient
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
@@ -1557,8 +1618,8 @@ object ProductEditForm: TProductEditForm
     FormNameParam.MultiSelectSeparator = ','
     PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 455
-    Top = 30
+    Left = 439
+    Top = 22
   end
   object BarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -1647,8 +1708,8 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 460
-    Top = 254
+    Left = 476
+    Top = 262
   end
   object spInsertUpdate_Invoice_byProduct: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Invoice_byProduct'

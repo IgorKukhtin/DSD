@@ -82,9 +82,9 @@ type
     cxLabel8: TcxLabel;
     GuidesStatus: TdsdGuides;
     cxLabel17: TcxLabel;
-    edInvNumber: TcxTextEdit;
+    edInvNumberOrderClient: TcxTextEdit;
     cxLabel18: TcxLabel;
-    edOperDate: TcxDateEdit;
+    edOperDateOrderClient: TcxDateEdit;
     UnCompleteMovement: TChangeGuidesStatus;
     CompleteMovement: TChangeGuidesStatus;
     DeleteMovement: TChangeGuidesStatus;
