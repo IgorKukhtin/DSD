@@ -253,7 +253,8 @@ uses
   MovementItemProtocol in '..\..\FormsBoat\System\MovementItemProtocol.pas' {MovementItemProtocolForm: TParentForm},
   MovementProtocol_Info in '..\..\FormsBoat\System\MovementProtocol_Info.pas' {MovementProtocol_InfoForm: TParentForm},
   Report_MovementIncome in '..\..\FormsBoat\Report\Report_MovementIncome.pas' {Report_MovementIncomeForm: TParentForm},
-  Report_MovementIncomeDialog in '..\..\FormsBoat\Report\Report_MovementIncomeDialog.pas' {Report_MovementIncomeDialogForm: TParentForm};
+  Report_MovementIncomeDialog in '..\..\FormsBoat\Report\Report_MovementIncomeDialog.pas' {Report_MovementIncomeDialogForm: TParentForm},
+  Union_IncomeOrderJournalChoice in '..\..\FormsBoat\Document\Union_IncomeOrderJournalChoice.pas' {Union_IncomeOrderJournalChoiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

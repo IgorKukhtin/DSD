@@ -494,7 +494,7 @@ object ProductEditForm: TProductEditForm
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     Properties.ReadOnly = True
-    TabOrder = 61
+    TabOrder = 60
     Width = 114
   end
   object ceAmountInBankAccountAll: TcxCurrencyEdit
@@ -503,7 +503,7 @@ object ProductEditForm: TProductEditForm
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     Properties.ReadOnly = True
-    TabOrder = 65
+    TabOrder = 64
     Width = 114
   end
   object cxLabel28: TcxLabel

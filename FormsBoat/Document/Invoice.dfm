@@ -1,22 +1,22 @@
 ﻿inherited InvoiceForm: TInvoiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090'>'
-  ClientHeight = 465
+  ClientHeight = 503
   ClientWidth = 351
   ExplicitWidth = 357
-  ExplicitHeight = 493
+  ExplicitHeight = 531
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 57
-    Top = 420
-    ExplicitLeft = 57
-    ExplicitTop = 420
+    Left = 55
+    Top = 466
+    ExplicitLeft = 55
+    ExplicitTop = 466
   end
   inherited bbCancel: TcxButton
-    Left = 201
-    Top = 420
-    ExplicitLeft = 201
-    ExplicitTop = 420
+    Left = 199
+    Top = 466
+    ExplicitLeft = 199
+    ExplicitTop = 466
   end
   object Код: TcxLabel [2]
     Left = 15
@@ -99,12 +99,12 @@
   end
   object cxLabel10: TcxLabel [13]
     Left = 15
-    Top = 352
+    Top = 404
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [14]
     Left = 15
-    Top = 373
+    Top = 425
     TabOrder = 9
     Width = 319
   end
@@ -226,6 +226,23 @@
     TabOrder = 29
     Width = 100
   end
+  object cxLabel4: TcxLabel [30]
+    Left = 15
+    Top = 352
+    Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079' / '#1055#1088#1080#1093#1086#1076
+  end
+  object ceParent: TcxButtonEdit [31]
+    Left = 15
+    Top = 373
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 31
+    Width = 319
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 242
     Top = 324
@@ -254,8 +271,8 @@
     end
   end
   inherited FormParams: TdsdFormParams
-    Left = 39
-    Top = 284
+    Left = 71
+    Top = 300
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Invoice'
@@ -266,6 +283,14 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = GuidesParent
+        ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -532,9 +557,24 @@
         Component = edVATPercent
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_parent'
+        Value = Null
+        Component = GuidesParent
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_parent'
+        Value = Null
+        Component = GuidesParent
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 287
-    Top = 368
+    Left = 288
+    Top = 440
   end
   object GuidesObject: TdsdGuides
     KeyField = 'Id'
@@ -591,7 +631,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 107
-    Top = 181
+    Top = 165
   end
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
@@ -789,5 +829,51 @@
     PackSize = 1
     Left = 184
     Top = 48
+  end
+  object GuidesParent: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceParent
+    Key = '0'
+    FormNameParam.Value = 'TUnion_IncomeOrderJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnion_IncomeOrderJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesParent
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = GuidesParent
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterObjectId'
+        Value = Null
+        Component = GuidesObject
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterObjectName'
+        Value = Null
+        Component = GuidesObject
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 203
+    Top = 375
   end
 end

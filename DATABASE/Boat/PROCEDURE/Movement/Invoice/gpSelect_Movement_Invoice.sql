@@ -49,6 +49,11 @@ RETURNS TABLE (Id              Integer
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
+             
+             , MovementId_parent Integer
+             , InvNumber_parent TVarChar
+             , DescName_parent TVarChar
+      
              , Color_Pay Integer
               )
 
@@ -200,6 +205,10 @@ BEGIN
       , Object_Update.ValueData                    AS UpdateName
       , MovementDate_Update.ValueData              AS UpdateDate
 
+      , Movement_Parent.Id             ::Integer  AS MovementId_parent
+      , ('№ ' || Movement_Parent.InvNumber || ' от ' || Movement_Parent.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_parent
+      , MovementDesc_Parent.ItemName   ::TVarChar  AS DescName_parent
+
       -- подсветить если счет не оплачен + подсветить красным - если оплата больше чем сумма счета + добавить кнопку - в новой форме показать все оплаты для этого счета
       , CASE WHEN (COALESCE (CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END,0) > COALESCE (tmpMLM_BankAccount.AmountOut,0)) AND COALESCE (tmpMLM_BankAccount.AmountOut,0)<>0
                OR (COALESCE (CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END,0) > COALESCE (tmpMLM_BankAccount.AmountIn,0))  AND COALESCE (tmpMLM_BankAccount.AmountIn,0)<>0
@@ -291,6 +300,12 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_CIN
                                ON ObjectString_CIN.ObjectId = Object_Product.Id
                               AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
+
+        --Parent Документ Заказ или ПРиход
+        LEFT JOIN Movement AS Movement_Parent
+                           ON Movement_Parent.Id = Movement.ParentId
+                          AND Movement_Parent.StatusId <> zc_Enum_Status_Erased()
+        LEFT JOIN MovementDesc AS MovementDesc_Parent ON MovementDesc_Parent.Id = Movement_Parent.DescId
 
         -- оплаты из документа BankAccount
         LEFT JOIN tmpMLM_BankAccount ON tmpMLM_BankAccount.MovementChildId = Movement.Id

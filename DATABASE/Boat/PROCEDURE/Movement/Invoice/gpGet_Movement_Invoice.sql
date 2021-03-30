@@ -30,6 +30,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , InvNumberPartner TVarChar
              , ReceiptNumber    TVarChar
              , Comment TVarChar
+             , MovementId_parent Integer
+             , InvNumber_parent TVarChar
              )
 AS
 $BODY$
@@ -75,7 +77,8 @@ BEGIN
            , CAST ('' as TVarChar)      AS InvNumberPartner
            , vbReceiptNumber:: TVarChar AS ReceiptNumber
            , CAST ('' as TVarChar)      AS Comment
-
+           , 0                          AS MovementId_parent
+           , CAST ('' as TVarChar)      AS InvNumber_parent
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
       ;
@@ -118,6 +121,9 @@ BEGIN
       , MovementString_InvNumberPartner.ValueData           AS InvNumberPartner
       , MovementString_ReceiptNumber.ValueData              AS ReceiptNumber
       , MovementString_Comment.ValueData                    AS Comment
+
+      , Movement_Parent.Id             ::Integer  AS MovementId_parent
+      , ('№ ' || Movement_Parent.InvNumber || ' от ' || zfConvert_DateToString (Movement_Parent.OperDate) :: TVarChar ||' (' ||MovementDesc_Parent.ItemName||' )' ) :: TVarChar  AS InvNumber_parent
 
     FROM Movement
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -177,6 +183,12 @@ BEGIN
                                      ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                     AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+
+        --Parent Документ Заказ или ПРиход
+        LEFT JOIN Movement AS Movement_Parent
+                           ON Movement_Parent.Id = Movement.ParentId
+                          AND Movement_Parent.StatusId <> zc_Enum_Status_Erased()
+        LEFT JOIN MovementDesc AS MovementDesc_Parent ON MovementDesc_Parent.Id = Movement_Parent.DescId
 
        WHERE Movement.Id = inMovementId
        ;

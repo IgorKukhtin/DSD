@@ -111,7 +111,7 @@ BEGIN
     SELECT     
         Movement.Id
       , Movement.InvNumber
-      , ('№ ' || Movement.InvNumber || ' от ' || Movement.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Full
+      , ('№ ' || Movement.InvNumber || ' от ' || zfConvert_DateToString (Movement.OperDate) :: TVarChar ) :: TVarChar  AS InvNumber_Full
       , Movement.OperDate
       , MovementDate_Plan.ValueData         :: TDateTime    AS PlanDate
       , Object_Status.ObjectCode                            AS StatusCode
