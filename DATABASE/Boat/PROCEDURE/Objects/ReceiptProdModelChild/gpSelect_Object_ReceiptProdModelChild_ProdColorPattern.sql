@@ -24,8 +24,6 @@ RETURNS TABLE (Id Integer, ReceiptProdModelId Integer
              , MeasureName TVarChar
              , EKPrice TFloat, EKPriceWVAT TFloat
              , EKPrice_summ TFloat, EKPriceWVAT_summ TFloat
-             --, BasisPrice TFloat, BasisPriceWVAT TFloat
-             --, Basis_summ TFloat, BasisWVAT_summ TFloat
               )
 AS
 $BODY$
@@ -36,9 +34,6 @@ BEGIN
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_ReceiptProdModelChild());
      vbUserId:= lpGetUserBySession (inSession);
 
-
-     -- Определили
-     vbPriceWithVAT:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = zc_PriceList_Basis() AND ObjectBoolean.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT());
 
      -- Результат
      RETURN QUERY
