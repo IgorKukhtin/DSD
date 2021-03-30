@@ -65,8 +65,8 @@ BEGIN
      THEN
          SELECT Object_PriceList.ValueData                             AS PriceListName
               , COALESCE (ObjectBoolean_PriceWithVAT.ValueData, FALSE) AS PriceWithVAT
-              , ObjectFloat_VATPercent.ValueData                       AS VATPercent
-                INTO outPriceListName, ioPriceWithVAT, ioVATPercent
+            --, ObjectFloat_VATPercent.ValueData                       AS VATPercent
+                INTO outPriceListName, ioPriceWithVAT--, ioVATPercent
          FROM Object AS Object_PriceList
               LEFT JOIN ObjectBoolean AS ObjectBoolean_PriceWithVAT
                                       ON ObjectBoolean_PriceWithVAT.ObjectId = Object_PriceList.Id
