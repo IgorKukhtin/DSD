@@ -283,7 +283,14 @@ begin
          DataSet.First;
          while not DataSet.EOF do begin
 
-             AddToLog('Отправка файла в ошибки: ' + DataSet.FieldByName('MailFrom').AsString + ' -> ' + DataSet.FieldByName('MailTo').AsString);
+             AddToLog('Отправка файла в ошибки: ' + DataSet.FieldByName('Host').AsString + '; ' +
+                                                    DataSet.FieldByName('Port').AsString + '; ' +
+                                                    DataSet.FieldByName('UserName').AsString + '; ' +
+                                                    DataSet.FieldByName('PasswordValue').AsString + '; ' +
+                                                    DataSet.FieldByName('MailFrom').AsString + ' -> ' +
+                                                    DataSet.FieldByName('MailTo').AsString +
+                                                    DataSet.FieldByName('Subject').AsString +
+                                                    DataSet.FieldByName('Body').AsString);
             {FormParams.ParamByName('Host').Value       :=DataSet.FieldByName('Host').AsString;
             FormParams.ParamByName('Port').Value       :=DataSet.FieldByName('Port').AsInteger;
             FormParams.ParamByName('UserName').Value   :=DataSet.FieldByName('UserName').AsString;
@@ -293,7 +300,10 @@ begin
             FormParams.ParamByName('Subject').Value    :=DataSet.FieldByName('Subject').AsString;
             FormParams.ParamByName('Body').Value       :=DataSet.FieldByName('Body').AsString;}
             //
-            actSendEmail.Execute;
+            try
+              actSendEmail.Execute;
+            except on E: Exception do AddToLog(E.Message);
+            end;
             //перешли к следующему
             DataSet.Next;
          end;

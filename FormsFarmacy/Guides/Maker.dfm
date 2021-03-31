@@ -215,10 +215,10 @@ object MakerForm: TMakerForm
         Width = 87
       end
       object isReport6: TcxGridDBColumn
-        Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100'  "'#1086#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1085#1072' '#1074#1080#1088#1090'. '#1089#1082#1083#1072#1076#1077'"'
+        Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100'  "'#1080#1089#1090#1077#1082#1096#1080#1081' '#1089#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080'"'
         DataBinding.FieldName = 'isReport6'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaBottom
+        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 102
       end
@@ -980,6 +980,7 @@ object MakerForm: TMakerForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -1027,6 +1028,7 @@ object MakerForm: TMakerForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>

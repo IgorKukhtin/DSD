@@ -57,8 +57,6 @@ type
     GuidesMaker: TdsdGuides;
     MakerName: TcxGridDBColumn;
     ExpirationDate: TcxGridDBColumn;
-    AmountLoss: TcxGridDBColumn;
-    AmountUnit: TcxGridDBColumn;
   private
     { Private declarations }
   public
