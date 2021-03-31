@@ -180,9 +180,9 @@
   object cxLabel4: TcxLabel [24]
     Left = 8
     Top = 220
-    Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
+    Caption = #8470' '#1076#1086#1082'. '#1055#1088#1080#1093#1086#1076' / '#1047#1072#1082#1072#1079
   end
-  object edOrderClient: TcxButtonEdit [25]
+  object edParent: TcxButtonEdit [25]
     Left = 8
     Top = 241
     Properties.Buttons = <
@@ -293,6 +293,14 @@
         Name = 'inMovementId_Invoice'
         Value = 0
         Component = GuidesInvoice
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Parent'
+        Value = Null
+        Component = GuidesParent
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -441,6 +449,21 @@
         Name = 'Comment_Invoice'
         Value = Null
         Component = ceComment_Invoice
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_parent'
+        Value = Null
+        Component = GuidesParent
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_parent'
+        Value = Null
+        Component = GuidesParent
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -690,14 +713,14 @@
       item
         Name = 'MovementId_parent'
         Value = Null
-        Component = GuidesOrderClient
+        Component = GuidesParent
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber_parent'
         Value = Null
-        Component = GuidesOrderClient
+        Component = GuidesParent
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -723,9 +746,9 @@
     Left = 200
     Top = 136
   end
-  object GuidesOrderClient: TdsdGuides
+  object GuidesParent: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edOrderClient
+    LookupControl = edParent
     DisableGuidesOpen = True
     Key = '0'
     FormNameParam.Value = 'TOrderJournalForm'
@@ -737,7 +760,7 @@
       item
         Name = 'Key'
         Value = '0'
-        Component = GuidesOrderClient
+        Component = GuidesParent
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -746,7 +769,7 @@
       item
         Name = 'InvNumber_Full'
         Value = ''
-        Component = GuidesOrderClient
+        Component = GuidesParent
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

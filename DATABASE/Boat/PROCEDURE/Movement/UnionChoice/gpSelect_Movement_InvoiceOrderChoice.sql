@@ -151,7 +151,7 @@ BEGIN
                                                                  ON MovementString_InvNumberPartner.MovementId = Movement_OrderClient.Id
                                                                 AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
-                                   WHERE Movement_OrderClient.StatusId = zc_Enum_Status_Erased()
+                                   WHERE Movement_OrderClient.StatusId <> zc_Enum_Status_Erased()
                                      AND Movement_OrderClient.OperDate BETWEEN inStartDate AND inEndDate
                                      AND Movement_OrderClient.DescId = zc_Movement_OrderClient()
                                      AND COALESCE (MovementLinkMovement_Invoice.MovementChildId,0) = 0
