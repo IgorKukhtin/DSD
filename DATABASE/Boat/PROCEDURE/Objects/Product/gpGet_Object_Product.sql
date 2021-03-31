@@ -147,10 +147,10 @@ BEGIN
                           FROM Movement
                                LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-                               INNER JOIN MovementFloat AS MovementFloat_Amount
+                               LEFT JOIN MovementFloat AS MovementFloat_Amount
                                                         ON MovementFloat_Amount.MovementId = Movement.Id
                                                        AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
-                                                       AND MovementFloat_Amount.ValueData > 0
+                                                       --AND MovementFloat_Amount.ValueData > 0
 
                           WHERE Movement.ParentId = (SELECT tmpOrderClient.MovementId FROM tmpOrderClient LIMIT 1) -- по идее должен быть 1 док. заказ
                             AND Movement.StatusId <> zc_Enum_Status_Erased()
