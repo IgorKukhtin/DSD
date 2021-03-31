@@ -139,11 +139,13 @@ BEGIN
                           )
    -- первый счет
    , tmpInvoice_First AS (SELECT Movement.Id
+                               , Movement.ParentId
                                , Movement.OperDate
                                , Movement.InvNumber
                                , Object_Status.ObjectCode AS StatusCode
                                , Object_Status.ValueData  AS StatusName
                                , CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END::TFloat AS AmountIn
+                               , ROW_NUMBER () OVER (ORDER BY Movement.Id ) AS ord
                           FROM Movement
                                LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -174,6 +176,11 @@ BEGIN
 
                     WHERE MovementLinkMovement_Invoice.MovementId IN (SELECT DISTINCT tmpOrderClient.MovementId FROM tmpOrderClient)
                       AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
+                 UNION 
+                    SELECT tmpInvoice_First.ParentId
+                         , tmpInvoice_First.Id
+                         , tmpInvoice_First.AmountIn
+                    FROM tmpInvoice_First
                     )
      -- данные по оплате счетов
      , tmpBankAccount AS (SELECT MovementLinkMovement.MovementChildId AS MovementId_Invoice
@@ -342,7 +349,7 @@ BEGIN
                                   ON MovementFloat_TotalSumm.MovementId = tmpOrderClient.MovementId
                                  AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
           -- данные первого счета
-          LEFT JOIN tmpInvoice_First ON 1 = 1
+          LEFT JOIN (SELECT tmpInvoice_First.* FROM tmpInvoice_First WHERE tmpInvoice_First.Ord = 1) AS tmpInvoice_First ON 1 = 1
           -- оплата по первому счету
           LEFT JOIN (SELECT tmpBankAccount.MovementId_Invoice, SUM (tmpBankAccount.AmountIn) AS AmountIn
                      FROM tmpBankAccount

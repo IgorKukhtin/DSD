@@ -682,7 +682,7 @@
       item
         Name = 'AmountOut'
         Value = Null
-        Component = ceAmountIn
+        Component = ceAmountOut
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -690,7 +690,7 @@
       item
         Name = 'AmountIn'
         Value = Null
-        Component = ceAmountOut
+        Component = ceAmountIn
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
