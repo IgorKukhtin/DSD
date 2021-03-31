@@ -50,6 +50,9 @@ type
     cxLabel18: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
     GuidesFiller: TGuidesFiller;
+    cxLabel4: TcxLabel;
+    edOrderClient: TcxButtonEdit;
+    GuidesOrderClient: TdsdGuides;
   private
     { Private declarations }
   public

@@ -634,6 +634,9 @@ end;
 
 procedure TLoadFormTest.LoadUnionFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnion_InvoiceOrderJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnion_InvoiceOrderJournalChoiceForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnion_IncomeOrderJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnion_IncomeOrderJournalChoiceForm');
   exit;
