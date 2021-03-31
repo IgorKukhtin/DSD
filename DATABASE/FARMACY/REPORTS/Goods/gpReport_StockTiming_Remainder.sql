@@ -432,7 +432,6 @@ BEGIN
                                        SUM(Movement.Amount5)::TFloat                                         AS Amount5,
                                        SUM(Movement.AmountUnit)::TFloat                                      AS AmountUnit,
                                        SUM(COALESCE(Movement.Amount, 0) +
-                                           COALESCE(Movement.AmountLoss, 0) +
                                            COALESCE(Movement.Amount5, 0) +
                                            COALESCE(Movement.AmountUnit, 0))::TFloat                         AS Amount,
                                        Movement.MakerId,

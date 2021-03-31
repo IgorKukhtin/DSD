@@ -49,20 +49,15 @@ type
     UnitName: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
-    AmountDeferred: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     Price: TcxGridDBColumn;
-    SummaDeferred: TcxGridDBColumn;
     Summa: TcxGridDBColumn;
     edMaker: TcxButtonEdit;
     cxLabel4: TcxLabel;
     GuidesMaker: TdsdGuides;
     MakerName: TcxGridDBColumn;
     ExpirationDate: TcxGridDBColumn;
-    Remains: TcxGridDBColumn;
     AmountLoss: TcxGridDBColumn;
-    AmountDischarged: TcxGridDBColumn;
-    Amount5: TcxGridDBColumn;
     AmountUnit: TcxGridDBColumn;
   private
     { Private declarations }

@@ -1,27 +1,27 @@
 inherited Report_StockTiming_RemainderForm: TReport_StockTiming_RemainderForm
-  Caption = #1054#1090#1095#1077#1090' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1042#1080#1090#1091#1088#1090#1091#1072#1083#1100#1085#1086#1084' '#1089#1082#1083#1072#1076#1077' '#1057#1088#1086#1082#1080
+  Caption = #1054#1090#1095#1077#1090' '#1086#1089#1090#1072#1090#1086#1082' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072' '#1085#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1080
   ClientHeight = 479
-  ClientWidth = 1096
+  ClientWidth = 1050
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1112
+  ExplicitWidth = 1066
   ExplicitHeight = 518
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 58
-    Width = 1096
+    Width = 1050
     Height = 421
     TabOrder = 3
     ExplicitTop = 58
     ExplicitWidth = 1096
     ExplicitHeight = 421
     ClientRectBottom = 421
-    ClientRectRight = 1096
+    ClientRectRight = 1050
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1096
       ExplicitHeight = 421
       inherited cxGrid: TcxGrid
-        Width = 1096
+        Width = 1050
         Height = 421
         ExplicitWidth = 1096
         ExplicitHeight = 421
@@ -31,7 +31,6 @@ inherited Report_StockTiming_RemainderForm: TReport_StockTiming_RemainderForm
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
               Position = spFooter
-              Column = AmountDeferred
             end
             item
               Format = ',0.####;-,0.####; ;'
@@ -47,7 +46,6 @@ inherited Report_StockTiming_RemainderForm: TReport_StockTiming_RemainderForm
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = AmountDeferred
             end
             item
               Format = ',0.####;-,0.####; ;'
@@ -62,7 +60,6 @@ inherited Report_StockTiming_RemainderForm: TReport_StockTiming_RemainderForm
               Format = ',0.##;-,0.##; ;'
               Kind = skSum
               Position = spFooter
-              Column = SummaDeferred
             end
             item
               Format = ',0.##;-,0.##; ;'
@@ -78,7 +75,6 @@ inherited Report_StockTiming_RemainderForm: TReport_StockTiming_RemainderForm
             item
               Format = ',0.##;-,0.##; ;'
               Kind = skSum
-              Column = SummaDeferred
             end
             item
               Format = ',0.##;-,0.##; ;'
@@ -104,18 +100,15 @@ inherited Report_StockTiming_RemainderForm: TReport_StockTiming_RemainderForm
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
               Position = spFooter
-              Column = AmountDischarged
             end
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = AmountDischarged
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = AmountDeferred
             end
             item
               Format = ',0.####;-,0.####; ;'
@@ -129,7 +122,6 @@ inherited Report_StockTiming_RemainderForm: TReport_StockTiming_RemainderForm
             item
               Format = ',0.##;-,0.##; ;'
               Kind = skSum
-              Column = SummaDeferred
             end
             item
               Format = ',0.##;-,0.##; ;'
@@ -143,7 +135,6 @@ inherited Report_StockTiming_RemainderForm: TReport_StockTiming_RemainderForm
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = Remains
             end
             item
               Format = ',0.####;-,0.####; ;'
@@ -153,12 +144,10 @@ inherited Report_StockTiming_RemainderForm: TReport_StockTiming_RemainderForm
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = AmountDischarged
             end
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = Amount5
             end
             item
               Format = ',0.####;-,0.####; ;'
@@ -204,36 +193,6 @@ inherited Report_StockTiming_RemainderForm: TReport_StockTiming_RemainderForm
             HeaderAlignmentVert = vaCenter
             Width = 51
           end
-          object AmountDischarged: TcxGridDBColumn
-            Caption = #1057#1085#1103#1090#1072' '#1086#1090#1083#1086#1078#1077#1085#1086'  '#1085#1072' '#1089#1082#1083#1072#1076' '#1089#1088#1086#1082#1086#1074' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086
-            DataBinding.FieldName = 'AmountDischarged'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 89
-          end
-          object AmountDeferred: TcxGridDBColumn
-            Caption = #1054#1090#1083#1086#1078#1077#1085#1086' '#1085#1072' '#1089#1082#1083#1072#1076' '#1089#1088#1086#1082#1086#1074' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086
-            DataBinding.FieldName = 'AmountDeferred'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 82
-          end
-          object SummaDeferred: TcxGridDBColumn
-            Caption = #1054#1090#1083#1086#1078#1077#1085#1086'  '#1085#1072' '#1089#1082#1083#1072#1076' '#1089#1088#1086#1082#1086#1074' '#1089#1091#1084#1084#1072
-            DataBinding.FieldName = 'SummaDeferred'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 82
-          end
           object AmountLoss: TcxGridDBColumn
             Caption = #1057#1087#1080#1089#1072#1085#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1055#1057')'
             DataBinding.FieldName = 'AmountLoss'
@@ -244,17 +203,6 @@ inherited Report_StockTiming_RemainderForm: TReport_StockTiming_RemainderForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 89
-          end
-          object Amount5: TcxGridDBColumn
-            Caption = #1055#1088#1086#1089#1088#1086#1095#1082#1072' '#1074'  5 '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086
-            DataBinding.FieldName = 'Amount5'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 77
           end
           object AmountUnit: TcxGridDBColumn
             Caption = #1055#1088#1086#1089#1088#1086#1095#1082#1072' '#1085#1072' '#1090#1077#1082#1091#1097#1077#1084' '#1086#1089#1090#1072#1090#1082#1077
@@ -268,7 +216,7 @@ inherited Report_StockTiming_RemainderForm: TReport_StockTiming_RemainderForm
             Width = 71
           end
           object Amount: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072' '#1085#1072' '#1090#1086#1095#1082#1077' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072' '#1085#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1080' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -276,16 +224,16 @@ inherited Report_StockTiming_RemainderForm: TReport_StockTiming_RemainderForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Styles.Content = dmMain.cxRemainsContentStyle
-            Width = 82
+            Width = 100
           end
           object Summa: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072' '#1085#1072' '#1090#1086#1095#1082#1077' '#1089#1091#1084#1084#1072
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072' '#1085#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1080' '#1089#1091#1084#1084#1072
             DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 82
+            Width = 100
           end
           object MakerName: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1100#1077#1083#1100' '#1087#1086' '#1084#1072#1088#1082'. '#1082#1086#1085#1090#1088
@@ -301,23 +249,12 @@ inherited Report_StockTiming_RemainderForm: TReport_StockTiming_RemainderForm
             HeaderAlignmentVert = vaCenter
             Width = 108
           end
-          object Remains: TcxGridDBColumn
-            Caption = #1058#1077#1082#1091#1097#1080#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-            DataBinding.FieldName = 'Remains'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 105
-          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1096
+    Width = 1050
     Height = 32
     ExplicitWidth = 1096
     ExplicitHeight = 32
