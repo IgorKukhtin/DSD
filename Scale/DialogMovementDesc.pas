@@ -595,8 +595,10 @@ begin
                  exit;
               end;
               //
-              // если надо - сначала уточникм подразделение
-              if GetArrayList_Value_byName (Default_Array,'isGet_Unit') = AnsiUpperCase('TRUE') then
+              // если надо - сначала уточним подразделение
+              if (GetArrayList_Value_byName (Default_Array,'isGet_Unit') = AnsiUpperCase('TRUE'))
+              //and ()
+              then
               begin
                     fGetUnit_OrderInternal(FromId_calc, ToId_calc, EditBarCode.Text);
                     if FromId_calc = 0 then
