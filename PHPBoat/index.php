@@ -63,6 +63,12 @@ if ($isUTF8) {
 else {
     $doc = new DOMDocument('1.0','windows-1251');
 }
+
+if(!$doc->loadXML($_POST["XML"])) {
+echo "Input data can't be parsed as XML document";
+exit;
+}
+
 $doc->loadXML($_POST["XML"],LIBXML_PARSEHUGE);
 
 $Session = $doc->documentElement->getAttribute('Session');
