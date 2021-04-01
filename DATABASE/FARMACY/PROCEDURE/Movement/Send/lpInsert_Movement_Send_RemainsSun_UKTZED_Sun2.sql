@@ -165,7 +165,8 @@ BEGIN
                                     AND ObjectBoolean_OutUKTZED_SUN1.DescId = zc_ObjectBoolean_Unit_OutUKTZED_SUN1()
         WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN()
           -- если указан день недели - проверим его
-       ;
+           AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = '')
+      ;
 
      -- находим максимальный
      vbPeriod_t_max := (SELECT MAX (CASE WHEN _tmpUnit_SUN_UKTZED.Value_T1 > _tmpUnit_SUN_UKTZED.Value_T2 THEN _tmpUnit_SUN_UKTZED.Value_T1 ELSE _tmpUnit_SUN_UKTZED.Value_T2 END)

@@ -53,10 +53,11 @@ BEGIN
      IF COALESCE (vbConditionsKeepId, 0) = 0 AND COALESCE (inConditionsKeepName, '')<> ''
      THEN
         -- записываем новый элемент
-        vbConditionsKeepId := gpInsertUpdate_Object_ConditionsKeep (ioId     := 0
-                                                                  , inCode   := lfGet_ObjectCode(0, zc_Object_ConditionsKeep()) 
-                                                                  , inName   := TRIM(inConditionsKeepName)
-                                                                  , inSession:= inSession
+        vbConditionsKeepId := gpInsertUpdate_Object_ConditionsKeep (ioId               := 0
+                                                                  , inCode             := lfGet_ObjectCode(0, zc_Object_ConditionsKeep()) 
+                                                                  , inName             := TRIM(inConditionsKeepName)
+                                                                  , inRelatedProductId := 0
+                                                                  , inSession          := inSession
                                                                     );
      END IF;
 
@@ -161,7 +162,7 @@ BEGIN
       WHERE Object_Goods_Juridical.ID = vbId;
      
       UPDATE Object_Goods_Main SET ConditionsKeepId = vbConditionsKeepId
-      WHERE Object_Goods_Main.ID = (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = ioId);  
+      WHERE Object_Goods_Main.ID = (SELECT Object_Goods_Juridical.GoodsMainId FROM Object_Goods_Juridical WHERE Object_Goods_Juridical.ID = vbId);  
     EXCEPTION
        WHEN others THEN 
          GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 

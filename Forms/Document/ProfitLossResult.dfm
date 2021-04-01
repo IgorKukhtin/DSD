@@ -89,7 +89,6 @@ inherited ProfitLossResultForm: TProfitLossResultForm
             Width = 300
           end
           object ContainerId: TcxGridDBColumn [2]
-            Caption = #1069#1083#1077#1084#1077#1085#1090
             DataBinding.FieldName = 'ContainerId'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.;-,0.; ;'
@@ -97,6 +96,7 @@ inherited ProfitLossResultForm: TProfitLossResultForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 149
           end
           object Amount_kredit: TcxGridDBColumn [3]
@@ -296,7 +296,7 @@ inherited ProfitLossResultForm: TProfitLossResultForm
       Top = 24
       Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1075#1086' '#1087#1077#1088#1080#1086#1076#1072' ('#1076#1072'/'#1085#1077#1090')'
       Caption = #1050#1086#1088#1088'. '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1075#1086' '#1087#1077#1088#1080#1086#1076#1072' ('#1076#1072'/'#1085#1077#1090')'
-      Properties.ReadOnly = True
+      Properties.ReadOnly = False
       TabOrder = 10
       Width = 226
     end

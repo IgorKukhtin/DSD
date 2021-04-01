@@ -985,7 +985,13 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-{
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_PromoBonusDiscoDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_PromoBonusDiscoDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_PromoBonusDiscoForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_PromoBonusDiscoForm');
+
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_CorrectMarketingForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_CorrectMarketingForm');
 
@@ -1199,12 +1205,12 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_InventoryErrorRemainsDialogForm');
     exit;
 
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StockTiming_RemainderForm'));
+}    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StockTiming_RemainderForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_StockTiming_RemainderForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StockTiming_RemainderDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_StockTiming_RemainderDialogForm');
     exit;
-
+ {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_PromoDoctorsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_PromoDoctorsForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_PromoEntrancesForm'));

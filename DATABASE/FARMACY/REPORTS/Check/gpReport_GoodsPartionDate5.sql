@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsPartionDate5 (
 )
 RETURNS TABLE (UnitID Integer, UnitCode Integer, UnitName TVarChar,
                GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, PartionDateKindName TVarChar,
-               Amount TFloat, ExpirationDate TDateTime,
+               Amount TFloat, ExpirationDate TDateTime, TransferDate TDateTime,
                Sales TFloat
               ) AS
 $BODY$
@@ -62,6 +62,7 @@ BEGIN
                                  , Container.Amount
                                  , zc_Enum_PartionDateKind_Cat_5()                                AS PartionDateKindId
                                  , COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd())   AS ExpirationDate
+                                 , ObjectDate_Cat_5.ValueData                                     AS TransferDate
                             FROM tmpContainer AS Container
 
                                  LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.ID = Container.PartionGoodsId
@@ -73,6 +74,11 @@ BEGIN
                                  LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoods_Cat_5
                                                          ON ObjectBoolean_PartionGoods_Cat_5.ObjectId =  Container.PartionGoodsId
                                                         AND ObjectBoolean_PartionGoods_Cat_5.DescID = zc_ObjectBoolean_PartionGoods_Cat_5()
+
+                                 LEFT JOIN ObjectDate AS ObjectDate_Cat_5
+                                                      ON ObjectDate_Cat_5.ObjectId = Container.PartionGoodsId
+                                                     AND ObjectDate_Cat_5.DescId = zc_ObjectDate_PartionGoods_Cat_5()
+
                             WHERE ObjectDate_ExpirationDate.ValueData <= vbDate0
                               AND COALESCE (ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = TRUE
 
@@ -103,6 +109,7 @@ BEGIN
          , Object_PartionDateKind.ValueData       AS PartionDateKindName
          , Container.Amount                       AS Amount
          , Container.ExpirationDate::TDateTime    AS ExpirationDate
+         , Container.TransferDate::TDateTime      AS TransferDate    
          , MovementItem.Amount::TFloat            AS Sales
     FROM tmpPDContainer AS Container
 
@@ -133,4 +140,5 @@ LANGUAGE plpgsql VOLATILE;
 
 -- тест
 -- SELECT * FROM gpReport_GoodsPartionDate5(inUnitId :=  183292, inSession := '3')
--- SELECT * FROM gpReport_GoodsPartionDate5(inUnitId :=  0, inSession := '3')
+-- 
+SELECT * FROM gpReport_GoodsPartionDate5(inUnitId :=  0, inSession := '3')

@@ -3482,7 +3482,7 @@ inherited MainForm: TMainForm
     object actReport_StockTiming_RemainderForm: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1042#1080#1090#1091#1088#1090#1091#1072#1083#1100#1085#1086#1084' '#1089#1082#1083#1072#1076#1077' '#1057#1088#1086#1082#1080
+      Caption = #1054#1090#1095#1077#1090' '#1086#1089#1090#1072#1090#1086#1082' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072' '#1085#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1080
       Hint = #1054#1090#1095#1077#1090' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1042#1080#1090#1091#1088#1090#1091#1072#1083#1100#1085#1086#1084' '#1089#1082#1083#1072#1076#1077' '#1057#1088#1086#1082#1080
       FormName = 'TReport_StockTiming_RemainderForm'
       FormNameParam.Value = 'TReport_StockTiming_RemainderForm'
@@ -4235,6 +4235,17 @@ inherited MainForm: TMainForm
       Caption = #1063#1077#1082#1080' '#1089' '#1075#1072#1083#1086#1095#1082#1086#1081' '#1087#1086#1075#1072#1096#1077#1085#1080#1103' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
       FormName = 'TReport_Check_CorrectMarketingForm'
       FormNameParam.Value = 'TReport_Check_CorrectMarketingForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_PromoBonusDisco: TdsdOpenForm
+      Category = #1041#1040#1048
+      MoveParams = <>
+      Caption = #1044#1080#1089#1082#1086#1090#1077#1082#1072' '#1087#1086' '#1084#1072#1088#1082#1077#1090' '#1073#1086#1085#1091#1089#1072#1084
+      FormName = 'TReport_Check_PromoBonusDiscoForm'
+      FormNameParam.Value = 'TReport_Check_PromoBonusDiscoForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -5084,6 +5095,9 @@ inherited MainForm: TMainForm
       end
       object N229: TMenuItem
         Action = actReport_PharmacyPerformance
+      end
+      object N285: TMenuItem
+        Action = actReport_PromoBonusDisco
       end
       object N138: TMenuItem
         Caption = '-'

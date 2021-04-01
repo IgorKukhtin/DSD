@@ -297,7 +297,7 @@ BEGIN
         -- сохранили <Документ>
         inInvNumber_Invoice := NEXTVAL ('movement_Invoice_seq')    :: TVarChar;
         inMovementId_Invoice := lpInsertUpdate_Movement_Invoice (ioId               := 0                                   ::Integer
-                                                               , ParentId           := inMovementId_OrderClient
+                                                               , inParentId         := inMovementId_OrderClient
                                                                , inInvNumber        := inInvNumber_Invoice                 :: TVarChar
                                                                , inOperDate         := inOperDate_Invoice
                                                                , inPlanDate         := Null                                ::TDateTime

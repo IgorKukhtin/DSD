@@ -17,6 +17,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDa
              , BankId Integer, BankName TVarChar
              , MoneyPlaceId Integer, MoneyPlaceName TVarChar
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
+             , MovementId_parent Integer
+             , InvNumber_parent TVarChar
              )
 AS
 $BODY$
@@ -49,6 +51,8 @@ BEGIN
            , 0                                                 AS MovementId_Invoice
            , CAST ('' as TVarChar)                             AS InvNumber_Invoice
            , CAST ('' as TVarChar)                             AS Comment_Invoice
+           , 0                                                 AS MovementId_parent
+           , CAST ('' as TVarChar)                             AS InvNumber_parent
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
       ;
      ELSE
@@ -76,6 +80,10 @@ BEGIN
            , Movement_Invoice.Id               AS MovementId_Invoice
            , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice
            , MovementString_Comment_Invoice.ValueData AS Comment_Invoice
+           --parent для Invoice
+           , Movement_Parent.Id             ::Integer  AS MovementId_parent
+           , ('№ ' || Movement_Parent.InvNumber || ' от ' || zfConvert_DateToString (Movement_Parent.OperDate) :: TVarChar ||' (' ||MovementDesc_Parent.ItemName||' )' ) :: TVarChar  AS InvNumber_parent
+
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
 
@@ -109,6 +117,12 @@ BEGIN
                                  ON ObjectLink_BankAccount_Bank.ObjectId = Object_BankAccount.Id
                                 AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
             LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
+
+        --Parent для Movement_Invoice - Документ Заказ или ПРиход
+        LEFT JOIN Movement AS Movement_Parent
+                           ON Movement_Parent.Id = Movement_Invoice.ParentId
+                          AND Movement_Parent.StatusId <> zc_Enum_Status_Erased()
+        LEFT JOIN MovementDesc AS MovementDesc_Parent ON MovementDesc_Parent.Id = Movement_Parent.DescId
 
        WHERE Movement.Id =  inMovementId_Value;
 

@@ -1,4 +1,4 @@
-unit InvoiceJournal;
+unit Union_InvoiceOrderJournalChoice;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TInvoiceJournalForm = class(TAncestorJournalForm)
+  TUnion_InvoiceOrderJournalChoiceForm = class(TAncestorJournalForm)
     ObjectName: TcxGridDBColumn;
     ProductName: TcxGridDBColumn;
     InfoMoneyName: TcxGridDBColumn;
@@ -37,11 +37,10 @@ type
     InfoMoneyCode: TcxGridDBColumn;
     InfoMoneyGroupName: TcxGridDBColumn;
     InfoMoneyDestinationName: TcxGridDBColumn;
-    InvNumberPartner: TcxGridDBColumn;
+    InvNumber_Full: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     DescName: TcxGridDBColumn;
     actInsertProfitLossService: TdsdInsertUpdateAction;
-    bbAddBonus: TdxBarButton;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
@@ -50,7 +49,6 @@ type
     actPrint1: TdsdPrintAction;
     bbPrint1: TdxBarButton;
     actIsCopy: TdsdExecStoredProc;
-    bbisCopy: TdxBarButton;
     mactInsertProfitLossService: TMultiAction;
     actIsCopyTrue: TdsdExecStoredProc;
     actMasterPost: TDataSetPost;
@@ -66,17 +64,13 @@ type
     actChoiceMoneyPlace: TOpenChoiceForm;
     actUpdateMoneyPlace: TdsdDataSetRefresh;
     macUpdateMoneyPlace: TMultiAction;
-    bbUpdateMoneyPlace: TdxBarButton;
-    AmountIn_NotVAT: TcxGridDBColumn;
-    AmountOut_NotVAT: TcxGridDBColumn;
-    AmountIn_VAT: TcxGridDBColumn;
-    AmountOut_VAT: TcxGridDBColumn;
+    dsdChoiceGuides: TdsdChoiceGuides;
+    bbb: TdxBarButton;
+    bbExecuteDialog: TdxBarButton;
     VATPercent: TcxGridDBColumn;
-    Color_Pay: TcxGridDBColumn;
-    actOpenBankAccountJournalByInvoice: TdsdOpenForm;
-    bbOpenBankAccountJournalByInvoice: TdxBarButton;
-    InvNumber_parent: TcxGridDBColumn;
-    DescName_parent: TcxGridDBColumn;
+    GuidesClient: TdsdGuides;
+    cxLabel6: TcxLabel;
+    edClient: TcxButtonEdit;
   private
     { Private declarations }
   public
@@ -88,6 +82,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TInvoiceJournalForm);
+  RegisterClass(TUnion_InvoiceOrderJournalChoiceForm);
 
 end.

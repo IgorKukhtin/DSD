@@ -168,8 +168,11 @@ BEGIN
                                 , tmpContainer_term.ExpirationDate                                                AS ExpirationDateIncome
                            FROM (SELECT DISTINCT tmpContainer_term.GoodsId
                                  FROM tmpContainer_term
+                                 -- !!!отбросили!!!
+                                 LEFT JOIN tmpContainer_PartionDate ON tmpContainer_PartionDate.ContainerId = tmpContainer_term.ContainerId
                                  -- !!!ограничили!!!
-                                 WHERE tmpContainer_term.ExpirationDateIn <= vbDate180 OR tmpContainer_term.ExpirationDate <= vbDate180
+                                 WHERE COALESCE(tmpContainer_term.ExpirationDateIn, tmpContainer_term.ExpirationDate) <= vbDate180
+                                   AND tmpContainer_PartionDate.ContainerId IS NULL 
                                 ) AS tmpContainer
                                 LEFT JOIN tmpContainer_term        ON tmpContainer_term.GoodsId = tmpContainer.GoodsId
                                  -- !!!отбросили!!!
@@ -242,9 +245,9 @@ BEGIN
                         -- все остатки
                       , SUM (tmpRemains.Amount) AS AmountRemains
                         -- только просрочка
-                      , SUM (CASE WHEN tmpRemains.ExpirationDateIncome <= vbDate180
-                                   AND tmpRemains.ExpirationDateIncome > zc_DateStart()
-                                -- AND tmpRemains.ExpirationDateIncome > CURRENT_DATE - INTERVAL '3 YEAR'
+                      , SUM (CASE WHEN tmpRemains.ExpirationDate <= vbDate180
+                                   AND tmpRemains.ExpirationDate > zc_DateStart()
+                                -- AND tmpRemains.ExpirationDate > CURRENT_DATE - INTERVAL '3 YEAR'
                                        THEN tmpRemains.Amount
                                   ELSE 0
                              END) AS Amount
@@ -331,7 +334,7 @@ BEGIN
                   -- удалим если лишний
                 , CASE WHEN tmpRemains.GoodsId > 0 THEN FALSE ELSE TRUE END AS isErased
            FROM tmpRemains
-                LEFT JOIN MI_Master ON MI_Master.GoodsId = tmpRemains.GoodsId
+                LEFT JOIN MI_Master ON MI_Master.GoodsId   = tmpRemains.GoodsId
                 FULL JOIN MI_Child ON MI_Child.GoodsId     = tmpRemains.GoodsId
                                   AND MI_Child.ContainerId = tmpRemains.ContainerId
           ;

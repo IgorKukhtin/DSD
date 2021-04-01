@@ -47,28 +47,9 @@ BEGIN
      END IF;
 
 
-     --
-/*     vbMonth_6 := (SELECT ObjectFloat_Month.ValueData
-                   FROM Object  AS Object_PartionDateKind
-                        LEFT JOIN ObjectFloat AS ObjectFloat_Month
-                                              ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
-                                             AND ObjectFloat_Month.DescId   = zc_ObjectFloat_PartionDateKind_Month()
-                   WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6()
-                  );
-
-      -- даты + 6 мес€цев, + 1 мес€ц
-      vbDate180 := vbOperDate+ (vbMonth_6||' MONTH' ) ::INTERVAL; */
-
-      vbDay_6 := (SELECT ObjectFloat_Day.ValueData::Integer
-                  FROM Object  AS Object_PartionDateKind
-                       LEFT JOIN ObjectFloat AS ObjectFloat_Day
-                                             ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
-                                            AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
-                  WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6());
-
-      -- даты + 6 мес€цев, + 1 мес€ц
-      vbDate180 := vbOperDate + (vbDay_6||' DAY' ) ::INTERVAL;
-
+     SELECT Date_6
+     INTO vbDate180
+     FROM lpSelect_PartionDateKind_SetDate ();
 
      -- таблица - элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem_PartionDate'))
@@ -90,7 +71,7 @@ BEGIN
      THEN
        PERFORM lpInsertUpdate_MovementItem (tmp.MovementItemId, zc_MI_Master(), tmp.GoodsId, inMovementId, tmp.Amount, NULL)
        FROM (SELECT MI_Master.Id AS MovementItemId, MI_Master.ObjectId AS GoodsId
-                  , SUM (CASE WHEN COALESCE(MIDate_ExpirationDateIncome.ValueData, MIDate_ExpirationDate.ValueData) <= vbDate180 THEN COALESCE (MovementItem.Amount, 0) ELSE 0 END) AS Amount
+                  , SUM (CASE WHEN COALESCE(MIDate_ExpirationDate.ValueData, MIDate_ExpirationDateIncome.ValueData) <= vbDate180 THEN COALESCE (MovementItem.Amount, 0) ELSE 0 END) AS Amount
              FROM MovementItem AS MI_Master
                   LEFT JOIN MovementItem ON MI_Master.MovementId  = inMovementId
                                         AND MovementItem.ParentId = MI_Master.Id
@@ -113,14 +94,14 @@ BEGIN
                                          PartionGoodsId, ExpirationDate, PriceWithVAT, ChangePercentMin, ChangePercentLess, ChangePercent, ContainerId_Transfer)
           SELECT MovementItem.Id                    AS MovementItemId
                , MovementItem.ObjectId              AS GoodsId
-               , CASE WHEN COALESCE(MIDate_ExpirationDateIncome.ValueData, MIDate_ExpirationDate.ValueData) <= vbDate180 THEN MovementItem.Amount ELSE 0 END AS Amount
+               , CASE WHEN COALESCE(MIDate_ExpirationDate.ValueData, MIDate_ExpirationDateIncome.ValueData) <= vbDate180 THEN MovementItem.Amount ELSE 0 END AS Amount
                , MIFloat_ContainerId.ValueData      AS ContainerId_in
                , 0                                  AS ContainerId
                , MIFloat_MovementId.ValueData       AS MovementId_in
                , CLO_MI.ObjectId                    AS PartionId_in
                , 0                                  AS PartionGoodsId
                  -- ƒата "срок годности"
-               , MIDate_ExpirationDate.ValueData    AS ExpirationDate
+               , COALESCE(MIDate_ExpirationDate.ValueData, MIDate_ExpirationDateIncome.ValueData)    AS ExpirationDate
                  -- ÷ена с Ќƒ—
                , MIFloat_PriceWithVAT.ValueData     AS PriceWithVAT
                  -- % скидки(срок меньше мес€ца)
@@ -186,7 +167,7 @@ BEGIN
           WHERE MovementItem.MovementId = inMovementId
             AND MovementItem.DescId     = zc_MI_Child()
             AND MovementItem.isErased   = FALSE
-            AND CASE WHEN COALESCE(MIDate_ExpirationDateIncome.ValueData, MIDate_ExpirationDate.ValueData) <= vbDate180 THEN MovementItem.Amount ELSE 0 END > 0
+            AND CASE WHEN COALESCE(MIDate_ExpirationDate.ValueData, MIDate_ExpirationDateIncome.ValueData) <= vbDate180 THEN MovementItem.Amount ELSE 0 END > 0
          ;
      ELSE
 

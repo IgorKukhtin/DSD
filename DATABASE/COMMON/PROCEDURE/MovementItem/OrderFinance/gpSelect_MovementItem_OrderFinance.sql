@@ -159,6 +159,11 @@ BEGIN
                       INNER JOIN tmpJuridicalOrderFinance ON tmpJuridicalOrderFinance.JuridicalId = ObjectLink_Contract_Juridical.ChildObjectId
                                                          AND tmpJuridicalOrderFinance.InfoMoneyId = ObjectLink_Contract_InfoMoney.ChildObjectId
 
+                      INNER JOIN ObjectLink AS ObjectLink_Contract_PaidKind
+                                            ON ObjectLink_Contract_PaidKind.ObjectId = ObjectLink_Contract_InfoMoney.ObjectId
+                                           AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
+                                           AND ObjectLink_Contract_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
+
                       LEFT JOIN tmp_Comment ON tmp_Comment.JuridicalId = ObjectLink_Contract_Juridical.ChildObjectId
                                            AND tmp_Comment.InfoMoneyId = ObjectLink_Contract_InfoMoney.ChildObjectId
                  WHERE ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()

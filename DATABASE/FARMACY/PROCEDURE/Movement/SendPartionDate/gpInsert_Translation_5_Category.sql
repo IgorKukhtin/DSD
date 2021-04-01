@@ -168,7 +168,7 @@ BEGIN
     -- Проводим документ сроков
     PERFORM gpUpdate_Status_SendPartionDate(inMovementId := tmpTranslation.MovementId  
                                           , inStatusCode   := zc_Enum_StatusCode_Complete()
-                                          , inSession      := inSession);
+                                          , inSession      := inSession)
     FROM tmpTranslation
     WHERE tmpTranslation.MovementId <> 0
     GROUP BY tmpTranslation.MovementId;

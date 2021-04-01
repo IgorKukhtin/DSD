@@ -1,4 +1,4 @@
-unit InvoiceJournal;
+unit Union_IncomeOrderJournalChoice;
 
 interface
 
@@ -27,21 +27,15 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TInvoiceJournalForm = class(TAncestorJournalForm)
-    ObjectName: TcxGridDBColumn;
+  TUnion_IncomeOrderJournalChoiceForm = class(TAncestorJournalForm)
     ProductName: TcxGridDBColumn;
     InfoMoneyName: TcxGridDBColumn;
-    UnitName: TcxGridDBColumn;
     PaidKindName: TcxGridDBColumn;
-    AmountIn: TcxGridDBColumn;
     InfoMoneyCode: TcxGridDBColumn;
     InfoMoneyGroupName: TcxGridDBColumn;
     InfoMoneyDestinationName: TcxGridDBColumn;
-    InvNumberPartner: TcxGridDBColumn;
-    Comment: TcxGridDBColumn;
     DescName: TcxGridDBColumn;
     actInsertProfitLossService: TdsdInsertUpdateAction;
-    bbAddBonus: TdxBarButton;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
@@ -50,12 +44,10 @@ type
     actPrint1: TdsdPrintAction;
     bbPrint1: TdxBarButton;
     actIsCopy: TdsdExecStoredProc;
-    bbisCopy: TdxBarButton;
     mactInsertProfitLossService: TMultiAction;
     actIsCopyTrue: TdsdExecStoredProc;
     actMasterPost: TDataSetPost;
     mactIsCopy: TMultiAction;
-    UnitCode: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     actInvoiceJournalDetailChoiceForm: TOpenChoiceForm;
     actUpdateDataSet: TdsdUpdateDataSet;
@@ -66,17 +58,13 @@ type
     actChoiceMoneyPlace: TOpenChoiceForm;
     actUpdateMoneyPlace: TdsdDataSetRefresh;
     macUpdateMoneyPlace: TMultiAction;
-    bbUpdateMoneyPlace: TdxBarButton;
-    AmountIn_NotVAT: TcxGridDBColumn;
-    AmountOut_NotVAT: TcxGridDBColumn;
-    AmountIn_VAT: TcxGridDBColumn;
-    AmountOut_VAT: TcxGridDBColumn;
+    dsdChoiceGuides: TdsdChoiceGuides;
+    bbb: TdxBarButton;
+    bbExecuteDialog: TdxBarButton;
     VATPercent: TcxGridDBColumn;
-    Color_Pay: TcxGridDBColumn;
-    actOpenBankAccountJournalByInvoice: TdsdOpenForm;
-    bbOpenBankAccountJournalByInvoice: TdxBarButton;
-    InvNumber_parent: TcxGridDBColumn;
-    DescName_parent: TcxGridDBColumn;
+    GuidesObject: TdsdGuides;
+    cxLabel6: TcxLabel;
+    edObject: TcxButtonEdit;
   private
     { Private declarations }
   public
@@ -88,6 +76,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TInvoiceJournalForm);
+  RegisterClass(TUnion_IncomeOrderJournalChoiceForm);
 
 end.

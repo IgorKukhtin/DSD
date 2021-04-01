@@ -59,6 +59,9 @@ type
     actGetPlanDate: TdsdDataSetRefresh;
     cxLabel2: TcxLabel;
     edVATPercent: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
+    ceParent: TcxButtonEdit;
+    GuidesParent: TdsdGuides;
   private
     { Private declarations }
   public

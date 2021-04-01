@@ -665,8 +665,8 @@ begin
     '  GoodsCode AS "Код", '#13#10 +
     '  GoodsName AS "Название", '#13#10 +
     '  Price AS "Цена с НДС", '#13#10 +
-    '  Sum(AmountDeferred) AS "Отложено количество", '#13#10 +
-    '  Sum(SummaDeferred) AS "Отложено сумма", '#13#10 +
+    '  Sum(Amount) AS "Остаток количество", '#13#10 +
+    '  Sum(Summa) AS "Остаток сумма", '#13#10 +
 //    '  AmountComplete AS "Перемещено количество", '#13#10 +
 //    '  SummaComplete AS "Перемещено сумма", '#13#10 +
 //    '  Amount AS "Остаток количество", '#13#10 +
@@ -674,7 +674,7 @@ begin
     '  ExpirationDate AS "Срок годности остатка" '#13#10 +
     'from gpReport_StockTiming_Remainder(CURRENT_DATE, 0, :inMaker, ''3'') '#13#10 +
     'GROUP BY UnitName, GoodsCode, GoodsName, Price, ExpirationDate '#13#10 +
-    'HAVING Sum(AmountDeferred) > 0';
+    'HAVING Sum(Amount) > 0';
 
   qryReport_Upload.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
 
