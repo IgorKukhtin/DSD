@@ -31,7 +31,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
 
                MemberTakeId Integer, MemberTakeCode Integer, MemberTakeName TVarChar,
                PersonalId Integer, PersonalCode Integer, PersonalName TVarChar,
-               PersonalTradeId Integer, PersonalTradeCode Integer, PersonalTradeName TVarChar,
+               PersonalTradeId Integer, PersonalTradeCode Integer, PersonalTradeName TVarChar, BranchName_PersonalTrade TVarChar, UnitName_PersonalTrade TVarChar,
                PersonalMerchId Integer, PersonalMerchCode Integer, PersonalMerchName TVarChar,
                AreaId Integer, AreaName TVarChar,
                PartnerTagId Integer, PartnerTagName TVarChar,
@@ -161,6 +161,8 @@ BEGIN
          , Object_PersonalTrade.PersonalId   AS PersonalTradeId
          , Object_PersonalTrade.PersonalCode AS PersonalTradeCode
          , Object_PersonalTrade.PersonalName AS PersonalTradeName
+         , Object_PersonalTrade.BranchName   AS BranchName_PersonalTrade
+         , Object_PersonalTrade.UnitName     AS UnitName_PersonalTrade
 
          , Object_PersonalMerch.Id           AS PersonalMerchId
          , Object_PersonalMerch.ObjectCode   AS PersonalMerchCode

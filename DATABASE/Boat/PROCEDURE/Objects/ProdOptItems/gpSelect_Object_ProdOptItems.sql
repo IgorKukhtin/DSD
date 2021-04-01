@@ -208,11 +208,9 @@ BEGIN
                               WHERE Object_ProdOptions.DescId   = zc_Object_ProdOptions()
                                 AND Object_ProdOptions.isErased = FALSE
                              )
-      -- документы Заказ Клиента
+      -- ??ВСЕ?? документы Заказ Клиента
     , tmpOrderClient AS (SELECT Movement.Id                              AS MovementId
                               , MovementLinkObject_Product.ObjectId      AS ProductId
-                              , MovementFloat_DiscountTax.ValueData      AS DiscountTax
-                              , MovementFloat_DiscountNextTax.ValueData  AS DiscountNextTax
                                 -- % НДС Заказ клиента
                               , MovementFloat_VATPercent.ValueData       AS VATPercent
                          FROM MovementLinkObject AS MovementLinkObject_Product
@@ -223,19 +221,13 @@ BEGIN
                               LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                                       ON MovementFloat_VATPercent.MovementId = Movement.Id
                                                      AND MovementFloat_VATPercent.DescId     = zc_MovementFloat_VATPercent()
-                              LEFT JOIN MovementFloat AS MovementFloat_DiscountTax
-                                                      ON MovementFloat_DiscountTax.MovementId = Movement.Id
-                                                     AND MovementFloat_DiscountTax.DescId = zc_MovementFloat_DiscountTax()
-                              LEFT JOIN MovementFloat AS MovementFloat_DiscountNextTax
-                                                      ON MovementFloat_DiscountNextTax.MovementId = Movement.Id
-                                                     AND MovementFloat_DiscountNextTax.DescId = zc_MovementFloat_DiscountNextTax()
                          -- !!!временно, надо будет как-то выбирать НЕ ВСЕ!!!
                          WHERE MovementLinkObject_Product.ObjectId > 0
                            AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
                         )
            -- все лодки + определяем продана да/нет
-         , tmpProduct AS (SELECT tmpOrderClient.MovementId AS MovementId_OrderClient
-                               , tmpOrderClient.VATPercent AS VATPercent
+         , tmpProduct AS (SELECT COALESCE (tmpOrderClient.MovementId, 0) AS MovementId_OrderClient
+                               , COALESCE (tmpOrderClient.VATPercent, 0) AS VATPercent
                                , Object_Product.Id
                                , Object_Product.ObjectCode
                                , Object_Product.ValueData
@@ -509,6 +501,8 @@ BEGIN
          , tmpRes.SalePriceWVAT                  :: TFloat AS SalePriceWVAT
          , (tmpRes.SalePrice     * CASE WHEN tmpRes.ProdColorPatternId > 0 THEN 1 ELSE tmpRes.Value END) :: TFloat AS Sale_summ
          , (tmpRes.SalePriceWVAT * CASE WHEN tmpRes.ProdColorPatternId > 0 THEN 1 ELSE tmpRes.Value END) :: TFloat AS SaleWVAT_summ
+
+           -- кол-во в сборке
          , tmpRes.Value ::TFloat AS Amount
 
          , Object_Insert.ValueData            ::TVarChar  AS InsertName
@@ -528,9 +522,6 @@ BEGIN
           LEFT JOIN tmpProduct ON tmpProduct.Id    = tmpRes.ProductId
           LEFT JOIN tmpGoods   ON tmpGoods.GoodsId = tmpRes.GoodsId
 
-          LEFT JOIN ObjectFloat AS ObjectFloat_MovementId_OrderClient
-                                ON ObjectFloat_MovementId_OrderClient.ObjectId = tmpRes.Id
-                               AND ObjectFloat_MovementId_OrderClient.DescId   = zc_ObjectFloat_ProdOptItems_OrderClient()
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = tmpRes.Id
                                 AND ObjectString_Comment.DescId   = zc_ObjectString_ProdOptItems_Comment()

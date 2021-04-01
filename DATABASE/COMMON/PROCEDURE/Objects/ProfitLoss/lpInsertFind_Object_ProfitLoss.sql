@@ -33,7 +33,7 @@ BEGIN
 
    IF COALESCE (inProfitLossDirectionId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Ошибка.Невозможно определить Статью ОПиУ т.к. не установлено <Аналитика ОПиУ - направление> : <%>, <%>, <%>, <%>', inProfitLossGroupId, inProfitLossDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
+       RAISE EXCEPTION 'Ошибка.Невозможно определить Статью ОПиУ т.к. не установлено <Аналитика ОПиУ - направление> : <%>, <%>, <%>, <%>', lfGet_Object_ValueData_sh (inProfitLossGroupId), lfGet_Object_ValueData_sh (inProfitLossDirectionId), lfGet_Object_ValueData_sh (inInfoMoneyDestinationId), lfGet_Object_ValueData_sh (inInfoMoneyId);
    END IF;
 
    IF COALESCE (inInfoMoneyDestinationId, 0) = 0 AND COALESCE (inInfoMoneyId, 0) = 0
