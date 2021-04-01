@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer
              , InfoMoneyCode Integer
              , InfoMoneyName TVarChar
              , InfoMoneyName_all TVarChar
-             , ContractId Integer, ContractName TVarChar
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , SummOrderFinance TFloat
              , Comment TVarChar
              , isErased Boolean
@@ -39,12 +39,14 @@ BEGIN
         tmpData AS (SELECT DISTINCT Object_Contract_View.JuridicalId
                          , Object_Contract_View.InfoMoneyId
                          , Object_Contract_View.ContractId
+                         , Object_Contract_View.ContractCode
                          , Object_Contract_View.InvNumber AS ContractName
                     FROM Object_Contract_View
                     WHERE Object_Contract_View.isErased = FALSE
                       AND Object_Contract_View.EndDate >= CURRENT_DATE
                       AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                       AND Object_Contract_View.isErased = FALSE
+                      AND Object_Contract_View.PaidKindId = zc_Enum_PaidKind_FirstForm()
                    )
 
        -- по inOrderFinanceId выбираем статьи, которые отображать в документе
@@ -137,8 +139,9 @@ BEGIN
              , Object_InfoMoney_View.InfoMoneyCode
              , Object_InfoMoney_View.InfoMoneyName
              , Object_InfoMoney_View.InfoMoneyName_all
-             
+
              , tmpData.ContractId
+             , tmpData.ContractCode
              , tmpData.ContractName
 
              , COALESCE (tmpJuridicalOrderFinance.SummOrderFinance,0) :: TFloat  AS SummOrderFinance
@@ -196,6 +199,7 @@ BEGIN
      , tmpData AS (SELECT DISTINCT Object_Contract_View.JuridicalId
                         , Object_Contract_View.InfoMoneyId
                         , Object_Contract_View.ContractId
+                        , Object_Contract_View.ContractCode
                         , Object_Contract_View.InvNumber AS ContractName
                    FROM Object_Contract_View
                    WHERE Object_Contract_View.isErased = FALSE
@@ -237,6 +241,7 @@ BEGIN
              , Object_InfoMoney_View.InfoMoneyName_all
              
              , tmpData.ContractId
+             , tmpData.ContractCode
              , tmpData.ContractName
 
              , ObjectFloat_SummOrderFinance.ValueData :: TFloat   AS SummOrderFinance
