@@ -210,13 +210,34 @@ BEGIN
 
           WHERE Container.DescId = zc_Container_CountPartionDate()
             AND Container.Amount <> 0
-            AND ObjectDate_PartionGoods_Cat_5.ValueData < CURRENT_DATE - INTERVAL '30 DAY';      
+            AND ObjectDate_PartionGoods_Cat_5.ValueData < CURRENT_DATE - INTERVAL '31 DAY';      
       END IF;
     EXCEPTION
        WHEN others THEN
          GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
        PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run zc_ObjectBoolean_PartionGoods_Cat_5', True, text_var1::TVarChar, vbUserId);
     END;
+    
+    -- Простановка фиксированных сумм в ЗП
+    BEGIN
+      IF date_part('HOUR',  CURRENT_TIME)::Integer < 1 AND date_part('HOUR',  CURRENT_TIME)::Integer <= 21
+      THEN
+          PERFORM  gpUpdate_Goods_SummaWages (T1.goodsid, 50, zfCalc_UserAdmin())
+          FROM gpSelect_MovementItem_Promo(inMovementId := 20813880 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3') AS T1
+               INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = T1.goodsid
+          WHERE COALESCE(Object_Goods_Retail.SummaWages, 0) <> 50;
+
+          PERFORM  gpUpdate_Goods_SummaWagesStore (T1.goodsid, 10, zfCalc_UserAdmin())
+          FROM gpSelect_MovementItem_Promo(inMovementId := 20813880 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3') AS T1
+               INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = T1.goodsid
+          WHERE COALESCE(Object_Goods_Retail.SummaWagesStore, 0) <> 10;    
+      END IF;
+    EXCEPTION
+       WHEN others THEN
+         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+       PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpUpdate_Goods_SummaWages', True, text_var1::TVarChar, vbUserId);
+    END;
+    
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

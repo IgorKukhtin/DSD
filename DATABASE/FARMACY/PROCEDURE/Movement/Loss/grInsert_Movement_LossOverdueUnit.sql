@@ -142,7 +142,7 @@
         HAVING Sum(tmpContainerOverdueLoss.Amount) > 0;
 
         -- Проводим списание
-        PERFORM gpComplete_Movement_Loss (inMovementId:= outMovementID, inIsCurrentData:= True, inSession:= inSession);
+        PERFORM gpComplete_Movement_Loss (inMovementId:= outMovementID, inIsCurrentData:= False, inSession:= inSession);
     END IF;
 
     -- Пересоздаем перемещение сроков
@@ -175,3 +175,4 @@
    */
 
 -- тест SELECT * FROM grInsert_Movement_LossOverdueUnit (inUnitID := 3457773    , inSession:= '3')
+-- SELECT grInsert_Movement_LossOverdue (inSession := zfCalc_UserAdmin());
