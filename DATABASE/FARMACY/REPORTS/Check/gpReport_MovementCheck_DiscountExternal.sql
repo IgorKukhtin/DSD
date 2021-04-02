@@ -24,6 +24,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Statu
              , ChangePercent TFloat
              , SummChangePercent TFloat
              , FromName TVarChar
+             , PriceWithVAT TFloat
               )
 AS
 $BODY$
@@ -85,6 +86,7 @@ BEGIN
            , MovementItem.ChangePercent
            ,( MovementItem.SummChangePercent * (-1.0 * MovementItemContainer.Amount)/ MovementItem.Amount) :: TFloat
            , Object_From.ValueData                      AS FromName
+           , MIFloat_PriceWithVAT.ValueData             AS PriceWithVAT
 
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
@@ -162,6 +164,11 @@ BEGIN
              -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
              LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
                                                   -- AND 1=0
+
+             -- Цена поставщика с учетом НДС
+             LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
+                                         ON MIFloat_PriceWithVAT.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)
+                                        AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
 
              LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                           ON MovementLinkObject_From.MovementId = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)

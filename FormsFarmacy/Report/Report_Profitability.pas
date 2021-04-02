@@ -57,8 +57,9 @@ type
     Remains: TcxGridDBBandedColumn;
     RemainsSum: TcxGridDBBandedColumn;
     Profit: TcxGridDBBandedColumn;
-    SummChange: TcxGridDBBandedColumn;
+    SummSP: TcxGridDBBandedColumn;
     cbNoStaticCodes: TcxCheckBox;
+    SummDiscount: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

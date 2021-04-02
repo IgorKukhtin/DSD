@@ -116,7 +116,7 @@ BEGIN
                                )
        , tmpExpirationDate AS (SELECT tmp.Id
                                     , tmp.GoodsId
-                                    , COALESCE(tmp.Amount, tmpContainerPD.Amount)                                             AS Amount
+                                    , COALESCE(tmpContainerPD.Amount, tmp.Amount)                                             AS Amount
                                     , COALESCE (tmpContainerPD.ExpirationDate, MIDate_ExpirationDate.ValueData, zc_DateEnd()) AS ExpirationDate
                                     , tmpContainerPD.PartionDateKindId                                                        AS PartionDateKindId
                                FROM tmpExpirationIn AS tmp
@@ -156,16 +156,16 @@ BEGIN
          -- , COALESCE(tmpObject_Price.Price,0)::TFloat                              AS Price
           , 0::TFloat                                                             AS Price
           , Container.Amount                                                       AS Amount
-          , tmpExpirationDate.ExpirationDate                                       AS MinExpirationDate
-          , tmpExpirationDate.PartionDateKindId                                    AS PartionDateKindId
-          , CASE WHEN COALESCE (tmpExpirationDate.ExpirationDate, zc_DateEnd()) <= vbDate_0 THEN zc_Color_Red()        -- просрочено
-                 WHEN COALESCE (tmpExpirationDate.ExpirationDate, zc_DateEnd()) <= vbDate_1 THEN zc_Color_Yelow()      -- ћеньше 1 мес€ца
-                 WHEN COALESCE (tmpExpirationDate.ExpirationDate, zc_DateEnd()) <= vbDate_3 THEN zc_Color_Cyan()       -- ћеньше 1 мес€ца
-                 WHEN COALESCE (tmpExpirationDate.ExpirationDate, zc_DateEnd()) <= vbDate_6 THEN zc_Color_Cyan()       -- ћеньше 6 мес€ца
+          , Container.ExpirationDate                                       AS MinExpirationDate
+          , Container.PartionDateKindId                                    AS PartionDateKindId
+          , CASE WHEN COALESCE (Container.ExpirationDate, zc_DateEnd()) <= vbDate_0 THEN zc_Color_Red()        -- просрочено
+                 WHEN COALESCE (Container.ExpirationDate, zc_DateEnd()) <= vbDate_1 THEN zc_Color_Yelow()      -- ћеньше 1 мес€ца
+                 WHEN COALESCE (Container.ExpirationDate, zc_DateEnd()) <= vbDate_3 THEN zc_Color_Cyan()       -- ћеньше 1 мес€ца
+                 WHEN COALESCE (Container.ExpirationDate, zc_DateEnd()) <= vbDate_6 THEN zc_Color_Cyan()       -- ћеньше 6 мес€ца
                  ELSE zc_Color_White() END                                         AS Color_calc
      FROM tmpExpirationDate AS Container
 
-          LEFT JOIN tmpExpirationDate ON tmpExpirationDate.id = Container.Id
+        --  LEFT JOIN tmpExpirationDate ON tmpExpirationDate.id = Container.Id
 
         --  LEFT OUTER JOIN tmpObject_Price ON tmpObject_Price.GoodsId = Container.GoodsId
      
@@ -185,4 +185,4 @@ $BODY$
 
 -- тест
 --
-SELECT * FROM gpSelect_CashGoodsToExpirationDate (inSession := '3');
+SELECT * FROM gpSelect_CashGoodsToExpirationDate (inSession := '3') where id = 12434818;

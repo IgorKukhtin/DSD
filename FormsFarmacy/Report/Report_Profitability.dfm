@@ -13,17 +13,17 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
     Height = 422
     TabOrder = 3
     ExplicitTop = 58
-    ExplicitWidth = 943
+    ExplicitWidth = 986
     ExplicitHeight = 422
     ClientRectBottom = 422
     ClientRectRight = 986
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 943
+      ExplicitWidth = 986
       ExplicitHeight = 422
       inherited cxGrid: TcxGrid
         Width = 986
         Height = 422
-        ExplicitWidth = 943
+        ExplicitWidth = 986
         ExplicitHeight = 422
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -201,10 +201,16 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
             item
               Format = ',0.##;-,0.##; ;'
               Kind = skSum
-              Column = SummChange
+              Column = SummSP
+            end
+            item
+              Format = ',0.##;-,0.##; ;'
+              Kind = skSum
+              Column = SummDiscount
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsView.Footer = True
+          OptionsView.HeaderAutoHeight = True
           Bands = <
             item
               Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -212,7 +218,7 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
             end
             item
               Caption = #1055#1088#1086#1076#1072#1078#1080' ('#1089#1091#1084#1084#1099' '#1075#1088#1085'.)'
-              Width = 245
+              Width = 262
             end
             item
               Caption = #1056#1072#1089#1093#1086#1076#1099
@@ -270,9 +276,9 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
             Position.ColIndex = 1
             Position.RowIndex = 0
           end
-          object SummChange: TcxGridDBBandedColumn
-            Caption = #1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103
-            DataBinding.FieldName = 'SummChange'
+          object SummSP: TcxGridDBBandedColumn
+            Caption = #1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103' '#1057#1055
+            DataBinding.FieldName = 'SummSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
@@ -280,6 +286,18 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
             Options.Editing = False
             Position.BandIndex = 1
             Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object SummDiscount: TcxGridDBBandedColumn
+            Caption = #1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103' '#1044#1055
+            DataBinding.FieldName = 'SummDiscount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Position.BandIndex = 1
+            Position.ColIndex = 3
             Position.RowIndex = 0
           end
           object SummaIncome: TcxGridDBBandedColumn
@@ -291,7 +309,7 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Position.BandIndex = 1
-            Position.ColIndex = 3
+            Position.ColIndex = 4
             Position.RowIndex = 0
           end
           object WagesAmount: TcxGridDBBandedColumn
@@ -363,7 +381,7 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
   inherited Panel: TPanel
     Width = 986
     Height = 32
-    ExplicitWidth = 943
+    ExplicitWidth = 986
     ExplicitHeight = 32
     inherited deStart: TcxDateEdit
       Left = 29

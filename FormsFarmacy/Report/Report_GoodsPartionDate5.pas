@@ -30,6 +30,7 @@ type
     bbExecuteDialog: TdxBarButton;
     ExpirationDate: TcxGridDBColumn;
     Sales: TcxGridDBColumn;
+    TransferDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -168,6 +168,7 @@ BEGIN
            , CAST ('' as TVarChar) AS LayoutName
            , CAST ('' as TVarChar) AS PromoForSale
            , FALSE                 AS isMinPercentMarkup
+           , CAST (0 as Integer)   AS SerialNumberMypharmacy
 ;
    ELSE
        RETURN QUERY 
@@ -615,3 +616,5 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 
 -- select * from gpGet_Object_Unit(inId := 377613 ,  inSession := '3'::TVarChar);
 
+
+ select * from gpGet_Object_Unit(inId := 0 ,  inSession := '375661');
