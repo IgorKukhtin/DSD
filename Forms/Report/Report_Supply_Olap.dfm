@@ -216,9 +216,23 @@ object Report_Supply_OlapForm: TReport_Supply_OlapForm
       Width = 80
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
-    object pvRemainsStart_Weight: TcxDBPivotGridField
+    object pvRemainsStart_summ: TcxDBPivotGridField
       Area = faData
       AreaIndex = 1
+      IsCaptionAssigned = True
+      Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1075#1088#1085'.'
+      DataBinding.FieldName = 'RemainsStart_summ'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Visible = True
+      Width = 80
+      UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
+    end
+    object pvRemainsStart_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 2
       IsCaptionAssigned = True
       Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1074#1077#1089
       DataBinding.FieldName = 'RemainsStart_Weight'
@@ -231,7 +245,7 @@ object Report_Supply_OlapForm: TReport_Supply_OlapForm
     end
     object pvCountIncome: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 2
+      AreaIndex = 3
       IsCaptionAssigned = True
       Caption = #1055#1088#1080#1093#1086#1076' '#1082#1086#1083'.'
       DataBinding.FieldName = 'CountIncome'
@@ -243,9 +257,23 @@ object Report_Supply_OlapForm: TReport_Supply_OlapForm
       Width = 80
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
-    object pvCountIncome_Weight: TcxDBPivotGridField
+    object pvSummIncome: TcxDBPivotGridField
       Area = faData
       AreaIndex = 4
+      IsCaptionAssigned = True
+      Caption = #1055#1088#1080#1093#1086#1076', '#1075#1088#1085'.'
+      DataBinding.FieldName = 'SummIncome'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Visible = True
+      Width = 80
+      UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
+    end
+    object pvCountIncome_Weight: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 9
       IsCaptionAssigned = True
       Caption = #1055#1088#1080#1093#1086#1076' '#1074#1077#1089
       DataBinding.FieldName = 'CountIncome_Weight'
@@ -258,7 +286,7 @@ object Report_Supply_OlapForm: TReport_Supply_OlapForm
     end
     object pvCountProduction: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 3
+      AreaIndex = 7
       IsCaptionAssigned = True
       Caption = #1055#1086#1090#1088#1077#1073#1083'. '#1082#1086#1083'.'
       DataBinding.FieldName = 'CountProduction'
@@ -270,9 +298,23 @@ object Report_Supply_OlapForm: TReport_Supply_OlapForm
       Width = 80
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
+    object pvSummProduction: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 8
+      IsCaptionAssigned = True
+      Caption = #1055#1086#1090#1088#1077#1073#1083'. '#1075#1088#1085'.'
+      DataBinding.FieldName = 'SummProduction'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Visible = True
+      Width = 80
+      UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
+    end
     object pvCountProduction_Weight: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 5
+      AreaIndex = 10
       IsCaptionAssigned = True
       Caption = #1055#1086#1090#1088#1077#1073#1083'. '#1074#1077#1089
       DataBinding.FieldName = 'CountProduction_Weight'
@@ -283,9 +325,37 @@ object Report_Supply_OlapForm: TReport_Supply_OlapForm
       Width = 80
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
-    object pvMoneySumm: TcxDBPivotGridField
+    object pvCountOther: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 5
+      IsCaptionAssigned = True
+      Caption = #1055#1088#1086#1095#1077#1077' '#1076#1074#1080#1078'. '#1082#1086#1083'.'
+      DataBinding.FieldName = 'CountOther'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Visible = True
+      Width = 80
+      UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
+    end
+    object pvSummOther: TcxDBPivotGridField
       Area = faData
       AreaIndex = 6
+      IsCaptionAssigned = True
+      Caption = #1055#1088#1086#1095#1077#1077' '#1076#1074#1080#1078'. '#1075#1088#1085'.'
+      DataBinding.FieldName = 'SummOther'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Visible = True
+      Width = 80
+      UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
+    end
+    object pvMoneySumm: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 11
       IsCaptionAssigned = True
       Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099
       DataBinding.FieldName = 'MoneySumm'

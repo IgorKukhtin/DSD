@@ -37,8 +37,13 @@ RETURNS TABLE ( MonthDate TDateTime
               , CountIncome_Weight       TFloat
               , CountProduction          TFloat
               , CountProduction_Weight   TFloat -- Потребление за периоды
+              , CountOther               TFloat
+              , CountOther_Weight        TFloat
               , MoneySumm                TFloat -- Оплата за периоды
-              
+              , RemainsStart_summ        TFloat
+              , SummIncome               TFloat
+              , SummProduction           TFloat
+              , SummOther                TFloat
               )
 AS
 $BODY$
@@ -80,9 +85,10 @@ BEGIN
     END IF;
 
     --сначала выбираем проводки во временную таблицу
-    CREATE TEMP TABLE _tmpContainer (ContainerId Integer, LocationId Integer, GoodsId Integer, GoodsKindId Integer, Amount TFloat) ON COMMIT DROP;
-    INSERT INTO _tmpContainer (ContainerId, LocationId, GoodsId, GoodsKindId, Amount)
+    CREATE TEMP TABLE _tmpContainer (ContainerId Integer, DescId Integer, LocationId Integer, GoodsId Integer, GoodsKindId Integer, Amount TFloat) ON COMMIT DROP;
+    INSERT INTO _tmpContainer (ContainerId, DescId, LocationId, GoodsId, GoodsKindId, Amount)
            SELECT CLO_Unit.ContainerId
+                , Container.DescId
                 , _tmpLocation.LocationId
                 , tmpGoods.GoodsId
                 , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -92,9 +98,12 @@ BEGIN
                                                ON CLO_Unit.ObjectId = _tmpLocation.LocationId
                                               AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                 LEFT JOIN Container ON Container.Id = CLO_Unit.ContainerId
-                                   AND Container.DescId = zc_Container_Count()
+                                   --AND Container.DescId = zc_Container_Count()
 
-                INNER JOIN tmpGoods ON tmpGoods.GoodsId = Container.ObjectId
+                LEFT JOIN ContainerLinkObject AS CLO_Goods ON CLO_Goods.ContainerId = CLO_Unit.ContainerId
+                                                          AND CLO_Goods.DescId = zc_ContainerLinkObject_Goods()
+                                                          AND Container.DescId = zc_Container_Summ()
+                INNER JOIN tmpGoods ON tmpGoods.GoodsId = CASE WHEN Container.DescId = zc_Container_Count() THEN Container.ObjectId ELSE CLO_Goods.ObjectId END
                 
                 LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                               ON CLO_GoodsKind.ContainerId = Container.Id
@@ -127,23 +136,51 @@ BEGIN
                                   , _tmpContainer.GoodsId
                                   , _tmpContainer.GoodsKindId
                                   , CASE WHEN MIContainer.MovementDescId = zc_Movement_Income() THEN MIContainer.MovementId ELSE 0 END AS MovementId_income
+                                  --, MIContainer.MovementId AS MovementId_income
                                   
                                   , DATE_TRUNC ('Month', MIContainer.OperDate)  AS MonthDate
-                                  
+
                                    -- Приход
                                  , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income()
+                                              AND _tmpContainer.DescId = zc_Container_Count()
                                                   THEN MIContainer.Amount
                                              ELSE 0
                                         END) AS CountIncome
+                                 , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income()
+                                              AND _tmpContainer.DescId = zc_Container_Summ()
+                                                  THEN MIContainer.Amount
+                                             ELSE 0
+                                        END) AS SummIncome
                                  --потребление
                                  , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                               AND _tmpContainer.DescId = zc_Container_Count()
                                               --AND MIContainer.isActive = TRUE
                                                   THEN MIContainer.Amount
                                              ELSE 0
                                         END) AS CountProduction
-                                
+                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                               AND _tmpContainer.DescId = zc_Container_Summ()
+                                              --AND MIContainer.isActive = TRUE
+                                                  THEN MIContainer.Amount
+                                             ELSE 0
+                                        END) AS SummProduction
+                                 -- прочее
+                                 , SUM (CASE WHEN MIContainer.MovementDescId NOT IN (zc_Movement_Income(), zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                               AND _tmpContainer.DescId = zc_Container_Count()
+                                              --AND MIContainer.isActive = TRUE
+                                                  THEN MIContainer.Amount
+                                             ELSE 0
+                                        END) AS CountOther
+                                 , SUM (CASE WHEN MIContainer.MovementDescId NOT IN (zc_Movement_Income(), zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                               AND _tmpContainer.DescId = zc_Container_Summ()
+                                              --AND MIContainer.isActive = TRUE
+                                                  THEN MIContainer.Amount
+                                             ELSE 0
+                                        END) AS SummOther
+
                                          -- ***REMAINS***
-                                 , -1 * SUM (CASE WHEN MIContainer.OperDate >= inStartDate THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS RemainsStart
+                                 , -1 * SUM (CASE WHEN MIContainer.OperDate >= DATE_TRUNC ('Month', MIContainer.OperDate) AND _tmpContainer.DescId = zc_Container_Count() THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS RemainsStart
+                                 , -1 * SUM (CASE WHEN MIContainer.OperDate >= DATE_TRUNC ('Month', MIContainer.OperDate) AND _tmpContainer.DescId = zc_Container_Summ()  THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS RemainsStart_summ
 
                              FROM _tmpContainer
                                   INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = _tmpContainer.ContainerId
@@ -153,21 +190,45 @@ BEGIN
                                     , _tmpContainer.GoodsId
                                     , _tmpContainer.GoodsKindId
                                     , CASE WHEN MIContainer.MovementDescId = zc_Movement_Income() THEN MIContainer.MovementId ELSE 0 END
+                                    --, MIContainer.MovementId
                                     , DATE_TRUNC ('Month', MIContainer.OperDate)
+                                    , _tmpContainer.DescId
 
                              HAVING SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income()
+                                               AND _tmpContainer.DescId = zc_Container_Count()
                                                    THEN MIContainer.Amount
                                               ELSE 0
                                          END) <> 0
+                                 OR SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income()
+                                              AND _tmpContainer.DescId = zc_Container_Summ()
+                                                  THEN MIContainer.Amount
+                                             ELSE 0
+                                        END) <> 0
                                   --потребление
                                  OR SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
-                                                --AND MIContainer.isActive = TRUE
+                                                 AND _tmpContainer.DescId = zc_Container_Count()
                                                    THEN MIContainer.Amount
                                               ELSE 0
-                                         END) <> 0                                       
+                                         END) <> 0
+                                 OR SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                               AND _tmpContainer.DescId = zc_Container_Summ()
+                                                  THEN MIContainer.Amount
+                                             ELSE 0
+                                        END) <> 0
+                                  -- прочее
+                                 OR SUM (CASE WHEN MIContainer.MovementDescId NOT IN (zc_Movement_Income(), zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                               AND _tmpContainer.DescId = zc_Container_Count()
+                                                  THEN MIContainer.Amount
+                                             ELSE 0
+                                        END) <> 0
+                                 OR SUM (CASE WHEN MIContainer.MovementDescId NOT IN (zc_Movement_Income(), zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                               AND _tmpContainer.DescId = zc_Container_Summ()
+                                                  THEN MIContainer.Amount
+                                             ELSE 0
+                                        END) <> 0
                                     -- ***REMAINS***
-                                 OR SUM (MIContainer.Amount) <> 0
-
+                                 OR SUM (CASE WHEN MIContainer.OperDate >= DATE_TRUNC ('Month', MIContainer.OperDate) AND _tmpContainer.DescId = zc_Container_Count() THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) <> 0
+                                 OR SUM (CASE WHEN MIContainer.OperDate >= DATE_TRUNC ('Month', MIContainer.OperDate) AND _tmpContainer.DescId = zc_Container_Summ()  THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) <> 0
                             UNION ALL
                              --для расчета остатков
                              SELECT _tmpContainer.ContainerId
@@ -179,15 +240,21 @@ BEGIN
 
                                     -- ***COUNT***
                                   , 0 AS CountIncome
+                                  , 0 AS SummIncome
                                   , 0 AS CountProduction
+                                  , 0 AS SummProduction
+                                  , 0 AS CountOther
+                                  , 0 AS SummOther
 
                                     -- ***REMAINS***
-                                 , _tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS RemainsStart
+                                 , CASE WHEN _tmpContainer.DescId = zc_Container_Count() THEN _tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END AS RemainsStart
+                                 , CASE WHEN _tmpContainer.DescId = zc_Container_Summ()  THEN _tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END AS RemainsStart_summ
 
                              FROM _tmpContainer
                                   LEFT JOIN MovementItemContainer AS MIContainer
                                                                   ON MIContainer.ContainerId = _tmpContainer.ContainerId
                                                                  AND MIContainer.OperDate > inEndDate
+                             
 
                              GROUP BY _tmpContainer.ContainerId
                                     , _tmpContainer.LocationId
@@ -195,20 +262,38 @@ BEGIN
                                     , _tmpContainer.GoodsKindId
                                     , _tmpContainer.Amount
                                     , DATE_TRUNC ('Month', inStartDate)
-                             HAVING _tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
+                                    , _tmpContainer.DescId
+                             HAVING CASE WHEN _tmpContainer.DescId = zc_Container_Count() THEN _tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END <> 0
+                                 OR CASE WHEN _tmpContainer.DescId = zc_Container_Summ()  THEN _tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END <> 0
                             )
 
         -- оплата идет по уп статье, у приходов товара есть договор а у него zc_ObjectLink_Contract_InfoMoney  --вот самая верхняя группировка - InfoMoney
-        , tmpInfoMoney AS (SELECT DISTINCT ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
-                                         , tmp.MovementId_income
-                           FROM (SELECT DISTINCT tmpMIContainer.MovementId_income FROM tmpMIContainer) AS tmp
-                                INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                                              ON MovementLinkObject_Contract.MovementId = tmp.MovementId_income
-                                                             AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-                                INNER JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
-                                                      ON ObjectLink_Contract_InfoMoney.ObjectId = MovementLinkObject_Contract.ObjectId
-                                                     AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
-                           )
+        , tmpInfoMoney AS (SELECT tmp.InfoMoneyId
+                                , tmp.GoodsId
+                                , tmp.MovementId_income
+                                , tmp.Summ
+                                --, MAX (tmp.Summ) OVER () AS Summ_max
+                                , ROW_NUMBER() OVER (PARTITION BY tmp.GoodsId ORDER BY tmp.Summ DESC) AS ord
+                           FROM (SELECT DISTINCT ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
+                                               , tmp.GoodsId
+                                               , tmp.MovementId_income
+                                               , SUM (tmp.SummIncome) OVER (PARTITION BY ObjectLink_Contract_InfoMoney.ChildObjectId) AS Summ
+                                 FROM (SELECT tmpMIContainer.MovementId_income
+                                            , tmpMIContainer.GoodsId
+                                            , SUM (tmpMIContainer.SummIncome) AS SummIncome
+                                       FROM tmpMIContainer
+                                       WHERE tmpMIContainer.MovementId_income <> 0
+                                       GROUP BY tmpMIContainer.MovementId_income
+                                              , tmpMIContainer.GoodsId
+                                       ) AS tmp
+                                            INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                                          ON MovementLinkObject_Contract.MovementId = tmp.MovementId_income
+                                                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                            INNER JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                                                  ON ObjectLink_Contract_InfoMoney.ObjectId = MovementLinkObject_Contract.ObjectId
+                                                                 AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+                                 ) AS tmp
+                          )
 
         , View_InfoMoney AS (SELECT * FROM Object_InfoMoney_View)
          -- оплаты по статьям
@@ -228,30 +313,41 @@ BEGIN
                               , DATE_TRUNC ('Month', MIContainer.OperDate)
 
                        HAVING SUM (COALESCE (MIContainer.Amount, 0) ) <> 0
-                       
                        )
 
         --объединяем таблицу товаров с оплатами
         , tmpData AS ( SELECT tmpMIContainer.MonthDate
-                            , tmpInfoMoney.InfoMoneyId
+                            , COALESCE (tmpInfoMoney.InfoMoneyId, tmpInfoMoney_Other.InfoMoneyId) AS InfoMoneyId
                             , tmpMIContainer.LocationId
                             , tmpMIContainer.GoodsId
                             , CASE WHEN inisGoodsKind = TRUE THEN tmpMIContainer.GoodsKindId ELSE 0 END AS GoodsKindId
                             --, STRING_AGG (DISTINCT Object_GoodsKind.ValueData, ',') ::TVarChar AS GoodsKindName
                             , CASE WHEN inisGoodsKind = TRUE THEN Object_GoodsKind.ValueData ELSE '' END AS GoodsKindName
                             
-                            , SUM (tmpMIContainer.CountIncome)     AS CountIncome
-                            , SUM (tmpMIContainer.CountProduction) AS CountProduction
-                            , SUM (tmpMIContainer.RemainsStart)    AS RemainsStart
+                            , SUM (tmpMIContainer.CountIncome)       AS CountIncome
+                            , SUM (tmpMIContainer.CountProduction)   AS CountProduction
+                            , SUM (tmpMIContainer.CountOther)        AS CountOther
+                            , SUM (tmpMIContainer.RemainsStart)      AS RemainsStart
+
+                            , SUM (tmpMIContainer.SummIncome)        AS SummIncome
+                            , SUM (tmpMIContainer.SummProduction)    AS SummProduction
+                            , SUM (tmpMIContainer.SummOther)         AS SummOther
+                            , SUM (tmpMIContainer.RemainsStart_summ) AS RemainsStart_summ
                             , 0 AS MoneySumm
                        FROM tmpMIContainer
                             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMIContainer.GoodsKindId
-                            LEFT JOIN tmpInfoMoney ON tmpInfoMoney.MovementId_income = tmpMIContainer.MovementId_income
+                            LEFT JOIN tmpInfoMoney ON tmpInfoMoney.GoodsId = tmpMIContainer.GoodsId
+                                                  AND tmpInfoMoney.MovementId_income = tmpMIContainer.MovementId_income
+                            -- второй раз привязывам к остальным товарам статью по макс сумме
+                            LEFT JOIN tmpInfoMoney AS tmpInfoMoney_Other
+                                                   ON tmpInfoMoney_Other.GoodsId = tmpMIContainer.GoodsId
+                                                  AND tmpInfoMoney_Other.ord = 1
                        GROUP BY tmpMIContainer.LocationId
                               , tmpMIContainer.GoodsId
                               , CASE WHEN inisGoodsKind = TRUE THEN tmpMIContainer.GoodsKindId ELSE 0 END
                               , CASE WHEN inisGoodsKind = TRUE THEN Object_GoodsKind.ValueData ELSE '' END
-                              , tmpInfoMoney.InfoMoneyId
+                              --, tmpInfoMoney.InfoMoneyId
+                              , COALESCE (tmpInfoMoney.InfoMoneyId, tmpInfoMoney_Other.InfoMoneyId)
                               , tmpMIContainer.MonthDate
                      UNION ALL
                        SELECT tmpMoney.MonthDate
@@ -263,7 +359,12 @@ BEGIN
                             
                             , 0 AS CountIncome
                             , 0 AS CountProduction
+                            , 0 AS CountOther
                             , 0 AS RemainsStart
+                            , 0 AS SummIncome
+                            , 0 AS SummProduction
+                            , 0 AS SummOther
+                            , 0 AS RemainsStart_summ
                             , tmpMoney.MoneySumm
                        FROM tmpMoney
                       )
@@ -304,7 +405,17 @@ BEGIN
               , tmpData.CountProduction   ::TFloat
               , (tmpData.CountProduction * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS CountProduction_Weight
 
+              , tmpData.CountOther        ::TFloat
+              , (tmpData.CountOther * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS CountOther_Weight
+              
               , tmpData.MoneySumm         ::TFloat
+              
+              , tmpData.RemainsStart_summ ::TFloat
+              , tmpData.SummIncome        ::TFloat
+              , tmpData.SummProduction    ::TFloat
+              , tmpData.SummOther         ::TFloat
+              
+
         
          FROM tmpData
          
