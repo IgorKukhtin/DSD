@@ -159,12 +159,21 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                           ELSE 0
                      END) AS AccessKeyId_PeriodClose
 
+
+              , MAX (CASE WHEN AccessKeyId IN (zc_Enum_Process_AccessKey_GuideAll()
+                                              )
+                               THEN AccessKeyId
+                          ELSE 0
+                     END) AS AccessKeyId_all
+                     
+
          FROM Object_RoleAccessKey_View
          WHERE AccessKeyId <> 0
          GROUP BY UserId
         ) AS tmpAccessKey
               LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfSelect_Object_Unit_byProfitLossDirection
-                                                                     ON (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceProduction()
+                                                                     ON AccessKeyId_all = 0
+                                                                   AND ((AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceProduction()
                                                                      AND (ProfitLossDirectionCode IN (20100 -- Общепроизводственные расходы + Содержание производства
                                                                                                     , 20200 -- Общепроизводственные расходы + Содержание складов
                                                                                                     , 20300 -- Общепроизводственные расходы + Содержание транспорта
@@ -247,6 +256,7 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                                                                      OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceZaporozhye()
                                                                      AND BranchId = 301310 -- филиал Запорожье
                                                                         )
+                                                                       )
            ;
 
 ALTER TABLE Object_RoleAccessKeyGuide_View OWNER TO postgres;
