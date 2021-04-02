@@ -34,6 +34,7 @@ $BODY$
    DECLARE vbGoodsSizeId   Integer;
    DECLARE vbGoodsId       Integer;
    DECLARE vbGoodsId_old   Integer;
+   DECLARE vbGoodsId_find  Integer;
    DECLARE vbGoodsInfoId   Integer;
    DECLARE vbGoodsItemId   Integer;
    DECLARE vbLabelId       Integer;
@@ -179,7 +180,52 @@ BEGIN
      -- !!!замена!!!
      IF zc_Enum_GlobalConst_isTerry() = FALSE
      THEN
-         inGoodsName:= ioGoodsCode :: TVarChar;
+         -- если надо найти существующий код
+         IF TRIM (inGoodsName) <> '' AND COALESCE (ioId, 0) = 0 AND (inSession :: Integer) > 0
+         THEN
+             -- проверка
+             IF inGoodsName <> ioGoodsCode :: TVarChar
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Артикул товара = <%> не соответствует значению код = <%>.', inGoodsName, ioGoodsCode;
+             END IF;
+             -- поиск
+             vbGoodsId_find:= (SELECT Object.Id FROM Object WHERE Object.ObjectCode = ioGoodsCode AND Object.DescId = zc_Object_Goods() AND Object.isErased = FALSE);
+             -- проверка
+             IF COALESCE (vbGoodsId_find, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Не найден товара с кодом = <%>.Необходимо в артикуле указать существующий.', ioGoodsCode;
+             END IF;
+             -- проверка - Группа товара - не должна меняться
+             IF inGoodsGroupId <> (SELECT DISTINCT Object_PartionGoods.GoodsGroupId FROM Object_PartionGoods WHERE Object_PartionGoods.GoodsId = vbGoodsId_find)
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Для товара с кодом = <%> Группа = <%> не может меняться на Группу = <%>.', ioGoodsCode, (SELECT DISTINCT Object_PartionGoods.GoodsGroupId FROM Object_PartionGoods WHERE Object_PartionGoods.GoodsId = vbGoodsId_find), inGoodsGroupId;
+             END IF;
+             -- проверка - Название - не должно меняться
+             IF vbLabelId <> (SELECT DISTINCT Object_PartionGoods.LabelId FROM Object_PartionGoods WHERE Object_PartionGoods.GoodsId = vbGoodsId_find)
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Для товара с кодом = <%> Название = <%> не может меняться на Название = <%>.', ioGoodsCode, (SELECT DISTINCT Object_PartionGoods.LabelId FROM Object_PartionGoods WHERE Object_PartionGoods.GoodsId = vbGoodsId_find), vbLabelId;
+             END IF;
+             -- проверка - Состав - не должен меняться
+             IF vbCompositionId <> (SELECT DISTINCT Object_PartionGoods.CompositionId FROM Object_PartionGoods WHERE Object_PartionGoods.GoodsId = vbGoodsId_find)
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Для товара с кодом = <%> Состав = <%> не может меняться на Состав = <%>.', ioGoodsCode, (SELECT DISTINCT Object_PartionGoods.CompositionId FROM Object_PartionGoods WHERE Object_PartionGoods.GoodsId = vbGoodsId_find), vbCompositionId;
+             END IF;
+             -- проверка - Описание - не должно меняться
+             IF vbGoodsInfoId <> (SELECT DISTINCT Object_PartionGoods.GoodsInfoId FROM Object_PartionGoods WHERE Object_PartionGoods.GoodsId = vbGoodsId_find)
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Для товара с кодом = <%> Описание = <%> не может меняться на Описание = <%>.', ioGoodsCode, (SELECT DISTINCT Object_PartionGoods.GoodsInfoId FROM Object_PartionGoods WHERE Object_PartionGoods.GoodsId = vbGoodsId_find), vbGoodsInfoId;
+             END IF;
+             -- проверка - Линия - не должна меняться
+             IF vbLineFabricaId <> (SELECT DISTINCT Object_PartionGoods.LineFabricaId FROM Object_PartionGoods WHERE Object_PartionGoods.GoodsId = vbGoodsId_find)
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Для товара с кодом = <%> Линия = <%> не может меняться на Линия = <%>.', ioGoodsCode, (SELECT DISTINCT Object_PartionGoods.LineFabricaId FROM Object_PartionGoods WHERE Object_PartionGoods.GoodsId = vbGoodsId_find), vbLineFabricaId;
+             END IF;
+
+         ELSE
+             --
+             inGoodsName:= ioGoodsCode :: TVarChar;
+         END IF;
+
      END IF;
 
      -- проверка - свойство должно быть установлено
@@ -193,126 +239,93 @@ BEGIN
      END IF;
 
 
-     -- для загрузки из Sybase т.к. там код НЕ = 0
-     IF vbUserId = zc_User_Sybase()
+     -- Запомнили !!!ДО изменений!!!
+     IF ioId > 0
+     THEN -- Товар - у текущего Элемента
+          vbGoodsId_old = (SELECT Object_PartionGoods.GoodsId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = ioId);
+     END IF;
+
+     -- Поиск
+     SELECT MIN (Object.Id), MAX (Object.Id)
+            INTO vbId_min, vbId_max
+     FROM Object
+          -- обязательно условие из партии
+          INNER JOIN Object_PartionGoods ON Object_PartionGoods.GoodsId   = Object.Id
+                                        AND Object_PartionGoods.PartnerId = vbPartnerId -- Марка + Год + Сезон
+          INNER JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                ON ObjectLink_Goods_GoodsGroup.ObjectId      = Object.Id
+                               AND ObjectLink_Goods_GoodsGroup.DescId        = zc_ObjectLink_Goods_GoodsGroup()
+                               AND ObjectLink_Goods_GoodsGroup.ChildObjectId = inGoodsGroupId
+     WHERE Object.DescId    = zc_Object_Goods()
+       AND Object.ValueData = inGoodsName
+     ;
+
+     -- проверка
+     IF vbId_min <> vbId_max
      THEN
-         -- Поиск - !!!без группы!!! + inGoodsName + ioGoodsCode
-         vbGoodsId:= (SELECT DISTINCT Object.Id
-                      FROM Object
-                           -- обязательно условие из партии
-                           INNER JOIN Object_PartionGoods ON Object_PartionGoods.GoodsId   = Object.Id
-                                                         AND Object_PartionGoods.PartnerId = vbPartnerId -- Марка + Год + Сезон
-                      WHERE Object.DescId     = zc_Object_Goods()
-                        AND Object.ValueData  = inGoodsName
-                        AND Object.ObjectCode = -1 * ioGoodsCode
-                     );
-         -- Поиск Товар - у текущего Элемента
-         vbGoodsId_old = (SELECT Object_PartionGoods.GoodsId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = ioId);
-
-
---         IF COALESCE (vbGoodsId, -1) <> COALESCE (vbGoodsId_old, -2) THEN
---            RAISE EXCEPTION 'Ошибка.COALESCE (%, -1) <> COALESCE (%, -2)', vbGoodsId, vbGoodsId_old;
---         END IF;
---         -- сохранили связь с <Группы товаров>
---         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroup(), vbGoodsId, inGoodsGroupId);
---         -- RETURN;
---         PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_GroupNameFull(), vbGoodsId, lfGet_Object_TreeNameFull (inGoodsGroupId, zc_ObjectLink_GoodsGroup_Parent()));
---         -- изменили во Всех партиях Товара
---         UPDATE Object_PartionGoods SET GoodsGroupId         = inGoodsGroupId
---         WHERE Object_PartionGoods.GoodsId = vbGoodsId;
---         RETURN;
-
-
+         RAISE EXCEPTION 'Ошибка.Артикул <%> уже существует в данной группе.', inGoodsName;
+     END IF;
+     
+     -- нашли
+     IF inIsCode = TRUE
+     THEN
+          vbGoodsId:= (SELECT Object.Id
+                       FROM Object
+                            -- только Группа
+                            INNER JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                                  ON ObjectLink_Goods_GoodsGroup.ObjectId      = Object.Id
+                                                 AND ObjectLink_Goods_GoodsGroup.DescId        = zc_ObjectLink_Goods_GoodsGroup()
+                                                 AND ObjectLink_Goods_GoodsGroup.ChildObjectId = inGoodsGroupId
+                       WHERE Object.DescId     = zc_Object_Goods()
+                         AND Object.ObjectCode = ioGoodsCode
+                      );
+          -- проверка
+          IF COALESCE (vbGoodsId, 0) = 0
+          THEN
+              RAISE EXCEPTION 'Ошибка.Код товара <%> в группе <%> не найден.', ioGoodsCode, lfGet_Object_ValueData_sh (inGoodsGroupId);
+          END IF;
+          -- !!!замена!!!
+          IF zc_Enum_GlobalConst_isTerry() = FALSE
+          THEN
+              RAISE EXCEPTION 'Ошибка.Нет прав.';
+          END IF;
      ELSE
-         -- Запомнили !!!ДО изменений!!!
-         IF ioId > 0
-         THEN -- Товар - у текущего Элемента
-              vbGoodsId_old = (SELECT Object_PartionGoods.GoodsId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = ioId);
-         END IF;
+         vbGoodsId:= vbId_max;
+     END IF;
 
-         -- Поиск
-         SELECT MIN (Object.Id), MAX (Object.Id)
-                INTO vbId_min, vbId_max
-         FROM Object
-              -- обязательно условие из партии
-              INNER JOIN Object_PartionGoods ON Object_PartionGoods.GoodsId   = Object.Id
-                                            AND Object_PartionGoods.PartnerId = vbPartnerId -- Марка + Год + Сезон
-              INNER JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                    ON ObjectLink_Goods_GoodsGroup.ObjectId      = Object.Id
-                                   AND ObjectLink_Goods_GoodsGroup.DescId        = zc_ObjectLink_Goods_GoodsGroup()
-                                   AND ObjectLink_Goods_GoodsGroup.ChildObjectId = inGoodsGroupId
-         WHERE Object.DescId    = zc_Object_Goods()
-           AND Object.ValueData = inGoodsName
-         ;
+     -- Если НЕ нашли - продолжаем Поиск "свободных"
+     IF COALESCE (vbGoodsId, 0) = 0
+     THEN
+         vbGoodsId:= (SELECT Object.Id
+                      FROM Object
+                           INNER JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                                 ON ObjectLink_Goods_GoodsGroup.ObjectId      = Object.Id
+                                                AND ObjectLink_Goods_GoodsGroup.DescId        = zc_ObjectLink_Goods_GoodsGroup()
+                                                AND ObjectLink_Goods_GoodsGroup.ChildObjectId = inGoodsGroupId
+                           -- партии
+                           LEFT JOIN Object_PartionGoods ON Object_PartionGoods.GoodsId   = Object.Id
+                      WHERE Object.DescId    = zc_Object_Goods()
+                        AND Object.ValueData = inGoodsName
+                        AND Object_PartionGoods.GoodsId IS NULL
+                     );
+     END IF;
 
-         -- проверка
-         IF vbId_min <> vbId_max
+     -- Если НЕ нашли И Корректировка + ОН ОДИН - ОСТАВЛЯЕМ тот же самый
+     IF COALESCE (vbGoodsId, 0) = 0 AND ioId <> 0
+     THEN
+         -- сколько партий с этим товаром
+         IF (SELECT COUNT (*) FROM Object_PartionGoods WHERE Object_PartionGoods.GoodsId = vbGoodsId_old AND Object_PartionGoods.MovementId = inMovementId)
+          = (SELECT COUNT (*) FROM Object_PartionGoods WHERE Object_PartionGoods.GoodsId = vbGoodsId_old)
          THEN
-             RAISE EXCEPTION 'Ошибка.Артикул <%> уже существует в данной группе.', inGoodsName;
-         END IF;
-         
-         -- нашли
-         IF inIsCode = TRUE
-         THEN
-              vbGoodsId:= (SELECT Object.Id
-                           FROM Object
-                                -- только Группа
-                                INNER JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                                      ON ObjectLink_Goods_GoodsGroup.ObjectId      = Object.Id
-                                                     AND ObjectLink_Goods_GoodsGroup.DescId        = zc_ObjectLink_Goods_GoodsGroup()
-                                                     AND ObjectLink_Goods_GoodsGroup.ChildObjectId = inGoodsGroupId
-                           WHERE Object.DescId     = zc_Object_Goods()
-                             AND Object.ObjectCode = ioGoodsCode
-                          );
-              -- проверка
-              IF COALESCE (vbGoodsId, 0) = 0
-              THEN
-                  RAISE EXCEPTION 'Ошибка.Код товара <%> в группе <%> не найден.', ioGoodsCode, lfGet_Object_ValueData_sh (inGoodsGroupId);
-              END IF;
-              -- !!!замена!!!
-              IF zc_Enum_GlobalConst_isTerry() = FALSE
-              THEN
-                  RAISE EXCEPTION 'Ошибка.Нет прав.';
-              END IF;
-         ELSE
-             vbGoodsId:= vbId_max;
-         END IF;
-
-         -- Если НЕ нашли - продолжаем Поиск "свободных"
-         IF COALESCE (vbGoodsId, 0) = 0
-         THEN
-             vbGoodsId:= (SELECT Object.Id
-                          FROM Object
-                               INNER JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                                     ON ObjectLink_Goods_GoodsGroup.ObjectId      = Object.Id
-                                                    AND ObjectLink_Goods_GoodsGroup.DescId        = zc_ObjectLink_Goods_GoodsGroup()
-                                                    AND ObjectLink_Goods_GoodsGroup.ChildObjectId = inGoodsGroupId
-                               -- партии
-                               LEFT JOIN Object_PartionGoods ON Object_PartionGoods.GoodsId   = Object.Id
-                          WHERE Object.DescId    = zc_Object_Goods()
-                            AND Object.ValueData = inGoodsName
-                            AND Object_PartionGoods.GoodsId IS NULL
-                         );
-         END IF;
-
-         -- Если НЕ нашли И Корректировка + ОН ОДИН - ОСТАВЛЯЕМ тот же самый
-         IF COALESCE (vbGoodsId, 0) = 0 AND ioId <> 0
-         THEN
-             -- сколько партий с этим товаром
-             IF (SELECT COUNT (*) FROM Object_PartionGoods WHERE Object_PartionGoods.GoodsId = vbGoodsId_old AND Object_PartionGoods.MovementId = inMovementId)
-              = (SELECT COUNT (*) FROM Object_PartionGoods WHERE Object_PartionGoods.GoodsId = vbGoodsId_old)
-             THEN
-                 -- ОСТАВЛЯЕМ тот же самый
-                 vbGoodsId:= vbGoodsId_old;
-                 -- Меняем ему название, если надо
-                 UPDATE Object SET ValueData = inGoodsName WHERE Object.Id = vbGoodsId AND Object.DescId = zc_Object_Goods() AND Object.ValueData <> inGoodsName;
-                 -- если изменение - БЫЛО
-                 IF FOUND THEN
-                   -- сохранили протокол
-                   PERFORM lpInsert_ObjectProtocol (vbGoodsId, vbUserId);
-                 END IF;
+             -- ОСТАВЛЯЕМ тот же самый
+             vbGoodsId:= vbGoodsId_old;
+             -- Меняем ему название, если надо
+             UPDATE Object SET ValueData = inGoodsName WHERE Object.Id = vbGoodsId AND Object.DescId = zc_Object_Goods() AND Object.ValueData <> inGoodsName;
+             -- если изменение - БЫЛО
+             IF FOUND THEN
+               -- сохранили протокол
+               PERFORM lpInsert_ObjectProtocol (vbGoodsId, vbUserId);
              END IF;
-
          END IF;
 
      END IF;
