@@ -192,7 +192,7 @@ BEGIN
 
     -- Сброс 5 категории через 30 дней
     BEGIN
-      IF date_part('HOUR',  CURRENT_TIME)::Integer < 1 AND date_part('HOUR',  CURRENT_TIME)::Integer <= 21
+      IF date_part('HOUR',  CURRENT_TIME)::Integer < 1 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 21
       THEN
           PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_PartionGoods_Cat_5(), ContainerLinkObject.ObjectId , False)
           FROM Container
@@ -220,7 +220,7 @@ BEGIN
     
     -- Простановка фиксированных сумм в ЗП
     BEGIN
-      IF date_part('HOUR',  CURRENT_TIME)::Integer < 1 AND date_part('HOUR',  CURRENT_TIME)::Integer <= 21
+      IF date_part('HOUR',  CURRENT_TIME)::Integer < 1 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 21
       THEN
           PERFORM  gpUpdate_Goods_SummaWages (T1.goodsid, 50, zfCalc_UserAdmin())
           FROM gpSelect_MovementItem_Promo(inMovementId := 20813880 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3') AS T1
@@ -238,6 +238,30 @@ BEGIN
        PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpUpdate_Goods_SummaWages', True, text_var1::TVarChar, vbUserId);
     END;
     
+    -- Заполнение суммы СП в дополнительные расходы
+    BEGIN
+      IF date_part('MONTH',  CURRENT_DATE)::Integer = 1 AND date_part('HOUR',  CURRENT_TIME)::Integer = 5 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 30
+      THEN
+         PERFORM gpInsertUpdate_MovementItem_WagesAdditionalExpenses_SP (inOperDate := CURRENT_DATE - INTERVAL '1 DAY', inSession:=  zfCalc_UserAdmin());
+      END IF;
+    EXCEPTION
+       WHEN others THEN
+         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+       PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpInsertUpdate_MovementItem_WagesAdditionalExpenses_SP', True, text_var1::TVarChar, vbUserId);
+    END;    
+    
+    -- Фиксация неликвидов
+    BEGIN
+      IF date_part('MONTH',  CURRENT_DATE)::Integer = 1 AND date_part('HOUR',  CURRENT_TIME)::Integer = 5 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 30
+      THEN
+         PERFORM gpInsertUpdate_Movement_IlliquidUnit_Formation(inOperDate := CURRENT_DATE, inSession:=  zfCalc_UserAdmin());
+      END IF;
+    EXCEPTION
+       WHEN others THEN
+         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+       PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpInsertUpdate_Movement_IlliquidUnit_Formation', True, text_var1::TVarChar, vbUserId);
+    END;    
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
