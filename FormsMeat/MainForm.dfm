@@ -9454,6 +9454,12 @@ inherited MainForm: TMainForm
       object N168: TMenuItem
         Action = actReport_MotionGoodsWeek
       end
+      object miReport_Supply_Olap: TMenuItem
+        Action = actReport_Supply_Olap
+      end
+      object miReport_Supply: TMenuItem
+        Action = actReport_Supply
+      end
       object N23: TMenuItem
         Caption = '-'
       end
@@ -9540,12 +9546,6 @@ inherited MainForm: TMainForm
       end
       object miReport_Tara: TMenuItem
         Action = actReport_Tara
-      end
-      object miReport_Supply: TMenuItem
-        Action = actReport_Supply
-      end
-      object miReport_Supply_Olap: TMenuItem
-        Action = actReport_Supply_Olap
       end
     end
     object miReportsFinance: TMenuItem [13]
@@ -10459,6 +10459,7 @@ inherited MainForm: TMainForm
       end>
     ActionItemList = <>
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = MsgAddr
