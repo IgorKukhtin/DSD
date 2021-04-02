@@ -250,7 +250,7 @@ BEGIN
          THEN
              RAISE EXCEPTION 'Ошибка.Артикул <%> уже существует в данной группе.', inGoodsName;
          END IF;
-         
+
          -- нашли
          IF inIsCode = TRUE
          THEN
@@ -509,8 +509,8 @@ BEGIN
                                               , inOperPriceList      := inOperPriceList
                                               , inUserId             := vbUserId
                                                );
-     
-     
+
+
      -- сохранили свойство <Цена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceJur(), ioId, inPriceJur);
 
@@ -563,7 +563,7 @@ BEGIN
 
      -- дописали - партию = Id
      UPDATE MovementItem SET PartionId = ioId WHERE MovementItem.Id = ioId AND MovementItem.PartionId IS NULL;
-     
+
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
@@ -590,7 +590,7 @@ SELECT Object_Goods.*, Object_GoodsSize.ValueData, Movement.OperDate, Movement.I
 , Object_PartionGoods .OperPrice , MIFloat_OperPrice.ValueData as PriceInOk
 , ObjectHistory_PriceListItem.*
 , Object_PartionGoods.*
-FROM Object_PartionGoods 
+FROM Object_PartionGoods
      join Object AS Object_Goods on Object_Goods.Id = Object_PartionGoods.GoodsId
      join Object AS Object_GoodsSize on Object_GoodsSize.Id = Object_PartionGoods.GoodsSizeId
 
@@ -612,7 +612,7 @@ FROM Object_PartionGoods
                                              ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                                             AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
                                             AND ObjectLink_PriceListItem_Goods.ChildObjectId = Object_PartionGoods.GoodsId
-       
+
                         LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                                 ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                                                AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
@@ -620,12 +620,12 @@ FROM Object_PartionGoods
                         LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
                                                      ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                                     AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
- 
-                   
+
+
 
 
 WHERE Object_PartionGoods.PeriodYear = 2019
--- and Object_PartionGoods .MovementItemId = 1707494 
+-- and Object_PartionGoods .MovementItemId = 1707494
 -- and Object_PartionGoods.OperPriceList <> MIFloat_OperPriceList.ValueData and ObjectHistory_PriceListItem.StartDate = zc_DateStart()
 -- and Object_PartionGoods .OperPriceList  <> ObjectHistoryFloat_PriceListItem_Value.ValueData
  and Object_PartionGoods .OperPrice  <> MIFloat_OperPrice.ValueData
@@ -635,7 +635,7 @@ order by 3, Object_GoodsSize.ValueData
 /*
 -- !!!ERROR!!!
 select distinct Object_PartionGoods.GoodsSizeId, CLO.ObjectId, *
-from Container 
+from Container
 join Object_PartionGoods on Object_PartionGoods.MovementItemId = Container.PartionId
 left join ContainerLinkObject as CLO on CLO.ContainerId = Container.Id and CLO.DescId = 14 -- zc_ContainerLinkObject_GoodsSize
 -- inner join MovementItemContainer on MovementItemContainer.ContainerId = Container.Id
