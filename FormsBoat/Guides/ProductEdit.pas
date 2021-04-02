@@ -126,6 +126,10 @@ type
     DeleteMovementInvoice: TChangeGuidesStatus;
     cxLabel29: TcxLabel;
     edVATPercentOrderClient: TcxCurrencyEdit;
+    cxLabel30: TcxLabel;
+    edAmountIn_rem: TcxCurrencyEdit;
+    edAmountIn_remAll: TcxCurrencyEdit;
+    cxLabel31: TcxLabel;
   private
     { Private declarations }
   public

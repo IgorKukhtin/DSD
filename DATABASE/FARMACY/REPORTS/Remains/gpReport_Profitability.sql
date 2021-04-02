@@ -14,7 +14,8 @@ RETURNS TABLE (UnitID          Integer
              , UnitName        TVarChar  --
              , SummaComing     TFloat    -- Сумма прихода сНДС
              , SummaSelling    TFloat    -- Сумма реализации
-             , SummChange      TFloat    -- Сумма компенсации
+             , SummSP          TFloat    -- Сумма компенсации СП
+             , SummDiscount    TFloat    -- Сумма компенсации Дисконта
              , SummaIncome     TFloat    -- Сумма дохода
 
              , Remains         TFloat    -- Остатки количество
@@ -151,6 +152,31 @@ BEGIN
                                      LEFT JOIN tmpObject_Price ON tmpObject_Price.UnitID  = tmpContainerEnd.UnitID
                                                               AND tmpObject_Price.GoodsId = tmpContainerEnd.GoodsId
                                 GROUP BY tmpContainerEnd.UnitID)
+             -- Исключаемые чеки
+           , tmpCheckDel AS (
+              SELECT AnalysisContainer.UnitId
+                   , SUM(-1.0 * MIC.Amount * AnalysisContainer.Price) AS AmountSumJuridical
+                   , SUM(-1.0 * MIC.Amount * MIC.Price)               AS AmountSum
+              FROM Movement
+
+                   INNER JOIN MovementItemContainer AS MIC
+                                                    ON MIC.MovementId = Movement.Id
+                                                   AND MIC.DescId = zc_MIContainer_Count()
+                                                   
+                   INNER JOIN AnalysisContainer AS AnalysisContainer
+                                                ON AnalysisContainer.Id = MIC.ContainerId
+
+                   LEFT JOIN MovementBoolean AS MovementBoolean_CorrectMarketing
+                                             ON MovementBoolean_CorrectMarketing.MovementId = Movement.Id
+                                            AND MovementBoolean_CorrectMarketing.DescId = zc_MovementBoolean_CorrectMarketing()
+
+              WHERE Movement.OperDate >= inDateStart 
+                AND Movement.OperDate < inDateFinal
+                AND Movement.DescId = zc_Movement_Check()
+                AND Movement.StatusId = zc_Enum_Status_Complete()
+                AND (COALESCE(MovementBoolean_CorrectMarketing.ValueData, False) =True
+                 OR Movement.Id IN (22653173, 22653613, 22653819))
+              GROUP BY AnalysisContainer.UnitId)
              -- Реализация за период
            , tmpRealization AS (SELECT AnalysisContainerItem.UnitID
                                      , Sum(COALESCE(AnalysisContainerItem.AmountCheckSumJuridical, 0) + COALESCE(AnalysisContainerItem.AmountSaleSumJuridical, 0)) AS AmountSumJuridical
@@ -251,8 +277,12 @@ BEGIN
                                               WHEN vbDateWStart THEN vbWStart
                                               WHEN vbDateWEnd THEN vbWEnd ELSE 1.0 END *
                                          (COALESCE (MIFloat_HolidaysHospital.ValueData, 0) +
-                                          COALESCE (MIFloat_Marketing.ValueData, 0) +
-                                          COALESCE (MIFloat_Director.ValueData, 0))) AS Amount
+                                          CASE WHEN COALESCE(MIFloat_Marketing.ValueData, 0) > 0 THEN COALESCE(MIFloat_Marketing.ValueData, 0)
+                                               WHEN COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0) > 0
+                                               THEN 0 ELSE COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0)  END +
+                                          COALESCE (MIFloat_Director.ValueData, 0) +
+                                          COALESCE (MIFloat_IlliquidAssets.ValueData, 0) +
+                                          COALESCE (MIFloat_PenaltySUN.ValueData, 0))) AS Amount
 
                               FROM  Movement
                                     LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
@@ -281,9 +311,21 @@ BEGIN
                                                                 ON MIFloat_Marketing.MovementItemId = MovementItem.Id
                                                                AND MIFloat_Marketing.DescId = zc_MIFloat_Marketing()
 
+                                    LEFT JOIN MovementItemFloat AS MIFloat_MarketingRepayment
+                                                                ON MIFloat_MarketingRepayment.MovementItemId = MovementItem.Id
+                                                               AND MIFloat_MarketingRepayment.DescId = zc_MIFloat_MarketingRepayment()
+
                                     LEFT JOIN MovementItemFloat AS MIFloat_Director
                                                                 ON MIFloat_Director.MovementItemId = MovementItem.Id
                                                                AND MIFloat_Director.DescId = zc_MIFloat_Director()
+
+                                    LEFT JOIN MovementItemFloat AS MIFloat_IlliquidAssets
+                                                                ON MIFloat_IlliquidAssets.MovementItemId = MovementItem.Id
+                                                               AND MIFloat_IlliquidAssets.DescId = zc_MIFloat_SummaIlliquidAssets()
+
+                                    LEFT JOIN MovementItemFloat AS MIFloat_PenaltySUN
+                                                                ON MIFloat_PenaltySUN.MovementItemId = MovementItem.Id
+                                                               AND MIFloat_PenaltySUN.DescId = zc_MIFloat_PenaltySUN()
 
                               WHERE Movement.DescId = zc_Movement_Wages()
                                 AND Movement.ID <> 15774527
@@ -339,14 +381,48 @@ BEGIN
                              AND Movement.DescId in (zc_Movement_Check(), zc_Movement_Sale())
                              AND Movement.StatusId = zc_Enum_Status_Complete()
                            GROUP BY  MovementLinkObject_Unit.ObjectId )
+           , tmpDiscount AS (SELECT MovementLinkObject_Unit.ObjectId                     AS UnitID
+                                  , sum(CASE WHEN Movement.DescId = zc_Movement_Check() THEN MovementFloat_TotalSummChangePercent.ValueData
+                                    ELSE COALESCE(MovementFloat_TotalSummSale.ValueData, 0) - COALESCE(MovementFloat_TotalSumm.ValueData, 0) END)  AS SummChange
+                             FROM Movement
+
+                                  INNER JOIN MovementLinkObject AS MovementLinkObject_DiscountCard
+                                                                ON MovementLinkObject_DiscountCard.MovementID = Movement.ID
+                                                               AND MovementLinkObject_DiscountCard.DescId = zc_MovementLinkObject_DiscountCard()
+                                                               AND MovementLinkObject_DiscountCard.ObjectId <> 0
+
+                                  INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                ON MovementLinkObject_Unit.MovementID = Movement.ID
+                                                               AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+
+                                  LEFT JOIN MovementFloat AS MovementFloat_TotalSummChangePercent
+                                                           ON MovementFloat_TotalSummChangePercent.MovementID = Movement.ID
+                                                          AND MovementFloat_TotalSummChangePercent.DescId = zc_MovementFloat_TotalSummChangePercent()
+
+                                  LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                          ON MovementFloat_TotalSumm.MovementId = Movement.Id
+                                                         AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+                                  LEFT JOIN MovementFloat AS MovementFloat_TotalSummSale
+                                                          ON MovementFloat_TotalSummSale.MovementId = Movement.Id
+                                                         AND MovementFloat_TotalSummSale.DescId = zc_MovementFloat_TotalSummSale()
+
+                             WHERE Movement.OperDate >= inDateStart
+                               AND Movement.OperDate < inDateFinal
+                               AND Movement.DescId = zc_Movement_Check()
+                               AND Movement.StatusId = zc_Enum_Status_Complete()
+                             GROUP BY  MovementLinkObject_Unit.ObjectId )
 
         SELECT tmpUnit.UnitId
              , Object_Unit.ObjectCode
              , Object_Unit.ValueData
-             , ROUND(tmpRealization.AmountSumJuridical, 2) ::TFloat
-             , ROUND(tmpRealization.AmountSum, 2) ::TFloat
-             , ROUND(tmpSPKind.SummChange, 2) ::TFloat
-             , ROUND(COALESCE(tmpRealization.AmountSum, 0)::TFloat + COALESCE(tmpSPKind.SummChange, 0)::TFloat - COALESCE(tmpRealization.AmountSumJuridical, 0), 2)::TFloat
+             , ROUND(tmpRealization.AmountSumJuridical - COALESCE(tmpCheckDel.AmountSumJuridical, 0), 2) ::TFloat
+             , ROUND(tmpRealization.AmountSum - COALESCE(tmpCheckDel.AmountSum, 0), 2) ::TFloat
+             , ROUND(COALESCE(tmpSPKind.SummChange, 0), 2) ::TFloat
+             , ROUND(COALESCE(tmpDiscount.SummChange, 0), 2) ::TFloat
+             , ROUND(COALESCE(tmpRealization.AmountSum, 0) + COALESCE(tmpSPKind.SummChange, 0) + COALESCE(tmpDiscount.SummChange, 0) - 
+                     COALESCE(tmpCheckDel.AmountSum, 0) - 
+                     COALESCE(tmpRealization.AmountSumJuridical, 0) + COALESCE(tmpCheckDel.AmountSumJuridical, 0), 2)::TFloat
 
              , ROUND(tmpRemains.Saldo, 2)::TFloat
              , ROUND(tmpRemains.SaldoSum, 2)::TFloat
@@ -354,7 +430,9 @@ BEGIN
              , ROUND(tmpWages.Amount + COALESCE (tmpGoodsSummaWages.Summa, 0) + COALESCE (tmpGoodsPercentWages.Summa, 0), 2)::TFloat
              , ROUND(COALESCE(tmpAdditionalExpenses.Amount, 0)::TFloat + COALESCE(tmpWagesRest.Amount, 0)::TFloat, 2)::TFloat
 
-             , ROUND(COALESCE(tmpRealization.AmountSum, 0)::TFloat + COALESCE(tmpSPKind.SummChange, 0)::TFloat - COALESCE(tmpRealization.AmountSumJuridical, 0)::TFloat -
+             , ROUND(COALESCE(tmpRealization.AmountSum, 0) + COALESCE(tmpSPKind.SummChange, 0) + COALESCE(tmpDiscount.SummChange, 0) - 
+                COALESCE(tmpCheckDel.AmountSum, 0) - 
+                COALESCE(tmpRealization.AmountSumJuridical, 0) + COALESCE(tmpCheckDel.AmountSumJuridical, 0) -
                 COALESCE(tmpWages.Amount, 0)::TFloat - COALESCE (tmpGoodsSummaWages.Summa, 0) - COALESCE (tmpGoodsPercentWages.Summa, 0) - 
                 COALESCE(tmpAdditionalExpenses.Amount, 0)::TFloat - COALESCE(tmpWagesRest.Amount, 0)::TFloat, 2) ::TFloat
         FROM tmpUnit
@@ -362,6 +440,8 @@ BEGIN
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUnit.UnitId
 
              LEFT JOIN tmpRealization ON tmpRealization.UnitID = Object_Unit.Id
+             
+             LEFT JOIN tmpCheckDel ON tmpCheckDel.UnitID = Object_Unit.Id
 
              LEFT JOIN tmpRemains ON tmpRemains.UnitID = Object_Unit.Id
 
@@ -373,6 +453,9 @@ BEGIN
              LEFT JOIN tmpAdditionalExpenses ON tmpAdditionalExpenses.UnitID = Object_Unit.Id
 
              LEFT JOIN tmpSPKind ON tmpSPKind.UnitID = Object_Unit.Id
+             
+             LEFT JOIN tmpDiscount ON tmpDiscount.UnitID = Object_Unit.Id
+             
         WHERE tmpRealization.AmountSumJuridical <> 0
            OR tmpRealization.AmountSum <> 0
            OR tmpWages.Amount <> 0
@@ -392,3 +475,5 @@ $BODY$
 
 -- тест
 -- select * from gpReport_Profitability(inDateStart := ('01.04.2020')::TDateTime , inDateFinal := ('30.06.2020')::TDateTime , inUnitId := 3457773 , inisNoStaticCodes := False,  inSession := '3');
+
+select * from gpReport_Profitability(inDateStart := ('01.03.2021')::TDateTime , inDateFinal := ('31.03.2021')::TDateTime , inUnitId := 377610 , inisNoStaticCodes := 'True' ,  inSession := '3');

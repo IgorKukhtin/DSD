@@ -6706,7 +6706,8 @@ begin
   if not CharInSet(Key, ['-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
     '/', FormatSettings.DecimalSeparator, #8]) or
     CharInSet(Key, ['/', FormatSettings.DecimalSeparator]) and
-    ((Pos(FormatSettings.DecimalSeparator, edAmount.Text) > 0) or
+    ((Pos(FormatSettings.DecimalSeparator, edAmount.Text) > 0) and
+    (Pos(FormatSettings.DecimalSeparator, edAmount.SelText) = 0) or
     (Pos('/', edAmount.Text) > 0)) or (Key = '-') and (edAmount.SelStart <> 0)
     or (Pos(FormatSettings.DecimalSeparator, edAmount.Text) > 0) and
     CharInSet(Key, ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']) and

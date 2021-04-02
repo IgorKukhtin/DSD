@@ -503,7 +503,7 @@ object ProductEditForm: TProductEditForm
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     Properties.ReadOnly = True
-    TabOrder = 64
+    TabOrder = 63
     Width = 114
   end
   object cxLabel28: TcxLabel
@@ -526,6 +526,34 @@ object ProductEditForm: TProductEditForm
     Properties.ReadOnly = True
     TabOrder = 68
     Width = 66
+  end
+  object cxLabel30: TcxLabel
+    Left = 331
+    Top = 425
+    Caption = #1054#1089#1090'. '#1082' '#1086#1087#1083#1072#1090#1077
+  end
+  object edAmountIn_rem: TcxCurrencyEdit
+    Left = 331
+    Top = 443
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    Properties.ReadOnly = True
+    TabOrder = 70
+    Width = 114
+  end
+  object edAmountIn_remAll: TcxCurrencyEdit
+    Left = 456
+    Top = 443
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    Properties.ReadOnly = True
+    TabOrder = 71
+    Width = 114
+  end
+  object cxLabel31: TcxLabel
+    Left = 456
+    Top = 427
+    Caption = #1054#1089#1090'. '#1082' '#1086#1087#1083#1072#1090#1077' ('#1080#1090#1086#1075#1086')'
   end
   object ActionList: TActionList
     Left = 232
@@ -1274,6 +1302,20 @@ object ProductEditForm: TProductEditForm
         Value = Null
         Component = FormParams
         ComponentItem = 'inMovementId_Invoice'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountIn_rem'
+        Value = Null
+        Component = edAmountIn_rem
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountIn_remAll'
+        Value = Null
+        Component = edAmountIn_remAll
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

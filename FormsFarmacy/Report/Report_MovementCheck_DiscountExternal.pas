@@ -42,6 +42,7 @@ type
     DiscountCardName: TcxGridDBColumn;
     DiscountExternalName: TcxGridDBColumn;
     FromName: TcxGridDBColumn;
+    PriceWithVAT: TcxGridDBColumn;
   private
     { Private declarations }
   public

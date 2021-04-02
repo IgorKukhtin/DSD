@@ -36,6 +36,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , AmountIn_InvoiceAll TFloat
              , AmountIn_BankAccount TFloat
              , AmountIn_BankAccountAll TFloat
+             , AmountIn_rem  TFloat
+             , AmountIn_remAll  TFloat
               ) AS
 $BODY$
 BEGIN
@@ -259,7 +261,9 @@ BEGIN
          
          , tmpBankAccount_First.AmountIn ::TFloat AS AmountIn_BankAccount
          , tmpBankAccount.AmountIn       ::TFloat AS AmountIn_BankAccountAll
-         
+
+         , (COALESCE (tmpInvoice_First.AmountIn,0) - COALESCE (tmpBankAccount_First.AmountIn,0)) ::TFloat AS AmountIn_rem
+         , (COALESCE (tmpInvoice.AmountIn,0) - COALESCE (tmpBankAccount.AmountIn,0))             ::TFloat AS AmountIn_remAll
          
      FROM Object AS Object_Product
           LEFT JOIN ObjectBoolean AS ObjectBoolean_BasicConf

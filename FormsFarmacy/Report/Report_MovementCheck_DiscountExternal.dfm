@@ -135,6 +135,15 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
             Options.Editing = False
             Width = 68
           end
+          object PriceWithVAT: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'PriceWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
+          end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
             DataBinding.FieldName = 'Price'
@@ -165,14 +174,14 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
             Options.Editing = False
           end
           object SummChangePercent: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080
+            Caption = #1041#1091#1076#1091#1097#1072#1103' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103
             DataBinding.FieldName = 'SummChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 79
+            Width = 87
           end
           object DiscountExternalName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1055#1088#1086#1077#1082#1090#1072
@@ -337,7 +346,7 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -451,7 +460,7 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
     Params = <
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -459,7 +468,7 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

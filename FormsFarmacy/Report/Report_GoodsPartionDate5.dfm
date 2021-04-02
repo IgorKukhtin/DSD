@@ -107,6 +107,14 @@ inherited Report_GoodsPartionDate5Form: TReport_GoodsPartionDate5Form
             HeaderAlignmentVert = vaCenter
             Width = 83
           end
+          object TransferDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1074#1086#1076#1072' '#1074' 5 '#1082#1072#1090#1077#1075#1086#1088#1080#1102
+            DataBinding.FieldName = 'TransferDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 134
+          end
         end
       end
     end
