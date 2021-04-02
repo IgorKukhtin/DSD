@@ -101,7 +101,8 @@
                                    FROM tmpContainer_term
                                    LEFT JOIN tmpContainer_Send ON tmpContainer_Send.ContainerId = tmpContainer_term.ContainerId
                                     -- !!!ограничили!!!
-                                   WHERE COALESCE(tmpContainer_Send.ExpirationDateIn, tmpContainer_term.ExpirationDate) <= vbDate180
+                                   WHERE (COALESCE(tmpContainer_Send.ExpirationDateIn, zc_DateEnd()) <= vbDate180 
+                                       OR COALESCE (tmpContainer_term.ExpirationDate, zc_DateEnd()) <= vbDate180)
                                   ) AS tmpContainer
                                   LEFT JOIN tmpContainer_term        ON tmpContainer_term.ContainerId = tmpContainer.ContainerId
                             )

@@ -151,6 +151,7 @@ type
     FinalSUA: TcxGridDBColumn;
     FinalSUASend: TcxGridDBColumn;
     spPUSHSUA: TdsdStoredProc;
+    DiscountJuridical: TcxGridDBColumn;
   private
     { Private declarations }
   public

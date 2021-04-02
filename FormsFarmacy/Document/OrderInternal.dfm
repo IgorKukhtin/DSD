@@ -861,6 +861,14 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 88
           end
+          object DiscountJuridical: TcxGridDBColumn
+            Caption = #1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1087#1086#1089'-'#1082#1080' '#1044#1080#1089#1082#1086#1085#1090' '#1087#1088#1086#1077#1082#1090#1072
+            DataBinding.FieldName = 'DiscountJuridical'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 141
+          end
           object AmountSUA: TcxGridDBColumn
             Caption = #1042' '#1079#1072#1082#1072#1079' '#1087#1086' '#1057#1059#1040
             DataBinding.FieldName = 'AmountSUA'
@@ -2708,6 +2716,7 @@ inherited OrderInternalForm: TOrderInternalForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ValueColumn = colPartionGoodsDateColor

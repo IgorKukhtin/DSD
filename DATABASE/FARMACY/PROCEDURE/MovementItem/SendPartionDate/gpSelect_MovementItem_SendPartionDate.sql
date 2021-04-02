@@ -190,6 +190,7 @@ BEGIN
                                             WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) > vbOperDate AND COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate30 THEN zc_Enum_PartionDateKind_1()
                                             WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) > vbDate30 AND COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate90 THEN zc_Enum_PartionDateKind_3()
                                             WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) > vbDate90   AND COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate180 THEN zc_Enum_PartionDateKind_6()
+                                            WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) > vbDate180   AND COALESCE (MIDate_ExpirationDate_in.ValueData, zc_DateEnd()) <= vbDate180 THEN zc_Enum_PartionDateKind_Good()
                                             ELSE 0
                                        END                                    AS PartionDateKindId
 
