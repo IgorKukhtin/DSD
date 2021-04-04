@@ -171,7 +171,7 @@ BEGIN
                                  -- !!!отбросили!!!
                                  LEFT JOIN tmpContainer_PartionDate ON tmpContainer_PartionDate.ContainerId = tmpContainer_term.ContainerId
                                  -- !!!ограничили!!!
-                                 WHERE COALESCE(tmpContainer_term.ExpirationDateIn, tmpContainer_term.ExpirationDate) <= vbDate180
+                                 WHERE (tmpContainer_term.ExpirationDateIn <= vbDate180 OR tmpContainer_term.ExpirationDate <= vbDate180)
                                    AND tmpContainer_PartionDate.ContainerId IS NULL 
                                 ) AS tmpContainer
                                 LEFT JOIN tmpContainer_term        ON tmpContainer_term.GoodsId = tmpContainer.GoodsId
@@ -247,7 +247,8 @@ BEGIN
                         -- только просрочка
                       , SUM (CASE WHEN tmpRemains.ExpirationDate <= vbDate180
                                    AND tmpRemains.ExpirationDate > zc_DateStart()
-                                -- AND tmpRemains.ExpirationDate > CURRENT_DATE - INTERVAL '3 YEAR'
+                                    OR tmpRemains.ExpirationDateIncome <= vbDate180
+                                   AND tmpRemains.ExpirationDateIncome > zc_DateStart()
                                        THEN tmpRemains.Amount
                                   ELSE 0
                              END) AS Amount

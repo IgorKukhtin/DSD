@@ -104,6 +104,7 @@ RETURNS TABLE (Id                    Integer
              , isDefault             Boolean
              
              , DiscountName          TVarChar
+             , DiscountJuridical     TVarChar
              
              , AmountSUA             TFloat
              , FinalSUA              TFloat
@@ -216,7 +217,7 @@ BEGIN
       AND inSession <> '3'
     THEN
 
---     raise notice 'Value: %', 1;
+     raise notice 'Value: %', 1;
 
      PERFORM lpCreateTempTable_OrderInternal_MI(inMovementId, vbObjectId, 0, vbUserId);
 
@@ -409,13 +410,46 @@ BEGIN
                                                      ON MIFloat_PriceOptSP.MovementItemId = tmp.MovementItemId
                                                     AND MIFloat_PriceOptSP.DescId = zc_MIFloat_PriceOptSP()
                        )
+      -- Дисконтные программы подразделения
+      , tmpDiscountJuridical AS (SELECT ObjectLink_DiscountExternal.ChildObjectId     AS DiscountExternalId
+                                      , STRING_AGG(CASE WHEN ObjectLink_Juridical.ChildObjectId = 59611 
+                                                        THEN 'Оптима' 
+                                                        ELSE Object_Juridical.ValueData END, ', ')  AS JuridicalName
+                                 FROM Object AS Object_DiscountExternalSupplier
+                                      LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
+                                                           ON ObjectLink_DiscountExternal.ObjectId = Object_DiscountExternalSupplier.Id
+                                                          AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountExternalSupplier_DiscountExternal()
 
-     -- Товары дисконтной программы
-     , tmpGoodsDiscount AS (SELECT 
+                                       LEFT JOIN ObjectLink AS ObjectLink_Juridical
+                                                            ON ObjectLink_Juridical.ObjectId = Object_DiscountExternalSupplier.Id
+                                                           AND ObjectLink_Juridical.DescId = zc_ObjectLink_DiscountExternalSupplier_Juridical()
+                                       LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Juridical.ChildObjectId
+
+                                  WHERE Object_DiscountExternalSupplier.DescId = zc_Object_DiscountExternalSupplier()
+                                    AND Object_DiscountExternalSupplier.isErased = FALSE
+                                  GROUP BY ObjectLink_DiscountExternal.ChildObjectId )
+      -- Дисконтные программы подразделения
+      , tmpUnitDiscount AS (SELECT ObjectLink_DiscountExternal.ChildObjectId     AS DiscountExternalId
+                                 , tmpDiscountJuridical.JuridicalName::TVarChar  AS JuridicalName
+                            FROM Object AS Object_DiscountExternalTools
+                                  LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
+                                                       ON ObjectLink_DiscountExternal.ObjectId = Object_DiscountExternalTools.Id
+                                                      AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountExternalTools_DiscountExternal()
+                                  LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                       ON ObjectLink_Unit.ObjectId = Object_DiscountExternalTools.Id
+                                                      AND ObjectLink_Unit.DescId = zc_ObjectLink_DiscountExternalTools_Unit()
+                                  LEFT JOIN tmpDiscountJuridical ON tmpDiscountJuridical.DiscountExternalId = ObjectLink_DiscountExternal.ChildObjectId
+                             WHERE Object_DiscountExternalTools.DescId = zc_Object_DiscountExternalTools()
+                               AND ObjectLink_Unit.ChildObjectId = vbUnitId
+                               AND Object_DiscountExternalTools.isErased = False
+                             )
+      -- Товары дисконтной программы
+      , tmpGoodsDiscount AS (SELECT 
                                    Object_Goods_Retail.GoodsMainId
                                            
                                  , Object_Object.Id                AS ObjectId
                                  , Object_Object.ValueData         AS DiscountName 
+                                 , tmpUnitDiscount.JuridicalName   AS DiscountJuridical
                                  
                              FROM Object AS Object_BarCode
                                  LEFT JOIN ObjectLink AS ObjectLink_BarCode_Goods
@@ -428,10 +462,12 @@ BEGIN
                                                      AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
                                  LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId           
 
+                                 LEFT JOIN tmpUnitDiscount ON tmpUnitDiscount.DiscountExternalId = ObjectLink_BarCode_Object.ChildObjectId 
 
                              WHERE Object_BarCode.DescId = zc_Object_BarCode()
                                AND Object_BarCode.isErased = False
                                AND Object_Object.isErased = False
+                               AND COALESCE (tmpUnitDiscount.DiscountExternalId, 0) <> 0
                       )
 
       , tmpGoodsMain AS (SELECT tmpMI.GoodsId
@@ -442,6 +478,7 @@ BEGIN
                               , DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData)                   ::TDateTime  AS LastPriceDate
                               , COALESCE (ObjectFloat_CountPrice.ValueData,0) ::TFloat AS CountPrice
                               , tmpGoodsDiscount.DiscountName
+                              , tmpGoodsDiscount.DiscountJuridical
                          FROM  _tmpOrderInternal_MI AS tmpMI
                                 -- получаем GoodsMainId
                                 LEFT JOIN  ObjectLink AS ObjectLink_Child
@@ -485,6 +522,7 @@ BEGIN
                        , tmpGoodsMain.LastPriceDate
                        , tmpGoodsMain.CountPrice
                        , tmpGoodsMain.DiscountName
+                       , tmpGoodsMain.DiscountJuridical
 
                   FROM  _tmpOrderInternal_MI AS tmpMI
 
@@ -964,6 +1002,7 @@ BEGIN
            , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean        AS isDefault
 
            , tmpMI.DiscountName
+           , tmpMI.DiscountJuridical
            
            , tmpMI.AmountSUA                                                 AS AmountSUA
            , tmpFinalSUAList.FinalSUA::TFloat                                AS FinalSUA
@@ -1026,7 +1065,7 @@ BEGIN
     THEN
 
 
---      raise notice 'Value: %', 2;
+      raise notice 'Value: %', 2;
 
 --    PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, 0, vbUserId);
 
@@ -2150,29 +2189,65 @@ BEGIN
                                                     AND MIFloat_PriceOptSP.DescId = zc_MIFloat_PriceOptSP()
                        )
 
-       -- Товары дисконтной программы
-       , tmpGoodsDiscount AS (SELECT 
-                                     Object_Goods_Retail.GoodsMainId
-                                             
-                                   , Object_Object.Id                AS ObjectId
-                                   , Object_Object.ValueData         AS DiscountName 
-                                   
-                               FROM Object AS Object_BarCode
-                                   LEFT JOIN ObjectLink AS ObjectLink_BarCode_Goods
-                                                        ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
-                                                       AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
-                                   LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = ObjectLink_BarCode_Goods.ChildObjectId
-                                   
-                                   LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
-                                                        ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
-                                                       AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
-                                   LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId           
+      -- Дисконтные программы подразделения
+      , tmpDiscountJuridical AS (SELECT ObjectLink_DiscountExternal.ChildObjectId     AS DiscountExternalId
+                                      , STRING_AGG(CASE WHEN ObjectLink_Juridical.ChildObjectId = 59611 
+                                                        THEN 'Оптима' 
+                                                        ELSE Object_Juridical.ValueData END, ', ')  AS JuridicalName
+                                 FROM Object AS Object_DiscountExternalSupplier
+                                      LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
+                                                           ON ObjectLink_DiscountExternal.ObjectId = Object_DiscountExternalSupplier.Id
+                                                          AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountExternalSupplier_DiscountExternal()
 
+                                       LEFT JOIN ObjectLink AS ObjectLink_Juridical
+                                                            ON ObjectLink_Juridical.ObjectId = Object_DiscountExternalSupplier.Id
+                                                           AND ObjectLink_Juridical.DescId = zc_ObjectLink_DiscountExternalSupplier_Juridical()
+                                       LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Juridical.ChildObjectId
 
-                               WHERE Object_BarCode.DescId = zc_Object_BarCode()
-                                 AND Object_BarCode.isErased = False
-                                 AND Object_Object.isErased = False
-                        )
+                                  WHERE Object_DiscountExternalSupplier.DescId = zc_Object_DiscountExternalSupplier()
+                                    AND Object_DiscountExternalSupplier.isErased = FALSE
+                                  GROUP BY ObjectLink_DiscountExternal.ChildObjectId )
+      -- Дисконтные программы подразделения
+      , tmpUnitDiscount AS (SELECT ObjectLink_DiscountExternal.ChildObjectId     AS DiscountExternalId
+                                 , tmpDiscountJuridical.JuridicalName::TVarChar  AS JuridicalName
+                            FROM Object AS Object_DiscountExternalTools
+                                  LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
+                                                       ON ObjectLink_DiscountExternal.ObjectId = Object_DiscountExternalTools.Id
+                                                      AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountExternalTools_DiscountExternal()
+                                  LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                       ON ObjectLink_Unit.ObjectId = Object_DiscountExternalTools.Id
+                                                      AND ObjectLink_Unit.DescId = zc_ObjectLink_DiscountExternalTools_Unit()
+                                  LEFT JOIN tmpDiscountJuridical ON tmpDiscountJuridical.DiscountExternalId = ObjectLink_DiscountExternal.ChildObjectId
+                             WHERE Object_DiscountExternalTools.DescId = zc_Object_DiscountExternalTools()
+                               AND ObjectLink_Unit.ChildObjectId = vbUnitId
+                               AND Object_DiscountExternalTools.isErased = False
+                             )
+      -- Товары дисконтной программы
+      , tmpGoodsDiscount AS (SELECT 
+                                   Object_Goods_Retail.GoodsMainId
+                                           
+                                 , Object_Object.Id                AS ObjectId
+                                 , Object_Object.ValueData         AS DiscountName 
+                                 , tmpUnitDiscount.JuridicalName   AS DiscountJuridical
+                                 
+                             FROM Object AS Object_BarCode
+                                 LEFT JOIN ObjectLink AS ObjectLink_BarCode_Goods
+                                                      ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
+                                                     AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
+                                 LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = ObjectLink_BarCode_Goods.ChildObjectId
+                                 
+                                 LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
+                                                      ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
+                                                     AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
+                                 LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId           
+
+                                 LEFT JOIN tmpUnitDiscount ON tmpUnitDiscount.DiscountExternalId = ObjectLink_BarCode_Object.ChildObjectId 
+
+                             WHERE Object_BarCode.DescId = zc_Object_BarCode()
+                               AND Object_BarCode.isErased = False
+                               AND Object_Object.isErased = False
+                               AND COALESCE (tmpUnitDiscount.DiscountExternalId, 0) <> 0
+                      )
       , tmpGoodsMain AS (SELECT tmpMI.GoodsId                                                           AS GoodsId
                               , COALESCE (tmpGoodsSP.isSP, False)                             ::Boolean AS isSP
                               , COALESCE (ObjectBoolean_Resolution_224.ValueData, False)      ::Boolean AS isResolution_224
@@ -2181,6 +2256,7 @@ BEGIN
                               , DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData)          ::TDateTime AS LastPriceDate
                               , COALESCE (ObjectFloat_CountPrice.ValueData,0)               ::TFloat    AS CountPrice
                               , tmpGoodsDiscount.DiscountName
+                              , tmpGoodsDiscount.DiscountJuridical
                          FROM tmpGoodsId AS tmpMI
                                 -- получаем GoodsMainId
                                 LEFT JOIN ObjectLink AS ObjectLink_Child
@@ -2677,6 +2753,7 @@ BEGIN
            , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean     AS isDefault
 
            , tmpGoodsMain.DiscountName
+           , tmpGoodsMain.DiscountJuridical
 
            , tmpMI.AmountSUA                                              AS AmountSUA
            , tmpFinalSUAList.FinalSUA::TFloat                             AS FinalSUA
@@ -2735,7 +2812,7 @@ BEGIN
     THEN
 
 
---    raise notice 'Value: %', 3;
+    raise notice 'Value: %', 3;
 
 --    PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, 0, vbUserId);
 
@@ -3822,12 +3899,46 @@ BEGIN
                                                     AND MIFloat_PriceOptSP.DescId = zc_MIFloat_PriceOptSP()
                        )
 
-     -- Товары дисконтной программы
-     , tmpGoodsDiscount AS (SELECT 
+      -- Дисконтные программы подразделения
+      , tmpDiscountJuridical AS (SELECT ObjectLink_DiscountExternal.ChildObjectId     AS DiscountExternalId
+                                      , STRING_AGG(CASE WHEN ObjectLink_Juridical.ChildObjectId = 59611 
+                                                        THEN 'Оптима' 
+                                                        ELSE Object_Juridical.ValueData END, ', ')  AS JuridicalName
+                                 FROM Object AS Object_DiscountExternalSupplier
+                                      LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
+                                                           ON ObjectLink_DiscountExternal.ObjectId = Object_DiscountExternalSupplier.Id
+                                                          AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountExternalSupplier_DiscountExternal()
+
+                                       LEFT JOIN ObjectLink AS ObjectLink_Juridical
+                                                            ON ObjectLink_Juridical.ObjectId = Object_DiscountExternalSupplier.Id
+                                                           AND ObjectLink_Juridical.DescId = zc_ObjectLink_DiscountExternalSupplier_Juridical()
+                                       LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Juridical.ChildObjectId
+
+                                  WHERE Object_DiscountExternalSupplier.DescId = zc_Object_DiscountExternalSupplier()
+                                    AND Object_DiscountExternalSupplier.isErased = FALSE
+                                  GROUP BY ObjectLink_DiscountExternal.ChildObjectId )
+      -- Дисконтные программы подразделения
+      , tmpUnitDiscount AS (SELECT ObjectLink_DiscountExternal.ChildObjectId     AS DiscountExternalId
+                                 , tmpDiscountJuridical.JuridicalName::TVarChar  AS JuridicalName
+                            FROM Object AS Object_DiscountExternalTools
+                                  LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
+                                                       ON ObjectLink_DiscountExternal.ObjectId = Object_DiscountExternalTools.Id
+                                                      AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountExternalTools_DiscountExternal()
+                                  LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                       ON ObjectLink_Unit.ObjectId = Object_DiscountExternalTools.Id
+                                                      AND ObjectLink_Unit.DescId = zc_ObjectLink_DiscountExternalTools_Unit()
+                                  LEFT JOIN tmpDiscountJuridical ON tmpDiscountJuridical.DiscountExternalId = ObjectLink_DiscountExternal.ChildObjectId
+                             WHERE Object_DiscountExternalTools.DescId = zc_Object_DiscountExternalTools()
+                               AND ObjectLink_Unit.ChildObjectId = vbUnitId
+                               AND Object_DiscountExternalTools.isErased = False
+                             )
+      -- Товары дисконтной программы
+      , tmpGoodsDiscount AS (SELECT 
                                    Object_Goods_Retail.GoodsMainId
                                            
                                  , Object_Object.Id                AS ObjectId
                                  , Object_Object.ValueData         AS DiscountName 
+                                 , tmpUnitDiscount.JuridicalName   AS DiscountJuridical
                                  
                              FROM Object AS Object_BarCode
                                  LEFT JOIN ObjectLink AS ObjectLink_BarCode_Goods
@@ -3840,12 +3951,13 @@ BEGIN
                                                      AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
                                  LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId           
 
+                                 LEFT JOIN tmpUnitDiscount ON tmpUnitDiscount.DiscountExternalId = ObjectLink_BarCode_Object.ChildObjectId 
 
                              WHERE Object_BarCode.DescId = zc_Object_BarCode()
                                AND Object_BarCode.isErased = False
                                AND Object_Object.isErased = False
+                               AND COALESCE (tmpUnitDiscount.DiscountExternalId, 0) <> 0
                       )
-
       , tmpGoodsMain AS (SELECT tmpMI.GoodsId                                                           AS GoodsId
                               , COALESCE (tmpGoodsSP.isSP, False)                             ::Boolean AS isSP
                               , COALESCE (ObjectBoolean_Resolution_224.ValueData, False)      ::Boolean AS isResolution_224 
@@ -3854,6 +3966,7 @@ BEGIN
                               , DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData)          ::TDateTime AS LastPriceDate
                               , COALESCE (ObjectFloat_CountPrice.ValueData,0)               ::TFloat    AS CountPrice
                               , tmpGoodsDiscount.DiscountName
+                              , tmpGoodsDiscount.DiscountJuridical
                          FROM tmpGoodsId AS tmpMI
                                 -- получаем GoodsMainId
                                 LEFT JOIN ObjectLink AS ObjectLink_Child
@@ -4344,6 +4457,7 @@ BEGIN
            , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean     AS isDefault
            
            , tmpGoodsMain.DiscountName
+           , tmpGoodsMain.DiscountJuridical
 
            , tmpMI.AmountSUA                                              AS AmountSUA
            , tmpFinalSUAList.FinalSUA::TFloat                             AS FinalSUA
@@ -4474,4 +4588,6 @@ where Movement.DescId = zc_Movement_OrderInternal()
 
 -- select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 22029712   , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
 
-select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 22630094  , inShowAll := 'True' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
+-- select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 22630094  , inShowAll := 'True' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
+
+select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 22775034 , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
