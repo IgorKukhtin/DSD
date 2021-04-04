@@ -143,6 +143,11 @@ type
     edRoute: TcxButtonEdit;
     GuidesRoute: TdsdGuides;
     PersonalMerchChoiceForm: TOpenChoiceForm;
+    PersonalTradeCode: TcxGridDBColumn;
+    PersonalCode: TcxGridDBColumn;
+    PersonalMerchCode: TcxGridDBColumn;
+    BranchName_PersonalTrade: TcxGridDBColumn;
+    UnitName_PersonalTrade: TcxGridDBColumn;
   private
     { Private declarations }
   public

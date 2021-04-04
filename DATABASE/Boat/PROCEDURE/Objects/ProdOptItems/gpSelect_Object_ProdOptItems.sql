@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ProdOptItems(
     IN inIsSale      Boolean,       -- признак показать проданные да / нет
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (MovementId_OrderClient Integer
+             , Id Integer, Code Integer, Name TVarChar
              , NPP Integer
              , PartNumber TVarChar, Comment TVarChar
              , KeyId TVarChar
@@ -31,6 +32,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MeasureName TVarChar
                -- % скидки
              , DiscountTax    TFloat
+               -- % НДС Заказ клиента
+             , VATPercent     TFloat
                -- Цена вх. без НДС
              , EKPrice        TFloat
                --
@@ -456,7 +459,8 @@ BEGIN
                      )
      -- Результат
      SELECT
-           tmpRes.Id
+           tmpRes.MovementId_OrderClient
+         , tmpRes.Id
          , tmpRes.Code
          , tmpRes.Name
          , ROW_NUMBER() OVER (PARTITION BY tmpProduct.Id ORDER BY CASE WHEN tmpRes.Id > 0 THEN 0 ELSE 1 END, tmpRes.Id ASC, Object_ProdOptions.ObjectCode ASC) :: Integer AS NPP
@@ -492,6 +496,7 @@ BEGIN
          , tmpGoods.MeasureName
 
          , tmpRes.DiscountTax    ::TFloat    AS DiscountTax
+         , tmpRes.VATPercent     ::TFloat    AS VATPercent
 
            -- Цена вх.
          , tmpRes.EKPrice                        :: TFloat AS EKPrice
@@ -551,5 +556,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ProdOptItems (false, false, zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_Object_ProdOptItems (true, false,true, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ProdOptItems (false, false, false, zfCalc_UserAdmin())

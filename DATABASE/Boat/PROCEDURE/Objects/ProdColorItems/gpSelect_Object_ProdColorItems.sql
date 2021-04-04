@@ -10,7 +10,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ProdColorItems(
     IN inIsSale      Boolean,       -- признак показать проданные да / нет
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (MovementId_OrderClient Integer
+             , Id Integer, Code Integer, Name TVarChar
              , NPP Integer
              , Comment TVarChar
 
@@ -282,7 +283,8 @@ BEGIN
 
      -- Результат
      SELECT
-           Object_ProdColorItems.Id    AS Id
+           Object_ProdColorItems.MovementId_OrderClient
+         , Object_ProdColorItems.Id    AS Id
          , Object_ProdColorItems.Code  AS Code
          , Object_ProdColorItems.Name  AS Name
          , ROW_NUMBER() OVER (PARTITION BY Object_Product.Id ORDER BY Object_ProdColorPattern.ObjectCode ASC, Object_ProdColorPattern.Id ASC) :: Integer AS NPP

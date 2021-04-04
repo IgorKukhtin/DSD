@@ -17,8 +17,8 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_FileTypeKind_ODBC(), inDescId:= zc_Object_FileTypeKind(), inCode:= 4, inName:= 'ODBC', inEnumName:= 'zc_Enum_FileTypeKind_ODBC');
 
      -- !!! Типы НДС
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_TaxKind_Basis(),  inDescId:= zc_Object_TaxKind(), inCode:= 1, inName:= 'Базовый', inEnumName:= 'zc_Enum_TaxKind_Basis');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_TaxKind_(), inDescId:= zc_Object_TaxKind(), inCode:= 2, inName:= 'Другой', inEnumName:= 'zc_Enum_TaxKind_');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_TaxKind_Basis(), inDescId:= zc_Object_TaxKind(), inCode:= 1, inName:= 'Базовый', inEnumName:= 'zc_Enum_TaxKind_Basis');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_TaxKind_Other(), inDescId:= zc_Object_TaxKind(), inCode:= 2, inName:= 'Другой', inEnumName:= 'zc_Enum_TaxKind_Other');
      -- PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_NDSKind_NDS(), zc_Enum_TaxKind_Basis(), 16);
      --PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_NDSKind_NDS(), zc_Enum_TaxKind_(), 5);
 

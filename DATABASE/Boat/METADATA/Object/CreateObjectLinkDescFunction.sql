@@ -105,10 +105,6 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Product_ReceiptProdModel() RETURNS Inte
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Product_ReceiptProdModel', 'Шаблон сборка Модели', zc_Object_Product(), zc_Object_ReceiptProdModel() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Product_ReceiptProdModel');
 
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Product_Client() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Product_Client'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
-SELECT 'zc_ObjectLink_Product_Client', 'Клиент', zc_Object_Product(), zc_Object_Client() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Product_Client');
-
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_ProdColorItems_Product() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdColorItems_Product'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)

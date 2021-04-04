@@ -165,11 +165,7 @@ type
     ReceiptProdModelName: TcxGridDBColumn;
     DiscountTax_ch2: TcxGridDBColumn;
     EKPrice_summ_ch1: TcxGridDBColumn;
-    EKPriceWVAT_summ_ch1: TcxGridDBColumn;
-    Basis_summ_ch1: TcxGridDBColumn;
-    BasisWVAT_summ_ch1: TcxGridDBColumn;
     EKPrice_summ_ch2: TcxGridDBColumn;
-    EKPriceWVAT_summ_ch2: TcxGridDBColumn;
     Sale_summ_ch2: TcxGridDBColumn;
     SaleWVAT_summ_ch2: TcxGridDBColumn;
     SummDiscount1: TcxGridDBColumn;
@@ -194,6 +190,9 @@ type
     bb: TdxBarButton;
     InfoMoneyName_Client: TcxGridDBColumn;
     TaxKind_Value_Client: TcxGridDBColumn;
+    KeyId: TcxGridDBColumn;
+    Basis_summ1_orig: TcxGridDBColumn;
+    Basis_summ2_orig: TcxGridDBColumn;
   private
     { Private declarations }
   public

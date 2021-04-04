@@ -1,8 +1,10 @@
 -- Function: gpSelect_Movement_Sale_Email_list(TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_Email_list (TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_Email_list (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_Email_list (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_Email_list(
+    IN inIsExcel              Boolean,    -- сессия пользователя
     IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer
@@ -31,13 +33,14 @@ BEGIN
                                     -- только для этого
                                     WHERE tmp.ExportKindId IN (zc_Enum_ExportKind_Glad2514900150()
                                                               )
+                                      AND inIsExcel = FALSE
                                    UNION
                                     SELECT DISTINCT tmp.PartnerId, tmp.ExportKindId
                                     FROM lpSelect_Object_ExportJuridical_list() AS tmp
                                     -- только для этого
                                     WHERE tmp.ExportKindId IN (zc_Enum_ExportKind_Logistik41750857()
                                                               )
-                                      AND inSession = '5'
+                                      AND inIsExcel = TRUE
                                    )
                   , tmpMovement AS (SELECT Movement.Id AS MovementId
                                          , Movement.InvNumber

@@ -104,6 +104,16 @@ object PartnerForm: TPartnerForm
         Options.Editing = False
         Width = 46
       end
+      object PersonalCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1089#1091#1087#1077#1088#1074'.'
+        DataBinding.FieldName = 'PersonalCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1076' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088')'
+        Options.Editing = False
+        Width = 55
+      end
       object PersonalName: TcxGridDBColumn
         Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088')'
         DataBinding.FieldName = 'PersonalName'
@@ -119,6 +129,16 @@ object PartnerForm: TPartnerForm
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
+      object PersonalTradeCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1058#1055
+        DataBinding.FieldName = 'PersonalTradeCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1076' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1058#1055')'
+        Options.Editing = False
+        Width = 55
+      end
       object PersonalTradeName: TcxGridDBColumn
         Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1058#1055')'
         DataBinding.FieldName = 'PersonalTradeName'
@@ -133,6 +153,35 @@ object PartnerForm: TPartnerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 120
+      end
+      object BranchName_PersonalTrade: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083' '#1058#1055
+        DataBinding.FieldName = 'BranchName_PersonalTrade'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1060#1080#1083#1080#1072#1083' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1058#1055')'
+        Options.Editing = False
+        Width = 80
+      end
+      object UnitName_PersonalTrade: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1058#1055
+        DataBinding.FieldName = 'UnitName_PersonalTrade'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1058#1055')'
+        Options.Editing = False
+        Width = 80
+      end
+      object PersonalMerchCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1084#1077#1088#1095'.'
+        DataBinding.FieldName = 'PersonalMerchCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1076' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1084#1077#1088#1095#1072#1085#1076#1072#1081#1079#1077#1088')'
+        Options.Editing = False
+        Width = 55
       end
       object PersonalMerchName: TcxGridDBColumn
         Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1084#1077#1088#1095#1072#1085#1076#1072#1081#1079#1077#1088')'
@@ -1758,6 +1807,8 @@ object PartnerForm: TPartnerForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 464
     Top = 288
   end

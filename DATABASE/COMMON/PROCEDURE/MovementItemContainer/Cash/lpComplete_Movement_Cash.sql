@@ -666,7 +666,7 @@ BEGIN
        ;
 
      -- Проверка
-     IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.IsMaster = FALSE AND _tmpItem.ObjectDescId = 0)
+     IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.IsMaster = FALSE AND _tmpItem.ObjectDescId = 0 AND _tmpItem.InfoMoneyGroupId <> zc_Enum_InfoMoneyGroup_70000())
         AND EXISTS (SELECT 1 FROM ObjectBoolean
                     WHERE ObjectBoolean.DescId = zc_ObjectBoolean_InfoMoney_ProfitLoss()
                       AND ObjectBoolean.ValueData = FALSE
@@ -674,6 +674,13 @@ BEGIN
                     )
      THEN
          RAISE EXCEPTION 'Ошибка.Для статьи <%> нельзя проводить затраты по оплате.Необходимо заполнить <От кого, кому>.'
+                        , lfGet_Object_ValueData_sh ((SELECT _tmpItem.InfoMoneyId FROM _tmpItem WHERE _tmpItem.IsMaster = FALSE AND _tmpItem.ObjectDescId = 0 AND _tmpItem.InfoMoneyId > 0 LIMIT 1))
+                         ;
+     END IF;
+     -- Проверка
+     IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.IsMaster = FALSE AND _tmpItem.ObjectDescId = 0 AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() AND _tmpItem.ProfitLossGroupId = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Для статьи <%>.Необходимо заполнить <Подразделение>.'
                         , lfGet_Object_ValueData_sh ((SELECT _tmpItem.InfoMoneyId FROM _tmpItem WHERE _tmpItem.IsMaster = FALSE AND _tmpItem.ObjectDescId = 0 AND _tmpItem.InfoMoneyId > 0 LIMIT 1))
                          ;
      END IF;

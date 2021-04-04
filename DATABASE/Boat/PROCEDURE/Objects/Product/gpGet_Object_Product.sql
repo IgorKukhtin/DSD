@@ -102,6 +102,11 @@ BEGIN
            , CAST (0 AS TFloat)        AS AmountIn_InvoiceAll
            , CAST (0 AS TFloat)        AS AmountIn_BankAccount
            , CAST (0 AS TFloat)        AS AmountIn_BankAccountAll
+
+           , CAST (0 AS TFloat)        AS AmountIn_rem
+           , CAST (0 AS TFloat)        AS AmountIn_remAll
+         
+
        FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
        ;
    ELSE
@@ -320,11 +325,6 @@ BEGIN
                                ON ObjectLink_Brand.ObjectId = Object_Product.Id
                               AND ObjectLink_Brand.DescId = zc_ObjectLink_Product_Brand()
           LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
-
-          /*LEFT JOIN ObjectLink AS ObjectLink_Client
-                               ON ObjectLink_Client.ObjectId = Object_Product.Id
-                              AND ObjectLink_Client.DescId = zc_ObjectLink_Product_Client()
-          LEFT JOIN Object AS Object_Client ON Object_Client.Id = ObjectLink_Client.ChildObjectId*/
 
           LEFT JOIN ObjectLink AS ObjectLink_Model
                                ON ObjectLink_Model.ObjectId = Object_Product.Id

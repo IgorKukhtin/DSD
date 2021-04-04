@@ -35,13 +35,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Product(
 
     IN inMovementId_OrderClient  Integer,
     IN inInvNumber_OrderClient   TVarChar ,  -- Номер документа
-    IN inOperDate_OrderClient    TDateTime, 
-    
+    IN inOperDate_OrderClient    TDateTime,
+
     IN inMovementId_Invoice      Integer,
     IN inInvNumber_Invoice       TVarChar ,  -- Номер документа
     IN inOperDate_Invoice        TDateTime,  --
-    IN inAmountIn_Invoice        TFloat   ,  -- 
-    IN inAmountOut_Invoice       TFloat   ,  -- 
+    IN inAmountIn_Invoice        TFloat   ,  --
+    IN inAmountOut_Invoice       TFloat   ,  --
 
     IN inSession               TVarChar       -- сессия пользователя
 )
@@ -49,11 +49,10 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbVATPercent Integer;
    DECLARE vbIsInsert Boolean;
    --DECLARE vbMovementId Integer;
    DECLARE vbAmount TFloat;
-   
+
    /*DECLARE vbDateStart TDateTime;
    DECLARE vbModelId Integer;
    DECLARE vbModelNom TVarChar;
@@ -94,13 +93,14 @@ BEGIN
                                              );
    END IF;
    -- проверка - должен быть CIN
-   IF COALESCE (inCIN, '') = '' THEN
+   IF COALESCE (inCIN, '') = '' AND inMovementId_OrderClient > 0
+   THEN
       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Должен быть определен <CIN Nr.>' :: TVarChar
                                             , inProcedureName := 'gpInsertUpdate_Object_Product'    :: TVarChar
                                             , inUserId        := vbUserId
                                              );
    END IF;
-     
+
    -- Проверка
    IF COALESCE (inModelId, 0) = 0
    THEN
@@ -123,8 +123,8 @@ BEGIN
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), inCode, vbUserId);
    -- проверка уникальности <CIN Nr.>
    IF LENGTH (inCIN) > 12 THEN PERFORM lpCheckUnique_ObjectString_ValueData (ioId, zc_ObjectString_Product_CIN(), inCIN, vbUserId); END IF;
-   
-   
+
+
 
    -- расчет
    inName:= SUBSTRING (COALESCE ((SELECT Object.ValueData FROM Object WHERE Object.Id = inBrandId), ''), 1, 2)
@@ -134,14 +134,8 @@ BEGIN
              ;
 
    -- проверка прав уникальности для свойства <Наименование >
- --PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Product(), inName, vbUserId);
+   -- PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Product(), inName, vbUserId);
 
-   -- учитываем только zc_Enum_TaxKind_Basis
-   vbVATPercent := (SELECT ObjectFloat_TaxKind_Value.ValueData AS VATPercent
-                    FROM ObjectFloat AS ObjectFloat_TaxKind_Value
-                    WHERE ObjectFloat_TaxKind_Value.ObjectId = zc_Enum_TaxKind_Basis()
-                      AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
-                    )::TFloat;
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Product(), inCode, inName);
@@ -151,7 +145,7 @@ BEGIN
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Product_Hours(), ioId, inHours);
-   
+
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Product_DateStart(), ioId, inDateStart);
    -- сохранили свойство <>
@@ -176,9 +170,58 @@ BEGIN
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Product_ReceiptProdModel(), ioId, inReceiptProdModelId);
-   
-   -- сохранили свойство <>
-   --PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Product_Client(), ioId, inClientId);
+
+
+
+   --- !!! ЗАКАЗ
+   -- если документ не создан
+   IF COALESCE (inMovementId_OrderClient, 0) = 0 -- OR 1=1
+   THEN
+       inInvNumber_OrderClient := COALESCE (NULLIF (zfConvert_StringToNumber (inInvNumber_OrderClient), 0), NEXTVAL ('movement_OrderClient_seq')) ::TVarChar;
+       -- создаем документ
+       inMovementId_OrderClient:= lpInsertUpdate_Movement_OrderClient(ioId                 := inMovementId_OrderClient
+                                                                    , inInvNumber          := inInvNumber_OrderClient
+                                                                    , inInvNumberPartner   := ''
+                                                                    , inOperDate           := COALESCE (inOperDate_OrderClient, CURRENT_DATE)
+                                                                    , inPriceWithVAT       := FALSE
+                                                                    , inVATPercent         := (SELECT ObjectFloat_TaxKind_Value.ValueData
+                                                                                               FROM ObjectLink AS ObjectLink_TaxKind
+                                                                                                    LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                                                                                                          ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                                                                                                                         AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
+                                                                                               WHERE ObjectLink_TaxKind.ObjectId = inClientId
+                                                                                                 AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
+                                                                                              )
+                                                                    , inDiscountTax        := inDiscountTax
+                                                                    , inDiscountNextTax    := inDiscountNextTax
+                                                                    , inFromId             := inClientId
+                                                                    , inToId               := 0
+                                                                    , inPaidKindId         := zc_Enum_PaidKind_FirstForm()
+                                                                    , inProductId          := ioId
+                                                                    , inMovementId_Invoice := 0
+                                                                    , inComment            := ''
+                                                                    , inUserId             := vbUserId
+                                                                    );
+   ELSE
+       -- пересохраняем
+       PERFORM lpInsertUpdate_Movement_OrderClient(ioId               := inMovementId_OrderClient  ::Integer
+                                                 , inInvNumber        := tmp.InvNumber ::TVarChar
+                                                 , inInvNumberPartner := tmp.InvNumberPartner      ::TVarChar
+                                                 , inOperDate         := inOperDate_OrderClient    ::TDateTime           --пересохраняем
+                                                 , inPriceWithVAT     := tmp.PriceWithVAT          ::Boolean
+                                                 , inVATPercent       := tmp.VATPercent            ::TFloat
+                                                 , inDiscountTax      := inDiscountTax             ::TFloat              --пересохраняем
+                                                 , inDiscountNextTax  := inDiscountNextTax         ::TFloat              --пересохраняем
+                                                 , inFromId           := inClientId                ::Integer             --пересохраняем
+                                                 , inToId             := tmp.ToId                  ::Integer
+                                                 , inPaidKindId       := tmp.PaidKindId            ::Integer
+                                                 , inProductId        := ioId                      ::Integer
+                                                 , inMovementId_Invoice := tmp.MovementId_Invoice  ::Integer  --пересохраняем
+                                                 , inComment          := tmp.Comment               ::TVarChar
+                                                 , inUserId           := vbUserId     ::Integer
+                                                 )
+       FROM gpGet_Movement_OrderClient (inMovementId_OrderClient, inOperDate_OrderClient, inSession) AS tmp;
+   END IF;
 
 
    -- только при создании
@@ -198,16 +241,17 @@ BEGIN
                                                                        ))*/
    THEN
        -- добавить все Items Boat Structure
-       PERFORM gpInsertUpdate_Object_ProdColorItems (ioId                  := 0
-                                                   , inCode                := 0
-                                                   , inProductId           := ioId
-                                                   , inGoodsId             := tmp.GoodsId
-                                                   , inProdColorPatternId  := tmp.ProdColorPatternId
-                                                   , inComment             := ''
-                                                   , inIsEnabled           := TRUE
-                                                   , ioIsProdOptions       := FALSE
-                                                   , inSession             := inSession
-                                                    ) 
+       PERFORM gpInsertUpdate_Object_ProdColorItems (ioId                     := 0
+                                                   , inCode                   := 0
+                                                   , inProductId              := ioId
+                                                   , inGoodsId                := tmp.GoodsId
+                                                   , inProdColorPatternId     := tmp.ProdColorPatternId
+                                                   , inMovementId_OrderClient := inMovementId_OrderClient
+                                                   , inComment                := ''
+                                                   , inIsEnabled              := TRUE
+                                                   , ioIsProdOptions          := FALSE
+                                                   , inSession                := inSession
+                                                    )
        FROM gpSelect_Object_ProdColorItems (inIsShowAll:= TRUE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
        WHERE tmp.ProductId = ioId
          AND tmp.ReceiptProdModelId = inReceiptProdModelId
@@ -229,47 +273,6 @@ BEGIN
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 
-   --- !!! ЗАКАЗ
-   -- если док есть то ничего не делаем, если нет создаем
-   IF COALESCE(inMovementId_OrderClient,0) = 0
-   THEN
-       inInvNumber_OrderClient := COALESCE (inInvNumber_OrderClient, NEXTVAL ('movement_OrderClient_seq')) ::TVarChar; 
-       -- создаем документ
-       inMovementId_OrderClient:= lpInsertUpdate_Movement_OrderClient(ioId               := 0            ::Integer
-                                                                    , inInvNumber        := inInvNumber_OrderClient ::TVarChar  ---CAST (NEXTVAL ('movement_OrderClient_seq') AS TVarChar) ::TVarChar
-                                                                    , inInvNumberPartner := ''           ::TVarChar
-                                                                    , inOperDate         := COALESCE (inOperDate_OrderClient, CURRENT_DATE) ::TDateTime
-                                                                    , inPriceWithVAT     := FALSE        ::Boolean
-                                                                    , inVATPercent       := vbVATPercent ::TFloat
-                                                                    , inDiscountTax      := inDiscountTax   ::TFloat
-                                                                    , inDiscountNextTax  := inDiscountNextTax ::TFloat
-                                                                    , inFromId           := inClientId   ::Integer
-                                                                    , inToId             := 0            ::Integer
-                                                                    , inPaidKindId       := zc_Enum_PaidKind_FirstForm() ::Integer
-                                                                    , inProductId        := ioId         ::Integer
-                                                                    , inMovementId_Invoice := 0          ::Integer
-                                                                    , inComment          := ''           ::TVarChar
-                                                                    , inUserId           := vbUserId     ::Integer
-                                                                    );
-   ELSE
-       PERFORM lpInsertUpdate_Movement_OrderClient(ioId               := inMovementId_OrderClient  ::Integer
-                                                 , inInvNumber        := tmp.InvNumber ::TVarChar
-                                                 , inInvNumberPartner := tmp.InvNumberPartner      ::TVarChar
-                                                 , inOperDate         := inOperDate_OrderClient    ::TDateTime           --пересохраняем
-                                                 , inPriceWithVAT     := tmp.PriceWithVAT          ::Boolean
-                                                 , inVATPercent       := tmp.VATPercent            ::TFloat
-                                                 , inDiscountTax      := inDiscountTax             ::TFloat              --пересохраняем
-                                                 , inDiscountNextTax  := inDiscountNextTax         ::TFloat              --пересохраняем
-                                                 , inFromId           := inClientId                ::Integer             --пересохраняем
-                                                 , inToId             := tmp.ToId                  ::Integer
-                                                 , inPaidKindId       := tmp.PaidKindId            ::Integer
-                                                 , inProductId        := ioId                      ::Integer
-                                                 , inMovementId_Invoice := tmp.MovementId_Invoice  ::Integer  --пересохраняем
-                                                 , inComment          := tmp.Comment               ::TVarChar
-                                                 , inUserId           := vbUserId     ::Integer
-                                                 )
-       FROM gpGet_Movement_OrderClient (inMovementId_OrderClient, inOperDate_OrderClient, inSession) AS tmp;
-   END IF;
 
    --- !!! СЧЕТ
     --проверка, если заказ проведен сумму и дату счета уже менять нельзя
@@ -285,12 +288,12 @@ BEGIN
         vbAmount := -1 * inAmountOut_Invoice;
      END IF;
 
-     -- Распроводим Документ
-     IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId_Invoice AND Movement.StatusId = zc_Enum_Status_Complete())
-     THEN
-         PERFORM lpUnComplete_Movement (inMovementId := inMovementId_Invoice
-                                      , inUserId     := vbUserId);
-     END IF;
+    -- Распроводим Документ
+    IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId_Invoice AND Movement.StatusId = zc_Enum_Status_Complete())
+    THEN
+        PERFORM lpUnComplete_Movement (inMovementId := inMovementId_Invoice
+                                     , inUserId     := vbUserId);
+    END IF;
 
     IF COALESCE (inMovementId_Invoice) = 0 AND COALESCE (vbAmount,0) <> 0  -- создаем новый документ только если сумма не 0
     THEN
@@ -316,11 +319,11 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_TaxKind
                                   ON ObjectLink_TaxKind.ObjectId = Object_Client.Id
                                  AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
-   
+
              LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
                                    ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId
                                   AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
-  
+
              LEFT JOIN ObjectLink AS ObjectLink_InfoMoney
                                   ON ObjectLink_InfoMoney.ObjectId = Object_Client.Id
                                  AND ObjectLink_InfoMoney.DescId = zc_ObjectLink_Client_InfoMoney()
@@ -328,21 +331,23 @@ BEGIN
         WHERE Object_Client.Id = inClientId;
         -- сохранили ParentId
         --PERFORM lpInsertUpdate_Movement (inMovementId_Invoice, zc_Movement_Invoice(), inInvNumber_Invoice, inOperDate_Invoice, inMovementId_OrderClient, vbUserId);
-    ELSE
-        
+
+    ELSEIF inMovementId_Invoice > 0
+    THEN
         -- пересохранили дату документа
         PERFORM lpInsertUpdate_Movement (inMovementId_Invoice, zc_Movement_Invoice(), inInvNumber_Invoice, inOperDate_Invoice, inMovementId_OrderClient, vbUserId);
-        --сохранили сумму 
+        --сохранили сумму
         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), inMovementId_Invoice, vbAmount);
+
     END IF;
 
      -- 5.3. проводим Документ
-     IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_Invoice())
+     IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_Invoice()) AND inMovementId_Invoice > 0
      THEN
           PERFORM lpComplete_Movement_Invoice (inMovementId := inMovementId_Invoice
                                              , inUserId     := vbUserId);
      END IF;
-     
+
      -- сохранили связь документа <Заказ> с документом <Счет>
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), inMovementId_OrderClient, inMovementId_Invoice);
 

@@ -155,7 +155,7 @@ BEGIN
      PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
 
 
-   /*IF inProductId > 0
+     IF inProductId > 0
      THEN
          -- ищем строку док. с лодкой, находим  - перезаписываем, не находим создаем
          vbMI_Id := (SELECT MovementItem.Id 
@@ -164,18 +164,20 @@ BEGIN
                        AND MovementItem.isErased = FALSE
                        AND MovementItem.DescId = zc_MI_Master()
                        AND MovementItem.ObjectId = inProductId
-                     );
-         --сохраняем лодку в строчную часть
-         PERFORM lpInsertUpdate_MovementItem_OrderClient (ioId            := COALESCE(vbMI_Id,0)
+                    );
+         -- сохраняем лодку в строчную часть
+         PERFORM lpInsertUpdate_MovementItem_OrderClient (ioId            := vbMI_Id
                                                         , inMovementId    := ioId
                                                         , inGoodsId       := inProductId
                                                         , inAmount        := 1  ::TFloat
-                                                        , inOperPrice     := 0  ::TFloat
+                                                        , inOperPrice     := gpSelect.Basis_summ_orig
                                                         , inCountForPrice := 1  ::TFloat
                                                         , inComment       := '' ::TVarChar
                                                         , inUserId        := inUserId
-                                                        );
-     END IF;*/
+                                                        )
+         FROM gpSelect_Object_Product (FALSE, FALSE, inUserId :: TVarChar) AS gpSelect
+         WHERE gpSelect.MovementId_OrderClient = ioId;
+     END IF;
                                                       
                                                       
 END;

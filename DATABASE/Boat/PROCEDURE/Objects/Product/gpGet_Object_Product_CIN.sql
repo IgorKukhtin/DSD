@@ -17,7 +17,7 @@ $BODY$
    DECLARE vbModelNom TVarChar;
 BEGIN
   
-   --находим сохраненную дату производства и модель, если изменили то нужно изменять CIN, 
+   -- находим сохраненную дату производства и модель, если изменили то нужно изменять CIN, 
    vbDateStart := (SELECT ObjectDate_DateStart.ValueData
                    FROM ObjectDate AS ObjectDate_DateStart
                    WHERE ObjectDate_DateStart.ObjectId = inId
@@ -32,7 +32,7 @@ BEGIN
    IF (COALESCE (vbDateStart, zc_DateStart()) <> inDateStart) OR (COALESCE (vbModelId,0) <> inModelId)
    THEN
        -- находим последний номер конкретной модели + 1
-       vbModelNom := COALESCE ((SELECT LPAD ( (1 + MAX ((SUBSTRING (ObjectString_CIN.ValueData, 8, 4)) :: Integer)) :: TVarChar, 4, '0')
+       vbModelNom := COALESCE ((SELECT LPAD ( (1 + MAX (zfConvert_StringToNumber (SUBSTRING (ObjectString_CIN.ValueData, 8, 4)) :: Integer)) :: TVarChar, 4, '0')
                                 FROM ObjectLink AS ObjectLink_Model
                                      LEFT JOIN ObjectString AS ObjectString_CIN
                                                             ON ObjectString_CIN.ObjectId = ObjectLink_Model.ObjectId
