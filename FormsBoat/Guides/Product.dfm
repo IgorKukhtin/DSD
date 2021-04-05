@@ -20,7 +20,7 @@ object ProductForm: TProductForm
   TextHeight = 13
   object PanelMaster: TPanel
     Left = 0
-    Top = 26
+    Top = 28
     Width = 1188
     Height = 209
     Align = alTop
@@ -660,9 +660,9 @@ object ProductForm: TProductForm
   end
   object PanelProdOptItems: TPanel
     Left = 561
-    Top = 240
+    Top = 242
     Width = 627
-    Height = 195
+    Height = 193
     Align = alClient
     BevelEdges = [beLeft]
     BevelOuter = bvNone
@@ -671,7 +671,7 @@ object ProductForm: TProductForm
       Left = 0
       Top = 17
       Width = 627
-      Height = 178
+      Height = 176
       Align = alClient
       PopupMenu = PopupMenuOption
       TabOrder = 0
@@ -1027,9 +1027,9 @@ object ProductForm: TProductForm
   end
   object PanelProdColorItems: TPanel
     Left = 0
-    Top = 240
+    Top = 242
     Width = 553
-    Height = 195
+    Height = 193
     Align = alLeft
     BevelEdges = [beLeft]
     BevelOuter = bvNone
@@ -1038,7 +1038,7 @@ object ProductForm: TProductForm
       Left = 0
       Top = 17
       Width = 553
-      Height = 178
+      Height = 176
       Align = alClient
       PopupMenu = PopupMenuColor
       TabOrder = 0
@@ -1318,7 +1318,7 @@ object ProductForm: TProductForm
   end
   object cxTopSplitter: TcxSplitter
     Left = 0
-    Top = 235
+    Top = 237
     Width = 1188
     Height = 5
     AlignSplitter = salTop
@@ -1326,9 +1326,9 @@ object ProductForm: TProductForm
   end
   object cxRightSplitter: TcxSplitter
     Left = 553
-    Top = 240
+    Top = 242
     Width = 8
-    Height = 195
+    Height = 193
     Control = PanelProdColorItems
   end
   object DataSource: TDataSource
@@ -1379,7 +1379,7 @@ object ProductForm: TProductForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -2571,6 +2571,8 @@ object ProductForm: TProductForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+      PictureFields.Strings = (
+        'photo1')
     end
     object actPrintOrderConfirmation: TdsdPrintAction
       Category = 'DSDLib'
@@ -2930,6 +2932,7 @@ object ProductForm: TProductForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         BackGroundValueColumn = Color_fon
@@ -3003,6 +3006,7 @@ object ProductForm: TProductForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorValueList = <>
@@ -3051,6 +3055,7 @@ object ProductForm: TProductForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorValueList = <>

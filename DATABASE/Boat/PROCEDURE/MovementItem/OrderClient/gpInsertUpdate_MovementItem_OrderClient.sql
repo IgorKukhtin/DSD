@@ -7,12 +7,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderClient(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
-    IN inOperPrice           TFloat    , -- Цена
+ INOUT ioOperPrice           TFloat    , -- Цена со скидкой
+    IN inOperPriceList       TFloat    , -- Цена без скидки
     IN inCountForPrice       TFloat    , -- Цена за кол.
     IN inComment             TVarChar  , --
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
@@ -25,21 +26,24 @@ BEGIN
 
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
-
+     
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem_OrderClient (ioId
-                                               , inMovementId
-                                               , inGoodsId
-                                               , inAmount
-                                               , inOperPrice
-                                               , inCountForPrice
-                                               , inComment
-                                               , vbUserId
-                                               );
+     SELECT tmp.ioId, tmp.ioOperPrice
+   INTO ioId , ioOperPrice
+     FROM lpInsertUpdate_MovementItem_OrderClient (ioId
+                                                 , inMovementId
+                                                 , inGoodsId
+                                                 , inAmount
+                                                 , ioOperPrice
+                                                 , inOperPriceList
+                                                 , inCountForPrice
+                                                 , inComment
+                                                 , vbUserId
+                                                 ) AS tmp;
 
                   
      -- пересчитали Итоговые суммы
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm_order (inMovementId);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
