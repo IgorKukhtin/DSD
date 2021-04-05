@@ -140,10 +140,10 @@ object ProductEditForm: TProductEditForm
     Width = 82
   end
   object edCIN: TcxTextEdit
-    Left = 8
+    Left = 10
     Top = 81
     TabOrder = 17
-    Width = 273
+    Width = 209
   end
   object cxLabel10: TcxLabel
     Left = 10
@@ -524,7 +524,7 @@ object ProductEditForm: TProductEditForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
     Properties.ReadOnly = True
-    TabOrder = 66
+    TabOrder = 65
     Width = 66
   end
   object cxLabel30: TcxLabel
@@ -538,7 +538,7 @@ object ProductEditForm: TProductEditForm
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     Properties.ReadOnly = True
-    TabOrder = 69
+    TabOrder = 68
     Width = 114
   end
   object edAmountIn_remAll: TcxCurrencyEdit
@@ -554,6 +554,15 @@ object ProductEditForm: TProductEditForm
     Left = 456
     Top = 427
     Caption = #1054#1089#1090'. '#1082' '#1086#1087#1083#1072#1090#1077' ('#1080#1090#1086#1075#1086')'
+  end
+  object cxButton3: TcxButton
+    Left = 225
+    Top = 79
+    Width = 58
+    Height = 25
+    Action = actGetCIN
+    Default = True
+    TabOrder = 73
   end
   object ActionList: TActionList
     Left = 232
@@ -612,9 +621,8 @@ object ProductEditForm: TProductEditForm
         item
           StoredProc = spGetCIN
         end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
+      Caption = 'get CIN'
+      Hint = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' CIN Nr.'
       RefreshOnTabSetChanges = False
     end
     object CompleteMovementInvoice: TChangeGuidesStatus
@@ -1598,7 +1606,6 @@ object ProductEditForm: TProductEditForm
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
     IdParam.MultiSelectSeparator = ','
-    RefreshAction = actGetCIN
     ComponentList = <
       item
         Component = GuidesModel
@@ -1647,8 +1654,8 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 256
-    Top = 72
+    Left = 280
+    Top = 96
   end
   object spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_OrderClient'
