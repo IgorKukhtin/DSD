@@ -639,6 +639,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
       Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
@@ -1325,6 +1326,8 @@ object OrderClientJournalForm: TOrderClientJournalForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+      PictureFields.Strings = (
+        'photo1')
     end
     object actPrintOrderConfirmation: TdsdPrintAction
       Category = 'DSDLib'
