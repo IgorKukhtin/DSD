@@ -28,7 +28,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
       Left = 101
       Top = 5
       EditValue = 44197d
-      Properties.ReadOnly = True
+      Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -38,7 +38,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
       Left = 310
       Top = 5
       EditValue = 44197d
-      Properties.ReadOnly = True
+      Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -1548,8 +1548,6 @@ object OrderClientJournalForm: TOrderClientJournalForm
     ComponentList = <
       item
         Component = PeriodChoice
-      end
-      item
       end>
     Left = 584
     Top = 48

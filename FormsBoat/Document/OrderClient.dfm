@@ -302,6 +302,9 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 0
@@ -665,7 +668,7 @@ object OrderClientForm: TOrderClientForm
       object cxTopSplitter: TcxSplitter
         Left = 0
         Top = 165
-        Width = 1349
+        Width = 8
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
@@ -1482,6 +1485,9 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -1787,6 +1793,9 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet2: TcxTabSheet
       Caption = 'Info'
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridInfo: TcxGrid
         Left = 0
         Top = 0

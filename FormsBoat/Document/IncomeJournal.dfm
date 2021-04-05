@@ -28,7 +28,7 @@ object IncomeJournalForm: TIncomeJournalForm
       Left = 101
       Top = 5
       EditValue = 44197d
-      Properties.ReadOnly = True
+      Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -38,7 +38,7 @@ object IncomeJournalForm: TIncomeJournalForm
       Left = 310
       Top = 5
       EditValue = 44197d
-      Properties.ReadOnly = True
+      Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -1386,6 +1386,7 @@ object IncomeJournalForm: TIncomeJournalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -1408,8 +1409,6 @@ object IncomeJournalForm: TIncomeJournalForm
     ComponentList = <
       item
         Component = PeriodChoice
-      end
-      item
       end>
     Left = 584
     Top = 48
