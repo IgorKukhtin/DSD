@@ -182,6 +182,14 @@ BEGIN
                                           ON MovementBoolean_SUN_v4.MovementId = Movement.Id
                                          AND MovementBoolean_SUN_v4.DescId     = zc_MovementBoolean_SUN_v3()
                                          AND MovementBoolean_SUN_v4.ValueData  = TRUE
+                LEFT JOIN MovementBoolean AS MovementBoolean_BanFiscalSale
+                                          ON MovementBoolean_BanFiscalSale.MovementId = Movement.Id
+                                         AND MovementBoolean_BanFiscalSale.DescId     = zc_MovementBoolean_BanFiscalSale()
+                                         AND MovementBoolean_BanFiscalSale.ValueData  = TRUE
+                LEFT JOIN MovementString AS MovementString_Comment
+                                         ON MovementString_Comment.MovementId = Movement.Id
+                                        AND MovementString_Comment.DescId = zc_MovementString_Comment()
+                                         
                 -- !!!кроме таких Аптек!!!
                 -- LEFT JOIN _tmpUnit_SUN_over ON _tmpUnit_SUN_over.UnitId = MovementLinkObject_From.ObjectId
            WHERE Movement.OperDate = inOperDate
@@ -191,6 +199,9 @@ BEGIN
              AND MovementBoolean_SUN_v2.MovementId IS NULL
              AND MovementBoolean_SUN_v3.MovementId IS NULL
              AND MovementBoolean_SUN_v4.MovementId IS NULL
+             AND MovementBoolean_BanFiscalSale.MovementId IS NULL
+             AND COALESCE (MovementString_Comment.ValueData, '') <> 'Распределение товара по сети согласно дополнению к СУН1'
+             AND COALESCE (MovementString_Comment.ValueData, '') <> 'Товар по СУА'
           ) AS tmp;
           
      -- !!!Удаляем предыдущие документы - DefSUN!!!

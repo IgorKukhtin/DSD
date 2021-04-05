@@ -154,10 +154,10 @@ BEGIN
         -- DELETE FROM _tmpItem_remains;
         DROP TABLE _tmpItem_remains;
         -- таблица - данные почти все
-        CREATE TEMP TABLE _tmpItem_remains (MovementItemId_partion Integer, GoodsId Integer, ContainerId Integer, NDSKindId Integer, DivisionPartiesId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
+        CREATE TEMP TABLE _tmpItem_remains (MovementItemId_partion Integer, GoodsId Integer, ContainerId Integer, NDSKindId Integer, DivisionPartiesId Integer, Amount TFloat, OperDate TDateTime, JuridicalId Integer) ON COMMIT DROP;
     ELSE
         -- таблица - данные почти все
-        CREATE TEMP TABLE _tmpItem_remains (MovementItemId_partion Integer, GoodsId Integer, ContainerId Integer, NDSKindId Integer, DivisionPartiesId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
+        CREATE TEMP TABLE _tmpItem_remains (MovementItemId_partion Integer, GoodsId Integer, ContainerId Integer, NDSKindId Integer, DivisionPartiesId Integer, Amount TFloat, OperDate TDateTime, JuridicalId Integer) ON COMMIT DROP;
     END IF;
 
     -- предварительно сохранили продажи
@@ -213,7 +213,7 @@ BEGIN
                            AND ObjectLink_DiscountExternal.ChildObjectId = vbDiscountExternalId
                          )
 
-    INSERT INTO _tmpItem_remains (MovementItemId_partion, GoodsId, ContainerId, NDSKindId, DivisionPartiesId, Amount, OperDate)
+    INSERT INTO _tmpItem_remains (MovementItemId_partion, GoodsId, ContainerId, NDSKindId, DivisionPartiesId, Amount, OperDate, JuridicalId)
        SELECT CASE WHEN Movement.DescId = zc_Movement_Inventory() AND MIFloat_MovementItem.ValueData > 0 THEN MIFloat_MovementItem.ValueData :: Integer ELSE MovementItem.Id END AS MovementItemId_partion
             , Container.ObjectId AS GoodsId
             , Container.Id       AS ContainerId
@@ -223,6 +223,7 @@ BEGIN
             , COALESCE(ContainerLinkObject_DivisionParties.ObjectId, 0)                      AS DivisionPartiesId
             , Container.Amount                                                               AS Amount
             , Movement.OperDate
+            , tmpSupplier.JuridicalId
        FROM (SELECT DISTINCT ObjectId FROM _tmpItem) AS tmp
             INNER JOIN Container ON Container.DescId = zc_Container_Count()
                                 AND Container.WhereObjectId = vbUnitId
@@ -273,6 +274,68 @@ BEGIN
        WHERE COALESCE (PDContainer.id, 0) = 0
          AND (vbDiscountExternalId = 0 OR COALESCE(tmpSupplier.SupplierID, 0) <> 0)
        ;
+         
+    IF COALESCE (vbDiscountExternalId, 0) <> 0
+    THEN
+
+      IF NOT EXISTS (WITH
+                    tmpItem AS (SELECT _tmpItem.ObjectId
+                                     , SUM(_tmpItem.OperSumm) AS Amount 
+                                FROM _tmpItem
+                                GROUP BY _tmpItem.ObjectId), 
+                    tmpItemRemains AS (SELECT _tmpItem_remains.GoodsId
+                                            , _tmpItem_remains.JuridicalId
+                                            , SUM(_tmpItem_remains.Amount) AS Amount
+                                            , MIN(_tmpItem_remains.OperDate) AS OperDate  
+
+                                       FROM _tmpItem_remains
+                                            LEFT JOIN tmpItem ON tmpItem.ObjectId = _tmpItem_remains.GoodsId
+                                       GROUP BY _tmpItem_remains.GoodsId, _tmpItem_remains.JuridicalId
+                                       HAVING SUM(_tmpItem_remains.Amount) >= MAX(tmpItem.Amount)),
+                    tmpItemRemainsOrd AS (SELECT tmpItemRemains.GoodsId
+                                               , tmpItemRemains.JuridicalId   
+                                               , tmpItemRemains.Amount
+                                               , ROW_NUMBER() OVER (PARTITION BY tmpItemRemains.GoodsId ORDER BY tmpItemRemains.OperDate) AS Ord
+                                          FROM tmpItemRemains)
+                    
+                    SELECT 1
+                    FROM tmpItem
+                         LEFT JOIN tmpItemRemainsOrd ON tmpItemRemainsOrd.GoodsId = tmpItem.ObjectId
+                                                    AND tmpItemRemainsOrd.Ord = 1
+                    WHERE COALESCE (tmpItemRemainsOrd.GoodsId, 0)  = 0
+                )
+      THEN
+        UPDATE _tmpItem_remains SET Amount = 0
+        FROM (WITH
+                    tmpItem AS (SELECT _tmpItem.ObjectId
+                                     , SUM(_tmpItem.OperSumm) AS Amount 
+                                FROM _tmpItem
+                                GROUP BY _tmpItem.ObjectId), 
+                    tmpItemRemains AS (SELECT _tmpItem_remains.GoodsId
+                                            , _tmpItem_remains.JuridicalId
+                                            , SUM(_tmpItem_remains.Amount) AS Amount
+                                            , MIN(_tmpItem_remains.OperDate) AS OperDate  
+
+                                       FROM _tmpItem_remains
+                                            LEFT JOIN tmpItem ON tmpItem.ObjectId = _tmpItem_remains.GoodsId
+                                       GROUP BY _tmpItem_remains.GoodsId, _tmpItem_remains.JuridicalId
+                                       HAVING SUM(_tmpItem_remains.Amount) >= MAX(tmpItem.Amount)),
+                    tmpItemRemainsOrd AS (SELECT tmpItemRemains.GoodsId
+                                               , tmpItemRemains.JuridicalId   
+                                               , tmpItemRemains.Amount
+                                               , ROW_NUMBER() OVER (PARTITION BY tmpItemRemains.GoodsId ORDER BY tmpItemRemains.OperDate) AS Ord
+                                          FROM tmpItemRemains)
+                    
+                    SELECT tmpItemRemainsOrd.GoodsId
+                         , tmpItemRemainsOrd.JuridicalId 
+                    FROM tmpItemRemainsOrd
+                    WHERE tmpItemRemainsOrd.Ord = 1) AS T1
+        WHERE _tmpItem_remains.GoodsId = T1.GoodsId
+          AND _tmpItem_remains.JuridicalId <> T1.JuridicalId;
+      END IF;
+
+      DELETE FROM _tmpItem_remains WHERE Amount = 0;
+    END IF;
 
     -- Проверим что б БЫЛ остаток в целом
     IF EXISTS (SELECT 1
@@ -622,3 +685,5 @@ $BODY$
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 103, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM MovementItemContainer WHERE MovementId = 12671`
 -- select * from gpUpdate_Status_Check(inMovementId := 19907613 , ioStatusCode := 2 ,  inSession := '3');
+
+--  select * from gpUpdate_Status_Check(inMovementId := 22802944 , ioStatusCode := 2 ,  inSession := '3');

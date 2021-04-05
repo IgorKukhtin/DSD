@@ -594,10 +594,14 @@ begin
     xlBook := xlApp.WorkBooks.Add;
     xlSheet := xlBook.ActiveSheet;
 
-    case FOrientation of
-      orPortrait : xlSheet.PageSetup.Orientation := xlPortrait;
-      orLandscape : xlSheet.PageSetup.Orientation := xlLandscape;
+    try
+      case FOrientation of
+        orPortrait : xlSheet.PageSetup.Orientation := xlPortrait;
+        orLandscape : xlSheet.PageSetup.Orientation := xlLandscape;
+      end;
+    except
     end;
+
 
 {    xlApp.ActiveWindow.SplitColumn := 2;
     xlApp.ActiveWindow.SplitRow := 1;
