@@ -134,13 +134,12 @@ BEGIN
         , tmpListDate AS (SELECT DISTINCT DATE_TRUNC ('Month', generate_series(inStartDate + INTERVAL '1 Month', inEndDate, '1 Month'::interval)) AS OperDate
                     UNION SELECT DATE_TRUNC ('Month', inStartDate) AS OperDate
                          )
-        -- для остатков
+          -- для остатков
         , tmp_Rem AS (SELECT _tmpContainer.ContainerId
                            , _tmpContainer.LocationId
                            , _tmpContainer.GoodsId
                            , _tmpContainer.GoodsKindId
                            , 0 AS MovementId_income
-                           , DATE_TRUNC ('Month', inStartDate)  AS MonthDate
 
                              -- ***COUNT***
                            , 0 AS CountIncome
@@ -151,8 +150,8 @@ BEGIN
                            , 0 AS SummOther
 
                              -- ***REMAINS***
-                          , CASE WHEN _tmpContainer.DescId = zc_Container_Count() THEN _tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END AS RemainsStart
-                          , CASE WHEN _tmpContainer.DescId = zc_Container_Summ()  THEN _tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END AS RemainsStart_summ
+                          , CASE WHEN _tmpContainer.DescId = zc_Container_Count() THEN _tmpContainer.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) ELSE 0 END AS RemainsStart
+                          , CASE WHEN _tmpContainer.DescId = zc_Container_Summ()  THEN _tmpContainer.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) ELSE 0 END AS RemainsStart_summ
 
                       FROM _tmpContainer
                            LEFT JOIN MovementItemContainer AS MIContainer
@@ -163,8 +162,8 @@ BEGIN
                              , _tmpContainer.GoodsId
                              , _tmpContainer.GoodsKindId
                              , _tmpContainer.Amount
-                             , DATE_TRUNC ('Month', inStartDate)
                              , _tmpContainer.DescId
+
                       HAVING CASE WHEN _tmpContainer.DescId = zc_Container_Count() THEN _tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END <> 0
                           OR CASE WHEN _tmpContainer.DescId = zc_Container_Summ()  THEN _tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END <> 0
                      )
@@ -218,8 +217,8 @@ BEGIN
                                         END) AS SummOther
 
                                          -- ***REMAINS***
-                                 , -1 * SUM (CASE WHEN MIContainer.OperDate >= DATE_TRUNC ('Month', MIContainer.OperDate) AND _tmpContainer.DescId = zc_Container_Count() THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS RemainsStart
-                                 , -1 * SUM (CASE WHEN MIContainer.OperDate >= DATE_TRUNC ('Month', MIContainer.OperDate) AND _tmpContainer.DescId = zc_Container_Summ()  THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS RemainsStart_summ
+                                 , -1 * SUM (CASE WHEN _tmpContainer.DescId = zc_Container_Count() THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS RemainsStart
+                                 , -1 * SUM (CASE WHEN _tmpContainer.DescId = zc_Container_Summ()  THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS RemainsStart_summ
                                  
                              FROM _tmpContainer
                                   INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = _tmpContainer.ContainerId
@@ -266,8 +265,8 @@ BEGIN
                                              ELSE 0
                                         END) <> 0
                                     -- ***REMAINS***
-                                 OR SUM (CASE WHEN MIContainer.OperDate >= DATE_TRUNC ('Month', MIContainer.OperDate) AND _tmpContainer.DescId = zc_Container_Count() THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) <> 0
-                                 OR SUM (CASE WHEN MIContainer.OperDate >= DATE_TRUNC ('Month', MIContainer.OperDate) AND _tmpContainer.DescId = zc_Container_Summ()  THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) <> 0
+                                 OR SUM (CASE WHEN _tmpContainer.DescId = zc_Container_Count() THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) <> 0
+                                 OR SUM (CASE WHEN _tmpContainer.DescId = zc_Container_Summ()  THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) <> 0
                            )
         
         , tmpMIContainer AS (SELECT _tmpContainer.ContainerId
@@ -289,21 +288,15 @@ BEGIN
                                   , _tmpContainer.CountOther
                                   , _tmpContainer.SummOther
                                           -- ***REMAINS***
-                                  , _tmpContainer.RemainsStart --+ SUM (_tmpContainer_next.RemainsStart)           AS RemainsStart
-                                  , _tmpContainer.RemainsStart_summ --+ SUM (_tmpContainer_next.RemainsStart_summ) AS RemainsStart_summ
+                                  , _tmpContainer.RemainsStart      + COALESCE (SUM (COALESCE (_tmpContainer_next.RemainsStart, 0)), 0)      AS RemainsStart
+                                  , _tmpContainer.RemainsStart_summ + COALESCE (SUM (COALESCE (_tmpContainer_next.RemainsStart_summ, 0)), 0) AS RemainsStart_summ
 
                              FROM _tmpContainer_1 AS _tmpContainer
 
                                   --нужно отнять движения след . по идее в _tmpContainer_1 и так они уже снято тк.к беру MIContainer.OperDate >= DATE_TRUNC ('Month', MIContainer.OperDate)
-
-                               /*   LEFT JOIN _tmpContainer_1 AS _tmpContainer_next
-                                                            ON _tmpContainer_next.MonthDate+INTERVAL'1 MONTH' <= _tmpContainer.MonthDate AND _tmpContainer_next.MonthDate > _tmpContainer.MonthDate
+                                  LEFT JOIN _tmpContainer_1 AS _tmpContainer_next
+                                                            ON _tmpContainer_next.MonthDate   > _tmpContainer.MonthDate
                                                            AND _tmpContainer_next.ContainerId = _tmpContainer.ContainerId
-                                                           AND _tmpContainer_next.LocationId = _tmpContainer.LocationId
-                                                           AND _tmpContainer_next.GoodsId = _tmpContainer.GoodsId
-                                                           AND _tmpContainer_next.GoodsKindId = _tmpContainer.GoodsKindId
-                                                           AND _tmpContainer_next.MovementId_income = _tmpContainer.MovementId_income
-*/
                              GROUP BY _tmpContainer.ContainerId
                                     , _tmpContainer.LocationId
                                     , _tmpContainer.GoodsId

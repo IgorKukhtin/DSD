@@ -62,8 +62,8 @@ BEGIN
      vbGoodsPropertyId_basis := zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0);
 
     -- таб. документов по Договору    -- параметры из документов
-    CREATE TEMP TABLE tmpListDocSale(MovementId Integer, OperDate TDateTime, OperDatePartner TDateTime, PriceWithVAT Boolean, VATPercent TFloat, DiscountPercent TFloat, ExtraChargesPercent TFloat, GoodsPropertyId Integer, PaidKindId Integer, IsDiscountPrice Boolean, IsChangePrice Boolean) ON COMMIT DROP;
-    INSERT INTO tmpListDocSale(MovementId, OperDate, OperDatePartner, PriceWithVAT, VATPercent, DiscountPercent, ExtraChargesPercent, GoodsPropertyId, PaidKindId, IsDiscountPrice, IsChangePrice)
+    CREATE TEMP TABLE tmpListDocSale(MovementId Integer, OperDate TDateTime, OperDatePartner TDateTime, PriceWithVAT Boolean, VATPercent TFloat, DiscountPercent TFloat, ExtraChargesPercent TFloat, GoodsPropertyId Integer, ContractId Integer, PaidKindId Integer, IsDiscountPrice Boolean, IsChangePrice Boolean) ON COMMIT DROP;
+    INSERT INTO tmpListDocSale(MovementId, OperDate, OperDatePartner, PriceWithVAT, VATPercent, DiscountPercent, ExtraChargesPercent, GoodsPropertyId, ContractId, PaidKindId, IsDiscountPrice, IsChangePrice)
        WITH
        tmpMovement AS (SELECT Movement.Id 
                             , Movement.OperDate
@@ -109,6 +109,7 @@ BEGIN
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -1 * MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN      MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
           , zfCalc_GoodsPropertyId (inContractId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId), MovementLinkObject_To.ObjectId) AS GoodsPropertyId
+          , COALESCE (MovementLinkObject_Contract.ObjectId, 0)        AS ContractId
           , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)        AS PaidKindId
           , COALESCE (ObjectBoolean_isDiscountPrice.ValueData, FALSE) AS isDiscountPrice
           , CASE WHEN (COALESCE (ObjectBoolean_isDiscountPrice.ValueData, FALSE) = TRUE
@@ -126,6 +127,9 @@ BEGIN
           LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                   ON MovementFloat_ChangePercent.MovementId = tmpMovement.Id
                                  AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                       ON MovementLinkObject_Contract.MovementId = tmpMovement.Id
+                                      AND MovementLinkObject_Contract.DescId IN (zc_MovementLinkObject_Contract())
           LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                        ON MovementLinkObject_PaidKind.MovementId = tmpMovement.Id
                                       AND MovementLinkObject_PaidKind.DescId IN (zc_MovementLinkObject_PaidKind(), zc_MovementLinkObject_PaidKindTo())
@@ -391,6 +395,12 @@ BEGIN
            , CASE WHEN EXISTS (SELECT 1 FROM tmpListDocSale WHERE tmpListDocSale.PaidKindId = zc_Enum_PaidKind_FirstForm()) THEN TRUE ELSE FALSE END :: Boolean AS isFirstForm
 
            , 'м.Дніпро' :: TVarChar AS CityOf                             -- Мiсце складання
+
+             -- для договора Id = 4440485(№7183Р(14781)) + доп страничка
+           , CASE WHEN EXISTS (SELECT 1 FROM tmpListDocSale WHERE tmpListDocSale.ContractId = 4440485) THEN TRUE ELSE FALSE END :: Boolean AS isFozzyPage2
+           
+             -- этому Юр Лицу печатается "За довіренністю ...."
+           , FALSE :: Boolean AS isOKPO_04544524
 
        FROM (SELECT Max(tmpListDocSale.MovementId) AS MovementId
                   , MAX(tmpListDocSale.ExtraChargesPercent - tmpListDocSale.DiscountPercent)  AS ChangePercent

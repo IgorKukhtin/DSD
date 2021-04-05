@@ -811,9 +811,11 @@ BEGIN
              -- кол-во Взвешиваний
            , vbWeighingCount AS WeighingCount
 
-           , 'м.Дніпро' :: TVarChar AS CityOf                             -- Мiсце складання
+             -- Мiсце складання
+           , 'м.Дніпро' :: TVarChar AS CityOf
 
-           , CASE WHEN vbContractId = 4440485 THEN TRUE ELSE FALSE END :: Boolean AS isFozzyPage2  -- для договора Id = 4440485(№7183Р(14781)) + доп страничка
+             -- для договора Id = 4440485(№7183Р(14781)) + доп страничка
+           , CASE WHEN vbContractId = 4440485 THEN TRUE ELSE FALSE END :: Boolean AS isFozzyPage2
            
              -- этому Юр Лицу печатается "За довіренністю ...."
            , vbIsOKPO_04544524 :: Boolean AS isOKPO_04544524

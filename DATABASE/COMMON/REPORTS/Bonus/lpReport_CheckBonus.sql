@@ -858,8 +858,8 @@ BEGIN
                                          ELSE tmpContract.InvNumber_master
                                     END AS InvNumber_find
       
-                                  , tmpContract.ContractTagName_child
-                                  , tmpContract.ContractStateKindCode_child
+                                  , COALESCE (tmpContract.ContractTagName_child, '') AS ContractTagName_child
+                                  , COALESCE (tmpContract.ContractStateKindCode_child, 0) AS ContractStateKindCode_child
       
                                   , tmpContract.ContractId_master
                                   , tmpContract.ContractId_child 
@@ -949,8 +949,8 @@ BEGIN
                             , CASE WHEN COALESCE (MILinkObject_ContractChild.ObjectId,0) <> 0 THEN View_Contract_InvNumber_child.InvNumber ELSE View_Contract_InvNumber_master.InvNumber END AS InvNumber_child
                             , View_Contract_InvNumber_find.InvNumber   AS InvNumber_find
 
-                            , View_Contract_InvNumber_child.ContractTagName  AS ContractTagName_child
-                            , View_Contract_InvNumber_child.ContractStateKindCode AS ContractStateKindCode_child
+                            , COALESCE (View_Contract_InvNumber_child.ContractTagName, '')  AS ContractTagName_child
+                            , COALESCE (View_Contract_InvNumber_child.ContractStateKindCode, 0) AS ContractStateKindCode_child
 
                             , COALESCE (MILinkObject_ContractMaster.ObjectId, MILinkObject_Contract.ObjectId, MILinkObject_ContractChild.ObjectId) AS ContractId_master  
                             , COALESCE (MILinkObject_ContractChild.ObjectId, MILinkObject_ContractMaster.ObjectId, MILinkObject_Contract.ObjectId) AS ContractId_child            
@@ -1074,7 +1074,7 @@ BEGIN
                             , tmpData.JuridicalId               AS JuridicalId
                             , 0                                 AS PartnerId
                             , tmpData.PaidKindId                AS PaidKindId
-                            , tmpData.PaidKindId_ContractCondition AS PaidKindId_child
+                            , CASE WHEN tmpData.PaidKindId_ContractCondition > 0 THEN tmpData.PaidKindId_ContractCondition ELSE tmpData.PaidKindId END AS PaidKindId_child
                             , tmpData.ContractConditionKindId   AS ContractConditionKindId
                             , tmpData.BonusKindId               AS BonusKindId
                             , COALESCE (tmpData.Value,0)        AS Value
@@ -1246,6 +1246,7 @@ BEGIN
                     WHERE (tmpAll.Sum_CheckBonus <> 0
                        OR tmpAll.Sum_Bonus <> 0
                        OR tmpAll.Sum_BonusFact <> 0)
+                     --OR inSessiON = '5'
                     )
 
       , tmpMovementParams AS (SELECT tmpMov.MovementId
