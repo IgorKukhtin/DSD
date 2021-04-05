@@ -8,7 +8,7 @@ uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst, ComObj,
   cxControls, dsdGuides, ImgList, cxPC, cxGrid, cxGridTableView, cxDBPivotGrid,
   cxGridDBTableView, frxClass, frxExportPDF, cxGridCustomView, Dialogs, Controls,
   dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL, cxDateNavigator, IdFTP, System.IOUtils
-  {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
+  {$IFDEF DELPHI103RIO}, Actions {$ENDIF}, Vcl.Graphics;
 
 type
 
@@ -611,6 +611,7 @@ type
     FReportNameParam: TdsdParam;  // Название отчета - из Get
     FPrinterNameParam: TdsdParam; // Название Принтера - из Get
     FParams: TdsdParams;          // Параметры - передаются в саму форму печати
+    FPictureFields: TStrings;     // Поля, в которых находятся фото
     FDataSets: TdsdDataSets;
 //    FDataSetList: TList;
     FWithOutPreview: Boolean;
@@ -622,11 +623,12 @@ type
     procedure SetReportName(const Value: String);
     procedure SetPrinterName(const Value: String);
     procedure SetWithOutPreview(const Value: Boolean);
-
+    procedure SetPictureFields(Value: TStrings);
   protected
     procedure Notification(AComponent: TComponent;
       Operation: TOperation); override;
     function LocalExecute: Boolean; override;
+    procedure PreparePictures;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -650,6 +652,8 @@ type
     // Название Принтера - из Get
     property PrinterNameParam: TdsdParam read FPrinterNameParam
       write FPrinterNameParam;
+    // Поля, в которых находятся фото
+    property PictureFields: TStrings read FPictureFields write SetPictureFields;
 
     Property ModalPreview: Boolean read FModalPreview write FModalPreview Default False;
     Property PreviewWindowMaximized: Boolean read FPreviewWindowMaximized write FPreviewWindowMaximized Default True;
@@ -2065,6 +2069,8 @@ begin
   FPrinter := '';
   FModalPreview := false;
   FPreviewWindowMaximized := True;
+
+  FPictureFields := TStringList.Create;
 end;
 
 destructor TdsdPrintAction.Destroy;
@@ -2073,6 +2079,7 @@ begin
   FreeAndNil(FReportNameParam);
   FreeAndNil(FPrinterNameParam);
   FreeAndNil(FDataSets);
+  FreeAndNil(FPictureFields);
   inherited;
 end;
 
@@ -2117,6 +2124,8 @@ begin
 
   inherited;
 
+  PreparePictures;
+
   result := true;
   With TfrxReportExt.Create(Self) do
     ExecuteReport(Self.ReportName,Self.DataSets,Self.Params,Self.CopiesCount, Self.Printer, Self.WithOutPreview,
@@ -2137,12 +2146,92 @@ begin
         Params[i].Component := nil;
 end;
 
+procedure TdsdPrintAction.PreparePictures;
+var I, J, Len: integer;
+    Data : AnsiString;
+    FMemoryStream: TMemoryStream;
+    Ext, FieldName: string;
+    GraphicClass: TGraphicClass;
+    CheckForImages: boolean;
+    Field: TField;
+begin
+  if FPictureFields.Count = 0 then Exit;
+  FMemoryStream := TMemoryStream.Create;
+  try
+    for I := 0 to Self.DataSets.Count - 1 do
+    begin
+      CheckForImages := false;
+      for J := 0 to Self.DataSets.Items[I].DataSet.FieldCount - 1 do
+        if (FPictureFields.IndexOf(Self.DataSets.Items[I].DataSet.Fields.Fields[J].FieldName) > -1)
+            and
+           (Self.DataSets.Items[I].DataSet.Fields.Fields[J].DataType = ftWideMemo) then
+        begin
+          CheckForImages := true;
+          break;
+        end;
+      if not CheckForImages then continue;
+      Self.DataSets.Items[I].DataSet.First;
+      while not Self.DataSets.Items[I].DataSet.Eof do
+      begin
+        for J := 0 to FPictureFields.Count - 1 do
+        begin
+          Field := Self.DataSets.Items[I].DataSet.Fields.FieldByName(FPictureFields.Strings[0]);
+          if Assigned(Field) and (Field.DataType = ftWideMemo) then
+          begin
+            try
+              if Length(Field.AsString) <= 4 then Continue;
+              
+              Data := ReConvertConvert(Field.AsString);
+              Ext := trim(Copy(Data, 1, 255));
+              Ext := AnsiLowerCase(ExtractFileExt(Ext));
+              Delete(Ext, 1, 1);
+
+              if 'wmf' = Ext then GraphicClass := TMetafile;
+              if 'emf' =  Ext then GraphicClass := TMetafile;
+              if 'ico' =  Ext then GraphicClass := TIcon;
+              if 'tiff' = Ext then GraphicClass := TWICImage;
+              if 'tif' = Ext then GraphicClass := TWICImage;
+              if 'png' = Ext then GraphicClass := TWICImage;
+              if 'gif' = Ext then GraphicClass := TWICImage;
+              if 'jpeg' = Ext then GraphicClass := TWICImage;
+              if 'jpg' = Ext then GraphicClass := TWICImage;
+              if 'bmp' = Ext then GraphicClass := Vcl.Graphics.TBitmap;
+              if GraphicClass = nil then Continue;
+
+              Data := Copy(Data, 256, maxint);
+              Self.DataSets.Items[I].DataSet.Edit;
+
+              Len := Length(Data);
+              FMemoryStream.WriteBuffer(Data[1],  Len);
+              FMemoryStream.Position := 0;
+              
+              TBlobField(Field).LoadFromStream(FMemoryStream);
+              Self.DataSets.Items[I].DataSet.Post;
+            finally
+              FMemoryStream.Clear;
+            end;
+          end;
+        end;
+        Self.DataSets.Items[I].DataSet.Next;
+      end;
+      Self.DataSets.Items[I].DataSet.First;
+    end;
+  finally
+    FMemoryStream.Free;
+  end;
+end;
+
 procedure TdsdPrintAction.SetReportName(const Value: String);
 begin
   if (csDesigning in ComponentState) and not(csLoading in ComponentState) then
     ShowMessage('Используйте ReportNameParam')
   else
     FReportName := Value;
+end;
+
+procedure TdsdPrintAction.SetPictureFields(Value: TStrings);
+begin
+  FPictureFields.Assign(Value);
 end;
 
 procedure TdsdPrintAction.SetPrinterName(const Value: String);
