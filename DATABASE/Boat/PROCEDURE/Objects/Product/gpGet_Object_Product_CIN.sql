@@ -18,7 +18,7 @@ $BODY$
 BEGIN
   
    -- находим сохраненную дату производства и модель, если изменили то нужно изменять CIN, 
-   vbDateStart := (SELECT ObjectDate_DateStart.ValueData
+  /* vbDateStart := (SELECT ObjectDate_DateStart.ValueData
                    FROM ObjectDate AS ObjectDate_DateStart
                    WHERE ObjectDate_DateStart.ObjectId = inId
                      AND ObjectDate_DateStart.DescId = zc_ObjectDate_Product_DateStart()
@@ -28,7 +28,7 @@ BEGIN
                  WHERE ObjectLink_Model.ObjectId = inId
                    AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model()
                  );
-
+*/
    IF (COALESCE (vbDateStart, zc_DateStart()) <> inDateStart) OR (COALESCE (vbModelId,0) <> inModelId)
    THEN
        -- находим последний номер конкретной модели + 1

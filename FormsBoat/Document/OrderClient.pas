@@ -200,11 +200,9 @@ type
     GoodsName_ch1: TcxGridDBColumn;
     MeasureName_ch1: TcxGridDBColumn;
     EKPrice_ch1: TcxGridDBColumn;
-    EKPriceWVAT_ch1: TcxGridDBColumn;
     BasisPrice_ch1: TcxGridDBColumn;
     BasisPriceWVAT_ch1: TcxGridDBColumn;
     EKPrice_summ_ch1: TcxGridDBColumn;
-    EKPriceWVAT_summ_ch1: TcxGridDBColumn;
     Basis_summ_ch1: TcxGridDBColumn;
     BasisWVAT_summ_ch1: TcxGridDBColumn;
     Comment_ch1: TcxGridDBColumn;
@@ -232,11 +230,9 @@ type
     MeasureName_ch2: TcxGridDBColumn;
     PartNumber_ch2: TcxGridDBColumn;
     EKPrice_ch2: TcxGridDBColumn;
-    EKPriceWVAT_ch2: TcxGridDBColumn;
     SalePrice_ch2: TcxGridDBColumn;
     SalePriceWVAT_ch2: TcxGridDBColumn;
     EKPrice_summ_ch2: TcxGridDBColumn;
-    EKPriceWVAT_summ_ch2: TcxGridDBColumn;
     Sale_summ_ch2: TcxGridDBColumn;
     SaleWVAT_summ_ch2: TcxGridDBColumn;
     Comment_ch2: TcxGridDBColumn;

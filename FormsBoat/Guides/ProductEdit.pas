@@ -130,6 +130,7 @@ type
     edAmountIn_rem: TcxCurrencyEdit;
     edAmountIn_remAll: TcxCurrencyEdit;
     cxLabel31: TcxLabel;
+    cxButton3: TcxButton;
   private
     { Private declarations }
   public
