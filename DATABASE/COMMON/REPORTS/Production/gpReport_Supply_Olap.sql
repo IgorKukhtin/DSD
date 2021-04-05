@@ -294,7 +294,7 @@ BEGIN
 
                              FROM _tmpContainer_1 AS _tmpContainer
 
-                                  --нужно отнять движения след ?
+                                  --нужно отнять движения след . по идее в _tmpContainer_1 и так они уже снято тк.к беру MIContainer.OperDate >= DATE_TRUNC ('Month', MIContainer.OperDate)
 
                                /*   LEFT JOIN _tmpContainer_1 AS _tmpContainer_next
                                                             ON _tmpContainer_next.MonthDate+INTERVAL'1 MONTH' <= _tmpContainer.MonthDate AND _tmpContainer_next.MonthDate > _tmpContainer.MonthDate
