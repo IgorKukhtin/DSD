@@ -642,7 +642,6 @@ object OrderClientForm: TOrderClientForm
                 item
                   Format = ',0.00'
                   Kind = skSum
-                  Column = EKPriceWVAT_ch1
                 end
                 item
                   Format = ',0.00'
@@ -662,7 +661,6 @@ object OrderClientForm: TOrderClientForm
                 item
                   Format = ',0.00##'
                   Kind = skSum
-                  Column = EKPriceWVAT_summ_ch1
                 end
                 item
                   Format = ',0.00##'
@@ -680,18 +678,9 @@ object OrderClientForm: TOrderClientForm
                   Kind = skCount
                 end
                 item
-                  Format = ',0.####'
-                  Kind = skSum
-                end
-                item
                   Format = ',0.00'
                   Kind = skSum
                   Column = EKPrice_ch1
-                end
-                item
-                  Format = ',0.00'
-                  Kind = skSum
-                  Column = EKPriceWVAT_ch1
                 end
                 item
                   Format = ',0.00'
@@ -707,11 +696,6 @@ object OrderClientForm: TOrderClientForm
                   Format = ',0.00##'
                   Kind = skSum
                   Column = EKPrice_summ_ch1
-                end
-                item
-                  Format = ',0.00##'
-                  Kind = skSum
-                  Column = EKPriceWVAT_summ_ch1
                 end
                 item
                   Format = ',0.00##'
@@ -899,16 +883,15 @@ object OrderClientForm: TOrderClientForm
                 Options.Editing = False
                 Width = 50
               end
-              object EKPriceWVAT_ch1: TcxGridDBColumn
-                Caption = #1062#1077#1085#1072' '#1074#1093'. '#1089' '#1053#1044#1057
-                DataBinding.FieldName = 'EKPriceWVAT'
+              object EKPrice_summ_ch1: TcxGridDBColumn
+                Caption = 'Total EK'
+                DataBinding.FieldName = 'EKPrice_summ'
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DecimalPlaces = 4
                 Properties.DisplayFormat = ',0.####;-,0.####; ;'
-                Visible = False
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
-                HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1089' '#1053#1044#1057
+                HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
                 Options.Editing = False
                 Width = 70
               end
@@ -937,31 +920,6 @@ object OrderClientForm: TOrderClientForm
                 HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1085#1076#1089
                 Options.Editing = False
                 Width = 70
-              end
-              object EKPrice_summ_ch1: TcxGridDBColumn
-                Caption = 'Total EK'
-                DataBinding.FieldName = 'EKPrice_summ'
-                PropertiesClassName = 'TcxCurrencyEditProperties'
-                Properties.DecimalPlaces = 4
-                Properties.DisplayFormat = ',0.####;-,0.####; ;'
-                HeaderAlignmentHorz = taCenter
-                HeaderAlignmentVert = vaCenter
-                HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
-                Options.Editing = False
-                Width = 70
-              end
-              object EKPriceWVAT_summ_ch1: TcxGridDBColumn
-                Caption = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057
-                DataBinding.FieldName = 'EKPriceWVAT_summ'
-                PropertiesClassName = 'TcxCurrencyEditProperties'
-                Properties.DecimalPlaces = 4
-                Properties.DisplayFormat = ',0.####;-,0.####; ;'
-                Visible = False
-                HeaderAlignmentHorz = taCenter
-                HeaderAlignmentVert = vaCenter
-                HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057
-                Options.Editing = False
-                Width = 80
               end
               object Basis_summ_ch1: TcxGridDBColumn
                 Caption = 'Total LP'
@@ -1072,26 +1030,6 @@ object OrderClientForm: TOrderClientForm
               DataController.Filter.Options = [fcoCaseInsensitive]
               DataController.Summary.DefaultGroupSummaryItems = <
                 item
-                  Format = ',0.####'
-                  Kind = skSum
-                end
-                item
-                  Format = ',0.00##'
-                  Kind = skSum
-                end
-                item
-                  Format = ',0.00##'
-                  Kind = skSum
-                end
-                item
-                  Format = ',0.00'
-                  Kind = skSum
-                end
-                item
-                  Format = ',0.00'
-                  Kind = skSum
-                end
-                item
                   Format = ',0.00'
                   Kind = skSum
                   Column = SalePrice_ch2
@@ -1107,19 +1045,9 @@ object OrderClientForm: TOrderClientForm
                   Column = EKPrice_ch2
                 end
                 item
-                  Format = ',0.00'
-                  Kind = skSum
-                  Column = EKPriceWVAT_ch2
-                end
-                item
                   Format = ',0.00##'
                   Kind = skSum
                   Column = EKPrice_summ_ch2
-                end
-                item
-                  Format = ',0.00##'
-                  Kind = skSum
-                  Column = EKPriceWVAT_summ_ch2
                 end
                 item
                   Format = ',0.00##'
@@ -1137,26 +1065,6 @@ object OrderClientForm: TOrderClientForm
                   Kind = skCount
                 end
                 item
-                  Format = ',0.####'
-                  Kind = skSum
-                end
-                item
-                  Format = ',0.00##'
-                  Kind = skSum
-                end
-                item
-                  Format = ',0.00##'
-                  Kind = skSum
-                end
-                item
-                  Format = ',0.00'
-                  Kind = skSum
-                end
-                item
-                  Format = ',0.00'
-                  Kind = skSum
-                end
-                item
                   Format = ',0.00'
                   Kind = skSum
                   Column = SalePrice_ch2
@@ -1172,19 +1080,9 @@ object OrderClientForm: TOrderClientForm
                   Column = EKPrice_ch2
                 end
                 item
-                  Format = ',0.00'
-                  Kind = skSum
-                  Column = EKPriceWVAT_ch2
-                end
-                item
                   Format = ',0.00##'
                   Kind = skSum
                   Column = EKPrice_summ_ch2
-                end
-                item
-                  Format = ',0.00##'
-                  Kind = skSum
-                  Column = EKPriceWVAT_summ_ch2
                 end
                 item
                   Format = ',0.00##'
@@ -1350,6 +1248,20 @@ object OrderClientForm: TOrderClientForm
                 HeaderHint = #8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1086#1075#1086' '#1076#1086#1087'. '#1086#1073#1086#1088#1091#1076#1086#1074#1072#1085#1080#1103
                 Width = 80
               end
+              object Article_ch2: TcxGridDBColumn
+                Caption = 'Artikel Nr'
+                DataBinding.FieldName = 'Article'
+                PropertiesClassName = 'TcxButtonEditProperties'
+                Properties.Buttons = <
+                  item
+                    Default = True
+                    Kind = bkEllipsis
+                  end>
+                Properties.ReadOnly = True
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Width = 55
+              end
               object EKPrice_ch2: TcxGridDBColumn
                 Caption = 'Netto EK'
                 DataBinding.FieldName = 'EKPrice'
@@ -1363,16 +1275,15 @@ object OrderClientForm: TOrderClientForm
                 Options.Editing = False
                 Width = 50
               end
-              object EKPriceWVAT_ch2: TcxGridDBColumn
-                Caption = #1062#1077#1085#1072' '#1074#1093'. '#1089' '#1053#1044#1057
-                DataBinding.FieldName = 'EKPriceWVAT'
+              object EKPrice_summ_ch2: TcxGridDBColumn
+                Caption = 'Total EK'
+                DataBinding.FieldName = 'EKPrice_summ'
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DecimalPlaces = 4
                 Properties.DisplayFormat = ',0.####;-,0.####; ;'
-                Visible = False
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
-                HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1089' '#1053#1044#1057
+                HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
                 Options.Editing = False
                 Width = 70
               end
@@ -1401,45 +1312,6 @@ object OrderClientForm: TOrderClientForm
                 HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1085#1076#1089
                 Options.Editing = False
                 Width = 70
-              end
-              object Article_ch2: TcxGridDBColumn
-                Caption = 'Artikel Nr'
-                DataBinding.FieldName = 'Article'
-                PropertiesClassName = 'TcxButtonEditProperties'
-                Properties.Buttons = <
-                  item
-                    Default = True
-                    Kind = bkEllipsis
-                  end>
-                Properties.ReadOnly = True
-                HeaderAlignmentHorz = taCenter
-                HeaderAlignmentVert = vaCenter
-                Width = 55
-              end
-              object EKPrice_summ_ch2: TcxGridDBColumn
-                Caption = 'Total EK'
-                DataBinding.FieldName = 'EKPrice_summ'
-                PropertiesClassName = 'TcxCurrencyEditProperties'
-                Properties.DecimalPlaces = 4
-                Properties.DisplayFormat = ',0.####;-,0.####; ;'
-                HeaderAlignmentHorz = taCenter
-                HeaderAlignmentVert = vaCenter
-                HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
-                Options.Editing = False
-                Width = 70
-              end
-              object EKPriceWVAT_summ_ch2: TcxGridDBColumn
-                Caption = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057
-                DataBinding.FieldName = 'EKPriceWVAT_summ'
-                PropertiesClassName = 'TcxCurrencyEditProperties'
-                Properties.DecimalPlaces = 4
-                Properties.DisplayFormat = ',0.####;-,0.####; ;'
-                Visible = False
-                HeaderAlignmentHorz = taCenter
-                HeaderAlignmentVert = vaCenter
-                HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057
-                Options.Editing = False
-                Width = 80
               end
               object Sale_summ_ch2: TcxGridDBColumn
                 Caption = 'Total LP'
@@ -1538,6 +1410,9 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -1843,6 +1718,9 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet2: TcxTabSheet
       Caption = 'Info'
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridInfo: TcxGrid
         Left = 0
         Top = 0
@@ -4092,6 +3970,7 @@ object OrderClientForm: TOrderClientForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorValueList = <>
@@ -4302,6 +4181,7 @@ object OrderClientForm: TOrderClientForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorValueList = <>
@@ -4659,6 +4539,7 @@ object OrderClientForm: TOrderClientForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorValueList = <>
@@ -4688,6 +4569,7 @@ object OrderClientForm: TOrderClientForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorValueList = <>
