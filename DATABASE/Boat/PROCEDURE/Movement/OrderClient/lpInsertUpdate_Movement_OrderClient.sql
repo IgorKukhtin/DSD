@@ -170,7 +170,8 @@ BEGIN
                                                         , inMovementId    := ioId
                                                         , inGoodsId       := inProductId
                                                         , inAmount        := 1  ::TFloat
-                                                        , inOperPrice     := gpSelect.Basis_summ_orig
+                                                        , ioOperPrice     := gpSelect.Basis_summ
+                                                        , inOperPriceList := gpSelect.Basis_summ_orig
                                                         , inCountForPrice := 1  ::TFloat
                                                         , inComment       := '' ::TVarChar
                                                         , inUserId        := inUserId

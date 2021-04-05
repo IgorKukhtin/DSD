@@ -368,6 +368,16 @@ object OrderClientForm: TOrderClientForm
                 Format = ',0.####'
                 Kind = skSum
                 Column = SummWithVAT
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+                Column = SummPriceList
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+                Column = SummPriceListWithVAT
               end>
             DataController.Summary.FooterSummaryItems = <
               item
@@ -389,6 +399,16 @@ object OrderClientForm: TOrderClientForm
                 Format = 'C'#1090#1088#1086#1082': ,0'
                 Kind = skCount
                 Column = GoodsName
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+                Column = SummPriceList
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+                Column = SummPriceListWithVAT
               end>
             DataController.Summary.SummaryGroups = <>
             Images = dmMain.SortImageList
@@ -487,7 +507,7 @@ object OrderClientForm: TOrderClientForm
               HeaderAlignmentVert = vaCenter
               Width = 70
             end
-            object OperPricePrice: TcxGridDBColumn
+            object OperPrice: TcxGridDBColumn
               Caption = 'Ladenpreis'
               DataBinding.FieldName = 'OperPrice'
               PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -496,6 +516,7 @@ object OrderClientForm: TOrderClientForm
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089
+              Options.Editing = False
               Width = 80
             end
             object CountForPrice: TcxGridDBColumn
@@ -546,6 +567,57 @@ object OrderClientForm: TOrderClientForm
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
+              Options.Editing = False
+              Width = 91
+            end
+            object OperPriceList: TcxGridDBColumn
+              Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
+              DataBinding.FieldName = 'OperPriceList'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.####;-,0.####; ;'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080' '#1073#1077#1079' '#1085#1076#1089
+              Width = 80
+            end
+            object OperPriceListWithVAT: TcxGridDBColumn
+              Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080' '#1089' '#1085#1076#1089
+              DataBinding.FieldName = 'OperPriceWithVAT'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.####;-,0.####; ;'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080' '#1089' '#1085#1076#1089
+              Options.Editing = False
+              Width = 80
+            end
+            object SummPriceList: TcxGridDBColumn
+              Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080' '#1073#1077#1079' '#1053#1044#1057
+              DataBinding.FieldName = 'SummPriceList'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.####;-,0.####; ;'
+              Properties.ReadOnly = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080' '#1073#1077#1079' '#1053#1044#1057
+              Options.Editing = False
+              Width = 91
+            end
+            object SummPriceListWithVAT: TcxGridDBColumn
+              Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080' '#1089' '#1053#1044#1057
+              DataBinding.FieldName = 'SummPriceListWithVAT'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.####;-,0.####; ;'
+              Properties.ReadOnly = False
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080' '#1089' '#1053#1044#1057
               Options.Editing = False
               Width = 91
             end
@@ -1410,9 +1482,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -1718,9 +1787,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet2: TcxTabSheet
       Caption = 'Info'
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridInfo: TcxGrid
         Left = 0
         Top = 0
@@ -3099,10 +3165,19 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperPrice'
+        Name = 'ioOperPrice'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'OperPrice'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPriceList'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPriceList'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3251,8 +3326,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 202
-    Top = 184
+    Left = 186
+    Top = 168
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -3754,10 +3829,19 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperPrice'
+        Name = 'ioOperPrice'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'OperPrice'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPriceList'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPriceList'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4508,8 +4592,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 280
-    Top = 223
+    Left = 272
+    Top = 239
   end
   object ChildCDS: TClientDataSet
     Aggregates = <>

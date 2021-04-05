@@ -163,7 +163,7 @@ type
     GoodsName: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
-    OperPricePrice: TcxGridDBColumn;
+    OperPrice: TcxGridDBColumn;
     CountForPrice: TcxGridDBColumn;
     OperPriceWithVAT: TcxGridDBColumn;
     Summ: TcxGridDBColumn;
