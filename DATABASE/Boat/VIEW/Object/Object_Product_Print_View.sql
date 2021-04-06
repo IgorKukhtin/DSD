@@ -14,7 +14,7 @@ CREATE OR REPLACE VIEW Object_Product_PrintInfo_View AS
         , 'KROATIEN'                   ::TVarChar AS Country_Firma
         , 'steuerfreie innergem. Lieferung gemab §4 Nr.1b i.V.m. §6a UStG' ::TVarChar AS Text_tax   --** не облагаемый налогом внутренний Поставка в соответствии с §4 № 1b в сочетании с §6a UStG. 
         , 'special discount'                    ::TVarChar AS Text_discount
-        , 'Sie wurden beraten von M.Starchenko' ::TVarChar AS Text_sign
+        , 'Sie wurden beraten von ' ::TVarChar AS Text_sign
 
         , 'Fapi Motor Ltd'        ::TVarChar AS Name_Firma2
         , 'Pitkali road'          ::TVarChar AS Street_Firma2

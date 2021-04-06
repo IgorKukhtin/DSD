@@ -193,6 +193,7 @@ type
     KeyId: TcxGridDBColumn;
     Basis_summ1_orig: TcxGridDBColumn;
     Basis_summ2_orig: TcxGridDBColumn;
+    Amount_ch2: TcxGridDBColumn;
   private
     { Private declarations }
   public

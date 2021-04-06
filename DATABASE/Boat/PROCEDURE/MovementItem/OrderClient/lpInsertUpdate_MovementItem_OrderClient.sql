@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_MovementItem_OrderClient()
 
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderClient(Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderClient(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderClient(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderClient(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderClient(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderClient(
     IN inAmount              TFloat    , -- Количество
  INOUT ioOperPrice           TFloat    , -- Цена со скидкой
     IN inOperPriceList       TFloat    , -- Цена без скидки
+    IN inBasisPrice          TFloat    , -- Цена базовая
     IN inCountForPrice       TFloat    , -- Цена за кол.
     IN inComment             TVarChar  , 
     IN inUserId              Integer     -- сессия пользователя
@@ -53,6 +55,10 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), ioId, inOperPriceList);
      -- сохранили свойство <Цена за кол.>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, inCountForPrice);
+     -- сохранили свойство <Цена базовая>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_BasisPrice(), ioId, inBasisPrice);
+     
+     
      
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
 
@@ -73,6 +79,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.04.21         *
  05.04.21         * inOperPriceList
  15.02.21         * 
 */

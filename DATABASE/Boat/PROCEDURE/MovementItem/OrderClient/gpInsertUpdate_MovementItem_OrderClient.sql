@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_OrderClient()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderClient(Integer, Integer, Integer, TFloat, TFloat, TFloat,TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderClient(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderClient(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderClient(
     IN inAmount              TFloat    , -- Количество
  INOUT ioOperPrice           TFloat    , -- Цена со скидкой
     IN inOperPriceList       TFloat    , -- Цена без скидки
+    IN inBasisPrice          TFloat    , -- Цена базовая
     IN inCountForPrice       TFloat    , -- Цена за кол.
     IN inComment             TVarChar  , --
     IN inSession             TVarChar    -- сессия пользователя
@@ -36,6 +38,7 @@ BEGIN
                                                  , inAmount
                                                  , ioOperPrice
                                                  , inOperPriceList
+                                                 , inBasisPrice
                                                  , inCountForPrice
                                                  , inComment
                                                  , vbUserId
