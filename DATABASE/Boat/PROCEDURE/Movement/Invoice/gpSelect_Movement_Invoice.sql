@@ -167,10 +167,10 @@ BEGIN
       , tmpMLM_BankAccount.AmountOut ::TFloat AS AmountOut_BankAccount
       , (COALESCE (tmpMLM_BankAccount.AmountIn,0) - COALESCE (tmpMLM_BankAccount.AmountOut,0)) ::TFloat AS Amount_BankAccount
       -- остаток по счету
-      , (COALESCE (CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END,0) - COALESCE (tmpMLM_BankAccount.AmountIn,0))  ::TFloat AS AmountIn_rem
-      , (COALESCE (CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END,0) - COALESCE (tmpMLM_BankAccount.AmountOut,0)) ::TFloat AS AmountOut_rem
-      , ((COALESCE (CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END,0) - COALESCE (tmpMLM_BankAccount.AmountIn,0))
-       - (COALESCE (CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END,0) - COALESCE (tmpMLM_BankAccount.AmountOut,0)) ) ::TFloat AS Amount_rem
+      , (COALESCE (CASE WHEN MovementFloat_Amount.ValueData > 0  THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END,0) - COALESCE (tmpMLM_BankAccount.AmountIn,0))  ::TFloat AS AmountIn_rem
+      , (COALESCE (CASE WHEN MovementFloat_Amount.ValueData < 0  THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END,0) - COALESCE (tmpMLM_BankAccount.AmountOut,0)) ::TFloat AS AmountOut_rem
+      , ((COALESCE (CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END,0) - COALESCE (tmpMLM_BankAccount.AmountIn,0))
+       - (COALESCE (CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END,0) - COALESCE (tmpMLM_BankAccount.AmountOut,0)) ) ::TFloat AS Amount_rem
 
       , Object_Object.Id                                    AS ObjectId
       , Object_Object.ValueData                             AS ObjectName
@@ -210,11 +210,11 @@ BEGIN
       , MovementDesc_Parent.ItemName   ::TVarChar  AS DescName_parent
 
       -- подсветить если счет не оплачен + подсветить красным - если оплата больше чем сумма счета + добавить кнопку - в новой форме показать все оплаты для этого счета
-      , CASE WHEN (COALESCE (CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END,0) > COALESCE (tmpMLM_BankAccount.AmountOut,0)) AND COALESCE (tmpMLM_BankAccount.AmountOut,0)<>0
-               OR (COALESCE (CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END,0) > COALESCE (tmpMLM_BankAccount.AmountIn,0))  AND COALESCE (tmpMLM_BankAccount.AmountIn,0)<>0
+      , CASE WHEN (COALESCE (CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END,0) > COALESCE (tmpMLM_BankAccount.AmountOut,0)) AND COALESCE (tmpMLM_BankAccount.AmountOut,0)<>0
+               OR (COALESCE (CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END,0) > COALESCE (tmpMLM_BankAccount.AmountIn,0))  AND COALESCE (tmpMLM_BankAccount.AmountIn,0)<>0
              THEN zc_Color_Blue()
-             WHEN (COALESCE (CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END,0) < COALESCE (tmpMLM_BankAccount.AmountOut,0)) AND COALESCE (tmpMLM_BankAccount.AmountOut,0)<>0
-               OR (COALESCE (CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END,0) < COALESCE (tmpMLM_BankAccount.AmountIn,0))  AND COALESCE (tmpMLM_BankAccount.AmountIn,0)<>0
+             WHEN (COALESCE (CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END,0) < COALESCE (tmpMLM_BankAccount.AmountOut,0)) AND COALESCE (tmpMLM_BankAccount.AmountOut,0)<>0
+               OR (COALESCE (CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END,0) < COALESCE (tmpMLM_BankAccount.AmountIn,0))  AND COALESCE (tmpMLM_BankAccount.AmountIn,0)<>0
              THEN zc_Color_Red()
              ELSE zc_Color_Black()
         END ::Integer AS Color_Pay

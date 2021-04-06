@@ -180,11 +180,11 @@ BEGIN
            , CASE WHEN tmpInvoice_Params.Amount < 0 AND MovementLinkMovement_Invoice.Ord = 1 THEN -1 * tmpInvoice_Params.Amount ELSE 0 END::TFloat AS AmountOut_Invoice
            --, (COALESCE (MovementItem.Amount,0) + COALESCE (tmpInvoice_Params.Amount,0))          ::TFloat AS Amount_diff
            , CASE WHEN MovementLinkMovement_Invoice.Ord = 1 OR MovementLinkMovement_Invoice.Ord IS NULL
-                  THEN (COALESCE (MovementItem.SumIn,0) - COALESCE (MovementItem.SumOut,0) + COALESCE (tmpInvoice_Params.Amount,0))
+                  THEN (COALESCE (tmpInvoice_Params.Amount,0) - (COALESCE (MovementItem.SumIn,0) - COALESCE (MovementItem.SumOut,0)))
                   ELSE 0
              END     ::TFloat  AS Amount_diff
 
-           , CASE WHEN (COALESCE (MovementItem.SumIn,0) - COALESCE (MovementItem.SumOut,0) + COALESCE (tmpInvoice_Params.Amount,0)) <> 0 
+           , CASE WHEN (COALESCE (tmpInvoice_Params.Amount,0) - (COALESCE (MovementItem.SumIn,0) - COALESCE (MovementItem.SumOut,0) )) <> 0 
                   THEN TRUE ELSE FALSE END ::Boolean AS isDiff
            , tmpInvoice_Params.ObjectName          AS ObjectName_Invoice
            , tmpInvoice_Params.DescName            AS DescName_Invoice
