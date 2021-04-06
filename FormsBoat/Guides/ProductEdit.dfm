@@ -530,7 +530,7 @@ object ProductEditForm: TProductEditForm
   object cxLabel30: TcxLabel
     Left = 331
     Top = 425
-    Caption = #1054#1089#1090'. '#1082' '#1086#1087#1083#1072#1090#1077
+    Caption = #1054#1089#1090'. '#1082' '#1086#1087#1083'. '#1087#1086' '#1089#1095#1077#1090#1072#1084
   end
   object edAmountIn_rem: TcxCurrencyEdit
     Left = 331
@@ -538,7 +538,7 @@ object ProductEditForm: TProductEditForm
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     Properties.ReadOnly = True
-    TabOrder = 68
+    TabOrder = 66
     Width = 114
   end
   object edAmountIn_remAll: TcxCurrencyEdit
@@ -547,12 +547,12 @@ object ProductEditForm: TProductEditForm
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     Properties.ReadOnly = True
-    TabOrder = 71
+    TabOrder = 69
     Width = 114
   end
   object cxLabel31: TcxLabel
     Left = 456
-    Top = 427
+    Top = 425
     Caption = #1054#1089#1090'. '#1082' '#1086#1087#1083#1072#1090#1077' ('#1080#1090#1086#1075#1086')'
   end
   object cxButton3: TcxButton
@@ -623,6 +623,7 @@ object ProductEditForm: TProductEditForm
         end>
       Caption = 'get CIN'
       Hint = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' CIN Nr.'
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object CompleteMovementInvoice: TChangeGuidesStatus

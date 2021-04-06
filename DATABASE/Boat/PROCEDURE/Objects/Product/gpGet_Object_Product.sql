@@ -24,7 +24,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , StatusCode_OrderClient Integer
              , StatusName_OrderClient TVarChar
              , VATPercent_OrderClient TFloat
-             , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummVAT TFloat
+             , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSummVAT TFloat
              , isBasicConf Boolean, isProdColorPattern Boolean
              
              , MovementId_Invoice Integer  
@@ -87,7 +87,6 @@ BEGIN
 
            , CAST (0 AS TFloat)        AS TotalSummMVAT
            , CAST (0 AS TFloat)        AS TotalSummPVAT
-           , CAST (0 AS TFloat)        AS TotalSumm
            , CAST (0 AS TFloat)        AS TotalSummVAT
 
            , CAST (TRUE AS Boolean)    AS isBasicConf
@@ -247,10 +246,9 @@ BEGIN
          , tmpOrderClient.StatusName :: TVarChar   AS StatusName_OrderClient
          , tmpOrderClient.VATPercent :: TFloat     AS VATPercent_OrderClient
 
-         , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
-         , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
-         , MovementFloat_TotalSumm.ValueData          AS TotalSumm
-         , (COALESCE (MovementFloat_TotalSummPVAT.ValueData,0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData,0)) :: TFloat AS TotalSummVAT
+         , zfCalc_Summ_NoVAT (MovementFloat_TotalSumm.ValueData, tmpOrderClient.VATPercent):: TFloat AS TotalSummMVAT
+         , MovementFloat_TotalSumm.ValueData                                               :: TFloat AS TotalSummPVAT
+         , zfCalc_Summ_VAT (MovementFloat_TotalSumm.ValueData, tmpOrderClient.VATPercent)  :: TFloat AS TotalSummVAT
 
          , COALESCE (ObjectBoolean_BasicConf.ValueData, FALSE) :: Boolean AS isBasicConf
          , CAST (FALSE AS Boolean)          AS isProdColorPattern
@@ -267,8 +265,9 @@ BEGIN
          , tmpBankAccount_First.AmountIn ::TFloat AS AmountIn_BankAccount
          , tmpBankAccount.AmountIn       ::TFloat AS AmountIn_BankAccountAll
 
-         , (COALESCE (tmpInvoice_First.AmountIn,0) - COALESCE (tmpBankAccount_First.AmountIn,0)) ::TFloat AS AmountIn_rem
-         , (COALESCE (tmpInvoice.AmountIn,0) - COALESCE (tmpBankAccount.AmountIn,0))             ::TFloat AS AmountIn_remAll
+         --, (COALESCE (tmpInvoice_First.AmountIn,0) - COALESCE (tmpBankAccount_First.AmountIn,0)) ::TFloat AS AmountIn_rem
+         , (COALESCE (tmpInvoice.AmountIn,0) - COALESCE (tmpBankAccount.AmountIn,0))               ::TFloat AS AmountIn_rem       -- итого к оплате по выставленным счетам
+         , (COALESCE (MovementFloat_TotalSumm.ValueData,0) - COALESCE (tmpBankAccount.AmountIn,0)) ::TFloat AS AmountIn_remAll    -- итого к оплате за лодку
          
      FROM Object AS Object_Product
           LEFT JOIN ObjectBoolean AS ObjectBoolean_BasicConf
@@ -343,12 +342,6 @@ BEGIN
 
           LEFT JOIN tmpOrderClient ON 1=1
 
-          LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
-                                  ON MovementFloat_TotalSummMVAT.MovementId = tmpOrderClient.MovementId
-                                 AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
-          LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
-                                  ON MovementFloat_TotalSummPVAT.MovementId = tmpOrderClient.MovementId
-                                 AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
           LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                   ON MovementFloat_TotalSumm.MovementId = tmpOrderClient.MovementId
                                  AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()

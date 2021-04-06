@@ -26,10 +26,10 @@ BEGIN
      -- % скидки для расчета цены со скидкой если элемент не лодка не лодка
      IF (SELECT Object.DescId FROM Object WHERE Object.Id = inGoodsId) <> zc_Object_Product()
      THEN
-      RAISE EXCEPTION ('111');
+      --RAISE EXCEPTION ('111');
           
           vbDiscountTax := (SELECT (COALESCE (MovementFloat_DiscountTax.ValueData,0)
-                                  + COALESCE (MovementFloat_DiscountNextTax.ValueData)) ::TFloat AS DiscountTax
+                                  + COALESCE (MovementFloat_DiscountNextTax.ValueData,0) ) ::TFloat AS DiscountTax
                             FROM Movement
                                 LEFT JOIN MovementFloat AS MovementFloat_DiscountTax
                                                         ON MovementFloat_DiscountTax.MovementId = Movement.Id
@@ -40,7 +40,7 @@ BEGIN
                             WHERE Movement.Id = inMovementId
                             );
           -- рассчитываем цену со скидкой
-          ioOperPrice := (CASE WHEN COALESCE (vbDiscountTax,0) > 0 THEN zfCalc_SummDiscount (inOperPriceList, vbDiscountTax)  ELSE inOperPriceList END );
+          ioOperPrice := (CASE WHEN COALESCE (vbDiscountTax,0) > 0 THEN zfCalc_SummDiscountTax (inOperPriceList, vbDiscountTax)  ELSE inOperPriceList END );
      END IF;
 
 
