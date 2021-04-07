@@ -16,6 +16,7 @@ $BODY$
     DECLARE vbProductId    Integer;
     DECLARE vbOperDate_OrderClient   TDateTime;
     DECLARE vbInvNumber_OrderClient  TVarChar;
+    DECLARE vbInsertName TVarChar;
     DECLARE vbPriceWithVAT Boolean;
     DECLARE vbVATPercent   TFloat;
     DECLARE vbDiscountTax  TFloat;  
@@ -28,12 +29,14 @@ BEGIN
           , MovementFloat_DiscountTax.ValueData     AS DiscountTax
           , Movement_OrderClient.OperDate
           , Movement_OrderClient.InvNumber
+          , Object_Insert.ValueData  AS InsertName
      INTO
          vbPriceWithVAT
        , vbVATPercent
        , vbDiscountTax
        , vbOperDate_OrderClient
        , vbInvNumber_OrderClient
+       , vbInsertName
      FROM Movement AS Movement_OrderClient
          LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                    ON MovementBoolean_PriceWithVAT.MovementId = Movement_OrderClient.Id
@@ -44,6 +47,10 @@ BEGIN
          LEFT JOIN MovementFloat AS MovementFloat_DiscountTax
                                  ON MovementFloat_DiscountTax.MovementId = Movement_OrderClient.Id
                                 AND MovementFloat_DiscountTax.DescId = zc_MovementFloat_DiscountTax()
+         LEFT JOIN MovementLinkObject AS MLO_Insert
+                                      ON MLO_Insert.MovementId = Movement_OrderClient.Id
+                                     AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+         LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId 
      WHERE Movement_OrderClient.Id = inMovementId_OrderClient  -- по идее должен быть один док. заказа, но малоли
        AND Movement_OrderClient.DescId = zc_Movement_OrderClient();
 
@@ -77,10 +84,12 @@ BEGIN
      CREATE TEMP TABLE tmpProduct ON COMMIT DROP AS (SELECT tmp.*
                                                      FROM gpSelect_Object_Product (inIsShowAll:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
                                                      WHERE tmp.Id = vbProductId
+                                                       AND tmp.MovementId_OrderClient = inMovementId_OrderClient
                                                      );
      CREATE TEMP TABLE tmpProdColorItems ON COMMIT DROP AS (SELECT tmp.*
                                                             FROM gpSelect_Object_ProdColorItems (inIsShowAll:= FALSE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
                                                             WHERE tmp.ProductId = vbProductId
+                                                              AND tmp.MovementId_OrderClient = inMovementId_OrderClient
                                                             );
      -- Результат
      OPEN Cursor1 FOR
@@ -104,8 +113,8 @@ BEGIN
             , 'KROATIEN'                   ::TVarChar AS Country_Firma
             , 'steuerfreie innergem. Lieferung gemab §4 Nr.1b i.V.m. §6a UStG' ::TVarChar AS Text1   --**
             , 'special discount'                    ::TVarChar AS Text2
-            , 'Sie wurden beraten von M.Starchenko' ::TVarChar AS Text3
-            
+            , ('Sie wurden beraten von '||' '||vbInsertName) ::TVarChar AS Text3
+
             , COALESCE (ObjectString_TaxNumber.ValueData,'') ::TVarChar AS TaxNumber
             , '' ::TVarChar AS Angebot
             , '' ::TVarChar AS Seite   

@@ -172,6 +172,7 @@ BEGIN
                                                         , inAmount        := 1  ::TFloat
                                                         , ioOperPrice     := gpSelect.Basis_summ
                                                         , inOperPriceList := gpSelect.Basis_summ_orig
+                                                        , inBasisPrice    := gpSelect.Basis_summ1_orig  --
                                                         , inCountForPrice := 1  ::TFloat
                                                         , inComment       := '' ::TVarChar
                                                         , inUserId        := inUserId

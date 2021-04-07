@@ -1864,6 +1864,19 @@ inherited OrderInternalForm: TOrderInternalForm
       ImageIndex = 80
       QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1048#1090#1086#1075#1086#1074#1086#1084#1091' '#1057#1059#1040'?'
     end
+    object actPUSHDiscount: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSHDiscount
+      StoredProcList = <
+        item
+          StoredProc = spPUSHDiscount
+        end>
+      Caption = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1080#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1084' '#1087#1088#1086#1075#1088#1072#1084#1084#1072#1084
+      Hint = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1080#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1084' '#1087#1088#1086#1075#1088#1072#1084#1084#1072#1084
+      ImageIndex = 67
+      PUSHMessageType = pmtInformation
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -1996,6 +2009,14 @@ inherited OrderInternalForm: TOrderInternalForm
         item
           Visible = True
           ItemName = 'bbPrioritetPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPUSHDiscount'
         end
         item
           Visible = True
@@ -2156,6 +2177,10 @@ inherited OrderInternalForm: TOrderInternalForm
     end
     object bbUpdateFinalSUA: TdxBarButton
       Action = actUpdateFinalSUA
+      Category = 0
+    end
+    object bbPUSHDiscount: TdxBarButton
+      Action = actPUSHDiscount
       Category = 0
     end
   end
@@ -3257,5 +3282,39 @@ inherited OrderInternalForm: TOrderInternalForm
     PackSize = 1
     Left = 682
     Top = 424
+  end
+  object spPUSHDiscount: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSH_Discount_OrderInternal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1058
+    Top = 360
   end
 end

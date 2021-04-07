@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_ProdOptItems(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , PriceIn TFloat, PriceOut TFloat
+             , Amount TFloat
+             , PriceIn TFloat, PriceOut TFloat, DiscountTax TFloat
              , PartNumber TVarChar, Comment TVarChar
              , ProductId Integer, ProductName TVarChar
              , ProdOptionsId Integer, ProdOptionsName TVarChar
@@ -28,6 +29,7 @@ BEGIN
               0 :: Integer            AS Id
            , lfGet_ObjectCode(0, zc_Object_Brand())   AS Code
            , '' :: TVarChar           AS Name
+           ,  0 :: TFloat             AS Amount
            ,  0 :: TFloat             AS PriceIn
            ,  0 :: TFloat             AS PriceOut
            ,  0 :: TFloat             AS DiscountTax
@@ -47,6 +49,7 @@ BEGIN
          , Object_ProdOptItems.ObjectCode     ::Integer   AS Code
          , Object_ProdOptItems.ValueData      ::TVarChar  AS Name
 
+         , COALESCE (ObjectFloat_Count.ValueData,1) ::TFloat AS Amount
          , ObjectFloat_PriceIn.ValueData      ::TFloat    AS PriceIn
          , ObjectFloat_PriceOut.ValueData     ::TFloat    AS PriceOut
          , ObjectFloat_DiscountTax.ValueData  ::TFloat    AS DiscountTax
@@ -79,6 +82,11 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_DiscountTax
                                 ON ObjectFloat_DiscountTax.ObjectId = Object_ProdOptItems.Id
                                AND ObjectFloat_DiscountTax.DescId = zc_ObjectFloat_Client_DiscountTax()
+
+          -- Кол-во самих опций
+          LEFT JOIN ObjectFloat AS ObjectFloat_Count
+                                ON ObjectFloat_Count.ObjectId = Object_ProdOptItems.Id
+                               AND ObjectFloat_Count.DescId   = zc_ObjectFloat_ProdOptItems_Count()
 
           LEFT JOIN ObjectLink AS ObjectLink_Product
                                ON ObjectLink_Product.ObjectId = Object_ProdOptItems.Id

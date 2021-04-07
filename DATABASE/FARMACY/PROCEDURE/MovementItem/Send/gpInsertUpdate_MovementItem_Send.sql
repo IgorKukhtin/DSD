@@ -235,6 +235,7 @@ BEGIN
     END IF;
     
     IF vbIsSUN = FALSE AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+      AND vbFromId NOT IN (1529734, 8156016) 
     THEN
       vHT_SUN := COALESCE((SELECT Max(ObjectFloat_HT_SUN_v1.ValueData) FROM ObjectFloat AS ObjectFloat_HT_SUN_v1 
                            WHERE ObjectFloat_HT_SUN_v1.DescId = zc_ObjectFloat_Unit_HT_SUN_v1()), 0);

@@ -917,6 +917,13 @@ CREATE OR REPLACE FUNCTION zc_Object_PSLExportKind() RETURNS integer AS $BODY$BE
 INSERT INTO ObjectDesc(Code, ItemName)
 SELECT 'zc_Object_PSLExportKind', 'Типы выгрузки ведомости в банк' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PSLExportKind');
 
+CREATE OR REPLACE FUNCTION zc_Object_ReturnKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ReturnKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_ReturnKind', 'Типы возврата' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ReturnKind');
+
+CREATE OR REPLACE FUNCTION zc_Object_Reason() RETURNS integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Reason'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_Reason', 'Причина возврата' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Reason');
 
 
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1379,6 +1386,8 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 07.04.21         * zc_Object_ReturnKind
+                    zc_Object_Reason
  24.03.21                                                                                        * zc_Object_FinalSUAProtocol
  11.03.21                                                                                        * zc_Object_DiscountExternalSupplier
  05.03.21                                                                                        * zc_Object_MemberKashtan, zc_Object_MedicKashtan

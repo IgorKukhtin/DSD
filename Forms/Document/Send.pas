@@ -103,6 +103,43 @@ type
     InsertRecord20202: TInsertRecord;
     bbInsertRecord20202: TdxBarButton;
     macInsertRecord20202: TMultiAction;
+    cxTabSheetDetail: TcxTabSheet;
+    DetailDS: TDataSource;
+    DetailCDS: TClientDataSet;
+    DBViewAddOnDetail: TdsdDBViewAddOn;
+    spSelectDetail: TdsdStoredProc;
+    cxGridDetail: TcxGrid;
+    cxGridDBTableViewDetail: TcxGridDBTableView;
+    GoodsGroupNameFull_ch2: TcxGridDBColumn;
+    GoodsCode_ch2: TcxGridDBColumn;
+    GoodsName_ch2: TcxGridDBColumn;
+    GoodsKindName_ch2: TcxGridDBColumn;
+    MeasureName_ch2: TcxGridDBColumn;
+    Amount_ch2: TcxGridDBColumn;
+    isErased_ch2: TcxGridDBColumn;
+    ReturnKindName_ch2: TcxGridDBColumn;
+    SubjectDocName_ch2: TcxGridDBColumn;
+    cxGridLevelDetail: TcxGridLevel;
+    cxLabel11: TcxLabel;
+    edReturnKind: TcxButtonEdit;
+    GuidesReturnKind: TdsdGuides;
+    actReturnKindOpenForm: TOpenChoiceForm;
+    actSubjectDocOpenForm: TOpenChoiceForm;
+    spInsertMaskMIDetail: TdsdStoredProc;
+    spInsertUpdateMIDetail: TdsdStoredProc;
+    actUpdateDetailDS: TdsdUpdateDataSet;
+    actAddMaskDetail: TdsdExecStoredProc;
+    bbAddMaskDetail: TdxBarButton;
+    actShowAllDetail: TBooleanStoredProcAction;
+    bbShowAllDetail: TdxBarButton;
+    actMISetErasedDetail: TdsdUpdateErased;
+    actMISetUnErasedDetail: TdsdUpdateErased;
+    spUnErasedMIDetail: TdsdStoredProc;
+    spErasedMIDetail: TdsdStoredProc;
+    bbMISetErasedDetail: TdxBarButton;
+    bbMISetUnErasedDetail: TdxBarButton;
+    actShowErasedDetail: TBooleanStoredProcAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

@@ -47,6 +47,9 @@ type
     function SummaReceipt : Currency;
     function GetTaxRate : string;
     function SensZReportBefore : boolean;
+    function SummaCash : Currency;
+    function ReceiptsSales : Integer;
+    function ReceiptsReturn : Integer;
   public
     constructor Create;
   end;
@@ -796,6 +799,21 @@ end;
 function TCashFP3530T.SensZReportBefore : boolean;
 begin
   Result := True;
+end;
+
+function TCashFP3530T.SummaCash : Currency;
+begin
+  Result := 0;
+end;
+
+function TCashFP3530T.ReceiptsSales : Integer;
+begin
+  Result := 0;
+end;
+
+function TCashFP3530T.ReceiptsReturn : Integer;
+begin
+  Result := 0;
 end;
 
 end.

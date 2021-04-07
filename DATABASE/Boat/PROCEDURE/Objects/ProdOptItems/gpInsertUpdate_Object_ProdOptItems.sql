@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_ProdOptItems()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptItems(
  INOUT ioId                     Integer   , -- Ключ
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptItems(
     IN inMovementId_OrderClient Integer   ,
  INOUT ioGoodsId                Integer   ,
    OUT outGoodsName             TVarChar  ,
+    IN inAmount                 TFloat    ,
     IN inPriceIn                TFloat    ,
     IN inPriceOut               TFloat    ,
     IN inDiscountTax            TFloat    ,
@@ -149,6 +151,9 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ProdOptItems_Comment(), ioId, inComment);
 
+   -- сохранили свойство <Кол опций>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_Count(), ioId, inAmount);
+
    -- сохранили свойство <PriceIn> - временно убрал, может потом понадобится
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_PriceIn(), ioId, 0);
    -- сохранили свойство <PriceOut> - временно убрал, может потом понадобится
@@ -192,6 +197,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.04.21         * inAmount
  04.01.21         * inDiscountTax
  09.10.20         *
 */

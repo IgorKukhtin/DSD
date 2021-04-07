@@ -9,6 +9,7 @@ CREATE OR REPLACE VIEW Object_Goods_View_ForSite AS
        , ObjectFloat_Goods_Site.ValueData :: Integer             as Id_Site
        , ObjectBlob_Site.ValueData                               as Name_Site
        , Object_Goods.ValueData                                  as name
+       , ObjectString_NameUkr.ValueData                          as nameukr
        , ObjectString_Foto.ValueData                             as foto
        , ObjectString_Thumb.ValueData                            as thumb
        , ObjectBlob_Description.ValueData                        as description
@@ -50,6 +51,11 @@ CREATE OR REPLACE VIEW Object_Goods_View_ForSite AS
         LEFT OUTER JOIN ObjectString AS ObjectString_Thumb
                                      ON ObjectString_Thumb.ObjectId = ObjectLink_Goods_Object.ObjectId
                                     AND ObjectString_Thumb.DescId = zc_ObjectString_Goods_Thumb()
+                                    
+        LEFT OUTER JOIN ObjectString AS ObjectString_NameUkr
+                                     ON ObjectString_NameUkr.ObjectId = ObjectLink_Goods_Object.ObjectId
+                                    AND ObjectString_NameUkr.DescId = zc_ObjectString_Goods_NameUkr()
+                                    
         LEFT OUTER JOIN ObjectBlob AS ObjectBlob_Site
                                    ON ObjectBlob_Site.ObjectId = ObjectLink_Goods_Object.ObjectId
                                   AND ObjectBlob_Site.DescId = zc_objectBlob_Goods_Site()

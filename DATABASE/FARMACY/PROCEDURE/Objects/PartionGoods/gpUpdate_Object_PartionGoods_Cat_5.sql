@@ -13,6 +13,8 @@ AS
 $BODY$
    DECLARE vbcontainerid_err Integer;
    DECLARE vbOperDate_str    TVarChar;
+   DECLARE vbUnitId Integer;
+   DECLARE vbGoodsId Integer;
 BEGIN
 
      -- Проверка - может быть только одна партия
@@ -23,24 +25,36 @@ BEGIN
      THEN 
          RAISE EXCEPTION 'Ошибка.Партия не найдена.';
      END IF;
-     
-     -- Если партию переводили в 5 категорию
-     IF NOT inCat_5 AND
-        EXISTS(SELECT * FROM ObjectDate 
-               WHERE ObjectDate.DescID = zc_ObjectDate_PartionGoods_Cat_5() 
-                 AND ObjectDate.ObjectID = inPartionGoodsId
-                 AND ObjectDate.ValueData < CURRENT_DATE - INTERVAL '30 DAY') --AND
-/*        NOT EXISTS(SELECT 1 FROM ContainerLinkObject
-                                 INNER JOIN MovementItemContainer ON MovementItemContainer.MovementDescId =  zc_Movement_Check() 
-                                                                 AND MovementItemContainer.ContainerId = ContainerLinkObject.ContainerId
-                                 INNER JOIN MovementItem ON MovementItem.Id = MovementItemContainer.MovementItemID
-                                 INNER JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.ParentId
-                                                                  AND MovementItemLinkObject.DescId = zc_MILinkObject_PartionDateKind()
-                                                                  AND MovementItemLinkObject.ObjectId = zc_Enum_PartionDateKind_Cat_5() 
-                   WHERE ContainerLinkObject.ObjectId = inPartionGoodsId
-                     AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods())
-*/     THEN     
-        RAISE EXCEPTION 'Ошибка. Эту позицию запрещено переносить в 5 кат, поскольку она там находилась 30 дней и вернулась в 4 кат';     
+           
+     SELECT Container.WhereObjectId, Container.ObjectId
+     INTO vbUnitId, vbGoodsId
+     FROM ContainerLinkObject 
+                                          
+            LEFT JOIN Container ON Container.ID = ContainerLinkObject.ContainerId
+            
+     WHERE ContainerLinkObject.ObjectId = inPartionGoodsId
+       AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods();  
+       
+     IF CURRENT_DATE <> '06.04.2021' OR vbUnitId <> 6741875  OR vbGoodsId NOT IN (8280902, 40081)
+     THEN
+       -- Если партию переводили в 5 категорию
+       IF NOT inCat_5 AND
+          EXISTS(SELECT * FROM ObjectDate 
+                 WHERE ObjectDate.DescID = zc_ObjectDate_PartionGoods_Cat_5() 
+                   AND ObjectDate.ObjectID = inPartionGoodsId
+                   AND ObjectDate.ValueData < CURRENT_DATE - INTERVAL '30 DAY') --AND
+  /*        NOT EXISTS(SELECT 1 FROM ContainerLinkObject
+                                   INNER JOIN MovementItemContainer ON MovementItemContainer.MovementDescId =  zc_Movement_Check() 
+                                                                   AND MovementItemContainer.ContainerId = ContainerLinkObject.ContainerId
+                                   INNER JOIN MovementItem ON MovementItem.Id = MovementItemContainer.MovementItemID
+                                   INNER JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.ParentId
+                                                                    AND MovementItemLinkObject.DescId = zc_MILinkObject_PartionDateKind()
+                                                                    AND MovementItemLinkObject.ObjectId = zc_Enum_PartionDateKind_Cat_5() 
+                     WHERE ContainerLinkObject.ObjectId = inPartionGoodsId
+                       AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods())
+  */     THEN     
+          RAISE EXCEPTION 'Ошибка. Эту позицию запрещено переносить в 5 кат, поскольку она там находилась 30 дней и вернулась в 4 кат';     
+       END IF;
      END IF;
      
 

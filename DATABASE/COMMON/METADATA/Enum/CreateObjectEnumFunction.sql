@@ -1301,10 +1301,17 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_SaleExternalVarus() RETURNS Int
 CREATE OR REPLACE FUNCTION zc_Enum_PSLExportKind_XML()   RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_PSLExportKind_XML'   AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_PSLExportKind_iBank() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_PSLExportKind_iBank' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+-- !!!
+-- !!! Типы возвратов
+-- !!!
+CREATE OR REPLACE FUNCTION zc_Enum_ReturnKind_Defect() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ReturnKind_Defect' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ReturnKind_Utilization() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ReturnKind_Utilization' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 07.04.21         * 
  18.03.21         * zc_Enum_PSLExportKind_...
  03.03.20         * add zc_Enum_ImportType_SaleExternalVarus
                         zc_Enum_ImportSetting_SaleExternalVarus

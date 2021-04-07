@@ -372,7 +372,12 @@ type
     macExecUpdate_isCheckUKTZED: TMultiAction;
     actExecUpdate_isCheckUKTZED: TdsdExecStoredProc;
     dxBarButton14: TdxBarButton;
-    apUpdate_isCheckUKTZED: TdsdStoredProc;
+    spUpdate_isCheckUKTZED: TdsdStoredProc;
+    isGoodsUKTZEDRRO: TcxGridDBColumn;
+    macExecUpdate_isGoodsUKTZEDRRO: TMultiAction;
+    actExecUpdate_isGoodsUKTZEDRRO: TdsdExecStoredProc;
+    spUpdate_isGoodsUKTZEDRRO: TdsdStoredProc;
+    dxBarButton15: TdxBarButton;
   private
     { Private declarations }
   public

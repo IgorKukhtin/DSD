@@ -217,7 +217,7 @@ BEGIN
       AND inSession <> '3'
     THEN
 
-     raise notice 'Value: %', 1;
+  --   raise notice 'Value: %', 1;
 
      PERFORM lpCreateTempTable_OrderInternal_MI(inMovementId, vbObjectId, 0, vbUserId);
 
@@ -1065,7 +1065,7 @@ BEGIN
     THEN
 
 
-      raise notice 'Value: %', 2;
+   --   raise notice 'Value: %', 2;
 
 --    PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, 0, vbUserId);
 
@@ -2812,7 +2812,7 @@ BEGIN
     THEN
 
 
-    raise notice 'Value: %', 3;
+--    raise notice 'Value: %', 3;
 
 --    PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, 0, vbUserId);
 
@@ -4590,4 +4590,4 @@ where Movement.DescId = zc_Movement_OrderInternal()
 
 -- select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 22630094  , inShowAll := 'True' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
 
-select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 22775034 , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 22824229 , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');

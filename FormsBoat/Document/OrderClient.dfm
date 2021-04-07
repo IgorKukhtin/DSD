@@ -519,6 +519,18 @@ object OrderClientForm: TOrderClientForm
               Options.Editing = False
               Width = 80
             end
+            object BasisPrice: TcxGridDBColumn
+              Caption = 'Total LP off Disc (Basis)'
+              DataBinding.FieldName = 'BasisPrice'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.####;-,0.####; ;'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderHint = #1048#1058#1054#1043#1054' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080' '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057' (Basis)'
+              Options.Editing = False
+              Width = 104
+            end
             object CountForPrice: TcxGridDBColumn
               Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
               DataBinding.FieldName = 'CountForPrice'
@@ -697,7 +709,6 @@ object OrderClientForm: TOrderClientForm
             TabOrder = 0
             LookAndFeel.NativeStyle = True
             LookAndFeel.SkinName = 'UserSkin'
-            ExplicitWidth = 747
             object cxGridDBTableViewProdColorItems: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = ProdColorItemsDS
@@ -1077,7 +1088,6 @@ object OrderClientForm: TOrderClientForm
             Color = clLime
             ParentBackground = False
             TabOrder = 1
-            ExplicitWidth = 747
           end
         end
         object PanelProdOptItems: TPanel
@@ -1089,8 +1099,6 @@ object OrderClientForm: TOrderClientForm
           BevelEdges = [beLeft]
           BevelOuter = bvNone
           TabOrder = 1
-          ExplicitLeft = 756
-          ExplicitWidth = 592
           object cxGridProdOptItems: TcxGrid
             Left = 0
             Top = 17
@@ -1100,7 +1108,6 @@ object OrderClientForm: TOrderClientForm
             TabOrder = 0
             LookAndFeel.NativeStyle = True
             LookAndFeel.SkinName = 'UserSkin'
-            ExplicitWidth = 592
             object cxGridDBTableViewProdOptItems: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = ProdOptItemsDS
@@ -1208,6 +1215,16 @@ object OrderClientForm: TOrderClientForm
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Width = 60
+              end
+              object Amount_ch2: TcxGridDBColumn
+                Caption = 'Amount Opt.'
+                DataBinding.FieldName = 'Amount'
+                PropertiesClassName = 'TcxCurrencyEditProperties'
+                Properties.DisplayFormat = ',0.####;-,0.####; ;'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                HeaderHint = #1050#1086#1083'-'#1074#1086' '#1086#1087#1094#1080#1081
+                Width = 54
               end
               object Code_ch2: TcxGridDBColumn
                 Caption = #1050#1086#1076
@@ -1472,7 +1489,6 @@ object OrderClientForm: TOrderClientForm
             Color = clAqua
             ParentBackground = False
             TabOrder = 1
-            ExplicitWidth = 592
           end
         end
         object cxSplitter1: TcxSplitter
@@ -1481,13 +1497,15 @@ object OrderClientForm: TOrderClientForm
           Width = 8
           Height = 175
           Control = PanelProdColorItems
-          ExplicitLeft = 1348
         end
       end
     end
     object cxTabSheet1: TcxTabSheet
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -1793,6 +1811,9 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet2: TcxTabSheet
       Caption = 'Info'
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridInfo: TcxGrid
         Left = 0
         Top = 0
@@ -3194,6 +3215,15 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inBasisPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BasisPrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inCountForPrice'
         Value = Null
         Component = MasterCDS
@@ -4446,6 +4476,15 @@ object OrderClientForm: TOrderClientForm
         Component = ProdOptItemsCDS
         ComponentItem = 'GoodsName'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = ProdOptItemsCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item

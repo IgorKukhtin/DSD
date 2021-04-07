@@ -168,6 +168,7 @@ type
     procedure LoadReportTaraFormTest;
     procedure LoadReportTransportFormTest;
     procedure LoadReportWageFormTest;
+    procedure LoadReturnKindFormTest;
     procedure LoadReturnInFormTest;
     procedure LoadReturnOutFormTest;
     procedure LoadRetailFormTest;
@@ -1357,6 +1358,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaskJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaskJournalForm');
 end;
+     procedure TLoadFormTest.LoadReturnKindFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnKindForm');
+end;
 
 procedure TLoadFormTest.LoadReturnOutFormTest;
 begin
@@ -1788,6 +1794,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReestrKindForm');
 end;
+
 
 procedure TLoadFormTest.LoadReplFormTest;
 begin

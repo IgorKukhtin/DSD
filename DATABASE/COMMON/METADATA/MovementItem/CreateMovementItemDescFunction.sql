@@ -18,9 +18,15 @@ CREATE OR REPLACE FUNCTION zc_MI_Second() RETURNS Integer AS $BODY$BEGIN RETURN 
 INSERT INTO MovementItemDesc (Code, ItemName)
   SELECT 'zc_MI_Second', 'Второй подчиненный элемент документа' WHERE NOT EXISTS (SELECT * FROM MovementItemDesc WHERE Code = 'zc_MI_Second');
 
+CREATE OR REPLACE FUNCTION zc_MI_Detail() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDesc WHERE Code = 'zc_MI_Detail'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDesc (Code, ItemName)
+  SELECT 'zc_MI_Detail', 'Подчиненный элемент документа (детали)' WHERE NOT EXISTS (SELECT * FROM MovementItemDesc WHERE Code = 'zc_MI_Detail');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 07.04.21         * zc_MI_Detail
  12.11.19                                                       * zc_MI_Second
  20.09.18         * zc_MI_Message
  23.08.16         * add zc_MI_Sign

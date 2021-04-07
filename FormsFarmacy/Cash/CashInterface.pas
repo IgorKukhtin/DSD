@@ -43,6 +43,9 @@ type
      function SummaReceipt : Currency;
      function GetTaxRate : string;
      function SensZReportBefore : boolean;
+     function SummaCash : Currency;
+     function ReceiptsSales : Integer;
+     function ReceiptsReturn : Integer;
 
      property AlwaysSold: boolean read GetAlwaysSold write SetAlwaysSold;
    end;

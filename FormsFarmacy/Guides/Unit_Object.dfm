@@ -3,6 +3,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 484
   ClientWidth = 1434
   PopupMenu = PopupMenu
+  ExplicitLeft = -98
   ExplicitWidth = 1450
   ExplicitHeight = 523
   PixelsPerInch = 96
@@ -917,6 +918,15 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1047#1072#1087#1088#1077#1090' '#1085#1072' '#1087#1077#1095#1072#1090#1100' '#1095#1077#1082#1072', '#1077#1089#1083#1080' '#1077#1089#1090#1100' '#1087#1086#1079#1080#1094#1080#1103' '#1087#1086' '#1059#1050#1058#1042#1069#1044' '
             Width = 83
+          end
+          object isGoodsUKTZEDRRO: TcxGridDBColumn
+            Caption = #1059#1050#1058#1042#1069#1044' '#1095#1077#1088#1077#1079' '#1056#1056#1054
+            DataBinding.FieldName = 'isGoodsUKTZEDRRO'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1077#1095#1072#1090#1100' '#1090#1086#1074#1072#1088#1086#1074' '#1087#1086' '#1059#1050#1058#1042#1069#1044' '#1095#1077#1088#1077#1079' '#1056#1056#1054
+            Options.Editing = False
+            Width = 75
           end
         end
       end
@@ -3371,12 +3381,37 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = apUpdate_isCheckUKTZED
+      StoredProc = spUpdate_isCheckUKTZED
       StoredProcList = <
         item
-          StoredProc = apUpdate_isCheckUKTZED
+          StoredProc = spUpdate_isCheckUKTZED
         end>
       Caption = 'actExecUpdate_isCheckUKTZED'
+    end
+    object macExecUpdate_isGoodsUKTZEDRRO: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actExecUpdate_isGoodsUKTZEDRRO
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1077#1095#1072#1090#1100' '#1090#1086#1074#1072#1088#1086#1074' '#1087#1086' '#1059#1050#1058#1042#1069#1044' '#1095#1077#1088#1077#1079' '#1056#1056#1054'"?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1077#1095#1072#1090#1100' '#1090#1086#1074#1072#1088#1086#1074' '#1087#1086' '#1059#1050#1058#1042#1069#1044' '#1095#1077#1088#1077#1079' '#1056#1056#1054'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1077#1095#1072#1090#1100' '#1090#1086#1074#1072#1088#1086#1074' '#1087#1086' '#1059#1050#1058#1042#1069#1044' '#1095#1077#1088#1077#1079' '#1056#1056#1054'"'
+      ImageIndex = 79
+    end
+    object actExecUpdate_isGoodsUKTZEDRRO: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isGoodsUKTZEDRRO
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isGoodsUKTZEDRRO
+        end>
+      Caption = 'actExecUpdate_isGoodsUKTZEDRRO'
     end
   end
   inherited MasterDS: TDataSource
@@ -4081,6 +4116,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton15'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton11'
         end>
     end
@@ -4152,6 +4191,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object dxBarButton14: TdxBarButton
       Action = macExecUpdate_isCheckUKTZED
+      Category = 0
+    end
+    object dxBarButton15: TdxBarButton
+      Action = macExecUpdate_isGoodsUKTZEDRRO
       Category = 0
     end
   end
@@ -6722,7 +6765,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     Left = 416
     Top = 283
   end
-  object apUpdate_isCheckUKTZED: TdsdStoredProc
+  object spUpdate_isCheckUKTZED: TdsdStoredProc
     StoredProcName = 'gpUpdate_Unit_isCheckUKTZED'
     DataSets = <>
     OutputType = otResult
@@ -6747,5 +6790,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 1200
     Top = 115
+  end
+  object spUpdate_isGoodsUKTZEDRRO: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isGoodsUKTZEDRRO'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisGoodsUKTZEDRRO'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isGoodsUKTZEDRRO'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1200
+    Top = 163
   end
 end

@@ -20,7 +20,7 @@ object ProductForm: TProductForm
   TextHeight = 13
   object PanelMaster: TPanel
     Left = 0
-    Top = 28
+    Top = 26
     Width = 1188
     Height = 209
     Align = alTop
@@ -660,9 +660,9 @@ object ProductForm: TProductForm
   end
   object PanelProdOptItems: TPanel
     Left = 561
-    Top = 242
+    Top = 240
     Width = 627
-    Height = 193
+    Height = 195
     Align = alClient
     BevelEdges = [beLeft]
     BevelOuter = bvNone
@@ -671,7 +671,7 @@ object ProductForm: TProductForm
       Left = 0
       Top = 17
       Width = 627
-      Height = 176
+      Height = 178
       Align = alClient
       PopupMenu = PopupMenuOption
       TabOrder = 0
@@ -696,6 +696,11 @@ object ProductForm: TProductForm
             Format = ',0.00##'
             Kind = skSum
             Column = SaleWVAT_summ_ch2
+          end
+          item
+            Format = ',0.'
+            Kind = skSum
+            Column = Amount_ch2
           end>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -716,6 +721,11 @@ object ProductForm: TProductForm
             Format = ',0.00##'
             Kind = skSum
             Column = SaleWVAT_summ_ch2
+          end
+          item
+            Format = ',0.'
+            Kind = skSum
+            Column = Amount_ch2
           end>
         DataController.Summary.SummaryGroups = <>
         Images = dmMain.SortImageList
@@ -765,6 +775,16 @@ object ProductForm: TProductForm
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
           Width = 43
+        end
+        object Amount_ch2: TcxGridDBColumn
+          Caption = 'Amount Opt.'
+          DataBinding.FieldName = 'Amount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1050#1086#1083'-'#1074#1086' '#1086#1087#1094#1080#1081
+          Width = 54
         end
         object ProdOptPatternName_ch2: TcxGridDBColumn
           Caption = #1069#1083#1077#1084#1077#1085#1090
@@ -1027,9 +1047,9 @@ object ProductForm: TProductForm
   end
   object PanelProdColorItems: TPanel
     Left = 0
-    Top = 242
+    Top = 240
     Width = 553
-    Height = 193
+    Height = 195
     Align = alLeft
     BevelEdges = [beLeft]
     BevelOuter = bvNone
@@ -1038,7 +1058,7 @@ object ProductForm: TProductForm
       Left = 0
       Top = 17
       Width = 553
-      Height = 176
+      Height = 178
       Align = alClient
       PopupMenu = PopupMenuColor
       TabOrder = 0
@@ -1318,7 +1338,7 @@ object ProductForm: TProductForm
   end
   object cxTopSplitter: TcxSplitter
     Left = 0
-    Top = 237
+    Top = 235
     Width = 1188
     Height = 5
     AlignSplitter = salTop
@@ -1326,9 +1346,9 @@ object ProductForm: TProductForm
   end
   object cxRightSplitter: TcxSplitter
     Left = 553
-    Top = 242
+    Top = 240
     Width = 8
-    Height = 193
+    Height = 195
     Control = PanelProdColorItems
   end
   object DataSource: TDataSource
@@ -1379,7 +1399,7 @@ object ProductForm: TProductForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -3303,6 +3323,15 @@ object ProductForm: TProductForm
         Component = ProdOptItemsCDS
         ComponentItem = 'GoodsName'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = ProdOptItemsCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item

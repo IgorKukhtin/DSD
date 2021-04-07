@@ -27,6 +27,7 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     Button7: TButton;
     Button8: TButton;
+    spGet_Money_CashRegister: TdsdStoredProc;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -50,7 +51,7 @@ implementation
 
 {$R *.dfm}
 
-  uses CommonData, EmployeeWorkLog, MainCash2;
+  uses CommonData, EmployeeWorkLog, PUSHMessage, MainCash2;
 
 { TCashWorkForm }
 
@@ -78,6 +79,22 @@ end;
 
 procedure TCashWorkForm.Button2Click(Sender: TObject);
 begin
+
+//  if not gc_User.Local then
+//  try
+//    spGet_Money_CashRegister.ParamByName('inCashRegisterName').Value := m_Cash.FiscalNumber;
+//    spGet_Money_CashRegister.ParamByName('inCheckOut').Value := m_Cash.ReceiptsSales;
+//    spGet_Money_CashRegister.ParamByName('inCheckIn').Value := m_Cash.ReceiptsReturn;
+//    spGet_Money_CashRegister.ParamByName('outSummsCash').Value := 0;
+//    spGet_Money_CashRegister.Execute;
+//
+//    if spGet_Money_CashRegister.ParamByName('outSummsCash').AsFloat <> m_Cash.SummaCash then
+//      ShowPUSHMessage('Проверьте суммы за день по X отчётe с суммами в программе.'#13#13 +
+//        'Сумма по РРО : ' + FormatCurr(',0.00', m_Cash.SummaCash) + #13#13 +
+//        'Сумма по программе: ' + FormatCurr(',0.00', spGet_Money_CashRegister.ParamByName('outSummsCash').AsFloat));
+//  except
+//  end;
+
   if MessageDlg('Вы уверены в снятии Z-отчета?', mtInformation, mbOKCancel, 0) = mrOk then
   begin
      if m_Cash.SensZReportBefore then

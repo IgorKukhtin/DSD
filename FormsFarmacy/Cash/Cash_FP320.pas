@@ -55,6 +55,9 @@ type
     function SensZReportBefore : boolean;
     function ReservedWordCurr : currency;
     function ReservedWordInt : integer;
+    function SummaCash : Currency;
+    function ReceiptsSales : Integer;
+    function ReceiptsReturn : Integer;
   public
     constructor Create;
   end;
@@ -680,5 +683,33 @@ begin
   Result := True;
 end;
 
+function TCashFP320.SummaCash : Currency;
+begin
+  pData := 0;
+  pString := Password + ';2;0;0;';
+  FPrinter.DirectIO($E0, pData, pString);
+  Result := ReservedWordCurr;
+
+  pData := 1;
+  pString := Password + ';2;0;0;';
+  FPrinter.DirectIO($E0, pData, pString);
+  Result := Result - ReservedWordCurr;
+end;
+
+function TCashFP320.ReceiptsSales : Integer;
+begin
+  pData := 0;
+  pString := Password + ';1;';
+  FPrinter.DirectIO($E2, pData, pString);
+  Result := ReservedWordInt;
+end;
+
+function TCashFP320.ReceiptsReturn : Integer;
+begin
+  pData := 0;
+  pString := Password + ';2;';
+  FPrinter.DirectIO($E2, pData, pString);
+  Result := ReservedWordInt;
+end;
 
 end.
