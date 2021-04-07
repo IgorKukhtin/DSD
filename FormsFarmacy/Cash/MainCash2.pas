@@ -3109,7 +3109,7 @@ begin
     RemainsCDS.EnableControls;
   end;
 
-  if nGoodsUKTZED <> 0 then
+  if not UnitConfigCDS.FieldByName('isGoodsUKTZEDRRO').AsBoolean and (nGoodsUKTZED <> 0) then
   begin
     try
       if CheckCDS.Locate('GoodsID', nGoodsUKTZED, []) then

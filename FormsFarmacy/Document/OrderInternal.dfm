@@ -1871,12 +1871,6 @@ inherited OrderInternalForm: TOrderInternalForm
       StoredProcList = <
         item
           StoredProc = spPUSHDiscount
-        end
-        item
-          StoredProc = spPUSHEVip
-        end
-        item
-          StoredProc = spPUSHSUA
         end>
       Caption = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1080#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1084' '#1087#1088#1086#1075#1088#1072#1084#1084#1072#1084
       Hint = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1080#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1084' '#1087#1088#1086#1075#1088#1072#1084#1084#1072#1084
@@ -2022,6 +2016,14 @@ inherited OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
+          ItemName = 'bbPUSHDiscount'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbSetGoodsLink'
         end
         item
@@ -2039,14 +2041,6 @@ inherited OrderInternalForm: TOrderInternalForm
         item
           Visible = True
           ItemName = 'bbUpdateFinalSUA'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPUSHDiscount'
         end
         item
           Visible = True
@@ -3295,10 +3289,10 @@ inherited OrderInternalForm: TOrderInternalForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inUnitID'
+        Name = 'inMovementID'
         Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'Key'
+        Component = FormParams
+        ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

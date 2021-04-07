@@ -138,7 +138,7 @@ object CashWorkForm: TCashWorkForm
     OnClick = Button8Click
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 43
+    Left = 67
     Top = 112
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -169,7 +169,41 @@ object CashWorkForm: TCashWorkForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 16
+    Left = 24
     Top = 112
+  end
+  object spGet_Money_CashRegister: TdsdStoredProc
+    StoredProcName = 'gpGet_Money_CashRegister'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inCashRegisterName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCheckOut'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCheckIn'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummsCash'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 57
+    Top = 11
   end
 end

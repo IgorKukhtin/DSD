@@ -891,9 +891,16 @@ INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_ObjectBoolean_FinalSUAProtocol_NotCheckNoMCS() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_FinalSUAProtocol_NotCheckNoMCS'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_FinalSUAProtocol(), 'zc_ObjectBoolean_FinalSUAProtocol_NotCheckNoMCS', 'Не показывать Продажи не для НТЗ' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_FinalSUAProtocol_NotCheckNoMCS');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_GoodsUKTZEDRRO() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_GoodsUKTZEDRRO'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_GoodsUKTZEDRRO', 'Печать товаров по УКТВЭД через РРО' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_GoodsUKTZEDRRO');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 24.03.21                                                                                                          * zc_ObjectBoolean_Unit_GoodsUKTZEDRRO
  24.03.21                                                                                                          * zc_ObjectBoolean_FinalSUAProtocol_...
  22.03.21                                                                                                          * zc_ObjectBoolean_Goods_MultiplicityError
  17.03.21                                                                                                          * zc_ObjectBoolean_Juridical_PriorityReprice

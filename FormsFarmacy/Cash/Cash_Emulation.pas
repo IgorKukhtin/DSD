@@ -61,6 +61,9 @@ type
     function SummaReceipt : Currency;
     function GetTaxRate : string;
     function SensZReportBefore : boolean;
+    function SummaCash : Currency;
+    function ReceiptsSales : Integer;
+    function ReceiptsReturn : Integer;
   public
     constructor Create;
     destructor Destroy; override;
@@ -313,7 +316,7 @@ end;
 
 function TCashEmulation.FiscalNumber: String;
 begin
-//  Result := FPrinter.FNUM[Password];
+  Result := '3000007988';
 end;
 
 function TCashEmulation.SerialNumber:String;
@@ -618,6 +621,21 @@ end;
 function TCashEmulation.SensZReportBefore : boolean;
 begin
   Result := True;
+end;
+
+function TCashEmulation.SummaCash : Currency;
+begin
+  Result := 19999;
+end;
+
+function TCashEmulation.ReceiptsSales : Integer;
+begin
+  Result := 20;
+end;
+
+function TCashEmulation.ReceiptsReturn : Integer;
+begin
+  Result := 1;
 end;
 
 end.

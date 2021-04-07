@@ -51,6 +51,9 @@ type
     function SummaReceipt : Currency;
     function GetTaxRate : string;
     function SensZReportBefore : boolean;
+    function SummaCash : Currency;
+    function ReceiptsSales : Integer;
+    function ReceiptsReturn : Integer;
   public
     constructor Create;
     function ShowError: boolean;
@@ -548,6 +551,23 @@ begin
   Result := True;
 end;
 
+function TCashIKC_C651T.SummaCash : Currency;
+begin
+  FPrinter.FPGetDayReportData;
+  Result := (FPrinter.prDaySaleSumOnPayForm4 - FPrinter.prDayRefundSumOnPayForm4) / 100;
+end;
+
+function TCashIKC_C651T.ReceiptsSales : Integer;
+begin
+  FPrinter.FPGetDayReportData;
+  Result := FPrinter.prDaySaleReceiptsCount;
+end;
+
+function TCashIKC_C651T.ReceiptsReturn : Integer;
+begin
+  FPrinter.FPGetDayReportData;
+  Result := FPrinter.prDayRefundReceiptsCount;
+end;
 
 end.
 

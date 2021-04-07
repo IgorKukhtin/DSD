@@ -49,6 +49,9 @@ type
     function SummaReceipt : Currency;
     function GetTaxRate : string;
     function SensZReportBefore : boolean;
+    function SummaCash : Currency;
+    function ReceiptsSales : Integer;
+    function ReceiptsReturn : Integer;
   public
     constructor Create;
   end;
@@ -698,6 +701,30 @@ end;
 function TCashFP3530T_NEW.SensZReportBefore : boolean;
 begin
   Result := True;
+end;
+
+function TCashFP3530T_NEW.SummaCash : Currency;
+  var S : string; nSum : Currency;
+begin
+  Result := 0;
+
+  S := FPrinter.SUMDAY[2, 0, 0, 1, Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum) then Result := nSum;
+
+  S := FPrinter.SUMDAY[2, 0, 0, 2, Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum) then Result := Result - nSum;
+end;
+
+function TCashFP3530T_NEW.ReceiptsSales : Integer;
+begin
+  Result := FPrinter.COUNTERSDAY[1, Password];
+end;
+
+function TCashFP3530T_NEW.ReceiptsReturn : Integer;
+begin
+  Result := FPrinter.COUNTERSDAY[2, Password];
 end;
 
 end.

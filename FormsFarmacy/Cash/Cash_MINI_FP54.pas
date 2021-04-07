@@ -55,6 +55,9 @@ type
     function SummaReceipt : Currency;
     function GetTaxRate : string;
     function SensZReportBefore : boolean;
+    function SummaCash : Currency;
+    function ReceiptsSales : Integer;
+    function ReceiptsReturn : Integer;
   public
     constructor Create;
     function OpenPort : Boolean;
@@ -675,6 +678,23 @@ end;
 function TCashMINI_FP54.SensZReportBefore : boolean;
 begin
   Result := False;
+end;
+
+function TCashMINI_FP54.SummaCash : Currency;
+begin
+  Result := 0;
+end;
+
+function TCashMINI_FP54.ReceiptsSales : Integer;
+begin
+  SendCommand('get_header;');
+  Result := StrToInt(FResult[39]);
+end;
+
+function TCashMINI_FP54.ReceiptsReturn : Integer;
+begin
+  SendCommand('get_header;');
+  Result := StrToInt(FResult[40]);
 end;
 
 end.

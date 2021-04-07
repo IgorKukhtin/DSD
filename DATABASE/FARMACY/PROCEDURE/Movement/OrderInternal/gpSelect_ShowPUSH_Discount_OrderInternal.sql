@@ -32,41 +32,15 @@ BEGIN
     WHERE Movement.Id = inMovementId;
 
     WITH
-        tmpMI_All AS (SELECT MovementItem.*,
-                             CEIL (( CASE WHEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= (COALESCE (MIFloat_ListDiff.ValueData, 0) + COALESCE (MIFloat_AmountSUA.ValueData, 0))
-                                          THEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
-                                          ELSE (COALESCE (MIFloat_ListDiff.ValueData, 0) + COALESCE (MIFloat_AmountSUA.ValueData, 0))     -- кол-во отказов + СУА
-                                     END
-                                     ) / COALESCE(ObjectFloat_Goods_MinimumLot.ValueData, 1)
-                                   ) * COALESCE(ObjectFloat_Goods_MinimumLot.ValueData, 1)                     AS CalcAmountAll, 
-                             MILinkObject_Juridical.ObjectId                                                   AS JuridicalId 
-                      FROM MovementItem 
+        tmpMI_All AS (SELECT MovementItem.GoodsId,
+                             MovementItem.CalcAmountAll, 
+                             MovementItem.JuridicalId
+                      FROM gpSelect_MovementItem_OrderInternal_Master(inMovementId := inMovementID , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := inSession) AS MovementItem 
 
-                            LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
-                                                                               AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond() 
-                            LEFT JOIN MovementItemFloat AS MIFloat_AmountManual ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
-                                                                               AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual() 
-                            LEFT JOIN MovementItemFloat     AS MIFloat_ListDiff ON MIFloat_ListDiff.MovementItemId    = MovementItem.Id
-                                                                               AND MIFloat_ListDiff.DescId = zc_MIFloat_ListDiff() 
-                            LEFT JOIN MovementItemFloat    AS MIFloat_AmountSUA ON MIFloat_AmountSUA.MovementItemId    = MovementItem.Id
-                                                                               AND MIFloat_AmountSUA.DescId = zc_MIFloat_AmountSUA() 
-                                                                               
-                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Juridical ON MILinkObject_Juridical.MovementItemId    = MovementItem.Id
-                                                                                      AND MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()
-                            LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_MinimumLot
-                                                   ON ObjectFloat_Goods_MinimumLot.ObjectId = MovementItem.ObjectId
-                                                  AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
-                                                  AND ObjectFloat_Goods_MinimumLot.ValueData <> 0
 
-                      WHERE MovementItem.MovementId = inMovementId
-                        AND MovementItem.DescId     = zc_MI_Master()
-                        AND CEIL (( CASE WHEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= (COALESCE (MIFloat_ListDiff.ValueData, 0) + COALESCE (MIFloat_AmountSUA.ValueData, 0))
-                                         THEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
-                                         ELSE (COALESCE (MIFloat_ListDiff.ValueData, 0) + COALESCE (MIFloat_AmountSUA.ValueData, 0))     -- кол-во отказов + СУА
-                                    END
-                                    ) / COALESCE(ObjectFloat_Goods_MinimumLot.ValueData, 1)
-                                  ) * COALESCE(ObjectFloat_Goods_MinimumLot.ValueData, 1)     > 0
-                        AND MovementItem.isErased   = False
+                      WHERE MovementItem.CalcAmountAll   > 0
+                        AND COALESCE (MovementItem.discountname, '') <> ''
+                        AND COALESCE (MovementItem.JuridicalId, 0) <> 0
                       )
       -- Дисконтные программы подразделения
       , tmpDiscountJuridical AS (SELECT ObjectLink_DiscountExternal.ChildObjectId     AS DiscountExternalId
@@ -131,11 +105,11 @@ BEGIN
                                AND COALESCE (tmpUnitDiscount.DiscountExternalId, 0) <> 0
                       )
                               
-    SELECT string_agg(Object_Goods_Main.ObjectCode||' - '||Object_Goods_Main.Name||Chr(13)||'   Выбран: '||COALESCE (Object_Juridical.ValueData, '')||'. По программе: '||COALESCE (tmpGoodsDiscount.DiscountJuridical, ''), Chr(13))
+    SELECT string_agg(Object_Goods_Main.ObjectCode||' - '||Object_Goods_Main.Name||Chr(13)||'   НЕПРАВИЛЬНО ВЫБРАН: '||COALESCE (Object_Juridical.ValueData, '')||'. НУЖНО ИСПРАВИТЬ  НА: '||COALESCE (tmpGoodsDiscount.DiscountJuridical, ''), Chr(13))
     INTO vbText
     FROM tmpMI_All
 
-         INNER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = tmpMI_All.ObjectId
+         INNER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = tmpMI_All.GoodsId
          
          INNER JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
 
@@ -150,6 +124,10 @@ BEGIN
       outShowMessage := True;
       outPUSHType := 3;
       outText := 'Для товаров дисконтных программ надо использовать поставщиков:'||Chr(13)||Chr(13)||vbText;
+    ELSE
+      outShowMessage := True;
+      outPUSHType := 3;
+      outText := 'По дисконт программам поставщики выбраны правильно.';
     END IF;
 
 END;
@@ -164,5 +142,6 @@ LANGUAGE plpgsql VOLATILE;
 
 */
 
---
-SELECT * FROM gpSelect_ShowPUSH_Discount_OrderInternal(22749117, '3')
+-- SELECT * FROM gpSelect_ShowPUSH_Discount_OrderInternal(22749117, '3')
+
+select * from gpSelect_ShowPUSH_Discount_OrderInternal(inMovementID := 22824229 ,  inSession := '3');
