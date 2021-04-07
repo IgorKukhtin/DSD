@@ -560,6 +560,8 @@ type
     MultiplicitySale: TcxGridDBColumn;
     pnlInfo: TPanel;
     lblInfo: TLabel;
+    spPullGoodsCheck: TdsdStoredProc;
+    spSelectCheckId: TdsdStoredProc;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -1912,6 +1914,13 @@ end;
 procedure TMainCashForm2.pm_VIP1Click(Sender: TObject);
 begin
   inherited;
+
+  if (DiscountServiceForm.gCode <> 0) then
+  begin
+    ShowMessage('Применен дисконт.'#13#10'Открытие отложенных чеков запрещено.'#13#10'Если надо применить дисконт сначало загрузите чек потом примените дисконтную программу.');
+    exit;
+  end;
+
   case TMenuItem(Sender).Tag of
     1:
       if actLoadDeferred.Execute and ((FormParams.ParamByName('CheckId').Value <> 0)
@@ -5211,7 +5220,7 @@ end;
 // ***20.07.16
 procedure TMainCashForm2.SetDiscountExternal(ACode : Integer = 0; ADiscountCard : String = '');
 var
-  DiscountExternalId: Integer;
+  DiscountExternalId: Integer; MovementItemID : Integer;
   DiscountExternalName, DiscountCardNumber: String;
   lMsg: String;
 begin
@@ -5235,9 +5244,9 @@ begin
     exit;
   end;
 
-  if CheckCDS.RecordCount > 1 then
+  if (CheckCDS.RecordCount > 1) and (FormParams.ParamByName('CheckId').Value = 0) then
   begin
-    ShowMessage('Ошибка.В чеке для Соц.проекта должен быть один товар.');
+    ShowMessage('Ошибка.В чеке для дисконтной программы должен быть один товар.');
     exit;
   end;
 
@@ -5262,6 +5271,89 @@ begin
       Free;
     end;
   //
+
+  if FormParams.ParamByName('CheckId').Value <> 0 then
+  begin
+    MovementItemID := 0;
+    try
+      RemainsCDS.DisableControls;
+      RemainsCDS.Filtered := false;
+      with CheckCDS do
+      begin
+        First;
+        while not Eof do
+        begin
+
+          if RemainsCDS.Locate('ID',
+             VarArrayOf([FieldByName('GoodsId').AsInteger,
+             FieldByName('PartionDateKindId').AsVariant,
+             FieldByName('NDSKindId').AsVariant,
+             FieldByName('DiscountExternalID').AsVariant,
+             FieldByName('DivisionPartiesID').AsVariant]), []) and
+             (RemainsCDS.FieldByName('GoodsDiscountName').AsString = DiscountExternalName) then
+          begin
+
+            if (RemainsCDS.FieldByName('Remains').AsCurrency + RemainsCDS.FieldByName('Reserved').AsCurrency) < FieldByName('Amount').AsCurrency then
+            begin
+                ShowMessage('Товар <' + FieldByName('GoodsName').AsString +
+                  '> входит в дисконтную программу <' + DiscountExternalName + '> наличия нет для продажи.');
+            end else
+            begin
+              if FieldByName('Id').AsInteger = 0 then
+              begin
+                ShowMessage('Что-то пошло не так очистите чек и званого его загрузите.');
+                Exit;
+              end;
+
+              if CheckCDS.RecordCount > 1 then
+              begin
+                if MessageDlg('Извлечь из отложенного чека товар <' + FieldByName('GoodsName').AsString +
+                  '> дисконтной программы <' + DiscountExternalName + '> в отдельный ВИП чек?', mtConfirmation, mbYesNo, 0) = mrYes then
+                begin
+                  MovementItemID := FieldByName('Id').AsInteger;
+                  Break
+                end;
+              end else
+              begin
+                MovementItemID := FieldByName('Id').AsInteger;
+                Break
+              end;
+            end;
+          end;
+          Next;
+        end;
+      end;
+    finally
+      RemainsCDS.Filtered := True;
+      RemainsCDS.EnableControls;
+    end;
+
+    if MovementItemID <> 0 then
+    begin
+    //  if CheckCDS.RecordCount > 1 then
+      begin
+         spPullGoodsCheck.ParamByName('inMovementId').Value := FormParams.ParamByName('CheckId').Value;
+         spPullGoodsCheck.ParamByName('inMovementItemId').Value := MovementItemID;
+         spPullGoodsCheck.ParamByName('outMovementId').Value :=  0;
+         spPullGoodsCheck.Execute;
+         if spPullGoodsCheck.ParamByName('outMovementId').Value <> 0 then
+         begin
+           CheckCDS.EmptyDataSet;
+           NewCheck(True);
+           spSelectCheckId.ParamByName('inMovementId').Value := spPullGoodsCheck.ParamByName('outMovementId').Value;
+           spSelectCheckId.Execute;
+           spSelectCheck.Execute;
+           LoadVIPCheck;
+           CalcTotalSumm;
+         end else Exit;
+      end;
+    end else
+    begin
+      ShowMessage('В чеке не найдены товары дисконтной программы: ' + DiscountExternalName);
+      Exit;
+    end;
+  end;
+
   FormParams.ParamByName('DiscountExternalId').Value := DiscountExternalId;
   FormParams.ParamByName('DiscountExternalName').Value := DiscountExternalName;
   FormParams.ParamByName('DiscountCardNumber').Value := DiscountCardNumber;
