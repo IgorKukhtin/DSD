@@ -528,6 +528,7 @@ object OrderClientForm: TOrderClientForm
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               HeaderHint = #1048#1058#1054#1043#1054' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080' '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057' (Basis)'
+              Options.Editing = False
               Width = 104
             end
             object CountForPrice: TcxGridDBColumn
