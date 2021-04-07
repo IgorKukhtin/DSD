@@ -53,6 +53,8 @@ BEGIN
          AND inUserId <> 128491 -- Хохлова Е.Ю. !!!временно!!!
          AND inUserId <> 12120 -- Нагорнова Т.С. !!!временно!!!
          AND inUserId <> 131160 -- Удовик Е.Е. !!!временно!!!
+         AND inUserId <> 6131893
+         AND inUserId <> 2030723
          -- AND inUserId <> 81241 -- Марухно А.В. !!!временно!!!
       THEN
           RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав на распроведение документа № <%> от <%> филиал <%>.', lfGet_Object_ValueData (inUserId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), lfGet_Object_ValueData ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_Branch()));

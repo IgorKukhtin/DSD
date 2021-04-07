@@ -71,8 +71,8 @@ BEGIN
 
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE ('tmpPersonalServiceList_check'))
      THEN
-         -- Оптимизация
-         CREATE TEMP TABLE tmpPersonalServiceList_check ON COMMIT DROP AS 
+          -- Оптимизация
+          CREATE TEMP TABLE tmpPersonalServiceList_check ON COMMIT DROP AS 
             WITH tmpUserAll_check AS (SELECT UserId FROM Constant_User_LevelMax01_View WHERE UserId = vbUserId /*AND UserId <> 9464*/) -- Документы-меню (управленцы) AND <> Рудик Н.В. + ЗП просмотр ВСЕ
             SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
             FROM ObjectLink AS ObjectLink_User_Member
@@ -107,7 +107,9 @@ BEGIN
             SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
             FROM Object AS Object_PersonalServiceList
             WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
-              AND EXISTS (SELECT 1 FROM tmpUserAll_check)
+              AND (EXISTS (SELECT 1 FROM tmpUserAll_check)
+               OR vbUserId = 80373 -- Прохорова С.А.
+                  )
            UNION
             -- Админ и другие видят ВСЕХ
             SELECT Object_PersonalServiceList.Id AS PersonalServiceListId

@@ -180,15 +180,19 @@ BEGIN
 	INSERT INTO _tmpResult (NPP, RowData) VALUES (-25, 'VALUE_DATE='||TO_CHAR(NOW(), 'dd.mm.yyyy'));
 	-- Счет банка плательщика
 	-- INSERT INTO _tmpResult (NPP, RowData) VALUES (-60, 'PAYER_BANK_ACCOUNT=29244006');
+
 	-- Период начисления
-     -- INSERT INTO _tmpResult (NPP, RowData) VALUES (-10, 'PERIOD='||TO_CHAR(NOW(), 'TMMonth yyyy'));
-	INSERT INTO _tmpResult (NPP, RowData) VALUES (-10, 'PERIOD=0' || EXTRACT (MONTH FROM CURRENT_DATE) :: TVarChar || ',' || EXTRACT (YEAR FROM CURRENT_DATE) :: TVarChar);
+        IF vbBankId IN (76968, 6314382) -- ПАТ "БАНК ВОСТОК"
+        THEN
+            -- INSERT INTO _tmpResult (NPP, RowData) VALUES (-10, 'PERIOD='||TO_CHAR(NOW(), 'TMMonth yyyy'));
+            INSERT INTO _tmpResult (NPP, RowData) VALUES (-10, 'PERIOD=0' || EXTRACT (MONTH FROM CURRENT_DATE) :: TVarChar || ',' || EXTRACT (YEAR FROM CURRENT_DATE) :: TVarChar);
+        END IF;
 
 
 	-- *** Строчный вывод
 	i := 0; -- обнуляем автонумерацию
 	FOR r IN (-- SELECT gpSelect.card
-	          SELECT substring( gpSelect.card FROM char_length(gpSelect.card) - 13 for 14 ) AS card
+	          SELECT CASE WHEN vbBankId IN (76968, 6314382) THEN SUBSTRING (gpSelect.card FROM char_length(gpSelect.card) - 13 for 14 ) ELSE gpSelect.card END AS card
 	               , gpSelect.personalname
 	               , gpSelect.inn
 	               , COALESCE (gpSelect.SummCardRecalc, 0) + COALESCE (gpSelect.SummHosp, 0) AS SummCardRecalc
