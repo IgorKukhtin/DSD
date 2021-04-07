@@ -47,6 +47,8 @@ RETURNS TABLE (MovementId_OrderClient Integer
              , Sale_summ TFloat, SaleWVAT_summ TFloat
              
              --
+             , AmountBasis TFloat
+             -- кол опций
              , Amount TFloat
 
              , InsertName TVarChar
@@ -301,6 +303,8 @@ BEGIN
                                  
                                , tmpProduct.MovementId_OrderClient
                                , tmpProduct.VATPercent
+                               
+                               , COALESCE (ObjectFloat_Count.ValueData,1) AS Amount
 
                           FROM Object AS Object_ProdOptItems
                                -- Лодка
@@ -311,7 +315,10 @@ BEGIN
                                INNER JOIN ObjectFloat AS ObjectFloat_MovementId_OrderClient
                                                       ON ObjectFloat_MovementId_OrderClient.ObjectId = Object_ProdOptItems.Id
                                                      AND ObjectFloat_MovementId_OrderClient.DescId   = zc_ObjectFloat_ProdOptItems_OrderClient()
-
+                               -- Кол-во самих опций
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Count
+                                                     ON ObjectFloat_Count.ObjectId = Object_ProdOptItems.Id
+                                                    AND ObjectFloat_Count.DescId   = zc_ObjectFloat_ProdOptItems_Count()
                                -- Заказ Клиента + Лодка
                                INNER JOIN tmpProduct ON tmpProduct.Id                     = ObjectLink_Product.ChildObjectId
                                                     AND tmpProduct.MovementId_OrderClient = ObjectFloat_MovementId_OrderClient.ValueData :: Integer
@@ -379,6 +386,7 @@ BEGIN
 
                          , tmpProdOptItems.MovementId_OrderClient
                          , tmpProdOptItems.VATPercent
+                         , tmpProdOptItems.Amount
 
                     FROM tmpProdOptItems
 
@@ -415,6 +423,7 @@ BEGIN
 
                          , tmpProduct.MovementId_OrderClient
                          , tmpProduct.VATPercent
+                         , 1 AS Amount
 
                     FROM tmpProdOptions
                          LEFT JOIN tmpProduct ON (tmpProduct.ModelId = tmpProdOptions.ModelId   OR tmpProdOptions.ModelId   = 0)
@@ -500,15 +509,18 @@ BEGIN
 
            -- Цена вх.
          , tmpRes.EKPrice                        :: TFloat AS EKPrice
-         , (tmpRes.EKPrice     * tmpRes.Value)   :: TFloat AS EKPrice_summ
+         , (tmpRes.EKPrice * CASE WHEN tmpRes.ProdColorPatternId > 0 THEN tmpRes.Value ELSE tmpRes.Amount END) :: TFloat AS EKPrice_summ
+
            -- Цена продажи
-         , tmpRes.SalePrice                      :: TFloat AS SalePrice
-         , tmpRes.SalePriceWVAT                  :: TFloat AS SalePriceWVAT
-         , (tmpRes.SalePrice     * CASE WHEN tmpRes.ProdColorPatternId > 0 THEN 1 ELSE tmpRes.Value END) :: TFloat AS Sale_summ
-         , (tmpRes.SalePriceWVAT * CASE WHEN tmpRes.ProdColorPatternId > 0 THEN 1 ELSE tmpRes.Value END) :: TFloat AS SaleWVAT_summ
+         , tmpRes.SalePrice                   :: TFloat AS SalePrice
+         , tmpRes.SalePriceWVAT               :: TFloat AS SalePriceWVAT
+         , (tmpRes.SalePrice * tmpRes.Amount) :: TFloat AS Sale_summ
+         , zfCalc_SummWVAT (tmpRes.SalePrice * tmpRes.Amount, tmpRes.VATPercent) :: TFloat AS SaleWVAT_summ
 
            -- кол-во в сборке
-         , tmpRes.Value ::TFloat AS Amount
+         , tmpRes.Value  ::TFloat AS AmountBasis
+         -- кол-во опций
+         , tmpRes.Amount ::TFloat AS Amount
 
          , Object_Insert.ValueData            ::TVarChar  AS InsertName
          , ObjectDate_Insert.ValueData        ::TDateTime AS InsertDate

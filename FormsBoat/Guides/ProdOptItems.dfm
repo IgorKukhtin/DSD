@@ -93,6 +93,17 @@ object ProdOptItemsForm: TProdOptItemsForm
         Options.Editing = False
         Width = 70
       end
+      object Amount: TcxGridDBColumn
+        Caption = 'Amount Opt.'
+        DataBinding.FieldName = 'Amount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1086#1087#1094#1080#1081
+        Options.Editing = False
+        Width = 74
+      end
       object optPriceIn: TcxGridDBColumn
         Caption = #1062#1077#1085#1072', '#1074#1093'.'
         DataBinding.FieldName = 'PriceIn'
@@ -654,6 +665,7 @@ object ProdOptItemsForm: TProdOptItemsForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>

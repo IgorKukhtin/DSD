@@ -55,6 +55,8 @@ type
     GuidesProdOptPattern: TdsdGuides;
     cxLabel5: TcxLabel;
     edDiscountTax: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
+    edAmount: TcxCurrencyEdit;
   private
     { Private declarations }
   public

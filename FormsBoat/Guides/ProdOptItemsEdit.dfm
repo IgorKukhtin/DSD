@@ -137,7 +137,7 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 16
-    Width = 273
+    Width = 196
   end
   object edProdOptPattern: TcxButtonEdit
     Left = 10
@@ -163,6 +163,25 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
     Properties.DisplayFormat = ',0.00'
     TabOrder = 19
     Width = 107
+  end
+  object cxLabel8: TcxLabel
+    Left = 217
+    Top = 193
+    Hint = #1050#1086#1083'. '#1086#1087#1094#1080#1081' '
+    Caption = 'Amount Opt.'
+    Properties.WordWrap = True
+    Width = 66
+  end
+  object edAmount: TcxCurrencyEdit
+    Left = 217
+    Top = 212
+    Hint = #1050#1086#1083'. '#1086#1087#1094#1080#1081' '
+    ParentShowHint = False
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.##'
+    ShowHint = True
+    TabOrder = 21
+    Width = 66
   end
   object ActionList: TActionList
     Left = 152
@@ -237,6 +256,14 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
         Value = Null
         Component = GuidesProdOptPattern
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = edAmount
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -393,10 +420,17 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Amount'
+        Value = Null
+        Component = edAmount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 184
-    Top = 16
+    Left = 216
+    Top = 24
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -472,7 +506,7 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 126
+    Left = 70
     Top = 203
   end
   object GuidesProdOptPattern: TdsdGuides
