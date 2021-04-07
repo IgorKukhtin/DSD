@@ -1025,6 +1025,12 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PSLExportKind_iBank(), inDescId:= zc_Object_PSLExportKind(), inCode:= 2, inName:= 'iBank', inEnumName:= 'zc_Enum_PSLExportKind_iBank');
 END $$;
 
+DO $$
+BEGIN 
+     -- !!! Типы возвратов
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReturnKind_Defect(), inDescId:= zc_Object_ReturnKind(), inCode:= 1, inName:= 'Брак', inEnumName:= 'zc_Enum_ReturnKind_Defect');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReturnKind_Utilization(), inDescId:= zc_Object_ReturnKind(), inCode:= 2, inName:= 'Утилизация', inEnumName:= 'zc_Enum_ReturnKind_Utilization');
+END $$;
 
 
 /* Закомментил, т.к. 1 раз добавили и харэ

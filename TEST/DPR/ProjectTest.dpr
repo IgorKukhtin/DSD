@@ -1249,7 +1249,8 @@ uses
   Report_Supply in '..\..\Forms\Report\Report_Supply.pas' {Report_SupplyForm: TParentForm},
   Report_SupplyDialog in '..\..\Forms\Report\Report_SupplyDialog.pas' {Report_SupplyDialogForm: TParentForm},
   Report_Supply_Olap in '..\..\Forms\Report\Report_Supply_Olap.pas' {Report_Supply_OlapForm: TParentForm},
-  Report_Supply_OlapDialog in '..\..\Forms\Report\Report_Supply_OlapDialog.pas' {Report_Supply_OlapDialogForm: TParentForm};
+  Report_Supply_OlapDialog in '..\..\Forms\Report\Report_Supply_OlapDialog.pas' {Report_Supply_OlapDialogForm: TParentForm},
+  ReturnKind in '..\..\Forms\Kind\ReturnKind.pas' {ReturnKindForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
