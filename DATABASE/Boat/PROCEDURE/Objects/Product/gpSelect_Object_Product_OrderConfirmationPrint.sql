@@ -107,6 +107,26 @@ BEGIN
                                                               AND COALESCE (tmp.Amount,0) <> 0
                                                               AND tmp.MovementId_OrderClient = inMovementId_OrderClient
                                                             );
+
+     -- выбор Примечаний
+     CREATE TEMP TABLE tmp_OrderInfo ON COMMIT DROP AS (SELECT CASE WHEN TRIM (COALESCE (MovementBlob_Info1.ValueData,'')) = '' THEN CHR (13) || CHR (13) || CHR (13) ELSE MovementBlob_Info1.ValueData END :: TBlob AS Text_Info1
+                                                          , CASE WHEN TRIM (COALESCE (MovementBlob_Info2.ValueData,'')) = '' THEN CHR (13) || CHR (13) || CHR (13) ELSE MovementBlob_Info2.ValueData END :: TBlob AS Text_Info2
+                                                          , CASE WHEN TRIM (COALESCE (MovementBlob_Info3.ValueData,'')) = '' THEN CHR (13) || CHR (13) || CHR (13) ELSE MovementBlob_Info3.ValueData END :: TBlob AS Text_Info3
+                                                        FROM Movement AS Movement_OrderClient 
+                                                            LEFT JOIN MovementBlob AS MovementBlob_Info1
+                                                                                   ON MovementBlob_Info1.MovementId = Movement_OrderClient.Id
+                                                                                  AND MovementBlob_Info1.DescId = zc_MovementBlob_Info1()
+                                                            LEFT JOIN MovementBlob AS MovementBlob_Info2
+                                                                                   ON MovementBlob_Info2.MovementId = Movement_OrderClient.Id
+                                                                                  AND MovementBlob_Info2.DescId = zc_MovementBlob_Info2()
+                                                            LEFT JOIN MovementBlob AS MovementBlob_Info3
+                                                                                   ON MovementBlob_Info3.MovementId = Movement_OrderClient.Id
+                                                                                  AND MovementBlob_Info3.DescId = zc_MovementBlob_Info3()
+                                                        WHERE Movement_OrderClient.Id = inMovementId_OrderClient
+                                                          AND Movement_OrderClient.DescId = zc_Movement_OrderClient()
+                                                     );
+
+
      -- Результат
      OPEN Cursor1 FOR
      WITH
@@ -144,6 +164,7 @@ BEGIN
                           GROUP BY MovementLinkMovement.MovementChildId
                           )
 
+
        -- Результат
        SELECT tmpProduct.*
             , LEFT (tmpProduct.CIN, 8) ::TVarChar AS PatternCIN
@@ -174,9 +195,11 @@ BEGIN
             , tmpInfo.Footer3        ::TVarChar AS Footer3   --***
             , tmpInfo.Footer4        ::TVarChar AS Footer4
             --
-            , tmpProdOptItems.Sale_summ_OptItems ::TFloat
+            , tmpProdOptItems.Sale_summ_OptItems     ::TFloat
+            , tmpProdOptItems.SaleWVAT_summ_OptItems ::TFloat
             --сумма товара из заказа
-            ,  COALESCE (tmpOrder.Sale_summ,0) :: TFloat AS Sale_summ_order
+            , COALESCE (tmpOrder.Sale_summ,0) :: TFloat AS Sale_summ_order
+            , zfCalc_SummWVAT (COALESCE (tmpOrder.Sale_summ,0), vbVATPercent) :: TFloat AS SaleWVat_summ_order
             -- сумма счета
             , tmpInvoice.AmountIn     ::TFloat AS Invoice_summ
             -- сумма педоплаты
@@ -184,6 +207,10 @@ BEGIN
             
             , vbOperDate_OrderClient  AS OperDate_Order
             , vbInvNumber_OrderClient AS InvNumber_Order
+
+            , tmp_OrderInfo.Text_Info1 :: TBlob AS Text_Info1
+            , tmp_OrderInfo.Text_Info2 :: TBlob AS Text_Info2
+            , tmp_OrderInfo.Text_Info3 :: TBlob AS Text_Info3
        FROM tmpProduct
           LEFT JOIN ObjectFloat AS ObjectFloat_Power
                                 ON ObjectFloat_Power.ObjectId = tmpProduct.EngineId
@@ -195,14 +222,19 @@ BEGIN
                                  ON ObjectString_TaxNumber.ObjectId = tmpProduct.ClientId
                                 AND ObjectString_TaxNumber.DescId = zc_ObjectString_Client_TaxNumber()
           LEFT JOIN (SELECT SUM (zfCalc_SummDiscountTax (tmpProdOptItems.Sale_summ, COALESCE (tmpProdOptItems.DiscountTax,0)) ) AS Sale_summ_OptItems
+                          , SUM (zfCalc_SummDiscountTax (tmpProdOptItems.SaleWVAT_summ, COALESCE (tmpProdOptItems.DiscountTax,0)) ) AS SaleWVAT_summ_OptItems
                      FROM tmpProdOptItems
                      ) AS tmpProdOptItems ON 1=1
 
-          LEFT JOIN (SELECT SUM(tmp.Amount * tmp.OperPrice) AS Sale_summ FROM tmpOrderClient AS tmp WHERE tmp.GoodsDesc <> zc_Object_Product()) AS tmpOrder ON 1 = 1
+          LEFT JOIN (SELECT SUM(tmp.Amount * tmp.OperPrice) AS Sale_summ 
+                     FROM tmpOrderClient AS tmp
+                     WHERE tmp.GoodsDesc <> zc_Object_Product()
+                     ) AS tmpOrder ON 1 = 1
           
           LEFT JOIN Object_Product_PrintInfo_View AS tmpInfo ON 1=1
           LEFT JOIN (SELECT SUM (tmpInvoice.AmountIn) AS AmountIn FROM tmpInvoice) AS tmpInvoice ON 1 = 1
           LEFT JOIN tmpBankAccount ON 1 = 1
+          LEFT JOIN tmp_OrderInfo ON 1=1
        ;
 
      RETURN NEXT Cursor1;

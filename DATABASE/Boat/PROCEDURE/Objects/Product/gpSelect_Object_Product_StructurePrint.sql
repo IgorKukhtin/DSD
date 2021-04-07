@@ -91,6 +91,26 @@ BEGIN
                                                             WHERE tmp.ProductId = vbProductId
                                                               AND tmp.MovementId_OrderClient = inMovementId_OrderClient
                                                             );
+
+     -- выбор Примечаний
+     CREATE TEMP TABLE tmp_OrderInfo ON COMMIT DROP AS (SELECT CASE WHEN TRIM (COALESCE (MovementBlob_Info1.ValueData,'')) = '' THEN CHR (13) || CHR (13) || CHR (13) ELSE MovementBlob_Info1.ValueData END :: TBlob AS Text_Info1
+                                                          , CASE WHEN TRIM (COALESCE (MovementBlob_Info2.ValueData,'')) = '' THEN CHR (13) || CHR (13) || CHR (13) ELSE MovementBlob_Info2.ValueData END :: TBlob AS Text_Info2
+                                                          , CASE WHEN TRIM (COALESCE (MovementBlob_Info3.ValueData,'')) = '' THEN CHR (13) || CHR (13) || CHR (13) ELSE MovementBlob_Info3.ValueData END :: TBlob AS Text_Info3
+                                                        FROM Movement AS Movement_OrderClient 
+                                                            LEFT JOIN MovementBlob AS MovementBlob_Info1
+                                                                                   ON MovementBlob_Info1.MovementId = Movement_OrderClient.Id
+                                                                                  AND MovementBlob_Info1.DescId = zc_MovementBlob_Info1()
+                                                            LEFT JOIN MovementBlob AS MovementBlob_Info2
+                                                                                   ON MovementBlob_Info2.MovementId = Movement_OrderClient.Id
+                                                                                  AND MovementBlob_Info2.DescId = zc_MovementBlob_Info2()
+                                                            LEFT JOIN MovementBlob AS MovementBlob_Info3
+                                                                                   ON MovementBlob_Info3.MovementId = Movement_OrderClient.Id
+                                                                                  AND MovementBlob_Info3.DescId = zc_MovementBlob_Info3()
+                                                        WHERE Movement_OrderClient.Id = inMovementId_OrderClient
+                                                          AND Movement_OrderClient.DescId = zc_Movement_OrderClient()
+                                                     );
+
+
      -- Результат
      OPEN Cursor1 FOR
 
@@ -102,27 +122,30 @@ BEGIN
             , ObjectFloat_Power.ValueData               ::TFloat   AS EnginePower
             , ObjectFloat_Volume.ValueData              ::TFloat   AS EngineVolume
             --
-            , 'info@agilis-jettenders.com' ::TVarChar AS Mail
-            , 'www.agilis-jettenders.com'  ::TVarChar AS WWW
-            , 'Agilis Jettenders GmbH'     ::TVarChar AS Name_main
-            , 'Lohfeld Str. 2'             ::TVarChar AS Street_main
-            , '52428 Julich'               ::TVarChar AS City_main                                   --*
-            , 'Adriatic Wave d.o.o'        ::TVarChar AS Name_Firma
-            , 'Via Niccoloa Tommasea 11'   ::TVarChar AS Street_Firma
-            , '52210 ROVINJ'               ::TVarChar AS City_Firma
-            , 'KROATIEN'                   ::TVarChar AS Country_Firma
-            , 'steuerfreie innergem. Lieferung gemab §4 Nr.1b i.V.m. §6a UStG' ::TVarChar AS Text1   --**
-            , 'special discount'                    ::TVarChar AS Text2
-            , ('Sie wurden beraten von '||' '||vbInsertName) ::TVarChar AS Text3
+            , tmpInfo.Mail           ::TVarChar AS Mail
+            , tmpInfo.WWW            ::TVarChar AS WWW
+            , tmpInfo.Name_main      ::TVarChar AS Name_main
+            , tmpInfo.Street_main    ::TVarChar AS Street_main
+            , tmpInfo.City_main      ::TVarChar AS City_main                                   --*
+                                  --*
+            , tmpInfo.Name_Firma2    ::TVarChar AS Name_Firma
+            , tmpInfo.Street_Firma2  ::TVarChar AS Street_Firma
+            , tmpInfo.City_Firma2    ::TVarChar AS City_Firma
+            , tmpInfo.Country_Firma2 ::TVarChar AS Country_Firma
+            , tmpInfo.Text_tax       ::TVarChar AS Text1   --**
+            , tmpInfo.Text_discount  ::TVarChar AS Text2
+            , (tmpInfo.Text_sign||' '||vbInsertName) ::TVarChar AS Text3
 
             , COALESCE (ObjectString_TaxNumber.ValueData,'') ::TVarChar AS TaxNumber
-            , '' ::TVarChar AS Angebot
-            , '' ::TVarChar AS Seite   
             
-            , 'Agilis Jettenders GmbH'||Chr(13)||Chr(10)||'Lohfeld Str.2'||Chr(13)||Chr(10)||'52428 Julich' ::TVarChar AS Footer1              --*
-            , 'Bankverbindung'||Chr(13)||Chr(10)||'Aachener Bank eG'||Chr(13)||Chr(10)||'IBAN: DE56390601800154560009'||Chr(13)||Chr(10)||'BIC: GENODED1AAC' ::TVarChar AS Footer2
-            , 'Geschaftsfuhrer:Starchenko Maxym'||Chr(13)||Chr(10)||Chr(13)||Chr(10)||'Amtsgericht Duren HRB 8163'||Chr(13)||Chr(10)||'Ust.-ID: DE326730388' ::TVarChar AS Footer3   --***
-            , 'Tel: +49 (0)2461 340 333-15'||Chr(13)||Chr(10)||'Fax: +49 (0)2461 340 333 13'||Chr(13)||Chr(10)||'Email: info@agilis-jettenders.com'||Chr(13)||Chr(10)||'WEB: www.agilis-jettenders.com' ::TVarChar AS Footer4
+            , tmpInfo.Footer1        ::TVarChar AS Footer1              --*
+            , tmpInfo.Footer2        ::TVarChar AS Footer2
+            , tmpInfo.Footer3        ::TVarChar AS Footer3              --***
+            , tmpInfo.Footer4        ::TVarChar AS Footer4
+
+            , tmp_OrderInfo.Text_Info1 :: TBlob AS Text_Info1
+            , tmp_OrderInfo.Text_Info2 :: TBlob AS Text_Info2
+            , tmp_OrderInfo.Text_Info3 :: TBlob AS Text_Info3
 
        FROM tmpProduct
           LEFT JOIN ObjectFloat AS ObjectFloat_Power
@@ -134,6 +157,8 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_TaxNumber
                                  ON ObjectString_TaxNumber.ObjectId = tmpProduct.ClientId
                                 AND ObjectString_TaxNumber.DescId = zc_ObjectString_Client_TaxNumber()
+          LEFT JOIN Object_Product_PrintInfo_View AS tmpInfo ON 1=1
+          LEFT JOIN tmp_OrderInfo ON 1=1
        ;
 
      RETURN NEXT Cursor1;
