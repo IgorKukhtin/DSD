@@ -54,17 +54,17 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' / '#1043#1088#1091#1087#1087#1072':'
   end
   object cbPartion: TcxCheckBox
-    Left = 10
+    Left = 3
     Top = 189
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
-    Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470
+    Caption = #1044#1086#1082'. '#1087#1072#1088#1090#1080#1103' '#8470
     ParentShowHint = False
     ShowHint = True
     TabOrder = 4
-    Width = 130
+    Width = 103
   end
   object cbPartner: TcxCheckBox
-    Left = 149
+    Left = 114
     Top = 189
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082#1080
@@ -91,14 +91,14 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
     Width = 322
   end
   object cbRemains: TcxCheckBox
-    Left = 241
+    Left = 254
     Top = 189
     Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089' '#1086#1089#1090#1072#1090#1082#1086#1084' = 0'
     Caption = #1054#1089#1090#1072#1090#1086#1082' = 0'
     ParentShowHint = False
     ShowHint = True
     TabOrder = 8
-    Width = 92
+    Width = 86
   end
   object cxLabel5: TcxLabel
     Left = 8
@@ -116,6 +116,16 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
     Properties.ReadOnly = True
     TabOrder = 10
     Width = 322
+  end
+  object cbPartNumber: TcxCheckBox
+    Left = 203
+    Top = 189
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' S/N ('#1044#1072'/'#1053#1077#1090')'
+    Caption = 'S/N'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 11
+    Width = 42
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 277
@@ -208,6 +218,14 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
         Component = GuidesGoodsGroup
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPartNumber'
+        Value = Null
+        Component = cbPartNumber
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

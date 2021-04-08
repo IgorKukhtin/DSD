@@ -13,6 +13,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   inherited Panel: TPanel [0]
     Width = 1131
     Height = 60
+    ExplicitLeft = 104
+    ExplicitTop = -16
     ExplicitWidth = 1131
     ExplicitHeight = 60
     inherited deStart: TcxDateEdit
@@ -112,7 +114,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Width = 200
     end
     object cbRemains: TcxCheckBox
-      Left = 866
+      Left = 930
       Top = 5
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089' '#1086#1089#1090#1072#1090#1082#1086#1084' = 0'
       Caption = #1054#1089#1090#1072#1090#1086#1082' = 0'
@@ -120,6 +122,16 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       ShowHint = True
       TabOrder = 10
       Width = 94
+    end
+    object cbPartNumber: TcxCheckBox
+      Left = 869
+      Top = 6
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' S/N ('#1044#1072'/'#1053#1077#1090')'
+      Caption = 'S/N'
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 11
+      Width = 46
     end
   end
   inherited PageControl: TcxPageControl [1]
@@ -913,6 +925,14 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           Component = GuidesGoodsGroup
           ComponentItem = 'TextValue'
           DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartNumber'
+          Value = Null
+          Component = cbPartNumber
+          DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -1766,6 +1786,14 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         Name = 'inIsRemains'
         Value = Null
         Component = cbRemains
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPartNumber'
+        Value = Null
+        Component = cbPartNumber
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

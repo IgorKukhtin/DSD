@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpReport_Goods_RemainsCurrent(
     IN inIsPartion        Boolean  ,  -- показать <Документ партия №> (Да/Нет)
     IN inIsPartner        Boolean  ,  -- показать Поставщика (Да/Нет)
     IN inIsRemains        Boolean  ,  -- Показать с остатком = 0
+    IN inisPartNumber     Boolean  ,  -- по серийным номерам
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementItemId       Integer
@@ -24,7 +25,6 @@ RETURNS TABLE (MovementItemId       Integer
              , UnitName             TVarChar
              , UnitName_in          TVarChar
              , PartnerName          TVarChar
-             --, BrandName            TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Article TVarChar, PartNumber TVarChar
              , GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar, MeasureName TVarChar
@@ -200,6 +200,12 @@ BEGIN
                                  AND inisPartion = TRUE
                                )
 
+       , tmpMIString AS (SELECT *
+                         FROM MovementItemString AS MIString_PartNumber
+                         WHERE MIString_PartNumber.MovementItemId IN (SELECT DISTINCT tmpContainer.MovementItemId FROM tmpContainer)
+                           AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+                         ) 
+
        , tmpData_All AS (SELECT tmpContainer.UnitId
                               , tmpContainer.GoodsId
                               , CASE WHEN inisPartion = TRUE THEN tmpContainer.MovementItemId   ELSE 0  END AS MovementItemId
@@ -209,7 +215,6 @@ BEGIN
                               , CASE WHEN inisPartion = TRUE THEN Movement_Partion.OperDate     ELSE zc_DateStart() END AS OperDate_Partion
                               , CASE WHEN inisPartner = TRUE THEN tmpContainer.PartnerId        ELSE 0  END AS PartnerId
                               , tmpContainer.GoodsSizeId
-                              --, tmpContainer.BrandId
                               , tmpContainer.MeasureId
                               , tmpContainer.GoodsGroupId
                               , tmpContainer.GoodsTagId
@@ -217,16 +222,13 @@ BEGIN
                               , tmpContainer.ProdColorId
                               , tmpContainer.TaxKindId
                               , tmpContainer.TaxKindValue
-                              , tmpContainer.EKPrice
                               , tmpContainer.OperPriceList
-                              --, tmpContainer.OperPrice_cost
                               , SUM (tmpContainer.CostPrice) AS CostPrice_summ
                               , tmpContainer.CountForPrice
                               , tmpContainer.UnitId_in
 
                                 --  только для Ord = 1
                               , SUM (CASE WHEN tmpContainer.Ord = 1 THEN tmpContainer.Amount_in ELSE 0 END) AS Amount_in
-                              --, SUM (CASE WHEN tmpContainer.Ord = 1 THEN zfCalc_SummIn (tmpContainer.Amount_in, tmpContainer.EKPrice, tmpContainer.CountForPrice) ELSE 0 END) AS TotalSummEKPrice
                               , SUM (tmpContainer.Remains)         AS Remains
                               , SUM (zfCalc_SummIn        (tmpContainer.Remains, tmpContainer.EKPrice, tmpContainer.CountForPrice)) AS TotalSummEKPrice
                               , SUM (zfCalc_SummPriceList (tmpContainer.Remains, tmpContainer.OperPriceList))                       AS TotalSummPriceList
@@ -236,6 +238,7 @@ BEGIN
                               , STRING_AGG (MS_Comment.ValueData, ' ;') ::TVarChar AS Comment_in
                               , COALESCE (MF_DiscountTax.ValueData, 0)      AS DiscountTax_in
                               , COALESCE (MF_VATPercent.ValueData, 0)       AS VATPercent_in
+                              , STRING_AGG (MIString_PartNumber.ValueData, ' ;') ::TVarChar AS PartNumber
 
                          FROM tmpContainer
                               LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id = tmpContainer.MovementId
@@ -253,6 +256,8 @@ BEGIN
                                                          ON MF_VATPercent.MovementId = tmpContainer.MovementId
                                                         AND MF_VATPercent.DescId     = zc_MovementFloat_VATPercent()
                                                         AND inisPartion            = TRUE
+                              LEFT JOIN tmpMIString AS MIString_PartNumber
+                                                    ON MIString_PartNumber.MovementItemId = tmpContainer.MovementItemId
                          GROUP BY tmpContainer.UnitId
                                 , tmpContainer.GoodsId
                                 , CASE WHEN inisPartion = TRUE THEN tmpContainer.MovementItemId   ELSE 0 END
@@ -261,8 +266,8 @@ BEGIN
                                 , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE '' END
                                 , CASE WHEN inisPartion = TRUE THEN Movement_Partion.OperDate     ELSE zc_DateStart() END
                                 , CASE WHEN inisPartner = TRUE THEN tmpContainer.PartnerId        ELSE 0  END
+                                , CASE WHEN inisPartNumber = TRUE THEN MIString_PartNumber.ValueData ELSE '' END
                                 , tmpContainer.GoodsSizeId
-                                --, tmpContainer.BrandId
                                 , tmpContainer.MeasureId
                                 , tmpContainer.GoodsGroupId
                                 , tmpContainer.GoodsTagId
@@ -270,15 +275,11 @@ BEGIN
                                 , tmpContainer.ProdColorId
                                 , tmpContainer.TaxKindId
                                 , tmpContainer.TaxKindValue
-                                , tmpContainer.EKPrice
                                 , tmpContainer.OperPriceList
                                 , tmpContainer.UnitId_in
-                                --, MS_Comment.ValueData
                                 , MF_DiscountTax.ValueData
                                 , MF_VATPercent.ValueData
                                 , tmpContainer.CountForPrice
-                                --, tmpContainer.OperPrice_cost
-                                --, tmpContainer.CostPrice
                   )
 
        , tmpData AS (SELECT tmpData_All.UnitId
@@ -292,17 +293,15 @@ BEGIN
                           , Object_GoodsSize.Id        AS GoodsSizeId
                           , Object_GoodsSize.ValueData AS GoodsSizeName_real
                           , STRING_AGG (Object_GoodsSize.ValueData, ', ' ORDER BY CASE WHEN LENGTH (Object_GoodsSize.ValueData) = 1 THEN '0' ELSE '' END || Object_GoodsSize.ValueData) AS GoodsSizeName
-                          --, tmpData_All.BrandId
                           , tmpData_All.MeasureId
                           , tmpData_All.GoodsGroupId
                           , tmpData_All.GoodsTagId
                           , tmpData_All.GoodsTypeId
                           , tmpData_All.ProdColorId
                           , tmpData_All.TaxKindId
+                          , tmpData_All.PartNumber
                           
-                          --, tmpData_All.EKPrice
                           , tmpData_All.OperPriceList
-                          --, tmpData_All.OperPrice_cost
                           , SUM (tmpData_All.CostPrice_summ) AS CostPrice_summ
                           , tmpData_All.CountForPrice
 
@@ -329,7 +328,6 @@ BEGIN
                             , tmpData_All.PartnerId
                             , Object_GoodsSize.Id
                             , Object_GoodsSize.ValueData
-                           -- , tmpData_All.BrandId
                             , tmpData_All.MeasureId
                             , tmpData_All.GoodsGroupId
                             , tmpData_All.GoodsTagId
@@ -342,18 +340,9 @@ BEGIN
                             , tmpData_All.Comment_in
                             , tmpData_All.DiscountTax_in
                             , tmpData_All.VATPercent_in
-                            --, tmpData_All.EKPrice
+                            , tmpData_All.PartNumber
                             , tmpData_All.CountForPrice
-                            --, tmpData_All.OperPrice_cost
-                            --, tmpData_All.CostPrice
               )
-
-       , tmpMIString AS (SELECT *
-                         FROM MovementItemString AS MIString_PartNumber
-                         WHERE MIString_PartNumber.MovementItemId IN (SELECT DISTINCT tmpData.MovementItemId FROM tmpData)
-                           AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
-                         ) 
-
                                                   
         -- Результат
         SELECT
@@ -368,13 +357,12 @@ BEGIN
            , Object_Unit.ValueData          AS UnitName
            , Object_Unit_in.ValueData       AS UnitName_in
            , Object_Partner.ValueData       AS PartnerName
-           --, Object_Brand.ValueData         AS BrandName
 
            , Object_Goods.Id                AS GoodsId
            , Object_Goods.ObjectCode        AS GoodsCode
            , Object_Goods.ValueData         AS GoodsName
            , ObjectString_Article.ValueData AS Article
-           , MIString_PartNumber.ValueData  AS PartNumber
+           , tmpData.PartNumber ::TVarChar
            , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_GoodsGroup.ValueData    AS GoodsGroupName
            , Object_Measure.ValueData       AS MeasureName
@@ -449,8 +437,7 @@ BEGIN
                                   AND ObjectString_Article.DescId = zc_ObjectString_Article()
             
             LEFT JOIN Object AS Object_PriceList_Basis ON Object_PriceList_Basis.Id = zc_PriceList_Basis()
-            LEFT JOIN tmpMIString AS MIString_PartNumber
-                                  ON MIString_PartNumber.MovementItemId = tmpData.MovementItemId
+
            ;
 
 END;
