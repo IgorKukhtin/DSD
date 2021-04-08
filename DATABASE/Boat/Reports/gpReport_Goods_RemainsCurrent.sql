@@ -219,8 +219,8 @@ BEGIN
                               , tmpContainer.TaxKindValue
                               , tmpContainer.EKPrice
                               , tmpContainer.OperPriceList
-                              , tmpContainer.OperPrice_cost
-                              , tmpContainer.CostPrice
+                              --, tmpContainer.OperPrice_cost
+                              , SUM (tmpContainer.CostPrice) AS CostPrice_summ
                               , tmpContainer.CountForPrice
                               , tmpContainer.UnitId_in
 
@@ -230,8 +230,10 @@ BEGIN
                               , SUM (tmpContainer.Remains)         AS Remains
                               , SUM (zfCalc_SummIn        (tmpContainer.Remains, tmpContainer.EKPrice, tmpContainer.CountForPrice)) AS TotalSummEKPrice
                               , SUM (zfCalc_SummPriceList (tmpContainer.Remains, tmpContainer.OperPriceList))                       AS TotalSummPriceList
+                              , SUM (zfCalc_SummPriceList (tmpContainer.Remains, tmpContainer.CostPrice))                           AS TotalSumm_cost
+                              , SUM (zfCalc_SummPriceList (tmpContainer.Remains, tmpContainer.OperPrice_cost))                      AS TotalSummPrice_cost
 
-                              , MS_Comment.ValueData                        AS Comment_in
+                              , STRING_AGG (MS_Comment.ValueData, ' ;') ::TVarChar AS Comment_in
                               , COALESCE (MF_DiscountTax.ValueData, 0)      AS DiscountTax_in
                               , COALESCE (MF_VATPercent.ValueData, 0)       AS VATPercent_in
 
@@ -271,12 +273,12 @@ BEGIN
                                 , tmpContainer.EKPrice
                                 , tmpContainer.OperPriceList
                                 , tmpContainer.UnitId_in
-                                , MS_Comment.ValueData
+                                --, MS_Comment.ValueData
                                 , MF_DiscountTax.ValueData
                                 , MF_VATPercent.ValueData
                                 , tmpContainer.CountForPrice
-                                , tmpContainer.OperPrice_cost
-                                , tmpContainer.CostPrice
+                                --, tmpContainer.OperPrice_cost
+                                --, tmpContainer.CostPrice
                   )
 
        , tmpData AS (SELECT tmpData_All.UnitId
@@ -298,10 +300,10 @@ BEGIN
                           , tmpData_All.ProdColorId
                           , tmpData_All.TaxKindId
                           
-                          , tmpData_All.EKPrice
+                          --, tmpData_All.EKPrice
                           , tmpData_All.OperPriceList
-                          , tmpData_All.OperPrice_cost
-                          , tmpData_All.CostPrice
+                          --, tmpData_All.OperPrice_cost
+                          , SUM (tmpData_All.CostPrice_summ) AS CostPrice_summ
                           , tmpData_All.CountForPrice
 
                           , tmpData_All.UnitId_in
@@ -309,10 +311,12 @@ BEGIN
                           , tmpData_All.DiscountTax_in
                           , tmpData_All.VATPercent_in
 
-                          , SUM (tmpData_All.Amount_in)          AS Amount_in
-                          , SUM (tmpData_All.Remains)            AS Remains
-                          , SUM (tmpData_All.TotalSummEKPrice) AS TotalSummEKPrice
-                          , SUM (tmpData_All.TotalSummPriceList) AS TotalSummPriceList
+                          , SUM (tmpData_All.Amount_in)           AS Amount_in
+                          , SUM (tmpData_All.Remains)             AS Remains
+                          , SUM (tmpData_All.TotalSummEKPrice)    AS TotalSummEKPrice
+                          , SUM (tmpData_All.TotalSummPriceList)  AS TotalSummPriceList
+                          , SUM (tmpData_All.TotalSummPrice_cost) AS TotalSummPrice_cost
+                          , SUM (tmpData_All.TotalSumm_cost)      AS TotalSumm_cost
                      FROM tmpData_All
                           LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = tmpData_All.GoodsSizeId
                      GROUP BY tmpData_All.UnitId
@@ -338,10 +342,10 @@ BEGIN
                             , tmpData_All.Comment_in
                             , tmpData_All.DiscountTax_in
                             , tmpData_All.VATPercent_in
-                            , tmpData_All.EKPrice
+                            --, tmpData_All.EKPrice
                             , tmpData_All.CountForPrice
-                            , tmpData_All.OperPrice_cost
-                            , tmpData_All.CostPrice
+                            --, tmpData_All.OperPrice_cost
+                            --, tmpData_All.CostPrice
               )
 
        , tmpMIString AS (SELECT *
@@ -398,8 +402,11 @@ BEGIN
              -- Цена по прайсу
            , tmpData.OperPriceList :: TFloat
 
-           , tmpData.OperPrice_cost   :: TFloat
-           , tmpData.CostPrice        :: TFloat
+           --, tmpData.OperPrice_cost   :: TFloat
+           , CASE WHEN tmpData.Amount_in  <> 0 THEN COALESCE (tmpData.TotalSummEKPrice,0) + COALESCE (tmpData.CostPrice_summ,0) / tmpData.Amount_in
+                  ELSE 0
+             END :: TFloat AS OperPrice_cost
+           , tmpData.CostPrice_summ        :: TFloat AS CostPrice
 
              -- Кол-во - остаток
            , tmpData.Remains                 :: TFloat AS Remains
@@ -408,12 +415,12 @@ BEGIN
              -- Сумма по прайсу - 
            , tmpData.TotalSummPriceList      :: TFloat AS TotalSummPriceList
            
-           , (tmpData.Remains * tmpData.CostPrice ) :: TFloat AS Summ_Cost
-           , (tmpData.Remains * tmpData.OperPrice_cost ) :: TFloat AS TotalSumm_cost
+           , tmpData.TotalSumm_Cost  :: TFloat AS Summ_Cost
+           , tmpData.TotalSummPrice_cost  :: TFloat AS TotalSummPrice_cost
 
              -- % наценки 
-           , CAST (CASE WHEN  tmpData.OperPrice_cost <> 0
-                        THEN (100 * tmpData.OperPriceList / tmpData.OperPrice_cost - 100)
+           , CAST (CASE WHEN  tmpData.TotalSummPrice_cost <> 0
+                        THEN (100 * tmpData.TotalSummPriceList / tmpData.TotalSummPrice_cost - 100)
                         ELSE 0
                    END AS NUMERIC (16, 0)) :: TFloat AS PriceTax
 
