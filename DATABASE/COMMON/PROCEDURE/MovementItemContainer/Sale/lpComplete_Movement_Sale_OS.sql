@@ -1,8 +1,8 @@
--- Function: lpComplete_Movement_Sale (Integer, Integer, Boolean)
+-- Function: lpComplete_Movement_Sale22 (Integer, Integer, Boolean)
 
-DROP FUNCTION IF EXISTS lpComplete_Movement_Sale (Integer, Integer, Boolean);
+DROP FUNCTION IF EXISTS lpComplete_Movement_Sale22 (Integer, Integer, Boolean);
 
-CREATE OR REPLACE FUNCTION lpComplete_Movement_Sale(
+CREATE OR REPLACE FUNCTION lpComplete_Movement_Sale22(
     IN inMovementId        Integer               , -- ключ Документа
     IN inUserId            Integer               , -- Пользователь
     IN inIsLastComplete    Boolean  DEFAULT False  -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
@@ -47,6 +47,8 @@ $BODY$
   DECLARE vbPriceWithVAT_PriceListJur Boolean;
   DECLARE vbVATPercent_PriceListJur TFloat;
   DECLARE vbPriceListId_Jur Integer;
+  DECLARE vbPriceListId_begin Integer;
+  DECLARE vbOperDate_pl TDateTime;
 
   DECLARE vbPriceWithVAT Boolean;
   DECLARE vbVATPercent TFloat;
@@ -96,23 +98,42 @@ $BODY$
   DECLARE vbPartionMovementId Integer;
   DECLARE vbPaymentDate TDateTime;
 
+  DECLARE vbOperSumm_51201 TFloat;
+  DECLARE vbContainerId_51201 Integer;
+
   DECLARE vbIsPriceList_begin_recalc Boolean;
-
-  DECLARE vbPriceListId_begin Integer;
-  DECLARE vbOperDate_pl TDateTime;
-
 BEGIN
-
-
-/*IF inUserId in (zfCalc_UserAdmin() :: Integer) -- , zc_Enum_Process_Auto_PrimeCost(), 9459)
+/*IF inUserId in (zfCalc_UserAdmin() :: Integer) -- , zc_Enum_Process_Auto_PrimeCost(), zfCalc_UserMain())
  OR ('01.10.2017' <= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
      AND
      '01.10.2017' <= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
     )
 THEN
-    PERFORM lpComplete_Movement_Sale_NEW (inMovementId, inUserId, FALSE);
+    PERFORM lpComplete_Movement_Sale22_NEW (inMovementId, inUserId, FALSE);
     RETURN;
 END IF;*/
+
+
+     -- ContainerId для распределения
+     vbContainerId_51201:= (SELECT Container.Id -- CLO_InfoMoney.ObjectId
+                            FROM ObjectFloat
+                                 INNER JOIN ContainerLinkObject AS CLO_PartionMovement
+                                                                ON CLO_PartionMovement.ObjectId = ObjectFloat.ObjectId
+                                                               AND CLO_PartionMovement.DescId   = zc_ContainerLinkObject_PartionMovement()
+                               --INNER JOIN ContainerLinkObject AS CLO_InfoMoney
+                               --                               ON CLO_InfoMoney.ContainerId = CLO_PartionMovement.ContainerId
+                               --                              AND CLO_InfoMoney.DescId      = zc_ContainerLinkObject_InfoMoney()
+                                 INNER JOIN Container ON Container.Id       = CLO_PartionMovement.ContainerId
+                                                     AND Container.ObjectId = zc_Enum_Account_51201() -- Распределение маркетинг + Маркетинг в накладных + Маркетинг
+                                                     AND Container.DescId   = zc_Container_Summ()
+                            WHERE ObjectFloat.ValueData = inMovementId
+                              AND ObjectFloat.DescId    = zc_ObjectFloat_PartionMovement_MovementId()
+                              AND Container.Amount <> 0
+                           );
+     -- Сумма для распределения
+     vbOperSumm_51201:= (SELECT Container.Amount FROM Container WHERE Container.Id = vbContainerId_51201);
+
+
 
      -- !!!временно!!!
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= inMovementId);
@@ -124,31 +145,6 @@ END IF;*/
      DELETE FROM _tmpItemSumm;
      -- !!!обязательно!!! очистили таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      DELETE FROM _tmpItem;
-
-
-     -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
-     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId = zc_Enum_Role_Admin())
-     THEN /*IF inIsLastComplete = FALSE
-             -- OR DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '3 DAY') <= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
-          -- !!! нужны еще для Запорожья, понятно что временно!!!
-          -- !!! OR 301310 = (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId)
-          -- !!! нужны еще для Одесса, понятно что временно!!!
-          -- !!! OR 8374 = (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId)
-          THEN vbIsHistoryCost:= TRUE;
-          ELSE vbIsHistoryCost:= FALSE;
-          END IF;*/
-          vbIsHistoryCost:= TRUE;
-     ELSE
-         -- !!! для остальных тоже нужны проводки с/с!!!
-         IF (0 < (SELECT 1 FROM Object_RoleAccessKeyGuide_View AS View_RoleAccessKeyGuide WHERE View_RoleAccessKeyGuide.UserId = inUserId AND View_RoleAccessKeyGuide.BranchId <> 0 GROUP BY View_RoleAccessKeyGuide.BranchId LIMIT 1)
-           OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (428382)) -- Кладовщик Днепр
-           OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (97837)) -- Бухгалтер ДНЕПР
-            )
-            AND DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '3 DAY') <= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
-         THEN vbIsHistoryCost:= FALSE;
-         ELSE vbIsHistoryCost:= TRUE;
-         END IF;
-     END IF;
 
 
      -- Эти параметры нужны для расчета конечных сумм по Контрагенту или Сотуднику и для формирования Аналитик в проводках
@@ -251,7 +247,7 @@ END IF;*/
 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
-                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                      AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
           LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
@@ -404,6 +400,7 @@ END IF;*/
      -- Эти параметры СПЕЦ. прайс-листа нужны для ...
      SELECT lfGet.PriceWithVAT, lfGet.VATPercent INTO vbPriceWithVAT_PriceListJur, vbVATPercent_PriceListJur FROM lfGet_Object_PriceList (vbPriceListId_Jur) AS lfGet;
 
+
      -- !!!
      vbIsPriceList_begin_recalc:= inUserId IN (6131893, 2030723, 5) AND vbOperDate >= '01.04.2021';
 
@@ -484,12 +481,35 @@ END IF;*/
               ) AS tmp;
 
 
-         -- !!!временно!!!
-         PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= inMovementId);
-
          -- Тест
          -- RAISE EXCEPTION 'Ошибка.<%  %>', lfGet_Object_ValueData_sh (vbPriceListId_begin), zfConvert_DateToString (vbOperDate_pl);
 
+     END IF;
+
+
+
+     -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId = zc_Enum_Role_Admin())
+        OR (vbOperDate < DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '2 DAY'))
+     THEN /*IF inIsLastComplete = FALSE
+             -- OR DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '3 DAY') <= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+          -- !!! нужны еще для Запорожья, понятно что временно!!!
+          -- !!! OR 301310 = (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId)
+          -- !!! нужны еще для Одесса, понятно что временно!!!
+          -- !!! OR 8374 = (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId)
+          THEN vbIsHistoryCost:= TRUE;
+          ELSE vbIsHistoryCost:= FALSE;
+          END IF;*/
+          vbIsHistoryCost:= TRUE;
+     ELSE
+         -- !!! для остальных тоже нужны проводки с/с!!!
+         IF (0 < (SELECT 1 FROM Object_RoleAccessKeyGuide_View AS View_RoleAccessKeyGuide WHERE View_RoleAccessKeyGuide.UserId = inUserId AND View_RoleAccessKeyGuide.BranchId <> 0 GROUP BY View_RoleAccessKeyGuide.BranchId LIMIT 1)
+           OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (428382)) -- Кладовщик Днепр
+           OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (97837)) -- Бухгалтер ДНЕПР
+            )
+         THEN vbIsHistoryCost:= FALSE;
+         ELSE vbIsHistoryCost:= TRUE;
+         END IF;
      END IF;
 
 
@@ -1199,7 +1219,7 @@ END IF;*/
      END IF;
 
      -- кроме Админа
-     IF inUserId <> zfCalc_UserAdmin() :: Integer
+     IF inUserId <> zfCalc_UserAdmin() :: Integer OR 1=1
      THEN
          -- !!!Синхронно - пересчитали/провели Пересортица!!! - на основании "Реализация" - !!!важно - здесь очищается _tmpMIContainer_insert, поэтому делаем ДО проводок!!!, но после заполнения _tmpItem
          PERFORM lpComplete_Movement_Sale_Recalc (inMovementId := inMovementId
@@ -1450,6 +1470,24 @@ END IF;*/
                                                                   THEN _tmpItem.OperSumm_PriceList - _tmpItem.OperSumm_Partner
                                                              ELSE 0
                                                         END;
+
+     -- Распределение - Маркетинг в накладных + Маркетинг
+     IF vbOperSumm_51201 <> 0
+     THEN
+         -- распределили
+         UPDATE _tmpItem SET OperSumm_51201 = CAST (vbOperSumm_51201 * _tmpItem.OperSumm_Partner / vbOperSumm_Partner AS NUMERIC (16,2))
+         WHERE _tmpItem.isLossMaterials = FALSE;
+
+         -- если не вышли на нужную сумму
+         IF vbOperSumm_51201 <> (SELECT SUM (COALESCE (_tmpItem.OperSumm_51201, 0)) FROM _tmpItem)
+         THEN
+             -- выровняли копейки
+             UPDATE _tmpItem SET OperSumm_51201 = _tmpItem.OperSumm_51201 - (SELECT SUM (_tmpItem.OperSumm_51201) FROM _tmpItem) + vbOperSumm_51201
+             WHERE _tmpItem.MovementItemId = (SELECT _tmpItem.MovementItemId FROM _tmpItem WHERE _tmpItem.OperSumm_51201 <> 0 ORDER BY _tmpItem.OperSumm_51201 DESC LIMIT 1);
+
+         END IF;
+     END IF;
+
 
      -- формируются Партии товара, ЕСЛИ надо ...
      UPDATE _tmpItem SET PartionGoodsId = CASE WHEN vbMovementDescId = zc_Movement_SaleAsset()
@@ -2151,7 +2189,36 @@ END IF;*/
                , lfContainerSumm_20901.ContainerId
                , lfContainerSumm_20901.AccountId
                , _tmpItem.isLossMaterials
-                ;
+
+       UNION ALL
+        SELECT
+              _tmpItem.MovementItemId
+            , _tmpItem.ContainerId_Goods
+            , 0 AS ContainerId_ProfitLoss_40208 -- Счет - прибыль (ОПиУ - разница в весе : с/с2 - с/с3)
+            , 0 AS ContainerId_ProfitLoss_10500 -- Счет - прибыль (ОПиУ - скидки в весе : с/с1 - с/с2)
+            , 0 AS ContainerId_ProfitLoss_10400 -- Счет - прибыль (ОПиУ - себестоимости реализации : с/с3)
+            , 0 AS ContainerId_ProfitLoss_20200 -- Счет - прибыль (ОПиУ - Общепроизводственные расходы + Содержание складов)
+            , COALESCE (Container_Summ.Id, 0)       AS ContainerId
+            , COALESCE (Container_Summ.ObjectId, 0) AS AccountId
+
+            , 0 AS ContainerId_Transit_01 -- Счет Транзит, определим позже +++
+            , 0 AS ContainerId_Transit_02 -- Счет Транзит, определим позже +++
+            , 0 AS ContainerId_Transit_51 -- Счет Транзит, определим позже
+            , 0 AS ContainerId_Transit_52 -- Счет Транзит, определим позже
+            , 0 AS ContainerId_Transit_53 -- Счет Транзит, определим позже +++
+
+              -- с/с1 - для количества: расход с остатка
+            , _tmpItem.OperSumm_51201 AS OperSumm
+              -- с/с2 - для количества: с учетом % скидки
+            , _tmpItem.OperSumm_51201 AS OperSumm_ChangePercent
+              -- с/с3 - для количества: контрагента
+            , _tmpItem.OperSumm_51201 AS OperSumm_Partner
+            , _tmpItem.isLossMaterials
+        FROM _tmpItem
+             -- так находим
+             LEFT JOIN Container AS Container_Summ ON Container_Summ.Id = vbContainerId_51201
+        WHERE _tmpItem.OperSumm_51201 <> 0
+       ;
 
      END IF; -- if vbIsHistoryCost = TRUE AND zc_isHistoryCost() = TRUE
 
@@ -3383,7 +3450,7 @@ END IF;*/
      -- 6.3. ФИНИШ - перепроводим Налоговую
      IF inUserId <> zc_Enum_Process_Auto_PrimeCost()
         AND inUserId <> 343013 -- Нагорная Я.Г.
-        -- AND inUserId <> 9459   -- Малахова Т.Н.
+        -- AND inUserId <> zfCalc_UserMain()
         -- AND inUserId <> 5
         AND vbPaidKindId = zc_Enum_PaidKind_FirstForm()
         AND vbCurrencyDocumentId = zc_Enum_Currency_Basis()
@@ -3411,7 +3478,7 @@ END IF;*/
                                                        , inStartDateTax          := NULL
                                                        , inUserId                := inUserId
                                                         );
-        --   ELSE RAISE EXCEPTION 'Админу только отладка';
+           ELSE RAISE EXCEPTION 'Админу только отладка';
            end if;
      END IF;
 
@@ -3495,5 +3562,5 @@ and coalesce (M1.ValueData, 0) <> coalesce (M2.ValueData, 0)
 */
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 122175 , inSession:= '2')
--- SELECT * FROM lpComplete_Movement_Sale (inMovementId:= 122175, inIsLastComplete:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM lpComplete_Movement_Sale22 (inMovementId:= 122175, inIsLastComplete:= FALSE, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 122175 , inSession:= '2')

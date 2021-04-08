@@ -18,7 +18,7 @@ BEGIN
 
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_Sale_CreateTemp();
-if vbUserId = 5 THEN
+if vbUserId IN (9459, 5) AND 1=0 THEN
      -- Проводим Документ
      PERFORM lpComplete_Movement_Sale22 (inMovementId     := inMovementId
                                      , inUserId         := vbUserId
@@ -29,6 +29,11 @@ ELSE
                                      , inUserId         := vbUserId
                                      , inIsLastComplete := inIsLastComplete);
 END IF;
+
+if inSession = '5'
+then
+    RAISE EXCEPTION 'Ошибка.Test - ok';
+end if;
 
 END;
 $BODY$
