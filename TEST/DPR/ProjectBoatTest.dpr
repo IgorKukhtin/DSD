@@ -255,7 +255,9 @@ uses
   Report_MovementIncome in '..\..\FormsBoat\Report\Report_MovementIncome.pas' {Report_MovementIncomeForm: TParentForm},
   Report_MovementIncomeDialog in '..\..\FormsBoat\Report\Report_MovementIncomeDialog.pas' {Report_MovementIncomeDialogForm: TParentForm},
   Union_IncomeOrderJournalChoice in '..\..\FormsBoat\Document\Union_IncomeOrderJournalChoice.pas' {Union_IncomeOrderJournalChoiceForm: TParentForm},
-  Union_InvoiceOrderJournalChoice in '..\..\FormsBoat\Document\Union_InvoiceOrderJournalChoice.pas' {Union_InvoiceOrderJournalChoiceForm: TParentForm};
+  Union_InvoiceOrderJournalChoice in '..\..\FormsBoat\Document\Union_InvoiceOrderJournalChoice.pas' {Union_InvoiceOrderJournalChoiceForm: TParentForm},
+  Report_GoodsDialog in '..\..\FormsBoat\Report\Report_GoodsDialog.pas' {Report_GoodsDialogForm: TParentForm},
+  Report_Goods in '..\..\FormsBoat\Report\Report_Goods.pas' {Report_GoodsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -1,36 +1,28 @@
 -- Function: gpReport_Goods ()
 
-DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Goods (
     IN inStartDate    TDateTime ,
     IN inEndDate      TDateTime ,
     IN inUnitGroupId  Integer   ,
-    IN inLocationId   Integer   ,
-    IN inGoodsGroupId Integer   ,
     IN inGoodsId      Integer   ,
-    IN inIsPartner    Boolean   ,
-    IN inIsPartion    Boolean   ,
+    IN inPartionId    Integer   ,
     IN inSession      TVarChar    -- ÒÂÒÒËˇ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ
 )
 RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime
-              , isPeresort Boolean
               , MovementDescName TVarChar, MovementDescName_order TVarChar
               , isActive Boolean, isRemains Boolean, isRePrice Boolean, isInv Boolean
               , LocationDescName TVarChar, LocationCode Integer, LocationName TVarChar
               , ObjectByDescName TVarChar, ObjectByCode Integer, ObjectByName TVarChar
               , PaidKindName TVarChar
-              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, GoodsKindName_complete TVarChar, PartionGoods TVarChar
-              , GoodsCode_parent Integer, GoodsName_parent TVarChar, GoodsKindName_parent TVarChar
+              , GoodsCode Integer, GoodsName TVarChar, PartionId Integer
+              , GoodsCode_parent Integer, GoodsName_parent TVarChar
               , Price TFloat, Price_end TFloat, Price_partner TFloat
               , SummPartnerIn TFloat, SummPartnerOut TFloat
               , AmountStart TFloat, AmountIn TFloat, AmountOut TFloat, AmountEnd TFloat, Amount TFloat
               , SummStart TFloat, SummIn TFloat, SummOut TFloat, SummEnd TFloat, Summ TFloat
-              , Amount_Change TFloat, Summ_Change_zavod TFloat
-              , Amount_40200 TFloat,  Summ_40200_zavod TFloat
-              , Amount_Loss TFloat,  Summ_Loss_zavod TFloat
-              , isPage3 Boolean, isExistsPage3 Boolean
-               )
+              )
 AS
 $BODY$
  DECLARE vbUserId Integer;
@@ -41,188 +33,156 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_Goods());
      vbUserId:= lpGetUserBySession (inSession);
 
-    IF inGoodsId = 0 AND inGoodsGroupId <> 0
-    THEN
-         RETURN QUERY
-         SELECT gpReport.MovementId, gpReport.InvNumber, gpReport.OperDate, gpReport.OperDatePartner
-              , gpReport.isPeresort
-              , gpReport.MovementDescName, gpReport.MovementDescName_order
-              , gpReport.isActive, gpReport.isRemains, gpReport.isRePrice, gpReport.isInv
-              , gpReport.LocationDescName, gpReport.LocationCode, gpReport.LocationName
-              , gpReport.CarCode, gpReport.CarName
-              , gpReport.ObjectByDescName, gpReport.ObjectByCode, gpReport.ObjectByName
-              , gpReport.PaidKindName
-              , gpReport.GoodsCode, gpReport.GoodsName, gpReport.GoodsKindName, gpReport.GoodsKindName_complete, gpReport.PartionGoods
-              , gpReport.GoodsCode_parent, gpReport.GoodsName_parent, gpReport.GoodsKindName_parent
-              , gpReport.Price, gpReport.Price_end,gpReport.Price_partner
-              , gpReport.SummPartnerIn, gpReport.SummPartnerOut
-              , gpReport.AmountStart, gpReport.AmountIn, gpReport.AmountOut, gpReport.AmountEnd, gpReport.Amount
-              , gpReport.SummStart, gpReport.SummIn, gpReport.SummOut, gpReport.SummEnd, gpReport.Summ
-              , gpReport.Amount_Change, gpReport.Summ_Change_zavod
-              , gpReport.Amount_40200, gpReport.Summ_40200_zavod
-              , gpReport.Amount_Loss, gpReport.Summ_Loss_zavod
-              , gpReport.isPage3, gpReport.isExistsPage3
-         FROM gpReport_GoodsGroup (inStartDate   := inStartDate
-                                 , inEndDate     := inEndDate
-                                 , inUnitGroupId := inUnitGroupId
-                                 , inLocationId  := inLocationId
-                                 , inGoodsGroupId:= inGoodsGroupId
-                                 , inIsPartner   := inIsPartner
-                                 , inSession     := inSession
-                                  ) AS gpReport;
-    ELSE
 
     RETURN QUERY
-    WITH tmpWhere AS (SELECT lfSelect.UnitId AS LocationId, zc_ContainerLinkObject_Unit() AS DescId, inGoodsId AS GoodsId FROM lfSelect_Object_Unit_byGroup (inUnitGroupId) AS lfSelect WHERE inLocationId = 0
+    WITH tmpWhere AS (SELECT lfSelect.UnitId               AS LocationId
+                      FROM lfSelect_Object_Unit_byGroup (inUnitGroupId) AS lfSelect
+                      wHERE COALESCE (inUnitGroupId,0) <> 0
                      UNION
-                      SELECT lfSelect.UnitId AS LocationId, zc_ContainerLinkObject_Unit() AS DescId, inGoodsId AS GoodsId FROM lfSelect_Object_Unit_byGroup (inLocationId) AS lfSelect WHERE inLocationId <> 0
+                      SELECT Object.Id  AS LocationId
+                      FROM Object
+                      WHERE Object.DescId = zc_Object_Unit()
+                        AND Object.isErased = FALSE
+                        AND COALESCE (inUnitGroupId,0) = 0
                      )
-       , tmpContainer_Count AS (SELECT Container.Id          AS ContainerId
-                                     , CLO_Location.ObjectId AS LocationId
-                                     , Container.ObjectId    AS GoodsId
-                                     , 0 AS GoodsKindId
-                                     , CASE WHEN inIsPartion = TRUE THEN COALESCE (Container.PartionId, 0) ELSE 0 END AS PartionGoodsId
+       , tmpGoods AS (SELECT inGoodsId AS GoodsId
+                      wHERE COALESCE (inGoodsId,0) <> 0
+                     UNION
+                      SELECT Object.Id  AS LocationId
+                      FROM Object
+                      WHERE Object.DescId = zc_Object_Goods()
+                        AND Object.isErased = FALSE
+                        AND COALESCE (inGoodsId,0) = 0
+                     )
+       , tmpContainer_Count AS (SELECT Container.Id            AS ContainerId
+                                     , Container.WhereObjectId AS LocationId
+                                     , Container.ObjectId      AS GoodsId
+                                     , COALESCE (Container.PartionId, 0) AS PartionId
                                      , Container.Amount
-                                FROM tmpWhere
-                                     INNER JOIN Container ON Container.ObjectId = tmpWhere.GoodsId
+                                FROM tmpGoods
+                                     INNER JOIN Container ON Container.ObjectId = tmpGoods.GoodsId
                                                          AND Container.DescId = zc_Container_Count()
-                                     INNER JOIN ContainerLinkObject AS CLO_Location ON CLO_Location.ContainerId = Container.Id
-                                                                                   AND CLO_Location.DescId = tmpWhere.DescId
-                                                                                   AND CLO_Location.ObjectId = tmpWhere.LocationId
-                                     /*LEFT JOIN ContainerLinkObject AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = Container.Id
-                                                                                   AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-                                     LEFT JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = Container.Id
-                                                                                      AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()*/
-                                     LEFT JOIN ContainerLinkObject AS CLO_Account ON CLO_Account.ContainerId = Container.Id
-                                                                                 AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
-                                WHERE CLO_Account.ContainerId IS NULL -- !!!Ú.Â. ·ÂÁ Ò˜ÂÚ‡ “‡ÌÁËÚ!!!
+                                                         AND (Container.PartionId = inPartionId OR inPartionId = 0)
+                                     INNER JOIN tmpWhere ON tmpWhere.LocationId = Container.WhereObjectId
                                )
-                , tmpMI_Count AS (SELECT tmpContainer_Count.ContainerId
-                                       , tmpContainer_Count.LocationId
-                                       , tmpContainer_Count.GoodsId
-                                       , tmpContainer_Count.GoodsKindId
-                                       , MIContainer.ObjectIntId_Analyzer AS GoodsKindId_mic
-                                       , tmpContainer_Count.PartionGoodsId
-                                       , tmpContainer_Count.Amount
-                                       , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn())
-                                                   THEN MIContainer.ContainerId_Analyzer
-                                              ELSE 0
-                                         END AS ContainerId_Analyzer
-                                       , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                   THEN MIContainer.MovementId
-                                              ELSE 0
-                                         END AS MovementId
-                                       , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                   THEN MIContainer.MovementItemId
-                                              ELSE 0
-                                         END AS MovementItemId
-                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                        THEN MIContainer.Amount
-                                                   ELSE 0
-                                              END) AS Amount_Period
-                                       , SUM (COALESCE (MIContainer.Amount, 0)) AS Amount_Total
-                                       , MIContainer.MovementDescId
-                                       , MIContainer.isActive
-                                  FROM tmpContainer_Count
-                                       LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_Count.ContainerId
-                                                                                     AND MIContainer.OperDate >= inStartDate
-                                  GROUP BY tmpContainer_Count.ContainerId
-                                         , tmpContainer_Count.LocationId
-                                         , tmpContainer_Count.GoodsId
-                                         , tmpContainer_Count.GoodsKindId
-                                         , MIContainer.ObjectIntId_Analyzer
-                                         , tmpContainer_Count.PartionGoodsId
-                                         , tmpContainer_Count.Amount
-                                         , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn())
-                                                     THEN MIContainer.ContainerId_Analyzer
-                                                ELSE 0
-                                           END
-                                         , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                     THEN MIContainer.MovementId
-                                                ELSE 0
-                                           END
-                                         , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                     THEN MIContainer.MovementItemId
-                                                ELSE 0
-                                           END
-                                         , MIContainer.MovementDescId
-                                         , MIContainer.isActive
-                                 )
+
+       , tmpMI_Count AS (SELECT tmpContainer_Count.ContainerId
+                              , tmpContainer_Count.LocationId
+                              , tmpContainer_Count.GoodsId
+                              , tmpContainer_Count.PartionId
+                              , tmpContainer_Count.Amount
+                              , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn())
+                                          THEN MIContainer.ContainerId_Analyzer
+                                     ELSE 0
+                                END AS ContainerId_Analyzer
+                              , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                          THEN MIContainer.MovementId
+                                     ELSE 0
+                                END AS MovementId
+                              , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                          THEN MIContainer.MovementItemId
+                                     ELSE 0
+                                END AS MovementItemId
+                              , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                               THEN MIContainer.Amount
+                                          ELSE 0
+                                     END) AS Amount_Period
+                              , SUM (COALESCE (MIContainer.Amount, 0)) AS Amount_Total
+                              , MIContainer.MovementDescId
+                              , MIContainer.isActive
+                         FROM tmpContainer_Count
+                              LEFT JOIN MovementItemContainer AS MIContainer
+                                                              ON MIContainer.ContainerId = tmpContainer_Count.ContainerId
+                                                             AND MIContainer.OperDate >= inStartDate
+                         GROUP BY tmpContainer_Count.ContainerId
+                                , tmpContainer_Count.LocationId
+                                , tmpContainer_Count.GoodsId
+                                , tmpContainer_Count.PartionId
+                                , tmpContainer_Count.Amount
+                                , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn())
+                                            THEN MIContainer.ContainerId_Analyzer
+                                       ELSE 0
+                                  END
+                                , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                            THEN MIContainer.MovementId
+                                       ELSE 0
+                                  END
+                                , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                            THEN MIContainer.MovementItemId
+                                       ELSE 0
+                                  END
+                                , MIContainer.MovementDescId
+                                , MIContainer.isActive
+                        )
        , tmpContainer_Summ AS (SELECT tmpContainer_Count.ContainerId AS ContainerId_Count
                                     , tmpContainer_Count.LocationId
                                     , tmpContainer_Count.GoodsId
-                                    , tmpContainer_Count.GoodsKindId
-                                    , tmpContainer_Count.PartionGoodsId
-                                    , Object_Account_View.AccountDirectionId
+                                    , tmpContainer_Count.PartionId
                                     , Container.Id AS ContainerId_Summ
                                     , Container.Amount
                                FROM tmpContainer_Count
                                     INNER JOIN Container ON Container.ParentId = tmpContainer_Count.ContainerId
                                                         AND Container.DescId = zc_Container_Summ()
-                                    LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Container.ObjectId
-                              )
-                , tmpMI_Summ AS (SELECT tmpContainer_Summ.AccountDirectionId
-                                      , tmpContainer_Summ.ContainerId_Count AS ContainerId
-                                      , tmpContainer_Summ.LocationId
-                                      , tmpContainer_Summ.GoodsId
-                                      , tmpContainer_Summ.GoodsKindId
-                                      , MIContainer.ObjectIntId_Analyzer AS GoodsKindId_mic
-                                      , tmpContainer_Summ.PartionGoodsId
-                                      , tmpContainer_Summ.Amount
-                                      , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                  THEN MIContainer.AnalyzerId
-                                             ELSE 0
-                                        END AS AnalyzerId
-                                      , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn())
-                                                  THEN MIContainer.ContainerId_Analyzer
-                                             ELSE 0
-                                        END AS ContainerId_Analyzer
-                                      , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                  THEN MIContainer.MovementId
-                                             ELSE 0
-                                        END AS MovementId
-                                      , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                  THEN MIContainer.MovementItemId
-                                             ELSE 0
-                                        END AS MovementItemId
-                                      , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                       THEN MIContainer.Amount
-                                                  ELSE 0
-                                             END) AS Amount_Period
-                                      , SUM (COALESCE (MIContainer.Amount, 0)) AS Amount_Total
-                                      , MIContainer.MovementDescId
-                                      , MIContainer.isActive
-                                 FROM tmpContainer_Summ
-                                      LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_Summ.ContainerId_Summ
-                                                                                    AND MIContainer.OperDate >= inStartDate
-                                 GROUP BY tmpContainer_Summ.AccountDirectionId
-                                        , tmpContainer_Summ.ContainerId_Count
-                                        , tmpContainer_Summ.ContainerId_Summ
-                                        , tmpContainer_Summ.LocationId
-                                        , tmpContainer_Summ.GoodsId
-                                        , tmpContainer_Summ.GoodsKindId
-                                        , MIContainer.ObjectIntId_Analyzer
-                                        , tmpContainer_Summ.PartionGoodsId
-                                        , tmpContainer_Summ.Amount
-                                        , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                    THEN MIContainer.AnalyzerId
-                                               ELSE 0
-                                          END
-                                        , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn())
-                                                    THEN MIContainer.ContainerId_Analyzer
-                                               ELSE 0
-                                          END
-                                        , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                    THEN MIContainer.MovementId
-                                               ELSE 0
-                                          END
-                                        , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                    THEN MIContainer.MovementItemId
-                                               ELSE 0
-                                          END
-                                        , MIContainer.MovementDescId
-                                        , MIContainer.isActive
                                 )
+
+       , tmpMI_Summ AS (SELECT tmpContainer_Summ.ContainerId_Count AS ContainerId
+                             , tmpContainer_Summ.LocationId
+                             , tmpContainer_Summ.GoodsId
+                             , tmpContainer_Summ.PartionId
+                             , tmpContainer_Summ.Amount
+                             , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                         THEN MIContainer.AnalyzerId
+                                    ELSE 0
+                               END AS AnalyzerId
+                             , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                     AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn())
+                                         THEN MIContainer.ContainerId_Analyzer
+                                    ELSE 0
+                               END AS ContainerId_Analyzer
+                             , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                         THEN MIContainer.MovementId
+                                    ELSE 0
+                               END AS MovementId
+                             , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                         THEN MIContainer.MovementItemId
+                                    ELSE 0
+                               END AS MovementItemId
+                             , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                              THEN MIContainer.Amount
+                                         ELSE 0
+                                    END) AS Amount_Period
+                             , SUM (COALESCE (MIContainer.Amount, 0)) AS Amount_Total
+                             , MIContainer.MovementDescId
+                             , MIContainer.isActive
+                        FROM tmpContainer_Summ
+                             LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_Summ.ContainerId_Summ
+                                                                           AND MIContainer.OperDate >= inStartDate
+                        GROUP BY tmpContainer_Summ.ContainerId_Count
+                               , tmpContainer_Summ.ContainerId_Summ
+                               , tmpContainer_Summ.LocationId
+                               , tmpContainer_Summ.GoodsId
+                               , tmpContainer_Summ.PartionId
+                               , tmpContainer_Summ.Amount
+                               , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                           THEN MIContainer.AnalyzerId
+                                      ELSE 0
+                                 END
+                               , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                       AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn())
+                                           THEN MIContainer.ContainerId_Analyzer
+                                      ELSE 0
+                                 END
+                               , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                           THEN MIContainer.MovementId
+                                      ELSE 0
+                                 END
+                               , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                           THEN MIContainer.MovementItemId
+                                      ELSE 0
+                                 END
+                               , MIContainer.MovementDescId
+                               , MIContainer.isActive
+                       )
 
          , tmpMI_Summ_group AS (SELECT DISTINCT tmpMI_Summ.MovementId, tmpMI_Summ.MovementItemId, tmpMI_Summ.ContainerId_Analyzer, tmpMI_Summ.isActive FROM tmpMI_Summ WHERE tmpMI_Summ.MovementItemId > 0)
 
@@ -253,8 +213,7 @@ BEGIN
                                     , tmpMI_Count.ContainerId
                                     , tmpMI_Count.LocationId
                                     , tmpMI_Count.GoodsId
-                                    , tmpMI_Count.GoodsKindId
-                                    , tmpMI_Count.PartionGoodsId
+                                    , tmpMI_Count.PartionId
                                     , 0    AS ContainerId_Analyzer
                                     , TRUE  AS isActive
                                     , FALSE AS isReprice
@@ -268,13 +227,11 @@ BEGIN
                                     , 0 AS SummEnd
                                     , 0 AS SummIn
                                     , 0 AS SummOut
-                                    , ''  AS PartionGoods_item
                                FROM tmpMI_Count
                                GROUP BY tmpMI_Count.ContainerId
                                       , tmpMI_Count.LocationId
                                       , tmpMI_Count.GoodsId
-                                      , tmpMI_Count.GoodsKindId
-                                      , tmpMI_Count.PartionGoodsId
+                                      , tmpMI_Count.PartionId
                                       , tmpMI_Count.Amount
                                HAVING tmpMI_Count.Amount - SUM (tmpMI_Count.Amount_Total) <> 0
                                    OR SUM (tmpMI_Count.Amount_Period) <> 0
@@ -286,8 +243,7 @@ BEGIN
                                     , tmpMI_Count.ContainerId
                                     , tmpMI_Count.LocationId
                                     , tmpMI_Count.GoodsId
-                                    , CASE WHEN tmpMI_Count.GoodsKindId > 0 THEN tmpMI_Count.GoodsKindId ELSE tmpMI_Count.GoodsKindId_mic END AS GoodsKindId
-                                    , tmpMI_Count.PartionGoodsId
+                                    , tmpMI_Count.PartionId
                                     , tmpMI_Count.ContainerId_Analyzer
                                     , tmpMI_Count.isActive
                                     , FALSE AS isReprice
@@ -301,12 +257,6 @@ BEGIN
                                     , 0 AS SummEnd
                                     , 0 AS SummIn
                                     , 0 AS SummOut
-                                    , /*CASE WHEN tmpMI_Count.MovementDescId = zc_Movement_ProductionSeparate()
-                                                THEN MovementString_PartionGoods.ValueData
-                                           WHEN MIString_PartionGoods.ValueData <> ''
-                                                THEN MIString_PartionGoods.ValueData
-                                           ELSE TO_CHAR (MIDate_PartionGoods.ValueData, 'DD.MM.YYYY')
-                                      END */ '' AS PartionGoods_item
                                FROM tmpMI_Count
                                     LEFT JOIN tmpMI_SummPartner ON tmpMI_SummPartner.MovementItemId = tmpMI_Count.MovementItemId
 
@@ -330,8 +280,7 @@ BEGIN
                                     , tmpMI_Summ.ContainerId
                                     , tmpMI_Summ.LocationId
                                     , tmpMI_Summ.GoodsId
-                                    , tmpMI_Summ.GoodsKindId
-                                    , tmpMI_Summ.PartionGoodsId
+                                    , tmpMI_Summ.PartionId
                                     , 0 AS ContainerId_Analyzer
                                     , TRUE AS isActive
                                     , FALSE AS isReprice
@@ -345,14 +294,11 @@ BEGIN
                                     , tmpMI_Summ.Amount - SUM (tmpMI_Summ.Amount_Total) + SUM (tmpMI_Summ.Amount_Period) AS SummEnd
                                     , 0 AS SummIn
                                     , 0 AS SummOut
-                                    , '' AS PartionGoods_item
                                FROM tmpMI_Summ
-                               GROUP BY tmpMI_Summ.AccountDirectionId
-                                      , tmpMI_Summ.ContainerId
+                               GROUP BY tmpMI_Summ.ContainerId
                                       , tmpMI_Summ.LocationId
                                       , tmpMI_Summ.GoodsId
-                                      , tmpMI_Summ.GoodsKindId
-                                      , tmpMI_Summ.PartionGoodsId
+                                      , tmpMI_Summ.PartionId
                                       , tmpMI_Summ.Amount
                                HAVING tmpMI_Summ.Amount - SUM (tmpMI_Summ.Amount_Total) <> 0
                                    OR SUM (tmpMI_Summ.Amount_Period) <> 0
@@ -364,8 +310,7 @@ BEGIN
                                     , tmpMI_Summ.ContainerId
                                     , tmpMI_Summ.LocationId
                                     , tmpMI_Summ.GoodsId
-                                    , CASE WHEN tmpMI_Summ.GoodsKindId > 0 THEN tmpMI_Summ.GoodsKindId ELSE tmpMI_Summ.GoodsKindId_mic END AS GoodsKindId
-                                    , tmpMI_Summ.PartionGoodsId
+                                    , tmpMI_Summ.PartionId
                                     , tmpMI_Summ.ContainerId_Analyzer
                                     , tmpMI_Summ.isActive
                                     , CASE WHEN tmpMI_Summ.AnalyzerId = zc_Enum_AccountGroup_60000() THEN TRUE ELSE FALSE END AS isReprice
@@ -379,12 +324,6 @@ BEGIN
                                     , 0 AS SummEnd
                                     , CASE WHEN tmpMI_Summ.Amount_Period > 0 THEN tmpMI_Summ.Amount_Period ELSE 0 END AS SummIn
                                     , CASE WHEN tmpMI_Summ.Amount_Period < 0 THEN -1 * tmpMI_Summ.Amount_Period ELSE 0 END AS SummOut
-                                    , /*CASE WHEN tmpMI_Summ.MovementDescId = zc_Movement_ProductionSeparate()
-                                                THEN MovementString_PartionGoods.ValueData
-                                           WHEN MIString_PartionGoods.ValueData <> ''
-                                                THEN MIString_PartionGoods.ValueData
-                                           ELSE TO_CHAR (MIDate_PartionGoods.ValueData, 'DD.MM.YYYY')
-                                      END*/ '' AS PartionGoods_item
                                FROM tmpMI_Summ
                                     LEFT JOIN tmpMI_find AS MovementItem ON MovementItem.Id = tmpMI_Summ.MovementItemId
                                     --LEFT JOIN tmpMID_PartionGoods AS MIDate_PartionGoods ON MIDate_PartionGoods.MovementItemId = tmpMI_Summ.MovementItemId
@@ -401,12 +340,10 @@ BEGIN
                                       , tmpMIContainer_all.ParentId
                                       , tmpMIContainer_all.LocationId
                                       , tmpMIContainer_all.GoodsId
-                                      , tmpMIContainer_all.GoodsKindId
-                                      , tmpMIContainer_all.PartionGoodsId
+                                      , tmpMIContainer_all.PartionId
                                       , tmpMIContainer_all.ContainerId_Analyzer
                                       , tmpMIContainer_all.isActive
                                       , tmpMIContainer_all.isReprice
-                                      , tmpMIContainer_all.PartionGoods_item
                                       , SUM (tmpMIContainer_all.AmountStart)      AS AmountStart
                                       , SUM (tmpMIContainer_all.AmountEnd)        AS AmountEnd
                                       , SUM (tmpMIContainer_all.AmountIn)         AS AmountIn
@@ -433,13 +370,11 @@ BEGIN
                                         , tmpMIContainer_all.ParentId
                                         , tmpMIContainer_all.LocationId
                                         , tmpMIContainer_all.GoodsId
-                                        , tmpMIContainer_all.GoodsKindId
-                                        , tmpMIContainer_all.PartionGoodsId
+                                        , tmpMIContainer_all.PartionId
                                         , tmpMIContainer_all.ContainerId_Analyzer
                                         , tmpMIContainer_all.isActive
                                         , tmpMIContainer_all.isReprice
-                                        , tmpMIContainer_all.PartionGoods_item
-                                )
+                               )
 
   ----
   
@@ -448,7 +383,6 @@ BEGIN
                    WHERE MovementLinkObject_By.MovementId IN (SELECT DISTINCT tmpMIContainer_group.MovementId FROM tmpMIContainer_group) 
                      AND MovementLinkObject_By.DescId IN ( zc_MovementLinkObject_From()
                                                          , zc_MovementLinkObject_To()
-                                                         --, zc_MovementLinkObject_ArticleLoss()
                                                          , zc_MovementLinkObject_PaidKind()
                                                          )
                  )
@@ -459,22 +393,11 @@ BEGIN
                           AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                         )
 
- /* , tmpMILO_GoodsKind_parent AS (SELECT MILinkObject_GoodsKind_parent.*
-                                 FROM MovementItemLinkObject AS MILinkObject_GoodsKind_parent
-                                 WHERE MILinkObject_GoodsKind_parent.MovementItemId IN (SELECT DISTINCT tmpMIContainer_group.ParentId FROM tmpMIContainer_group)  
-                                       AND MILinkObject_GoodsKind_parent.DescId = zc_MILinkObject_GoodsKind()
-                                )*/
-
-
-
-
    -- –≈«”À‹“¿“
   , tmpDataAll AS (SELECT Movement.Id AS MovementId
                         , Movement.InvNumber
                         , Movement.OperDate
                         , MovementDate_OperDatePartner.ValueData AS OperDatePartner
-                        --, COALESCE (MovementBoolean_Peresort.ValueData, FALSE) :: Boolean AS isPeresort
-                        , FALSE :: Boolean AS isPeresort
                 
                         , MovementDesc.ItemName :: TVarChar AS MovementDescName
                 
@@ -527,14 +450,13 @@ BEGIN
                         , ObjectDesc_By.ItemName         AS ObjectByDescName
                         , Object_By.ObjectCode           AS ObjectByCode
                         , Object_By.ValueData            AS ObjectByName
-                
+             
                         , Object_PaidKind.ValueData AS PaidKindName
                 
                         , Object_Goods.ObjectCode AS GoodsCode
                         , Object_Goods.ValueData  AS GoodsName
-                        , Object_GoodsKind.ValueData AS GoodsKindName
-                        , Object_GoodsKind_complete.ValueData AS GoodsKindName_complete
-                        , COALESCE (CASE WHEN Object_PartionGoods.ValueData <> '' THEN Object_PartionGoods.ValueData ELSE NULL END, CASE WHEN tmpMIContainer_group.PartionGoods_item <> '' THEN '*' || tmpMIContainer_group.PartionGoods_item ELSE '' END) :: TVarChar AS PartionGoods
+                        --, COALESCE (CASE WHEN Object_PartionGoods.ValueData <> '' THEN Object_PartionGoods.ValueData ELSE NULL END, '') :: TVarChar AS PartionGoods
+                        , tmpMIContainer_group.PartionId
                         , Object_Goods_parent.ObjectCode AS GoodsCode_parent
                         , Object_Goods_parent.ValueData  AS GoodsName_parent
                         , ''::TVarChar AS GoodsKindName_parent
@@ -582,14 +504,7 @@ BEGIN
                               * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_Loss()) THEN -1 ELSE 1 END
                               --* CASE WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE THEN -1 ELSE 1 END
                                 AS TFloat) AS Summ
-              
-                        , 0 :: TFloat AS Amount_Change,  0 :: TFloat AS Summ_Change_zavod
-                        , 0 :: TFloat AS Amount_40200,   0 :: TFloat AS Summ_40200_zavod
-                        , 0 :: TFloat AS Amount_Loss,    0 :: TFloat AS Summ_Loss_zavod
-                
-                        , FALSE AS isPage3
-                        , FALSE AS isExistsPage3
-                
+      
                    FROM tmpMIContainer_group
                         LEFT JOIN Movement ON Movement.Id = tmpMIContainer_group.MovementId
                         LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
@@ -616,40 +531,26 @@ BEGIN
                                                   ON MovementDate_OperDatePartner.MovementId = tmpMIContainer_group.MovementId
                                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                 
-                       -- LEFT JOIN tmpMovementBoolean AS MovementBoolean_Peresort
-                       --                              ON MovementBoolean_Peresort.MovementId = tmpMIContainer_group.MovementId
-                                                    --AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
-                
                         LEFT JOIN MovementItem AS MovementItem_parent ON MovementItem_parent.Id = tmpMIContainer_group.ParentId
                         LEFT JOIN Object AS Object_Goods_parent ON Object_Goods_parent.Id = MovementItem_parent.ObjectId
-                        --LEFT JOIN tmpMILO_GoodsKind_parent AS MILinkObject_GoodsKind_parent
-                        --                                   ON MILinkObject_GoodsKind_parent.MovementItemId = tmpMIContainer_group.ParentId
-                          
-                        --LEFT JOIN Object AS Object_GoodsKind_parent ON Object_GoodsKind_parent.Id = MILinkObject_GoodsKind_parent.ObjectId
                 
                         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMIContainer_group.GoodsId
-                        LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMIContainer_group.GoodsKindId
                 
                         LEFT JOIN Object AS Object_Location_find ON Object_Location_find.Id = tmpMIContainer_group.LocationId
                         LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Location_find.DescId
                         LEFT JOIN Object AS Object_Location ON Object_Location.Id = tmpMIContainer_group.LocationId
                         LEFT JOIN Object AS Object_By ON Object_By.Id = CASE WHEN CLO_Object_By.ObjectId > 0 THEN CLO_Object_By.ObjectId ELSE MovementLinkObject_By.ObjectId END
                         LEFT JOIN ObjectDesc AS ObjectDesc_By ON ObjectDesc_By.Id = Object_By.DescId
-                        LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_group.PartionGoodsId
-                        LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
-                                             ON ObjectLink_GoodsKindComplete.ObjectId = tmpMIContainer_group.PartionGoodsId
-                                            AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
-                        LEFT JOIN Object AS Object_GoodsKind_complete ON Object_GoodsKind_complete.Id = ObjectLink_GoodsKindComplete.ChildObjectId
+                        --LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_group.PartionId
                    )
+
    -- –≈«”À‹“¿“
    SELECT tmpDataAll.MovementId AS MovementId
         , tmpDataAll.InvNumber  ::TVarChar AS InvNumber
         , tmpDataAll.OperDate
         , tmpDataAll.OperDatePartner ::TDateTime AS OperDatePartner
-        , tmpDataAll.isPeresort
 
         , tmpDataAll.MovementDescName ::TVarChar AS MovementDescName
-
         , tmpDataAll.MovementDescName_order  ::TVarChar AS MovementDescName_order
 
         , tmpDataAll.isActive
@@ -669,12 +570,9 @@ BEGIN
 
         , tmpDataAll.GoodsCode
         , tmpDataAll.GoodsName
-        , tmpDataAll.GoodsKindName
-        , tmpDataAll.GoodsKindName_complete
-        , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.PartionGoods ELSE NULL END ::TVarChar AS PartionGoods
+        , tmpDataAll.PartionId
         , tmpDataAll.GoodsCode_parent
         , tmpDataAll.GoodsName_parent
-        , tmpDataAll.GoodsKindName_parent
 
         , AVG (tmpDataAll.Price)            ::TFloat AS Price
         , AVG (tmpDataAll.Price_end)        ::TFloat AS Price_end
@@ -691,21 +589,12 @@ BEGIN
         , SUM (tmpDataAll.SummIn)           ::TFloat  AS SummIn           
         , SUM (tmpDataAll.SummOut)          ::TFloat  AS SummOut          
         , SUM (tmpDataAll.SummEnd)          ::TFloat  AS SummEnd          
-        , SUM (tmpDataAll.Summ)             ::TFloat  AS Summ             
-
-        , 0 :: TFloat AS Amount_Change, 0 :: TFloat AS Summ_Change_zavod
-        , 0 :: TFloat AS Amount_40200,  0 :: TFloat AS Summ_40200_zavod
-        , 0 :: TFloat AS Amount_Loss,   0 :: TFloat AS Summ_Loss_zavod 
-
-        , tmpDataAll.isPage3
-        , tmpDataAll.isExistsPage3
-
+        , SUM (tmpDataAll.Summ)             ::TFloat  AS Summ
    FROM tmpDataAll
    GROUP BY tmpDataAll.MovementId
         , tmpDataAll.InvNumber
         , tmpDataAll.OperDate
         , tmpDataAll.OperDatePartner
-        , tmpDataAll.isPeresort
         , tmpDataAll.MovementDescName
         , tmpDataAll.MovementDescName_order
         , tmpDataAll.isActive
@@ -721,17 +610,10 @@ BEGIN
         , tmpDataAll.PaidKindName
         , tmpDataAll.GoodsCode
         , tmpDataAll.GoodsName
-        , tmpDataAll.GoodsKindName
-        , tmpDataAll.GoodsKindName_complete
-        , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.PartionGoods ELSE NULL END
+        , tmpDataAll.PartionId
         , tmpDataAll.GoodsCode_parent
         , tmpDataAll.GoodsName_parent
-        , tmpDataAll.GoodsKindName_parent
-        , tmpDataAll.isPage3
-        , tmpDataAll.isExistsPage3
    ;
-
-   END IF;
 
 END;
 $BODY$
@@ -744,5 +626,4 @@ $BODY$
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpReport_Goods (inStartDate:= '01.01.2017', inEndDate:= '01.01.2017', inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 1826, inIsPartner:= FALSE, inSession:= zfCalc_UserAdmin());
--- select * from gpReport_Goods(inStartDate := ('02.03.2020')::TDateTime , inEndDate := ('03.03.2020')::TDateTime , inUnitGroupId := 0 , inLocationId := 0 , inGoodsGroupId := 1858 , inGoodsId := 341913 , inIsPartner := 'False' , inIsPartion := 'False', inSession := '5');
+-- select * from gpReport_Goods(inStartDate := ('02.03.2020')::TDateTime , inEndDate := ('03.03.2021')::TDateTime , inUnitGroupId := 0 , inGoodsId := 3780 , inPartionId := 28494, inSession := '5');

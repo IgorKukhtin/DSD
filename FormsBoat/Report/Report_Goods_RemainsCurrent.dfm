@@ -13,8 +13,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   inherited Panel: TPanel [0]
     Width = 1131
     Height = 60
-    ExplicitLeft = 104
-    ExplicitTop = -16
     ExplicitWidth = 1131
     ExplicitHeight = 60
     inherited deStart: TcxDateEdit
@@ -1120,7 +1118,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'LocationId'
+          Name = 'UnitGroupId'
           Value = ''
           Component = GuidesUnit
           ComponentItem = 'Key'
@@ -1128,7 +1126,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'LocationName'
+          Name = 'UnitGroupName'
           Value = ''
           Component = GuidesUnit
           ComponentItem = 'TextValue'
@@ -1154,35 +1152,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'GoodsSizeId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsSizeId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsSizeName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsSizeName_real'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'PartionId'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PartionId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MovementId'
-          Value = '0'
-          Component = MasterCDS
-          ComponentItem = 'MovementId_Partion'
+          ComponentItem = 'MovementItemId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
