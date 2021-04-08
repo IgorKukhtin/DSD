@@ -63,7 +63,7 @@ $BODY$
    DECLARE vbIsOperPrice Boolean;
    DECLARE vbPriceListName_Basis TVarChar;
 BEGIN
-    -- проверка прав пользователя на вызов процедуры
+   -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_...());
     vbUserId:= lpGetUserBySession (inSession);
 
@@ -346,7 +346,7 @@ BEGIN
 
        , tmpMIString AS (SELECT *
                          FROM MovementItemString AS MIString_PartNumber
-                         WHERE MIString_PartNumber.MovementItemId (SELECT DISTINCT tmpData.MovementItemId FROM tmpData)
+                         WHERE MIString_PartNumber.MovementItemId IN (SELECT DISTINCT tmpData.MovementItemId FROM tmpData)
                            AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
                          ) 
 
@@ -445,7 +445,6 @@ BEGIN
             LEFT JOIN tmpMIString AS MIString_PartNumber
                                   ON MIString_PartNumber.MovementItemId = tmpData.MovementItemId
            ;
-
 
 END;
 $BODY$
