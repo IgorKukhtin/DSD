@@ -1,4 +1,4 @@
-unit Report_Goods_RemainsCurrentDialog;
+unit Report_GoodsDialog;
 
 interface
 
@@ -9,9 +9,9 @@ uses
   cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod,
   dsdGuides, cxDropDownEdit, cxCalendar, cxTextEdit, cxMaskEdit, cxButtonEdit,
   cxPropertiesStore, dsdAddOn, dsdDB, cxLabel, dxSkinsCore,
-  dxSkinsDefaultPainters, cxCheckBox, dsdAction, Vcl.ActnList, dxSkinBlack,
-  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
-  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinsDefaultPainters, cxCheckBox, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
   dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
   dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
   dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
@@ -19,33 +19,29 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCurrencyEdit;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TReport_Goods_RemainsCurrentDialogForm = class(TParentForm)
+  TReport_GoodsDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
-    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    deEnd: TcxDateEdit;
+    deStart: TcxDateEdit;
+    PeriodChoice: TPeriodChoice;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     FormParams: TdsdFormParams;
-    edUnit: TcxButtonEdit;
+    edGoods: TcxButtonEdit;
+    GuidesGoods: TdsdGuides;
+    edUnitGroup: TcxButtonEdit;
     cxLabel3: TcxLabel;
-    GuidesUnit: TdsdGuides;
-    cbPartion: TcxCheckBox;
-    cbPartner: TcxCheckBox;
     cxLabel2: TcxLabel;
-    edPartner: TcxButtonEdit;
-    GuidesPartner: TdsdGuides;
-    ActionList: TActionList;
-    actGet_UserUnit: TdsdExecStoredProc;
-    actRefreshStart: TdsdDataSetRefresh;
-    actRefresh: TdsdDataSetRefresh;
-    cbRemains: TcxCheckBox;
-    cxLabel5: TcxLabel;
-    edGoodsGroup: TcxButtonEdit;
-    GuidesGoodsGroup: TdsdGuides;
-    cbPartNumber: TcxCheckBox;
+    GuidesUnitGroup: TdsdGuides;
+    cxLabel6: TcxLabel;
+    cxLabel7: TcxLabel;
+    GuidesPartion: TdsdGuides;
+    cxLabel1: TcxLabel;
+    edPartion: TcxButtonEdit;
   private
     { Private declarations }
   public
@@ -57,6 +53,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_Goods_RemainsCurrentDialogForm);
+  RegisterClass(TReport_GoodsDialogForm);
 
 end.

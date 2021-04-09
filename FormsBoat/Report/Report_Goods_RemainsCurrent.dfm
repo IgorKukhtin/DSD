@@ -112,7 +112,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Width = 200
     end
     object cbRemains: TcxCheckBox
-      Left = 866
+      Left = 930
       Top = 5
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089' '#1086#1089#1090#1072#1090#1082#1086#1084' = 0'
       Caption = #1054#1089#1090#1072#1090#1086#1082' = 0'
@@ -120,6 +120,16 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       ShowHint = True
       TabOrder = 10
       Width = 94
+    end
+    object cbPartNumber: TcxCheckBox
+      Left = 869
+      Top = 6
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' S/N ('#1044#1072'/'#1053#1077#1090')'
+      Caption = 'S/N'
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 11
+      Width = 46
     end
   end
   inherited PageControl: TcxPageControl [1]
@@ -915,6 +925,14 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartNumber'
+          Value = Null
+          Component = cbPartNumber
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1100,7 +1118,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'LocationId'
+          Name = 'UnitGroupId'
           Value = ''
           Component = GuidesUnit
           ComponentItem = 'Key'
@@ -1108,7 +1126,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'LocationName'
+          Name = 'UnitGroupName'
           Value = ''
           Component = GuidesUnit
           ComponentItem = 'TextValue'
@@ -1134,35 +1152,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'GoodsSizeId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsSizeId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsSizeName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsSizeName_real'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'PartionId'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PartionId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MovementId'
-          Value = '0'
-          Component = MasterCDS
-          ComponentItem = 'MovementId_Partion'
+          ComponentItem = 'MovementItemId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
@@ -1766,6 +1759,14 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         Name = 'inIsRemains'
         Value = Null
         Component = cbRemains
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPartNumber'
+        Value = Null
+        Component = cbPartNumber
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

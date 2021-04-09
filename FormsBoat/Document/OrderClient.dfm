@@ -4108,13 +4108,21 @@ object OrderClientForm: TOrderClientForm
     Top = 416
   end
   object spSelect_ProdColorItems: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ProdColorItems'
+    StoredProcName = 'gpSelect_Object_ProdColorItems_byOrder'
     DataSet = ProdColorItemsCDS
     DataSets = <
       item
         DataSet = ProdColorItemsCDS
       end>
     Params = <
+      item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inisShowAll'
         Value = False
@@ -4343,13 +4351,21 @@ object OrderClientForm: TOrderClientForm
     Top = 424
   end
   object spSelect_ProdOptItems: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ProdOptItems'
+    StoredProcName = 'gpSelect_Object_ProdOptItems_byOrder'
     DataSet = ProdOptItemsCDS
     DataSets = <
       item
         DataSet = ProdOptItemsCDS
       end>
     Params = <
+      item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inIsShowAll'
         Value = False
