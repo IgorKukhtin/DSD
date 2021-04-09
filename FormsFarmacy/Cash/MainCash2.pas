@@ -910,7 +910,9 @@ function GetPrice(Price, Discount: Currency): Currency;
 function GetSumm(Amount, Price: Currency; Down: Boolean): Currency;
 function GetSummFull(Amount, Price: Currency): Currency;
 function GenerateGUID: String;
+
 procedure Add_Log(AMessage: String);
+procedure Add_Log_RRO(AMessage: String);
 
 implementation
 
@@ -934,6 +936,10 @@ const
   StatusCompleteCode = 2;
   StatusUnCompleteId = 14;
   StatusCompleteId = 15;
+
+var
+  isLog_RRO : Boolean;
+
 
 function IfZero(N1, N2: Currency): Currency;
 begin
@@ -973,6 +979,37 @@ begin
       ShowMessage
         ('Ошибка сохранения в лог файл. Покажите это окно системному администратору: '
         + #13#10 + E.Message);
+  end;
+end;
+
+procedure Add_Log_RRO(AMessage: String);
+var
+  F: TextFile;
+begin
+  try
+    if isLog_RRO then
+    try
+      AssignFile(F, ChangeFileExt(Application.ExeName, '_RRO.log'));
+      if not fileExists(ChangeFileExt(Application.ExeName, '_RRO.log')) then
+      begin
+        Rewrite(F);
+      end
+      else
+        Append(F);
+      //
+      try
+        Writeln(F, DateTimeToStr(Now) + ': ' + AMessage);
+      finally
+        CloseFile(F);
+      end;
+    except
+      on E: Exception do
+        ShowMessage
+          ('Ошибка сохранения в лог файл по рро. Покажите это окно системному администратору: '
+          + #13#10 + E.Message);
+    end;
+  finally
+    ShowMessage(AMessage);
   end;
 end;
 
@@ -1378,6 +1415,7 @@ begin
   Add_Log('Clear all');
   // Вернуть товар в верхний грид
   FormParams.ParamByName('CheckId').Value := 0;
+  FormParams.ParamByName('CheckOldId').Value := 0;
   FormParams.ParamByName('ManagerId').Value := 0;
   FormParams.ParamByName('BayerName').Value := '';
   FormParams.ParamByName('ManagerName').Value := '';
@@ -1659,7 +1697,7 @@ begin
     (FormParams.ParamByName('DiscountExternalId').Value,
     FormParams.ParamByName('DiscountCardNumber').Value);
   // ***20.07.16
-  if FormParams.ParamByName('DiscountExternalId').Value > 0 then
+  if DiscountServiceForm.gService = 'CardService' then
   begin
     // проверка карты + сохраним "текущие" параметры-Main
     if not DiscountServiceForm.fCheckCard(lMsg, DiscountServiceForm.gURL,
@@ -1738,6 +1776,18 @@ begin
   lblDiscountCardNumber.Caption := '  ' + FormParams.ParamByName
     ('DiscountCardNumber').Value + '  ';
   pnlDiscount.Visible := FormParams.ParamByName('DiscountExternalId').Value > 0;
+
+  if pnlDiscount.Visible then
+  begin
+    try
+      RemainsCDS.DisableControls;
+      RemainsCDS.Filtered := false;
+      RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0) and GoodsDiscountID = ' + IntToStr(DiscountServiceForm.gDiscountExternalId)
+    finally
+      RemainsCDS.Filtered := true;
+      RemainsCDS.EnableControls;
+    end;
+  end;
 
   if FormParams.ParamByName('SPTax').Value <> 0 then
     lblSPKindName.Caption := '  ' + FloatToStr(FormParams.ParamByName('SPTax')
@@ -2882,11 +2932,12 @@ var
   PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID: Variant;
   aRelatedProductId : array of Integer;
   aRelatedProductPrice : array of Currency;
-  I : integer;
+  I, CheckOldId : integer;
 begin
   if CheckCDS.RecordCount = 0 then
     exit;
   TimerDroppedDown.Enabled := True;
+  CheckOldId := 0;
 
   if pnlPosition.Visible then
   begin
@@ -3476,6 +3527,7 @@ begin
         End;
 
         Add_Log('Чек сохранен');
+        CheckOldId := FormParams.ParamByName('CheckOldId').Value;
         NewCheck(false);
       end;
     End;
@@ -3486,6 +3538,14 @@ begin
   finally
     ShapeState.Brush.Color := clGreen;
     ShapeState.Repaint;
+
+    if (CheckOldId <> 0) and (MessageDlg('Загрузить разбитый ВИП чек?', mtConfirmation, mbYesNo, 0) = mrYes) then
+    begin
+       spSelectCheckId.ParamByName('inMovementId').Value := CheckOldId;
+       spSelectCheckId.Execute;
+       spSelectCheck.Execute;
+       LoadVIPCheck;
+    end;
   end;
 end;
 
@@ -5220,7 +5280,7 @@ end;
 // ***20.07.16
 procedure TMainCashForm2.SetDiscountExternal(ACode : Integer = 0; ADiscountCard : String = '');
 var
-  DiscountExternalId: Integer; MovementItemID : Integer;
+  DiscountExternalId: Integer; MovementItemID, gCode : Integer;
   DiscountExternalName, DiscountCardNumber: String;
   lMsg: String;
 begin
@@ -5330,7 +5390,7 @@ begin
 
     if MovementItemID <> 0 then
     begin
-    //  if CheckCDS.RecordCount > 1 then
+      if CheckCDS.RecordCount > 1 then
       begin
          spPullGoodsCheck.ParamByName('inMovementId').Value := FormParams.ParamByName('CheckId').Value;
          spPullGoodsCheck.ParamByName('inMovementItemId').Value := MovementItemID;
@@ -5340,11 +5400,15 @@ begin
          begin
            CheckCDS.EmptyDataSet;
            NewCheck(True);
+           FormParams.ParamByName('CheckOldId').Value := spPullGoodsCheck.ParamByName('inMovementId').Value;
            spSelectCheckId.ParamByName('inMovementId').Value := spPullGoodsCheck.ParamByName('outMovementId').Value;
            spSelectCheckId.Execute;
            spSelectCheck.Execute;
+           FormParams.ParamByName('DiscountExternalId').Value := DiscountExternalId;
+           FormParams.ParamByName('DiscountExternalName').Value := DiscountExternalName;
+           FormParams.ParamByName('DiscountCardNumber').Value := DiscountCardNumber;
            LoadVIPCheck;
-           CalcTotalSumm;
+           Exit;
          end else Exit;
       end;
     end else
@@ -7061,6 +7125,8 @@ begin
   FOldAnalogFilter := '';
   FAnalogFilter := 0;
 
+  isLog_RRO := iniLog_RRO;
+
   LoadGoodsExpirationDate;
   LoadBankPOSTerminal;
   LoadUnitConfig;
@@ -8634,6 +8700,7 @@ end;
 procedure TMainCashForm2.NewCheck(ANeedRemainsRefresh: Boolean = True);
 begin
   FormParams.ParamByName('CheckId').Value := 0;
+  FormParams.ParamByName('CheckOldId').Value := 0;
   FormParams.ParamByName('ManagerId').Value := 0;
   FormParams.ParamByName('ManagerName').Value := '';
   FormParams.ParamByName('BayerName').Value := '';
@@ -9288,7 +9355,7 @@ begin
           else
           begin
             Result := false;
-            ShowMessage('Ошибка. Сумма чека ' + CurrToStr(FTotalSumm) +
+            Add_Log_RRO('Ошибка. Сумма чека ' + CurrToStr(FTotalSumm) +
               ' не равна сумме товара в фискальном чеке ' +
               CurrToStr(Cash.SummaReceipt) + '.'#13#10 +
               'Чек анулирован...'#13#10'(Перезагрузите свой кассовый аппарат и перезайдите в программу, ' +
@@ -9299,7 +9366,7 @@ begin
         end
         else if not Result and Assigned(Cash) AND not Cash.AlwaysSold then
         begin
-          ShowMessage('Ошибка печати фискального чека.'#13#10 +
+          Add_Log_RRO('Ошибка печати фискального чека.'#13#10 +
             'Чек анулирован...');
           Cash.Anulirovt;
         end;

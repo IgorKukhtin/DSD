@@ -64,6 +64,12 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      RETURN QUERY
+     WITH
+        tmpMovementFloat AS (SELECT *
+                             FROM MovementFloat
+                             WHERE MovementFloat.MovementId = inMovementId
+                             )
+                      
        SELECT Movement.Id
             , Movement.InvNumber
             , Movement.OperDate
@@ -133,17 +139,17 @@ BEGIN
 		                               ON MovementBoolean_Deferred.MovementId = Movement.Id
 		                              AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                    ON MovementFloat_TotalCount.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalCount
+                                       ON MovementFloat_TotalCount.MovementId =  Movement.Id
+                                      AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSumm
+                                       ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                      AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummChangePercent
-                                    ON MovementFloat_TotalSummChangePercent.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSummChangePercent.DescId = zc_MovementFloat_TotalSummChangePercent()
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSummChangePercent
+                                       ON MovementFloat_TotalSummChangePercent.MovementId =  Movement.Id
+                                      AND MovementFloat_TotalSummChangePercent.DescId = zc_MovementFloat_TotalSummChangePercent()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
                                          ON MovementLinkObject_CashRegister.MovementId = Movement.Id
@@ -211,9 +217,9 @@ BEGIN
                                  AND ObjectFloat_SPTax.DescId   = zc_ObjectFloat_SPKind_Tax()
 
             -- инфа из документа промо код
-            LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
-                                    ON MovementFloat_MovementItemId.MovementId = Movement.Id
-                                   AND MovementFloat_MovementItemId.DescId     = zc_MovementFloat_MovementItemId()
+            LEFT JOIN tmpMovementFloat AS MovementFloat_MovementItemId
+                                      ON MovementFloat_MovementItemId.MovementId = Movement.Id
+                                     AND MovementFloat_MovementItemId.DescId     = zc_MovementFloat_MovementItemId()
             LEFT JOIN MovementItem AS MI_PromoCode
                                    ON MI_PromoCode.Id       = MovementFloat_MovementItemId.ValueData :: Integer
                                   AND MI_PromoCode.isErased = FALSE

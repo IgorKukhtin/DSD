@@ -90,7 +90,7 @@ BEGIN
                 , tmp.UnitId_to
                 , gpInsertUpdate_Movement_Send (ioId               := 0
                                               , inInvNumber        := CAST (NEXTVAL ('Movement_Send_seq') AS TVarChar)
-                                              , inOperDate         := CURRENT_DATE
+                                              , inOperDate         := inOperDate
                                               , inFromId           := UnitId_from
                                               , inToId             := UnitId_to
                                               , inComment          := 'Товар по СУА'
@@ -163,7 +163,7 @@ BEGIN
      -- 10. сохранили свойство <Дата перемещений>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Calculation(), vbMovementId, CURRENT_DATE);
 
-  --   RAISE EXCEPTION '<ok>';
+     -- RAISE EXCEPTION '<ok>';
 
 END;
 $BODY$
@@ -176,5 +176,4 @@ $BODY$
 */
 
 -- тест
--- 
-SELECT * FROM gpInsert_Movement_Send_RemainsSun_SUA (inOperDate:= CURRENT_DATE - INTERVAL '1 DAY', inSession:= zfCalc_UserAdmin()) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
+-- SELECT * FROM gpInsert_Movement_Send_RemainsSun_SUA (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inSession:= zfCalc_UserAdmin()) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ

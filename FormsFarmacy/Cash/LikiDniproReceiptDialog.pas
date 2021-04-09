@@ -70,7 +70,7 @@ implementation
 
 {$R *.dfm}
 
-uses IniUtils, RegularExpressions, LikiDniproReceipt, MainCash2;
+uses IniUtils, RegularExpressions, LikiDniproReceipt , MainCash2;
 
 procedure TLikiDniproReceiptDialogForm.bbOkClick(Sender: TObject);
   var Key :Integer;

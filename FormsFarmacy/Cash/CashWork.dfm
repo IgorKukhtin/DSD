@@ -83,7 +83,7 @@ object CashWorkForm: TCashWorkForm
     OnClick = Button4Click
   end
   object BitBtn1: TBitBtn
-    Left = 142
+    Left = 150
     Top = 116
     Width = 75
     Height = 25
@@ -128,14 +128,14 @@ object CashWorkForm: TCashWorkForm
     TabOrder = 9
     OnClick = Button1Click
   end
-  object Button8: TButton
+  object btInfo: TButton
     Left = 246
     Top = 80
     Width = 75
     Height = 25
     Caption = #1048#1085#1092#1086#1088#1084#1072#1094#1080#1103
     TabOrder = 10
-    OnClick = Button8Click
+    OnClick = btInfoClick
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 67
@@ -205,5 +205,17 @@ object CashWorkForm: TCashWorkForm
     PackSize = 1
     Left = 57
     Top = 11
+  end
+  object PopupMenuInfo: TPopupMenu
+    Left = 120
+    Top = 112
+    object pmZReportInfo: TMenuItem
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' Z '#1086#1090#1095#1077#1090#1072
+      OnClick = pmZReportInfoClick
+    end
+    object pmCheckSum: TMenuItem
+      Caption = #1057#1088#1072#1074#1085#1080#1090#1100' '#1089#1091#1084#1084#1099' '#1056#1056#1054' '#1080' '#1087#1086' '#1087#1088#1086#1075#1088#1072#1084#1077
+      OnClick = pmCheckSumClick
+    end
   end
 end
