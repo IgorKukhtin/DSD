@@ -69,7 +69,7 @@ BEGIN
                  -- Logistik
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Logistik41750857())
                       THEN 'Doc_Alan'
-                 || '_' || zfConvert_DateShortToString (MovementDate_OperDatePartner.ValueData)
+                 || '_' || zfCalc_Text_replace (zfConvert_DateShortToString (MovementDate_OperDatePartner.ValueData), '.', '_')
                  || '_' || Movement.InvNumber
 
             END AS outFileName
@@ -80,6 +80,7 @@ BEGIN
                       THEN 'csv'
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Logistik41750857())
                       THEN 'xls'
+                    --THEN 'xlsx'
             END AS outDefaultFileExt
           , CASE WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Mida35273055(), zc_Enum_ExportKind_Brusn34604386(), zc_Enum_ExportKind_Glad2514900150())
                       THEN FALSE

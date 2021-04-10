@@ -264,9 +264,9 @@ BEGIN
                                          , tmpProduct.DiscountNextTax
                                            -- % НДС Заказ клиента
                                          , tmpProduct.VATPercent
-                                           -- Цена продажи без НДС (ReceiptProdModel - Basis)
+                                           -- Цена продажи без НДС (ReceiptProdModel - Basis) - Лодка
                                          , tmpProduct.BasisPrice
-                                           -- Цена продажи с НДС (ReceiptProdModel - Basis)
+                                           -- Цена продажи с НДС (ReceiptProdModel - Basis) - Лодка
                                          , tmpProduct.BasisPriceWVAT
                                            --
                                          , lpSelect.ReceiptProdModelId, lpSelect.ReceiptProdModelChildId
@@ -274,9 +274,9 @@ BEGIN
                                          , lpSelect.ObjectId_parent
                                            -- либо Goods "такой" как в Boat Structure /либо другой Goods, не такой как в Boat Structure /либо ПУСТО
                                          , lpSelect.ObjectId
-                                           -- значение
+                                           -- значение - Элемент
                                          , lpSelect.Value
-                                           -- цена вх. без НДС
+                                           -- цена вх. без НДС - Элемент
                                          , lpSelect.EKPrice
                                            --
                                          , lpSelect.ProdColorPatternId

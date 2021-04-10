@@ -5,7 +5,9 @@ unit dsdInternetAction;
 interface
 
 uses
-  dsdAction, dsdDB, Classes, cxGrid {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
+  dsdAction, dsdDB, Classes, cxGrid {$IFDEF DELPHI103RIO}, Actions {$ENDIF}
+//, Vcl.Dialogs, Messages
+  ;
 
 type
 
@@ -286,6 +288,9 @@ begin
      if High(Files) >= 0 then
         FileName := Files[0];
   end;
+
+//ShowMessage(FFileName);
+//if not FileExists(FFileName) then ShowMessage('not find ' + FFileName);
 
   SetLength(FAttachments, 1);
   FAttachments[0] := FFileName;

@@ -961,9 +961,12 @@ begin
     xlApp.WindowState := xlMinimized;
     xlApp.WindowState := xlMaximized or xlNormal;
     xlApp.Visible := True;
+    // для проекта Project
+    if Self.name = 'actExportToXLS_project' then xlApp.Application.Quit;
   finally
 
   end;
+  Result := true;
 end;
 
 end.

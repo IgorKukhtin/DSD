@@ -186,7 +186,7 @@ BEGIN
     WHERE ObjectLink_Goods_Measure.ObjectId = inGoodsId
       AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure();
     
-    -- Еслт % Возврата пусто пробуем найти у аналогичного товара
+    -- Если % Возврата пусто пробуем найти у аналогичного товара
     IF COALESCE (ioTaxRetIn,0) = 0 AND COALESCE (ioId, 0) = 0
     THEN
         ioTaxRetIn := COALESCE ((SELECT COALESCE (MIFloat_TaxRetIn.ValueData,0) ::TFloat AS TaxRetIn

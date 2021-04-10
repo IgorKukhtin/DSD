@@ -405,7 +405,7 @@ END IF;*/
      SELECT lfGet.PriceWithVAT, lfGet.VATPercent INTO vbPriceWithVAT_PriceListJur, vbVATPercent_PriceListJur FROM lfGet_Object_PriceList (vbPriceListId_Jur) AS lfGet;
 
      -- !!!
-     vbIsPriceList_begin_recalc:= inUserId IN (6131893, 2030723, 5) AND vbOperDate >= '01.04.2021';
+     vbIsPriceList_begin_recalc:= inUserId IN (6131893, /*2030723,*/ 5) AND vbOperDate >= '01.04.2021';
 
      -- !!!Пересчет цен - если надо!!!!
      IF vbIsPriceList_begin_recalc = TRUE
@@ -441,9 +441,13 @@ END IF;*/
                                    LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                               AND MIFloat_Price.DescId         = zc_MIFloat_Price()
+                                   LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                                               ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
                               WHERE MovementItem.MovementId = inMovementId
                                 AND MovementItem.DescId     = zc_MI_Master()
                                 AND MovementItem.isErased   = FALSE
+                                AND COALESCE (MIFloat_PromoMovement.ValueData, 0) = 0
                              )
                     , tmpPrice AS (SELECT tmpGoods.GoodsId
                                         , COALESCE (ObjectLink_PriceListItem_GoodsKind.ChildObjectId, 0) AS GoodsKindId

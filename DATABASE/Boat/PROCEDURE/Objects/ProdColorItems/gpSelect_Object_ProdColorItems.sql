@@ -332,7 +332,20 @@ BEGIN
          , ObjectString_GoodsGroupFull.ValueData      AS GoodsGroupNameFull
          , Object_GoodsGroup.ValueData                AS GoodsGroupName
          , ObjectString_Article.ValueData             AS Article
-         , CASE WHEN Object_ProdColorItems.GoodsId IS NULL THEN ObjectString_ProdColorPattern_Comment.ValueData ELSE Object_ProdColor.ValueData END :: TVarChar AS ProdColorName
+           -- цвет
+         , CASE WHEN Object_ProdColorItems.GoodsId > 0
+                     -- у Товара
+                     THEN Object_ProdColor.ValueData
+
+                WHEN TRIM (ObjectString_Comment.ValueData) <> ''
+                     -- если было изменение для Лодки (когда нет GoodsId)
+                     THEN TRIM (ObjectString_Comment.ValueData)
+
+                -- у Boat Structure  (когда нет GoodsId)
+                ELSE ObjectString_ProdColorPattern_Comment.ValueData
+
+           END :: TVarChar AS ProdColorName
+           --
          , Object_Measure.ValueData                   AS MeasureName
 
            -- Цена вх. без НДС
@@ -344,9 +357,10 @@ BEGIN
          , Object_ProdColorItems.Value_Receipt ::TFloat AS Amount
 
      FROM tmpRes AS Object_ProdColorItems
+          -- здесь цвет (когда нет GoodsId)
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_ProdColorItems.Id
-                                AND ObjectString_Comment.DescId = zc_ObjectString_ProdColorItems_Comment()
+                                AND ObjectString_Comment.DescId    = zc_ObjectString_ProdColorItems_Comment()
           -- добавить как Опцию (да/нет)
           LEFT JOIN ObjectBoolean AS ObjectBoolean_ProdOptions
                                   ON ObjectBoolean_ProdOptions.ObjectId = Object_ProdColorItems.Id
