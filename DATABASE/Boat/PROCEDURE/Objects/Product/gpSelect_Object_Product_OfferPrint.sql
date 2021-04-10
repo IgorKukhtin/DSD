@@ -31,7 +31,7 @@ BEGIN
           , (COALESCE (MovementFloat_DiscountTax.ValueData,0) + COALESCE (MovementFloat_DiscountNextTax.ValueData,0)) AS DiscountTax  -- основная  + дополнительая скидки
           , Movement_OrderClient.OperDate
           , Movement_OrderClient.InvNumber
-          , Object_Insert.ValueData  AS InsertName
+          , Object_Member.ValueData  AS InsertName
      INTO
          vbPriceWithVAT
        , vbVATPercent
@@ -55,7 +55,12 @@ BEGIN
          LEFT JOIN MovementLinkObject AS MLO_Insert
                                       ON MLO_Insert.MovementId = Movement_OrderClient.Id
                                      AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
-         LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId 
+         --LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                              ON ObjectLink_User_Member.ObjectId = MLO_Insert.ObjectId
+                             AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+         LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
      WHERE Movement_OrderClient.Id = inMovementId_OrderClient
        AND Movement_OrderClient.DescId = zc_Movement_OrderClient();
 

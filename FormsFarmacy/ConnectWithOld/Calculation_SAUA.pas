@@ -138,7 +138,7 @@ begin
      Exit;
    end;
 
-   if ceCountPharmacies.Value <= 1 then
+   if ceCountPharmacies.Value < 1 then
    begin
      ShowMessage('Не указано "Минимальное количество аптек ассортимента из выбранных"');
      ceCountPharmacies.SetFocus;

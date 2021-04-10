@@ -30,7 +30,7 @@ BEGIN
      CREATE TEMP TABLE _tmpGoods_Sun_exception_UKTZED   (UnitId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
 
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
-       CREATE TEMP TABLE _tmpRemains_all_UKTZED (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat, AmountUse TFloat) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpRemains_all_UKTZED (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountNotSend TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat, AmountUse TFloat) ON COMMIT DROP;
 --     CREATE TEMP TABLE _tmpRemains_all_UKTZED   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountRemains TFloat, AmountSalesDay TFloat, AmountSalesMonth TFloat, AverageSalesMonth TFloat, Need TFloat, AmountUse TFloat) ON COMMIT DROP;
 
      -- 2. все остатки, НТЗ, и коэф. товарного запаса

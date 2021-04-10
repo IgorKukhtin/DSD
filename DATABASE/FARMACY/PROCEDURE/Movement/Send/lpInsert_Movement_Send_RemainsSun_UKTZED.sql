@@ -108,7 +108,7 @@ BEGIN
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpRemains_all_UKTZED'))
      THEN
-       CREATE TEMP TABLE _tmpRemains_all_UKTZED (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat, AmountUse TFloat) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpRemains_all_UKTZED (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountNotSend TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat, AmountUse TFloat) ON COMMIT DROP;
      END IF;
 
      -- 2. все остатки, НТЗ, и коэф. товарного запаса
@@ -545,6 +545,28 @@ BEGIN
                          GROUP BY Container.WhereObjectId
                                 , Container.ObjectId
                         )
+        , tmpRemainsNoSend AS (SELECT Container.WhereObjectId AS UnitId
+                              , Container.ObjectId      AS GoodsId
+                              , SUM (COALESCE (Container.Amount, 0)) AS Amount
+                         FROM Container
+                              -- !!!только для таких Аптек!!!
+                              INNER JOIN _tmpUnit_SUN_UKTZED ON _tmpUnit_SUN_UKTZED.UnitId = Container.WhereObjectId
+                              INNER JOIN _tmpGoods_SUN_UKTZED ON _tmpGoods_SUN_UKTZED.GoodsId = Container.ObjectId  
+
+                              LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                            ON CLO_PartionGoods.ContainerId = Container.Id
+                                                           AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                              LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
+                                                   ON ObjectDate_PartionGoods_Value.ObjectId = CLO_PartionGoods.ObjectId
+                                                  AND ObjectDate_PartionGoods_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
+                         WHERE Container.DescId = zc_Container_CountPartionDate()
+                           AND Container.Amount <> 0
+                           -- !!!оставили только эту категорию
+                           AND ObjectDate_PartionGoods_Value.ValueData <= CURRENT_DATE + INTERVAL '30 DAY'
+                           -- !!!оставили только эту категорию
+                         GROUP BY Container.WhereObjectId
+                                , Container.ObjectId
+                        )
           -- MCS_isClose
         , tmpPrice_MCS_isClose AS (SELECT MCS_isClose.*
                                    FROM ObjectLink AS OL_Price_Unit
@@ -644,7 +666,7 @@ BEGIN
                                  OR COALESCE (tmpPrice.Price, 0) <> 0
                              )
      -- 2.5. Результат: все остатки, продажи => расчет кол-во ПОТРЕБНОСТЬ у получателя: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
-     INSERT INTO  _tmpRemains_all_UKTZED (UnitId, GoodsId, Price, MCS, AmountResult, AmountRemains, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve, AmountUse)
+     INSERT INTO  _tmpRemains_all_UKTZED (UnitId, GoodsId, Price, MCS, AmountResult, AmountRemains, AmountNotSend, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve, AmountUse)
         --
         SELECT tmpObject_Price.UnitId
              , tmpObject_Price.GoodsId
@@ -697,6 +719,7 @@ BEGIN
                END AS AmountResult
                -- остаток
              , COALESCE (tmpRemains.Amount, 0)          AS AmountRemains
+             , COALESCE (tmpRemainsNoSend.Amount, 0)    AS AmountNotSend
                -- приход - UnComplete - за последние +/-7 дней для Date_Branch
              , COALESCE (tmpMI_Income.Amount, 0)        AS AmountIncome
                -- Перемещение - приход - UnComplete - за последние +/-30 дней
@@ -712,6 +735,9 @@ BEGIN
              LEFT JOIN tmpRemains AS tmpRemains
                                   ON tmpRemains.UnitId  = tmpObject_Price.UnitId
                                  AND tmpRemains.GoodsId = tmpObject_Price.GoodsId
+             LEFT JOIN tmpRemainsNoSend AS tmpRemainsNoSend
+                                        ON tmpRemainsNoSend.UnitId  = tmpObject_Price.UnitId
+                                       AND tmpRemainsNoSend.GoodsId = tmpObject_Price.GoodsId
              LEFT JOIN tmpMI_Income ON tmpMI_Income.UnitId  = tmpObject_Price.UnitId
                                    AND tmpMI_Income.GoodsId = tmpObject_Price.GoodsId
              LEFT JOIN tmpMI_Send_in ON tmpMI_Send_in.UnitId_to = tmpObject_Price.UnitId
@@ -768,7 +794,7 @@ BEGIN
      OPEN curPartion_next FOR
         SELECT _tmpRemains_all_UKTZED.UnitId
              , _tmpRemains_all_UKTZED.GoodsId
-             , _tmpRemains_all_UKTZED.AmountRemains AS Need
+             , _tmpRemains_all_UKTZED.AmountRemains - _tmpRemains_all_UKTZED.AmountNotSend AS Need
              , COALESCE (_tmpGoods_SUN_UKTZED.KoeffSUN, 0)
        FROM _tmpRemains_all_UKTZED
 
@@ -777,7 +803,7 @@ BEGIN
             LEFT JOIN _tmpUnit_SUN_UKTZED ON _tmpUnit_SUN_UKTZED.UnitId = _tmpRemains_all_UKTZED.UnitId
 
        WHERE _tmpUnit_SUN_UKTZED.isOutUKTZED_SUN1 = True
-         AND _tmpRemains_all_UKTZED.AmountRemains > 0
+         AND _tmpRemains_all_UKTZED.AmountRemains - _tmpRemains_all_UKTZED.AmountNotSend > 0
        ORDER BY _tmpRemains_all_UKTZED.UnitId
               , _tmpRemains_all_UKTZED.GoodsId
        ;
@@ -932,4 +958,4 @@ $BODY$
 -- select * from gpReport_Movement_Send_RemainsSun_UKTZED(inOperDate := ('28.12.2020')::TDateTime ,  inSession := '3');
 
 --
- select * from gpReport_Movement_Send_RemainsSun_UKTZED(inOperDate := ('22.03.2021')::TDateTime ,  inSession := '3');
+ select * from gpReport_Movement_Send_RemainsSun_UKTZED(inOperDate := ('12.04.2021')::TDateTime ,  inSession := '3');

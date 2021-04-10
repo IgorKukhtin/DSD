@@ -43,6 +43,9 @@ function iniPosPortNumber(ACode : integer):Integer;
 //возвращает скорость порта POS-терминала
 function iniPosPortSpeed(ACode : integer):Integer;
 
+//логировать сообщения от РРО
+function iniLog_RRO : Boolean;
+
 //Регистрационный номер текущего кассового аппарата
 function iniLocalCashRegisterGet: string;
 function iniLocalCashRegisterSave(ACashRegister: string): string;
@@ -339,6 +342,15 @@ begin
   S := GetValue('TSoldWithCompMainForm','PosPortSpeed' + IntToStr(ACode),'');
   if not tryStrToInt(S,Result) then
     Result := 0;
+end;
+
+//логировать сообщения от РРО
+function iniLog_RRO: Boolean;
+ var
+  S: String;
+begin
+  S := GetValue('TSoldWithCompMainForm','Log_RRO', 'False');
+  if not TryStrToBool(S, Result) then Result := False;
 end;
 
 function iniLocalCashRegisterGet: string;

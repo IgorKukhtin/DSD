@@ -24,10 +24,12 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_ReturnOut());
 
       -- проверка
-     IF EXISTS (SELECT MIC.Id FROM MovementItemContainer AS MIC WHERE MIC.Movementid = inMovementId)
-     THEN
+    IF COALESCE ((SELECT MovementBoolean_Deferred.ValueData FROM MovementBoolean  AS MovementBoolean_Deferred
+                  WHERE MovementBoolean_Deferred.MovementId = inMovementId
+                    AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()), FALSE) = TRUE
+    THEN
          RAISE EXCEPTION 'Ошибка.Документ отложен, проведение запрещено!';
-     END IF;
+    END IF;
 
       -- параметры документа
      SELECT
@@ -66,6 +68,14 @@ BEGIN
 
      UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
+       -- Проверим а не провели за время отложки были прицеденты
+     IF COALESCE ((SELECT MB.ValueData FROM MovementBoolean AS MB 
+                   WHERE MB.MovementId = inMovementId 
+                     AND MB.DescId = zc_MovementBoolean_Deferred()), FALSE) = TRUE
+     THEN
+         RAISE EXCEPTION 'Ошибка. За время проведения документ отлаживали.';
+     END IF;
+  
     --Если в документе установлена дата возврата поставщика - то создаем документ на изменение долга 
     IF EXISTS(SELECT 1 FROM Movement_ReturnOut_View WHERE Id = inMovementId AND OperDatePartner is not null)
     THEN

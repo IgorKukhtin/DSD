@@ -222,6 +222,8 @@ type
     N13: TMenuItem;
     actIncomeCost: TdsdOpenForm;
     N14: TMenuItem;
+    actReport_Goods: TdsdOpenForm;
+    N15: TMenuItem;
   private
     { Private declarations }
   public

@@ -59,7 +59,7 @@ type
 
 
 implementation
-uses Forms, SysUtils, Dialogs, Math, Variants, StrUtils, IniUtils, RegularExpressions, Log;
+uses Forms, SysUtils, Dialogs, Math, Variants, StrUtils, IniUtils, RegularExpressions, Log, MainCash2;
 
 function СообщениеКА(k: string): boolean;
 begin
@@ -67,66 +67,66 @@ begin
   if result then
      exit;
 
-  if (k='$0101') then begin ShowMessage('$0101 Ошибка принтера');  exit;  end; //257
-  if (k='$0201') then begin ShowMessage('$0201 Ошибка RAM'); exit; end;    //
-  if (k='$0301') then begin ShowMessage('$0301 Ошибка Контрольная сумма памяти программ'); exit; end; ///
-  if (k='$0401') then begin ShowMessage('$0401 Ошибка flash памяти');  exit; end;                      //
-  if (k='$0501') then begin ShowMessage('$0501 Ошибка Дисплея');  exit; end;                           //
-  if (k='$0601') then begin ShowMessage('$0601 Ошибка часов');  exit; end;                             //
-  if (k='$0701') then begin ShowMessage('$0701 Ошибка возникла вследствие понижения питания');  exit; end; //
-  if (k='$0002') then begin ShowMessage('$0002 Неправильный код инструкции');  exit; end; 	          //
+  if (k='$0101') then begin Add_Log_RRO('$0101 Ошибка принтера');  exit;  end; //257
+  if (k='$0201') then begin Add_Log_RRO('$0201 Ошибка RAM'); exit; end;    //
+  if (k='$0301') then begin Add_Log_RRO('$0301 Ошибка Контрольная сумма памяти программ'); exit; end; ///
+  if (k='$0401') then begin Add_Log_RRO('$0401 Ошибка flash памяти');  exit; end;                      //
+  if (k='$0501') then begin Add_Log_RRO('$0501 Ошибка Дисплея');  exit; end;                           //
+  if (k='$0601') then begin Add_Log_RRO('$0601 Ошибка часов');  exit; end;                             //
+  if (k='$0701') then begin Add_Log_RRO('$0701 Ошибка возникла вследствие понижения питания');  exit; end; //
+  if (k='$0002') then begin Add_Log_RRO('$0002 Неправильный код инструкции');  exit; end; 	          //
 
    //0xNN03	Формат поля неверен, где NN -Порядковый номер неверного поля
-  if Copy(k, 3, 2) = '03'	then begin ShowMessage('Формат поля неверен, где NN -Порядковый номер неверного поля (' + Copy(k, 1, 2) + ')');  exit; end;
+  if Copy(k, 3, 2) = '03'	then begin Add_Log_RRO('Формат поля неверен, где NN -Порядковый номер неверного поля (' + Copy(k, 1, 2) + ')');  exit; end;
    //0xNN04	Значение поля выходит за диапазон, где NN -Порядковый номер неверного поля
-  if Copy(k, 3, 2) = '04'	then begin ShowMessage('Значение поля выходит за диапазон, где NN -Порядковый номер неверного поля (' + Copy(k, 1, 2) + ')');  exit; end;
+  if Copy(k, 3, 2) = '04'	then begin Add_Log_RRO('Значение поля выходит за диапазон, где NN -Порядковый номер неверного поля (' + Copy(k, 1, 2) + ')');  exit; end;
    //0xXX05 Ошибка ФП
 
-  if (k='$0005')	then begin ShowMessage('$0005 Нет свободного места для записи');   exit; end;  //
-  if (k='$0105')	then begin ShowMessage('$0105 Ошибка записи в ФП');  exit; end;                //
-  if (k='$0205')	then begin ShowMessage('$0205 Заводской номер неустановлен');    exit; end;    //
-  if (k='$0305')	then begin ShowMessage('$0305 Дата последней записи в ФП более поздняя, чем та, что пытаемся установить');  exit; end; //
-  if (k='$0405')	then begin ShowMessage('$0405 Нельзя выходить за пределы суток');  exit; end; //
-  if (k='$0505')	then begin ShowMessage('$0505 Сбой данных в ФП');  exit; end; //
-  if (k='$0605')	then begin ShowMessage('$0605 фискальная память исчерпана(Запись запрещена)');  exit; end; //
-  if (k='$0705')	then begin ShowMessage('$0705 ЭККР не в фискальном режиме');  exit; end; //
-  if (k='$0805')	then begin ShowMessage('$0805 дата и время не были установлены с момента последнего аварийного обнуления ОЗУ');  exit; end; //
-  if (k='$0905')	then begin ShowMessage('$0905 С начала смены прошло более чем 24 часа');  exit; end; //
-  if (k='$0A05')	then begin ShowMessage('$0A05 необходимо скорректировать время');  exit; end; //
-  if (k='$0B05')	then begin ShowMessage('$0B05 Ошибка в таблице налоговых ставок');  exit; end; //
-  if (k='$0006')	then begin ShowMessage('$0006 Неверный пароль');  exit; end; //
+  if (k='$0005')	then begin Add_Log_RRO('$0005 Нет свободного места для записи');   exit; end;  //
+  if (k='$0105')	then begin Add_Log_RRO('$0105 Ошибка записи в ФП');  exit; end;                //
+  if (k='$0205')	then begin Add_Log_RRO('$0205 Заводской номер неустановлен');    exit; end;    //
+  if (k='$0305')	then begin Add_Log_RRO('$0305 Дата последней записи в ФП более поздняя, чем та, что пытаемся установить');  exit; end; //
+  if (k='$0405')	then begin Add_Log_RRO('$0405 Нельзя выходить за пределы суток');  exit; end; //
+  if (k='$0505')	then begin Add_Log_RRO('$0505 Сбой данных в ФП');  exit; end; //
+  if (k='$0605')	then begin Add_Log_RRO('$0605 фискальная память исчерпана(Запись запрещена)');  exit; end; //
+  if (k='$0705')	then begin Add_Log_RRO('$0705 ЭККР не в фискальном режиме');  exit; end; //
+  if (k='$0805')	then begin Add_Log_RRO('$0805 дата и время не были установлены с момента последнего аварийного обнуления ОЗУ');  exit; end; //
+  if (k='$0905')	then begin Add_Log_RRO('$0905 С начала смены прошло более чем 24 часа');  exit; end; //
+  if (k='$0A05')	then begin Add_Log_RRO('$0A05 необходимо скорректировать время');  exit; end; //
+  if (k='$0B05')	then begin Add_Log_RRO('$0B05 Ошибка в таблице налоговых ставок');  exit; end; //
+  if (k='$0006')	then begin Add_Log_RRO('$0006 Неверный пароль');  exit; end; //
    //0xXX07 ошибка режима
-  if (k='$0007')	then begin ShowMessage('$0007 Команда в данном режиме регистратора невыполнима');  exit; end; 	//
-  if (k='$0107')	then begin ShowMessage('$0107 Команда в данном состоянии смены невыполнима');   exit; end; 	    //
-  if (k='$0008')	then begin ShowMessage('$0008 Переполнение математики'); 	 exit; end;                         //
-  if (k='$0009')	then begin ShowMessage('$0009 Не обнулено'); 	 exit; end;                                     //
+  if (k='$0007')	then begin Add_Log_RRO('$0007 Команда в данном режиме регистратора невыполнима');  exit; end; 	//
+  if (k='$0107')	then begin Add_Log_RRO('$0107 Команда в данном состоянии смены невыполнима');   exit; end; 	    //
+  if (k='$0008')	then begin Add_Log_RRO('$0008 Переполнение математики'); 	 exit; end;                         //
+  if (k='$0009')	then begin Add_Log_RRO('$0009 Не обнулено'); 	 exit; end;                                     //
    //0xXX0A Ошибки при работе с базой товаров
-  if (k='$000A')	then begin ShowMessage('$000A Недостаточно свободного места для выполнения команды');  exit; end; //
-  if (k='$010A')	then begin ShowMessage('$010A Длина записи больше максимума'); 	 exit; end;                   //
-  if (k='$020A')	then begin ShowMessage('$020A Артикул с данным кодом не найден');  exit; end; 	                  //
-  if (k='$030A')	then begin ShowMessage('$030A Индекс за пределами базы');  exit; end; 	                          //
-  if (k='$040A')	then begin ShowMessage('$040A Артикул/отдел с данным кодом существует');  exit; end; 	          //
-  if (k='$050A')	then begin ShowMessage('$050A Запрещенная налоговая группа');  exit; end; 	                      //
+  if (k='$000A')	then begin Add_Log_RRO('$000A Недостаточно свободного места для выполнения команды');  exit; end; //
+  if (k='$010A')	then begin Add_Log_RRO('$010A Длина записи больше максимума'); 	 exit; end;                   //
+  if (k='$020A')	then begin Add_Log_RRO('$020A Артикул с данным кодом не найден');  exit; end; 	                  //
+  if (k='$030A')	then begin Add_Log_RRO('$030A Индекс за пределами базы');  exit; end; 	                          //
+  if (k='$040A')	then begin Add_Log_RRO('$040A Артикул/отдел с данным кодом существует');  exit; end; 	          //
+  if (k='$050A')	then begin Add_Log_RRO('$050A Запрещенная налоговая группа');  exit; end; 	                      //
    //0хХX0B Ошибка при работе с цепочкой продаж                                                     //
-  if (k='$000B')	then begin ShowMessage('$000B Неверное состояние документа');  exit; end; 	                      //
-  if (k='$010B')	then begin ShowMessage('$010B Недостаточно свободного места для выполнения команды');  exit; end; //
-  if (k='$020B')	then begin ShowMessage('$020B Неизвестный тип записи продажи');  exit; end; 	                  //
-  if (k='$030B')	then begin ShowMessage('$030B Аннулирование не может начинаться с данной операции');  exit; end;  //
-  if (k='$040B')	then begin ShowMessage('$040B Данная операция в чеке не найдена');  exit; end; 	                  //
-  if (k='$050B')	then begin ShowMessage('$050B последовательность неполная (за последней операцией есть еще команды которые с ней связаны)');  exit; end; //
-  if (k='$060B')	then begin ShowMessage('$060B Аннулировать нечего'); 	 exit; end;                               //
-  if (k='$070B')	then begin ShowMessage('$070B Копия чека недоступна'); 	 exit; end;                               //
-  if (k='$080B')	then begin ShowMessage('$080B Недостаточно наличности для выполнения операции'); 	 exit; end;   //
-  if (k='$090B')	then begin ShowMessage('$090B Данная форма оплаты в этом чеке запрещена'); 	 exit; end;           //
-  if (k='$0A0B')	then begin ShowMessage('$0A0B Данная сдача с данной формы оплаты (в данном типе чека) запрещена');  exit; end; 	//
-  if (k='$0B0B')	then begin ShowMessage('$0B0B Значение скидки вышло за пределы');  exit; end; 	                                //
-  if (k='$0C0B')	then begin ShowMessage('$0C0B Переполнение итога по чеку');  exit; end; 	                                    //
-  if (k='$0D0B')	then begin ShowMessage('$0D0B Переполнение по оплатам');  exit; end; 	                                        //
-  if (k='$0E0B')	then begin ShowMessage('$0E0B Вышли за пределы буфера'); 	 exit; end;                                         //
-  if (k='$000C')	then begin ShowMessage('$000C Ошибки временного буфера');   exit; end; 	                                        //
-  if (k='$010C')	then begin ShowMessage('$010C Данные не совпали с ранее сохраненными');   exit; end;
+  if (k='$000B')	then begin Add_Log_RRO('$000B Неверное состояние документа');  exit; end; 	                      //
+  if (k='$010B')	then begin Add_Log_RRO('$010B Недостаточно свободного места для выполнения команды');  exit; end; //
+  if (k='$020B')	then begin Add_Log_RRO('$020B Неизвестный тип записи продажи');  exit; end; 	                  //
+  if (k='$030B')	then begin Add_Log_RRO('$030B Аннулирование не может начинаться с данной операции');  exit; end;  //
+  if (k='$040B')	then begin Add_Log_RRO('$040B Данная операция в чеке не найдена');  exit; end; 	                  //
+  if (k='$050B')	then begin Add_Log_RRO('$050B последовательность неполная (за последней операцией есть еще команды которые с ней связаны)');  exit; end; //
+  if (k='$060B')	then begin Add_Log_RRO('$060B Аннулировать нечего'); 	 exit; end;                               //
+  if (k='$070B')	then begin Add_Log_RRO('$070B Копия чека недоступна'); 	 exit; end;                               //
+  if (k='$080B')	then begin Add_Log_RRO('$080B Недостаточно наличности для выполнения операции'); 	 exit; end;   //
+  if (k='$090B')	then begin Add_Log_RRO('$090B Данная форма оплаты в этом чеке запрещена'); 	 exit; end;           //
+  if (k='$0A0B')	then begin Add_Log_RRO('$0A0B Данная сдача с данной формы оплаты (в данном типе чека) запрещена');  exit; end; 	//
+  if (k='$0B0B')	then begin Add_Log_RRO('$0B0B Значение скидки вышло за пределы');  exit; end; 	                                //
+  if (k='$0C0B')	then begin Add_Log_RRO('$0C0B Переполнение итога по чеку');  exit; end; 	                                    //
+  if (k='$0D0B')	then begin Add_Log_RRO('$0D0B Переполнение по оплатам');  exit; end; 	                                        //
+  if (k='$0E0B')	then begin Add_Log_RRO('$0E0B Вышли за пределы буфера'); 	 exit; end;                                         //
+  if (k='$000C')	then begin Add_Log_RRO('$000C Ошибки временного буфера');   exit; end; 	                                        //
+  if (k='$010C')	then begin Add_Log_RRO('$010C Данные не совпали с ранее сохраненными');   exit; end;
 
-  ShowMessage(k + ' Недокументированная ошибка!!! Свяжитесь с разработчиком')
+  Add_Log_RRO(k + ' Недокументированная ошибка!!! Свяжитесь с разработчиком')
 end;
 
 const
@@ -710,11 +710,11 @@ begin
 
   S := FPrinter.SUMDAY[2, 0, 0, 1, Password];
   if not СообщениеКА(FPrinter.GETERROR) then Exit;
-  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum) then Result := nSum;
+  if TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum) then Result := nSum;
 
   S := FPrinter.SUMDAY[2, 0, 0, 2, Password];
   if not СообщениеКА(FPrinter.GETERROR) then Exit;
-  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum) then Result := Result - nSum;
+  if TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum) then Result := Result - nSum;
 end;
 
 function TCashFP3530T_NEW.ReceiptsSales : Integer;

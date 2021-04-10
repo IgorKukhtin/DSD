@@ -847,6 +847,14 @@
 				<Form>Union_InvoiceOrderJournalChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Report\Report_GoodsDialog.pas">
+				<Form>Report_GoodsDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Report\Report_Goods.pas">
+				<Form>Report_GoodsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

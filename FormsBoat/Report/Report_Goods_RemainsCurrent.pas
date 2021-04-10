@@ -141,6 +141,7 @@ type
     cxLabel5: TcxLabel;
     GuidesGoodsGroup: TdsdGuides;
     MovementItemId: TcxGridDBColumn;
+    cbPartNumber: TcxCheckBox;
   private
     { Private declarations }
   public

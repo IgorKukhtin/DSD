@@ -385,7 +385,6 @@ BEGIN
                                                                         AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
                                                                         AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
                                     WHERE  MovementItem.Id = ioId
-                                      AND  MovementItem.ObjectId
                                     )
                , tmpProtocol AS (SELECT tmpProtocolAll.Id
                                       , tmpProtocolAll.ObjectId

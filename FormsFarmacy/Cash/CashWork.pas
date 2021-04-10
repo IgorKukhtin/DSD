@@ -8,7 +8,7 @@ uses
   Gauges, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, cxTextEdit, cxCurrencyEdit,
   cxClasses, cxPropertiesStore, dsdAddOn, dxSkinsCore, dxSkinsDefaultPainters,
-  dsdDB;
+  dsdDB, Vcl.Menus;
 
 type
   TCashWorkForm = class(TForm)
@@ -26,8 +26,11 @@ type
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     Button7: TButton;
-    Button8: TButton;
+    btInfo: TButton;
     spGet_Money_CashRegister: TdsdStoredProc;
+    PopupMenuInfo: TPopupMenu;
+    pmZReportInfo: TMenuItem;
+    pmCheckSum: TMenuItem;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -36,7 +39,9 @@ type
     procedure Button5Click(Sender: TObject);
     procedure btDeleteAllArticulClick(Sender: TObject);
     procedure Button6Click(Sender: TObject);
-    procedure Button8Click(Sender: TObject);
+    procedure btInfoClick(Sender: TObject);
+    procedure pmZReportInfoClick(Sender: TObject);
+    procedure pmCheckSumClick(Sender: TObject);
   private
     m_Cash: ICash;
     m_DataSet: TDataSet;
@@ -89,9 +94,9 @@ begin
 //    spGet_Money_CashRegister.Execute;
 //
 //    if spGet_Money_CashRegister.ParamByName('outSummsCash').AsFloat <> m_Cash.SummaCash then
-//      ShowPUSHMessage('Проверьте суммы за день по X отчётe с суммами в программе.'#13#13 +
-//        'Сумма по РРО : ' + FormatCurr(',0.00', m_Cash.SummaCash) + #13#13 +
-//        'Сумма по программе: ' + FormatCurr(',0.00', spGet_Money_CashRegister.ParamByName('outSummsCash').AsFloat));
+//      if not ShowPUSHMessage('Проверьте суммы за день по X отчётe с суммами в программе.'#13#13 +
+//                  'Сумма по РРО : ' + FormatCurr(',0.00', m_Cash.SummaCash) + #13#13 +
+//                  'Сумма по программе: ' + FormatCurr(',0.00', spGet_Money_CashRegister.ParamByName('outSummsCash').AsFloat)) then Exit;
 //  except
 //  end;
 
@@ -154,6 +159,25 @@ begin
   Action:=caFree
 end;
 
+procedure TCashWorkForm.pmCheckSumClick(Sender: TObject);
+begin
+    spGet_Money_CashRegister.ParamByName('inCashRegisterName').Value := m_Cash.FiscalNumber;
+    spGet_Money_CashRegister.ParamByName('inCheckOut').Value := m_Cash.ReceiptsSales;
+    spGet_Money_CashRegister.ParamByName('inCheckIn').Value := m_Cash.ReceiptsReturn;
+    spGet_Money_CashRegister.ParamByName('outSummsCash').Value := 0;
+    spGet_Money_CashRegister.Execute;
+
+    ShowPUSHMessage('Сравнение суммы за день по X отчётe с суммами в программе.'#13#13 +
+      'Сумма по РРО : ' + FormatCurr(',0.00', m_Cash.SummaCash) + #13#13 +
+      'Сумма по программе: ' + FormatCurr(',0.00', spGet_Money_CashRegister.ParamByName('outSummsCash').AsFloat));
+
+end;
+
+procedure TCashWorkForm.pmZReportInfoClick(Sender: TObject);
+begin
+  ShowMessage(m_Cash.InfoZReport);
+end;
+
 procedure TCashWorkForm.Button5Click(Sender: TObject);
 begin
   if MessageDlg('Вы уверены в снятии X-отчета?', mtInformation, mbOKCancel, 0) = mrOk then
@@ -165,9 +189,12 @@ begin
   m_Cash.SetTime
 end;
 
-procedure TCashWorkForm.Button8Click(Sender: TObject);
+procedure TCashWorkForm.btInfoClick(Sender: TObject);
+var
+  APoint: TPoint;
 begin
-  ShowMessage(m_Cash.InfoZReport);
+  APoint := btInfo.ClientToScreen(Point(0, btInfo.ClientHeight));
+  PopupMenuInfo.Popup(APoint.X, APoint.Y);
 end;
 
 procedure TCashWorkForm.btDeleteAllArticulClick(Sender: TObject);

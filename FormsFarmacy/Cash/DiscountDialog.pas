@@ -60,7 +60,7 @@ begin
            //обновим "нужные" параметры-Main ***20.07.16
            DiscountServiceForm.pGetDiscountExternal (Key, trim (edCardNumber.Text));
            // проверка карты + сохраним "текущие" параметры-Main
-           if DiscountServiceForm.gCode = 1 then
+           if DiscountServiceForm.gService = 'CardService' then
            begin
              if DiscountServiceForm.fCheckCard (lMsg
                                                ,DiscountServiceForm.gURL

@@ -1607,8 +1607,12 @@ return;
      OPEN curPartion_next FOR
         SELECT _tmpRemains_Partion_SUA.UnitId AS UnitId_from
              , _tmpRemains_Partion_SUA.GoodsId
-             , FLOOR (_tmpRemains_Partion_SUA.Amount - COALESCE(_tmpGoodsLayout_SUN_SUA.Layout, 0) 
-                                                     - COALESCE(_tmpGoods_PromoUnit_SUA.Amount, 0)) AS Amount
+             , FLOOR (_tmpRemains_Partion_SUA.Amount - 
+                         CASE WHEN (Amount_save - _tmpRemains_Partion_SUA.Amount) < 
+                                   (COALESCE(_tmpGoodsLayout_SUN_SUA.Layout, 0) + COALESCE(_tmpGoods_PromoUnit_SUA.Amount, 0))
+                              THEN (COALESCE(_tmpGoodsLayout_SUN_SUA.Layout, 0) + COALESCE(_tmpGoods_PromoUnit_SUA.Amount, 0)) -
+                                   (Amount_save - _tmpRemains_Partion_SUA.Amount)
+                              ELSE 0 END)  AS Amount
             -- , _tmpRemains_Partion_SUA.Amount_save AS Amount_save
              , COALESCE (_tmpGoods_SUN_SUA.KoeffSUN, 0)
 
@@ -1628,8 +1632,12 @@ return;
 
         WHERE -- !!!Отключили парные!!!
               _tmpGoods_SUN_PairSun_find.GoodsId_PairSun IS NULL
-          AND FLOOR (_tmpRemains_Partion_SUA.Amount - COALESCE(_tmpGoodsLayout_SUN_SUA.Layout, 0) 
-                                                    - COALESCE(_tmpGoods_PromoUnit_SUA.Amount, 0)) >= 1
+          AND FLOOR (_tmpRemains_Partion_SUA.Amount  - 
+                         CASE WHEN (Amount_save - _tmpRemains_Partion_SUA.Amount) < 
+                                   (COALESCE(_tmpGoodsLayout_SUN_SUA.Layout, 0) + COALESCE(_tmpGoods_PromoUnit_SUA.Amount, 0))
+                              THEN (COALESCE(_tmpGoodsLayout_SUN_SUA.Layout, 0) + COALESCE(_tmpGoods_PromoUnit_SUA.Amount, 0)) -
+                                   (Amount_save - _tmpRemains_Partion_SUA.Amount)
+                              ELSE 0 END) >= 1
         ORDER BY _tmpRemains_Partion_SUA.Amount DESC, _tmpRemains_Partion_SUA.UnitId, _tmpRemains_Partion_SUA.GoodsId
        ;
      -- начало цикла по курсору1
@@ -1755,4 +1763,5 @@ $BODY$
 --SELECT * FROM lpInsert_Movement_Send_RemainsSun_SUA (inOperDate:= ('22.03.2021')::TDateTime, inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 
 -- 
---select * from gpReport_Movement_Send_RemainsSun_SUA(inOperDate := ('22.03.2021')::TDateTime ,  inSession := '3');
+--
+select * from gpReport_Movement_Send_RemainsSun_SUA(inOperDate := ('12.04.2021')::TDateTime ,  inSession := '3');
