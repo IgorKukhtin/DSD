@@ -67,17 +67,6 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
             Options.Editing = False
             Width = 63
           end
-          object EKPrice: TcxGridDBColumn
-            Caption = 'Netto EK'
-            DataBinding.FieldName = 'EKPrice'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
-            Width = 70
-          end
           object GoodsTagName: TcxGridDBColumn
             Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103
             DataBinding.FieldName = 'GoodsTagName'
@@ -130,6 +119,17 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
             HeaderGlyphAlignmentHorz = taCenter
             HeaderGlyphAlignmentVert = vaTop
             Width = 60
+          end
+          object EKPrice: TcxGridDBColumn
+            Caption = 'Netto EK'
+            DataBinding.FieldName = 'EKPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
+            Width = 70
           end
           object CostPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1079#1072#1090#1088#1072#1090#1099
@@ -475,10 +475,10 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormNameParam.Value = 'TGoods_ObjectForm'
+    FormNameParam.Value = 'TGoodsForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoods_ObjectForm'
+    FormName = 'TGoodsForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

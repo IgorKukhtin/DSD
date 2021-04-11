@@ -71,12 +71,10 @@ inherited Report_GoodsForm: TReport_GoodsForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SummPartnerIn
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SummPartnerOut
             end
             item
               Format = ',0.####'
@@ -184,12 +182,10 @@ inherited Report_GoodsForm: TReport_GoodsForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SummPartnerIn
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SummPartnerOut
             end
             item
               Format = ',0.####'
@@ -477,20 +473,8 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Options.Editing = False
             Width = 70
           end
-          object TotalSummPriceList_in: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
-            DataBinding.FieldName = 'TotalSummPriceList_in'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
-            Options.Editing = False
-            Width = 80
-          end
           object OperPrice: TcxGridDBColumn
-            Caption = 'Netto EK'
+            Caption = 'Netto EK (partion)'
             DataBinding.FieldName = 'OperPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -500,18 +484,6 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
             Options.Editing = False
             Width = 70
-          end
-          object TotalSummEKPrice_in: TcxGridDBColumn
-            Caption = 'Total EK'
-            DataBinding.FieldName = 'TotalSummEKPrice_in'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
-            Options.Editing = False
-            Width = 80
           end
           object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -541,6 +513,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
           object ObjectByName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086' / '#1050#1086#1084#1091
             DataBinding.FieldName = 'ObjectByName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 250
@@ -579,7 +552,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Width = 100
           end
           object Price: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' c/c '#1079#1072#1074#1086#1076
+            Caption = 'Netto EK (start)'
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -589,7 +562,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Width = 55
           end
           object Price_end: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' c/c '#1086#1089#1090'. '#1082#1086#1085#1077#1095'.'
+            Caption = 'Netto EK (end)'
             DataBinding.FieldName = 'Price_end'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -597,16 +570,6 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
-          end
-          object Price_partner: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-            DataBinding.FieldName = 'Price_partner'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
           end
           object AmountStart: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1082#1086#1083'-'#1074#1086
@@ -619,7 +582,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Width = 70
           end
           object SummStart: TcxGridDBColumn
-            Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1089#1091#1084#1084#1072' '#1089'/'#1089
+            Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1089#1091#1084#1084#1072
             DataBinding.FieldName = 'SummStart'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -642,7 +605,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Width = 70
           end
           object SummIn: TcxGridDBColumn
-            Caption = #1055#1088#1080#1093#1086#1076' '#1089#1091#1084#1084#1072' '#1089'/'#1089
+            Caption = 'Total EK (in)'
             DataBinding.FieldName = 'SummIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -665,7 +628,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Width = 70
           end
           object SummOut: TcxGridDBColumn
-            Caption = #1056#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072' '#1089'/'#1089
+            Caption = #1056#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072
             DataBinding.FieldName = 'SummOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -697,26 +660,6 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
-          end
-          object SummPartnerIn: TcxGridDBColumn
-            Caption = #1055#1088#1080#1093#1086#1076' '#1089#1091#1084#1084#1072' '#1089' '#1053#1044#1057
-            DataBinding.FieldName = 'SummPartnerIn'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object SummPartnerOut: TcxGridDBColumn
-            Caption = #1056#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072' '#1089' '#1053#1044#1057
-            DataBinding.FieldName = 'SummPartnerOut'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object GoodsCode_parent: TcxGridDBColumn

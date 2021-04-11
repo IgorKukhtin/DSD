@@ -31,8 +31,7 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
               , GoodsSizeId Integer
               , GoodsSizeName TVarChar
               
-              , Price TFloat, Price_end TFloat, Price_partner TFloat
-              , SummPartnerIn TFloat, SummPartnerOut TFloat
+              , Price TFloat, Price_end TFloat
               , AmountStart TFloat, AmountIn TFloat, AmountOut TFloat, AmountEnd TFloat, Amount TFloat
               , SummStart TFloat, SummIn TFloat, SummOut TFloat, SummEnd TFloat, Summ TFloat
                
@@ -214,17 +213,6 @@ BEGIN
 
          , tmpMI_Summ_group AS (SELECT DISTINCT tmpMI_Summ.MovementId, tmpMI_Summ.MovementItemId, tmpMI_Summ.ContainerId_Analyzer, tmpMI_Summ.isActive FROM tmpMI_Summ WHERE tmpMI_Summ.MovementItemId > 0)
 
-         , tmpMI_SummPartner AS (SELECT tmpMI_Summ_group.MovementItemId
-                                      , SUM (MIContainer.Amount * CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ReturnOut(), zc_Movement_Sale()) THEN 1 ELSE -1 END) AS Amount
-                                 FROM tmpMI_Summ_group
-                                      INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.MovementId     = tmpMI_Summ_group.MovementId
-                                                                                     AND MIContainer.DescId         = zc_MIContainer_Summ()
-                                                                                     AND MIContainer.MovementItemId = tmpMI_Summ_group.MovementItemId
-                                                                                     AND MIContainer.ContainerId    = tmpMI_Summ_group.ContainerId_Analyzer
-                                                                                     AND MIContainer.isActive      <> tmpMI_Summ_group.isActive
-                                 GROUP BY tmpMI_Summ_group.MovementItemId
-                                )
-
       , tmpMI_Id AS (SELECT DISTINCT tmpMI_Count.MovementItemId FROM tmpMI_Count WHERE tmpMI_Count.MovementItemId > 0
                     UNION
                      SELECT DISTINCT tmpMI_Summ.MovementItemId FROM tmpMI_Summ WHERE tmpMI_Summ.MovementItemId > 0
@@ -249,8 +237,6 @@ BEGIN
                                     , tmpMI_Count.Amount - SUM (tmpMI_Count.Amount_Total) + SUM (tmpMI_Count.Amount_Period) AS AmountEnd
                                     , 0 AS AmountIn
                                     , 0 AS AmountOut
-                                    , 0 AS SummPartnerIn
-                                    , 0 AS SummPartnerOut
                                     , 0 AS SummStart
                                     , 0 AS SummEnd
                                     , 0 AS SummIn
@@ -279,15 +265,11 @@ BEGIN
                                     , 0 AS AmountEnd
                                     , CASE WHEN tmpMI_Count.Amount_Period > 0 THEN      tmpMI_Count.Amount_Period ELSE 0 END AS AmountIn
                                     , CASE WHEN tmpMI_Count.Amount_Period < 0 THEN -1 * tmpMI_Count.Amount_Period ELSE 0 END AS AmountOut
-                                    , CASE WHEN tmpMI_Count.Amount_Period > 0 THEN tmpMI_SummPartner.Amount ELSE 0 END AS SummPartnerIn
-                                    , CASE WHEN tmpMI_Count.Amount_Period < 0 THEN tmpMI_SummPartner.Amount ELSE 0 END AS SummPartnerOut
                                     , 0 AS SummStart
                                     , 0 AS SummEnd
                                     , 0 AS SummIn
                                     , 0 AS SummOut
                                FROM tmpMI_Count
-                                    LEFT JOIN tmpMI_SummPartner ON tmpMI_SummPartner.MovementItemId = tmpMI_Count.MovementItemId
-
                                     LEFT JOIN tmpMI_find AS MovementItem ON MovementItem.Id = tmpMI_Count.MovementItemId
                                     --LEFT JOIN tmpMID_PartionGoods AS MIDate_PartionGoods ON MIDate_PartionGoods.MovementItemId = tmpMI_Count.MovementItemId
                                     --LEFT JOIN tmpMIS_PartionGoods AS MIString_PartionGoods ON MIString_PartionGoods.MovementItemId = tmpMI_Count.MovementItemId
@@ -316,8 +298,6 @@ BEGIN
                                     , 0 AS AmountEnd
                                     , 0 AS AmountIn
                                     , 0 AS AmountOut
-                                    , 0 AS SummPartnerIn
-                                    , 0 AS SummPartnerOut
                                     , tmpMI_Summ.Amount - SUM (tmpMI_Summ.Amount_Total) AS SummStart
                                     , tmpMI_Summ.Amount - SUM (tmpMI_Summ.Amount_Total) + SUM (tmpMI_Summ.Amount_Period) AS SummEnd
                                     , 0 AS SummIn
@@ -346,8 +326,6 @@ BEGIN
                                     , 0 AS AmountEnd
                                     , 0 AS AmountIn
                                     , 0 AS AmountOut
-                                    , 0 AS SummPartnerIn
-                                    , 0 AS SummPartnerOut
                                     , 0 AS SummStart
                                     , 0 AS SummEnd
                                     , CASE WHEN tmpMI_Summ.Amount_Period > 0 THEN tmpMI_Summ.Amount_Period ELSE 0 END AS SummIn
@@ -390,8 +368,7 @@ BEGIN
                                                   THEN SUM (tmpMIContainer_all.SummOut - tmpMIContainer_all.SummIn)
                                              ELSE 0
                                         END AS SummOut
-                                      , SUM (tmpMIContainer_all.SummPartnerIn)  AS SummPartnerIn
-                                      , SUM (tmpMIContainer_all.SummPartnerOut) AS SummPartnerOut
+
                                 FROM tmpMIContainer_all
                                  GROUP BY tmpMIContainer_all.MovementId
                                         -- , tmpMIContainer_all.MovementItemId
@@ -460,10 +437,7 @@ BEGIN
 
                         , AVG (tmpDataAll.Price)            ::TFloat AS Price
                         , AVG (tmpDataAll.Price_end)        ::TFloat AS Price_end
-                        , AVG (tmpDataAll.Price_partner)    ::TFloat AS Price_partner
-
-                        , SUM (tmpDataAll.SummPartnerIn)    ::TFloat  AS SummPartnerIn    
-                        , SUM (tmpDataAll.SummPartnerOut)   ::TFloat  AS SummPartnerOut   
+ 
                         , SUM (tmpDataAll.AmountStart)      ::TFloat  AS AmountStart      
                         , SUM (tmpDataAll.AmountIn)         ::TFloat  AS AmountIn         
                         , SUM (tmpDataAll.AmountOut)        ::TFloat  AS AmountOut        
@@ -580,16 +554,6 @@ BEGIN
                                           THEN tmpMIContainer_group.SummEnd / tmpMIContainer_group.AmountEnd
                                      ELSE 0
                                 END AS TFloat) AS Price_end
-                
-                        , CAST (CASE WHEN tmpMIContainer_group.AmountIn <> 0
-                                          THEN tmpMIContainer_group.SummPartnerIn / tmpMIContainer_group.AmountIn
-                                     WHEN tmpMIContainer_group.AmountOut <> 0
-                                          THEN tmpMIContainer_group.SummPartnerOut / tmpMIContainer_group.AmountOut
-                                     ELSE 0
-                                END AS TFloat) AS Price_partner
-                
-                        , CAST (tmpMIContainer_group.SummPartnerIn AS TFloat)      AS SummPartnerIn
-                        , CAST (tmpMIContainer_group.SummPartnerOut AS TFloat)     AS SummPartnerOut
                 
                         , CAST (tmpMIContainer_group.AmountStart AS TFloat) AS AmountStart
                         , CAST (tmpMIContainer_group.AmountIn AS TFloat)    AS AmountIn
@@ -762,10 +726,7 @@ BEGIN
 
         , tmpDataAll.Price            ::TFloat AS Price
         , tmpDataAll.Price_end        ::TFloat AS Price_end
-        , tmpDataAll.Price_partner    ::TFloat AS Price_partner
 
-        , tmpDataAll.SummPartnerIn    ::TFloat  AS SummPartnerIn    
-        , tmpDataAll.SummPartnerOut   ::TFloat  AS SummPartnerOut   
         , tmpDataAll.AmountStart      ::TFloat  AS AmountStart      
         , tmpDataAll.AmountIn         ::TFloat  AS AmountIn         
         , tmpDataAll.AmountOut        ::TFloat  AS AmountOut        
