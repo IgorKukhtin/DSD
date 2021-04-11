@@ -105,7 +105,7 @@ BEGIN
                                                    , inGoodsId                := ioGoodsId
                                                    , inProdColorPatternId     := tmp.ProdColorPatternId
                                                    , inMovementId_OrderClient := inMovementId_OrderClient
-                                                   , inComment                := '' :: TVarChar
+                                                   , inComment                := inComment
                                                    , inIsEnabled              := TRUE :: Boolean
                                                    , ioIsProdOptions          := CASE WHEN tmp.GoodsId_Receipt <> ioGoodsId THEN TRUE ELSE FALSE END
                                                    , inSession                := inSession

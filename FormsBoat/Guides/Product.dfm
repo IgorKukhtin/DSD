@@ -1090,7 +1090,6 @@ object ProductForm: TProductForm
         OptionsCustomize.ColumnsQuickCustomization = True
         OptionsData.Deleting = False
         OptionsData.DeletingConfirmation = False
-        OptionsData.Editing = False
         OptionsData.Inserting = False
         OptionsView.CellAutoHeight = True
         OptionsView.Footer = True
@@ -1180,6 +1179,7 @@ object ProductForm: TProductForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082#1072#1082' '#1054#1087#1094#1080#1102
+          Options.Editing = False
           Width = 62
         end
         object GoodsGroupNameFull_ch1: TcxGridDBColumn
@@ -1223,6 +1223,7 @@ object ProductForm: TProductForm
           Properties.ReadOnly = True
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          Options.Editing = False
           Width = 70
         end
         object GoodsName_ch1: TcxGridDBColumn
@@ -1240,6 +1241,7 @@ object ProductForm: TProductForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+          Options.Editing = False
           Width = 110
         end
         object MeasureName_ch1: TcxGridDBColumn
@@ -1248,6 +1250,19 @@ object ProductForm: TProductForm
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 55
+        end
+        object Amount_ch1: TcxGridDBColumn
+          Caption = #1050#1086#1083'-'#1074#1086
+          DataBinding.FieldName = 'Amount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1089#1073#1086#1088#1082#1077
           Options.Editing = False
           Width = 55
         end
@@ -1283,6 +1298,7 @@ object ProductForm: TProductForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderGlyphAlignmentHorz = taCenter
+          Options.Editing = False
           Width = 179
         end
         object InsertDate_ch1: TcxGridDBColumn
@@ -1316,6 +1332,7 @@ object ProductForm: TProductForm
         object Color_fon_ch1: TcxGridDBColumn
           DataBinding.FieldName = 'Color_fon'
           Visible = False
+          Options.Editing = False
           VisibleForCustomization = False
           Width = 55
         end

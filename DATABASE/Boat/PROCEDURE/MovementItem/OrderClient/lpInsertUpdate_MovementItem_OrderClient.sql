@@ -7,7 +7,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderClient(Integer, Integer
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderClient(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inGoodsId             Integer   , -- Товары
+    IN inGoodsId             Integer   , -- Комплектующие
     IN inAmount              TFloat    , -- Количество
  INOUT ioOperPrice           TFloat    , -- Цена со скидкой
     IN inOperPriceList       TFloat    , -- Цена без скидки

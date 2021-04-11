@@ -194,6 +194,7 @@ type
     Basis_summ1_orig: TcxGridDBColumn;
     Basis_summ2_orig: TcxGridDBColumn;
     Amount_ch2: TcxGridDBColumn;
+    Amount_ch1: TcxGridDBColumn;
   private
     { Private declarations }
   public
