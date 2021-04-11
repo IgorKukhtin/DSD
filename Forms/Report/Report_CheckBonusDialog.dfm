@@ -3,8 +3,8 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084'>'
-  ClientHeight = 234
-  ClientWidth = 338
+  ClientHeight = 293
+  ClientWidth = 343
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +19,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 48
-    Top = 200
+    Top = 248
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
   end
   object cxButton2: TcxButton
     Left = 217
-    Top = 200
+    Top = 248
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -117,7 +117,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
   end
   object cbMovement: TcxCheckBox
     Left = 19
-    Top = 165
+    Top = 213
     Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     Caption = #1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
     TabOrder = 12
@@ -141,15 +141,32 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
     TabOrder = 14
     Width = 172
   end
+  object cxLabel8: TcxLabel
+    Left = 11
+    Top = 160
+    Caption = #1057#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088':'
+  end
+  object edPersonal: TcxButtonEdit
+    Left = 11
+    Top = 178
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 16
+    Width = 319
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
     Left = 6
-    Top = 168
+    Top = 216
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 310
-    Top = 176
+    Top = 224
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -271,9 +288,26 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalId'
+        Value = Null
+        Component = GuidesPersonal
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalName'
+        Value = Null
+        Component = GuidesPersonal
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 150
-    Top = 160
+    Top = 208
   end
   object GuidesBonusKind: TdsdGuides
     KeyField = 'Id'
@@ -394,5 +428,35 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
       end>
     Left = 229
     Top = 62
+  end
+  object GuidesPersonal: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonal
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPersonal
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPersonal
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 152
+    Top = 171
   end
 end

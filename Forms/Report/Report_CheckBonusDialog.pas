@@ -46,6 +46,9 @@ type
     cxLabel4: TcxLabel;
     edBranch: TcxButtonEdit;
     GuidesBranch: TdsdGuides;
+    cxLabel8: TcxLabel;
+    edPersonal: TcxButtonEdit;
+    GuidesPersonal: TdsdGuides;
   private
     { Private declarations }
   public

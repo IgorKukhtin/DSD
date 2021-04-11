@@ -104,6 +104,9 @@ type
     actInsertUpdate_ByGrid: TdsdExecStoredProc;
     macInsertUpdate_ByGrid_list: TMultiAction;
     bbInsertUpdate_ByGrid: TdxBarButton;
+    cxLabel8: TcxLabel;
+    GuidesPersonal: TdsdGuides;
+    edPersonal: TcxButtonEdit;
   private
     { Private declarations }
   public
