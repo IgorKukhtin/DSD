@@ -16,12 +16,34 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
               , LocationDescName TVarChar, LocationCode Integer, LocationName TVarChar
               , ObjectByDescName TVarChar, ObjectByCode Integer, ObjectByName TVarChar
               , PaidKindName TVarChar
-              , GoodsCode Integer, GoodsName TVarChar, PartionId Integer
+              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, PartionId Integer
               , GoodsCode_parent Integer, GoodsName_parent TVarChar
+              , PartnerName TVarChar
+              , Article TVarChar
+              , PartNumber TVarChar
+              , GoodsGroupNameFull TVarChar
+              , GoodsGroupName TVarChar
+              , MeasureName TVarChar
+              , GoodsTagName TVarChar
+              , GoodsTypeName TVarChar
+              , ProdColorName TVarChar
+              , TaxKindName TVarChar
+              , GoodsSizeId Integer
+              , GoodsSizeName TVarChar
+              
               , Price TFloat, Price_end TFloat, Price_partner TFloat
               , SummPartnerIn TFloat, SummPartnerOut TFloat
               , AmountStart TFloat, AmountIn TFloat, AmountOut TFloat, AmountEnd TFloat, Amount TFloat
               , SummStart TFloat, SummIn TFloat, SummOut TFloat, SummEnd TFloat, Summ TFloat
+               
+              , OperPrice   TFloat           -- ÷ена вх
+              , OperPriceList  TFloat        -- ÷ена по прайсу
+              , OperPrice_cost TFloat
+              , CostPrice TFloat
+              , TotalSummEKPrice_in TFloat   -- —умма по входным ценам
+              , TotalSummPriceList_in TFloat -- —умма по прайсу - 
+              , Summ_Cost TFloat
+              , TotalSummPrice_cost_in TFloat
               )
 AS
 $BODY$
@@ -46,7 +68,7 @@ BEGIN
                         AND COALESCE (inUnitGroupId,0) = 0
                      )
        , tmpGoods AS (SELECT inGoodsId AS GoodsId
-                      wHERE COALESCE (inGoodsId,0) <> 0
+                      WHERE COALESCE (inGoodsId,0) <> 0
                      UNION
                       SELECT Object.Id  AS LocationId
                       FROM Object
@@ -54,6 +76,12 @@ BEGIN
                         AND Object.isErased = FALSE
                         AND COALESCE (inGoodsId,0) = 0
                      )
+       , tmpPriceBasis AS (SELECT tmp.GoodsId
+                                , tmp.ValuePrice
+                           FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
+                                                                    , inOperDate   := CURRENT_DATE) AS tmp
+                                INNER JOIN tmpGoods ON tmpGoods.GoodsId = tmp.GoodsId
+                           )
        , tmpContainer_Count AS (SELECT Container.Id            AS ContainerId
                                      , Container.WhereObjectId AS LocationId
                                      , Container.ObjectId      AS GoodsId
@@ -393,8 +421,84 @@ BEGIN
                           AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                         )
 
+  , tmpMIString AS (SELECT *
+                    FROM MovementItemString AS MIString_PartNumber
+                    WHERE MIString_PartNumber.MovementItemId IN (SELECT DISTINCT tmpMIContainer_group.PartionId FROM tmpMIContainer_group)
+                      AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+                    ) 
+
    -- –≈«”Ћ№“ј“
-  , tmpDataAll AS (SELECT Movement.Id AS MovementId
+  , tmpDataAll AS (SELECT tmpDataAll.MovementId AS MovementId
+                        , tmpDataAll.InvNumber  ::TVarChar AS InvNumber
+                        , tmpDataAll.OperDate
+                        , tmpDataAll.OperDatePartner ::TDateTime AS OperDatePartner
+
+                        , tmpDataAll.MovementDescName ::TVarChar AS MovementDescName
+                        , tmpDataAll.MovementDescName_order  ::TVarChar AS MovementDescName_order
+
+                        , tmpDataAll.isActive
+                        , tmpDataAll.isRemains
+                        , tmpDataAll.isRePrice
+                        , tmpDataAll.isInv
+
+                        , tmpDataAll.LocationDescName
+                        , tmpDataAll.LocationCode
+                        , tmpDataAll.LocationName
+
+                        , tmpDataAll.ObjectByDescName
+                        , tmpDataAll.ObjectByCode
+                        , tmpDataAll.ObjectByName
+
+                        , tmpDataAll.PaidKindName
+
+                        , tmpDataAll.GoodsId
+                        , tmpDataAll.GoodsCode
+                        , tmpDataAll.GoodsName
+                        , tmpDataAll.PartionId
+                        , tmpDataAll.GoodsCode_parent
+                        , tmpDataAll.GoodsName_parent
+
+                        , AVG (tmpDataAll.Price)            ::TFloat AS Price
+                        , AVG (tmpDataAll.Price_end)        ::TFloat AS Price_end
+                        , AVG (tmpDataAll.Price_partner)    ::TFloat AS Price_partner
+
+                        , SUM (tmpDataAll.SummPartnerIn)    ::TFloat  AS SummPartnerIn    
+                        , SUM (tmpDataAll.SummPartnerOut)   ::TFloat  AS SummPartnerOut   
+                        , SUM (tmpDataAll.AmountStart)      ::TFloat  AS AmountStart      
+                        , SUM (tmpDataAll.AmountIn)         ::TFloat  AS AmountIn         
+                        , SUM (tmpDataAll.AmountOut)        ::TFloat  AS AmountOut        
+                        , SUM (tmpDataAll.AmountEnd)        ::TFloat  AS AmountEnd        
+                        , SUM (tmpDataAll.Amount)           ::TFloat  AS Amount 
+                        , SUM (tmpDataAll.SummStart)        ::TFloat  AS SummStart        
+                        , SUM (tmpDataAll.SummIn)           ::TFloat  AS SummIn           
+                        , SUM (tmpDataAll.SummOut)          ::TFloat  AS SummOut          
+                        , SUM (tmpDataAll.SummEnd)          ::TFloat  AS SummEnd          
+                        , SUM (tmpDataAll.Summ)             ::TFloat  AS Summ
+
+                        --из партии
+                        , tmpDataAll.PartnerId
+                        , tmpDataAll.GoodsSizeId
+                        , tmpDataAll.MeasureId
+                        , tmpDataAll.GoodsGroupId
+                        , tmpDataAll.GoodsTagId
+                        , tmpDataAll.GoodsTypeId
+                        , tmpDataAll.ProdColorId
+                        , tmpDataAll.TaxKindId
+                        , tmpDataAll.TaxKindValue
+                        , tmpDataAll.OperPriceList
+                        , SUM (tmpDataAll.CostPrice) AS CostPrice_summ
+                        --, tmpDataAll.CountForPrice
+                        --, tmpDataAll.UnitId_in
+                          --  только дл€ Ord = 1
+                        , SUM (CASE WHEN tmpDataAll.Ord = 1 THEN tmpDataAll.AmountIn ELSE 0 END) AS Amount_in
+                        , SUM (zfCalc_SummIn        (tmpDataAll.AmountIn, tmpDataAll.EKPrice, tmpDataAll.CountForPrice)) AS TotalSummEKPrice_in
+                        , SUM (zfCalc_SummPriceList (tmpDataAll.AmountIn, tmpDataAll.OperPriceList))                     AS TotalSummPriceList_in
+                        , SUM (zfCalc_SummPriceList (tmpDataAll.AmountIn, tmpDataAll.CostPrice))                         AS TotalSumm_cost_in
+                        , SUM (zfCalc_SummPriceList (tmpDataAll.AmountIn, tmpDataAll.OperPrice_cost))                    AS TotalSummPrice_cost_in
+
+                        , STRING_AGG (MIString_PartNumber.ValueData, ' ;') ::TVarChar AS PartNumber
+
+                   FROM (SELECT Movement.Id AS MovementId
                         , Movement.InvNumber
                         , Movement.OperDate
                         , MovementDate_OperDatePartner.ValueData AS OperDatePartner
@@ -453,9 +557,9 @@ BEGIN
              
                         , Object_PaidKind.ValueData AS PaidKindName
                 
+                        , Object_Goods.Id         AS GoodsId
                         , Object_Goods.ObjectCode AS GoodsCode
                         , Object_Goods.ValueData  AS GoodsName
-                        --, COALESCE (CASE WHEN Object_PartionGoods.ValueData <> '' THEN Object_PartionGoods.ValueData ELSE NULL END, '') :: TVarChar AS PartionGoods
                         , tmpMIContainer_group.PartionId
                         , Object_Goods_parent.ObjectCode AS GoodsCode_parent
                         , Object_Goods_parent.ValueData  AS GoodsName_parent
@@ -504,7 +608,30 @@ BEGIN
                               * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_Loss()) THEN -1 ELSE 1 END
                               --* CASE WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE THEN -1 ELSE 1 END
                                 AS TFloat) AS Summ
-      
+
+                         -- из партии
+                        , Object_PartionGoods.FromId AS PartnerId
+                        , Object_PartionGoods.GoodsSizeId
+                        , Object_PartionGoods.MeasureId
+                        , Object_PartionGoods.GoodsGroupId
+                        , Object_PartionGoods.GoodsTagId
+                        , Object_PartionGoods.GoodsTypeId
+                        , Object_PartionGoods.ProdColorId
+                        , Object_PartionGoods.TaxKindId
+                        , Object_PartionGoods.TaxValue AS TaxKindValue
+                        --, Object_PartionGoods.MovementId  -- приход
+                        , Object_PartionGoods.EKPrice
+                        , Object_PartionGoods.CountForPrice
+                        , COALESCE (tmpPriceBasis.ValuePrice, Object_PartionGoods.OperPriceList) AS OperPriceList
+                          -- ÷ена без Ќƒ— затраты
+                        , Object_PartionGoods.CostPrice     ::TFloat
+                          -- ÷ена вх. с затратами без Ќƒ—
+                        , (Object_PartionGoods.EKPrice / Object_PartionGoods.CountForPrice + COALESCE (Object_PartionGoods.CostPrice,0) ) ::TFloat AS OperPrice_cost
+                        , Object_PartionGoods.Amount     AS Amount_in
+                        --, Object_PartionGoods.UnitId     AS UnitId_in
+                          --  є п/п - только дл€ = 1 возьмем Amount_in
+                        , ROW_NUMBER() OVER (PARTITION BY tmpMIContainer_group.PartionId ORDER BY CASE WHEN tmpMIContainer_group.LocationId = Object_PartionGoods.UnitId THEN 0 ELSE 1 END ASC) AS Ord
+
                    FROM tmpMIContainer_group
                         LEFT JOIN Movement ON Movement.Id = tmpMIContainer_group.MovementId
                         LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
@@ -542,7 +669,51 @@ BEGIN
                         LEFT JOIN Object AS Object_By ON Object_By.Id = CASE WHEN CLO_Object_By.ObjectId > 0 THEN CLO_Object_By.ObjectId ELSE MovementLinkObject_By.ObjectId END
                         LEFT JOIN ObjectDesc AS ObjectDesc_By ON ObjectDesc_By.Id = Object_By.DescId
                         --LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_group.PartionId
+
+                        LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpMIContainer_group.PartionId
+                                                     AND Object_PartionGoods.ObjectId       = tmpMIContainer_group.GoodsId
+                                                     AND Object_PartionGoods.isErased       = FALSE
+                         -- цена из ѕрайс-листа
+                        LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = tmpMIContainer_group.GoodsId
+                   ) AS tmpDataAll
+                     LEFT JOIN tmpMIString AS MIString_PartNumber
+                                           ON MIString_PartNumber.MovementItemId = tmpDataAll.PartionId
+                   GROUP BY tmpDataAll.MovementId
+                          , tmpDataAll.InvNumber
+                          , tmpDataAll.OperDate
+                          , tmpDataAll.OperDatePartner
+                          , tmpDataAll.MovementDescName
+                          , tmpDataAll.MovementDescName_order
+                          , tmpDataAll.isActive
+                          , tmpDataAll.isRemains
+                          , tmpDataAll.isRePrice
+                          , tmpDataAll.isInv
+                          , tmpDataAll.LocationDescName
+                          , tmpDataAll.LocationCode
+                          , tmpDataAll.LocationName
+                          , tmpDataAll.ObjectByDescName
+                          , tmpDataAll.ObjectByCode
+                          , tmpDataAll.ObjectByName
+                          , tmpDataAll.PaidKindName
+                          , tmpDataAll.GoodsId
+                          , tmpDataAll.GoodsCode
+                          , tmpDataAll.GoodsName
+                          , tmpDataAll.PartionId
+                          , tmpDataAll.GoodsCode_parent
+                          , tmpDataAll.GoodsName_parent
+
+                          , tmpDataAll.GoodsSizeId
+                          , tmpDataAll.MeasureId
+                          , tmpDataAll.GoodsGroupId
+                          , tmpDataAll.GoodsTagId
+                          , tmpDataAll.GoodsTypeId
+                          , tmpDataAll.ProdColorId
+                          , tmpDataAll.TaxKindId
+                          , tmpDataAll.TaxKindValue
+                          , tmpDataAll.OperPriceList
+                          , tmpDataAll.PartnerId
                    )
+
 
    -- –≈«”Ћ№“ј“
    SELECT tmpDataAll.MovementId AS MovementId
@@ -568,51 +739,80 @@ BEGIN
 
         , tmpDataAll.PaidKindName
 
+        , tmpDataAll.GoodsId
         , tmpDataAll.GoodsCode
         , tmpDataAll.GoodsName
         , tmpDataAll.PartionId
         , tmpDataAll.GoodsCode_parent
         , tmpDataAll.GoodsName_parent
 
-        , AVG (tmpDataAll.Price)            ::TFloat AS Price
-        , AVG (tmpDataAll.Price_end)        ::TFloat AS Price_end
-        , AVG (tmpDataAll.Price_partner)    ::TFloat AS Price_partner
+        , Object_Partner.ValueData       AS PartnerName
+        , ObjectString_Article.ValueData AS Article
+        , tmpDataAll.PartNumber ::TVarChar
+        , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+        , Object_GoodsGroup.ValueData    AS GoodsGroupName
+        , Object_Measure.ValueData       AS MeasureName
+        , Object_GoodsTag.ValueData      AS GoodsTagName
+        , Object_GoodsType.ValueData     AS GoodsTypeName
+        , Object_ProdColor.ValueData     AS ProdColorName
+        , Object_TaxKind.ValueData       AS TaxKindName
+        , Object_GoodsSize.Id            AS GoodsSizeId
+        , Object_GoodsSize.ValueData ::TVarChar AS GoodsSizeName
 
-        , SUM (tmpDataAll.SummPartnerIn)    ::TFloat  AS SummPartnerIn    
-        , SUM (tmpDataAll.SummPartnerOut)   ::TFloat  AS SummPartnerOut   
-        , SUM (tmpDataAll.AmountStart)      ::TFloat  AS AmountStart      
-        , SUM (tmpDataAll.AmountIn)         ::TFloat  AS AmountIn         
-        , SUM (tmpDataAll.AmountOut)        ::TFloat  AS AmountOut        
-        , SUM (tmpDataAll.AmountEnd)        ::TFloat  AS AmountEnd        
-        , SUM (tmpDataAll.Amount)           ::TFloat  AS Amount 
-        , SUM (tmpDataAll.SummStart)        ::TFloat  AS SummStart        
-        , SUM (tmpDataAll.SummIn)           ::TFloat  AS SummIn           
-        , SUM (tmpDataAll.SummOut)          ::TFloat  AS SummOut          
-        , SUM (tmpDataAll.SummEnd)          ::TFloat  AS SummEnd          
-        , SUM (tmpDataAll.Summ)             ::TFloat  AS Summ
+
+        , tmpDataAll.Price            ::TFloat AS Price
+        , tmpDataAll.Price_end        ::TFloat AS Price_end
+        , tmpDataAll.Price_partner    ::TFloat AS Price_partner
+
+        , tmpDataAll.SummPartnerIn    ::TFloat  AS SummPartnerIn    
+        , tmpDataAll.SummPartnerOut   ::TFloat  AS SummPartnerOut   
+        , tmpDataAll.AmountStart      ::TFloat  AS AmountStart      
+        , tmpDataAll.AmountIn         ::TFloat  AS AmountIn         
+        , tmpDataAll.AmountOut        ::TFloat  AS AmountOut        
+        , tmpDataAll.AmountEnd        ::TFloat  AS AmountEnd        
+        , tmpDataAll.Amount           ::TFloat  AS Amount 
+        , tmpDataAll.SummStart        ::TFloat  AS SummStart        
+        , tmpDataAll.SummIn           ::TFloat  AS SummIn           
+        , tmpDataAll.SummOut          ::TFloat  AS SummOut          
+        , tmpDataAll.SummEnd          ::TFloat  AS SummEnd          
+        , tmpDataAll.Summ             ::TFloat  AS Summ
+
+           -- ÷ена вх
+           , CASE WHEN tmpDataAll.Amountin  <> 0 THEN tmpDataAll.TotalSummEKPrice_in / tmpDataAll.Amountin ELSE 0 END :: TFloat AS OperPrice
+             -- ÷ена по прайсу
+           , tmpDataAll.OperPriceList :: TFloat
+           --, tmpData.OperPrice_cost   :: TFloat
+           , CASE WHEN tmpDataAll.Amountin  <> 0 THEN COALESCE (tmpDataAll.TotalSummEKPrice_in,0) + COALESCE (tmpDataAll.CostPrice_summ,0) / tmpDataAll.Amountin
+                  ELSE 0
+             END :: TFloat AS OperPrice_cost
+           , tmpDataAll.CostPrice_summ        :: TFloat AS CostPrice
+
+             -- —умма по входным ценам
+           , tmpDataAll.TotalSummEKPrice_in      :: TFloat AS TotalSummEKPrice_in
+             -- —умма по прайсу - 
+           , tmpDataAll.TotalSummPriceList_in      :: TFloat AS TotalSummPriceList_in
+           
+           , tmpDataAll.TotalSumm_Cost_in   :: TFloat AS Summ_Cost
+           , tmpDataAll.TotalSummPrice_cost_in  :: TFloat AS TotalSummPrice_cost_in
+
    FROM tmpDataAll
-   GROUP BY tmpDataAll.MovementId
-        , tmpDataAll.InvNumber
-        , tmpDataAll.OperDate
-        , tmpDataAll.OperDatePartner
-        , tmpDataAll.MovementDescName
-        , tmpDataAll.MovementDescName_order
-        , tmpDataAll.isActive
-        , tmpDataAll.isRemains
-        , tmpDataAll.isRePrice
-        , tmpDataAll.isInv
-        , tmpDataAll.LocationDescName
-        , tmpDataAll.LocationCode
-        , tmpDataAll.LocationName
-        , tmpDataAll.ObjectByDescName
-        , tmpDataAll.ObjectByCode
-        , tmpDataAll.ObjectByName
-        , tmpDataAll.PaidKindName
-        , tmpDataAll.GoodsCode
-        , tmpDataAll.GoodsName
-        , tmpDataAll.PartionId
-        , tmpDataAll.GoodsCode_parent
-        , tmpDataAll.GoodsName_parent
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpDataAll.PartnerId
+            LEFT JOIN Object AS Object_Goods   ON Object_Goods.Id   = tmpDataAll.GoodsId
+
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = tmpDataAll.GoodsGroupId
+            LEFT JOIN Object AS Object_Measure    ON Object_Measure.Id    = tmpDataAll.MeasureId
+            LEFT JOIN Object AS Object_GoodsTag   ON Object_GoodsTag.Id   = tmpDataAll.GoodsTagId
+            LEFT JOIN Object AS Object_GoodsType  ON Object_GoodsType.Id  = tmpDataAll.GoodsTypeId
+            LEFT JOIN Object AS Object_ProdColor  ON Object_ProdColor.Id  = tmpDataAll.ProdColorId
+            LEFT JOIN Object AS Object_TaxKind    ON Object_TaxKind.Id    = tmpDataAll.TaxKindId
+            LEFT JOIN Object AS Object_GoodsSize  ON Object_GoodsSize.Id  = tmpDataAll.GoodsSizeId
+
+            LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
+                                   ON ObjectString_GoodsGroupFull.ObjectId = tmpDataAll.GoodsId
+                                  AND ObjectString_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
+            LEFT JOIN ObjectString AS ObjectString_Article
+                                   ON ObjectString_Article.ObjectId = tmpDataAll.GoodsId
+                                  AND ObjectString_Article.DescId = zc_ObjectString_Article()
    ;
 
 END;
@@ -626,4 +826,5 @@ $BODY$
 */
 
 -- тест
--- select * from gpReport_Goods(inStartDate := ('02.03.2020')::TDateTime , inEndDate := ('03.03.2021')::TDateTime , inUnitGroupId := 0 , inGoodsId := 3780 , inPartionId := 28494, inSession := '5');
+-- 
+select * from gpReport_Goods(inStartDate := ('02.03.2020')::TDateTime , inEndDate := ('03.03.2021')::TDateTime , inUnitGroupId := 0 , inGoodsId := 3780 , inPartionId := 28494, inSession := '5');
