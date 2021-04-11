@@ -43,6 +43,7 @@ type
     procedure LoadMeasureFormTest;
     procedure LoadModelEtiketenFormTest;
     procedure LoadOrderClientFormTest;
+    procedure LoadPartionGoodsFormTest;
     procedure LoadPersonalFormTest;
     procedure LoadPartnerFormTest;
     procedure LoadPLZFormTest;
@@ -425,14 +426,19 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPartnerEditForm');
 end;
 
-procedure TLoadFormTest.LoadPersonalFormTest;
+procedure TLoadFormTest.LoadPartionGoodsFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartionGoodsChoiceForm');
+end;
+
+ procedure TLoadFormTest.LoadPersonalFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalEditForm');
 end;
-
 procedure TLoadFormTest.LoadPLZFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPLZForm'));

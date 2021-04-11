@@ -1,6 +1,7 @@
 -- FunctiON: gpReport_CheckBonus_PersentSalePart ()
 
-DROP FUNCTION IF EXISTS gpReport_CheckBonus_PersentSalePart (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_CheckBonus_PersentSalePart (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_CheckBonus_PersentSalePart (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_CheckBonus_PersentSalePart (
     IN inStartDate           TDateTime ,  
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_CheckBonus_PersentSalePart (
     IN inPaidKindId          Integer   ,
     IN inJuridicalId         Integer   ,
     IN inBranchId            Integer   , 
+    IN inPersonalId          Integer   ,
     IN inSessiON             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ContractId_master Integer, ContractId_child Integer, ContractId_find Integer
@@ -23,8 +25,10 @@ RETURNS TABLE (ContractId_master Integer, ContractId_child Integer, ContractId_f
              , BranchId Integer, BranchName TVarChar
              , BranchId_inf Integer, BranchName_inf TVarChar
              , RetailName TVarChar
+             , PersonalTradeCode Integer, PersonalTradeName TVarChar
              , PersonalCode Integer, PersonalName TVarChar
              , PartnerId Integer, PartnerName TVarChar
+             , AreaId Integer, AreaName TVarChar
              , Value TFloat
              , PercentRetBonus TFloat
              , PercentRetBonus_fact TFloat
@@ -898,10 +902,15 @@ BEGIN
             , Object_Branch_inf.ValueData                   AS BranchName_inf
 
             , Object_Retail.ValueData                       AS RetailName
-            , Object_Personal_View.PersonalCode             AS PersonalCode
-            , Object_Personal_View.PersonalName             AS PersonalName
+            , Object_PersonalTrade.PersonalCode             AS PersonalTradeCode
+            , Object_PersonalTrade.PersonalName             AS PersonalTradeName
+            , Object_Personal.PersonalCode                  AS PersonalCode
+            , Object_Personal.PersonalName                  AS PersonalName
             , Object_Partner.Id                             AS PartnerId
             , Object_Partner.ValueData  ::TVarChar          AS PartnerName
+
+            , Object_Area.Id                  AS AreaId
+            , Object_Area.ValueData           AS AreaName
 
             , CAST (tmpData.Value AS TFloat)                AS Value
             , CAST (tmpData.PercentRetBonus AS TFloat)      AS PercentRetBonus
@@ -964,11 +973,11 @@ BEGIN
                                 AND (tmpData.PaidKindId_child = zc_Enum_PaidKind_SecondForm()
                                    OR COALESCE (ObjectLink_Contract_PersonalTrade.ChildObjectId,0) = 0
                                      )
-            LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = COALESCE (ObjectLink_Partner_PersonalTrade.ChildObjectId, ObjectLink_Contract_PersonalTrade.ChildObjectId) 
+            LEFT JOIN Object_Personal_View AS Object_PersonalTrade ON Object_PersonalTrade.PersonalId = COALESCE (ObjectLink_Partner_PersonalTrade.ChildObjectId, ObjectLink_Contract_PersonalTrade.ChildObjectId) 
 
             --показываем информативно Филиал по подразделению Сотрудника ТП
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
-                                 ON ObjectLink_Unit_Branch.ObjectId = Object_Personal_View.UnitId
+                                 ON ObjectLink_Unit_Branch.ObjectId = Object_PersonalTrade.UnitId
                                 AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
             LEFT JOIN Object AS Object_Branch_inf ON Object_Branch_inf.Id = ObjectLink_Unit_Branch.ChildObjectId
 
@@ -976,6 +985,21 @@ BEGIN
                                     AND tmpObjectBonus.PartnerId   = COALESCE (Object_Partner.Id, 0)
                                     AND tmpObjectBonus.ContractId_master = tmpData.ContractId_master
                                     AND tmpObjectBonus.ContractId_child  = tmpData.ContractId_child
+
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
+                                 ON ObjectLink_Partner_Area.ObjectId = tmpObjectBonus.PartnerId
+                                AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
+            LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Partner_Area.ChildObjectId
+
+            --для нал берем из контрагента          
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
+                                 ON ObjectLink_Partner_Personal.ObjectId = tmpData.PartnerId
+                                AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
+            LEFT JOIN Object_Personal_View AS Object_Personal ON Object_Personal.PersonalId = ObjectLink_Partner_Personal.ChildObjectId 
+
+      WHERE ((Object_Personal.PersonalId = inPersonalId AND tmpData.PaidKindId = zc_Enum_PaidKind_SecondForm())
+           OR inPersonalId = 0
+           OR tmpData.PaidKindId = zc_Enum_PaidKind_FirstForm())
           ;
 
 END;
@@ -988,4 +1012,4 @@ $BODY$
  13.12.20         *
 */
 
--- select * from gpReport_CheckBonus_PersentSalePart (inStartDate := ('01.12.2020')::TDateTime , inEndDate := ('30.12.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId :=  15158 /*15158 / 862910*/  , inBranchId := 0 , inSession := '5');
+-- select * from gpReport_CheckBonus_PersentSalePart (inStartDate := ('01.12.2020')::TDateTime , inEndDate := ('02.12.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId :=  15158 /*15158 / 862910*/  , inBranchId := 0 , inPersonalId:= 0, inSession := '5');

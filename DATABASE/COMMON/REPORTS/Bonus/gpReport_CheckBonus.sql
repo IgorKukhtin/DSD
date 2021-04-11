@@ -4,14 +4,16 @@ DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_CheckBonus (
     IN inStartDate           TDateTime ,  
     IN inEndDate             TDateTime ,
     IN inPaidKindID          Integer   ,
     IN inJuridicalId         Integer   ,
-    IN inBranchId            Integer   , 
+    IN inBranchId            Integer   ,
+    IN inPersonalId          Integer   , 
     IN inIsMovement          Boolean   , -- по документам
     IN inSessiON             TVarChar    -- сессия пользователя
 )
@@ -26,8 +28,11 @@ RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber
              , ConditionKindId Integer, ConditionKindName TVarChar
              , BonusKindId Integer, BonusKindName TVarChar
              , BranchId Integer, BranchName TVarChar
-             , RetailName TVarChar, PersonalName TVarChar
+             , RetailName TVarChar
+             , PersonalTradeName TVarChar
+             , PersonalName TVarChar
              , PartnerId Integer, PartnerName TVarChar
+             , AreaId Integer, AreaName TVarChar
              , Value TFloat
 
              , Sum_CheckBonus      TFloat
@@ -192,9 +197,12 @@ BEGIN
            , tmp.BonusKindId, tmp.BonusKindName
            , tmp.BranchId, tmp.BranchName
            , tmp.RetailName
+           , tmp.PersonalTradeName
            , tmp.PersonalName
            , tmp.PartnerId
            , tmp.PartnerName
+           , tmp.AreaId
+           , tmp.AreaName
            , tmp.Value
            , tmp.Sum_CheckBonus
            , tmp.Sum_CheckBonusFact
@@ -222,13 +230,14 @@ BEGIN
            , tmp.ReportBonusId
            , tmp.isSend
            , tmp.isSalePart
-      FROM lpReport_CheckBonus (inStartDate           := inStartDate                                --gpReport_CheckBonusTest2_old
-                              , inEndDate             := inEndDate
-                              , inPaidKindID          := zc_Enum_PaidKind_FirstForm()
-                              , inJuridicalId         := inJuridicalId
-                              , inBranchId            := inBranchId
-                              , inIsMovement          := inIsMovement
-                              , inSession             := inSession
+      FROM lpReport_CheckBonus (inStartDate    := inStartDate                                --gpReport_CheckBonusTest2_old
+                              , inEndDate      := inEndDate
+                              , inPaidKindID   := zc_Enum_PaidKind_FirstForm()
+                              , inJuridicalId  := inJuridicalId
+                              , inBranchId     := inBranchId
+                              , inPersonalId   := inPersonalId
+                              , inIsMovement   := inIsMovement
+                              , inSession      := inSession
                                ) AS tmp
           /* LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = tmp.JuridicalId
                                    AND tmpObjectBonus.PartnerId   = COALESCE (tmp.PartnerId, 0)
@@ -249,9 +258,12 @@ BEGIN
            , tmp.BonusKindId, tmp.BonusKindName
            , tmp.BranchId, tmp.BranchName
            , tmp.RetailName
+           , tmp.PersonalTradeName
            , tmp.PersonalName
            , tmp.PartnerId
            , tmp.PartnerName
+           , tmp.AreaId
+           , tmp.AreaName
            , tmp.Value
 
            , tmp.Sum_CheckBonus
@@ -284,13 +296,14 @@ BEGIN
            , tmp.ReportBonusId
            , tmp.isSend
            , tmp.isSalePart
-      FROM lpReport_CheckBonus (inStartDate           := inStartDate                                --gpReport_CheckBonusTest2_old
-                              , inEndDate             := inEndDate
-                              , inPaidKindID          := zc_Enum_PaidKind_SecondForm()
-                              , inJuridicalId         := inJuridicalId
-                              , inBranchId            := inBranchId
-                              , inIsMovement          := inIsMovement
-                              , inSession             := inSession
+      FROM lpReport_CheckBonus (inStartDate     := inStartDate                                --gpReport_CheckBonusTest2_old
+                              , inEndDate       := inEndDate
+                              , inPaidKindID    := zc_Enum_PaidKind_SecondForm()
+                              , inJuridicalId   := inJuridicalId
+                              , inBranchId      := inBranchId
+                              , inPersonalId    := inPersonalId
+                              , inIsMovement    := inIsMovement
+                              , inSession       := inSession
                                ) AS tmp
          /*  LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = tmp.JuridicalId
                                    AND tmpObjectBonus.PartnerId   = COALESCE (tmp.PartnerId, 0)
@@ -340,4 +353,4 @@ $BODY$
 */
 -- тест
 -- select * from gpReport_CheckBonus (inStartDate:= '15.03.2016', inEndDate:= '15.03.2016', inPaidKindID:= zc_Enum_PaidKind_FirstForm(), inJuridicalId:= 0, inBranchId:= 0, inSession:= zfCalc_UserAdmin());
--- select * from gpReport_CheckBonus(inStartDate := ('28.05.2020')::TDateTime , inEndDate := ('28.05.2020')::TDateTime , inPaidKindId := 3 , inJuridicalId := 344240 , inBranchId :=  8374 ,  inSession := '5');--
+-- select * from gpReport_CheckBonus(inStartDate := ('28.05.2020')::TDateTime , inEndDate := ('28.05.2020')::TDateTime , inPaidKindId := 3 , inJuridicalId := 344240 , inBranchId :=  8374, inPersonalId:=0 ,  inIsMovement := FALSE, inSession := '5');--

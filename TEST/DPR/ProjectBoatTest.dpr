@@ -257,7 +257,8 @@ uses
   Union_IncomeOrderJournalChoice in '..\..\FormsBoat\Document\Union_IncomeOrderJournalChoice.pas' {Union_IncomeOrderJournalChoiceForm: TParentForm},
   Union_InvoiceOrderJournalChoice in '..\..\FormsBoat\Document\Union_InvoiceOrderJournalChoice.pas' {Union_InvoiceOrderJournalChoiceForm: TParentForm},
   Report_GoodsDialog in '..\..\FormsBoat\Report\Report_GoodsDialog.pas' {Report_GoodsDialogForm: TParentForm},
-  Report_Goods in '..\..\FormsBoat\Report\Report_Goods.pas' {Report_GoodsForm: TParentForm};
+  Report_Goods in '..\..\FormsBoat\Report\Report_Goods.pas' {Report_GoodsForm: TParentForm},
+  PartionGoodsChoice in '..\..\FormsBoat\Guides\PartionGoodsChoice.pas' {PartionGoodsChoiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -453,8 +453,17 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             Width = 55
           end
           object PersonalName: TcxGridDBColumn
-            Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
+            Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088')'
             DataBinding.FieldName = 'PersonalName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object PersonalTradeName: TcxGridDBColumn
+            Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
+            DataBinding.FieldName = 'PersonalTradeName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -469,6 +478,14 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
+          end
+          object AreaName: TcxGridDBColumn
+            Caption = #1056#1077#1075#1080#1086#1085
+            DataBinding.FieldName = 'AreaName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
           object Sum_CheckBonus: TcxGridDBColumn
             Caption = #1056#1072#1089#1095#1077#1090#1085#1072#1103' '#1073#1072#1079#1072
@@ -673,8 +690,8 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       Width = 208
     end
     object cbMovement: TcxCheckBox
-      Left = 640
-      Top = 5
+      Left = 841
+      Top = 32
       Action = actRefreshMovement
       TabOrder = 6
       Visible = False
@@ -745,6 +762,23 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     Properties.ShowTime = False
     TabOrder = 11
     Width = 85
+  end
+  object cxLabel8: TcxLabel [8]
+    Left = 664
+    Top = 6
+    Caption = #1057#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088':'
+  end
+  object edPersonal: TcxButtonEdit [9]
+    Left = 744
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 13
+    Width = 153
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -909,6 +943,22 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           Value = Null
           Component = edOperDate
           DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalId'
+          Value = Null
+          Component = GuidesPersonal
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalName'
+          Value = Null
+          Component = GuidesPersonal
+          ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -1488,6 +1538,14 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPersonalId'
+        Value = Null
+        Component = GuidesPersonal
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisMovement'
         Value = False
         DataType = ftBoolean
@@ -1841,8 +1899,8 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 461
-    Top = 65534
+    Left = 429
+    Top = 22
   end
   object GuidesBranch: TdsdGuides
     KeyField = 'Id'
@@ -1871,8 +1929,8 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 541
-    Top = 6
+    Left = 501
+    Top = 22
   end
   object spUpdateSend_No: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ReportBonus'
@@ -2272,5 +2330,35 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     PackSize = 1
     Left = 440
     Top = 192
+  end
+  object GuidesPersonal: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonal
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPersonal
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPersonal
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 801
+    Top = 65534
   end
 end

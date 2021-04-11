@@ -59,9 +59,6 @@ type
     GoodsCode_parent: TcxGridDBColumn;
     GoodsName_parent: TcxGridDBColumn;
     Price_end: TcxGridDBColumn;
-    Price_partner: TcxGridDBColumn;
-    SummPartnerOut: TcxGridDBColumn;
-    SummPartnerIn: TcxGridDBColumn;
     cxLabel5: TcxLabel;
     edPartion: TcxButtonEdit;
     cxLabel8: TcxLabel;
