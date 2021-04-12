@@ -54,6 +54,7 @@ BEGIN
                                           AND MovementItem.isErased   = FALSE
                    INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
                                       AND Movement.DescId = zc_Movement_OrderClient()
+                                      AND Movement.StatusId <> zc_Enum_Status_Erased()
                     
                    LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                ON MIFloat_MovementId.MovementItemId = MovementItem.Id
