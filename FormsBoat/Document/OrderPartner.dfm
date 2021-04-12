@@ -1,4 +1,4 @@
-object OrderPartnerForm: TOrderPartnerForm
+﻿object OrderPartnerForm: TOrderPartnerForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1082#1072#1079' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
@@ -26,7 +26,6 @@ object OrderPartnerForm: TOrderPartnerForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1349
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -256,16 +255,12 @@ object OrderPartnerForm: TOrderPartnerForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 1349
-    ExplicitHeight = 374
     ClientRectBottom = 436
     ClientRectRight = 1102
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 1349
-      ExplicitHeight = 350
       object Panel1: TPanel
         Left = 0
         Top = 0
@@ -274,8 +269,6 @@ object OrderPartnerForm: TOrderPartnerForm
         Align = alClient
         Caption = 'Panel1'
         TabOrder = 0
-        ExplicitWidth = 1349
-        ExplicitHeight = 165
         object cxGrid: TcxGrid
           Left = 1
           Top = 1
@@ -283,8 +276,6 @@ object OrderPartnerForm: TOrderPartnerForm
           Height = 192
           Align = alClient
           TabOrder = 0
-          ExplicitWidth = 1347
-          ExplicitHeight = 163
           object cxGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
@@ -582,8 +573,6 @@ object OrderPartnerForm: TOrderPartnerForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel4
-        ExplicitTop = 165
-        ExplicitWidth = 1349
       end
       object Panel4: TPanel
         Left = 0
@@ -593,15 +582,11 @@ object OrderPartnerForm: TOrderPartnerForm
         Align = alBottom
         Caption = 'Panel4'
         TabOrder = 2
-        ExplicitTop = 368
-        ExplicitWidth = 1349
         object cxSplitter1: TcxSplitter
           Left = 1
           Top = 1
           Width = 8
           Height = 208
-          ExplicitLeft = 606
-          ExplicitHeight = 175
         end
         object cxGrid1: TcxGrid
           Left = 9
@@ -610,9 +595,6 @@ object OrderPartnerForm: TOrderPartnerForm
           Height = 208
           Align = alClient
           TabOrder = 1
-          ExplicitLeft = 15
-          ExplicitTop = 6
-          ExplicitWidth = 1365
           object cxGridDBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ChildDS
@@ -699,17 +681,38 @@ object OrderPartnerForm: TOrderPartnerForm
             OptionsCustomize.ColumnsQuickCustomization = True
             OptionsData.Deleting = False
             OptionsData.DeletingConfirmation = False
+            OptionsData.Editing = False
             OptionsData.Inserting = False
             OptionsView.Footer = True
             OptionsView.GroupByBox = False
             OptionsView.HeaderAutoHeight = True
             OptionsView.Indicator = True
             Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+            object OperDate_ch3: TcxGridDBColumn
+              Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
+              DataBinding.FieldName = 'OperDate'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082'. '#1047#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
+              Options.Editing = False
+              Width = 83
+            end
+            object Invnumber_ср3: TcxGridDBColumn
+              Caption = #8470' '#1076#1086#1082'.'
+              DataBinding.FieldName = 'Invnumber'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderHint = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
+              Options.Editing = False
+              Width = 87
+            end
             object UnitName_ch3: TcxGridDBColumn
               Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
               DataBinding.FieldName = 'UnitName'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
               Options.Editing = False
-              Width = 70
+              Width = 104
             end
             object GoodsGroupNameFull_ch3: TcxGridDBColumn
               Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
@@ -1064,6 +1067,14 @@ object OrderPartnerForm: TOrderPartnerForm
         end
         item
           Visible = True
+          ItemName = 'bbInsert_MI_byOrderClient'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -1246,6 +1257,10 @@ object OrderPartnerForm: TOrderPartnerForm
       Action = actMovementProtocolInfoOpenForm
       Category = 0
     end
+    object bbInsert_MI_byOrderClient: TdxBarButton
+      Action = actInsert_MI_byOrderClient
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1259,7 +1274,7 @@ object OrderPartnerForm: TOrderPartnerForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 89
+    Left = 113
     Top = 224
   end
   object ActionList: TActionList
@@ -2009,6 +2024,25 @@ object OrderPartnerForm: TOrderPartnerForm
       Caption = 'Add Info'
       Hint = 'Add Info'
       ImageIndex = 0
+    end
+    object actInsert_MI_byOrderClient: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_MI_byOrderClient
+      StoredProcList = <
+        item
+          StoredProc = spInsert_MI_byOrderClient
+        end
+        item
+          StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spSelectMI_Child
+        end>
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1047#1072#1082#1072#1079#1072#1084' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1047#1072#1082#1072#1079#1072#1084' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072
+      ImageIndex = 27
     end
   end
   object MasterDS: TDataSource
@@ -2808,8 +2842,8 @@ object OrderPartnerForm: TOrderPartnerForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1104
-    Top = 208
+    Left = 1048
+    Top = 200
   end
   object spSelectPrintOrderConfirmation: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Product_OrderConfirmationPrint'
@@ -2835,7 +2869,7 @@ object OrderPartnerForm: TOrderPartnerForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1112
+    Left = 1048
     Top = 256
   end
   object spSelectMI_Child: TdsdStoredProc
@@ -2906,5 +2940,52 @@ object OrderPartnerForm: TOrderPartnerForm
     PropertiesCellList = <>
     Left = 728
     Top = 208
+  end
+  object spInsert_MI_byOrderClient: TdsdStoredProc
+    StoredProcName = 'gpInsert_MI_OrderPartner_byOrderClient'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 162
+    Top = 256
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView
+    OnDblClickActionList = <
+      item
+      end
+      item
+      end>
+    ActionItemList = <
+      item
+        ShortCut = 13
+      end
+      item
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <
+      item
+        ColorValueList = <>
+      end>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    Left = 816
+    Top = 224
   end
 end

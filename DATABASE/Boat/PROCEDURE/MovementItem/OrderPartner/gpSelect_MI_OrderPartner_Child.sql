@@ -27,7 +27,6 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, Invnumber TVarChar
              , OperPriceList  TFloat -- Цена по прайсу  
              , CostPrice      TFloat -- Цена вх + затрата 
              , OperPrice_cost TFloat -- сумма затраты
-             
               )
 AS
 $BODY$

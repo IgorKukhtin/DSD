@@ -204,6 +204,12 @@ type
     OperPriceList_ch3: TcxGridDBColumn;
     isErased_ch3: TcxGridDBColumn;
     cxGridLevel3: TcxGridLevel;
+    spInsert_MI_byOrderClient: TdsdStoredProc;
+    actInsert_MI_byOrderClient: TdsdExecStoredProc;
+    bbInsert_MI_byOrderClient: TdxBarButton;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
+    OperDate_ch3: TcxGridDBColumn;
+    Invnumber_ср3: TcxGridDBColumn;
   private
   public
   end;
