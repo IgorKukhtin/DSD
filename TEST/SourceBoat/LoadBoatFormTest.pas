@@ -43,6 +43,7 @@ type
     procedure LoadMeasureFormTest;
     procedure LoadModelEtiketenFormTest;
     procedure LoadOrderClientFormTest;
+        procedure LoadOrderPartnerFormTest;
     procedure LoadPartionGoodsFormTest;
     procedure LoadPersonalFormTest;
     procedure LoadPartnerFormTest;
@@ -308,12 +309,21 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCostJournalChoiceForm');
 end;
 
-procedure TLoadFormTest.LoadOrderClientFormTest;
+ procedure TLoadFormTest.LoadOrderClientFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderClientJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderClientJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderClientForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderClientForm');
+end;
+
+
+ procedure TLoadFormTest.LoadOrderPartnerFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderPartnerJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderPartnerJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderPartnerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderPartnerForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsGroupFormTest;
