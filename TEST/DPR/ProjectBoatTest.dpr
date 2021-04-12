@@ -258,7 +258,9 @@ uses
   Union_InvoiceOrderJournalChoice in '..\..\FormsBoat\Document\Union_InvoiceOrderJournalChoice.pas' {Union_InvoiceOrderJournalChoiceForm: TParentForm},
   Report_GoodsDialog in '..\..\FormsBoat\Report\Report_GoodsDialog.pas' {Report_GoodsDialogForm: TParentForm},
   Report_Goods in '..\..\FormsBoat\Report\Report_Goods.pas' {Report_GoodsForm: TParentForm},
-  PartionGoodsChoice in '..\..\FormsBoat\Guides\PartionGoodsChoice.pas' {PartionGoodsChoiceForm: TParentForm};
+  PartionGoodsChoice in '..\..\FormsBoat\Guides\PartionGoodsChoice.pas' {PartionGoodsChoiceForm: TParentForm},
+  OrderPartner in '..\..\FormsBoat\Document\OrderPartner.pas' {OrderPartnerForm: TParentForm},
+  OrderPartnerJournal in '..\..\FormsBoat\Document\OrderPartnerJournal.pas' {OrderPartnerJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
