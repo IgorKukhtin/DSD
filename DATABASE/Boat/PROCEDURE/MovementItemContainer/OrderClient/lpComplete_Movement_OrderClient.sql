@@ -347,7 +347,7 @@ BEGIN
     PERFORM lpInsertUpdate_MI_OrderClient_Child (ioId                  := 0
                                                , inMovementId          := inMovementId
                                                , inObjectId            := _tmpItem.ObjectId
-                                               , inGoodsId             := CASE WHEN _tmpItem.ObjectId_parent_find > 0 THEN _tmpItem.ObjectId_parent_find ELSE _tmpItem.ObjectId_parent END
+                                               , inGoodsId             := CASE WHEN _tmpItem.ObjectId_parent_find > 0 THEN _tmpItem.ObjectId_parent_find WHEN _tmpItem.ObjectId <> _tmpItem.ObjectId_parent THEN _tmpItem.ObjectId_parent ELSE 0 END
                                                , inAmount              := 0
                                                , inAmountPartner       := _tmpItem.OperCount
                                                , inOperPrice           := _tmpItem.OperPrice

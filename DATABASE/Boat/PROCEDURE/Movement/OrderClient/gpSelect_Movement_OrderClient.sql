@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderClient(
     IN inIsErased      Boolean ,
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
+RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar
              , OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , PriceWithVAT Boolean
@@ -86,7 +86,7 @@ BEGIN
 
 
         SELECT Movement_OrderClient.Id
-             , Movement_OrderClient.InvNumber
+             , zfConvert_StringToNumber (Movement_OrderClient.InvNumber) AS InvNumber
              , Movement_OrderClient.InvNumberPartner
              , Movement_OrderClient.OperDate
              , Object_Status.ObjectCode                   AS StatusCode
@@ -111,7 +111,7 @@ BEGIN
              , Object_PaidKind.Id                         AS PaidKindId      
              , Object_PaidKind.ValueData                  AS PaidKindName
              , Object_Product.Id                          AS ProductId
-             , Object_Product.ValueData                   AS ProductName
+             , CASE WHEN Object_Product.isErased = TRUE THEN '--- ' || Object_Product.ValueData ELSE Object_Product.ValueData END :: TVarChar AS ProductName
              , Object_Brand.Id                            AS BrandId
              , Object_Brand.ValueData                     AS BrandName
              , ObjectString_CIN.ValueData                 AS CIN
@@ -212,4 +212,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderClient (inStartDate:= '29.01.2016', inEndDate:= '01.02.2016', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_OrderClient (inStartDate:= '29.01.2016', inEndDate:= '01.02.2016', inIsErased := FALSE, inSession:= zfCalc_UserAdmin())

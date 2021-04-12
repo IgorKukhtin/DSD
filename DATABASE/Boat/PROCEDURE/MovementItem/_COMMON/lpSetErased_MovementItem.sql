@@ -29,9 +29,6 @@
    SELECT StatusId, DescId INTO vbStatusId, vbMovementDescId FROM Movement WHERE Id = vbMovementId;
    -- проверка - проведенные/удаленные документы Изменять нельзя
    IF vbStatusId           <> zc_Enum_Status_UnComplete()
-      AND vbDescId         <> zc_MI_Sign()
-      AND vbMovementDescId <> zc_Movement_PromoPartner()
-      -- AND inUserId <> 5 -- !!!временно для загрузки из Sybase!!!
    THEN
        /*IF AND vbStatusId = zc_Enum_Status_Erased() 
        THEN
@@ -44,21 +41,16 @@
        RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
    END IF;
  
-   -- !!!не всегда!!!
-   IF vbDescId <> zc_MI_Sign()
-   THEN
-       -- пересчитали Итоговые суммы по накладной
-       PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
+   -- пересчитали Итоговые суммы по накладной
+   PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
  
-       -- сохранили протокол
-       PERFORM lpInsert_MovementItemProtocol (inMovementItemId:= inMovementItemId, inUserId:= inUserId, inIsInsert:= FALSE, inIsErased:= TRUE);
-   END IF;
+   -- сохранили протокол
+   PERFORM lpInsert_MovementItemProtocol (inMovementItemId:= inMovementItemId, inUserId:= inUserId, inIsInsert:= FALSE, inIsErased:= TRUE);
  
  
  END;
  $BODY$
    LANGUAGE plpgsql VOLATILE;
- ALTER FUNCTION lpSetErased_MovementItem (Integer, Integer) OWNER TO postgres;
  
  /*-------------------------------------------------------------------------------
   ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

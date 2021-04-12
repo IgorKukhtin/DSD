@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Income(
     IN inIsErased      Boolean ,
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
+RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar
              , OperDate TDateTime, OperDatePartner TDateTime
              , StatusCode Integer, StatusName TVarChar
              , PriceWithVAT Boolean
@@ -88,7 +88,7 @@ BEGIN
 
 
         SELECT Movement_Income.Id
-             , Movement_Income.InvNumber
+             , zfConvert_StringToNumber (Movement_Income.InvNumber) AS InvNumber
              , Movement_Income.InvNumberPartner
              , Movement_Income.OperDate
              , Movement_Income.OperDatePartner
@@ -195,4 +195,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Income (inStartDate:= '29.01.2016', inEndDate:= '01.02.2016', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Income (inStartDate:= '29.01.2016', inEndDate:= '01.02.2016', inIsErased := FALSE, inSession:= zfCalc_UserAdmin())

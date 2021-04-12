@@ -241,13 +241,13 @@ BEGIN
                                                                        ))*/
    THEN
        -- добавить все Items Boat Structure
-       PERFORM gpInsertUpdate_Object_ProdColorItems (ioId                     := 0
+       PERFORM gpInsertUpdate_Object_ProdColorItems (ioId                     := tmp.Id
                                                    , inCode                   := 0
                                                    , inProductId              := ioId
                                                    , inGoodsId                := tmp.GoodsId
                                                    , inProdColorPatternId     := tmp.ProdColorPatternId
                                                    , inMovementId_OrderClient := inMovementId_OrderClient
-                                                   , inComment                := ''
+                                                   , inComment                := tmp.Comment
                                                    , inIsEnabled              := TRUE
                                                    , ioIsProdOptions          := FALSE
                                                    , inSession                := inSession

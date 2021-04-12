@@ -144,7 +144,7 @@ type
     cxLabel13: TcxLabel;
     cxLabel14: TcxLabel;
     edDiscountNextTax: TcxCurrencyEdit;
-    dsdDBViewAddOnProdColorItems: TdsdDBViewAddOn;
+    DBViewAddOnProdColorItems: TdsdDBViewAddOn;
     ProdColorItemsDS: TDataSource;
     spSelect_ProdColorItems: TdsdStoredProc;
     spInsertUpdateProdColorItems: TdsdStoredProc;
@@ -174,7 +174,7 @@ type
     IsErased: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     ProdOptItemsCDS: TClientDataSet;
-    dsdDBViewAddOnProdOptItems: TdsdDBViewAddOn;
+    DBViewAddOnProdOptItems: TdsdDBViewAddOn;
     ProdOptItemsDS: TDataSource;
     spErasedOpt: TdsdStoredProc;
     spSelect_ProdOptItems: TdsdStoredProc;
@@ -261,9 +261,9 @@ type
     cxGridDBTableView1: TcxGridDBTableView;
     GoodsGroupNameFull_ch3: TcxGridDBColumn;
     GoodsGroupName_ch3: TcxGridDBColumn;
-    Article_ch3: TcxGridDBColumn;
-    GoodsCode_ch3: TcxGridDBColumn;
-    GoodsName_ch3: TcxGridDBColumn;
+    Article_Object_ch3: TcxGridDBColumn;
+    ObjectCode_ch3: TcxGridDBColumn;
+    ObjectName_ch3: TcxGridDBColumn;
     MeasureName_ch3: TcxGridDBColumn;
     Amount_ch3: TcxGridDBColumn;
     OperPrice_ch3: TcxGridDBColumn;
@@ -275,13 +275,13 @@ type
     spSelectMI_Child: TdsdStoredProc;
     ChildCDS: TClientDataSet;
     ChildDS: TDataSource;
-    actDBViewAddOnChild: TdsdDBViewAddOn;
+    DBViewAddOnChild: TdsdDBViewAddOn;
     cxTabSheet2: TcxTabSheet;
     cxGridInfo: TcxGrid;
     cxGridDBTableViewInfo: TcxGridDBTableView;
     Text_Info: TcxGridDBColumn;
     cxGridLevel4: TcxGridLevel;
-    dsdDBViewAddOnInfo: TdsdDBViewAddOn;
+    DBViewAddOnInfo: TdsdDBViewAddOn;
     InfoCDS: TClientDataSet;
     InfoDS: TDataSource;
     spSelectMovement_Info: TdsdStoredProc;
@@ -293,6 +293,16 @@ type
     actRefreshInfo: TdsdDataSetRefresh;
     actMovementProtocolInfoOpenForm: TdsdOpenForm;
     bbProtocolInfoOpen: TdxBarButton;
+    DBViewAddOn: TdsdDBViewAddOn;
+    PartnerName_ch3: TcxGridDBColumn;
+    GoodsCode_ch3: TcxGridDBColumn;
+    Article_ch3: TcxGridDBColumn;
+    GoodsName_ch3: TcxGridDBColumn;
+    DescName_ch3: TcxGridDBColumn;
+    TotalSumm_unit_ch3: TcxGridDBColumn;
+    TotalSumm_partner_ch3: TcxGridDBColumn;
+    TotalSumm_ch3: TcxGridDBColumn;
+    ProdOptionsName_ch3: TcxGridDBColumn;
   private
   public
   end;

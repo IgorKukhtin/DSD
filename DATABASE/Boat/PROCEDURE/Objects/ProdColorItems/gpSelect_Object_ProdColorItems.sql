@@ -289,7 +289,19 @@ BEGIN
          , Object_ProdColorItems.Name  AS Name
          , ROW_NUMBER() OVER (PARTITION BY Object_Product.Id ORDER BY Object_ProdColorPattern.ObjectCode ASC, Object_ProdColorPattern.Id ASC) :: Integer AS NPP
 
-         , ObjectString_Comment.ValueData     ::TVarChar  AS Comment
+           -- "иногда" - цвет
+         , CASE WHEN Object_ProdColorItems.GoodsId > 0
+                     -- показываем что ввели
+                     THEN ObjectString_Comment.ValueData
+
+                WHEN ObjectString_Comment.ValueData <> ''
+                     -- показываем что ввели
+                     THEN ObjectString_Comment.ValueData
+
+                -- у Boat Structure  (когда нет GoodsId)
+                ELSE ObjectString_ProdColorPattern_Comment.ValueData
+
+           END :: TVarChar AS Comment
 
          , (Object_Product.Id :: TVarChar || '_' || Object_ProdColorItems.MovementId_OrderClient :: TVarChar) :: TVarChar AS KeyId
 
