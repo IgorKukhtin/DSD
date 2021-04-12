@@ -539,7 +539,6 @@ object OrderPartnerForm: TOrderPartnerForm
               DataBinding.FieldName = 'Comment'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
-              Options.Editing = False
               Width = 267
             end
             object InsertName: TcxGridDBColumn
