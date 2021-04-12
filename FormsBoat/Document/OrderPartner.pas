@@ -210,6 +210,9 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     OperDate_ch3: TcxGridDBColumn;
     Invnumber_ср3: TcxGridDBColumn;
+    SetErasedChild: TdsdUpdateErased;
+    bbSetErasedChild: TdxBarButton;
+    spErasedMIChild: TdsdStoredProc;
   private
   public
   end;

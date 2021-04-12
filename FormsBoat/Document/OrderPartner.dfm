@@ -1061,6 +1061,18 @@
           ItemName = 'bbUnErased'
         end
         item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedChild'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
@@ -1259,6 +1271,10 @@
     end
     object bbInsert_MI_byOrderClient: TdxBarButton
       Action = actInsert_MI_byOrderClient
+      Category = 0
+    end
+    object bbSetErasedChild: TdxBarButton
+      Action = SetErasedChild
       Category = 0
     end
   end
@@ -1477,6 +1493,26 @@
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
+    end
+    object SetErasedChild: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedMIChild
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIChild
+        end
+        item
+          StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spSelectMI_Child
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ShortCut = 46
+      isSetErased = False
     end
     object SetErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -2581,8 +2617,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 438
-    Top = 176
+    Left = 390
+    Top = 184
   end
   object StatusGuides: TdsdGuides
     KeyField = 'Id'
@@ -2758,8 +2794,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 486
-    Top = 207
+    Left = 454
+    Top = 231
   end
   object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
@@ -2987,5 +3023,30 @@
     PropertiesCellList = <>
     Left = 816
     Top = 224
+  end
+  object spErasedMIChild: TdsdStoredProc
+    StoredProcName = 'gpMI_OrderPartner_Child_SetErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementItemId_child'
+        Value = 0
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 550
+    Top = 247
   end
 end
