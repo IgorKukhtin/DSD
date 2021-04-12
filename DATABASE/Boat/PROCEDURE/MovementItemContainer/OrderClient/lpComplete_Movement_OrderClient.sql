@@ -167,6 +167,7 @@ BEGIN
                                                              AND tmpProdColorItems.ProdColorPatternId = lpSelect.ProdColorPatternId
                                   LEFT JOIN tmpProdOptItems ON tmpProdOptItems.ProductId          = lpSelect.ProductId
                                                            AND tmpProdOptItems.ProdColorPatternId = lpSelect.ProdColorPatternId
+                                                           AND tmpProdOptItems.ProdColorPatternId > 0
                              WHERE -- !!!если учитываем в стоимости ВСЮ БАЗОВУЮ конфигурацию!!
                                    lpSelect.isBasicConf = TRUE
                                OR -- или заполнена ЭТА структура
@@ -302,6 +303,14 @@ BEGIN
     ;
     
 
+    -- !!!Временно - заменим остальным ObjectId_parent, если не Boat Structure - хотя надо будет все составляющие перезалить!!!
+    UPDATE _tmpItem SET ObjectId_parent_find = tmp.ObjectId_parent_find
+    FROM (SELECT DISTINCT _tmpItem.ObjectId_parent, _tmpItem.ObjectId_parent_find FROM _tmpItem) AS tmp
+    WHERE _tmpItem.ObjectId_parent_find = 0
+      AND _tmpItem.ObjectId_parent      = tmp.ObjectId_parent
+     ;
+
+
     -- Проверка
     IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.ObjectId_parent_find = 0 AND _tmpItem.ProdColorPatternId > 0)
     THEN
@@ -331,7 +340,7 @@ BEGIN
     FROM MovementItem
     WHERE MovementItem.MovementId = inMovementId
       AND MovementItem.DescId     = zc_MI_Child()
-      AND MovementItem.isdErased  = FALSE
+      AND MovementItem.isErased   = FALSE
     ;
 
     -- формируем заново
@@ -344,14 +353,14 @@ BEGIN
                                                , inOperPrice           := _tmpItem.OperPrice
                                                , inCountForPrice       := 1
                                                , inUnitId              := NULL
-                                               , inPartnerId           := (SELECT Object_PartionGoods.FromId FROM Object_PartionGoods WHERE GoodsId = _tmpItem.ObjectId ORDER BY Id DESC LIMIT 1)
+                                               , inPartnerId           := (SELECT Object_PartionGoods.FromId FROM Object_PartionGoods WHERE Object_PartionGoods.ObjectId = _tmpItem.ObjectId ORDER BY Object_PartionGoods.OperDate DESC, Object_PartionGoods.MovementItemId DESC LIMIT 1)
                                                , inColorPatternId      := _tmpItem.ColorPatternId
-                                               , inProdColorPatternId  := _tmpItem.
-                                               , inProdOptionsId       := _tmpItem.
+                                               , inProdColorPatternId  := _tmpItem.ProdColorPatternId
+                                               , inProdOptionsId       := _tmpItem.ProdOptionsId
                                                , inUserId              := inUserId
                                                 )
     FROM _tmpItem
-    WHERE ;
+    WHERE _tmpItem.ObjectId > 0;
 
 
     -- Результат
@@ -372,10 +381,10 @@ BEGIN
        ;
 
     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
-    /*PERFORM lpComplete_Movement (inMovementId := inMovementId
+    PERFORM lpComplete_Movement (inMovementId := inMovementId
                                , inDescId     := zc_Movement_OrderClient()
                                , inUserId     := inUserId
-                                );*/
+                                );
 
 END;
 $BODY$
@@ -388,4 +397,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpComplete_Movement_OrderClient (inMovementId:= 218, inUserId := zfCalc_UserAdmin() :: Integer)  order by ObjectId_parent;
+-- SELECT * FROM lpComplete_Movement_OrderClient (inMovementId:= 224, inUserId := zfCalc_UserAdmin() :: Integer)  order by ObjectId_parent;

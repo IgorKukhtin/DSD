@@ -7,8 +7,9 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_OrderClient_Child(
     IN inIsErased         Boolean      , --
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, DescName TVarChar
              , UnitId Integer, UnitName TVarChar
+             , PartnerId Integer, PartnerName TVarChar
              , Amount TFloat, AmountPartner TFloat
              , OperPrice TFloat
              , isErased Boolean
@@ -44,6 +45,8 @@ BEGIN
            , Object_Goods.ValueData                   AS GoodsName
            , Object_Unit.Id                           AS UnitId
            , Object_Unit.ValueData                    AS UnitName 
+           , Object_Partner.Id                        AS PartnerId
+           , Object_Partner.ValueData                 AS PartnerName 
            , MovementItem.Amount             ::TFloat AS Amount            --Количество резерв
            , MIFloat_AmountPartner.ValueData ::TFloat AS AmountPartner     --Количество заказ поставщику
            , MIFloat_OperPrice.ValueData     ::TFloat AS OperPrice         -- Цена вх без НДС
@@ -84,19 +87,42 @@ BEGIN
                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
+                                             ON MILinkObject_Partner.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Partner.DescId         = zc_MILinkObject_Partner()
+
             LEFT JOIN ObjectString AS ObjectString_Article
                                    ON ObjectString_Article.ObjectId = Object_Goods.Id
-                                  AND ObjectString_Article.DescId = zc_ObjectString_Article()
+                                  AND ObjectString_Article.DescId   = zc_ObjectString_Article()
             LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
                                    ON ObjectString_GoodsGroupFull.ObjectId = Object_Goods.Id
-                                  AND ObjectString_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+                                  AND ObjectString_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
+
+            LEFT JOIN ObjectLink AS ObjectLink_ProdColor
+                                 ON ObjectLink_ProdColor.ObjectId = Object_Goods.Id
+                                AND ObjectLink_ProdColor.DescId   = zc_ObjectLink_Goods_ProdColor()
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsTag
+                                 ON ObjectLink_GoodsTag.ObjectId = Object_Goods.Id
+                                AND ObjectLink_GoodsTag.DescId   = zc_ObjectLink_Goods_GoodsTag()
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsType
+                                 ON ObjectLink_GoodsType.ObjectId = Object_Goods.Id
+                                AND ObjectLink_GoodsType.DescId   = zc_ObjectLink_Goods_GoodsType()
+            LEFT JOIN ObjectLink AS ObjectLink_Measure
+                                 ON ObjectLink_Measure.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Measure.DescId   = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
+                                 ON ObjectLink_GoodsGroup.ObjectId = Object_Goods.Id
+                                AND ObjectLink_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
+
             --
             LEFT JOIN Object AS Object_Unit_in    ON Object_Unit_in.Id    = Object_PartionGoods.UnitId
-            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = Object_PartionGoods.GoodsGroupId
-            LEFT JOIN Object AS Object_Measure    ON Object_Measure.Id    = Object_PartionGoods.MeasureId
-            LEFT JOIN Object AS Object_GoodsTag   ON Object_GoodsTag.Id   = Object_PartionGoods.GoodsTagId
-            LEFT JOIN Object AS Object_GoodsType  ON Object_GoodsType.Id  = Object_PartionGoods.GoodsTypeId
-            LEFT JOIN Object AS Object_ProdColor  ON Object_ProdColor.Id  = Object_PartionGoods.ProdColorId
+
+            LEFT JOIN Object AS Object_Partner    ON Object_Partner.Id    = COALESCE (Object_PartionGoods.FromId, MILinkObject_Partner.ObjectId)
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = COALESCE (Object_PartionGoods.GoodsGroupId, ObjectLink_GoodsGroup.ChildObjectId)
+            LEFT JOIN Object AS Object_Measure    ON Object_Measure.Id    = COALESCE (Object_PartionGoods.MeasureId, ObjectLink_Measure.ChildObjectId)
+            LEFT JOIN Object AS Object_GoodsTag   ON Object_GoodsTag.Id   = COALESCE (Object_PartionGoods.GoodsTagId, ObjectLink_GoodsTag.ChildObjectId)
+            LEFT JOIN Object AS Object_GoodsType  ON Object_GoodsType.Id  = COALESCE (Object_PartionGoods.GoodsTypeId, ObjectLink_GoodsType.ChildObjectId)
+            LEFT JOIN Object AS Object_ProdColor  ON Object_ProdColor.Id  = COALESCE (Object_PartionGoods.ProdColorId, ObjectLink_ProdColor.ChildObjectId)
             LEFT JOIN Object AS Object_TaxKind    ON Object_TaxKind.Id    = Object_PartionGoods.TaxKindId
           ;
 

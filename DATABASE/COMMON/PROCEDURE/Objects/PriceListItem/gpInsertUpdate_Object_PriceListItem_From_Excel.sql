@@ -22,7 +22,7 @@ BEGIN
 
     IF COALESCE(inPriceListId,0) = 0
     THEN
-        RAISE EXCEPTION 'Ошибка.Не выберан Прайс-лист.';
+        RAISE EXCEPTION 'Ошибка.Не выбран Прайс-лист.';
     END IF;
     
     IF COALESCE (TRIM (inGoodsKindName), '') <> ''
