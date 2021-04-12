@@ -213,6 +213,9 @@ type
     SetErasedChild: TdsdUpdateErased;
     bbSetErasedChild: TdxBarButton;
     spErasedMIChild: TdsdStoredProc;
+    getMovementForm: TdsdStoredProc;
+    actOpenForm: TdsdOpenForm;
+    bbOpenDocument: TdxBarButton;
   private
   public
   end;
