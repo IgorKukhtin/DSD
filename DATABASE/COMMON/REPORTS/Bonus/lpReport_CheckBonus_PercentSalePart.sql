@@ -26,7 +26,7 @@ RETURNS TABLE (ContractId_master Integer, ContractId_child Integer, ContractId_f
              , BranchId_inf Integer, BranchName_inf TVarChar
              , RetailName TVarChar
              , PersonalTradeCode Integer, PersonalTradeName TVarChar
-             , PersonalCode Integer, PersonalName TVarChar
+             , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , PartnerId Integer, PartnerName TVarChar
              , AreaId Integer, AreaName TVarChar
              , Value TFloat
@@ -904,6 +904,7 @@ BEGIN
             , Object_Retail.ValueData                       AS RetailName
             , Object_PersonalTrade.PersonalCode             AS PersonalTradeCode
             , Object_PersonalTrade.PersonalName             AS PersonalTradeName
+            , Object_Personal.PersonalId                    AS PersonalId
             , Object_Personal.PersonalCode                  AS PersonalCode
             , Object_Personal.PersonalName                  AS PersonalName
             , Object_Partner.Id                             AS PartnerId
@@ -997,9 +998,8 @@ BEGIN
                                 AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
             LEFT JOIN Object_Personal_View AS Object_Personal ON Object_Personal.PersonalId = ObjectLink_Partner_Personal.ChildObjectId 
 
-      WHERE ((Object_Personal.PersonalId = inPersonalId AND tmpData.PaidKindId = zc_Enum_PaidKind_SecondForm())
-           OR inPersonalId = 0
-           OR tmpData.PaidKindId = zc_Enum_PaidKind_FirstForm())
+      WHERE ((Object_Personal.PersonalId = inPersonalId AND inPaidKindId = zc_Enum_PaidKind_SecondForm()) OR inPersonalId = 0)
+           OR tmpData.PaidKindId = zc_Enum_PaidKind_FirstForm()
           ;
 
 END;
