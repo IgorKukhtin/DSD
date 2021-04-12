@@ -140,11 +140,7 @@ BEGIN
                         WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
                           AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
                         )
-                 , tmpOrderInternalAll AS (SELECT * FROM gpSelect_MovementItem_OrderInternal_Master(inMovementId := inMovementId 
-                                                                                                  , inShowAll    := True 
-                                                                                                  , inIsErased   := False 
-                                                                                                  , inIsLink     := False
-                                                                                                  , inSession    := inSession))
+
                                  
                   -- строки финальный СУН
                 SELECT MI_Master.GoodsId                                                                                     AS GoodsId
@@ -157,12 +153,8 @@ BEGIN
                                            
                      LEFT JOIN tmpObject_Price ON tmpObject_Price.GoodsId = MI_Master.GoodsId
                      
-                     LEFT JOIN tmpOrderInternalAll ON tmpOrderInternalAll.GoodsId = MI_Master.GoodsId
-                
                 WHERE CEIL(MI_Master.Amount - COALESCE (MI_Master.SendSUN, 0) - COALESCE (Container.Amount, 0)) > 0
                   AND COALESCE(tmpObject_Price.MCSIsClose, FALSE) = False
-                  AND COALESCE(tmpOrderInternalAll.ContractId, 0) <> 0
-                  AND COALESCE(tmpOrderInternalAll.PartionGoodsDate, CURRENT_DATE) > CURRENT_DATE + INTERVAL '1 YEAR'
                 ;
                 
      IF NOT EXISTS(SELECT * FROM _tmpFinalSUA_MI)
@@ -191,6 +183,76 @@ BEGIN
      WHERE COALESCE (_tmp_MI.AmountSUA,0) <> COALESCE (tmpFinalSUA_MI.Amount, 0)
      ;
      
+     
+     -- строки заказа
+     DELETE FROM _tmp_MI;
+       INSERT INTO _tmp_MI (Id, GoodsId, AmountSUA, AmountManual, Comment)
+             WITH
+                  tmpMI AS (SELECT MovementItem.Id
+                                 , MovementItem.ObjectId AS GoodsId
+                            FROM MovementItem
+                            WHERE MovementItem.MovementId = inMovementId
+                              AND MovementItem.DescId     = zc_MI_Master()
+                              AND MovementItem.isErased   = FALSE
+                            )
+                  -- сохраненные данные кол-во СУА
+                , tmpMIFloat_AmountSUA AS (SELECT MovementItemFloat.*
+                                           FROM MovementItemFloat
+                                           WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                             AND MovementItemFloat.DescId = zc_MIFloat_AmountSUA()
+                                             AND COALESCE (MovementItemFloat.ValueData, 0) <> 0 
+                                           )
+                  -- сохраненные данные <Ручное количество>
+                , tmpMIFloat_AmountManual AS (SELECT MovementItemFloat.*
+                                              FROM MovementItemFloat
+                                              WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                                AND MovementItemFloat.DescId = zc_MIFloat_AmountManual()
+                                                AND COALESCE (MovementItemFloat.ValueData, 0) <> 0 
+                                              )
+                , tmpMI_String AS (SELECT MovementItemString.*
+                                    FROM MovementItemString
+                                    WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                      AND MovementItemString.DescId = zc_MIString_Comment()
+                                  )
+                
+             SELECT tmpMI.Id
+                  , tmpMI.GoodsId
+                  , COALESCE (MIFloat_AmountSUA.ValueData, 0)        AS AmountSUA
+                  , COALESCE (MIFloat_AmountManual.ValueData, 0)     AS AmountManual
+                  , COALESCE (tmpMI_String.ValueData, '') ::TVarChar AS Comment
+             FROM tmpMI
+                  LEFT JOIN tmpMIFloat_AmountSUA    AS MIFloat_AmountSUA    ON MIFloat_AmountSUA.MovementItemId = tmpMI.Id
+                  LEFT JOIN tmpMIFloat_AmountManual AS MIFloat_AmountManual ON MIFloat_AmountManual.MovementItemId = tmpMI.Id
+                  LEFT JOIN tmpMI_String            AS tmpMI_String         ON tmpMI_String.MovementItemId = tmpMI.Id
+                  ;
+                  
+             
+     -- Правим по сроку годности
+     PERFORM lpInsertUpdate_MI_OrderInternal_FinalSUA (inId             := tmpOrderInternalAll.Id
+                                                     , inMovementId     := inMovementId
+                                                     , inGoodsId        := tmpOrderInternalAll.GoodsId
+                                                     , inAmountManual   := CASE WHEN COALESCE (MovementItemFloat.ValueData,0) >= COALESCE (tmpOrderInternalAll.AmountSUA, 0)    -- ренее была сумма этих значений
+                                                                                THEN COALESCE (MovementItemFloat.ValueData,0) - COALESCE (tmpOrderInternalAll.AmountSUA, 0)
+                                                                                ELSE 0
+                                                                           END ::TFloat
+                                                     , inAmountSUA      := COALESCE (tmpOrderInternalAll.AmountSUA, 0)::TFloat
+
+                                                     , inUserId         := vbUserId
+                                                     )
+     FROM (SELECT * FROM gpSelect_MovementItem_OrderInternal_Master(inMovementId := inMovementId 
+                                                                  , inShowAll    := False 
+                                                                  , inIsErased   := False 
+                                                                  , inIsLink     := False
+                                                                  , inSession    := inSession)) AS tmpOrderInternalAll
+                  -- сохраненные данные <Ручное количество>
+          LEFT JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = tmpOrderInternalAll.Id
+                                     AND MovementItemFloat.DescId = zc_MIFloat_AmountManual()
+
+     WHERE COALESCE (tmpOrderInternalAll.AmountSUA, 0) > 0
+       AND (COALESCE(tmpOrderInternalAll.ContractId, 0) = 0
+        OR COALESCE(tmpOrderInternalAll.PartionGoodsDate, zc_DateEnd()) <= CURRENT_DATE + INTERVAL '1 YEAR')
+     ;     
+     
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
@@ -203,3 +265,4 @@ LANGUAGE PLPGSQL VOLATILE;
 
 -- тест
 -- select * from gpUpdate_MI_OrderInternal_FinalSUA(inMovementId := 22630094 , inUnitId := 16240371 , inOperDate := ('23.03.2021')::TDateTime ,  inSession := '3');
+-- select * from gpUpdate_MI_OrderInternal_FinalSUA(inMovementId := 22922846 , inUnitId := 16240371 , inOperDate := ('12.04.2021')::TDateTime ,  inSession := '3');

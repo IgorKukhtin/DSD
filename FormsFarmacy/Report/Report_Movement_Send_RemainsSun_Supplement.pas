@@ -81,6 +81,7 @@ type
     Summa_To: TcxGridDBBandedColumn;
     Layout_From: TcxGridDBBandedColumn;
     PromoUnit_From: TcxGridDBBandedColumn;
+    MinExpirationDate: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

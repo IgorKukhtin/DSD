@@ -91,6 +91,8 @@ type
     actInsert_FinalSUAProtocol: TdsdExecStoredProc;
     actFinalSUAProtocol: TdsdOpenForm;
     bbFinalSUAProtocol: TdxBarButton;
+    cbRemains: TcxCheckBox;
+    cbMCSValue: TcxCheckBox;
     procedure ParentFormCreate(Sender: TObject);
     procedure ParentFormClose(Sender: TObject; var Action: TCloseAction);
     procedure actCalculationExecute(Sender: TObject);

@@ -13,8 +13,9 @@ RETURNS TABLE (Id Integer
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , Remains TFloat, Amount TFloat, SendSUN TFloat, AmountOI TFloat
              , Price TFloat
-             , isTop boolean, isClose boolean, MCSIsClose boolean
+             , isTop boolean, isClose boolean, isNot boolean, MCSIsClose boolean
              , isPromoBonus  Boolean, isLearnWeek Boolean
+             , MCS TFloat
              , isErased Boolean)
  AS
 $BODY$
@@ -156,9 +157,11 @@ BEGIN
                     , tmpObject_Price.Price                             AS Price
                     , Object_Goods_Retail.isTop                         AS isTop
                     , Object_Goods_Main.isClose                         AS isClose
+                    , Object_Goods_Main.isNot                           AS isNot
                     , COALESCE(tmpObject_Price.MCSIsClose, False)       AS MCSIsClose
                     , COALESCE(PromoBonus.Amount, 0) > 0                AS isPromoBonus  
                     , COALESCE(PromoBonus.isLearnWeek, FALSE)           AS isLearnWeek
+                    , tmpObject_Price.MCSValue                          AS MCS 
                     , COALESCE(MI_Master.IsErased, False)               AS isErased
                FROM MI_Master
 
@@ -192,4 +195,5 @@ $BODY$
  11.02.21                                                      *
 */
 -- 
-select * from gpSelect_MovementItem_FinalSUA(inMovementId := 22613940 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+
+select * from gpSelect_MovementItem_FinalSUA(inMovementId := 22870236 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

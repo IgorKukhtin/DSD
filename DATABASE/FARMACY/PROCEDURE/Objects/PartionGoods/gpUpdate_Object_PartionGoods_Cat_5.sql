@@ -35,7 +35,7 @@ BEGIN
      WHERE ContainerLinkObject.ObjectId = inPartionGoodsId
        AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods();  
        
-     IF CURRENT_DATE <> '06.04.2021' OR vbUnitId <> 6741875  OR vbGoodsId NOT IN (8280902, 40081)
+     IF CURRENT_DATE <> '12.04.2021' OR vbUnitId <> 375626 OR vbGoodsId NOT IN (8806871)
      THEN
        -- Если партию переводили в 5 категорию
        IF NOT inCat_5 AND

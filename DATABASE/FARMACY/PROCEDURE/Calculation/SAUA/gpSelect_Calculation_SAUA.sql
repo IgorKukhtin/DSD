@@ -1,6 +1,6 @@
 -- Function: gpSelect_Calculation_SAUA()
 
-DROP FUNCTION IF EXISTS gpSelect_Calculation_SAUA (TDateTime, TDateTime, Text, Text, TFloat, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Calculation_SAUA (TDateTime, TDateTime, Text, Text, TFloat, Integer, Integer, TFloat, boolean, boolean, boolean, boolean, boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Calculation_SAUA(
     IN inDateStart           TDateTime , -- Начало периода
@@ -14,6 +14,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Calculation_SAUA(
     IN inisGoodsClose        boolean   , -- Не показывать Закрыт код
     IN inisMCSIsClose        boolean   , -- Не показывать Убит код 
     IN inisNotCheckNoMCS     boolean   , -- Не показывать Продажи не для НТЗ
+    IN inisMCSValue          boolean   , -- Учитывать товар с НТЗ > 0
+    IN inisRemains           boolean   , -- Остаток получателя > 0
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (UnitId Integer, UnitCode Integer, UnitName TVarChar
@@ -209,6 +211,9 @@ BEGIN
       AND (COALESCE(_tmpRemains_All.Amount, 0) < inResolutionParameter OR inResolutionParameter = 0)
       AND (Object_Goods_Main.isClose = False OR inisGoodsClose = False)
       AND (tmpObject_Price.MCSIsClose = False OR inisMCSIsClose = False)
+      AND (COALESCE (tmpObject_Price.MCSValue , 0) = 0 OR inisMCSValue = True)
+      AND (COALESCE (_tmpRemains_All.Amount, 0) = 0 OR inisRemains = True)
+
     ;
 
 
@@ -223,3 +228,5 @@ $BODY$
 */
 
 -- select * from gpSelect_Calculation_SAUA(inDateStart := ('01.10.2020')::TDateTime , inDateEnd := ('31.10.2020')::TDateTime , inRecipientList := '183292' , inAssortmentList := '472116,1781716,6309262' , inThreshold := 1 , inDaysStock := 10, inPercentPharmacies := 75,  inSession := '3');
+
+--select * from gpSelect_Calculation_SAUA(inDateStart := ('01.01.2021')::TDateTime , inDateEnd := ('09.04.2021')::TDateTime , inRecipientList := '377594' , inAssortmentList := '1781716,6309262' , inThreshold := 1 , inDaysStock := 7 , inCountPharmacies := 1 , inResolutionParameter := 1 , inisGoodsClose := 'True' , inisMCSIsClose := 'True' , inisNotCheckNoMCS := 'True' ,  inSession := '3');
