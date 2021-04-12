@@ -452,9 +452,27 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             Options.Editing = False
             Width = 55
           end
+          object PersonalCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088')'
+            DataBinding.FieldName = 'PersonalCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object PersonalName: TcxGridDBColumn
             Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088')'
             DataBinding.FieldName = 'PersonalName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object PersonalTradeCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1054#1090#1074'. ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
+            DataBinding.FieldName = 'PersonalTradeCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -958,7 +976,8 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           Name = 'PersonalName'
           Value = Null
           Component = GuidesPersonal
-          ComponentItem = 'Key'
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -1047,6 +1066,14 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalName'
+          Value = Null
+          Component = GuidesPersonal
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       ReportName = #1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' '#1076#1083#1103' '#1087#1086#1076#1087#1080#1089#1080
       ReportNameParam.Value = #1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' '#1076#1083#1103' '#1087#1086#1076#1087#1080#1089#1080
@@ -1123,6 +1150,14 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           Name = 'BranchName'
           Value = ''
           Component = GuidesBranch
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalName'
+          Value = Null
+          Component = GuidesPersonal
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -1203,6 +1238,14 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           Name = 'BranchName'
           Value = Null
           Component = GuidesBranch
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalName'
+          Value = Null
+          Component = GuidesPersonal
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -1752,6 +1795,9 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       end
       item
         Component = GuidesBranch
+      end
+      item
+        Component = GuidesPersonal
       end>
     Left = 192
     Top = 208
