@@ -3,7 +3,7 @@ object Report_FinalSUAProtocolForm: TReport_FinalSUAProtocolForm
   Top = 0
   Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1081' '#1087#1086' '#1057#1059#1040
   ClientHeight = 486
-  ClientWidth = 1032
+  ClientWidth = 1122
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,12 +21,12 @@ object Report_FinalSUAProtocolForm: TReport_FinalSUAProtocolForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1032
+    Width = 1122
     Height = 30
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 817
+    ExplicitWidth = 1032
     object edDateStart: TcxDateEdit
       Left = 60
       Top = 6
@@ -58,11 +58,11 @@ object Report_FinalSUAProtocolForm: TReport_FinalSUAProtocolForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 56
-    Width = 1032
+    Width = 1122
     Height = 209
     Align = alTop
     TabOrder = 3
-    ExplicitWidth = 817
+    ExplicitWidth = 1032
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -203,6 +203,21 @@ object Report_FinalSUAProtocolForm: TReport_FinalSUAProtocolForm
         Options.Editing = False
         Width = 80
       end
+      object isMCSValue: TcxGridDBColumn
+        Caption = #1059#1095#1080#1090#1099#1074#1072#1090#1100' '#1090#1086#1074#1072#1088' '#1089' '#1053#1058#1047' > 0'
+        DataBinding.FieldName = 'isMCSValue'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 81
+      end
+      object isRemains: TcxGridDBColumn
+        Caption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103' > 0'
+        DataBinding.FieldName = 'isRemains'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 91
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -211,40 +226,40 @@ object Report_FinalSUAProtocolForm: TReport_FinalSUAProtocolForm
   object Panel1: TPanel
     Left = 0
     Top = 273
-    Width = 1032
+    Width = 1122
     Height = 213
     Align = alClient
     Caption = 'Panel1'
     ShowCaption = False
     TabOrder = 8
-    ExplicitWidth = 817
+    ExplicitWidth = 1032
     object Panel2: TPanel
       Left = 1
       Top = 1
-      Width = 519
+      Width = 609
       Height = 211
       Align = alClient
       Caption = 'Panel2'
       ShowCaption = False
       TabOrder = 0
-      ExplicitWidth = 622
+      ExplicitWidth = 519
       object cxLabel3: TcxLabel
         Left = 1
         Top = 1
         Align = alTop
         Caption = #1040#1087#1090#1077#1082#1080' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1080
         Properties.Alignment.Horz = taCenter
-        ExplicitWidth = 405
-        AnchorX = 260
+        ExplicitWidth = 517
+        AnchorX = 305
       end
       object cxGridRecipient: TcxGrid
         Left = 1
         Top = 18
-        Width = 517
+        Width = 607
         Height = 192
         Align = alClient
         TabOrder = 1
-        ExplicitWidth = 504
+        ExplicitWidth = 517
         object cxGridDBTableViewRecipient: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = RecipientDS
@@ -320,7 +335,7 @@ object Report_FinalSUAProtocolForm: TReport_FinalSUAProtocolForm
       end
     end
     object Panel3: TPanel
-      Left = 528
+      Left = 618
       Top = 1
       Width = 503
       Height = 211
@@ -328,13 +343,13 @@ object Report_FinalSUAProtocolForm: TReport_FinalSUAProtocolForm
       Caption = 'Panel3'
       ShowCaption = False
       TabOrder = 1
+      ExplicitLeft = 528
       object cxLabel4: TcxLabel
         Left = 1
         Top = 1
         Align = alTop
         Caption = #1040#1087#1090#1077#1082#1080' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1072
         Properties.Alignment.Horz = taCenter
-        ExplicitWidth = 398
         AnchorX = 252
       end
       object cxGridAssortment: TcxGrid
@@ -344,8 +359,6 @@ object Report_FinalSUAProtocolForm: TReport_FinalSUAProtocolForm
         Height = 192
         Align = alClient
         TabOrder = 1
-        ExplicitLeft = -3
-        ExplicitWidth = 402
         object cxGridDBTableViewAssortment: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = AssortmentDS
@@ -421,23 +434,23 @@ object Report_FinalSUAProtocolForm: TReport_FinalSUAProtocolForm
       end
     end
     object cxSplitter2: TcxSplitter
-      Left = 520
+      Left = 610
       Top = 1
       Width = 8
       Height = 211
       AlignSplitter = salRight
       Control = Panel3
-      ExplicitLeft = 408
+      ExplicitLeft = 520
     end
   end
   object cxSplitter1: TcxSplitter
     Left = 0
     Top = 265
-    Width = 1032
+    Width = 1122
     Height = 8
     AlignSplitter = salTop
     Control = Panel1
-    ExplicitWidth = 817
+    ExplicitWidth = 1032
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -836,6 +849,7 @@ object Report_FinalSUAProtocolForm: TReport_FinalSUAProtocolForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>

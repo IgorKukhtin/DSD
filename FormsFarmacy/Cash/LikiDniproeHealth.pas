@@ -9,35 +9,6 @@ uses
 
 type
 
-  TRecipe  = Record
-    // Рецепт
-    FRecipe_Number : String;
-    FRecipe_Created : Variant;
-    FRecipe_Valid_From : Variant;
-    FRecipe_Valid_To : Variant;
-    FRecipe_Type : Integer;
-
-    FCategory_1303_Id : Integer;
-    FCategory_1303_Name : String;
-    FCategory_1303_Discount_Percent : Currency;
-
-    // Пациент
-    FPatient_Id : Integer;
-    FPatient_Name : String;
-    FPatient_Age : String;
-
-    // Медецинское учереждение
-    FInstitution_Id : Integer;
-    FInstitution_Name : String;
-    FInstitution_Edrpou : String;
-
-    // Доктор
-    FDoctor_Id : Integer;
-    FDoctor_Name : String;
-    FDoctor_INN : String;
-    FDoctor_Speciality : String;
-  end;
-
   TLikiDniproeHealthApi = class(TObject)
   private
     FRESTResponse: TRESTResponse;
@@ -54,26 +25,37 @@ type
     // Рецепт
     FNumber : String;
 
-    // Информация по рецепту
-    FRecipe : TRecipe;
+    // Данные из рецепта
+    FMedication_ID : string;            // dosage_id что выписано
+    FMedication_ID_List : String;       // ID что выписано
+    FMedication_Name : string;          // Название
+    FMedication_Qty : currency;         // Количество выписано
 
-    // Сопержимое рецепта
-    FPositionCDS: TClientDataSet;
+    FMedication_request_id : String;    // ID рецепта
+    FMedical_program_id : String;       // ID соц. программы программы
 
+    FRequest_number : String;           // Номер рецепта из чека
+    FStatus : string;                   // Статус чека
+    FCreated_at : TDateTime;            // Дата создания
+    FDispense_valid_from : TDateTime;   // Действителен с
+    FDispense_valid_to : TDateTime;     // по
+
+    // Необходимо лргироваться
+    FShow_eHealth : Boolean;
+    FShow_Location : String;
   protected
     function GetReceiptId : boolean;
-    function InitCDS : boolean;
+    function GetDrugList : boolean;
   public
     constructor Create; virtual;
     destructor Destroy; override;
 
     function ShowError(AText : string = 'Ошибка получение информации о рецепте') : string;
 
-    property Recipe : TRecipe read FRecipe;
-    property PositionCDS: TClientDataSet read FPositionCDS;
   end;
 
-function GetReceipt(const AReceipt : String) : boolean;
+function GetReceipt(const AReceipt : String; var AID, AIDList, AName : string;
+  var AQty : currency; var ADate : TDateTime) : boolean;
 function CheckLikiDniproeHealth_Number(ANumber : string) : boolean;
 
 var LikiDniproeHealthApi : TLikiDniproeHealthApi;
@@ -119,18 +101,11 @@ begin
   end;
 end;
 
-function StrToDateSite(ADateStr : string; var ADate : Variant) : Boolean;
+function StrToDateSite(ADateStr : string; var ADate : TDateTime) : Boolean;
   var Res: TArray<string>;
 begin
   Result := False;
   try
-    if DelDoubleQuote(ADateStr) = 'null' then
-    begin
-      ADate := Null;
-      Result := True;
-      Exit;
-    end;
-
     Res := TRegEx.Split(DelDoubleQuote(ADateStr), '-');
     if High(Res) <> 2 then exit;
     try
@@ -143,7 +118,6 @@ begin
   end;
 end;
 
-
   { TLikiDniproeHealthApi }
 constructor TLikiDniproeHealthApi.Create;
 begin
@@ -153,45 +127,19 @@ begin
   FRESTRequest.Client := FRESTClient;
   FRESTRequest.Response := FRESTResponse;
 
-  FPositionCDS := TClientDataSet.Create(Nil);
-
   FLikiDnepr := '';
   FAccess_Token := '';
   FEmployee_Email := '';
+  FShow_eHealth := False;
+  FShow_Location := '';
+
 end;
 
 destructor TLikiDniproeHealthApi.Destroy;
 begin
-  FPositionCDS.Free;
   FRESTResponse.Free;
   FRESTRequest.Free;
   FRESTClient.Free;
-end;
-
-function TLikiDniproeHealthApi.InitCDS : boolean;
-begin
-  try
-    FPositionCDS.Close;
-    FPositionCDS.FieldDefs.Clear;
-    FPositionCDS.FieldDefs.Add('position_id', TFieldType.ftInteger);
-    FPositionCDS.FieldDefs.Add('position', TFieldType.ftString, 250);
-    FPositionCDS.FieldDefs.Add('name_inn_ua', TFieldType.ftString, 250);
-    FPositionCDS.FieldDefs.Add('name_inn_lat', TFieldType.ftString, 250);
-    FPositionCDS.FieldDefs.Add('name_reg_ua', TFieldType.ftString, 250);
-    FPositionCDS.FieldDefs.Add('comment', TFieldType.ftString, 250);
-    FPositionCDS.FieldDefs.Add('is_drug', TFieldType.ftString, 250);
-    FPositionCDS.FieldDefs.Add('drugs_need_bought', TFieldType.ftString, 100);
-    FPositionCDS.FieldDefs.Add('doctor_recommended_manufacturer', TFieldType.ftString, 100);
-    FPositionCDS.FieldDefs.Add('inn_name_lat', TFieldType.ftString, 100);
-    FPositionCDS.FieldDefs.Add('id_morion', TFieldType.ftString, 100);
-
-    FPositionCDS.CreateDataSet;
-
-    if not FPositionCDS.Active then FPositionCDS.Open;
-
-  except
-  end;
-  Result := FPositionCDS.Active;
 end;
 
 function TLikiDniproeHealthApi.ShowError(AText : string = 'Ошибка получение информации о рецепте') : string;
@@ -218,11 +166,13 @@ var
   I, L : integer;
 begin
   Result := False;
-  FRecipe.FRecipe_Number := '';
+  FRequest_number := '';
+  FMedication_request_id := '';
+  FMedication_ID_List := '';
 
   FRESTClient.BaseURL := FLikiDnepr;
-//  FRESTClient.ContentType := 'application/x-www-form-urlencoded';
-  FRESTClient.ContentType := 'application/json';
+  FRESTClient.ContentType := 'application/x-www-form-urlencoded';
+//  FRESTClient.ContentType := 'application/json';
 
   FRESTRequest.ClearBody;
   FRESTRequest.Method := TRESTRequestMethod.rmPOST;
@@ -243,100 +193,113 @@ begin
     Result := False;
     try
       jValue := FRESTResponse.JSONValue;
-      if (jValue.FindValue('status') = Nil) and (jValue.FindValue('status').ToString <> 'success') then
-      begin
-        ShowError;
-        Exit;
-      end;
-
-      if jValue.FindValue('message') <> Nil then
-      begin
-        ShowError;
-        Exit;
-      end else if jValue.FindValue('data') <> Nil then
+      if jValue.FindValue('medical_program') <> Nil then
       begin
 
-        InitCDS;
-        JSONA := jValue.GetValue<TJSONArray>('data');
-        for I := 0 to JSONA.Count - 1 do
+        if jValue.FindValue('medical_program') <> Nil then
         begin
-          j :=  JSONA.Items[I];
+          j := jValue.FindValue('medical_program');
+          FMedical_program_id := DelDoubleQuote(j.FindValue('id').ToString);
+        end else FMedical_program_id := '';
 
-          if DelDoubleQuote(j.FindValue('recipe_number').ToString) <> FNumber then Continue;
+        if jValue.FindValue('medication_info') <> Nil then
+        begin
+          j := jValue.FindValue('medication_info');
+          FMedication_ID := DelDoubleQuote(j.FindValue('medication_id').ToString);
+          FMedication_Name := DelDoubleQuote(j.FindValue('medication_name').ToString);
+          FMedication_Qty := StrToCurr(StringReplace(StringReplace(j.FindValue('medication_qty').ToString,
+                            ',', FormatSettings.DecimalSeparator, [rfReplaceAll]),
+                            '.', FormatSettings.DecimalSeparator, [rfReplaceAll]));
 
-          if FRecipe.FRecipe_Number = '' then
-          begin
-            // Рецепт
-            FRecipe.FRecipe_Number := DelDoubleQuote(j.FindValue('recipe_number').ToString);
-            if not StrToDateSite(j.FindValue('recipe_created').ToString, FRecipe.FRecipe_Created) then Exit;
-            if not StrToDateSite(j.FindValue('recipe_valid_from').ToString, FRecipe.FRecipe_Valid_From) then Exit;
-            if not StrToDateSite(j.FindValue('recipe_valid_to').ToString, FRecipe.FRecipe_Valid_To) then Exit;
-            FRecipe.FRecipe_Type := j.GetValue<TJSONNumber>('recipe_type').AsInt;
+          FMedication_request_id := DelDoubleQuote(jValue.FindValue('id').ToString);
+          FStatus := DelDoubleQuote(jValue.FindValue('status').ToString);
+          if not StrToDateSite(jValue.FindValue('created_at').ToString, FCreated_at) then Exit;
+          if not StrToDateSite(jValue.FindValue('dispense_valid_from').ToString, FDispense_valid_from) then Exit;
+          if not StrToDateSite(jValue.FindValue('dispense_valid_to').ToString, FDispense_valid_to) then Exit;
 
-            if DelDoubleQuote(j.FindValue('category_1303_id').ToString) = 'null' then FRecipe.FCategory_1303_Id := 0
-            else FRecipe.FCategory_1303_Id := j.GetValue<TJSONNumber>('category_1303_id').AsInt;
-            if DelDoubleQuote(j.FindValue('category_1303_name').ToString) = 'null' then FRecipe.FCategory_1303_Name := ''
-            else FRecipe.FCategory_1303_Name := DelDoubleQuote(j.FindValue('category_1303_name').ToString);
-            if DelDoubleQuote(j.FindValue('category_1303_discount_percent').ToString) = 'null' then FRecipe.FCategory_1303_Discount_Percent := 0
-            else FRecipe.FCategory_1303_Discount_Percent := j.GetValue<TJSONNumber>('category_1303_discount_percent').AsDouble;
+          FRequest_number := DelDoubleQuote(jValue.FindValue('request_number').ToString);
 
-            // Пациент
-            FRecipe.FPatient_Id := j.GetValue<TJSONNumber>('patient_id').AsInt;
-            FRecipe.FPatient_Name := DelDoubleQuote(j.FindValue('patient_name').ToString);
-            FRecipe.FPatient_Age := DelDoubleQuote(j.FindValue('patient_age').ToString);
-
-            // Медецинское учереждение
-            FRecipe.FInstitution_Id := j.GetValue<TJSONNumber>('institution_id').AsInt;
-            FRecipe.FInstitution_Name := DelDoubleQuote(j.FindValue('institution_name').ToString);
-            FRecipe.FInstitution_Edrpou := DelDoubleQuote(j.FindValue('institution_edrpou').ToString);
-
-            // Доктор
-            FRecipe.FDoctor_Id := j.GetValue<TJSONNumber>('doctor_id').AsInt;
-            FRecipe.FDoctor_Name := DelDoubleQuote(j.FindValue('doctor_name').ToString);
-            FRecipe.FDoctor_INN := DelDoubleQuote(j.FindValue('doctor_inn').ToString);
-            FRecipe.FDoctor_Speciality := DelDoubleQuote(j.FindValue('doctor_speciality').ToString);
-          end;
-
-          // Медикамент
-          FPositionCDS.Last;
-          FPositionCDS.Append;
-          FPositionCDS.FieldByName('position_id').AsInteger := j.GetValue<TJSONNumber>('position_id').AsInt;
-          FPositionCDS.FieldByName('position').AsString := DelDoubleQuoteVar(j.FindValue('position').ToString);
-          FPositionCDS.FieldByName('name_inn_ua').AsString := DelDoubleQuoteVar(j.FindValue('name_inn_ua').ToString);
-          FPositionCDS.FieldByName('name_inn_lat').AsString := DelDoubleQuoteVar(j.FindValue('name_inn_lat').ToString);
-          FPositionCDS.FieldByName('name_reg_ua').AsString := DelDoubleQuoteVar(j.FindValue('name_reg_ua').ToString);
-          FPositionCDS.FieldByName('comment').AsString := DelDoubleQuoteVar(j.FindValue('comment').ToString);
-          FPositionCDS.FieldByName('is_drug').AsString := DelDoubleQuoteVar(j.FindValue('is_drug').ToString);
-          FPositionCDS.FieldByName('drugs_need_bought').AsString := DelDoubleQuoteVar(j.FindValue('drugs_need_bought').ToString);
-          FPositionCDS.FieldByName('doctor_recommended_manufacturer').AsString := DelDoubleQuoteVar(j.FindValue('doctor_recommended_manufacturer').ToString);
-          FPositionCDS.FieldByName('inn_name_lat').AsString := '';
-          FPositionCDS.FieldByName('id_morion').AsString := '';
-
-          JSONAR := j.GetValue<TJSONArray>('reimbursement');
-          for L := 0 to JSONAR.Count - 1 do
-          begin
-            if DelDoubleQuoteVar(JSONAR.Items[L].FindValue('inn_name_lat').ToString) <> '' then
-            begin
-              if FPositionCDS.FieldByName('inn_name_lat').AsString <> '' then FPositionCDS.FieldByName('inn_name_lat').AsString := FPositionCDS.FieldByName('inn_name_lat').AsString + ',';
-              FPositionCDS.FieldByName('inn_name_lat').AsString := FPositionCDS.FieldByName('inn_name_lat').AsString + DelDoubleQuoteVar(JSONAR.Items[L].FindValue('inn_name_lat').ToString);
-            end;
-            if DelDoubleQuoteVar(JSONAR.Items[L].FindValue('id_morion').ToString) <> '' then
-            begin
-              if FPositionCDS.FieldByName('id_morion').AsString <> '' then FPositionCDS.FieldByName('id_morion').AsString := FPositionCDS.FieldByName('id_morion').AsString + ',';
-              FPositionCDS.FieldByName('id_morion').AsString  := FPositionCDS.FieldByName('id_morion').AsString + DelDoubleQuoteVar(JSONAR.Items[L].FindValue('id_morion').ToString);
-            end;
-          end;
-          FPositionCDS.Post
+          Result := True;
         end;
-        if FPositionCDS.IsEmpty then
-          ShowMessage('Ошибка не найдены медикаменты в рецепте.')
-        else Result := True;
+      end else if (jValue.FindValue('error') <> Nil) and (DelDoubleQuote(j.FindValue('error').ToString) = 'auth') then
+      begin
+        FShow_eHealth := True;
       end else ShowError;
     except
     end
   end else ShowError;
 end;
 
+function TLikiDniproeHealthApi.GetDrugList : boolean;
+var
+  jValue, j : TJSONValue;
+  JSONA, JSONAR: TJSONArray;
+  I, L : integer;
+begin
+  Result := False;
+
+  if (FMedication_request_id = '') or (FMedical_program_id = '') then Exit;
+
+  FRESTClient.BaseURL := FLikiDnepr;
+  FRESTClient.ContentType := 'application/x-www-form-urlencoded';
+//  FRESTClient.ContentType := 'application/json';
+
+  FRESTRequest.ClearBody;
+  FRESTRequest.Method := TRESTRequestMethod.rmPOST;
+  FRESTRequest.Resource := 'get-drug-list/' + FMedication_request_id + '/' + FMedical_program_id + '/' + CurrToStr(FMedication_Qty);
+
+  // required parameters
+  FRESTRequest.Params.Clear;
+  FRESTRequest.AddParameter('Authorization', 'Bearer ' + FAccess_Token, TRESTRequestParameterKind.pkHTTPHEADER,
+                                                                        [TRESTRequestParameterOption.poDoNotEncode]);
+  FRESTRequest.AddParameter('Accept', 'application/json', TRESTRequestParameterKind.pkHTTPHEADER);
+  FRESTRequest.AddParameter('employee_email', FEmployee_Email, TRESTRequestParameterKind.pkGETorPOST);
+  try
+    FRESTRequest.Execute;
+  except
+  end;
+
+  if (FRESTResponse.StatusCode = 200) and (FRESTResponse.ContentType = 'application/json') then
+  begin
+    Result := False;
+    try
+      jValue := FRESTResponse.JSONValue;
+      if jValue.FindValue('medical_program') <> Nil then
+      begin
+
+        if jValue.FindValue('medical_program') <> Nil then
+        begin
+          j := jValue.FindValue('medical_program');
+          FMedical_program_id := DelDoubleQuote(j.FindValue('id').ToString);
+        end else FMedical_program_id := '';
+
+        if jValue.FindValue('medication_info') <> Nil then
+        begin
+          j := jValue.FindValue('medication_info');
+          FMedication_ID := DelDoubleQuote(j.FindValue('medication_id').ToString);
+          FMedication_Name := DelDoubleQuote(j.FindValue('medication_name').ToString);
+          FMedication_Qty := StrToCurr(StringReplace(StringReplace(j.FindValue('medication_qty').ToString,
+                            ',', FormatSettings.DecimalSeparator, [rfReplaceAll]),
+                            '.', FormatSettings.DecimalSeparator, [rfReplaceAll]));
+
+          FMedication_request_id := DelDoubleQuote(jValue.FindValue('id').ToString);
+          FStatus := DelDoubleQuote(jValue.FindValue('status').ToString);
+          if not StrToDateSite(jValue.FindValue('created_at').ToString, FCreated_at) then Exit;
+          if not StrToDateSite(jValue.FindValue('dispense_valid_from').ToString, FDispense_valid_from) then Exit;
+          if not StrToDateSite(jValue.FindValue('dispense_valid_to').ToString, FDispense_valid_to) then Exit;
+
+          FRequest_number := DelDoubleQuote(jValue.FindValue('request_number').ToString);
+
+          Result := True;
+        end;
+      end else if (jValue.FindValue('error') <> Nil) and (DelDoubleQuote(j.FindValue('error').ToString) = 'auth') then
+      begin
+        FShow_eHealth := True;
+      end else ShowError;
+    except
+    end
+  end else ShowError;
+end;
 
 
 function InitLikiDniproeHealthApi : boolean;
@@ -363,6 +326,8 @@ begin
 //    LikiDniproeHealthApi.FAccess_Token := '3bc48397885c039ee40586f4781d10006e3c01b0ba4776f4df5ec1f64af38f2a';
     LikiDniproeHealthApi.FAccess_Token := '98bfd760a1b65cd45641ca2e1d59247d2f846f5a6e75a5d50dc44a213b7f8242';
     LikiDniproeHealthApi.FEmployee_Email := 'provizor2@yopmail.com';
+    LikiDniproeHealthApi.FShow_Location := 'https://preprod.ciet-holding.com/login';
+
 
 //    LikiDniproeHealthApi.FLikiDnepr := MainCashForm.UnitConfigCDS.FieldByName('LikiDneproURL').AsString;
 //    LikiDniproeHealthApi.FAccess_Token := MainCashForm.UnitConfigCDS.FieldByName('LikiDneproToken').AsString;
@@ -372,7 +337,8 @@ begin
   Result := True;
 end;
 
-function GetReceipt(const AReceipt : String) : boolean;
+function GetReceipt(const AReceipt : String; var AID, AIDList, AName : string;
+  var AQty : currency; var ADate : TDateTime) : boolean;
 begin
   Result := False;
 
@@ -384,6 +350,56 @@ begin
 
   Result := LikiDniproeHealthApi.GetReceiptId;
 
+  if LikiDniproeHealthApi.FShow_eHealth then
+  begin
+    ShellExecute(Screen.ActiveForm.Handle, 'open', PChar(LikiDniproeHealthApi.FShow_Location), nil, nil, SW_SHOWNORMAL);
+    LikiDniproeHealthApi.FShow_eHealth := False;
+    Exit;
+  end;
+
+  if AReceipt <> LikiDniproeHealthApi.FRequest_number then
+  begin
+    ShowMessage('Ошибка получения информации о рецепте с сайта Хелси...'#13#10 +
+      'Неправельный номер рецепта.');
+    Exit;
+  end;
+
+//  if LikiDniproeHealthApi.FDispense_valid_to < Date then
+//  begin
+//    ShowMessage('Срок действия рецепта истек...');
+//    Exit;
+//  end;
+
+  if LikiDniproeHealthApi.FStatus <> 'ACTIVE' then
+  begin
+
+    if LikiDniproeHealthApi.FMedical_program_id = '' then
+    begin
+      ShowMessage('Нет в чеке информации о соц проекте...');
+      Exit;
+    end;
+
+    if not LikiDniproeHealthApi.GetDrugList then Exit;
+
+    AID := LikiDniproeHealthApi.FMedication_ID;
+    AIDList := LikiDniproeHealthApi.FMedication_ID_List;
+    AName := LikiDniproeHealthApi.FMedication_Name;
+    AQty := LikiDniproeHealthApi.FMedication_Qty;
+    ADate := LikiDniproeHealthApi.FCreated_at;
+    Result := True;
+  end else if LikiDniproeHealthApi.FStatus = 'EXPIRED' then
+  begin
+    LikiDniproeHealthApi.FRequest_number := '';
+    ShowMessage('Ошибка чек пророчен.');
+  end else if LikiDniproeHealthApi.FStatus = 'COMPLETED' then
+  begin
+    LikiDniproeHealthApi.FRequest_number := '';
+    ShowMessage('Ошибка чек погашен.');
+  end else
+  begin
+    LikiDniproeHealthApi.FRequest_number := '';
+    ShowMessage('Ошибка неизвестный статус чека.');
+  end;
 end;
 
 initialization

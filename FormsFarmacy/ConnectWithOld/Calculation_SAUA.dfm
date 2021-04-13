@@ -23,7 +23,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
     Height = 217
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 895
     object Panel2: TPanel
       Left = 1
       Top = 1
@@ -34,7 +33,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
       Caption = 'Panel2'
       ShowCaption = False
       TabOrder = 0
-      ExplicitWidth = 893
       object Panel4: TPanel
         Left = 0
         Top = 0
@@ -79,14 +77,12 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         Caption = 'Panel5'
         ShowCaption = False
         TabOrder = 1
-        ExplicitWidth = 433
         object cxLabel4: TcxLabel
           Left = 1
           Top = 1
           Align = alTop
           Caption = #1040#1087#1090#1077#1082#1080' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1072
           Properties.Alignment.Horz = taCenter
-          ExplicitWidth = 431
           AnchorX = 236
         end
         object CheckListBoxAssortment: TCheckListBox
@@ -98,7 +94,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           Align = alClient
           ItemHeight = 13
           TabOrder = 1
-          ExplicitWidth = 431
         end
         object cxLabel10: TcxLabel
           Left = 1
@@ -106,7 +101,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           Align = alBottom
           Caption = #1042#1099#1073#1088#1072#1085#1086' 0'
           Properties.Alignment.Horz = taLeftJustify
-          ExplicitWidth = 431
         end
       end
     end
@@ -119,7 +113,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
       Caption = 'Panel3'
       ShowCaption = False
       TabOrder = 1
-      ExplicitWidth = 893
       object cxLabel1: TcxLabel
         Left = 8
         Top = 3
@@ -265,7 +258,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
     Height = 390
     Align = alClient
     TabOrder = 5
-    ExplicitWidth = 895
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.Filter.Options = [fcoCaseInsensitive]
@@ -1076,6 +1068,22 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         Name = 'inisNotCheckNoMCS'
         Value = False
         Component = cbNotCheckNoMCS
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMCSValue'
+        Value = Null
+        Component = cbMCSValue
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisRemains'
+        Value = Null
+        Component = cbRemains
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -39,6 +39,8 @@ BEGIN
            , ObjectBoolean_GoodsClose.ValueData                 AS isGoodsClose
            , ObjectBoolean_MCSIsClose.ValueData                 AS isMCSIsClose
            , ObjectBoolean_NotCheckNoMCS.ValueData              AS isNotCheckNoMCS
+           , COALESCE(ObjectBoolean_MCSValue.ValueData, False)  AS isMCSValue
+           , COALESCE(ObjectBoolean_Remains.ValueData, False)   AS isRemains
            
       FROM Object AS Object_FinalSUAProtocol
       
@@ -80,6 +82,12 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_NotCheckNoMCS
                                     ON ObjectBoolean_NotCheckNoMCS.ObjectId = Object_FinalSUAProtocol.Id
                                    AND ObjectBoolean_NotCheckNoMCS.DescId = zc_ObjectBoolean_FinalSUAProtocol_NotCheckNoMCS()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_MCSValue
+                                    ON ObjectBoolean_MCSValue.ObjectId = Object_FinalSUAProtocol.Id
+                                   AND ObjectBoolean_MCSValue.DescId = zc_ObjectBoolean_FinalSUAProtocol_MCSValue()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Remains
+                                    ON ObjectBoolean_Remains.ObjectId = Object_FinalSUAProtocol.Id
+                                   AND ObjectBoolean_Remains.DescId = zc_ObjectBoolean_FinalSUAProtocol_Remains()
             
       WHERE Object_FinalSUAProtocol.DescId = zc_Object_FinalSUAProtocol()
         AND Object_FinalSUAProtocol.isErased = False

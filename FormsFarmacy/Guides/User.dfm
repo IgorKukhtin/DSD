@@ -495,7 +495,15 @@ object UserForm: TUserForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'bbOpenUserHelsiEdit'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -550,7 +558,7 @@ object UserForm: TUserForm
       Action = actProtocolRoleForm
       Category = 0
     end
-    object dxBarButton1: TdxBarButton
+    object bbOpenUserHelsiEdit: TdxBarButton
       Action = OpenUserHelsiEditForm
       Category = 0
     end
@@ -910,8 +918,8 @@ object UserForm: TUserForm
     object OpenUserHelsiEditForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1059#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1076#1086#1089#1090#1091#1087#1072' '#1082' '#1089#1072#1081#1090#1091' '#1061#1077#1083#1089#1080
-      Hint = #1059#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1076#1086#1089#1090#1091#1087#1072' '#1082' '#1089#1072#1081#1090#1091' '#1061#1077#1083#1089#1080
+      Caption = #1059#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1076#1086#1089#1090#1091#1087#1072' '#1082' '#1089#1072#1081#1090#1072#1084' '#1076#1083#1103' '#1087#1086#1075#1072#1096#1077#1085#1080#1103' '#1088#1077#1094#1077#1087#1090#1086#1074
+      Hint = #1059#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1076#1086#1089#1090#1091#1087#1072' '#1082' '#1089#1072#1081#1090#1072#1084' '#1076#1083#1103' '#1087#1086#1075#1072#1096#1077#1085#1080#1103' '#1088#1077#1094#1077#1087#1090#1086#1074
       ImageIndex = 55
       FormName = 'TUserHelsiEditForm'
       FormNameParam.Value = 'TUserHelsiEditForm'
@@ -977,10 +985,13 @@ object UserForm: TUserForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 248
     Top = 232
   end
@@ -1011,10 +1022,13 @@ object UserForm: TUserForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 392
     Top = 96
   end
@@ -1098,10 +1112,13 @@ object UserForm: TUserForm
     OnDblClickActionList = <>
     ActionItemList = <>
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 472
     Top = 216
   end

@@ -103,7 +103,7 @@ type
     InDate: TcxGridDBColumn;
     FarmacyCashDate: TcxGridDBColumn;
     isSite: TcxGridDBColumn;
-    dxBarButton1: TdxBarButton;
+    bbOpenUserHelsiEdit: TdxBarButton;
     OpenUserHelsiEditForm: TdsdOpenForm;
     spClearDefaultUnit: TdsdStoredProc;
     actClearDefaultUnit: TdsdExecStoredProc;

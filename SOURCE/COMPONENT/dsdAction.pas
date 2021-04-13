@@ -7,7 +7,8 @@ interface
 uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst, ComObj,
   cxControls, dsdGuides, ImgList, cxPC, cxGrid, cxGridTableView, cxDBPivotGrid,
   cxGridDBTableView, frxClass, frxExportPDF, cxGridCustomView, Dialogs, Controls,
-  dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL, cxDateNavigator, IdFTP, System.IOUtils
+  dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL, cxDateNavigator, IdFTP, IdFTPCommon,
+  System.IOUtils
   {$IFDEF DELPHI103RIO}, Actions {$ENDIF}, Vcl.Graphics;
 
 type
@@ -4189,6 +4190,9 @@ begin
   inherited;
 
   FIdFTP := TIdFTP.Create(Nil);
+  FIdFTP.Passive := True;
+  FIdFTP.TransferType := ftBinary;
+  FIdFTP.UseExtensionDataPort := True;
 
   FHostParam := TdsdParam.Create(nil);
   FHostParam.DataType := ftString;
@@ -4293,7 +4297,7 @@ begin
 
     if FFileNameFTPParam.Value = '' then
       FileNameFTP :=  FFileNameParam.Value
-    else FileNameFTP :=  FFileNameFTPParam.Value;
+    else FileNameFTP :=  FFileNameFTPParam.Value +  TPath.GetExtension(FFileNameParam.Value);
 
   end else
   begin
@@ -4305,7 +4309,7 @@ begin
 
     if FFileNameFTPParam.Value = '' then
       FileNameFTP :=  FFileNameParam.Value
-    else FileNameFTP :=  FFileNameFTPParam.Value;
+    else FileNameFTP :=  FFileNameFTPParam.Value +  TPath.GetExtension(FFileNameParam.Value);
 
     if FDownloadFolderParam.Value <> '' then
     begin
@@ -4315,6 +4319,12 @@ begin
 
     if FullFileName[Length(FullFileName)] <> '\' then FullFileName := FullFileName + '\' ;
     FullFileName := FullFileName + FFileNameParam.Value;
+
+    if not ForceDirectories(ExtractFilePath(FullFileName)) then
+    begin
+      ShowMessage('Ошибка создания директории для сохранения файлов инструкций. Покажите это окно системному администратору...');
+      Exit;
+    end;
   end;
 
   try
@@ -4323,6 +4333,7 @@ begin
     FIdFTP.Port := FPortParam.Value;
     FIdFTP.Username := FUsernameParam.Value;
     FIdFTP.Password := FPasswordParam.Value;
+
     try
       FIdFTP.Connect;
     Except ON E: Exception DO
@@ -4333,9 +4344,10 @@ begin
     end;
 
     // Изменяем директорий если надо
-    if FDirParam.Value <> '' then
     try
-      FIdFTP.ChangeDir(FDirParam.Value);
+      if FDirParam.Value <> '' then
+        FIdFTP.ChangeDir(FDirParam.Value)
+      else FIdFTP.ChangeDir('/');
     except ON E: Exception DO
       begin
         ShowMessage(E.Message);
@@ -4355,7 +4367,7 @@ begin
                       if FIdFTP.DirectoryListing.Count > 0 then FIdFTP.Delete(FileNameFTP);
                       FFileNameParam.Value := '';
                     end;
-        else FIdFTP.Get(FileNameFTP, FullFileName);
+        else FIdFTP.Get(FileNameFTP, FullFileName, True);
       end;
 
     except ON E: Exception DO

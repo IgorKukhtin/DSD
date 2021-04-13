@@ -20,13 +20,11 @@ type
     FPassword : String;
     FBase64Key : String;
     FKeyPassword : String;
-
     // Адреса сайтоа Хелси
     FHelsi_Id : String;
     FHelsi_be : String;
     // Адреса сайтоа подписи рецепта
     FIntegrationClient : String;
-
     // Базовые параметры подключения
     FClientId : String;
     FClientSecret : String;
@@ -1010,20 +1008,24 @@ begin
     HelsiApi.FHelsi_Id := MainCashForm.UnitConfigCDS.FieldByName('Helsi_Id').AsString;
     HelsiApi.FHelsi_be := MainCashForm.UnitConfigCDS.FieldByName('Helsi_be').AsString;
     HelsiApi.FIntegrationClient := MainCashForm.UnitConfigCDS.FieldByName('Helsi_IntegrationClient').AsString;
-
     HelsiApi.FClientId := MainCashForm.UnitConfigCDS.FieldByName('Helsi_ClientId').AsString;
     HelsiApi.FClientSecret := MainCashForm.UnitConfigCDS.FieldByName('Helsi_ClientSecret').AsString;
 
-    if (HelsiApi.FHelsi_Id = '') or (HelsiApi.FHelsi_be = '') or (HelsiApi.FIntegrationClient = '')  then
-    begin
-      FreeAndNil(HelsiApi);
+
+    if (HelsiApi.FHelsi_Id = '') or (HelsiApi.FHelsi_be = '') or (HelsiApi.FIntegrationClient = '')  then
+
+    begin
+
+      FreeAndNil(HelsiApi);
       ShowMessage('Ошибка не заполнены данные для подключения к сайтам Хелси...');
       Exit;
     end;
 
-    if (HelsiApi.FClientId = '') or (HelsiApi.FClientSecret = '')  then
+
+    if (HelsiApi.FClientId = '') or (HelsiApi.FClientSecret = '')  then
     begin
-      FreeAndNil(HelsiApi);
+
+      FreeAndNil(HelsiApi);
       ShowMessage('Ошибка не заполнены ID или секрет клиента...');
       Exit;
     end;

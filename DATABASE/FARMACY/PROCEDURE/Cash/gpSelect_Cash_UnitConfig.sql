@@ -27,7 +27,8 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                DiscountExternalId integer, DiscountExternalCode integer, DiscountExternalName TVarChar,
                GoodsDiscountId integer, GoodsDiscountCode integer, GoodsDiscountName TVarChar,
                isPromoForSale Boolean, isCheckUKTZED Boolean, isGoodsUKTZEDRRO Boolean,
-               LikiDneproURL TVarChar, LikiDneproToken TVarChar, LikiDneproId Integer
+               LikiDneproURL TVarChar, LikiDneproToken TVarChar, LikiDneproId Integer,
+               LikiDneproeHealthURL TVarChar, LikiDneproeHealthToken TVarChar
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -271,9 +272,13 @@ BEGIN
        , COALESCE(ObjectString_PromoForSale.ValueData, '') <> ''                   AS isPromoForSale
        , COALESCE (ObjectBoolean_CheckUKTZED.ValueData, FALSE)                     AS isCheckUKTZED
        , COALESCE (ObjectBoolean_GoodsUKTZEDRRO.ValueData, FALSE)                  AS isGoodsUKTZEDRRO
+
        , 'https://liki-dnepr.nzt.su/api'::TVarChar                                      AS LikiDneproURL
        , '3bc48397885c039ee40586f4781d10006e3c01b0ba4776f4df5ec1f64af38f2a'::TVarChar   AS LikiDneproToken
        , 92                                                                             AS LikiDneproId
+
+       , 'https://api.preprod.ciet-holding.com/api/v1/medications'::TVarChar            AS LikiDneproeHealthURL
+       , '98bfd760a1b65cd45641ca2e1d59247d2f846f5a6e75a5d50dc44a213b7f8242'::TVarChar   AS LikiDneproeHealthToken
 
 
    FROM Object AS Object_Unit
