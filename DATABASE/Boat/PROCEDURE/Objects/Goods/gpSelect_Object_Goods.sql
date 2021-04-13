@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , UnitId Integer, UnitName TVarChar
              , DiscountParnerId Integer, DiscountParnerName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar, TaxKind_Value TFloat
+             , EngineId Integer, EngineName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyId Integer
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
@@ -135,6 +136,9 @@ BEGIN
             , Object_TaxKind.Id                  AS TaxKindId
             , Object_TaxKind.ValueData           AS TaxKindName
             , ObjectFloat_TaxKind_Value.ValueData AS TaxKind_Value
+            
+            , Object_Engine.Id                   AS EngineId
+            , Object_Engine.ValueData            AS EngineName
 
             , Object_InfoMoney_View.InfoMoneyCode
             , Object_InfoMoney_View.InfoMoneyGroupName
@@ -227,6 +231,11 @@ BEGIN
                                   ON ObjectLink_Goods_TaxKind.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_TaxKind.DescId = zc_ObjectLink_Goods_TaxKind()
              LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_Goods_TaxKind.ChildObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Engine
+                                  ON ObjectLink_Goods_Engine.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_Engine.DescId = zc_ObjectLink_Goods_Engine()
+             LEFT JOIN Object AS Object_Engine ON Object_Engine.Id = ObjectLink_Goods_Engine.ChildObjectId
 
              LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
                                    ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
