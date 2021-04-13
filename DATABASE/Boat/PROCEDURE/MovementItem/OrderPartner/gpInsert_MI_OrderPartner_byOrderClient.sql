@@ -16,7 +16,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_OrderPartner());
      vbUserId := lpGetUserBySession (inSession);
-    
+    /*
     --проверка, если  есть строки в док то ошибка
     IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.isErased = FALSE AND MovementItem.DescId = zc_MI_Master())
     THEN
@@ -24,7 +24,8 @@ BEGIN
                                                , inProcedureName := 'gpInsert_MI_OrderPartner_byOrderClient'   :: TVarChar
                                                , inUserId        := vbUserId);
     END IF;
-
+    */
+    
     SELECT MovementLinkObject_From.ObjectId        AS FromId
          , MovementLinkObject_To.ObjectId          AS ToId
     INTO
@@ -41,6 +42,27 @@ BEGIN
     WHERE Movement_OrderPartner.Id = inMovementId
       AND Movement_OrderPartner.DescId = zc_Movement_OrderPartner();
       
+    -- сохраненные строки из документа
+    CREATE TEMP TABLE _tmpMI (Id Integer, ObjectId Integer, Amount TFloat, OperPrice TFloat, CountForPrice TFloat) ON COMMIT DROP;
+    INSERT INTO _tmpMI (Id, ObjectId, Amount, OperPrice, CountForPrice)
+          SELECT MovementItem.Id
+               , MovementItem.ObjectId
+               , MovementItem.Amount
+               , MIFloat_OperPrice.ValueData                   AS OperPrice
+               , COALESCE (MIFloat_CountForPrice.ValueData, 1) AS CountForPrice
+          FROM MovementItem
+             LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
+                                         ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
+                                        AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()
+             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+          WHERE MovementItem.MovementId = inMovementId
+            AND MovementItem.DescId     = zc_MI_Master()
+            AND MovementItem.isErased   = FALSE;
+    
+
+
     --данные из zc_Movement_OrderClient.zc_MI_Child по признаку zc_MILinkObject_Partner
     CREATE TEMP TABLE _tmpMI_Child (Id Integer, ObjectId Integer, Amount TFloat, AmountPartner TFloat, OperPrice TFloat, CountForPrice TFloat) ON COMMIT DROP;
     INSERT INTO _tmpMI_Child (Id, ObjectId, Amount, AmountPartner, OperPrice, CountForPrice)
@@ -71,7 +93,9 @@ BEGIN
                                                     , zc_MIFloat_CountForPrice()
                                                     )
                    )
-      SELECT tmpMI.*
+      SELECT tmpMI.Id
+           , tmpMI.ObjectId
+           , tmpMI.Amount
            , MIFloat_AmountPartner.ValueData ::TFloat AS AmountPartner     --Количество заказ поставщику
            , MIFloat_OperPrice.ValueData     ::TFloat AS OperPrice         -- Цена вх без НДС
            , MIFloat_CountForPrice.ValueData ::TFloat AS CountForPrice     --
@@ -88,24 +112,25 @@ BEGIN
      ;
 
     -- создаем  zc_MI_Master() OrderPartner
-    PERFORM lpInsertUpdate_MovementItem_OrderPartner (ioId         := 0                    ::Integer
-                                                    , inMovementId := inMovementId         ::Integer
-                                                    , inGoodsId    := tmp.ObjectId         ::Integer
-                                                    , inAmount     := tmp.AmountPartner    ::TFloat
-                                                    , ioOperPrice  := tmp.OperPrice        ::TFloat
-                                                    , inCountForPrice := tmp.CountForPrice ::TFloat
-                                                    , inComment    := ''                   ::TVarChar
-                                                    , inUserId     := vbUserId             ::Integer
+    PERFORM lpInsertUpdate_MovementItem_OrderPartner (ioId         := COALESCE (_tmpMI.Id,0)                      ::Integer
+                                                    , inMovementId := inMovementId                                ::Integer
+                                                    , inGoodsId    := COALESCE (_tmpMI.ObjectId, tmp.ObjectId)    ::Integer
+                                                    , inAmount     := COALESCE (tmp.AmountPartner, _tmpMI.Amount) ::TFloat  -- если есть сохраненное кол-во, а заказов от покупателя нет
+                                                    , ioOperPrice  := COALESCE (tmp.OperPrice, _tmpMI.OperPrice)  ::TFloat
+                                                    , inCountForPrice := COALESCE (tmp.CountForPrice, _tmpMI.CountForPrice) ::TFloat
+                                                    , inComment    := ''                                          ::TVarChar
+                                                    , inUserId     := vbUserId             
                                                     )
-    FROM (SELECT _tmpMI_Child.ObjectId
-               , _tmpMI_Child.CountForPrice
-               , _tmpMI_Child.OperPrice
-               , SUM (_tmpMI_Child.AmountPartner) AS AmountPartner 
-          FROM _tmpMI_Child
-          GROUP BY _tmpMI_Child.ObjectId
-                 , _tmpMI_Child.CountForPrice
-                 , _tmpMI_Child.OperPrice
-          ) AS tmp
+    FROM _tmpMI
+        FULL JOIN (SELECT _tmpMI_Child.ObjectId
+                        , _tmpMI_Child.CountForPrice
+                        , _tmpMI_Child.OperPrice
+                        , SUM (_tmpMI_Child.AmountPartner) AS AmountPartner 
+                   FROM _tmpMI_Child
+                   GROUP BY _tmpMI_Child.ObjectId
+                          , _tmpMI_Child.CountForPrice
+                          , _tmpMI_Child.OperPrice
+                   ) AS tmp ON tmp.ObjectId = _tmpMI.ObjectId
     ;
     
     --cохраняем zc_MIFloat_MovementId в док. OrderClient
