@@ -63,6 +63,8 @@ type
     isPromoBonus: TcxGridDBColumn;
     isLearnWeek: TcxGridDBColumn;
     AmountOI: TcxGridDBColumn;
+    MCS: TcxGridDBColumn;
+    isNot: TcxGridDBColumn;
   private
     { Private declarations }
   public

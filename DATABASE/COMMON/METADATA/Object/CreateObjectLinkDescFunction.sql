@@ -2498,9 +2498,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_FinalSUAProtocol_User() RETURNS Integer
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_FinalSUAProtocol_User', 'Связь с пользователем', zc_Object_FinalSUAProtocol(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_FinalSUAProtocol_User');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_User_LikiDnepr_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_User_LikiDnepr_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_User_LikiDnepr_Unit', 'Связь с Подразделением для которого сотрудник зарегистрирован в МИС «Каштан»', zc_Object_User(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_User_LikiDnepr_Unit');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 12.04.21                                                                                      * zc_ObjectLink_User_LikiDnepr_Unit
  25.03.21                                                                                      * zc_ObjectLink_FinalSUAProtocol_User
  18.03.21         * zc_ObjectLink_PersonalServiceList_PSLExportKind
                     zc_ObjectLink_PersonalServiceList_BankAccount

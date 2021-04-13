@@ -3,7 +3,7 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
   Top = 0
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1080#1089#1090#1077#1084#1077' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1086#1075#1086' '#1091#1087#1088#1072#1074#1083#1077#1085#1080#1103' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1086#1084
   ClientHeight = 633
-  ClientWidth = 895
+  ClientWidth = 934
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,20 +19,22 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 895
+    Width = 934
     Height = 217
     Align = alTop
     TabOrder = 0
+    ExplicitWidth = 895
     object Panel2: TPanel
       Left = 1
       Top = 1
-      Width = 893
+      Width = 932
       Height = 151
       Align = alClient
       BevelOuter = bvNone
       Caption = 'Panel2'
       ShowCaption = False
       TabOrder = 0
+      ExplicitWidth = 893
       object Panel4: TPanel
         Left = 0
         Top = 0
@@ -71,29 +73,32 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
       object Panel5: TPanel
         Left = 460
         Top = 0
-        Width = 433
+        Width = 472
         Height = 151
         Align = alClient
         Caption = 'Panel5'
         ShowCaption = False
         TabOrder = 1
+        ExplicitWidth = 433
         object cxLabel4: TcxLabel
           Left = 1
           Top = 1
           Align = alTop
           Caption = #1040#1087#1090#1077#1082#1080' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1072
           Properties.Alignment.Horz = taCenter
-          AnchorX = 217
+          ExplicitWidth = 431
+          AnchorX = 236
         end
         object CheckListBoxAssortment: TCheckListBox
           Left = 1
           Top = 18
-          Width = 431
+          Width = 470
           Height = 115
           OnClickCheck = CheckListBoxAssortmentClickCheck
           Align = alClient
           ItemHeight = 13
           TabOrder = 1
+          ExplicitWidth = 431
         end
         object cxLabel10: TcxLabel
           Left = 1
@@ -101,18 +106,20 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           Align = alBottom
           Caption = #1042#1099#1073#1088#1072#1085#1086' 0'
           Properties.Alignment.Horz = taLeftJustify
+          ExplicitWidth = 431
         end
       end
     end
     object Panel3: TPanel
       Left = 1
       Top = 152
-      Width = 893
+      Width = 932
       Height = 64
       Align = alBottom
       Caption = 'Panel3'
       ShowCaption = False
       TabOrder = 1
+      ExplicitWidth = 893
       object cxLabel1: TcxLabel
         Left = 8
         Top = 3
@@ -235,15 +242,30 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         ParentShowHint = False
         ShowHint = True
       end
+      object cbRemains: TcxCheckBox
+        Left = 718
+        Top = 22
+        Caption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103' > 0'
+        TabOrder = 15
+        Width = 201
+      end
+      object cbMCSValue: TcxCheckBox
+        Left = 718
+        Top = 3
+        Caption = #1059#1095#1080#1090#1099#1074#1072#1090#1100' '#1090#1086#1074#1072#1088' '#1089' '#1053#1058#1047' > 0'
+        TabOrder = 16
+        Width = 201
+      end
     end
   end
   object cxGrid: TcxGrid
     Left = 0
     Top = 243
-    Width = 895
+    Width = 934
     Height = 390
     Align = alClient
     TabOrder = 5
+    ExplicitWidth = 895
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.Filter.Options = [fcoCaseInsensitive]
@@ -890,6 +912,22 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         Name = 'inisNotCheckNoMCS'
         Value = Null
         Component = cbNotCheckNoMCS
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMCSValue'
+        Value = Null
+        Component = cbMCSValue
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisRemains'
+        Value = Null
+        Component = cbRemains
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -94,7 +94,8 @@ BEGIN
                                                            AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
 
-                         WHERE Movement.OperDate BETWEEN date_trunc('month', vbOperDate) AND date_trunc('month', vbOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
+                         WHERE Movement.OperDate >= date_trunc('month', vbOperDate) 
+                           AND Movement.OperDate < date_trunc('month', vbOperDate) + INTERVAL '1 MONTH'
                            AND Movement.DescId = zc_Movement_Check()
                            AND Movement.StatusId = zc_Enum_Status_Complete()
                          ), 0);
@@ -119,4 +120,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_WagesMarketingRepayment (inMovementID := 22645383  ,  inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpInsertUpdate_MovementItem_WagesMarketingRepayment (inMovementID := 22754189  ,  inSession:= zfCalc_UserAdmin())

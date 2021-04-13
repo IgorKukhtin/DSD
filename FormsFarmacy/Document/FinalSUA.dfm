@@ -1,28 +1,28 @@
 inherited FinalSUAForm: TFinalSUAForm
   Caption = #1048#1090#1086#1075#1086#1074#1099#1081' '#1057#1059#1040
   ClientHeight = 560
-  ClientWidth = 797
+  ClientWidth = 973
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 813
+  ExplicitWidth = 989
   ExplicitHeight = 599
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 133
-    Width = 797
+    Width = 973
     Height = 427
     ExplicitTop = 133
-    ExplicitWidth = 797
+    ExplicitWidth = 973
     ExplicitHeight = 427
     ClientRectBottom = 427
-    ClientRectRight = 797
+    ClientRectRight = 973
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 797
+      ExplicitWidth = 973
       ExplicitHeight = 403
       inherited cxGrid: TcxGrid
-        Width = 797
+        Width = 973
         Height = 403
-        ExplicitWidth = 797
+        ExplicitWidth = 973
         ExplicitHeight = 403
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -167,6 +167,15 @@ inherited FinalSUAForm: TFinalSUAForm
             Options.Editing = False
             Width = 253
           end
+          object MCS: TcxGridDBColumn
+            Caption = #1053#1058#1047
+            DataBinding.FieldName = 'MCS'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
           object Remains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'Remains'
@@ -228,6 +237,14 @@ inherited FinalSUAForm: TFinalSUAForm
             Options.Editing = False
             Width = 66
           end
+          object isNot: TcxGridDBColumn
+            Caption = #1053#1054#1058'- '#1085#1077#1087#1077#1088#1077#1084#1077#1097'. '#1086#1089#1090'.'
+            DataBinding.FieldName = 'isNot'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
           object MCSIsClose: TcxGridDBColumn
             Caption = #1059#1073#1080#1090'  '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084
             DataBinding.FieldName = 'MCSIsClose'
@@ -257,10 +274,10 @@ inherited FinalSUAForm: TFinalSUAForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 797
+    Width = 973
     Height = 107
     TabOrder = 3
-    ExplicitWidth = 797
+    ExplicitWidth = 973
     ExplicitHeight = 107
     inherited edInvNumber: TcxTextEdit
       Left = 9

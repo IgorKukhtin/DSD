@@ -1372,7 +1372,7 @@ BEGIN
              -- отбросили !!НОТ!!
            , tmpGoods_NOT AS (SELECT OB_Goods_NOT.ObjectId
                               FROM ObjectBoolean AS OB_Goods_NOT
-                              WHERE OB_Goods_NOT.DescId   = zc_ObjectBoolean_Goods_NOT_Sun_v4()
+                              WHERE OB_Goods_NOT.DescId   = zc_ObjectBoolean_Goods_NOT()
                                 AND OB_Goods_NOT.ValueData = TRUE
                               --AND 1=0
                              )

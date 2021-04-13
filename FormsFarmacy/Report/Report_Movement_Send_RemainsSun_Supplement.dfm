@@ -190,6 +190,17 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             Position.ColIndex = 6
             Position.RowIndex = 0
           end
+          object MinExpirationDate: TcxGridDBBandedColumn
+            Caption = #1052#1080#1085' '#1089#1088#1086#1082' '#1086#1089#1090#1072#1090#1082#1072
+            DataBinding.FieldName = 'MinExpirationDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+            Position.BandIndex = 0
+            Position.ColIndex = 7
+            Position.RowIndex = 0
+          end
           object MCS: TcxGridDBBandedColumn
             Caption = #1053#1058#1047
             DataBinding.FieldName = 'MCS'
