@@ -3,8 +3,8 @@ object Movement_PeriodDialog_BonusForm: TMovement_PeriodDialog_BonusForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1042#1099#1073#1086#1088' '#1087#1077#1088#1080#1086#1076#1072' '#1078#1091#1088#1085#1072#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
-  ClientHeight = 216
-  ClientWidth = 609
+  ClientHeight = 264
+  ClientWidth = 605
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,8 +19,8 @@ object Movement_PeriodDialog_BonusForm: TMovement_PeriodDialog_BonusForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 144
-    Top = 181
+    Left = 146
+    Top = 229
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,8 +29,8 @@ object Movement_PeriodDialog_BonusForm: TMovement_PeriodDialog_BonusForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 318
-    Top = 181
+    Left = 320
+    Top = 229
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -167,6 +167,23 @@ object Movement_PeriodDialog_BonusForm: TMovement_PeriodDialog_BonusForm
       end>
     Properties.ReadOnly = True
     TabOrder = 17
+    Width = 453
+  end
+  object cxLabel8: TcxLabel
+    Left = 51
+    Top = 187
+    Caption = #1057#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088
+  end
+  object edPersonal: TcxButtonEdit
+    Left = 131
+    Top = 186
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 19
     Width = 453
   end
   object PeriodChoice: TPeriodChoice
@@ -307,6 +324,23 @@ object Movement_PeriodDialog_BonusForm: TMovement_PeriodDialog_BonusForm
         Name = 'JuridicalName'
         Value = Null
         Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalId'
+        Value = Null
+        Component = GuidesPersonal
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalName'
+        Value = Null
+        Component = GuidesPersonal
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -584,7 +618,37 @@ object Movement_PeriodDialog_BonusForm: TMovement_PeriodDialog_BonusForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 88
-    Top = 168
+    Left = 80
+    Top = 208
+  end
+  object GuidesPersonal: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonal
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPersonal
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPersonal
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 401
+    Top = 166
   end
 end

@@ -589,14 +589,14 @@ inherited CashJournalUserForm: TCashJournalUserForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -726,7 +726,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
         end
         item
           Name = 'isCurrency'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -759,7 +759,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -770,7 +770,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -839,7 +839,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -850,7 +850,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -892,7 +892,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
         end
         item
           Name = 'isCurrency'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -932,6 +932,12 @@ inherited CashJournalUserForm: TCashJournalUserForm
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalName'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       ReportName = #1055#1086' '#1082#1072#1089#1089#1077' ('#1089' '#1082#1086#1084#1084#1077#1085#1090#1072#1088#1080#1103#1084#1080')'
       ReportNameParam.Value = #1055#1086' '#1082#1072#1089#1089#1077' ('#1089' '#1082#1086#1084#1084#1077#1085#1090#1072#1088#1080#1103#1084#1080')'
@@ -968,6 +974,12 @@ inherited CashJournalUserForm: TCashJournalUserForm
           Value = 42736d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalName'
+          Value = Null
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       ReportName = #1055#1086' '#1082#1072#1089#1089#1077' ('#1087#1086' '#1091#1089#1083#1091#1075#1072#1084')'
@@ -1460,7 +1472,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
       end
       item
         Name = 'inisDate'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -1,6 +1,7 @@
 -- Function: gpSelect_Movement_Cash_Bonus()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Cash_Bonus (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_Cash_Bonus (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Cash_Bonus (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Cash_Bonus(
     IN inStartDate        TDateTime , --
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Cash_Bonus(
     IN inBranchId         Integer   , --Филиал
     IN inRetailId         Integer   , --Торг. сеть
     IN inJuridicalId      Integer   , --Юр.лицо
+    IN inPersonalId       Integer   , --супервайзер
     IN inIsErased         Boolean ,
     IN inSession          TVarChar    -- сессия пользователя
 )
@@ -54,6 +56,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , SummPay   TFloat
              , RemainsToPay TFloat
              , ContainerId_bonus Integer
+             , AreaId Integer, AreaName TVarChar
+             , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
               )
 AS
 $BODY$
@@ -400,6 +404,10 @@ BEGIN
                         , Object_Unit.ObjectCode             AS UnitCode
                         , Object_Unit.ValueData              AS UnitName
 
+                        , Object_Personal.Id                 AS PersonalId
+                        , Object_Personal.ObjectCode         AS PersonalCode
+                        , Object_Personal.ValueData          AS PersonalName
+
                         , Object_Currency.ValueData                     AS CurrencyName
                         , Object_CurrencyPartner.ValueData              AS CurrencyPartnerName
                         , MovementFloat_CurrencyValue.ValueData         AS CurrencyValue
@@ -618,8 +626,14 @@ BEGIN
                                               ON OL_Juridical_Retail.ObjectId = Object_Juridical.Id
                                              AND OL_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = OL_Juridical_Retail.ChildObjectId
+
+                         LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
+                                              ON ObjectLink_Partner_Personal.ObjectId = Object_MoneyPlace.Id
+                                             AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
+                         LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Partner_Personal.ChildObjectId
                     WHERE (View_InfoMoney.InfoMoneyId = inInfoMoneyId OR (inInfoMoneyId = 0 AND View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21502()) ))
                        AND (OL_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
+                       AND (ObjectLink_Partner_Personal.ChildObjectId = inPersonalId OR inPersonalId = 0)
                    )
 
        SELECT tmpRes.Id
@@ -685,8 +699,19 @@ BEGIN
             , CASE WHEN tmpRes.Ord = 1 THEN (COALESCE(tmpRes.AmountBonus,0) - COALESCE (tmpRes.TotalAmountOut,0)) ELSE 0 END ::TFloat AS RemainsToPay
 
             , tmpRes.ContainerId_bonus
+            
+            , Object_Area.Id                  AS AreaId
+            , Object_Area.ValueData           AS AreaName
+            
+            , tmpRes.PersonalId
+            , tmpRes.PersonalCode
+            , tmpRes.PersonalName
 
        FROM tmpRes
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
+                              ON ObjectLink_Partner_Area.ObjectId = tmpRes.MoneyPlaceId
+                             AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
+         LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Partner_Area.ChildObjectId
       ;
 
 END;

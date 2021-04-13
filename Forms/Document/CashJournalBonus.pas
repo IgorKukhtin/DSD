@@ -94,6 +94,9 @@ type
     spGet_UserParams: TdsdStoredProc;
     actUpdate_New: TdsdInsertUpdateAction;
     bbUpdate_New: TdxBarButton;
+    cxLabel8: TcxLabel;
+    edPersonal: TcxButtonEdit;
+    GuidesPersonal: TdsdGuides;
   private
     { Private declarations }
   public
