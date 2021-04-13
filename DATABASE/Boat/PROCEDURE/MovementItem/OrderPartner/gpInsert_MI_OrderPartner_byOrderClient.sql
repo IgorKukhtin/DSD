@@ -88,8 +88,7 @@ BEGIN
   , tmpMIFloat AS (SELECT MovementItemFloat.*
                    FROM MovementItemFloat
                    WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
-                     AND MovementItemFloat.DescId IN (zc_MIFloat_OperPrice()
-                                                    , zc_MIFloat_AmountPartner()
+                     AND MovementItemFloat.DescId IN (zc_MIFloat_AmountPartner()
                                                     , zc_MIFloat_CountForPrice()
                                                     )
                    )
@@ -97,18 +96,18 @@ BEGIN
            , tmpMI.ObjectId
            , tmpMI.Amount
            , MIFloat_AmountPartner.ValueData ::TFloat AS AmountPartner     --Количество заказ поставщику
-           , MIFloat_OperPrice.ValueData     ::TFloat AS OperPrice         -- Цена вх без НДС
-           , MIFloat_CountForPrice.ValueData ::TFloat AS CountForPrice     --
+           , ObjectFloat_EKPrice.ValueData   ::TFloat AS OperPrice         -- Цена вх без НДС  -- последняя цена поставщика
+           , COALESCE (MIFloat_CountForPrice.ValueData,1) ::TFloat AS CountForPrice     --
       FROM tmpMI
            LEFT JOIN tmpMIFloat AS MIFloat_AmountPartner
                                 ON MIFloat_AmountPartner.MovementItemId = tmpMI.Id
                                AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-           LEFT JOIN tmpMIFloat AS MIFloat_OperPrice
-                                ON MIFloat_OperPrice.MovementItemId = tmpMI.Id
-                               AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()
            LEFT JOIN tmpMIFloat AS MIFloat_CountForPrice
                                 ON MIFloat_CountForPrice.MovementItemId = tmpMI.Id
                                AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+           LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
+                                 ON ObjectFloat_EKPrice.ObjectId = tmpMI.ObjectId
+                                AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
      ;
 
     -- создаем  zc_MI_Master() OrderPartner
@@ -117,7 +116,7 @@ BEGIN
                                                     , inGoodsId    := COALESCE (_tmpMI.ObjectId, tmp.ObjectId)    ::Integer
                                                     , inAmount     := COALESCE (tmp.AmountPartner, _tmpMI.Amount) ::TFloat  -- если есть сохраненное кол-во, а заказов от покупателя нет
                                                     , ioOperPrice  := COALESCE (tmp.OperPrice, _tmpMI.OperPrice)  ::TFloat
-                                                    , inCountForPrice := COALESCE (tmp.CountForPrice, _tmpMI.CountForPrice) ::TFloat
+                                                    , inCountForPrice := COALESCE (tmp.CountForPrice, _tmpMI.CountForPrice,1) ::TFloat
                                                     , inComment    := ''                                          ::TVarChar
                                                     , inUserId     := vbUserId             
                                                     )
