@@ -16,8 +16,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptProdModelChild(
  INOUT ioValue_service       TFloat    , 
    OUT outEKPrice_summ       TFloat    ,
    OUT outEKPriceWVAT_summ   TFloat    ,
-   OUT outBasis_summ         TFloat    ,
-   OUT outBasisWVAT_summ     TFloat    ,
+--   OUT outBasis_summ         TFloat    ,
+--   OUT outBasisWVAT_summ     TFloat    ,
    OUT outReceiptLevelName   TVarChar  ,
     IN inSession             TVarChar       -- сессия пользователя
 )
@@ -54,14 +54,14 @@ BEGIN
                                               );
    END IF;
    -- Проверка
-   IF COALESCE (inObjectId, 0) = 0
+ /*  IF COALESCE (inObjectId, 0) = 0
    THEN
        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Элемент не установлен.'
                                              , inProcedureName := 'gpInsertUpdate_Object_ReceiptProdModelChild'
                                              , inUserId        := vbUserId
                                               );
    END IF;
-
+*/
    -- переопределяем
    IF COALESCE (inReceiptLevelId, 0) = 0
    THEN
@@ -115,7 +115,7 @@ BEGIN
              * CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
                     * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))) :: TFloat AS EKPriceWVAT_summ
                     
-        , (ioValue
+       /* , (ioValue
             * CASE WHEN vbPriceWithVAT = FALSE
                    THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
                    ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
@@ -126,7 +126,8 @@ BEGIN
                     THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
                     ELSE COALESCE (tmpPriceBasis.ValuePrice, 0) 
                END) ::TFloat BasisWVAT_summ
- INTO outEKPrice_summ, outEKPriceWVAT_summ, outBasis_summ, outBasisWVAT_summ
+               */
+ INTO outEKPrice_summ, outEKPriceWVAT_summ     --, outBasis_summ, outBasisWVAT_summ
    FROM Object
         LEFT JOIN ObjectLink AS ObjectLink_Goods
                              ON ObjectLink_Goods.ObjectId = Object.Id

@@ -2536,22 +2536,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outBasis_summ'
-        Value = Null
-        Component = GoodsCDS
-        ComponentItem = 'Basis_summ'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outBasisWVAT_summ'
-        Value = Null
-        Component = GoodsCDS
-        ComponentItem = 'BasisWVAT_summ'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'outReceiptLevelName'
         Value = Null
         Component = GoodsCDS
@@ -2623,7 +2607,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       end>
     PackSize = 1
     Left = 1184
-    Top = 280
+    Top = 264
   end
   object spErasedGoods: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_ProdColorPattern'
