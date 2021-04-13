@@ -3,7 +3,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
   ClientHeight = 668
   ClientWidth = 982
   ExplicitWidth = 998
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -613,7 +613,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Top = 63
     Caption = #1056#1072#1089#1095#1077#1090' '#1087#1086' % '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089' :'
     Properties.ReadOnly = False
-    State = cbsChecked
     TabOrder = 6
     Width = 157
   end
@@ -632,8 +631,8 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Top = 552
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 40
-    Top = 640
+    Left = 32
+    Top = 272
   end
   inherited ActionList: TActionList
     Left = 55
@@ -783,7 +782,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
         end
         item
           Name = 'PrintParam'
-          Value = '4'
+          Value = 4.000000000000000000
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>
@@ -833,7 +832,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
         end
         item
           Name = 'PrintParam'
-          Value = '3'
+          Value = 3.000000000000000000
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>
@@ -954,7 +953,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
         end
         item
           Name = 'PrintParam'
-          Value = '1'
+          Value = 1.000000000000000000
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>
@@ -1126,7 +1125,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'OperDate_TransportGoods'
           DataType = ftDateTime
@@ -1626,7 +1625,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1674,7 +1673,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -1799,7 +1798,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       end
       item
         Name = 'OperDate_TransportGoods'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'OperDate_TransportGoods'
         DataType = ftDateTime
@@ -1881,7 +1880,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       end
       item
         Name = 'inPriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         ParamType = ptInput
@@ -2237,14 +2236,14 @@ inherited SendOnPriceForm: TSendOnPriceForm
       end
       item
         Name = 'inAmount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'ioAmountPartner'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -2864,7 +2863,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       end
       item
         Name = 'inIsDiffTax'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2990,7 +2989,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       end
       item
         Name = 'inIsDiffTax'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3014,7 +3013,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       end
       item
         Name = 'ioChecked'
-        Value = 'False'
+        Value = False
         Component = edIsChecked
         DataType = ftBoolean
         ParamType = ptInputOutput

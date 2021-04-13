@@ -223,7 +223,7 @@ BEGIN
 
      -- Находим ObjectId_parent для Boat Structure
      UPDATE _tmpItem SET ObjectId_parent_find = _tmpItem_find.ObjectId_parent_find
-     FROM (WITH -- существующие элементы Boat Structure
+     FROM (WITH -- шаблон сборки Узла - элементы Boat Structure
                 tmpReceiptItems AS (SELECT Object_ReceiptGoodsChild.Id                     AS ReceiptGoodsChildId
                                          , ObjectLink_ReceiptGoods.ChildObjectId           AS ReceiptGoodsId
                                            -- узел
