@@ -14,8 +14,6 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, Invnumber TVarChar, Statu
              , OperPrice TFloat
              , isErased Boolean
              , Article TVarChar
-             , GoodsGroupNameFull TVarChar
-             , GoodsGroupName TVarChar
              , EKPrice        TFloat -- ÷ÂÌ‡ ‚ı.
               )
 AS
