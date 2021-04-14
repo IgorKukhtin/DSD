@@ -182,8 +182,6 @@ type
     edOperDatePartner: TcxDateEdit;
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
-    GoodsGroupNameFull_ch3: TcxGridDBColumn;
-    GoodsGroupName_ch3: TcxGridDBColumn;
     Article_ch3: TcxGridDBColumn;
     GoodsCode_ch3: TcxGridDBColumn;
     GoodsName_ch3: TcxGridDBColumn;
@@ -196,7 +194,6 @@ type
     bbInsert_MI_byOrderClient: TdxBarButton;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     OperDate_ch3: TcxGridDBColumn;
-    Invnumber_ср3: TcxGridDBColumn;
     SetErasedChild: TdsdUpdateErased;
     bbSetErasedChild: TdxBarButton;
     spErasedMIChild: TdsdStoredProc;
@@ -206,6 +203,7 @@ type
     macErasedMI_Master_list: TMultiAction;
     macErasedMI_Master: TMultiAction;
     bbErasedMI_Master: TdxBarButton;
+    GoodsId: TcxGridDBColumn;
   private
   public
   end;
