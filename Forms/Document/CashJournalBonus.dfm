@@ -1,31 +1,31 @@
 inherited CashJournalBonusForm: TCashJournalBonusForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1072#1089#1089#1072', '#1088#1072#1089#1093#1086#1076'> '#1041#1086#1085#1091#1089#1099
   ClientHeight = 565
-  ClientWidth = 963
+  ClientWidth = 1103
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 979
+  ExplicitWidth = 1119
   ExplicitHeight = 603
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 99
-    Width = 963
+    Width = 1103
     Height = 466
     TabOrder = 3
     ExplicitTop = 99
-    ExplicitWidth = 963
+    ExplicitWidth = 1103
     ExplicitHeight = 466
     ClientRectBottom = 466
-    ClientRectRight = 963
+    ClientRectRight = 1103
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 963
+      ExplicitWidth = 1103
       ExplicitHeight = 466
       inherited cxGrid: TcxGrid
-        Width = 963
+        Width = 1103
         Height = 466
-        ExplicitWidth = 963
+        ExplicitWidth = 1103
         ExplicitHeight = 466
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -158,6 +158,31 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 150
+          end
+          object PersonalCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088')'
+            DataBinding.FieldName = 'PersonalCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object PersonalName: TcxGridDBColumn
+            Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088')'
+            DataBinding.FieldName = 'PersonalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 121
+          end
+          object AreaName: TcxGridDBColumn
+            Caption = #1056#1077#1075#1080#1086#1085
+            DataBinding.FieldName = 'AreaName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'.'#1083#1080#1094#1086
@@ -475,9 +500,9 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
     end
   end
   inherited Panel: TPanel
-    Width = 963
+    Width = 1103
     Height = 73
-    ExplicitWidth = 963
+    ExplicitWidth = 1103
     ExplicitHeight = 73
     inherited deStart: TcxDateEdit
       Left = 122
@@ -591,6 +616,23 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
       Properties.ReadOnly = True
       TabOrder = 13
       Width = 252
+    end
+    object cxLabel8: TcxLabel
+      Left = 799
+      Top = 35
+      Caption = #1057#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088':'
+    end
+    object edPersonal: TcxButtonEdit
+      Left = 875
+      Top = 34
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 15
+      Width = 155
     end
   end
   object cxLabel15: TcxLabel [2]
@@ -959,14 +1001,14 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -1131,6 +1173,23 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalId'
+          Value = Null
+          Component = GuidesPersonal
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalName'
+          Value = Null
+          Component = GuidesPersonal
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1231,7 +1290,7 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1242,7 +1301,7 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1311,7 +1370,7 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1322,7 +1381,7 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1404,6 +1463,14 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalName'
+          Value = Null
+          Component = GuidesPersonal
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       ReportName = #1055#1086' '#1082#1072#1089#1089#1077' ('#1089' '#1082#1086#1084#1084#1077#1085#1090#1072#1088#1080#1103#1084#1080')'
       ReportNameParam.Value = #1055#1086' '#1082#1072#1089#1089#1077' ('#1089' '#1082#1086#1084#1084#1077#1085#1090#1072#1088#1080#1103#1084#1080')'
@@ -1440,6 +1507,14 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
           Value = 42736d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalName'
+          Value = Null
+          Component = GuidesPersonal
+          ComponentItem = 'TextValue'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       ReportName = #1055#1086' '#1082#1072#1089#1089#1077' ('#1087#1086' '#1091#1089#1083#1091#1075#1072#1084')'
@@ -1572,6 +1647,14 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
         Name = 'inJuridicalId'
         Value = Null
         Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId'
+        Value = Null
+        Component = GuidesPersonal
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1786,6 +1869,9 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
       end
       item
         Component = GuidesJuridical
+      end
+      item
+        Component = GuidesPersonal
       end>
   end
   inherited spMovementComplete: TdsdStoredProc
@@ -2169,7 +2255,7 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
     Params = <
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -2274,5 +2360,35 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
     PackSize = 1
     Left = 448
     Top = 408
+  end
+  object GuidesPersonal: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonal
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPersonal
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPersonal
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 889
+    Top = 22
   end
 end

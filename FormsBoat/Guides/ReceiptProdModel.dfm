@@ -37,6 +37,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitTop = 23
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -823,7 +824,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           Properties.ReadOnly = True
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 110
+          Width = 152
         end
         object MeasureName_ch1: TcxGridDBColumn
           Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -1412,6 +1413,14 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         item
           Visible = True
           ItemName = 'bbChoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoad'
         end
         item
           Visible = True
@@ -2019,22 +2028,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           ComponentItem = 'EKPriceWVAT'
           DataType = ftFloat
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'BasisPrice'
-          Value = Null
-          Component = GoodsCDS
-          ComponentItem = 'BasisPrice'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'BasisPriceWVAT'
-          Value = Null
-          Component = GoodsCDS
-          ComponentItem = 'BasisPriceWVAT'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2143,7 +2136,23 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       ImportSettingsId.Component = FormParams
       ImportSettingsId.ComponentItem = 'ImportSettingId'
       ImportSettingsId.MultiSelectSeparator = ','
-      ExternalParams = <>
+      ExternalParams = <
+        item
+          Name = 'inReceiptProdModelId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inReceiptLevelId_top'
+          Value = Null
+          Component = GuidesReceiptLevel
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
     end
     object actStartLoad: TMultiAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
@@ -2158,10 +2167,10 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1042#1057#1045#1061' '#1044#1072#1085#1085#1099#1093'?'
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1072#1085#1085#1099#1093' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1084' '#1080#1079' '#1092#1072#1081#1083#1072'?'
       InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1042#1057#1045' '#1044#1072#1085#1085#1099#1077' '#1051#1086#1076#1082#1072#1084
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1042#1057#1045' '#1044#1072#1085#1085#1099#1077' '#1051#1086#1076#1082#1072#1084
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1084' '#1080#1079' '#1092#1072#1081#1083#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1084' '#1080#1079' '#1092#1072#1081#1083#1072
       ImageIndex = 41
     end
   end
@@ -2242,6 +2251,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -2311,6 +2321,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -2332,8 +2343,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   end
   object GoodsDS: TDataSource
     DataSet = GoodsCDS
-    Left = 280
-    Top = 360
+    Left = 320
+    Top = 336
   end
   object dsdDBViewAddOnGoods: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2356,6 +2367,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ValueColumn = Color_Level_ch1
@@ -2524,22 +2536,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outBasis_summ'
-        Value = Null
-        Component = GoodsCDS
-        ComponentItem = 'Basis_summ'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outBasisWVAT_summ'
-        Value = Null
-        Component = GoodsCDS
-        ComponentItem = 'BasisWVAT_summ'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'outReceiptLevelName'
         Value = Null
         Component = GoodsCDS
@@ -2611,7 +2607,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       end>
     PackSize = 1
     Left = 1184
-    Top = 280
+    Top = 264
   end
   object spErasedGoods: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_ProdColorPattern'
@@ -2741,7 +2737,9 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     Params = <
       item
         Name = 'inDefaultKey'
-        Value = 'TBoat1Form;zc_Object_ImportSetting_Boat1'
+        Value = 
+          'TReceiptProdModelChildForm;zc_Object_ImportSetting_ReceiptProdMo' +
+          'delChild'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2761,8 +2759,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 872
-    Top = 112
+    Left = 888
+    Top = 136
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -2820,6 +2818,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorValueList = <>

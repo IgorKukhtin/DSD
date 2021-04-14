@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , DiscountParnerId Integer, DiscountParnerName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
+             , EngineId Integer, EngineName TVarChar
               )
 AS
 $BODY$
@@ -65,7 +66,6 @@ BEGIN
            , CAST (0 as TFloat)    AS EKPrice
            , CAST (0 as TFloat)    AS EmpfPrice
 
-
            , CAST (0 as Integer)      AS GoodsGroupId
            , CAST ('' as TVarChar)    AS GoodsGroupName
            , CAST (0 as Integer)      AS MeasureId
@@ -88,6 +88,8 @@ BEGIN
            , CAST ('' as TVarChar)    AS TaxKindName
            , CAST (0 as Integer)      AS InfoMoneyId
            , CAST ('' as TVarChar)    AS InfoMoneyName
+           , CAST (0 as Integer)      AS EngineId
+           , CAST ('' as TVarChar)    AS EngineName
            ;
    ELSE
        RETURN QUERY 
@@ -134,6 +136,8 @@ BEGIN
             , Object_TaxKind.ValueData           AS TaxKindName
             , Object_InfoMoney_View.InfoMoneyId
             , Object_InfoMoney_View.InfoMoneyName
+            , Object_Engine.Id                   AS EngineId
+            , Object_Engine.ValueData            AS EngineName
        FROM Object AS Object_Goods
             LEFT JOIN ObjectString AS ObjectString_Comment
                                    ON ObjectString_Comment.ObjectId = Object_Goods.Id
@@ -193,6 +197,11 @@ BEGIN
                                   ON ObjectLink_Goods_TaxKind.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_TaxKind.DescId = zc_ObjectLink_Goods_TaxKind()
              LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_Goods_TaxKind.ChildObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Engine
+                                  ON ObjectLink_Goods_Engine.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_Engine.DescId = zc_ObjectLink_Goods_Engine()
+             LEFT JOIN Object AS Object_Engine ON Object_Engine.Id = ObjectLink_Goods_Engine.ChildObjectId
 
              LEFT JOIN ObjectDate AS ObjectDate_PartnerDate
                                   ON ObjectDate_PartnerDate.ObjectId = Object_Goods.Id

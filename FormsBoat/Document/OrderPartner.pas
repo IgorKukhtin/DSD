@@ -138,7 +138,6 @@ type
     GoodsGroupName: TcxGridDBColumn;
     DescName: TcxGridDBColumn;
     Article: TcxGridDBColumn;
-    CIN: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
@@ -183,25 +182,13 @@ type
     edOperDatePartner: TcxDateEdit;
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
-    UnitName_ch3: TcxGridDBColumn;
     GoodsGroupNameFull_ch3: TcxGridDBColumn;
     GoodsGroupName_ch3: TcxGridDBColumn;
     Article_ch3: TcxGridDBColumn;
     GoodsCode_ch3: TcxGridDBColumn;
     GoodsName_ch3: TcxGridDBColumn;
-    MeasureName_ch3: TcxGridDBColumn;
-    Amount_ch3: TcxGridDBColumn;
     AmountPartner_ch3: TcxGridDBColumn;
     OperPrice_ch3: TcxGridDBColumn;
-    CountForPrice_ch3: TcxGridDBColumn;
-    GoodsTagName_ch3: TcxGridDBColumn;
-    GoodsTypeName_ch3: TcxGridDBColumn;
-    ProdColorName_ch3: TcxGridDBColumn;
-    TaxKindName_ch3: TcxGridDBColumn;
-    Amount_in_ch3: TcxGridDBColumn;
-    CostPrice_ch3: TcxGridDBColumn;
-    OperPrice_cost_ch3: TcxGridDBColumn;
-    OperPriceList_ch3: TcxGridDBColumn;
     isErased_ch3: TcxGridDBColumn;
     cxGridLevel3: TcxGridLevel;
     spInsert_MI_byOrderClient: TdsdStoredProc;
@@ -216,6 +203,9 @@ type
     getMovementForm: TdsdStoredProc;
     actOpenForm: TdsdOpenForm;
     bbOpenDocument: TdxBarButton;
+    macErasedMI_Master_list: TMultiAction;
+    macErasedMI_Master: TMultiAction;
+    bbErasedMI_Master: TdxBarButton;
   private
   public
   end;

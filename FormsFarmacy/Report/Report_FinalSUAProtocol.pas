@@ -91,6 +91,8 @@ type
     AssortmentDS: TDataSource;
     AssortmentCDS: TClientDataSet;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    isMCSValue: TcxGridDBColumn;
+    isRemains: TcxGridDBColumn;
   private
   public
   end;

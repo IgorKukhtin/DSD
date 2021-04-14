@@ -308,6 +308,64 @@ BEGIN
 
        WHERE Object_ReceiptService.DescId = zc_Object_ReceiptService()
          AND Object_ReceiptService.isErased = FALSE
+      UNION
+              -- ”‰‡ÎËÚ¸
+       SELECT 0              AS Id
+            , 0       AS Code
+            , '”ƒ¿À»“‹' ::TVarChar  AS Name
+            , '' ::TVarChar         AS DescName
+            , '' ::TVarChar         AS Article
+            
+            , '' ::TVarChar    AS ArticleVergl
+            , '' ::TVarChar    AS EAN
+            , '' ::TVarChar    AS ASIN
+            , '' ::TVarChar    AS MatchCode
+            , '' ::TVarChar    AS FeeNumber
+            , '' ::TVarChar    AS GoodsGroupNameFull
+            
+            , '' ::TVarChar    AS Comment
+
+            , NULL  :: TDateTime AS PartnerDate
+            , FALSE :: Boolean   AS isArc
+
+            , 0 ::TFloat    AS AmountMin
+            , 0 ::TFloat    AS AmountRefer
+            , 0 ::TFloat    AS EKPrice
+            , 0 ::TFloat    AS EKPriceWVAT
+            , 0 ::TFloat    AS EmpfPrice
+            , 0 ::TFloat    AS EmpfPriceWVAT
+            , 0 ::TFloat    AS BasisPrice
+            , 0 ::TFloat    AS BasisPriceWVAT
+
+            , 0  ::Integer  AS GoodsGroupId
+            , '' ::TVarChar AS GoodsGroupName
+            , 0  ::Integer  AS MeasureId
+            , '' ::TVarChar AS MeasureName
+            , 0  ::Integer  AS GoodsTagId
+            , '' ::TVarChar AS GoodsTagName
+            , 0  ::Integer  AS GoodsTypeId
+            , '' ::TVarChar AS GoodsTypeName
+            , 0  ::Integer  AS GoodsSizeId
+            , '' ::TVarChar AS GoodsSizeName
+            , 0  ::Integer  AS ProdColorId
+            , '' ::TVarChar AS ProdColorName
+            , 0  ::Integer  AS PartnerId
+            , '' ::TVarChar AS PartnerName
+            , 0  ::Integer  AS UnitId
+            , '' ::TVarChar AS UnitName
+            , 0  ::Integer  AS DiscountParnerId
+            , '' ::TVarChar AS DiscountParnerName
+            , 0  ::Integer  AS TaxKindId
+            , '' ::TVarChar AS TaxKindName
+            , 0  ::TFloat   AS TaxKind_Value
+
+            , 0  ::Integer  AS InfoMoneyCode
+            , '' ::TVarChar AS InfoMoneyGroupName
+            , '' ::TVarChar AS InfoMoneyDestinationName
+            , '' ::TVarChar AS InfoMoneyName
+            , 0  ::Integer  AS InfoMoneyId
+            
+            , FALSE         AS isErased
       ;
 
 END;

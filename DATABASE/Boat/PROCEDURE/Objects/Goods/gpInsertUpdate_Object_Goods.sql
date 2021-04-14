@@ -9,6 +9,11 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar,T
                                                   , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                   , TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar
+                                                  , Boolean, TFloat, TFloat, TFloat, TFloat
+                                                  , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                  , TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
  INOUT ioId                     Integer   , -- ключ объекта <Товар>
     IN inCode                   Integer   , -- Код объекта <Товар>
@@ -35,6 +40,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inUnitId                 Integer, 
     IN inDiscountParnerId       Integer, 
     IN inTaxKindId              Integer, 
+    IN inEngineId               Integer, 
     IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -148,7 +154,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_DiscountParner(), ioId, inDiscountParnerId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_TaxKind(), ioId, inTaxKindId);
-      
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Engine(), ioId, inEngineId);
+
    -- сохранили связь с ***<УП статья назначения>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_InfoMoney(), ioId, vbInfoMoneyId);
    

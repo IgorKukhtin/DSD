@@ -380,15 +380,15 @@
     Caption = 'Empf. VK'
   end
   object cxLabel16: TcxLabel
-    Left = 40
+    Left = 182
     Top = 556
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit
-    Left = 40
+    Left = 182
     Top = 576
     TabOrder = 50
-    Width = 279
+    Width = 137
   end
   object ceisArc: TcxCheckBox
     Left = 252
@@ -572,6 +572,23 @@
         end
       end
     end
+  end
+  object cxLabel24: TcxLabel
+    Left = 40
+    Top = 556
+    Caption = 'Engine'
+  end
+  object edEngine: TcxButtonEdit
+    Left = 40
+    Top = 576
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 59
+    Width = 135
   end
   object ActionList: TActionList
     Left = 248
@@ -815,6 +832,14 @@
         Name = 'inTaxKindId'
         Value = Null
         Component = GuidesTaxKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEngineId'
+        Value = Null
+        Component = GuidesProdEngine
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1106,6 +1131,21 @@
         Name = 'Comment'
         Value = Null
         Component = edComment
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EngineId'
+        Value = Null
+        Component = GuidesProdEngine
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EngineName'
+        Value = Null
+        Component = GuidesProdEngine
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -1421,8 +1461,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 169
-    Top = 504
+    Left = 137
+    Top = 496
   end
   object GuidesTaxKind: TdsdGuides
     KeyField = 'Id'
@@ -2059,6 +2099,7 @@
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -2079,5 +2120,34 @@
     PropertiesCellList = <>
     Left = 792
     Top = 592
+  end
+  object GuidesProdEngine: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edEngine
+    FormNameParam.Value = 'TProdEngineForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TProdEngineForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesProdEngine
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesProdEngine
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 86
+    Top = 554
   end
 end

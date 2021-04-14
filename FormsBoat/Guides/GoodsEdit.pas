@@ -164,6 +164,9 @@ type
     cxGrid1Level1: TcxGridLevel;
     cxGrid1: TcxGrid;
     cxGrid1DBTableView1Column1: TcxGridDBColumn;
+    cxLabel24: TcxLabel;
+    edEngine: TcxButtonEdit;
+    GuidesProdEngine: TdsdGuides;
   private
     { Private declarations }
   public

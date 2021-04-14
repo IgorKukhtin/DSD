@@ -130,6 +130,15 @@ object GoodsForm: TGoodsForm
         Options.Editing = False
         Width = 55
       end
+      object EngineName: TcxGridDBColumn
+        Caption = 'Engine'
+        DataBinding.FieldName = 'EngineName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1052#1086#1090#1086#1088
+        Options.Editing = False
+        Width = 80
+      end
       object EKPrice: TcxGridDBColumn
         Caption = 'Netto EK'
         DataBinding.FieldName = 'EKPrice'
@@ -1192,6 +1201,7 @@ object GoodsForm: TGoodsForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>

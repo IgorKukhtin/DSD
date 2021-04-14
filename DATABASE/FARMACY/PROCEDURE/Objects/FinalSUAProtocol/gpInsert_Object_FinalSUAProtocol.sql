@@ -1,6 +1,6 @@
 -- Function: gpInsert_Object_FinalSUAProtocol()
 
-DROP FUNCTION IF EXISTS gpInsert_Object_FinalSUAProtocol (TDateTime, TDateTime, Text, Text, TFloat, Integer, Integer, TFloat, boolean, boolean, boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Object_FinalSUAProtocol (TDateTime, TDateTime, Text, Text, TFloat, Integer, Integer, TFloat, boolean, boolean, boolean, boolean, boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Object_FinalSUAProtocol(
     IN inDateStart           TDateTime , -- Начало периода
@@ -14,6 +14,8 @@ CREATE OR REPLACE FUNCTION gpInsert_Object_FinalSUAProtocol(
     IN inisGoodsClose        boolean   , -- Не показывать Закрыт код
     IN inisMCSIsClose        boolean   , -- Не показывать Убит код 
     IN inisNotCheckNoMCS     boolean   , -- Не показывать Продажи не для НТЗ
+    IN inisMCSValue          boolean   , -- Учитывать товар с НТЗ > 0
+    IN inisRemains           boolean   , -- Остаток получателя > 0
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -65,6 +67,10 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_FinalSUAProtocol_MCSIsClose(), vbId, inIsMCSIsClose);
    -- сохранили
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_FinalSUAProtocol_NotCheckNoMCS(), vbId, inIsNotCheckNoMCS);
+   -- сохранили
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_FinalSUAProtocol_MCSValue(), vbId, inisMCSValue);
+   -- сохранили
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_FinalSUAProtocol_Remains(), vbId, inisRemains);
 
    -- сохранили связь с <Пользователи>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_FinalSUAProtocol_User(), vbId, vbUserId);
