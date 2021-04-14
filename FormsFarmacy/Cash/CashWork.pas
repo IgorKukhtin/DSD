@@ -85,20 +85,26 @@ end;
 procedure TCashWorkForm.Button2Click(Sender: TObject);
 begin
 
-//  if not gc_User.Local then
-//  try
-//    spGet_Money_CashRegister.ParamByName('inCashRegisterName').Value := m_Cash.FiscalNumber;
-//    spGet_Money_CashRegister.ParamByName('inCheckOut').Value := m_Cash.ReceiptsSales;
-//    spGet_Money_CashRegister.ParamByName('inCheckIn').Value := m_Cash.ReceiptsReturn;
-//    spGet_Money_CashRegister.ParamByName('outSummsCash').Value := 0;
-//    spGet_Money_CashRegister.Execute;
-//
-//    if spGet_Money_CashRegister.ParamByName('outSummsCash').AsFloat <> m_Cash.SummaCash then
-//      if not ShowPUSHMessage('Проверьте суммы за день по X отчётe с суммами в программе.'#13#13 +
-//                  'Сумма по РРО : ' + FormatCurr(',0.00', m_Cash.SummaCash) + #13#13 +
-//                  'Сумма по программе: ' + FormatCurr(',0.00', spGet_Money_CashRegister.ParamByName('outSummsCash').AsFloat)) then Exit;
-//  except
-//  end;
+  if not gc_User.Local then
+  try
+    spGet_Money_CashRegister.ParamByName('inCashRegisterName').Value := m_Cash.FiscalNumber;
+    spGet_Money_CashRegister.ParamByName('inCheckOut').Value := m_Cash.ReceiptsSales;
+    spGet_Money_CashRegister.ParamByName('inCheckIn').Value := m_Cash.ReceiptsReturn;
+    spGet_Money_CashRegister.ParamByName('outSummsCash').Value := 0;
+    spGet_Money_CashRegister.ParamByName('outSummsCard').Value := 0;
+    spGet_Money_CashRegister.Execute;
+
+    if (spGet_Money_CashRegister.ParamByName('outSummsCash').AsFloat <> m_Cash.SummaCash)
+      or (spGet_Money_CashRegister.ParamByName('outSummsCard').AsFloat <> m_Cash.SummaCard) then
+      if not ShowPUSHMessage('Проверьте суммы за день по X отчётe с суммами в программе.'#13#13 +
+                             'Сумма по РРО нал   : ' + FormatCurr(',0.00', m_Cash.SummaCash) + #13 +
+                             'Сумма по РРО карта : ' + FormatCurr(',0.00', m_Cash.SummaCard) + #13 +
+                             'Сумма по РРО итого : ' + FormatCurr(',0.00', m_Cash.SummaCash + m_Cash.SummaCard) + #13#13 +
+                             'Сумма по программе нал  : ' + FormatCurr(',0.00', spGet_Money_CashRegister.ParamByName('outSummsCash').AsFloat) + #13 +
+                             'Сумма по программе карта: ' + FormatCurr(',0.00', spGet_Money_CashRegister.ParamByName('outSummsCard').AsFloat) + #13 +
+                             'Сумма по программе итого: ' + FormatCurr(',0.00', spGet_Money_CashRegister.ParamByName('outSummsCash').AsFloat + spGet_Money_CashRegister.ParamByName('outSummsCard').AsFloat)) then Exit;
+  except
+  end;
 
   if MessageDlg('Вы уверены в снятии Z-отчета?', mtInformation, mbOKCancel, 0) = mrOk then
   begin
@@ -165,11 +171,16 @@ begin
     spGet_Money_CashRegister.ParamByName('inCheckOut').Value := m_Cash.ReceiptsSales;
     spGet_Money_CashRegister.ParamByName('inCheckIn').Value := m_Cash.ReceiptsReturn;
     spGet_Money_CashRegister.ParamByName('outSummsCash').Value := 0;
+    spGet_Money_CashRegister.ParamByName('outSummsCard').Value := 0;
     spGet_Money_CashRegister.Execute;
 
     ShowPUSHMessage('Сравнение суммы за день по X отчётe с суммами в программе.'#13#13 +
-      'Сумма по РРО : ' + FormatCurr(',0.00', m_Cash.SummaCash) + #13#13 +
-      'Сумма по программе: ' + FormatCurr(',0.00', spGet_Money_CashRegister.ParamByName('outSummsCash').AsFloat));
+      'Сумма по РРО нал   : ' + FormatCurr(',0.00', m_Cash.SummaCash) + #13 +
+      'Сумма по РРО карта : ' + FormatCurr(',0.00', m_Cash.SummaCard) + #13 +
+      'Сумма по РРО итого : ' + FormatCurr(',0.00', m_Cash.SummaCash + m_Cash.SummaCard) + #13#13 +
+      'Сумма по программе нал  : ' + FormatCurr(',0.00', spGet_Money_CashRegister.ParamByName('outSummsCash').AsFloat) + #13 +
+      'Сумма по программе карта: ' + FormatCurr(',0.00', spGet_Money_CashRegister.ParamByName('outSummsCard').AsFloat) + #13 +
+      'Сумма по программе итого: ' + FormatCurr(',0.00', spGet_Money_CashRegister.ParamByName('outSummsCash').AsFloat + spGet_Money_CashRegister.ParamByName('outSummsCard').AsFloat));
 
 end;
 

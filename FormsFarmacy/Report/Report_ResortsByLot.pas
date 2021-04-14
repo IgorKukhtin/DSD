@@ -50,6 +50,9 @@ type
     actResortCorrection: TdsdExecStoredProc;
     spResortCorrection: TdsdStoredProc;
     dxBarButton1: TdxBarButton;
+    TypeResorts: TcxGridDBColumn;
+    AmountPD: TcxGridDBColumn;
+    CountPD: TcxGridDBColumn;
   private
     { Private declarations }
   public

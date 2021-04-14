@@ -201,6 +201,12 @@ object CashWorkForm: TCashWorkForm
         Value = Null
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummsCard'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 57

@@ -3,13 +3,16 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_HelsiUser (Integer, Integer, TVarChar, TVarChar, TBlob, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_HelsiUser(
-    IN inId               Integer   ,    -- ключ объекта <Пользователь> 
-    IN inUnitId           Integer   ,    -- Подразделением для которого зарегестрирован ключ
-    IN inUserName         TVarChar  ,    -- Имя пользователя на сайте Хелси
-    IN inUserPassword     TVarChar  ,    -- Пароль пользователя на сайте Хелси
-    IN inKey              TBlob     ,    -- Файловый ключь
-    IN inKeyPassword      TVarChar  ,    -- Пароль к файловому ключу
-    IN inSession          TVarChar       -- сессия пользователя
+    IN inId                        Integer   ,    -- ключ объекта <Пользователь> 
+    IN inUnitId                    Integer   ,    -- Подразделением для которого зарегестрирован ключ
+    IN inUserName                  TVarChar  ,    -- Имя пользователя на сайте Хелси
+    IN inUserPassword              TVarChar  ,    -- Пароль пользователя на сайте Хелси
+    IN inKey                       TBlob     ,    -- Файловый ключь
+    IN inKeyPassword               TVarChar  ,    -- Пароль к файловому ключу
+    IN inLikiDnepr_UnitId          Integer   ,    -- Подразделение в МИС «Каштан»
+    IN inLikiDnepr_UserEmail       TVarChar  ,    -- E-mail провизора Е-Хелс для МИС «Каштан»
+    IN inLikiDnepr_PasswordEHels   TVarChar  ,    -- Пароль Е-Хелс для регистрации через МИС «Каштан»
+    IN inSession                   TVarChar       -- сессия пользователя
 )
   RETURNS VOID
 AS
@@ -37,6 +40,11 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_Helsi_UserPassword(), inId, inUserPassword);
    PERFORM lpInsertUpdate_ObjectBlob(zc_ObjectBlob_User_Helsi_Key(), inId, inKey);
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_Helsi_KeyPassword(), inId, inKeyPassword);
+
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_User_LikiDnepr_Unit(), inId, inLikiDnepr_UnitId);
+
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_LikiDnepr_UserEmail(), inId, inLikiDnepr_UserEmail);
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_LikiDnepr_PasswordEHels(), inId, inLikiDnepr_PasswordEHels);
 
    -- Ведение протокола
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId);

@@ -1,9 +1,9 @@
 ﻿object UserHelsiEditForm: TUserHelsiEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1089#1090#1091#1087' '#1082' '#1089#1072#1081#1090#1091' '#1093#1077#1083#1089#1080
+  Caption = #1044#1086#1089#1090#1091#1087' '#1082' '#1089#1072#1081#1090#1091' '#1076#1083#1103' '#1087#1086#1075#1072#1096#1077#1085#1080#1103' '#1088#1077#1094#1077#1087#1090#1086#1074
   ClientHeight = 405
-  ClientWidth = 303
+  ClientWidth = 593
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -30,7 +30,7 @@
     Caption = #1051#1086#1075#1080#1085
   end
   object cxButton1: TcxButton
-    Left = 54
+    Left = 158
     Top = 363
     Width = 75
     Height = 25
@@ -40,7 +40,7 @@
     TabOrder = 5
   end
   object cxButton2: TcxButton
-    Left = 189
+    Left = 373
     Top = 363
     Width = 75
     Height = 25
@@ -133,9 +133,49 @@
     TabOrder = 3
     Width = 273
   end
+  object edLikiDnepr_Unit: TcxButtonEdit
+    Left = 309
+    Top = 122
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 16
+    Width = 273
+  end
+  object cxLabel2: TcxLabel
+    Left = 309
+    Top = 102
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1074' '#1052#1048#1057' '#171#1050#1072#1096#1090#1072#1085#187
+  end
+  object edLikiDnepr_PasswordEHels: TcxTextEdit
+    Left = 309
+    Top = 223
+    Properties.PasswordChar = '*'
+    TabOrder = 18
+    Width = 273
+  end
+  object cxLabel8: TcxLabel
+    Left = 309
+    Top = 202
+    Caption = #1055#1072#1088#1086#1083#1100' '#1045'-'#1061#1077#1083#1089' '#1076#1083#1103' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080' '#1095#1077#1088#1077#1079' '#1052#1048#1057' '#171#1050#1072#1096#1090#1072#1085#187
+  end
+  object edLikiDnepr_UserEmail: TcxTextEdit
+    Left = 309
+    Top = 175
+    Properties.PasswordChar = '*'
+    TabOrder = 20
+    Width = 273
+  end
+  object cxLabel9: TcxLabel
+    Left = 309
+    Top = 154
+    Caption = 'E-mail '#1087#1088#1086#1074#1080#1079#1086#1088#1072' '#1045'-'#1061#1077#1083#1089' '#1076#1083#1103' '#1052#1048#1057' '#171#1050#1072#1096#1090#1072#1085#187
+  end
   object ActionList: TActionList
-    Left = 269
-    Top = 72
+    Left = 309
+    Top = 40
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -218,10 +258,34 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLikiDnepr_UnitId'
+        Value = Null
+        Component = LikiDnepr_UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLikiDnepr_UserEmail'
+        Value = Null
+        Component = edLikiDnepr_UserEmail
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLikiDnepr_PasswordEHels'
+        Value = Null
+        Component = edLikiDnepr_PasswordEHels
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 213
-    Top = 48
+    Left = 237
+    Top = 24
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -231,8 +295,8 @@
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 133
-    Top = 80
+    Left = 157
+    Top = 40
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_HelsiUser'
@@ -302,6 +366,35 @@
         Component = edKeyPassword
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LikiDnepr_UnitId'
+        Value = Null
+        Component = LikiDnepr_UnitGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LikiDnepr_UnitName'
+        Value = Null
+        Component = LikiDnepr_UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LikiDnepr_UserEmail'
+        Value = Null
+        Component = edLikiDnepr_UserEmail
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LikiDnepr_PasswordEHels'
+        Value = Null
+        Component = edLikiDnepr_PasswordEHels
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 165
@@ -332,7 +425,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 85
-    Top = 125
+    Top = 117
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 237
@@ -357,5 +450,32 @@
     LookupControl = edKey
     Left = 176
     Top = 256
+  end
+  object LikiDnepr_UnitGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edLikiDnepr_Unit
+    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnitTreeForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = LikiDnepr_UnitGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = LikiDnepr_UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 493
+    Top = 117
   end
 end

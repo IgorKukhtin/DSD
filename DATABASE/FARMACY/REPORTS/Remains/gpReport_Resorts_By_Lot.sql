@@ -14,9 +14,16 @@ RETURNS TABLE (
   GoodsId integer,
   GoodsCode integer,
   GoodsName TVarChar,
+  
+  TypeResorts TVarChar,
 
   Amount TFloat,
-  AmountRest TFloat
+  AmountRest TFloat,
+
+  AmountPD TFloat,
+  CountPD integer,
+  ContainerPDId integer 
+
 ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -42,18 +49,30 @@ BEGIN
                                                        AND Container.WhereObjectId = tmpContainer.WhereObjectId
                                                        AND Container.DescId = zc_Container_Count()
                                                        AND Container.Amount > 0
-                              GROUP BY tmpContainer.Id
-                              )
-
+                              GROUP BY tmpContainer.Id),
+         tmpContainerPD AS (SELECT Container.ParentId,
+                                   SUM(Container.Amount)   AS Amount,
+                                   COUNT(*)::Integer       AS CountPD,
+                                   Max(Container.Id)       AS ContainerId
+                            FROM Container
+                            WHERE Container.DescId = zc_Container_CountPartionDate()
+                            GROUP BY Container.ParentId)
+                     
     SELECT tmpContainer.Id                   AS ContainerId,
            tmpContainer.WhereObjectId        AS UnitID,
            Object_Unit.ValueData             AS UnitName,
            tmpContainer.ObjectId             AS GoodsId,
            Object_Goods.ObjectCode           AS GoodsCode,
            Object_Goods.ValueData            AS GoodsName,
+           
+           'Основным'::TVarChar              AS TypeResorts,
 
            tmpContainer.Amount::TFloat       AS Amount,
-           tmpContainerRest.Amount::TFloat   AS AmountRest
+           tmpContainerRest.Amount::TFloat   AS AmountRest,
+
+           0::TFloat                         AS AmountPD,
+           0::integer                        AS CountPD,
+           0::integer                        AS ContainerPDId 
 
     FROM tmpContainer
 
@@ -66,7 +85,39 @@ BEGIN
          LEFT JOIN ObjectBoolean ON ObjectBoolean.objectid = tmpContainer.WhereObjectId
                                 AND ObjectBoolean.descid = zc_ObjectBoolean_Unit_SUN()
                               
-    WHERE inisSUN = FALSE OR COALESCE(ObjectBoolean.ValueData, False) = TRUE;
+    WHERE inisSUN = FALSE OR COALESCE(ObjectBoolean.ValueData, False) = TRUE
+    UNION ALL 
+    SELECT Container.Id                      AS ContainerId,
+           Container.WhereObjectId           AS UnitID,
+           Object_Unit.ValueData             AS UnitName,
+           Container.ObjectId                AS GoodsId,
+           Object_Goods.ObjectCode           AS GoodsCode,
+           Object_Goods.ValueData            AS GoodsName,
+           
+           'Сроковым'::TVarChar              AS TypeResorts,
+
+           Container.Amount::TFloat          AS Amount,
+           0::TFloat                         AS AmountRest,
+
+           tmpContainerPD.Amount::TFloat       AS AmountPD,
+           tmpContainerPD.CountPD::integer     AS CountPD,
+           tmpContainerPD.ContainerId::integer AS ContainerPDId 
+
+
+    FROM Container
+
+       INNER JOIN tmpContainerPD ON tmpContainerPD.ParentId = Container.Id
+
+       LEFT JOIN Object AS Object_Goods ON Object_Goods.ID = Container.ObjectId
+       LEFT JOIN Object AS Object_Unit ON Object_Unit.ID = Container.WhereObjectId
+
+       LEFT JOIN ObjectBoolean ON ObjectBoolean.objectid = Container.WhereObjectId
+                              AND ObjectBoolean.descid = zc_ObjectBoolean_Unit_SUN()
+                              
+    WHERE Container.DescId = zc_Container_Count()
+      AND Container.Amount <> tmpContainerPD.Amount
+      AND (inisSUN = FALSE OR COALESCE(ObjectBoolean.ValueData, False) = TRUE)
+    ;
     
 END;
 $BODY$
@@ -82,3 +133,4 @@ $BODY$
 -- тест
 --
  select * from gpReport_Resorts_By_Lot (183292, True, '3')
+--select * from gpReport_Resorts_By_Lot(inUnitId := 0 , inisSUN := 'False' ,  inSession := '3');

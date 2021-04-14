@@ -2,12 +2,13 @@ DROP FUNCTION IF EXISTS gpGet_Money_CashRegister (TVarChar, Integer, Integer, TV
 
 CREATE OR REPLACE FUNCTION gpGet_Money_CashRegister(
     IN inCashRegisterName  TVarChar, -- Касса
-    IN inCheckOut           Integer,  -- Чеков продажи
-    IN inCheckIn          Integer,  -- Чеков возврата
-   OUT outSummsCash        TFloat,   -- Сумма выручки за день
+    IN inCheckOut          Integer,  -- Чеков продажи
+    IN inCheckIn           Integer,  -- Чеков возврата
+   OUT outSummsCash        TFloat,   -- Сумма выручки за день нал
+   OUT outSummsCard        TFloat,   -- Сумма выручки за день карта
     IN inSession           TVarChar  -- сессия пользователя
 )
-RETURNS TFloat
+RETURNS Record
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -28,6 +29,10 @@ BEGIN
                          , CASE WHEN MovementLinkObject_PaidType.ObjectId = zc_Enum_PaidType_Cash()
                                 THEN COALESCE(MovementFloat_TotalSumm.ValueData, 0)
                                 ELSE COALESCE(MovementFloat_TotalSummPayAdd.ValueData, 0) END                  AS SummCash
+                         , CASE WHEN MovementLinkObject_PaidType.ObjectId = zc_Enum_PaidType_Cash()
+                                THEN 0
+                                ELSE COALESCE(MovementFloat_TotalSumm.ValueData, 0) - 
+                                     COALESCE(MovementFloat_TotalSummPayAdd.ValueData, 0) END                  AS SummCard
                          , ROW_NUMBER()OVER(ORDER BY MovementString_FiscalCheckNumber.ValueData::Integer DESC) as ORD
                     FROM Movement
 
@@ -65,6 +70,10 @@ BEGIN
                             , CASE WHEN MovementLinkObject_PaidType.ObjectId = zc_Enum_PaidType_Cash()
                                    THEN COALESCE(MovementFloat_TotalSumm.ValueData, 0)
                                    ELSE COALESCE(MovementFloat_TotalSummPayAdd.ValueData, 0) END                  AS SummCash
+                            , CASE WHEN MovementLinkObject_PaidType.ObjectId = zc_Enum_PaidType_Cash()
+                                   THEN 0
+                                   ELSE COALESCE(MovementFloat_TotalSumm.ValueData, 0) - 
+                                        COALESCE(MovementFloat_TotalSummPayAdd.ValueData, 0) END                  AS SummCard
                             , ROW_NUMBER()OVER(ORDER BY MovementString_FiscalCheckNumber.ValueData::Integer DESC) as ORD
                        FROM Movement
 
@@ -98,15 +107,17 @@ BEGIN
                          AND MovementLinkObject_Unit.ObjectId = vbUnitId
                          AND Object_CashRegister.ValueData = inCashRegisterName)
      , tmpSum AS (SELECT sum(tmpCheck.SummCash) AS SummCash
+                       , sum(tmpCheck.SummCard) AS SummCard
                   FROM tmpCheck
                   WHERE tmpCheck.ORD <= inCheckOut
                   UNION ALL
                   SELECT - sum(tmpReturnIn.SummCash) 
+                       , - sum(tmpReturnIn.SummCard) 
                   FROM tmpReturnIn
                   WHERE tmpReturnIn.ORD <= inCheckIn)
                       
-  SELECT sum(tmpSum.SummCash)
-  INTO outSummsCash
+  SELECT sum(tmpSum.SummCash), sum(tmpSum.SummCard)
+  INTO outSummsCash, outSummsCard
   FROM tmpSum;
                
 

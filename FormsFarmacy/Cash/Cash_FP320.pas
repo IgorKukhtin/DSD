@@ -56,6 +56,7 @@ type
     function ReservedWordCurr : currency;
     function ReservedWordInt : integer;
     function SummaCash : Currency;
+    function SummaCard : Currency;
     function ReceiptsSales : Integer;
     function ReceiptsReturn : Integer;
   public
@@ -692,6 +693,19 @@ begin
 
   pData := 1;
   pString := Password + ';2;0;0;';
+  FPrinter.DirectIO($E0, pData, pString);
+  Result := Result - ReservedWordCurr;
+end;
+
+function TCashFP320.SummaCard : Currency;
+begin
+  pData := 0;
+  pString := Password + ';2;1;0;';
+  FPrinter.DirectIO($E0, pData, pString);
+  Result := ReservedWordCurr;
+
+  pData := 1;
+  pString := Password + ';2;1;0;';
   FPrinter.DirectIO($E0, pData, pString);
   Result := Result - ReservedWordCurr;
 end;

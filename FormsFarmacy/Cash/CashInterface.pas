@@ -44,6 +44,7 @@ type
      function GetTaxRate : string;
      function SensZReportBefore : boolean;
      function SummaCash : Currency;
+     function SummaCard : Currency;
      function ReceiptsSales : Integer;
      function ReceiptsReturn : Integer;
 
