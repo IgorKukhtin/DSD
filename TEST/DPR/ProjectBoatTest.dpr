@@ -260,7 +260,9 @@ uses
   Report_Goods in '..\..\FormsBoat\Report\Report_Goods.pas' {Report_GoodsForm: TParentForm},
   PartionGoodsChoice in '..\..\FormsBoat\Guides\PartionGoodsChoice.pas' {PartionGoodsChoiceForm: TParentForm},
   OrderPartner in '..\..\FormsBoat\Document\OrderPartner.pas' {OrderPartnerForm: TParentForm},
-  OrderPartnerJournal in '..\..\FormsBoat\Document\OrderPartnerJournal.pas' {OrderPartnerJournalForm: TParentForm};
+  OrderPartnerJournal in '..\..\FormsBoat\Document\OrderPartnerJournal.pas' {OrderPartnerJournalForm: TParentForm},
+  Report_OrderClientDialog in '..\..\FormsBoat\Report\Report_OrderClientDialog.pas' {Report_OrderClientDialogForm: TParentForm},
+  Report_OrderClient in '..\..\FormsBoat\Report\Report_OrderClient.pas' {Report_OrderClientForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

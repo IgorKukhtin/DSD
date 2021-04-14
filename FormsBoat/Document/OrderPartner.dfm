@@ -764,6 +764,14 @@ object OrderPartnerForm: TOrderPartnerForm
               Options.Editing = False
               Width = 116
             end
+            object FromName_ch3: TcxGridDBColumn
+              Caption = 'Kunden'
+              DataBinding.FieldName = 'FromName'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderHint = #1054#1090' '#1082#1086#1075#1086
+              Width = 103
+            end
             object ProductName_ch3: TcxGridDBColumn
               Caption = 'Boat'
               DataBinding.FieldName = 'ProductName'
@@ -2411,7 +2419,7 @@ object OrderPartnerForm: TOrderPartnerForm
       end>
     GetStoredProc = spGet
     Left = 512
-    Top = 81
+    Top = 65
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_OrderPartner'

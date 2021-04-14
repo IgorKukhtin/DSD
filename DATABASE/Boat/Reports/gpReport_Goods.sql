@@ -47,7 +47,6 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
 AS
 $BODY$
  DECLARE vbUserId Integer;
- DECLARE vbIsBranch Boolean;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры

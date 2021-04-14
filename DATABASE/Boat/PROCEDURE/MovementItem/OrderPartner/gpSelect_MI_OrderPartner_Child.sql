@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_OrderPartner_Child(
     IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer, OperDate TDateTime, Invnumber TVarChar, StatusCode Integer
+             , FromId Integer, FromCode Integer, FromName TVarChar
              , ProductId Integer, ProductName TVarChar, BrandId Integer, BrandName TVarChar, CIN TVarChar
              , Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat, AmountPartner TFloat
@@ -51,6 +52,9 @@ BEGIN
            , MovementItem.OperDate
            , MovementItem.Invnumber
            , Object_Status.ObjectCode AS StatusCode
+           , Object_From.Id                             AS FromId
+           , Object_From.ObjectCode                     AS FromCode
+           , Object_From.ValueData                      AS FromName
            , Object_Product.Id                          AS ProductId
            , CASE WHEN Object_Product.isErased = TRUE THEN '--- ' || Object_Product.ValueData ELSE Object_Product.ValueData END :: TVarChar AS ProductName
            , Object_Brand.Id                            AS BrandId
@@ -89,6 +93,11 @@ BEGIN
                                          ON MovementLinkObject_Product.MovementId = MovementItem.MovementId
                                         AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
             LEFT JOIN Object AS Object_Product  ON Object_Product.Id = MovementLinkObject_Product.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                         ON MovementLinkObject_From.MovementId = MovementItem.MovementId
+                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
             --
             LEFT JOIN ObjectString AS ObjectString_CIN
