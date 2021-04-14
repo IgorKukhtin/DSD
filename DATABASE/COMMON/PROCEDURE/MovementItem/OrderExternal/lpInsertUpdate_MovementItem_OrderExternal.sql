@@ -67,8 +67,8 @@ BEGIN
      -- Цены с НДС
      vbPriceWithVAT:= (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_PriceWithVAT());
      -- параметры акции
-     SELECT tmp.MovementId, CASE WHEN tmp.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmp.PriceWithVAT_orig
-                                 WHEN tmp.TaxPromo <> 0 THEN tmp.PriceWithOutVAT_orig
+     SELECT tmp.MovementId, CASE WHEN /*tmp.TaxPromo <> 0*/ 1=1 AND vbPriceWithVAT = TRUE THEN tmp.PriceWithVAT_orig
+                                 WHEN /*tmp.TaxPromo <> 0*/ 1=1 THEN tmp.PriceWithOutVAT_orig
                                  ELSE 0
                             END
           , tmp.CountForPrice
@@ -107,20 +107,29 @@ BEGIN
         IF NOT EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = outMovementId_Promo AND MB.DescId = zc_MovementBoolean_Promo() AND MB.ValueData = TRUE)
         THEN
               -- меняется значение - для Тенедер
-             ioPrice:= outPricePromo;
+             IF outPricePromo > 0 OR inUserId = 5
+             THEN 
+                 ioPrice:= outPricePromo;
+             END IF;
 
         ELSEIF COALESCE (ioId, 0) = 0 AND vbTaxPromo <> 0
         THEN
             -- меняется значение
-            ioPrice:= outPricePromo;
-            ioCountForPrice:= vbCountForPricePromo;
+            IF outPricePromo > 0 OR inUserId = 5
+            THEN 
+                ioPrice:= outPricePromo;
+                ioCountForPrice:= vbCountForPricePromo;
+            END IF;
 
         ELSE IF ioId <> 0 AND ioPrice <> outPricePromo AND vbTaxPromo <> 0
              THEN
                  IF EXISTS (SELECT 1 FROM MovementString AS MS WHERE MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_GUID())
                  THEN
                      -- меняется значение
-                     ioPrice:= outPricePromo;
+                     IF outPricePromo > 0 OR inUserId = 5
+                     THEN 
+                         ioPrice:= outPricePromo;
+                     END IF;
                  ELSE
                      RAISE EXCEPTION 'Ошибка.Для товара = <%> <%> необходимо ввести акционную цену = <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData_sh (inGoodsKindId), zfConvert_FloatToString (outPricePromo);
                  END IF;

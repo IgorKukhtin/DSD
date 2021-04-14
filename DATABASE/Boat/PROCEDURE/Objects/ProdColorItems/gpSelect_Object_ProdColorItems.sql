@@ -299,7 +299,7 @@ BEGIN
                      THEN ObjectString_Comment.ValueData
 
                 -- у Boat Structure  (когда нет GoodsId)
-                ELSE ObjectString_ProdColorPattern_Comment.ValueData
+                --ELSE ObjectString_ProdColorPattern_Comment.ValueData
 
            END :: TVarChar AS Comment
 

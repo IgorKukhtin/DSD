@@ -31,6 +31,7 @@ RETURNS TABLE (Id Integer
              , OperPriceList  TFloat -- Цена по прайсу  
              , CostPrice      TFloat -- Цена вх + затрата 
              , OperPrice_cost TFloat -- сумма затраты
+             , tmp1           TDateTime 
              
               )
 AS
@@ -45,8 +46,6 @@ BEGIN
         WITH -- существующие элементы ProdColorItems - у Лодки (здесь Boat Structure)
              tmpProdColorItems AS (SELECT ObjectLink_Product.ChildObjectId          AS ProductId
                                         , ObjectLink_ProdColorPattern.ChildObjectId AS ProdColorPatternId
-                                          -- по этому полю потом соберем в 1-ну строку
-                                        , ObjectLink_ColorPattern.ChildObjectId     AS ColorPatternId
                                           -- здесь цвет (когда нет GoodsId)
                                         , CASE WHEN TRIM (ObjectString_Comment.ValueData) <> '' THEN TRIM (ObjectString_Comment.ValueData) ELSE TRIM (COALESCE (ObjectString_ProdColorPattern_Comment.ValueData, '')) END AS ProdColorName
         
@@ -89,6 +88,45 @@ BEGIN
                                      -- !!!если Товара НЕТ!!!
                                      AND ObjectLink_Goods.ChildObjectId IS NULL
                                   )
+            , tmpItem AS (SELECT MILinkObject_Goods.ObjectId            AS GoodsId
+                               , MILinkObject_ProdColorPattern.ObjectId AS ProdColorPatternId
+                               , MILinkObject_ColorPattern.ObjectId     AS ColorPatternId
+                          FROM MovementItem
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                                ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_ProdColorPattern
+                                                                ON MILinkObject_ProdColorPattern.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_ProdColorPattern.DescId         = zc_MILinkObject_ProdColorPattern()
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_ColorPattern
+                                                                ON MILinkObject_ColorPattern.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_ColorPattern.DescId         = zc_MILinkObject_ColorPattern()
+                          WHERE MovementItem.MovementId = inMovementId
+                            AND MovementItem.DescId     = zc_MI_Child()
+                         )
+   -- все Элементы сборки Модели - у Лодки - здесь вся база
+ , tmpReceiptProdModelChild_all AS (SELECT tmpProduct.Id          AS ProductId
+                                           --
+                                         , lpSelect.ReceiptProdModelId, lpSelect.ReceiptProdModelChildId
+                                           --
+                                         , lpSelect.ObjectId_parent
+                                           -- либо Goods "такой" как в Boat Structure /либо другой Goods, не такой как в Boat Structure /либо ПУСТО
+                                         , lpSelect.ObjectId
+                                           --
+                                         , lpSelect.ProdColorPatternId
+                                         , lpSelect.ProdOptionsId
+
+                                    FROM lpSelect_Object_ReceiptProdModelChild_detail (vbUserId) AS lpSelect
+                                         -- ограничили элементом Сборки
+                                         JOIN (SELECT DISTINCT ObjectLink_ReceiptProdModel.ChildObjectId AS ReceiptProdModelId
+                                               FROM tmpProdColorItems
+                                                    JOIN ObjectLink AS ObjectLink_ReceiptProdModel
+                                                                    ON ObjectLink_ReceiptProdModel.ObjectId = tmpProdColorItems.ProductId
+                                                                   AND ObjectLink_ReceiptProdModel.DescId   = zc_ObjectLink_Product_ReceiptProdModel()
+                                              ) ON tmpProduct.ReceiptProdModelId = lpSelect.ReceiptProdModelId
+                                         -- ограничили элементом Сборки
+                                         JOIN (SELECT DISTINCT tmpItem.GoodsId FROM tmpItem) AS tmpItem ON tmpItem.GoodsId = lpSelect.ObjectId_parent
+                                   )
         -- Результат
         SELECT
              MovementItem.Id                          AS Id
@@ -136,6 +174,8 @@ BEGIN
            , Object_PartionGoods.OperPriceList ::TFloat                                                                                                     -- Цена по прайсу
            , Object_PartionGoods.CostPrice     ::TFloat                                                                                                     -- Цена затраты без НДС 
            , (Object_PartionGoods.EKPrice / Object_PartionGoods.CountForPrice + COALESCE (Object_PartionGoods.CostPrice,0) ) ::TFloat AS OperPrice_cost     -- Цена вх. с затратами без НДС
+           
+           , CURRENT_DATE :: TDateTime AS tmp1
                            
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -208,12 +248,13 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_ColorPattern
                                              ON MILinkObject_ColorPattern.MovementItemId = MovementItem.Id
                                             AND MILinkObject_ColorPattern.DescId         = zc_MILinkObject_ColorPattern()
-            LEFT JOIN (SELECT tmpProdColorItems.ColorPatternId
+            LEFT JOIN (SELECT tmpItem.GoodsId
                             , STRING_AGG (tmpProdColorItems.ProdColorName, ';') AS ProdColorName
                        FROM tmpProdColorItems
-                       GROUP BY tmpProdColorItems.ColorPatternId
-                      ) AS tmpProdColorItems ON tmpProdColorItems.ColorPatternId = MILinkObject_ColorPattern.ObjectId
-                                            AND Object_Object.DescId             = zc_Object_ReceiptService()
+                            JOIN tmpItem ON tmpItem.ColorPatternId = tmpProdColorItems.ColorPatternId
+                       GROUP BY tmpItem.GoodsId
+                      ) AS tmpProdColorItems ON tmpProdColorItems.GoodsId = MILinkObject_Goods.ObjectId
+                                            AND Object_Object.DescId      = zc_Object_ReceiptService()
            ;
 
 END;

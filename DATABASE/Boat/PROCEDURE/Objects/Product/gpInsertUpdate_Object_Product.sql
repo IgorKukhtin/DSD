@@ -229,7 +229,9 @@ BEGIN
                                                                     FROM gpSelect_Object_ProdColorItems (inIsShowAll:= TRUE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
                                                                     WHERE tmp.ProductId = ioId
                                                                       AND COALESCE (tmp.Id, 0) = 0
-                                                                   ))
+                                                                   )
+                                                       --OR 1=1
+                                      )
 
                                                                        /*(SELECT 1
                                                                         FROM ObjectLink AS ObjectLink_Product

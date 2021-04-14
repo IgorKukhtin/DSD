@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_ReportCollation_byUser(
     IN inEndDate        TDateTime , --
     IN inSession        TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, ObjectCode Integer, idBarCode TVarChar
+RETURNS TABLE (Id Integer, ObjectCode Integer, idBarCode TVarChar, BarCode_Sale TVarChar
              , StartDate  TDateTime
              , EndDate    TDateTime
              , JuridicalName TVarChar
@@ -134,6 +134,7 @@ BEGIN
       SELECT tmpData.Id
            , tmpData.ObjectCode
            , tmpData.idBarCode
+           , tmpData.idBarCode AS BarCode_Sale
            , tmpData.StartDate
            , tmpData.EndDate
            , tmpData.JuridicalName
