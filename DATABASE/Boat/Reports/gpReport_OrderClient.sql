@@ -54,6 +54,7 @@ RETURNS TABLE  (
               , OperPrice       TFloat
               , CountForPrice   TFloat    --
               , Summ TFloat
+              , OperPrice_OpderPartner TFloat
               , GoodsId Integer
               , GoodsCode Integer
               , GoodsName TVarChar
@@ -233,6 +234,21 @@ BEGIN
                                                             AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                                 )
 
+  -- из заказа поставщику, цена по которой заказали
+  , tmpMI_OpderPartner AS (SELECT MovementItem.MovementId
+                                , MovementItem.ObjectId       AS GoodsId
+                                , MIFloat_OperPrice.ValueData AS OperPrice
+                           FROM tmpMovement_OrderPartner AS Movement
+                                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                       AND MovementItem.DescId     = zc_MI_Master()
+                                                       AND MovementItem.isErased   = FALSE
+                                INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
+ 
+                                LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
+                                                            ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()
+                           )
+
   , tmpGoodsParams AS (SELECT tmpGoods.GoodsId
                             , Object_Goods.ObjectCode            AS GoodsCode
                             , Object_Goods.ValueData             AS GoodsName
@@ -363,6 +379,7 @@ BEGIN
            , MIFloat_OperPrice.ValueData     ::TFloat AS OperPrice         -- Цена вх без НДС
            , COALESCE (MIFloat_CountForPrice.ValueData,1) ::TFloat AS CountForPrice     --
            , zfCalc_SummIn (MIFloat_AmountPartner.ValueData, MIFloat_OperPrice.ValueData, COALESCE (MIFloat_CountForPrice.ValueData,1))  ::TFloat AS Summ
+           , tmpMI_OpderPartner.OperPrice ::TFloat AS OperPrice_OpderPartner
            , tmpMI_Child.GoodsId
            , tmpGoodsParams.GoodsCode
            , tmpGoodsParams.GoodsName
@@ -380,6 +397,8 @@ BEGIN
       FROM tmpMI_Child
            LEFT JOIN tmpMovement_OrderClient ON tmpMovement_OrderClient.MovementId = tmpMI_Child.MovementId
            LEFT JOIN tmpMovement_OrderPartner ON tmpMovement_OrderPartner.Id = tmpMI_Child.MovementId_OrderPartner
+           LEFT JOIN tmpMI_OpderPartner ON tmpMI_OpderPartner.MovementId = tmpMovement_OrderPartner.Id
+                                       AND tmpMI_OpderPartner.GoodsId = tmpMI_Child.GoodsId
            LEFT JOIN tmpGoodsParams ON tmpGoodsParams.GoodsId = tmpMI_Child.GoodsId
 
            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id   = tmpMI_Child.PartnerId

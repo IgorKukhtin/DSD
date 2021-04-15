@@ -36,7 +36,6 @@ type
     GoodsName: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
-    EKPrice: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     InvNumberPartner: TcxGridDBColumn;
