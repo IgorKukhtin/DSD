@@ -330,39 +330,7 @@ object OrderClientForm: TOrderClientForm
               item
                 Format = ',0.####'
                 Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
                 Column = Summ
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
               end
               item
                 Format = ',0.####'
@@ -715,10 +683,6 @@ object OrderClientForm: TOrderClientForm
               DataController.Filter.Options = [fcoCaseInsensitive]
               DataController.Summary.DefaultGroupSummaryItems = <
                 item
-                  Format = ',0.####'
-                  Kind = skSum
-                end
-                item
                   Format = ',0.00'
                   Kind = skSum
                   Column = EKPrice_ch1
@@ -741,10 +705,6 @@ object OrderClientForm: TOrderClientForm
                   Format = ',0.00##'
                   Kind = skSum
                   Column = EKPrice_summ_ch1
-                end
-                item
-                  Format = ',0.00##'
-                  Kind = skSum
                 end
                 item
                   Format = ',0.00##'
@@ -1583,6 +1543,34 @@ object OrderClientForm: TOrderClientForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object InvNumber_ch3: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1079#1072#1082#1072#1079' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+            Options.Editing = False
+            Width = 70
+          end
+          object OperDate_ch3: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'OperDate'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1079#1072#1082#1072#1079' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+            Options.Editing = False
+            Width = 70
+          end
+          object OperDatePartner_ch3: TcxGridDBColumn
+            Caption = 'Plan Dt'
+            DataBinding.FieldName = 'OperDatePartner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085#1086#1074#1072#1103' '#1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1082#1080' - '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1082#1072#1079' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+            Options.Editing = False
+            Width = 70
+          end
           object UnitName_ch3: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
@@ -1741,15 +1729,16 @@ object OrderClientForm: TOrderClientForm
             Width = 100
           end
           object Amount_ch3: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1079#1077#1088#1074
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1079#1072#1088#1077#1079#1077#1088#1074#1080#1088#1086#1074#1072#1085#1086' '#1085#1072' '#1089#1082#1083#1072#1076#1077
             Options.Editing = False
-            Width = 50
+            Width = 55
           end
           object AmountPartner_ch3: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1089#1090#1072#1074#1097'.'
@@ -1875,34 +1864,6 @@ object OrderClientForm: TOrderClientForm
             Options.Editing = False
             Width = 70
           end
-          object InvNumber_ch3: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
-            DataBinding.FieldName = 'InvNumber'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1079#1072#1082#1072#1079' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
-            Options.Editing = False
-            Width = 70
-          end
-          object OperDate_ch3: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
-            DataBinding.FieldName = 'OperDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1079#1072#1082#1072#1079' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
-            Options.Editing = False
-            Width = 70
-          end
-          object OperDatePartner_ch3: TcxGridDBColumn
-            Caption = 'Plan Dt'
-            DataBinding.FieldName = 'OperDatePartner'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1083#1072#1085#1086#1074#1072#1103' '#1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1082#1080' - '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1082#1072#1079' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
-            Options.Editing = False
-            Width = 70
-          end
         end
         object cxGridLevel3: TcxGridLevel
           GridView = cxGridDBTableView1
@@ -1928,83 +1889,11 @@ object OrderClientForm: TOrderClientForm
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = InfoDS
           DataController.Filter.Options = [fcoCaseInsensitive]
-          DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end>
+          DataController.Summary.DefaultGroupSummaryItems = <>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
