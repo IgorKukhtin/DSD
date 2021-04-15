@@ -52,6 +52,7 @@ type
     function GetTaxRate : string;
     function SensZReportBefore : boolean;
     function SummaCash : Currency;
+    function SummaCard : Currency;
     function ReceiptsSales : Integer;
     function ReceiptsReturn : Integer;
   public
@@ -547,6 +548,12 @@ function TCashIKC_E810T.SummaCash : Currency;
 begin
   FPrinter.FPGetDayReportData;
   Result := (FPrinter.prDaySaleSumOnPayForm4 - FPrinter.prDayRefundSumOnPayForm4) / 100;
+end;
+
+function TCashIKC_E810T.SummaCard : Currency;
+begin
+  FPrinter.FPGetDayReportData;
+  Result := (FPrinter.prDaySaleSumOnPayForm1 - FPrinter.prDayRefundSumOnPayForm1) / 100;
 end;
 
 function TCashIKC_E810T.ReceiptsSales : Integer;

@@ -12,6 +12,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , UserPassword TVarChar
              , Key TBlob
              , KeyPassword TVarChar
+             , LikiDnepr_UnitId Integer, LikiDnepr_UnitName TVarChar
+             , LikiDnepr_UserEmail TVarChar
+             , LikiDnepr_PasswordEHels TVarChar
 ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -44,6 +47,11 @@ BEGIN
         , ObjectString_UserPassword.ValueData
         , ObjectBlob_Key.ValueData
         , ObjectString_KeyPassword.ValueData
+        
+        , Object_LikiDnepr_Unit.Id AS LikiDnepr_UnitId
+        , Object_LikiDnepr_Unit.ValueData AS LikiDnepr_UnitName
+        , ObjectString_LikiDnepr_UserEmail.ValueData
+        , ObjectString_LikiDnepr_PasswordEHels.ValueData
 
    FROM Object AS Object_User
 
@@ -68,6 +76,19 @@ BEGIN
                 ON ObjectString_KeyPassword.DescId = zc_ObjectString_User_Helsi_KeyPassword() 
                AND ObjectString_KeyPassword.ObjectId = Object_User.Id
                          
+         LEFT JOIN ObjectLink AS ObjectLink_User_LikiDnepr_Unit
+                ON ObjectLink_User_LikiDnepr_Unit.ObjectId = Object_User.Id
+               AND ObjectLink_User_LikiDnepr_Unit.DescId = zc_ObjectLink_User_LikiDnepr_Unit()
+         LEFT JOIN Object AS Object_LikiDnepr_Unit ON Object_LikiDnepr_Unit.Id = ObjectLink_User_LikiDnepr_Unit.ChildObjectId
+
+         LEFT JOIN ObjectString AS ObjectString_LikiDnepr_UserEmail
+                ON ObjectString_LikiDnepr_UserEmail.DescId = zc_ObjectString_User_LikiDnepr_UserEmail() 
+               AND ObjectString_LikiDnepr_UserEmail.ObjectId = Object_User.Id
+        
+         LEFT JOIN ObjectString AS ObjectString_LikiDnepr_PasswordEHels
+                ON ObjectString_LikiDnepr_PasswordEHels.DescId = zc_ObjectString_User_LikiDnepr_PasswordEHels() 
+               AND ObjectString_LikiDnepr_PasswordEHels.ObjectId = Object_User.Id
+
    WHERE Object_User.Id = inId;
   
 END;$BODY$

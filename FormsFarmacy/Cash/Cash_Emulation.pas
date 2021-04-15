@@ -62,6 +62,7 @@ type
     function GetTaxRate : string;
     function SensZReportBefore : boolean;
     function SummaCash : Currency;
+    function SummaCard : Currency;
     function ReceiptsSales : Integer;
     function ReceiptsReturn : Integer;
   public
@@ -626,6 +627,11 @@ end;
 function TCashEmulation.SummaCash : Currency;
 begin
   Result := 19999;
+end;
+
+function TCashEmulation.SummaCard : Currency;
+begin
+  Result := 1444;
 end;
 
 function TCashEmulation.ReceiptsSales : Integer;

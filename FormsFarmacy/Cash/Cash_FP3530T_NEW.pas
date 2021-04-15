@@ -50,6 +50,7 @@ type
     function GetTaxRate : string;
     function SensZReportBefore : boolean;
     function SummaCash : Currency;
+    function SummaCard : Currency;
     function ReceiptsSales : Integer;
     function ReceiptsReturn : Integer;
   public
@@ -713,6 +714,20 @@ begin
   if TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum) then Result := nSum;
 
   S := FPrinter.SUMDAY[2, 0, 0, 2, Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  if TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum) then Result := Result - nSum;
+end;
+
+function TCashFP3530T_NEW.SummaCard : Currency;
+  var S : string; nSum : Currency;
+begin
+  Result := 0;
+
+  S := FPrinter.SUMDAY[2, 1, 0, 1, Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  if TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum) then Result := nSum;
+
+  S := FPrinter.SUMDAY[2, 1, 0, 2, Password];
   if not СообщениеКА(FPrinter.GETERROR) then Exit;
   if TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum) then Result := Result - nSum;
 end;

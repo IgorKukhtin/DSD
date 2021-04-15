@@ -1302,6 +1302,34 @@ end if;*/
                , OperDate
             FROM tmpItem;
     END IF;
+    
+    -- Проверили правельность проводок
+    IF EXISTS(SELECT 1
+              FROM Movement
+
+                   INNER JOIN movementitem ON movementitem.movementid = Movement.Id
+                                          AND movementitem.amount > 0
+                                          AND MovementItem.DescId = zc_MI_Master()
+                                          AND movementitem.iserased = False
+
+                   LEFT JOIN movementitem AS movementitem_Child
+                                          ON movementitem_Child.movementid = Movement.Id
+                                         AND movementitem_Child.parentid = movementitem.id
+                                         AND movementitem_Child.amount > 0
+                                         AND movementitem_Child.DescId = zc_MI_Child()
+                                         AND movementitem_Child.iserased = False
+
+                   LEFT JOIN movementitemcontainer ON movementitemcontainer.movementitemid =  COALESCE(movementitem_Child.ID, movementitem.id)
+                                                  AND movementitemcontainer.descid = zc_Container_Count()
+                                                  AND movementitemcontainer.Amount < 0
+                                                   
+              WHERE Movement.ID = 22059675  
+              GROUP BY COALESCE(movementitem_Child.ID, movementitem.id), COALESCE(movementitem_Child.amount, movementitem.amount)
+              HAVING COALESCE(movementitem_Child.amount, movementitem.amount) + COALESCE(SUM(movementitemcontainer.amount), 0) <> 0)
+    THEN
+      RAISE EXCEPTION 'Ошибка проведения перемещения. Повторите проведение если повториться обратитесь к системному администратору.';
+    END IF;
+    
 
      -- ФИНИШ - Обязательно сохранили
      PERFORM lpInsertUpdate_MovementItemContainer_byTable();

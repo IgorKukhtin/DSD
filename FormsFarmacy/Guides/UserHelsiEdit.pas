@@ -39,6 +39,13 @@ type
     edKeyPassword: TcxTextEdit;
     edKey: TcxButtonEdit;
     dsdFileToBase641: TdsdFileToBase64;
+    edLikiDnepr_Unit: TcxButtonEdit;
+    cxLabel2: TcxLabel;
+    edLikiDnepr_PasswordEHels: TcxTextEdit;
+    cxLabel8: TcxLabel;
+    edLikiDnepr_UserEmail: TcxTextEdit;
+    cxLabel9: TcxLabel;
+    LikiDnepr_UnitGuides: TdsdGuides;
   private
     { Private declarations }
   public

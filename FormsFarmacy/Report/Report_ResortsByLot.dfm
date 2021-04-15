@@ -1,29 +1,29 @@
 inherited Report_ResortsByLotForm: TReport_ResortsByLotForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1077#1088#1077#1089#1086#1088#1090#1099' '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084' '#1090#1086#1074#1072#1088#1072'>'
   ClientHeight = 509
-  ClientWidth = 712
+  ClientWidth = 930
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 728
+  ExplicitWidth = 946
   ExplicitHeight = 548
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 712
+    Width = 930
     Height = 450
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 712
     ExplicitHeight = 450
     ClientRectBottom = 450
-    ClientRectRight = 712
+    ClientRectRight = 930
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 712
       ExplicitHeight = 450
       inherited cxGrid: TcxGrid
         Top = 8
-        Width = 712
+        Width = 930
         Height = 442
         ExplicitTop = 8
         ExplicitWidth = 712
@@ -44,6 +44,11 @@ inherited Report_ResortsByLotForm: TReport_ResortsByLotForm
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####; -,0.####;;'
+              Kind = skSum
+              Column = AmountPD
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -77,6 +82,14 @@ inherited Report_ResortsByLotForm: TReport_ResortsByLotForm
             Options.Editing = False
             Width = 235
           end
+          object TypeResorts: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1089#1086#1088#1090' '#1087#1086
+            DataBinding.FieldName = 'TypeResorts'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
           object Amount: TcxGridDBColumn
             Caption = #1042' '#1087#1077#1088#1077#1089#1086#1088#1090#1077
             DataBinding.FieldName = 'Amount'
@@ -98,20 +111,40 @@ inherited Report_ResortsByLotForm: TReport_ResortsByLotForm
             Options.Editing = False
             Width = 84
           end
+          object AmountPD: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082#1086#1074#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
+            DataBinding.FieldName = 'AmountPD'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####; -,0.####;;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
+          object CountPD: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1088#1086#1082#1086#1074#1099#1093' '#1087#1072#1088#1090#1080#1081
+            DataBinding.FieldName = 'CountPD'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
         end
       end
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 0
-        Width = 712
+        Width = 930
         Height = 8
         AlignSplitter = salTop
         Control = cxGrid
+        ExplicitWidth = 712
       end
     end
   end
   inherited Panel: TPanel
-    Width = 712
+    Width = 930
     Height = 33
     ExplicitWidth = 712
     ExplicitHeight = 33
@@ -394,7 +427,7 @@ inherited Report_ResortsByLotForm: TReport_ResortsByLotForm
         end
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -567,6 +600,14 @@ inherited Report_ResortsByLotForm: TReport_ResortsByLotForm
         Value = ''
         Component = MasterCDS
         ComponentItem = 'ContainerId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContainerPDId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContainerPDId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
