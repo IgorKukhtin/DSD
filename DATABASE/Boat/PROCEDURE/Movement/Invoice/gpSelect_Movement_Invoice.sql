@@ -113,14 +113,19 @@ BEGIN
                                                       )
                   )
 
-     , tmpMLM_OrderClient AS (SELECT MovementLinkMovement.*
-                              FROM MovementLinkMovement
-                                  INNER JOIN Movement AS Movement_Order
-                                                      ON Movement_Order.Id = MovementLinkMovement.MovementId
-                                                     AND Movement_Order.StatusId <> zc_Enum_Status_Erased()
-                                                     AND Movement_Order.DescId = zc_Movement_OrderClient()
-                              WHERE MovementLinkMovement.MovementChildId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Invoice()
+     , tmpMLM_OrderClient AS (SELECT *
+                              FROM (
+                                    SELECT MovementLinkMovement.*
+                                         , ROW_NUMBER() OVER (PARTITION BY MovementLinkMovement.MovementId) AS ord
+                                    FROM MovementLinkMovement
+                                        INNER JOIN Movement AS Movement_Order
+                                                            ON Movement_Order.Id = MovementLinkMovement.MovementId
+                                                           AND Movement_Order.StatusId <> zc_Enum_Status_Erased()
+                                                           AND Movement_Order.DescId = zc_Movement_OrderClient()
+                                    WHERE MovementLinkMovement.MovementChildId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                      AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Invoice()
+                                    ) AS tmp
+                              WHERE tmp.Ord = 1
                               )
 
      , tmpMLM_BankAccount AS (SELECT MovementLinkMovement.MovementChildId
@@ -299,8 +304,9 @@ BEGIN
                          LEFT JOIN tmpMLM_OrderClient AS MovementLinkMovement_Invoice
                                                       ON MovementLinkMovement_Invoice.MovementChildId = Movement.Id
                                                     -- AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
+                         
                          LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
-                                                      ON MovementLinkObject_Product.MovementId = MovementLinkMovement_Invoice.MovementId
+                                                      ON MovementLinkObject_Product.MovementId = COALESCE (Movement.ParentId, MovementLinkMovement_Invoice.MovementId)
                                                      AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
                          LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId
                  

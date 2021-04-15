@@ -86,14 +86,18 @@ BEGIN
      
      RETURN QUERY 
      WITH
-     tmpMLM_OrderClient AS (SELECT MovementLinkMovement.*
-                            FROM MovementLinkMovement
-                                INNER JOIN Movement AS Movement_Order
-                                                    ON Movement_Order.Id = MovementLinkMovement.MovementId
-                                                   AND Movement_Order.StatusId <> zc_Enum_Status_Erased()
-                                                   AND Movement_Order.DescId = zc_Movement_OrderClient()
-                            WHERE MovementLinkMovement.MovementChildId = inMovementId
-                              AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Invoice()
+     tmpMLM_OrderClient AS (SELECT *
+                            FROM (SELECT MovementLinkMovement.*
+                                       , ROW_NUMBER() OVER (PARTITION BY MovementLinkMovement.MovementId) AS ord
+                                  FROM MovementLinkMovement
+                                      INNER JOIN Movement AS Movement_Order
+                                                          ON Movement_Order.Id = MovementLinkMovement.MovementId
+                                                         AND Movement_Order.StatusId <> zc_Enum_Status_Erased()
+                                                         AND Movement_Order.DescId = zc_Movement_OrderClient()
+                                  WHERE MovementLinkMovement.MovementChildId = inMovementId
+                                    AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Invoice()
+                                  ) AS tmp
+                              WHERE tmp.Ord = 1
                             )
 
 
@@ -164,13 +168,19 @@ BEGIN
                                      ON MovementLinkObject_Product.MovementId = Movement.Id
                                     AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
         LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId*/
+         --Parent Документ Заказ или ПРиход
+        LEFT JOIN Movement AS Movement_Parent
+                           ON Movement_Parent.Id = Movement.ParentId
+                          AND Movement_Parent.StatusId <> zc_Enum_Status_Erased()
+        LEFT JOIN MovementDesc AS MovementDesc_Parent ON MovementDesc_Parent.Id = Movement_Parent.DescId
+        
         --Лодку показываем из док. Заказ информативно
         LEFT JOIN tmpMLM_OrderClient AS MovementLinkMovement_Invoice
                                      ON MovementLinkMovement_Invoice.MovementChildId = Movement.Id
                                     AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
         
         LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
-                                     ON MovementLinkObject_Product.MovementId = MovementLinkMovement_Invoice.MovementId
+                                     ON MovementLinkObject_Product.MovementId = COALESCE (Movement.ParentId, MovementLinkMovement_Invoice.MovementId)
                                     AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
         LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId
 
@@ -184,11 +194,7 @@ BEGIN
                                     AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
-        --Parent Документ Заказ или ПРиход
-        LEFT JOIN Movement AS Movement_Parent
-                           ON Movement_Parent.Id = Movement.ParentId
-                          AND Movement_Parent.StatusId <> zc_Enum_Status_Erased()
-        LEFT JOIN MovementDesc AS MovementDesc_Parent ON MovementDesc_Parent.Id = Movement_Parent.DescId
+
 
        WHERE Movement.Id = inMovementId
        ;

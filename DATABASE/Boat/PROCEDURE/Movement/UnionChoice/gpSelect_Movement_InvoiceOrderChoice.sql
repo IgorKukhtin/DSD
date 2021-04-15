@@ -107,13 +107,18 @@ BEGIN
                                                       )
                   )
      --Лодку показываем из док. Заказ
-     , tmpMLM AS (SELECT MovementLinkMovement.*
-                  FROM MovementLinkMovement
-                       INNER JOIN Movement ON Movement.Id = MovementLinkMovement.MovementChildId
-                                          AND Movement.DescId = zc_Movement_OrderClient()
-                  WHERE MovementLinkMovement.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                    AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Invoice()
+     , tmpMLM AS (SELECT *
+                  FROM (SELECT MovementLinkMovement.*
+                             , ROW_NUMBER() OVER (PARTITION BY MovementLinkMovement.MovementId) AS ord
+                        FROM MovementLinkMovement
+                             INNER JOIN Movement ON Movement.Id = MovementLinkMovement.MovementChildId
+                                                AND Movement.DescId = zc_Movement_OrderClient()
+                        WHERE MovementLinkMovement.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                          AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Invoice()
+                         ) AS tmp
+                  WHERE tmp.Ord = 1
                   )
+
      -- док Заказа без счетов
      , tmpMovement_OrderClient AS (SELECT Movement_OrderClient.Id
                                         , Movement_OrderClient.DescId
@@ -260,7 +265,7 @@ BEGIN
                         AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
         
         LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
-                                     ON MovementLinkObject_Product.MovementId = MovementLinkMovement_Invoice.MovementId
+                                     ON MovementLinkObject_Product.MovementId = COALESCE (Movement.ParentId, MovementLinkMovement_Invoice.MovementId)
                                     AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
         LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId
 
@@ -377,6 +382,9 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
                               ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
                              AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
+        
+        LEFT JOIN tmpMovement ON tmpMovement.ParentId = Movement_OrderClient.Id
+       WHERE tmpMovement.ParentId IS NULL
 ;
 
 END;
