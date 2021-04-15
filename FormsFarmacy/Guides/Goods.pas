@@ -285,6 +285,7 @@ type
     actExecUpdate_isMultiplicityError: TdsdExecStoredProc;
     spUpdate_isMultiplicityError_Revert: TdsdStoredProc;
     dxBarButton12: TdxBarButton;
+    isUkrainianTranslation: TcxGridDBColumn;
   private
     { Private declarations }
   public

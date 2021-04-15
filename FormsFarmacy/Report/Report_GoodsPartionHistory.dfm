@@ -309,7 +309,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
       Caption = #1058#1086#1074#1072#1088
     end
     object edGoods: TcxButtonEdit
-      Left = 329
+      Left = 378
       Top = 27
       Properties.Buttons = <
         item
@@ -321,12 +321,12 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
       Width = 184
     end
     object cxLabel5: TcxLabel
-      Left = 522
+      Left = 571
       Top = 29
       Caption = #1055#1072#1088#1090#1080#1103
     end
     object edParty: TcxButtonEdit
-      Left = 569
+      Left = 618
       Top = 27
       Properties.Buttons = <
         item
@@ -336,6 +336,15 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
       Properties.ReadOnly = True
       TabOrder = 9
       Width = 184
+    end
+    object ceCode: TcxCurrencyEdit
+      Left = 331
+      Top = 27
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      Properties.ReadOnly = True
+      TabOrder = 10
+      Width = 48
     end
   end
   object cbPartion: TcxCheckBox [2]
@@ -374,6 +383,11 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
         Properties.Strings = (
           'Key'
           'TextValue')
+      end
+      item
+        Component = ceCode
+        Properties.Strings = (
+          'Value')
       end>
   end
   inherited ActionList: TActionList
@@ -500,6 +514,12 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
           Component = GuidesGoods
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsCode'
+          Value = Null
+          Component = ceCode
           MultiSelectSeparator = ','
         end
         item
@@ -734,6 +754,12 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Code'
+        Value = Null
+        Component = ceCode
+        MultiSelectSeparator = ','
       end>
     Left = 424
     Top = 24
@@ -890,7 +916,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
       end
       item
         Name = 'StartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -898,7 +924,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
       end
       item
         Name = 'EndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

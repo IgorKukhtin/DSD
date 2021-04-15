@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , UpperLimitPromoBonus TFloat
              , LowerLimitPromoBonus TFloat
              , MinPercentPromoBonus TFloat
+             , DayCompensDiscount Integer
              ) AS
 $BODY$
 BEGIN
@@ -45,6 +46,7 @@ BEGIN
         , ObjectFloat_CashSettings_UpperLimitPromoBonus.ValueData                  AS UpperLimitPromoBonus
         , ObjectFloat_CashSettings_LowerLimitPromoBonus.ValueData                  AS LowerLimitPromoBonus
         , ObjectFloat_CashSettings_MinPercentPromoBonus.ValueData                  AS MinPercentPromoBonus
+        , ObjectFloat_CashSettings_DayCompensDiscount.ValueData::Integer           AS DayCompensDiscount
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id 
@@ -82,6 +84,9 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_MinPercentPromoBonus
                               ON ObjectFloat_CashSettings_MinPercentPromoBonus.ObjectId = Object_CashSettings.Id 
                              AND ObjectFloat_CashSettings_MinPercentPromoBonus.DescId = zc_ObjectFloat_CashSettings_MinPercentPromoBonus()
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_DayCompensDiscount
+                              ON ObjectFloat_CashSettings_DayCompensDiscount.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_DayCompensDiscount.DescId = zc_ObjectFloat_CashSettings_DayCompensDiscount()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_BlockVIP
                                 ON ObjectBoolean_CashSettings_BlockVIP.ObjectId = Object_CashSettings.Id 

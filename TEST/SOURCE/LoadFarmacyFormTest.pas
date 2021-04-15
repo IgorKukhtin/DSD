@@ -1574,12 +1574,12 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckFarmDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckFarmDialogForm');
-}
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionHistoryForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionHistoryForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionHistoryDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionHistoryDialogForm');
-{    exit;
+    exit;
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SoldForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_SoldForm');

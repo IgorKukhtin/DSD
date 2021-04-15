@@ -72,6 +72,7 @@ type
     bbExecuteDialog: TdxBarButton;
     actRefreshIsPartion: TdsdDataSetRefresh;
     cbPartion: TcxCheckBox;
+    ceCode: TcxCurrencyEdit;
   private
     { Private declarations }
   public

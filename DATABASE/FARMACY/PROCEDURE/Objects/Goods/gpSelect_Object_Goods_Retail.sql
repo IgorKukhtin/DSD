@@ -48,6 +48,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , SummaWages TFloat, PercentWages TFloat, SummaWagesStore TFloat, PercentWagesStore TFloat
              , UnitSupplementSUN1OutId Integer, UnitSupplementSUN1OutName TVarChar
              , Multiplicity TFloat, isMultiplicityError boolean
+             , isUkrainianTranslation boolean
               ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -349,6 +350,7 @@ BEGIN
            , Object_UnitSupplementSUN1Out.ValueData                              AS UnitSupplementSUN1OutName
            , Object_Goods_Main.Multiplicity
            , Object_Goods_Main.isMultiplicityError
+           , Trim(COALESCE(Object_Goods_Main.NameUkr, '')) <> ''                 AS isUkrainianTranslation
 
       FROM Object_Goods_Retail
 

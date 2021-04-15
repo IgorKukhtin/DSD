@@ -93,6 +93,8 @@ type
     bbFinalSUAProtocol: TdxBarButton;
     cbRemains: TcxCheckBox;
     cbMCSValue: TcxCheckBox;
+    cbNeedRound: TcxCheckBox;
+    cbAssortmentRound: TcxCheckBox;
     procedure ParentFormCreate(Sender: TObject);
     procedure ParentFormClose(Sender: TObject; var Action: TCloseAction);
     procedure actCalculationExecute(Sender: TObject);

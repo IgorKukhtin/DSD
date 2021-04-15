@@ -3,7 +3,7 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
   Top = 0
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1080#1089#1090#1077#1084#1077' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1086#1075#1086' '#1091#1087#1088#1072#1074#1083#1077#1085#1080#1103' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1086#1084
   ClientHeight = 633
-  ClientWidth = 934
+  ClientWidth = 1134
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,14 +19,14 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 934
+    Width = 1134
     Height = 217
     Align = alTop
     TabOrder = 0
     object Panel2: TPanel
       Left = 1
       Top = 1
-      Width = 932
+      Width = 1132
       Height = 151
       Align = alClient
       BevelOuter = bvNone
@@ -71,7 +71,7 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
       object Panel5: TPanel
         Left = 460
         Top = 0
-        Width = 472
+        Width = 672
         Height = 151
         Align = alClient
         Caption = 'Panel5'
@@ -83,12 +83,12 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           Align = alTop
           Caption = #1040#1087#1090#1077#1082#1080' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1072
           Properties.Alignment.Horz = taCenter
-          AnchorX = 236
+          AnchorX = 336
         end
         object CheckListBoxAssortment: TCheckListBox
           Left = 1
           Top = 18
-          Width = 470
+          Width = 670
           Height = 115
           OnClickCheck = CheckListBoxAssortmentClickCheck
           Align = alClient
@@ -107,7 +107,7 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
     object Panel3: TPanel
       Left = 1
       Top = 152
-      Width = 932
+      Width = 1132
       Height = 64
       Align = alBottom
       Caption = 'Panel3'
@@ -240,21 +240,35 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         Top = 22
         Caption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103' > 0'
         TabOrder = 15
-        Width = 201
+        Width = 171
       end
       object cbMCSValue: TcxCheckBox
         Left = 718
         Top = 3
         Caption = #1059#1095#1080#1090#1099#1074#1072#1090#1100' '#1090#1086#1074#1072#1088' '#1089' '#1053#1058#1047' > 0'
         TabOrder = 16
-        Width = 201
+        Width = 171
+      end
+      object cbNeedRound: TcxCheckBox
+        Left = 879
+        Top = 22
+        Caption = #1055#1086#1090#1088#1077#1073#1085#1086#1089#1090#1100' '#1086#1082#1088#1091#1075#1083#1103#1090#1100' '#1087#1086' '#1084#1072#1090' '#1087#1088#1080#1085#1094#1080#1087#1091
+        TabOrder = 17
+        Width = 234
+      end
+      object cbAssortmentRound: TcxCheckBox
+        Left = 879
+        Top = 3
+        Caption = #1040#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090' '#1086#1082#1088#1091#1075#1083#1103#1090#1100' '#1087#1086' '#1084#1072#1090' '#1087#1088#1080#1085#1094#1080#1087#1091
+        TabOrder = 18
+        Width = 234
       end
     end
   end
   object cxGrid: TcxGrid
     Left = 0
     Top = 243
-    Width = 934
+    Width = 1134
     Height = 390
     Align = alClient
     TabOrder = 5
@@ -920,6 +934,22 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         Name = 'inisRemains'
         Value = Null
         Component = cbRemains
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAssortmentRound'
+        Value = Null
+        Component = cbAssortmentRound
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNeedRound'
+        Value = Null
+        Component = cbNeedRound
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
