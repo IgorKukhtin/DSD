@@ -1,29 +1,29 @@
 inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_DiscountExternalForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' ('#1076#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1087#1088#1086#1077#1082#1090#1099')'
-  ClientHeight = 395
+  ClientHeight = 430
   ClientWidth = 1072
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1088
-  ExplicitHeight = 434
+  ExplicitHeight = 469
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 77
     Width = 1072
-    Height = 318
+    Height = 353
     ExplicitTop = 77
     ExplicitWidth = 1072
-    ExplicitHeight = 318
-    ClientRectBottom = 318
+    ExplicitHeight = 353
+    ClientRectBottom = 353
     ClientRectRight = 1072
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1072
-      ExplicitHeight = 318
+      ExplicitHeight = 353
       inherited cxGrid: TcxGrid
         Width = 1072
-        Height = 318
+        Height = 353
         ExplicitWidth = 1072
-        ExplicitHeight = 318
+        ExplicitHeight = 353
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -142,6 +142,7 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 75
           end
           object Price: TcxGridDBColumn
@@ -183,11 +184,21 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
             Options.Editing = False
             Width = 87
           end
+          object DateCompensation: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
+            DataBinding.FieldName = 'DateCompensation'
+            PropertiesClassName = 'TcxDateEditProperties'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Styles.Content = dmMain.cxHeaderL1Style
+            Width = 73
+          end
           object DiscountExternalName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1055#1088#1086#1077#1082#1090#1072
             DataBinding.FieldName = 'DiscountExternalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
           end
           object DiscountCardName: TcxGridDBColumn
@@ -446,6 +457,63 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actUpdateMainDS: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateDateCompensation
+      StoredProcList = <
+        item
+          StoredProc = spUpdateDateCompensation
+        end>
+      Caption = 'actUpdateMainDS'
+      DataSource = MasterDS
+    end
+    object matUpdateDateCompensation: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actExecuteDialogDateCompensation
+      ActionList = <
+        item
+          Action = actUpdateDateCompensation
+        end>
+      View = cxGridDBTableView
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
+      ImageIndex = 43
+    end
+    object actUpdateDateCompensation: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateDateCompensationFilter
+      StoredProcList = <
+        item
+          StoredProc = spUpdateDateCompensationFilter
+        end>
+      Caption = 'actUpdateDateCompensation'
+    end
+    object actExecuteDialogDateCompensation: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteDialogDateCompensation'
+      FormName = 'TDataDialogForm'
+      FormNameParam.Value = 'TDataDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DateCompensation'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -534,6 +602,18 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
         item
           Visible = True
           ItemName = 'bbOpenDocument'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateDateCompensation'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object bbOpenDocument: TdxBarButton
@@ -542,6 +622,10 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bbUpdateDateCompensation: TdxBarButton
+      Action = matUpdateDateCompensation
       Category = 0
     end
   end
@@ -627,6 +711,12 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DateCompensation'
+        Value = '01.01.2021'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 232
     Top = 176
@@ -687,5 +777,75 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
       end>
     Left = 360
     Top = 24
+  end
+  object spUpdateDateCompensation: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_DateCompensation'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioDateCompensation'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DateCompensation'
+        DataType = ftDateTime
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummChangePercent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummChangePercent'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 330
+    Top = 208
+  end
+  object spUpdateDateCompensationFilter: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_DateCompensation'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioDateCompensation'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DateCompensation'
+        DataType = ftDateTime
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummChangePercent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummChangePercent'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 338
+    Top = 264
   end
 end

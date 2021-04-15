@@ -13,6 +13,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Statu
              , UnitName TVarChar, MainJuridicalId Integer, MainJuridicalName TVarChar, RetailId Integer, RetailName TVarChar
              , CashRegisterName TVarChar, PaidTypeName TVarChar
              , DiscountCardName TVarChar, DiscountExternalName TVarChar
+             , DateCompensation TDateTime
 
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat
@@ -31,6 +32,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId Integer;
    DECLARE vbRetailId Integer;
+   DECLARE vbDayCompensDiscount Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
@@ -73,6 +75,8 @@ BEGIN
 
            , Object_DiscountCard.ValueData                      AS DiscountCardName
            , Object_DiscountExternal.ValueData                  AS DiscountExternalName
+           
+           , MovementDate_Compensation.ValueData                AS DateCompensation
 
            , MovementItem.GoodsId
            , MovementItem.GoodsCode
@@ -139,6 +143,9 @@ BEGIN
              LEFT JOIN Object AS Object_DiscountCard ON Object_DiscountCard.Id = Movement_Check.DiscountCardId
              LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = Movement_Check.DiscountExternalId
 
+             LEFT JOIN MovementDate AS MovementDate_Compensation
+                                    ON MovementDate_Compensation.MovementId = Movement_Check.Id
+                                   AND MovementDate_Compensation.DescId = zc_MovementDate_Compensation()
 
    	         LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidType
                                           ON MovementLinkObject_PaidType.MovementId = Movement_Check.Id
@@ -188,3 +195,4 @@ $BODY$
  29.10.19                                                       *
 */
 
+select * from gpReport_MovementCheck_DiscountExternal(inStartDate := ('15.04.2021')::TDateTime , inEndDate := ('15.04.2021')::TDateTime , inUnitId := 183292 , inDiscountExternalId := 0 ,  inSession := '3');
