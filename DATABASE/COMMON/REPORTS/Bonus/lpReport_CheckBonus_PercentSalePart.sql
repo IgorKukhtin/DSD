@@ -863,6 +863,21 @@ BEGIN
                                 , ObjectLink_ContractChild.ChildObjectId
                                 , Object_ReportBonus.isErased
                          )
+
+     -- супервайзер для строк где нет контрагента берем по MAX из всех контрагентов юр лица
+    , tmpPersonal AS  (SELECT tmp.JuridicalId
+                            , MAX (ObjectLink_Partner_Personal.ChildObjectId) AS PersonalId
+                       FROM (SELECT tmpData.JuridicalId FROM tmpData WHERE COALESCE (tmpData.PartnerId ,0) =0) AS tmp
+                            INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                  ON ObjectLink_Partner_Juridical.ChildObjectId = tmp.JuridicalId
+                                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                            LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
+                                                 ON ObjectLink_Partner_Personal.ObjectId = ObjectLink_Partner_Juridical.ObjectId
+                                                AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
+                       WHERE inPaidKindId = zc_Enum_PaidKind_SecondForm()
+                       GROUP BY tmp.JuridicalId
+                       )
+
       -- Результат
       SELECT  tmpData.ContractId_master
             , tmpData.ContractId_child
@@ -992,11 +1007,13 @@ BEGIN
                                 AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
             LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Partner_Area.ChildObjectId
 
+            --
+            LEFT JOIN tmpPersonal ON tmpPersonal.JuridicalId = tmpData.JuridicalId
             --для нал берем из контрагента          
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
                                  ON ObjectLink_Partner_Personal.ObjectId = tmpData.PartnerId
                                 AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
-            LEFT JOIN Object_Personal_View AS Object_Personal ON Object_Personal.PersonalId = ObjectLink_Partner_Personal.ChildObjectId 
+            LEFT JOIN Object_Personal_View AS Object_Personal ON Object_Personal.PersonalId = COALESCE (ObjectLink_Partner_Personal.ChildObjectId, tmpPersonal.PersonalId)
 
       WHERE ((Object_Personal.PersonalId = inPersonalId AND inPaidKindId = zc_Enum_PaidKind_SecondForm()) OR inPersonalId = 0)
            OR tmpData.PaidKindId = zc_Enum_PaidKind_FirstForm()
