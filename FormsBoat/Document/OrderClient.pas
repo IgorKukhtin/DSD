@@ -303,6 +303,9 @@ type
     TotalSumm_partner_ch3: TcxGridDBColumn;
     TotalSumm_ch3: TcxGridDBColumn;
     ProdOptionsName_ch3: TcxGridDBColumn;
+    InvNumber_ch3: TcxGridDBColumn;
+    OperDate_ch3: TcxGridDBColumn;
+    OperDatePartner_ch3: TcxGridDBColumn;
   private
   public
   end;

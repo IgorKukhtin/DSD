@@ -302,9 +302,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 0
@@ -680,7 +677,7 @@ object OrderClientForm: TOrderClientForm
       object cxTopSplitter: TcxSplitter
         Left = 0
         Top = 165
-        Width = 8
+        Width = 1349
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
@@ -1875,6 +1872,34 @@ object OrderClientForm: TOrderClientForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object InvNumber_ch3: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1079#1072#1082#1072#1079' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+            Options.Editing = False
+            Width = 70
+          end
+          object OperDate_ch3: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1079#1072#1082#1072#1079' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+            Options.Editing = False
+            Width = 70
+          end
+          object OperDatePartner_ch3: TcxGridDBColumn
+            Caption = 'Plan Dt'
+            DataBinding.FieldName = 'OperDatePartner'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085#1086#1074#1072#1103' '#1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1082#1080' - '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1082#1072#1079' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
             Options.Editing = False
             Width = 70
           end

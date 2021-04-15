@@ -50,7 +50,7 @@ object OrderPartnerForm: TOrderPartnerForm
     object cxLabel2: TcxLabel
       Left = 171
       Top = 5
-      Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
+      Caption = #1044#1072#1090#1072
     end
     object edFrom: TcxButtonEdit
       Left = 407
@@ -231,8 +231,8 @@ object OrderPartnerForm: TOrderPartnerForm
     object cxLabel6: TcxLabel
       Left = 171
       Top = 45
-      Hint = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090'.'
-      Caption = 'External Dt'
+      Hint = #1055#1083#1072#1085#1086#1074#1072#1103' '#1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1082#1080
+      Caption = 'Plan Dt'
       ParentShowHint = False
       ShowHint = True
     end

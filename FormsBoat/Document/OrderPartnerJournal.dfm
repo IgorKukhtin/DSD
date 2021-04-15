@@ -214,18 +214,19 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
         Width = 56
       end
       object OperDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
+        Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
       object OperDatePartner: TcxGridDBColumn
-        Caption = 'External Dt'
+        Caption = 'Plan Dt'
         DataBinding.FieldName = 'OperDatePartner'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1055#1083#1072#1085#1086#1074#1072#1103' '#1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1082#1080
         Options.Editing = False
         Width = 100
       end
@@ -255,6 +256,7 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
       object PaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'PaidKindName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 50
@@ -287,7 +289,7 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 111
+        Width = 70
       end
       object DiscountNextTax: TcxGridDBColumn
         Caption = '% '#1089#1082'.('#1076#1086#1087'.)'
@@ -297,11 +299,12 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 111
+        Width = 70
       end
       object PriceWithVAT: TcxGridDBColumn
         Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
         DataBinding.FieldName = 'PriceWithVAT'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
@@ -312,6 +315,7 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 42
