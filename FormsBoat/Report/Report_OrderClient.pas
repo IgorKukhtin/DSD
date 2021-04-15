@@ -30,44 +30,23 @@ type
     cxLabel3: TcxLabel;
     edGoods: TcxButtonEdit;
     GuidesGoods: TdsdGuides;
-    LocationDescName: TcxGridDBColumn;
-    LocationName: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
-    MovementDescName: TcxGridDBColumn;
-    SummStart: TcxGridDBColumn;
-    SummIn: TcxGridDBColumn;
-    SummOut: TcxGridDBColumn;
-    SummEnd: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
-    ObjectByName: TcxGridDBColumn;
-    OperDatePartner: TcxGridDBColumn;
-    ObjectByCode: TcxGridDBColumn;
-    AmountStart: TcxGridDBColumn;
-    Price: TcxGridDBColumn;
-    PartionId: TcxGridDBColumn;
+    EKPrice: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    isActive: TcxGridDBColumn;
-    ObjectByDescName: TcxGridDBColumn;
-    MovementDescName_order: TcxGridDBColumn;
-    Amount: TcxGridDBColumn;
-    Summ: TcxGridDBColumn;
-    MovementId: TcxGridDBColumn;
-    isRemains: TcxGridDBColumn;
-    GoodsCode_parent: TcxGridDBColumn;
-    GoodsName_parent: TcxGridDBColumn;
-    Price_end: TcxGridDBColumn;
+    InvNumberPartner: TcxGridDBColumn;
+    AmountPartner: TcxGridDBColumn;
     cxLabel8: TcxLabel;
     edPartner: TcxButtonEdit;
     GuidesPartner: TdsdGuides;
-    Amount_Change: TcxGridDBColumn;
     bbSumm_branch: TdxBarControlContainerItem;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    isRePrice: TcxGridDBColumn;
-    isInv: TcxGridDBColumn;
     getMovementForm: TdsdStoredProc;
     actGetForm: TdsdExecStoredProc;
     bbOpenFormClient: TdxBarButton;
@@ -76,6 +55,7 @@ type
     actOpenFormClient: TdsdOpenForm;
     actOpenFormPartner: TdsdOpenForm;
     bbOpenFormPartner: TdxBarButton;
+    actRefreshEmpty: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

@@ -36,6 +36,8 @@ RETURNS TABLE  (
               , MovementId_OrderPartner  Integer
               , OperDate_OrderPartner TDateTime
               , InvNumber_OrderPartner  TVarChar
+              , OperDatePartner_OrderPartner TDateTime
+              , InvNumberPartner_OrderPartner TVarChar
               , StatusCode_OrderPartner Integer
               , FromId_OrderPartner Integer
               , FromCode_OrderPartner Integer
@@ -51,6 +53,7 @@ RETURNS TABLE  (
               , AmountPartner   TFloat
               , OperPrice       TFloat
               , CountForPrice   TFloat    --
+              , Summ TFloat
               , GoodsId Integer
               , GoodsCode Integer
               , GoodsName TVarChar
@@ -58,6 +61,11 @@ RETURNS TABLE  (
               , GoodsGroupName TVarChar
               , GoodsGroupNameFull TVarChar
               , MeasureName TVarChar
+              , GoodsTagName TVarChar
+              , GoodsTypeName TVarChar
+              , GoodsSizeName TVarChar
+              , ProdColorName TVarChar
+              , EngineName TVarChar
               , EKPrice     TFloat
 )
 AS
@@ -185,7 +193,9 @@ BEGIN
                                 )
 
   , tmpMovement_OrderPartner AS (SELECT Movement.*
-                                      , Object_Status.ObjectCode AS StatusCode
+                                      , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
+                                      , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
+                                      , Object_Status.ObjectCode                   AS StatusCode
                                       , Object_From.Id                             AS FromId
                                       , Object_From.ObjectCode                     AS FromCode
                                       , Object_From.ValueData                      AS FromName
@@ -232,6 +242,16 @@ BEGIN
                             , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
                             , Object_Measure.Id                  AS MeasureId
                             , Object_Measure.ValueData           AS MeasureName
+                            , Object_GoodsTag.Id                 AS GoodsTagId
+                            , Object_GoodsTag.ValueData          AS GoodsTagName
+                            , Object_GoodsType.Id                AS GoodsTypeId
+                            , Object_GoodsType.ValueData         AS GoodsTypeName
+                            , Object_GoodsSize.Id                AS GoodsSizeId
+                            , Object_GoodsSize.ValueData         AS GoodsSizeName
+                            , Object_ProdColor.Id                AS ProdColorId
+                            , Object_ProdColor.ValueData         AS ProdColorName
+                            , Object_Engine.Id                   AS EngineId
+                            , Object_Engine.ValueData            AS EngineName
                             , ObjectFloat_EKPrice.ValueData   ::TFloat   AS EKPrice  -- Цена вх. без НДС
                        FROM (SELECT DISTINCT tmpMI_Child.GoodsId FROM tmpMI_Child) AS tmpGoods
                            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsId
@@ -263,6 +283,31 @@ BEGIN
                            LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
                                                  ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_Goods_TaxKind.ChildObjectId
                                                 AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
+
+                           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
+                                                ON ObjectLink_Goods_GoodsTag.ObjectId = tmpGoods.GoodsId
+                                               AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
+                           LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_Goods_GoodsTag.ChildObjectId
+              
+                           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsType
+                                                ON ObjectLink_Goods_GoodsType.ObjectId = tmpGoods.GoodsId
+                                               AND ObjectLink_Goods_GoodsType.DescId   = zc_ObjectLink_Goods_GoodsType()
+                           LEFT JOIN Object AS Object_GoodsType ON Object_GoodsType.Id = ObjectLink_Goods_GoodsType.ChildObjectId
+              
+                           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsSize
+                                                ON ObjectLink_Goods_GoodsSize.ObjectId = tmpGoods.GoodsId
+                                               AND ObjectLink_Goods_GoodsSize.DescId = zc_ObjectLink_Goods_GoodsSize()
+                           LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = ObjectLink_Goods_GoodsSize.ChildObjectId
+              
+                           LEFT JOIN ObjectLink AS ObjectLink_Goods_ProdColor
+                                                ON ObjectLink_Goods_ProdColor.ObjectId = tmpGoods.GoodsId
+                                               AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
+                           LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
+
+                           LEFT JOIN ObjectLink AS ObjectLink_Goods_Engine
+                                                ON ObjectLink_Goods_Engine.ObjectId = tmpGoods.GoodsId
+                                               AND ObjectLink_Goods_Engine.DescId = zc_ObjectLink_Goods_Engine()
+                           LEFT JOIN Object AS Object_Engine ON Object_Engine.Id = ObjectLink_Goods_Engine.ChildObjectId
                        )
                        
   , tmpMIFloat AS (SELECT MovementItemFloat.*
@@ -300,7 +345,9 @@ BEGIN
            , tmpMovement_OrderPartner.Id           AS MovementId_OrderPartner
            , tmpMovement_OrderPartner.OperDate     AS OperDate_OrderPartner
            , tmpMovement_OrderPartner.InvNumber    AS InvNumber_OrderPartner
-           , tmpMovement_OrderPartner.StatusCode ::Integer   AS StatusCode_OrderPartner
+           , tmpMovement_OrderPartner.OperDatePartner   AS OperDatePartner_OrderPartner
+           , tmpMovement_OrderPartner.InvNumberPartner  AS InvNumberPartner_OrderPartner
+           , tmpMovement_OrderPartner.StatusCode ::Integer AS StatusCode_OrderPartner
            , tmpMovement_OrderPartner.FromId       AS FromId_OrderPartner
            , tmpMovement_OrderPartner.FromCode     AS FromCode_OrderPartner
            , tmpMovement_OrderPartner.FromName     AS FromName_OrderPartner
@@ -315,6 +362,7 @@ BEGIN
            , MIFloat_AmountPartner.ValueData ::TFloat AS AmountPartner     -- Количество заказ поставщику
            , MIFloat_OperPrice.ValueData     ::TFloat AS OperPrice         -- Цена вх без НДС
            , COALESCE (MIFloat_CountForPrice.ValueData,1) ::TFloat AS CountForPrice     --
+           , zfCalc_SummIn (MIFloat_AmountPartner.ValueData, MIFloat_OperPrice.ValueData, COALESCE (MIFloat_CountForPrice.ValueData,1))  ::TFloat AS Summ
            , tmpMI_Child.GoodsId
            , tmpGoodsParams.GoodsCode
            , tmpGoodsParams.GoodsName
@@ -322,6 +370,11 @@ BEGIN
            , tmpGoodsParams.GoodsGroupName
            , tmpGoodsParams.GoodsGroupNameFull
            , tmpGoodsParams.MeasureName
+           , tmpGoodsParams.GoodsTagName
+           , tmpGoodsParams.GoodsTypeName
+           , tmpGoodsParams.GoodsSizeName
+           , tmpGoodsParams.ProdColorName
+           , tmpGoodsParams.EngineName
            , tmpGoodsParams.EKPrice             ::TFloat
 
       FROM tmpMI_Child
