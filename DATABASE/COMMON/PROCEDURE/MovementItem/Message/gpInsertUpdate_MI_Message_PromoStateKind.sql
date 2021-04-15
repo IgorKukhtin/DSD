@@ -42,7 +42,7 @@ BEGIN
      END IF;
 
      -- Проверка - что б научились добавлять
-     IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.Id = ioId AND MovementItem.ObjectId IN (zc_Enum_PromoStateKind_Head(), zc_Enum_PromoStateKind_Main(), zc_Enum_PromoStateKind_Complete()))
+     IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.Id = ioId AND MovementItem.ObjectId IN (zc_Enum_PromoStateKind_StartSign(), zc_Enum_PromoStateKind_Head(), zc_Enum_PromoStateKind_Main(), zc_Enum_PromoStateKind_Complete()))
         AND NOT EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.Id = ioId AND MovementItem.ObjectId = inPromoStateKindId)
      THEN
          RAISE EXCEPTION 'Ошибка.Состояние <%> не может быть изменено на <%>.', lfGet_Object_ValueData_sh ((SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.Id = ioId)), lfGet_Object_ValueData_sh (inPromoStateKindId);

@@ -15,11 +15,19 @@ $BODY$
    DECLARE vbIsMsg_Contract       Boolean;
    DECLARE vbIsUserSigning1       Boolean;
    DECLARE vbIsUserSigning2       Boolean;
+   DECLARE vbIsUserSigning3       Boolean;
    DECLARE vbIsMsgColor           Boolean;
+
+   DECLARE vbMovementId_1_Member  Integer;
+   DECLARE vbCount_1_Member       Integer;
+   DECLARE vbMovementId_2_Member  Integer;
+   DECLARE vbCount_2_Member       Integer;
+
    DECLARE vbMovementId_1_Head    Integer;
    DECLARE vbCount_1_Head         Integer;
    DECLARE vbMovementId_2_Head    Integer;
    DECLARE vbCount_2_Head         Integer;
+
    DECLARE vbMovementId_1_Main    Integer;
    DECLARE vbCount_1_Main         Integer;
    DECLARE vbMovementId_2_Main    Integer;
@@ -138,8 +146,9 @@ BEGIN
      END IF;
 
      -- Signing
-     vbIsUserSigning1:= vbUserId IN (280164, 5, 133035);  -- Старецкая М.В. + Фурсов А.А.
-     vbIsUserSigning2:= vbUserId IN (9463); -- Махота Д.П.
+     vbIsUserSigning1:= vbUserId IN (112324);  -- Колосинская С.А.
+     vbIsUserSigning2:= vbUserId IN (280164, 5, 133035);  -- Старецкая М.В. + Фурсов А.А.
+     vbIsUserSigning3:= vbUserId IN (9463); -- Махота Д.П.
      -- vbIsUserSigning1:= vbUserId IN (133035, 5); -- Фурсов А.А.
      -- vbIsUserSigning2:= vbUserId IN (280164); -- Старецкая М.В.
 
@@ -150,8 +159,34 @@ BEGIN
      IF 1=1 AND (vbIsMsg_PromoStateKind = TRUE OR vbIsMsg_Contract = TRUE)
      THEN
           SELECT
+
+                 -- 0.1.1. MovementId - Срочно - Отдел Маркетинга
+                 MIN (CASE WHEN MovementLinkObject_PromoStateKind.ObjectId = zc_Enum_PromoStateKind_StartSign()
+                            AND MovementFloat_PromoStateKind.ValueData     = 1
+                                THEN Movement_Promo.Id
+                                ELSE 2147483000
+                      END) AS MovementId_1_Member
+                 -- 0.1.2. Count - Срочно - Отдел Маркетинга
+               , SUM (CASE WHEN MovementLinkObject_PromoStateKind.ObjectId = zc_Enum_PromoStateKind_StartSign()
+                            AND MovementFloat_PromoStateKind.ValueData     = 1
+                                THEN 1
+                                ELSE 0
+                      END) AS Count_1_Member
+                 -- 0.2.1. MovementId - НЕ Срочно - Отдел Маркетинга
+               , MIN (CASE WHEN MovementLinkObject_PromoStateKind.ObjectId = zc_Enum_PromoStateKind_StartSign()
+                            AND COALESCE (MovementFloat_PromoStateKind.ValueData, 0) <> 1
+                                THEN Movement_Promo.Id
+                                ELSE 2147483000
+                      END) AS MovementId_2_Member
+                 -- 0.2.2. Count - НЕ Срочно - Отдел Маркетинга
+               , SUM (CASE WHEN MovementLinkObject_PromoStateKind.ObjectId = zc_Enum_PromoStateKind_StartSign()
+                            AND COALESCE (MovementFloat_PromoStateKind.ValueData, 0) <> 1
+                                THEN 1
+                                ELSE 0
+                      END) AS Count_2_Member
+
                  -- 1.1.1. MovementId - Срочно - Директор по маркетингу
-                 MIN (CASE WHEN MovementLinkObject_PromoStateKind.ObjectId = zc_Enum_PromoStateKind_Head()
+               , MIN (CASE WHEN MovementLinkObject_PromoStateKind.ObjectId = zc_Enum_PromoStateKind_Head()
                             AND MovementFloat_PromoStateKind.ValueData     = 1
                                 THEN Movement_Promo.Id
                                 ELSE 2147483000
@@ -203,10 +238,16 @@ BEGIN
                       END) AS Count_2_Main
 
 
-                 INTO vbMovementId_1_Head
+                 INTO vbMovementId_1_Member
+                    , vbCount_1_Member
+                    , vbMovementId_2_Member
+                    , vbCount_2_Member
+
+                    , vbMovementId_1_Head
                     , vbCount_1_Head
                     , vbMovementId_2_Head
                     , vbCount_2_Head
+
                     , vbMovementId_1_Main
                     , vbCount_1_Main
                     , vbMovementId_2_Main
@@ -217,7 +258,7 @@ BEGIN
                INNER JOIN MovementLinkObject AS MovementLinkObject_PromoStateKind
                                              ON MovementLinkObject_PromoStateKind.MovementId = Movement_Promo.Id
                                             AND MovementLinkObject_PromoStateKind.DescId     = zc_MovementLinkObject_PromoStateKind()
-                                            AND MovementLinkObject_PromoStateKind.ObjectId   IN (zc_Enum_PromoStateKind_Head(), zc_Enum_PromoStateKind_Main())
+                                            AND MovementLinkObject_PromoStateKind.ObjectId   IN (zc_Enum_PromoStateKind_StartSign(), zc_Enum_PromoStateKind_Head(), zc_Enum_PromoStateKind_Main())
                -- Срочно
                LEFT JOIN MovementFloat AS MovementFloat_PromoStateKind
                                        ON MovementFloat_PromoStateKind.MovementId = Movement_Promo.Id
@@ -237,6 +278,101 @@ BEGIN
 
      -- Результат
      RETURN QUERY
+
+       -- 0.1.
+       SELECT CASE WHEN vbCount_1_Member > 0
+                        THEN vbMovementId_1_Member
+                   WHEN vbCount_2_Member > 0
+                        THEN vbMovementId_2_Member
+                   ELSE -1
+              END :: Integer AS MovementId
+
+            , CASE WHEN vbIsUserSigning1 = TRUE THEN 1 WHEN vbIsUserSigning2 = TRUE THEN 3 ELSE 3 END :: Integer AS NPP
+            , 'Отдел Маркетинга : ' :: TVarChar AS MsgAddr
+
+            , (CASE WHEN vbCount_1_Member > 0
+                        THEN 'Приоритетных документов для подписания '
+                          || ' : '    || vbCount_1_Member :: TVarChar || ' шт.'
+                          || COALESCE ((SELECT ' <' || MIS.ValueData || '>' FROM MovementItem AS MI JOIN MovementItemString AS MIS ON MIS.MovementItemId = MI.Id AND MIS.DescId = zc_MIString_Comment() AND MIS.ValueData <> '' WHERE MI.MovementId = vbMovementId_1_Member AND MI.DescId = zc_MI_Message() AND MI.ObjectId = zc_Enum_PromoStateKind_StartSign() AND MI.isErased = FALSE ORDER BY MI.Id DESC LIMIT 1), '')
+                          || '    № ' || (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_1_Member)
+                          || ' от '   || zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_1_Member))
+                          || ' период продаж с ' || zfConvert_DateToString ((SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId_1_Member AND MD.DescId = zc_MovementDate_StartSale()))
+                          || ' по '              || zfConvert_DateToString ((SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId_1_Member AND MD.DescId = zc_MovementDate_EndSale()))
+                    ELSE 'Нет приоритетных документов'
+               END :: TVarChar
+              ) :: TVarChar AS ValueText
+
+              -- 1.1.
+            , CASE WHEN vbCount_1_Member > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
+                        THEN zc_Color_Black()
+                   WHEN vbCount_2_Member > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
+                        THEN zc_Color_Black()
+                   ELSE -1
+              END AS ColorText_Addr
+              -- 1.2.
+            , CASE WHEN vbCount_1_Member > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
+                        THEN zc_Color_Yelow()
+                   WHEN vbCount_2_Member > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
+                        THEN zc_Color_Pink()
+                   ELSE -1
+              END AS Color_Addr
+              -- 2.1.
+            , CASE WHEN vbCount_1_Member > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
+                        THEN zc_Color_Black()
+                   ELSE -1
+              END AS ColorText_Text
+              -- 2.2.
+            , CASE WHEN vbCount_1_Member > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
+                        THEN zc_Color_Yelow()
+                   ELSE -1
+              END AS Color_Text
+       WHERE vbCount_1_Member > 0
+
+      UNION ALL
+       -- 0.2.
+       SELECT CASE WHEN vbCount_2_Member > 0
+                        THEN vbMovementId_2_Member
+                   ELSE -1
+              END :: Integer AS MovementId
+
+            , CASE WHEN vbIsUserSigning1 = TRUE THEN 1 WHEN vbIsUserSigning2 = TRUE THEN 3 ELSE 3 END :: Integer AS NPP
+            , 'Отдел Маркетинга : ' :: TVarChar AS MsgAddr
+            , (CASE WHEN vbCount_2_Member > 0
+                        THEN 'подготовлены документы для подписания '
+                          || ' : '    || vbCount_2_Member :: TVarChar || ' шт.'
+                          || COALESCE ((SELECT ' <' || MIS.ValueData || '>' FROM MovementItem AS MI JOIN MovementItemString AS MIS ON MIS.MovementItemId = MI.Id AND MIS.DescId = zc_MIString_Comment() AND MIS.ValueData <> '' WHERE MI.MovementId = vbMovementId_2_Member AND MI.DescId = zc_MI_Message() AND MI.ObjectId = zc_Enum_PromoStateKind_StartSign() AND MI.isErased = FALSE ORDER BY MI.Id DESC LIMIT 1), '')
+                          || '    № ' || (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_2_Member)
+                          || ' от '   || zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_2_Member))
+                          || ' период продаж с ' || zfConvert_DateToString ((SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId_2_Member AND MD.DescId = zc_MovementDate_StartSale()))
+                          || ' по '              || zfConvert_DateToString ((SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId_2_Member AND MD.DescId = zc_MovementDate_EndSale()))
+                    ELSE 'Нет подготовленных документов'
+               END :: TVarChar
+              ) :: TVarChar AS ValueText
+
+              -- 1.1.
+            , CASE WHEN vbCount_2_Member > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
+                        THEN -1 -- zc_Color_Black()
+                   ELSE -1
+              END AS ColorText_Addr
+              -- 1.2.
+            , CASE WHEN vbCount_2_Member > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
+                        THEN -1 -- zc_Color_Pink()
+                   ELSE -1
+              END AS Color_Addr
+              -- 2.1.
+            , CASE WHEN vbCount_2_Member > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
+                        THEN zc_Color_Black()
+                   ELSE -1
+              END AS ColorText_Text
+              -- 2.2.
+            , CASE WHEN vbCount_2_Member > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
+                        THEN zc_Color_Pink()
+                   ELSE -1
+              END AS Color_Text
+
+       WHERE COALESCE (vbCount_1_Member, 0) = 0
+
+      UNION ALL
        -- 1.1.
        SELECT CASE WHEN vbCount_1_Head > 0
                         THEN vbMovementId_1_Head
@@ -245,7 +381,7 @@ BEGIN
                    ELSE -1
               END :: Integer AS MovementId
 
-            , CASE WHEN vbIsUserSigning2 = TRUE THEN 3 ELSE 1 END :: Integer AS NPP
+            , CASE WHEN vbIsUserSigning1 = TRUE THEN 1 WHEN vbIsUserSigning2 = TRUE THEN 2 ELSE 2 END :: Integer AS NPP
             , 'Директору по Маркетингу : ' :: TVarChar AS MsgAddr
 
             , (CASE WHEN vbCount_1_Head > 0
@@ -261,29 +397,30 @@ BEGIN
               ) :: TVarChar AS ValueText
 
               -- 1.1.
-            , CASE WHEN vbCount_1_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
+            , CASE WHEN vbCount_1_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Black()
-                   WHEN vbCount_2_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
+                   WHEN vbCount_2_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Black()
                    ELSE -1
               END AS ColorText_Addr
               -- 1.2.
-            , CASE WHEN vbCount_1_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
+            , CASE WHEN vbCount_1_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Yelow()
-                   WHEN vbCount_2_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
+                   WHEN vbCount_2_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Pink()
                    ELSE -1
               END AS Color_Addr
               -- 2.1.
-            , CASE WHEN vbCount_1_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
+            , CASE WHEN vbCount_1_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Black()
                    ELSE -1
               END AS ColorText_Text
               -- 2.2.
-            , CASE WHEN vbCount_1_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
+            , CASE WHEN vbCount_1_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Yelow()
                    ELSE -1
               END AS Color_Text
+       WHERE vbCount_1_Head > 0
 
       UNION ALL
        -- 1.2.
@@ -292,8 +429,8 @@ BEGIN
                    ELSE -1
               END :: Integer AS MovementId
 
-            , CASE WHEN vbIsUserSigning2 = TRUE THEN 4 ELSE 2 END :: Integer AS NPP
-            , '' :: TVarChar AS MsgAddr
+            , CASE WHEN vbIsUserSigning1 = TRUE THEN 1 WHEN vbIsUserSigning2 = TRUE THEN 2 ELSE 2 END :: Integer AS NPP
+            , 'Директору по Маркетингу : ' :: TVarChar AS MsgAddr
             , (CASE WHEN vbCount_2_Head > 0
                         THEN 'подготовлены документы для подписания '
                           || ' : '    || vbCount_2_Head :: TVarChar || ' шт.'
@@ -307,25 +444,27 @@ BEGIN
               ) :: TVarChar AS ValueText
 
               -- 1.1.
-            , CASE WHEN vbCount_2_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
+            , CASE WHEN vbCount_2_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
                         THEN -1 -- zc_Color_Black()
                    ELSE -1
               END AS ColorText_Addr
               -- 1.2.
-            , CASE WHEN vbCount_2_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
+            , CASE WHEN vbCount_2_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
                         THEN -1 -- zc_Color_Pink()
                    ELSE -1
               END AS Color_Addr
               -- 2.1.
-            , CASE WHEN vbCount_2_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
+            , CASE WHEN vbCount_2_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Black()
                    ELSE -1
               END AS ColorText_Text
               -- 2.2.
-            , CASE WHEN vbCount_2_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
+            , CASE WHEN vbCount_2_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Pink()
                    ELSE -1
               END AS Color_Text
+
+       WHERE COALESCE (vbCount_1_Head, 0) = 0
 
       UNION ALL
        -- 2.1.
@@ -336,7 +475,7 @@ BEGIN
                    ELSE -1
               END :: Integer AS MovementId
 
-            , CASE WHEN vbIsUserSigning2 = TRUE THEN 1 ELSE 3 END :: Integer AS NPP
+            , CASE WHEN vbIsUserSigning1 = TRUE THEN 3 WHEN vbIsUserSigning2 = TRUE THEN 2 ELSE 1 END :: Integer AS NPP
             , 'Исполнительному Директору : ' :: TVarChar AS MsgAddr
             , (CASE WHEN vbCount_1_Main > 0
                         THEN 'Приоритетных документов для подписания '
@@ -351,29 +490,31 @@ BEGIN
               ) :: TVarChar AS ValueText
 
               -- 1.1.
-            , CASE WHEN vbCount_1_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
+            , CASE WHEN vbCount_1_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Black()
-                   WHEN vbCount_2_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
+                   WHEN vbCount_2_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Black()
                    ELSE -1
               END AS ColorText_Addr
               -- 1.2.
-            , CASE WHEN vbCount_1_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
+            , CASE WHEN vbCount_1_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Lime()
-                   WHEN vbCount_2_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
+                   WHEN vbCount_2_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Aqua()
                    ELSE -1
               END AS Color_Addr
               -- 2.1.
-            , CASE WHEN vbCount_1_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
+            , CASE WHEN vbCount_1_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Black()
                    ELSE -1
               END AS ColorText_Text
               -- 2.2.
-            , CASE WHEN vbCount_1_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
+            , CASE WHEN vbCount_1_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Lime()
                    ELSE -1
               END AS Color_Text
+
+       WHERE vbCount_1_Main > 0
 
       UNION ALL
        -- 2.2.
@@ -382,8 +523,8 @@ BEGIN
                    ELSE -1
               END :: Integer AS MovementId
 
-            , CASE WHEN vbIsUserSigning2 = TRUE THEN 2 ELSE 4 END :: Integer AS NPP
-            , '' :: TVarChar AS MsgAddr
+            , CASE WHEN vbIsUserSigning1 = TRUE THEN 3 WHEN vbIsUserSigning2 = TRUE THEN 2 ELSE 1 END :: Integer AS NPP
+            , 'Исполнительному Директору : ' :: TVarChar AS MsgAddr
             , (CASE WHEN vbCount_2_Main > 0
                         THEN 'подготовлены документы для подписания '
                           || ' : '    || vbCount_2_Main :: TVarChar || ' шт.'
@@ -397,25 +538,27 @@ BEGIN
               ) :: TVarChar AS ValueText
 
               -- 1.1.
-            , CASE WHEN vbCount_2_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
+            , CASE WHEN vbCount_2_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
                         THEN -1 -- zc_Color_Black()
                    ELSE -1
               END AS ColorText_Addr
               -- 1.2.
-            , CASE WHEN vbCount_2_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
+            , CASE WHEN vbCount_2_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
                         THEN -1 -- zc_Color_Aqua()
                    ELSE -1
               END AS Color_Addr
               -- 2.1.
-            , CASE WHEN vbCount_2_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
+            , CASE WHEN vbCount_2_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Black()
                    ELSE -1
               END AS ColorText_Text
               -- 2.2.
-            , CASE WHEN vbCount_2_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
+            , CASE WHEN vbCount_2_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsUserSigning3 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Aqua()
                    ELSE -1
               END AS Color_Text
+
+       WHERE COALESCE (vbCount_1_Main, 0) = 0
 
       UNION ALL
        -- 3.

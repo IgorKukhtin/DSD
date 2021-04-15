@@ -17,6 +17,7 @@ $BODY$
   DECLARE vbIndex                Integer; -- № п/п в очереди - кто уже подписал
   DECLARE vbIndexNo              Integer; -- № п/п в очереди - кто остался подписать
   DECLARE vbPromoStateKindId_old Integer;
+  DECLARE vbCount_member         Integer;
 BEGIN
 
      -- данные из шапки
@@ -35,8 +36,10 @@ BEGIN
           , zfCalc_WordNumber_Split (tmp.strIdSign,   ',', inUserId :: TVarChar)
             -- № п/п в очереди - кто остался подписать
           , zfCalc_WordNumber_Split (tmp.strIdSignNo, ',', inUserId :: TVarChar)
+          
+          , tmp.Count_member
 
-            INTO vbSignInternalId, vbStrMIIdSign, vbStrIdSign, vbStrIdSignNo, vbIndex, vbIndexNo
+            INTO vbSignInternalId, vbStrMIIdSign, vbStrIdSign, vbStrIdSignNo, vbIndex, vbIndexNo, vbCount_member
 
       FROM lpSelect_MI_Sign (inMovementId:= inMovementId) AS tmp;
 
@@ -45,6 +48,13 @@ BEGIN
       -- проверка - если подписано
       IF vbStrIdSign <> '' AND inPromoStateKindId = zc_Enum_PromoStateKind_Start()
       THEN
+          -- если 3 раза подписали
+          IF zfCalc_Word_Split (vbStrIdSign, ',', 3) <> ''
+          THEN
+              -- убрали подпись - под Пользователем № 3
+              PERFORM gpInsertUpdate_MI_Sign (inMovementId, FALSE, zfCalc_Word_Split (vbStrIdSign, ',', 3));
+          END IF;
+
           -- если 2 раза подписали
           IF zfCalc_Word_Split (vbStrIdSign, ',', 2) <> ''
           THEN
@@ -62,7 +72,8 @@ BEGIN
 
 
       -- проверка - если есть подпись
-      IF vbStrIdSign <> '' AND inPromoStateKindId NOT IN (zc_Enum_PromoStateKind_Start(), zc_Enum_PromoStateKind_Main()) AND vbIndexNo <> 1
+      IF vbStrIdSign <> '' AND inPromoStateKindId NOT IN (zc_Enum_PromoStateKind_Start(), zc_Enum_PromoStateKind_Head(), zc_Enum_PromoStateKind_Main()) AND vbIndexNo <> 1
+    --IF vbStrIdSign <> '' AND inPromoStateKindId NOT IN (zc_Enum_PromoStateKind_Start(), zc_Enum_PromoStateKind_StartSign()) AND vbIndexNo <> 1
       THEN
           RAISE EXCEPTION 'Ошибка.Документ № <%> от <%> уже <Подписан>.Измененния невозможны.<%><%>'
                         , (SELECT InvNumber FROM Movement WHERE Id = inMovementId)
@@ -82,8 +93,34 @@ BEGIN
               PERFORM gpInsertUpdate_MI_Sign (inMovementId, TRUE, inUserId :: TVarChar);
           END IF;
           --
-          -- если надо 2 раза подписать
-          IF zfCalc_Word_Split (vbStrIdSignNo, ',', 2) <> ''
+          -- если надо 2 раза подписать + есть кому подписать после текущего
+          IF vbCount_member = 2 AND zfCalc_Word_Split (vbStrIdSignNo, ',', 2) <> ''
+          THEN
+              -- добавили состояние
+              PERFORM gpInsertUpdate_MI_Message_PromoStateKind (ioId                  := 0
+                                                              , inMovementId          := inMovementId
+                                                              , inPromoStateKindId    := zc_Enum_PromoStateKind_Head()
+                                                              , inIsQuickly           := TRUE
+                                                              , inComment             := ''
+                                                              , inSession             := inUserId :: TVarChar
+                                                               );
+          END IF;
+          
+          -- если надо 3 раза подписать + есть кому подписать после текущего + после текущего
+          IF vbCount_member = 3 AND zfCalc_Word_Split (vbStrIdSignNo, ',', 2) <> '' AND zfCalc_Word_Split (vbStrIdSignNo, ',', 3) <> ''
+          THEN
+              -- добавили состояние
+              PERFORM gpInsertUpdate_MI_Message_PromoStateKind (ioId                  := 0
+                                                              , inMovementId          := inMovementId
+                                                              , inPromoStateKindId    := zc_Enum_PromoStateKind_Head()
+                                                              , inIsQuickly           := TRUE
+                                                              , inComment             := ''
+                                                              , inSession             := inUserId :: TVarChar
+                                                               );
+          END IF;
+
+          -- если надо 3 раза подписать + есть кому подписать после текущего + нет следующего
+          IF vbCount_member = 3 AND zfCalc_Word_Split (vbStrIdSignNo, ',', 2) <> '' AND zfCalc_Word_Split (vbStrIdSignNo, ',', 3) = ''
           THEN
               -- добавили состояние
               PERFORM gpInsertUpdate_MI_Message_PromoStateKind (ioId                  := 0
@@ -94,7 +131,7 @@ BEGIN
                                                               , inSession             := inUserId :: TVarChar
                                                                );
           END IF;
-          
+
       END IF;
       
       

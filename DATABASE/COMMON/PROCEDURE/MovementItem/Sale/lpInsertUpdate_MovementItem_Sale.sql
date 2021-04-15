@@ -90,7 +90,7 @@ BEGIN
              -- меняется значение - для Тенедер
              ioPrice:= outPricePromo;
 
-        ELSEIF COALESCE (ioId, 0) = 0 AND vbTaxPromo <> 0
+        ELSEIF COALESCE (ioId, 0) = 0 /*AND vbTaxPromo <> 0*/
         THEN
              -- меняется значение
              ioPrice:= outPricePromo;
@@ -105,7 +105,7 @@ BEGIN
              END IF;
 
              -- только проверка
-             IF ioId <> 0 AND (ioPrice + 0.06) < outPricePromo AND vbTaxPromo <> 0
+             IF ioId <> 0 AND (ioPrice + 0.06) < outPricePromo /*AND vbTaxPromo <> 0*/
              THEN
                  RAISE EXCEPTION 'Ошибка.Для товара = <%> <%> необходимо ввести акционную цену = <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData_sh (inGoodsKindId), zfConvert_FloatToString (outPricePromo);
              END IF;

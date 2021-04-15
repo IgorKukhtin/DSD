@@ -1,10 +1,11 @@
 -- Function: gpUpdate_Movement_Promo_SignInternal()
 
-DROP FUNCTION IF EXISTS gpUpdate_Movement_Promo_SignInternal(Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpUpdate_Movement_Promo_SignInternal(Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_Promo_SignInternal(Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_Promo_SignInternal(
     IN inMovementId             Integer   , -- Ключ объекта <Документ>
-    IN inIsNull                 Boolean   , -- удалить Модель - тогда подписанты по-умолчанию и их ДВОЕ, инче - только ОДИН
+    IN inCountNum               Integer   , -- удалить Модель - тогда подписанты по-умолчанию и их ДВОЕ, инче - только ОДИН
    OUT outSignInternalId        Integer   ,
    OUT outSignInternalName      TVarChar  ,
    OUT outStrSign               TVarChar  , -- ФИО пользователей. - есть эл. подпись
@@ -27,20 +28,25 @@ BEGIN
      vbStrMIIdSign:= (SELECT tmp.StrMIIdSign FROM lpSelect_MI_Sign (inMovementId:= inMovementId) AS tmp);
 
      -- поиск
-     IF inIsNull = TRUE
+     IF inCountNum = 3
      THEN
-         -- нашли модель - с isMain = TRUE, там два подписанта
+         -- нашли модель - с isMain = TRUE, там 3 подписанта
          vbSignInternalId:= (SELECT gpSelect.Id
                              FROM gpSelect_Object_SignInternal (FALSE, inSession) AS gpSelect
                              WHERE gpSelect.MovementDescId = zc_Movement_Promo()
                                AND gpSelect.isMain         = TRUE
+                               AND gpSelect.Count_member   = inCountNum
+                               AND gpSelect.Id <> 1127098
                             );
-     ELSE
-         -- нашли модель - "другую" - с isMain = FALSE, там по идее только один подписант
+     ELSEIF inCountNum IN (1, 2)
+     THEN
+         -- нашли модель - "другую" - с isMain = FALSE, там по идее только один/два подписанта
          vbSignInternalId:= (SELECT gpSelect.Id
                              FROM gpSelect_Object_SignInternal (FALSE, inSession) AS gpSelect
                              WHERE gpSelect.MovementDescId = zc_Movement_Promo()
                                AND gpSelect.isMain         = FALSE
+                               AND gpSelect.Count_member   = inCountNum
+                               AND gpSelect.Id <> 1127098
                             );
          -- проверка - второй подписи быть не должно
          IF zfCalc_Word_Split (vbStrMIIdSign, ',', 2) <> ''
@@ -50,11 +56,17 @@ BEGIN
 
      END IF;
 
+     -- проверка
+     IF COALESCE (vbSignInternalId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не найдена Модель для подписи <%> подписанта.', inCountNum;
+     END IF;
+
      -- надо поменять Модель
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SignInternal(), inMovementId, vbSignInternalId);
      
 
-     -- если подписан - меняем Модель у самой подписи
+     -- если только одна подпись - меняем Модель у самой подписи
      IF vbStrMIIdSign <> ''
      THEN
          -- так определили Id строки
@@ -69,6 +81,9 @@ BEGIN
          FROM MovementItem
          WHERE MovementItem.Id = vbId;
 
+     -- Ставим первую подпись - Маркетинга
+     -- ELSE
+    
      END IF;
 
 
@@ -86,7 +101,7 @@ BEGIN
          -- добавили состояние
          PERFORM gpInsertUpdate_MI_Message_PromoStateKind (ioId                  := 0
                                                          , inMovementId          := inMovementId
-                                                         , inPromoStateKindId    := zc_Enum_PromoStateKind_Head()
+                                                         , inPromoStateKindId    := zc_Enum_PromoStateKind_StartSign() -- zc_Enum_PromoStateKind_Head()
                                                          , inIsQuickly           := TRUE
                                                          , inComment             := ''
                                                          , inSession             := inSession

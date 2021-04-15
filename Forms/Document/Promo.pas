@@ -440,6 +440,21 @@ type
     CountForPrice: TcxGridDBColumn;
     actOpenFormPromoContractBonus_Detail: TdsdOpenForm;
     bbOpenFormPromoContractBonus_Detail: TdxBarButton;
+    actUpdate_SignInternal_Three: TdsdExecStoredProc;
+    spUpdate_SignInternal_Three: TdsdStoredProc;
+    bbUpdate_SignInternal_Three: TdxBarButton;
+    dxBarSeparator2: TdxBarSeparator;
+    spGetPromoStateKind: TdsdStoredProc;
+    spUpdate_PromoStateKind: TdsdStoredProc;
+    actUpdateMovement_PromoStateKind: TdsdExecStoredProc;
+    actPromoManagerDialog: TExecuteDialog;
+    actGetPromoStateKind_Return: TdsdDataSetRefresh;
+    actGetPromoStateKind_Complete: TdsdDataSetRefresh;
+    macUpdatePromoStateKind_Return: TMultiAction;
+    macUpdatePromoStateKind_Complete: TMultiAction;
+    bbUpdatePromoStateKind_Complete: TdxBarButton;
+    bbUpdatePromoStateKind_Return: TdxBarButton;
+    dxBarSeparator3: TdxBarSeparator;
   private
     { Private declarations }
   public

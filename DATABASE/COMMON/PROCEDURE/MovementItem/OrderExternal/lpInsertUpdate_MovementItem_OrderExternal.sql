@@ -30,7 +30,7 @@ $BODY$
    DECLARE vbOperDate_pl TDateTime;
 BEGIN
      -- !!!временно - пока есть ошибка на моб устройстве с ценами!!!
-     IF COALESCE (ioPrice, 0) = 0 AND EXISTS (SELECT 1 FROM MovementString AS MS WHERE MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_GUID())
+     IF COALESCE (ioPrice, 0) = 0 -- AND EXISTS (SELECT 1 FROM MovementString AS MS WHERE MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_GUID())
      THEN
          -- !!!замена!!!
          SELECT tmp.PriceListId, tmp.OperDate
@@ -112,7 +112,7 @@ BEGIN
                  ioPrice:= outPricePromo;
              END IF;
 
-        ELSEIF COALESCE (ioId, 0) = 0 AND vbTaxPromo <> 0
+        ELSEIF COALESCE (ioId, 0) = 0 /*AND vbTaxPromo <> 0*/
         THEN
             -- меняется значение
             IF outPricePromo > 0 OR inUserId = 5
@@ -121,7 +121,7 @@ BEGIN
                 ioCountForPrice:= vbCountForPricePromo;
             END IF;
 
-        ELSE IF ioId <> 0 AND ioPrice <> outPricePromo AND vbTaxPromo <> 0
+        ELSE IF ioId <> 0 AND ioPrice <> outPricePromo /*AND vbTaxPromo <> 0*/
              THEN
                  IF EXISTS (SELECT 1 FROM MovementString AS MS WHERE MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_GUID())
                  THEN

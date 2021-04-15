@@ -329,7 +329,7 @@ BEGIN
                                      tmpMIPromo_all.MovementId_Promo
                                    , tmpMIPromo_all.GoodsId
                                    , tmpMIPromo_all.GoodsKindId
-                                   , CASE WHEN tmpMIPromo_all.TaxPromo <> 0 THEN MIFloat_PriceWithOutVAT.ValueData ELSE 0 END AS PricePromo
+                                   , CASE WHEN /*tmpMIPromo_all.TaxPromo <> 0*/ 1=1 THEN MIFloat_PriceWithOutVAT.ValueData ELSE 0 END AS PricePromo
                               FROM tmpMIPromo_all
                                    LEFT JOIN MovementItemFloat AS MIFloat_PriceWithOutVAT
                                                                ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
@@ -554,8 +554,8 @@ BEGIN
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
            , Object_Measure.ValueData   AS MeasureName
-           , CASE WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
-                  WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
+           , CASE WHEN /*tmpPromo.TaxPromo <> 0 AND*/ tmpPromo.GoodsId > 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
+                  WHEN /*tmpPromo.TaxPromo <> 0*/ tmpPromo.GoodsId > 0 AND 1=1 THEN tmpPromo.PriceWithOutVAT
                   ELSE COALESCE (tmpPriceList_Kind.Price_Pricelist, tmpPriceList.Price_Pricelist)
              END :: TFloat              AS Price
            , 0 :: TFloat                AS PriceEDI
@@ -573,8 +573,8 @@ BEGIN
            , tmpGoodsPropertyValue.ArticleGLN
 
            , tmpPromo.MovementPromo
-           , CASE WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
-                  WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
+           , CASE WHEN /*tmpPromo.TaxPromo <> 0 AND*/ tmpPromo.GoodsId > 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
+                  WHEN /*tmpPromo.TaxPromo <> 0*/ tmpPromo.GoodsId > 0 AND 1=1 THEN tmpPromo.PriceWithOutVAT
                   ELSE 0
              END :: TFloat AS PricePromo
 
@@ -710,8 +710,8 @@ BEGIN
               END) :: TVarChar AS MovementPromo
 
            , CASE WHEN 1 = 0 AND tmpMI.PricePromo <> 0 THEN tmpMI.PricePromo
-                  WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
-                  WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
+                  WHEN /*tmpPromo.TaxPromo <> 0 AND*/ tmpPromo.GoodsId > 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
+                  WHEN /*tmpPromo.TaxPromo <> 0*/ tmpPromo.GoodsId > 0 AND 1=1 THEN tmpPromo.PriceWithOutVAT
                   ELSE 0
              END :: TFloat AS PricePromo
 
@@ -824,7 +824,7 @@ BEGIN
                                      tmpMIPromo_all.MovementId_Promo
                                    , tmpMIPromo_all.GoodsId
                                    , tmpMIPromo_all.GoodsKindId
-                                   , CASE WHEN tmpMIPromo_all.TaxPromo <> 0 THEN MIFloat_PriceWithOutVAT.ValueData ELSE 0 END AS PricePromo
+                                   , CASE WHEN /*tmpMIPromo_all.TaxPromo <> 0*/ 1=1 THEN MIFloat_PriceWithOutVAT.ValueData ELSE 0 END AS PricePromo
                               FROM tmpMIPromo_all
                                    LEFT JOIN MovementItemFloat AS MIFloat_PriceWithOutVAT
                                                                ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
@@ -1065,8 +1065,8 @@ BEGIN
               END) :: TVarChar AS MovementPromo
 
            , CASE WHEN 1 = 0 AND tmpMI.PricePromo <> 0 THEN tmpMI.PricePromo
-                  WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
-                  WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
+                  WHEN /*tmpPromo.TaxPromo <> 0 AND*/ tmpPromo.GoodsId > 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
+                  WHEN /*tmpPromo.TaxPromo <> 0*/ tmpPromo.GoodsId > 0 AND 1=1 THEN tmpPromo.PriceWithOutVAT
                   ELSE 0
              END :: TFloat AS PricePromo
 

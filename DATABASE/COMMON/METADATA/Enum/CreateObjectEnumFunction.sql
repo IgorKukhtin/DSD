@@ -1161,6 +1161,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_ConditionPromo_BonusOff() RETURNS Integer AS 
 -- !!! состояния Акция
 -- !!!
  CREATE OR REPLACE FUNCTION zc_Enum_PromoStateKind_Start() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_PromoStateKind_Start' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+ CREATE OR REPLACE FUNCTION zc_Enum_PromoStateKind_StartSign() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_PromoStateKind_StartSign' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
  CREATE OR REPLACE FUNCTION zc_Enum_PromoStateKind_Head() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_PromoStateKind_Head' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
  CREATE OR REPLACE FUNCTION zc_Enum_PromoStateKind_Main() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_PromoStateKind_Main' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
  CREATE OR REPLACE FUNCTION zc_Enum_PromoStateKind_Complete() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_PromoStateKind_Complete' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;

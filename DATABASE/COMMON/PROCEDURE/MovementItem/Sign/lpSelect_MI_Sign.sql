@@ -12,6 +12,7 @@ RETURNS TABLE (Id             Integer
              , strIdSign      TVarChar -- Id Пользователей - среди подписанных
              , strIdSignNo    TVarChar -- Id Пользователей - среди НЕ подписанных
              , strMIIdSign    TVarChar -- Id MovementItem - среди подписанных
+             , Count_member   Integer
               )
 AS
 $BODY$
@@ -97,6 +98,7 @@ BEGIN
           , COALESCE (tmpSign.strIdSign, '')     :: TVarChar AS strIdSign
           , COALESCE (tmpSignNo.strIdSignNo, '') :: TVarChar AS strIdSignNo
           , COALESCE (tmpSign.strMIIdSign, '')   :: TVarChar AS strMIIdSign
+          , (SELECT COUNT(*) FROM tmpObject)     :: Integer  AS Count_member
      FROM tmpSign
           FULL JOIN tmpSignNo ON tmpSignNo.SignInternalId = tmpSign.SignInternalId
     ;

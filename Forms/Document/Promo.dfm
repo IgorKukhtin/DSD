@@ -4,7 +4,7 @@
   ClientHeight = 684
   ClientWidth = 1366
   ExplicitWidth = 1382
-  ExplicitHeight = 722
+  ExplicitHeight = 719
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -4145,7 +4145,7 @@
       GuiParams = <
         item
           Name = 'inStartDate'
-          Value = 'NULL'
+          Value = Null
           Component = deStartPromo
           DataType = ftDateTime
           ParamType = ptInput
@@ -4153,7 +4153,7 @@
         end
         item
           Name = 'inEndDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEndPromo
           DataType = ftDateTime
           ParamType = ptInput
@@ -4283,7 +4283,7 @@
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = edOperDate
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -4450,6 +4450,192 @@
       Caption = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1062#1077#1085#1099' '#1089'/'#1089' ('#1087#1083#1072#1085'/'#1092#1072#1082#1090') '#1080' '#1041#1086#1085#1091#1089#1072' '#1089#1077#1090#1080
       Hint = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1062#1077#1085#1099' '#1089'/'#1089' ('#1087#1083#1072#1085'/'#1092#1072#1082#1090') '#1080' '#1041#1086#1085#1091#1089#1072' '#1089#1077#1090#1080
       ImageIndex = 76
+    end
+    object actUpdate_SignInternal_Three: TdsdExecStoredProc
+      Category = 'Sign'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectMIPromoStateKind
+      StoredProcList = <
+        item
+          StoredProc = spSelectMIPromoStateKind
+        end
+        item
+          StoredProc = spUpdate_SignInternal_Three
+        end
+        item
+          StoredProc = spSelectMISign
+        end
+        item
+          StoredProc = spSelectMIPromoStateKind
+        end
+        item
+          StoredProc = spGet
+        end>
+      Caption = #1058#1056#1048' '#1087#1086#1076#1087#1080#1089#1072#1085#1090#1072' '#1074' '#1040#1082#1094#1080#1080
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1058#1056#1045#1061' '#1087#1086#1076#1087#1080#1089#1072#1085#1090#1086#1074' '#1074' '#1040#1082#1094#1080#1080
+      ImageIndex = 49
+    end
+    object macUpdatePromoStateKind_Complete: TMultiAction
+      Category = 'Update_PromoStateKind'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetPromoStateKind_Complete
+        end
+        item
+          Action = actPromoManagerDialog
+        end
+        item
+          Action = actUpdateMovement_PromoStateKind
+        end>
+      Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1087#1086#1076#1087#1080#1089#1072#1085#1080#1077
+      Hint = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1087#1086#1076#1087#1080#1089#1072#1085#1080#1077' - '#1054#1090#1076#1077#1083' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+    end
+    object macUpdatePromoStateKind_Return: TMultiAction
+      Category = 'Update_PromoStateKind'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetPromoStateKind_Return
+        end
+        item
+          Action = actPromoManagerDialog
+        end
+        item
+          Action = actUpdateMovement_PromoStateKind
+        end>
+      Caption = #1054#1090#1082#1083#1086#1085#1080#1090#1100' '#1087#1086#1076#1087#1080#1089#1072#1085#1080#1077
+      Hint = #1054#1090#1082#1083#1086#1085#1080#1090#1100' '#1087#1086#1076#1087#1080#1089#1072#1085#1080#1077' - '#1074#1077#1088#1085#1091#1090#1100' '#1040#1082#1094#1080#1102' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1103
+    end
+    object actGetPromoStateKind_Complete: TdsdDataSetRefresh
+      Category = 'Update_PromoStateKind'
+      MoveParams = <
+        item
+          FromParam.Value = '0'
+          FromParam.Component = FormParams
+          FromParam.ComponentItem = 'isComplete_PromoStateKind_true'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'isComplete_PromoStateKind'
+          ToParam.DataType = ftBoolean
+          ToParam.ParamType = ptInput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectMIPromoStateKind
+      StoredProcList = <
+        item
+          StoredProc = spSelectMIPromoStateKind
+        end
+        item
+          StoredProc = spGetPromoStateKind
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actGetPromoStateKind_Return: TdsdDataSetRefresh
+      Category = 'Update_PromoStateKind'
+      MoveParams = <
+        item
+          FromParam.Value = '0'
+          FromParam.Component = FormParams
+          FromParam.ComponentItem = 'isComplete_PromoStateKind_false'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'isComplete_PromoStateKind'
+          ToParam.DataType = ftBoolean
+          ToParam.ParamType = ptInput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectMIPromoStateKind
+      StoredProcList = <
+        item
+          StoredProc = spSelectMIPromoStateKind
+        end
+        item
+          StoredProc = spGetPromoStateKind
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actPromoManagerDialog: TExecuteDialog
+      Category = 'Update_PromoStateKind'
+      MoveParams = <>
+      Caption = 'actPromoManagerDialog'
+      FormName = 'TPromoManagerDialogForm'
+      FormNameParam.Value = 'TPromoManagerDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MovementItemId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'MovementItemId_PromoStateKind_true'
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PromoStateKindId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'PromoStateKindId'
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PromoStateKindName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PromoStateKindName'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Comment_PromoStateKind'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Comment_PromoStateKind'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdateMovement_PromoStateKind: TdsdExecStoredProc
+      Category = 'Update_PromoStateKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_PromoStateKind
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_PromoStateKind
+        end
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spSelectMIPromoStateKind
+        end>
+      Caption = 'actUpdateMovement_PromoStateKind'
     end
   end
   inherited MasterDS: TDataSource
@@ -4865,6 +5051,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_SignInternal_Three'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarSeparator1'
         end
         item
@@ -4878,6 +5068,22 @@
         item
           Visible = True
           ItemName = 'bbProtocoPromoStateKind'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdatePromoStateKind_Return'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator3'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdatePromoStateKind_Complete'
         end>
     end
     object bsCalc: TdxBarSubItem
@@ -4943,6 +5149,32 @@
       Action = actOpenFormPromoContractBonus_Detail
       Category = 0
     end
+    object bbUpdate_SignInternal_Three: TdxBarButton
+      Action = actUpdate_SignInternal_Three
+      Category = 0
+    end
+    object dxBarSeparator2: TdxBarSeparator
+      Caption = 'New Separator'
+      Category = 0
+      Hint = 'New Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbUpdatePromoStateKind_Complete: TdxBarButton
+      Action = macUpdatePromoStateKind_Complete
+      Category = 0
+    end
+    object bbUpdatePromoStateKind_Return: TdxBarButton
+      Action = macUpdatePromoStateKind_Return
+      Category = 0
+    end
+    object dxBarSeparator3: TdxBarSeparator
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      ShowCaption = False
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -5004,6 +5236,30 @@
         Name = 'RetailId'
         Value = Null
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isComplete_PromoStateKind'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isComplete_PromoStateKind_true'
+        Value = True
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isComplete_PromoStateKind_false'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementItemId_PromoStateKind_true'
+        Value = Null
+        MultiSelectSeparator = ','
       end>
     Left = 168
     Top = 312
@@ -5028,7 +5284,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -5094,49 +5350,49 @@
       end
       item
         Name = 'StartPromo'
-        Value = 'NULL'
+        Value = Null
         Component = deStartPromo
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndPromo'
-        Value = 'NULL'
+        Value = Null
         Component = deEndPromo
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'StartSale'
-        Value = 'NULL'
+        Value = Null
         Component = deStartSale
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndSale'
-        Value = 'NULL'
+        Value = Null
         Component = deEndSale
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndReturn'
-        Value = 'NULL'
+        Value = Null
         Component = deEndReturn
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'OperDateStart'
-        Value = 'NULL'
+        Value = Null
         Component = deOperDateStart
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'OperDateEnd'
-        Value = 'NULL'
+        Value = Null
         Component = deOperDateEnd
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -5220,7 +5476,7 @@
       end
       item
         Name = 'MonthPromo'
-        Value = 'NULL'
+        Value = Null
         Component = deMonthPromo
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -5241,7 +5497,7 @@
       end
       item
         Name = 'CheckDate'
-        Value = 'NULL'
+        Value = Null
         Component = deCheck
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -5326,7 +5582,7 @@
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 320
+    Left = 312
     Top = 264
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
@@ -5374,7 +5630,7 @@
       end
       item
         Name = 'inStartPromo'
-        Value = 'NULL'
+        Value = Null
         Component = deStartPromo
         DataType = ftDateTime
         ParamType = ptInput
@@ -5382,7 +5638,7 @@
       end
       item
         Name = 'inEndPromo'
-        Value = 'NULL'
+        Value = Null
         Component = deEndPromo
         DataType = ftDateTime
         ParamType = ptInput
@@ -5390,7 +5646,7 @@
       end
       item
         Name = 'inStartSale'
-        Value = 'NULL'
+        Value = Null
         Component = deStartSale
         DataType = ftDateTime
         ParamType = ptInput
@@ -5398,7 +5654,7 @@
       end
       item
         Name = 'inEndSale'
-        Value = 'NULL'
+        Value = Null
         Component = deEndSale
         DataType = ftDateTime
         ParamType = ptInput
@@ -5406,7 +5662,7 @@
       end
       item
         Name = 'inEndReturn'
-        Value = 'NULL'
+        Value = Null
         Component = deEndReturn
         DataType = ftDateTime
         ParamType = ptInput
@@ -5414,7 +5670,7 @@
       end
       item
         Name = 'inOperDateStart'
-        Value = 'NULL'
+        Value = Null
         Component = deOperDateStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -5422,7 +5678,7 @@
       end
       item
         Name = 'inOperDateEnd'
-        Value = 'NULL'
+        Value = Null
         Component = deOperDateEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -5430,7 +5686,7 @@
       end
       item
         Name = 'ioMonthPromo'
-        Value = 'NULL'
+        Value = Null
         Component = deMonthPromo
         DataType = ftDateTime
         ParamType = ptInputOutput
@@ -5438,7 +5694,7 @@
       end
       item
         Name = 'inCheckDate'
-        Value = 'NULL'
+        Value = Null
         Component = deCheck
         DataType = ftDateTime
         ParamType = ptInput
@@ -5589,43 +5845,11 @@
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Promo_SetErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 374
     Top = 192
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Promo_SetUnErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 462
     Top = 200
   end
@@ -6174,6 +6398,7 @@
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -6337,6 +6562,7 @@
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -6626,6 +6852,7 @@
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -6746,6 +6973,7 @@
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -6805,6 +7033,7 @@
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = calcPriceIn
@@ -7136,6 +7365,7 @@
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -7323,14 +7553,15 @@
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 288
-    Top = 607
+    Left = 272
+    Top = 567
   end
   object spSelectMIPromoStateKind: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_Message_PromoStateKind'
@@ -7426,6 +7657,7 @@
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = ссPriceIn
@@ -7792,9 +8024,8 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsNull'
-        Value = False
-        DataType = ftBoolean
+        Name = 'inCountNum'
+        Value = '1'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -7845,9 +8076,8 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsNull'
-        Value = True
-        DataType = ftBoolean
+        Name = 'inCountNum'
+        Value = '2'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -7882,7 +8112,7 @@
       end>
     PackSize = 1
     Left = 1256
-    Top = 288
+    Top = 264
   end
   object spSelectCalc_Print: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_PromoGoods_Calc'
@@ -7962,6 +8192,7 @@
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -8028,5 +8259,155 @@
     PackSize = 1
     Left = 856
     Top = 640
+  end
+  object spUpdate_SignInternal_Three: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Promo_SignInternal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCountNum'
+        Value = '3'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSignInternalId'
+        Value = 'Null'
+        Component = GuidesSignInternal
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSignInternalName'
+        Value = ''
+        Component = GuidesSignInternal
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outStrSign'
+        Value = ''
+        Component = edStrSign
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outStrSignNo'
+        Value = ''
+        Component = edStrSignNo
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1264
+    Top = 288
+  end
+  object spGetPromoStateKind: TdsdStoredProc
+    StoredProcName = 'gpGet_MI_Message_PromoStateKind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsComplete'
+        Value = True
+        Component = FormParams
+        ComponentItem = 'isComplete_PromoStateKind'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementItemId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementItemId_PromoStateKind_true'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PromoStateKindId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'PromoStateKindId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PromoStateKindName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PromoStateKindName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Comment_PromoStateKind'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 344
+    Top = 280
+  end
+  object spUpdate_PromoStateKind: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Message_PromoStateKind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementItemId_PromoStateKind_true'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPromoStateKindId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'PromoStateKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Comment_PromoStateKind'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 258
+    Top = 616
   end
 end

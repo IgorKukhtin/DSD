@@ -1010,11 +1010,12 @@ DO $$
 BEGIN
    -- !!! состояние акций 
    PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoStateKind_Start(),     inDescId:= zc_Object_PromoStateKind(), inCode:= 1, inName:= 'В работе Отдел Маркетинга', inEnumName:= 'zc_Enum_PromoStateKind_Start');
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoStateKind_Head(),      inDescId:= zc_Object_PromoStateKind(), inCode:= 2, inName:= 'В работе Директор по маркетингу', inEnumName:= 'zc_Enum_PromoStateKind_Head');
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoStateKind_Main(),      inDescId:= zc_Object_PromoStateKind(), inCode:= 3, inName:= 'В работе Исполнительный Директор', inEnumName:= 'zc_Enum_PromoStateKind_Main');
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoStateKind_Complete(),  inDescId:= zc_Object_PromoStateKind(), inCode:= 4, inName:= 'Согласован', inEnumName:= 'zc_Enum_PromoStateKind_Complete');
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoStateKind_Canceled(),  inDescId:= zc_Object_PromoStateKind(), inCode:= 5, inName:= 'Отменен', inEnumName:= 'zc_Enum_PromoStateKind_Canceled');
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoStateKind_Return(),    inDescId:= zc_Object_PromoStateKind(), inCode:= 6, inName:= 'Вернули для исправлений', inEnumName:= 'zc_Enum_PromoStateKind_Return');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoStateKind_StartSign(), inDescId:= zc_Object_PromoStateKind(), inCode:= 2, inName:= 'Подписание Отдел Маркетинга', inEnumName:= 'zc_Enum_PromoStateKind_StartSign');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoStateKind_Head(),      inDescId:= zc_Object_PromoStateKind(), inCode:= 3, inName:= 'В работе Директор по маркетингу', inEnumName:= 'zc_Enum_PromoStateKind_Head');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoStateKind_Main(),      inDescId:= zc_Object_PromoStateKind(), inCode:= 4, inName:= 'В работе Исполнительный Директор', inEnumName:= 'zc_Enum_PromoStateKind_Main');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoStateKind_Complete(),  inDescId:= zc_Object_PromoStateKind(), inCode:= 5, inName:= 'Согласован', inEnumName:= 'zc_Enum_PromoStateKind_Complete');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoStateKind_Canceled(),  inDescId:= zc_Object_PromoStateKind(), inCode:= 6, inName:= 'Отменен', inEnumName:= 'zc_Enum_PromoStateKind_Canceled');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoStateKind_Return(),    inDescId:= zc_Object_PromoStateKind(), inCode:= 7, inName:= 'Вернули для исправлений', inEnumName:= 'zc_Enum_PromoStateKind_Return');
 END $$;
 
 

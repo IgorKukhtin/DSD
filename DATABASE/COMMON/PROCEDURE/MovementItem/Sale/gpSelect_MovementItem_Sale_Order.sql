@@ -338,7 +338,7 @@ BEGIN
                                   tmpMIPromo_all.MovementId_Promo
                                 , tmpMIPromo_all.GoodsId
                                 , tmpMIPromo_all.GoodsKindId
-                                , CASE WHEN tmpMIPromo_all.TaxPromo <> 0 THEN MIFloat_PriceWithOutVAT.ValueData ELSE 0 END AS PricePromo
+                                , CASE WHEN /*tmpMIPromo_all.TaxPromo <> 0*/ 1=1 THEN MIFloat_PriceWithOutVAT.ValueData ELSE 0 END AS PricePromo
                            FROM tmpMIPromo_all
                                 LEFT JOIN tmpMIFLoat_PriceWithOutVAT_promo AS MIFloat_PriceWithOutVAT
                                                                            ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
@@ -457,8 +457,8 @@ BEGIN
            , CAST (NULL AS TFloat)      AS TotalPercentAmount
            , CASE WHEN tmpPromo.isChangePercent = TRUE THEN vbChangePercent ELSE 0 END :: TFloat AS ChangePercent
 
-           , CASE WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
-                  WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
+           , CASE WHEN /*tmpPromo.TaxPromo <> 0 AND*/ tmpPromo.GoodsId > 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
+                  WHEN /*tmpPromo.TaxPromo <> 0*/ tmpPromo.GoodsId > 0 AND 1=1 THEN tmpPromo.PriceWithOutVAT
                   WHEN vbPriceWithVAT = FALSE THEN COALESCE (tmpPriceList_Kind.Price_PriceList, tmpPriceList.Price_Pricelist)
                   WHEN vbPriceWithVAT = TRUE  THEN COALESCE (tmpPriceList_Kind.Price_Pricelist_vat, tmpPriceList.Price_Pricelist_vat)
              END :: TFloat              AS Price
@@ -484,8 +484,8 @@ BEGIN
 
            , tmpPromo.MovementId     ::Integer AS MovementId_Promo
            , tmpPromo.MovementPromo
-           , CAST (CASE WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT / tmpPromo.CountForPrice
-                        WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT / tmpPromo.CountForPrice
+           , CAST (CASE WHEN /*tmpPromo.TaxPromo <> 0 AND*/ tmpPromo.GoodsId > 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT / tmpPromo.CountForPrice
+                        WHEN /*tmpPromo.TaxPromo <> 0*/ tmpPromo.GoodsId > 0 AND 1=1 THEN tmpPromo.PriceWithOutVAT / tmpPromo.CountForPrice
                         ELSE 0
                    END AS Numeric (16,8)) AS PricePromo
 
@@ -589,9 +589,9 @@ BEGIN
                            ELSE CAST ( (COALESCE (tmpMI.AmountPartner, 0)) * tmpMI.Price AS NUMERIC (16, 2))
                    END AS TFloat)                   AS AmountSumm
 
-           , CASE WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE AND tmpPromo.PriceWithVAT = tmpMI.Price
+           , CASE WHEN /*tmpPromo.TaxPromo <> 0 AND*/ tmpPromo.GoodsId > 0 AND vbPriceWithVAT = TRUE AND tmpPromo.PriceWithVAT = tmpMI.Price
                        THEN FALSE
-                  WHEN tmpPromo.TaxPromo <> 0 AND tmpPromo.PriceWithOutVAT = tmpMI.Price
+                  WHEN /*tmpPromo.TaxPromo <> 0 AND*/ tmpPromo.GoodsId > 0 AND tmpPromo.PriceWithOutVAT = tmpMI.Price
                        THEN FALSE
                   WHEN ((COALESCE (tmpMI.Price, 0) = COALESCE (tmpPriceList_Kind.Price_Pricelist, tmpPriceList.Price_Pricelist, 0)        AND vbPriceWithVAT = FALSE)
                      OR (COALESCE (tmpMI.Price, 0) = COALESCE (tmpPriceList_Kind.Price_Pricelist_vat,tmpPriceList.Price_Pricelist_vat, 0) AND vbPriceWithVAT = TRUE))
@@ -617,8 +617,8 @@ BEGIN
               END) :: TVarChar AS MovementPromo
 
            , CAST (CASE WHEN 1 = 0 AND tmpMIPromo.PricePromo <> 0 THEN tmpMIPromo.PricePromo / tmpPromo.CountForPrice
-                        WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT / tmpPromo.CountForPrice
-                        WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT / tmpPromo.CountForPrice
+                        WHEN /*tmpPromo.TaxPromo <> 0 AND*/ tmpPromo.GoodsId > 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT / tmpPromo.CountForPrice
+                        WHEN /*tmpPromo.TaxPromo <> 0*/ tmpPromo.GoodsId > 0 AND 1=1 THEN tmpPromo.PriceWithOutVAT / tmpPromo.CountForPrice
                         ELSE 0
                    END AS Numeric (16,8)) AS PricePromo
 
@@ -882,7 +882,7 @@ BEGIN
                                   tmpMIPromo_all.MovementId_Promo
                                 , tmpMIPromo_all.GoodsId
                                 , tmpMIPromo_all.GoodsKindId
-                                , CASE WHEN tmpMIPromo_all.TaxPromo <> 0 THEN MIFloat_PriceWithOutVAT.ValueData ELSE 0 END AS PricePromo
+                                , CASE WHEN /*tmpMIPromo_all.TaxPromo <> 0*/ 1=1 THEN MIFloat_PriceWithOutVAT.ValueData ELSE 0 END AS PricePromo
                            FROM tmpMIPromo_all
                                 LEFT JOIN tmpMIFLoat_PriceWithOutVAT_promo AS MIFloat_PriceWithOutVAT
                                                                            ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
@@ -1028,9 +1028,9 @@ BEGIN
                            ELSE CAST ( (COALESCE (tmpMI.AmountPartner, 0)) * tmpMI.Price AS NUMERIC (16, 2))
                    END AS TFloat)                   AS AmountSumm
 
-           , CASE WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE AND tmpPromo.PriceWithVAT = tmpMI.Price
+           , CASE WHEN /*tmpPromo.TaxPromo <> 0 AND*/ tmpPromo.GoodsId > 0 AND vbPriceWithVAT = TRUE AND tmpPromo.PriceWithVAT = tmpMI.Price
                        THEN FALSE
-                  WHEN tmpPromo.TaxPromo <> 0 AND tmpPromo.PriceWithOutVAT = tmpMI.Price
+                  WHEN /*tmpPromo.TaxPromo <> 0 AND*/ tmpPromo.GoodsId > 0 AND tmpPromo.PriceWithOutVAT = tmpMI.Price
                        THEN FALSE
                   WHEN ((COALESCE (tmpMI.Price, 0) = COALESCE (tmpPriceList_Kind.Price_Pricelist, tmpPriceList.Price_Pricelist, 0)     AND vbPriceWithVAT = FALSE)
                      OR (COALESCE (tmpMI.Price, 0) = COALESCE (tmpPriceList_Kind.Price_Pricelist_vat, tmpPriceList.Price_Pricelist_vat, 0) AND vbPriceWithVAT = TRUE))
@@ -1056,8 +1056,8 @@ BEGIN
               END) :: TVarChar AS MovementPromo
 
            , CAST (CASE WHEN 1 = 0 AND tmpMIPromo.PricePromo <> 0 THEN tmpMIPromo.PricePromo / tmpPromo.CountForPrice
-                        WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT / tmpPromo.CountForPrice
-                        WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT / tmpPromo.CountForPrice
+                        WHEN /*tmpPromo.TaxPromo <> 0 AND*/ tmpPromo.GoodsId > 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT / tmpPromo.CountForPrice
+                        WHEN /*tmpPromo.TaxPromo <> 0*/ tmpPromo.GoodsId > 0 AND 1=1 THEN tmpPromo.PriceWithOutVAT / tmpPromo.CountForPrice
                         ELSE 0
                    END AS Numeric (16,8)) AS PricePromo
 

@@ -15,14 +15,16 @@ $BODY$
   DECLARE vbPromoStateKindId Integer;
   DECLARE vbIsUserSigning1   Boolean;
   DECLARE vbIsUserSigning2   Boolean;
+  DECLARE vbIsUserSigning3   Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_Promo());
      vbUserId := inSession;
 
      -- Signing
-     vbIsUserSigning1:= vbUserId IN (280164, 5, 133035);  -- Старецкая М.В. + Фурсов А.А.
-     vbIsUserSigning2:= vbUserId IN (9463); -- Махота Д.П.
+     vbIsUserSigning1:= vbUserId IN (112324);  -- Колосинская С.А.
+     vbIsUserSigning2:= vbUserId IN (280164, 133035);  -- Старецкая М.В. + Фурсов А.А.
+     vbIsUserSigning3:= vbUserId IN (9463); -- Махота Д.П.
      -- vbIsUserSigning1:= vbUserId IN (133035, 5); -- Фурсов А.А.
      -- vbIsUserSigning2:= vbUserId IN (280164);    -- Старецкая М.В.
 
@@ -40,8 +42,9 @@ BEGIN
           ) AS tmp;
           
      -- Проверка
-     IF (vbIsUserSigning1 = TRUE AND COALESCE (vbPromoStateKindId, 0) NOT IN (zc_Enum_PromoStateKind_Head(), zc_Enum_PromoStateKind_Complete(), zc_Enum_PromoStateKind_Return()))
-     OR (vbIsUserSigning2 = TRUE AND COALESCE (vbPromoStateKindId, 0) NOT IN (zc_Enum_PromoStateKind_Main(), zc_Enum_PromoStateKind_Complete(), zc_Enum_PromoStateKind_Return()))
+     IF (vbIsUserSigning1 = TRUE AND COALESCE (vbPromoStateKindId, 0) NOT IN (zc_Enum_PromoStateKind_StartSign(), zc_Enum_PromoStateKind_Complete(), zc_Enum_PromoStateKind_Return()))
+     OR (vbIsUserSigning2 = TRUE AND COALESCE (vbPromoStateKindId, 0) NOT IN (zc_Enum_PromoStateKind_Head(), zc_Enum_PromoStateKind_Complete(), zc_Enum_PromoStateKind_Return()))
+     OR (vbIsUserSigning3 = TRUE AND COALESCE (vbPromoStateKindId, 0) NOT IN (zc_Enum_PromoStateKind_Main(), zc_Enum_PromoStateKind_Complete(), zc_Enum_PromoStateKind_Return()))
      THEN
          RAISE EXCEPTION 'Ошибка.Состояние <%> не может быть переведено в состояние <%>'
                        , lfGet_Object_ValueData_sh (vbPromoStateKindId)
