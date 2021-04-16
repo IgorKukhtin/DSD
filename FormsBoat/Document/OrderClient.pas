@@ -306,6 +306,8 @@ type
     InvNumber_ch3: TcxGridDBColumn;
     OperDate_ch3: TcxGridDBColumn;
     OperDatePartner_ch3: TcxGridDBColumn;
+    PartnerName_goods_ch3: TcxGridDBColumn;
+    PartNumber_ch3: TcxGridDBColumn;
   private
   public
   end;

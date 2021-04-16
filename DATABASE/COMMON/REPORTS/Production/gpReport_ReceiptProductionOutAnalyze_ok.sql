@@ -207,6 +207,23 @@ BEGIN
             GROUP BY MIContainer_parent.ContainerId
            )
 
+          , -- для оптимизации - 1
+            tmpCuterCount_find_1 AS (SELECT DISTINCT tmpMIContainer.ContainerId FROM tmpMIContainer)
+          , -- для оптимизации - 2
+            tmpCuterCount_find_2 AS (SELECT MIContainer.*
+                                     FROM MovementItemContainer AS MIContainer
+                                     WHERE MIContainer.ContainerId IN (SELECT DISTINCT tmpCuterCount_find_1.ContainerId FROM tmpCuterCount_find_1)
+                                       AND MIContainer.DescId = zc_MIContainer_Count()
+                                       AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                                       AND MIContainer.isActive = TRUE
+                                    )
+/*          , -- для оптимизации - 3
+            tmpCuterCount_find_3 AS (SELECT MIContainer.*
+                                     FROM tmpCuterCount_find_2 AS MIContainer
+                                     WHERE MIContainer.DescId = zc_MIContainer_Count()
+                                       AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                                       AND MIContainer.isActive = TRUE
+                                    )*/
           , -- Приход с пр-ва пф/гп - кутеров
             tmpCuterCount_find AS 
            (SELECT tmpMI_WorkProgress_in.ContainerId                AS ContainerId
@@ -215,10 +232,10 @@ BEGIN
                  -- , MAX (COALESCE (MILO_Receipt.ObjectId, 0))        AS ReceiptId
             FROM (SELECT tmpMIContainer.ContainerId, MIContainer.MovementItemId , SUM (MIContainer.Amount) AS Amount
                   FROM tmpMIContainer
-                       INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpMIContainer.ContainerId
-                                                                      AND MIContainer.DescId = zc_MIContainer_Count()
-                                                                      AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
-                                                                      AND MIContainer.isActive = TRUE
+                       INNER JOIN tmpCuterCount_find_2 AS MIContainer ON MIContainer.ContainerId = tmpMIContainer.ContainerId
+                                                                   --AND MIContainer.DescId = zc_MIContainer_Count()
+                                                                   --AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                                                                   --AND MIContainer.isActive = TRUE
                   GROUP BY tmpMIContainer.ContainerId, MIContainer.MovementItemId
                  ) AS tmpMI_WorkProgress_in
                  LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
@@ -756,7 +773,7 @@ BEGIN
 
 
 END;
-$BODY$
+ $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpReport_ReceiptProductionOutAnalyze (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 

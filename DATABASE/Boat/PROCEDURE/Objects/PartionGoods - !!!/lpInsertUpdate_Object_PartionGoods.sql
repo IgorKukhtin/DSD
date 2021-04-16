@@ -334,7 +334,7 @@ BEGIN
        AND Object_PartionGoods.ObjectId        = inObjectId;*/
 
 
-     -- cохранили Цену в истории - !!!Кроме Sybase!!!
+     -- cохранили Цену в истории
      IF 1=1 -- vbPriceList_change = TRUE
      THEN
          -- Здесь еще Update - Object_PartionGoods.OperPriceList
@@ -347,6 +347,12 @@ BEGIN
                                                                , inIsLast     := TRUE
                                                                , inSession    := inUserId :: TVarChar
                                                                 );
+     END IF;
+
+     IF 1=1 -- vbPriceList_change = TRUE
+     THEN
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_EKPrice(), inObjectId, inEKPrice);
      END IF;
 
 

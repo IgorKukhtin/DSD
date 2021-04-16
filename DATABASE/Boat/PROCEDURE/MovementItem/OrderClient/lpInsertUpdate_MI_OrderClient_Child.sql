@@ -1,10 +1,12 @@
 -- Function: lpInsertUpdate_MI_OrderClient_Child()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Child (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_OrderClient_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
+    IN inPartionId           Integer   , -- Комплектующие / Работы/Услуги
     IN inObjectId            Integer   , -- Комплектующие / Работы/Услуги
     IN inGoodsId             Integer   , -- Комплектующие - какой узел собирается
     IN inAmount              TFloat    , -- Количество резерв
@@ -28,7 +30,7 @@ BEGIN
 
 
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inObjectId, NULL, inMovementId, inAmount, NULL,inUserId);
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inObjectId, inPartionId, inMovementId, inAmount, NULL,inUserId);
 
      -- сохранили свойство <AmountPartner>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), ioId, inAmountPartner);

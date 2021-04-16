@@ -5,7 +5,7 @@
   ClientWidth = 605
   AddOnFormData.isSingle = False
   ExplicitWidth = 611
-  ExplicitHeight = 341
+  ExplicitHeight = 338
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -375,7 +375,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -546,21 +546,21 @@
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
-    FormNameParam.Value = 'TMember_ContainerForm'
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMember_ContainerForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
-        Name = 'InfoMoneyId'
+        Name = 'Key'
         Value = ''
         Component = GuidesInfoMoney
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InfoMoneyName_all'
+        Name = 'TextValue'
         Value = ''
         Component = GuidesInfoMoney
         ComponentItem = 'TextValue'

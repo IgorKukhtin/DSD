@@ -298,6 +298,9 @@ BEGIN
                      -- показываем что ввели
                      THEN ObjectString_Comment.ValueData
 
+                WHEN COALESCE (Object_ProdColorItems.Id, 0) = 0
+                     THEN ObjectString_ProdColorPattern_Comment.ValueData
+
                 -- у Boat Structure  (когда нет GoodsId)
                 --ELSE ObjectString_ProdColorPattern_Comment.ValueData
 

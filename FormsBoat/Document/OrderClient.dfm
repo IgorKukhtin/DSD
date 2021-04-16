@@ -1585,25 +1585,18 @@ object OrderClientForm: TOrderClientForm
             DataBinding.FieldName = 'PartnerName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1089#1090#1072#1074#1097#1080#1082' ('#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077')'
             Options.Editing = False
             Width = 120
           end
-          object GoodsGroupNameFull_ch3: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
-            DataBinding.FieldName = 'GoodsGroupNameFull'
-            Visible = False
+          object PartnerName_goods_ch3: TcxGridDBColumn
+            Caption = '*** '#1055#1086#1089#1090#1072#1074#1097#1080#1082
+            DataBinding.FieldName = 'PartnerName_goods'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1089#1090#1072#1074#1097#1080#1082' ('#1091#1079#1077#1083')'
             Options.Editing = False
-            Width = 120
-          end
-          object GoodsGroupName_ch3: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072
-            DataBinding.FieldName = 'GoodsGroupName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 120
+            Width = 80
           end
           object GoodsCode_ch3: TcxGridDBColumn
             Caption = '*** '#1050#1086#1076
@@ -1639,13 +1632,33 @@ object OrderClientForm: TOrderClientForm
             Options.Editing = False
             Width = 150
           end
+          object GoodsGroupNameFull_ch3: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'GoodsGroupNameFull'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077') - '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+            Options.Editing = False
+            Width = 120
+          end
+          object GoodsGroupName_ch3: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'GoodsGroupName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1043#1088#1091#1087#1087#1072' - '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+            Options.Editing = False
+            Width = 120
+          end
           object ObjectCode_ch3: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'ObjectCode'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 50
+            Width = 55
           end
           object Article_Object_ch3: TcxGridDBColumn
             Caption = 'Artikel Nr'
@@ -1659,7 +1672,7 @@ object OrderClientForm: TOrderClientForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 70
           end
           object ObjectName_ch3: TcxGridDBColumn
             Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1089#1083#1091#1075#1080
@@ -1693,6 +1706,14 @@ object OrderClientForm: TOrderClientForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
+          end
+          object PartNumber_ch3: TcxGridDBColumn
+            Caption = #1047#1072#1074#1086#1076#1089#1082#1086#1081' '#8470
+            DataBinding.FieldName = 'PartNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object ProdColorName_ch3: TcxGridDBColumn
             Caption = 'Farbe'

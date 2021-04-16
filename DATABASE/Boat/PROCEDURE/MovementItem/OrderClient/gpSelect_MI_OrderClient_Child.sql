@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer
              , ObjectId Integer, ObjectCode Integer, Article_Object TVarChar, ObjectName TVarChar, DescName TVarChar
              , GoodsId Integer, GoodsCode Integer, Article TVarChar, GoodsName TVarChar
              , UnitId Integer, UnitName TVarChar
+             , PartnerId_goods Integer, PartnerName_goods TVarChar
              , PartnerId Integer, PartnerName TVarChar
              , Amount TFloat, AmountPartner TFloat
              , OperPrice TFloat
@@ -28,8 +29,8 @@ RETURNS TABLE (Id Integer
              , Amount_in      TFloat -- Итого кол-во Приход от поставщика
              , EKPrice        TFloat -- Цена вх.
              , CountForPrice  TFloat -- Кол. в цене вх.
-             , OperPriceList  TFloat -- Цена по прайсу  
-             , CostPrice      TFloat -- Цена вх + затрата 
+             , OperPriceList  TFloat -- Цена по прайсу
+             , CostPrice      TFloat -- Цена вх + затрата
              , OperPrice_cost TFloat -- сумма затраты
 
              , MovementId_OrderPartner Integer
@@ -37,6 +38,8 @@ RETURNS TABLE (Id Integer
              , OperDate                TDateTime
              , OperDatePartner         TDateTime
              
+             , PartNumber TVarChar
+
               )
 AS
 $BODY$
@@ -52,7 +55,7 @@ BEGIN
                                         , ObjectLink_ProdColorPattern.ChildObjectId AS ProdColorPatternId
                                           -- здесь цвет (когда нет GoodsId)
                                         , CASE WHEN TRIM (ObjectString_Comment.ValueData) <> '' THEN TRIM (ObjectString_Comment.ValueData) ELSE TRIM (COALESCE (ObjectString_ProdColorPattern_Comment.ValueData, '')) END AS ProdColorName
-        
+
                                    FROM Object AS Object_ProdColorItems
                                         -- Лодка
                                         INNER JOIN ObjectLink AS ObjectLink_Product
@@ -63,12 +66,12 @@ BEGIN
                                                                ON ObjectFloat_MovementId_OrderClient.ObjectId = Object_ProdColorItems.Id
                                                               AND ObjectFloat_MovementId_OrderClient.DescId   = zc_ObjectFloat_ProdColorItems_OrderClient()
                                                               AND ObjectFloat_MovementId_OrderClient.ValueData = inMovementId
-        
+
                                         -- здесь цвет, если было изменение для Лодки (когда нет GoodsId)
                                         LEFT JOIN ObjectString AS ObjectString_Comment
                                                                ON ObjectString_Comment.ObjectId = Object_ProdColorItems.Id
                                                               AND ObjectString_Comment.DescId   = zc_ObjectString_ProdColorItems_Comment()
-        
+
                                         -- если меняли на другой товар, не тот что в ReceiptGoodsChild
                                         LEFT JOIN ObjectLink AS ObjectLink_Goods
                                                              ON ObjectLink_Goods.ObjectId = Object_ProdColorItems.Id
@@ -81,7 +84,7 @@ BEGIN
                                         LEFT JOIN ObjectString AS ObjectString_ProdColorPattern_Comment
                                                                ON ObjectString_ProdColorPattern_Comment.ObjectId = ObjectLink_ProdColorPattern.ChildObjectId
                                                               AND ObjectString_ProdColorPattern_Comment.DescId   = zc_ObjectString_ProdColorPattern_Comment()
-        
+
                                         -- Шаблон Boat Structure
                                         LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
                                                              ON ObjectLink_ColorPattern.ObjectId = ObjectLink_ProdColorPattern.ChildObjectId
@@ -153,9 +156,11 @@ BEGIN
            , Object_Goods.ValueData                   AS GoodsName
 
            , Object_Unit.Id                           AS UnitId
-           , Object_Unit.ValueData                    AS UnitName 
+           , Object_Unit.ValueData                    AS UnitName
+           , Object_Partner_goods.Id                  AS PartnerId_goods
+           , Object_Partner_goods.ValueData           AS PartnerName_goods
            , Object_Partner.Id                        AS PartnerId
-           , Object_Partner.ValueData                 AS PartnerName 
+           , Object_Partner.ValueData                 AS PartnerName
            , MovementItem.Amount             ::TFloat AS Amount            --Количество резерв
            , MIFloat_AmountPartner.ValueData ::TFloat AS AmountPartner     --Количество заказ поставщику
            , MIFloat_OperPrice.ValueData     ::TFloat AS OperPrice         -- Цена вх без НДС
@@ -182,19 +187,25 @@ BEGIN
            , Object_PartionGoods.EKPrice
            , Object_PartionGoods.CountForPrice
            , Object_PartionGoods.OperPriceList ::TFloat                                                                                                     -- Цена по прайсу
-           , Object_PartionGoods.CostPrice     ::TFloat                                                                                                     -- Цена затраты без НДС 
+           , Object_PartionGoods.CostPrice     ::TFloat                                                                                                     -- Цена затраты без НДС
            , (Object_PartionGoods.EKPrice / Object_PartionGoods.CountForPrice + COALESCE (Object_PartionGoods.CostPrice,0) ) ::TFloat AS OperPrice_cost     -- Цена вх. с затратами без НДС
-           
+
            , Movement_OrderPartner.Id                            AS MovementId_OrderPartner
            , zfConvert_StringToNumber (Movement_OrderPartner.InvNumber) AS InvNumber
            , Movement_OrderPartner.OperDate
            , MovementDate_OperDatePartner.ValueData AS OperDatePartner
+           
+           , MIString_PartNumber.ValueData AS PartNumber
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                    AND MovementItem.DescId     = zc_MI_Child()
                                    AND MovementItem.isErased   = tmpIsErased.isErased
             LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MovementItem.PartionId
+
+            LEFT JOIN MovementItemString AS MIString_PartNumber
+                                         ON MIString_PartNumber.MovementItemId = MovementItem.PartionId
+                                        AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
 
             LEFT JOIN Object AS Object_Object ON Object_Object.Id = MovementItem.ObjectId
             LEFT JOIN ObjectString AS ObjectString_Article_object
@@ -249,7 +260,12 @@ BEGIN
                                              ON MILinkObject_ProdOptions.MovementItemId = MovementItem.Id
                                             AND MILinkObject_ProdOptions.DescId = zc_MILinkObject_ProdOptions()
             LEFT JOIN Object AS Object_ProdOptions ON Object_ProdOptions.Id = MILinkObject_ProdOptions.ObjectId
-            --
+
+            LEFT JOIN ObjectLink AS OL_Goods_Partner_goods
+                                 ON OL_Goods_Partner_goods.ObjectId =  Object_Goods.Id
+                                AND OL_Goods_Partner_goods.DescId   = zc_ObjectLink_Goods_Partner()
+            LEFT JOIN Object AS Object_Partner_goods ON Object_Partner_goods.Id     = OL_Goods_Partner_goods.ChildObjectId
+
             LEFT JOIN Object AS Object_Partner     ON Object_Partner.Id     = COALESCE (Object_PartionGoods.FromId, MILinkObject_Partner.ObjectId)
             LEFT JOIN Object AS Object_GoodsGroup  ON Object_GoodsGroup.Id  = COALESCE (Object_PartionGoods.GoodsGroupId, ObjectLink_GoodsGroup.ChildObjectId)
             LEFT JOIN Object AS Object_Measure     ON Object_Measure.Id     = COALESCE (Object_PartionGoods.MeasureId, ObjectLink_Measure.ChildObjectId)
@@ -257,7 +273,7 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsType   ON Object_GoodsType.Id   = COALESCE (Object_PartionGoods.GoodsTypeId, ObjectLink_GoodsType.ChildObjectId)
             LEFT JOIN Object AS Object_ProdColor   ON Object_ProdColor.Id   = COALESCE (Object_PartionGoods.ProdColorId, ObjectLink_ProdColor.ChildObjectId)
             LEFT JOIN Object AS Object_TaxKind     ON Object_TaxKind.Id     = Object_PartionGoods.TaxKindId
-            
+
             LEFT JOIN MovementItemLinkObject AS MILinkObject_ColorPattern
                                              ON MILinkObject_ColorPattern.MovementItemId = MovementItem.Id
                                             AND MILinkObject_ColorPattern.DescId         = zc_MILinkObject_ColorPattern()
@@ -284,8 +300,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И. 
- 18.07.16         * 
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.07.16         *
 */
 
 -- тест
