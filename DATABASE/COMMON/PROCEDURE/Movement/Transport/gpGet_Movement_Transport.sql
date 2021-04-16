@@ -134,14 +134,14 @@ BEGIN
            , Object_CarTrailer.ValueData AS CarTrailerName
 
            , View_PersonalDriver.PersonalId   AS PersonalDriverId
-           , View_PersonalDriver.PersonalName AS PersonalDriverName
+           , (View_PersonalDriver.PersonalName /*|| ' ' || View_PersonalDriver.PositionName*/) :: TVarChar AS PersonalDriverName
            , ObjectString_DriverCertificate.ValueData AS DriverCertificate
 
            , View_PersonalDriverMore.PersonalId   AS PersonalDriverMoreId
-           , View_PersonalDriverMore.PersonalName AS PersonalDriverMoreName
+           , (View_PersonalDriverMore.PersonalName /*|| ' ' || View_PersonalDriverMore.PositionName*/) :: TVarChar AS PersonalDriverMoreName
 
            , View_Personal.PersonalId   AS PersonalId
-           , View_Personal.PersonalName AS PersonalName
+           , (View_Personal.PersonalName /*|| ' ' || View_Personal.PositionName*/) :: TVarChar AS PersonalName
 
            , Object_UnitForwarding.Id        AS UnitForwardingId
            , Object_UnitForwarding.ValueData AS UnitForwardingName

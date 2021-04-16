@@ -110,6 +110,7 @@ type
     bbProtocolProcessAccess: TdxBarButton;
     actProtocolUserForm: TdsdOpenForm;
     bbProtocolUser: TdxBarButton;
+    cxSplitter1: TcxSplitter;
   private
     { Private declarations }
   public

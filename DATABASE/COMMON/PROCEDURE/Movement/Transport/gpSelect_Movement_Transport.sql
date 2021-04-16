@@ -106,9 +106,9 @@ BEGIN
            , Object_CarModel.ValueData            AS CarModelName
            , Object_CarTrailer.ValueData          AS CarTrailerName
 
-           , View_PersonalDriver.PersonalName     AS PersonalDriverName
-           , View_PersonalDriverMore.PersonalName AS PersonalDriverMoreName
-           , View_Personal.PersonalName           AS PersonalName
+           , (View_PersonalDriver.PersonalName || ' ' || View_PersonalDriver.PositionName) :: TVarChar AS PersonalDriverName
+           , (View_PersonalDriverMore.PersonalName || ' ' || View_PersonalDriverMore.PositionName) :: TVarChar AS PersonalDriverMoreName
+           , (View_Personal.PersonalName || ' ' || View_Personal.PositionName) :: TVarChar AS PersonalName
 
            , Object_UnitForwarding.ValueData AS UnitForwardingName
            , tmpCost.Cost_Info ::TVarChar

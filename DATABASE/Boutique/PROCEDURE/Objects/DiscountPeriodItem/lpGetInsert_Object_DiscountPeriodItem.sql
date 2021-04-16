@@ -13,6 +13,18 @@ $BODY$
 DECLARE vbId Integer;
 BEGIN
 
+   -- Проверка
+   IF COALESCE (inUnitId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Магазин не установлен.';
+   END IF;
+   -- Проверка
+   IF COALESCE (inUnitId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Товар не установлен.';
+   END IF;
+
+
    -- поиск
    vbId:= (SELECT ObjectLink_DiscountPeriodItem_Goods.ObjectId
            FROM ObjectLink AS ObjectLink_DiscountPeriodItem_Goods

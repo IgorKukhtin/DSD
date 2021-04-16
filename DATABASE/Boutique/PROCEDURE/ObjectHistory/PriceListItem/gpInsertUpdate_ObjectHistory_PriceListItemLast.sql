@@ -19,6 +19,7 @@ $BODY$
 DECLARE
    DECLARE vbUserId Integer;
    DECLARE vbPriceListItemId Integer;
+   DECLARE vbDiscountPeriodItemId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_ObjectHistory_PriceListItem());
@@ -94,9 +95,31 @@ BEGIN
        PERFORM lpUpdate_Object_PartionGoods_OperPriceList (inGoodsId:= inGoodsId, inUserId:= vbUserId);
    END IF;
 
+   IF zc_Enum_GlobalConst_isTerry() = FALSE
+   THEN
+       -- Поиск <Элемент скидки>
+       vbDiscountPeriodItemId := lpGetInsert_Object_DiscountPeriodItem ((SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.ChildObjectId = inPriceListId AND OL.DescId = zc_ObjectLink_Unit_PriceList())
+                                                                      , inGoodsId, vbUserId);
+       -- Проверка
+       IF EXISTS (SELECT 1 FROM ObjectHistory AS OH WHERE OH.DescId = zc_ObjectHistory_PriceListItem() AND OH.ObjectId = vbPriceListItemId AND OH.EndDate = inOperDate)
+          AND inValue < (SELECT COALESCE (OFl.ValueData, 0) FROM ObjectHistory AS OH LEFT JOIN ObjectHistoryFloat AS OFl ON OFl.ObjectHistoryId = OH.Id AND OFl.DescId = zc_ObjectHistoryFloat_PriceListItem_Value() WHERE OH.DescId = zc_ObjectHistory_PriceListItem() AND OH.ObjectId = vbPriceListItemId AND OH.EndDate = inOperDate)
+          AND 0 < (SELECT COALESCE (OFl.ValueData, 0) FROM ObjectHistory AS OH LEFT JOIN ObjectHistoryFloat AS OFl ON OFl.ObjectHistoryId = OH.Id AND OFl.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value() WHERE OH.DescId = zc_ObjectHistory_DiscountPeriodItem() AND OH.ObjectId = vbDiscountPeriodItemId AND OH.StartDate <= inOperDate AND inOperDate < OH.EndDate)
+       THEN
+           RAISE EXCEPTION 'Ошибка.Для товара найдена сезонная скидка = <% %>.Переоценку провести нельзя.'
+                         , zfConvert_FloatToString((SELECT COALESCE (OFl.ValueData, 0) FROM ObjectHistory AS OH LEFT JOIN ObjectHistoryFloat AS OFl ON OFl.ObjectHistoryId = OH.Id AND OFl.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value() WHERE OH.DescId = zc_ObjectHistory_DiscountPeriodItem() AND OH.ObjectId = vbDiscountPeriodItemId AND OH.StartDate <= inOperDate AND inOperDate < OH.EndDate))
+                         , '%'
+                          ;
+       END IF;
+
+   END IF;
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectHistoryProtocol (inObjectId:= vbPriceListItemId, inUserId:= vbUserId, inStartDate:= outStartDate, inEndDate:= outEndDate, inPrice:= inValue, inIsUpdate:= TRUE, inIsErased:= FALSE);
+
+   IF vbUserId :: TVarChar = zfCalc_UserAdmin()
+   THEN
+       RAISE EXCEPTION 'Error.Admin test - ok';
+   END IF;
 
 
 END;$BODY$
