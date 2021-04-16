@@ -70,6 +70,7 @@ type
     actExecuteDialogNeed: TExecuteDialog;
     gpUpdate_MI_FinalSUA_Need: TdsdStoredProc;
     dxBarButton2: TdxBarButton;
+    Price: TcxGridDBColumn;
   private
     { Private declarations }
   public

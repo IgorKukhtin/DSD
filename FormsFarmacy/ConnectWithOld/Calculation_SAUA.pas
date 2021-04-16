@@ -47,8 +47,6 @@ type
     Panel5: TPanel;
     cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
-    CheckListBoxRecipient: TCheckListBox;
-    CheckListBoxAssortment: TCheckListBox;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     cxGridDBBandedTableView1: TcxGridDBBandedTableView;
@@ -61,8 +59,8 @@ type
     AmountCheck: TcxGridDBBandedColumn;
     CountUnit: TcxGridDBBandedColumn;
     cxGridLevel: TcxGridLevel;
-    GetUnitsList: TdsdStoredProc;
-    UnitsCDS: TClientDataSet;
+    GetUnitsRecipientList: TdsdStoredProc;
+    UnitsRecipientCDS: TClientDataSet;
     ceThreshold: TcxCurrencyEdit;
     cxLabel5: TcxLabel;
     actCalculation: TAction;
@@ -77,8 +75,6 @@ type
     cbGoodsClose: TcxCheckBox;
     cbMCSIsClose: TcxCheckBox;
     cbNotCheckNoMCS: TcxCheckBox;
-    ceResolutionParameter: TcxCurrencyEdit;
-    cxLabel8: TcxLabel;
     actScheduleNearestSUN1: TMultiAction;
     actExecactScheduleNearestSUN1: TdsdExecStoredProc;
     bbScheduleNearestSUN1: TdxBarButton;
@@ -91,15 +87,41 @@ type
     actInsert_FinalSUAProtocol: TdsdExecStoredProc;
     actFinalSUAProtocol: TdsdOpenForm;
     bbFinalSUAProtocol: TdxBarButton;
-    cbRemains: TcxCheckBox;
-    cbMCSValue: TcxCheckBox;
     cbNeedRound: TcxCheckBox;
     cbAssortmentRound: TcxCheckBox;
+    ceThresholdMCS: TcxCurrencyEdit;
+    ceThresholdRemains: TcxCurrencyEdit;
+    FieldFilterRecipient: TdsdFieldFilter;
+    FieldFilterAssortment: TdsdFieldFilter;
+    cbMCSValue: TcxCheckBox;
+    cbRemains: TcxCheckBox;
+    ceThresholdRemainsLarge: TcxCurrencyEdit;
+    ceThresholdMCSLarge: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
+    cxLabel11: TcxLabel;
+    UnitAssortmentCDS: TClientDataSet;
+    GetUnitsAssortmentList: TdsdStoredProc;
+    cxTextEdit1: TcxTextEdit;
+    cxGridRecipient: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    risChecked: TcxGridDBColumn;
+    rUnitName: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxTextEdit2: TcxTextEdit;
+    cxGridAssortment: TcxGrid;
+    cxGridDBTableView2: TcxGridDBTableView;
+    aisChecked: TcxGridDBColumn;
+    aUnitName: TcxGridDBColumn;
+    cxGridLevel2: TcxGridLevel;
+    UnitsRecipientDS: TDataSource;
+    UnitAssortmentDS: TDataSource;
     procedure ParentFormCreate(Sender: TObject);
     procedure ParentFormClose(Sender: TObject; var Action: TCloseAction);
     procedure actCalculationExecute(Sender: TObject);
-    procedure CheckListBoxRecipientClickCheck(Sender: TObject);
-    procedure CheckListBoxAssortmentClickCheck(Sender: TObject);
+    procedure UnitsRecipientCDSAfterPost(DataSet: TDataSet);
+    procedure UnitAssortmentCDSAfterPost(DataSet: TDataSet);
+    procedure risCheckedPropertiesEditValueChanged(Sender: TObject);
+    procedure aisCheckedPropertiesEditValueChanged(Sender: TObject);
   private
     { Private declarations }
   public
@@ -115,26 +137,44 @@ procedure TCalculation_SAUAForm.actCalculationExecute(Sender: TObject);
 begin
 
    cRecipient := ''; cAssortment := '';  j := 0;
-   for i := 0 to CheckListBoxRecipient.Items.Count - 1 do
-    Begin
-      Application.ProcessMessages;
-      if CheckListBoxRecipient.Checked[i] then
-      begin
-        if cRecipient <> '' then cRecipient := cRecipient + ',';
-        cRecipient := cRecipient + IntToStr(Integer(CheckListBoxRecipient.Items.Objects[I]));
-      end;
-    End;
+   try
+     UnitsRecipientCDS.DisableControls;
+     i := UnitsRecipientCDS.RecNo;
+     UnitsRecipientCDS.First;
+     while not UnitsRecipientCDS.Eof do
+      Begin
+        Application.ProcessMessages;
+        if UnitsRecipientCDS.FieldByName('isChecked').AsBoolean then
+        begin
+          if cRecipient <> '' then cRecipient := cRecipient + ',';
+          cRecipient := cRecipient + UnitsRecipientCDS.FieldByName('Id').AsString;
+        end;
+        UnitsRecipientCDS.Next;
+      End;
+   finally
+     UnitsRecipientCDS.RecNo := i;
+     UnitsRecipientCDS.EnableControls;
+   end;
 
-   for i := 0 to CheckListBoxAssortment.Items.Count - 1 do
-    Begin
-      Application.ProcessMessages;
-      if CheckListBoxAssortment.Checked[i] then
-      begin
-        if cAssortment <> '' then cAssortment := cAssortment + ',';
-        cAssortment := cAssortment + IntToStr(Integer(CheckListBoxAssortment.Items.Objects[I]));
-        Inc(J);
-      end;
-    End;
+   try
+     UnitAssortmentCDS.DisableControls;
+     i := UnitAssortmentCDS.RecNo;
+     UnitAssortmentCDS.First;
+     while not UnitAssortmentCDS.Eof do
+      Begin
+        Application.ProcessMessages;
+        if UnitAssortmentCDS.FieldByName('isChecked').AsBoolean then
+        begin
+          if cAssortment <> '' then cAssortment := cAssortment + ',';
+          cAssortment := cAssortment + UnitAssortmentCDS.FieldByName('Id').AsString;
+          Inc(J);
+        end;
+        UnitAssortmentCDS.Next;
+      End;
+   finally
+     UnitAssortmentCDS.RecNo := i;
+     UnitAssortmentCDS.EnableControls;
+   end;
 
    if cRecipient = '' then
    begin
@@ -160,26 +200,10 @@ begin
    spCalculation.Execute;
 end;
 
-procedure TCalculation_SAUAForm.CheckListBoxAssortmentClickCheck(
+procedure TCalculation_SAUAForm.aisCheckedPropertiesEditValueChanged(
   Sender: TObject);
-var i, nCount : integer;
 begin
-   nCount := 0;
-  for i := 0 to CheckListBoxAssortment.Items.Count - 1 do
-    if CheckListBoxAssortment.Checked[i] then Inc(nCount);
-
-  cxLabel10.Caption := 'Выбрано ' + IntToStr(nCount);
-end;
-
-procedure TCalculation_SAUAForm.CheckListBoxRecipientClickCheck(
-  Sender: TObject);
-var i, nCount : integer;
-begin
-   nCount := 0;
-  for i := 0 to CheckListBoxRecipient.Items.Count - 1 do
-    if CheckListBoxRecipient.Checked[i] then Inc(nCount);
-
-  cxLabel9.Caption := 'Выбрано ' + IntToStr(nCount);
+  UnitAssortmentCDS.Post;
 end;
 
 procedure TCalculation_SAUAForm.ParentFormClose(Sender: TObject;
@@ -193,16 +217,59 @@ procedure TCalculation_SAUAForm.ParentFormCreate(Sender: TObject);
 begin
   UserSettingsStorageAddOn.LoadUserSettings;
 
-  GetUnitsList.Execute;
-  UnitsCDS.First;
-  while not UnitsCDS.Eof do
-  begin
-    CheckListBoxRecipient.Items.AddObject(UnitsCDS.FieldByName('UnitName').asString,TObject(UnitsCDS.FieldByName('Id').AsInteger));
-    if UnitsCDS.FieldByName('UnitCalculationId').AsInteger <> 0 then
-      CheckListBoxAssortment.Items.AddObject(UnitsCDS.FieldByName('UnitName').asString,TObject(UnitsCDS.FieldByName('Id').AsInteger));
-    UnitsCDS.Next;
+  GetUnitsRecipientList.Execute;
+  GetUnitsAssortmentList.Execute;
+
+end;
+
+procedure TCalculation_SAUAForm.risCheckedPropertiesEditValueChanged(
+  Sender: TObject);
+begin
+  UnitsRecipientCDS.Post;
+end;
+
+procedure TCalculation_SAUAForm.UnitAssortmentCDSAfterPost(DataSet: TDataSet);
+var nCount, i : integer;
+begin
+  nCount := 0;
+
+  try
+    DataSet.DisableControls;
+    i := UnitsRecipientCDS.RecNo;
+    DataSet.First;
+    while not DataSet.Eof do
+    begin
+      if DataSet['isChecked'] then  Inc(nCount);
+      DataSet.Next;
+    end;
+  finally
+     DataSet.RecNo := i;
+     DataSet.EnableControls;
   end;
 
+  cxLabel10.Caption := 'Выбрано ' + IntToStr(nCount);
+end;
+
+procedure TCalculation_SAUAForm.UnitsRecipientCDSAfterPost(DataSet: TDataSet);
+var nCount, i : integer;
+begin
+  nCount := 0;
+
+  try
+    DataSet.DisableControls;
+    i := UnitsRecipientCDS.RecNo;
+    DataSet.First;
+    while not DataSet.Eof do
+    begin
+      if DataSet['isChecked'] then  Inc(nCount);
+      DataSet.Next;
+    end;
+  finally
+     DataSet.RecNo := i;
+     DataSet.EnableControls;
+  end;
+
+  cxLabel9.Caption := 'Выбрано ' + IntToStr(nCount);
 end;
 
 initialization

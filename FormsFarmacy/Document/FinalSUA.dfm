@@ -210,6 +210,15 @@ inherited FinalSUAForm: TFinalSUAForm
             Options.Editing = False
             Width = 81
           end
+          object Price: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079'. '#1091' '#1086#1090#1087#1088#1072#1074'.'
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object AmountOI: TcxGridDBColumn
             Caption = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'AmountOI'

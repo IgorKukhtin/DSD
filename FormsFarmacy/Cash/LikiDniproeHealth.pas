@@ -370,7 +370,7 @@ begin
 //    Exit;
 //  end;
 
-  if LikiDniproeHealthApi.FStatus <> 'ACTIVE' then
+  if LikiDniproeHealthApi.FStatus = 'ACTIVE' then
   begin
 
     if LikiDniproeHealthApi.FMedical_program_id = '' then

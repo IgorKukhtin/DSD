@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_UnitForSAUA (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_UnitForSAUA(
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, UnitName TVarChar, UnitCalculationId Integer)
+RETURNS TABLE (Id Integer, isChecked boolean, UnitName TVarChar, UnitCalculationId Integer)
 AS
 $BODY$
 BEGIN
@@ -26,6 +26,7 @@ BEGIN
 
 
         SELECT Object_Unit.Id          AS Id
+             , False                   AS isChecked
              , (COALESCE (Object_Juridical.ValueData, '') ||'  **  '||
                 COALESCE (Object_Unit.ValueData, '')) :: TVarChar AS Name
              , tmpUnit.UnitId

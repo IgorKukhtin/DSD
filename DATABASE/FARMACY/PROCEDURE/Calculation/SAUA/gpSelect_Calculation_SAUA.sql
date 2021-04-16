@@ -1,6 +1,7 @@
 -- Function: gpSelect_Calculation_SAUA()
 
-DROP FUNCTION IF EXISTS gpSelect_Calculation_SAUA (TDateTime, TDateTime, Text, Text, TFloat, Integer, Integer, TFloat, boolean, boolean, boolean, boolean, boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Calculation_SAUA (TDateTime, TDateTime, Text, Text, TFloat, Integer, Integer, TFloat, boolean, boolean, boolean, boolean, boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Calculation_SAUA (TDateTime, TDateTime, Text, Text, TFloat, Integer, Integer, boolean, boolean, boolean, boolean, TFloat, TFloat, boolean, TFloat, TFloat, boolean, boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Calculation_SAUA(
     IN inDateStart           TDateTime , -- Начало периода
@@ -10,13 +11,22 @@ CREATE OR REPLACE FUNCTION gpSelect_Calculation_SAUA(
     IN inThreshold           TFloat    , -- Порог минимальных продаж
     IN inDaysStock           Integer   , -- Дней запаса у получателя
     IN inCountPharmacies     Integer   , -- Мин. кол-во аптек ассортимента
-    IN inResolutionParameter TFloat    , -- Гранич. параметр разрешения
+--    IN inResolutionParameter TFloat    , -- Гранич. параметр разрешения
     IN inisGoodsClose        boolean   , -- Не показывать Закрыт код
     IN inisMCSIsClose        boolean   , -- Не показывать Убит код 
     IN inisNotCheckNoMCS     boolean   , -- Не показывать Продажи не для НТЗ
-    IN inisMCSValue          boolean   , -- Учитывать товар с НТЗ > 0
-    IN inisRemains           boolean   , -- Остаток получателя > 0
-    IN inSession             TVarChar    -- сессия пользователя
+
+    IN inisMCSValue          boolean   , -- Учитывать товар с НТЗ
+    IN inThresholdMCS        TFloat    , -- Порог минимального НТЗ
+    IN inThresholdMCSLarge   TFloat    , -- Порог минимального НТЗ верхний
+
+    IN inisRemains             boolean   , -- Остаток получателя
+    IN inThresholdRemains      TFloat    , -- Порог остатка
+    IN inThresholdRemainsLarge TFloat    , -- Порог остатка верхний
+
+    IN inisAssortmentRound     boolean   , -- Ассортимент округлять по мат принципу
+    IN inisNeedRound           boolean   , -- Потребность округлять по мат принципу
+    IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (UnitId Integer, UnitCode Integer, UnitName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
@@ -78,7 +88,9 @@ BEGIN
        (SELECT AnalysisContainerItem.GoodsId                          AS GoodsId
              , SUM(AnalysisContainerItem.AmountCheck)::TFloat         AS AmountCheck
              , COUNT(DISTINCT AnalysisContainerItem.UnitID)::Integer  AS CountUnit
-             , CEIL(SUM(AnalysisContainerItem.AmountCheck) / COUNT(DISTINCT AnalysisContainerItem.UnitID) / (inDateEnd::Date -  inDateStart::Date + 1) * inDaysStock)::TFloat         AS Assortment
+             , CASE WHEN COALESCE (inisAssortmentRound, False) = True
+                    THEN ROUND(SUM(AnalysisContainerItem.AmountCheck) / COUNT(DISTINCT AnalysisContainerItem.UnitID) / (inDateEnd::Date -  inDateStart::Date + 1) * inDaysStock)
+                    ELSE CEIL(SUM(AnalysisContainerItem.AmountCheck) / COUNT(DISTINCT AnalysisContainerItem.UnitID) / (inDateEnd::Date -  inDateStart::Date + 1) * inDaysStock) END::TFloat         AS Assortment
         FROM AnalysisContainerItem AS AnalysisContainerItem
         WHERE AnalysisContainerItem.Operdate >= inDateStart
           AND AnalysisContainerItem.Operdate < inDateEnd + INTERVAL '1 DAY'
@@ -128,7 +140,9 @@ BEGIN
       raise notice 'Value 02: %', timeofday();
 
       UPDATE _tmpSale_Assortment SET AmountCheck = _tmpSale_Assortment.AmountCheck - T1.Amount
-                                   , Assortment = CEIL((_tmpSale_Assortment.AmountCheck - T1.Amount) / _tmpSale_Assortment.CountUnit / (inDateEnd::Date -  inDateStart::Date + 1) * inDaysStock)::TFloat
+                                   , Assortment = CASE WHEN COALESCE (inisAssortmentRound, False) = True
+                                                       THEN ROUND((_tmpSale_Assortment.AmountCheck - T1.Amount) / _tmpSale_Assortment.CountUnit / (inDateEnd::Date -  inDateStart::Date + 1) * inDaysStock)
+                                                       ELSE CEIL((_tmpSale_Assortment.AmountCheck - T1.Amount) / _tmpSale_Assortment.CountUnit / (inDateEnd::Date -  inDateStart::Date + 1) * inDaysStock) END::TFloat
       FROM (SELECT * FROM _tmpSale_CheckNoMCS) AS T1
       WHERE _tmpSale_Assortment.GoodsId = T1.GoodsId;
 
@@ -191,7 +205,9 @@ BEGIN
          , Object_Goods_Main.Name
          , _tmpRemains_All.Amount
          , _tmpSale_Assortment.Assortment
-         , CEIL( _tmpSale_Assortment.Assortment - COALESCE(_tmpRemains_All.Amount, 0))::TFloat
+         , CASE WHEN COALESCE (inisNeedRound, False) = True
+                THEN ROUND(_tmpSale_Assortment.Assortment - COALESCE(_tmpRemains_All.Amount, 0))
+                ELSE CEIL(_tmpSale_Assortment.Assortment - COALESCE(_tmpRemains_All.Amount, 0)) END::TFloat
          , _tmpSale_Assortment.AmountCheck
          , _tmpSale_Assortment.CountUnit
     FROM _tmpUnitRecipient
@@ -207,12 +223,16 @@ BEGIN
          LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = _tmpSale_Assortment.GoodsId
          LEFT JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
 
-    WHERE CEIL( _tmpSale_Assortment.Assortment - COALESCE(_tmpRemains_All.Amount, 0)) > 0
-      AND (COALESCE(_tmpRemains_All.Amount, 0) < inResolutionParameter OR inResolutionParameter = 0)
+    WHERE CASE WHEN COALESCE (inisNeedRound, False) = True
+               THEN ROUND(_tmpSale_Assortment.Assortment - COALESCE(_tmpRemains_All.Amount, 0))
+               ELSE CEIL(_tmpSale_Assortment.Assortment - COALESCE(_tmpRemains_All.Amount, 0)) END > 0
+     -- AND (COALESCE(_tmpRemains_All.Amount, 0) < inResolutionParameter OR inResolutionParameter = 0)
       AND (Object_Goods_Main.isClose = False OR inisGoodsClose = False)
       AND (tmpObject_Price.MCSIsClose = False OR inisMCSIsClose = False)
-      AND (COALESCE (tmpObject_Price.MCSValue , 0) = 0 OR inisMCSValue = True)
-      AND (COALESCE (_tmpRemains_All.Amount, 0) = 0 OR inisRemains = True)
+      AND (inisMCSValue = False AND COALESCE (tmpObject_Price.MCSValue , 0) = 0 
+        OR inisMCSValue = TRUE AND COALESCE (tmpObject_Price.MCSValue , 0) >= COALESCE (inThresholdMCS, 0) AND COALESCE (tmpObject_Price.MCSValue , 0) <= COALESCE (inThresholdMCSLarge, 0))
+      AND (inisRemains = False AND COALESCE (_tmpRemains_All.Amount, 0) = 0 
+        OR inisRemains = TRUE AND COALESCE (_tmpRemains_All.Amount, 0) >= COALESCE (inThresholdRemains, 0) AND COALESCE (_tmpRemains_All.Amount, 0) <= COALESCE (inThresholdRemainsLarge, 0))
 
     ;
 

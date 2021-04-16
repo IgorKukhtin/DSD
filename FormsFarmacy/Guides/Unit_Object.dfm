@@ -3,7 +3,6 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 484
   ClientWidth = 1434
   PopupMenu = PopupMenu
-  ExplicitLeft = -98
   ExplicitWidth = 1450
   ExplicitHeight = 523
   PixelsPerInch = 96
@@ -270,6 +269,13 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 104
+          end
+          object isSUN_Supplement_Priority: TcxGridDBColumn
+            Caption = #1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1087#1088#1080' '#1086#1090#1076#1072#1095#1077' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1082' '#1057#1059#1053' (V.1)'
+            DataBinding.FieldName = 'isSUN_Supplement_Priority'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 87
           end
           object isOutUKTZED_SUN1: TcxGridDBColumn
             Caption = #1054#1090#1076#1072#1095#1072' '#1059#1050#1058#1042#1069#1044' '#1074' '#1057#1059#1053' (V.1)'
@@ -3413,6 +3419,56 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end>
       Caption = 'actExecUpdate_isGoodsUKTZEDRRO'
     end
+    object actUpdate_Unit_isSUN_Supplement_Priority_yes: TdsdExecStoredProc
+      Category = 'isSUN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isSUN_Supplement_Priority_yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isSUN_Supplement_Priority_yes
+        end>
+      Caption = #9#1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1087#1088#1080' '#1086#1090#1076#1072#1095#1077' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1082' '#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #9#1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1087#1088#1080' '#1086#1090#1076#1072#1095#1077' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1082' '#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 48
+    end
+    object actUpdate_Unit_isSUN_Supplement_Priority_no: TdsdExecStoredProc
+      Category = 'isSUN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isSUN_Supplement_Priority_no
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isSUN_Supplement_Priority_no
+        end>
+      Caption = #9#1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1087#1088#1080' '#1086#1090#1076#1072#1095#1077' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1082' '#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #9#1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1087#1088#1080' '#1086#1090#1076#1072#1095#1077' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1082' '#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 48
+    end
+    object macUpdate_Unit_isSUN_Supplement_Priority_yes: TMultiAction
+      Category = 'isSUN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_isSUN_Supplement_Priority_yes
+        end>
+      View = cxGridDBTableView
+      Caption = #9#1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1087#1088#1080' '#1086#1090#1076#1072#1095#1077' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1082' '#1057#1059#1053'- '#1044#1072
+      Hint = #9#1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1087#1088#1080' '#1086#1090#1076#1072#1095#1077' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1082' '#1057#1059#1053'- '#1044#1072
+      ImageIndex = 48
+    end
+    object macUpdate_Unit_isSUN_Supplement_Priority_no: TMultiAction
+      Category = 'isSUN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_isSUN_Supplement_Priority_no
+        end>
+      View = cxGridDBTableView
+      Caption = #9#1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1087#1088#1080' '#1086#1090#1076#1072#1095#1077' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1082' '#1057#1059#1053' - '#1053#1077#1090
+      Hint = #9#1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1087#1088#1080' '#1086#1090#1076#1072#1095#1077' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1082' '#1057#1059#1053' - '#1053#1077#1090
+      ImageIndex = 48
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -3797,6 +3853,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton16'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton13'
         end
         item
@@ -3915,6 +3975,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         item
           Visible = True
           ItemName = 'bbUpdate_Unit_isSUN_Supplement_out_no'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton17'
         end
         item
           Visible = True
@@ -4195,6 +4259,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object dxBarButton15: TdxBarButton
       Action = macExecUpdate_isGoodsUKTZEDRRO
+      Category = 0
+    end
+    object dxBarButton16: TdxBarButton
+      Action = macUpdate_Unit_isSUN_Supplement_Priority_yes
+      Category = 0
+    end
+    object dxBarButton17: TdxBarButton
+      Action = macUpdate_Unit_isSUN_Supplement_Priority_no
       Category = 0
     end
   end
@@ -6514,7 +6586,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end>
     PackSize = 1
     Left = 1352
-    Top = 299
+    Top = 275
   end
   object spUpdate_Unit_isSUN_Supplement_in_no: TdsdStoredProc
     StoredProcName = 'gpUpdate_Unit_isSUN_Supplement_in'
@@ -6546,7 +6618,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end>
     PackSize = 1
     Left = 1336
-    Top = 299
+    Top = 275
   end
   object spUpdate_Unit_isSUN_out_no: TdsdStoredProc
     StoredProcName = 'gpUpdate_Unit_isSUN_out'
@@ -6642,7 +6714,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end>
     PackSize = 1
     Left = 1336
-    Top = 339
+    Top = 299
   end
   object spUpdate_Unit_isSUN_Supplement_out_no: TdsdStoredProc
     StoredProcName = 'gpUpdate_Unit_isSUN_Supplement_out'
@@ -6674,7 +6746,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end>
     PackSize = 1
     Left = 1352
-    Top = 339
+    Top = 299
   end
   object spUpdate_SunAllParam: TdsdStoredProc
     StoredProcName = 'gpUpdate_Unit_SunAllParam'
@@ -6816,5 +6888,69 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 1200
     Top = 163
+  end
+  object spUpdate_Unit_isSUN_Supplement_Priority_yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isSUN_Supplement_Priority'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSun_Supplement_Priority'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSun_Supplement_Priority'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSUN_Supplement_Priority'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1336
+    Top = 323
+  end
+  object spUpdate_Unit_isSUN_Supplement_Priority_no: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isSUN_Supplement_Priority'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSun_Supplement_Priority'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSun_Supplement_Priority'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSUN_Supplement_Priority'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1352
+    Top = 323
   end
 end

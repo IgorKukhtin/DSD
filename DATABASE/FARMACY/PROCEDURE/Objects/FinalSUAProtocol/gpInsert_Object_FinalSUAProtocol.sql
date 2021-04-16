@@ -1,6 +1,7 @@
 -- Function: gpInsert_Object_FinalSUAProtocol()
 
-DROP FUNCTION IF EXISTS gpInsert_Object_FinalSUAProtocol (TDateTime, TDateTime, Text, Text, TFloat, Integer, Integer, TFloat, boolean, boolean, boolean, boolean, boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsert_Object_FinalSUAProtocol (TDateTime, TDateTime, Text, Text, TFloat, Integer, Integer, TFloat, boolean, boolean, boolean, boolean, boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Object_FinalSUAProtocol (TDateTime, TDateTime, Text, Text, TFloat, Integer, Integer, boolean, boolean, boolean, boolean, TFloat, TFloat, boolean, TFloat, TFloat, boolean, boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Object_FinalSUAProtocol(
     IN inDateStart           TDateTime , -- Начало периода
@@ -10,12 +11,21 @@ CREATE OR REPLACE FUNCTION gpInsert_Object_FinalSUAProtocol(
     IN inThreshold           TFloat    , -- Порог минимальных продаж
     IN inDaysStock           Integer   , -- Дней запаса у получателя
     IN inCountPharmacies     Integer   , -- Мин. кол-во аптек ассортимента
-    IN inResolutionParameter TFloat    , -- Гранич. параметр разрешения
+--    IN inResolutionParameter TFloat    , -- Гранич. параметр разрешения
     IN inisGoodsClose        boolean   , -- Не показывать Закрыт код
     IN inisMCSIsClose        boolean   , -- Не показывать Убит код 
     IN inisNotCheckNoMCS     boolean   , -- Не показывать Продажи не для НТЗ
-    IN inisMCSValue          boolean   , -- Учитывать товар с НТЗ > 0
-    IN inisRemains           boolean   , -- Остаток получателя > 0
+
+    IN inisMCSValue          boolean   , -- Учитывать товар с НТЗ
+    IN inThresholdMCS        TFloat    , -- Порог минимального НТЗ
+    IN inThresholdMCSLarge   TFloat    , -- Порог минимального НТЗ верхний
+
+    IN inisRemains             boolean   , -- Остаток получателя
+    IN inThresholdRemains      TFloat    , -- Порог остатка
+    IN inThresholdRemainsLarge TFloat    , -- Порог остатка верхний
+
+    IN inisAssortmentRound   boolean   , -- Ассортимент округлять по мат принципу
+    IN inisNeedRound         boolean   , -- Потребность округлять по мат принципу
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -58,7 +68,15 @@ BEGIN
    -- сохранили
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_FinalSUAProtocol_CountPharmacies(), vbId, inCountPharmacies);
    -- сохранили
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_FinalSUAProtocol_ResolutionParameter(), vbId, inResolutionParameter);
+--   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_FinalSUAProtocol_ResolutionParameter(), vbId, inResolutionParameter);
+   -- сохранили
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_FinalSUAProtocol_ThresholdMCS(), vbId, inThresholdMCS);
+   -- сохранили
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_FinalSUAProtocol_ThresholdMCSLarge(), vbId, inThresholdMCSLarge);
+   -- сохранили
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_FinalSUAProtocol_ThresholdRemains(), vbId, inThresholdRemains);
+   -- сохранили
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_FinalSUAProtocol_ThresholdRemainsLarge(), vbId, inThresholdRemainsLarge);
 
 
    -- сохранили
@@ -71,6 +89,10 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_FinalSUAProtocol_MCSValue(), vbId, inisMCSValue);
    -- сохранили
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_FinalSUAProtocol_Remains(), vbId, inisRemains);
+   -- сохранили
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_FinalSUAProtocol_AssortmentRound(), vbId, inisAssortmentRound);
+   -- сохранили
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_FinalSUAProtocol_NeedRound(), vbId, inisNeedRound);
 
    -- сохранили связь с <Пользователи>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_FinalSUAProtocol_User(), vbId, vbUserId);
