@@ -15,6 +15,7 @@ $BODY$
         vbUserId Integer;
         vbMCSIsClose Boolean;
         vbId Integer;
+        vbMCSValue TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
@@ -28,7 +29,8 @@ BEGIN
     -- Находим запись - достаем её ключу подр.-товар
     SELECT Price_Goods.ObjectId                  AS Id
          , COALESCE(MCS_isClose.ValueData,False) AS MCSIsClose
-      INTO vbId, vbMCSIsClose
+         , COALESCE(MCS_Value.ValueData, 0) AS MCSValue 
+      INTO vbId, vbMCSIsClose, vbMCSValue
     FROM ObjectLink AS Price_Goods
         INNER JOIN ObjectLink AS ObjectLink_Price_Unit
                               ON ObjectLink_Price_Unit.ObjectId = Price_Goods.ObjectId
@@ -37,6 +39,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS MCS_isClose
                              ON MCS_isClose.ObjectId = Price_Goods.ObjectId
                             AND MCS_isClose.DescId = zc_ObjectBoolean_Price_MCSIsClose()
+        LEFT JOIN ObjectFloat AS MCS_Value
+                              ON MCS_Value.ObjectId = Price_Goods.ObjectId
+                             AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
        WHERE Price_Goods.DescId = zc_ObjectLink_Price_Goods()
          AND Price_Goods.ChildObjectId = inGoodsId;
        
@@ -44,6 +49,11 @@ BEGIN
     THEN
         PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_MCSIsClose(), vbId, inMCSIsClose);
         PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_MCSIsCloseDateChange(), vbId, CURRENT_DATE);
+
+        IF COALESCE(inMCSIsClose, False) = TRUE AND COALESCE (vbMCSValue, 0) <> 0
+        THEN
+           PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_Price_MCSValue(), vbId, 0);
+        END IF;
     END IF;
     
     -- сохранили протокол

@@ -187,6 +187,11 @@ object Report_GoodsPartionHistoryDialogForm: TReport_GoodsPartionHistoryDialogFo
         MultiSelectSeparator = ','
       end
       item
+        Name = 'GoodsCode'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'GoodsName'
         Value = Null
         Component = GuidesGoods
@@ -305,6 +310,13 @@ object Report_GoodsPartionHistoryDialogForm: TReport_GoodsPartionHistoryDialogFo
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Code'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'GoodsCode'
         MultiSelectSeparator = ','
       end>
     Left = 152

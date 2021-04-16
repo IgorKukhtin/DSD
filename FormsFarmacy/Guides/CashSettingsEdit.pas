@@ -51,6 +51,8 @@ type
     cxLabel9: TcxLabel;
     edMinPercentPromoBonus: TcxCurrencyEdit;
     cxLabel10: TcxLabel;
+    ceDayCompensDiscount: TcxCurrencyEdit;
+    cxLabel12: TcxLabel;
   private
     { Private declarations }
   public

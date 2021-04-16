@@ -1957,10 +1957,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_FinalSUAProtocol_ResolutionParameter()
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_FinalSUAProtocol(), 'zc_ObjectFloat_FinalSUAProtocol_ResolutionParameter', 'Гранич. параметр разрешения' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_FinalSUAProtocol_ResolutionParameter');
   
-  
+  CREATE OR REPLACE FUNCTION c() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_DayCompensDiscount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_DayCompensDiscount', 'Дней до компенсации по дисконтным проектам' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_DayCompensDiscount');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 14.04.21                                                                                      * zc_ObjectFloat_CashSettings_DayCompensDiscount
  25.03.21         * zc_ObjectFloat_GoodsByGoodsKind_NormRem
                     zc_ObjectFloat_GoodsByGoodsKind_NormOut
  23.03.21                                                                                      * zc_ObjectFloat_FinalSUAProtocol_...

@@ -689,6 +689,14 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 88
           end
+          object isUkrainianTranslation: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1074#1086#1076' '#1085#1072' '#1091#1082#1088' '#1103#1079#1099#1082
+            DataBinding.FieldName = 'isUkrainianTranslation'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 72
+          end
         end
       end
     end

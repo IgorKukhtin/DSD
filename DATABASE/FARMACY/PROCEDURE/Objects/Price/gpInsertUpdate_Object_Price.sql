@@ -389,6 +389,10 @@ BEGIN
         PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_MCSIsClose(), ioId, inMCSIsClose);
         outMCSIsCloseDateChange := CURRENT_DATE;
         PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_MCSIsCloseDateChange(), ioId, outMCSIsCloseDateChange);
+        IF COALESCE(inMCSIsClose, False) = TRUE AND COALESCE (inMCSValue, 0) <> 0
+        THEN
+           PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_Price_MCSValue(), ioId, 0);
+        END IF;
     END IF;
     
     IF (ioMCSNotRecalc is not null) AND (COALESCE(vbMCSNotRecalc,False) <> ioMCSNotRecalc)

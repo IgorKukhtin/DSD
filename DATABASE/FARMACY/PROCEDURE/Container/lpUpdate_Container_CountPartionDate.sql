@@ -13,7 +13,7 @@ BEGIN
 
   update Container SET Amount = Amount + inDelta
   where  Container.DescId = zc_Container_CountPartionDate()
-    and  Container.ParentId = inContainerPDId;
+    and  Container.Id = inContainerPDId;
 
 END;
 $BODY$

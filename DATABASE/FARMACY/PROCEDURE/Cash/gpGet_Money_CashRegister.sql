@@ -74,7 +74,7 @@ BEGIN
                                    THEN 0
                                    ELSE COALESCE(MovementFloat_TotalSumm.ValueData, 0) - 
                                         COALESCE(MovementFloat_TotalSummPayAdd.ValueData, 0) END                  AS SummCard
-                            , ROW_NUMBER()OVER(ORDER BY MovementString_FiscalCheckNumber.ValueData::Integer DESC) as ORD
+                            , ROW_NUMBER()OVER(ORDER BY Movement.Id DESC) as ORD
                        FROM Movement
 
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -116,7 +116,7 @@ BEGIN
                   FROM tmpReturnIn
                   WHERE tmpReturnIn.ORD <= inCheckIn)
                       
-  SELECT sum(tmpSum.SummCash), sum(tmpSum.SummCard)
+  SELECT COALESCE(sum(tmpSum.SummCash), 0), COALESCE(sum(tmpSum.SummCard), 0)
   INTO outSummsCash, outSummsCard
   FROM tmpSum;
                
@@ -135,4 +135,5 @@ ALTER FUNCTION gpGet_Money_CashRegister (TVarChar, Integer, Integer, TVarChar) O
 */
 
 -- тест
--- SELECT * FROM gpGet_Money_CashRegister ('3000007988', 31, 1, '3')
+-- 
+SELECT * FROM gpGet_Money_CashRegister ('3000822161', 106, 1, '15323410')
