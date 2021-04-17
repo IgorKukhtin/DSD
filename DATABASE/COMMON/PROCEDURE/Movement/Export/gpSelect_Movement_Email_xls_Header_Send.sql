@@ -49,125 +49,150 @@ BEGIN
                                  FROM Object_Bank_View
                                  )
 
+        , tmpData AS (SELECT Movement.InvNumber
+                           , MovementDate_OperDatePartner.ValueData AS OperDatePartner
+                           , Object_From.ValueData                  AS FromName
+                           , OH_JuridicalDetails_From.FullName      AS JuridicalName_From
+                           , OH_JuridicalDetails_From.OKPO          AS OKPO_from
+                           , Object_Contract.ValueData              AS ContractName
+                           , ObjectDate_Signing.ValueData           AS ContractSigningDate
 
+                           , CASE WHEN COALESCE (OH_JuridicalDetails_From.BankAccount,'') <> '' THEN OH_JuridicalDetails_From.BankAccount ELSE Object_BankAccount.Name END   AS BankAccount_from
+                           , CASE WHEN COALESCE (OH_JuridicalDetails_From.BankAccount,'') <> '' THEN OH_JuridicalDetails_From.BankName ELSE Object_BankAccount.BankName END  AS BankName_from
+                           , CASE WHEN COALESCE (OH_JuridicalDetails_From.BankAccount,'') <> '' THEN OH_JuridicalDetails_From.MFO ELSE Object_BankAccount.MFO END            AS MFO_from
 
-     SELECT ('Расходная накладная № ' || tmp.InvNumber||' от ' ||zfConvert_DateToString (tmp.OperDatePartner)
-     || CHR (13) || ''
-      --from
-      || CHR (13) || 'Поставщик:  '||tmp.JuridicalName_From
-      || CHR (13) || '              P/c '||tmp.BankAccount_from||' в '||tmp.BankName_from||' МФО '||tmp.MFO_from
-      || CHR (13) || '              код по ЕГРПОУ '||tmp.OKPO_from
-      || CHR (13) || ''
-      --To
-      || CHR (13) || 'Покупатель: '||tmp.JuridicalName_To
-      || CHR (13) || '             '||tmp.JuridicalAddress_to
-      || CHR (13) || ''
-      || CHR (13) || 'Договор:      № '||tmp.ContractName ||' от '||zfConvert_DateToString (tmp.ContractSigningDate)
-            ) :: TBlob
-     FROM (SELECT Movement.InvNumber
-                , MovementDate_OperDatePartner.ValueData AS OperDatePartner
-                , Object_From.ValueData                  AS FromName
-                , OH_JuridicalDetails_From.FullName      AS JuridicalName_From
-                , OH_JuridicalDetails_From.OKPO          AS OKPO_from
-                , Object_Contract.ValueData              AS ContractName
-                , ObjectDate_Signing.ValueData           AS ContractSigningDate
+                           , Object_To.ValueData                     AS ToName
+                           , OH_JuridicalDetails_To.FullName         AS JuridicalName_To
+                           , OH_JuridicalDetails_To.JuridicalAddress AS JuridicalAddress_to
 
-                , CASE WHEN COALESCE (OH_JuridicalDetails_From.BankAccount,'') <> '' THEN OH_JuridicalDetails_From.BankAccount ELSE Object_BankAccount.Name END   AS BankAccount_from
-                , CASE WHEN COALESCE (OH_JuridicalDetails_From.BankAccount,'') <> '' THEN OH_JuridicalDetails_From.BankName ELSE Object_BankAccount.BankName END  AS BankName_from
-                , CASE WHEN COALESCE (OH_JuridicalDetails_From.BankAccount,'') <> '' THEN OH_JuridicalDetails_From.MFO ELSE Object_BankAccount.MFO END            AS MFO_from
+                           , CASE WHEN COALESCE (ObjectString_PlaceOf.ValueData, '') <> '' THEN COALESCE (ObjectString_PlaceOf.ValueData, '')
+                                  ELSE '' -- 'м.Днiпро'
+                                  END  :: TVarChar   AS PlaceOf
+                      FROM Movement
+                           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                                  ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                                 AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                        ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                       AND MovementLinkObject_Contract.DescId IN (zc_MovementLinkObject_Contract(), zc_MovementLinkObject_ContractTo())
+                           LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
 
-                , Object_To.ValueData                     AS ToName
-                , OH_JuridicalDetails_To.FullName         AS JuridicalName_To
-                , OH_JuridicalDetails_To.JuridicalAddress AS JuridicalAddress_to
-                
-           FROM Movement
-                LEFT JOIN MovementDate AS MovementDate_OperDatePartner
-                                       ON MovementDate_OperDatePartner.MovementId =  Movement.Id
-                                      AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
-                LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                             ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                            AND MovementLinkObject_Contract.DescId IN (zc_MovementLinkObject_Contract(), zc_MovementLinkObject_ContractTo())
-                LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                        ON MovementLinkObject_From.MovementId = Movement.Id
+                                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                        ON MovementLinkObject_To.MovementId = Movement.Id
+                                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                           LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+                           LEFT JOIN Object AS Object_To   ON Object_To.Id   = MovementLinkObject_To.ObjectId
+                           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                ON ObjectLink_Partner_Juridical.ObjectId = Object_To.Id
+                                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                       --
+                       LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                                    ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                                   AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
 
-                LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                             ON MovementLinkObject_From.MovementId = Movement.Id
-                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                             ON MovementLinkObject_To.MovementId = Movement.Id
-                                            AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-                LEFT JOIN Object AS Object_To   ON Object_To.Id   = MovementLinkObject_To.ObjectId
-                LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                     ON ObjectLink_Partner_Juridical.ObjectId = Object_To.Id
-                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-            --
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
-                                        AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                       LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDocument
+                                            ON ObjectLink_Contract_JuridicalDocument.ObjectId = MovementLinkObject_Contract.ObjectId
+                                           AND ObjectLink_Contract_JuridicalDocument.DescId = zc_ObjectLink_Contract_JuridicalDocument()
+                                           AND MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm()
 
-            LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDocument
-                                 ON ObjectLink_Contract_JuridicalDocument.ObjectId = MovementLinkObject_Contract.ObjectId
-                                AND ObjectLink_Contract_JuridicalDocument.DescId = zc_ObjectLink_Contract_JuridicalDocument()
-                                AND MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm()
+                       LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
+                                            ON ObjectLink_Contract_JuridicalBasis.ObjectId = MovementLinkObject_Contract.ObjectId
+                                           AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
 
-            LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
-                                 ON ObjectLink_Contract_JuridicalBasis.ObjectId = MovementLinkObject_Contract.ObjectId
-                                AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
+                       LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                            ON ObjectLink_Unit_Juridical.ObjectId = Object_From.Id
+                                           AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                                           AND COALESCE (MovementLinkObject_Contract.ObjectId,0) = 0
 
-            LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
-                                 ON ObjectLink_Unit_Juridical.ObjectId = Object_From.Id
-                                AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                                AND COALESCE (MovementLinkObject_Contract.ObjectId,0) = 0
+                       LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
+                                                                           ON OH_JuridicalDetails_From.JuridicalId = COALESCE (ObjectLink_Contract_JuridicalDocument.ChildObjectId
+                                                                                                                             , ObjectLink_Contract_JuridicalBasis.ChildObjectId
+                                                                                                                             , ObjectLink_Unit_Juridical.ChildObjectId
+                                                                                                                             , Object_From.Id)
+                                                                          AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_From.StartDate
+                                                                          AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_From.EndDate
 
-            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
-                                                                ON OH_JuridicalDetails_From.JuridicalId = COALESCE (ObjectLink_Contract_JuridicalDocument.ChildObjectId
-                                                                                                                  , ObjectLink_Contract_JuridicalBasis.ChildObjectId
-                                                                                                                  , ObjectLink_Unit_Juridical.ChildObjectId
-                                                                                                                  , Object_From.Id)
-                                                               AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_From.StartDate
-                                                               AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_From.EndDate
+                       LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
+                                                                           ON OH_JuridicalDetails_To.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object_To.Id)
+                                                                          AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_To.StartDate
+                                                                          AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_To.EndDate
 
-            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
-                                                                ON OH_JuridicalDetails_To.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object_To.Id)
-                                                               AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_To.StartDate
-                                                               AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_To.EndDate
+                       LEFT JOIN ObjectDate AS ObjectDate_Signing
+                                            ON ObjectDate_Signing.ObjectId = MovementLinkObject_Contract.ObjectId
+                                           AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
+                                           AND Object_Contract.ValueData <> '-'
 
-            LEFT JOIN ObjectDate AS ObjectDate_Signing
-                                 ON ObjectDate_Signing.ObjectId = MovementLinkObject_Contract.ObjectId
-                                AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
-                                AND Object_Contract.ValueData <> '-'
+                       LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                            ON ObjectLink_Contract_InfoMoney.ObjectId = MovementLinkObject_Contract.ObjectId
+                                           AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+                    -- bank account
+                       LEFT JOIN ObjectLink AS ObjectLink_Contract_BankAccount
+                                            ON ObjectLink_Contract_BankAccount.ObjectId = MovementLinkObject_Contract.ObjectId
+                                           AND ObjectLink_Contract_BankAccount.DescId = zc_ObjectLink_Contract_BankAccount()
+           
+                       LEFT JOIN tmpBankAccount AS tmpBankAccount1 ON tmpBankAccount1.UnitId      = MovementLinkObject_From.ObjectId
+                                                                  AND tmpBankAccount1.InfoMoneyId = ObjectLink_Contract_InfoMoney.ChildObjectId
+                                                                  AND ObjectLink_Contract_BankAccount.ChildObjectId IS NULL
+                       LEFT JOIN tmpBankAccount AS tmpBankAccount2 ON tmpBankAccount2.UnitId      = MovementLinkObject_From.ObjectId
+                                                                  AND tmpBankAccount2.InfoMoneyId = 0
+                                                                  AND ObjectLink_Contract_BankAccount.ChildObjectId IS NULL
+                                                                  AND tmpBankAccount1.BankAccountId IS NULL
+                       LEFT JOIN tmpBankAccount AS tmpBankAccount3 ON tmpBankAccount3.UnitId      = 0
+                                                                  AND tmpBankAccount3.InfoMoneyId = ObjectLink_Contract_InfoMoney.ChildObjectId
+                                                                  AND ObjectLink_Contract_BankAccount.ChildObjectId IS NULL
+                                                                  AND tmpBankAccount1.BankAccountId IS NULL
+                                                                  AND tmpBankAccount2.BankAccountId IS NULL
+                       LEFT JOIN tmpBankAccount AS tmpBankAccount4 ON tmpBankAccount4.UnitId      = 0
+                                                                  AND tmpBankAccount4.InfoMoneyId = 0
+                                                                  AND ObjectLink_Contract_BankAccount.ChildObjectId IS NULL
+                                                                  AND tmpBankAccount1.BankAccountId IS NULL
+                                                                  AND tmpBankAccount2.BankAccountId IS NULL
+                                                                  AND tmpBankAccount3.BankAccountId IS NULL
+                       LEFT JOIN Object_BankAccount_View AS Object_BankAccount ON Object_BankAccount.Id = COALESCE (ObjectLink_Contract_BankAccount.ChildObjectId, COALESCE (tmpBankAccount1.BankAccountId, COALESCE (tmpBankAccount2.BankAccountId, COALESCE (tmpBankAccount3.BankAccountId, tmpBankAccount4.BankAccountId))))
 
-            LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
-                                 ON ObjectLink_Contract_InfoMoney.ObjectId = MovementLinkObject_Contract.ObjectId
-                                AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
-         -- bank account
-            LEFT JOIN ObjectLink AS ObjectLink_Contract_BankAccount
-                                 ON ObjectLink_Contract_BankAccount.ObjectId = MovementLinkObject_Contract.ObjectId
-                                AND ObjectLink_Contract_BankAccount.DescId = zc_ObjectLink_Contract_BankAccount()
-
-            LEFT JOIN tmpBankAccount AS tmpBankAccount1 ON tmpBankAccount1.UnitId      = MovementLinkObject_From.ObjectId
-                                                       AND tmpBankAccount1.InfoMoneyId = ObjectLink_Contract_InfoMoney.ChildObjectId
-                                                       AND ObjectLink_Contract_BankAccount.ChildObjectId IS NULL
-            LEFT JOIN tmpBankAccount AS tmpBankAccount2 ON tmpBankAccount2.UnitId      = MovementLinkObject_From.ObjectId
-                                                       AND tmpBankAccount2.InfoMoneyId = 0
-                                                       AND ObjectLink_Contract_BankAccount.ChildObjectId IS NULL
-                                                       AND tmpBankAccount1.BankAccountId IS NULL
-            LEFT JOIN tmpBankAccount AS tmpBankAccount3 ON tmpBankAccount3.UnitId      = 0
-                                                       AND tmpBankAccount3.InfoMoneyId = ObjectLink_Contract_InfoMoney.ChildObjectId
-                                                       AND ObjectLink_Contract_BankAccount.ChildObjectId IS NULL
-                                                       AND tmpBankAccount1.BankAccountId IS NULL
-                                                       AND tmpBankAccount2.BankAccountId IS NULL
-            LEFT JOIN tmpBankAccount AS tmpBankAccount4 ON tmpBankAccount4.UnitId      = 0
-                                                       AND tmpBankAccount4.InfoMoneyId = 0
-                                                       AND ObjectLink_Contract_BankAccount.ChildObjectId IS NULL
-                                                       AND tmpBankAccount1.BankAccountId IS NULL
-                                                       AND tmpBankAccount2.BankAccountId IS NULL
-                                                       AND tmpBankAccount3.BankAccountId IS NULL
-            LEFT JOIN Object_BankAccount_View AS Object_BankAccount ON Object_BankAccount.Id = COALESCE (ObjectLink_Contract_BankAccount.ChildObjectId, COALESCE (tmpBankAccount1.BankAccountId, COALESCE (tmpBankAccount2.BankAccountId, COALESCE (tmpBankAccount3.BankAccountId, tmpBankAccount4.BankAccountId))))
-
-
-           WHERE Movement.Id = inMovementId
-          ) AS tmp
+                       LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                            ON ObjectLink_Unit_Branch.ObjectId = Object_From.Id
+                                           AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                       LEFT JOIN ObjectString AS ObjectString_PlaceOf
+                                              ON ObjectString_PlaceOf.ObjectId = COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
+                                             AND ObjectString_PlaceOf.DescId = zc_objectString_Branch_PlaceOf()
+                      WHERE Movement.Id = inMovementId
+                     )
+   
+       SELECT ('Видаткова накладна № ' || tmpData.InvNumber||' від ' ||zfConvert_DateToString (tmpData.OperDatePartner)) :: TBlob
+       FROM tmpData
+         UNION ALL
+       SELECT ('') :: TBlob
+         UNION ALL
+       SELECT ('Постачальник:  '||tmpData.JuridicalName_From) :: TBlob
+       FROM tmpData
+         UNION ALL
+       SELECT ('              P/c '||tmpData.BankAccount_from||' в '||tmpData.BankName_from||' МФО '||tmpData.MFO_from) :: TBlob
+       FROM tmpData
+         UNION ALL
+       SELECT ('              код по ЕГРПОУ '||tmpData.OKPO_from) :: TBlob
+       FROM tmpData
+         UNION ALL
+       SELECT ('') :: TBlob
+         UNION ALL
+       SELECT ('Одержувач: '||tmpData.JuridicalName_To) :: TBlob
+       FROM tmpData
+         UNION ALL
+       SELECT ('             '||tmpData.JuridicalAddress_to) :: TBlob
+       FROM tmpData
+         UNION ALL
+       SELECT ('') :: TBlob
+         UNION ALL
+       SELECT ('Пiдстава: Договір № '||tmpData.ContractName ||' від '||zfConvert_DateToString (tmpData.ContractSigningDate)) :: TBlob
+       FROM tmpData
+         UNION ALL
+       SELECT ('Місце складання: '||tmpData.PlaceOf ) :: TBlob
+       FROM tmpData
+    -- || CHR (13) || 
+          
     ;
 
 END;
