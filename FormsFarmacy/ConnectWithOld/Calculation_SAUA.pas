@@ -235,7 +235,7 @@ begin
 
   try
     DataSet.DisableControls;
-    i := UnitsRecipientCDS.RecNo;
+    i := DataSet.RecNo;
     DataSet.First;
     while not DataSet.Eof do
     begin
@@ -257,7 +257,7 @@ begin
 
   try
     DataSet.DisableControls;
-    i := UnitsRecipientCDS.RecNo;
+    i := DataSet.RecNo;
     DataSet.First;
     while not DataSet.Eof do
     begin

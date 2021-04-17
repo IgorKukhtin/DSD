@@ -127,6 +127,60 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Как минимум у одного товара <%> количество <%> контейнер <%>. Больше остатка.', vbGoodsName, vbAmount, vbContainerId;
     END IF;
 
+    -- Проверяем чтоб не было в отложенных перемещениях
+    IF EXISTS (SELECT 1
+               FROM MovementItem AS MI_Master
+
+                    INNER JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                 ON MIFloat_ContainerId.MovementItemId = MI_Master.Id
+                                                AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+
+                    INNER JOIN Container ON Container.ID = MIFloat_ContainerId.ValueData::Integer
+                                        AND Container.DescId = zc_Container_Count() 
+
+                    INNER JOIN MovementItemContainer ON MovementItemContainer.ContainerID = Container.ID
+                                                    AND MovementItemContainer.DescId = zc_MIContainer_Count()
+                                                    AND MovementItemContainer.MovementDescId = zc_Movement_Send()                     
+                                                    AND MovementItemContainer.Amount < 0 
+    
+                    INNER JOIN MovementBoolean AS MovementBoolean_Deferred
+                                               ON MovementBoolean_Deferred.MovementId = MovementItemContainer.MovementId
+                                              AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                              AND MovementBoolean_Deferred.ValueData = True
+
+               WHERE MI_Master.MovementId = inMovementId
+                 AND MI_Master.DescId     = zc_MI_Master()
+                 AND MI_Master.Amount > 0
+                 AND MI_Master.IsErased   = FALSE
+              )
+    THEN
+      RAISE EXCEPTION 'Ошибка. Закупка отложена в перемещениях: %.', (SELECT STRING_AGG('Номер '||Movement.InvNumber||' дата '||TO_CHAR (Movement.OperDate, 'dd.mm.yyyy'), ', ') 
+                                                                      FROM MovementItem AS MI_Master
+
+                                                                           INNER JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                                                                        ON MIFloat_ContainerId.MovementItemId = MI_Master.Id
+                                                                                                       AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+
+                                                                           INNER JOIN Container ON Container.ID = MIFloat_ContainerId.ValueData::Integer
+                                                                                               AND Container.DescId = zc_Container_Count() 
+
+                                                                           INNER JOIN MovementItemContainer ON MovementItemContainer.ContainerID = Container.ID
+                                                                                                           AND MovementItemContainer.DescId = zc_MIContainer_Count()
+                                                                                                           AND MovementItemContainer.MovementDescId = zc_Movement_Send()                     
+                                                                                                           AND MovementItemContainer.Amount < 0 
+                                                            
+                                                                           INNER JOIN MovementBoolean AS MovementBoolean_Deferred
+                                                                                                      ON MovementBoolean_Deferred.MovementId = MovementItemContainer.MovementId
+                                                                                                     AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                                                                                     AND MovementBoolean_Deferred.ValueData = True
+
+                                                                           LEFT JOIN Movement ON Movement.ID = MovementItemContainer.MovementID
+                                                                      WHERE MI_Master.MovementId = inMovementId
+                                                                        AND MI_Master.DescId     = zc_MI_Master()
+                                                                        AND MI_Master.Amount > 0
+                                                                        AND MI_Master.IsErased   = FALSE);
+    END IF;
+
     -- 5.2. Формируем документ изменеия сроков
 
     SELECT MAX(Movement.ID)
@@ -335,4 +389,3 @@ $BODY$
 
 -- тест
 -- select * from gpUpdate_Status_SendPartionDateChange(inMovementId := 19386934 , inStatusCode := 2 ,  inSession := '3');
-

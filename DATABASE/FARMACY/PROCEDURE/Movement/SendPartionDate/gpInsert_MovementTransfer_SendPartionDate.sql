@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsert_MovementTransfer_SendPartionDate (Integer, TDateTime, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_MovementTransfer_SendPartionDate(
-    IN inContainerID    Integer    , -- ID контейнера для изменения срока
+    IN inContainerID    Integer   , -- ID контейнера для изменения срока
     IN inExpirationDate TDateTime , -- Новый срок
     IN inAmount         TFloat    , -- Количество
     IN inSession        TVarChar    -- сессия пользователя
@@ -27,7 +27,7 @@ BEGIN
                 WHERE Container.DescId    = zc_Container_CountPartionDate()
                   AND Container.Id        = inContainerID)
   THEN
-    RAISE EXCEPTION 'Ошибка. Контейнкр не найден.';
+    RAISE EXCEPTION 'Ошибка. Контейнер не найден.';
   END IF;
 
   SELECT Container.WhereObjectId, Container.ObjectId, Container.Amount, ObjectDate_ExpirationDate.ValueData, ObjectLink_Juridical_Retail.ChildObjectId

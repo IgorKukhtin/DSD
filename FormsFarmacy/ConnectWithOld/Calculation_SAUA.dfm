@@ -23,7 +23,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
     Height = 217
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 1134
     object Panel2: TPanel
       Left = 1
       Top = 1
@@ -34,7 +33,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
       Caption = 'Panel2'
       ShowCaption = False
       TabOrder = 0
-      ExplicitWidth = 1132
       object Panel4: TPanel
         Left = 0
         Top = 0
@@ -53,7 +51,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           Align = alTop
           Caption = #1040#1087#1090#1077#1082#1080' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1080
           Properties.Alignment.Horz = taCenter
-          ExplicitWidth = 458
           AnchorX = 269
         end
         object cxLabel9: TcxLabel
@@ -62,7 +59,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           Align = alBottom
           Caption = #1042#1099#1073#1088#1072#1085#1086' 0'
           Properties.Alignment.Horz = taLeftJustify
-          ExplicitWidth = 458
         end
         object cxTextEdit1: TcxTextEdit
           Left = 328
@@ -81,10 +77,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           Height = 115
           Align = alClient
           TabOrder = 3
-          ExplicitLeft = 0
-          ExplicitTop = 21
-          ExplicitWidth = 263
-          ExplicitHeight = 210
           object cxGridDBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             Navigator.Buttons.Insert.Visible = False
@@ -135,8 +127,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         Caption = 'Panel5'
         ShowCaption = False
         TabOrder = 1
-        ExplicitLeft = 460
-        ExplicitWidth = 608
         DesignSize = (
           531
           151)
@@ -146,7 +136,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           Align = alTop
           Caption = #1040#1087#1090#1077#1082#1080' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1072
           Properties.Alignment.Horz = taCenter
-          ExplicitWidth = 670
           AnchorX = 266
         end
         object cxLabel10: TcxLabel
@@ -155,7 +144,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           Align = alBottom
           Caption = #1042#1099#1073#1088#1072#1085#1086' 0'
           Properties.Alignment.Horz = taLeftJustify
-          ExplicitWidth = 670
         end
         object cxTextEdit2: TcxTextEdit
           Left = 336
@@ -174,10 +162,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           Height = 115
           Align = alClient
           TabOrder = 3
-          ExplicitLeft = 0
-          ExplicitTop = 21
-          ExplicitWidth = 263
-          ExplicitHeight = 210
           object cxGridDBTableView2: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             Navigator.Buttons.Insert.Visible = False
@@ -229,7 +213,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
       Caption = 'Panel3'
       ShowCaption = False
       TabOrder = 1
-      ExplicitWidth = 1132
       object cxLabel1: TcxLabel
         Left = 8
         Top = 3
@@ -411,7 +394,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
     Height = 390
     Align = alClient
     TabOrder = 5
-    ExplicitWidth = 1134
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.Filter.Options = [fcoCaseInsensitive]

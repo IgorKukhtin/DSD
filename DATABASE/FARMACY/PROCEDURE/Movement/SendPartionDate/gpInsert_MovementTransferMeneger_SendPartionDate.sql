@@ -64,6 +64,35 @@ BEGIN
       RAISE EXCEPTION 'Ошибка. По закупке строковый контейнер уже создан.';
     END IF;
 
+    IF EXISTS(SELECT 1 
+              FROM MovementItemContainer
+    
+                   INNER JOIN MovementBoolean AS MovementBoolean_Deferred
+                                              ON MovementBoolean_Deferred.MovementId = MovementItemContainer.MovementId
+                                             AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                             AND MovementBoolean_Deferred.ValueData = True
+    
+              WHERE MovementItemContainer.DescId = zc_MIContainer_Count()
+                AND MovementItemContainer.ContainerId  = inContainerID
+                AND MovementItemContainer.MovementDescId = zc_Movement_Send()                     
+                AND MovementItemContainer.Amount < 0)
+    THEN
+      RAISE EXCEPTION 'Ошибка. Закупка отложена в перемещениях: %.', (SELECT STRING_AGG('Номер '||Movement.InvNumber||' дата '||TO_CHAR (Movement.OperDate, 'dd.mm.yyyy'), ', ') 
+                                                                      FROM MovementItemContainer
+                                                              
+                                                                           INNER JOIN MovementBoolean AS MovementBoolean_Deferred
+                                                                                                      ON MovementBoolean_Deferred.MovementId = MovementItemContainer.MovementId
+                                                                                                     AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                                                                                     AND MovementBoolean_Deferred.ValueData = True
+                                                                                                    
+                                                                           LEFT JOIN Movement ON Movement.ID = MovementItemContainer.MovementID
+                                                              
+                                                                      WHERE MovementItemContainer.DescId = zc_MIContainer_Count()
+                                                                        AND MovementItemContainer.ContainerId  = inContainerID
+                                                                        AND MovementItemContainer.MovementDescId = zc_Movement_Send()                     
+                                                                        AND MovementItemContainer.Amount < 0);
+    END IF;
+
     SELECT Container.WhereObjectId, Container.ObjectId, Container.Amount, MIDate_ExpirationDate.ValueData
     INTO vbUnitId, vbGoodsId, vbRemains, vbExpirationDate
     FROM Container

@@ -12,6 +12,8 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
 
              , UnitId_To Integer, UnitName_To TVarChar
              , Amount TFloat
+             
+             , MinExpirationDate TDateTime
 
              , MCS TFloat
              , AmountRemains TFloat
@@ -77,7 +79,7 @@ BEGIN
      -- все Подразделения для схемы SUN Supplement
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpUnit_SUN_Supplement'))
      THEN
-       CREATE TEMP TABLE _tmpUnit_SUN_Supplement (UnitId Integer, DeySupplSun1 Integer, MonthSupplSun1 Integer, isSUN_Supplement_in Boolean, isSUN_Supplement_out Boolean) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpUnit_SUN_Supplement (UnitId Integer, DeySupplSun1 Integer, MonthSupplSun1 Integer, isSUN_Supplement_in Boolean, isSUN_Supplement_out Boolean, isSUN_Supplement_Priority Boolean) ON COMMIT DROP;
      END IF;
 
      -- Выкладки
@@ -107,7 +109,7 @@ BEGIN
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpRemains_all_Supplement'))
      THEN
-       CREATE TEMP TABLE _tmpRemains_all_Supplement   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountRemains TFloat, AmountNotSend TFloat, AmountSalesDay TFloat, AmountSalesMonth TFloat, AverageSalesMonth TFloat, Need TFloat, AmountUse TFloat) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpRemains_all_Supplement   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountRemains TFloat, AmountNotSend TFloat, AmountSalesDay TFloat, AmountSalesMonth TFloat, AverageSalesMonth TFloat, Need TFloat, AmountUse TFloat, MinExpirationDate TDateTime) ON COMMIT DROP;
      END IF;
 
      -- 2. все остатки, НТЗ, и коэф. товарного запаса
@@ -142,12 +144,13 @@ BEGIN
      DELETE FROM _tmpResult_Supplement;
 
      -- все Подразделения для схемы SUN
-     INSERT INTO _tmpUnit_SUN_Supplement (UnitId, DeySupplSun1, MonthSupplSun1, isSUN_Supplement_in, isSUN_Supplement_out)
+     INSERT INTO _tmpUnit_SUN_Supplement (UnitId, DeySupplSun1, MonthSupplSun1, isSUN_Supplement_in, isSUN_Supplement_out, isSUN_Supplement_Priority)
         SELECT OB.ObjectId
              , COALESCE (NULLIF(OF_DeySupplSun1.ValueData, 0), 30)::Integer              AS DeySupplSun1
              , COALESCE (NULLIF(OF_MonthSupplSun1.ValueData, 0), 8)::Integer             AS MonthSupplSun1
              , COALESCE (ObjectBoolean_SUN_Supplement_in.ValueData, FALSE)  :: Boolean   AS isSUN_Supplement_in
              , COALESCE (ObjectBoolean_SUN_Supplement_out.ValueData, FALSE) :: Boolean   AS isSUN_Supplement_out             
+             , COALESCE (ObjectBoolean_SUN_Supplement_Priority.ValueData, FALSE) :: Boolean   AS isSUN_Supplement_Priority             
         FROM ObjectBoolean AS OB
              LEFT JOIN ObjectFloat   AS OF_DeySupplSun1  ON OF_DeySupplSun1.ObjectId  = OB.ObjectId AND OF_DeySupplSun1.DescId     = zc_ObjectFloat_Unit_DeySupplSun1()
              LEFT JOIN ObjectFloat   AS OF_MonthSupplSun1 ON OF_MonthSupplSun1.ObjectId = OB.ObjectId AND OF_MonthSupplSun1.DescId = zc_ObjectFloat_Unit_MonthSupplSun1()
@@ -158,6 +161,9 @@ BEGIN
              LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_Supplement_out
                                      ON ObjectBoolean_SUN_Supplement_out.ObjectId = OB.ObjectId
                                     AND ObjectBoolean_SUN_Supplement_out.DescId = zc_ObjectBoolean_Unit_SUN_Supplement_out()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_Supplement_Priority
+                                     ON ObjectBoolean_SUN_Supplement_Priority.ObjectId = OB.ObjectId
+                                    AND ObjectBoolean_SUN_Supplement_Priority.DescId = zc_ObjectBoolean_Unit_SUN_Supplement_Priority()
              -- !!!только для этого водителя!!!
              /*INNER JOIN ObjectLink AS ObjectLink_Unit_Driver
                                    ON ObjectLink_Unit_Driver.ObjectId      = OB.ObjectId
@@ -402,43 +408,65 @@ BEGIN
 
      -- 1. все остатки
      --
-     WITH tmpRemains AS (SELECT Container.WhereObjectId AS UnitId
+     WITH tmpRemainsPD AS (SELECT Container.ParentId
+                                , Container.Amount
+                                , COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd())    AS ExpirationDate
+                           FROM Container
+                                -- !!!только для таких Аптек!!!
+                                INNER JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsId = Container.ObjectId
+                                INNER JOIN _tmpUnit_SUN_Supplement ON _tmpUnit_SUN_Supplement.UnitId = Container.WhereObjectId
+                                LEFT JOIN _tmpGoods_TP_exception_Supplement ON _tmpGoods_TP_exception_Supplement.GoodsId = Container.ObjectId
+                                                                AND _tmpGoods_TP_exception_Supplement.UnitId = Container.WhereObjectId
+
+                                LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                              ON CLO_PartionGoods.ContainerId = Container.Id
+                                                             AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                                LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
+                                                     ON ObjectDate_PartionGoods_Value.ObjectId = CLO_PartionGoods.ObjectId
+                                                    AND ObjectDate_PartionGoods_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
+                           WHERE Container.DescId = zc_Container_CountPartionDate()
+                             AND Container.Amount <> 0
+                             AND COALESCE (_tmpGoods_TP_exception_Supplement.GoodsId, 0) = 0
+                          )
+        , tmpRemains AS (SELECT Container.WhereObjectId AS UnitId
                               , Container.ObjectId      AS GoodsId
-                              , SUM (COALESCE (Container.Amount, 0)) AS Amount
+                              , SUM (COALESCE (tmpRemainsPD.Amount, Container.Amount, 0))                              AS Amount
+                              , SUM (CASE WHEN COALESCE (tmpRemainsPD.ExpirationDate, zc_DateEnd()) <= CURRENT_DATE + INTERVAL '30 DAY'
+                                          THEN COALESCE (tmpRemainsPD.Amount, Container.Amount, 0)
+                                          ELSE 0 END)                                                                         AS AmountNotSend
+                              , MIN (CASE WHEN COALESCE (tmpRemainsPD.ExpirationDate, zc_DateEnd()) <= CURRENT_DATE + INTERVAL '30 DAY'
+                                          THEN COALESCE (tmpRemainsPD.ExpirationDate, MIDate_ExpirationDate.ValueData, zc_DateEnd())
+                                          ELSE zc_DateEnd() END)                                                              AS MinExpirationDate
                          FROM Container
                               -- !!!только для таких Аптек!!!
                               INNER JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsId = Container.ObjectId
                               INNER JOIN _tmpUnit_SUN_Supplement ON _tmpUnit_SUN_Supplement.UnitId = Container.WhereObjectId
                               LEFT JOIN _tmpGoods_TP_exception_Supplement ON _tmpGoods_TP_exception_Supplement.GoodsId = Container.ObjectId
                                                               AND _tmpGoods_TP_exception_Supplement.UnitId = Container.WhereObjectId
+                                                              
+                              LEFT JOIN tmpRemainsPD ON tmpRemainsPD.ParentId = Container.Id
+ 
+                              LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                            ON ContainerLinkObject_MovementItem.Containerid = Container.Id
+                                                           AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                              LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                              -- элемент прихода
+                              LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                              -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                              LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                          ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                         AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                              -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                              LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+
+                              LEFT OUTER JOIN MovementItemDate AS MIDate_ExpirationDate
+                                                               ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id, MI_Income.Id) 
+                                                              AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+
                          WHERE Container.DescId = zc_Container_Count()
                            AND Container.Amount <> 0
                            AND COALESCE (_tmpGoods_TP_exception_Supplement.GoodsId, 0) = 0
-                         GROUP BY Container.WhereObjectId
-                                , Container.ObjectId
-                        )
-        , tmpRemainsNoSend AS (SELECT Container.WhereObjectId AS UnitId
-                              , Container.ObjectId      AS GoodsId
-                              , SUM (COALESCE (Container.Amount, 0)) AS Amount
-                         FROM Container
-                              -- !!!только для таких Аптек!!!
-                              INNER JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsId = Container.ObjectId
-                              INNER JOIN _tmpUnit_SUN_Supplement ON _tmpUnit_SUN_Supplement.UnitId = Container.WhereObjectId
-                              LEFT JOIN _tmpGoods_TP_exception_Supplement ON _tmpGoods_TP_exception_Supplement.GoodsId = Container.ObjectId
-                                                              AND _tmpGoods_TP_exception_Supplement.UnitId = Container.WhereObjectId
-
-                              LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
-                                                            ON CLO_PartionGoods.ContainerId = Container.Id
-                                                           AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
-                              LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
-                                                   ON ObjectDate_PartionGoods_Value.ObjectId = CLO_PartionGoods.ObjectId
-                                                  AND ObjectDate_PartionGoods_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
-                         WHERE Container.DescId = zc_Container_CountPartionDate()
-                           AND Container.Amount <> 0
-                           AND COALESCE (_tmpGoods_TP_exception_Supplement.GoodsId, 0) = 0
-                           -- !!!оставили только эту категорию
-                           AND ObjectDate_PartionGoods_Value.ValueData <= CURRENT_DATE + INTERVAL '30 DAY'
-                           -- !!!оставили только эту категорию
+                           --AND COALESCE (tmpRemainsPD.ExpirationDate, zc_DateEnd()) > CURRENT_DATE + INTERVAL '30 DAY'
                          GROUP BY Container.WhereObjectId
                                 , Container.ObjectId
                         )
@@ -553,7 +581,7 @@ BEGIN
                                  OR COALESCE (tmpPrice.Price, 0) <> 0
                              )
      -- 1. Результат: все остатки, НТЗ => получаем кол-ва автозаказа: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
-     INSERT INTO  _tmpRemains_all_Supplement (UnitId, GoodsId, Price, MCS, AmountRemains, AmountNotSend, AmountSalesDay, AmountSalesMonth)
+     INSERT INTO  _tmpRemains_all_Supplement (UnitId, GoodsId, Price, MCS, AmountRemains, AmountNotSend, AmountSalesDay, AmountSalesMonth, MinExpirationDate)
         SELECT tmpObject_Price.UnitId
              , tmpObject_Price.GoodsId
              , tmpObject_Price.Price
@@ -562,10 +590,11 @@ BEGIN
                -- остаток
              , CASE WHEN COALESCE (tmpRemains.Amount - COALESCE (_tmpGoods_Sun_exception_Supplement.Amount, 0), 0) > 0
                     THEN COALESCE (tmpRemains.Amount - COALESCE (_tmpGoods_Sun_exception_Supplement.Amount, 0), 0) ELSE 0 END AS AmountRemains
-             , COALESCE (tmpRemainsNoSend.Amount, 0)                                                                          AS AmountNotSend
+             , COALESCE (tmpRemains.AmountNotSend, 0)                                                                         AS AmountNotSend
                -- реализация
              , COALESCE (tmpSalesDay.AmountSalesDay, 0)      AS AmountSalesDay
              , COALESCE (tmpSalesMonth.AmountSalesMonth, 0)  AS AmountSalesMonth
+             , tmpRemains.MinExpirationDate
 
         FROM tmpPrice AS tmpObject_Price
 
@@ -573,10 +602,6 @@ BEGIN
                                   ON tmpRemains.UnitId  = tmpObject_Price.UnitId
                                  AND tmpRemains.GoodsId = tmpObject_Price.GoodsId
                                  
-             LEFT JOIN tmpRemainsNoSend AS tmpRemainsNoSend
-                                        ON tmpRemainsNoSend.UnitId  = tmpObject_Price.UnitId
-                                       AND tmpRemainsNoSend.GoodsId = tmpObject_Price.GoodsId
-
              LEFT JOIN tmpSalesDay AS tmpSalesDay
                                    ON tmpSalesDay.UnitId  = tmpObject_Price.UnitId
                                   AND tmpSalesDay.GoodsId = tmpObject_Price.GoodsId
@@ -659,7 +684,7 @@ BEGIN
         SELECT _tmpRemains_all_Supplement.UnitId
              , _tmpRemains_all_Supplement.GoodsId
              , - CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
-                 CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
+                 CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 OR _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = True
                       THEN - _tmpRemains_all_Supplement.AmountRemains
                       ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains 
                                                             + CASE WHEN _tmpRemains_all_Supplement.AmountNotSend > 
@@ -670,7 +695,7 @@ BEGIN
                                                                       + COALESCE(_tmpGoods_PromoUnit_Supplement.Amount, 0) END)::Integer
                       END
                  ELSE
-                 FLOOR (CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
+                 FLOOR (CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 OR _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = True
                              THEN - _tmpRemains_all_Supplement.AmountRemains
                              ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains 
                                                                    + CASE WHEN _tmpRemains_all_Supplement.AmountNotSend > 
@@ -693,9 +718,9 @@ BEGIN
 
             LEFT JOIN _tmpGoods_PromoUnit_Supplement ON _tmpGoods_PromoUnit_Supplement.GoodsID = _tmpRemains_all_Supplement.GoodsId
                                                     AND _tmpGoods_PromoUnit_Supplement.UnitId = _tmpRemains_all_Supplement.UnitId  
-                        
+                                                                            
        WHERE CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
-                 CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
+                 CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 OR _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = True
                       THEN - _tmpRemains_all_Supplement.AmountRemains
                       ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains 
                                                             + CASE WHEN _tmpRemains_all_Supplement.AmountNotSend > 
@@ -706,7 +731,7 @@ BEGIN
                                                                       + COALESCE(_tmpGoods_PromoUnit_Supplement.Amount, 0) END)::Integer
                       END
                  ELSE
-                 FLOOR (CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
+                 FLOOR (CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 OR _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = True
                              THEN - _tmpRemains_all_Supplement.AmountRemains
                              ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains 
                                                                    + CASE WHEN _tmpRemains_all_Supplement.AmountNotSend > 
@@ -719,7 +744,8 @@ BEGIN
                  END < 0
          AND _tmpUnit_SUN_Supplement.isSUN_Supplement_out = True
          AND (COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0) = 0 OR COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0) = _tmpRemains_all_Supplement.UnitId)
-       ORDER BY CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
+       ORDER BY _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority DESC
+              , CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
                       THEN - _tmpRemains_all_Supplement.AmountRemains
                       ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
                       END
@@ -786,7 +812,6 @@ BEGIN
              THEN
                raise notice 'Value 05: % % % % % %', vbUnitId_from, vbUnitId_to, vbGoodsId, vbNeed, vbSurplus, CASE WHEN vbSurplus > vbNeed THEN vbNeed ELSE vbSurplus END;
              END IF;
-
 */
              INSERT INTO _tmpResult_Supplement (UnitId_from, UnitId_to, GoodsId, Amount)
                VALUES (vbUnitId_from, vbUnitId_to, vbGoodsId, CASE WHEN vbSurplus > vbNeed THEN vbNeed ELSE vbSurplus END);
@@ -818,6 +843,8 @@ BEGIN
             , Object_Unit_To.ValueData                   AS UnitName_To
 
             , _tmpResult_Supplement.Amount               AS Amount
+
+            , tmpRemains_all_From.MinExpirationDate
 
             , _tmpStockRatio_all_Supplement.MCS
             , _tmpStockRatio_all_Supplement.AmountRemains
@@ -895,4 +922,4 @@ $BODY$
 -- SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '4 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 
 -- 
-select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('12.04.2021')::TDateTime ,  inSession := '3');
+select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('19.04.2021')::TDateTime ,  inSession := '3');
