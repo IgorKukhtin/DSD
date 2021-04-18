@@ -50,6 +50,9 @@ type
     GoodsSubSendOpenChoice: TOpenChoiceForm;
     GoodsKindSubSendChoiceForm: TOpenChoiceForm;
     ReceiptGPChoiceForm: TOpenChoiceForm;
+    spUpdateNewQuality: TdsdStoredProc;
+    actUpdateNewQuality: TdsdDataSetRefresh;
+    bbUpdateNewQuality: TdxBarButton;
   private
     { Private declarations }
   public
