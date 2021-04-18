@@ -2,17 +2,13 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Child (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Child (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderClient_Child (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_OrderClient_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inParentId            Integer   , -- 
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inPartionId           Integer   , -- Комплектующие / Работы/Услуги
     IN inObjectId            Integer   , -- Комплектующие / Работы/Услуги
     IN inGoodsId             Integer   , -- Комплектующие - какой узел собирается
-    IN inAmountBasis         TFloat    , -- Количество 
     IN inAmount              TFloat    , -- Количество резерв
     IN inAmountPartner       TFloat    , -- Количество заказ поставщику
     IN inOperPrice           TFloat    , -- Цена вх без НДС
@@ -34,10 +30,8 @@ BEGIN
 
 
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inObjectId, inPartionId, inMovementId, inAmount, inParentId, inUserId);
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inObjectId, inPartionId, inMovementId, inAmount, NULL,inUserId);
 
-     -- сохранили свойство <AmountBasis>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountBasis(), ioId, inAmountBasis);
      -- сохранили свойство <AmountPartner>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), ioId, inAmountPartner);
      -- сохранили свойство <Цена со скидкой>

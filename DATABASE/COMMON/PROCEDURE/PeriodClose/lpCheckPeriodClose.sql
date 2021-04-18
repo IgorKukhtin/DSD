@@ -37,6 +37,16 @@ BEGIN
      THEN
           RETURN; -- !!!выход!!!
      END IF;
+
+     -- !!!Проверка закрытия периода только для <Технолог Днепр>!!!
+     IF inUserId IN (439917, 300550) -- Маховская М.В. + Рыбалко В.В.
+     THEN
+         IF  (SELECT gpGet.OperDate FROM gpGet_Scale_OperDate (FALSE, 1, inUserId :: TVarChar) AS gpGet) - INTERVAL '6 DAY' > inOperDate
+         THEN
+             RAISE EXCEPTION 'Ошибка.Период закрыт до <%>.', zfConvert_DateToString ((SELECT gpGet.OperDate FROM gpGet_Scale_OperDate (FALSE, 1, inUserId :: TVarChar) AS gpGet) - INTERVAL '6 DAY');
+         END IF;
+     END IF;
+
      -- если вообще нет, тогда сразу выход - !!!но для PeriodClose.Period не будет работать!!!
      IF NOT EXISTS (SELECT 1 FROM PeriodClose WHERE PeriodClose.CloseDate > inOperDate)
      THEN
