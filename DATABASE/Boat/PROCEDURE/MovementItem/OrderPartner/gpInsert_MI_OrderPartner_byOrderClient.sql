@@ -108,6 +108,7 @@ BEGIN
            LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
                                  ON ObjectFloat_EKPrice.ObjectId = tmpMI.ObjectId
                                 AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
+      WHERE COALESCE (MIFloat_AmountPartner.ValueData,0) <> 0
      ;
 
     -- создаем  zc_MI_Master() OrderPartner
@@ -131,6 +132,7 @@ BEGIN
                           , _tmpMI_Child.OperPrice
                    ) AS tmp ON tmp.ObjectId = _tmpMI.ObjectId
     ;
+
     
     --cохраняем zc_MIFloat_MovementId в док. OrderClient
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), _tmpMI_Child.Id, inMovementId)
