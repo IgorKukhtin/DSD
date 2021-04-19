@@ -32,7 +32,9 @@ BEGIN
     IF EXISTS (SELECT * FROM AccommodationLincGoods WHERE UnitId = vbUnitId
                                                       AND GoodsId = inGoodsId)
     THEN
-      DELETE FROM AccommodationLincGoods WHERE UnitId = vbUnitId AND GoodsId = inGoodsId;
+      UPDATE AccommodationLincGoods SET UserUpdateId = vbUserId, DateUpdate = CURRENT_TIMESTAMP, isErased = True
+      WHERE UnitId = vbUnitId
+        AND GoodsId = inGoodsId;
     END IF;
           
 END;$BODY$
@@ -45,4 +47,3 @@ END;$BODY$
                Шаблий О.В.
  27.08.18         *
 */
-

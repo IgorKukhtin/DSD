@@ -33,13 +33,17 @@ BEGIN
     WHERE Movement.Id = inMovementId;
 
 
-    IF vbStatusId <> zc_Enum_Status_Complete() AND
+/*    IF vbStatusId <> zc_Enum_Status_Complete() AND
        inSession in (zfCalc_UserAdmin(), '3004360', '4183126', '3171185', 
                                          '8688630', '7670317', '11262719',
                                          '10642587', '10362758', '10642315',
                                          '8539679', '7670307', '9909730')
     THEN
+*/
 
+    IF vbStatusId <> zc_Enum_Status_Complete() AND
+       EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin(), zc_Enum_Role_PharmacyManager(), zc_Enum_Role_SeniorManager()))
+    THEN
       WITH    
           -- документ финальный СУН
           tmpFinalSUA AS (SELECT Movement.id

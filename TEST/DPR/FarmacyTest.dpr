@@ -1020,7 +1020,8 @@ uses
   Report_FinalSUAProtocol in '..\..\FormsFarmacy\Report\Report_FinalSUAProtocol.pas' {Report_FinalSUAProtocolForm: TParentForm},
   Report_Check_CorrectMarketing in '..\..\FormsFarmacy\Report\Report_Check_CorrectMarketing.pas' {Report_Check_CorrectMarketingForm: TParentForm},
   Report_Check_PromoBonusDiscoDialog in '..\..\FormsFarmacy\Report\Report_Check_PromoBonusDiscoDialog.pas' {Report_Check_PromoBonusDiscoDialogForm: TParentForm},
-  Report_Check_PromoBonusDisco in '..\..\FormsFarmacy\Report\Report_Check_PromoBonusDisco.pas' {Report_Check_PromoBonusDiscoForm: TParentForm};
+  Report_Check_PromoBonusDisco in '..\..\FormsFarmacy\Report\Report_Check_PromoBonusDisco.pas' {Report_Check_PromoBonusDiscoForm: TParentForm},
+  AccommodationLincGoods in '..\..\FormsFarmacy\Cash\AccommodationLincGoods.pas' {AccommodationLincGoodsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

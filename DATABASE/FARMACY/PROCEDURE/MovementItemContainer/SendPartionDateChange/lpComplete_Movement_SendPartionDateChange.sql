@@ -273,7 +273,7 @@ BEGIN
     PERFORM gpInsertUpdate_MI_SendPartionDate_Master(ioId               := MI_SendPartionDate.ID, -- Ключ объекта <Элемент документа>
                                                      inMovementId       := vbMovementId,          -- Ключ объекта <Документ>
                                                      inGoodsId          := MovementItem.ObjectId, -- Товары
-                                                     inAmount           := MovementItem.Amount,   -- Количество
+                                                     inAmount           := CASE WHEN Container.DescId = zc_Container_Count() THEN Container.Amount ELSE MovementItem.Amount END,   -- Количество
                                                      inAmountRemains    := Container.Amount,      --
                                                      inChangePercent    := COALESCE(ObjectFloat_PartionGoods_Value.ValueData, 0),     -- % (срок от 1 мес до 3 мес)
                                                      inChangePercentLess:= COALESCE(ObjectFloat_PartionGoods_ValueLess.ValueData, 0), -- % (срок от 3 мес до 6 мес)
@@ -366,7 +366,7 @@ BEGIN
     -- Проводим документ сроков
     PERFORM gpUpdate_Status_SendPartionDate(inMovementId := vbMovementId , inStatusCode := 2 ,  inSession := inUserId::TVarChar);
 
---    RAISE EXCEPTION 'Ошибка. В разработке.';
+  --  RAISE EXCEPTION 'Ошибка. В разработке.';
 
     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
     PERFORM lpComplete_Movement (inMovementId := inMovementId

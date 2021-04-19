@@ -690,7 +690,8 @@ BEGIN
 
         LEFT OUTER JOIN AccommodationLincGoods AS Accommodation
                                                ON Accommodation.UnitId = vbUnitId
-                                              AND Accommodation.GoodsId = GoodsRemains.ObjectId;
+                                              AND Accommodation.GoodsId = GoodsRemains.ObjectId
+                                              AND Accommodation.isErased = False;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

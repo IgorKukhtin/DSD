@@ -360,6 +360,7 @@ BEGIN
         LEFT JOIN AccommodationLincGoods AS Accommodation
                                          ON Accommodation.UnitId = vbUnitId
                                         AND Accommodation.GoodsId = GoodsRemains.ObjectId
+                                        AND Accommodation.isErased = False
         LEFT JOIN Object AS Object_Accommodation  ON Object_Accommodation.ID = Accommodation.AccommodationId
         
         LEFT JOIN tmpReserve ON tmpReserve.GoodsId = GoodsRemains.ObjectId

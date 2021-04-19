@@ -183,6 +183,7 @@ BEGIN
             LEFT OUTER JOIN AccommodationLincGoods AS Accommodation
                                                    ON Accommodation.UnitId = vbUnitFromId
                                                   AND Accommodation.GoodsId = Object_Goods.Id
+                                                  AND Accommodation.isErased = False
             -- Размещение товара
             LEFT JOIN Object AS Object_Accommodation  ON Object_Accommodation.ID = Accommodation.AccommodationId
             

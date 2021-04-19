@@ -41,21 +41,17 @@ BEGIN
         RAISE EXCEPTION 'Код размещения товара не найден или принаждежит другой аптеке';
     END IF;
 
-      -- Если связи нет
-    IF NOT EXISTS (SELECT * FROM AccommodationLincGoods WHERE AccommodationId = ioAccommodationID 
-                                                      AND UnitId = vbUnitId
+      -- Если связь есть
+    IF EXISTS (SELECT * FROM AccommodationLincGoods WHERE UnitId = vbUnitId
                                                       AND GoodsId = inGoodsId)
     THEN
-        -- Удаляем связь с <Медикаментом> если есть
-      IF EXISTS (SELECT * FROM AccommodationLincGoods WHERE UnitId = vbUnitId
-                                                        AND GoodsId = inGoodsId)
-      THEN
-        DELETE FROM AccommodationLincGoods WHERE UnitId = vbUnitId AND GoodsId = inGoodsId;
-      END IF;
-          
+      UPDATE AccommodationLincGoods SET AccommodationId = ioAccommodationID, UserUpdateId = vbUserId, DateUpdate = CURRENT_TIMESTAMP, isErased = False
+      WHERE UnitId = vbUnitId
+        AND GoodsId = inGoodsId;
+    ELSE
         -- сохранили связь с <Медикаментом>
-      INSERT INTO AccommodationLincGoods (AccommodationId, UnitId, GoodsId)
-      VALUES (ioAccommodationID, vbUnitId, inGoodsId);
+      INSERT INTO AccommodationLincGoods (AccommodationId, UnitId, GoodsId, UserUpdateId, DateUpdate, isErased)
+      VALUES (ioAccommodationID, vbUnitId, inGoodsId, vbUserId, CURRENT_TIMESTAMP, False);
     END IF;
    
     SELECT 
@@ -75,4 +71,3 @@ END;$BODY$
                Шаблий О.В.
  21.08.18         *
 */
-

@@ -24,7 +24,8 @@ BEGIN
       -- Удаляем связь с <Медикаментом> если есть
     IF EXISTS (SELECT * FROM AccommodationLincGoods WHERE UnitId = vbUnitId)
     THEN
-      DELETE FROM AccommodationLincGoods WHERE AccommodationLincGoods.UnitId = vbUnitId;
+      UPDATE AccommodationLincGoods SET UserUpdateId = vbUserId, DateUpdate = CURRENT_TIMESTAMP, isErased = True
+      WHERE UnitId = vbUnitId;
     END IF;
           
 END;$BODY$
@@ -37,4 +38,3 @@ END;$BODY$
                Шаблий О.В.
  08.05.19         *
 */
-

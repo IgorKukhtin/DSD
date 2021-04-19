@@ -4251,6 +4251,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actAccommodationLincGoods: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1055#1088#1080#1074#1103#1079#1082#1080' '#1090#1086#1074#1072#1088#1086#1074' '#1082' '#1088#1072#1079#1084#1077#1097#1077#1085#1080#1102
+      FormName = 'TAccommodationLincGoodsForm'
+      FormNameParam.Value = 'TAccommodationLincGoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5383,6 +5394,9 @@ inherited MainForm: TMainForm
         object N251: TMenuItem
           Action = actDivisionParties
           Caption = #1058#1080#1087#1099' '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081' '#1087#1072#1088#1090#1080#1081' '#1074' '#1082#1072#1089#1089#1077' '#1076#1083#1103' '#1087#1088#1086#1076#1072#1078
+        end
+        object N286: TMenuItem
+          Action = actAccommodationLincGoods
         end
       end
       object N44: TMenuItem [1]

@@ -250,6 +250,7 @@ BEGIN
                   LEFT OUTER JOIN AccommodationLincGoods AS Accommodation
                                                          ON Accommodation.UnitId = vbUnitId
                                                         AND Accommodation.GoodsId = Container.ObjectId
+                                                        AND Accommodation.isErased = False
                   LEFT JOIN Object AS Object_Accommodation  ON Object_Accommodation.ID = Accommodation.AccommodationId
 
                   -- Коды UKTZED

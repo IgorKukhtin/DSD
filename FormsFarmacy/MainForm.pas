@@ -793,6 +793,8 @@ type
     N284: TMenuItem;
     actReport_PromoBonusDisco: TdsdOpenForm;
     N285: TMenuItem;
+    actAccommodationLincGoods: TdsdOpenForm;
+    N286: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
