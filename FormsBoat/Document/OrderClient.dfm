@@ -677,7 +677,6 @@ object OrderClientForm: TOrderClientForm
             TabOrder = 0
             LookAndFeel.NativeStyle = True
             LookAndFeel.SkinName = 'UserSkin'
-            ExplicitWidth = 553
             object cxGridDBTableViewProdColorItems: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = ProdColorItemsDS
@@ -950,7 +949,6 @@ object OrderClientForm: TOrderClientForm
             Color = clLime
             ParentBackground = False
             TabOrder = 1
-            ExplicitWidth = 605
           end
         end
         object PanelProdOptItems: TPanel
@@ -962,8 +960,6 @@ object OrderClientForm: TOrderClientForm
           BevelEdges = [beLeft]
           BevelOuter = bvNone
           TabOrder = 1
-          ExplicitLeft = 614
-          ExplicitWidth = 734
           object cxGridProdOptItems: TcxGrid
             Left = 0
             Top = 17
@@ -973,7 +969,6 @@ object OrderClientForm: TOrderClientForm
             TabOrder = 0
             LookAndFeel.NativeStyle = True
             LookAndFeel.SkinName = 'UserSkin'
-            ExplicitWidth = 734
             object cxGridDBTableViewProdOptItems: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = ProdOptItemsDS
@@ -1326,7 +1321,6 @@ object OrderClientForm: TOrderClientForm
             Color = clAqua
             ParentBackground = False
             TabOrder = 1
-            ExplicitWidth = 734
           end
         end
         object cxSplitter1: TcxSplitter
@@ -1335,7 +1329,6 @@ object OrderClientForm: TOrderClientForm
           Width = 8
           Height = 175
           Control = PanelProdColorItems
-          ExplicitLeft = 606
         end
       end
     end
@@ -4341,7 +4334,7 @@ object OrderClientForm: TOrderClientForm
     Top = 416
   end
   object spSelect_ProdColorItems: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ProdColorItems_byOrder'
+    StoredProcName = 'gpSelect_Object_ProdColorItems'
     DataSet = ProdColorItemsCDS
     DataSets = <
       item
@@ -4585,7 +4578,7 @@ object OrderClientForm: TOrderClientForm
     Top = 424
   end
   object spSelect_ProdOptItems: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ProdOptItems_byOrder'
+    StoredProcName = 'gpSelect_Object_ProdOptItems'
     DataSet = ProdOptItemsCDS
     DataSets = <
       item

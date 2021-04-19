@@ -20,7 +20,8 @@ BEGIN
 
    -- нашли если это Boat Structure
    vbProdColorPatternId:= (SELECT tmp.ProdColorPatternId
-                           FROM gpSelect_Object_ProdOptItems (inIsShowAll:= FALSE
+                           FROM gpSelect_Object_ProdOptItems (inMovementId_OrderClient := 0
+                                                            , inIsShowAll:= FALSE
                                                             , inIsErased := TRUE
                                                             , inIsSale   := TRUE
                                                             , inSession  := inSession
@@ -47,7 +48,7 @@ BEGIN
                                                       , inSession                := inSession
                                                       )
                                                       
-           FROM gpSelect_Object_ProdColorItems (FALSE,FALSE,FALSE, inSession) as tmp
+           FROM gpSelect_Object_ProdColorItems (0,FALSE,FALSE,FALSE, inSession) as tmp
            -- Лодка
            WHERE tmp.MovementId_OrderClient = (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = inObjectId AND OFl.DescId   = zc_ObjectFloat_ProdOptItems_OrderClient()) :: Integer
              AND tmp.ProductId = (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inObjectId AND OL.DescId   = zc_ObjectLink_ProdOptItems_Product())
@@ -68,7 +69,7 @@ BEGIN
                                                       , inSession                := inSession
                                                       )
                                                       
-           FROM gpSelect_Object_ProdColorItems (FALSE,FALSE,FALSE, inSession) as tmp
+           FROM gpSelect_Object_ProdColorItems (0,FALSE,FALSE,FALSE, inSession) as tmp
            -- Лодка
            WHERE tmp.MovementId_OrderClient = (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = inObjectId AND OFl.DescId   = zc_ObjectFloat_ProdOptItems_OrderClient()) :: Integer
              AND tmp.ProductId = (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inObjectId AND OL.DescId   = zc_ObjectLink_ProdOptItems_Product())

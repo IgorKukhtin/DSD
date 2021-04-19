@@ -295,7 +295,8 @@ BEGIN
                                      --
                                    , lpSelect.ProdColorPatternId
 
-                              FROM gpSelect_Object_ProdColorItems (inIsShowAll:= FALSE
+                              FROM gpSelect_Object_ProdColorItems (inMovementId_OrderClient:=0
+                                                                 , inIsShowAll:= FALSE
                                                                  , inIsErased := FALSE
                                                                  , inIsSale   := TRUE
                                                                  , inSession  := inSession
@@ -319,7 +320,8 @@ BEGIN
                                    , lpSelect.Sale_summ
                                    , lpSelect.SaleWVAT_summ
 
-                              FROM gpSelect_Object_ProdOptItems (inIsShowAll:= FALSE
+                              FROM gpSelect_Object_ProdOptItems (inMovementId_OrderClient:=0
+                                                               , inIsShowAll:= FALSE
                                                                , inIsErased := FALSE
                                                                , inIsSale   := TRUE
                                                                , inSession  := inSession

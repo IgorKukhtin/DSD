@@ -109,7 +109,8 @@ BEGIN
                                  , lpSelect.Amount
                                  , lpSelect.EKPrice
 
-                            FROM gpSelect_Object_ProdOptItems (inIsShowAll:= FALSE
+                            FROM gpSelect_Object_ProdOptItems (inMovementId_OrderClient := 0
+                                                             , inIsShowAll:= FALSE
                                                              , inIsErased := FALSE
                                                              , inIsSale   := TRUE
                                                              , inSession  := inUserId :: TVarChar
@@ -549,6 +550,7 @@ BEGIN
 
     -- формируем заново
     PERFORM lpInsertUpdate_MI_OrderClient_Child (ioId                  := 0
+                                               , inParentId            := NULL
                                                , inMovementId          := inMovementId
                                                , inPartionId           := _tmpItem.PartionId
                                                , inObjectId            := _tmpItem.ObjectId

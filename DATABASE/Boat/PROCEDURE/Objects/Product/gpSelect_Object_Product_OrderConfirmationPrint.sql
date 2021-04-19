@@ -101,13 +101,13 @@ BEGIN
                                                      );
      -- выбор данных по опциям
      CREATE TEMP TABLE tmpProdOptItems ON COMMIT DROP AS (SELECT tmp.*
-                                                     FROM gpSelect_Object_ProdOptItems (inIsShowAll:= FALSE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
+                                                     FROM gpSelect_Object_ProdOptItems (inMovementId_OrderClient:= inMovementId_OrderClient, inIsShowAll:= FALSE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
                                                      WHERE tmp.ProductId = vbProductId
                                                        AND tmp.MovementId_OrderClient = inMovementId_OrderClient
                                                      );
      -- выбор данных по цвету
      CREATE TEMP TABLE tmpProdColorItems ON COMMIT DROP AS (SELECT tmp.*
-                                                            FROM gpSelect_Object_ProdColorItems (inIsShowAll:= FALSE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
+                                                            FROM gpSelect_Object_ProdColorItems (inMovementId_OrderClient:= inMovementId_OrderClient, inIsShowAll:= FALSE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
                                                             WHERE tmp.ProductId = vbProductId
                                                               AND COALESCE (tmp.Amount,0) <> 0
                                                               AND tmp.MovementId_OrderClient = inMovementId_OrderClient

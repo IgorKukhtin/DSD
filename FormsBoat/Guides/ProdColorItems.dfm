@@ -760,6 +760,12 @@ object ProdColorItemsForm: TProdColorItemsForm
       end>
     Params = <
       item
+        Name = 'inMovementId_OrderClient'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsShowAll'
         Value = False
         DataType = ftBoolean
@@ -835,6 +841,7 @@ object ProdColorItemsForm: TProdColorItemsForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>

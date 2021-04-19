@@ -3114,6 +3114,12 @@ object ProductForm: TProductForm
       end>
     Params = <
       item
+        Name = 'inMovementId_OrderClient'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisShowAll'
         Value = Null
         Component = actShowAllColorItems
@@ -3149,6 +3155,12 @@ object ProductForm: TProductForm
         DataSet = ProdOptItemsCDS
       end>
     Params = <
+      item
+        Name = 'inMovementId_OrderClient'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inIsShowAll'
         Value = False

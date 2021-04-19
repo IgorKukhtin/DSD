@@ -3,12 +3,14 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_ProdColorItems (Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_ProdColorItems (Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_ProdColorItems (Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ProdColorItems (Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ProdColorItems(
-    IN inIsShowAll   Boolean,       -- признак показать все (уникальные по всему справочнику)
-    IN inIsErased    Boolean,       -- признак показать удаленные да / нет
-    IN inIsSale      Boolean,       -- признак показать проданные да / нет
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inMovementId_OrderClient  Integer, --
+    IN inIsShowAll               Boolean,       -- признак показать все (уникальные по всему справочнику)
+    IN inIsErased                Boolean,       -- признак показать удаленные да / нет
+    IN inIsSale                  Boolean,       -- признак показать проданные да / нет
+    IN inSession                 TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (MovementId_OrderClient Integer
              , Id Integer, Code Integer, Name TVarChar
@@ -180,6 +182,7 @@ BEGIN
 
                     WHERE Object_Product.DescId = zc_Object_Product()
                      AND (COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() OR inIsSale = TRUE)
+                     AND (COALESCE (tmpOrderClient.MovementId, 0) = inMovementId_OrderClient OR inMovementId_OrderClient = 0)
                    )
      -- существующие элементы Boat Structure
    , tmpRes_all AS (SELECT Object_ProdColorItems.Id         AS Id
@@ -218,6 +221,7 @@ BEGIN
 
                     WHERE Object_ProdColorItems.DescId = zc_Object_ProdColorItems()
                      AND (Object_ProdColorItems.isErased = FALSE OR inIsErased = TRUE)
+                     AND (tmpProduct.MovementId_OrderClient = inMovementId_OrderClient OR inMovementId_OrderClient = 0)
                    )
        , tmpRes AS (SELECT tmpRes_all.Id
                          , tmpRes_all.Code
@@ -444,4 +448,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ProdColorItems (false,false,false, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ProdColorItems (0,false,false,false, zfCalc_UserAdmin())

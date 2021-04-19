@@ -2,12 +2,14 @@
 
 --DROP FUNCTION IF EXISTS gpSelect_Object_ProdOptItems (Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_ProdOptItems (Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ProdOptItems (Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ProdOptItems(
-    IN inIsShowAll   Boolean,       -- признак показать все (уникальные по всему справочнику)
-    IN inIsErased    Boolean,       -- признак показать удаленные да / нет
-    IN inIsSale      Boolean,       -- признак показать проданные да / нет
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inMovementId_OrderClient   Integer, --
+    IN inIsShowAll                Boolean,       -- признак показать все (уникальные по всему справочнику)
+    IN inIsErased                 Boolean,       -- признак показать удаленные да / нет
+    IN inIsSale                   Boolean,       -- признак показать проданные да / нет
+    IN inSession                  TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (MovementId_OrderClient Integer
              , Id Integer, Code Integer, Name TVarChar
@@ -253,6 +255,7 @@ BEGIN
 
                           WHERE Object_Product.DescId = zc_Object_Product()
                            AND (COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() OR inIsSale = TRUE)
+                           AND (COALESCE (tmpOrderClient.MovementId, 0) = inMovementId_OrderClient OR inMovementId_OrderClient = 0)
                           )
       -- существующие элементы ProdOptItems
     , tmpProdOptItems AS (SELECT Object_ProdOptItems.Id           AS Id
@@ -357,6 +360,7 @@ BEGIN
 
                           WHERE Object_ProdOptItems.DescId = zc_Object_ProdOptItems()
                            AND (Object_ProdOptItems.isErased = FALSE OR inIsErased = TRUE)
+                           AND (tmpProduct.MovementId_OrderClient = inMovementId_OrderClient OR inMovementId_OrderClient = 0)
                          )
          -- все элементы ProdOptItems
        , tmpRes AS (-- существующие

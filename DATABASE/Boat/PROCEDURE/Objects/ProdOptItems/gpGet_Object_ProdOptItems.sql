@@ -121,4 +121,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ProdOptItems (true, true, zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Object_ProdOptItems (0, zfCalc_UserAdmin())

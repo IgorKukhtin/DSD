@@ -107,7 +107,8 @@ BEGIN
                                  , lpSelect.Amount
                                  , lpSelect.EKPrice
 
-                            FROM gpSelect_Object_ProdOptItems (inIsShowAll:= FALSE
+                            FROM gpSelect_Object_ProdOptItems (inMovementId_OrderClient:= 0
+                                                             , inIsShowAll:= FALSE
                                                              , inIsErased := FALSE
                                                              , inIsSale   := TRUE
                                                              , inSession  := inUserId :: TVarChar

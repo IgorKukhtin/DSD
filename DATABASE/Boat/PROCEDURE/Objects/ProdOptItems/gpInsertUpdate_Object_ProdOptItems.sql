@@ -111,7 +111,7 @@ BEGIN
                                                    , inSession                := inSession
                                                     )
                                                    
-        FROM gpSelect_Object_ProdColorItems (FALSE,FALSE,FALSE, inSession) as tmp
+        FROM gpSelect_Object_ProdColorItems (COALESCE (inMovementId_OrderClient,0),FALSE,FALSE,FALSE, inSession) as tmp
         WHERE tmp.ProductId = inProductId
           AND tmp.ProdColorPatternId = inProdColorPatternId
         ;

@@ -92,7 +92,7 @@ BEGIN
                                                        AND tmp.MovementId_OrderClient = inMovementId_OrderClient
                                                      );
      CREATE TEMP TABLE tmpProdColorItems ON COMMIT DROP AS (SELECT tmp.*
-                                                            FROM gpSelect_Object_ProdColorItems (inIsShowAll:= FALSE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
+                                                            FROM gpSelect_Object_ProdColorItems (inMovementId_OrderClient:= inMovementId_OrderClient, inIsShowAll:= FALSE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
                                                             WHERE tmp.ProductId = vbProductId
                                                               AND tmp.MovementId_OrderClient = inMovementId_OrderClient
                                                             );

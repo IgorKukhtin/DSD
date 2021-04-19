@@ -227,7 +227,7 @@ BEGIN
 
    -- только при создании
    IF inIsProdColorPattern = TRUE AND (vbIsInsert = TRUE OR EXISTS (SELECT 1
-                                                                    FROM gpSelect_Object_ProdColorItems (inIsShowAll:= TRUE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
+                                                                    FROM gpSelect_Object_ProdColorItems (inMovementId_OrderClient := inMovementId_OrderClient, inIsShowAll:= TRUE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
                                                                     WHERE tmp.ProductId = ioId
                                                                       AND COALESCE (tmp.Id, 0) = 0
                                                                    )
@@ -255,7 +255,7 @@ BEGIN
                                                    , ioIsProdOptions          := FALSE
                                                    , inSession                := inSession
                                                     )
-       FROM gpSelect_Object_ProdColorItems (inIsShowAll:= TRUE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
+       FROM gpSelect_Object_ProdColorItems (inMovementId_OrderClient:= inMovementId_OrderClient, inIsShowAll:= TRUE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
        WHERE tmp.ProductId = ioId
          AND tmp.ReceiptProdModelId = inReceiptProdModelId
          AND COALESCE (tmp.Id, 0) = 0
