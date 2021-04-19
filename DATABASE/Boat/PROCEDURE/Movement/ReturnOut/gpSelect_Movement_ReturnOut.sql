@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ReturnOut(
     IN inIsErased      Boolean ,
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar
+RETURNS TABLE (Id Integer, InvNumber Integer
              , OperDate TDateTime, OperDatePartner TDateTime
              , StatusCode Integer, StatusName TVarChar
              , PriceWithVAT Boolean
@@ -82,7 +82,7 @@ BEGIN
 
 
         SELECT Movement_ReturnOut.Id
-             , Movement_ReturnOut.InvNumber
+             , zfConvert_StringToNumber (Movement_ReturnOut.InvNumber) ::Integer AS InvNumber
              , Movement_ReturnOut.OperDate
              , Movement_ReturnOut.OperDatePartner
              , Object_Status.ObjectCode                   AS StatusCode

@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_BankAccount_byInvoice(
     IN inIsErased                 Boolean ,
     IN inSession                  TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime
+RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , AmountIn TFloat
              , AmountOut TFloat
@@ -153,7 +153,7 @@ BEGIN
 
        SELECT
              Movement.Id
-           , Movement.InvNumber
+           , zfConvert_StringToNumber (Movement.InvNumber) ::Integer AS InvNumber
            , MovementString_InvNumberPartner.ValueData :: TVarChar AS InvNumberPartner
            , Movement.OperDate
            , Object_Status.ObjectCode   AS StatusCode

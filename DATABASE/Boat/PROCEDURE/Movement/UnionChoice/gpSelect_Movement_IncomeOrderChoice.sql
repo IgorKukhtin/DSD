@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_IncomeOrderChoice(
     IN inIsErased      Boolean ,
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Full TVarChar, InvNumberPartner TVarChar
+RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full TVarChar, InvNumberPartner TVarChar
              , OperDate TDateTime, OperDatePartner TDateTime
              , StatusCode Integer, StatusName TVarChar, DescName TVarChar
              , PriceWithVAT Boolean
@@ -95,7 +95,7 @@ BEGIN
 
 
         SELECT Movement.Id
-             , Movement.InvNumber
+             , zfConvert_StringToNumber (Movement.InvNumber) ::Integer AS InvNumber
              , ('№ ' || Movement.InvNumber || ' от ' || zfConvert_DateToString (Movement.OperDate) :: TVarChar ) :: TVarChar  AS InvNumber_Full
              , Movement.InvNumberPartner
              , Movement.OperDate

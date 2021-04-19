@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderClient_Info(
     IN inMovementId        Integer  , -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar
+RETURNS TABLE (Id Integer, InvNumber Integer
              , CodeInfo Integer, DescInfo TVarChar, Text_Info TBlob
              
               )
@@ -24,7 +24,7 @@ BEGIN
 
         SELECT 
             Movement_OrderClient.Id
-          , Movement_OrderClient.InvNumber
+          , zfConvert_StringToNumber (Movement_OrderClient.InvNumber) ::Integer AS InvNumber
           , 1 ::Integer AS CodeInfo
           , 'Information  1' ::TVarChar AS DescInfo
           , CASE WHEN TRIM (COALESCE (MovementBlob_Info.ValueData,'')) = '' THEN CHR (13) || CHR (13) || CHR (13) ELSE MovementBlob_Info.ValueData END :: TBlob AS Text_Info
@@ -39,7 +39,7 @@ BEGIN
       UNION 
         SELECT 
             Movement_OrderClient.Id
-          , Movement_OrderClient.InvNumber
+          , zfConvert_StringToNumber (Movement_OrderClient.InvNumber) ::Integer AS InvNumber
           , 2 ::Integer AS CodeInfo
           , 'Information  2' ::TVarChar AS DescInfo
           , CASE WHEN TRIM (COALESCE (MovementBlob_Info.ValueData,'')) = '' THEN CHR (13) || CHR (13) || CHR (13) ELSE MovementBlob_Info.ValueData END :: TBlob AS Text_Info
@@ -54,7 +54,7 @@ BEGIN
       UNION 
         SELECT 
             Movement_OrderClient.Id
-          , Movement_OrderClient.InvNumber
+          , zfConvert_StringToNumber (Movement_OrderClient.InvNumber) ::Integer AS InvNumber
           , 3 ::Integer AS CodeInfo
           , 'Information  3' ::TVarChar AS DescInfo
           , CASE WHEN TRIM (COALESCE (MovementBlob_Info.ValueData,'')) = '' THEN CHR (13) || CHR (13) || CHR (13) ELSE MovementBlob_Info.ValueData END :: TBlob AS Text_Info

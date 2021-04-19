@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Invoice(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id              Integer
-             , InvNumber       TVarChar
+             , InvNumber       Integer
              , InvNumber_Full  TVarChar
              , OperDate        TDateTime
              , PlanDate        TDateTime
@@ -151,7 +151,7 @@ BEGIN
     --
     , tmpData AS (SELECT     
                          Movement.Id
-                       , Movement.InvNumber
+                       , zfConvert_StringToNumber (Movement.InvNumber) ::Integer AS InvNumber
                        , ('№ ' || Movement.InvNumber || ' от ' || zfConvert_DateToString (Movement.OperDate):: TVarChar ) :: TVarChar  AS InvNumber_Full
                        , Movement.OperDate
                        , MovementDate_Plan.ValueData         :: TDateTime    AS PlanDate
