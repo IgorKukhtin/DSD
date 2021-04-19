@@ -45,6 +45,9 @@ type
     cxLabel4: TcxLabel;
     ceMinLineByLineImplPlan: TcxCurrencyEdit;
     cxLabel2: TcxLabel;
+    ceScaleCalcMarketingPlan: TcxButtonEdit;
+    cxLabel15: TcxLabel;
+    GuidesScaleCalcMarketingPlan: TdsdGuides;
   private
     { Private declarations }
   public

@@ -62,6 +62,7 @@ type
     Summa: TcxGridDBColumn;
     GoodsGroupName: TcxGridDBColumn;
     ExpirationDate: TcxGridDBColumn;
+    SummaSale: TcxGridDBColumn;
   private
     { Private declarations }
   public

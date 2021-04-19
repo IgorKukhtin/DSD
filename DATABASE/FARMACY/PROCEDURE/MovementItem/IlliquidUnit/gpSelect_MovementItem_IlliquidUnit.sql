@@ -11,6 +11,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_IlliquidUnit(
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
 
              , Amount TFloat, Price TFloat, Summ TFloat
+             , AmountSale TFloat, SummSale TFloat, ProcSale TFloat
+
              , isErased Boolean
               )
 AS
@@ -59,7 +61,30 @@ BEGIN
                                                    AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
                          WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
                            AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
-                         )
+                         ),
+            tmpMI AS (SELECT MovementItem.Id
+                           , MovementItem.ObjectId
+                           , MovementItem.Amount                                                 AS Amount
+                           , MovementItem.IsErased                                               AS isErased
+                        FROM MovementItem
+                        WHERE MovementItem.MovementId = inMovementId
+                          AND MovementItem.DescId = zc_MI_Master()
+                          AND (MovementItem.isErased = FALSE or inIsErased = TRUE)),
+            tmpRealization AS (SELECT tmpMI.ObjectId
+                                    , Sum(- 1.0 * MIC.Amount)                                            AS Amount
+                                    , Sum(Round(- 1.0 * MIC.Amount * MIC.Price, 2))                      AS Summa
+                               FROM tmpMI
+
+                                    INNER JOIN MovementItemContainer AS MIC
+                                                                     ON MIC.WhereObjectId_Analyzer = vbUnitId
+                                                                    AND MIC.ObjectId_Analyzer = tmpMI.ObjectId
+                                                                    AND MIC.OperDate >= vbOperDate
+                                                                    AND MIC.OperDate < vbOperDate + INTERVAL '1 MONTH'
+                                                                    AND MIC.DescId = zc_MIContainer_Count()
+                                                                    AND MIC.MovementDescId = zc_Movement_Check()
+                                                                    
+                              GROUP BY tmpMI.ObjectId
+                              )
 
        -- ðåçóëüòàò
        SELECT
@@ -70,16 +95,17 @@ BEGIN
 
            , MovementItem.Amount                                                 AS Amount
            , Object_Price.Price                                                  AS Price
-           , Round(MovementItem.Amount * Object_Price.Price, 2)::TFloat          AS Price
+           , Round(MovementItem.Amount * Object_Price.Price, 2)::TFloat          AS Summ
+           , tmpRealization.Amount::TFloat                                       AS AmountSale
+           , tmpRealization.Summa::TFloat                                        AS SummSale
+           , Round(tmpRealization.Amount / MovementItem.Amount * 100, 2)::TFloat AS ProcSale
            , MovementItem.IsErased                                               AS isErased
 
-       FROM MovementItem
+       FROM tmpMI AS MovementItem
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
             LEFT JOIN tmpPrice AS Object_Price
                                ON Object_Price.GoodsId = MovementItem.ObjectId
-       WHERE MovementItem.MovementId = inMovementId
-         AND MovementItem.DescId = zc_MI_Master()
-         AND (MovementItem.isErased = FALSE or inIsErased = TRUE)
+            LEFT JOIN tmpRealization ON tmpRealization.ObjectId = MovementItem.ObjectId
 ;
 
 END;
@@ -90,10 +116,12 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) 
 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
-               Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
- 09.06.19         *
+               Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Øàáëèé Î.Â.
+ 23.12.19                                                       *
 
 */
 
 -- òåñò
 -- select * from gpSelect_MovementItem_IlliquidUnit(inMovementId := 15183090 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+
+select * from gpSelect_MovementItem_IlliquidUnit(inMovementId := 22760200 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' <'#1050#1072#1090#1077#1075#1086#1088#1080#1102' '#1072#1087#1090#1077#1082#1080'>'
-  ClientHeight = 300
+  ClientHeight = 347
   ClientWidth = 436
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 91
-    Top = 258
+    Left = 111
+    Top = 306
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 241
-    Top = 258
+    Left = 261
+    Top = 306
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -99,6 +99,22 @@
     Left = 23
     Top = 204
     Caption = ' '#1052#1080#1085'. % '#1087#1086#1089#1090#1088#1086#1095#1085#1086#1075#1086' '#1074#1099#1087#1086#1083#1085'. '#1084#1080#1085'. '#1087#1083#1072#1085#1072' '#1076#1083#1103' '#1087#1086#1083#1091#1095'. '#1087#1088#1077#1084#1080#1080
+  end
+  object ceScaleCalcMarketingPlan: TcxButtonEdit
+    Left = 23
+    Top = 272
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 12
+    Width = 186
+  end
+  object cxLabel15: TcxLabel
+    Left = 23
+    Top = 250
+    Caption = #1064#1082#1072#1083#1072' '#1088#1072#1089#1095#1077#1090#1072' '#1087#1088#1077#1084#1080#1080'/'#1096#1090#1088#1072#1092#1099' '#1074' '#1087#1083#1072#1085' '#1087#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1091
   end
   object ActionList: TActionList
     Left = 252
@@ -162,7 +178,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PenaltyNonMinPlan'
+        Name = 'inPenaltyNonMinPlan'
         Value = Null
         Component = cePenaltyNonMinPlan
         DataType = ftFloat
@@ -170,7 +186,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PremiumImplPlan'
+        Name = 'inPremiumImplPlan'
         Value = Null
         Component = cePremiumImplPlan
         DataType = ftFloat
@@ -178,10 +194,18 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'MinLineByLineImplPlan'
+        Name = 'inMinLineByLineImplPlan'
         Value = Null
         Component = ceMinLineByLineImplPlan
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inScaleCalcMarketingPlanId'
+        Value = Null
+        Component = GuidesScaleCalcMarketingPlan
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -246,6 +270,21 @@
         Component = ceMinLineByLineImplPlan
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ScaleCalcMarketingPlanId'
+        Value = Null
+        Component = GuidesScaleCalcMarketingPlan
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ScaleCalcMarketingPlanName'
+        Value = Null
+        Component = GuidesScaleCalcMarketingPlan
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 324
@@ -269,5 +308,34 @@
     StorageType = stStream
     Left = 324
     Top = 64
+  end
+  object GuidesScaleCalcMarketingPlan: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceScaleCalcMarketingPlan
+    FormNameParam.Value = 'TScaleCalcMarketingPlanForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TScaleCalcMarketingPlanForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesScaleCalcMarketingPlan
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesScaleCalcMarketingPlan
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 120
+    Top = 247
   end
 end

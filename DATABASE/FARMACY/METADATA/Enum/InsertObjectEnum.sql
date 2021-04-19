@@ -4406,6 +4406,15 @@ BEGIN
      
 END $$;
 
+DO $$
+BEGIN
+     -- !!! Шкала расчета премии/штрафы в план по маркетингу
+     
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ScaleCalcMarketingPlan_AB(),   inDescId:= zc_Object_ScaleCalcMarketingPlan(), inCode:= 1, inName:= 'Шкала АВ',              inEnumName:= 'zc_Enum_ScaleCalcMarketingPlan_AB');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ScaleCalcMarketingPlan_CC1(),  inDescId:= zc_Object_ScaleCalcMarketingPlan(), inCode:= 2, inName:= 'Шкала CC1',             inEnumName:= 'zc_Enum_ScaleCalcMarketingPlan_CC1');
+     
+END $$;
+
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

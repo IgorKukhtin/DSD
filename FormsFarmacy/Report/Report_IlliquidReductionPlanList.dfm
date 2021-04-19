@@ -60,6 +60,11 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
               Format = ',0.##'
               Kind = skSum
               Column = Summa
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaSale
             end>
           OptionsData.Editing = False
           Styles.Content = nil
@@ -119,6 +124,15 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 71
+          end
+          object SummaSale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080
+            DataBinding.FieldName = 'SummaSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
           object ProcSale: TcxGridDBColumn
             Caption = '% '#1087#1088#1086#1076#1072#1078
@@ -474,7 +488,7 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -545,7 +559,7 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
       end
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'OperDate'
         DataType = ftDateTime
@@ -656,7 +670,7 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
     Params = <
       item
         Name = 'OperDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -719,6 +733,7 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         BackGroundValueColumn = D_Color_calc
@@ -727,6 +742,8 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 520
     Top = 344
   end
