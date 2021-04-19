@@ -43,6 +43,14 @@ type
     DiscountExternalName: TcxGridDBColumn;
     FromName: TcxGridDBColumn;
     PriceWithVAT: TcxGridDBColumn;
+    DateCompensation: TcxGridDBColumn;
+    actUpdateMainDS: TdsdUpdateDataSet;
+    spUpdateDateCompensation: TdsdStoredProc;
+    spUpdateDateCompensationFilter: TdsdStoredProc;
+    matUpdateDateCompensation: TMultiAction;
+    actUpdateDateCompensation: TdsdExecStoredProc;
+    actExecuteDialogDateCompensation: TExecuteDialog;
+    bbUpdateDateCompensation: TdxBarButton;
   private
     { Private declarations }
   public

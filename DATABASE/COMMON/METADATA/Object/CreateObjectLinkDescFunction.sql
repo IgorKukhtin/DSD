@@ -1864,6 +1864,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ContractTradeMark_TradeMark() RETURNS I
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_ContractTradeMark_TradeMark', 'Торговая марка', zc_Object_ContractTradeMark(), zc_Object_TradeMark() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContractTradeMark_TradeMark');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MemberPriceList_PriceList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberPriceList_PriceList'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_MemberPriceList_PriceList', 'PriceList', zc_Object_MemberPriceList(), zc_Object_PriceList() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberPriceList_PriceList');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MemberPriceList_Member() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberPriceList_Member'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_MemberPriceList_Member', 'Физ лицо', zc_Object_MemberPriceList(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberPriceList_Member');
+
+
 
 --!!! АПТЕКА
 
@@ -2506,6 +2515,8 @@ SELECT 'zc_ObjectLink_User_LikiDnepr_Unit', 'Связь с Подразделением для которого
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 18.04.21         * zc_ObjectLink_MemberPriceList_PriceList
+                    zc_ObjectLink_MemberPriceList_Member
  12.04.21                                                                                      * zc_ObjectLink_User_LikiDnepr_Unit
  25.03.21                                                                                      * zc_ObjectLink_FinalSUAProtocol_User
  18.03.21         * zc_ObjectLink_PersonalServiceList_PSLExportKind

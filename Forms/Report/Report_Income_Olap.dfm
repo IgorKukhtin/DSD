@@ -129,7 +129,7 @@ object Report_Income_OlapForm: TReport_Income_OlapForm
     Align = alClient
     DataSource = DataSource
     Groups = <>
-    OptionsView.RowGrandTotalWidth = 336
+    OptionsView.RowGrandTotalWidth = 461
     TabOrder = 1
     object pvMonthDate: TcxDBPivotGridField
       AreaIndex = 0
@@ -370,7 +370,7 @@ object Report_Income_OlapForm: TReport_Income_OlapForm
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.##;-,0.##; ;'
       Visible = True
-      Width = 70
+      Width = 140
       UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
     end
     object pvSumm_ProfitLoss: TcxDBPivotGridField

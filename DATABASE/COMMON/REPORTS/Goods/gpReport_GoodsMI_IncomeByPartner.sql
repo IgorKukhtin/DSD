@@ -250,6 +250,7 @@ BEGIN
                    AND MIContainer.MovementDescId = inDescId
                    -- AND MIContainer.isActive = CASE WHEN inDescId = zc_Movement_Income() THEN TRUE ELSE FALSE END
                    AND COALESCE (MIContainer.AccountId, 0) <> zc_Enum_Account_100301() -- прибыль текущего периода
+                   AND COALESCE (MIContainer.AccountId, 0) <> zc_Enum_Account_110101()-- товар в пути
                  GROUP BY MIContainer.ContainerId
                         , MIContainer.ObjectId_analyzer
                         , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE COALESCE (MIContainer.ObjectIntId_Analyzer, 0) END

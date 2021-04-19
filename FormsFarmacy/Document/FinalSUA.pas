@@ -65,6 +65,12 @@ type
     AmountOI: TcxGridDBColumn;
     MCS: TcxGridDBColumn;
     isNot: TcxGridDBColumn;
+    matExecUpfdate_Multiplicity: TMultiAction;
+    actUpdate_MI_FinalSUA_Need: TdsdExecStoredProc;
+    actExecuteDialogNeed: TExecuteDialog;
+    gpUpdate_MI_FinalSUA_Need: TdsdStoredProc;
+    dxBarButton2: TdxBarButton;
+    Price: TcxGridDBColumn;
   private
     { Private declarations }
   public

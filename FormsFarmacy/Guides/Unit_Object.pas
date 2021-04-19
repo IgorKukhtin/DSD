@@ -378,6 +378,15 @@ type
     actExecUpdate_isGoodsUKTZEDRRO: TdsdExecStoredProc;
     spUpdate_isGoodsUKTZEDRRO: TdsdStoredProc;
     dxBarButton15: TdxBarButton;
+    isSUN_Supplement_Priority: TcxGridDBColumn;
+    spUpdate_Unit_isSUN_Supplement_Priority_yes: TdsdStoredProc;
+    spUpdate_Unit_isSUN_Supplement_Priority_no: TdsdStoredProc;
+    actUpdate_Unit_isSUN_Supplement_Priority_yes: TdsdExecStoredProc;
+    actUpdate_Unit_isSUN_Supplement_Priority_no: TdsdExecStoredProc;
+    macUpdate_Unit_isSUN_Supplement_Priority_yes: TMultiAction;
+    macUpdate_Unit_isSUN_Supplement_Priority_no: TMultiAction;
+    dxBarButton16: TdxBarButton;
+    dxBarButton17: TdxBarButton;
   private
     { Private declarations }
   public

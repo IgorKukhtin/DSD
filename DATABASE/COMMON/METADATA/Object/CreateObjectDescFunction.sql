@@ -925,6 +925,10 @@ CREATE OR REPLACE FUNCTION zc_Object_Reason() RETURNS integer AS $BODY$BEGIN  RE
 INSERT INTO ObjectDesc(Code, ItemName)
 SELECT 'zc_Object_Reason', 'Причина возврата' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Reason');
 
+CREATE OR REPLACE FUNCTION zc_Object_MemberPriceList() RETURNS integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_MemberPriceList'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_MemberPriceList', 'Доступ к Изменениям в Прайс листе' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MemberPriceList');
+
 
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 --!!! Аптека

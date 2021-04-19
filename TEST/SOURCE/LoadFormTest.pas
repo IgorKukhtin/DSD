@@ -100,6 +100,7 @@ type
     procedure LoadMemberBankAccountFormTest;
     procedure LoadMemberBranchFormTest;
     procedure LoadMemberExternalFormTest;
+    procedure LoadMemberPriceListFormTest;
     procedure LoadMemberSheetWorkTimeFormTest;
     procedure LoadMemberHolidayFormTest;
     procedure LoadMemberPersonalServiceListFormTest;
@@ -565,15 +566,15 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTree_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsTree_ObjectForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKindForm');
   exit;
-  }
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_NormForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_NormForm');
   exit;
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_OrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_OrderForm');
 
@@ -3455,6 +3456,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMemberSheetWorkTimeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberSheetWorkTimeEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberSheetWorkTimeEditForm');
+end;
+
+   procedure TLoadFormTest.LoadMemberPriceListFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberPriceListForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberPriceListForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberPriceListEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberPriceListEditForm');
 end;
 
 procedure TLoadFormTest.LoadMemberPersonalServiceListFormTest;

@@ -1243,13 +1243,13 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitabilityDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitabilityDialogForm');
     exit;
-
+}
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_DiscountExternalForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_DiscountExternalForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_DiscountExternalDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_DiscountExternalDialogForm');
     exit;
-
+ {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSUNForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSUNForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSUNDialogForm'));

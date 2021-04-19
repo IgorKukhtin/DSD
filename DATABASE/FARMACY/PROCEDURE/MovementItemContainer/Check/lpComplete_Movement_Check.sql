@@ -29,6 +29,8 @@ $BODY$
 
    DECLARE curRemains refcursor;
    DECLARE curSale refcursor;
+   DECLARE vbDayCompensDiscount Integer;
+   DECLARE vbSummChangePercent TFloat;
 BEGIN
 
      -- Проверим чтоб сроковый товар был прикреплен к партиям и был остаток
@@ -120,7 +122,8 @@ BEGIN
          , MovementLinkObject_Unit.ObjectId
          , COALESCE(ObjectLink_DiscountExternal.ChildObjectId, 0)
          , COALESCE(ObjectBoolean_TwoPackages.ValueData, False) 
-    INTO vbOperDate, vbUnitId, vbDiscountExternalId, vbisOneSupplier
+         , COALESCE(MovementFloat_TotalSummChangePercent.ValueData, 0)
+    INTO vbOperDate, vbUnitId, vbDiscountExternalId, vbisOneSupplier, vbSummChangePercent
     FROM Movement
 
          LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -139,6 +142,9 @@ BEGIN
                                  ON ObjectBoolean_TwoPackages.ObjectId = ObjectLink_DiscountExternal.ChildObjectId
                                 AND ObjectBoolean_TwoPackages.DescId = zc_ObjectBoolean_DiscountExternal_TwoPackages()
 
+         LEFT JOIN MovementFloat AS MovementFloat_TotalSummChangePercent
+                                 ON MovementFloat_TotalSummChangePercent.MovementId =  Movement.Id
+                                AND MovementFloat_TotalSummChangePercent.DescId = zc_MovementFloat_TotalSummChangePercent()
     WHERE Movement.Id = inMovementId;
 
     -- Определить
@@ -649,6 +655,22 @@ BEGIN
           -- сохранили свойство <Пользователь (подтверждения) для того чтоб попало в ЗП>
           PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_UserConfirmedKind(), inMovementId, inUserId);
        END IF;
+     END IF;
+          
+     IF COALESCE (vbDiscountExternalId, 0) <> 0 AND vbSummChangePercent > 0
+     THEN
+       vbDayCompensDiscount := COALESCE (
+           (SELECT ObjectFloat_DayCompensDiscount.ValueData                  AS DayCompensDiscount
+            FROM Object AS Object_CashSettings
+                 LEFT JOIN ObjectFloat AS ObjectFloat_DayCompensDiscount
+                                       ON ObjectFloat_DayCompensDiscount.ObjectId = Object_CashSettings.Id
+                                      AND ObjectFloat_DayCompensDiscount.DescId = zc_ObjectFloat_CashSettings_DayCompensDiscount()
+            WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+            LIMIT 1), 60);
+            
+       -- Установим признак Дата компенсации
+       PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_Compensation(), inMovementId, DATE_TRUNC ('DAY', vbOperDate)  + (vbDayCompensDiscount||' DAY')::INTERVAL);
+
      END IF;
 
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол

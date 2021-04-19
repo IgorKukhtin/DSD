@@ -98,7 +98,7 @@ BEGIN
                                                    ON ObjectBoolean_Goods_TOP.ObjectId = Price_Goods.ChildObjectId
                                                   AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
                         WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
-                          AND ObjectLink_Price_Unit.ChildObjectId IN (SELECT MI_Master.UnitId FROM MI_Master)
+                          AND ObjectLink_Price_Unit.ChildObjectId IN (SELECT DISTINCT MI_Master.UnitId FROM MI_Master)
                         )
                , tmpPromoBonus_GoodsWeek AS (SELECT * FROM gpSelect_PromoBonus_GoodsWeek(inSession := inSession))
                , PromoBonus AS (SELECT MovementItem.Id                               AS Id
@@ -141,7 +141,54 @@ BEGIN
                                GROUP BY Movement.UnitId
                                       , MovementItem.ObjectId
                                       )
+               , tmpRemains AS (SELECT AnalysisContainer.GoodsId                   AS GoodsId
+                                     , AnalysisContainer.UnitId                    AS UnitId
+                                     , SUM(AnalysisContainer.Saldo)                AS Saldo
+                                FROM AnalysisContainer 
+                                
+                                     INNER JOIN (SELECT DISTINCT MI_Master.GoodsID FROM MI_Master) AS Goods ON Goods.GoodsID = AnalysisContainer.GoodsId
+                                 
+--                                WHERE AnalysisContainer.Saldo > 0
+                                GROUP BY AnalysisContainer.GoodsId
+                                       , AnalysisContainer.UnitId  
+                                )
+               , tmpRemainsMax AS (SELECT tmpRemains.GoodsId                   AS GoodsId
+                                        , tmpRemains.UnitId                    AS UnitId
+                                        , ObjectLink_Price_Unit.ObjectId       AS ObjectPrice
+                                        , ROW_NUMBER() OVER (PARTITION BY tmpRemains.GoodsId ORDER BY tmpRemains.Saldo DESC) AS Ord
+                                   FROM tmpRemains
+             
+                                        INNER JOIN ObjectLink AS ObjectLink_Price_Unit
+                                                              ON ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit() 
+                                                             AND ObjectLink_Price_Unit.ChildObjectId = tmpRemains.UnitId
+                                        
+                                        INNER JOIN ObjectLink AS Price_Goods
+                                                              ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                             AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                                             AND Price_Goods.ChildObjectId  = tmpRemains.GoodsId
+                                   )  
+               , tmpObject_PriceSale AS (
+                                SELECT CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                                             AND ObjectFloat_Goods_Price.ValueData > 0
+                                            THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
+                                            ELSE ROUND (Price_Value.ValueData, 2)
+                                       END :: TFloat                           AS Price
+                                     , tmpRemainsMax.GoodsId                   AS GoodsId
+                                     , tmpRemainsMax.UnitId                    AS UnitId
+                                FROM tmpRemainsMax 
 
+                                   LEFT JOIN ObjectFloat AS Price_Value
+                                                         ON Price_Value.ObjectId = tmpRemainsMax.ObjectPrice
+                                                        AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                                   -- Фикс цена для всей Сети
+                                   LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
+                                                          ON ObjectFloat_Goods_Price.ObjectId = tmpRemainsMax.GoodsId
+                                                         AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
+                                   LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                                           ON ObjectBoolean_Goods_TOP.ObjectId = tmpRemainsMax.GoodsId
+                                                          AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
+                                WHERE tmpRemainsMax.Ord = 1
+                                )
 
                SELECT MI_Master.Id                                      AS Id
                     , MI_Master.GoodsId                                 AS GoodsId
@@ -154,7 +201,7 @@ BEGIN
                     , MI_Master.Amount                                  AS Amount
                     , MI_Master.SendSUN                                 AS SendSUN
                     , tmpOIList.Amount                                  AS AmountOI
-                    , tmpObject_Price.Price                             AS Price
+                    , tmpObject_PriceSale.Price                             AS Price
                     , Object_Goods_Retail.isTop                         AS isTop
                     , Object_Goods_Main.isClose                         AS isClose
                     , Object_Goods_Main.isNot                           AS isNot
@@ -177,6 +224,8 @@ BEGIN
                                          
                    LEFT JOIN tmpObject_Price ON tmpObject_Price.GoodsId = MI_Master.GoodsId
                                             AND tmpObject_Price.UnitId = MI_Master.UnitId
+
+                   LEFT JOIN tmpObject_PriceSale ON tmpObject_PriceSale.GoodsId = MI_Master.GoodsId
 
                    -- Маркетинговый бонус
                    LEFT JOIN PromoBonus ON PromoBonus.GoodsId = MI_Master.GoodsId

@@ -3,7 +3,7 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
   Top = 0
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1080#1089#1090#1077#1084#1077' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1086#1075#1086' '#1091#1087#1088#1072#1074#1083#1077#1085#1080#1103' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1086#1084
   ClientHeight = 633
-  ClientWidth = 1134
+  ClientWidth = 1070
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,46 +19,42 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 1134
+    Width = 1070
     Height = 217
     Align = alTop
     TabOrder = 0
+    ExplicitWidth = 1134
     object Panel2: TPanel
       Left = 1
       Top = 1
-      Width = 1132
+      Width = 1068
       Height = 151
       Align = alClient
       BevelOuter = bvNone
       Caption = 'Panel2'
       ShowCaption = False
       TabOrder = 0
+      ExplicitWidth = 1132
       object Panel4: TPanel
         Left = 0
         Top = 0
-        Width = 460
+        Width = 537
         Height = 151
         Align = alLeft
         Caption = 'Panel4'
         ShowCaption = False
         TabOrder = 0
+        DesignSize = (
+          537
+          151)
         object cxLabel3: TcxLabel
           Left = 1
           Top = 1
           Align = alTop
           Caption = #1040#1087#1090#1077#1082#1080' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1080
           Properties.Alignment.Horz = taCenter
-          AnchorX = 230
-        end
-        object CheckListBoxRecipient: TCheckListBox
-          Left = 1
-          Top = 18
-          Width = 458
-          Height = 115
-          OnClickCheck = CheckListBoxRecipientClickCheck
-          Align = alClient
-          ItemHeight = 13
-          TabOrder = 1
+          ExplicitWidth = 458
+          AnchorX = 269
         end
         object cxLabel9: TcxLabel
           Left = 1
@@ -66,34 +62,92 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           Align = alBottom
           Caption = #1042#1099#1073#1088#1072#1085#1086' 0'
           Properties.Alignment.Horz = taLeftJustify
+          ExplicitWidth = 458
+        end
+        object cxTextEdit1: TcxTextEdit
+          Left = 328
+          Top = 0
+          Anchors = [akTop, akRight]
+          TabOrder = 2
+          DesignSize = (
+            209
+            21)
+          Width = 209
+        end
+        object cxGridRecipient: TcxGrid
+          Left = 1
+          Top = 18
+          Width = 535
+          Height = 115
+          Align = alClient
+          TabOrder = 3
+          ExplicitLeft = 0
+          ExplicitTop = 21
+          ExplicitWidth = 263
+          ExplicitHeight = 210
+          object cxGridDBTableView1: TcxGridDBTableView
+            Navigator.Buttons.CustomButtons = <>
+            Navigator.Buttons.Insert.Visible = False
+            Navigator.Buttons.Append.Visible = False
+            Navigator.Buttons.Delete.Visible = False
+            Navigator.Buttons.Edit.Visible = False
+            Navigator.Buttons.Post.Visible = False
+            Navigator.Buttons.Cancel.Visible = False
+            Navigator.Buttons.Refresh.Visible = False
+            DataController.DataSource = UnitsRecipientDS
+            DataController.Summary.DefaultGroupSummaryItems = <>
+            DataController.Summary.FooterSummaryItems = <>
+            DataController.Summary.SummaryGroups = <>
+            OptionsData.CancelOnExit = False
+            OptionsData.Deleting = False
+            OptionsData.DeletingConfirmation = False
+            OptionsData.Inserting = False
+            OptionsView.ColumnAutoWidth = True
+            OptionsView.GroupByBox = False
+            OptionsView.Header = False
+            OptionsView.Indicator = True
+            object risChecked: TcxGridDBColumn
+              Caption = #1050#1086#1076
+              DataBinding.FieldName = 'isChecked'
+              PropertiesClassName = 'TcxCheckBoxProperties'
+              Properties.OnEditValueChanged = risCheckedPropertiesEditValueChanged
+              Width = 45
+            end
+            object rUnitName: TcxGridDBColumn
+              Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+              DataBinding.FieldName = 'UnitName'
+              Options.Editing = False
+              Width = 399
+            end
+          end
+          object cxGridLevel1: TcxGridLevel
+            Caption = #1050#1086#1085#1090#1088#1072#1082#1090
+            GridView = cxGridDBTableView1
+          end
         end
       end
       object Panel5: TPanel
-        Left = 460
+        Left = 537
         Top = 0
-        Width = 672
+        Width = 531
         Height = 151
         Align = alClient
         Caption = 'Panel5'
         ShowCaption = False
         TabOrder = 1
+        ExplicitLeft = 460
+        ExplicitWidth = 608
+        DesignSize = (
+          531
+          151)
         object cxLabel4: TcxLabel
           Left = 1
           Top = 1
           Align = alTop
           Caption = #1040#1087#1090#1077#1082#1080' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1072
           Properties.Alignment.Horz = taCenter
-          AnchorX = 336
-        end
-        object CheckListBoxAssortment: TCheckListBox
-          Left = 1
-          Top = 18
-          Width = 670
-          Height = 115
-          OnClickCheck = CheckListBoxAssortmentClickCheck
-          Align = alClient
-          ItemHeight = 13
-          TabOrder = 1
+          ExplicitWidth = 670
+          AnchorX = 266
         end
         object cxLabel10: TcxLabel
           Left = 1
@@ -101,18 +155,81 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           Align = alBottom
           Caption = #1042#1099#1073#1088#1072#1085#1086' 0'
           Properties.Alignment.Horz = taLeftJustify
+          ExplicitWidth = 670
+        end
+        object cxTextEdit2: TcxTextEdit
+          Left = 336
+          Top = 0
+          Anchors = [akTop, akRight]
+          TabOrder = 2
+          DesignSize = (
+            195
+            21)
+          Width = 195
+        end
+        object cxGridAssortment: TcxGrid
+          Left = 1
+          Top = 18
+          Width = 529
+          Height = 115
+          Align = alClient
+          TabOrder = 3
+          ExplicitLeft = 0
+          ExplicitTop = 21
+          ExplicitWidth = 263
+          ExplicitHeight = 210
+          object cxGridDBTableView2: TcxGridDBTableView
+            Navigator.Buttons.CustomButtons = <>
+            Navigator.Buttons.Insert.Visible = False
+            Navigator.Buttons.Append.Visible = False
+            Navigator.Buttons.Delete.Visible = False
+            Navigator.Buttons.Edit.Visible = False
+            Navigator.Buttons.Post.Visible = False
+            Navigator.Buttons.Cancel.Visible = False
+            Navigator.Buttons.Refresh.Visible = False
+            DataController.DataSource = UnitAssortmentDS
+            DataController.Summary.DefaultGroupSummaryItems = <>
+            DataController.Summary.FooterSummaryItems = <>
+            DataController.Summary.SummaryGroups = <>
+            OptionsData.CancelOnExit = False
+            OptionsData.Deleting = False
+            OptionsData.DeletingConfirmation = False
+            OptionsData.Inserting = False
+            OptionsView.ColumnAutoWidth = True
+            OptionsView.GroupByBox = False
+            OptionsView.Header = False
+            OptionsView.Indicator = True
+            object aisChecked: TcxGridDBColumn
+              Caption = #1050#1086#1076
+              DataBinding.FieldName = 'isChecked'
+              PropertiesClassName = 'TcxCheckBoxProperties'
+              Properties.OnEditValueChanged = aisCheckedPropertiesEditValueChanged
+              Width = 45
+            end
+            object aUnitName: TcxGridDBColumn
+              Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+              DataBinding.FieldName = 'UnitName'
+              Options.Editing = False
+              Width = 399
+            end
+          end
+          object cxGridLevel2: TcxGridLevel
+            Caption = #1050#1086#1085#1090#1088#1072#1082#1090
+            GridView = cxGridDBTableView2
+          end
         end
       end
     end
     object Panel3: TPanel
       Left = 1
       Top = 152
-      Width = 1132
+      Width = 1068
       Height = 64
       Align = alBottom
       Caption = 'Panel3'
       ShowCaption = False
       TabOrder = 1
+      ExplicitWidth = 1132
       object cxLabel1: TcxLabel
         Left = 8
         Top = 3
@@ -191,87 +308,110 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
       end
       object cbGoodsClose: TcxCheckBox
         Left = 511
-        Top = 3
+        Top = 2
         Caption = #1053#1077' '#1087#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1047#1072#1082#1088#1099#1090' '#1082#1086#1076
         State = cbsChecked
         TabOrder = 10
-        Width = 201
+        Width = 167
       end
       object cbMCSIsClose: TcxCheckBox
         Left = 511
-        Top = 22
+        Top = 16
         Caption = #1053#1077' '#1087#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1059#1073#1080#1090' '#1082#1086#1076' '
         TabOrder = 11
         Width = 201
       end
       object cbNotCheckNoMCS: TcxCheckBox
         Left = 511
-        Top = 42
+        Top = 30
         Caption = #1053#1077' '#1087#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1055#1088#1086#1076#1072#1078#1080' '#1085#1077' '#1076#1083#1103' '#1053#1058#1047
         TabOrder = 12
         Width = 217
       end
-      object ceResolutionParameter: TcxCurrencyEdit
-        Left = 170
-        Top = 42
-        Hint = 
-          #1043#1088#1072#1085#1080#1095#1085#1099#1081' '#1087#1072#1088#1072#1084#1077#1090#1088' '#1088#1072#1079#1088#1077#1096#1077#1085#1080#1103' '#1085#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1080#1083#1080' '#1079#1072#1082#1072#1079' '#1091' '#1087#1086#1089#1090#1072#1074#1097 +
-          #1080#1082#1072
-        EditValue = 1.000000000000000000
-        ParentShowHint = False
-        Properties.DecimalPlaces = 3
-        Properties.DisplayFormat = ',0.###'
-        ShowHint = True
-        TabOrder = 13
-        Width = 53
-      end
-      object cxLabel8: TcxLabel
-        Left = 8
-        Top = 43
-        Hint = 
-          #1043#1088#1072#1085#1080#1095#1085#1099#1081' '#1087#1072#1088#1072#1084#1077#1090#1088' '#1088#1072#1079#1088#1077#1096#1077#1085#1080#1103' '#1085#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1080#1083#1080' '#1079#1072#1082#1072#1079' '#1091' '#1087#1086#1089#1090#1072#1074#1097 +
-          #1080#1082#1072
-        Caption = #1043#1088#1072#1085#1080#1095'. '#1087#1072#1088#1072#1084#1077#1090#1088' '#1088#1072#1079#1088#1077#1096#1077#1085#1080#1103
-        ParentShowHint = False
-        ShowHint = True
-      end
-      object cbRemains: TcxCheckBox
-        Left = 718
-        Top = 22
-        Caption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103' > 0'
-        TabOrder = 15
-        Width = 171
-      end
-      object cbMCSValue: TcxCheckBox
-        Left = 718
-        Top = 3
-        Caption = #1059#1095#1080#1090#1099#1074#1072#1090#1100' '#1090#1086#1074#1072#1088' '#1089' '#1053#1058#1047' > 0'
-        TabOrder = 16
-        Width = 171
-      end
       object cbNeedRound: TcxCheckBox
-        Left = 879
-        Top = 22
+        Left = 751
+        Top = 44
         Caption = #1055#1086#1090#1088#1077#1073#1085#1086#1089#1090#1100' '#1086#1082#1088#1091#1075#1083#1103#1090#1100' '#1087#1086' '#1084#1072#1090' '#1087#1088#1080#1085#1094#1080#1087#1091
-        TabOrder = 17
+        TabOrder = 13
         Width = 234
       end
       object cbAssortmentRound: TcxCheckBox
-        Left = 879
-        Top = 3
+        Left = 511
+        Top = 44
         Caption = #1040#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090' '#1086#1082#1088#1091#1075#1083#1103#1090#1100' '#1087#1086' '#1084#1072#1090' '#1087#1088#1080#1085#1094#1080#1087#1091
-        TabOrder = 18
+        TabOrder = 14
         Width = 234
+      end
+      object ceThresholdMCS: TcxCurrencyEdit
+        Left = 919
+        Top = 5
+        EditValue = 0.000000000000000000
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.###'
+        TabOrder = 15
+        Width = 53
+      end
+      object ceThresholdRemains: TcxCurrencyEdit
+        Left = 919
+        Top = 25
+        EditValue = 0.000000000000000000
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.###'
+        TabOrder = 16
+        Width = 53
+      end
+      object cbMCSValue: TcxCheckBox
+        Left = 751
+        Top = 6
+        Caption = #1059#1095#1080#1090#1099#1074#1072#1090#1100' '#1090#1086#1074#1072#1088' '#1089' '#1053#1058#1047' '#1089
+        TabOrder = 17
+        Width = 167
+      end
+      object cbRemains: TcxCheckBox
+        Left = 751
+        Top = 25
+        Caption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103' '#1089
+        TabOrder = 18
+        Width = 167
+      end
+      object ceThresholdRemainsLarge: TcxCurrencyEdit
+        Left = 999
+        Top = 25
+        EditValue = 0.000000000000000000
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.###'
+        TabOrder = 19
+        Width = 53
+      end
+      object ceThresholdMCSLarge: TcxCurrencyEdit
+        Left = 999
+        Top = 5
+        EditValue = 0.000000000000000000
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.###'
+        TabOrder = 20
+        Width = 53
+      end
+      object cxLabel8: TcxLabel
+        Left = 977
+        Top = 6
+        Caption = #1087#1086
+      end
+      object cxLabel11: TcxLabel
+        Left = 977
+        Top = 26
+        Caption = #1087#1086
       end
     end
   end
   object cxGrid: TcxGrid
     Left = 0
     Top = 243
-    Width = 1134
+    Width = 1070
     Height = 390
     Align = alClient
     TabOrder = 5
+    ExplicitWidth = 1134
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.Filter.Options = [fcoCaseInsensitive]
@@ -794,27 +934,29 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
     Left = 408
     Top = 90
   end
-  object GetUnitsList: TdsdStoredProc
+  object GetUnitsRecipientList: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_UnitForSAUA'
-    DataSet = UnitsCDS
+    DataSet = UnitsRecipientCDS
     DataSets = <
       item
-        DataSet = UnitsCDS
+        DataSet = UnitsRecipientCDS
       end>
     Params = <>
     PackSize = 1
     Left = 128
     Top = 26
   end
-  object UnitsCDS: TClientDataSet
+  object UnitsRecipientCDS: TClientDataSet
     Aggregates = <>
+    IndexFieldNames = 'UnitName'
     Params = <>
-    Left = 216
+    AfterPost = UnitsRecipientCDSAfterPost
+    Left = 240
     Top = 26
   end
   object dsResult: TDataSource
     DataSet = cdsResult
-    Left = 216
+    Left = 248
     Top = 360
   end
   object cdsResult: TClientDataSet
@@ -891,14 +1033,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inResolutionParameter'
-        Value = Null
-        Component = ceResolutionParameter
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inisGoodsClose'
         Value = Null
         Component = cbGoodsClose
@@ -931,6 +1065,22 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inThresholdMCS'
+        Value = Null
+        Component = ceThresholdMCS
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inThresholdMCSLarge'
+        Value = Null
+        Component = ceThresholdMCSLarge
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisRemains'
         Value = Null
         Component = cbRemains
@@ -939,7 +1089,23 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAssortmentRound'
+        Name = 'inThresholdRemains'
+        Value = Null
+        Component = ceThresholdRemains
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inThresholdRemainsLarge'
+        Value = Null
+        Component = ceThresholdRemainsLarge
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAssortmentRound'
         Value = Null
         Component = cbAssortmentRound
         DataType = ftBoolean
@@ -947,7 +1113,7 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inNeedRound'
+        Name = 'inisNeedRound'
         Value = Null
         Component = cbNeedRound
         DataType = ftBoolean
@@ -1071,14 +1237,6 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inResolutionParameter'
-        Value = 1.000000000000000000
-        Component = ceResolutionParameter
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inisGoodsClose'
         Value = True
         Component = cbGoodsClose
@@ -1111,9 +1269,57 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inThresholdMCS'
+        Value = Null
+        Component = ceThresholdMCS
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inThresholdMCSLarge'
+        Value = Null
+        Component = ceThresholdMCSLarge
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisRemains'
         Value = Null
         Component = cbRemains
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inThresholdRemains'
+        Value = Null
+        Component = ceThresholdRemains
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inThresholdRemainsLarge'
+        Value = Null
+        Component = ceThresholdRemainsLarge
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAssortmentRound'
+        Value = Null
+        Component = cbAssortmentRound
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNeedRound'
+        Value = Null
+        Component = cbNeedRound
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1121,5 +1327,51 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
     PackSize = 1
     Left = 56
     Top = 520
+  end
+  object FieldFilterRecipient: TdsdFieldFilter
+    TextEdit = cxTextEdit1
+    DataSet = UnitsRecipientCDS
+    Column = rUnitName
+    CheckBoxList = <>
+    Left = 464
+    Top = 24
+  end
+  object FieldFilterAssortment: TdsdFieldFilter
+    TextEdit = cxTextEdit2
+    DataSet = UnitAssortmentCDS
+    Column = aUnitName
+    CheckBoxList = <>
+    Left = 936
+    Top = 32
+  end
+  object UnitAssortmentCDS: TClientDataSet
+    Aggregates = <>
+    IndexFieldNames = 'UnitName'
+    Params = <>
+    AfterPost = UnitAssortmentCDSAfterPost
+    Left = 696
+    Top = 34
+  end
+  object GetUnitsAssortmentList: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_UnitForSAUA'
+    DataSet = UnitAssortmentCDS
+    DataSets = <
+      item
+        DataSet = UnitAssortmentCDS
+      end>
+    Params = <>
+    PackSize = 1
+    Left = 608
+    Top = 34
+  end
+  object UnitsRecipientDS: TDataSource
+    DataSet = UnitsRecipientCDS
+    Left = 352
+    Top = 24
+  end
+  object UnitAssortmentDS: TDataSource
+    DataSet = UnitAssortmentCDS
+    Left = 792
+    Top = 32
   end
 end

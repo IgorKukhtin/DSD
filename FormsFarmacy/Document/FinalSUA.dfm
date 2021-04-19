@@ -210,6 +210,15 @@ inherited FinalSUAForm: TFinalSUAForm
             Options.Editing = False
             Width = 81
           end
+          object Price: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079'. '#1091' '#1086#1090#1087#1088#1072#1074'.'
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object AmountOI: TcxGridDBColumn
             Caption = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'AmountOI'
@@ -459,6 +468,58 @@ inherited FinalSUAForm: TFinalSUAForm
       ReportName = #1055#1088#1086#1076#1072#1078#1072
       ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072
     end
+    object matExecUpfdate_Multiplicity: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actExecuteDialogNeed
+      ActionList = <
+        item
+          Action = actUpdate_MI_FinalSUA_Need
+        end>
+      View = cxGridDBTableView
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1090#1088#1077#1073#1085#1086#1089#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1090#1088#1077#1073#1085#1086#1089#1090#1100
+      ImageIndex = 43
+    end
+    object actUpdate_MI_FinalSUA_Need: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = gpUpdate_MI_FinalSUA_Need
+      StoredProcList = <
+        item
+          StoredProc = gpUpdate_MI_FinalSUA_Need
+        end>
+      Caption = 'actExecUpfdate_Multiplicity'
+    end
+    object actExecuteDialogNeed: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteDialogUpdate_PercentWagesStore'
+      FormName = 'TIntegerDialogForm'
+      FormNameParam.Value = 'TIntegerDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Values'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Need'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'NeedLabel'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -557,6 +618,10 @@ inherited FinalSUAForm: TFinalSUAForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -611,6 +676,10 @@ inherited FinalSUAForm: TFinalSUAForm
       Action = actShowAll
       Category = 0
     end
+    object dxBarButton2: TdxBarButton
+      Action = matExecUpfdate_Multiplicity
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -663,6 +732,17 @@ inherited FinalSUAForm: TFinalSUAForm
         Name = 'TotalSummPrimeCost'
         Value = 0.000000000000000000
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Need'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'NeedLabel'
+        Value = #1042#1074#1077#1076#1080#1090#1077' '#1087#1086#1090#1088#1077#1073#1085#1086#1089#1090#1100
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 40
@@ -1050,5 +1130,57 @@ inherited FinalSUAForm: TFinalSUAForm
       end>
     Left = 536
     Top = 200
+  end
+  object gpUpdate_MI_FinalSUA_Need: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_FinalSUA'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Need'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 80
+    Top = 376
   end
 end

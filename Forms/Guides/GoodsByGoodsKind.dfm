@@ -547,6 +547,15 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 110
           end
+          object IsNewQuality: TcxGridDBColumn
+            Caption = #1053#1086#1074#1072#1103' '#1076#1077#1082#1083'. '#1089' '#1087#1072#1088#1072#1084'. "'#1042#1078#1080#1090#1080' '#1076#1086'" ('#1044#1072'/'#1053#1077#1090')'
+            DataBinding.FieldName = 'IsNewQuality'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1086#1074#1072#1103' '#1076#1077#1082#1083#1072#1088#1072#1094#1080#1103' '#1089' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1084' "'#1042#1078#1080#1090#1080' '#1076#1086'" ('#1044#1072'/'#1053#1077#1090')'
+            Options.Editing = False
+            Width = 110
+          end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
@@ -1092,6 +1101,20 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
         end>
       isShowModal = False
     end
+    object actUpdateNewQuality: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdateNewQuality
+      StoredProcList = <
+        item
+          StoredProc = spUpdateNewQuality
+        end>
+      Caption = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1042#1078#1080#1090#1080' '#1076#1086'" ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1042#1078#1080#1090#1080' '#1076#1086'" ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 77
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -1132,6 +1155,14 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateNewQuality'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocol'
         end
         item
@@ -1153,6 +1184,11 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
     end
     object bbProtocol: TdxBarButton
       Action = ProtocolOpenForm
+      Category = 0
+    end
+    object bbUpdateNewQuality: TdxBarButton
+      Action = actUpdateNewQuality
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1042#1078#1080#1090#1080' '#1076#1086'" ('#1044#1072'/'#1053#1077#1090')'
       Category = 0
     end
   end
@@ -1352,5 +1388,47 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
     PackSize = 1
     Left = 432
     Top = 112
+  end
+  object spUpdateNewQuality: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_GoodsByGoodsKind_isNewQuality'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsNewQuality'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'IsNewQuality'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 368
+    Top = 176
   end
 end

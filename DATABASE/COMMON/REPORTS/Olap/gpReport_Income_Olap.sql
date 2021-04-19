@@ -33,13 +33,11 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
 
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyId_Detail Integer, InfoMoneyCode_Detail Integer, InfoMoneyGroupName_Detail TVarChar, InfoMoneyDestinationName_Detail TVarChar, InfoMoneyName_Detail TVarChar, InfoMoneyName_all_Detail TVarChar
-
              , GoodsGroupNameFull TVarChar
              , GoodsGroupAnalystName TVarChar
              , TradeMarkName TVarChar
              , GoodsTagName TVarChar
              , GoodsPlatformName TVarChar
-             
              , PartnerName TVarChar
              )   
 AS
@@ -129,6 +127,7 @@ BEGIN
                                   WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                     AND MIContainer.MovementDescId = zc_Movement_Income()
                                     AND COALESCE (MIContainer.AccountId, 0) <> zc_Enum_Account_100301() -- прибыль текущего периода
+                                    AND COALESCE (MIContainer.AccountId, 0) <> zc_Enum_Account_110101()-- товар в пути
                                   GROUP BY MIContainer.ContainerId
                                          , MIContainer.MovementId
                                          , MIContainer.ObjectId_analyzer
@@ -236,6 +235,7 @@ BEGIN
                                   WHERE MIContainer.OperDate BETWEEN inStartDate2 AND inEndDate2
                                     AND MIContainer.MovementDescId = zc_Movement_Income()
                                     AND COALESCE (MIContainer.AccountId, 0) <> zc_Enum_Account_100301() -- прибыль текущего периода
+                                    AND COALESCE (MIContainer.AccountId, 0) <> zc_Enum_Account_110101()-- товар в пути
                                   GROUP BY MIContainer.ContainerId
                                          , MIContainer.MovementId
                                          , MIContainer.ObjectId_analyzer
