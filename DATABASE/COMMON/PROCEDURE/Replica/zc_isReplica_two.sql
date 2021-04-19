@@ -7,7 +7,7 @@ RETURNS Boolean
 AS
 $BODY$
 BEGIN 
-     RETURN FALSE;
+     RETURN TRUE;
 END;
 $BODY$
   LANGUAGE PLPGSQL IMMUTABLE;
@@ -31,6 +31,7 @@ limit 100000000
 
 -- select last_value + 1001 from _replica.table_update_data_two_id_seq
 -- alter sequence if exists _replica.table_update_data_id_seq restart with 4162328153;
+-- alter sequence if exists _replica.table_update_data_two_id_seq restart with 4971964134;
 
 
 -- тест

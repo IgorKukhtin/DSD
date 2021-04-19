@@ -1256,6 +1256,8 @@ type
     actReport_Supply_Olap: TdsdOpenForm;
     miReport_Supply_Olap: TMenuItem;
     actReason: TdsdOpenForm;
+    actMemberPriceList: TdsdOpenForm;
+    N238: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

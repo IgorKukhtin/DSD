@@ -222,7 +222,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
             item
-              Action = actChoiceFormGoods
+              Action = actChoiceFormGoods_1
               Default = True
               Kind = bkEllipsis
             end>
@@ -600,7 +600,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
             item
-              Action = actChoiceFormGoods
+              Action = actChoiceFormGoods_1
               Default = True
               Kind = bkEllipsis
             end>
@@ -615,7 +615,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
             item
-              Action = actChoiceFormGoods
+              Action = actChoiceFormGoods_1
               Default = True
               Kind = bkEllipsis
             end>
@@ -924,7 +924,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
             item
-              Action = actChoiceFormProdColorPattern2
+              Action = actChoiceFormProdColorPattern_2
               Default = True
               Kind = bkEllipsis
             end>
@@ -940,7 +940,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
             item
-              Action = actChoiceFormProdColor_goods
+              Action = actChoiceFormProdColor_goods_2
               Default = True
               Kind = bkEllipsis
             end>
@@ -993,7 +993,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
             item
-              Action = actChoiceFormGoods2
+              Action = actChoiceFormGoods_2
               Default = True
               Kind = bkEllipsis
             end>
@@ -1008,7 +1008,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
             item
-              Action = actChoiceFormGoods2
+              Action = actChoiceFormGoods_2
               Default = True
               Kind = bkEllipsis
             end>
@@ -1731,7 +1731,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableViewCh2
-      Action = actChoiceFormProdColorPattern2
+      Action = actChoiceFormProdColorPattern_2
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
@@ -1742,17 +1742,17 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = cxGridDBTableViewCh1
-      Action = actChoiceFormGoods
+      Action = actChoiceFormGoods_1
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ImageIndex = 0
     end
-    object actChoiceFormGoods2: TOpenChoiceForm
+    object actChoiceFormGoods_2: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'actChoiceFormGoods2'
+      Caption = 'actChoiceFormGoods_2'
       FormName = 'TGoodsForm'
       FormNameParam.Value = 'TGoodsForm'
       FormNameParam.DataType = ftString
@@ -1798,11 +1798,11 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         end>
       isShowModal = False
     end
-    object actChoiceFormGoods: TOpenChoiceForm
+    object actChoiceFormGoods_1: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'actChoiceFormGoods'
+      Caption = 'actChoiceFormGoods_1'
       FormName = 'TUnion_Goods_ReceiptServiceForm'
       FormNameParam.Value = 'TUnion_Goods_ReceiptServiceForm'
       FormNameParam.DataType = ftString
@@ -1847,11 +1847,11 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         end>
       isShowModal = False
     end
-    object actChoiceFormProdColor_goods: TOpenChoiceForm
+    object actChoiceFormProdColor_goods_2: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'actChoiceFormProdColor_goods'
+      Caption = 'actChoiceFormProdColor_goods_2'
       FormName = 'TProdColor_goodsForm'
       FormNameParam.Value = 'TProdColor_goodsForm'
       FormNameParam.DataType = ftString
@@ -1926,24 +1926,10 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           ComponentItem = 'EKPriceWVAT'
           DataType = ftFloat
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'BasisPrice'
-          Value = Null
-          Component = Child2CDS
-          ComponentItem = 'BasisPrice'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'BasisPriceWVAT'
-          Value = Null
-          Component = Child2CDS
-          ComponentItem = 'BasisPriceWVAT'
-          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
-    object dsdUpdateDataSet_Child2: TdsdUpdateDataSet
+    object actUpdateDataSet_Child2: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1976,11 +1962,11 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       Caption = 'actUpdateDataSet_Child1'
       DataSource = Child1DS
     end
-    object actChoiceFormProdColorPattern2: TOpenChoiceForm
+    object actChoiceFormProdColorPattern_2: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'actChoiceFormProdColorPattern2'
+      Caption = 'actChoiceFormProdColorPattern_2'
       FormName = 'TProdColorPatternForm'
       FormNameParam.Value = 'TProdColorPatternForm'
       FormNameParam.DataType = ftString
@@ -2014,33 +2000,6 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           Value = Null
           Component = Child2CDS
           ComponentItem = 'Article'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actChoiceFormProdColorPattern: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'actChoiceFormProdColorPattern'
-      FormName = 'TProdColorPatternForm'
-      FormNameParam.Value = 'TProdColorPatternForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = Child1CDS
-          ComponentItem = 'ProdColorPatternId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = Child1CDS
-          ComponentItem = 'ProdColorPatternName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -2135,6 +2094,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -2204,6 +2164,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = Value_ch1
@@ -2506,6 +2467,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>

@@ -180,7 +180,6 @@ object RoleForm: TRoleForm
       TabOrder = 1
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitLeft = -2
       object ActionGridView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ActionDS
@@ -277,21 +276,25 @@ object RoleForm: TRoleForm
     end
     object cxSplitterClient: TcxSplitter
       Left = 0
-      Top = 242
+      Top = 373
       Width = 372
       Height = 6
       AlignSplitter = salTop
-      Control = ProcessGrid
+      Control = UserGrid
+      ExplicitLeft = 24
+      ExplicitTop = 367
     end
     object AccessGrid: TcxGrid
       Left = 0
-      Top = 373
+      Top = 379
       Width = 372
-      Height = 128
+      Height = 122
       Align = alClient
       TabOrder = 5
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitTop = 373
+      ExplicitHeight = 128
       object AccessGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ProcessAccessDS
@@ -332,6 +335,14 @@ object RoleForm: TRoleForm
       object AccessGridLevel: TcxGridLevel
         GridView = AccessGridDBTableView
       end
+    end
+    object cxSplitter1: TcxSplitter
+      Left = 0
+      Top = 242
+      Width = 372
+      Height = 6
+      AlignSplitter = salTop
+      Control = ProcessGrid
     end
   end
   object DataSource: TDataSource
@@ -1094,10 +1105,13 @@ object RoleForm: TRoleForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 248
     Top = 272
   end
@@ -1144,10 +1158,13 @@ object RoleForm: TRoleForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 432
     Top = 208
   end
@@ -1185,10 +1202,13 @@ object RoleForm: TRoleForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 456
     Top = 48
   end
@@ -1238,10 +1258,13 @@ object RoleForm: TRoleForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 416
     Top = 320
   end
@@ -1351,10 +1374,13 @@ object RoleForm: TRoleForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 600
     Top = 464
   end

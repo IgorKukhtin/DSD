@@ -235,7 +235,10 @@ end if;
          SELECT tmpAmountDoc.GoodsId, tmpAmountDoc.GoodsKindId, tmpAmountDoc.Amount, tmpAmountDoc.TaxDoc, tmpAmountDoc.Amount / tmpAmountDoc.AmountDoc * 100 - 100
                 INTO vbGoodsId_err, vbGoodsKindId_err, vbAmount_err, vbTaxDoc_err, vbTaxMI_err
          FROM tmpAmountDoc
+              LEFT JOIN MovementLinkObject AS MLO ON MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract()
+              LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MLO.ObjectId
          WHERE tmpAmountDoc.AmountStart > 0 AND NOT (tmpAmountDoc.Amount BETWEEN tmpAmountDoc.AmountStart AND tmpAmountDoc.AmountEnd)
+           AND COALESCE (Object_Contract.ValueData, '') NOT ILIKE '%ξαμεν%'
          LIMIT 1
          ;
          --

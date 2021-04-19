@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , DaysQ TFloat
              , NormRem TFloat, NormOut TFloat
              , isOrder Boolean, isScaleCeh Boolean, isNotMobile Boolean
+             , isNewQuality Boolean
              , GoodsSubId Integer, GoodsSubCode Integer, GoodsSubName TVarChar, MeasureSubName TVarChar
              , GoodsKindSubId Integer, GoodsKindSubName TVarChar
              , GoodsSubSendId Integer, GoodsSubSendCode Integer, GoodsSubSendName TVarChar, MeasureSubSendName TVarChar
@@ -182,6 +183,7 @@ BEGIN
            , COALESCE (ObjectBoolean_Order.ValueData, False)           AS isOrder
            , COALESCE (ObjectBoolean_ScaleCeh.ValueData, False)        AS isScaleCeh
            , COALESCE (ObjectBoolean_NotMobile.ValueData, False)       AS isNotMobile
+           , COALESCE (ObjectBoolean_NewQuality.ValueData, False)      AS isNewQuality
 
            , Object_GoodsSub.Id               AS GoodsSubId
            , Object_GoodsSub.ObjectCode       AS GoodsSubCode
@@ -325,6 +327,10 @@ BEGIN
                                     ON ObjectBoolean_NotMobile.ObjectId = Object_GoodsByGoodsKind_View.Id
                                    AND ObjectBoolean_NotMobile.DescId = zc_ObjectBoolean_GoodsByGoodsKind_NotMobile()
 
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_NewQuality
+                                    ON ObjectBoolean_NewQuality.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                   AND ObjectBoolean_NewQuality.DescId = zc_ObjectBoolean_GoodsByGoodsKind_NewQuality()
+
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = Object_GoodsByGoodsKind_View.GoodsId
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
@@ -445,6 +451,7 @@ ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 18.04.21        *
  25.03.21        *
  19.02.21        * DaysQ
  10.04.20        *

@@ -66,13 +66,19 @@ BEGIN
      -- Нашли
      SELECT tmp.PartionId
           , tmp.GoodsId
-    INTO vbPartionId, vbGoodsId
+            INTO vbPartionId, vbGoodsId
      FROM gpGet_MISale_Partion_byBarCode (inBarCode, inSession) AS tmp;
 
      -- проверка
      IF COALESCE (vbPartionId, 0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка.Ошибка в Штрихкоде <%>.', inBarCode;
+     END IF;
+
+     -- проверка
+     IF zfCalc_SummBarCode (inBarCode) <> SUBSTRING (inBarCode FROM 13 FOR 1)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Ошибка в Контрольной цифре <%> для Штрихкода = <%>.', zfCalc_SummBarCode (inBarCode), inBarCode;
      END IF;
 
      -- из шапки берем подразделение для остатков

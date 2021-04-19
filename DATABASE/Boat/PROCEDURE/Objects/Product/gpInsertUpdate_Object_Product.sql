@@ -202,7 +202,8 @@ BEGIN
                                                                     , inComment            := ''
                                                                     , inUserId             := vbUserId
                                                                     );
-   ELSE
+   ELSEIF NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId_OrderClient AND Movement.StatusId = zc_Enum_Status_Complete())
+   THEN
        -- пересохраняем
        PERFORM lpInsertUpdate_Movement_OrderClient(ioId               := inMovementId_OrderClient  ::Integer
                                                  , inInvNumber        := tmp.InvNumber ::TVarChar

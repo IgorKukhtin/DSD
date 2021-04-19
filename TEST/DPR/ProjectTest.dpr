@@ -1250,7 +1250,9 @@ uses
   Report_SupplyDialog in '..\..\Forms\Report\Report_SupplyDialog.pas' {Report_SupplyDialogForm: TParentForm},
   Report_Supply_Olap in '..\..\Forms\Report\Report_Supply_Olap.pas' {Report_Supply_OlapForm: TParentForm},
   Report_Supply_OlapDialog in '..\..\Forms\Report\Report_Supply_OlapDialog.pas' {Report_Supply_OlapDialogForm: TParentForm},
-  ReturnKind in '..\..\Forms\Kind\ReturnKind.pas' {ReturnKindForm: TParentForm};
+  ReturnKind in '..\..\Forms\Kind\ReturnKind.pas' {ReturnKindForm: TParentForm},
+  MemberPriceList in '..\..\Forms\Guides\MemberPriceList.pas' {MemberPriceListForm: TParentForm},
+  MemberPriceListEdit in '..\..\Forms\Guides\MemberPriceListEdit.pas' {MemberPriceListEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

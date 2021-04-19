@@ -29,7 +29,7 @@ BEGIN
      vbProductId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Product());
 
      -- таблица - элементы документа, со всеми свойствами
-     CREATE TEMP TABLE _tmpItem_all (ObjectId_parent_find Integer, ObjectId_parent Integer, ObjectId Integer, ObjectDescId Integer
+     CREATE TEMP TABLE _tmpItem_all (ObjectId_parent_find Integer, ObjectId_parent Integer, ObjectId Integer
                                    , ProdOptionsId Integer
                                    , ColorPatternId Integer
                                    , ProdColorPatternId  Integer
@@ -40,12 +40,14 @@ BEGIN
      -- таблица - элементы документа, по партиям
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
                                , ContainerId_Goods Integer
-                               , ObjectId Integer, PartionId Integer
+                               , ObjectId_parent_find Integer, ObjectId_parent Integer, ObjectId Integer, PartionId Integer
+                               , ProdOptionsId Integer
+                               , ColorPatternId Integer
                                , ProdColorPatternId  Integer
+                               , ProdColorName TVarChar
                                , OperCount TFloat
                                , OperCountPartner TFloat
-                               , OperPricePartner TFloat
-                               , ObjectDescId Integer
+                               , OperPrice TFloat
                                 ) ON COMMIT DROP;
 
      -- элементы документа
@@ -173,7 +175,7 @@ BEGIN
                                     --
                                   , lpSelect.ProdColorPatternId
                                     -- только если по факту это опция
-                                  , COALESCE (tmpProdOptItems.ProdOptionsId, 0) AS ProdOptionsId
+                                  , tmpProdOptItems.ProdOptionsId
 
                                   , tmpProdColorItems.ProdColorName
 
@@ -217,11 +219,10 @@ BEGIN
                              WHERE COALESCE (lpSelect.ProdColorPatternId, 0) = 0
                             )
      -- Результат
-     INSERT INTO _tmpItem_all (ObjectId_parent_find, ObjectId_parent, ObjectId, ObjectDescId, ProdOptionsId, ColorPatternId, ProdColorPatternId, ProdColorName, OperCount_parent, OperCount, OperPrice)
+     INSERT INTO _tmpItem_all (ObjectId_parent_find, ObjectId_parent, ObjectId, ProdOptionsId, ColorPatternId, ProdColorPatternId, ProdColorName, OperCount_parent, OperCount, OperPrice)
         SELECT 0 AS ObjectId_parent_find
              , tmpRes.ObjectId_parent
              , tmpRes.ObjectId
-             , COALESCE (Object_Object.DescId, 0) AS ObjectDescId
                --
              , tmpRes.ProdOptionsId
              , ObjectLink_ColorPattern.ChildObjectId AS ColorPatternId
@@ -231,7 +232,6 @@ BEGIN
              , tmpRes.OperCount
              , tmpRes.OperPrice
         FROM tmpRes
-             LEFT JOIN Object AS Object_Object ON Object_Object.Id = tmpRes.ObjectId
              -- Шаблон Boat Structure
              LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
                                   ON ObjectLink_ColorPattern.ObjectId = tmpRes.ProdColorPatternId
@@ -402,113 +402,17 @@ BEGIN
     END IF;
 
 
-    -- сначала все удалили
-    PERFORM lpSetErased_MovementItem (inMovementItemId:= MovementItem.Id, inUserId:= inUserId)
-    FROM MovementItem
-    WHERE MovementItem.MovementId = inMovementId
-      AND MovementItem.DescId     = zc_MI_Child()
-      AND MovementItem.isErased   = FALSE
-    ;
+    -- !!!элементы документа, по партиям!!!
+    WITH -- группируем по узлам - если есть
+         tmpRes_group AS   (SELECT CASE WHEN tmpRes.ObjectId_parent_find > 0 THEN tmpRes.ObjectId_parent_find  WHEN tmpRes.ObjectId_parent > 0 THEN tmpRes.ObjectId_parent  ELSE tmpRes.ObjectId  END AS ObjectId
+                                 , CASE WHEN tmpRes.ObjectId_parent_find > 0 THEN tmpRes.OperCount_parent      WHEN tmpRes.ObjectId_parent > 0 THEN tmpRes.ObjectId_parent  ELSE tmpRes.OperCount END AS OperCount
+                             FROM _tmpItem_all AS tmpRes
+                                  -- через услуги - ограничим одной строчкой
+                                  LEFT JOIN Object ON Object.Id = tmpRes.ObjectId
 
-    -- 1. формируем заново -  Количество шаблон сборки 
-    PERFORM lpInsertUpdate_MI_OrderClient_Child (ioId                  := 0
-                                               , inParentId            := NULL
-                                               , inMovementId          := inMovementId
-                                               , inPartionId           := NULL
-                                               , inObjectId            := CASE WHEN _tmpItem.ObjectId > 0 THEN _tmpItem.ObjectId ELSE _tmpItem.ProdColorPatternId END
-                                               , inGoodsId             := _tmpItem.ObjectId_parent
-                                               , inAmountBasis         := _tmpItem.OperCount
-                                               , inAmount              := CASE WHEN _tmpItem.ObjectDescId = zc_Object_ReceiptService() THEN _tmpItem.OperCount ELSE 0 END
-                                               , inAmountPartner       := 0 -- !!!временно!!!
-                                                                          -- CASE WHEN _tmpItem.ObjectId_parent > 0 THEN 0 ELSE _tmpItem.OperCount END
-                                               , inOperPrice           := _tmpItem.OperPrice
-                                               , inCountForPrice       := 1
-                                               , inUnitId              := NULL
-                                               , inPartnerId           := OL_Goods_Partner.ChildObjectId
-                                               , inColorPatternId      := _tmpItem.ColorPatternId
-                                               , inProdColorPatternId  := _tmpItem.ProdColorPatternId
-                                               , inProdOptionsId       := _tmpItem.ProdOptionsId
-                                               , inUserId              := inUserId
-                                                )
-    FROM (-- Собрали Узлы
-          SELECT 0 AS ObjectId_parent
-               , CASE WHEN _tmpItem.ObjectId_parent_find > 0 THEN _tmpItem.ObjectId_parent_find ELSE _tmpItem.ObjectId_parent END AS ObjectId
-               , _tmpItem.OperCount_parent AS OperCount
-               , SUM (_tmpItem.OperCount * _tmpItem.OperPrice) / CASE WHEN _tmpItem.OperCount_parent > 0 THEN _tmpItem.OperCount_parent ELSE 1 END AS OperPrice
-               , 0 AS ColorPatternId
-               , 0 AS ProdColorPatternId
-               , CASE WHEN _tmpItem.ProdColorPatternId > 0 THEN 0 ELSE _tmpItem.ProdOptionsId END AS ProdOptionsId
-               , 0 AS ObjectDescId
-          FROM _tmpItem_all AS _tmpItem
-               -- цена для Узел
-             --LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
-             --                      ON ObjectFloat_EKPrice.DescId   = zc_ObjectFloat_Goods_EKPrice()
-             --                     AND ObjectFloat_EKPrice.ObjectId = CASE WHEN _tmpItem.ObjectId_parent_find > 0 THEN _tmpItem.ObjectId_parent_find
-             --                                                             ELSE _tmpItem.ObjectId_parent
-             --                                                        END
-          WHERE _tmpItem.ObjectId_parent <> 0
-          GROUP BY CASE WHEN _tmpItem.ObjectId_parent_find > 0 THEN _tmpItem.ObjectId_parent_find ELSE _tmpItem.ObjectId_parent END
-                 , _tmpItem.OperCount_parent
-                 , CASE WHEN _tmpItem.ProdColorPatternId > 0 THEN 0 ELSE _tmpItem.ProdOptionsId END
-         UNION
-          -- Все Составляющие
-          SELECT DISTINCT
-                 CASE WHEN _tmpItem.ObjectId_parent_find > 0 THEN _tmpItem.ObjectId_parent_find ELSE _tmpItem.ObjectId_parent END AS ObjectId_parent
-               , _tmpItem.ObjectId
-               , _tmpItem.OperCount
-               , _tmpItem.OperPrice
-               , _tmpItem.ColorPatternId
-               , _tmpItem.ProdColorPatternId
-               , _tmpItem.ProdOptionsId
-               , _tmpItem.ObjectDescId
-          FROM _tmpItem_all AS _tmpItem
-         ) AS _tmpItem
-         LEFT JOIN ObjectLink AS OL_Goods_Partner
-                              ON OL_Goods_Partner.ObjectId = _tmpItem.ObjectId
-                             AND OL_Goods_Partner.DescId   = zc_ObjectLink_Goods_Partner()
-        ;
-
-
-
-    -- !!!2.элементы документа, по партиям!!!
-    WITH -- только ObjectId
-         tmpItem AS   (SELECT MovementItem.Id                        AS MovementItemId
-                            , MILinkObject_Partner.ObjectId          AS PartnerId
-               
-                            , MovementItem.ObjectId                  AS ObjectId
-                            , MILinkObject_ProdColorPattern.ObjectId AS ProdColorPatternId
-               
-                            , MIFloat_AmountBasis.ValueData          AS AmountBasis
-                            , MIFloat_OperPrice.ValueData            AS OperPrice
-                            
-                            , COALESCE (Object_Object.DescId, 0)     AS ObjectDescId
-              
-                       FROM MovementItem
-                            LEFT JOIN Object AS Object_Object ON Object_Object.Id = MovementItem.ObjectId
-                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
-                                                             ON MILinkObject_Partner.MovementItemId = MovementItem.Id
-                                                            AND MILinkObject_Partner.DescId         = zc_MILinkObject_Partner()
-                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                                            AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
-                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
-                                                             ON MILinkObject_Goods.MovementItemId = MovementItem.Id
-                                                            AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods()
-                            LEFT JOIN MovementItemLinkObject AS MILinkObject_ProdColorPattern
-                                                             ON MILinkObject_ProdColorPattern.MovementItemId = MovementItem.Id
-                                                            AND MILinkObject_ProdColorPattern.DescId         = zc_MILinkObject_ProdColorPattern()
-                            LEFT JOIN MovementItemFloat AS MIFloat_AmountBasis
-                                                        ON MIFloat_AmountBasis.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_AmountBasis.DescId         = zc_MIFloat_AmountBasis()
-                            LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
-                                                        ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
-                       WHERE MovementItem.MovementId = inMovementId
-                         AND MovementItem.DescId     = zc_MI_Child()
-                         AND MovementItem.isErased   = FALSE
-                         -- !!! без этой структуры !!!
-                         AND COALESCE (MILinkObject_Goods.ObjectId, 0) = 0
-                      )
+                             WHERE COALESCE (tmpRes.ObjectId_parent, 0) = 0
+                               OR (tmpRes.ObjectId_parent > 0 AND Object.DescId = zc_Object_ReceiptService())
+                            )
             -- существующие резервы
           , tmpOrderClient AS (SELECT MovementItem.PartionId
                                     , SUM (MovementItem.Amount) AS Amount
@@ -516,8 +420,6 @@ BEGIN
                                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                            AND MovementItem.DescId     = zc_MI_Child()
                                                            AND MovementItem.isErased   = FALSE
-                                                           -- ограничили товарами
-                                                           AND MovementItem.ObjectId IN (SELECT tmpItem.ObjectId FROM tmpItem)
                                WHERE Movement.DescId   = zc_Movement_OrderClient()
                                  AND Movement.StatusId = zc_Enum_Status_Complete()
                                GROUP BY MovementItem.PartionId
@@ -532,7 +434,7 @@ BEGIN
                              WHERE Container.DescId = zc_Container_Count()
                                AND Container.Amount - COALESCE (tmpOrderClient.Amount, 0) > 0
                                -- ограничили товарами
-                               AND Container.ObjectId IN (SELECT tmpItem.ObjectId FROM tmpItem)
+                               AND Container.ObjectId IN (SELECT tmpRes_group.ObjectId FROM tmpRes_group)
                                -- !!! временно для отладки
                                AND NOT EXISTS (SELECT 1 FROM MovementString AS MS WHERE MS.ValueData = '1' AND MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_Comment())
 
@@ -542,13 +444,13 @@ BEGIN
                                   , Container.PartionId    AS PartionId
                                   , Container.ObjectId     AS ObjectId
                                   , Container.Amount       AS ContainerAmount
-                                  , tmpItem.AmountBasis    AS OperCount
+                                  , tmpRes_group.OperCount AS OperCount
                                   , SUM (Container.Amount) OVER (PARTITION BY Container.ObjectId
                                                                  ORDER BY Object_PartionGoods.OperDate ASC, Container.Id ASC
                                                                 ) AS ContainerAmountSUM
                              FROM tmpContainer_all AS Container
                                   LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = Container.PartionId
-                                  LEFT JOIN tmpItem ON tmpItem.ObjectId = Container.ObjectId
+                                  LEFT JOIN tmpRes_group ON tmpRes_group.ObjectId = Container.ObjectId
                             )
             -- разбили по партиям
           , tmpRes_partion AS
@@ -563,101 +465,114 @@ BEGIN
                     WHERE DD.OperCount - (DD.ContainerAmountSUM - DD.ContainerAmount) > 0
                    )
      -- Результат
-     INSERT INTO _tmpItem (MovementItemId, ContainerId_Goods, ObjectId, PartionId, ProdColorPatternId, OperCount, OperCountPartner, OperPricePartner, ObjectDescId)
-        -- 0.1. Остатки
-        SELECT tmpItem.MovementItemId
-               -- нашли!!
-             , tmpRes_partion.ContainerId
-               -- 
-             , tmpItem.ObjectId
+     INSERT INTO _tmpItem (ContainerId_Goods, ObjectId_parent_find, ObjectId_parent, ObjectId, PartionId, ProdOptionsId, ColorPatternId, ProdColorPatternId, ProdColorName, OperCount, OperCountPartner, OperPrice)
+        SELECT tmpRes_partion.ContainerId
+             , tmpRes.ObjectId_parent_find
+             , tmpRes.ObjectId_parent
+               -- заменили!!
+             , COALESCE (tmpRes_partion.ObjectId, tmpRes.ObjectId) AS ObjectId
                -- нашли!!
              , tmpRes_partion.PartionId
                --
-             , tmpItem.ProdColorPatternId
+             , tmpRes.ProdOptionsId
+             , tmpRes.ColorPatternId
+             , tmpRes.ProdColorPatternId
+             , tmpRes.ProdColorName
                -- нашли!!
              , COALESCE (tmpRes_partion.OperCount, 0) AS OperCount
                -- 
-             , 0 AS OperCountPartner
+             , CASE WHEN tmpRes.ObjectId_parent > 0 AND tmpRes_partion.OperCount > 0
+                         -- если нашли узел + нашли остаток, сумма услуг обнуляется
+                         THEN 0
+                    ELSE -- для заказа оставили сколько не хватает
+                         tmpRes.OperCount - COALESCE (tmpRes_partion_total.OperCount, 0)
+               END AS OperCountPartner
                     
-               -- нашли, хотя для остатка - информативно
-             , COALESCE (ObjectFloat_EKPrice.ValueData, 0) AS OperPricePartner
-             
-             , tmpItem.ObjectDescId
+               -- нашли для узла
+             , COALESCE (ObjectFloat_EKPrice.ValueData, tmpRes.OperPrice) AS OperPrice
 
-        FROM tmpItem
-             INNER JOIN tmpRes_partion ON tmpRes_partion.ObjectId = tmpItem.ObjectId
-             -- цена
+        FROM _tmpItem_all AS tmpRes
+             LEFT JOIN tmpRes_partion ON tmpRes_partion.ObjectId = CASE WHEN tmpRes.ObjectId_parent_find > 0 THEN tmpRes.ObjectId_parent_find
+                                                                        WHEN tmpRes.ObjectId_parent      > 0 THEN tmpRes.ObjectId_parent
+                                                                        ELSE tmpRes.ObjectId
+                                                                   END
+             -- цена для замены, если нашли готовый Узел
              LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
                                    ON ObjectFloat_EKPrice.DescId   = zc_ObjectFloat_Goods_EKPrice()
-                                  AND ObjectFloat_EKPrice.ObjectId = tmpItem.ObjectId
+                                  AND ObjectFloat_EKPrice.ObjectId = CASE WHEN tmpRes.ObjectId_parent_find > 0 THEN tmpRes.ObjectId_parent_find
+                                                                          WHEN tmpRes.ObjectId_parent      > 0 THEN tmpRes.ObjectId_parent
+                                                                          ELSE tmpRes.ObjectId
+                                                                     END
+                                  -- !!!если нашли остаток!!!
+                                  AND tmpRes_partion.OperCount     > 0
 
-       UNION ALL
-        -- 0.2. Заказ
-        SELECT tmpItem.MovementItemId
-               -- 
-             , 0 AS ContainerId_Goods
-               -- 
-             , tmpItem.ObjectId
-               --
-             , 0 AS PartionId
-               --
-             , tmpItem.ProdColorPatternId
-               --
-             , 0 AS OperCount
-
-             , -- для заказа оставили сколько не хватает
-               tmpItem.AmountBasis - COALESCE (tmpRes_partion_total.OperCount, 0) AS OperCountPartner
-                    
-               -- нашли
-             , COALESCE (ObjectFloat_EKPrice.ValueData, 0) AS OperPricePartner
-
-             , tmpItem.ObjectDescId
-
-        FROM tmpItem
-             -- цена
-             LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
-                                   ON ObjectFloat_EKPrice.DescId   = zc_ObjectFloat_Goods_EKPrice()
-                                  AND ObjectFloat_EKPrice.ObjectId = tmpItem.ObjectId
+             -- если в остатках есть готовый Узел, ограничим одной строчкой
+             LEFT JOIN tmpRes_partion AS tmpRes_partion_find ON tmpRes_partion_find.ObjectId = CASE WHEN tmpRes.ObjectId_parent_find > 0 THEN tmpRes.ObjectId_parent_find
+                                                                                                    WHEN tmpRes.ObjectId_parent      > 0 THEN tmpRes.ObjectId_parent
+                                                                                               END
 
              -- итого по партиям, а сколько не хватает - заказ у поставщика
              LEFT JOIN (SELECT tmpRes_partion.ObjectId, SUM (tmpRes_partion.OperCount) AS OperCount FROM tmpRes_partion GROUP BY tmpRes_partion.ObjectId
-                       ) AS tmpRes_partion_total ON tmpRes_partion_total.ObjectId = tmpItem.ObjectId
-        -- если нужен заказ
-        WHERE tmpItem.AmountBasis - COALESCE (tmpRes_partion_total.OperCount, 0) > 0
+                       ) AS tmpRes_partion_total ON tmpRes_partion_total.ObjectId = tmpRes.ObjectId
+                                                -- для узлов не надо
+                                                AND tmpRes.ObjectId_parent        = 0
+
+             -- через услуги - ограничим одной строчкой
+             LEFT JOIN Object ON Object.Id = tmpRes.ObjectId
+
+        WHERE tmpRes_partion_find.ObjectId IS NULL
+           OR Object.DescId = zc_Object_ReceiptService()
         ;
 
 
-    -- Заказ Поставщику
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPricePartner(), _tmpItem.MovementItemId, _tmpItem.OperPricePartner)
-          , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(),    _tmpItem.MovementItemId, _tmpItem.OperCountPartner)
-    FROM _tmpItem
-    WHERE _tmpItem.ContainerId_Goods = 0
-      AND _tmpItem.ObjectDescId      <> zc_Object_ReceiptService() 
-   ;
+    -- Проверка
+    IF EXISTS (SELECT 1
+               FROM _tmpItem
+                   JOIN _tmpItem AS _tmpItem_find
+                                 ON _tmpItem_find.ObjectId_parent = _tmpItem.ObjectId_parent
+                                 AND COALESCE (_tmpItem_find.ObjectId_parent_find, 0) <> COALESCE (_tmpItem.ObjectId_parent_find, 0)
+               WHERE _tmpItem.ObjectId_parent > 0
+              )
+    --AND 1=0
+    THEN
+        RAISE EXCEPTION 'Ошибка-2.Не у всех элементов одинаковый ObjectId_parent.';
+    END IF;
 
+
+    -- сначала все удалили
+    PERFORM lpSetErased_MovementItem (inMovementItemId:= MovementItem.Id, inUserId:= inUserId)
+    FROM MovementItem
+    WHERE MovementItem.MovementId = inMovementId
+      AND MovementItem.DescId     = zc_MI_Child()
+      AND MovementItem.isErased   = FALSE
+    ;
 
     -- формируем заново
     PERFORM lpInsertUpdate_MI_OrderClient_Child (ioId                  := 0
-                                               , inParentId            := _tmpItem.MovementItemId
                                                , inMovementId          := inMovementId
                                                , inPartionId           := _tmpItem.PartionId
                                                , inObjectId            := _tmpItem.ObjectId
-                                               , inGoodsId             := NULL
-                                               , inAmountBasis         := 0
+                                               , inGoodsId             := CASE WHEN _tmpItem.ObjectId_parent_find > 0 THEN _tmpItem.ObjectId_parent_find WHEN _tmpItem.ObjectId <> _tmpItem.ObjectId_parent THEN _tmpItem.ObjectId_parent ELSE 0 END
                                                , inAmount              := _tmpItem.OperCount
-                                               , inAmountPartner       := 0
-                                               , inOperPrice           := _tmpItem.OperPricePartner -- информативно
+                                               , inAmountPartner       := _tmpItem.OperCountPartner
+                                               , inOperPrice           := _tmpItem.OperPrice
                                                , inCountForPrice       := 1
                                                , inUnitId              := CLO_Unit.ObjectId
-                                               , inPartnerId           := COALESCE ((SELECT Object_PartionGoods.FromId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = _tmpItem.PartionId ), 0)
-                                               , inColorPatternId      := NULL
-                                               , inProdColorPatternId  := NULL
-                                               , inProdOptionsId       := NULL
+                                               , inPartnerId           := COALESCE ((SELECT Object_PartionGoods.FromId FROM Object_PartionGoods WHERE Object_PartionGoods.ObjectId = _tmpItem.ObjectId ORDER BY Object_PartionGoods.OperDate DESC, Object_PartionGoods.MovementItemId DESC LIMIT 1)
+                                                                                  , (SELECT OL_Goods_Partner.ChildObjectId FROM ObjectLink AS OL_Goods_Partner WHERE OL_Goods_Partner.ObjectId = _tmpItem.ObjectId AND OL_Goods_Partner.DescId = zc_ObjectLink_Goods_Partner())
+                                                                                   )
+/*            LEFT JOIN ObjectLink AS OL_Goods_Partner_goods
+                                 ON OL_Goods_Partner_goods.ObjectId =  Object_Goods.Id
+                                AND OL_Goods_Partner_goods.DescId   = zc_ObjectLink_Goods_Partner()
+            LEFT JOIN Object AS Object_Partner_goods ON Object_Partner_goods.Id     = OL_Goods_Partner_goods.ChildObjectId*/
+                                               , inColorPatternId      := _tmpItem.ColorPatternId
+                                               , inProdColorPatternId  := _tmpItem.ProdColorPatternId
+                                               , inProdOptionsId       := _tmpItem.ProdOptionsId
                                                , inUserId              := inUserId
                                                 )
     FROM _tmpItem
          LEFT JOIN ContainerLinkObject AS CLO_Unit ON CLO_Unit.ContainerId = _tmpItem.ContainerId_Goods AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
-    WHERE _tmpItem.ContainerId_Goods > 0;
+    WHERE _tmpItem.ObjectId > 0;
 
 
 
@@ -720,15 +635,15 @@ BEGIN
 
     END IF;
 
-/*
+
     -- Результат
     RETURN QUERY
-       SELECT 0 :: Integer AS MovementItemId
+       SELECT _tmpItem.MovementItemId
             , _tmpItem.ContainerId_Goods
             , _tmpItem.ObjectId_parent
             , _tmpItem.ObjectId_parent_find
             , _tmpItem.ObjectId
-            , 0 :: Integer AS PartionId
+            , _tmpItem.PartionId
             , _tmpItem.ProdOptionsId
             , _tmpItem.ColorPatternId
             , _tmpItem.ProdColorPatternId
@@ -736,8 +651,8 @@ BEGIN
             , _tmpItem.OperCount
             , _tmpItem.OperCount
             , _tmpItem.OperPrice
-        FROM _tmpItem_all AS _tmpItem
-       ;*/
+        FROM _tmpItem
+       ;
 
     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
     PERFORM lpComplete_Movement (inMovementId := inMovementId
