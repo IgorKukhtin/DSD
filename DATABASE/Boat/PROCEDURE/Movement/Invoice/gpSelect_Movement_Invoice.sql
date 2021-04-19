@@ -1,10 +1,13 @@
 -- Function: gpSelect_Movement_Invoice()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Invoice (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_InvoiceChoice (TDateTime, TDateTime, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Invoice (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Invoice(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
+    IN inClientId      Integer ,
     IN inIsErased      Boolean ,
     IN inSession       TVarChar    -- сессия пользователя
 )
@@ -322,7 +325,8 @@ BEGIN
                  
                          -- оплаты из документа BankAccount
                          LEFT JOIN tmpMLM_BankAccount ON tmpMLM_BankAccount.MovementChildId = Movement.Id
-                 
+                     WHERE Object_Object.Id = inClientId 
+                        OR inClientId = 0
                                    )
     -- Результат
     SELECT     
@@ -415,4 +419,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_Movement_Invoice(inStartDate := ('01.01.2021')::TDateTime , inEndDate := ('18.02.2021')::TDateTime , inIsErased := 'False' ,  inSession := zfCalc_UserAdmin());
+-- select * from gpSelect_Movement_Invoice(inStartDate := ('01.01.2021')::TDateTime , inEndDate := ('18.02.2021')::TDateTime , inClientId:=0, inIsErased := 'False' ,  inSession := zfCalc_UserAdmin());

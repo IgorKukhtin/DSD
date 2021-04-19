@@ -1406,6 +1406,12 @@ object OrderClientJournalForm: TOrderClientJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inClientId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsErased'
         Value = Null
         Component = actShowErased

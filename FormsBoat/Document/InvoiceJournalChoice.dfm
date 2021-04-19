@@ -987,7 +987,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
     Top = 59
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_InvoiceChoice'
+    StoredProcName = 'gpSelect_Movement_Invoice'
     Params = <
       item
         Name = 'inStartDate'

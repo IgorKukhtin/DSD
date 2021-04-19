@@ -1488,7 +1488,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_OrderClientChoice'
+    StoredProcName = 'gpSelect_Movement_OrderClient'
     DataSet = ClientDataSet
     DataSets = <
       item

@@ -1,14 +1,17 @@
--- Function: gpSelect_Movement_OrderClient()
+-- Function: gpSelect_Movement_OrderClientChoice()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_OrderClient (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_OrderClientChoice (TDateTime, TDateTime, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_OrderClient (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderClient(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
+    IN inClientId      Integer  , 
     IN inIsErased      Boolean ,
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar
+RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar, InvNumberPartner TVarChar
              , OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , PriceWithVAT Boolean
@@ -82,11 +85,14 @@ BEGIN
                                     LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Invoice
                                                                    ON MovementLinkMovement_Invoice.MovementId = Movement_OrderClient.Id
                                                                   AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
+                               WHERE MovementLinkObject_From.ObjectId = inClientId 
+                                  OR inClientId = 0
                               )
 
 
         SELECT Movement_OrderClient.Id
              , zfConvert_StringToNumber (Movement_OrderClient.InvNumber) AS InvNumber
+             , ('№ ' || Movement_OrderClient.InvNumber || ' от ' || zfConvert_DateToString (Movement_OrderClient.OperDate) :: TVarChar ) :: TVarChar  AS InvNumber_Full
              , Movement_OrderClient.InvNumberPartner
              , Movement_OrderClient.OperDate
              , Object_Status.ObjectCode                   AS StatusCode
@@ -212,4 +218,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderClient (inStartDate:= '29.01.2016', inEndDate:= '01.02.2016', inIsErased := FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_OrderClient (inStartDate:= '29.01.2016', inEndDate:= '01.02.2016', inClientId:=0 , inIsErased := FALSE, inSession:= zfCalc_UserAdmin())
