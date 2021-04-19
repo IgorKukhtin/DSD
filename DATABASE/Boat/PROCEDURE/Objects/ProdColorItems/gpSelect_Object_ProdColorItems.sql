@@ -146,7 +146,7 @@ BEGIN
                          FROM MovementLinkObject AS MovementLinkObject_Product
                               INNER JOIN Movement ON Movement.Id = MovementLinkObject_Product.MovementId
                                                  AND Movement.DescId = zc_Movement_OrderClient()
-                                                 AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                               --AND Movement.StatusId <> zc_Enum_Status_Erased()
                          -- !!!временно, надо будет как-то выбирать НЕ ВСЕ!!!
                          WHERE MovementLinkObject_Product.ObjectId > 0
                            AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
