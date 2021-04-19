@@ -1,11 +1,11 @@
 -- Function: gpSelect_Movement_Invoice()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_InvoiceChoice (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_InvoiceChoice (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_InvoiceChoice(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
-    IN inCliendId      Integer ,
+    IN inClientId      Integer ,
     IN inIsErased      Boolean ,
     IN inSession       TVarChar    -- сессия пользователя
 )
@@ -38,9 +38,12 @@ RETURNS TABLE (Id              Integer
 
              , InvNumberPartner TVarChar
              , ReceiptNumber    TVarChar
-             , Comment TVarChar
+             , Comment          TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
+             , MovementId_parent Integer
+             , InvNumber_parent TVarChar
+             , DescName_parent TVarChar
               )
 
 AS
@@ -106,7 +109,22 @@ BEGIN
                   WHERE MovementLinkMovement.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                     AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Invoice()
                   )
-
+     , tmpMLM_OrderClient AS (SELECT *
+                              FROM (
+                                    SELECT MovementLinkMovement.*
+                                         , ROW_NUMBER() OVER (PARTITION BY MovementLinkMovement.MovementId) AS ord
+                                    FROM MovementLinkMovement
+                                        INNER JOIN Movement AS Movement_Order
+                                                            ON Movement_Order.Id = MovementLinkMovement.MovementId
+                                                           AND Movement_Order.StatusId <> zc_Enum_Status_Erased()
+                                                           AND Movement_Order.DescId = zc_Movement_OrderClient()
+                                    WHERE MovementLinkMovement.MovementChildId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                      AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Invoice()
+                                    ) AS tmp
+                              WHERE tmp.Ord = 1
+                              )
+                              
+                              
     -- Результат
     SELECT     
         Movement.Id
@@ -162,6 +180,9 @@ BEGIN
       , Object_Update.ValueData                    AS UpdateName
       , MovementDate_Update.ValueData              AS UpdateDate
 
+      , Movement_Parent.Id             ::Integer   AS MovementId_parent
+      , ('№ ' || Movement_Parent.InvNumber || ' от ' || Movement_Parent.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_parent
+      , MovementDesc_Parent.ItemName   ::TVarChar  AS DescName_parent
     FROM tmpMovement AS Movement
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
         
@@ -201,14 +222,18 @@ BEGIN
         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MovementLinkObject_InfoMoney.ObjectId
 
         --Лодку показываем из док. Заказ
-        LEFT JOIN tmpMLM AS MovementLinkMovement_Invoice
-                         ON MovementLinkMovement_Invoice.MovementChildId = Movement.Id
-                        AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
-        
+        LEFT JOIN tmpMLM_OrderClient AS MovementLinkMovement_Invoice
+                                     ON MovementLinkMovement_Invoice.MovementChildId = Movement.Id
+                                    --AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
+                                    
+        LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = COALESCE (Movement.ParentId, MovementLinkMovement_Invoice.MovementId)
+        LEFT JOIN MovementDesc AS MovementDesc_Parent ON MovementDesc_Parent.Id = Movement_Parent.DescId
+
         LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
-                                     ON MovementLinkObject_Product.MovementId = MovementLinkMovement_Invoice.MovementId
+                                     ON MovementLinkObject_Product.MovementId = Movement_Parent.Id
                                     AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
         LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId
+        
 
         LEFT JOIN ObjectString AS ObjectString_CIN
                                ON ObjectString_CIN.ObjectId = Object_Product.Id
@@ -239,8 +264,8 @@ BEGIN
                                      ON MLO_Update.MovementId = Movement.Id
                                     AND MLO_Update.DescId = zc_MovementLinkObject_Update()
         LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
-    WHERE Object_Object.Id = inCliendId 
-       OR inCliendId = 0
+    WHERE Object_Object.Id = inClientId 
+       OR inClientId = 0
 ;
 
 END;
@@ -254,4 +279,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_Movement_InvoiceChoice(inStartDate := ('01.01.2021')::TDateTime , inEndDate := ('18.02.2021')::TDateTime , inCliendId :=0, inIsErased := 'False' ,  inSession := zfCalc_UserAdmin());
+--select * from gpSelect_Movement_InvoiceChoice(inStartDate := ('01.01.2021')::TDateTime , inEndDate := ('18.02.2021')::TDateTime , inClientId :=0, inIsErased := 'False' ::boolean ,  inSession := zfCalc_UserAdmin());

@@ -262,7 +262,8 @@ uses
   OrderPartner in '..\..\FormsBoat\Document\OrderPartner.pas' {OrderPartnerForm: TParentForm},
   OrderPartnerJournal in '..\..\FormsBoat\Document\OrderPartnerJournal.pas' {OrderPartnerJournalForm: TParentForm},
   Report_OrderClientDialog in '..\..\FormsBoat\Report\Report_OrderClientDialog.pas' {Report_OrderClientDialogForm: TParentForm},
-  Report_OrderClient in '..\..\FormsBoat\Report\Report_OrderClient.pas' {Report_OrderClientForm: TParentForm};
+  Report_OrderClient in '..\..\FormsBoat\Report\Report_OrderClient.pas' {Report_OrderClientForm: TParentForm},
+  OrderClientJournalChoice in '..\..\FormsBoat\Document\OrderClientJournalChoice.pas' {OrderClientJournalChoiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

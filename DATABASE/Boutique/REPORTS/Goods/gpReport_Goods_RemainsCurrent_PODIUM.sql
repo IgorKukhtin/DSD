@@ -832,8 +832,8 @@ BEGIN
 
            , Object_Currency_pl.ValueData AS CurrencyName_pl
 
-           , CASE WHEN COALESCE (tmpData.OperPriceList_first,0) <> 0 THEN 100 - tmpData.OperPriceList * 100 / tmpData.OperPriceList_first ELSE 0 END :: TFloat AS Persent_diff
-           , CASE WHEN COALESCE (tmpData.OperPriceList_first,0) > COALESCE (tmpData.OperPriceList,0) AND COALESCE (tmpDiscount.DiscountTax,0) > 0 THEN TRUE ELSE FALSE END ::Boolean AS isDiff
+           , CASE WHEN COALESCE (tmpData.OperPriceList_first,0) <> 0 THEN 100 - tmpData.OperPriceList_orig * 100 / tmpData.OperPriceList_first ELSE 0 END :: TFloat AS Persent_diff
+           , CASE WHEN COALESCE (tmpData.OperPriceList_first,0) > COALESCE (tmpData.OperPriceList_orig,0) AND COALESCE (tmpDiscount.DiscountTax,0) > 0 THEN TRUE ELSE FALSE END ::Boolean AS isDiff
 
         FROM tmpData
             LEFT JOIN Object AS Object_Unit    ON Object_Unit.Id    = tmpData.UnitId

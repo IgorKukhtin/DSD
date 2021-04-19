@@ -226,6 +226,22 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
             Options.Editing = False
             Width = 80
           end
+          object InvNumber_parent: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093#1086#1076' / '#1047#1072#1082#1072#1079
+            DataBinding.FieldName = 'InvNumber_parent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 109
+          end
+          object DescName_parent: TcxGridDBColumn
+            Caption = #1069#1083#1077#1083#1077#1085#1090' ('#1055#1088#1080#1093#1086#1076' / '#1047#1072#1082#1072#1079')'
+            DataBinding.FieldName = 'DescName_parent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 110
+          end
           object ProductCode: TcxGridDBColumn
             Caption = 'Interne Nr (Boat)'
             DataBinding.FieldName = 'ProductCode'
@@ -339,8 +355,12 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
         Properties.Strings = (
           'Date')
       end>
+    Left = 248
+    Top = 67
   end
   inherited ActionList: TActionList
+    Left = 167
+    Top = 66
     object macUpdateMoneyPlace: TMultiAction [2]
       Category = 'Update'
       MoveParams = <>
@@ -936,6 +956,21 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
           ComponentItem = 'AmountOut'
           DataType = ftFloat
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_parent'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_parent'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_parent'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber_parent'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
@@ -944,12 +979,12 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 96
-    Top = 155
+    Left = 344
+    Top = 59
   end
   inherited MasterCDS: TClientDataSet
-    Left = 64
-    Top = 155
+    Left = 368
+    Top = 59
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_InvoiceChoice'
@@ -986,12 +1021,12 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 16
-    Top = 107
+    Left = 128
+    Top = 67
   end
   inherited BarManager: TdxBarManager
-    Left = 128
-    Top = 131
+    Left = 200
+    Top = 67
     DockControlHeights = (
       0
       0
