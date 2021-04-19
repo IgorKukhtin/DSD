@@ -92,7 +92,7 @@ type
     FormParams: TdsdFormParams;
     spGetImportSettingId: TdsdStoredProc;
     bbStartLoad: TdxBarButton;
-    actChoiceFormGoods: TOpenChoiceForm;
+    actChoiceFormGoods_1: TOpenChoiceForm;
     bbShowAllColorItems: TdxBarButton;
     bbShowAllOptItems: TdxBarButton;
     BarSubItemBoat: TdxBarSubItem;
@@ -145,10 +145,9 @@ type
     Panel4: TPanel;
     spInsertUpdate_Child2: TdsdStoredProc;
     ProdColorPatternName_ch2: TcxGridDBColumn;
-    actChoiceFormGoods2: TOpenChoiceForm;
-    actChoiceFormProdColorPattern: TOpenChoiceForm;
-    actChoiceFormProdColorPattern2: TOpenChoiceForm;
-    dsdUpdateDataSet_Child2: TdsdUpdateDataSet;
+    actChoiceFormGoods_2: TOpenChoiceForm;
+    actChoiceFormProdColorPattern_2: TOpenChoiceForm;
+    actUpdateDataSet_Child2: TdsdUpdateDataSet;
     DescName_ch1: TcxGridDBColumn;
     InsertRecordProdColorPattern: TInsertRecord;
     actSetErasedProdColorPattern: TdsdUpdateErased;
@@ -164,7 +163,7 @@ type
     isEnabled_ch2: TcxGridDBColumn;
     Color_value_ch1: TcxGridDBColumn;
     Color_Level_ch1: TcxGridDBColumn;
-    actChoiceFormProdColor_goods: TOpenChoiceForm;
+    actChoiceFormProdColor_goods_2: TOpenChoiceForm;
   private
     { Private declarations }
   public
