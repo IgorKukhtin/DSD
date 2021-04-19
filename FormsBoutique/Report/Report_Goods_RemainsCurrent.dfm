@@ -6,9 +6,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitTop = -141
   ExplicitWidth = 1147
-  ExplicitHeight = 598
+  ExplicitHeight = 601
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -614,6 +613,27 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             HeaderHint = '% '#1057#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
             Options.Editing = False
             Width = 40
+          end
+          object Persent_diff: TcxGridDBColumn
+            Caption = '% '#1086#1090#1082#1083'. '#1090#1077#1082'. '#1094#1077#1085#1099' '#1087#1088#1072#1081#1089#1072' '#1086#1090' '#1087#1077#1088#1074#1086#1081
+            DataBinding.FieldName = 'Persent_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1086#1090#1082#1083'. '#1090#1077#1082'. '#1094#1077#1085#1099' '#1087#1088#1072#1081#1089#1072' '#1086#1090' '#1087#1077#1088#1074#1086#1081
+            Options.Editing = False
+            Width = 40
+          end
+          object isDiff: TcxGridDBColumn
+            Caption = '% '#1089#1077#1079'.'#1089#1082'. + '#1091#1084#1077#1085#1100#1096'. '#1086#1090' '#1087#1077#1088#1074#1086#1081' '#1094#1077#1085#1099
+            DataBinding.FieldName = 'isDiff'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1089#1077#1079'.'#1089#1082'. + '#1091#1084#1077#1085#1100#1096'. '#1086#1090' '#1087#1077#1088#1074#1086#1081' '#1094#1077#1085#1099
+            Options.Editing = False
+            Width = 55
           end
           object OperPriceList_disc: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089' '#1043#1056#1053' (% '#1089#1082'.)'

@@ -735,9 +735,6 @@
     IdParam.MultiSelectSeparator = ','
     GuidesList = <
       item
-        Guides = GuidesInvoice
-      end
-      item
         Guides = GuidesBankAccount
       end>
     ActionItemList = <
@@ -831,7 +828,7 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 132
-    Top = 227
+    Left = 172
+    Top = 219
   end
 end

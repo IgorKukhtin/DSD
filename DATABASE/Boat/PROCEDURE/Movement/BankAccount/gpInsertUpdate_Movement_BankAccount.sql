@@ -28,6 +28,12 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankAccount());
 
      -- проверка
+     IF COALESCE (inBankAccountId, 0) = 0
+     THEN
+        RAISE EXCEPTION 'Ошибка.Не выбран Расчетный счет';
+     END IF;
+
+     -- проверка
      IF COALESCE (inAmountIn, 0) = 0 AND COALESCE (inAmountOut, 0) = 0 
      THEN
         RAISE EXCEPTION 'Ошибка.Введите сумму прихода или расхода';

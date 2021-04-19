@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION lpinsertupdate_movement_BankAccount(
      IN inInvNumberPartner     TVarChar  , -- Номер документа (внешний)
      IN inoperdate             TDateTime, 
      IN inamount               TFloat, 
-     IN inbankaccountid        Integer, 
+     IN inBankAccountId        Integer, 
      IN inmoneyplaceid         Integer, 
      IN inMovementId_Invoice     Integer, 
      IN incomment              TVarChar, 

@@ -221,7 +221,7 @@ BEGIN
                          FROM MovementLinkObject AS MovementLinkObject_Product
                               INNER JOIN Movement ON Movement.Id = MovementLinkObject_Product.MovementId
                                                  AND Movement.DescId = zc_Movement_OrderClient()
-                                                 AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                               --AND Movement.StatusId <> zc_Enum_Status_Erased()
 
                               LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                                       ON MovementFloat_VATPercent.MovementId = Movement.Id
