@@ -150,8 +150,9 @@ BEGIN
                                , Movement.InvNumber
                                , Object_Status.ObjectCode AS StatusCode
                                , Object_Status.ValueData  AS StatusName
-                               , CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END::TFloat AS AmountIn
-                               , ROW_NUMBER () OVER (ORDER BY Movement.Id ) AS ord
+                               --, CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END::TFloat AS AmountIn
+                               , MovementFloat_Amount.ValueData     ::TFloat AS AmountIn
+                               , ROW_NUMBER () OVER (ORDER BY Movement.Id)   AS ord
                           FROM Movement
                                LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -168,7 +169,8 @@ BEGIN
    , tmpInvoice AS (SELECT  MovementLinkMovement_Invoice.MovementId AS MovementId_OrderClient
                           , Movement.Id                             AS MovementId_Invoice
                           -- с НДС
-                          , CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END::TFloat AS AmountIn
+                          --, CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END::TFloat AS AmountIn
+                          , MovementFloat_Amount.ValueData ::TFloat AS AmountIn
 
                     FROM MovementLinkMovement AS MovementLinkMovement_Invoice
                          INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Invoice.MovementChildId
@@ -178,8 +180,7 @@ BEGIN
                          INNER JOIN MovementFloat AS MovementFloat_Amount
                                                   ON MovementFloat_Amount.MovementId = Movement.Id
                                                  AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
-                                                 AND MovementFloat_Amount.ValueData > 0
-
+                                                 --AND MovementFloat_Amount.ValueData > 0
                     WHERE MovementLinkMovement_Invoice.MovementId IN (SELECT DISTINCT tmpOrderClient.MovementId FROM tmpOrderClient)
                       AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
                  UNION 
@@ -200,7 +201,7 @@ BEGIN
                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement_BankAccount.Id
                                                      AND MovementItem.DescId = zc_MI_Master()
                                                      AND MovementItem.isErased = FALSE
-                                                     AND COALESCE (MovementItem.Amount,0) > 0
+                                                     --AND COALESCE (MovementItem.Amount,0) > 0
                           WHERE MovementLinkMovement.MovementChildId IN (SELECT DISTINCT tmpInvoice.MovementId_Invoice FROM tmpInvoice)
                             AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Invoice()
                           GROUP BY MovementLinkMovement.MovementChildId
@@ -348,13 +349,13 @@ BEGIN
           -- данные первого счета
           LEFT JOIN (SELECT tmpInvoice_First.* FROM tmpInvoice_First WHERE tmpInvoice_First.Ord = 1) AS tmpInvoice_First ON 1 = 1
           -- оплата по первому счету
-          LEFT JOIN (SELECT tmpBankAccount.MovementId_Invoice, SUM (tmpBankAccount.AmountIn) AS AmountIn
+          LEFT JOIN (SELECT tmpBankAccount.MovementId_Invoice, SUM (COALESCE (tmpBankAccount.AmountIn,0)) AS AmountIn
                      FROM tmpBankAccount
                      GROUP BY tmpBankAccount.MovementId_Invoice
                      ) AS tmpBankAccount_first ON tmpBankAccount_first.MovementId_Invoice = tmpInvoice_First.Id
-          LEFT JOIN (SELECT SUM (tmpInvoice.AmountIn) AS AmountIn FROM tmpInvoice) AS tmpInvoice ON 1 = 1
+          LEFT JOIN (SELECT SUM (COALESCE (tmpInvoice.AmountIn,0)) AS AmountIn FROM tmpInvoice) AS tmpInvoice ON 1 = 1
           
-          LEFT JOIN (SELECT SUM (tmpBankAccount.AmountIn) AS AmountIn FROM tmpBankAccount) AS tmpBankAccount ON 1 = 1
+          LEFT JOIN (SELECT SUM (COALESCE (tmpBankAccount.AmountIn,0)) AS AmountIn FROM tmpBankAccount) AS tmpBankAccount ON 1 = 1
        WHERE Object_Product.Id = inId;
    END IF;
 

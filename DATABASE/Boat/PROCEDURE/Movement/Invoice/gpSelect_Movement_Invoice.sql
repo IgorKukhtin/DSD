@@ -119,7 +119,7 @@ BEGIN
      , tmpMLM_OrderClient AS (SELECT *
                               FROM (
                                     SELECT MovementLinkMovement.*
-                                         , ROW_NUMBER() OVER (PARTITION BY MovementLinkMovement.MovementId) AS ord
+                                         , ROW_NUMBER() OVER (PARTITION BY MovementLinkMovement.MovementChildId) AS ord
                                     FROM MovementLinkMovement
                                         INNER JOIN Movement AS Movement_Order
                                                             ON Movement_Order.Id = MovementLinkMovement.MovementId
