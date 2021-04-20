@@ -61,11 +61,11 @@ then
 
 
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), MovementItem.Id, null)
-     from MovementItem 
+     from MovementItem
      where  MovementItem.MovementId = 12175588 ;
     --
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), MovementItem.Id, 0)
-     from MovementItem 
+     from MovementItem
      where  MovementItem.MovementId = 12175588 ;
     --
     update Movement set statusId = zc_Enum_Status_UnComplete(), ParentId = null where Movement.Id = inMovementId;
@@ -540,6 +540,86 @@ end if;
                                      AND MLM_Order.DescId     = zc_MovementLinkMovement_Order()
                                   );
           ELSE
+              -- Проверка
+              IF 1 < (SELECT COUNT(*)
+                      FROM MovementLinkMovement
+                            INNER JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                                            ON MovementLinkMovement_Order.MovementChildId = MovementLinkMovement.MovementChildId
+                                                           AND MovementLinkMovement_Order.DescId          = zc_MovementLinkMovement_Order()
+                            INNER JOIN Movement ON Movement.Id       = MovementLinkMovement_Order.MovementId
+                                               AND Movement.DescId   = zc_Movement_SendOnPrice()
+                                               AND Movement.OperDate = inOperDate
+                                               AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                      WHERE MovementLinkMovement.MovementId = inMovementId
+                        AND MovementLinkMovement.DescId     = zc_MovementLinkMovement_Order()
+                     )
+               --OR inSession = '5'
+              THEN
+                  RAISE EXCEPTION 'Ошибка.Для заявки № <%> от <%> сформировано 2 документа: <№ % от %> + <№ % от %>'
+                                , (SELECT Movement.InvNumber FROM MovementLinkMovement AS MLM_Order JOIN Movement ON Movement.Id = MLM_Order.MovementChildId WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order())
+                                , (SELECT zfConvert_DateToString (Movement.OperDate) FROM MovementLinkMovement AS MLM_Order JOIN Movement ON Movement.Id = MLM_Order.MovementChildId WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order())
+                                  -- 1.1.
+                                , (SELECT Movement.InvNumber
+                                   FROM MovementLinkMovement
+                                        INNER JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                                                        ON MovementLinkMovement_Order.MovementChildId = MovementLinkMovement.MovementChildId
+                                                                       AND MovementLinkMovement_Order.DescId          = zc_MovementLinkMovement_Order()
+                                        INNER JOIN Movement ON Movement.Id       = MovementLinkMovement_Order.MovementId
+                                                           AND Movement.DescId   = zc_Movement_SendOnPrice()
+                                                           AND Movement.OperDate = inOperDate
+                                                           AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                                   WHERE MovementLinkMovement.MovementId = inMovementId
+                                     AND MovementLinkMovement.DescId     = zc_MovementLinkMovement_Order()
+                                   ORDER BY Movement.Id DESC
+                                   LIMIT 1
+                                  )
+                                  -- 1.2.
+                                , (SELECT zfConvert_DateToString (Movement.OperDate)
+                                   FROM MovementLinkMovement
+                                        INNER JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                                                        ON MovementLinkMovement_Order.MovementChildId = MovementLinkMovement.MovementChildId
+                                                                       AND MovementLinkMovement_Order.DescId          = zc_MovementLinkMovement_Order()
+                                        INNER JOIN Movement ON Movement.Id       = MovementLinkMovement_Order.MovementId
+                                                           AND Movement.DescId   = zc_Movement_SendOnPrice()
+                                                           AND Movement.OperDate = inOperDate
+                                                           AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                                   WHERE MovementLinkMovement.MovementId = inMovementId
+                                     AND MovementLinkMovement.DescId     = zc_MovementLinkMovement_Order()
+                                   ORDER BY Movement.Id DESC
+                                   LIMIT 1
+                                  )
+                                  -- 2.1.
+                                , (SELECT Movement.InvNumber
+                                   FROM MovementLinkMovement
+                                        INNER JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                                                        ON MovementLinkMovement_Order.MovementChildId = MovementLinkMovement.MovementChildId
+                                                                       AND MovementLinkMovement_Order.DescId          = zc_MovementLinkMovement_Order()
+                                        INNER JOIN Movement ON Movement.Id       = MovementLinkMovement_Order.MovementId
+                                                           AND Movement.DescId   = zc_Movement_SendOnPrice()
+                                                           AND Movement.OperDate = inOperDate
+                                                           AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                                   WHERE MovementLinkMovement.MovementId = inMovementId
+                                     AND MovementLinkMovement.DescId     = zc_MovementLinkMovement_Order()
+                                   ORDER BY Movement.Id ASC
+                                   LIMIT 1
+                                  )
+                                  -- 2.2.
+                                , (SELECT zfConvert_DateToString (Movement.OperDate)
+                                   FROM MovementLinkMovement
+                                        INNER JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                                                        ON MovementLinkMovement_Order.MovementChildId = MovementLinkMovement.MovementChildId
+                                                                       AND MovementLinkMovement_Order.DescId          = zc_MovementLinkMovement_Order()
+                                        INNER JOIN Movement ON Movement.Id       = MovementLinkMovement_Order.MovementId
+                                                           AND Movement.DescId   = zc_Movement_SendOnPrice()
+                                                           AND Movement.OperDate = inOperDate
+                                                           AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                                   WHERE MovementLinkMovement.MovementId = inMovementId
+                                     AND MovementLinkMovement.DescId     = zc_MovementLinkMovement_Order()
+                                   ORDER BY Movement.Id ASC
+                                   LIMIT 1
+                                  )
+                                ;
+              END IF;
               -- на основании <Заявки> или вообще "безликий" - поиск существующего документа <Перемещение по цене> !!!сразу получаем ключ!!!
               vbMovementId_find:= (SELECT Movement.Id
                                    FROM MovementLinkMovement
@@ -619,7 +699,7 @@ end if;
                                                   , inOperDate              := inOperDate
                                                   , inOperDatePartner       := inOperDate
                                                   , inInvNumberPartner      := ''
-                                                  , inPriceWithVAT          := PriceWithVAT -- определяются по прайлисту 
+                                                  , inPriceWithVAT          := PriceWithVAT -- определяются по прайлисту
                                                   , inVATPercent            := VATPercent
                                                   , inChangePercent         := ChangePercent
                                                   , inFromId                := FromId
@@ -900,7 +980,7 @@ end if;
                                , COALESCE (MIFloat_Price.ValueData, 0)               AS Price
                                , COALESCE (MIFloat_CountForPrice.ValueData, 0)       AS CountForPrice
                                , COALESCE (MILinkObject_To.ObjectId, COALESCE (MLO_To.ObjectId, 0)) AS UnitId_to
-                               
+
                                , COALESCE (MIFloat_ChangePercent.ValueData, 0)       AS ChangePercent    -- используется только для возврата
                                , COALESCE (MIFloat_PromoMovement.ValueData, 0)       AS MovementId_Promo -- используется только для возврата
 
@@ -1375,7 +1455,7 @@ end if;
                                        THEN 0 -- не заполняется - берем из реального взвешивания
                                   ELSE tmpMI.Amount
                              END AS Amount
-                           
+
                            , CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() AND vbMovementId_find > 0
                                        THEN 0 -- не заполняется - берем из реального взвешивания
                                   ELSE tmpMI.AmountChangePercent
@@ -1693,6 +1773,46 @@ end if;
      END IF;
 
 
+     -- !!!Проверка что документ один!!!
+     IF vbMovementDescId = zc_Movement_SendOnPrice() AND EXISTS (SELECT MLM_Order.MovementChildId
+                                                                 FROM MovementLinkMovement AS MLM_Order
+                                                                      JOIN Movement ON Movement.Id     = MLM_Order.MovementChildId
+                                                                                   AND Movement.DescId = zc_Movement_OrderExternal()
+                                                                 WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
+                                                                )
+     THEN
+         IF NOT EXISTS (SELECT 1
+                        FROM Movement
+                             JOIN MovementLinkMovement AS MLM_Order
+                                                       ON MLM_Order.MovementId      = Movement.Id
+                                                      AND MLM_Order.DescId          = zc_MovementLinkMovement_Order()
+                                                      AND MLM_Order.MovementChildId > 0
+                             JOIN LockUnique ON LockUnique.OperDate >= Movement.OperDate AND LockUnique.OperDate < Movement.OperDate + INTERVAL '1 DAY'
+                                            AND LockUnique.KeyData = 'Movement'
+                                                           || ';' || Movement.DescId :: TVarChar
+                                                           || ';' || MLM_Order.MovementChildId :: TVarChar
+                                                           || ';' || (DATE (Movement.OperDate)) :: TVarChar
+                        WHERE Movement.Id = vbMovementId_begin
+                       )
+         THEN
+             -- !!!проверка уникальности!!!
+             PERFORM lpInsert_LockUnique (inKeyData:= 'Movement'
+                                            || ';' || Movement.DescId :: TVarChar
+                                            || ';' || MLM_Order.MovementChildId :: TVarChar
+                                            || ';' || (DATE (Movement.OperDate)) :: TVarChar
+                                        , inUserId:= vbUserId
+                                         )
+             FROM Movement
+                  JOIN MovementLinkMovement AS MLM_Order
+                                            ON MLM_Order.MovementId      = Movement.Id
+                                           AND MLM_Order.DescId          = zc_MovementLinkMovement_Order()
+                                           AND MLM_Order.MovementChildId > 0
+             WHERE Movement.Id = vbMovementId_begin;
+
+         END IF;
+     END IF;
+
+
 --для теста
 /*if inMovementId in (8351040) then
     RAISE EXCEPTION ' !!! --- END ALL --- !!! Errr <%>', vbMovementId_begin;
@@ -1709,7 +1829,7 @@ end if;*/
   , (SELECT  MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = vbMovementId_begin AND MLM.DescId = zc_MovementLinkMovement_Master())
   , (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = vbMovementId_begin AND MF.DescId = zc_MovementFloat_TotalCount())
   , (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = vbMovementId_begin AND MF.DescId = zc_MovementFloat_TotalCountPartner())
-  , (SELECT MIF.ValueData FROM MovementItem AS MI JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MI.Id AND MIF.DescId = zc_MIFloat_Price() WHERE MI.MovementId = vbMovementId_begin AND MI.DescId = zc_MI_Master())
+  , (SELECT MIF.ValueData FROM MovementItem AS MI JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MI.Id AND MIF.DescId = zc_MIFloat_Price() WHERE MI.MovementId = vbMovementId_begin AND MI.DescId = zc_MI_Master() LIMIT 1)
    ;
 END IF;
 

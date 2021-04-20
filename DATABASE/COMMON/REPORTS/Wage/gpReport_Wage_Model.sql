@@ -1816,15 +1816,18 @@ AS  (SELECT
                                          AND tmpMovement_PersonalComplete.HoursWork  <> 0
          LEFT JOIN Object AS Object_Unit_car ON Object_Unit_car.Id = tmpMovement_PersonalComplete.UnitId_car
          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
-                              ON ObjectLink_Personal_PersonalGroup.ChildObjectId = tmpMovement_PersonalComplete.PersonalId
-                             AND ObjectLink_Personal_PersonalGroup.DescId        = zc_ObjectLink_Personal_PersonalGroup()
+                              ON ObjectLink_Personal_PersonalGroup.ObjectId = tmpMovement_PersonalComplete.PersonalId
+                             AND ObjectLink_Personal_PersonalGroup.DescId  = zc_ObjectLink_Personal_PersonalGroup()
          LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
-                              ON ObjectLink_Personal_PositionLevel.ChildObjectId = tmpMovement_PersonalComplete.PersonalId
-                             AND ObjectLink_Personal_PositionLevel.DescId        = zc_ObjectLink_Personal_PositionLevel()
+                              ON ObjectLink_Personal_PositionLevel.ObjectId = tmpMovement_PersonalComplete.PersonalId
+                             AND ObjectLink_Personal_PositionLevel.DescId   = zc_ObjectLink_Personal_PositionLevel()
          LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
          LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = ObjectLink_Personal_PositionLevel.ChildObjectId
 
     WHERE Setting.SelectKindId IN (zc_Enum_SelectKind_MovementTransportHours())
+      AND (COALESCE (Setting.PositionLevelId, 0) = COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId, 0)
+        OR Setting.isPositionLevel_all = TRUE
+          )
    ;
 
 END;

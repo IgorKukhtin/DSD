@@ -645,6 +645,7 @@ BEGIN
 
         -- доступ филиалов только к этим ведомостям
         WHERE tmpMemberPersonalServiceList.PersonalServiceListId > 0 OR vbObjectId_Constraint_Branch = 0
+          AND (ObjectLink_Personal_Member_find.ChildObjectId = inMemberId OR COALESCE (inMemberId, 0) = 0)
        ;
 
 END;
