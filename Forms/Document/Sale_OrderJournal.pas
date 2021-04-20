@@ -200,7 +200,7 @@ type
     actGet_Export_FileName: TdsdExecStoredProc;
     actSelect_Export: TdsdExecStoredProc;
     actExport_Grid: TExportGrid;
-    actExport: TMultiAction;
+    mactExport: TMultiAction;
     bbExport: TdxBarButton;
     spGet_Export_Email: TdsdStoredProc;
     actGet_Export_Email: TdsdExecStoredProc;

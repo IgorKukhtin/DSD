@@ -24,7 +24,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  dsdInternetAction;
 
 type
   TSaleJournalForm = class(TAncestorJournalForm)
@@ -178,7 +179,7 @@ type
     actUpdateMovementDesc: TdsdExecStoredProc;
     spUpdateMovementDesc: TdsdStoredProc;
     GuidesTo: TdsdGuides;
-    dxBarButton1: TdxBarButton;
+    bbUpdateMovementDesc: TdxBarButton;
     PersonalName: TcxGridDBColumn;
     RouteGroupName: TcxGridDBColumn;
     InvNumber_Transport: TcxGridDBColumn;
@@ -256,6 +257,27 @@ type
     mactPrint_TTN2: TMultiAction;
     actPrint_TTN2: TdsdPrintAction;
     bbPrint_TTN2: TdxBarButton;
+    ExportXmlGrid: TcxGrid;
+    ExportXmlGridDBTableView: TcxGridDBTableView;
+    RowData: TcxGridDBColumn;
+    ExportXmlGridLevel: TcxGridLevel;
+    spSelect_Export: TdsdStoredProc;
+    spUpdate_isMail: TdsdStoredProc;
+    spGet_Export_Email: TdsdStoredProc;
+    ExportCDS: TClientDataSet;
+    ExportDS: TDataSource;
+    ExportEmailDS: TDataSource;
+    ExportEmailCDS: TClientDataSet;
+    actGet_Export_Email: TdsdExecStoredProc;
+    actSelect_Export: TdsdExecStoredProc;
+    actExport_Grid: TExportGrid;
+    actSMTPFile: TdsdSMTPFileAction;
+    actUpdate_isMail: TdsdExecStoredProc;
+    spGet_Export_FileName: TdsdStoredProc;
+    actGet_Export_FileName: TdsdExecStoredProc;
+    mactExport: TMultiAction;
+    macExportAll: TMultiAction;
+    bbExport: TdxBarButton;
   private
     { Private declarations }
   public

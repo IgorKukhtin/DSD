@@ -5,7 +5,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -593
   ExplicitWidth = 1382
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -939,7 +938,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actExport: TMultiAction [1]
+    object mactExport: TMultiAction [1]
       Category = 'Export_Email'
       MoveParams = <>
       ActionList = <
@@ -1647,7 +1646,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end
         item
           Name = 'inPrice'
-          Value = '0'
+          Value = 0.000000000000000000
           DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -2102,7 +2101,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate_TransportGoods_calc'
           DataType = ftDateTime
@@ -2231,7 +2230,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         item
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDMaster2'
-          IndexFieldNames = ''
         end>
       Params = <
         item
@@ -2745,7 +2743,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end
         item
           Name = 'IsPartnerDate'
-          Value = 'False'
+          Value = False
           Component = edIsPartnerDate
           DataType = ftBoolean
           ParamType = ptInput
@@ -3288,7 +3286,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actExport
+          Action = mactExport
         end>
       View = cxGridDBTableView
       QuestionBeforeExecute = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1042#1057#1045#1052' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'?'
@@ -3326,7 +3324,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       end
       item
         Name = 'inIsPartnerDate'
-        Value = 'False'
+        Value = False
         Component = edIsPartnerDate
         DataType = ftBoolean
         ParamType = ptInput
@@ -3721,7 +3719,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       Category = 0
     end
     object bbExport: TdxBarButton
-      Action = actExport
+      Action = mactExport
       Category = 0
     end
     object bbactOpenReport: TdxBarButton
@@ -3942,7 +3940,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       end
       item
         Name = 'inislastcomplete'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3981,7 +3979,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4460,7 +4458,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       end
       item
         Name = 'OperDate_TransportGoods'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate_TransportGoods'
         DataType = ftDateTime
@@ -4629,7 +4627,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       end
       item
         Name = 'inIsDiffTax'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4701,7 +4699,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       end
       item
         Name = 'inNewPrinted'
-        Value = 'True'
+        Value = True
         Component = FormParams
         ComponentItem = 'isPrinted'
         DataType = ftBoolean
@@ -4710,7 +4708,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       end
       item
         Name = 'outPrinted'
-        Value = 'False'
+        Value = False
         Component = MasterCDS
         ComponentItem = 'isPrinted'
         DataType = ftBoolean
@@ -4939,7 +4937,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       end
       item
         Name = 'inIsList'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5050,7 +5048,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       end
       item
         Name = 'inIsList'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5154,7 +5152,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       end
       item
         Name = 'inisList'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5198,7 +5196,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       end
       item
         Name = 'inIsDiffTax'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

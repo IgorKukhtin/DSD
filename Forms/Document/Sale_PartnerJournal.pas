@@ -24,7 +24,7 @@ uses
   cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit,
-  cxButtonEdit, dsdGuides, frxClass, frxDBSet;
+  cxButtonEdit, dsdGuides, frxClass, frxDBSet, dsdInternetAction;
 
 type
   TSale_PartnerJournalForm = class(TAncestorJournalForm)
@@ -191,6 +191,27 @@ type
     actPrint_PackWeight: TdsdPrintAction;
     spGetReportNameQuality: TdsdStoredProc;
     actPrint_Quality_ReportName: TdsdExecStoredProc;
+    ExportXmlGrid: TcxGrid;
+    ExportXmlGridDBTableView: TcxGridDBTableView;
+    RowData: TcxGridDBColumn;
+    ExportXmlGridLevel: TcxGridLevel;
+    spSelect_Export: TdsdStoredProc;
+    spUpdate_isMail: TdsdStoredProc;
+    spGet_Export_Email: TdsdStoredProc;
+    ExportCDS: TClientDataSet;
+    ExportDS: TDataSource;
+    ExportEmailDS: TDataSource;
+    ExportEmailCDS: TClientDataSet;
+    actGet_Export_Email: TdsdExecStoredProc;
+    actSelect_Export: TdsdExecStoredProc;
+    actExport_Grid: TExportGrid;
+    actSMTPFile: TdsdSMTPFileAction;
+    actUpdate_isMail: TdsdExecStoredProc;
+    spGet_Export_FileName: TdsdStoredProc;
+    actGet_Export_FileName: TdsdExecStoredProc;
+    mactExport: TMultiAction;
+    macExportAll: TMultiAction;
+    bbExport: TdxBarButton;
   private
     { Private declarations }
   public
