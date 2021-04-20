@@ -51,7 +51,6 @@ BEGIN
                     WHERE Movement.Id = inMovementId
                     );
 
-
 --   select DISCTINCT zc_ObjectLink_Contract_Juridical если zc_ObjectLink_Contract_InfoMoney соответсвует соотвю списку полученному из zc_ObjectLink_OrderFinanceProperty_Object
      
      RETURN QUERY

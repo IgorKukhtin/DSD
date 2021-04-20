@@ -113,6 +113,7 @@ BEGIN
      WITH
      tmpOrderClient AS (SELECT Object_From.Id             AS ClientId
                              , Object_From.ValueData      AS ClientName
+                             , Movement.StatusId
                              , Object_Status.ObjectCode   AS StatusCode
                              , Object_Status.ValueData    AS StatusName
                              , Movement.InvNumber ::TVarChar
@@ -148,6 +149,7 @@ BEGIN
                                , Movement.ParentId
                                , Movement.OperDate
                                , Movement.InvNumber
+                               , Movement.StatusId
                                , Object_Status.ObjectCode AS StatusCode
                                , Object_Status.ValueData  AS StatusName
                                --, CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END::TFloat AS AmountIn
@@ -242,10 +244,15 @@ BEGIN
 
          , tmpOrderClient.MovementId :: Integer    AS MovementId_OrderClient
          , tmpOrderClient.OperDate   :: TDateTime  AS OperDate_OrderClient
-         , tmpOrderClient.InvNumber  :: TVarChar   AS InvNumber_OrderClient
-         , tmpOrderClient.StatusCode :: Integer    AS StatusCode_OrderClient
-         , tmpOrderClient.StatusName :: TVarChar   AS StatusName_OrderClient
-         , tmpOrderClient.VATPercent :: TFloat     AS VATPercent_OrderClient
+         , (CASE WHEN tmpOrderClient.StatusId = zc_Enum_Status_UnComplete() THEN zc_InvNumber_Status_UnComlete()
+                 WHEN tmpOrderClient.StatusId = zc_Enum_Status_Erased()     THEN zc_InvNumber_Status_Erased()
+                 ELSE ''
+            END
+            ||' '
+            ||tmpOrderClient.InvNumber) :: TVarChar  AS InvNumber_OrderClient
+         , tmpOrderClient.StatusCode  :: Integer   AS StatusCode_OrderClient
+         , tmpOrderClient.StatusName  :: TVarChar  AS StatusName_OrderClient
+         , tmpOrderClient.VATPercent  :: TFloat    AS VATPercent_OrderClient
 
          , zfCalc_Summ_NoVAT (MovementFloat_TotalSumm.ValueData, tmpOrderClient.VATPercent):: TFloat AS TotalSummMVAT
          , MovementFloat_TotalSumm.ValueData                                               :: TFloat AS TotalSummPVAT
@@ -256,7 +263,12 @@ BEGIN
 
          , tmpInvoice_First.Id           :: Integer    AS MovementId_Invoice
          , tmpInvoice_First.OperDate     :: TDateTime  AS OperDate_Invoice
-         , tmpInvoice_First.InvNumber    :: TVarChar   AS InvNumber_Invoice
+         , (CASE WHEN tmpInvoice_First.StatusId = zc_Enum_Status_UnComplete() THEN zc_InvNumber_Status_UnComlete()
+                 WHEN tmpInvoice_First.StatusId = zc_Enum_Status_Erased()     THEN zc_InvNumber_Status_Erased()
+                 ELSE ''
+            END
+            ||' '
+            ||tmpInvoice_First.InvNumber)  :: TVarChar   AS InvNumber_Invoice
          , tmpInvoice_First.StatusCode   :: Integer    AS StatusCode_Invoice
          , tmpInvoice_First.StatusName   :: TVarChar   AS StatusName_Invoice
 

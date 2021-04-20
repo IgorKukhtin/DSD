@@ -219,7 +219,13 @@ BEGIN
       , MovementDate_Update.ValueData              AS UpdateDate
 
       , Movement_Parent.Id             ::Integer  AS MovementId_parent
-      , ('№ ' || Movement_Parent.InvNumber || ' от ' || zfConvert_DateToString (Movement_Parent.OperDate) :: TVarChar ||' (' ||MovementDesc_Parent.ItemName||' )' ) :: TVarChar  AS InvNumber_parent
+      , ('№ '
+         ||CASE WHEN Movement_Parent.StatusId = zc_Enum_Status_UnComplete() THEN zc_InvNumber_Status_UnComlete()
+                WHEN Movement_Parent.StatusId = zc_Enum_Status_Erased()     THEN zc_InvNumber_Status_Erased()
+                ELSE ''
+           END
+         ||' '
+         || Movement_Parent.InvNumber || ' от ' || zfConvert_DateToString (Movement_Parent.OperDate) :: TVarChar ||' (' ||MovementDesc_Parent.ItemName||' )' ) :: TVarChar  AS InvNumber_parent
 
     FROM tmpMovement AS Movement
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
