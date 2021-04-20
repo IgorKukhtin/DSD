@@ -66,7 +66,7 @@ object AccommodationLincGoodsForm: TAccommodationLincGoodsForm
       end
       object GoodsName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GoodsCode'
+        DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False

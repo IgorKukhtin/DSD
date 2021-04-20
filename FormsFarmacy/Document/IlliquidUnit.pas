@@ -45,6 +45,9 @@ type
     actFormationUnit: TdsdExecStoredProc;
     spFormationUnit: TdsdStoredProc;
     dxBarButton1: TdxBarButton;
+    AmountSale: TcxGridDBColumn;
+    SummSale: TcxGridDBColumn;
+    ProcSale: TcxGridDBColumn;
   private
     { Private declarations }
   public

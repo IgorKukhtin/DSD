@@ -1,15 +1,16 @@
 -- Function: gpInsertUpdate_Object_UnitCategory()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_UnitCategory (Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_UnitCategory (Integer, Integer, TVarChar, TFloat, TFloat, TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_UnitCategory(
- INOUT ioId             Integer,        -- ключ объекта <>
-    IN inCode           Integer,        -- Код объекта
-    IN inName           TVarChar,       -- Название объекта
-    IN inPenaltyNonMinPlan TFloat,      -- % штрафа за невыполнение минимального плана
-    IN inPremiumImplPlan TFloat,        -- % премии за выполнение плана продаж
-    IN inMinLineByLineImplPlan TFloat,  -- Минимальный % построчного выполнения минимального плана для получения премии
-    IN inSession        TVarChar        -- сессия пользователя
+ INOUT ioId                        Integer,   -- ключ объекта <>
+    IN inCode                      Integer,   -- Код объекта
+    IN inName                      TVarChar,  -- Название объекта
+    IN inPenaltyNonMinPlan         TFloat,    -- % штрафа за невыполнение минимального плана
+    IN inPremiumImplPlan           TFloat,    -- % премии за выполнение плана продаж
+    IN inMinLineByLineImplPlan     TFloat,    -- Минимальный % построчного выполнения минимального плана для получения премии
+    IN inScaleCalcMarketingPlanId  Integer,   -- Шкала расчета премии/штрафы в план по маркетингу
+    IN inSession                   TVarChar   -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
@@ -44,7 +45,9 @@ BEGIN
    -- Минимальный % построчного выполнения минимального плана для получения премии
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_UnitCategory_MinLineByLineImplPlan(), ioId, inMinLineByLineImplPlan);
 
-
+   -- сохранили связь с <Шкала расчета премии/штрафы в план по маркетингу>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_UnitCategory_ScaleCalcMarketingPlan(), ioId, inScaleCalcMarketingPlanId);
+   
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 

@@ -1952,7 +1952,9 @@ begin
     //
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitCategoryEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUnitCategoryEditForm');
-    }
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TScaleCalcMarketingPlanForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TScaleCalcMarketingPlanForm');   }
 end;
 
 procedure TLoadFormTest.LoadUnionFormTest;

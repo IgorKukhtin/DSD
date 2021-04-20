@@ -527,6 +527,14 @@ CREATE OR REPLACE FUNCTION zc_Enum_InstructionsKind_IT() RETURNS integer AS $BOD
 CREATE OR REPLACE FUNCTION zc_Enum_InstructionsKind_Managers() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_InstructionsKind_Managers' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_InstructionsKind_Marketing() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_InstructionsKind_Marketing' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+
+-- !!!
+-- !!! Шкала расчета премии/штрафы в план по маркетингу
+-- !!!
+
+CREATE OR REPLACE FUNCTION zc_Enum_ScaleCalcMarketingPlan_AB() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ScaleCalcMarketingPlan_AB' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ScaleCalcMarketingPlan_CC1() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ScaleCalcMarketingPlan_CC1' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

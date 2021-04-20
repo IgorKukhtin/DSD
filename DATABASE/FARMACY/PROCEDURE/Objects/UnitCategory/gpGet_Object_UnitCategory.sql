@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PenaltyNonMinPlan TFloat
              , PremiumImplPlan TFloat
              , MinLineByLineImplPlan TFloat
+             , ScaleCalcMarketingPlanId Integer, ScaleCalcMarketingPlanName TVarChar
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -27,6 +28,8 @@ BEGIN
            , CAST (NULL AS TFloat)  AS PenaltyNonMinPlan
            , CAST (NULL AS TFloat)  AS PremiumImplPlan
            , CAST (NULL AS TFloat)  AS MinLineByLineImplPlan
+           , CAST (0 as Integer)    AS ScaleCalcMarketingPlanId
+           , CAST ('' as TVarChar)  AS ScaleCalcMarketingPlanName           
            , CAST (NULL AS Boolean) AS isErased;
    ELSE
        RETURN QUERY
@@ -37,6 +40,8 @@ BEGIN
            , ObjectFloat_PenaltyNonMinPlan.ValueData      AS PenaltyNonMinPlan
            , ObjectFloat_PremiumImplPlan.ValueData        AS PremiumImplPlan
            , ObjectFloat_MinLineByLineImplPlan.ValueData  AS MinLineByLineImplPlan
+           , Object_ScaleCalcMarketingPlan.Id             AS ScaleCalcMarketingPlanId
+           , Object_ScaleCalcMarketingPlan.ValueData      AS ScaleCalcMarketingPlanName
            , Object_UnitCategory.isErased                 AS isErased
 
        FROM Object AS Object_UnitCategory
@@ -52,6 +57,11 @@ BEGIN
          LEFT JOIN ObjectFloat AS ObjectFloat_MinLineByLineImplPlan
                                ON ObjectFloat_MinLineByLineImplPlan.ObjectId = Object_UnitCategory.Id
                               AND ObjectFloat_MinLineByLineImplPlan.DescId = zc_ObjectFloat_UnitCategory_MinLineByLineImplPlan()
+
+         LEFT JOIN ObjectLink AS ObjectLink_ScaleCalcMarketingPlan
+                              ON ObjectLink_ScaleCalcMarketingPlan.ObjectId = Object_UnitCategory.Id 
+                             AND ObjectLink_ScaleCalcMarketingPlan.DescId = zc_ObjectLink_UnitCategory_ScaleCalcMarketingPlan()
+         LEFT JOIN Object AS Object_ScaleCalcMarketingPlan ON Object_ScaleCalcMarketingPlan.Id = ObjectLink_ScaleCalcMarketingPlan.ChildObjectId
 
        WHERE Object_UnitCategory.Id = inId;
    END IF;

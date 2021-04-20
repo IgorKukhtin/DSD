@@ -66,12 +66,21 @@ inherited IlliquidUnitForm: TIlliquidUnitForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = AmountSale
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummSale
             end>
           OptionsBehavior.IncSearch = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
-          OptionsView.ColumnAutoWidth = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -127,6 +136,36 @@ inherited IlliquidUnitForm: TIlliquidUnitForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 95
+          end
+          object AmountSale: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1085#1086
+            DataBinding.FieldName = 'AmountSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 73
+          end
+          object SummSale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078
+            DataBinding.FieldName = 'SummSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 71
+          end
+          object ProcSale: TcxGridDBColumn
+            Caption = #1055#1088#1086#1094#1077#1085#1090' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
+            DataBinding.FieldName = 'ProcSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 88
           end
         end
       end

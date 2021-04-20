@@ -1374,6 +1374,10 @@ CREATE OR REPLACE FUNCTION zc_Object_FinalSUAProtocol() RETURNS Integer AS $BODY
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_FinalSUAProtocol', 'Протокол формирований по СУА' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_FinalSUAProtocol');
 
+CREATE OR REPLACE FUNCTION zc_Object_ScaleCalcMarketingPlan() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ScaleCalcMarketingPlan'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_ScaleCalcMarketingPlan', 'Шкала расчета премии/штрафы в план по маркетингу' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ScaleCalcMarketingPlan');
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1390,6 +1394,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 19.04.21                                                                                        * zc_Object_ScaleCalcMarketingPlan
  07.04.21         * zc_Object_ReturnKind
                     zc_Object_Reason
  24.03.21                                                                                        * zc_Object_FinalSUAProtocol

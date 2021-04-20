@@ -2511,10 +2511,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_User_LikiDnepr_Unit() RETURNS Integer A
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_User_LikiDnepr_Unit', 'Связь с Подразделением для которого сотрудник зарегистрирован в МИС «Каштан»', zc_Object_User(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_User_LikiDnepr_Unit');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_UnitCategory_ScaleCalcMarketingPlan() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_UnitCategory_ScaleCalcMarketingPlan'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_UnitCategory_ScaleCalcMarketingPlan', 'Связь с Шкала расчета премии/штрафы в план по маркетингу', zc_Object_UnitCategory(), zc_Object_ScaleCalcMarketingPlan() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_UnitCategory_ScaleCalcMarketingPlan');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 19.04.21                                                                                      * zc_ObjectLink_UnitCategory_ScaleCalcMarketingPlan
  18.04.21         * zc_ObjectLink_MemberPriceList_PriceList
                     zc_ObjectLink_MemberPriceList_Member
  12.04.21                                                                                      * zc_ObjectLink_User_LikiDnepr_Unit
