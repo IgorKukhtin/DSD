@@ -33,10 +33,11 @@ pg_free_result($result);
 //$doc = new DOMDocument('1.0','windows-1251');
 $doc = new DOMDocument('1.0','UTF-8');
 
-if(!$doc->loadXML($_POST["XML"])) {
-echo "Input data can't be parsed as XML document";
-exit;
-}
+//c этим не работает загрузка файлов большого размера
+//if(!$doc->loadXML($_POST["XML"])) {
+//echo "Input data can't be parsed as XML document";
+//exit;
+//}
 
 $doc->loadXML($_POST["XML"],LIBXML_PARSEHUGE);
 
