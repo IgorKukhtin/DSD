@@ -86,7 +86,13 @@ BEGIN
                         FROM tmpUser
                              INNER JOIN ObjectProtocol ON ObjectProtocol.ObjectId = tmpUser.UserId
                         GROUP BY tmpUser.UserId
-                        )
+                        ),
+        tmpProtocolArc AS (SELECT tmpUser.UserId
+                                , min(ObjectProtocol.OperDate)::TDateTime AS DateInsert
+                           FROM tmpUser
+                                INNER JOIN ObjectProtocol_Arc ON ObjectProtocol_Arc.ObjectId = tmpUser.UserId
+                           GROUP BY tmpUser.UserId
+                           )
 
    SELECT 'У вас не сдан экзамен - сдача обязательна!'::TBlob AS Message,
           ''::TVarChar            AS FormName,
@@ -100,8 +106,10 @@ BEGIN
           
         LEFT JOIN tmpProtocol ON tmpProtocol.UserID = tmpUser.UserId
 
+        LEFT JOIN tmpProtocolArc ON tmpProtocolArc.UserID = tmpUser.UserId
+
    WHERE COALESCE(tmpResult.Result, 0) < 85
-     AND COALESCE(tmpUser.DateIn, tmpProtocol.DateInsert, '01.01.2021') < vbDateStart
+     AND COALESCE(tmpUser.DateIn, tmpProtocolArc.DateInsert, tmpProtocol.DateInsert, '01.01.2021') < vbDateStart
      AND tmpUser.UserId = inUserId
    LIMIT 1;
 

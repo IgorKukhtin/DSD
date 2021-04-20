@@ -1229,12 +1229,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_MemberPriceList_Comment() RETURNS Int
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_MemberPriceList_Comment', zc_Object_MemberPriceList(), ' 	Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MemberPriceList_Comment');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_BuyerForSite_Phone() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_BuyerForSite_Phone'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_BuyerForSite_Phone', zc_Object_BuyerForSite(), 'Телефон' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_BuyerForSite_Phone');
 
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 20.04.21                                                                                                         * zc_ObjectString_BuyerForSite_Phone  
  18.04.21         * zc_ObjectString_MemberPriceList_Comment
  13.04.21                                                                                                         * zc_ObjectString_User_LikiDnepr_UserEmail, zc_ObjectString_User_LikiDnepr_PasswordEHels   
  18.03.21         * zc_ObjectString_PersonalServiceList_OnFlowType

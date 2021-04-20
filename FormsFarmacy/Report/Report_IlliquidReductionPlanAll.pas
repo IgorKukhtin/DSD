@@ -36,6 +36,8 @@ type
     AmountStart: TcxGridDBColumn;
     SummaPenalty: TcxGridDBColumn;
     ManDays: TcxGridDBColumn;
+    SummaSale: TcxGridDBColumn;
+    ProcSaleIlliquid: TcxGridDBColumn;
   private
     { Private declarations }
   public

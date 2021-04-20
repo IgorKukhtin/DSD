@@ -40,6 +40,8 @@ BEGIN
                           AND (COALESCE (inUnitId, 0) = 0 OR Object_Unit.Id = inUnitId)  
                           AND Object_Unit.IsErased = False
                           AND COALESCE(ObjectString_Unit_Address.ValueData, '') <> ''
+                          AND Object_Unit.ValueData NOT ILIKE '%«¿ –€“¿%'
+                          AND Object_Unit.ValueData NOT ILIKE '!%'
                        )
           , tmpUnitPrice AS (SELECT tmpUnit.UnitId
                                   , ObjectLink_Price_Goods.ChildObjectId AS GoodsId

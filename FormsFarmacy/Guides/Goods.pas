@@ -123,8 +123,6 @@ type
     macUpdateNot_v2_No: TMultiAction;
     bbUpdateNot_v2_Yes: TdxBarButton;
     bbUpdateNot_v2_No: TdxBarButton;
-    isSUN_v3: TcxGridDBColumn;
-    KoeffSUN_v3: TcxGridDBColumn;
     spUpdate_isSun_v3_No: TdsdStoredProc;
     spUpdate_isSun_v3_yes: TdsdStoredProc;
     actUpdate_isSun_v3_No: TdsdExecStoredProc;

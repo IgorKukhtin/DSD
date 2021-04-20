@@ -10,17 +10,17 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
   inherited PageControl: TcxPageControl
     Width = 949
     Height = 447
-    ExplicitWidth = 869
+    ExplicitWidth = 949
     ExplicitHeight = 447
     ClientRectBottom = 447
     ClientRectRight = 949
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 869
+      ExplicitWidth = 949
       ExplicitHeight = 447
       inherited cxGrid: TcxGrid
         Width = 949
         Height = 447
-        ExplicitWidth = 869
+        ExplicitWidth = 949
         ExplicitHeight = 447
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -104,6 +104,16 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
             Options.Editing = False
             Width = 75
           end
+          object ProcSaleIlliquid: TcxGridDBColumn
+            Caption = #1055#1088#1086#1094#1077#1085#1090' '#1086#1090' '#1089#1091#1084#1084#1099
+            DataBinding.FieldName = 'ProcSaleIlliquid'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
+          end
           object ProcSale: TcxGridDBColumn
             Caption = '% '#1087#1088#1086#1076#1072#1078
             DataBinding.FieldName = 'ProcSale'
@@ -113,6 +123,15 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 65
+          end
+          object SummaSale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078
+            DataBinding.FieldName = 'SummaSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
           object Color_calc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_Calc'
@@ -143,7 +162,7 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
   end
   inherited Panel: TPanel
     Width = 949
-    ExplicitWidth = 869
+    ExplicitWidth = 949
     inherited deStart: TcxDateEdit
       EditValue = 43344d
       Properties.DisplayFormat = 'mmmm yyyy'
@@ -220,6 +239,25 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
     Top = 192
   end
   inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
     Left = 48
     Top = 240
   end
@@ -248,7 +286,7 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
       GuiParams = <
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
@@ -359,7 +397,7 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
     Params = <
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput

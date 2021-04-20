@@ -10,17 +10,19 @@ inherited Report_ImplementationPlanEmployeeAllForm: TReport_ImplementationPlanEm
   inherited PageControl: TcxPageControl
     Width = 824
     Height = 447
-    ExplicitWidth = 920
+    ExplicitWidth = 824
     ExplicitHeight = 447
     ClientRectBottom = 447
     ClientRectRight = 824
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 920
+      ExplicitWidth = 824
       ExplicitHeight = 447
       inherited cxGrid: TcxGrid
         Width = 824
         Height = 447
-        ExplicitWidth = 920
+        ExplicitLeft = 101
+        ExplicitTop = 16
+        ExplicitWidth = 824
         ExplicitHeight = 447
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -74,6 +76,21 @@ inherited Report_ImplementationPlanEmployeeAllForm: TReport_ImplementationPlanEm
             Options.Editing = False
             Width = 188
           end
+          object PositionName: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+            DataBinding.FieldName = 'PositionName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object DaysWorked: TcxGridDBColumn
+            Caption = #1044#1085#1077#1081' '#1088#1072#1073#1086#1090#1072#1077#1090
+            DataBinding.FieldName = 'DaysWorked'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
           object UnitName: TcxGridDBColumn
             Caption = #1040#1087#1090#1077#1082#1072' ('#1086#1089#1085#1086#1074#1085#1072#1103')'
             DataBinding.FieldName = 'UnitName'
@@ -81,6 +98,14 @@ inherited Report_ImplementationPlanEmployeeAllForm: TReport_ImplementationPlanEm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 220
+          end
+          object UnitCategoryName: TcxGridDBColumn
+            Caption = #1050#1072#1090#1077'- '#1075#1086#1088#1080#1103
+            DataBinding.FieldName = 'UnitCategoryName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 49
           end
           object NormOfManDays: TcxGridDBColumn
             Caption = #1053#1086#1088#1084#1072' '#1095#1077#1083#1086#1074#1077#1082#1086#1076#1085#1077#1081
@@ -143,7 +168,7 @@ inherited Report_ImplementationPlanEmployeeAllForm: TReport_ImplementationPlanEm
   end
   inherited Panel: TPanel
     Width = 824
-    ExplicitWidth = 920
+    ExplicitWidth = 824
     inherited deStart: TcxDateEdit
       EditValue = 43344d
       Properties.DisplayFormat = 'mmmm yyyy'
@@ -174,6 +199,25 @@ inherited Report_ImplementationPlanEmployeeAllForm: TReport_ImplementationPlanEm
     Top = 192
   end
   inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
     Left = 48
     Top = 240
   end
@@ -210,7 +254,7 @@ inherited Report_ImplementationPlanEmployeeAllForm: TReport_ImplementationPlanEm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -265,7 +309,7 @@ inherited Report_ImplementationPlanEmployeeAllForm: TReport_ImplementationPlanEm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
