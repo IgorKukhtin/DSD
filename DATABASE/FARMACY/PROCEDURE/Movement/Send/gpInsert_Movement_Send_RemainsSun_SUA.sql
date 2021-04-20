@@ -161,7 +161,10 @@ BEGIN
      HAVING SUM(_tmpResult_SUA.Amount) > 0;
              
      -- 10. сохранили свойство <ƒата перемещений>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Calculation(), vbMovementId, CURRENT_DATE);
+     IF EXISTS(SELECT 1 FROM _tmpResult_SUA WHERE _tmpResult_SUA.Amount > 0)
+     THEN
+       PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Calculation(), vbMovementId, CURRENT_DATE);
+     END IF;
 
      -- RAISE EXCEPTION '<ok>';
 

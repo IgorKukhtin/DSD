@@ -35,7 +35,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , isNotUploadSites Boolean, DoesNotShare Boolean, AllowDivision Boolean
              , GoodsAnalog TVarChar, GoodsAnalogATC TVarChar, GoodsActiveSubstance TVarChar
              , NotTransferTime boolean
-             , isSUN_v3 boolean, KoeffSUN_v3 TFloat
+             --, isSUN_v3 boolean, KoeffSUN_v3 TFloat
              , KoeffSUN_v1 TFloat, KoeffSUN_v2 TFloat, KoeffSUN_v4 TFloat, KoeffSUN_Supplementv1 TFloat
              --, LimitSUN_T1 TFloat
              , isResolution_224  boolean
@@ -328,8 +328,8 @@ BEGIN
            , Object_Goods_Main.ActiveSubstance                                   AS GoodsActiveSubstance
            , Object_Goods_Main.isNotTransferTime                                 AS NotTransferTime
 
-           , COALESCE (Object_Goods_Retail.isSUN_v3, False) ::Boolean AS isSUN_v3
-           , COALESCE (Object_Goods_Retail.KoeffSUN_v3,0)   :: TFloat AS KoeffSUN_v3
+           --, COALESCE (Object_Goods_Retail.isSUN_v3, False) ::Boolean AS isSUN_v3
+           --, COALESCE (Object_Goods_Retail.KoeffSUN_v3,0)   :: TFloat AS KoeffSUN_v3
            , COALESCE (Object_Goods_Retail.KoeffSUN_v1,0)   :: TFloat AS KoeffSUN_v1
            , COALESCE (Object_Goods_Retail.KoeffSUN_v2,0)   :: TFloat AS KoeffSUN_v2
            , COALESCE (Object_Goods_Retail.KoeffSUN_v4,0)   :: TFloat AS KoeffSUN_v4

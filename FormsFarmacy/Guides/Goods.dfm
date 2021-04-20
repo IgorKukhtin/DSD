@@ -498,27 +498,6 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 78
           end
-          object isSUN_v3: TcxGridDBColumn
-            Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053
-            DataBinding.FieldName = 'isSUN_v3'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' - '#1069#1082#1089#1087#1088#1077#1089#1089
-            Options.Editing = False
-            Width = 50
-          end
-          object KoeffSUN_v3: TcxGridDBColumn
-            Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1086' '#1069'-'#1057#1059#1053
-            DataBinding.FieldName = 'KoeffSUN_v3'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##; ; '
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1086' '#1057#1059#1053' - '#1069#1082#1089#1087#1088#1077#1089#1089
-            Options.Editing = False
-            Width = 70
-          end
           object KoeffSUN_v1: TcxGridDBColumn
             Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1086' '#1057#1059#1053' v1'
             DataBinding.FieldName = 'KoeffSUN_v1'

@@ -1225,9 +1225,9 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_PercentageOverdueSUNForm');
     exit;
 
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IlliquidReductionPlanAllForm'));
+}    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IlliquidReductionPlanAllForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_IlliquidReductionPlanAllForm');
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IlliquidReductionPlanListForm'));
+{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IlliquidReductionPlanListForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_IlliquidReductionPlanListForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IlliquidReductionPlanAllDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_IlliquidReductionPlanAllDialogForm');
@@ -1246,13 +1246,13 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitabilityDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitabilityDialogForm');
     exit;
-}
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_DiscountExternalForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_DiscountExternalForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_DiscountExternalDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_DiscountExternalDialogForm');
     exit;
- {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSUNForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSUNForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSUNDialogForm'));
@@ -1567,9 +1567,9 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckFLForm');
 
     // Отчет по выполнению плана продаж по сотруднику
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ImplementationPlanEmployeeAllForm'));
+}    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ImplementationPlanEmployeeAllForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_ImplementationPlanEmployeeAllForm');
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TDataDialogForm'));
+ {   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDataDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TDataDialogForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ImplementationPlanEmployeeDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_ImplementationPlanEmployeeDialogForm');

@@ -28,6 +28,9 @@ type
     bbExecuteDialog: TdxBarButton;
     NormOfManDays: TcxGridDBColumn;
     FactOfManDays: TcxGridDBColumn;
+    UnitCategoryName: TcxGridDBColumn;
+    PositionName: TcxGridDBColumn;
+    DaysWorked: TcxGridDBColumn;
   private
     { Private declarations }
   public
