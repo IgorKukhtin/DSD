@@ -221,7 +221,13 @@ BEGIN
                        , MovementDate_Update.ValueData              AS UpdateDate
                  
                        , Movement_Parent.Id             ::Integer  AS MovementId_parent
-                       , ('№ ' || Movement_Parent.InvNumber || ' от ' || Movement_Parent.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_parent
+                       , ('№ '
+                          ||CASE WHEN Movement_Parent.StatusId = zc_Enum_Status_UnComplete() THEN zc_InvNumber_Status_UnComlete()
+                                 WHEN Movement_Parent.StatusId = zc_Enum_Status_Erased()     THEN zc_InvNumber_Status_Erased()
+                                 ELSE ''
+                            END
+                          ||' '
+                          || Movement_Parent.InvNumber || ' от ' || Movement_Parent.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_parent
                        , MovementDesc_Parent.ItemName   ::TVarChar  AS DescName_parent
                  
                        -- подсветить если счет не оплачен + подсветить красным - если оплата больше чем сумма счета + добавить кнопку - в новой форме показать все оплаты для этого счета

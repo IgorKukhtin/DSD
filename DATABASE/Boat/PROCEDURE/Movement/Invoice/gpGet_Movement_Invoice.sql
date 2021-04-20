@@ -88,7 +88,7 @@ BEGIN
      WITH
      tmpMLM_OrderClient AS (SELECT *
                             FROM (SELECT MovementLinkMovement.*
-                                       , ROW_NUMBER() OVER (PARTITION BY MovementLinkMovement.MovementId) AS ord
+                                       , ROW_NUMBER() OVER (PARTITION BY MovementLinkMovement.MovementChildId) AS ord
                                   FROM MovementLinkMovement
                                       INNER JOIN Movement AS Movement_Order
                                                           ON Movement_Order.Id = MovementLinkMovement.MovementId
@@ -127,7 +127,13 @@ BEGIN
       , MovementString_Comment.ValueData                    AS Comment
 
       , Movement_Parent.Id             ::Integer  AS MovementId_parent
-      , ('№ ' || Movement_Parent.InvNumber || ' от ' || zfConvert_DateToString (Movement_Parent.OperDate) :: TVarChar ||' (' ||MovementDesc_Parent.ItemName||' )' ) :: TVarChar  AS InvNumber_parent
+      , ('№ '
+         ||CASE WHEN Movement_Parent.StatusId = zc_Enum_Status_UnComplete() THEN zc_InvNumber_Status_UnComlete()
+                WHEN Movement_Parent.StatusId = zc_Enum_Status_Erased()     THEN zc_InvNumber_Status_Erased()
+                ELSE ''
+           END
+         ||' '
+         || Movement_Parent.InvNumber || ' от ' || zfConvert_DateToString (Movement_Parent.OperDate) :: TVarChar ||' (' ||MovementDesc_Parent.ItemName||' )' ) :: TVarChar  AS InvNumber_parent
 
     FROM Movement
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
