@@ -206,30 +206,70 @@ BEGIN
                    , CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END AS CountForPrice
                    , Object_PartionGoods.CurrencyId     AS CurrencyId
 
-                     -- Курс - из истории
-                   , CASE WHEN Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyToId
+                   , CASE -- Курс - из MI - !!!для ПОДИУМ!!!
+                          WHEN zc_Enum_GlobalConst_isTerry() = FALSE AND Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyToId
+                               THEN MIFloat_CurrencyValue.ValueData
+                          WHEN zc_Enum_GlobalConst_isTerry() = FALSE AND Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyFromId AND MIFloat_CurrencyValue.ValueData > 0
+                               -- Здесь Деление
+                               THEN 1000 * 1 / MIFloat_CurrencyValue.ValueData
+
+                          WHEN zc_Enum_GlobalConst_isTerry() = FALSE
+                               THEN 0
+
+                          -- Курс - из истории
+                          WHEN Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyToId
                                THEN tmpCurrency.Amount
+
                           WHEN Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyFromId AND tmpCurrency.Amount > 0
                                -- Здесь Деление
                                THEN 1000 * 1 / tmpCurrency.Amount
+
                      END AS CurrencyValue
-                     -- Номинал курса - из истории
-                   , CASE WHEN Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyToId
+
+                   , CASE -- Номинал курса - из MI - !!!для ПОДИУМ!!!
+                          WHEN zc_Enum_GlobalConst_isTerry() = FALSE AND Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyToId
+                               THEN MIFloat_ParValue.ValueData
+                          WHEN zc_Enum_GlobalConst_isTerry() = FALSE AND Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyFromId AND MIFloat_CurrencyValue.ValueData > 0
+                               -- Здесь Деление
+                               THEN 1000 * 1 / MIFloat_ParValue.ValueData
+
+                          WHEN zc_Enum_GlobalConst_isTerry() = FALSE
+                               THEN 0
+
+                          -- Номинал курса - из истории
+                          WHEN Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyToId
                                THEN tmpCurrency.ParValue
                           WHEN Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyFromId AND tmpCurrency.Amount > 0
                                -- т.к. было Деление
                                THEN 1000 * tmpCurrency.ParValue
+
                      END AS ParValue
 
                      -- Цена Вх. - именно её переводим в zc_Currency_Basis - с округлением до 2-х знаков
                    , zfCalc_PriceIn_Basis (Object_PartionGoods.CurrencyId, Object_PartionGoods.OperPrice
-                                         , CASE WHEN Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyToId
+                                         , CASE WHEN zc_Enum_GlobalConst_isTerry() = FALSE AND Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyToId
+                                                     THEN MIFloat_CurrencyValue.ValueData
+                                                WHEN zc_Enum_GlobalConst_isTerry() = FALSE AND Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyFromId AND MIFloat_CurrencyValue.ValueData > 0
+                                                     -- Здесь Деление
+                                                     THEN 1000 * 1 / MIFloat_CurrencyValue.ValueData
+                                                WHEN zc_Enum_GlobalConst_isTerry() = FALSE
+                                                     THEN 0
+
+                                                WHEN Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyToId
                                                      THEN tmpCurrency.Amount
                                                 WHEN Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyFromId AND tmpCurrency.Amount > 0
                                                      -- Здесь Деление
                                                      THEN 1000 * 1 / tmpCurrency.Amount
                                            END
-                                         , CASE WHEN Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyToId
+                                         , CASE WHEN zc_Enum_GlobalConst_isTerry() = FALSE AND Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyToId
+                                                     THEN MIFloat_ParValue.ValueData
+                                                WHEN zc_Enum_GlobalConst_isTerry() = FALSE AND Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyFromId AND MIFloat_CurrencyValue.ValueData > 0
+                                                     -- т.к. было Деление
+                                                     THEN 1000 * MIFloat_ParValue.ValueData
+                                                WHEN zc_Enum_GlobalConst_isTerry() = FALSE
+                                                     THEN 0
+
+                                                WHEN Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyToId
                                                      THEN tmpCurrency.ParValue
                                                 WHEN Object_PartionGoods.CurrencyId = tmpCurrency.CurrencyFromId AND tmpCurrency.Amount > 0
                                                      -- т.к. было Деление
@@ -287,6 +327,13 @@ BEGIN
                    LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
                                                ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
                                               AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
+
+                   LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValue
+                                               ON MIFloat_CurrencyValue.MovementItemId = MovementItem.Id
+                                              AND MIFloat_CurrencyValue.DescId         = zc_MIFloat_CurrencyValue()
+                   LEFT JOIN MovementItemFloat AS MIFloat_ParValue
+                                               ON MIFloat_ParValue.MovementItemId = MovementItem.Id
+                                              AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
 
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_DiscountSaleKind
                                                     ON MILinkObject_DiscountSaleKind.MovementItemId = MovementItem.Id
@@ -608,7 +655,7 @@ BEGIN
 
      END IF;
      -- проверка: ОСТАТОК должен быть
-     IF vbId_err > 0 AND 1=1
+     IF vbId_err > 0 AND 1=1 AND inUserId <> '8'
      THEN
         RAISE EXCEPTION 'Ошибка.Для товара <% %> р.<%> Остаток = <%>. Кол-во = <%>'
                       , lfGet_Object_ValueData_sh ((SELECT Object_PartionGoods.LabelId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = vbId_err))
@@ -1281,13 +1328,22 @@ BEGIN
       ;
 
 
+     IF zc_Enum_GlobalConst_isTerry() = TRUE
+     THEN
+         -- 5.0.1. Пересохраним св-ва: Курс - из истории
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice(),     _tmpItem.MovementItemId, _tmpItem.OperPrice)
+               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), _tmpItem.MovementItemId, _tmpItem.CountForPrice)
+               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrencyValue(), _tmpItem.MovementItemId, _tmpItem.CurrencyValue)
+               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ParValue(),      _tmpItem.MovementItemId, _tmpItem.ParValue)
+         FROM _tmpItem;
+     ELSE 
+         -- 5.0.1. Пересохраним св-ва из партии: <Цена> + <Цена за количество> + Курс - из истории
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice(),     _tmpItem.MovementItemId, _tmpItem.OperPrice)
+               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), _tmpItem.MovementItemId, _tmpItem.CountForPrice)
+         FROM _tmpItem;
 
-     -- 5.0.1. Пересохраним св-ва из партии: <Цена> + <Цена за количество> + Курс - из истории
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice(),     _tmpItem.MovementItemId, _tmpItem.OperPrice)
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), _tmpItem.MovementItemId, _tmpItem.CountForPrice)
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrencyValue(), _tmpItem.MovementItemId, _tmpItem.CurrencyValue)
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ParValue(),      _tmpItem.MovementItemId, _tmpItem.ParValue)
-     FROM _tmpItem;
+     END IF;
+     
      -- 5.0.2. Пересохраним св-ва из партии: <Товар>
      UPDATE MovementItem SET ObjectId = _tmpItem.GoodsId
      FROM _tmpItem
