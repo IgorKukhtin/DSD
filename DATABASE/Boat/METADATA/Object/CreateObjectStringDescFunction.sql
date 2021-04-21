@@ -300,10 +300,20 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_TranslateMessage_Name() RETURNS Integ
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_TranslateMessage_Name', zc_Object_TranslateMessage(), 'Название Элемента' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_TranslateMessage_Name');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_DocTag_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_DocTag_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_DocTag_Comment', zc_Object_DocTag(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_DocTag_Comment');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsDocument_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsDocument_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_GoodsDocument_Comment', zc_Object_GoodsDocument(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsDocument_Comment');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.04.21         * zc_ObjectString_DocTag_Comment
+                    zc_ObjectString_GoodsDocument_Comment
  11.01.21         * zc_ObjectString_ProdModel_PatternCIN
  15.12.20         * zc_ObjectString_TranslateMessage_Name
  11.12.20         * zc_ObjectString_ColorPattern_Code

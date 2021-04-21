@@ -247,6 +247,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsDocument_Goods() RETURNS Integer A
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_GoodsDocument_Goods', 'Документ', zc_Object_GoodsDocument(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsDocument_Goods');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsDocument_DocTag() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsDocument_DocTag'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_GoodsDocument_DocTag', 'Категория Документация', zc_Object_GoodsDocument(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsDocument_DocTag');
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsPhoto_Goods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsPhoto_Goods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_GoodsPhoto_Goods', 'Фото', zc_Object_GoodsPhoto(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsPhoto_Goods');
@@ -386,6 +390,7 @@ SELECT 'zc_ObjectLink_Account_AccountKind', 'Типы Счетов', zc_Object_Account(), 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.04.21         * zc_ObjectLink_GoodsDocument_DocTag
  13.04.21         * zc_ObjectLink_Goods_Engine
  03.03.21         * zc_ObjectLink_Account_AccountGroup
                     zc_ObjectLink_Account_AccountDirection
