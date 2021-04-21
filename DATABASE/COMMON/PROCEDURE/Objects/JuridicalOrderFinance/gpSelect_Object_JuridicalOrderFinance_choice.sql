@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer
              , InfoMoneyCode Integer
              , InfoMoneyName TVarChar
              , InfoMoneyName_all TVarChar
-             , ContractId Integer, ContractCode Integer, ContractName TVarChar
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar, PaidKindName TVarChar
              , SummOrderFinance TFloat
              , Comment TVarChar
              , isErased Boolean
@@ -41,7 +41,9 @@ BEGIN
                          , Object_Contract_View.ContractId
                          , Object_Contract_View.ContractCode
                          , Object_Contract_View.InvNumber AS ContractName
+                         , Object_PaidKind.ValueData      AS PaidKindName
                     FROM Object_Contract_View
+                        LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
                     WHERE Object_Contract_View.isErased = FALSE
                       AND Object_Contract_View.EndDate >= CURRENT_DATE
                       AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
@@ -143,6 +145,7 @@ BEGIN
              , tmpData.ContractId
              , tmpData.ContractCode
              , tmpData.ContractName
+             , tmpData.PaidKindName
 
              , COALESCE (tmpJuridicalOrderFinance.SummOrderFinance,0) :: TFloat  AS SummOrderFinance
              , COALESCE (tmpJuridicalOrderFinance.Comment,'')         ::TVarChar AS Comment
@@ -173,6 +176,7 @@ BEGIN
              LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate
                                      ON ObjectBoolean_isCorporate.ObjectId = Object_Juridical.Id
                                     AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
+             
         ;
     ELSE
         RETURN QUERY 
@@ -201,11 +205,14 @@ BEGIN
                         , Object_Contract_View.ContractId
                         , Object_Contract_View.ContractCode
                         , Object_Contract_View.InvNumber AS ContractName
+                        , Object_PaidKind.ValueData      AS PaidKindName
                    FROM Object_Contract_View
+                        LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
                    WHERE Object_Contract_View.isErased = FALSE
                      AND Object_Contract_View.EndDate >= CURRENT_DATE
                      AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                      AND Object_Contract_View.isErased = FALSE
+                     --AND Object_Contract_View.PaidKindId = zc_Enum_PaidKind_FirstForm()
                   )
 
 
@@ -243,6 +250,7 @@ BEGIN
              , tmpData.ContractId
              , tmpData.ContractCode
              , tmpData.ContractName
+             , tmpData.PaidKindName
 
              , ObjectFloat_SummOrderFinance.ValueData :: TFloat   AS SummOrderFinance
              , ObjectString_Comment.ValueData         :: TVarChar AS Comment
