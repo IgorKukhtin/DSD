@@ -437,8 +437,6 @@
       Styles.Header = dmMain.cxHeaderStyle
       TabOrder = 0
       DataController.DataSource = PhotoDS
-      ExplicitTop = 329
-      ExplicitHeight = 135
       Version = 1
       object colFileName: TcxDBEditorRow
         Options.CanAutoHeight = False
@@ -474,7 +472,6 @@
       Height = 26
       Align = dalTop
       BarManager = BarManager
-      ExplicitTop = 297
     end
     object PanelPhoto: TPanel
       Left = 0
@@ -550,9 +547,6 @@
         Height = 273
         Align = alRight
         TabOrder = 1
-        ExplicitLeft = 307
-        ExplicitTop = 25
-        ExplicitHeight = 132
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSourceDoc
@@ -608,8 +602,6 @@
         Styles.Header = dmMain.cxHeaderStyle
         TabOrder = 0
         DataController.DataSource = DocumentDS
-        ExplicitWidth = 264
-        ExplicitHeight = 216
         Version = 1
         object cxDBEditorRow1: TcxDBEditorRow
           Options.CanAutoHeight = False
@@ -637,8 +629,6 @@
         Height = 273
         AlignSplitter = salRight
         Control = cxGrid2
-        ExplicitLeft = -4
-        ExplicitHeight = 247
       end
     end
   end
@@ -1928,6 +1918,9 @@
       StoredProcList = <
         item
           StoredProc = spDocumentSelect
+        end
+        item
+          StoredProc = spDocumentSelect2
         end>
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
@@ -2134,14 +2127,6 @@
         item
           Visible = True
           ItemName = 'bbRefreshDoc'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bb'
         end
         item
           Visible = True
