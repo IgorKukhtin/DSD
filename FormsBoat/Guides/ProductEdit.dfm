@@ -547,7 +547,7 @@ object ProductEditForm: TProductEditForm
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     Properties.ReadOnly = True
-    TabOrder = 69
+    TabOrder = 68
     Width = 114
   end
   object cxLabel31: TcxLabel

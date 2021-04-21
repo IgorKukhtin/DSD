@@ -265,7 +265,8 @@ uses
   Report_OrderClient in '..\..\FormsBoat\Report\Report_OrderClient.pas' {Report_OrderClientForm: TParentForm},
   OrderClientJournalChoice in '..\..\FormsBoat\Document\OrderClientJournalChoice.pas' {OrderClientJournalChoiceForm: TParentForm},
   DocTag in '..\..\FormsBoat\Guides\DocTag.pas' {DocTagForm: TParentForm},
-  DocTagEdit in '..\..\FormsBoat\Guides\DocTagEdit.pas' {DocTagEditForm: TParentForm};
+  DocTagEdit in '..\..\FormsBoat\Guides\DocTagEdit.pas' {DocTagEditForm: TParentForm},
+  ProductDocumentPhotoEdit in '..\..\FormsBoat\Guides\ProductDocumentPhotoEdit.pas' {ProductDocumentPhotoEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

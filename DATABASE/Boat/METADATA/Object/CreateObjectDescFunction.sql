@@ -279,6 +279,15 @@ CREATE OR REPLACE FUNCTION zc_Object_GoodsPhoto() RETURNS Integer AS $BODY$BEGIN
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_GoodsPhoto', 'Фото комплектующие' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_GoodsPhoto');
 
+CREATE OR REPLACE FUNCTION zc_Object_ProductDocument() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ProductDocument'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_ProductDocument', 'Документы лодка' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ProductDocument');
+
+CREATE OR REPLACE FUNCTION zc_Object_ProductPhoto() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ProductPhoto'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_ProductPhoto', 'Фото лодка' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ProductPhoto');
+
+
 CREATE OR REPLACE FUNCTION zc_Object_ReceiptProdModel() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ReceiptProdModel'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_ReceiptProdModel', 'Шаблон сборка Модели' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ReceiptProdModel');
@@ -323,6 +332,8 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.04.21         * zc_Object_ProductDocument
+                    zc_Object_ProductPhoto
  20.04.21         * zc_Object_DocTag
  09.02.21         * zc_Object_ProdColorPatternPhoto
  15.12.20         * zc_Object_TranslateMessage

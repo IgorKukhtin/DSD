@@ -187,7 +187,7 @@ type
     OperDate_OrderClient: TcxGridDBColumn;
     InvNumber_OrderClient: TcxGridDBColumn;
     actUpdate_OrderClient: TdsdInsertUpdateAction;
-    bb: TdxBarButton;
+    bbUpdate_OrderClient: TdxBarButton;
     InfoMoneyName_Client: TcxGridDBColumn;
     TaxKind_Value_Client: TcxGridDBColumn;
     KeyId: TcxGridDBColumn;
@@ -195,6 +195,8 @@ type
     Basis_summ2_orig: TcxGridDBColumn;
     Amount_ch2: TcxGridDBColumn;
     Amount_ch1: TcxGridDBColumn;
+    actUpdate2: TdsdInsertUpdateAction;
+    bbUpdate2: TdxBarButton;
   private
     { Private declarations }
   public

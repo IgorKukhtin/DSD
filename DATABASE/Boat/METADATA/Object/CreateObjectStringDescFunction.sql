@@ -308,10 +308,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsDocument_Comment() RETURNS Integ
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_GoodsDocument_Comment', zc_Object_GoodsDocument(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsDocument_Comment');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_ProductDocument_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ProductDocument_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_ProductDocument_Comment', zc_Object_ProductDocument(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ProductDocument_Comment');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.04.21         * zc_ObjectString_ProductDocument_Comment
  20.04.21         * zc_ObjectString_DocTag_Comment
                     zc_ObjectString_GoodsDocument_Comment
  11.01.21         * zc_ObjectString_ProdModel_PatternCIN

@@ -1508,7 +1508,7 @@ object ProductForm: TProductForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbUpdate_OrderClient'
         end
         item
           Visible = True
@@ -1659,6 +1659,10 @@ object ProductForm: TProductForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate2'
+        end
+        item
+          Visible = True
           ItemName = 'bbSetErased'
         end
         item
@@ -1720,9 +1724,13 @@ object ProductForm: TProductForm
       Caption = #1055#1077#1095#1072#1090#1100' '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1079#1072#1082#1072#1079#1072
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbUpdate_OrderClient: TdxBarButton
       Action = actUpdate_OrderClient
       Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079
+      Category = 0
+    end
+    object bbUpdate2: TdxBarButton
+      Action = actUpdate2
       Category = 0
     end
   end
@@ -1772,6 +1780,39 @@ object ProductForm: TProductForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actUpdate2: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090#1099' / '#1060#1086#1090#1086
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090#1099' / '#1060#1086#1090#1086
+      ImageIndex = 29
+      FormName = 'TProductDocumentPhotoEditForm'
+      FormNameParam.Value = 'TProductDocumentPhotoEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_OrderClient'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_OrderClient'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
