@@ -54,6 +54,7 @@ BEGIN
    
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), outMovementId, MovementLinkObject_Unit.ObjectId)
           , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ConfirmedKind(), outMovementId, zc_Enum_ConfirmedKind_Complete())
+          , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_BuyerForSite(), outMovementId, MovementLinkObject_BuyerForSite.ObjectId)
           , lpInsertUpdate_MovementString (zc_MovementString_Bayer(), outMovementId, MovementString_Bayer.ValueData)
           , lpInsertUpdate_MovementString (zc_MovementString_BayerPhone(), outMovementId, MovementString_BayerPhone.ValueData)
           , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Deferred(), outMovementId, TRUE)
@@ -72,7 +73,9 @@ BEGIN
          LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckMember
                                       ON MovementLinkObject_CheckMember.MovementId = Movement.Id
                                      AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
-
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_BuyerForSite
+                                      ON MovementLinkObject_BuyerForSite.MovementId = Movement.Id
+                                     AND MovementLinkObject_BuyerForSite.DescId = zc_MovementLinkObject_BuyerForSite()
     WHERE Movement.Id = inMovementId;    
 
     UPDATE MovementItem SET MovementId = outMovementId WHERE MovementItem.ID = inMovementItemId;
@@ -90,6 +93,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И. Шаблий О.В.
+ 21.04.21                                                     * add BuyerForSite
  25.11.19                                                     *
 */
 -- тест

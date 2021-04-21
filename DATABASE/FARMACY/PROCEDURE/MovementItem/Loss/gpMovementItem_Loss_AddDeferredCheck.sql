@@ -29,12 +29,16 @@ BEGIN
          , TO_CHAR (Movement_Check.OperDate, 'dd.mm.yyyy')
          , Movement_Check.TotalCount
          , Movement_Check.TotalSumm
-         , COALESCE (MovementString_Bayer.ValueData , ''))
+         , COALESCE (Object_BuyerForSite.ValueData, MovementString_Bayer.ValueData , ''))
     INTO vbComent
     FROM Movement_Check_View AS Movement_Check
 	     LEFT JOIN MovementString AS MovementString_Bayer
                                       ON MovementString_Bayer.MovementId = Movement_Check.Id
                                      AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_BuyerForSite
+                                      ON MovementLinkObject_BuyerForSite.MovementId = Movement_Check.Id
+                                     AND MovementLinkObject_BuyerForSite.DescId = zc_MovementLinkObject_BuyerForSite()
+         LEFT JOIN Object AS Object_BuyerForSite ON Object_BuyerForSite.Id = MovementLinkObject_BuyerForSite.ObjectId
     WHERE Movement_Check.Id = inCheckID;
 
     -- сохранили <Примечание>
@@ -71,6 +75,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 21.04.21                                                       * add BuyerForSite
  19.07.19                                                       *
 */
 

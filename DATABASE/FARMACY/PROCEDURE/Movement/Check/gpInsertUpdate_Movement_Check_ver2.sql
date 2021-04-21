@@ -174,7 +174,13 @@ BEGIN
           -- сохранили менеджера
           PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_CheckMember(), ioId, inManagerId);
           -- сохранили ФИО покупателя
-          PERFORM lpInsertUpdate_MovementString(zc_MovementString_Bayer(), ioId, inBayer);
+          IF NOT EXISTS(SELECT * 
+                        FROM MovementLinkObject AS MovementLinkObject_BuyerForSite
+                        WHERE MovementLinkObject_BuyerForSite.MovementId = ioId
+                          AND MovementLinkObject_BuyerForSite.DescId = zc_MovementLinkObject_BuyerForSite())
+          THEN
+            PERFORM lpInsertUpdate_MovementString(zc_MovementString_Bayer(), ioId, inBayer);
+          END IF;
         END IF;
         -- Отмечаем документ как отложенный
         PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Deferred(), ioId, TRUE);

@@ -58,7 +58,7 @@ BEGIN
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (outId, vbUserId);
-   
+      
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
 

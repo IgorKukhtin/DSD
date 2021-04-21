@@ -240,7 +240,7 @@ BEGIN
     
     -- Заполнение суммы СП в дополнительные расходы
     BEGIN
-      IF date_part('MONTH',  CURRENT_DATE)::Integer = 1 AND date_part('HOUR',  CURRENT_TIME)::Integer = 5 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 30
+      IF date_part('DAY',  CURRENT_DATE)::Integer = 1 AND date_part('HOUR',  CURRENT_TIME)::Integer = 5 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 30
       THEN
          PERFORM gpInsertUpdate_MovementItem_WagesAdditionalExpenses_SP (inOperDate := CURRENT_DATE - INTERVAL '1 DAY', inSession:=  zfCalc_UserAdmin());
       END IF;
@@ -252,7 +252,7 @@ BEGIN
     
     -- Фиксация неликвидов
     BEGIN
-      IF date_part('MONTH',  CURRENT_DATE)::Integer = 1 AND date_part('HOUR',  CURRENT_TIME)::Integer = 5 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 30
+      IF date_part('DAY',  CURRENT_DATE)::Integer = 1 AND date_part('HOUR',  CURRENT_TIME)::Integer = 5 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 30
       THEN
          PERFORM gpInsertUpdate_Movement_IlliquidUnit_Formation(inOperDate := CURRENT_DATE, inSession:=  zfCalc_UserAdmin());
       END IF;

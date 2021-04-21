@@ -65,8 +65,10 @@ BEGIN
            , Object_Unit.ValueData                      AS UnitName
            , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) :: Boolean AS IsDeferred
            , CASE WHEN MovementString_InvNumberOrder.ValueData <> '' AND MovementLinkObject_CheckMember.ObjectId IS NULL THEN zc_Member_Site() ELSE Object_CashMember.ValueData END :: TVarChar AS CashMember
-	   , MovementString_Bayer.ValueData             AS Bayer
-           , MovementString_BayerPhone.ValueData        AS BayerPhone
+	       , COALESCE(Object_BuyerForSite.ValueData,
+                      MovementString_Bayer.ValueData)   AS Bayer
+           , COALESCE (ObjectString_BuyerForSite_Phone.ValueData, 
+                       MovementString_BayerPhone.ValueData)        AS BayerPhone
            , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
            , Object_ConfirmedKind.ValueData             AS ConfirmedKindName
            , Object_ConfirmedKindClient.ValueData       AS ConfirmedKindClientName
@@ -78,9 +80,9 @@ BEGIN
              INNER JOIN Movement ON Movement.Id = MovementLinkObject_ConfirmedKindClient.MovementId
                                 AND Movement.StatusId <> zc_Enum_Status_Erased()
 
-	     LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
-			               ON MovementBoolean_Deferred.MovementId = Movement.Id
-				      AND MovementBoolean_Deferred.DescId     = zc_MovementBoolean_Deferred()
+             LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                       ON MovementBoolean_Deferred.MovementId = Movement.Id
+			                          AND MovementBoolean_Deferred.DescId     = zc_MovementBoolean_Deferred()
 
              LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                           ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -90,14 +92,22 @@ BEGIN
              LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckMember
                                           ON MovementLinkObject_CheckMember.MovementId = Movement.Id
                                          AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
-	     LEFT JOIN Object AS Object_CashMember ON Object_CashMember.Id = MovementLinkObject_CheckMember.ObjectId
+	         LEFT JOIN Object AS Object_CashMember ON Object_CashMember.Id = MovementLinkObject_CheckMember.ObjectId
 
-	     LEFT JOIN MovementString AS MovementString_Bayer
+	         LEFT JOIN MovementString AS MovementString_Bayer
                                       ON MovementString_Bayer.MovementId = Movement.Id
                                      AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
              LEFT JOIN MovementString AS MovementString_BayerPhone
                                       ON MovementString_BayerPhone.MovementId = Movement.Id
                                      AND MovementString_BayerPhone.DescId = zc_MovementString_BayerPhone()
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_BuyerForSite
+                                          ON MovementLinkObject_BuyerForSite.MovementId = Movement.Id
+                                         AND MovementLinkObject_BuyerForSite.DescId = zc_MovementLinkObject_BuyerForSite()
+             LEFT JOIN Object AS Object_BuyerForSite ON Object_BuyerForSite.Id = MovementLinkObject_BuyerForSite.ObjectId
+             LEFT JOIN ObjectString AS ObjectString_BuyerForSite_Phone
+                                    ON ObjectString_BuyerForSite_Phone.ObjectId = Object_BuyerForSite.Id 
+                                   AND ObjectString_BuyerForSite_Phone.DescId = zc_ObjectString_BuyerForSite_Phone()
 
              LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                       ON MovementString_InvNumberOrder.MovementId = Movement.Id
@@ -118,9 +128,10 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В.
+ 21.04.21                                                                                    * add BuyerForSite
  25.08.16                                        *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Check_SMS_Site (inUnitId_list:= '', inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Check_SMS_Site (inUnitId_list:= '377605,16240371,11769526,183292,4135547,14422124,14422095,377606,6128298,9951517,13338606,377595,12607257,494882,10779386,394426,183289,8393158,16001195,6309262,13311246,377613,7117700,377610,377594,377574,15212291,13711869,183291,1781716,5120968,9771036,6608396,375626,375627,11152911,10128935,472116', inSession:= '2')

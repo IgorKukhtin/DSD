@@ -233,6 +233,20 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
       Top = 6
       Caption = '% '#1074#1099#1087'. '#1087#1086' '#1072#1087#1090#1077#1082#1077'.'
     end
+    object cePlanAmount: TcxCurrencyEdit
+      Left = 832
+      Top = 5
+      EditValue = 7.000000000000000000
+      Properties.DecimalPlaces = 2
+      Properties.DisplayFormat = ',0.##'
+      TabOrder = 10
+      Width = 53
+    end
+    object cxLabel5: TcxLabel
+      Left = 748
+      Top = 6
+      Caption = #1055#1083#1072#1085' '#1086#1090' '#1089#1091#1084#1084#1099
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 51
@@ -373,6 +387,13 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
           MultiSelectSeparator = ','
         end
         item
+          Name = 'PlanAmount'
+          Value = Null
+          Component = cePlanAmount
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'Penalty'
           Value = Null
           Component = cePenalty
@@ -415,6 +436,14 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
         Name = 'inProcUnit'
         Value = Null
         Component = ceProcUnit
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPlanAmount'
+        Value = Null
+        Component = cePlanAmount
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
