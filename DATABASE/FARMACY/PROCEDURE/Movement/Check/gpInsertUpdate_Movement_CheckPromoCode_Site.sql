@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_Movement_CheckPromoCode_Site()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCode_Site (Integer, Integer, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCode_Site (Integer, Integer, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCode_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_CheckPromoCode_Site(
  INOUT ioId                Integer   , -- Ключ объекта <Документ ЧЕК>
     IN inUnitId            Integer   , -- Ключ объекта <Подразделение>
     IN inDate              TDateTime , -- Дата/время документа
+    IN inBayerId           Integer   , -- ID покупателя с сайта
     IN inBayer             TVarChar  , -- Покупатель ВИП
     IN inBayerPhone        TVarChar  , -- Контактный телефон (Покупателя)
     IN inInvNumberOrder    TVarChar  , -- Номер заказа (с сайта)
@@ -102,10 +104,18 @@ BEGIN
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
     -- сохранили связь с <Статус заказа (Состояние VIP-чека)>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ConfirmedKind(), ioId, zc_Enum_ConfirmedKind_UnComplete());
-    -- сохранили ФИО покупателя
-    PERFORM lpInsertUpdate_MovementString (zc_MovementString_Bayer(), ioId, inBayer);
-    -- сохранили Контактный телефон (Покупателя)
-    PERFORM lpInsertUpdate_MovementString (zc_MovementString_BayerPhone(), ioId, inBayerPhone);
+
+    IF COALESCE (inBayerId, 0) <> 0
+    THEN
+      -- сохранили связь с <Статус заказа (Состояние VIP-чека)>
+      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_BuyerForSite(), ioId, gpInsertUpdate_Object_BuyerForSite(inBayerID, inBayer, inBayerPhone, inSession));    
+    ELSE
+      -- сохранили ФИО покупателя
+      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Bayer(), ioId, inBayer);
+      -- сохранили Контактный телефон (Покупателя)
+      PERFORM lpInsertUpdate_MovementString (zc_MovementString_BayerPhone(), ioId, inBayerPhone);
+    END IF;
+
     -- сохранили Номер заказа (с сайта)
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberOrder(), ioId, inInvNumberOrder);
     -- Отмечаем документ как отложенный
@@ -116,7 +126,6 @@ BEGIN
       PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Site(), ioId, True);
 	END IF;
     
-
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
 
@@ -132,6 +141,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_CheckPromoCode_Site (ioId := 0, inUnitId := 183292, inDate := NULL::TDateTime, inBayer := 'Test Bayer'::TVarChar, inBayerPhone:= '11-22-33', inInvNumberOrder:= '12345', inManagerName:= '5', inGUID := '68f0bcd0', inSession := '3'); -- Аптека_1 пр_Правды_6
-
+-- SELECT * FROM gpInsertUpdate_Movement_CheckPromoCode_Site (ioId := 0, inUnitId := 183292, inDate := NULL::TDateTime, inBayerId := 333, inBayer := 'Test Bayer'::TVarChar, inBayerPhone:= '11-22-33', inInvNumberOrder:= '12345', inManagerName:= '5', inGUID := '68f0bcd0', inSession := '3'); -- Аптека_1 пр_Правды_6
 

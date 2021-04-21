@@ -156,9 +156,11 @@ BEGIN
             , Object_CashRegister.ValueData              AS CashRegisterName
             , COALESCE(MovementLinkObject_CheckMember.ObjectId, 0)    AS CashMemberId
             , CASE WHEN MovementString_InvNumberOrder.ValueData <> '' AND COALESCE (Object_CashMember.ValueData, '') = '' THEN zc_Member_Site() ELSE Object_CashMember.ValueData END :: TVarChar AS CashMember
-	        , MovementString_Bayer.ValueData             AS Bayer
+	        , COALESCE(Object_BuyerForSite.ValueData,
+                       MovementString_Bayer.ValueData)              AS Bayer
 
-            , MovementString_BayerPhone.ValueData        AS BayerPhone
+            , COALESCE (ObjectString_BuyerForSite_Phone.ValueData, 
+                        MovementString_BayerPhone.ValueData)        AS BayerPhone
             , COALESCE(MovementString_InvNumberOrder.ValueData,
               CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Tabletki() THEN MovementString_OrderId.ValueData
                    WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) <> 0 THEN Movement.Id::TVarChar END)::TVarChar   AS InvNumberOrder
@@ -257,6 +259,14 @@ BEGIN
              LEFT JOIN MovementString AS MovementString_BayerPhone
                                       ON MovementString_BayerPhone.MovementId = Movement.Id
                                      AND MovementString_BayerPhone.DescId = zc_MovementString_BayerPhone()
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_BuyerForSite
+                                          ON MovementLinkObject_BuyerForSite.MovementId = Movement.Id
+                                         AND MovementLinkObject_BuyerForSite.DescId = zc_MovementLinkObject_BuyerForSite()
+             LEFT JOIN Object AS Object_BuyerForSite ON Object_BuyerForSite.Id = MovementLinkObject_BuyerForSite.ObjectId
+             LEFT JOIN ObjectString AS ObjectString_BuyerForSite_Phone
+                                    ON ObjectString_BuyerForSite_Phone.ObjectId = Object_BuyerForSite.Id 
+                                   AND ObjectString_BuyerForSite_Phone.DescId = zc_ObjectString_BuyerForSite_Phone()
 
              LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                       ON MovementString_InvNumberOrder.MovementId = Movement.Id
@@ -372,10 +382,11 @@ ALTER FUNCTION gpSelect_Movement_CheckLoadCash (TVarChar, TVarChar) OWNER TO pos
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В.
+ 21.04.21                                                                                    * add BuyerForSite
  07.12.20                                                                                    *
 */
 
 -- тест
 -- 
 
-select * from gpSelect_Movement_CheckLoadCash(inVIPOrder := '317434' ,  inSession := '3');
+select * from gpSelect_Movement_CheckLoadCash(inVIPOrder := '338603' ,  inSession := '3');

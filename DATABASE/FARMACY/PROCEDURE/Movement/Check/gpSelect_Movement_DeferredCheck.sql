@@ -26,8 +26,8 @@ BEGIN
            , Movement_Check.OperDate
            , MovementFloat_TotalCount.ValueData                 AS TotalCount
            , MovementFloat_TotalSumm.ValueData                  AS TotalSumm
-           , MovementString_Bayer.ValueData                     AS Bayer
-
+           , COALESCE(Object_BuyerForSite.ValueData,
+                      MovementString_Bayer.ValueData)           AS Bayer
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
               FROM  MovementBoolean AS MovementBoolean_Deferred
@@ -51,9 +51,18 @@ BEGIN
              LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                      ON MovementFloat_TotalSumm.MovementId =  Movement_Check.Id
                                     AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-	     LEFT JOIN MovementString AS MovementString_Bayer
+	         LEFT JOIN MovementString AS MovementString_Bayer
                                       ON MovementString_Bayer.MovementId = Movement_Check.Id
                                      AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_BuyerForSite
+                                          ON MovementLinkObject_BuyerForSite.MovementId = Movement_Check.Id
+                                         AND MovementLinkObject_BuyerForSite.DescId = zc_MovementLinkObject_BuyerForSite()
+             LEFT JOIN Object AS Object_BuyerForSite ON Object_BuyerForSite.Id = MovementLinkObject_BuyerForSite.ObjectId
+             LEFT JOIN ObjectString AS ObjectString_BuyerForSite_Phone
+                                    ON ObjectString_BuyerForSite_Phone.ObjectId = Object_BuyerForSite.Id 
+                                   AND ObjectString_BuyerForSite_Phone.DescId = zc_ObjectString_BuyerForSite_Phone()
+                                  
         WHERE Movement_Check.UnitId = inUnitId
 
       ;
@@ -64,10 +73,10 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В. +
- 19.07.19                                                                                    *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В. +
+ 21.04.21                                                       * add BuyerForSite
+ 19.07.19                                                       *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_DeferredCheck (inUnitId:= 1, inSession:= '3')
-
+-- SELECT * FROM gpSelect_Movement_DeferredCheck (inUnitId:= 472116 , inSession:= '3')

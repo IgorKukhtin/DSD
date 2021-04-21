@@ -32,9 +32,6 @@ CREATE OR REPLACE VIEW MovementItem_Check_View_ForExport AS
                                      ON MovementLinkObject_CheckMember.MovementId = MIC_Check.MovementId
                                     AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
         LEFT JOIN Object AS Object_CashMember ON Object_CashMember.Id = MovementLinkObject_CheckMember.ObjectId
-        LEFT JOIN MovementString AS MovementString_Bayer
-                                         ON MovementString_Bayer.MovementId = MIC_Check.MovementId
-                                        AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
             
     WHERE 
         MIC_Check.MovementDescId = zc_Movement_Check();
@@ -44,10 +41,10 @@ ALTER TABLE MovementItem_Check_View_ForExport
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   Р’РѕСЂРѕР±РєР°Р»Рѕ Рђ.Рђ.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
  03.09.15                                                         *
 */
 
--- С‚РµСЃС‚
--- SELECT * FROM MovementItem_Check_View_ForExport
+-- тест
+-- SELECT * FROM MovementItem_Check_View_ForExport LIMIT 100

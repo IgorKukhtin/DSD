@@ -226,6 +226,9 @@ type
     N15: TMenuItem;
     actReport_OrderClient: TdsdOpenForm;
     miReport_OrderClient: TMenuItem;
+    actDocTag: TdsdOpenForm;
+    N16: TMenuItem;
+    N17: TMenuItem;
   private
     { Private declarations }
   public

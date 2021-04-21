@@ -50,8 +50,10 @@ BEGIN
      RETURN QUERY
      SELECT
              Object_Unit.ValueData                              AS UnitName
-           , MovementString_Bayer.ValueData                     AS Bayer
-           , MovementString_BayerPhone.ValueData                AS BayerPhone
+           , COALESCE(Object_BuyerForSite.ValueData,
+                      MovementString_Bayer.ValueData)           AS Bayer
+           , COALESCE (ObjectString_BuyerForSite_Phone.ValueData, 
+                       MovementString_BayerPhone.ValueData)     AS BayerPhone
            , MovementString_MedicSP.ValueData                   AS MedicSPName
            , MovementItem.ObjectId                              AS GoodsId
            , Object_Goods.goodscodeInt                          AS GoodsCode
@@ -69,6 +71,14 @@ BEGIN
         LEFT JOIN MovementString AS MovementString_BayerPhone
                                  ON MovementString_BayerPhone.MovementId = Movement.Id
                                 AND MovementString_BayerPhone.DescId = zc_MovementString_BayerPhone()
+
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_BuyerForSite
+                                     ON MovementLinkObject_BuyerForSite.MovementId = Movement.Id
+                                    AND MovementLinkObject_BuyerForSite.DescId = zc_MovementLinkObject_BuyerForSite()
+        LEFT JOIN Object AS Object_BuyerForSite ON Object_BuyerForSite.Id = MovementLinkObject_BuyerForSite.ObjectId
+        LEFT JOIN ObjectString AS ObjectString_BuyerForSite_Phone
+                               ON ObjectString_BuyerForSite_Phone.ObjectId = Object_BuyerForSite.Id 
+                              AND ObjectString_BuyerForSite_Phone.DescId = zc_ObjectString_BuyerForSite_Phone()
 
         LEFT JOIN MovementString AS MovementString_MedicSP
                                  ON MovementString_MedicSP.MovementId = Movement.Id
@@ -100,8 +110,8 @@ BEGIN
        AND vbRetailId = vbObjectId
        AND (COALESCE(MovementString_Bayer.ValueData, '') <> '' OR COALESCE(MovementString_MedicSP.ValueData, '') <> '')
      GROUP BY  Object_Unit.ValueData
-           , MovementString_Bayer.ValueData
-           , MovementString_BayerPhone.ValueData
+           , COALESCE(Object_BuyerForSite.ValueData, MovementString_Bayer.ValueData)
+           , COALESCE (ObjectString_BuyerForSite_Phone.ValueData, MovementString_BayerPhone.ValueData)
            , MovementString_MedicSP.ValueData
            , MovementItem.ObjectId
            , Object_Goods.goodscodeInt
@@ -109,8 +119,8 @@ BEGIN
            , Object_Goods.NDS 
            , MIFloat_Price.ValueData
      ORDER BY Object_Unit.ValueData
-           , MovementString_Bayer.ValueData
-           , MovementString_BayerPhone.ValueData
+           , COALESCE(Object_BuyerForSite.ValueData, MovementString_Bayer.ValueData)
+           , COALESCE (ObjectString_BuyerForSite_Phone.ValueData, MovementString_BayerPhone.ValueData)
            , MovementString_MedicSP.ValueData
            , Object_Goods.goodsname
            , Object_Goods.NDS ;
@@ -123,6 +133,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ÿ‡·ÎËÈ Œ.¬.
+ 21.04.21         * add BuyerForSite
  12.05.18         *
 */
 

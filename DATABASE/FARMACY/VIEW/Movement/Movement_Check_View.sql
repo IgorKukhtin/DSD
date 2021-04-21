@@ -23,7 +23,8 @@ SELECT
            , COALESCE(MovementBoolean_Deferred.ValueData,False) AS IsDeferred
            , MovementLinkObject_CheckMember.ObjectId            AS CashMemberId
 		   , Object_CashMember.ValueData                AS CashMember
-		   , MovementString_Bayer.ValueData             AS Bayer
+		   , COALESCE(Object_BuyerForSite.ValueData,
+                      MovementString_Bayer.ValueData)    AS Bayer
 		   , MovementLinkObject_PaidType.ObjectId       AS PaidTypeId  
            , Object_PaidType.ValueData                          AS PaidTypeName 
            , MovementString_FiscalCheckNumber.ValueData         AS FiscalCheckNumber
@@ -32,7 +33,8 @@ SELECT
            , Object_DiscountCard.Id                          AS DiscountCardId 
            , Object_DiscountCard.ValueData                   AS DiscountCardName
            
-           , MovementString_BayerPhone.ValueData             AS BayerPhone
+           , COALESCE (ObjectString_BuyerForSite_Phone.ValueData, 
+                       MovementString_BayerPhone.ValueData)  AS BayerPhone
            , MovementString_InvNumberOrder.ValueData         AS InvNumberOrder
            , MovementLinkObject_ConfirmedKind.ObjectId       AS ConfirmedKindId
            , Object_ConfirmedKind.ValueData                  AS ConfirmedKindName
@@ -114,6 +116,14 @@ SELECT
                                         AND MovementLinkObject_DiscountCard.DescId = zc_MovementLinkObject_DiscountCard()
             LEFT JOIN Object AS Object_DiscountCard ON Object_DiscountCard.Id = MovementLinkObject_DiscountCard.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_BuyerForSite
+                                         ON MovementLinkObject_BuyerForSite.MovementId = Movement.Id
+                                        AND MovementLinkObject_BuyerForSite.DescId = zc_MovementLinkObject_BuyerForSite()
+            LEFT JOIN Object AS Object_BuyerForSite ON Object_BuyerForSite.Id = MovementLinkObject_BuyerForSite.ObjectId
+            LEFT JOIN ObjectString AS ObjectString_BuyerForSite_Phone
+                                   ON ObjectString_BuyerForSite_Phone.ObjectId = Object_BuyerForSite.Id 
+                                  AND ObjectString_BuyerForSite_Phone.DescId = zc_ObjectString_BuyerForSite_Phone()
+
             LEFT JOIN MovementString AS MovementString_BayerPhone
                                      ON MovementString_BayerPhone.MovementId = Movement.Id
                                     AND MovementString_BayerPhone.DescId = zc_MovementString_BayerPhone()
@@ -175,6 +185,7 @@ ALTER TABLE Movement_Check_View
 
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 21.04.21                                                       * add BuyerForSite
  11.01.19         *
  02.10.18                                                       * add TotalSummPayAdd
  29.06.18                                                       * 
@@ -184,4 +195,4 @@ ALTER TABLE Movement_Check_View
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM Movement_Check_View where id = 805
+-- SELECT * FROM Movement_Check_View where id = 23017636 

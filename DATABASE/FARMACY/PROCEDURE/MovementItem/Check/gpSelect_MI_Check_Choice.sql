@@ -183,13 +183,15 @@ BEGIN
            , Object_CashRegister.ValueData                      AS CashRegisterName
            , Object_PaidType.ValueData                          AS PaidTypeName 
            , CASE WHEN MovementString_InvNumberOrder.ValueData <> '' AND COALESCE (Object_CashMember.ValueData, '') = '' THEN zc_Member_Site() ELSE Object_CashMember.ValueData END :: TVarChar AS CashMember
-           , MovementString_Bayer.ValueData                     AS Bayer
+           , COALESCE(Object_BuyerForSite.ValueData,
+                      MovementString_Bayer.ValueData)           AS Bayer
            , MovementString_FiscalCheckNumber.ValueData         AS FiscalCheckNumber
           -- , COALESCE(MovementBoolean_NotMCS.ValueData,FALSE)   AS NotMCS
            , Movement_Check.IsDeferred                          AS IsDeferred
            --, Object_DiscountCard.ValueData                      AS DiscountCardName
            --, Object_DiscountExternal.ValueData                  AS DiscountExternalName
-           , MovementString_BayerPhone.ValueData                AS BayerPhone
+           , COALESCE (ObjectString_BuyerForSite_Phone.ValueData, 
+                       MovementString_BayerPhone.ValueData)     AS BayerPhone
            , MovementString_InvNumberOrder.ValueData            AS InvNumberOrder
            --, Object_ConfirmedKind.ValueData                     AS ConfirmedKindName
            --, Object_ConfirmedKindClient.ValueData               AS ConfirmedKindClientName
@@ -244,7 +246,7 @@ BEGIN
                                          ON MovementString_InvNumberOrder.MovementId = Movement_Check.Id
                                         AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
 
-	     LEFT JOIN tmpMovementString AS MovementString_Bayer
+	         LEFT JOIN tmpMovementString AS MovementString_Bayer
                                          ON MovementString_Bayer.MovementId = Movement_Check.Id
                                         AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
              LEFT JOIN tmpMovementString AS MovementString_BayerPhone
@@ -254,6 +256,14 @@ BEGIN
                                          ON MovementString_FiscalCheckNumber.MovementId = Movement_Check.Id
                                         AND MovementString_FiscalCheckNumber.DescId = zc_MovementString_FiscalCheckNumber()
 
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_BuyerForSite
+                                          ON MovementLinkObject_BuyerForSite.MovementId = Movement_Check.Id
+                                         AND MovementLinkObject_BuyerForSite.DescId = zc_MovementLinkObject_BuyerForSite()
+             LEFT JOIN Object AS Object_BuyerForSite ON Object_BuyerForSite.Id = MovementLinkObject_BuyerForSite.ObjectId
+             LEFT JOIN ObjectString AS ObjectString_BuyerForSite_Phone
+                                    ON ObjectString_BuyerForSite_Phone.ObjectId = Object_BuyerForSite.Id 
+                                   AND ObjectString_BuyerForSite_Phone.DescId = zc_ObjectString_BuyerForSite_Phone()
+                                  
   /*           LEFT JOIN MovementString AS MovementString_MedicSP
                                       ON MovementString_MedicSP.MovementId = Movement_Check.Id
                                      AND MovementString_MedicSP.DescId = zc_MovementString_MedicSP() and 1=0
@@ -332,7 +342,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 21.04.21                                                       * add BuyerForSite
  23.01.19         *
 */
 

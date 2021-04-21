@@ -1,4 +1,4 @@
--- Function: gpSelect_Movement_OrderInternal()
+-- Function: gpSelect_Movement_Check()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Check (TDateTime, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Check (TDateTime, TDateTime, Boolean, Integer, TVarChar);
@@ -103,14 +103,16 @@ BEGIN
            , Object_CashRegister.ValueData                      AS CashRegisterName
            , Object_PaidType.ValueData                          AS PaidTypeName 
            , CASE WHEN MovementString_InvNumberOrder.ValueData <> '' AND COALESCE (Object_CashMember.ValueData, '') = '' THEN zc_Member_Site() ELSE Object_CashMember.ValueData END :: TVarChar AS CashMember
-           , MovementString_Bayer.ValueData                     AS Bayer
+           , COALESCE(Object_BuyerForSite.ValueData,
+                      MovementString_Bayer.ValueData)           AS Bayer
            , MovementString_FiscalCheckNumber.ValueData         AS FiscalCheckNumber
            , COALESCE(MovementBoolean_NotMCS.ValueData,FALSE)   AS NotMCS
            , Movement_Check.IsDeferred                          AS IsDeferred
            , COALESCE(MovementBoolean_Site.ValueData,FALSE) :: Boolean AS isSite
            , Object_DiscountCard.ValueData                      AS DiscountCardName
            , Object_DiscountExternal.ValueData                  AS DiscountExternalName
-           , MovementString_BayerPhone.ValueData                AS BayerPhone
+           , COALESCE (ObjectString_BuyerForSite_Phone.ValueData, 
+                       MovementString_BayerPhone.ValueData)     AS BayerPhone
            , COALESCE(MovementString_InvNumberOrder.ValueData,
              CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Tabletki() THEN MovementString_OrderId.ValueData
                   WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) <> 0 THEN Movement_Check.Id::TVarChar END)::TVarChar   AS InvNumberOrder
@@ -236,6 +238,14 @@ BEGIN
              LEFT JOIN MovementString AS MovementString_FiscalCheckNumber
                                       ON MovementString_FiscalCheckNumber.MovementId = Movement_Check.Id
                                      AND MovementString_FiscalCheckNumber.DescId = zc_MovementString_FiscalCheckNumber()
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_BuyerForSite
+                                          ON MovementLinkObject_BuyerForSite.MovementId = Movement_Check.Id
+                                         AND MovementLinkObject_BuyerForSite.DescId = zc_MovementLinkObject_BuyerForSite()
+             LEFT JOIN Object AS Object_BuyerForSite ON Object_BuyerForSite.Id = MovementLinkObject_BuyerForSite.ObjectId
+             LEFT JOIN ObjectString AS ObjectString_BuyerForSite_Phone
+                                    ON ObjectString_BuyerForSite_Phone.ObjectId = Object_BuyerForSite.Id 
+                                   AND ObjectString_BuyerForSite_Phone.DescId = zc_ObjectString_BuyerForSite_Phone()
 
              LEFT JOIN MovementString AS MovementString_MedicSP
                                       ON MovementString_MedicSP.MovementId = Movement_Check.Id
@@ -415,4 +425,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Check (inStartDate:= '01.08.2020', inEndDate:= '01.08.2020', inIsErased := FALSE, inIsSP := FALSE, inIsVip := FALSE, inUnitId:= 0, inSession:= '2')
+-- select * from gpSelect_Movement_Check(inStartDate := ('20.04.2021')::TDateTime , inEndDate := ('20.04.2021')::TDateTime , inIsErased := 'False' , inIsSP := 'False' , inIsVip := 'False' , inUnitId := 377605 ,  inSession := '3');

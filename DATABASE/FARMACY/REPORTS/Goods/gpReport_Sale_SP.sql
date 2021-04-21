@@ -231,7 +231,7 @@ BEGIN
                               , COALESCE (MovementString_MedicSP.ValueData, '')    :: TVarChar  AS MedicSP
                               , ''                                                 :: TVarChar  AS AmbulantClinicSP
                               , Object_MemberSP.Id                                                                     AS MemberSPId
-                              , COALESCE (Object_MemberSP.ValueData, MovementString_Bayer.ValueData, '')  :: TVarChar  AS MemberSP
+                              , COALESCE (Object_MemberSP.ValueData, Object_BuyerForSite.ValueData, MovementString_Bayer.ValueData, '')  :: TVarChar  AS MemberSP
                               , COALESCE (MovementDate_OperDateSP.ValueData,Null) AS OperDateSP
                               , ObjectLink_MemberSP_GroupMemberSP.ChildObjectId   AS GroupMemberSPId
                               , Movement_Invoice.InvNumber  :: TVarChar           AS InvNumber_Invoice
@@ -265,6 +265,11 @@ BEGIN
                                                        ON MovementString_Bayer.MovementId = Movement_Check.Id
                                                       AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
 
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_BuyerForSite
+                                                           ON MovementLinkObject_BuyerForSite.MovementId = Movement_Check.Id
+                                                          AND MovementLinkObject_BuyerForSite.DescId = zc_MovementLinkObject_BuyerForSite()
+                              LEFT JOIN Object AS Object_BuyerForSite ON Object_BuyerForSite.Id = MovementLinkObject_BuyerForSite.ObjectId
+
                               LEFT JOIN MovementDate AS MovementDate_OperDateSP
                                                      ON MovementDate_OperDateSP.MovementId = Movement_Check.Id
                                                     AND MovementDate_OperDateSP.DescId = zc_MovementDate_OperDateSP()
@@ -290,7 +295,7 @@ BEGIN
                                  COALESCE (ObjectLink_MemberSP_GroupMemberSP.ChildObjectId ,0) <> 0 OR
                                  COALESCE (MovementString_InvNumberSP.ValueData,'') <> '' OR
                                  COALESCE (MovementString_MedicSP.ValueData, '') <> '' OR
-                                 COALESCE (MovementString_Bayer.ValueData, '') <> ''
+                                 COALESCE (Object_BuyerForSite.ValueData, MovementString_Bayer.ValueData, '') <> ''
                                )
                            AND (MovementLinkObject_PartnerMedical.ObjectId = inHospitalId OR inHospitalId = 0)
                            AND (   (ObjectLink_MemberSP_GroupMemberSP.ChildObjectId = inGroupMemberSPId AND inisGroupMemberSP = FALSE AND COALESCE(inGroupMemberSPId,0) <> 0)
@@ -828,6 +833,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ¬ÓÓ·Í‡ÎÓ ¿.¿.   ÿ‡·ÎËÈ Œ.¬.
+ 21.04.21                                                                        * add BuyerForSite
  25.01.21                                                                        *
  26.11.19         *
  11.01.19         *
@@ -839,8 +845,6 @@ $BODY$
 
 -- ÚÂÒÚ
 -- SELECT * FROM gpReport_Sale_SP (inStartDate:= '01.09.2019', inEndDate:= '05.09.2019', inJuridicalId:= 0, inUnitId:= 0, inHospitalId:= 0, inGroupMemberSPId:= 0, inPercentSP:= 0, inisGroupMemberSP:= TRUE, inSession:= zfCalc_UserAdmin());
-
-select * from gpReport_Sale_SP(inStartDate := ('21.12.2020')::TDateTime , inEndDate := ('21.12.2020')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 0, inSession := '3');
 
 
 select * from gpReport_Sale_SP(inStartDate := ('08.01.2021')::TDateTime , inEndDate := ('31.01.2021')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 0 ,  inSession := '3');

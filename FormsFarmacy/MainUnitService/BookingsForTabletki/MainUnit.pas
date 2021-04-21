@@ -18,7 +18,8 @@ uses
   Vcl.ActnList, IdText, IdSSLOpenSSL, IdGlobal, strUtils, IdAttachmentFile,
   IdFTP, cxCurrencyEdit, cxCheckBox, Vcl.Menus, DateUtils, cxButtonEdit, ZLibExGZ,
   cxImageComboBox, cxNavigator, UnitTabletki, System.JSON,
-  cxDataControllerConditionalFormattingRulesManagerDialog, ZStoredProcedure;
+  cxDataControllerConditionalFormattingRulesManagerDialog, ZStoredProcedure,
+  dxDateRanges;
 
 type
   TMainForm = class(TForm)
@@ -100,6 +101,7 @@ type
   public
     { Public declarations }
     procedure Add_Log(AMessage:String);
+    procedure Add_LogTest(AMessage:String);
 
     procedure AllDriver;
   end;
@@ -119,6 +121,26 @@ begin
   try
     AssignFile(F,ChangeFileExt(Application.ExeName,'.log'));
     if not fileExists(ChangeFileExt(Application.ExeName,'.log')) then
+      Rewrite(F)
+    else
+      Append(F);
+  try
+    Writeln(F,FormatDateTime('YYYY.MM.DD hh:mm:ss',now) + ' - ' + AMessage);
+  finally
+    CloseFile(F);
+  end;
+  except
+  end;
+end;
+
+procedure TMainForm.Add_LogTest(AMessage: String);
+var
+  F: TextFile;
+
+begin
+  try
+    AssignFile(F,ChangeFileExt(Application.ExeName,'_Test.log'));
+    if not fileExists(ChangeFileExt(Application.ExeName,'_Test.log')) then
       Rewrite(F)
     else
       Append(F);
@@ -236,6 +258,11 @@ begin
       spInsertMovement.Params.ParamByName('inBookingStatus').AsString := TabletkiAPI.BookingsHeadCDS.FieldByName('statusID').AsString;
       spInsertMovement.Params.ParamByName('inSession').AsString := '3';
       spInsertMovement.ExecProc;
+
+//      Add_LogTest(TabletkiAPI.BookingsHeadCDS.FieldByName('bookingId').AsString);
+//      Add_LogTest(TabletkiAPI.BookingsHeadCDS.FieldByName('customer').AsString);
+//      Add_LogTest(TabletkiAPI.BookingsHeadCDS.FieldByName('customerPhone').AsString);
+
 
       TabletkiAPI.BookingsBodyCDS.First;
       while not TabletkiAPI.BookingsBodyCDS.Eof  do

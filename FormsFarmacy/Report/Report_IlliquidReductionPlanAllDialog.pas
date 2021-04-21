@@ -31,6 +31,8 @@ type
     cxLabel3: TcxLabel;
     cePenalty: TcxCurrencyEdit;
     cxLabel2: TcxLabel;
+    cePlanAmount: TcxCurrencyEdit;
+    cxLabel5: TcxLabel;
   private
     { Private declarations }
   public

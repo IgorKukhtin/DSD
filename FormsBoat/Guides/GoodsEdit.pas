@@ -26,7 +26,7 @@ uses
   cxInplaceContainer, dxBar, Vcl.ExtCtrls, dxBarExtItems, cxClasses, Document,
   cxImage, dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage,
   cxDBData, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGrid;
+  cxGridTableView, cxGridDBTableView, cxGrid, cxSplitter;
 
 type
   TGoodsEditForm = class(TParentForm)
@@ -167,6 +167,22 @@ type
     cxLabel24: TcxLabel;
     edEngine: TcxButtonEdit;
     GuidesProdEngine: TdsdGuides;
+    dsdDBViewAddOnDoc: TdsdDBViewAddOn;
+    Panel1: TPanel;
+    cxGrid2: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    DocTagName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    ClientDataSetDoc: TClientDataSet;
+    DataSourceDoc: TDataSource;
+    spDocumentSelect2: TdsdStoredProc;
+    spUpdate_GoodsDocument: TdsdStoredProc;
+    dsdUpdateDataSetDoc: TdsdUpdateDataSet;
+    cxRightSplitter: TcxSplitter;
+    OpenChoiceFormDocTag: TOpenChoiceForm;
+    InsertRecordDoc: TInsertRecord;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

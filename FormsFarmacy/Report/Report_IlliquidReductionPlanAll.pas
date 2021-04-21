@@ -38,6 +38,8 @@ type
     ManDays: TcxGridDBColumn;
     SummaSale: TcxGridDBColumn;
     ProcSaleIlliquid: TcxGridDBColumn;
+    cePlanAmount: TcxCurrencyEdit;
+    cxLabel5: TcxLabel;
   private
     { Private declarations }
   public

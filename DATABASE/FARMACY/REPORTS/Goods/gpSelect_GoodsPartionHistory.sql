@@ -249,7 +249,8 @@ BEGIN
                    END::TFloat                                           AS AmountInvent, --Кол-во переучет
                    Object_Price_View.MCSValue                            AS MCSValue,     --НТЗ
                    Object_CheckMember.ValueData                          AS CheckMember,  --Менеджер
-                   MovementString_Bayer.ValueData                        AS Bayer,        --Покупатель
+                   COALESCE(Object_BuyerForSite.ValueData,
+                            MovementString_Bayer.ValueData)              AS Bayer,        --Покупатель
                    CLO_Party.ObjectID                                    AS PartyId,      --# партии
                    ROW_NUMBER() OVER(ORDER BY MovementItemContainer.OperDate,
                                               CASE WHEN MovementDesc.Id = zc_Movement_Inventory() THEN 1 else 0 end,
@@ -313,6 +314,10 @@ BEGIN
                 LEFT JOIN MovementString AS MovementString_Bayer
                                          ON MovementString_Bayer.MovementId = Movement.Id
                                         AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
+                LEFT JOIN MovementLinkObject AS MovementLinkObject_BuyerForSite
+                                             ON MovementLinkObject_BuyerForSite.MovementId = Movement.Id
+                                            AND MovementLinkObject_BuyerForSite.DescId = zc_MovementLinkObject_BuyerForSite()
+                LEFT JOIN Object AS Object_BuyerForSite ON Object_BuyerForSite.Id = MovementLinkObject_BuyerForSite.ObjectId
                 -- Пользователь(созд.) + Дата(созд.)
                 LEFT JOIN MovementDate AS MovementDate_Insert
                                        ON MovementDate_Insert.MovementId = Movement.Id
@@ -544,7 +549,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 21.04.21                                                                                     * add BuyerForSite
  23.08.19         * isSUN,isDefSUN
  19.08.19         * add PartionDateKindName
  08.04.19         * add ExpirationDate
