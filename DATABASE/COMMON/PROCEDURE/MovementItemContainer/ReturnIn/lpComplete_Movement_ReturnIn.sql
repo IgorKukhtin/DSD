@@ -487,12 +487,17 @@ BEGIN
                      , MIDate_PartionGoods.ValueData
              )
   , tmpChangePrice AS (SELECT TRUE AS isChangePrice
+                       WHERE vbPaidKindId = zc_Enum_PaidKind_FirstForm() -- это БН
+                      UNION 
+                       SELECT TRUE AS isChangePrice
                        FROM tmpMI_all
                        WHERE (vbIsDiscountPrice = TRUE                    -- у Юр лица есть галка
                            OR tmpMI_all.ChangePercent = 0                 -- в шапке есть скидка, но есть хоть один элемент со скидкой = 0%
                            OR vbPaidKindId = zc_Enum_PaidKind_FirstForm() -- это БН
                              )
+                         -- оставил Для НАЛ?
                          AND (vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0)
+                         AND vbPaidKindId = zc_Enum_PaidKind_SecondForm() -- это НАЛ
                        LIMIT 1
                       )
      , tmpPL_Basis AS (-- цены из прайса напрямую, для скорости
@@ -2603,6 +2608,13 @@ end if;
                                 , inDescId     := zc_Movement_ReturnIn()
                                 , inUserId     := inUserId
                                  );
+
+-- !!! ВРЕМЕННО !!!
+ IF inUserId = 5 and 1=1 THEN
+    RAISE EXCEPTION 'Admin - Test = OK : %   %', vbOperSumm_Partner_ChangePercent_byItem, vbOperSumm_Partner_ChangePercent
+      ;
+END IF;
+
 
 END;
 $BODY$

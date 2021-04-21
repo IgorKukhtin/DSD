@@ -92,7 +92,7 @@ end if;*/
                                    , tmpMIPromo_all.GoodsId
                                  --, tmpMIPromo_all.GoodsKindId
                                    , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                                   , CASE WHEN tmpMIPromo_all.TaxPromo <> 0 THEN MIFloat_PriceWithOutVAT.ValueData ELSE 0 END AS PricePromo
+                                   , CASE WHEN /*tmpMIPromo_all.TaxPromo <> 0*/ 1=1 THEN MIFloat_PriceWithOutVAT.ValueData ELSE 0 END AS PricePromo
                               FROM tmpMIPromo_all
                                    LEFT JOIN tmpMIFloatPromo AS MIFloat_PriceWithOutVAT
                                                              ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId

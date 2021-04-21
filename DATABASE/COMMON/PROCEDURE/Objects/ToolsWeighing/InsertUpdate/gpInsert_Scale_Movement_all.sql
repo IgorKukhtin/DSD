@@ -41,6 +41,8 @@ $BODY$
    DECLARE vbGoodsId_ReWork Integer;
 
    DECLARE vbOperDate_StartBegin TDateTime;
+   
+   DECLARE vbKeyData TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Scale_Movement());
@@ -1781,35 +1783,26 @@ end if;
                                                                  WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
                                                                 )
      THEN
-         IF NOT EXISTS (SELECT 1
-                        FROM Movement
-                             JOIN MovementLinkMovement AS MLM_Order
-                                                       ON MLM_Order.MovementId      = Movement.Id
-                                                      AND MLM_Order.DescId          = zc_MovementLinkMovement_Order()
-                                                      AND MLM_Order.MovementChildId > 0
-                             JOIN LockUnique ON LockUnique.OperDate >= Movement.OperDate AND LockUnique.OperDate < Movement.OperDate + INTERVAL '1 DAY'
-                                            AND LockUnique.KeyData = 'Movement'
-                                                           || ';' || Movement.DescId :: TVarChar
-                                                           || ';' || MLM_Order.MovementChildId :: TVarChar
-                                                           || ';' || (DATE (Movement.OperDate)) :: TVarChar
-                        WHERE Movement.Id = vbMovementId_begin
-                       )
+         --
+         vbKeyData:= (SELECT 'Movement'
+                   || ';' || Movement.DescId :: TVarChar
+                   || ';' || MLM_Order.MovementChildId :: TVarChar
+                   || ';' || (DATE (Movement.OperDate)) :: TVarChar
+                      FROM Movement
+                           JOIN MovementLinkMovement AS MLM_Order
+                                                     ON MLM_Order.MovementId      = Movement.Id
+                                                    AND MLM_Order.DescId          = zc_MovementLinkMovement_Order()
+                                                    AND MLM_Order.MovementChildId > 0
+                      WHERE Movement.Id = vbMovementId_begin
+                     );
+
+         -- Проверка
+         IF NOT EXISTS (SELECT 1 FROM LockUnique WHERE LockUnique.KeyData = vbKeyData)
          THEN
              -- !!!проверка уникальности!!!
-             PERFORM lpInsert_LockUnique (inKeyData:= 'Movement'
-                                            || ';' || Movement.DescId :: TVarChar
-                                            || ';' || MLM_Order.MovementChildId :: TVarChar
-                                            || ';' || (DATE (Movement.OperDate)) :: TVarChar
-                                        , inUserId:= vbUserId
-                                         )
-             FROM Movement
-                  JOIN MovementLinkMovement AS MLM_Order
-                                            ON MLM_Order.MovementId      = Movement.Id
-                                           AND MLM_Order.DescId          = zc_MovementLinkMovement_Order()
-                                           AND MLM_Order.MovementChildId > 0
-             WHERE Movement.Id = vbMovementId_begin;
-
+             PERFORM lpInsert_LockUnique (inKeyData:= vbKeyData, inUserId:= vbUserId);
          END IF;
+
      END IF;
 
 

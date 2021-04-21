@@ -123,6 +123,12 @@ BEGIN
            ORDER BY MI.Id DESC
            LIMIT 1
           ) AS tmp;
+          
+     --
+     IF (vbStrIdSignNo = '') AND inPromoStateKindId IN (zc_Enum_PromoStateKind_StartSign(), zc_Enum_PromoStateKind_Head(), zc_Enum_PromoStateKind_Main())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ уже подписан.Нельзя установить визу <%>.', CHR (13), lfGet_Object_ValueData_sh (inPromoStateKindId);
+     END IF;
 
 /*
     RAISE EXCEPTION 'Ошибка.<%>  %', (SELECT zfCalc_WordNumber_Split (tmp.strIdSign,   ',', vbUserId :: TVarChar)

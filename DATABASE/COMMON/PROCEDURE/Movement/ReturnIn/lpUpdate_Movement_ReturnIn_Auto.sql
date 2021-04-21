@@ -892,7 +892,7 @@ BEGIN
 
      -- !!!вернули ќЎ»Ѕ ”, если есть!!!
      outMessageText:= lpCheck_Movement_ReturnIn_Auto (inMovementId    := inMovementId
-                                                    , inUserId        := inUserId
+                                                    , inUserId        := -1 * inUserId
                                                      )
        || CHR (13) || 'за период с <' || DATE (inStartDateSale) :: TVarChar || '> по <' || DATE (inEndDateSale) :: TVarChar || '>'
        || CHR (13) || '(' || (vbStep - 1) :: TVarChar || ')'

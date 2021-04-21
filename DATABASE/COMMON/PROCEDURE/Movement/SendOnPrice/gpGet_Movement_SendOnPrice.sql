@@ -46,7 +46,7 @@ BEGIN
              , ObjectBoolean_PriceWithVAT.ValueData       AS PriceWithVAT
              , ObjectFloat_VATPercent.ValueData           AS VATPercent
              , CAST (0 AS TFloat)                         AS ChangePercent
-             , inChangePercentAmount                      AS ChangePercentAmount
+             , 0 /*inChangePercentAmount*/      :: TFloat AS ChangePercentAmount
              , 0                     			  AS FromId
              , CAST ('' AS TVarChar) 			  AS FromName
              , 0                     			  AS ToId
@@ -99,7 +99,7 @@ BEGIN
            , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) :: Boolean         AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData             AS VATPercent
            , MovementFloat_ChangePercent.ValueData          AS ChangePercent
-           , inChangePercentAmount                          AS ChangePercentAmount
+           , 0 /*inChangePercentAmount*/          :: TFloat AS ChangePercentAmount
            , Object_From.Id                    	            AS FromId
            , Object_From.ValueData             		    AS FromName
            , Object_To.Id                      		    AS ToId
