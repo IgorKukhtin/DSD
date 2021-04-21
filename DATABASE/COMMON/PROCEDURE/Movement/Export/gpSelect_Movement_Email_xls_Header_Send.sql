@@ -54,20 +54,47 @@ BEGIN
                            , Object_From.ValueData                  AS FromName
                            , OH_JuridicalDetails_From.FullName      AS JuridicalName_From
                            , OH_JuridicalDetails_From.OKPO          AS OKPO_from
+                           , OH_JuridicalDetails_From.INN           AS INN_From
+                           , OH_JuridicalDetails_From.NumberVAT     AS NumberVAT_From
                            , Object_Contract.ValueData              AS ContractName
                            , ObjectDate_Signing.ValueData           AS ContractSigningDate
+                           , Object_ContractKind.ValueData          AS ContractKindName
 
                            , CASE WHEN COALESCE (OH_JuridicalDetails_From.BankAccount,'') <> '' THEN OH_JuridicalDetails_From.BankAccount ELSE Object_BankAccount.Name END   AS BankAccount_from
                            , CASE WHEN COALESCE (OH_JuridicalDetails_From.BankAccount,'') <> '' THEN OH_JuridicalDetails_From.BankName ELSE Object_BankAccount.BankName END  AS BankName_from
                            , CASE WHEN COALESCE (OH_JuridicalDetails_From.BankAccount,'') <> '' THEN OH_JuridicalDetails_From.MFO ELSE Object_BankAccount.MFO END            AS MFO_from
+                           
+                           , COALESCE (Object_BankAccount.Name,'')                 AS BankAccount_ByContract
+                           , COALESCE (Object_BankAccount.BankName,'')             AS BankName_ByContract
+                           , COALESCE (Object_BankAccount.MFO,'')                  AS BankMFO_ByContract
+                           , COALESCE (Object_BankAccount.IBAN,'')                 AS BankIBAN_ByContract
+                           , COALESCE (OHS_JD_JuridicalAddress_Bank_From.ValueData,'') AS JuridicalAddressBankFrom
 
                            , Object_To.ValueData                     AS ToName
                            , OH_JuridicalDetails_To.FullName         AS JuridicalName_To
                            , OH_JuridicalDetails_To.JuridicalAddress AS JuridicalAddress_to
+                           , ObjectString_ToAddress.ValueData        AS PartnerAddress_To
+                           , COALESCE (OH_JuridicalDetails_To.OKPO,'')             AS OKPO_To
+                           , COALESCE (OH_JuridicalDetails_To.INN,'')              AS INN_To
+                           , COALESCE (OH_JuridicalDetails_To.NumberVAT,'')        AS NumberVAT_To
+                           , COALESCE (OH_JuridicalDetails_To.BankAccount,'')      AS BankAccount_To
+                           , COALESCE (OH_JuridicalDetails_To.BankName,'')         AS BankName_To
+                           , COALESCE (OH_JuridicalDetails_To.MFO,'')              AS BankMFO_To
 
                            , CASE WHEN COALESCE (ObjectString_PlaceOf.ValueData, '') <> '' THEN COALESCE (ObjectString_PlaceOf.ValueData, '')
                                   ELSE '' -- 'м.Днiпро'
                                   END  :: TVarChar   AS PlaceOf
+                                  
+                           , CASE WHEN MovementString_InvNumberPartner_order.ValueData <> ''
+                                       THEN CASE WHEN zfConvert_StringToNumber (MovementString_InvNumberPartner_order.ValueData) <> 0
+                                                      THEN zfConvert_StringToNumber (MovementString_InvNumberPartner_order.ValueData) :: TVarChar
+                                                 ELSE MovementString_InvNumberPartner_order.ValueData
+                                            END
+                                  WHEN MovementString_InvNumberOrder.ValueData <> ''
+                                       THEN MovementString_InvNumberOrder.ValueData
+                                  ELSE COALESCE (Movement_order.InvNumber, '')
+                             END AS InvNumberOrder
+                           , COALESCE (Movement_order.OperDate, Movement.OperDate) :: TDateTime AS OperDateOrder
                       FROM Movement
                            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -92,6 +119,26 @@ BEGIN
                        LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                                     ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                                    AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+
+                       LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                                         ON MovementLinkMovement_Order.MovementId = Movement.Id
+                                                        AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                       LEFT JOIN Movement AS Movement_order ON Movement_order.Id = MovementLinkMovement_Order.MovementChildId
+                       LEFT JOIN MovementString AS MovementString_InvNumberPartner_order
+                                                       ON MovementString_InvNumberPartner_order.MovementId = Movement_order.Id
+                                                      AND MovementString_InvNumberPartner_order.DescId = zc_MovementString_InvNumberPartner()
+
+                       LEFT JOIN MovementString AS MovementString_InvNumberOrder
+                                                   ON MovementString_InvNumberOrder.MovementId =  Movement.Id
+                                                  AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+                       LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                                    ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                                   AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+                       --LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
+
+                       LEFT JOIN ObjectString AS ObjectString_ToAddress
+                                              ON ObjectString_ToAddress.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_To.Id)
+                                             AND ObjectString_ToAddress.DescId = zc_ObjectString_Partner_Address()
 
                        LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDocument
                                             ON ObjectLink_Contract_JuridicalDocument.ObjectId = MovementLinkObject_Contract.ObjectId
@@ -124,6 +171,11 @@ BEGIN
                                             ON ObjectDate_Signing.ObjectId = MovementLinkObject_Contract.ObjectId
                                            AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
                                            AND Object_Contract.ValueData <> '-'
+                       LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
+                                            ON ObjectLink_Contract_ContractKind.ObjectId = MovementLinkObject_Contract.ObjectId
+                                           AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
+                                           AND Object_Contract.ValueData <> '-'
+                       LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
 
                        LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
                                             ON ObjectLink_Contract_InfoMoney.ObjectId = MovementLinkObject_Contract.ObjectId
@@ -153,6 +205,15 @@ BEGIN
                                                                   AND tmpBankAccount3.BankAccountId IS NULL
                        LEFT JOIN Object_BankAccount_View AS Object_BankAccount ON Object_BankAccount.Id = COALESCE (ObjectLink_Contract_BankAccount.ChildObjectId, COALESCE (tmpBankAccount1.BankAccountId, COALESCE (tmpBankAccount2.BankAccountId, COALESCE (tmpBankAccount3.BankAccountId, tmpBankAccount4.BankAccountId))))
 
+                       LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_Bank_From
+                                                                           ON OH_JuridicalDetails_Bank_From.JuridicalId = Object_BankAccount.BankJuridicalId
+                                                                          AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_Bank_From.StartDate
+                                                                          AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_Bank_From.EndDate
+
+                       LEFT JOIN ObjectHistoryString AS OHS_JD_JuridicalAddress_Bank_From
+                                                     ON OHS_JD_JuridicalAddress_Bank_From.ObjectHistoryId = OH_JuridicalDetails_Bank_From.ObjectHistoryId
+                                                    AND OHS_JD_JuridicalAddress_Bank_From.DescId = zc_ObjectHistoryString_JuridicalDetails_JuridicalAddress()
+                                         
                        LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                             ON ObjectLink_Unit_Branch.ObjectId = Object_From.Id
                                            AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
@@ -170,26 +231,35 @@ BEGIN
        SELECT ('Постачальник:  '||tmpData.JuridicalName_From) :: TBlob
        FROM tmpData
          UNION ALL
-       SELECT ('              P/c '||tmpData.BankAccount_from||' в '||tmpData.BankName_from||' МФО '||tmpData.MFO_from) :: TBlob
+       SELECT ('                П/р '||tmpData.BankAccount_ByContract||' у '||tmpData.BankName_ByContract||' МФО '||tmpData.BankMFO_ByContract) :: TBlob
        FROM tmpData
          UNION ALL
-       SELECT ('              код по ЕГРПОУ '||tmpData.OKPO_from) :: TBlob
+       SELECT ('               '||tmpData.JuridicalAddressBankFrom) :: TBlob
        FROM tmpData
          UNION ALL
-       SELECT ('') :: TBlob
-         UNION ALL
-       SELECT ('Одержувач: '||tmpData.JuridicalName_To) :: TBlob
-       FROM tmpData
-         UNION ALL
-       SELECT ('             '||tmpData.JuridicalAddress_to) :: TBlob
+       SELECT ('                код за ЄДРПОУ '||tmpData.OKPO_from||', IПН '||tmpData.INN_From ||', номер свiдоцтва '||tmpData.NumberVAT_From) :: TBlob
        FROM tmpData
          UNION ALL
        SELECT ('') :: TBlob
          UNION ALL
-       SELECT ('Пiдстава: Договір № '||tmpData.ContractName ||' від '||zfConvert_DateToString (tmpData.ContractSigningDate)) :: TBlob
+       SELECT ('Одержувач:     '||tmpData.JuridicalName_To) :: TBlob
        FROM tmpData
          UNION ALL
-       SELECT ('Місце складання: '||tmpData.PlaceOf ) :: TBlob
+       SELECT ('                П/р '||tmpData.BankAccount_To||' у '||tmpData.BankName_To||' МФО '||tmpData.BankMFO_To) :: TBlob
+       FROM tmpData
+         UNION ALL
+       SELECT ('                код за ЄДРПОУ '||tmpData.OKPO_To||', IПН '||tmpData.INN_To ||', номер свiдоцтва '||tmpData.NumberVAT_To) :: TBlob
+       FROM tmpData
+         UNION ALL
+       SELECT ('') :: TBlob
+         UNION ALL
+       SELECT ('Договір:       '||tmpData.ContractKindName||' № '||tmpData.ContractName ||' від '||zfConvert_DateToString (tmpData.ContractSigningDate) ) :: TBlob
+       FROM tmpData
+         UNION ALL
+       SELECT ('Замовлення:     Замовлення покупця № '||tmpData.InvNumberOrder||'від '||zfConvert_DateToString (tmpData.OperDateOrder) ) :: TBlob
+       FROM tmpData
+         UNION ALL
+       SELECT ('Адреса доставки: '||tmpData.PartnerAddress_To) :: TBlob
        FROM tmpData
     -- || CHR (13) || 
           
@@ -207,4 +277,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Email_xls_Header_Send (inMovementId:= 19371076, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Email_xls_Header_Send (inMovementId:= 19556147 , inSession:= zfCalc_UserAdmin())

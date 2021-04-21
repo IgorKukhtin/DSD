@@ -132,7 +132,21 @@ AS
            , CAST ('PrintMovement_Sale32490244' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('32490244', '41744911', '39775097', '41135005', '30728887')
+       AND OH_JuridicalDetails.OKPO IN ('32490244', '41744911', '39775097', '41135005', '30728887') 
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+      UNION
+-- ◊—œÃ ÀŒ√≤—“»  “Œ¬ 41750857
+      SELECT
+             zc_Movement_Sale()
+           , CAST ('Sale' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , zc_Enum_PaidKind_FirstForm()
+           , CAST ('PrintMovement_Sale41750857' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('41750857')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
 -- ¿¯‡Ì ”Í‡øÌ‡ √≥ÔÂÏ‡ÍÂÚ “Œ¬ + –≤¿À ≤—“≈…“ ‘. .¿.”.

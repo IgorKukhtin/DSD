@@ -177,16 +177,16 @@ begin
   LoadReportFromFile('Начисления услуг(итоги)', ReportPath + '\Финансовый Учет\Начисления услуг(итоги).fr3');
   LoadReportFromFile('Начисления услуг', ReportPath + '\Финансовый Учет\Начисления услуг.fr3');
   exit;
-  }
+
   LoadReportFromFile('По кассе (по услугам)', ReportPath + '\Финансовый Учет\По кассе (по услугам).fr3');
-  {exit;
+  exit;
 
   LoadReportFromFile('PrintMovement_MemberHoliday', ReportPath + '\Персонал\PrintMovement_MemberHoliday.fr3');
   exit;
-  }
+
   LoadReportFromFile('По кассе (с комментариями)', ReportPath + '\Финансовый Учет\По кассе (с комментариями).fr3');
   exit;
-  {
+
   LoadReportFromFile('PrintMovementGoodsBarCode', ReportPath + '\Товарный Учет\PrintMovementGoodsBarCode.fr3');
 
   LoadReportFromFile('Пароли подтверждения в Scale', ReportPath + '\Справочники\Пароли подтверждения в Scale.fr3');
@@ -496,10 +496,10 @@ begin
   LoadReportFromFile('PrintMovement_ReturnIn32516492', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn32516492.fr3');
   LoadReportFromFile('PrintMovement_ReturnIn35442481', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn35442481.fr3');
   LoadReportFromFile('PrintMovement_ReturnInDay', ReportPath + '\Товарный Учет\PrintMovement_ReturnInDay.fr3');
-  }
+
   LoadReportFromFile('PrintMovement_ReturnIn_corr', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn_corr.fr3');
   exit;
-  {
+
   LoadReportFromFile('PrintMovement_PriceCorrective35442481', ReportPath + '\Товарный Учет\PrintMovement_PriceCorrective35442481.fr3');
   LoadReportFromFile('PrintMovement_PriceCorrective32049199', ReportPath + '\Товарный Учет\PrintMovement_PriceCorrective32049199.fr3');
   LoadReportFromFile('PrintMovement_Tax', ReportPath + '\Товарный Учет\PrintMovement_Tax.fr3');
@@ -510,11 +510,11 @@ begin
   LoadReportFromFile('PrintMovement_Tax0317', ReportPath + '\Товарный Учет\PrintMovement_Tax0317.fr3');
   LoadReportFromFile('PrintMovement_Tax1218', ReportPath + '\Товарный Учет\PrintMovement_Tax1218.fr3');
   LoadReportFromFile('PrintMovement_TaxCorrective1218', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrective1218.fr3');
-  }
+
   LoadReportFromFile('PrintMovement_Tax160321', ReportPath + '\Товарный Учет\PrintMovement_Tax160321.fr3');
   LoadReportFromFile('PrintMovement_TaxCorrective160321', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrective160321.fr3');
   exit;
-  {
+
   LoadReportFromFile('PrintMovement_Tax0321', ReportPath + '\Товарный Учет\PrintMovement_Tax0321.fr3');
   exit;
 
@@ -611,6 +611,9 @@ begin
   for i := Low(OKPO) to High(OKPO) do
     LoadReportFromFile('PrintMovement_Sale' + OKPO[i], ReportPath + '\Товарный Учет\PrintMovement_Sale' + OKPO[i] + '.fr3');
 }
+  TStrArrAdd(['41750857']);
+  for i := Low(OKPO) to High(OKPO) do
+    LoadReportFromFile('PrintMovement_Sale' + OKPO[i], ReportPath + '\Товарный Учет\PrintMovement_Sale' + OKPO[i] + '.fr3');
 
 end;
 
