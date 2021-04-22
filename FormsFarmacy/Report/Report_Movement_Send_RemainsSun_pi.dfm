@@ -1,4 +1,4 @@
-inherited Report_Movement_Send_RemainsSun_piForm: TReport_Movement_Send_RemainsSun_piForm
+﻿inherited Report_Movement_Send_RemainsSun_piForm: TReport_Movement_Send_RemainsSun_piForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102' '#1057#1059#1053' ('#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1048#1079#1083#1080#1096#1082#1086#1074')>'
   ClientHeight = 673
   ClientWidth = 960
@@ -452,6 +452,22 @@ inherited Report_Movement_Send_RemainsSun_piForm: TReport_Movement_Send_RemainsS
             Options.Editing = False
             Width = 55
           end
+          object isClose: TcxGridDBColumn
+            Caption = #1047#1074#1082#1088#1099#1090' '#1087#1086' '#1089#1077#1090#1080
+            DataBinding.FieldName = 'isClose'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 54
+          end
+          object isCloseMCS: TcxGridDBColumn
+            Caption = #1059#1073#1080#1090#1100' '#1082#1086#1076
+            DataBinding.FieldName = 'isCloseMCS'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 54
+          end
           object AmountRemains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'AmountRemains'
@@ -692,7 +708,6 @@ inherited Report_Movement_Send_RemainsSun_piForm: TReport_Movement_Send_RemainsS
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitTop = 390
         object cxGridDBTableViewPartion: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PartionDS
@@ -1055,6 +1070,14 @@ inherited Report_Movement_Send_RemainsSun_piForm: TReport_Movement_Send_RemainsS
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+          end
+          object срisCloseMCS: TcxGridDBColumn
+            Caption = #1059#1073#1080#1090#1100' '#1082#1086#1076
+            DataBinding.FieldName = 'isCloseMCS'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
           object chAmount_notSold_summ: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1057#1074#1077#1088#1093#1079#1072#1087#1072#1089
@@ -1812,6 +1835,7 @@ inherited Report_Movement_Send_RemainsSun_piForm: TReport_Movement_Send_RemainsS
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>

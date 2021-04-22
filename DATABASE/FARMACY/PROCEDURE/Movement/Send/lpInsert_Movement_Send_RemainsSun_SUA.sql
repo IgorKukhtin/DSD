@@ -7,13 +7,14 @@ CREATE OR REPLACE FUNCTION lpInsert_Movement_Send_RemainsSun_SUA(
     IN inDriverId            Integer   , -- Водитель, распределяем только по аптекам этого
     IN inUserId              Integer     -- пользователь
 )
-RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, isClose boolean
              , UnitId_From Integer, UnitName_From TVarChar
              , Remains_From TFloat, Layout_From TFloat, PromoUnit_From TFloat
 
              , UnitId_To Integer, UnitName_To TVarChar, Remains_To TFloat
              , Amount TFloat
              , Price_From TFloat, Price_To TFloat
+             , isCloseMCS_From boolean, isCloseMCS_To boolean
 
               )
 AS
@@ -101,7 +102,7 @@ BEGIN
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpRemains_all_SUA'))
      THEN
-       CREATE TEMP TABLE _tmpRemains_all_SUA   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpRemains_all_SUA   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat, isCloseMCS boolean) ON COMMIT DROP;
      END IF;
 
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpRemains_SUA'))
@@ -688,6 +689,7 @@ BEGIN
                                    THEN CASE WHEN COALESCE (Price_MCSValueMin.ValueData, 0) < COALESCE (MCS_Value.ValueData, 0) THEN COALESCE (Price_MCSValueMin.ValueData, 0) ELSE MCS_Value.ValueData END
                                    ELSE 0
                               END AS MCSValue_min
+                            , COALESCE (MCS_isClose.ValueData, FALSE) AS isCloseMCS
                        FROM ObjectLink AS OL_Price_Unit
                             -- !!!только для таких Аптек!!!
                             INNER JOIN _tmpUnit_SUN_SUA ON _tmpUnit_SUN_SUA.UnitId = OL_Price_Unit.ChildObjectId
@@ -755,6 +757,7 @@ BEGIN
                                           ELSE tmpGoodsCategory.Value
                                      END                                         :: TFloat AS MCSValue
                                    , COALESCE (tmpPrice.MCSValue_min, 0.0)       :: TFloat AS MCSValue_min
+                                   , COALESCE(tmpPrice.isCloseMCS, FALSE)                  AS isCloseMCS
                               FROM tmpPrice
                                    FULL JOIN tmpGoodsCategory ON tmpGoodsCategory.GoodsId = tmpPrice.GoodsId
                                                              AND tmpGoodsCategory.UnitId  = tmpPrice.UnitId
@@ -763,7 +766,7 @@ BEGIN
                                  OR COALESCE (tmpPrice.Price, 0) <> 0
                              )
      -- 2.5. Результат: все остатки у ПОЛУЧАТЕЛЯ, продажи => расчет кол-во ПОТРЕБНОСТЬ: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
-     INSERT INTO  _tmpRemains_all_SUA (UnitId, GoodsId, Price, MCS, AmountResult, AmountRemains, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve)
+     INSERT INTO  _tmpRemains_all_SUA (UnitId, GoodsId, Price, MCS, AmountResult, AmountRemains, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve, isCloseMCS)
         SELECT tmpObject_Price.UnitId
              , tmpObject_Price.GoodsId
              , tmpObject_Price.Price
@@ -895,6 +898,7 @@ BEGIN
              , COALESCE (tmpMI_OrderExternal.Amount,0)  AS AmountOrderExternal
                -- отложенные Чеки + не проведенные с CommentError
              , COALESCE (tmpMI_Reserve.Amount, 0)       AS AmountReserve
+             , tmpObject_Price.isCloseMCS
         FROM tmpObject_Price
              -- Работают по СУН - только отправка
              LEFT JOIN ObjectBoolean AS OB_Unit_SUN_out
@@ -1702,8 +1706,9 @@ return;
      -- Результат
      RETURN QUERY
        SELECT Object_Goods.Id                            AS GoodsId
-            , Object_Goods.ObjectCode                    AS GoodsCode
-            , Object_Goods.ValueData                     AS GoodsName
+            , Object_Goods_Main.ObjectCode               AS GoodsCode
+            , Object_Goods_Main.Name                     AS GoodsName
+            , Object_Goods_Main.isClose                  AS isClose
 
             , Object_Unit_From.Id                        AS UnitId_From
             , Object_Unit_From.ValueData                 AS UnitName_From
@@ -1719,6 +1724,9 @@ return;
 
             , tmpRemains_From.Price
             , tmpRemains_To.Price
+            
+            , COALESCE(tmpRemains_From.isCloseMCS, FALSE)
+            , COALESCE(tmpRemains_To.isCloseMCS, FALSE)
 
 
        FROM _tmpResult_SUA
@@ -1728,7 +1736,8 @@ return;
 
             LEFT JOIN Object AS Object_Unit_To  ON Object_Unit_To.Id  = _tmpResult_SUA.UnitId_to
 
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpResult_SUA.GoodsId
+            LEFT JOIN Object_Goods_Retail AS Object_Goods ON Object_Goods.Id = _tmpResult_SUA.GoodsId
+            LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods.GoodsMainId
 
             LEFT JOIN _tmpRemains_all_SUA AS tmpRemains_From
                                           ON tmpRemains_From.UnitId = _tmpResult_SUA.UnitId_From
@@ -1760,8 +1769,8 @@ $BODY$
 */
 
 --
---SELECT * FROM lpInsert_Movement_Send_RemainsSun_SUA (inOperDate:= ('22.03.2021')::TDateTime, inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
+--
+--SELECT * FROM lpInsert_Movement_Send_RemainsSun_SUA (inOperDate:= ('19.04.2021')::TDateTime, inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 
 -- 
---
-select * from gpReport_Movement_Send_RemainsSun_SUA(inOperDate := ('12.04.2021')::TDateTime ,  inSession := '3');
+-- select * from gpReport_Movement_Send_RemainsSun_SUA(inOperDate := ('12.04.2021')::TDateTime ,  inSession := '3');

@@ -13,17 +13,17 @@ inherited Report_Movement_Send_RemainsSun_SUAForm: TReport_Movement_Send_Remains
     Height = 614
     TabOrder = 2
     ExplicitTop = 59
-    ExplicitWidth = 960
+    ExplicitWidth = 1016
     ExplicitHeight = 614
     ClientRectBottom = 614
     ClientRectRight = 1016
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 960
+      ExplicitWidth = 1016
       ExplicitHeight = 614
       inherited cxGrid: TcxGrid
         Width = 1016
         Height = 614
-        ExplicitWidth = 960
+        ExplicitWidth = 1016
         ExplicitHeight = 614
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Deleting = False
@@ -120,9 +120,20 @@ inherited Report_Movement_Send_RemainsSun_SUAForm: TReport_Movement_Send_Remains
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 137
+            Width = 162
             Position.BandIndex = 0
             Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object isClose: TcxGridDBBandedColumn
+            Caption = #1047#1072#1082#1088#1099#1090' '#1087#1086' '#1089#1077#1090#1080
+            DataBinding.FieldName = 'isClose'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+            Position.BandIndex = 0
+            Position.ColIndex = 2
             Position.RowIndex = 0
           end
           object UnitName_From: TcxGridDBBandedColumn
@@ -170,6 +181,17 @@ inherited Report_Movement_Send_RemainsSun_SUAForm: TReport_Movement_Send_Remains
             Options.Editing = False
             Position.BandIndex = 1
             Position.ColIndex = 3
+            Position.RowIndex = 0
+          end
+          object isCloseMCS_From: TcxGridDBBandedColumn
+            Caption = #1059#1073#1080#1090#1100' '#1082#1086#1076
+            DataBinding.FieldName = 'isCloseMCS_From'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+            Position.BandIndex = 1
+            Position.ColIndex = 4
             Position.RowIndex = 0
           end
           object UnitName_To: TcxGridDBBandedColumn
@@ -236,6 +258,17 @@ inherited Report_Movement_Send_RemainsSun_SUAForm: TReport_Movement_Send_Remains
             Position.ColIndex = 4
             Position.RowIndex = 0
           end
+          object isCloseMCS_To: TcxGridDBBandedColumn
+            Caption = #1059#1073#1080#1090#1100' '#1082#1086#1076
+            DataBinding.FieldName = 'isCloseMCS_To'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+            Position.BandIndex = 2
+            Position.ColIndex = 5
+            Position.RowIndex = 0
+          end
         end
         inherited cxGridLevel: TcxGridLevel
           GridView = cxGridDBBandedTableView1
@@ -247,7 +280,7 @@ inherited Report_Movement_Send_RemainsSun_SUAForm: TReport_Movement_Send_Remains
     Width = 1016
     Height = 33
     TabOrder = 4
-    ExplicitWidth = 960
+    ExplicitWidth = 1016
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 29

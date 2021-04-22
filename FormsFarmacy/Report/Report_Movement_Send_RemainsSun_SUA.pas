@@ -64,6 +64,9 @@ type
     Layout_From: TcxGridDBBandedColumn;
     PromoUnit_From: TcxGridDBBandedColumn;
     Remains_To: TcxGridDBBandedColumn;
+    isClose: TcxGridDBBandedColumn;
+    isCloseMCS_From: TcxGridDBBandedColumn;
+    isCloseMCS_To: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

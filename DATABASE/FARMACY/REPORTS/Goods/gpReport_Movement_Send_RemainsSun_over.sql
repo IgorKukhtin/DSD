@@ -108,8 +108,8 @@ BEGIN
      CREATE TEMP TABLE _tmpGoods_TP_exception   (UnitId Integer, GoodsId Integer) ON COMMIT DROP;
 
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
-     CREATE TEMP TABLE _tmpRemains_all   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmpRemains_all_a (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpRemains_all   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat, isCloseMCS boolean) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpRemains_all_a (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat, isCloseMCS boolean) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpRemains   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpRemains_a (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
 
@@ -160,7 +160,7 @@ BEGIN
      -- Результат
      CREATE TEMP TABLE _tmpResult (DriverId Integer, DriverName TVarChar
                                  , UnitId Integer, UnitName TVarChar
-                                 , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+                                 , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, isClose boolean
                                  , Amount_sale         TFloat --
                                  , Summ_sale           TFloat --
                                  , AmountSun_real      TFloat -- сумма сроковых по реальным остаткам, должно сходиться с AmountSun_summ_save
@@ -182,6 +182,7 @@ BEGIN
                                  , MCS                 TFloat -- НТЗ
                                  , Layout              TFloat -- Выкладка
                                  , PromoUnit           TFloat -- Марк. план длч точки
+                                 , isCloseMCS          boolean -- Убить код
                                  , Summ_min            TFloat -- информативно - мнимальн сумма
                                  , Summ_max            TFloat -- информативно - максимальн сумма
                                  , Unit_count          TFloat -- информативно - кол-во таких накл.
@@ -204,7 +205,7 @@ BEGIN
      -- Результат - ПЕРВЫЙ водитель
      INSERT INTO _tmpResult (DriverId, DriverName
                            , UnitId, UnitName
-                           , GoodsId, GoodsCode, GoodsName
+                           , GoodsId, GoodsCode, GoodsName, isClose
                            , Amount_sale
                            , Summ_sale
                            , AmountSun_real
@@ -226,6 +227,7 @@ BEGIN
                            , MCS
                            , Layout
                            , PromoUnit
+                           , isCloseMCS
                            , Summ_min
                            , Summ_max
                            , Unit_count
@@ -251,6 +253,7 @@ BEGIN
                , COALESCE (tmp.GoodsId, 0)     :: Integer  AS GoodsId
                , COALESCE (tmp.GoodsCode, 0)   :: Integer  AS GoodsCode
                , COALESCE (tmp.GoodsName, '')  :: TVarChar AS GoodsName
+               , COALESCE (tmp.isClose, False)             AS isClose
                , tmp.Amount_sale
                , tmp.Summ_sale
                , tmp.AmountSun_real
@@ -272,6 +275,7 @@ BEGIN
                , COALESCE (tmp.MCS, 0)        :: TFloat AS MCS
                , COALESCE (tmp.Layout, 0)     :: TFloat AS Layout
                , COALESCE (tmp.PromoUnit, 0)  :: TFloat AS PromoUnit
+               , COALESCE (tmp.isCloseMCS, False)       AS isCloseMCS
                , tmp.Summ_min
                , tmp.Summ_max
                , tmp.Unit_count
@@ -569,6 +573,7 @@ BEGIN
                   -- Выкладка
                , _tmpGoods_Layout.Layout
                , _tmpGoods_PromoUnit.Amount
+               , _tmpRemains.isCloseMCS
                , _tmpRemains.AmountResult
                , _tmpRemains.AmountRemains
                  -- отложенные Чеки + не проведенные с CommentError

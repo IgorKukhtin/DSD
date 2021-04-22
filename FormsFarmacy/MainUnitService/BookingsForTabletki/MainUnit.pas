@@ -259,11 +259,6 @@ begin
       spInsertMovement.Params.ParamByName('inSession').AsString := '3';
       spInsertMovement.ExecProc;
 
-//      Add_LogTest(TabletkiAPI.BookingsHeadCDS.FieldByName('bookingId').AsString);
-//      Add_LogTest(TabletkiAPI.BookingsHeadCDS.FieldByName('customer').AsString);
-//      Add_LogTest(TabletkiAPI.BookingsHeadCDS.FieldByName('customerPhone').AsString);
-
-
       TabletkiAPI.BookingsBodyCDS.First;
       while not TabletkiAPI.BookingsBodyCDS.Eof  do
       begin

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION lpInsert_Movement_Send_RemainsSun(
     IN inUserId              Integer     -- пользователь
 )
 RETURNS TABLE (UnitId Integer, UnitName TVarChar
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, isClose boolean
              , Amount_sale         TFloat --
              , Summ_sale           TFloat --
              , AmountSun_real      TFloat -- сумма сроковых по реальным остаткам, должно сходиться с AmountSun_summ_save
@@ -32,6 +32,7 @@ RETURNS TABLE (UnitId Integer, UnitName TVarChar
              , MCS                 TFloat -- НТЗ
              , Layout              TFloat -- Выкладка
              , PromoUnit           TFloat -- Марк. план длч точки
+             , isCloseMCS          boolean -- Убить код
              , Summ_min            TFloat -- информативно - мнимальн сумма
              , Summ_max            TFloat -- информативно - максимальн сумма
              , Unit_count          TFloat -- информативно - кол-во таких накл.
@@ -763,6 +764,7 @@ BEGIN
                                    THEN CASE WHEN COALESCE (Price_MCSValueMin.ValueData, 0) < COALESCE (MCS_Value.ValueData, 0) THEN COALESCE (Price_MCSValueMin.ValueData, 0) ELSE MCS_Value.ValueData END
                                    ELSE 0
                               END AS MCSValue_min
+                            , COALESCE (MCS_isClose.ValueData, FALSE) AS isCloseMCS
                        FROM ObjectLink AS OL_Price_Unit
                             -- !!!только для таких Аптек!!!
                             INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = OL_Price_Unit.ChildObjectId
@@ -831,6 +833,7 @@ BEGIN
                                           ELSE tmpGoodsCategory.Value
                                      END                                         :: TFloat AS MCSValue
                                    , COALESCE (tmpPrice.MCSValue_min, 0.0)       :: TFloat AS MCSValue_min
+                                   , COALESCE (tmpPrice.isCloseMCS, FALSE)                 AS isCloseMCS
                               FROM tmpPrice
                                    FULL JOIN tmpGoodsCategory ON tmpGoodsCategory.GoodsId = tmpPrice.GoodsId
                                                              AND tmpGoodsCategory.UnitId  = tmpPrice.UnitId
@@ -845,7 +848,7 @@ BEGIN
                              )
 
      -- 1.1. Результат: все остатки, НТЗ => получаем кол-ва автозаказа: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
-     INSERT INTO  _tmpRemains_all (UnitId, GoodsId, Price, MCS, AmountResult, AmountRemains, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve)
+     INSERT INTO  _tmpRemains_all (UnitId, GoodsId, Price, MCS, AmountResult, AmountRemains, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve, isCloseMCS)
         SELECT tmpObject_Price.UnitId
              , tmpObject_Price.GoodsId
              , tmpObject_Price.Price
@@ -928,6 +931,7 @@ BEGIN
              , COALESCE (tmpMI_OrderExternal.Amount,0)  AS AmountOrderExternal
                -- отложенные Чеки + не проведенные с CommentError
              , COALESCE (tmpMI_Reserve.Amount, 0)       AS AmountReserve
+             , COALESCE (tmpObject_Price.isCloseMCS, FALSE)  AS isCloseMCS
         FROM tmpObject_Price
              -- Работают по СУН - только отправка
              LEFT JOIN ObjectBoolean AS OB_Unit_SUN_out
@@ -2881,8 +2885,9 @@ BEGIN
        SELECT Object_Unit.Id          AS UnitId
             , Object_Unit.ValueData   AS UnitName
             , Object_Goods.Id         AS GoodsId
-            , Object_Goods.ObjectCode AS GoodsCode
-            , Object_Goods.ValueData  AS GoodsName
+            , Object_Goods_Main.ObjectCode AS GoodsCode
+            , Object_Goods_Main.Name       AS GoodsName
+            , Object_Goods_Main.isClose    AS isClose
               -- продажи
             , _tmpSale.Amount AS Amount_sale
             , _tmpSale.Summ   AS Summ_sale
@@ -2913,6 +2918,8 @@ BEGIN
             , _tmpRemains_calc.MCS
             , _tmpGoods_Layout.Layout
             , _tmpGoods_PromoUnit.Amount
+              -- Убить код
+            , _tmpRemains_all.isCloseMCS
 
               -- информативно - "возможна" мнимальн сумма
             , tmpSumm.Summ_min   :: TFloat AS Summ_min
@@ -3052,7 +3059,8 @@ BEGIN
             --
             --
             LEFT JOIN Object AS Object_Unit  ON Object_Unit.Id  = _tmpRemains_calc.UnitId
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpRemains_calc.GoodsId
+            LEFT JOIN Object_Goods_Retail AS Object_Goods ON Object_Goods.Id = _tmpRemains_calc.GoodsId
+            LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods.GoodsMainId
             -- итого Автозаказ по всем Аптекам
             LEFT JOIN (SELECT _tmpRemains_calc.GoodsId, SUM (_tmpRemains_calc.AmountResult) AS AmountResult FROM _tmpRemains_calc GROUP BY _tmpRemains_calc.GoodsId
                       ) AS tmpRemains_sum ON tmpRemains_sum.GoodsId = _tmpRemains_calc.GoodsId
@@ -3065,13 +3073,15 @@ BEGIN
             LEFT JOIN _tmpGoods_Layout ON _tmpGoods_Layout.UnitId = _tmpRemains_calc.UnitId
                                       AND _tmpGoods_Layout.GoodsId = _tmpRemains_calc.GoodsId
                               
+            LEFT JOIN _tmpRemains_all ON _tmpRemains_all.UnitId = _tmpRemains_calc.UnitId
+                                     AND _tmpRemains_all.GoodsId = _tmpRemains_calc.GoodsId
 
 -- тест для пары
 --     WHERE _tmpRemains_calc.GoodsId IN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId FROM _tmpGoods_SUN_PairSun)
 --        OR _tmpRemains_calc.GoodsId IN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun)
 
        -- ORDER BY Object_Goods.ObjectCode, Object_Unit.ValueData
-       ORDER BY Object_Goods.ValueData, Object_Unit.ValueData
+       ORDER BY Object_Goods_Main.Name, Object_Unit.ValueData
        -- ORDER BY Object_Unit.ValueData, Object_Goods.ValueData
        -- ORDER BY Object_Unit.ValueData, Object_Goods.ObjectCode
       ;
