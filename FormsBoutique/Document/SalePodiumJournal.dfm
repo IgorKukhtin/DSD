@@ -293,6 +293,15 @@ object SalePodiumJournalForm: TSalePodiumJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 163
       end
+      object isOffer: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1088#1082#1072
+        DataBinding.FieldName = 'isOffer'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1088#1080#1084#1077#1088#1082#1072
+        Options.Editing = False
+        Width = 34
+      end
       object ToName: TcxGridDBColumn
         Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
         DataBinding.FieldName = 'ToName'
@@ -806,7 +815,7 @@ object SalePodiumJournalForm: TSalePodiumJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -871,7 +880,7 @@ object SalePodiumJournalForm: TSalePodiumJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -1226,7 +1235,7 @@ object SalePodiumJournalForm: TSalePodiumJournalForm
       end
       item
         Name = 'inStartProtocol'
-        Value = 'NULL'
+        Value = Null
         Component = deStartProtocol
         DataType = ftDateTime
         ParamType = ptInput
@@ -1234,7 +1243,7 @@ object SalePodiumJournalForm: TSalePodiumJournalForm
       end
       item
         Name = 'inEndProtocol'
-        Value = 'NULL'
+        Value = Null
         Component = deEndProtocol
         DataType = ftDateTime
         ParamType = ptInput
@@ -1371,10 +1380,12 @@ object SalePodiumJournalForm: TSalePodiumJournalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 248
     Top = 216

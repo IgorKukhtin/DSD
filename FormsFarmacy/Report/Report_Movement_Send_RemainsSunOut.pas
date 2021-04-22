@@ -135,6 +135,9 @@ type
     chSumm_not_in: TcxGridDBColumn;
     chLayout: TcxGridDBColumn;
     chPromoUnit: TcxGridDBColumn;
+    chisClose: TcxGridDBColumn;
+    chisCloseMCS: TcxGridDBColumn;
+    isCloseMCS: TcxGridDBColumn;
   private
     { Private declarations }
   public

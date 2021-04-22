@@ -112,6 +112,7 @@ type
     deEndProtocol: TcxDateEdit;
     PeriodChoice1: TPeriodChoice;
     spGet_Current_Date: TdsdStoredProc;
+    isOffer: TcxGridDBColumn;
   private
   public
   end;

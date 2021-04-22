@@ -136,15 +136,15 @@ object SalePodiumForm: TSalePodiumForm
       Width = 89
     end
     object cxLabel16: TcxLabel
-      Left = 9
+      Left = 95
       Top = 85
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1044#1086#1082#1091#1084#1077#1085#1090
     end
     object ceComment: TcxTextEdit
-      Left = 9
+      Left = 95
       Top = 103
       TabOrder = 13
-      Width = 548
+      Width = 462
     end
     object cxLabel6: TcxLabel
       Left = 770
@@ -232,7 +232,7 @@ object SalePodiumForm: TSalePodiumForm
     end
     object edDiscountTaxTwo: TcxCurrencyEdit
       Left = 975
-      Top = 108
+      Top = 113
       Hint = '% '#1089#1082#1080#1076#1082#1080' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1074' '#1063#1072#1076#1086' '#1085#1072' '#1043#1088#1091#1087#1087#1091' <'#1054#1073#1091#1074#1100'>'
       ParentShowHint = False
       Properties.Alignment.Horz = taCenter
@@ -363,6 +363,14 @@ object SalePodiumForm: TSalePodiumForm
       Left = 958
       Top = 45
       Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082'.)'
+    end
+    object cbOffer: TcxCheckBox
+      Left = 9
+      Top = 103
+      Caption = #1055#1088#1080#1084#1077#1088#1082#1072
+      Properties.ReadOnly = False
+      TabOrder = 39
+      Width = 75
     end
   end
   object cxPageControl: TcxPageControl
@@ -2784,14 +2792,14 @@ object SalePodiumForm: TSalePodiumForm
         end
         item
           Name = 'isPeriod'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartion'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -3294,6 +3302,7 @@ object SalePodiumForm: TSalePodiumForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -3306,6 +3315,7 @@ object SalePodiumForm: TSalePodiumForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 32
       end>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 347
     Top = 337
@@ -3366,6 +3376,14 @@ object SalePodiumForm: TSalePodiumForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOffer'
+        Value = Null
+        Component = cbOffer
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 362
@@ -3392,6 +3410,9 @@ object SalePodiumForm: TSalePodiumForm
       end
       item
         Control = ceComment
+      end
+      item
+        Control = cbOffer
       end>
     GetStoredProc = spGet
     Left = 264
@@ -3412,7 +3433,7 @@ object SalePodiumForm: TSalePodiumForm
       end
       item
         Name = 'inOperDate'
-        Value = 0c
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -3501,7 +3522,7 @@ object SalePodiumForm: TSalePodiumForm
       end
       item
         Name = 'LastDate'
-        Value = 'NULL'
+        Value = Null
         Component = edLastDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -3536,7 +3557,7 @@ object SalePodiumForm: TSalePodiumForm
       end
       item
         Name = 'HappyDate'
-        Value = ''
+        Value = Null
         Component = edHappyDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -3578,7 +3599,7 @@ object SalePodiumForm: TSalePodiumForm
       end
       item
         Name = 'InsertDate'
-        Value = 'NULL'
+        Value = Null
         Component = edInsertDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -3588,6 +3609,13 @@ object SalePodiumForm: TSalePodiumForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isOffer'
+        Value = Null
+        Component = cbOffer
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -3736,14 +3764,14 @@ object SalePodiumForm: TSalePodiumForm
       end
       item
         Name = 'HappyDate'
-        Value = 'NULL'
+        Value = Null
         Component = edHappyDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'LastDate'
-        Value = 'NULL'
+        Value = Null
         Component = edLastDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -3891,6 +3919,7 @@ object SalePodiumForm: TSalePodiumForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <
@@ -3898,6 +3927,7 @@ object SalePodiumForm: TSalePodiumForm
         Column = BarCode
       end>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 784
     Top = 208
@@ -3987,7 +4017,7 @@ object SalePodiumForm: TSalePodiumForm
       end
       item
         Name = 'inIsPay'
-        Value = 'False'
+        Value = False
         Component = cbIsPay
         DataType = ftBoolean
         ParamType = ptInput
@@ -3995,28 +4025,28 @@ object SalePodiumForm: TSalePodiumForm
       end
       item
         Name = 'ioAmount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
         Name = 'ioChangePercent'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'ioSummChangePercent'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'ioSummChangePercent_curr'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4151,7 +4181,7 @@ object SalePodiumForm: TSalePodiumForm
       end
       item
         Name = 'inOperDate'
-        Value = 0c
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -4358,7 +4388,7 @@ object SalePodiumForm: TSalePodiumForm
       end
       item
         Name = 'inisChecked'
-        Value = 'FALSE'
+        Value = False
         Component = MasterCDS
         ComponentItem = 'isChecked'
         DataType = ftBoolean
@@ -4505,7 +4535,7 @@ object SalePodiumForm: TSalePodiumForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 992
+    Left = 1008
     Top = 88
   end
 end

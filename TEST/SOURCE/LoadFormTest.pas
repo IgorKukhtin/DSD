@@ -3224,13 +3224,13 @@ end;
 
 procedure TLoadFormTest.LoadStickerFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSticker_ListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSticker_ListForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerEditForm');
   //
@@ -3239,10 +3239,12 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerProperty_ValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerProperty_ValueForm');
+
   //Property
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerPropertyEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerPropertyEditForm');
-  {
+
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerGroupForm');

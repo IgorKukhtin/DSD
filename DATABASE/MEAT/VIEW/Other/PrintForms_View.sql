@@ -64,7 +64,7 @@ AS
            , CAST ('01.01.2200' AS TDateTime)           AS EndDate
            , CAST (0 AS INTEGER)                        AS JuridicalId
            , zc_Enum_PaidKind_FirstForm()               AS PaidKindId --б/н
-           , CAST ('PrintMovement_Bill' AS TVarChar)   AS PrintFormName
+           , CAST ('PrintMovement_Bill' AS TVarChar)    AS PrintFormName
       UNION
       SELECT
              zc_Movement_Sale()                         AS DescId
@@ -73,7 +73,8 @@ AS
            , CAST ('01.01.2200' AS TDateTime)           AS EndDate
            , CAST (0 AS INTEGER)                        AS JuridicalId
            , zc_Enum_PaidKind_SecondForm()              AS PaidKindId --н
-           , CAST ('PrintMovement_Bill' AS TVarChar)   AS PrintFormName
+           , CAST ('PrintMovement_Bill' AS TVarChar)    AS PrintFormName
+   
       UNION
       SELECT
              zc_Movement_Sale()
@@ -88,7 +89,75 @@ AS
        AND OH_JuridicalDetails.OKPO IN ('01074874','23193668','01074791','25774961','01074302','01074064',
                                         '01073981','26139824','01074874','24755803','04791599','01073946','01074741','25927436')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
+
       UNION
+      SELECT
+             zc_Movement_Sale()                         AS DescId
+           , CAST ('Bill' AS TVarChar)                  AS ReportType
+           , CAST ('01.01.2000' AS TDateTime)           AS StartDate
+           , CAST ('01.01.2200' AS TDateTime)           AS EndDate
+           , CAST (Object_Juridical.Id AS INTEGER)      AS JuridicalId
+           , zc_Enum_PaidKind_FirstForm()               AS PaidKindId --б/н
+           , CAST ('PrintMovement_Bill' AS TVarChar)    AS PrintFormName
+      FROM Object AS Object_Juridical
+        JOIN ObjectBoolean AS ObjectBoolean_isPriceWithVAT
+                           ON ObjectBoolean_isPriceWithVAT.ObjectId = Object_Juridical.Id 
+                          AND ObjectBoolean_isPriceWithVAT.DescId = zc_ObjectBoolean_Juridical_isPriceWithVAT() 
+                          AND ObjectBoolean_isPriceWithVAT.ValueData = FALSE
+      UNION
+      SELECT
+             zc_Movement_Sale()                         AS DescId
+           , CAST ('Bill' AS TVarChar)                  AS ReportType
+           , CAST ('01.01.2000' AS TDateTime)           AS StartDate
+           , CAST ('01.01.2200' AS TDateTime)           AS EndDate
+           , CAST (Object_Juridical.Id AS INTEGER)      AS JuridicalId
+           , zc_Enum_PaidKind_SecondForm()              AS PaidKindId --н
+           , CAST ('PrintMovement_Bill' AS TVarChar)    AS PrintFormName
+      FROM Object AS Object_Juridical
+        JOIN ObjectBoolean AS ObjectBoolean_isPriceWithVAT
+                           ON ObjectBoolean_isPriceWithVAT.ObjectId = Object_Juridical.Id 
+                          AND ObjectBoolean_isPriceWithVAT.DescId = zc_ObjectBoolean_Juridical_isPriceWithVAT() 
+                          AND ObjectBoolean_isPriceWithVAT.ValueData = FALSE
+
+      UNION
+
+      SELECT
+             zc_Movement_Sale()                         AS DescId
+           , CAST ('Bill' AS TVarChar)                  AS ReportType
+           , CAST ('01.01.2000' AS TDateTime)           AS StartDate
+           , CAST ('01.01.2200' AS TDateTime)           AS EndDate
+           , CAST (Object_Juridical.Id AS INTEGER)      AS JuridicalId
+           , zc_Enum_PaidKind_FirstForm()               AS PaidKindId --б/н
+           , CAST ('PrintMovement_Bill_WithVAT' AS TVarChar)   AS PrintFormName
+      FROM Object AS Object_Juridical
+        JOIN ObjectBoolean AS ObjectBoolean_isPriceWithVAT
+                           ON ObjectBoolean_isPriceWithVAT.ObjectId = Object_Juridical.Id 
+                          AND ObjectBoolean_isPriceWithVAT.DescId = zc_ObjectBoolean_Juridical_isPriceWithVAT() 
+                          AND ObjectBoolean_isPriceWithVAT.ValueData = TRUE
+        LEFT JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+        AND OH_JuridicalDetails.OKPO NOT IN  ('01074874','23193668','01074791','25774961','01074302','01074064',
+                                             '01073981','26139824','01074874','24755803','04791599','01073946','01074741','25927436')
+      UNION
+      SELECT
+             zc_Movement_Sale()                         AS DescId
+           , CAST ('Bill' AS TVarChar)                  AS ReportType
+           , CAST ('01.01.2000' AS TDateTime)           AS StartDate
+           , CAST ('01.01.2200' AS TDateTime)           AS EndDate
+           , CAST (Object_Juridical.Id AS INTEGER)      AS JuridicalId
+           , zc_Enum_PaidKind_SecondForm()              AS PaidKindId --б/н
+           , CAST ('PrintMovement_Bill_WithVAT' AS TVarChar)   AS PrintFormName
+      FROM Object AS Object_Juridical
+        JOIN ObjectBoolean AS ObjectBoolean_isPriceWithVAT
+                           ON ObjectBoolean_isPriceWithVAT.ObjectId = Object_Juridical.Id 
+                          AND ObjectBoolean_isPriceWithVAT.DescId = zc_ObjectBoolean_Juridical_isPriceWithVAT() 
+                          AND ObjectBoolean_isPriceWithVAT.ValueData = TRUE
+        LEFT JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+        AND OH_JuridicalDetails.OKPO NOT IN  ('01074874','23193668','01074791','25774961','01074302','01074064',
+                                             '01073981','26139824','01074874','24755803','04791599','01073946','01074741','25927436')
+      UNION
+
 
 --если с определенной даты появится новая форма добавляем запись, а у предидущей уменьшаем EndDate до StartDate этой записи
 
@@ -132,7 +201,21 @@ AS
            , CAST ('PrintMovement_Sale32490244' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('32490244', '41744911', '39775097', '41135005', '30728887')
+       AND OH_JuridicalDetails.OKPO IN ('32490244', '41744911', '39775097', '41135005', '30728887') 
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+      UNION
+-- ЧСПМ ЛОГІСТИК ТОВ 41750857
+      SELECT
+             zc_Movement_Sale()
+           , CAST ('Sale' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , zc_Enum_PaidKind_FirstForm()
+           , CAST ('PrintMovement_Sale41750857' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('41750857')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
 -- Ашан Україна Гіпермаркет ТОВ + РІАЛ ІСТЕЙТ Ф.К.А.У.

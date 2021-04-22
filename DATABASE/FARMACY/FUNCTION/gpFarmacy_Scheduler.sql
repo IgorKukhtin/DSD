@@ -238,29 +238,46 @@ BEGIN
        PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpUpdate_Goods_SummaWages', True, text_var1::TVarChar, vbUserId);
     END;
     
-    -- Заполнение суммы СП в дополнительные расходы
-    BEGIN
-      IF date_part('DAY',  CURRENT_DATE)::Integer = 1 AND date_part('HOUR',  CURRENT_TIME)::Integer = 5 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 30
-      THEN
+    -- Пропись в ЗП
+    IF date_part('DAY',  CURRENT_DATE)::Integer = 1 AND date_part('HOUR',  CURRENT_TIME)::Integer = 5 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 30
+    THEN
+
+      -- Заполнение суммы по выполнению плана продаж
+      BEGIN
+         PERFORM gpUpdate_MovementItem_Wages_Marketing (inOperDate := CURRENT_DATE, inSession:=  zfCalc_UserAdmin());
+      EXCEPTION
+         WHEN others THEN
+           GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+         PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpUpdate_MovementItem_Wages_Marketing', True, text_var1::TVarChar, vbUserId);
+      END;    
+
+      -- Заполнение суммы по плану по уменьшению кол-во неликвида
+      BEGIN
+         PERFORM gpUpdate_MovementItem_Wages_IlliquidAssets (inOperDate := CURRENT_DATE, inSession:=  zfCalc_UserAdmin());
+      EXCEPTION
+         WHEN others THEN
+           GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+         PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpUpdate_MovementItem_Wages_IlliquidAssets', True, text_var1::TVarChar, vbUserId);
+      END;    
+
+      -- Заполнение суммы СП в дополнительные расходы
+      BEGIN
          PERFORM gpInsertUpdate_MovementItem_WagesAdditionalExpenses_SP (inOperDate := CURRENT_DATE - INTERVAL '1 DAY', inSession:=  zfCalc_UserAdmin());
-      END IF;
-    EXCEPTION
-       WHEN others THEN
-         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
-       PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpInsertUpdate_MovementItem_WagesAdditionalExpenses_SP', True, text_var1::TVarChar, vbUserId);
-    END;    
+      EXCEPTION
+         WHEN others THEN
+           GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+         PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpInsertUpdate_MovementItem_WagesAdditionalExpenses_SP', True, text_var1::TVarChar, vbUserId);
+      END;    
     
-    -- Фиксация неликвидов
-    BEGIN
-      IF date_part('DAY',  CURRENT_DATE)::Integer = 1 AND date_part('HOUR',  CURRENT_TIME)::Integer = 5 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 30
-      THEN
+      -- Фиксация неликвидов
+      BEGIN
          PERFORM gpInsertUpdate_Movement_IlliquidUnit_Formation(inOperDate := CURRENT_DATE, inSession:=  zfCalc_UserAdmin());
-      END IF;
-    EXCEPTION
-       WHEN others THEN
-         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
-       PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpInsertUpdate_Movement_IlliquidUnit_Formation', True, text_var1::TVarChar, vbUserId);
-    END;    
+      EXCEPTION
+         WHEN others THEN
+           GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+         PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpInsertUpdate_Movement_IlliquidUnit_Formation', True, text_var1::TVarChar, vbUserId);
+      END;    
+    END IF;    
 
 END;
 $BODY$

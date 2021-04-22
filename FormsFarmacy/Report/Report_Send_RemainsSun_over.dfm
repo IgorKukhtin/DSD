@@ -452,6 +452,22 @@ inherited Report_Send_RemainsSun_overForm: TReport_Send_RemainsSun_overForm
             Options.Editing = False
             Width = 55
           end
+          object isClose: TcxGridDBColumn
+            Caption = #1047#1074#1082#1088#1099#1090' '#1087#1086' '#1089#1077#1090#1080
+            DataBinding.FieldName = 'isClose'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object isCloseMCS: TcxGridDBColumn
+            Caption = #1059#1073#1080#1090#1100' '#1082#1086#1076
+            DataBinding.FieldName = 'isCloseMCS'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object AmountRemains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'AmountRemains'
@@ -1056,6 +1072,14 @@ inherited Report_Send_RemainsSun_overForm: TReport_Send_RemainsSun_overForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 61
+          end
+          object chisCloseMCS: TcxGridDBColumn
+            Caption = #1059#1073#1080#1090#1100' '#1082#1086#1076
+            DataBinding.FieldName = 'isCloseMCS'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
           object chAmount_notSold_summ: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1057#1074#1077#1088#1093#1079#1072#1087#1072#1089
@@ -1813,6 +1837,7 @@ inherited Report_Send_RemainsSun_overForm: TReport_Send_RemainsSun_overForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>

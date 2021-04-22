@@ -25,7 +25,6 @@ object StickerProperty_ValueForm: TStickerProperty_ValueForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 540
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -156,6 +155,13 @@ object StickerProperty_ValueForm: TStickerProperty_ValueForm
         HeaderAlignmentVert = vaCenter
         Width = 52
       end
+      object isCK: TcxGridDBColumn
+        Caption = #1042#1099#1074#1086#1076#1080#1090#1100' '#1092#1088#1072#1079#1091' '#1076#1083#1103' '#1057'/'#1050'+'#1057'/'#1042
+        DataBinding.FieldName = 'isCK'
+        HeaderHint = #1042#1099#1074#1086#1076#1080#1090#1100' '#1092#1088#1072#1079#1091' '#1076#1083#1103' '#1057'/'#1050'+'#1057'/'#1042
+        Options.Editing = False
+        Width = 70
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -168,7 +174,6 @@ object StickerProperty_ValueForm: TStickerProperty_ValueForm
     Height = 5
     AlignSplitter = salTop
     Control = cxGrid
-    ExplicitWidth = 544
   end
   object cxRightSplitter: TcxSplitter
     Left = 763
@@ -176,7 +181,6 @@ object StickerProperty_ValueForm: TStickerProperty_ValueForm
     Width = 4
     Height = 325
     AlignSplitter = salRight
-    ExplicitLeft = 540
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -248,6 +252,18 @@ object StickerProperty_ValueForm: TStickerProperty_ValueForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_CK'
         end
         item
           Visible = True
@@ -352,12 +368,16 @@ object StickerProperty_ValueForm: TStickerProperty_ValueForm
       Visible = ivAlways
       ImageIndex = 54
     end
-    object bb: TdxBarButton
+    object bbb: TdxBarButton
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077' <'#1057#1074#1086#1081#1089#1090#1074#1072' '#1101#1090#1080#1082#1077#1090#1082#1080'>'
       Category = 0
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1074#1086#1081#1089#1090#1074#1072' '#1101#1090#1080#1082#1077#1090#1082#1080'>'
       Visible = ivAlways
       ImageIndex = 54
+    end
+    object bbUpdate_CK: TdxBarButton
+      Action = actUpdate_CK
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -551,6 +571,19 @@ object StickerProperty_ValueForm: TStickerProperty_ValueForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actUpdate_CK: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate
+      StoredProcList = <
+        item
+          StoredProc = spUpdate
+        end>
+      Caption = 'actUpdateDataSet'
+      ImageIndex = 76
+      DataSource = DataSource
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_StickerProperty_Value'
@@ -604,10 +637,13 @@ object StickerProperty_ValueForm: TStickerProperty_ValueForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 400
     Top = 248
   end
@@ -647,5 +683,39 @@ object StickerProperty_ValueForm: TStickerProperty_ValueForm
       end>
     Left = 328
     Top = 200
+  end
+  object spUpdate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_StickerProperty_CK'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisCK'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isCK'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisCK'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isCK'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 619
+    Top = 158
   end
 end

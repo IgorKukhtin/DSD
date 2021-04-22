@@ -506,6 +506,14 @@ inherited Report_Movement_Send_RemainsSunOutForm: TReport_Movement_Send_RemainsS
             Options.Editing = False
             Width = 55
           end
+          object isCloseMCS: TcxGridDBColumn
+            Caption = #1059#1073#1080#1090#1100' '#1082#1086#1076
+            DataBinding.FieldName = 'isCloseMCS'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
@@ -1660,6 +1668,22 @@ inherited Report_Movement_Send_RemainsSunOutForm: TReport_Movement_Send_RemainsS
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1053#1058#1047' '#1074' '#1040#1087#1090#1077#1082#1077' "'#1054#1090' '#1082#1086#1075#1086'" '#1089' '#1091#1095#1077#1090#1086#1084' '#1079#1085#1072#1095#1077#1085#1080#1103' '#1074' '#1072#1089#1089#1086#1088#1090'. '#1084#1072#1090#1088#1080#1094#1077
             Width = 45
+          end
+          object chisClose: TcxGridDBColumn
+            Caption = #1047#1074#1082#1088#1099#1090' '#1087#1086' '#1089#1077#1090#1080
+            DataBinding.FieldName = 'isClose'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object chisCloseMCS: TcxGridDBColumn
+            Caption = #1059#1073#1080#1090#1100' '#1082#1086#1076
+            DataBinding.FieldName = 'isCloseMCS'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
           object chLayout: TcxGridDBColumn
             Caption = #1042#1099#1082#1083'.'
@@ -3228,6 +3252,7 @@ inherited Report_Movement_Send_RemainsSunOutForm: TReport_Movement_Send_RemainsS
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = Summ_next_str
@@ -3391,6 +3416,7 @@ inherited Report_Movement_Send_RemainsSunOutForm: TReport_Movement_Send_RemainsS
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = Summ_next_str
@@ -3601,6 +3627,7 @@ inherited Report_Movement_Send_RemainsSunOutForm: TReport_Movement_Send_RemainsS
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = Summ_next_str
@@ -3752,6 +3779,7 @@ inherited Report_Movement_Send_RemainsSunOutForm: TReport_Movement_Send_RemainsS
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = Summ_next_str

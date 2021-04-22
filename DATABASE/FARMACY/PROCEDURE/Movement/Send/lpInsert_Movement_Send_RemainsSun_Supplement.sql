@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION lpInsert_Movement_Send_RemainsSun_Supplement(
     IN inDriverId            Integer   , -- Водитель, распределяем только по аптекам этого
     IN inUserId              Integer     -- пользователь
 )
-RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, isClose boolean
              , UnitId_From Integer, UnitName_From TVarChar
 
              , UnitId_To Integer, UnitName_To TVarChar
@@ -25,6 +25,7 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Layout_From TFloat
              , PromoUnit_From TFloat
              , Price_From TFloat
+             , isCloseMCS_From boolean
              , AmountRemains_From TFloat
              , AmountSalesDey_From TFloat
              , AmountSalesMonth_From TFloat
@@ -34,6 +35,7 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
 
              , MCS_To TFloat
              , Price_To TFloat
+             , isCloseMCS_To boolean
              , AmountRemains_To TFloat
              , AmountSalesDey_To TFloat
              , AmountSalesMonth_To TFloat
@@ -109,7 +111,7 @@ BEGIN
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpRemains_all_Supplement'))
      THEN
-       CREATE TEMP TABLE _tmpRemains_all_Supplement   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountRemains TFloat, AmountNotSend TFloat, AmountSalesDay TFloat, AmountSalesMonth TFloat, AverageSalesMonth TFloat, Need TFloat, AmountUse TFloat, MinExpirationDate TDateTime) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpRemains_all_Supplement   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountRemains TFloat, AmountNotSend TFloat, AmountSalesDay TFloat, AmountSalesMonth TFloat, AverageSalesMonth TFloat, Need TFloat, AmountUse TFloat, MinExpirationDate TDateTime, isCloseMCS boolean) ON COMMIT DROP;
      END IF;
 
      -- 2. все остатки, НТЗ, и коэф. товарного запаса
@@ -506,6 +508,7 @@ BEGIN
                                    THEN CASE WHEN COALESCE (Price_MCSValueMin.ValueData, 0) < COALESCE (MCS_Value.ValueData, 0) THEN COALESCE (Price_MCSValueMin.ValueData, 0) ELSE MCS_Value.ValueData END
                                    ELSE 0
                               END AS MCSValue_min
+                            , COALESCE (MCS_isClose.ValueData, FALSE) AS isCloseMCS
                        FROM ObjectLink AS OL_Price_Unit
                             -- !!!только для таких Аптек!!!
                             INNER JOIN _tmpUnit_SUN_Supplement ON _tmpUnit_SUN_Supplement.UnitId = OL_Price_Unit.ChildObjectId
@@ -573,6 +576,7 @@ BEGIN
                                           ELSE tmpGoodsCategory.Value
                                      END                                         :: TFloat AS MCSValue
                                    , COALESCE (tmpPrice.MCSValue_min, 0.0)       :: TFloat AS MCSValue_min
+                                   , COALESCE (tmpPrice.isCloseMCS, FALSE)                 AS isCloseMCS
                               FROM tmpPrice
                                    FULL JOIN tmpGoodsCategory ON tmpGoodsCategory.GoodsId = tmpPrice.GoodsId
                                                              AND tmpGoodsCategory.UnitId  = tmpPrice.UnitId
@@ -581,7 +585,7 @@ BEGIN
                                  OR COALESCE (tmpPrice.Price, 0) <> 0
                              )
      -- 1. Результат: все остатки, НТЗ => получаем кол-ва автозаказа: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
-     INSERT INTO  _tmpRemains_all_Supplement (UnitId, GoodsId, Price, MCS, AmountRemains, AmountNotSend, AmountSalesDay, AmountSalesMonth, MinExpirationDate)
+     INSERT INTO  _tmpRemains_all_Supplement (UnitId, GoodsId, Price, MCS, AmountRemains, AmountNotSend, AmountSalesDay, AmountSalesMonth, MinExpirationDate, isCloseMCS)
         SELECT tmpObject_Price.UnitId
              , tmpObject_Price.GoodsId
              , tmpObject_Price.Price
@@ -595,6 +599,7 @@ BEGIN
              , COALESCE (tmpSalesDay.AmountSalesDay, 0)      AS AmountSalesDay
              , COALESCE (tmpSalesMonth.AmountSalesMonth, 0)  AS AmountSalesMonth
              , tmpRemains.MinExpirationDate
+             , COALESCE (tmpObject_Price.isCloseMCS, FALSE)  AS isCloseMCS
 
         FROM tmpPrice AS tmpObject_Price
 
@@ -833,8 +838,9 @@ BEGIN
      -- Результат
      RETURN QUERY
        SELECT Object_Goods.Id                            AS GoodsId
-            , Object_Goods.ObjectCode                    AS GoodsCode
-            , Object_Goods.ValueData                     AS GoodsName
+            , Object_Goods_Main.ObjectCode               AS GoodsCode
+            , Object_Goods_Main.Name                     AS GoodsName
+            , Object_Goods_Main.isClose                  AS isClose
 
             , Object_Unit_From.Id                        AS UnitId_From
             , Object_Unit_From.ValueData                 AS UnitName_From
@@ -857,6 +863,7 @@ BEGIN
             , _tmpGoods_PromoUnit_Supplement.Amount      AS PromoUnit_From
             
             , tmpRemains_all_From.Price                  AS Price_From
+            , tmpRemains_all_From.isCloseMCS             AS isCloseMCS_From
             , tmpRemains_all_From.AmountRemains          AS AmountRemains_From
             , tmpRemains_all_From.AmountSalesDay         AS AmountSalesDay_From
             , tmpRemains_all_From.AmountSalesMonth       AS AmountSalesMonth_From
@@ -870,6 +877,7 @@ BEGIN
 
             , tmpRemains_all_To.MCS                      AS MCS_To
             , tmpRemains_all_To.Price                    AS Price_To
+            , tmpRemains_all_To.isCloseMCS               AS isCloseMCS_To
             , tmpRemains_all_To.AmountRemains            AS AmountRemains_To
             , tmpRemains_all_To.AmountSalesDay           AS AmountSalesDay_To
             , tmpRemains_all_To.AmountSalesMonth         AS AmountSalesMonth_To
@@ -903,7 +911,9 @@ BEGIN
             LEFT JOIN _tmpGoods_PromoUnit_Supplement ON _tmpGoods_PromoUnit_Supplement.GoodsID = _tmpResult_Supplement.GoodsId
                                                     AND _tmpGoods_PromoUnit_Supplement.UnitId = _tmpResult_Supplement.UnitId_from 
 
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpRemains_all_To.GoodsId
+            LEFT JOIN Object_Goods_Retail AS Object_Goods ON Object_Goods.Id = tmpRemains_all_To.GoodsId
+            LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods.GoodsMainId
+            
        ORDER BY Object_Goods.Id
               , Object_Unit_From.ValueData
               , Object_Unit_To.ValueData
@@ -919,7 +929,7 @@ $BODY$
  10.06.20                                                     *
 */
 
--- SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '4 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
+ SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '1 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 
 -- 
-select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('19.04.2021')::TDateTime ,  inSession := '3');
+--select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('19.04.2021')::TDateTime ,  inSession := '3');

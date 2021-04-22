@@ -135,7 +135,7 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             Options.Editing = False
             Width = 127
             Position.BandIndex = 0
-            Position.ColIndex = 2
+            Position.ColIndex = 3
             Position.RowIndex = 0
           end
           object UnitName_To: TcxGridDBBandedColumn
@@ -146,7 +146,7 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             Options.Editing = False
             Width = 155
             Position.BandIndex = 0
-            Position.ColIndex = 3
+            Position.ColIndex = 4
             Position.RowIndex = 0
           end
           object Amount: TcxGridDBBandedColumn
@@ -159,7 +159,7 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Position.BandIndex = 0
-            Position.ColIndex = 4
+            Position.ColIndex = 5
             Position.RowIndex = 0
           end
           object Summa_From: TcxGridDBBandedColumn
@@ -173,7 +173,7 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             Options.Editing = False
             Width = 82
             Position.BandIndex = 0
-            Position.ColIndex = 5
+            Position.ColIndex = 6
             Position.RowIndex = 0
           end
           object Summa_To: TcxGridDBBandedColumn
@@ -187,7 +187,7 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             Options.Editing = False
             Width = 79
             Position.BandIndex = 0
-            Position.ColIndex = 6
+            Position.ColIndex = 7
             Position.RowIndex = 0
           end
           object MinExpirationDate: TcxGridDBBandedColumn
@@ -198,7 +198,7 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             Options.Editing = False
             Width = 80
             Position.BandIndex = 0
-            Position.ColIndex = 7
+            Position.ColIndex = 8
             Position.RowIndex = 0
           end
           object MCS: TcxGridDBBandedColumn
@@ -280,6 +280,17 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
+          object isClose: TcxGridDBBandedColumn
+            Caption = #1047#1072#1082#1088#1099#1090' '#1087#1086' '#1089#1077#1090#1080
+            DataBinding.FieldName = 'isClose'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+            Position.BandIndex = 0
+            Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
           object Layout_From: TcxGridDBBandedColumn
             Caption = #1042#1099#1082#1083#1072#1076#1082#1072
             DataBinding.FieldName = 'Layout_From'
@@ -290,7 +301,7 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             HeaderAlignmentVert = vaCenter
             Width = 60
             Position.BandIndex = 2
-            Position.ColIndex = 1
+            Position.ColIndex = 2
             Position.RowIndex = 0
           end
           object PromoUnit_From: TcxGridDBBandedColumn
@@ -303,7 +314,7 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             HeaderAlignmentVert = vaCenter
             Width = 56
             Position.BandIndex = 2
-            Position.ColIndex = 2
+            Position.ColIndex = 3
             Position.RowIndex = 0
           end
           object AmountRemains_From: TcxGridDBBandedColumn
@@ -317,7 +328,7 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             Options.Editing = False
             Width = 54
             Position.BandIndex = 2
-            Position.ColIndex = 3
+            Position.ColIndex = 4
             Position.RowIndex = 0
           end
           object AmountSalesDey_From: TcxGridDBBandedColumn
@@ -330,7 +341,7 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Position.BandIndex = 2
-            Position.ColIndex = 4
+            Position.ColIndex = 5
             Position.RowIndex = 0
           end
           object AmountSalesMonth_From: TcxGridDBBandedColumn
@@ -343,7 +354,7 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Position.BandIndex = 2
-            Position.ColIndex = 5
+            Position.ColIndex = 6
             Position.RowIndex = 0
           end
           object AverageSalesMonth_From: TcxGridDBBandedColumn
@@ -356,7 +367,7 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Position.BandIndex = 2
-            Position.ColIndex = 6
+            Position.ColIndex = 7
             Position.RowIndex = 0
           end
           object Need_From: TcxGridDBBandedColumn
@@ -369,7 +380,7 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Position.BandIndex = 2
-            Position.ColIndex = 7
+            Position.ColIndex = 8
             Position.RowIndex = 0
           end
           object Delt_From: TcxGridDBBandedColumn
@@ -382,7 +393,18 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Position.BandIndex = 2
-            Position.ColIndex = 8
+            Position.ColIndex = 9
+            Position.RowIndex = 0
+          end
+          object isCloseMCS_From: TcxGridDBBandedColumn
+            Caption = #1059#1073#1080#1090#1100' '#1082#1086#1076
+            DataBinding.FieldName = 'isCloseMCS_From'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+            Position.BandIndex = 2
+            Position.ColIndex = 1
             Position.RowIndex = 0
           end
           object MCS_To: TcxGridDBBandedColumn
@@ -408,7 +430,7 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Position.BandIndex = 3
-            Position.ColIndex = 1
+            Position.ColIndex = 2
             Position.RowIndex = 0
           end
           object AmountSalesDey_To: TcxGridDBBandedColumn
@@ -421,7 +443,7 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Position.BandIndex = 3
-            Position.ColIndex = 2
+            Position.ColIndex = 3
             Position.RowIndex = 0
           end
           object AmountSalesMonth_To: TcxGridDBBandedColumn
@@ -434,7 +456,7 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Position.BandIndex = 3
-            Position.ColIndex = 3
+            Position.ColIndex = 4
             Position.RowIndex = 0
           end
           object AverageSalesMonth_To: TcxGridDBBandedColumn
@@ -447,7 +469,7 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Position.BandIndex = 3
-            Position.ColIndex = 4
+            Position.ColIndex = 5
             Position.RowIndex = 0
           end
           object Need_To: TcxGridDBBandedColumn
@@ -460,7 +482,7 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Position.BandIndex = 3
-            Position.ColIndex = 5
+            Position.ColIndex = 6
             Position.RowIndex = 0
           end
           object Delta_To: TcxGridDBBandedColumn
@@ -473,7 +495,18 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Position.BandIndex = 3
-            Position.ColIndex = 6
+            Position.ColIndex = 7
+            Position.RowIndex = 0
+          end
+          object isCloseMCS_To: TcxGridDBBandedColumn
+            Caption = #1059#1073#1080#1090#1100' '#1082#1086#1076
+            DataBinding.FieldName = 'isCloseMCS_To'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+            Position.BandIndex = 3
+            Position.ColIndex = 1
             Position.RowIndex = 0
           end
         end

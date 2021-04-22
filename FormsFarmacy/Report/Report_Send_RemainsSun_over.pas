@@ -78,6 +78,9 @@ type
     mactSendSUN: TMultiAction;
     chPromoUnit: TcxGridDBColumn;
     chLayout: TcxGridDBColumn;
+    chisCloseMCS: TcxGridDBColumn;
+    isClose: TcxGridDBColumn;
+    isCloseMCS: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -201,6 +201,7 @@ type
     edCurrencyClient: TcxButtonEdit;
     cxLabel19: TcxLabel;
     GuidesCurrencyClient: TdsdGuides;
+    cbOffer: TcxCheckBox;
   private
   public
   end;

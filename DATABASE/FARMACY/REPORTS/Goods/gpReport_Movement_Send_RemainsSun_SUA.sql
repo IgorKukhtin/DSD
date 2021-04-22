@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpReport_Movement_Send_RemainsSun_SUA(
     IN inOperDate            TDateTime , -- Дата начала отчета
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, isClose boolean
              , UnitId_From Integer, UnitName_From TVarChar
              , Remains_From TFloat, Layout_From TFloat, PromoUnit_From TFloat
 
@@ -15,6 +15,8 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat
              , Summa_From TFloat
              , Summa_To TFloat
+             , isCloseMCS_From boolean
+             , isCloseMCS_To boolean
               )
 AS
 $BODY$
@@ -29,6 +31,7 @@ BEGIN
            Result.GoodsId
          , Result.GoodsCode
          , Result.GoodsName
+         , Result.isClose
          , Result.UnitId_From 
          , Result.UnitName_From 
          , Result.PromoUnit_From
@@ -41,6 +44,8 @@ BEGIN
          , Result.Amount 
          , Round(Result.Amount * Result.Price_From, 2)::TFloat 
          , Round(Result.Amount * Result.Price_To, 2)::TFloat 
+         , Result.isCloseMCS_From 
+         , Result.isCloseMCS_To 
 
     FROM lpInsert_Movement_Send_RemainsSun_SUA(inOperDate, 0, vbUserId) AS Result;
 

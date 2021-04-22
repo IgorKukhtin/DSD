@@ -410,7 +410,6 @@ type
     N160: TMenuItem;
     N161: TMenuItem;
     actFiscal: TdsdOpenForm;
-    miFiscal: TMenuItem;
     N162: TMenuItem;
     actReport_GoodsRemainsCurrent: TdsdOpenForm;
     miReport_GoodsRemainsCurrent: TMenuItem;

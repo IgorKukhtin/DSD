@@ -197,12 +197,14 @@ BEGIN
    , tmpPriceList AS (SELECT tmp.UnitId
                            , tmp.GoodsId
                            , tmp.CurrencyId_pl
+                           , tmp.PriceListId
                            , MAX (CASE WHEN tmp.EndDate = zc_DateEnd() THEN tmp.OperPriceList ELSE 0 END)    AS OperPriceList
                            , MAX (CASE WHEN tmp.StartDate = tmp.FirstDate THEN tmp.OperPriceList ELSE 0 END) AS OperPriceList_first
                       FROM (SELECT _tmpUnit.UnitId                                  AS UnitId
                                  , ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
                                  , ObjectHistoryFloat_PriceListItem_Value.ValueData AS OperPriceList
                                  , COALESCE (ObjectHistoryLink_Currency.ObjectId, _tmpUnit.CurrencyId_pl) AS CurrencyId_pl
+                                 , _tmpUnit.PriceListId
                                  , ObjectHistory_PriceListItem.StartDate
                                  , ObjectHistory_PriceListItem.EndDate
                                  , MIN (ObjectHistory_PriceListItem.StartDate) OVER (PARTITION BY _tmpUnit.UnitId, ObjectLink_PriceListItem_Goods.ChildObjectId) AS FirstDate
@@ -233,6 +235,7 @@ BEGIN
                       GROUP BY tmp.UnitId
                            , tmp.GoodsId
                            , tmp.CurrencyId_pl
+                           , tmp.PriceListId
                       )
                        
      -- Остатки + Партии
@@ -269,6 +272,7 @@ BEGIN
                            , COALESCE (tmpPriceList.OperPriceList, Object_PartionGoods.OperPriceList) AS OperPriceList
                            , tmpPriceList.OperPriceList_first                                         AS OperPriceList_first
                            , COALESCE (tmpPriceList.CurrencyId_pl, zc_Currency_Basis())               AS CurrencyId_pl
+                           , COALESCE (tmpPriceList.PriceListId, zc_PriceList_Basis())                AS PriceListId
                            
                            -- , CASE WHEN Container.WhereObjectId = Object_PartionGoods.UnitId THEN Object_PartionGoods.Amount ELSE 0 END AS Amount_in
                            , Object_PartionGoods.Amount     AS Amount_in
@@ -342,6 +346,7 @@ BEGIN
                               , tmpContainer.JuridicalId
                               , tmpContainer.CurrencyId
                               , tmpContainer.CurrencyId_pl
+                              , tmpContainer.PriceListId
                               , tmpContainer.OperPriceList
                               , tmpContainer.OperPriceList_first
                               , tmpContainer.UnitId_in
@@ -426,6 +431,7 @@ BEGIN
                                 , tmpContainer.JuridicalId
                                 , tmpContainer.CurrencyId
                                 , tmpContainer.CurrencyId_pl
+                                , tmpContainer.PriceListId
                                 , tmpContainer.PeriodYear
                                 , tmpContainer.OperPriceList
                                 , tmpContainer.OperPriceList_first
@@ -472,6 +478,7 @@ BEGIN
                           , tmpData_All.JuridicalId
                           , tmpData_All.CurrencyId
                           , tmpData_All.CurrencyId_pl
+                          , tmpData_All.PriceListId
                           
                             -- Цена прайс
                           , tmpData_All.OperPriceList       AS OperPriceList_orig
@@ -548,6 +555,7 @@ BEGIN
                             , tmpData_All.JuridicalId
                             , tmpData_All.CurrencyId
                             , tmpData_All.CurrencyId_pl
+                            , tmpData_All.PriceListId
                             , tmpData_All.OperPriceList
                             , tmpData_All.OperPriceList_first
                             , tmpData_All.UnitId_in
@@ -821,8 +829,8 @@ BEGIN
              -- Кол-во для печати ценников
            , tmpGoodsPrint.Amount            :: TFloat AS Amount_GoodsPrint
 
-           , zc_PriceList_Basis()  AS PriceListId_Basis
-           , vbPriceListName_Basis AS PriceListName_Basis
+           , Object_PriceList.Id          AS PriceListId_Basis    -- zc_PriceList_Basis()  
+           , Object_PriceList.ValueData   AS PriceListName_Basis  -- vbPriceListName_Basis
            , COALESCE (tmpPriceInfo.UpdateDate, NULL) :: TDateTime AS UpdateDate_Price
 
            , CASE WHEN COALESCE (tmpData.byOlap, 0) > 0 THEN TRUE ELSE FALSE END :: Boolean AS isOlap
@@ -841,6 +849,7 @@ BEGIN
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpData.PartnerId
             LEFT JOIN Object AS Object_Goods   ON Object_Goods.Id   = tmpData.GoodsId
             LEFT JOIN Object AS Object_Currency_pl ON Object_Currency_pl.Id = tmpData.CurrencyId_pl
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = tmpData.PriceListId
 
             LEFT JOIN Object AS Object_GoodsGroup       ON Object_GoodsGroup.Id       = tmpData.GoodsGroupId
             LEFT JOIN Object AS Object_Measure          ON Object_Measure.Id          = tmpData.MeasureId

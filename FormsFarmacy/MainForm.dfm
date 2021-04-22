@@ -5370,9 +5370,6 @@ inherited MainForm: TMainForm
         object N162: TMenuItem
           Caption = '-'
         end
-        object miFiscal: TMenuItem
-          Action = actFiscal
-        end
         object actJackdawsChecks1: TMenuItem
           Action = actJackdawsChecks
         end

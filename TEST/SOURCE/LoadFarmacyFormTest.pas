@@ -1233,7 +1233,6 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_IlliquidReductionPlanAllDialogForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IlliquidReductionPlanUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_IlliquidReductionPlanUserForm');
-    exit;
 {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ReturnOutForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ReturnOutForm');
