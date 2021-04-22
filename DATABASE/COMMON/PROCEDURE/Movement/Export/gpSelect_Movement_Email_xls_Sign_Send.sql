@@ -27,6 +27,8 @@ $BODY$
 
     DECLARE vbTotalCountSh_Kg TFloat;
     DECLARE vbTotalCountKg_only TFloat;
+    
+    DECLARE vbCount TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Email_Send());
@@ -79,8 +81,8 @@ BEGIN
          ;
 
             -- Расчет шт для штучного товара, который нужно показать как кг, чтоб снять это кол-во с итого шт.
-        SELECT TotalCountSh_Kg, TotalCountKg_only
-               INTO vbTotalCountSh_Kg, vbTotalCountKg_only
+        SELECT TotalCountSh_Kg, TotalCountKg_only, Count
+               INTO vbTotalCountSh_Kg, vbTotalCountKg_only, vbCount
         FROM (SELECT -- для ШТ, если сво-во tmpObject_GoodsPropertyValue.isWeigth = TRUE, нужно єто кол-во снять с итого шт.
                      SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND COALESCE (tmpObject_GoodsPropertyValue.isWeigth,FALSE) = TRUE
                                     THEN tmpMI.Amount
@@ -93,6 +95,7 @@ BEGIN
                                THEN tmpMI.Amount
                           ELSE 0
                      END) AS TotalCountKg_only
+                   , Count (*) AS Count
               FROM (SELECT MovementItem.ObjectId AS GoodsId
                          , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId
                          , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Sale())
@@ -190,26 +193,40 @@ BEGIN
                  )
           
 
+       SELECT ('          Разом кг   ' || tmpData.TotalCountKg) :: TBlob
+       FROM tmpData
+   UNION ALL
+       SELECT ('                                                 Разом сума без ПДВ:   '  || tmpData.TotalSummMVAT) :: TBlob
+       FROM tmpData
+   UNION ALL
+       SELECT ('                                                           Сума ПДВ:   ' || ( COALESCE (tmpData.TotalSummPVAT,0) - COALESCE (tmpData.TotalSummMVAT,0))) :: TBlob
+       FROM tmpData
+   UNION ALL
+       SELECT ('                                                      Всього із ПДВ:   ' || tmpData.TotalSummPVAT) :: TBlob
+       FROM tmpData
+   UNION ALL
+       SELECT ('') :: TBlob
 
-       SELECT ('                                                      Разом кг   ' || tmpData.TotalCountKg) :: TBlob
+   UNION ALL
+       SELECT ('Всього найменувань '||vbCount|| ', на суму ' || tmpData.TotalSummPVAT||' грн.' ) :: TBlob
        FROM tmpData
    UNION ALL
-       SELECT ('                                                      Разом шт   ' || tmpData.TotalCountSh) :: TBlob
-       FROM tmpData
+       SELECT ('_______________________________________________________________________________________________' ) :: TBlob
    UNION ALL
-       SELECT ('                                            Разом сума без ПДВ   '  || tmpData.TotalSummMVAT) :: TBlob
-       FROM tmpData
-   UNION ALL
-       SELECT ('                                                           ПДВ   ' || ( COALESCE (tmpData.TotalSummPVAT,0) - COALESCE (tmpData.TotalSummMVAT,0))) :: TBlob
-       FROM tmpData
-   UNION ALL
-       SELECT ('                                              Разом сума з ПДВ   ' || tmpData.TotalSummPVAT) :: TBlob
+       SELECT ('Від постачальника : комірник ' || tmpData.StoreKeeper||'                       Отримав:' ) :: TBlob
        FROM tmpData
    UNION ALL
        SELECT ('') :: TBlob
    UNION ALL
-       SELECT ('Здав: комірник ' || tmpData.StoreKeeper||'                       Прийняв:' ) :: TBlob
-       FROM tmpData;
+       SELECT ('________________________________                           _____________________________' ) :: TBlob
+   UNION ALL
+       SELECT ('') :: TBlob
+   UNION ALL
+       SELECT ('* Відповідальний за здійснення господарської' ) :: TBlob
+   UNION ALL
+       SELECT ('операції і правильність її оформлення                      За довіреністю №          від') :: TBlob
+
+       ;
 
 END;
 $BODY$

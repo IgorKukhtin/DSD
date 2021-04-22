@@ -6,14 +6,14 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Email_xls_Send(
     IN inMovementId           Integer   ,
     IN inSession              TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Ord        TVarChar
-             , GoodsCode  TVarChar
-             , GoodsName  TVarChar
-             , GoodsKindName  TVarChar
-             , MeasureName    TVarChar
-             , Amount     TFloat
-             , Price      TFloat
-             , AmountSumm TFloat
+RETURNS TABLE (Ord          TVarChar
+             , BarCode      TVarChar
+             , GoodsName    TVarChar
+             , Amount       TFloat
+             , MeasureName     TVarChar
+             , PriceNoVAT      TFloat
+             , AmountSummNoVAT TFloat
+             , VATPercent      TFloat
                )
 AS
 $BODY$
@@ -458,13 +458,14 @@ BEGIN
                )
 
      SELECT ROW_NUMBER() OVER(ORDER BY tmpRes.GoodsName) :: TVarChar AS Ord
-          , tmpRes.GoodsCode :: TVarChar 
-          , tmpRes.GoodsName_two ::TVarChar
-          , tmpRes.GoodsKindName ::TVarChar
-          , tmpRes.MeasureName   ::TVarChar
+          , tmpRes.BarCode       :: TVarChar 
+          , tmpRes.GoodsName     ::TVarChar
           , tmpRes.Amount        ::TFloat
-          , tmpRes.Price         ::TFloat
-          , tmpRes.AmountSumm     ::TFloat
+          , tmpRes.MeasureName   ::TVarChar
+          
+          , tmpRes.PriceNoVAT         ::TFloat
+          , tmpRes.AmountSummNoVAT    ::TFloat
+          , vbVATPercent              ::TFloat AS VATPercent
      FROM tmpRes   
      ;
      ELSE

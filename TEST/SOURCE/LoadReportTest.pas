@@ -526,7 +526,10 @@ begin
   LoadReportFromFile('PrintMovement_TaxCorrective0317', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrective0317.fr3');
 
   LoadReportFromFile('PrintMovement_Bill', ReportPath + '\Товарный Учет\PrintMovement_Bill.fr3');
-
+ }
+    LoadReportFromFile('PrintMovement_Bill_WithVAT', ReportPath + '\Товарный Учет\PrintMovement_Bill_WithVAT.fr3');
+    exit;
+{
   LoadReportFromFile('PrintMovement_TaxCorrective0321', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrective0321.fr3');
     exit;
 

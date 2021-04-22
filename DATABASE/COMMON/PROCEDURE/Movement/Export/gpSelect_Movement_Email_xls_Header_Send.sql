@@ -78,8 +78,16 @@ BEGIN
                            , COALESCE (OH_JuridicalDetails_To.INN,'')              AS INN_To
                            , COALESCE (OH_JuridicalDetails_To.NumberVAT,'')        AS NumberVAT_To
                            , COALESCE (OH_JuridicalDetails_To.BankAccount,'')      AS BankAccount_To
-                           , COALESCE (OH_JuridicalDetails_To.BankName,'')         AS BankName_To
-                           , COALESCE (OH_JuridicalDetails_To.MFO,'')              AS BankMFO_To
+                           , CASE WHEN COALESCE (OH_JuridicalDetails_To.BankName,'')= '' THEN Object_Bank_View_To.JuridicalName ELSE OH_JuridicalDetails_To.BankName END AS BankName_To
+                           , CASE WHEN COALESCE (OH_JuridicalDetails_To.BankName,'')= '' THEN BankAccount_To.MFO ELSE OH_JuridicalDetails_To.MFO END AS BankMFO_To
+
+                           , BankAccount_To.MFO                                 AS BankMFO_Int
+                           , BankAccount_To.SWIFT                               AS BankSWIFT_Int
+                           , BankAccount_To.IBAN                                AS BankIBAN_Int
+                           , Object_Bank_View_To.JuridicalName                  AS BankJuridicalName_Int
+                           , OHS_JD_JuridicalAddress_To.ValueData               AS BankJuridicalAddress_Int
+                           , BankAccount_To.BeneficiarysAccount                 AS BenefAccount_Int
+                           , BankAccount_To.Name                                AS BankAccount_Int
 
                            , CASE WHEN COALESCE (ObjectString_PlaceOf.ValueData, '') <> '' THEN COALESCE (ObjectString_PlaceOf.ValueData, '')
                                   ELSE '' -- 'м.Днiпро'
@@ -213,7 +221,47 @@ BEGIN
                        LEFT JOIN ObjectHistoryString AS OHS_JD_JuridicalAddress_Bank_From
                                                      ON OHS_JD_JuridicalAddress_Bank_From.ObjectHistoryId = OH_JuridicalDetails_Bank_From.ObjectHistoryId
                                                     AND OHS_JD_JuridicalAddress_Bank_From.DescId = zc_ObjectHistoryString_JuridicalDetails_JuridicalAddress()
-                                         
+
+                       -- +++++++++++++++++ BANK TO
+                       LEFT JOIN
+                                  (SELECT *
+                                   FROM Object_BankAccount_View
+                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                ON MovementLinkObject_To.MovementId = inMovementId
+                                                               AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                   LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                        ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                                       AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+            
+            
+                                  WHERE Object_BankAccount_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                                  LIMIT 1
+                                  ) AS BankAccount_To ON 1=1
+            
+                        LEFT JOIN tmpObject_Bank_View AS Object_Bank_View_CorrespondentBank ON Object_Bank_View_CorrespondentBank.Id = BankAccount_To.CorrespondentBankId
+                        LEFT JOIN tmpObject_Bank_View AS Object_Bank_View_BenifBank ON Object_Bank_View_BenifBank.Id = BankAccount_To.BeneficiarysBankId
+                        LEFT JOIN tmpObject_Bank_View AS Object_Bank_View_To ON Object_Bank_View_To.Id = BankAccount_To.BankId
+
+                        LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_BenifBank_To
+                                                                            ON OH_JuridicalDetails_BenifBank_To.JuridicalId = Object_Bank_View_BenifBank.JuridicalId
+                                                                           AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_BenifBank_To.StartDate
+                                                                           AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) < OH_JuridicalDetails_BenifBank_To.EndDate
+            
+                        LEFT JOIN ObjectHistoryString AS OHS_JD_JuridicalAddress_BenifBank_To
+                                                      ON OHS_JD_JuridicalAddress_BenifBank_To.ObjectHistoryId = OH_JuridicalDetails_BenifBank_To.ObjectHistoryId
+                                                     AND OHS_JD_JuridicalAddress_BenifBank_To.DescId = zc_ObjectHistoryString_JuridicalDetails_JuridicalAddress()
+            
+            
+                        LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetailsBank_To
+                                                                            ON OH_JuridicalDetailsBank_To.JuridicalId = Object_Bank_View_To.JuridicalId
+                                                                           AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetailsBank_To.StartDate
+                                                                           AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetailsBank_To.EndDate
+            
+                        LEFT JOIN ObjectHistoryString AS OHS_JD_JuridicalAddress_To
+                                                      ON OHS_JD_JuridicalAddress_To.ObjectHistoryId = OH_JuridicalDetailsBank_To.ObjectHistoryId
+                                                     AND OHS_JD_JuridicalAddress_To.DescId = zc_ObjectHistoryString_JuridicalDetails_JuridicalAddress()
+
+
                        LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                             ON ObjectLink_Unit_Branch.ObjectId = Object_From.Id
                                            AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
@@ -223,6 +271,8 @@ BEGIN
                       WHERE Movement.Id = inMovementId
                      )
    
+   
+      --- 
        SELECT ('Видаткова накладна № ' || tmpData.InvNumber||' від ' ||zfConvert_DateToString (tmpData.OperDatePartner)) :: TBlob
        FROM tmpData
          UNION ALL
@@ -231,13 +281,13 @@ BEGIN
        SELECT ('Постачальник:  '||tmpData.JuridicalName_From) :: TBlob
        FROM tmpData
          UNION ALL
-       SELECT ('                П/р '||tmpData.BankAccount_ByContract||' у '||tmpData.BankName_ByContract||' МФО '||tmpData.BankMFO_ByContract) :: TBlob
+       SELECT ('               П/р '||tmpData.BankAccount_ByContract||' у '||tmpData.BankName_ByContract||' МФО '||tmpData.BankMFO_ByContract) :: TBlob
        FROM tmpData
          UNION ALL
        SELECT ('               '||tmpData.JuridicalAddressBankFrom) :: TBlob
        FROM tmpData
          UNION ALL
-       SELECT ('                код за ЄДРПОУ '||tmpData.OKPO_from||', IПН '||tmpData.INN_From ||', номер свiдоцтва '||tmpData.NumberVAT_From) :: TBlob
+       SELECT ('               код за ЄДРПОУ '||tmpData.OKPO_from||', IПН '||tmpData.INN_From ||', номер свiдоцтва '||tmpData.NumberVAT_From) :: TBlob
        FROM tmpData
          UNION ALL
        SELECT ('') :: TBlob
@@ -245,10 +295,13 @@ BEGIN
        SELECT ('Одержувач:     '||tmpData.JuridicalName_To) :: TBlob
        FROM tmpData
          UNION ALL
-       SELECT ('                П/р '||tmpData.BankAccount_To||' у '||tmpData.BankName_To||' МФО '||tmpData.BankMFO_To) :: TBlob
+       SELECT ('               П/р '||tmpData.BankAccount_To||' у '||tmpData.BankName_To||' МФО '||tmpData.BankMFO_To) :: TBlob
        FROM tmpData
          UNION ALL
-       SELECT ('                код за ЄДРПОУ '||tmpData.OKPO_To||', IПН '||tmpData.INN_To ||', номер свiдоцтва '||tmpData.NumberVAT_To) :: TBlob
+       SELECT ('               '||tmpData.BankJuridicalAddress_Int) :: TBlob
+       FROM tmpData
+         UNION ALL
+       SELECT ('               код за ЄДРПОУ '||tmpData.OKPO_To||', IПН '||tmpData.INN_To ||', номер свiдоцтва '||tmpData.NumberVAT_To) :: TBlob
        FROM tmpData
          UNION ALL
        SELECT ('') :: TBlob
@@ -256,7 +309,7 @@ BEGIN
        SELECT ('Договір:       '||tmpData.ContractKindName||' № '||tmpData.ContractName ||' від '||zfConvert_DateToString (tmpData.ContractSigningDate) ) :: TBlob
        FROM tmpData
          UNION ALL
-       SELECT ('Замовлення:     Замовлення покупця № '||tmpData.InvNumberOrder||'від '||zfConvert_DateToString (tmpData.OperDateOrder) ) :: TBlob
+       SELECT ('Замовлення:    Замовлення покупця № '||tmpData.InvNumberOrder||'від '||zfConvert_DateToString (tmpData.OperDateOrder) ) :: TBlob
        FROM tmpData
          UNION ALL
        SELECT ('Адреса доставки: '||tmpData.PartnerAddress_To) :: TBlob
