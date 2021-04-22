@@ -13,15 +13,30 @@ CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child_Total(
     IN inAmountUSD         TFloat   , --
     IN inAmountEUR         TFloat   , --
     IN inAmountCard        TFloat   , --
-    IN inAmountDiscount    TFloat   , -- или ГРН или EUR
+    IN inAmountDiscount    TFloat   , -- всегда ГРН
     IN inCurrencyId_Client Integer  , -- 
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (AmountToPay         TFloat -- К оплате, грн
+RETURNS TABLE (-- Информативно - для Диалога
+               AmountToPay         TFloat -- К оплате, грн
              , AmountToPay_curr    TFloat -- К оплате, EUR
+               -- факт - отсюда долг
+             , AmountToPay_GRN     TFloat
+             , AmountToPay_EUR     TFloat
+               --
              , AmountRemains       TFloat -- Остаток, грн
              , AmountRemains_curr  TFloat -- Остаток, EUR
-             , AmountDiff          TFloat -- Сдача, грн
+
+               -- сдача, ГРН
+             , AmountDiff          TFloat
+
+               -- корректируем копейки - списанием
+             , AmountDiscount      TFloat
+             , AmountDiscount_curr TFloat
+
+               -- AmountPay - для отладки
+             , AmountPay            TFloat
+             , AmountPay_curr       TFloat
               )
 AS
 $BODY$
@@ -33,116 +48,103 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-       WITH tmp AS (-- Расчет - сколько осталось оплатить / либо сдача
-                    SELECT CASE WHEN inCurrencyId_Client = zc_Currency_EUR()
-                                THEN
-                                    CASE WHEN COALESCE (inAmountGRN, 0)  = 0
-                                          AND COALESCE (inAmountUSD, 0)  = 0
-                                          AND COALESCE (inAmountEUR, 0)  = 0
-                                          AND COALESCE (inAmountCard, 0) = 0
-                                    THEN inAmountToPay_EUR + zfCalc_SummPriceList (1, zfCalc_CurrencyTo (inAmountToPay_GRN, inCurrencyValueEUR, 1))
-                                        - COALESCE (inAmountDiscount, 0)
- 
-                                    WHEN
-                                                                  ABS (zfCalc_SummPriceList (1
-                                                                    , inAmountToPay_GRN + zfCalc_CurrencyFrom (inAmountToPay_EUR, inCurrencyValueEUR, 1))
-                                                                      -- МИНУС Итого Оплата - переводим в ГРН
-                                                                    - (COALESCE (inAmountGRN, 0)
-                                                                     + zfCalc_CurrencyFrom (inAmountUSD, inCurrencyValueUSD, 1)
-                                                                     + zfCalc_CurrencyFrom (inAmountEUR, inCurrencyValueEUR, 1)
-                                                                     + COALESCE (inAmountCard, 0)
-                                                                     + zfCalc_CurrencyFrom (inAmountDiscount, inCurrencyValueEUR, 1)
-                                                                      )) < 1
-                                    THEN
-                             zfCalc_SummPriceList (1
-                                                   -- переводим обратно в EUR
-                                                 , zfCalc_CurrencyTo (-- Сумма к оплате - переводим в ГРН
-                                                                      inAmountToPay_GRN
-                                                                    + zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (inAmountToPay_EUR, inCurrencyValueEUR, 1))
-                                                                      -- МИНУС Итого Оплата - переводим в ГРН
-                                                                    - (COALESCE (inAmountGRN, 0)
-                                                                     + zfCalc_CurrencyFrom (inAmountUSD, inCurrencyValueUSD, 1)
-                                                                     + zfCalc_CurrencyFrom (inAmountEUR, inCurrencyValueEUR, 1)
-                                                                     + COALESCE (inAmountCard, 0)
-                                                                     + zfCalc_CurrencyFrom (inAmountDiscount, inCurrencyValueEUR, 1)
-                                                                      )
-                                                                 , inCurrencyValueEUR, 1)
-                                                 , 0)
-                                    ELSE
-                                    zfCalc_SummIn (1
-                                                   -- переводим обратно в EUR
-                                                 , zfCalc_CurrencyTo (-- Сумма к оплате - переводим в ГРН
-                                                   zfCalc_SummPriceList (1, inAmountToPay_GRN + zfCalc_CurrencyFrom (inAmountToPay_EUR, inCurrencyValueEUR, 1)
-                                                                            -- МИНУС Итого Оплата - переводим в ГРН
-                                                                          - (COALESCE (inAmountGRN, 0)
-                                                                           + zfCalc_CurrencyFrom (inAmountUSD, inCurrencyValueUSD, 1)
-                                                                           + zfCalc_CurrencyFrom (inAmountEUR, inCurrencyValueEUR, 1)
-                                                                           + COALESCE (inAmountCard, 0)
-                                                                           + zfCalc_CurrencyFrom (inAmountDiscount, inCurrencyValueEUR, 1)
-                                                                            ))
-                                                                 , inCurrencyValueEUR, 1)
-                                                 , 1)
-                                    END
-                                ELSE -- Сумма к оплате МИНУС Итого Оплата - все в ГРН
-                                     inAmountToPay_GRN + zfCalc_SummIn (1, zfCalc_CurrencyFrom (inAmountToPay_EUR, inCurrencyValueEUR, 1), 0)
-                                                    - (COALESCE (inAmountGRN, 0)
-                                                    + zfCalc_CurrencyFrom (inAmountUSD, inCurrencyValueUSD, 1)
-                                                    + zfCalc_CurrencyFrom (inAmountEUR, inCurrencyValueEUR, 1)
-                                                    + COALESCE (inAmountCard, 0)
-                                                    + COALESCE (inAmountDiscount, 0)
-                                                     )
-                           END AS AmountDiff
-                   )
-       SELECT -- К оплате, грн
-              CASE WHEN inCurrencyId_Client = zc_Currency_EUR()
-                        -- переводим из EUR в ГРН + округление до 0 знаков
-                        THEN inAmountToPay_GRN + zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (inAmountToPay_EUR, inCurrencyValueEUR, 1), 0)
-                   ELSE inAmountToPay_GRN
-              END :: TFloat AS AmountToPay
+       WITH tmp1 AS (SELECT -- Сумма оплаты - в ГРН
+                             COALESCE (inAmountGRN, 0)
+                           + zfCalc_CurrencyFrom (inAmountUSD, inCurrencyValueUSD, 1)
+                           + zfCalc_CurrencyFrom (inAmountEUR, inCurrencyValueEUR, 1)
+                           + COALESCE (inAmountCard, 0)
+                             AS AmountPay_GRN
 
-              -- К оплате, EUR
-            , CASE WHEN inCurrencyId_Client = zc_Currency_EUR()
-                        THEN zfCalc_SummIn (1, zfCalc_CurrencyTo (inAmountToPay_GRN, inCurrencyValueEUR, 1), 1) + inAmountToPay_EUR
-                   ELSE -- переводим из ГРН в EUR + округление до 2х знаков
-                        zfCalc_SummIn (1, zfCalc_CurrencyTo (inAmountToPay_GRN, inCurrencyValueEUR, 1), 1) + inAmountToPay_EUR
-              END :: TFloat AS AmountToPay_curr
+                            -- сумма к оплате, грн - НЕ округлили, отсюда остаток
+                          , zfCalc_CurrencyFrom (inAmountToPay_EUR, inCurrencyValueEUR, 1) AS AmountToPay_GRN
+                            -- сумма к оплате, EUR - НЕ округлили, отсюда остаток
+                          , inAmountToPay_EUR AS AmountToPay_EUR
+                    )
+          , tmp2 AS (SELECT -- если после округления - суммы совпали
+                            CASE WHEN tmp1.AmountPay_GRN = zfCalc_SummPriceList (1, tmp1.AmountToPay_GRN)
+                                 THEN -- разница и будет ручным списанием
+                                      tmp1.AmountToPay_GRN - zfCalc_SummPriceList (1, tmp1.AmountToPay_GRN)
+
+                                 -- если все в USD
+                                 WHEN zfCalc_SummPriceList (1, zfCalc_CurrencyTo (tmp1.AmountToPay_GRN, inCurrencyValueUSD, 1)) = inAmountUSD
+                                 THEN -- разница и будет ручным списанием
+                                      tmp1.AmountToPay_GRN - tmp1.AmountPay_GRN
+
+                                 WHEN tmp1.AmountPay_GRN = 0 AND inAmountDiscount < 2 AND tmp1.AmountToPay_GRN > 2
+                                 THEN -- "вернули" списания НЕТ
+                                      0
+                                 ELSE -- оставили как есть
+                                      inAmountDiscount
+                             END AS AmountDiscount_GRN
+
+                            -- Сумма оплаты - в ГРН
+                          , tmp1.AmountPay_GRN
+                            -- сумма к оплате, грн - НЕ округлили, отсюда остаток
+                          , tmp1.AmountToPay_GRN
+                            -- сумма к оплате, EUR - НЕ округлили, отсюда остаток
+                          , tmp1.AmountToPay_EUR
+                     FROM tmp1
+                    )
+             -- Расчет - сколько осталось оплатить / либо сдача
+           , tmp AS (SELECT -- Сумма к оплате МИНУС Итого Оплата - все в ГРН
+                            tmp2.AmountToPay_GRN - tmp2.AmountPay_GRN - tmp2.AmountDiscount_GRN AS AmountDiff
+                            -- сумма к оплате, грн - НЕ округлили, отсюда остаток
+                          , tmp2.AmountToPay_GRN
+                            -- сумма к оплате, EUR - НЕ округлили, отсюда остаток
+                          , tmp2.AmountToPay_EUR
+                            -- сумма ручного списания
+                          , tmp2.AmountDiscount_GRN
+                            -- Сумма оплаты - в ГРН
+                          , tmp2.AmountPay_GRN
+                     FROM tmp2
+                    )
+
+       SELECT -- К оплате, грн - здесь округлили
+              zfCalc_SummPriceList (1, tmp.AmountToPay_GRN) :: TFloat AS AmountToPay
+              -- К оплате, EUR - здесь округлили
+            , zfCalc_SummPriceList (1, tmp.AmountToPay_EUR) :: TFloat AS AmountToPay_curr
+
+              -- К оплате, грн - НЕ округлили
+            , tmp.AmountToPay_GRN :: TFloat AS AmountToPay_GRN
+              -- К оплате, EUR - НЕ округлили
+            , tmp.AmountToPay_EUR :: TFloat AS AmountToPay_EUR
 
               -- сколько осталось оплатить, ГРН
-            , CASE WHEN tmp.AmountDiff > 0 AND inCurrencyId_Client = zc_Currency_EUR()
-                        -- переводим из EUR в ГРН + округление до 0 знаков
-                        THEN zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (tmp.AmountDiff, inCurrencyValueEUR, 1), 0)
-
-                   WHEN tmp.AmountDiff > 0
-                        -- сумма итак в ГРН
+            , CASE WHEN tmp.AmountDiff > 0 AND tmp.AmountToPay_GRN = tmp.AmountDiff
+                         THEN -- здесь округлили
+                              zfCalc_SummPriceList (1, tmp.AmountDiff)
+                    WHEN tmp.AmountDiff > 0
+                        -- НЕ округлили
                         THEN tmp.AmountDiff
-
                    ELSE 0
               END :: TFloat AS AmountRemains
 
-              -- сколько осталось оплатить, EUR + округление до 0 знаков
-            , CASE WHEN tmp.AmountDiff > 0 AND inCurrencyId_Client = zc_Currency_EUR()
-                        -- сумма итак в EUR - нельзя округлять
-                        THEN tmp.AmountDiff
-
-                   WHEN tmp.AmountDiff > 0
+              -- сколько осталось оплатить, EUR - НЕ округлили
+            , CASE WHEN tmp.AmountDiff > 0
                         -- переводим из ГРН в EUR + ОКРУГЛЕНИЕ ?
                         THEN zfCalc_SummIn (1, zfCalc_CurrencyTo (tmp.AmountDiff, inCurrencyValueEUR, 1), 1)
-
                    ELSE 0
               END :: TFloat AS AmountRemains_curr
 
 
               -- Сдача, грн
-            , CASE WHEN tmp.AmountDiff < 0 AND inCurrencyId_Client = zc_Currency_EUR() 
-                        -- переводим из EUR в ГРН + округление до 0 знаков
-                        THEN zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (-1 * tmp.AmountDiff, inCurrencyValueEUR, 1), 0)
-
-                   WHEN tmp.AmountDiff < 0
+            , CASE WHEN tmp.AmountDiff < 0
                         -- сумма итак в ГРН
                         THEN -1 * tmp.AmountDiff
 
                    ELSE 0
               END :: TFloat AS AmountDiff
+
+              -- AmountDiscount, ГРН
+            , tmp.AmountDiscount_GRN :: TFloat AS AmountDiscount
+              -- AmountDiscount, EUR
+            , zfCalc_SummIn (1, zfCalc_CurrencyTo (tmp.AmountDiscount_GRN, inCurrencyValueEUR, 1), 1) :: TFloat AS AmountDiscount_curr
+
+              -- AmountPay, ГРН
+            , tmp.AmountPay_GRN :: TFloat AS AmountPay
+              -- AmountPay, EUR
+            , zfCalc_CurrencyTo (tmp.AmountPay_GRN, inCurrencyValueEUR, 1) :: TFloat AS AmountPay_curr
+
 
        FROM tmp;
 
