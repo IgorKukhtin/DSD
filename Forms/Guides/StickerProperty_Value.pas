@@ -63,7 +63,11 @@ type
     bbShowAll: TdxBarButton;
     FormParams: TdsdFormParams;
     bbInsertMask: TdxBarButton;
-    bb: TdxBarButton;
+    bbb: TdxBarButton;
+    spUpdate: TdsdStoredProc;
+    actUpdate_CK: TdsdUpdateDataSet;
+    bbUpdate_CK: TdxBarButton;
+    isCK: TcxGridDBColumn;
 
   private
     { Private declarations }

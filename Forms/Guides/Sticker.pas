@@ -177,6 +177,10 @@ type
     colValue9: TcxGridDBColumn;
     colValue10: TcxGridDBColumn;
     colValue11: TcxGridDBColumn;
+    spUpdate_StickerProperty_CK: TdsdStoredProc;
+    colisCK: TcxGridDBColumn;
+    actUpdate_StickerProperty_CK: TdsdUpdateDataSet;
+    bbUpdate_StickerProperty_CK: TdxBarButton;
 
   private
     { Private declarations }

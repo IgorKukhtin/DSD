@@ -25,6 +25,7 @@ object StickerForm: TStickerForm
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 80
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -449,6 +450,15 @@ object StickerForm: TStickerForm
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1081' '#1074#1077#1089
           Width = 45
+        end
+        object colisCK: TcxGridDBColumn
+          Caption = #1057'/'#1050'+'#1057'/'#1042
+          DataBinding.FieldName = 'isCK'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1042#1099#1074#1086#1076#1080#1090#1100' '#1092#1088#1072#1079#1091' '#1076#1083#1103' '#1057'/'#1050'+'#1057'/'#1042
+          Options.Editing = False
+          Width = 62
         end
         object colStickerPackName: TcxGridDBColumn
           Caption = #1042#1080#1076' '#1087#1072#1082#1091#1074#1072#1085#1085#1103
@@ -966,6 +976,18 @@ object StickerForm: TStickerForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_StickerProperty_CK'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoiceGuides'
         end
         item
@@ -1104,6 +1126,10 @@ object StickerForm: TStickerForm
     end
     object bbShowAll: TdxBarButton
       Action = actShowAll
+      Category = 0
+    end
+    object bbUpdate_StickerProperty_CK: TdxBarButton
+      Action = actUpdate_StickerProperty_CK
       Category = 0
     end
   end
@@ -2161,6 +2187,23 @@ object StickerForm: TStickerForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actUpdate_StickerProperty_CK: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_StickerProperty_CK
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_StickerProperty_CK
+        end
+        item
+          StoredProc = spSelectProperty
+        end>
+      Caption = #1042#1099#1074#1086#1076#1080#1090#1100' '#1092#1088#1072#1079#1091' '#1076#1083#1103' '#1057'/'#1050'+'#1057'/'#1042' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1042#1099#1074#1086#1076#1080#1090#1100' '#1092#1088#1072#1079#1091' '#1076#1083#1103' '#1057'/'#1050'+'#1057'/'#1042' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 76
+      DataSource = DataSource
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Sticker'
@@ -2172,7 +2215,7 @@ object StickerForm: TStickerForm
     Params = <
       item
         Name = 'inShowErased'
-        Value = 'False'
+        Value = False
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
@@ -2232,10 +2275,13 @@ object StickerForm: TStickerForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 648
     Top = 256
   end
@@ -2687,10 +2733,13 @@ object StickerForm: TStickerForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 432
     Top = 392
   end
@@ -2840,7 +2889,7 @@ object StickerForm: TStickerForm
       end
       item
         Name = 'inDateStart'
-        Value = 'NULL'
+        Value = Null
         Component = deDateStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -2848,7 +2897,7 @@ object StickerForm: TStickerForm
       end
       item
         Name = 'inDateTare'
-        Value = 'NULL'
+        Value = Null
         Component = deDateTare
         DataType = ftDateTime
         ParamType = ptInput
@@ -2856,7 +2905,7 @@ object StickerForm: TStickerForm
       end
       item
         Name = 'inDatePack'
-        Value = 'NULL'
+        Value = Null
         Component = deDatePack
         DataType = ftDateTime
         ParamType = ptInput
@@ -2864,7 +2913,7 @@ object StickerForm: TStickerForm
       end
       item
         Name = 'inDateProduction'
-        Value = 'NULL'
+        Value = Null
         Component = deDateProduction
         DataType = ftDateTime
         ParamType = ptInput
@@ -2972,7 +3021,7 @@ object StickerForm: TStickerForm
       end
       item
         Name = 'inIsStartEnd'
-        Value = 'True'
+        Value = True
         Component = cbStartEnd
         DataType = ftBoolean
         ParamType = ptInput
@@ -2980,7 +3029,7 @@ object StickerForm: TStickerForm
       end
       item
         Name = 'inIsTare'
-        Value = 'False'
+        Value = False
         Component = cbTare
         DataType = ftBoolean
         ParamType = ptInput
@@ -2988,7 +3037,7 @@ object StickerForm: TStickerForm
       end
       item
         Name = 'inIsPartion'
-        Value = 'False'
+        Value = False
         Component = cbPartion
         DataType = ftBoolean
         ParamType = ptInput
@@ -2996,7 +3045,7 @@ object StickerForm: TStickerForm
       end
       item
         Name = 'inIsGoodsName'
-        Value = 'True'
+        Value = True
         Component = cbGoodsName
         DataType = ftBoolean
         ParamType = ptInput
@@ -3086,7 +3135,7 @@ object StickerForm: TStickerForm
       end
       item
         Name = 'inIsStartEnd'
-        Value = 'True'
+        Value = True
         Component = cbStartEnd
         DataType = ftBoolean
         ParamType = ptInput
@@ -3094,7 +3143,7 @@ object StickerForm: TStickerForm
       end
       item
         Name = 'inIsTare'
-        Value = 'False'
+        Value = False
         Component = cbTare
         DataType = ftBoolean
         ParamType = ptInput
@@ -3102,7 +3151,7 @@ object StickerForm: TStickerForm
       end
       item
         Name = 'inIsPartion'
-        Value = 'False'
+        Value = False
         Component = cbPartion
         DataType = ftBoolean
         ParamType = ptInput
@@ -3110,7 +3159,7 @@ object StickerForm: TStickerForm
       end
       item
         Name = 'inIsGoodsName'
-        Value = 'True'
+        Value = True
         Component = cbGoodsName
         DataType = ftBoolean
         ParamType = ptInput
@@ -3167,5 +3216,31 @@ object StickerForm: TStickerForm
     PackSize = 1
     Left = 695
     Top = 88
+  end
+  object spUpdate_StickerProperty_CK: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_StickerProperty_CK'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = CDSProperty
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisCK'
+        Value = Null
+        Component = CDSProperty
+        ComponentItem = 'isCK'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 523
+    Top = 518
   end
 end

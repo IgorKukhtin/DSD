@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , StickerFileId Integer, StickerFileName TVarChar, TradeMarkName_StickerFile TVarChar
              , StickerSkinId Integer, StickerSkinName TVarChar
              , BarCode TVarChar
-             , isFix Boolean
+             , isFix Boolean, isCK Boolean
              , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat, Value6 TFloat, Value7 TFloat
              , Value8 TFloat, Value9 TFloat, Value10 TFloat, Value11 TFloat
              , isErased Boolean
@@ -51,6 +51,7 @@ BEGIN
 
             , ObjectString_BarCode.ValueData     AS BarCode
             , ObjectBoolean_Fix.ValueData        AS isFix
+            , COALESCE (ObjectBoolean_CK.ValueData, FALSE) ::Boolean AS isCK
 
             , ObjectFloat_Value1.ValueData       AS Value1
             , ObjectFloat_Value2.ValueData       AS Value2
@@ -147,6 +148,10 @@ BEGIN
                                      ON ObjectBoolean_Fix.ObjectId = Object_StickerProperty.Id
                                     AND ObjectBoolean_Fix.DescId = zc_ObjectBoolean_StickerProperty_Fix()
 
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_CK
+                                     ON ObjectBoolean_CK.ObjectId = Object_StickerProperty.Id
+                                    AND ObjectBoolean_CK.DescId = zc_ObjectBoolean_StickerProperty_CK()
+
              LEFT JOIN ObjectString AS ObjectString_BarCode
                                     ON ObjectString_BarCode.ObjectId = Object_StickerProperty.Id
                                    AND ObjectString_BarCode.DescId = zc_ObjectString_StickerProperty_BarCode()
@@ -165,6 +170,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 22.04.21         * zc_ObjectBoolean_StickerProperty_CK
  24.10.17         *
 */
 
