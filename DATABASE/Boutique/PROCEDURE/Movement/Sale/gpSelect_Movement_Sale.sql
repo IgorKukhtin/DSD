@@ -29,6 +29,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ToId Integer, ToName TVarChar
              , CurrencyId_Client Integer, CurrencyName_Client TVarChar
              , Comment TVarChar
+             , isOffer Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , isProtocol Boolean
              )
@@ -116,6 +117,8 @@ BEGIN
            , Object_CurrencyClient.Id                    AS CurrencyId_Client
            , Object_CurrencyClient.ValueData             AS CurrencyName_Client
            , MovementString_Comment.ValueData            AS Comment
+           
+           , COALESCE (MovementBoolean_Offer.ValueData, FALSE) ::Boolean AS isOffer
 
            , Object_Insert.ValueData                     AS InsertName
            , MovementDate_Insert.ValueData               AS InsertDate
@@ -129,6 +132,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Offer
+                                      ON MovementBoolean_Offer.MovementId = Movement.Id
+                                     AND MovementBoolean_Offer.DescId = zc_MovementBoolean_Offer()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId = Movement.Id
@@ -197,6 +204,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.04.21         * isOffer
  13.05.20         * 
  19.02.18         * add inUnitId
  09.05.17         *

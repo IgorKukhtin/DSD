@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , HappyDate TDateTime
              , PhoneMobile TVarChar, Phone TVarChar
              , Comment TVarChar, Comment_Client TVarChar
+             , isOffer Boolean
              , InsertName TVarChar, InsertDate TDateTime
                )
 AS
@@ -95,6 +96,7 @@ BEGIN
              , CAST ('' as TVarChar)            AS Phone
              , CAST ('' as TVarChar)            AS Comment
              , CAST ('' as TVarChar)            AS Comment_Client
+             , CAST (FALSE AS Boolean)          AS isOffer
 
              , COALESCE(Object_Insert.ValueData,'')  ::TVarChar AS InsertName
              , CURRENT_TIMESTAMP ::TDateTime    AS InsertDate
@@ -222,6 +224,8 @@ BEGIN
 
              , MovementString_Comment.ValueData       AS Comment
              , ObjectString_Comment.ValueData         AS Comment_Client
+             
+             , COALESCE (MovementBoolean_Offer.ValueData, FALSE) ::Boolean AS isOffer
 
              , Object_Insert.ValueData                AS InsertName
              , COALESCE (MovementDate_Insert.ValueData, CURRENT_TIMESTAMP)  :: TDateTime AS InsertDate
@@ -231,6 +235,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Offer
+                                      ON MovementBoolean_Offer.MovementId = Movement.Id
+                                     AND MovementBoolean_Offer.DescId = zc_MovementBoolean_Offer()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -307,6 +315,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.04.21         * isOffer
  19.02.18         *
  09.05.17         *
 */
