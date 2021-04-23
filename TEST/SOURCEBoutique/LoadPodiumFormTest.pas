@@ -807,7 +807,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ClientDebtDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ClientDebtDialogForm');
   //Report_GoodsMI_SaleReturnInForm
-
+  }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleReturnInPodiumForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleReturnInPodiumForm');
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleReturnInForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleReturnInDialogForm'));

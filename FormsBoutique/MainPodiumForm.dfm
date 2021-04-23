@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 723
   KeyPreview = True
   ExplicitWidth = 739
-  ExplicitHeight = 223
+  ExplicitHeight = 226
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -1132,12 +1132,12 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_SaleReturnIn: TdsdOpenForm
+    object actReport_SaleReturnInPodium: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' / '#1074#1086#1079#1074#1088#1072#1090#1072#1084
-      FormName = 'TReport_SaleReturnInForm'
-      FormNameParam.Value = 'TReport_SaleReturnInForm'
+      FormName = 'TReport_SaleReturnInPodiumForm'
+      FormNameParam.Value = 'TReport_SaleReturnInPodiumForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -1264,7 +1264,7 @@ inherited MainForm: TMainForm
     object miReport_Unit: TMenuItem [6]
       Caption = #1054#1090#1095#1077#1090#1099' ('#1084#1072#1075#1072#1079#1080#1085')'
       object miReport_SaleReturnIn: TMenuItem
-        Action = actReport_SaleReturnIn
+        Action = actReport_SaleReturnInPodium
       end
       object miReport_GoodsMI_Account: TMenuItem
         Action = actReport_GoodsMI_Account

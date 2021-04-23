@@ -285,10 +285,15 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_CorrectMarketing() RETURNS integer
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_CorrectMarketing', 'Корректировка суммы маркетинга в ЗП по подразделению'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_CorrectMarketing');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_CorrectIlliquidMarketing() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_CorrectIlliquidMarketing'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_CorrectIlliquidMarketing', 'Корректировка суммы неликвидов маркетинга в ЗП'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_CorrectIlliquidMarketing');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 23.04.21                                                                                    * zc_MovementBoolean_CorrectIlliquidMarketing
  19.03.21                                                                                    * zc_MovementBoolean_CorrectMarketing
  09.03.21         * zc_MovementBoolean_isCorrective
  15.02.21                                                                                    * zc_MovementBoolean_ConfirmedMarketing

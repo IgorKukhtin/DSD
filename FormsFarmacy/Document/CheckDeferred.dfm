@@ -499,7 +499,7 @@ inherited CheckDeferredForm: TCheckDeferredForm
         end
         item
           Name = 'OperDateSP'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDateSP'
           DataType = ftDateTime
@@ -659,6 +659,7 @@ inherited CheckDeferredForm: TCheckDeferredForm
         end>
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' - <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' - <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
+      ImageIndex = 77
     end
     object actSetConfirmedKind_UnComplete: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -671,6 +672,7 @@ inherited CheckDeferredForm: TCheckDeferredForm
         end>
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' - <'#1053#1077' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' - <'#1053#1077' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
+      ImageIndex = 58
     end
     object actShowMessage: TShowMessageAction
       Category = 'DSDLib'
@@ -699,6 +701,7 @@ inherited CheckDeferredForm: TCheckDeferredForm
         end>
       Caption = #1054#1090#1082#1088#1099#1090#1100' '#1095#1077#1082' '#1076#1083#1103' '#1088#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1103
       Hint = #1054#1090#1082#1088#1099#1090#1100' '#1095#1077#1082' '#1076#1083#1103' '#1088#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1103
+      ImageIndex = 1
       FormName = 'TCheckCashForm'
       FormNameParam.Value = 'TCheckCashForm'
       FormNameParam.DataType = ftString
@@ -721,7 +724,7 @@ inherited CheckDeferredForm: TCheckDeferredForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -773,14 +776,14 @@ inherited CheckDeferredForm: TCheckDeferredForm
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1095#1077#1082
       Hint = 
-        #1059#1076#1072#1083#1080#1090#1100' '#1095#1077#1082' "'#1058#1072#1073#1083#1077#1090#1082#1080'" ('#1091#1082#1072#1079#1072#1090#1100' '#1087#1088#1080#1095#1080#1085#1091' '#1086#1090#1082#1072#1079#1072' - '#1090#1086#1074#1072#1088' '#1074#1077#1088#1085#1077#1090#1089#1103' ' +
-        #1074' '#1082#1072#1089#1089#1091')'
+        #1059#1076#1072#1083#1080#1090#1100' '#1095#1077#1082' '#1089' '#1089#1072#1081#1090#1072' "'#1053#1077' '#1073#1086#1083#1077#1081'" '#1080' "'#1058#1072#1073#1083#1077#1090#1082#1080'" ('#1091#1082#1072#1079#1072#1090#1100' '#1087#1088#1080#1095#1080#1085#1091' '#1086#1090#1082 +
+        #1072#1079#1072' - '#1090#1086#1074#1072#1088' '#1074#1077#1088#1085#1077#1090#1089#1103' '#1074' '#1082#1072#1089#1089#1091')'
       ImageIndex = 13
       Status = mtDelete
       DataSource = MasterDS
       QuestionBeforeExecute = 
-        #1059#1076#1072#1083#1080#1090#1100' '#1095#1077#1082' "'#1058#1072#1073#1083#1077#1090#1082#1080'" ('#1091#1082#1072#1079#1072#1090#1100' '#1087#1088#1080#1095#1080#1085#1091' '#1086#1090#1082#1072#1079#1072' - '#1090#1086#1074#1072#1088' '#1074#1077#1088#1085#1077#1090#1089#1103' ' +
-        #1074' '#1082#1072#1089#1089#1091')?'
+        #1059#1076#1072#1083#1080#1090#1100' '#1095#1077#1082' '#1089' '#1089#1072#1081#1090#1072' "'#1053#1077' '#1073#1086#1083#1077#1081'" '#1080' "'#1058#1072#1073#1083#1077#1090#1082#1080'" ('#1091#1082#1072#1079#1072#1090#1100' '#1087#1088#1080#1095#1080#1085#1091' '#1086#1090#1082 +
+        #1072#1079#1072' - '#1090#1086#1074#1072#1088' '#1074#1077#1088#1085#1077#1090#1089#1103' '#1074' '#1082#1072#1089#1089#1091')?'
     end
     object actChoiceCancelReason: TOpenChoiceForm
       Category = 'DSDLib'
@@ -944,18 +947,15 @@ inherited CheckDeferredForm: TCheckDeferredForm
       Action = actSetConfirmedKind_Complete
       Caption = 'VIP '#1095#1077#1082'  - <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
       Category = 0
-      ImageIndex = 77
     end
     object bbConfirmedKind_UnComplete: TdxBarButton
       Action = actSetConfirmedKind_UnComplete
       Caption = 'VIP '#1095#1077#1082'  - <'#1053#1077' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
       Category = 0
-      ImageIndex = 58
     end
     object dxBarButton4: TdxBarButton
       Action = actCheckCash
       Category = 0
-      ImageIndex = 1
     end
     object dxBarButton5: TdxBarButton
       Action = actSmashCheck
@@ -1006,6 +1006,7 @@ inherited CheckDeferredForm: TCheckDeferredForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         BackGroundValueColumn = Color_Calc
@@ -1014,6 +1015,7 @@ inherited CheckDeferredForm: TCheckDeferredForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 544
     Top = 256

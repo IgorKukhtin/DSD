@@ -10,6 +10,7 @@ AS
 $BODY$
   DECLARE vbUserId          Integer;
   DECLARE vbCheckSourceKind Integer;
+  DECLARE vbInvNumberOrder  TVarChar;
 BEGIN
     --Если документ уже проведен то проверим права
     -- проверка прав пользователя на вызов процедуры
@@ -18,13 +19,18 @@ BEGIN
     vbCheckSourceKind := (SELECT MovementLinkObject.ObjectId  FROM MovementLinkObject
                           WHERE MovementLinkObject.DescId = zc_MovementLinkObject_CheckSourceKind()
                             AND MovementLinkObject.MovementID = inMovementId);
+                            
+    vbInvNumberOrder := COALESCE((SELECT MovementString_InvNumberOrder.ValueData 
+                                  FROM MovementString AS MovementString_InvNumberOrder
+                                  WHERE MovementString_InvNumberOrder.MovementId = inMovementId
+                                    AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()), '');
 
-    IF COALESCE (vbCheckSourceKind, 0) = zc_Enum_CheckSourceKind_Tabletki()
+    IF COALESCE (vbCheckSourceKind, 0) = zc_Enum_CheckSourceKind_Tabletki() OR vbInvNumberOrder <> ''
     THEN
        IF COALESCE (inCancelReasonId, 0) = 0
        THEN
         RAISE EXCEPTION 'Ошибка. При удалении VIP чека загруженного с <%> надо указать причину отказа. Для удаления используйте соседнюю кнопку.  ',
-          (SELECT Object.ValueData FROM Object WHERE Object.ID = vbCheckSourceKind);
+          COALESCE((SELECT Object.ValueData FROM Object WHERE Object.ID = vbCheckSourceKind), 'Не болей');
        END IF;
        PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_CancelReason(), inMovementId, inCancelReasonId);
     ELSE
@@ -33,7 +39,7 @@ BEGIN
         RAISE EXCEPTION 'Ошибка. При удалении VIP чеков не надо указать причину отказа. Для удаления используйте соседнюю кнопку.';
        END IF;
     END IF;
-
+   
     -- Удаляем Документ
     PERFORM gpSetErased_Movement_Check (inMovementId := inMovementId
                                       , inSession     := inSession);

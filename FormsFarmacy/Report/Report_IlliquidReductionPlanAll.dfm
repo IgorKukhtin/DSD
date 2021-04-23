@@ -41,6 +41,16 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = UserName
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaPenaltyCount
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaPenaltySum
             end>
           OptionsData.Editing = False
           Styles.Content = nil
@@ -104,16 +114,6 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
             Options.Editing = False
             Width = 75
           end
-          object ProcSaleIlliquid: TcxGridDBColumn
-            Caption = #1055#1088#1086#1094#1077#1085#1090' '#1086#1090' '#1089#1091#1084#1084#1099
-            DataBinding.FieldName = 'ProcSaleIlliquid'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 67
-          end
           object ProcSale: TcxGridDBColumn
             Caption = '% '#1087#1088#1086#1076#1072#1078
             DataBinding.FieldName = 'ProcSale'
@@ -124,6 +124,16 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
             Options.Editing = False
             Width = 65
           end
+          object SummaPenaltyCount: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' '#1087#1086' '#1082#1086#1083#1080'-'#1074#1091
+            DataBinding.FieldName = 'SummaPenaltyCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 71
+          end
           object SummaSale: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078
             DataBinding.FieldName = 'SummaSale'
@@ -133,14 +143,24 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
+          object ProcSaleIlliquid: TcxGridDBColumn
+            Caption = #1055#1088#1086#1094#1077#1085#1090' '#1086#1090' '#1089#1091#1084#1084#1099
+            DataBinding.FieldName = 'ProcSaleIlliquid'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
+          end
           object Color_calc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_Calc'
             Visible = False
             Options.Editing = False
           end
-          object SummaPenalty: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072
-            DataBinding.FieldName = 'SummaPenalty'
+          object SummaPenaltySum: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' '#1087#1086' '#1089#1091#1084#1084#1077
+            DataBinding.FieldName = 'SummaPenaltySum'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
@@ -148,13 +168,31 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
             Options.Editing = False
             Width = 73
           end
+          object SummaPenalty: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' '#1080#1090#1086#1075#1086
+            DataBinding.FieldName = 'SummaPenalty'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object ManDays: TcxGridDBColumn
-            Caption = #1054#1090#1088#1072#1073#1086#1090#1072#1085#1086' '#1076#1085#1077#1081
+            Caption = #1054#1090#1088#1072#1073#1086#1090#1072#1085#1086' '#1076#1085#1077#1081' '#1074' '#1084#1077#1089#1103#1094#1077
             DataBinding.FieldName = 'ManDays'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 62
+            Width = 68
+          end
+          object DaysWorked: TcxGridDBColumn
+            Caption = #1044#1085#1077#1081' '#1088#1072#1073#1086#1090#1072#1077#1090
+            DataBinding.FieldName = 'DaysWorked'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
           end
         end
       end
@@ -194,7 +232,7 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
     object cePenalty: TcxCurrencyEdit
       Left = 695
       Top = 5
-      EditValue = 500.000000000000000000
+      EditValue = 250.000000000000000000
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = '0'
       TabOrder = 4

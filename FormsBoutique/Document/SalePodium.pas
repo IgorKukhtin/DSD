@@ -202,6 +202,10 @@ type
     cxLabel19: TcxLabel;
     GuidesCurrencyClient: TdsdGuides;
     cbOffer: TcxCheckBox;
+    mact_User_PriceReal: TMultiAction;
+    mactPrintCheckPriceReal: TMultiAction;
+    actPrintCheckPriceReal: TdsdPrintAction;
+    bbact_User_PriceReal: TdxBarButton;
   private
   public
   end;

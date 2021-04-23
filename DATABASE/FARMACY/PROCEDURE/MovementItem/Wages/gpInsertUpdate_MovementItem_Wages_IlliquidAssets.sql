@@ -57,7 +57,7 @@ BEGIN
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
 
-    RAISE EXCEPTION 'Ошибка. Прошло % %', (select valuedata from Object where id = inUserId), inIlliquidAssets;
+    --RAISE EXCEPTION 'Ошибка. Прошло % %', (select valuedata from Object where id = inUserId), inIlliquidAssets;
 
 END;
 $BODY$

@@ -40,6 +40,9 @@ type
     ProcSaleIlliquid: TcxGridDBColumn;
     cePlanAmount: TcxCurrencyEdit;
     cxLabel5: TcxLabel;
+    SummaPenaltyCount: TcxGridDBColumn;
+    SummaPenaltySum: TcxGridDBColumn;
+    DaysWorked: TcxGridDBColumn;
   private
     { Private declarations }
   public

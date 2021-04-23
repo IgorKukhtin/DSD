@@ -640,7 +640,7 @@ inherited CheckCashForm: TCheckCashForm
       ImageIndex = 3
       FormName = 'TCheckPrintDialogForm'
       FormNameParam.Value = 'TCheckPrintDialogForm'
-      FormNameParam.DataType = ftDateTime
+      FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptInputOutput
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -833,7 +833,7 @@ inherited CheckCashForm: TCheckCashForm
       GuiParams = <
         item
           Name = 'inOperDate'
-          Value = '0'
+          Value = Null
           Component = edOperDate
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -943,7 +943,7 @@ inherited CheckCashForm: TCheckCashForm
         end
         item
           Name = 'MasterOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = edOperDate
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -1356,7 +1356,7 @@ inherited CheckCashForm: TCheckCashForm
       end
       item
         Name = 'OperDateSP'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDateSP
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -1648,7 +1648,7 @@ inherited CheckCashForm: TCheckCashForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput

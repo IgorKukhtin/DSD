@@ -15,6 +15,8 @@ $BODY$
     DECLARE vbUnitId Integer;
     DECLARE vbClientId Integer;
     DECLARE vbStatusId Integer;
+    DECLARE vbCurrencyId_Client Integer;
+    DECLARE vbCurrencyName_Client TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale_Print());
@@ -23,8 +25,10 @@ BEGIN
      -- параметры из Документа
      SELECT CASE WHEN Object_From.DescId = zc_Object_Client() THEN MovementLinkObject_From.ObjectId ELSE MovementLinkObject_To.ObjectId   END AS ClientId
           , CASE WHEN Object_To.DescId   = zc_Object_Unit()   THEN MovementLinkObject_To.ObjectId   ELSE MovementLinkObject_From.ObjectId END AS UnitId
-          , Movement.StatusId                AS StatusId
-           INTO vbClientId, vbUnitId, vbStatusId
+          , Movement.StatusId                          AS StatusId
+          , MovementLinkObject_CurrencyClient.ObjectId AS CurrencyId_Client
+          , CASE WHEN MovementLinkObject_CurrencyClient.ObjectId = zc_Currency_GRN() THEN 'грн' ELSE 'экв.' END CurrencyName_Client
+           INTO vbClientId, vbUnitId, vbStatusId, vbCurrencyId_Client, vbCurrencyName_Client
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
@@ -34,6 +38,11 @@ BEGIN
                                        ON MovementLinkObject_To.MovementId = MovementLinkObject_From.MovementId
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
           LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyClient
+                                       ON MovementLinkObject_CurrencyClient.MovementId = Movement.Id
+                                      AND MovementLinkObject_CurrencyClient.DescId = zc_MovementLinkObject_CurrencyClient()
+          LEFT JOIN Object AS Object_CurrencyClient ON Object_CurrencyClient.Id = MovementLinkObject_CurrencyClient.ObjectId
      WHERE Movement.Id = inMovementId;
 
       --
@@ -64,7 +73,7 @@ BEGIN
                      from tmpDiscountTools as t1
                           LEFT JOIN tmpDiscountTools AS t2 ON t2.StartSumm= t1.EndSumm
                      )
---
+
    -- выбираю все контейнеры по покупателю и подразделению , если выбрано 
    , tmpContainer AS (SELECT CLO_PartionMI.ObjectId          AS PartionId_MI
                            , Container.Amount
@@ -182,6 +191,7 @@ BEGIN
            , tmpData.SummDebt                                  ::TFloat  AS SummDebt
            , (tmpDiscount.StartSumm_Next - tmpData.TotalSumm)  ::TFloat  AS Discount_diff
            , CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN TRUE ELSE FALSE END :: Boolean AS isReturnIn
+           , vbCurrencyName_Client AS CurrencyName_Client
        FROM Movement
             LEFT JOIN tmpMI ON 1=1
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPriceList
@@ -254,8 +264,10 @@ BEGIN
                            , COALESCE (MIFloat_OperPriceList.ValueData, 0)      AS OperPriceList
                            , COALESCE (MIFloat_OperPriceList_curr.ValueData, 0) AS OperPriceList_curr
                            , COALESCE (MIFloat_ChangePercent.ValueData, 0)      AS ChangePercent
+                           , COALESCE (MIFloat_TotalChangePercent_curr.ValueData, 0) AS TotalChangePercent_curr
                            , COALESCE (MIFloat_SummChangePercent.ValueData, 0)  AS SummChangePercent
                            , COALESCE (MIFloat_TotalPay.ValueData, 0)           AS TotalPay
+                           , COALESCE (MIFloat_TotalPay_curr.ValueData, 0)      AS TotalPay_curr
                            , COALESCE (MIFloat_TotalChangePercent.ValueData, 0) AS TotalChangePercent
                            , Object_PartionMI.ObjectCode                        AS SaleMI_ID
                            , MovementItem.isErased
@@ -281,15 +293,23 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
                                                         ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
                                                        AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
+                            LEFT JOIN MovementItemFloat AS MIFloat_TotalPay_curr
+                                                        ON MIFloat_TotalPay_curr.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_TotalPay_curr.DescId         = zc_MIFloat_TotalPay_curr()
 
                             LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
                                                         ON MIFloat_TotalChangePercent.MovementItemId = MovementItem.Id
                                                        AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent_curr
+                                        ON MIFloat_TotalChangePercent_curr.MovementItemId = MovementItem.Id
+                                       AND MIFloat_TotalChangePercent_curr.DescId         = zc_MIFloat_TotalChangePercent_curr()
+
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
                                                              ON MILinkObject_PartionMI.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_PartionMI.DescId         = zc_MILinkObject_PartionMI()
                             LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = MILinkObject_PartionMI.ObjectId
+
 
                        WHERE MovementItem.MovementId = inMovementId
                          AND MovementItem.DescId     = zc_MI_Master()
@@ -322,6 +342,12 @@ BEGIN
            , tmpMI.CountForPrice  ::TFloat
            , COALESCE (MIFloat_OperPriceList.ValueData,      tmpMI.OperPriceList)      :: TFloat AS OperPriceList
            , COALESCE (MIFloat_OperPriceList_curr.ValueData, tmpMI.OperPriceList_curr) :: TFloat AS OperPriceList_curr
+
+           -- чек в ценах покупателя
+           , CASE WHEN vbCurrencyId_Client = zc_Currency_GRN()
+                  THEN tmpMI.OperPriceList - COALESCE (tmpMI.SummChangePercent, 0)
+                  ELSE tmpMI.OperPriceList_curr - COALESCE (tmpMI.TotalChangePercent_curr, 0)
+             END                                                                       :: TFloat AS OperPriceList_real
            
            , zfCalc_SummIn (tmpMI.Amount, tmpMI.OperPrice, tmpMI.CountForPrice) AS TotalSumm
            , zfCalc_SummPriceList (tmpMI.Amount, tmpMI.OperPriceList)           AS TotalSummPriceList
@@ -341,8 +367,12 @@ BEGIN
              ) :: TFloat AS TotalSummToPay
              
            , tmpMI.TotalPay                                               :: TFloat  AS TotalPay
+           , tmpMI.TotalPay_curr                                          :: TFloat  AS TotalPay_curr
            , COALESCE (tmpMI.SummChangePercent, tmpMI.TotalChangePercent) :: TFloat  AS SummChangePercent
-            
+
+             -- Сумма к оплате в валюте
+           , (zfCalc_SummPriceList (tmpMI.Amount, tmpMI.OperPriceList_curr) - COALESCE (tmpMI.TotalChangePercent_curr)) :: TFloat AS TotalSummToPay_curr
+
            , tmpMI.isErased
 
        FROM tmpMI
@@ -422,3 +452,7 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_Check_Print (inMovementId := 432692, inSession:= '5');
+
+--select * from gpSelect_Movement_Check_Print(inMovementId := 10102 ,  inSession := '2');
+
+--FETCH ALL "<unnamed portal 12>";

@@ -80,7 +80,7 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
   object cePenalty: TcxCurrencyEdit
     Left = 188
     Top = 179
-    EditValue = 500.000000000000000000
+    EditValue = 250.000000000000000000
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.##'
     TabOrder = 8
