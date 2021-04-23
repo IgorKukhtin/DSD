@@ -1946,6 +1946,14 @@ object SalePodiumForm: TSalePodiumForm
         end
         item
           Visible = True
+          ItemName = 'bbact_User_PriceReal'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMIContainer'
         end
         item
@@ -2056,6 +2064,10 @@ object SalePodiumForm: TSalePodiumForm
       Action = actUpdate_isChecked
       Category = 0
       ImageIndex = 77
+    end
+    object bbact_User_PriceReal: TdxBarButton
+      Action = mact_User_PriceReal
+      Category = 0
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -2213,6 +2225,73 @@ object SalePodiumForm: TSalePodiumForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actPrintCheckPriceReal: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint_Check
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Check
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'InvNumber'
+          Value = ''
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'From'
+          Value = ''
+          Component = GuidesTo
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = 42864d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PrinterName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PrinterName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      Printer = 'PrinterName'
+      ReportName = 'Print_CheckPodiumRealPrice'
+      ReportNameParam.Value = 'Print_CheckPodiumRealPrice'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = Null
+      PrinterNameParam.Component = FormParams
+      PrinterNameParam.ComponentItem = 'PrinterName'
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+      PreviewWindowMaximized = False
     end
     object actPrintCheck: TdsdPrintAction
       Category = 'DSDLib'
@@ -2841,6 +2920,33 @@ object SalePodiumForm: TSalePodiumForm
         end>
       Caption = 'actComplete_User'
     end
+    object mact_User_PriceReal: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actComplete_User
+        end
+        item
+          Action = mactPrintCheckPriceReal
+        end
+        item
+          Action = actGet_New
+        end
+        item
+          Action = actRefreshMI
+        end>
+      QuestionBeforeExecute = 
+        #1041#1091#1076#1077#1090' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1072' '#1086#1087#1077#1088#1072#1094#1080#1103' "'#1055#1088#1086#1074#1077#1076#1077#1085#1080#1077'/ '#1063#1077#1082' ('#1074' '#1088#1077#1072#1083'. '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076 +
+        '.)/ '#1053#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090'". '#1055#1088#1086#1076#1086#1083#1078#1080#1090#1100'?'
+      Caption = 
+        #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1086#1087#1077#1088#1072#1094#1080#1102' ('#1095#1077#1082' '#1074' '#1088#1077#1072#1083#1100#1085#1099#1093' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076#1072#1078#1080' ('#1077#1074#1088#1086' '#1080#1083#1080' '#1075#1088 +
+        #1085'))'
+      Hint = 
+        #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1086#1087#1077#1088#1072#1094#1080#1102' ('#1095#1077#1082' '#1074' '#1088#1077#1072#1083#1100#1085#1099#1093' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076#1072#1078#1080' ('#1077#1074#1088#1086' '#1080#1083#1080' '#1075#1088 +
+        #1085'))'
+      ImageIndex = 61
+    end
     object mact_User: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -2874,6 +2980,20 @@ object SalePodiumForm: TSalePodiumForm
           StoredProc = spGet_Printer
         end>
       Caption = 'Get_Printer'
+    end
+    object mactPrintCheckPriceReal: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Printer
+        end
+        item
+          Action = actPrintCheckPriceReal
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
+      ImageIndex = 15
     end
     object mactPrintCheck: TMultiAction
       Category = 'DSDLib'

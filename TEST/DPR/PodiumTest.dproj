@@ -1178,6 +1178,10 @@
 			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201211.pas"/>
 			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201212.pas"/>
 			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201012.pas"/>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_SaleReturnInPodium.pas">
+				<Form>Report_SaleReturnInPodiumForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

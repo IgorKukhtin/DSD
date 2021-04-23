@@ -152,7 +152,7 @@ type
     miReport_GoodsCode: TMenuItem;
     miReport_GoodsMI_Account: TMenuItem;
     actReport_GoodsMI_Account: TdsdOpenForm;
-    actReport_SaleReturnIn: TdsdOpenForm;
+    actReport_SaleReturnInPodium: TdsdOpenForm;
     miReport_SaleReturnIn: TMenuItem;
     actReport_ClientDebt: TdsdOpenForm;
     miReport_PartnerDebt: TMenuItem;
