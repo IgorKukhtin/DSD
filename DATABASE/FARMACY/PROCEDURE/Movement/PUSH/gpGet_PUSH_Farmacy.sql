@@ -477,6 +477,95 @@ BEGIN
      END IF;
    END IF;
 
+   IF inSession::Integer IN (3, 390046, 2431210)
+   THEN
+     vbText := '';
+     
+      WITH tmpMovement AS (SELECT Movement.*
+                                , MovementString_InvNumberOrder.ValueData  AS InvNumberOrder
+                                , CASE WHEN Movement.StatusId = zc_Enum_Status_Erased()
+                                       THEN COALESCE(Object_CancelReason.ValueData, CancelReasonDefault.Name) END::TVarChar  AS CancelReason
+                                , MovementFloat_TotalSumm.ValueData        AS TotalSumm
+                                , COALESCE(Object_BuyerForSite.ValueData,
+                                           MovementString_Bayer.ValueData, '')           AS Bayer
+                                , COALESCE (ObjectString_BuyerForSite_Phone.ValueData, 
+                                            MovementString_BayerPhone.ValueData, '')     AS BayerPhone
+                         FROM Movement
+                                
+                           
+                              INNER JOIN MovementBoolean AS MovementBoolean_Deferred
+                                                         ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                                        AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                                        AND MovementBoolean_Deferred.ValueData = TRUE
+                                                          
+                              INNER JOIN MovementString AS MovementString_InvNumberOrder
+                                                        ON MovementString_InvNumberOrder.MovementId = Movement.Id
+                                                       AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_CancelReason
+                                                           ON MovementLinkObject_CancelReason.MovementId = Movement.Id
+                                                          AND MovementLinkObject_CancelReason.DescId = zc_MovementLinkObject_CancelReason()
+                              LEFT JOIN Object AS Object_CancelReason ON Object_CancelReason.Id = MovementLinkObject_CancelReason.ObjectId
+                                
+                              LEFT JOIN (SELECT * FROM gpSelect_Object_CancelReason('3') AS CR ORDER BY CR.Code LIMIT 1) AS CancelReasonDefault ON 1 =1 
+                                
+                              LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                      ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                                     AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                                                       
+                              LEFT JOIN MovementString AS MovementString_Bayer
+                                                       ON MovementString_Bayer.MovementId = Movement.Id
+                                                      AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
+                              LEFT JOIN MovementString AS MovementString_BayerPhone
+                                                       ON MovementString_BayerPhone.MovementId = Movement.Id
+                                                      AND MovementString_BayerPhone.DescId = zc_MovementString_BayerPhone()
+
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_BuyerForSite
+                                                           ON MovementLinkObject_BuyerForSite.MovementId = Movement.Id
+                                                          AND MovementLinkObject_BuyerForSite.DescId = zc_MovementLinkObject_BuyerForSite()
+                              LEFT JOIN Object AS Object_BuyerForSite ON Object_BuyerForSite.Id = MovementLinkObject_BuyerForSite.ObjectId
+                              LEFT JOIN ObjectString AS ObjectString_BuyerForSite_Phone
+                                                     ON ObjectString_BuyerForSite_Phone.ObjectId = Object_BuyerForSite.Id 
+                                                    AND ObjectString_BuyerForSite_Phone.DescId = zc_ObjectString_BuyerForSite_Phone()                                                       
+                                                      
+                         WHERE Movement.DescId = zc_Movement_Check()
+                           AND Movement.StatusId = zc_Enum_Status_Erased()
+                           AND Movement.OperDate >= CURRENT_DATE - INTERVAL '1 MONTH'
+                           AND Movement.OperDate >= '20.04.2021')
+         , tmpMovementProtocol AS (SELECT MovementProtocol.MovementId
+                                        , MovementProtocol.OperDate 
+                                        , MovementProtocol.UserId
+                                        , CASE WHEN SUBSTRING(MovementProtocol.ProtocolData, POSITION('Статус' IN MovementProtocol.ProtocolData) + 22, 1) = 'У'
+                                               THEN TRUE ELSE FALSE END AS Status
+                                        , ROW_NUMBER() OVER (Partition BY MovementProtocol.MovementId ORDER BY MovementProtocol.OperDate DESC) AS ord
+                                   FROM (SELECT DISTINCT tmpMovement.Id AS ID FROM tmpMovement) Movement
+
+                                        INNER JOIN MovementProtocol ON MovementProtocol.MovementId = Movement.ID
+                                   WHERE CASE WHEN SUBSTRING(MovementProtocol.ProtocolData, POSITION('Статус' IN MovementProtocol.ProtocolData) + 22, 1) = 'У'
+                                              THEN TRUE ELSE FALSE END = TRUE)
+
+                             
+     SELECT STRING_AGG('  № '||Movement.InvNumber||
+                       ', удален '||TO_CHAR(tmpMovementProtocol.OperDate, 'DD.MM.YYYY HH24:MI:SS')||
+                       ', причина '||COALESCE(Movement.CancelReason, '')||
+                       ', сумма '||zfConvert_FloatToString(Movement.TotalSumm)||
+                       ', покупатель '||COALESCE(Movement.Bayer, '')||
+                       ', номер телефона '||COALESCE(Movement.BayerPhone, '')||
+                       ', номер заказа '||COALESCE(Movement.InvNumberOrder, ''), Chr(13))
+           
+     INTO vbText
+     FROM tmpMovement AS Movement
+          INNER JOIN tmpMovementProtocol ON tmpMovementProtocol.MovementId = Movement.Id
+                                       AND tmpMovementProtocol.ord = 1
+     WHERE tmpMovementProtocol.OperDate >= vbDatePUSH;  
+
+     IF COALESCE (vbText, '') <> ''
+     THEN
+       INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
+       VALUES (15, 'Был удален ВИП чеки:'||Chr(13)||vbText, '', '', '', '', '');
+     END IF;
+   END IF;
+
    RETURN QUERY
      SELECT _PUSH.Id                     AS Id
           , _PUSH.Text                   AS Text
@@ -501,5 +590,4 @@ LANGUAGE plpgsql VOLATILE;
 
 -- тест
 -- SELECT * FROM gpGet_PUSH_Farmacy('12198759')
---
-SELECT * FROM gpGet_PUSH_Farmacy(1, '948223')
+-- SELECT * FROM gpGet_PUSH_Farmacy(1, '3')
