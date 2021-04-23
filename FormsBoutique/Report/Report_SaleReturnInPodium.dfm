@@ -1403,14 +1403,6 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintCheck'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbactPrintCheckPriceReal'
         end
         item
