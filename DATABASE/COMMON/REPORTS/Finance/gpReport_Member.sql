@@ -35,26 +35,35 @@ BEGIN
 
      -- –ÂÁÛÎ¸Ú‡Ú
   RETURN QUERY
-     WITH tmpContainer AS (SELECT CLO_Member.ContainerId AS Id, Container.Amount, Container.ObjectId, CLO_Member.ObjectId AS MemberId, CLO_InfoMoney.ObjectId AS InfoMoneyId, CLO_Branch.ObjectId AS BranchId
-                  FROM ContainerLinkObject AS CLO_Member
-                  INNER JOIN Container ON Container.Id = CLO_Member.ContainerId AND Container.DescId = zc_Container_Summ()
-                  LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
-                                                ON CLO_InfoMoney.ContainerId = Container.Id AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-                  LEFT JOIN ContainerLinkObject AS CLO_Branch
-                                                ON CLO_Branch.ContainerId = Container.Id AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
-                  LEFT JOIN ContainerLinkObject AS CLO_Goods
-                                                ON CLO_Goods.ContainerId = Container.Id AND CLO_Goods.DescId = zc_ContainerLinkObject_Goods()
+     WITH tmpContainer AS (SELECT CLO_Member.ContainerId AS Id
+                                , Container.Amount
+                                , Container.ObjectId
+                                , COALESCE (ObjectLink_Personal_Member_find.ChildObjectId, CLO_Member.ObjectId) AS MemberId
+                                , CLO_InfoMoney.ObjectId AS InfoMoneyId, CLO_Branch.ObjectId AS BranchId
+                           FROM ContainerLinkObject AS CLO_Member
+                                INNER JOIN Container ON Container.Id = CLO_Member.ContainerId AND Container.DescId = zc_Container_Summ()
+                                LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
+                                                              ON CLO_InfoMoney.ContainerId = Container.Id AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+                                LEFT JOIN ContainerLinkObject AS CLO_Branch
+                                                              ON CLO_Branch.ContainerId = Container.Id AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
+                                LEFT JOIN ContainerLinkObject AS CLO_Goods
+                                                              ON CLO_Goods.ContainerId = Container.Id AND CLO_Goods.DescId = zc_ContainerLinkObject_Goods()
 
-                  LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = CLO_InfoMoney.ObjectId
-                  WHERE CLO_Member.DescId = zc_ContainerLinkObject_Member()
-                    AND (CLO_Member.ObjectId = inMemberId OR inMemberId = 0)
-                    AND (Object_InfoMoney_View.InfoMoneyDestinationId = inInfoMoneyDestinationId OR inInfoMoneyDestinationId = 0)
-                    AND (Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId OR inInfoMoneyId = 0)
-                    AND (Object_InfoMoney_View.InfoMoneyGroupId = inInfoMoneyGroupId OR inInfoMoneyGroupId = 0)
-                    AND (Container.ObjectId = inAccountId OR inAccountId = 0)
-                    AND (CLO_Branch.ObjectId = inBranchId OR inBranchId = 0)
-                    AND (CLO_Goods.ObjectId IS  NULL)
-                  )
+                                LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = CLO_InfoMoney.ObjectId
+
+                                LEFT JOIN ObjectLink AS ObjectLink_Personal_Member_find
+                                                     ON ObjectLink_Personal_Member_find.ObjectId = CLO_Member.ObjectId
+                                                    AND ObjectLink_Personal_Member_find.DescId   = zc_ObjectLink_Personal_Member()
+
+                           WHERE CLO_Member.DescId = zc_ContainerLinkObject_Member()
+                             AND (COALESCE (ObjectLink_Personal_Member_find.ChildObjectId, CLO_Member.ObjectId) = inMemberId OR inMemberId = 0)
+                             AND (Object_InfoMoney_View.InfoMoneyDestinationId = inInfoMoneyDestinationId OR inInfoMoneyDestinationId = 0)
+                             AND (Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId OR inInfoMoneyId = 0)
+                             AND (Object_InfoMoney_View.InfoMoneyGroupId = inInfoMoneyGroupId OR inInfoMoneyGroupId = 0)
+                             AND (Container.ObjectId = inAccountId OR inAccountId = 0)
+                             AND (CLO_Branch.ObjectId = inBranchId OR inBranchId = 0)
+                             AND (CLO_Goods.ObjectId IS  NULL)
+                           )
      SELECT
         Operation.ContainerId,
         Object_Member.Id                                                                            AS MemberId,
@@ -93,9 +102,17 @@ BEGIN
        , Operation.Comment :: TVarChar                                                              AS Comment
 
      FROM
-         (SELECT Operation_all.ContainerId, Operation_all.ObjectId,  Operation_all.MemberId, Operation_all.InfoMoneyId,
-                 CLO_Car.ObjectId AS CarId, Operation_all.BranchId, Operation_all.ObjectId_by, Operation_all.Comment,
-                     SUM (Operation_all.StartAmount) AS StartAmount,
+         (SELECT MAX (Operation_all.ContainerId) AS ContainerId
+               , MAX (Operation_all.ObjectId) AS ObjectId
+               , Operation_all.MemberId
+                 -- —ÒÛ‰˚
+               , MAX (CASE WHEN Operation_all.InfoMoneyId = zc_Enum_InfoMoney_40501() THEN 0 ELSE Operation_all.InfoMoneyId END) AS InfoMoneyId
+                 --
+               , MAX (CLO_Car.ObjectId) AS CarId
+               , MAX (Operation_all.BranchId) AS BranchId
+               , MAX (Operation_all.ObjectId_by) AS ObjectId_by
+               , MAX (Operation_all.Comment) AS Comment
+                   , SUM (Operation_all.StartAmount) AS StartAmount,
                      SUM (Operation_all.DebetSumm)   AS DebetSumm,
                      SUM (Operation_all.KreditSumm)  AS KreditSumm,
 
@@ -105,7 +122,9 @@ BEGIN
                      SUM (Operation_all.SendSumm)    AS SendSumm,
 
                      SUM (Operation_all.EndAmount)   AS EndAmount
-          FROM (SELECT tmpContainer.Id AS ContainerId, tmpContainer.ObjectId, tmpContainer.MemberId, tmpContainer.InfoMoneyId, tmpContainer.BranchId
+          FROM (SELECT tmpContainer.Id AS ContainerId, tmpContainer.ObjectId
+                     , tmpContainer.MemberId
+                     , tmpContainer.InfoMoneyId, tmpContainer.BranchId
                      , 0 AS ObjectId_by
                      , tmpContainer.Amount - COALESCE(SUM (MIContainer.Amount), 0)                                                                                    AS StartAmount
                      , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END)          AS DebetSumm
@@ -124,7 +143,9 @@ BEGIN
                                                     AND MIContainer.OperDate >= inStartDate
                 GROUP BY tmpContainer.Id, tmpContainer.Amount, tmpContainer.ObjectId, tmpContainer.MemberId, tmpContainer.InfoMoneyId, tmpContainer.BranchId
                UNION ALL
-                SELECT tmpContainer.Id AS ContainerId, tmpContainer.ObjectId, tmpContainer.MemberId, tmpContainer.InfoMoneyId, tmpContainer.BranchId
+                SELECT tmpContainer.Id AS ContainerId, tmpContainer.ObjectId
+                     , tmpContainer.MemberId
+                     , tmpContainer.InfoMoneyId, tmpContainer.BranchId
                      , CASE WHEN MIContainer.MovementDescId = zc_Movement_Income()
                                  THEN MovementLinkObject_From.ObjectId
 
@@ -183,6 +204,7 @@ BEGIN
                      LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                                           ON ObjectLink_Personal_Member.ObjectId = MovementLinkObject_Personal.ObjectId
                                          AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+
                      LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
                                                       ON MILinkObject_MoneyPlace.MovementItemId = MIContainer.MovementItemId
                                                      AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
@@ -212,12 +234,19 @@ BEGIN
                                              ON CLO_Car.ContainerId = Operation_all.ContainerId
                                             AND CLO_Car.DescId = zc_ContainerLinkObject_Car()
 
-          GROUP BY Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.MemberId, Operation_all.InfoMoneyId, CLO_Car.ObjectId, Operation_all.BranchId, Operation_all.ObjectId_by, Operation_all.Comment
+          GROUP BY /*Operation_all.ContainerId,*/
+                   /*Operation_all.ObjectId, */
+                    Operation_all.MemberId
+               /*, Operation_all.InfoMoneyId, CLO_Car.ObjectId*/
+               /*, Operation_all.BranchId*/
+               /*, Operation_all.ObjectId_by, Operation_all.Comment*/
          ) AS Operation
 
             LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Operation.ObjectId
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = Operation.MemberId
-            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId
+            -- —ÒÛ‰˚
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = CASE WHEN Operation.InfoMoneyId = 0 THEN zc_Enum_InfoMoney_40501() ELSE Operation.InfoMoneyId END
+            --
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = Operation.CarId
             LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Operation.BranchId
 
@@ -238,7 +267,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpReport_Member (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -251,4 +279,4 @@ $BODY$
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpReport_Member (inStartDate:= '01.08.2016', inEndDate:= '05.08.2016', inAccountId:= 0, inBranchId:=0, inInfoMoneyId:= 0, inInfoMoneyGroupId:= 0, inInfoMoneyDestinationId:= 0, inSession:= '2');
+-- SELECT * FROM gpReport_Member (inStartDate := ('01.04.2021')::TDateTime , inEndDate := ('22.04.2021')::TDateTime , inAccountId := 0 , inBranchId := 0 , inInfoMoneyId := 0 , inInfoMoneyGroupId := 0 , inInfoMoneyDestinationId := 0 , inMemberId := 0 ,  inSession := zfCalc_UserAdmin());

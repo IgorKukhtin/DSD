@@ -38,7 +38,7 @@ BEGIN
      vbCurrencyId_Client:= COALESCE((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_CurrencyClient())
                                   , CASE WHEN zc_Enum_GlobalConst_isTerry() = TRUE THEN zc_Currency_GRN() ELSE zc_Currency_EUR() END
                                    );
-                                   
+
      -- если зависим от измения курса
      IF vbCurrencyId_Client <> zc_Currency_GRN()
      THEN
@@ -70,36 +70,19 @@ BEGIN
      END IF;
 
      -- заливка Сумма к Оплате - !!! грн + EUR !!!
-     CREATE TEMP TABLE _tmp_MI_Master (MovementItemId Integer, SummPriceList TFloat, AmountToPay TFloat, SummPriceList_curr TFloat, AmountToPay_curr TFloat) ON COMMIT DROP;
-     INSERT INTO _tmp_MI_Master (MovementItemId, SummPriceList, AmountToPay, SummPriceList_curr, AmountToPay_curr)
+     CREATE TEMP TABLE _tmp_MI_Master (MovementItemId Integer, SummPriceList TFloat, SummPriceList_curr TFloat, AmountToPay TFloat, AmountToPay_curr TFloat) ON COMMIT DROP;
+     INSERT INTO _tmp_MI_Master (MovementItemId, SummPriceList, SummPriceList_curr, AmountToPay, AmountToPay_curr)
         WITH tmpMI AS (SELECT MovementItem.Id AS MovementItemId
-                            , CASE WHEN vbCurrencyId_Client = zc_Currency_EUR()
-                                   -- EUR -> ГРН
-                                   THEN zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList_curr.ValueData), inCurrencyValueEUR, inParValueEUR))
-                                   -- ГРН
-                                   ELSE zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData)
-                              END AS SummPriceList
+                            , zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPriceList.ValueData, 1)      AS SummPriceList
+                            , zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPriceList_curr.ValueData, 1) AS SummPriceList_curr
 
-                            , CASE WHEN vbCurrencyId_Client = zc_Currency_EUR()
-                                   -- EUR -> ГРН
-                                   THEN zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (zfCalc_SummChangePercent (MovementItem.Amount, MIFloat_OperPriceList_curr.ValueData, MIFloat_ChangePercent.ValueData), inCurrencyValueEUR, inParValueEUR))
-                                   -- ГРН
-                                   ELSE zfCalc_SummChangePercent (MovementItem.Amount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData)
-                              END AS AmountToPay
+                            , zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPriceList.ValueData, 1)
+                            - COALESCE (MIFloat_TotalChangePercent.ValueData, 0)
+                            + COALESCE (MIFloat_SummChangePercent.ValueData, 0)                            AS AmountToPay
 
-                            , CASE WHEN vbCurrencyId_Client = zc_Currency_EUR()
-                                   -- EUR
-                                   THEN zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList_curr.ValueData)
-                                   -- ГРН
-                                   ELSE zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData)
-                              END AS SummPriceList_curr
-
-                            , CASE WHEN vbCurrencyId_Client = zc_Currency_EUR()
-                                   -- EUR
-                                   THEN zfCalc_SummChangePercent (MovementItem.Amount, MIFloat_OperPriceList_curr.ValueData, MIFloat_ChangePercent.ValueData)
-                                   -- ГРН
-                                   ELSE zfCalc_SummChangePercent (MovementItem.Amount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData)
-                              END AS AmountToPay_curr
+                            , zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPriceList_curr.ValueData, 1)
+                            - COALESCE (MIFloat_TotalChangePercent_curr.ValueData, 0)
+                            + COALESCE (MIFloat_SummChangePercent_curr.ValueData, 0)                       AS AmountToPay_curr
 
                        FROM MovementItem
                             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
@@ -108,15 +91,25 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList_curr
                                                         ON MIFloat_OperPriceList_curr.MovementItemId = MovementItem.Id
                                                        AND MIFloat_OperPriceList_curr.DescId         = zc_MIFloat_OperPriceList_curr()
-                            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
-                                                        ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+                            LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
+                                                        ON MIFloat_TotalChangePercent.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()
+                            LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent_curr
+                                                        ON MIFloat_TotalChangePercent_curr.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_TotalChangePercent_curr.DescId         = zc_MIFloat_TotalChangePercent_curr()
+
+                            LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                                                        ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
+                            LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent_curr
+                                                        ON MIFloat_SummChangePercent_curr.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_SummChangePercent_curr.DescId         = zc_MIFloat_SummChangePercent_curr()
                        WHERE MovementItem.MovementId = inMovementId
                          AND MovementItem.DescId     = zc_MI_Master()
                          AND MovementItem.isErased   = FALSE
                       )
         -- результат
-        SELECT tmpMI.MovementItemId, tmpMI.SummPriceList, tmpMI.AmountToPay, tmpMI.SummPriceList_curr, tmpMI.AmountToPay_curr
+        SELECT tmpMI.MovementItemId, tmpMI.SummPriceList, tmpMI.SummPriceList_curr, tmpMI.AmountToPay, tmpMI.AmountToPay_curr
         FROM tmpMI
         WHERE tmpMI.MovementItemId     = inParentId
            OR COALESCE (inParentId, 0) = 0;
@@ -204,18 +197,18 @@ BEGIN
                                                            , inIsPay                   := FALSE                  -- добавить с оплатой
                                                            , ioAmount                  := MovementItem.Amount    -- Количество
                                                            , ioChangePercent           := 0                      -- *** - % Скидки
-                                                      
+
                                                            , ioSummChangePercent       := 0                      -- *** - Дополнительная скидка в продаже ГРН
                                                            , ioSummChangePercent_curr  := 0                      -- *** - Дополнительная скидка в продаже в валюте***
-                                                      
+
                                                            , ioOperPriceList           := MIFloat_OperPriceListReal.ValueData -- *** - Цена факт ГРН
-                                                      
+
                                                            , inBarCode_partner         := ''                         -- Штрих-код поставщика
                                                            , inBarCode_old             := ''                         -- Штрих-код из верхнего грида - old
                                                            , inComment                 := MIString_Comment.ValueData -- примечание
                                                            , inSession                 := inSession                  -- сессия пользователя
                                                             )
-    
+
              FROM MovementItem
                   LEFT JOIN MovementItemFloat AS MIFloat_OperPriceListReal
                                               ON MIFloat_OperPriceListReal.MovementItemId = MovementItem.Id

@@ -62,6 +62,7 @@ type
     bbShowAll: TdxBarButton;
     Currency: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
+    UnitName: TcxGridDBColumn;
   private
     { Private declarations }
   public

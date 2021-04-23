@@ -63,6 +63,7 @@ type
     BankName: TcxGridDBColumn;
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    PriceListName: TcxGridDBColumn;
   private
     { Private declarations }
   public

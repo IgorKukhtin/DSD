@@ -162,6 +162,7 @@ type
     ExportEmailDS: TDataSource;
     spGet_Export_Email: TdsdStoredProc;
     actGet_Export_Email: TdsdExecStoredProc;
+    StartDate_Price: TcxGridDBColumn;
   private
     { Private declarations }
   public

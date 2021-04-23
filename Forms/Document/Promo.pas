@@ -455,6 +455,7 @@ type
     bbUpdatePromoStateKind_Complete: TdxBarButton;
     bbUpdatePromoStateKind_Return: TdxBarButton;
     dxBarSeparator3: TdxBarSeparator;
+    PriceCorr: TcxGridDBColumn;
   private
     { Private declarations }
   public

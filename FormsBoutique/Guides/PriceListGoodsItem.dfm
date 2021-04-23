@@ -25,9 +25,6 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = -8
-    ExplicitTop = 113
-    ExplicitWidth = 519
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -97,7 +94,6 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 502
     object cxLabel1: TcxLabel
       Left = 4
       Top = 9
@@ -253,6 +249,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       Category = 0
       Hint = '       '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbInsert: TdxBarButton
       Action = actInsert
@@ -402,7 +399,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         end
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'StartDate'
           DataType = ftDateTime
@@ -411,7 +408,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'EndDate'
           DataType = ftDateTime
@@ -545,10 +542,12 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 336
     Top = 168

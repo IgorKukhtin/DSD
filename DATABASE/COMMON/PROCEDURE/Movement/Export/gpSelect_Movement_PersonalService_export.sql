@@ -206,7 +206,10 @@ BEGIN
 		   OR (char_length(r.personalname)=0) THEN
 		   BEGIN
 			e := 'Неверные/неполные данные: Карта - ' || r.card || ', ФИО - ' || r.personalname || ', ИНН - ' || r.inn || ', Сумма - ' || r.SummCardRecalc || CHR(13) || CHR(10);
-			er := concat(er, e);
+			IF COALESCE (er, '') = ''
+			THEN
+			    er := concat(er, e);
+			END IF;
 		   END;
 		ELSE
 		BEGIN

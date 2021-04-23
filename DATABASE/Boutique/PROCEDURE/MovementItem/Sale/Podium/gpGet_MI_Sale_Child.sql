@@ -117,6 +117,7 @@ BEGIN
                + COALESCE (MIFloat_SummChangePercent.ValueData, 0)
                 ) AS AmountToPay_GRN
 
+            -- сумма к оплате EUR - учитывается ТОЛЬКО скидка %
           , SUM (zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPriceList_curr.ValueData, 1)
                - COALESCE (MIFloat_TotalChangePercent_curr.ValueData, 0)
                + COALESCE (MIFloat_SummChangePercent_curr.ValueData, 0)

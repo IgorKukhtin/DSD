@@ -58,7 +58,15 @@ object Unit_ObjectForm: TUnit_ObjectForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 339
+        Width = 200
+      end
+      object PriceListName: TcxGridDBColumn
+        Caption = #1055#1088#1072#1081#1089
+        DataBinding.FieldName = 'PriceListName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 150
       end
       object isOLAP: TcxGridDBColumn
         Caption = #1044#1083#1103' '#1054#1090#1095#1077#1090#1072
@@ -109,6 +117,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
       object DiscountTax: TcxGridDBColumn
         Caption = '% '#1089#1082#1080#1076#1082#1080' OUTLET'
         DataBinding.FieldName = 'DiscountTax'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -118,6 +127,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
       object JuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -127,6 +137,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
       object ParentName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'ParentName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -136,6 +147,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
       object ChildName: TcxGridDBColumn
         Caption = #1057#1082#1083#1072#1076
         DataBinding.FieldName = 'ChildName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -145,6 +157,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
       object BankAccountName: TcxGridDBColumn
         Caption = #1053#1086#1084#1077#1088' '#1089#1095#1077#1090#1072
         DataBinding.FieldName = 'BankAccountName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -154,6 +167,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
       object BankName: TcxGridDBColumn
         Caption = #1041#1072#1085#1082
         DataBinding.FieldName = 'BankName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -163,6 +177,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
       object AccountDirectionName: TcxGridDBColumn
         Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'AccountDirectionName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -252,6 +267,10 @@ object Unit_ObjectForm: TUnit_ObjectForm
         item
           Visible = True
           ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -354,6 +373,21 @@ object Unit_ObjectForm: TUnit_ObjectForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceListId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PriceListId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceListName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PriceListName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -500,10 +534,13 @@ object Unit_ObjectForm: TUnit_ObjectForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 104
     Top = 248
   end

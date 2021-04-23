@@ -33,7 +33,7 @@ type
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
     dsdFormClose: TdsdFormClose;
     cxPropertiesStore: TcxPropertiesStore;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel18: TcxLabel;
     ceCurrencyValue_USD: TcxCurrencyEdit;
     ceAmountGRN: TcxCurrencyEdit;
@@ -83,6 +83,8 @@ type
     cxEditRepositoryCurrency_1GRN: TcxEditRepositoryCurrencyItem;
     cxEditRepositoryCurrency_2EUR: TcxEditRepositoryCurrencyItem;
     dsdProperties—hange_AmountDiscount_curr: TdsdProperties—hange;
+    ceAmountToPay_GRN: TcxCurrencyEdit;
+    ceAmountToPay_EUR: TcxCurrencyEdit;
   private
     { Private declarations }
   public

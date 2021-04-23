@@ -23,6 +23,7 @@ RETURNS TABLE (
       , PriceSale           TFloat --Цена на полке
       , PriceWithOutVAT     Numeric (16,8) --Цена отгрузки без учета НДС, с учетом скидки, грн
       , PriceWithVAT        Numeric (16,8) --Цена отгрузки с учетом НДС, с учетом скидки, грн
+      , PriceCorr           TFloat --На сколько корректируется Цена (из-за округлений)
       , CountForPrice       TFloat --Цена отгрузки с учетом НДС, с учетом скидки, грн
       , AmountReal          TFloat --Объем продаж в аналогичный период, кг
       , AmountRealWeight    TFloat --Объем продаж в аналогичный период, кг Вес
@@ -146,6 +147,10 @@ BEGIN
              , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN MIFloat_PriceWithOutVAT.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_PriceWithOutVAT.ValueData END AS Numeric (16, 8)) AS PriceWithOutVAT
                --Цена отгрузки с учетом НДС, с учетом скидки, грн
              , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN MIFloat_PriceWithVAT.ValueData    / MIFloat_CountForPrice.ValueData ELSE MIFloat_PriceWithVAT.ValueData    END AS Numeric (16, 8)) AS PriceWithVAT
+
+                -- На сколько корректируется Цена (из-за округлений)
+             ,  MIFloat_PriceCorr.ValueData AS PriceCorr
+             
                -- CountForPrice
              , MIFloat_CountForPrice.ValueData        AS CountForPrice
 
@@ -207,6 +212,9 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_Price
                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
+             LEFT JOIN MovementItemFloat AS MIFloat_PriceCorr
+                                         ON MIFloat_PriceCorr.MovementItemId = MovementItem.Id
+                                        AND MIFloat_PriceCorr.DescId = zc_MIFloat_PriceCorr()
              LEFT JOIN MovementItemFloat AS MIFloat_PriceWithOutVAT
                                          ON MIFloat_PriceWithOutVAT.MovementItemId = MovementItem.Id
                                         AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()

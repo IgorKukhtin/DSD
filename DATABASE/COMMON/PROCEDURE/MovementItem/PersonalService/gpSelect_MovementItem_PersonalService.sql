@@ -195,6 +195,23 @@ BEGIN
                            SELECT vbUserId WHERE vbUserId = 2573318
                           )
           
+            , tmpPersonal_all AS (SELECT View_Personal.*
+                                  FROM (SELECT UnitId_PersonalService FROM Object_RoleAccessKeyGuide_View WHERE UnitId_PersonalService <> 0 AND UserId = vbUserId AND inShowAll = TRUE
+                                        UNION
+                                         -- Админ видит ВСЕХ
+                                         SELECT Object.Id AS UnitId_PersonalService FROM Object WHERE Object.DescId = zc_Object_Unit() AND inShowAll = TRUE
+                                                                                                  AND EXISTS (SELECT 1 FROM tmpUserAll)
+                                        ) AS View_RoleAccessKeyGuide
+                                        INNER JOIN Object_Personal_View AS View_Personal ON View_Personal.UnitId = View_RoleAccessKeyGuide.UnitId_PersonalService
+       
+                                 UNION
+                                  SELECT View_Personal.*
+                                  FROM tmpPersonalServiceList_check
+                                       INNER JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList_all
+                                                             ON ObjectLink_Personal_PersonalServiceList_all.ChildObjectId = tmpPersonalServiceList_check.PersonalServiceListId
+                                                            AND ObjectLink_Personal_PersonalServiceList_all.DescId        = zc_ObjectLink_Personal_PersonalServiceList()
+                                       INNER JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = ObjectLink_Personal_PersonalServiceList_all.ObjectId
+                                 )
           , tmpPersonal AS (SELECT 0 AS MovementItemId
                                  , 0 AS Amount
                                  , View_Personal.PersonalId
@@ -205,27 +222,7 @@ BEGIN
                                  , 0     AS MemberId
                                  , ObjectLink_Personal_PersonalServiceList.ChildObjectId AS PersonalServiceListId -- !!!берем это поле т.к. есть ограничение по БН!!!
                                  , FALSE AS isErased
-                          /*FROM (SELECT UnitId_PersonalService FROM Object_RoleAccessKeyGuide_View WHERE UnitId_PersonalService <> 0 AND UserId = vbUserId AND inShowAll = TRUE
-                                 UNION
-                                  -- Админ видит ВСЕХ
-                                  SELECT Object.Id AS UnitId_PersonalService FROM Object WHERE Object.DescId = zc_Object_Unit() AND inShowAll = TRUE
-                                                                                           AND EXISTS (SELECT 1 FROM tmpUserAll)
-                                 ) AS View_RoleAccessKeyGuide
-                                 INNER JOIN Object_Personal_View AS View_Personal ON View_Personal.UnitId = View_RoleAccessKeyGuide.UnitId_PersonalService
-
-                                 LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
-                                                      ON ObjectLink_Personal_PersonalServiceList.ObjectId = View_Personal.PersonalId
-                                                     AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
-                                                     AND vbIsSummCardRecalc = TRUE -- !!!т.е. если это БН!!!
-                                                    */
-
-                                                                                 -- AND View_Personal.isErased = FALSE
-                            FROM tmpPersonalServiceList_check
-                                 INNER JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList_all
-                                                       ON ObjectLink_Personal_PersonalServiceList_all.ChildObjectId = tmpPersonalServiceList_check.PersonalServiceListId
-                                                      AND ObjectLink_Personal_PersonalServiceList_all.DescId        = zc_ObjectLink_Personal_PersonalServiceList()
-                                 INNER JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = ObjectLink_Personal_PersonalServiceList_all.ObjectId
-
+                            FROM tmpPersonal_all AS View_Personal
                                  LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                                       ON ObjectLink_Personal_PersonalServiceList.ObjectId = View_Personal.PersonalId
                                                      AND ObjectLink_Personal_PersonalServiceList.DescId   = zc_ObjectLink_Personal_PersonalServiceList()
@@ -236,6 +233,7 @@ BEGIN
                                                 AND tmpMI.PositionId = View_Personal.PositionId
 
                             WHERE tmpMI.PersonalId IS NULL
+                              AND inShowAll = TRUE
                            )
           , tmpAll AS (SELECT tmpMI.MovementItemId, tmpMI.Amount, tmpMI.PersonalId, tmpMI.UnitId, tmpMI.PositionId, tmpMI.InfoMoneyId, tmpMI.MemberId_Personal, tmpMI.MemberId , tmpMI.PersonalServiceListId, tmpMI.isErased FROM tmpMI
                       UNION ALL
@@ -555,7 +553,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_PersonalService (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

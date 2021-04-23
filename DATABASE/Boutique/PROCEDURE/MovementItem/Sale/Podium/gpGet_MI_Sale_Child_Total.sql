@@ -96,6 +96,9 @@ BEGIN
                           , tmp2.AmountDiscount_GRN
                             -- Сумма оплаты - в ГРН
                           , tmp2.AmountPay_GRN
+                          
+                     --     , CASE WHEN tmp2.AmountDiff < 0
+                       --               THEN 
                      FROM tmp2
                     )
 

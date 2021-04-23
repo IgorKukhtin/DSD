@@ -445,8 +445,10 @@ object PriceListItemForm: TPriceListItemForm
       Properties.Buttons = <
         item
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 1
       Width = 180
     end
@@ -475,8 +477,10 @@ object PriceListItemForm: TPriceListItemForm
       Properties.Buttons = <
         item
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 5
       Width = 180
     end
@@ -1013,7 +1017,7 @@ object PriceListItemForm: TPriceListItemForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = edOperDate
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -1588,6 +1592,7 @@ object PriceListItemForm: TPriceListItemForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <
       item
@@ -1617,10 +1622,10 @@ object PriceListItemForm: TPriceListItemForm
     KeyField = 'Id'
     LookupControl = edPriceList
     Key = '0'
-    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.Value = 'TPriceListForm123'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPriceListForm'
+    FormName = 'TPriceListForm123'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -1635,6 +1640,23 @@ object PriceListItemForm: TPriceListItemForm
         Name = 'TextValue'
         Value = ''
         Component = GuidesPriceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1674,7 +1696,7 @@ object PriceListItemForm: TPriceListItemForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -1698,7 +1720,7 @@ object PriceListItemForm: TPriceListItemForm
       end
       item
         Name = 'outStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'StartDate'
         DataType = ftDateTime
@@ -1706,7 +1728,7 @@ object PriceListItemForm: TPriceListItemForm
       end
       item
         Name = 'outEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'EndDate'
         DataType = ftDateTime
@@ -1780,10 +1802,10 @@ object PriceListItemForm: TPriceListItemForm
     KeyField = 'Id'
     LookupControl = edUnit
     Key = '0'
-    FormNameParam.Value = 'TUnitForm'
+    FormNameParam.Value = 'TUnitForm123'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnitForm'
+    FormName = 'TUnitForm123'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -1801,6 +1823,21 @@ object PriceListItemForm: TPriceListItemForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListId'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListName'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 392
@@ -1949,7 +1986,7 @@ object PriceListItemForm: TPriceListItemForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -1983,7 +2020,7 @@ object PriceListItemForm: TPriceListItemForm
     Params = <
       item
         Name = 'gpGet_Current_Date'
-        Value = ''
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','

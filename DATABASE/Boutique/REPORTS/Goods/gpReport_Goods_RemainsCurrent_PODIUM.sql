@@ -65,6 +65,7 @@ RETURNS TABLE (PartionId            Integer
              , OperPriceList_curr_doc  TFloat -- *Цена по прайсу в валюте по курсу документа  
              , PriceJur                TFloat -- Цена вх. без ск. в валюте (информативно)
              , OperPriceList_first     TFloat -- первая цена по прайсу (информативно)
+             , StartDate_Price         TDateTime
              
              , OperPriceList_disc           TFloat -- Цена по прайсу в ГРН по курсу на тек дату c учетом Сезонной скидки
              , OperPriceList_doc_disc       TFloat -- Цена по прайсу в ГРН по курсу документа c учетом Сезонной скидки
@@ -198,6 +199,7 @@ BEGIN
                            , tmp.GoodsId
                            , tmp.CurrencyId_pl
                            , tmp.PriceListId
+                           , MAX (CASE WHEN tmp.EndDate = zc_DateEnd() THEN tmp.StartDate END)               AS StartDate_Price
                            , MAX (CASE WHEN tmp.EndDate = zc_DateEnd() THEN tmp.OperPriceList ELSE 0 END)    AS OperPriceList
                            , MAX (CASE WHEN tmp.StartDate = tmp.FirstDate THEN tmp.OperPriceList ELSE 0 END) AS OperPriceList_first
                       FROM (SELECT _tmpUnit.UnitId                                  AS UnitId
@@ -273,6 +275,7 @@ BEGIN
                            , tmpPriceList.OperPriceList_first                                         AS OperPriceList_first
                            , COALESCE (tmpPriceList.CurrencyId_pl, zc_Currency_Basis())               AS CurrencyId_pl
                            , COALESCE (tmpPriceList.PriceListId, zc_PriceList_Basis())                AS PriceListId
+                           , tmpPriceList.StartDate_Price                                             AS StartDate_Price
                            
                            -- , CASE WHEN Container.WhereObjectId = Object_PartionGoods.UnitId THEN Object_PartionGoods.Amount ELSE 0 END AS Amount_in
                            , Object_PartionGoods.Amount     AS Amount_in
@@ -349,6 +352,7 @@ BEGIN
                               , tmpContainer.PriceListId
                               , tmpContainer.OperPriceList
                               , tmpContainer.OperPriceList_first
+                              , tmpContainer.StartDate_Price
                               , tmpContainer.UnitId_in
 
                                 --  только для Ord = 1
@@ -435,6 +439,7 @@ BEGIN
                                 , tmpContainer.PeriodYear
                                 , tmpContainer.OperPriceList
                                 , tmpContainer.OperPriceList_first
+                                , tmpContainer.StartDate_Price
                                 , tmpContainer.UnitId_in
                                 , MS_Comment.ValueData
                                 , MF_ChangePercent.ValueData
@@ -480,6 +485,9 @@ BEGIN
                           , tmpData_All.CurrencyId_pl
                           , tmpData_All.PriceListId
                           
+
+                            -- Дата Цена
+                          , tmpData_All.StartDate_Price     AS StartDate_Price
                             -- Цена прайс
                           , tmpData_All.OperPriceList       AS OperPriceList_orig
                            -- первая цена товара (инф.) 
@@ -558,6 +566,7 @@ BEGIN
                             , tmpData_All.PriceListId
                             , tmpData_All.OperPriceList
                             , tmpData_All.OperPriceList_first
+                            , tmpData_All.StartDate_Price
                             , tmpData_All.UnitId_in
                             , tmpData_All.Comment_in
                             , tmpData_All.ChangePercent_in
@@ -746,8 +755,10 @@ BEGIN
                   ELSE 0
              END :: TFloat AS PriceJur
 
-             -- первая цена товара (инф.)
+              -- первая цена товара (инф.)
            , tmpData.OperPriceList_first :: TFloat
+           
+           , tmpData.StartDate_Price :: TDateTime
 
              --c учетом сезонной скидки
              -- Цена по прайсу в ГРН  тек.курс

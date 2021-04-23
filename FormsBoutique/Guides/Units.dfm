@@ -49,7 +49,7 @@ object UnitForm: TUnitForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 90
+        Width = 55
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -57,7 +57,14 @@ object UnitForm: TUnitForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 339
+        Width = 200
+      end
+      object PriceListName: TcxGridDBColumn
+        Caption = #1055#1088#1072#1081#1089' '#1083#1080#1089#1090
+        DataBinding.FieldName = 'PriceListName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 112
       end
       object PrintName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1088#1080' '#1087#1077#1095#1072#1090#1080
@@ -96,6 +103,7 @@ object UnitForm: TUnitForm
       object DiscountTax: TcxGridDBColumn
         Caption = '% '#1089#1082#1080#1076#1082#1080' OUTLET'
         DataBinding.FieldName = 'DiscountTax'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -104,6 +112,7 @@ object UnitForm: TUnitForm
       object JuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -112,6 +121,7 @@ object UnitForm: TUnitForm
       object ParentName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'ParentName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -120,6 +130,7 @@ object UnitForm: TUnitForm
       object ChildName: TcxGridDBColumn
         Caption = #1057#1082#1083#1072#1076
         DataBinding.FieldName = 'ChildName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -128,6 +139,7 @@ object UnitForm: TUnitForm
       object BankAccountName: TcxGridDBColumn
         Caption = #1053#1086#1084#1077#1088' '#1089#1095#1077#1090#1072
         DataBinding.FieldName = 'BankAccountName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -136,6 +148,7 @@ object UnitForm: TUnitForm
       object BankName: TcxGridDBColumn
         Caption = #1041#1072#1085#1082
         DataBinding.FieldName = 'BankName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -144,6 +157,7 @@ object UnitForm: TUnitForm
       object AccountDirectionName: TcxGridDBColumn
         Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'AccountDirectionName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -152,30 +166,16 @@ object UnitForm: TUnitForm
       object GoodsGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsGroupName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
       end
-      object PriceListName: TcxGridDBColumn
-        Caption = #1055#1088#1072#1081#1089' '#1083#1080#1089#1090
-        DataBinding.FieldName = 'PriceListName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 112
-      end
-      object Erased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        PropertiesClassName = 'TcxCheckBoxProperties'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 78
-      end
       object isPartnerBarCode: TcxGridDBColumn
         Caption = #1064'/'#1050' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
         DataBinding.FieldName = 'isPartnerBarCode'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -184,6 +184,7 @@ object UnitForm: TUnitForm
       object GoodsTagName: TcxGridDBColumn
         Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsTagName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072
@@ -193,6 +194,7 @@ object UnitForm: TUnitForm
       object PeriodTagName: TcxGridDBColumn
         Caption = #1057#1077#1079#1086#1085
         DataBinding.FieldName = 'PeriodTagName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1057#1077#1079#1086#1085' ('#1076#1083#1103' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1090#1086#1074'.)'
@@ -204,12 +206,22 @@ object UnitForm: TUnitForm
         DataBinding.FieldName = 'PeriodYearTag'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = #1043#1086#1076' ('#1076#1083#1103' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1090#1086#1074'.)'
         Options.Editing = False
         Width = 120
+      end
+      object Erased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 78
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -302,6 +314,10 @@ object UnitForm: TUnitForm
         item
           Visible = True
           ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -501,6 +517,21 @@ object UnitForm: TUnitForm
           ComponentItem = 'Name'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceListId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PriceListId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceListName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PriceListName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -635,10 +666,13 @@ object UnitForm: TUnitForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 104
     Top = 248
   end
