@@ -58,7 +58,6 @@ BEGIN
                                                                                           , inSession    := inUserId :: TVarChar
                                                                                            ) AS tmp)
                             , 0);
-                                                                                                                                                                                                                             
      END IF;
 
 
@@ -108,7 +107,7 @@ BEGIN
         THEN
               -- меняется значение - для Тенедер
              IF outPricePromo > 0 OR inUserId = 5
-             THEN 
+             THEN
                  ioPrice:= outPricePromo;
              END IF;
 
@@ -116,7 +115,7 @@ BEGIN
         THEN
             -- меняется значение
             IF outPricePromo > 0 OR inUserId = 5
-            THEN 
+            THEN
                 ioPrice:= outPricePromo;
                 ioCountForPrice:= vbCountForPricePromo;
             END IF;
@@ -127,7 +126,7 @@ BEGIN
                  THEN
                      -- меняется значение
                      IF outPricePromo > 0 OR inUserId = 5
-                     THEN 
+                     THEN
                          ioPrice:= outPricePromo;
                      END IF;
                  ELSE
@@ -135,7 +134,26 @@ BEGIN
                  END IF;
              END IF;
         END IF;
-     -- ELSE !!!обратно из прайса пока не реализовал!!!!
+
+     ELSE -- !!!обратно из прайса + проверка!!!!
+
+          -- !!!замена!!!
+          ioPrice:= lpGet_ObjectHistory_Price_check (inMovementId            := inMovementId
+                                                   , inMovementItemId        := ioId
+                                                   , inContractId            := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
+                                                   , inPartnerId             := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
+                                                   , inMovementDescId        := zc_Movement_Sale()
+                                                   , inOperDate_order        := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+                                                   , inOperDatePartner       := NULL
+                                                   , inDayPrior_PriceReturn  := NULL
+                                                   , inIsPrior               := FALSE -- !!!отказались от старых цен!!!
+                                                   , inOperDatePartner_order :=(SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner()) 
+                                                   , inGoodsId               := inGoodsId
+                                                   , inGoodsKindId           := inGoodsKindId
+                                                   , inPrice                 := ioPrice
+                                                   , inCountForPrice         := 1
+                                                   , inUserId                := inUserId
+                                                    );
      END IF;
 
 
@@ -200,7 +218,7 @@ $BODY$
 -- SELECT * FROM lpInsertUpdate_MovementItem_OrderExternal (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
 
 /*
--- !!!!!!!!!!!! - 0 - !!!!!!!!! 
+-- !!!!!!!!!!!! - 0 - !!!!!!!!!
 select lpInsertUpdate_MovementFloat_TotalSumm  (tmp.Id)
 from (
 select distinct Movement.*
@@ -213,15 +231,15 @@ from Movement
                                                              ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                                             AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
 
-where Movement.DescId = zc_Movement_OrderExternal() 
--- and Movement.Id = 4111493 
+where Movement.DescId = zc_Movement_OrderExternal()
+-- and Movement.Id = 4111493
   and Movement.OperDate between '01.07.2016' and '01.10.2016'
   and coalesce (MIFloat_ChangePercent.ValueData, 0)  = 0
 ) as tmp
 
 
 
--- !!!!!!!!!!!! - 1 - !!!!!!!!! 
+-- !!!!!!!!!!!! - 1 - !!!!!!!!!
 select Movement.*
 , MIFloat_ChangePercent.*
 , MF.ValueData
@@ -235,13 +253,13 @@ from Movement
                                                              ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                                             AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
 
-where Movement.DescId = zc_Movement_OrderExternal() 
--- and Movement.Id = 4111493 
+where Movement.DescId = zc_Movement_OrderExternal()
+-- and Movement.Id = 4111493
   and Movement.OperDate between '01.07.2016' and '01.10.2016'
 and coalesce (MIFloat_ChangePercent.ValueData, 0) <> coalesce (MF.ValueData, 0)
 
 
--- !!!!!!!!!!!! - 2 - !!!!!!!!! 
+-- !!!!!!!!!!!! - 2 - !!!!!!!!!
 select Movement.*
 --     , MovementItem.ObjectId AS GoodsId
 --       , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), MovementItem.Id, 0)
@@ -286,7 +304,7 @@ from Movement
                                                             AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
 
 where Movement.DescId = zc_Movement_OrderExternal()
--- and Movement.Id = 4111493 
+-- and Movement.Id = 4111493
   and Movement.OperDate between '01.09.2016' and '01.12.2016'
   and COALESCE (MIFloat_ChangePercent.ValueData, 0) = 0
   and coalesce (MILinkObject_GoodsKind_sale.ObjectId , 0) = coalesce (MILinkObject_GoodsKind.ObjectId , 0)

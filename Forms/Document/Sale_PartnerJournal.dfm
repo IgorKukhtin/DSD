@@ -6,6 +6,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitLeft = -335
+  ExplicitTop = -113
   ExplicitWidth = 1124
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -17,17 +18,17 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     TabOrder = 3
     ExplicitTop = 76
     ExplicitWidth = 1108
-    ExplicitHeight = 459
+    ExplicitHeight = 374
     ClientRectBottom = 374
     ClientRectRight = 1108
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1108
-      ExplicitHeight = 459
+      ExplicitHeight = 374
       inherited cxGrid: TcxGrid
         Width = 1108
         Height = 374
         ExplicitWidth = 1108
-        ExplicitHeight = 459
+        ExplicitHeight = 374
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -805,10 +806,9 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     Align = alBottom
     TabOrder = 6
     Visible = False
-    ExplicitLeft = -258
-    ExplicitWidth = 1366
     object ExportXmlGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = ExportDS
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>

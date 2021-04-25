@@ -193,38 +193,81 @@ BEGIN
                  )
           
 
-       SELECT ('          Разом кг   ' || tmpData.TotalCountKg) :: TBlob
+       SELECT tmp.Sign
+       FROM (
+--     SELECT ('          Разом кг   ' || tmpData.TotalCountKg) :: TBlob
+--     FROM tmpData
+-- UNION ALL
+       SELECT ('Вага (кг): ' || zfConvert_FloatToString (tmpData.TotalCountKg)
+            || '                              '
+            || 'Разом сума без ПДВ:'
+            || '  '
+            || zfConvert_FloatToString (tmpData.TotalSummMVAT)
+            || '  '
+              ) :: TBlob AS Sign
+            , 1 AS Num
        FROM tmpData
    UNION ALL
-       SELECT ('                                                 Разом сума без ПДВ:   '  || tmpData.TotalSummMVAT) :: TBlob
+       SELECT ('Сума ПДВ:'
+            || '  '
+            || zfConvert_FloatToString (COALESCE (tmpData.TotalSummPVAT,0) - COALESCE (tmpData.TotalSummMVAT,0))
+            || '  '
+              ) :: TBlob
+            , 2 AS Num
        FROM tmpData
    UNION ALL
-       SELECT ('                                                           Сума ПДВ:   ' || ( COALESCE (tmpData.TotalSummPVAT,0) - COALESCE (tmpData.TotalSummMVAT,0))) :: TBlob
+       SELECT ('Всього із ПДВ: '
+            || '  '
+            || zfConvert_FloatToString (tmpData.TotalSummPVAT)
+            || '  '
+              ) :: TBlob
+            , 3 AS Num
        FROM tmpData
-   UNION ALL
-       SELECT ('                                                      Всього із ПДВ:   ' || tmpData.TotalSummPVAT) :: TBlob
-       FROM tmpData
-   UNION ALL
-       SELECT ('') :: TBlob
 
    UNION ALL
-       SELECT ('Всього найменувань '||vbCount|| ', на суму ' || tmpData.TotalSummPVAT||' грн.' ) :: TBlob
+       SELECT '' :: TBlob
+            , 4 AS Num
+
+   UNION ALL
+       SELECT ('Всього найменувань '||zfConvert_FloatToString (vbCount)|| ', на суму ' || zfConvert_FloatToString (tmpData.TotalSummPVAT) ||' грн.' ) :: TBlob
+            , 5 AS Num
        FROM tmpData
+
    UNION ALL
        SELECT ('_______________________________________________________________________________________________' ) :: TBlob
+            , 10 AS Num
+
    UNION ALL
-       SELECT ('Від постачальника : комірник ' || tmpData.StoreKeeper||'                       Отримав:' ) :: TBlob
+       SELECT '' :: TBlob
+            , 11 AS Num
        FROM tmpData
+
    UNION ALL
-       SELECT ('') :: TBlob
+     --SELECT ('     Від постачальника : комірник ' || tmpData.StoreKeeper||'                       Отримав:' ) :: TBlob
+       SELECT ('                   Від постачальника                                                              Отримав:' ) :: TBlob
+            , 12 AS Num
+       FROM tmpData
+
    UNION ALL
-       SELECT ('________________________________                           _____________________________' ) :: TBlob
+       SELECT '' :: TBlob
+            , 13 AS Num
    UNION ALL
-       SELECT ('') :: TBlob
+       SELECT ('     ________________________________                           _____________________________' ) :: TBlob
+            , 14 AS Num
+
    UNION ALL
-       SELECT ('* Відповідальний за здійснення господарської' ) :: TBlob
+       SELECT '' :: TBlob
+            , 15 AS Num
    UNION ALL
-       SELECT ('операції і правильність її оформлення                      За довіреністю №          від') :: TBlob
+       SELECT ('         * Відповідальний за здійснення господарської' ) :: TBlob
+            , 21 AS Num
+
+   UNION ALL
+       SELECT ('             операції і правильність її оформлення                      За довіреністю №          від') :: TBlob
+            , 22 AS Num
+
+      ) AS tmp
+      ORDER BY tmp.Num
 
        ;
 
