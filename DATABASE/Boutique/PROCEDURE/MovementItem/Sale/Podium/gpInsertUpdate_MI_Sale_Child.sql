@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Sale_Child(
     IN inAmountUSD             TFloat    , -- сумма оплаты
     IN inAmountEUR             TFloat    , -- сумма оплаты
     IN inAmountCard            TFloat    , -- сумма оплаты
-    IN inAmountDiscount        TFloat    , -- Дополнительная скидка в продаже !!! EUR or грн !!!
+    IN inAmountDiscount        TFloat    , -- Дополнительная скидка в продаже !!! ГРН !!!
     IN inCurrencyValueUSD      TFloat    , --
     IN inParValueUSD           TFloat    , --
     IN inCurrencyValueEUR      TFloat    , --
@@ -73,17 +73,31 @@ BEGIN
      CREATE TEMP TABLE _tmp_MI_Master (MovementItemId Integer, SummPriceList TFloat, SummPriceList_curr TFloat, AmountToPay TFloat, AmountToPay_curr TFloat) ON COMMIT DROP;
      INSERT INTO _tmp_MI_Master (MovementItemId, SummPriceList, SummPriceList_curr, AmountToPay, AmountToPay_curr)
         WITH tmpMI AS (SELECT MovementItem.Id AS MovementItemId
-                            , zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPriceList.ValueData, 1)      AS SummPriceList
-                            , zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPriceList_curr.ValueData, 1) AS SummPriceList_curr
+                              -- SummPriceList
+                            , zfCalc_SummIn (MovementItem.Amount, CASE WHEN vbCurrencyId_Client <> zc_Currency_GRN()
+                                                                            THEN zfCalc_CurrencyFrom (MIFloat_OperPriceList_curr.ValueData, inCurrencyValueEUR, 1)
+                                                                       ELSE MIFloat_OperPriceList.ValueData
+                                                                  END, 1) AS SummPriceList
+                              -- SummPriceList_curr
+                            , zfCalc_SummIn (MovementItem.Amount, CASE WHEN vbCurrencyId_Client <> zc_Currency_GRN()
+                                                                            THEN MIFloat_OperPriceList_curr.ValueData
+                                                                       ELSE zfCalc_CurrencyTo (MIFloat_OperPriceList.ValueData, inCurrencyValueEUR, 1)
+                                                                  END, 1) AS SummPriceList_curr
 
-                            , zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPriceList.ValueData, 1)
-                            - COALESCE (MIFloat_TotalChangePercent.ValueData, 0)
-                            + COALESCE (MIFloat_SummChangePercent.ValueData, 0)                            AS AmountToPay
-
-                            , zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPriceList_curr.ValueData, 1)
-                            - COALESCE (MIFloat_TotalChangePercent_curr.ValueData, 0)
-                            + COALESCE (MIFloat_SummChangePercent_curr.ValueData, 0)                       AS AmountToPay_curr
-
+                              -- AmountToPay
+                            , zfCalc_SummChangePercent (MovementItem.Amount
+                                                      , CASE WHEN vbCurrencyId_Client <> zc_Currency_GRN()
+                                                                  THEN zfCalc_CurrencyFrom (MIFloat_OperPriceList_curr.ValueData, inCurrencyValueEUR, 1)
+                                                             ELSE MIFloat_OperPriceList.ValueData
+                                                        END
+                                                      , MIFloat_ChangePercent.ValueData) AS AmountToPay
+                              -- AmountToPay_curr
+                            , zfCalc_SummChangePercent (MovementItem.Amount
+                                                      , CASE WHEN vbCurrencyId_Client <> zc_Currency_GRN()
+                                                                  THEN MIFloat_OperPriceList_curr.ValueData
+                                                             ELSE zfCalc_CurrencyTo (MIFloat_OperPriceList.ValueData, inCurrencyValueEUR, 1)
+                                                        END
+                                                      , MIFloat_ChangePercent.ValueData) AS AmountToPay_curr
                        FROM MovementItem
                             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                         ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
@@ -91,19 +105,16 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList_curr
                                                         ON MIFloat_OperPriceList_curr.MovementItemId = MovementItem.Id
                                                        AND MIFloat_OperPriceList_curr.DescId         = zc_MIFloat_OperPriceList_curr()
-                            LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
-                                                        ON MIFloat_TotalChangePercent.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()
-                            LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent_curr
-                                                        ON MIFloat_TotalChangePercent_curr.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_TotalChangePercent_curr.DescId         = zc_MIFloat_TotalChangePercent_curr()
+                            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                        ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
 
-                            LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                          /*LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
                                                         ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
                                                        AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
                             LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent_curr
                                                         ON MIFloat_SummChangePercent_curr.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_SummChangePercent_curr.DescId         = zc_MIFloat_SummChangePercent_curr()
+                                                       AND MIFloat_SummChangePercent_curr.DescId         = zc_MIFloat_SummChangePercent_curr()*/
                        WHERE MovementItem.MovementId = inMovementId
                          AND MovementItem.DescId     = zc_MI_Master()
                          AND MovementItem.isErased   = FALSE
@@ -124,7 +135,7 @@ BEGIN
                                                   , inAmountUSD         := inAmountUSD         -- сумма оплаты
                                                   , inAmountEUR         := inAmountEUR         -- сумма оплаты
                                                   , inAmountCard        := inAmountCard        -- сумма оплаты
-                                                  , inAmountDiscount    := inAmountDiscount    -- Дополнительная скидка  !!! EUR or грн !!!
+                                                  , inAmountDiscount_GRN:= inAmountDiscount    -- Дополнительная скидка  !!! ГРН !!!
                                                   , inCurrencyValueUSD  := inCurrencyValueUSD
                                                   , inParValueUSD       := inParValueUSD
                                                   , inCurrencyValueEUR  := inCurrencyValueEUR

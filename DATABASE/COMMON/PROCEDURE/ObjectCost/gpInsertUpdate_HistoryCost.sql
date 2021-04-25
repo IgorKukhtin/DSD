@@ -636,6 +636,8 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
      
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (3231332, 3234249); -- 10.2020
 
+--     DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (3502863); -- 04.2021
+
 
      IF inBranchId = 0 -- OR 1 = 1
      THEN
@@ -1559,4 +1561,4 @@ SELECT * FROM HistoryCost WHERE ('01.03.2017' BETWEEN StartDate AND EndDate) and
 -- SELECT * FROM  ObjectProtocol WHERE ObjectId = zfCalc_UserAdmin() :: Integer ORDER BY ID DESC LIMIT 100
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.03.2020', inEndDate:= '01.03.2020', inBranchId:= 0, inItearationCount:= 10, inInsert:= -1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (2459386, 2459377) -- ORDER BY ABS (Price) DESC -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.09.2020', inEndDate:= '31.09.2020', inBranchId:= 301310, inItearationCount:= 10, inInsert:= 12345, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (2459386, 2459377) -- ORDER BY ABS (Price) DESC -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.11.2020', inEndDate:= '30.11.2020', inBranchId:= 0, inItearationCount:= 200, inInsert:= -1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (769262) -- ORDER BY ABS (Price) DESC -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.04.2021', inEndDate:= '23.04.2021', inBranchId:= 0, inItearationCount:= 200, inInsert:= -1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (769262) -- ORDER BY ABS (Price) DESC -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext

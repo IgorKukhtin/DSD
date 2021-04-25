@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child_Total(
     IN inAmountEUR         TFloat   , --
     IN inAmountCard        TFloat   , --
     IN inAmountDiscount    TFloat   , -- всегда ГРН
-    IN inCurrencyId_Client Integer  , -- 
+    IN inCurrencyId_Client Integer  , --
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (-- Информативно - для Диалога
@@ -30,10 +30,6 @@ RETURNS TABLE (-- Информативно - для Диалога
                -- сдача, ГРН
              , AmountDiff          TFloat
 
-               -- корректируем копейки - списанием
-             , AmountDiscount      TFloat
-             , AmountDiscount_curr TFloat
-
                -- AmountPay - для отладки
              , AmountPay            TFloat
              , AmountPay_curr       TFloat
@@ -48,108 +44,78 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-       WITH tmp1 AS (SELECT -- Сумма оплаты - в ГРН
-                             COALESCE (inAmountGRN, 0)
-                           + zfCalc_CurrencyFrom (inAmountUSD, inCurrencyValueUSD, 1)
-                           + zfCalc_CurrencyFrom (inAmountEUR, inCurrencyValueEUR, 1)
-                           + COALESCE (inAmountCard, 0)
-                             AS AmountPay_GRN
+      WITH tmp1 AS (SELECT -- Сумма оплаты - в ГРН
+                            COALESCE (inAmountGRN, 0)
+                          + zfCalc_CurrencyFrom (inAmountUSD, inCurrencyValueUSD, 1)
+                          + zfCalc_CurrencyFrom (inAmountEUR, inCurrencyValueEUR, 1)
+                          + COALESCE (inAmountCard, 0)
+                            AS AmountPay_GRN
 
-                            -- сумма к оплате, грн - НЕ округлили, отсюда остаток
-                          , zfCalc_CurrencyFrom (inAmountToPay_EUR, inCurrencyValueEUR, 1) AS AmountToPay_GRN
-                            -- сумма к оплате, EUR - НЕ округлили, отсюда остаток
-                          , inAmountToPay_EUR AS AmountToPay_EUR
-                    )
-          , tmp2 AS (SELECT -- если после округления - суммы совпали
-                            CASE WHEN tmp1.AmountPay_GRN = zfCalc_SummPriceList (1, tmp1.AmountToPay_GRN)
-                                 THEN -- разница и будет ручным списанием
-                                      tmp1.AmountToPay_GRN - zfCalc_SummPriceList (1, tmp1.AmountToPay_GRN)
+                           -- сумма к оплате, грн - НЕ округлили, отсюда остаток
+                         , zfCalc_CurrencyFrom (inAmountToPay_EUR, inCurrencyValueEUR, 1) AS AmountToPay_GRN
+                           -- сумма к оплате, EUR - НЕ округлили, отсюда остаток
+                         , inAmountToPay_EUR AS AmountToPay_EUR
+                           -- сумма ручного списания
+                         , inAmountDiscount  AS AmountDiscount_GRN
+                   )
+            -- Расчет - сколько осталось оплатить / либо сдача
+          , tmp AS (SELECT -- Сумма к оплате МИНУС Итого Оплата - все в ГРН
+                           tmp1.AmountToPay_GRN - tmp1.AmountPay_GRN - tmp1.AmountDiscount_GRN AS AmountDiff
+                           -- сумма к оплате, грн - НЕ округлили, отсюда остаток
+                         , tmp1.AmountToPay_GRN
+                           -- сумма к оплате, EUR - НЕ округлили, отсюда остаток
+                         , tmp1.AmountToPay_EUR
+                           -- сумма ручного списания
+                         , tmp1.AmountDiscount_GRN
+                           -- Сумма оплаты - в ГРН
+                         , tmp1.AmountPay_GRN
 
-                                 -- если все в USD
-                                 WHEN zfCalc_SummPriceList (1, zfCalc_CurrencyTo (tmp1.AmountToPay_GRN, inCurrencyValueUSD, 1)) = inAmountUSD
-                                 THEN -- разница и будет ручным списанием
-                                      tmp1.AmountToPay_GRN - tmp1.AmountPay_GRN
+                    FROM tmp1
+                   )
 
-                                 WHEN tmp1.AmountPay_GRN = 0 AND inAmountDiscount < 2 AND tmp1.AmountToPay_GRN > 2
-                                 THEN -- "вернули" списания НЕТ
-                                      0
-                                 ELSE -- оставили как есть
-                                      inAmountDiscount
-                             END AS AmountDiscount_GRN
+      SELECT -- К оплате, грн - здесь округлили
+             zfCalc_SummPriceList (1, tmp.AmountToPay_GRN) :: TFloat AS AmountToPay
+             -- К оплате, EUR - здесь округлили
+           , zfCalc_SummPriceList (1, tmp.AmountToPay_EUR) :: TFloat AS AmountToPay_curr
 
-                            -- Сумма оплаты - в ГРН
-                          , tmp1.AmountPay_GRN
-                            -- сумма к оплате, грн - НЕ округлили, отсюда остаток
-                          , tmp1.AmountToPay_GRN
-                            -- сумма к оплате, EUR - НЕ округлили, отсюда остаток
-                          , tmp1.AmountToPay_EUR
-                     FROM tmp1
-                    )
-             -- Расчет - сколько осталось оплатить / либо сдача
-           , tmp AS (SELECT -- Сумма к оплате МИНУС Итого Оплата - все в ГРН
-                            tmp2.AmountToPay_GRN - tmp2.AmountPay_GRN - tmp2.AmountDiscount_GRN AS AmountDiff
-                            -- сумма к оплате, грн - НЕ округлили, отсюда остаток
-                          , tmp2.AmountToPay_GRN
-                            -- сумма к оплате, EUR - НЕ округлили, отсюда остаток
-                          , tmp2.AmountToPay_EUR
-                            -- сумма ручного списания
-                          , tmp2.AmountDiscount_GRN
-                            -- Сумма оплаты - в ГРН
-                          , tmp2.AmountPay_GRN
-                          
-                     --     , CASE WHEN tmp2.AmountDiff < 0
-                       --               THEN 
-                     FROM tmp2
-                    )
+             -- К оплате, грн - НЕ округлили
+           , tmp.AmountToPay_GRN :: TFloat AS AmountToPay_GRN
+             -- К оплате, EUR - НЕ округлили
+           , tmp.AmountToPay_EUR :: TFloat AS AmountToPay_EUR
 
-       SELECT -- К оплате, грн - здесь округлили
-              zfCalc_SummPriceList (1, tmp.AmountToPay_GRN) :: TFloat AS AmountToPay
-              -- К оплате, EUR - здесь округлили
-            , zfCalc_SummPriceList (1, tmp.AmountToPay_EUR) :: TFloat AS AmountToPay_curr
+             -- сколько осталось оплатить, ГРН
+           , CASE WHEN tmp.AmountDiff > 0 AND tmp.AmountToPay_GRN = tmp.AmountDiff
+                        THEN -- здесь округлили
+                             zfCalc_SummPriceList (1, tmp.AmountDiff)
+                   WHEN tmp.AmountDiff > 0
+                       -- НЕ округлили
+                       THEN tmp.AmountDiff
+                  ELSE 0
+             END :: TFloat AS AmountRemains
 
-              -- К оплате, грн - НЕ округлили
-            , tmp.AmountToPay_GRN :: TFloat AS AmountToPay_GRN
-              -- К оплате, EUR - НЕ округлили
-            , tmp.AmountToPay_EUR :: TFloat AS AmountToPay_EUR
-
-              -- сколько осталось оплатить, ГРН
-            , CASE WHEN tmp.AmountDiff > 0 AND tmp.AmountToPay_GRN = tmp.AmountDiff
-                         THEN -- здесь округлили
-                              zfCalc_SummPriceList (1, tmp.AmountDiff)
-                    WHEN tmp.AmountDiff > 0
-                        -- НЕ округлили
-                        THEN tmp.AmountDiff
-                   ELSE 0
-              END :: TFloat AS AmountRemains
-
-              -- сколько осталось оплатить, EUR - НЕ округлили
-            , CASE WHEN tmp.AmountDiff > 0
-                        -- переводим из ГРН в EUR + ОКРУГЛЕНИЕ ?
-                        THEN zfCalc_SummIn (1, zfCalc_CurrencyTo (tmp.AmountDiff, inCurrencyValueEUR, 1), 1)
-                   ELSE 0
-              END :: TFloat AS AmountRemains_curr
+             -- сколько осталось оплатить, EUR - НЕ округлили
+           , CASE WHEN tmp.AmountDiff > 0
+                       -- переводим из ГРН в EUR + ОКРУГЛЕНИЕ ?
+                       THEN zfCalc_SummIn (1, zfCalc_CurrencyTo (tmp.AmountDiff, inCurrencyValueEUR, 1), 1)
+                  ELSE 0
+             END :: TFloat AS AmountRemains_curr
 
 
-              -- Сдача, грн
-            , CASE WHEN tmp.AmountDiff < 0
-                        -- сумма итак в ГРН
-                        THEN -1 * tmp.AmountDiff
+             -- Сдача, грн
+           , CASE WHEN tmp.AmountDiff < 0
+                       -- сумма итак в ГРН
+                       THEN -1 * tmp.AmountDiff
 
-                   ELSE 0
-              END :: TFloat AS AmountDiff
+                  ELSE 0
+             END :: TFloat AS AmountDiff
 
-              -- AmountDiscount, ГРН
-            , tmp.AmountDiscount_GRN :: TFloat AS AmountDiscount
-              -- AmountDiscount, EUR
-            , zfCalc_SummIn (1, zfCalc_CurrencyTo (tmp.AmountDiscount_GRN, inCurrencyValueEUR, 1), 1) :: TFloat AS AmountDiscount_curr
+             -- AmountPay, ГРН
+           , tmp.AmountPay_GRN :: TFloat AS AmountPay
+             -- AmountPay, EUR
+           , zfCalc_CurrencyTo (tmp.AmountPay_GRN, inCurrencyValueEUR, 1) :: TFloat AS AmountPay_curr
 
-              -- AmountPay, ГРН
-            , tmp.AmountPay_GRN :: TFloat AS AmountPay
-              -- AmountPay, EUR
-            , zfCalc_CurrencyTo (tmp.AmountPay_GRN, inCurrencyValueEUR, 1) :: TFloat AS AmountPay_curr
+      FROM tmp;
 
-
-       FROM tmp;
 
 END;
 $BODY$

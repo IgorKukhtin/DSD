@@ -50,7 +50,6 @@ type
     ceAmountDiscount: TcxCurrencyEdit;
     cxLabel2: TcxLabel;
     ceCurrencyValue_EUR: TcxCurrencyEdit;
-    RefreshDispatcher: TRefreshDispatcher;
     dsdDataSetRefreshStart: TdsdDataSetRefresh;
     spGet_Total: TdsdStoredProc;
     actRefreshTotal: TdsdDataSetRefresh;
@@ -78,11 +77,6 @@ type
     cxLabel19: TcxLabel;
     edCurrencyClient: TcxButtonEdit;
     GuidesCurrencyClient: TdsdGuides;
-    dsdProperties—hange_AmountDiscount: TdsdProperties—hange;
-    cxEditRepository_AmountDiscount: TcxEditRepository;
-    cxEditRepositoryCurrency_1GRN: TcxEditRepositoryCurrencyItem;
-    cxEditRepositoryCurrency_2EUR: TcxEditRepositoryCurrencyItem;
-    dsdProperties—hange_AmountDiscount_curr: TdsdProperties—hange;
     ceAmountToPay_GRN: TcxCurrencyEdit;
     ceAmountToPay_EUR: TcxCurrencyEdit;
   private

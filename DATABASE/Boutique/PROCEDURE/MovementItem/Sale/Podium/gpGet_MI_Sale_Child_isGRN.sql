@@ -21,14 +21,21 @@ CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child_isGRN(
 )
 RETURNS TABLE (AmountRemains       TFloat -- Остаток, грн
              , AmountRemains_curr  TFloat -- Остаток, EUR
-             , AmountDiff          TFloat -- Сдача, грн
-             , AmountGRN           TFloat -- Расчетная сумма
+               -- сдача, ГРН
+             , AmountDiff          TFloat
+               -- Дополнительная скидка
+             , AmountDiscount      TFloat
+             , AmountDiscount_curr TFloat
+               -- Расчетная сумма
+             , AmountGRN           TFloat
               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbAmountPay_GRN TFloat;
-   DECLARE vbAmountGRN TFloat;
+
+   DECLARE vbAmountPay_GRN      TFloat;
+   DECLARE vbAmountGRN          TFloat;
+   DECLARE vbAmountDiscount_GRN TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
@@ -40,25 +47,59 @@ BEGIN
                       + COALESCE (inAmountCard, 0)
                       + COALESCE (inAmountDiscount, 0)
                        ;
+     -- сохранили
+     vbAmountDiscount_GRN:= COALESCE (inAmountDiscount, 0);
 
 
      -- Сумма - ГРН
      IF inIsGRN = TRUE
      THEN
          IF inAmountGRN = 0
-         THEN
-             vbAmountGRN := CASE WHEN inCurrencyId_Client = zc_Currency_EUR()
-                                      THEN -- Округлили к 0 знаков, разница попадет автоматом в списание
-                                           zfCalc_SummPriceList (1, inAmountToPay - vbAmountPay_GRN)
-                                      ELSE 
-                                           inAmountToPay - vbAmountPay_GRN
-                            END;
+         THEN -- расчет остаток суммы
+              vbAmountGRN := CASE WHEN inCurrencyId_Client = zc_Currency_EUR()
+                                       THEN -- Округлили к 0 знаков, разница попадет автоматом в списание
+                                            zfCalc_SummPriceList (1, inAmountToPay - vbAmountPay_GRN)
+                                       ELSE
+                                            inAmountToPay - vbAmountPay_GRN
+                             END;
+
+              -- если нет скидки, сформируем её и спишим "хвостик"
+              IF vbAmountDiscount_GRN = 0
+              THEN
+                  -- пробуем списать весь остаток
+                  vbAmountDiscount_GRN:= inAmountToPay - vbAmountGRN;
+
+                  -- если большая сумма
+                  IF ABS (vbAmountDiscount_GRN) >= zc_AmountDiscountGRN()
+                  THEN
+                      -- списываем только КОП.
+                      vbAmountDiscount_GRN:= vbAmountDiscount_GRN - FLOOR (vbAmountDiscount_GRN);
+                  END IF;
+
+                  -- пересчитали сумму с учетом нового AmountDiscount
+                  vbAmountPay_GRN:= vbAmountPay_GRN + vbAmountDiscount_GRN;
+
+              END IF;
+
           ELSE -- оставили без изменений
                vbAmountGRN := inAmountGRN;
           END IF;
+
      ELSE
          -- обнулили
          vbAmountGRN := 0;
+
+         -- если все 0
+         IF inAmountUSD  = 0
+        AND inAmountEUR  = 0
+        AND inAmountCard = 0
+         THEN
+             -- Обнулили Дополнительная скидка
+             vbAmountDiscount_GRN:= 0;
+             -- пересчитали сумму с учетом нового AmountDiscount
+             vbAmountPay_GRN:= 0;
+         END IF;
+
      END IF;
 
      -- выровняли
@@ -94,6 +135,11 @@ BEGIN
 
              -- Сдача, грн
            , tmpData.AmountDiff :: TFloat AS AmountDiff
+
+             -- Дополнительная скидка - ГРН
+           , vbAmountDiscount_GRN :: TFloat AS AmountDiscount
+             -- Дополнительная скидка - EUR
+           , zfCalc_SummIn (1, zfCalc_CurrencyTo (vbAmountDiscount_GRN, inCurrencyValueEUR, 1), 1) :: TFloat AS AmountDiscount_curr
 
              -- Расчетная сумма ГРН
            , tmpData.AmountGRN

@@ -28,8 +28,8 @@ RETURNS TABLE (AmountRemains       TFloat -- Остаток, грн
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbAmountPay_GRN TFloat;
-   DECLARE vbAmountDiscount TFloat;
+   DECLARE vbAmountPay_GRN      TFloat;
+   DECLARE vbAmountDiscount_GRN TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
@@ -46,23 +46,23 @@ BEGIN
      IF inIsDiscount = TRUE THEN
          IF inAmountDiscount = 0
          THEN -- НЕ округлили
-              vbAmountDiscount := inAmountToPay - vbAmountPay_GRN;
+              vbAmountDiscount_GRN := inAmountToPay - vbAmountPay_GRN;
 
          ELSE -- оставили без изменений
-              vbAmountDiscount := inAmountDiscount;
+              vbAmountDiscount_GRN := inAmountDiscount;
          END IF;
      ELSE
          -- обнулили
-         vbAmountDiscount := 0;
+         vbAmountDiscount_GRN := 0;
      END IF;
 
 
      -- Результат
      RETURN QUERY
       WITH -- только остаток к оплате - или ГРН или EUR
-           tmpData_all AS (SELECT inAmountToPay - (vbAmountPay_GRN + vbAmountDiscount) AS AmountDiff
+           tmpData_all AS (SELECT inAmountToPay - (vbAmountPay_GRN + vbAmountDiscount_GRN) AS AmountDiff
                           )
-              -- данные - или ГРН или EUR
+              -- данные - ГРН
             , tmpData AS (SELECT CASE WHEN tmpData_all.AmountDiff > 0
                                       THEN tmpData_all.AmountDiff
                                       ELSE 0
@@ -73,7 +73,7 @@ BEGIN
                                       ELSE 0
                                  END AS AmountDiff
 
-                               , vbAmountDiscount AS AmountDiscount
+                               , vbAmountDiscount_GRN AS AmountDiscount
 
                           FROM tmpData_all
                          )

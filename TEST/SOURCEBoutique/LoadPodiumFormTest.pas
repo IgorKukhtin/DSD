@@ -991,7 +991,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSalePodiumJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSalePodiumJournalForm');
-  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSalePodiumItemEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSalePodiumItemEditForm');
 end;

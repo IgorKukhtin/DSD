@@ -1,4 +1,4 @@
-﻿object SalePodiumItemEditForm: TSalePodiumItemEditForm
+object SalePodiumItemEditForm: TSalePodiumItemEditForm
   Left = 0
   Top = 0
   Caption = #1054#1087#1083#1072#1090#1072' '#1074' '#1055#1088#1086#1076#1072#1078#1077
@@ -139,6 +139,15 @@
     TabOrder = 15
     Width = 120
   end
+  object ceAmountDiscount_curr: TcxCurrencyEdit
+    Left = 316
+    Top = 170
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.#### EUR'
+    Properties.ReadOnly = True
+    TabOrder = 27
+    Width = 100
+  end
   object cxLabel2: TcxLabel
     Left = 316
     Top = 74
@@ -149,7 +158,7 @@
     Top = 90
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    TabOrder = 17
+    TabOrder = 16
     Width = 100
   end
   object cbisGRN: TcxCheckBox
@@ -157,7 +166,7 @@
     Top = 8
     Action = actRefreshGRN
     Properties.ReadOnly = False
-    TabOrder = 18
+    TabOrder = 17
     Width = 104
   end
   object cbisUSD: TcxCheckBox
@@ -165,7 +174,7 @@
     Top = 50
     Action = actRefreshUSD
     Properties.ReadOnly = False
-    TabOrder = 19
+    TabOrder = 18
     Width = 104
   end
   object cbisEUR: TcxCheckBox
@@ -173,7 +182,7 @@
     Top = 90
     Action = actRefreshEUR
     Properties.ReadOnly = False
-    TabOrder = 20
+    TabOrder = 19
     Width = 104
   end
   object cbisCARD: TcxCheckBox
@@ -181,7 +190,7 @@
     Top = 130
     Action = actRefreshCard
     Properties.ReadOnly = False
-    TabOrder = 21
+    TabOrder = 20
     Width = 147
   end
   object cbisDiscount: TcxCheckBox
@@ -189,7 +198,7 @@
     Top = 170
     Action = actRefreshDiscount
     Properties.ReadOnly = False
-    TabOrder = 22
+    TabOrder = 21
     Width = 156
   end
   object cxLabel5: TcxLabel
@@ -203,7 +212,7 @@
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
-    TabOrder = 24
+    TabOrder = 22
     Width = 100
   end
   object cxLabel6: TcxLabel
@@ -217,16 +226,7 @@
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
-    TabOrder = 26
-    Width = 100
-  end
-  object ceAmountDiscount_curr: TcxCurrencyEdit
-    Left = 316
-    Top = 170
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.#### EUR'
-    Properties.ReadOnly = True
-    TabOrder = 27
+    TabOrder = 24
     Width = 100
   end
   object cxLabel19: TcxLabel
@@ -513,13 +513,11 @@
       item
         Name = 'CurrencyNum_ToPay'
         Value = 1
-        Component = dsdPropertiesСhange_AmountDiscount
         MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyNum_ToPay_curr'
         Value = 2
-        Component = dsdPropertiesСhange_AmountDiscount_curr
         MultiSelectSeparator = ','
       end>
     Left = 128
@@ -744,34 +742,6 @@
     Left = 208
     Top = 245
   end
-  object RefreshDispatcher: TRefreshDispatcher
-    IdParam.Value = Null
-    IdParam.MultiSelectSeparator = ','
-    ComponentList = <
-      item
-        Component = ceAmountGRN
-      end
-      item
-        Component = ceAmountUSD
-      end
-      item
-        Component = ceAmountEUR
-      end
-      item
-        Component = ceAmountCARD
-      end
-      item
-        Component = ceAmountDiscount
-      end
-      item
-        Component = ceCurrencyValue_USD
-      end
-      item
-        Component = ceCurrencyValue_EUR
-      end>
-    Left = 376
-    Top = 64
-  end
   object spGet_Total: TdsdStoredProc
     StoredProcName = 'gpGet_MI_Sale_Child_Total'
     DataSets = <>
@@ -905,20 +875,6 @@
         Component = ceAmountDiff
         DataType = ftFloat
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountDiscount'
-        Value = Null
-        Component = ceAmountDiscount
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountDiscount_curr'
-        Value = Null
-        Component = ceAmountDiscount_curr
-        DataType = ftFloat
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 152
@@ -1035,6 +991,20 @@
         Name = 'AmountDiff'
         Value = 0.000000000000000000
         Component = ceAmountDiff
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountDiscount'
+        Value = Null
+        Component = ceAmountDiscount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountDiscount_curr'
+        Value = Null
+        Component = ceAmountDiscount_curr
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -1164,6 +1134,20 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'AmountDiscount'
+        Value = Null
+        Component = ceAmountDiscount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountDiscount_curr'
+        Value = Null
+        Component = ceAmountDiscount_curr
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'AmountUSD'
         Value = 0.000000000000000000
         Component = ceAmountUSD
@@ -1289,6 +1273,20 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'AmountDiscount'
+        Value = Null
+        Component = ceAmountDiscount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountDiscount_curr'
+        Value = Null
+        Component = ceAmountDiscount_curr
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'AmountEUR'
         Value = 0.000000000000000000
         Component = ceAmountEUR
@@ -1410,6 +1408,20 @@
         Name = 'AmountDiff'
         Value = 0.000000000000000000
         Component = ceAmountDiff
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountDiscount'
+        Value = Null
+        Component = ceAmountDiscount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountDiscount_curr'
+        Value = Null
+        Component = ceAmountDiscount_curr
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -1547,7 +1559,7 @@
       end
       item
         Name = 'AmountDiscount_curr'
-        Value = Null
+        Value = 0.000000000000000000
         Component = ceAmountDiscount_curr
         DataType = ftFloat
         MultiSelectSeparator = ','
@@ -1574,6 +1586,9 @@
       end
       item
         Control = ceAmountDiscount
+      end
+      item
+        Control = ceAmountDiscount_curr
       end
       item
         Control = ceCurrencyValue_USD
@@ -1614,27 +1629,5 @@
       end>
     Left = 344
     Top = 248
-  end
-  object dsdPropertiesСhange_AmountDiscount: TdsdPropertiesСhange
-    EditRepository = cxEditRepository_AmountDiscount
-    Left = 352
-    Top = 120
-  end
-  object cxEditRepository_AmountDiscount: TcxEditRepository
-    Left = 392
-    Top = 120
-    object cxEditRepositoryCurrency_1GRN: TcxEditRepositoryCurrencyItem
-      Properties.DecimalPlaces = 4
-      Properties.DisplayFormat = ',0.#### '#1043#1056#1053
-    end
-    object cxEditRepositoryCurrency_2EUR: TcxEditRepositoryCurrencyItem
-      Properties.DecimalPlaces = 4
-      Properties.DisplayFormat = ',0.#### EUR'
-    end
-  end
-  object dsdPropertiesСhange_AmountDiscount_curr: TdsdPropertiesСhange
-    EditRepository = cxEditRepository_AmountDiscount
-    Left = 368
-    Top = 168
   end
 end
