@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION lpGet_ObjectHistory_Price_check(
     IN inOperDatePartner       TDateTime,
     IN inDayPrior_PriceReturn  Integer,
     IN inIsPrior               Boolean,
-    IN inOperDatePartner_order TDateTime  -- DEFAULT NULL
+    IN inOperDatePartner_order TDateTime, -- DEFAULT NULL
     IN inGoodsId                Integer,  -- Товар
     IN inGoodsKindId            Integer,  -- Вид товара
     IN inPrice                  TFloat,   -- Цена для проверки
@@ -78,7 +78,7 @@ BEGIN
        THEN
            RAISE EXCEPTION 'Ошибка.У пользователя <%> нет прав ручного регулирования цены <%>.%Можно ввести цену <%> из прайса <%>.'
                          , lfGet_Object_ValueData_sh (inUserId)
-                         , zfConvert_FloatToString (ioPrice)
+                         , zfConvert_FloatToString (inPrice)
                          , CHR (13)
                          , zfConvert_FloatToString (vbPrice_check)
                          , lfGet_Object_ValueData_sh (vbPriceListId)
