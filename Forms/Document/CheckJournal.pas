@@ -88,6 +88,7 @@ type
     MedicForSaleName: TcxGridDBColumn;
     BuyerForSaleName: TcxGridDBColumn;
     isCorrectMarketing: TcxGridDBColumn;
+    isCorrectIlliquidMarketing: TcxGridDBColumn;
   private
     { Private declarations }
   public

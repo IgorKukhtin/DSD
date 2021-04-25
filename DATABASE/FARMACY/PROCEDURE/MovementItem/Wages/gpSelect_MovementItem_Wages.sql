@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Wages(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
-             , HolidaysHospital TFloat, Marketing TFloat, MarketingRepayment TFloat, Director TFloat, IlliquidAssets TFloat, PenaltySUN TFloat
+             , HolidaysHospital TFloat, Marketing TFloat, MarketingRepayment TFloat, Director TFloat, IlliquidAssets TFloat, IlliquidAssetsRepayment TFloat, PenaltySUN TFloat
              , AmountCard TFloat, AmountHand TFloat
              , MemberCode Integer, MemberName TVarChar, PositionName TVarChar
              , isManagerPharmacy boolean
@@ -97,6 +97,7 @@ BEGIN
                  , Null::TFloat                       AS MarketingRepayment
                  , Null::TFloat                       AS Director
                  , Null::TFloat                       AS IlliquidAssets
+                 , Null::TFloat                       AS IlliquidAssetsRepayment
                  , Null::TFloat                       AS PenaltySUN
                  , NULL::TFloat                       AS AmountCard
                  , NULL::TFloat                       AS AmountHand
@@ -146,6 +147,9 @@ BEGIN
                         THEN - MIFloat_Marketing.ValueData ELSE MIFloat_MarketingRepayment.ValueData END::TFloat      AS MarketingRepayment
                  , MIFloat_Director.ValueData         AS Director
                  , MIFloat_IlliquidAssets.ValueData   AS IlliquidAssets
+                 , CASE WHEN COALESCE(MIFloat_IlliquidAssets.ValueData, 0) > 0 THEN 0
+                        WHEN COALESCE(MIFloat_IlliquidAssets.ValueData, 0) + COALESCE(MIFloat_IlliquidAssetsRepayment.ValueData, 0) > 0
+                        THEN - MIFloat_IlliquidAssets.ValueData ELSE MIFloat_IlliquidAssetsRepayment.ValueData END::TFloat      AS IlliquidAssetsRepayment
                  , MIFloat_PenaltySUN.ValueData       AS PenaltySUN
                  , MIF_AmountCard.ValueData           AS AmountCard
                  , (MovementItem.Amount +
@@ -154,7 +158,9 @@ BEGIN
                          WHEN COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0) > 0
                          THEN 0 ELSE COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0)  END +
                     COALESCE (MIFloat_Director.ValueData, 0) +
-                    COALESCE (MIFloat_IlliquidAssets.ValueData, 0) +
+                    CASE WHEN COALESCE(MIFloat_IlliquidAssets.ValueData, 0) > 0 THEN COALESCE(MIFloat_IlliquidAssets.ValueData, 0)
+                         WHEN COALESCE(MIFloat_IlliquidAssets.ValueData, 0) + COALESCE(MIFloat_IlliquidAssetsRepayment.ValueData, 0) > 0
+                         THEN 0 ELSE COALESCE(MIFloat_IlliquidAssets.ValueData, 0) + COALESCE(MIFloat_IlliquidAssetsRepayment.ValueData, 0)  END +
                     COALESCE (MIFloat_PenaltySUN.ValueData, 0) -
                     COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
 
@@ -228,6 +234,10 @@ BEGIN
                                               ON MIFloat_IlliquidAssets.MovementItemId = MovementItem.Id
                                              AND MIFloat_IlliquidAssets.DescId = zc_MIFloat_SummaIlliquidAssets()
 
+                  LEFT JOIN MovementItemFloat AS MIFloat_IlliquidAssetsRepayment
+                                              ON MIFloat_IlliquidAssetsRepayment.MovementItemId = MovementItem.Id
+                                             AND MIFloat_IlliquidAssetsRepayment.DescId = zc_MIFloat_IlliquidAssetsRepayment()
+
                   LEFT JOIN MovementItemFloat AS MIFloat_PenaltySUN
                                               ON MIFloat_PenaltySUN.MovementItemId = MovementItem.Id
                                              AND MIFloat_PenaltySUN.DescId = zc_MIFloat_PenaltySUN()
@@ -267,6 +277,7 @@ BEGIN
                  , Null::TFloat                       AS MarketingRepayment
                  , Null::TFloat                       AS Director
                  , Null::TFloat                       AS IlliquidAssets
+                 , Null::TFloat                       AS IlliquidAssetsRepayment
                  , Null::TFloat                       AS PenaltySUN
                  , Null::TFloat                       AS AmountCard
                  , tmpAdditionalExpenses.SummaTotal   AS AmountHand
@@ -342,6 +353,9 @@ BEGIN
                         THEN - MIFloat_Marketing.ValueData ELSE MIFloat_MarketingRepayment.ValueData END::TFloat      AS MarketingRepayment
                  , MIFloat_Director.ValueData         AS Director
                  , MIFloat_IlliquidAssets.ValueData   AS IlliquidAssets
+                 , CASE WHEN COALESCE(MIFloat_IlliquidAssets.ValueData, 0) > 0 THEN 0
+                        WHEN COALESCE(MIFloat_IlliquidAssets.ValueData, 0) + COALESCE(MIFloat_IlliquidAssetsRepayment.ValueData, 0) > 0
+                        THEN - MIFloat_IlliquidAssets.ValueData ELSE MIFloat_IlliquidAssetsRepayment.ValueData END::TFloat      AS IlliquidAssetsRepayment
                  , MIFloat_PenaltySUN.ValueData       AS PenaltySUN
                  , MIF_AmountCard.ValueData           AS AmountCard
                  , (MovementItem.Amount +
@@ -350,7 +364,9 @@ BEGIN
                          WHEN COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0) > 0
                          THEN 0 ELSE COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0)  END +
                     COALESCE (MIFloat_Director.ValueData, 0) +
-                    COALESCE (MIFloat_IlliquidAssets.ValueData, 0) +
+                    CASE WHEN COALESCE(MIFloat_IlliquidAssets.ValueData, 0) > 0 THEN COALESCE(MIFloat_IlliquidAssets.ValueData, 0)
+                         WHEN COALESCE(MIFloat_IlliquidAssets.ValueData, 0) + COALESCE(MIFloat_IlliquidAssetsRepayment.ValueData, 0) > 0
+                         THEN 0 ELSE COALESCE(MIFloat_IlliquidAssets.ValueData, 0) + COALESCE(MIFloat_IlliquidAssetsRepayment.ValueData, 0)  END +
                     COALESCE (MIFloat_PenaltySUN.ValueData, 0) -
                     COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
 
@@ -424,6 +440,10 @@ BEGIN
                                               ON MIFloat_IlliquidAssets.MovementItemId = MovementItem.Id
                                              AND MIFloat_IlliquidAssets.DescId = zc_MIFloat_SummaIlliquidAssets()
 
+                  LEFT JOIN MovementItemFloat AS MIFloat_IlliquidAssetsRepayment
+                                              ON MIFloat_IlliquidAssetsRepayment.MovementItemId = MovementItem.Id
+                                             AND MIFloat_IlliquidAssetsRepayment.DescId = zc_MIFloat_IlliquidAssetsRepayment()
+
                   LEFT JOIN MovementItemFloat AS MIFloat_PenaltySUN
                                               ON MIFloat_PenaltySUN.MovementItemId = MovementItem.Id
                                              AND MIFloat_PenaltySUN.DescId = zc_MIFloat_PenaltySUN()
@@ -463,6 +483,7 @@ BEGIN
                  , Null::TFloat                       AS MarketingRepayment                 
                  , Null::TFloat                       AS Director
                  , Null::TFloat                       AS IlliquidAssets
+                 , Null::TFloat                       AS IlliquidAssetsRepayment
                  , Null::TFloat                       AS PenaltySUN
                  , Null::TFloat                       AS AmountCard
                  , tmpAdditionalExpenses.SummaTotal   AS AmountHand

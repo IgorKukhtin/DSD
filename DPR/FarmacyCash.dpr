@@ -139,7 +139,8 @@ uses
   LikiDniproReceiptDialog in '..\FormsFarmacy\Cash\LikiDniproReceiptDialog.pas' {LikiDniproReceiptDialogForm: TParentForm},
   EnterRecipeNumber1303 in '..\FormsFarmacy\Cash\EnterRecipeNumber1303.pas' {EnterRecipeNumber1303Form},
   LikiDniproReceipt in '..\FormsFarmacy\Cash\LikiDniproReceipt.pas',
-  ListGoodsBadTiming in '..\FormsFarmacy\Cash\ListGoodsBadTiming.pas' {ListGoodsBadTimingForm: TParentForm};
+  ListGoodsBadTiming in '..\FormsFarmacy\Cash\ListGoodsBadTiming.pas' {ListGoodsBadTimingForm: TParentForm},
+  ListGoodsIlliquidMarketing in '..\FormsFarmacy\Cash\ListGoodsIlliquidMarketing.pas' {ListGoodsIlliquidMarketingForm: TParentForm};
 
 {$R *.res}
 

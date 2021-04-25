@@ -190,6 +190,7 @@ type
     spUpdatePrice: TdsdStoredProc;
     dxBarButton15: TdxBarButton;
     cbCorrectMarketing: TcxCheckBox;
+    cbCorrectIlliquidMarketing: TcxCheckBox;
   private
     { Private declarations }
   public

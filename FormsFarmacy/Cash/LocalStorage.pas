@@ -94,6 +94,7 @@ begin
       AddIntField(LocalDataBaseHead,  'MEMBERKID');    //ФИО пациента (МИС «Каштан»)
       //***10.03.21
       AddBoolField(LocalDataBaseHead, 'ISCORRMARK');   //Корректировка суммы маркетинг в ЗП по подразделению
+      AddBoolField(LocalDataBaseHead, 'ISCORRIA');   //Корректировка суммы нелеквидов в ЗП по подразделению
 
       LocalDataBaseHead.CreateTable;
     end
@@ -161,6 +162,7 @@ begin
         if FindField('MEMBERKID') = nil then AddIntField(LFieldDefs,   'MEMBERKID');    //ФИО пациента (МИС «Каштан»)
         //***10.03.21
         if FindField('ISCORRMARK') = nil then AddBoolField(LFieldDefs, 'ISCORRMARK');    //Корректировка суммы маркетинг в ЗП по подразделению
+        if FindField('ISCORRIA') = nil then AddBoolField(LFieldDefs, 'ISCORRIA');    //Корректировка суммы нелеквидов в ЗП по подразделению
 
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -238,7 +240,8 @@ begin
         (FindField('MEDICKID') = nil) or
         (FindField('MEMBERKID') = nil) or
         //***10.03.21
-        (FindField('ISCORRMARK') = nil));
+        (FindField('ISCORRMARK') = nil) or
+        (FindField('ISCORRIA') = nil));
 
       Close;
 

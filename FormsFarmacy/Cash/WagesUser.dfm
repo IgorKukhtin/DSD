@@ -86,7 +86,7 @@ inherited WagesUserForm: TWagesUserForm
         ShowCaption = False
         TabOrder = 1
         object ceTotal: TcxCurrencyEdit
-          Left = 182
+          Left = 144
           Top = 6
           ParentFont = False
           Properties.DecimalPlaces = 2
@@ -99,7 +99,7 @@ inherited WagesUserForm: TWagesUserForm
           Style.Font.Style = []
           Style.IsFontAssigned = True
           TabOrder = 0
-          Width = 156
+          Width = 148
         end
         object cxLabel4: TcxLabel
           Left = 8
@@ -114,8 +114,8 @@ inherited WagesUserForm: TWagesUserForm
           Style.IsFontAssigned = True
         end
         object ceCard: TcxCurrencyEdit
-          Left = 478
-          Top = 58
+          Left = 144
+          Top = 110
           ParentFont = False
           Properties.DecimalPlaces = 2
           Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -127,11 +127,11 @@ inherited WagesUserForm: TWagesUserForm
           Style.Font.Style = []
           Style.IsFontAssigned = True
           TabOrder = 2
-          Width = 156
+          Width = 148
         end
         object cxLabel1: TcxLabel
-          Left = 345
-          Top = 58
+          Left = 8
+          Top = 110
           Caption = #1047'/'#1055' '#1085#1072' '#1082#1072#1088#1090#1091' :'
           ParentFont = False
           Style.Font.Charset = DEFAULT_CHARSET
@@ -158,8 +158,8 @@ inherited WagesUserForm: TWagesUserForm
           Width = 156
         end
         object cxLabel3: TcxLabel
-          Left = 345
-          Top = 110
+          Left = 298
+          Top = 111
           Caption = #1048#1090#1086#1075#1086' '#1085#1072' '#1088#1091#1082#1080':'
           ParentFont = False
           Style.Font.Charset = DEFAULT_CHARSET
@@ -182,7 +182,7 @@ inherited WagesUserForm: TWagesUserForm
           Style.IsFontAssigned = True
         end
         object ceHolidaysHospital: TcxCurrencyEdit
-          Left = 182
+          Left = 144
           Top = 32
           ParentFont = False
           Properties.DecimalPlaces = 2
@@ -195,7 +195,7 @@ inherited WagesUserForm: TWagesUserForm
           Style.Font.Style = []
           Style.IsFontAssigned = True
           TabOrder = 7
-          Width = 156
+          Width = 148
         end
         object cxLabel6: TcxLabel
           Left = 8
@@ -210,8 +210,8 @@ inherited WagesUserForm: TWagesUserForm
           Style.IsFontAssigned = True
         end
         object ceDirector: TcxCurrencyEdit
-          Left = 182
-          Top = 110
+          Left = 478
+          Top = 6
           ParentFont = False
           Properties.DecimalPlaces = 2
           Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -226,8 +226,8 @@ inherited WagesUserForm: TWagesUserForm
           Width = 156
         end
         object cxLabel7: TcxLabel
-          Left = 8
-          Top = 110
+          Left = 298
+          Top = 7
           Caption = #1044#1080#1088#1077#1082#1090#1086#1088' '#1076#1086#1087'. '#1091#1076'.:'
           ParentFont = False
           Style.Font.Charset = DEFAULT_CHARSET
@@ -238,8 +238,8 @@ inherited WagesUserForm: TWagesUserForm
           Style.IsFontAssigned = True
         end
         object ceIlliquidAssets: TcxCurrencyEdit
-          Left = 478
-          Top = 6
+          Left = 144
+          Top = 84
           ParentFont = False
           Properties.DecimalPlaces = 2
           Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -251,11 +251,11 @@ inherited WagesUserForm: TWagesUserForm
           Style.Font.Style = []
           Style.IsFontAssigned = True
           TabOrder = 11
-          Width = 156
+          Width = 148
         end
         object cxLabel21: TcxLabel
-          Left = 347
-          Top = 6
+          Left = 8
+          Top = 84
           Caption = #1053#1077#1083#1080#1082#1074#1080#1076#1099':'
           ParentFont = False
           Style.Font.Charset = DEFAULT_CHARSET
@@ -282,8 +282,8 @@ inherited WagesUserForm: TWagesUserForm
           Width = 156
         end
         object cxLabel25: TcxLabel
-          Left = 347
-          Top = 32
+          Left = 298
+          Top = 33
           Caption = #1064#1090#1088#1072#1092' '#1087#1086' '#1057#1059#1053':'
           ParentFont = False
           Style.Font.Charset = DEFAULT_CHARSET
@@ -294,7 +294,7 @@ inherited WagesUserForm: TWagesUserForm
           Style.IsFontAssigned = True
         end
         object ceMarketing: TcxCurrencyEdit
-          Left = 182
+          Left = 144
           Top = 58
           ParentFont = False
           Properties.DecimalPlaces = 2
@@ -307,11 +307,11 @@ inherited WagesUserForm: TWagesUserForm
           Style.Font.Style = []
           Style.IsFontAssigned = True
           TabOrder = 15
-          Width = 156
+          Width = 148
         end
         object cxLabel29: TcxLabel
-          Left = 9
-          Top = 84
+          Left = 298
+          Top = 59
           Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075' '#1087#1086#1075'. '#1095#1077#1082#1086#1084':'
           ParentFont = False
           Style.Font.Charset = DEFAULT_CHARSET
@@ -322,8 +322,8 @@ inherited WagesUserForm: TWagesUserForm
           Style.IsFontAssigned = True
         end
         object ceMarketingRepayment: TcxCurrencyEdit
-          Left = 182
-          Top = 84
+          Left = 478
+          Top = 58
           ParentFont = False
           Properties.DecimalPlaces = 2
           Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -336,6 +336,34 @@ inherited WagesUserForm: TWagesUserForm
           Style.IsFontAssigned = True
           TabOrder = 17
           Width = 156
+        end
+        object ceIlliquidAssetsRepayment: TcxCurrencyEdit
+          Left = 478
+          Top = 84
+          ParentFont = False
+          Properties.DecimalPlaces = 2
+          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+          Properties.ReadOnly = True
+          Style.Font.Charset = DEFAULT_CHARSET
+          Style.Font.Color = clWindowText
+          Style.Font.Height = -16
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = []
+          Style.IsFontAssigned = True
+          TabOrder = 18
+          Width = 156
+        end
+        object cxLabel30: TcxLabel
+          Left = 298
+          Top = 85
+          Caption = #1053#1077#1083#1080#1082#1074#1080#1076#1099'  '#1087#1086#1075'. '#1095#1077#1082#1086#1084':'
+          ParentFont = False
+          Style.Font.Charset = DEFAULT_CHARSET
+          Style.Font.Color = clWindowText
+          Style.Font.Height = -16
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = []
+          Style.IsFontAssigned = True
         end
       end
     end
@@ -734,6 +762,33 @@ inherited WagesUserForm: TWagesUserForm
       PostDataSetBeforeExecute = False
       Caption = 'actFormClose'
     end
+    object actListGoodsIlliquidMarketing: TdsdOpenStaticForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actFormClose
+      Caption = #1053#1077#1083#1077#1082#1074#1080#1076#1099' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
+      Hint = #1053#1077#1083#1077#1082#1074#1080#1076#1099' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
+      FormName = 'TListGoodsIlliquidMarketingForm'
+      FormNameParam.Value = 'TListGoodsIlliquidMarketingForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'IlliquidAssets'
+          Value = 0.000000000000000000
+          Component = ceIlliquidAssets
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actDblClickIlliquidMarketing: TdsdDblClickAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actDblClickIlliquidMarketing'
+      Action = actListGoodsIlliquidMarketing
+      Component = ceIlliquidAssets
+    end
   end
   inherited MasterDS: TDataSource
     Left = 24
@@ -1029,6 +1084,13 @@ inherited WagesUserForm: TWagesUserForm
         Name = 'IlliquidAssets'
         Value = Null
         Component = ceIlliquidAssets
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IlliquidAssetsRepayment'
+        Value = Null
+        Component = ceIlliquidAssetsRepayment
         DataType = ftFloat
         MultiSelectSeparator = ','
       end

@@ -484,7 +484,7 @@ BEGIN
       WITH tmpMovement AS (SELECT Movement.*
                                 , MovementString_InvNumberOrder.ValueData  AS InvNumberOrder
                                 , CASE WHEN Movement.StatusId = zc_Enum_Status_Erased()
-                                       THEN COALESCE(Object_CancelReason.ValueData, CancelReasonDefault.Name) END::TVarChar  AS CancelReason
+                                       THEN COALESCE(Object_CancelReason.ValueData, '') END::TVarChar  AS CancelReason
                                 , MovementFloat_TotalSumm.ValueData        AS TotalSumm
                                 , COALESCE(Object_BuyerForSite.ValueData,
                                            MovementString_Bayer.ValueData, '')           AS Bayer
@@ -502,12 +502,13 @@ BEGIN
                                                         ON MovementString_InvNumberOrder.MovementId = Movement.Id
                                                        AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
 
-                              LEFT JOIN MovementLinkObject AS MovementLinkObject_CancelReason
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_CancelReason
                                                            ON MovementLinkObject_CancelReason.MovementId = Movement.Id
                                                           AND MovementLinkObject_CancelReason.DescId = zc_MovementLinkObject_CancelReason()
-                              LEFT JOIN Object AS Object_CancelReason ON Object_CancelReason.Id = MovementLinkObject_CancelReason.ObjectId
+                              INNER JOIN Object AS Object_CancelReason 
+                                                ON Object_CancelReason.Id = MovementLinkObject_CancelReason.ObjectId
+                                               AND Object_CancelReason.ObjectCode = 2
                                 
-                              LEFT JOIN (SELECT * FROM gpSelect_Object_CancelReason('3') AS CR ORDER BY CR.Code LIMIT 1) AS CancelReasonDefault ON 1 =1 
                                 
                               LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                                       ON MovementFloat_TotalSumm.MovementId =  Movement.Id

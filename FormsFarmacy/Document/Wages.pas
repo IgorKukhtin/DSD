@@ -120,6 +120,7 @@ type
     deDateCalculation: TcxDateEdit;
     cxLabel3: TcxLabel;
     MarketingRepayment: TcxGridDBBandedColumn;
+    IlliquidAssetsRepayment: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

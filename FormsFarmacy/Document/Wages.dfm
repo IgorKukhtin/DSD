@@ -1,26 +1,26 @@
 inherited WagesForm: TWagesForm
   Caption = #1047'/'#1055' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074
   ClientHeight = 626
-  ClientWidth = 1051
+  ClientWidth = 1099
   AddOnFormData.AddOnFormRefresh.ParentList = 'Wages'
-  ExplicitWidth = 1067
+  ExplicitWidth = 1115
   ExplicitHeight = 665
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 77
-    Width = 1051
+    Width = 1099
     Height = 549
     ExplicitTop = 77
     ExplicitWidth = 1051
     ExplicitHeight = 549
     ClientRectBottom = 549
-    ClientRectRight = 1051
+    ClientRectRight = 1099
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1051
       ExplicitHeight = 525
       inherited cxGrid: TcxGrid
-        Width = 1051
+        Width = 1099
         Height = 328
         ExplicitWidth = 1051
         ExplicitHeight = 328
@@ -116,7 +116,7 @@ inherited WagesForm: TWagesForm
             item
               Options.HoldOwnColumnsOnly = True
               Options.Moving = False
-              Width = 587
+              Width = 645
             end>
           object MemberCode: TcxGridDBBandedColumn
             Caption = #1050#1086#1076
@@ -273,6 +273,19 @@ inherited WagesForm: TWagesForm
             Position.ColIndex = 5
             Position.RowIndex = 0
           end
+          object IlliquidAssetsRepayment: TcxGridDBBandedColumn
+            Caption = #1053#1077#1083#1080#1082#1074#1080#1076#1099'  '#1087#1086#1075#1072#1096#1077#1085#1080#1077' '#1095#1077#1088#1077#1079' '#1095#1077#1082
+            DataBinding.FieldName = 'IlliquidAssetsRepayment'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 48
+            Position.BandIndex = 1
+            Position.ColIndex = 6
+            Position.RowIndex = 0
+          end
           object PenaltySUN: TcxGridDBBandedColumn
             Caption = #1055#1077#1088#1089#1086#1085#1072#1083#1100#1085#1099#1081' '#1096#1090#1088#1072#1092' '#1087#1086' '#1057#1059#1053
             DataBinding.FieldName = 'PenaltySUN'
@@ -282,7 +295,7 @@ inherited WagesForm: TWagesForm
             HeaderAlignmentVert = vaCenter
             Width = 57
             Position.BandIndex = 1
-            Position.ColIndex = 6
+            Position.ColIndex = 7
             Position.RowIndex = 0
           end
           object AmountCard: TcxGridDBBandedColumn
@@ -294,7 +307,7 @@ inherited WagesForm: TWagesForm
             HeaderAlignmentVert = vaCenter
             Width = 48
             Position.BandIndex = 1
-            Position.ColIndex = 7
+            Position.ColIndex = 8
             Position.RowIndex = 0
           end
           object AmountHand: TcxGridDBBandedColumn
@@ -307,7 +320,7 @@ inherited WagesForm: TWagesForm
             Options.Editing = False
             Width = 51
             Position.BandIndex = 1
-            Position.ColIndex = 8
+            Position.ColIndex = 9
             Position.RowIndex = 0
           end
           object isIssuedBy: TcxGridDBBandedColumn
@@ -317,7 +330,7 @@ inherited WagesForm: TWagesForm
             HeaderAlignmentVert = vaCenter
             Width = 50
             Position.BandIndex = 1
-            Position.ColIndex = 9
+            Position.ColIndex = 10
             Position.RowIndex = 0
           end
           object DateIssuedBy: TcxGridDBBandedColumn
@@ -328,7 +341,7 @@ inherited WagesForm: TWagesForm
             Options.Editing = False
             Width = 77
             Position.BandIndex = 1
-            Position.ColIndex = 10
+            Position.ColIndex = 11
             Position.RowIndex = 0
           end
           object Color_Calc: TcxGridDBBandedColumn
@@ -364,11 +377,12 @@ inherited WagesForm: TWagesForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 336
-        Width = 1051
+        Width = 1099
         Height = 189
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 1051
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -460,16 +474,17 @@ inherited WagesForm: TWagesForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 328
-        Width = 1051
+        Width = 1099
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitWidth = 1051
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 1051
+    Width = 1099
     Height = 51
     TabOrder = 3
     ExplicitWidth = 1051
@@ -1854,6 +1869,7 @@ inherited WagesForm: TWagesForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
