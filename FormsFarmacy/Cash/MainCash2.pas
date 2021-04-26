@@ -3047,7 +3047,8 @@ begin
           (FieldByName('AmountMonth').AsInteger = 0) and
           not(actSpecCorr.Checked or actSpec.Checked) and
           (FieldByName('Amount').AsCurrency <> 0) and
-          (FormParams.ParamByName('isCorrectMarketing').Value = False) then
+          (FormParams.ParamByName('isCorrectMarketing').Value = False) and
+          (FormParams.ParamByName('isCorrectIlliquidAssets').Value = False) then
         begin
           ShowMessage('Ошибка.В чеке использован просроченный товар '#13#10 +
             FieldByName('GoodsName').AsString);

@@ -263,39 +263,15 @@ begin
   begin
     Result := False;
     try
-      jValue := FRESTResponse.JSONValue;
-      if jValue.FindValue('medical_program') <> Nil then
-      begin
+      JSONA := FRESTResponse.JSONValue.GetValue<TJSONArray>;
 
-        if jValue.FindValue('medical_program') <> Nil then
+        for I := 0 to JSONA.Count - 1 do if JSONA.Items[I].FindValue('medication_id') <> Nil then
         begin
-          j := jValue.FindValue('medical_program');
-          FMedical_program_id := DelDoubleQuote(j.FindValue('id').ToString);
-        end else FMedical_program_id := '';
-
-        if jValue.FindValue('medication_info') <> Nil then
-        begin
-          j := jValue.FindValue('medication_info');
-          FMedication_ID := DelDoubleQuote(j.FindValue('medication_id').ToString);
-          FMedication_Name := DelDoubleQuote(j.FindValue('medication_name').ToString);
-          FMedication_Qty := StrToCurr(StringReplace(StringReplace(j.FindValue('medication_qty').ToString,
-                            ',', FormatSettings.DecimalSeparator, [rfReplaceAll]),
-                            '.', FormatSettings.DecimalSeparator, [rfReplaceAll]));
-
-          FMedication_request_id := DelDoubleQuote(jValue.FindValue('id').ToString);
-          FStatus := DelDoubleQuote(jValue.FindValue('status').ToString);
-          if not StrToDateSite(jValue.FindValue('created_at').ToString, FCreated_at) then Exit;
-          if not StrToDateSite(jValue.FindValue('dispense_valid_from').ToString, FDispense_valid_from) then Exit;
-          if not StrToDateSite(jValue.FindValue('dispense_valid_to').ToString, FDispense_valid_to) then Exit;
-
-          FRequest_number := DelDoubleQuote(jValue.FindValue('request_number').ToString);
-
-          Result := True;
+          if FMedication_ID_List = '' then FMedication_ID_List := DelDoubleQuote(JSONA.Items[I].FindValue('medication_id').ToString)
+          else FMedication_ID_List := FMedication_ID_List + ',' + DelDoubleQuote(JSONA.Items[I].FindValue('medication_id').ToString);
         end;
-      end else if (jValue.FindValue('error') <> Nil) and (DelDoubleQuote(j.FindValue('error').ToString) = 'auth') then
-      begin
-        FShow_eHealth := True;
-      end else ShowError;
+
+      Result := True;
     except
     end
   end else ShowError;

@@ -24,7 +24,7 @@ type
     ListGoodsIlliquidMarketingDS: TDataSource;
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
-    DeferredSend: TcxGridDBColumn;
+    AmountSend: TcxGridDBColumn;
     Price: TcxGridDBColumn;
     ListGoodsIlliquidMarketingCDS: TClientDataSet;
     BarManager: TdxBarManager;
@@ -53,7 +53,7 @@ type
     dxBarContainerItem1: TdxBarContainerItem;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     dxBarControlContainerItem2: TdxBarControlContainerItem;
-    edIlliquidAssets: TcxCurrencyEdit;
+    edMarketing: TcxCurrencyEdit;
     Label12: TLabel;
     actCheckSumm: TAction;
     procedure ListGoodsIlliquidMarketingCDSBeforePost(DataSet: TDataSet);
@@ -116,7 +116,7 @@ begin
   finally
     ListGoodsIlliquidMarketingCDS.RecNo := nPos;
     ListGoodsIlliquidMarketingCDS.EnableControls;
-    if FileExists(ExtractFilePath(ParamStr(0)) + 'GoodsIlliquid.dat') then DeleteFile(ExtractFilePath(ParamStr(0)) + 'GoodsIlliquid.dat');
+    if FileExists(ExtractFilePath(ParamStr(0)) + 'GoodsBadTiming.dat') then DeleteFile(ExtractFilePath(ParamStr(0)) + 'GoodsBadTiming.dat');
   end;
 end;
 
@@ -141,6 +141,16 @@ begin
         if (ListGoodsIlliquidMarketingCDS.FieldByName('AmountCheck').AsCurrency > ListGoodsIlliquidMarketingCDS.FieldByName('Remains').AsCurrency) then
         begin
           ShowMessage('Товар <' + ListGoodsIlliquidMarketingCDS.FieldByName('GoodsName').AsString + '> выбрано больше чем есть в наличии...');
+          Exit;
+        end;
+
+        if (ListGoodsIlliquidMarketingCDS.FieldByName('AmountCheck').AsCurrency > (ListGoodsIlliquidMarketingCDS.FieldByName('Remains').AsCurrency -
+          ListGoodsIlliquidMarketingCDS.FieldByName('AmountSend').AsCurrency - ListGoodsIlliquidMarketingCDS.FieldByName('AmountReserve').AsCurrency)) then
+        begin
+          if ListGoodsIlliquidMarketingCDS.FieldByName('AmountSend').AsCurrency > 0 then
+            ShowMessage('Товар <' + ListGoodsIlliquidMarketingCDS.FieldByName('GoodsName').AsString + '> отложен в перемещении на склад отложки. Необходимо снять его отложку...')
+          else ShowMessage('Товар <' + ListGoodsIlliquidMarketingCDS.FieldByName('GoodsName').AsString + '> отложен в чеках ' +
+          ListGoodsIlliquidMarketingCDS.FieldByName('CheckList').AsString + '. Необходимо убрать из чеков...');
           Exit;
         end;
 
@@ -199,9 +209,9 @@ begin
     MainCashForm.FormParams.ParamByName('isCorrectIlliquidAssets').Value := True;
     actClearExecute(Sender);
     MainCashForm.pnlInfo.Visible := True;
-    MainCashForm.lblInfo.Caption := 'Корректировка суммы нелеквидов в ЗП по сотруднику';
+    MainCashForm.lblInfo.Caption := 'Корректировка суммы неликвидов в ЗП по сотруднику';
     if ((RoundTo(ListGoodsIlliquidMarketingGridDBTableView.DataController.Summary.FooterSummaryValues[ListGoodsIlliquidMarketingGridDBTableView.DataController.Summary.FooterSummaryItems.IndexOfItemLink(SummaCheck)], -2) +
-      edIlliquidAssets.Value) >= 0) then ShowMessage('Достигнут 0 в сумме штрафа по нелеквидам.');
+      edMarketing.Value) >= 0) then ShowMessage('Достигнут 0 в сумме штрафа по неликвидам.');
     Close;
   finally
     ListGoodsIlliquidMarketingCDS.RecNo := nPos;
@@ -231,21 +241,18 @@ begin
     ListGoodsIlliquidMarketingCDS.First;
     while not ListGoodsIlliquidMarketingCDS.Eof do
     begin
-      if ListGoodsIlliquidMarketingCDS.FieldByName('PartionDateKindId').AsVariant <> Null then
+      if MainCashForm.RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
+                VarArrayOf([ListGoodsIlliquidMarketingCDS.FieldByName('Id').AsInteger,
+                            ListGoodsIlliquidMarketingCDS.FieldByName('PartionDateKindId').AsVariant,
+                            ListGoodsIlliquidMarketingCDS.FieldByName('NDSKindId').AsVariant,
+                            ListGoodsIlliquidMarketingCDS.FieldByName('DiscountExternalID').AsVariant,
+                            ListGoodsIlliquidMarketingCDS.FieldByName('DivisionPartiesID').AsVariant]), []) then
       begin
-        if MainCashForm.RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
-                  VarArrayOf([ListGoodsIlliquidMarketingCDS.FieldByName('Id').AsInteger,
-                              ListGoodsIlliquidMarketingCDS.FieldByName('PartionDateKindId').AsVariant,
-                              ListGoodsIlliquidMarketingCDS.FieldByName('NDSKindId').AsVariant,
-                              ListGoodsIlliquidMarketingCDS.FieldByName('DiscountExternalID').AsVariant,
-                              ListGoodsIlliquidMarketingCDS.FieldByName('DivisionPartiesID').AsVariant]), []) then
-        begin
-          ListGoodsIlliquidMarketingCDS.Edit;
-          if MainCashForm.RemainsCDS.FieldByName('PricePartionDate').AsCurrency = 0 then
-            ListGoodsIlliquidMarketingCDS.FieldByName('Price').AsVariant := MainCashForm.RemainsCDS.FieldByName('Price').AsVariant
-          else ListGoodsIlliquidMarketingCDS.FieldByName('Price').AsVariant := MainCashForm.RemainsCDS.FieldByName('PricePartionDate').AsVariant;
-          ListGoodsIlliquidMarketingCDS.Post;
-        end;
+        ListGoodsIlliquidMarketingCDS.Edit;
+        if MainCashForm.RemainsCDS.FieldByName('PricePartionDate').AsCurrency = 0 then
+          ListGoodsIlliquidMarketingCDS.FieldByName('Price').AsVariant := MainCashForm.RemainsCDS.FieldByName('Price').AsVariant
+        else ListGoodsIlliquidMarketingCDS.FieldByName('Price').AsVariant := MainCashForm.RemainsCDS.FieldByName('PricePartionDate').AsVariant;
+        ListGoodsIlliquidMarketingCDS.Post;
       end;
       ListGoodsIlliquidMarketingCDS.Next;
     end;
@@ -284,12 +291,12 @@ begin
 
   end else
   begin
-    if not FileExists(ExtractFilePath(ParamStr(0)) + 'GoodsIlliquid.dat') then Exit;
+    if not FileExists(ExtractFilePath(ParamStr(0)) + 'GoodsBadTiming.dat') then Exit;
     List := TStringList.Create;
     ListGoodsIlliquidMarketingCDS.DisableControls;
     try
       FIsLoad := True;
-      List.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'GoodsIlliquid.dat');
+      List.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'GoodsBadTiming.dat');
       for I := 0 to List.Count - 1 do
       begin
          Res := TRegEx.Split(List.Strings[I], ';');
@@ -337,6 +344,13 @@ begin
       raise Exception.Create('Количество больше или равно 0...');
       Exit;
     end;
+
+    if Dataset['AmountCheck'] > (Dataset['Remains'] - Dataset['AmountSend'] - Dataset['AmountReserve']) then
+    begin
+      if Dataset['AmountSend'] > 0 then
+        ShowMessage('Товар отложен в перемещении на склад отложки перед опуском надо будет отменить отложку...')
+      else ShowMessage('Товар отложен в чеках ' + Dataset['CheckList']  + ' перед опуском необходимо убрать из чеков...');
+    end;
   end;
 
   Dataset['SummaCheck'] := GetSumm(Dataset['AmountCheck'], Dataset['Price'] ,
@@ -367,7 +381,7 @@ begin
     end;
   finally
     ListGoodsIlliquidMarketingCDS.EnableControls;
-    if List.Count > 0 then List.SaveToFile(ExtractFilePath(ParamStr(0)) + 'GoodsIlliquid.dat');
+    if List.Count > 0 then List.SaveToFile(ExtractFilePath(ParamStr(0)) + 'GoodsBadTiming.dat');
     List.Free;
   end;
 end;

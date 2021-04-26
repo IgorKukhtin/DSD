@@ -13,9 +13,14 @@ AS
 $BODY$
    DECLARE vbcontainerid_err Integer;
    DECLARE vbOperDate_str    TVarChar;
+   DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
    DECLARE vbGoodsId Integer;
 BEGIN
+
+     -- проверка прав пользователя на вызов процедуры
+     --vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Send());
+     vbUserId := inSession::Integer;
 
      -- Проверка - может быть только одна партия
      IF NOT EXISTS (SELECT 1
@@ -35,7 +40,8 @@ BEGIN
      WHERE ContainerLinkObject.ObjectId = inPartionGoodsId
        AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods();  
        
-     IF CURRENT_DATE <> '12.04.2021' OR vbUnitId <> 375626 OR vbGoodsId NOT IN (8806871)
+     IF  NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+       --CURRENT_DATE <> '12.04.2021'  OR vbUnitId <> 375626 OR vbGoodsId NOT IN (8806871)
      THEN
        -- Если партию переводили в 5 категорию
        IF NOT inCat_5 AND

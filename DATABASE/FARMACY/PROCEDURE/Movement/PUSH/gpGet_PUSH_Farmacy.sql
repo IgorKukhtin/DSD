@@ -481,7 +481,7 @@ BEGIN
    THEN
      vbText := '';
      
-      WITH tmpMovement AS (SELECT Movement.*
+            WITH tmpMovement AS (SELECT Movement.*
                                 , MovementString_InvNumberOrder.ValueData  AS InvNumberOrder
                                 , CASE WHEN Movement.StatusId = zc_Enum_Status_Erased()
                                        THEN COALESCE(Object_CancelReason.ValueData, '') END::TVarChar  AS CancelReason
@@ -490,8 +490,12 @@ BEGIN
                                            MovementString_Bayer.ValueData, '')           AS Bayer
                                 , COALESCE (ObjectString_BuyerForSite_Phone.ValueData, 
                                             MovementString_BayerPhone.ValueData, '')     AS BayerPhone
+                                , MovementLinkObject_Unit.ObjectId                       AS UnitId
                          FROM Movement
                                 
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                            
                               INNER JOIN MovementBoolean AS MovementBoolean_Deferred
                                                          ON MovementBoolean_Deferred.MovementId = Movement.Id
@@ -529,10 +533,11 @@ BEGIN
                                                      ON ObjectString_BuyerForSite_Phone.ObjectId = Object_BuyerForSite.Id 
                                                     AND ObjectString_BuyerForSite_Phone.DescId = zc_ObjectString_BuyerForSite_Phone()                                                       
                                                       
-                         WHERE Movement.DescId = zc_Movement_Check()
-                           AND Movement.StatusId = zc_Enum_Status_Erased()
-                           AND Movement.OperDate >= CURRENT_DATE - INTERVAL '1 MONTH'
-                           AND Movement.OperDate >= '20.04.2021')
+                               WHERE Movement.DescId = zc_Movement_Check()
+                                 AND Movement.StatusId = zc_Enum_Status_Erased()
+                                 AND Movement.OperDate >= CURRENT_DATE - INTERVAL '1 MONTH'
+                                 AND Movement.OperDate >= '20.04.2021'
+                           )
          , tmpMovementProtocol AS (SELECT MovementProtocol.MovementId
                                         , MovementProtocol.OperDate 
                                         , MovementProtocol.UserId
@@ -544,8 +549,39 @@ BEGIN
                                         INNER JOIN MovementProtocol ON MovementProtocol.MovementId = Movement.ID
                                    WHERE CASE WHEN SUBSTRING(MovementProtocol.ProtocolData, POSITION('Статус' IN MovementProtocol.ProtocolData) + 22, 1) = 'У'
                                               THEN TRUE ELSE FALSE END = TRUE)
-
-                             
+         , tmpMI_all AS (SELECT tmpMov.Id AS MovementId, tmpMov.UnitId, MovementItem.ObjectId AS GoodsId, SUM (MovementItem.Amount) AS Amount
+                         FROM tmpMovement AS tmpMov
+                              INNER JOIN MovementItem
+                                      ON MovementItem.MovementId = tmpMov.Id
+                                     AND MovementItem.DescId     = zc_MI_Master()
+                                     AND MovementItem.isErased   = FALSE
+                         GROUP BY tmpMov.Id, tmpMov.UnitId, MovementItem.ObjectId
+                         )
+         , tmpMI AS (SELECT tmpMI_all.UnitId, tmpMI_all.GoodsId, SUM (tmpMI_all.Amount) AS Amount
+                     FROM tmpMI_all
+                     GROUP BY tmpMI_all.UnitId, tmpMI_all.GoodsId
+                    )
+         , tmpRemains AS (SELECT tmpMI.GoodsId
+                               , tmpMI.UnitId
+                               , tmpMI.Amount           AS Amount_mi
+                               , COALESCE (SUM (Container.Amount), 0) AS Amount_remains
+                          FROM tmpMI
+                               LEFT JOIN Container ON Container.DescId = zc_Container_Count()
+                                                  AND Container.ObjectId = tmpMI.GoodsId
+                                                  AND Container.WhereObjectId = tmpMI.UnitId
+                                                  AND Container.Amount <> 0
+                          GROUP BY tmpMI.GoodsId
+                                 , tmpMI.UnitId
+                                 , tmpMI.Amount
+                          HAVING COALESCE (SUM (Container.Amount), 0) < tmpMI.Amount
+                          )
+         , tmpErr AS (SELECT DISTINCT tmpMov.Id AS MovementId
+                      FROM tmpMovement AS tmpMov
+                           INNER JOIN tmpMI_all ON tmpMI_all.MovementId = tmpMov.Id
+                           INNER JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI_all.GoodsId
+                                                AND tmpRemains.UnitId  = tmpMI_all.UnitId
+                     )
+                                                  
      SELECT STRING_AGG('  № '||Movement.InvNumber||
                        ', удален '||TO_CHAR(tmpMovementProtocol.OperDate, 'DD.MM.YYYY HH24:MI:SS')||
                        ', причина '||COALESCE(Movement.CancelReason, '')||
@@ -558,7 +594,9 @@ BEGIN
      FROM tmpMovement AS Movement
           INNER JOIN tmpMovementProtocol ON tmpMovementProtocol.MovementId = Movement.Id
                                        AND tmpMovementProtocol.ord = 1
-     WHERE tmpMovementProtocol.OperDate >= vbDatePUSH;  
+          LEFT JOIN tmpErr ON tmpErr.MovementId = Movement.Id
+     WHERE tmpMovementProtocol.OperDate >= vbDatePUSH
+       AND COALESCE(tmpErr.MovementId, 0) = 0;  
 
      IF COALESCE (vbText, '') <> ''
      THEN

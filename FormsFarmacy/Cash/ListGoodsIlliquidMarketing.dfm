@@ -1,6 +1,6 @@
 inherited ListGoodsIlliquidMarketingForm: TListGoodsIlliquidMarketingForm
   BorderIcons = [biSystemMenu]
-  Caption = #1053#1077#1083#1077#1082#1074#1080#1076#1099' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
+  Caption = #1055#1088#1086#1089#1088#1086#1095#1082#1072' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
   ClientHeight = 411
   ClientWidth = 1029
   OnDestroy = ParentFormDestroy
@@ -16,7 +16,7 @@ inherited ListGoodsIlliquidMarketingForm: TListGoodsIlliquidMarketingForm
     Width = 68
     Height = 13
     Align = alCustom
-    Caption = #1053#1077#1083#1077#1082#1074#1080#1076#1099':  '
+    Caption = #1053#1077#1083#1080#1082#1074#1080#1076#1099':  '
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -11
@@ -49,7 +49,7 @@ inherited ListGoodsIlliquidMarketingForm: TListGoodsIlliquidMarketingForm
         item
           Format = ',0.###;-,0.###; ;'
           Kind = skSum
-          Column = DeferredSend
+          Column = AmountSend
         end
         item
           Format = ',0.###;-,0.###; ;'
@@ -107,9 +107,9 @@ inherited ListGoodsIlliquidMarketingForm: TListGoodsIlliquidMarketingForm
         Options.Editing = False
         Width = 86
       end
-      object DeferredSend: TcxGridDBColumn
+      object AmountSend: TcxGridDBColumn
         Caption = #1042' '#1086#1090#1083#1086#1078'. '#1087#1077#1088#1077#1084#1077#1097'.'
-        DataBinding.FieldName = 'DeferredSend'
+        DataBinding.FieldName = 'AmountSend'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 3
         Properties.DisplayFormat = ',0.###;-,0.###; ;'
@@ -176,9 +176,9 @@ inherited ListGoodsIlliquidMarketingForm: TListGoodsIlliquidMarketingForm
       GridView = ListGoodsIlliquidMarketingGridDBTableView
     end
   end
-  object edIlliquidAssets: TcxCurrencyEdit [2]
-    Left = 847
-    Top = 65
+  object edMarketing: TcxCurrencyEdit [2]
+    Left = 831
+    Top = 1
     Properties.DisplayFormat = ',0.00;-,0.00'
     Properties.ReadOnly = True
     TabOrder = 5
@@ -392,11 +392,11 @@ inherited ListGoodsIlliquidMarketingForm: TListGoodsIlliquidMarketingForm
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
-      Control = edIlliquidAssets
+      Control = edMarketing
     end
   end
   object spListGoodsIlliquidMarketing: TdsdStoredProc
-    StoredProcName = 'gpSelect_CashGoodsIlliquid'
+    StoredProcName = 'gpSelect_CashGoodsBadTiming'
     DataSet = ListGoodsIlliquidMarketingCDS
     DataSets = <
       item
@@ -431,7 +431,7 @@ inherited ListGoodsIlliquidMarketingForm: TListGoodsIlliquidMarketingForm
       item
         Name = 'IlliquidAssets'
         Value = Null
-        Component = edIlliquidAssets
+        Component = edMarketing
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
