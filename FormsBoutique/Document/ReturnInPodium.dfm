@@ -200,6 +200,7 @@ object ReturnInPodiumForm: TReturnInPodiumForm
     object edEndDate: TcxDateEdit
       Left = 452
       Top = 103
+      EditValue = 44312d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 19
@@ -361,6 +362,7 @@ object ReturnInPodiumForm: TReturnInPodiumForm
     object edStartDate: TcxDateEdit
       Left = 340
       Top = 103
+      EditValue = 44312d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 17
@@ -864,6 +866,17 @@ object ReturnInPodiumForm: TReturnInPodiumForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
+          object AmountPartner: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1089' '#1087#1088#1080#1084#1077#1088#1082#1080' '#1074' '#1076#1086#1083#1075
+            DataBinding.FieldName = 'AmountPartner'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1089' '#1087#1088#1080#1084#1077#1088#1082#1080' '#1074' '#1076#1086#1083#1075
             Width = 50
           end
           object Amount_Sale: TcxGridDBColumn
@@ -1586,7 +1599,7 @@ object ReturnInPodiumForm: TReturnInPodiumForm
       end
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = edStartDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -1594,7 +1607,7 @@ object ReturnInPodiumForm: TReturnInPodiumForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = edEndDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -1725,6 +1738,14 @@ object ReturnInPodiumForm: TReturnInPodiumForm
         end
         item
           Visible = True
+          ItemName = 'bbact_User_Sale'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMIContainer'
         end
         item
@@ -1826,6 +1847,11 @@ object ReturnInPodiumForm: TReturnInPodiumForm
     object bb_User: TdxBarButton
       Action = mact_User
       Category = 0
+    end
+    object bbact_User_Sale: TdxBarButton
+      Action = mact_User_Sale
+      Category = 0
+      ImageIndex = 61
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -2367,14 +2393,14 @@ object ReturnInPodiumForm: TReturnInPodiumForm
         end
         item
           Name = 'isPeriod'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartion'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -2452,6 +2478,39 @@ object ReturnInPodiumForm: TReturnInPodiumForm
       PrinterNameParam.MultiSelectSeparator = ','
       PreviewWindowMaximized = False
     end
+    object actGet_Check_ReturnIn_Yes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Check_ReturnIn_Yes
+      StoredProcList = <
+        item
+          StoredProc = spGet_Check_ReturnIn_Yes
+        end>
+      Caption = 'Get_Check_ReturnIn_Yes'
+    end
+    object actGet_Check_ReturnIn_No: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Check_ReturnIn_No
+      StoredProcList = <
+        item
+          StoredProc = spGet_Check_ReturnIn_No
+        end>
+      Caption = 'Get_Check_ReturnIn_No'
+    end
+    object actInsert_Movement_Sale: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_Movement_Sale
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_Movement_Sale
+        end>
+      Caption = 'actInsert_Movement_Sale_byReturnIn'
+    end
     object actGet_New: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -2474,10 +2533,45 @@ object ReturnInPodiumForm: TReturnInPodiumForm
         end>
       Caption = 'actComplete_User'
     end
+    object mact_User_Sale: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Check_ReturnIn_Yes
+        end
+        item
+          Action = actComplete_User
+        end
+        item
+          Action = actPrintCheck
+        end
+        item
+          Action = actInsert_Movement_Sale
+        end
+        item
+          Action = actOpenSalePodiumForm
+        end
+        item
+          Action = actGet_New
+        end
+        item
+          Action = actRefreshMI
+        end>
+      QuestionBeforeExecute = 
+        #1041#1091#1076#1077#1090' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1072' '#1086#1087#1077#1088#1072#1094#1080#1103' "'#1055#1088#1086#1074#1077#1076#1077#1085#1080#1077'/ '#1063#1077#1082'/ '#1053#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1074#1086#1079 +
+        #1074#1088#1072#1090' / '#1053#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1088#1086#1076#1072#1078#1072'". '#1055#1088#1086#1076#1086#1083#1078#1080#1090#1100'?'
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1086#1087#1077#1088#1072#1094#1080#1102'  (+'#1087#1088#1086#1076#1072#1078#1072')'
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1086#1087#1077#1088#1072#1094#1080#1102' (+'#1087#1088#1086#1076#1072#1078#1072')'
+      ImageIndex = 78
+    end
     object mact_User: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
+        item
+          Action = actGet_Check_ReturnIn_No
+        end
         item
           Action = actComplete_User
         end
@@ -2521,6 +2615,37 @@ object ReturnInPodiumForm: TReturnInPodiumForm
       Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
       Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
       ImageIndex = 15
+    end
+    object actOpenSalePodiumForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actOpenSalePodiumForm'
+      FormName = 'TSalePodiumForm'
+      FormNameParam.Value = 'TSalePodiumForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'outMovementId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object MasterDS: TDataSource
@@ -2645,6 +2770,15 @@ object ReturnInPodiumForm: TReturnInPodiumForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountPartner'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountPartner'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2778,6 +2912,7 @@ object ReturnInPodiumForm: TReturnInPodiumForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -2790,6 +2925,7 @@ object ReturnInPodiumForm: TReturnInPodiumForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 16
       end>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 339
     Top = 377
@@ -2896,7 +3032,7 @@ object ReturnInPodiumForm: TReturnInPodiumForm
       end
       item
         Name = 'inOperDate'
-        Value = 0c
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -2905,7 +3041,7 @@ object ReturnInPodiumForm: TReturnInPodiumForm
       end
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = edStartDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -2913,7 +3049,7 @@ object ReturnInPodiumForm: TReturnInPodiumForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = edEndDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -2993,7 +3129,7 @@ object ReturnInPodiumForm: TReturnInPodiumForm
       end
       item
         Name = 'LastDate'
-        Value = 'NULL'
+        Value = Null
         Component = edLastDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -3035,7 +3171,7 @@ object ReturnInPodiumForm: TReturnInPodiumForm
       end
       item
         Name = 'HappyDate'
-        Value = ''
+        Value = Null
         Component = edHappyDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -3056,14 +3192,14 @@ object ReturnInPodiumForm: TReturnInPodiumForm
       end
       item
         Name = 'StartDate'
-        Value = 'NULL'
+        Value = Null
         Component = edStartDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
-        Value = 'NULL'
+        Value = Null
         Component = edEndDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -3077,7 +3213,7 @@ object ReturnInPodiumForm: TReturnInPodiumForm
       end
       item
         Name = 'InsertDate'
-        Value = 'NULL'
+        Value = Null
         Component = edInsertDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -3236,14 +3372,14 @@ object ReturnInPodiumForm: TReturnInPodiumForm
       end
       item
         Name = 'HappyDate'
-        Value = 'NULL'
+        Value = Null
         Component = edHappyDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'LastDate'
-        Value = 'NULL'
+        Value = Null
         Component = edLastDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -3371,6 +3507,7 @@ object ReturnInPodiumForm: TReturnInPodiumForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <
@@ -3378,6 +3515,7 @@ object ReturnInPodiumForm: TReturnInPodiumForm
         Column = BarCode
       end>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 800
     Top = 208
@@ -3520,7 +3658,7 @@ object ReturnInPodiumForm: TReturnInPodiumForm
       end
       item
         Name = 'inisPay'
-        Value = 'False'
+        Value = False
         Component = cbIsPay
         DataType = ftBoolean
         ParamType = ptInput
@@ -3528,7 +3666,7 @@ object ReturnInPodiumForm: TReturnInPodiumForm
       end
       item
         Name = 'inAmount'
-        Value = '1'
+        Value = 1.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3689,7 +3827,7 @@ object ReturnInPodiumForm: TReturnInPodiumForm
       end
       item
         Name = 'inOperDate'
-        Value = 0c
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -3698,7 +3836,7 @@ object ReturnInPodiumForm: TReturnInPodiumForm
       end
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = edStartDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -3706,7 +3844,7 @@ object ReturnInPodiumForm: TReturnInPodiumForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = edEndDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -4025,5 +4163,77 @@ object ReturnInPodiumForm: TReturnInPodiumForm
     DateEnd = edEndDate
     Left = 512
     Top = 168
+  end
+  object spInsertUpdate_Movement_Sale: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_Sale_byReturnIn'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId_ReturnIn'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'outMovementId'
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 288
+    Top = 440
+  end
+  object spGet_Check_ReturnIn_No: TdsdStoredProc
+    StoredProcName = 'gpGet_Check_ReturnIn'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAmountPartner'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 456
+    Top = 448
+  end
+  object spGet_Check_ReturnIn_Yes: TdsdStoredProc
+    StoredProcName = 'gpGet_Check_ReturnIn'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAmountPartner'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 504
+    Top = 448
   end
 end
