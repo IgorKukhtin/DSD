@@ -578,7 +578,7 @@ begin
   end;
 
   try
-    xlApp := GetActiveOleObject('Excel.Application');
+     xlApp := GetActiveOleObject('Excel.Application');
   except
     try
       xlApp:=CreateOleObject('Excel.Application');
@@ -633,7 +633,12 @@ begin
         xlRange.Merge;
         xlRange := xlSheet.Cells[nTitleCount, 1];
         xlRange.Value := FTitleDataSet.Fields.Fields[0].AsString;
-        xlRange.HorizontalAlignment := xlCenter;
+        // для проекта Project
+        if Self.name = 'actExportToXLS_project'
+        then if nTitleCount = 1
+             then xlRange.HorizontalAlignment := xlCenter
+             else xlRange.HorizontalAlignment := xlLeft
+        else xlRange.HorizontalAlignment := xlCenter;
         xlRange.VerticalAlignment := xlCenter;
         xlRange.WrapText:=true;
         xlRange.Font.Name := FTitleFont.Name;
@@ -813,68 +818,73 @@ begin
     xlRange.Borders[xlInsideHorizontal].Weight := xlThin;
 
 
+    // НЕ для проекта Project
+    if Self.name <> 'actExportToXLS_project'
+    then begin
       // Форматируем данные
-    if FColumnParams.Count > 0 then
-    begin
-      J := 1;
-      for I := 0 to nColumnCount - 1 do
-      begin
-        xlRange := xlSheet.Range[xlSheet.Cells[nDataStart, I + 1], xlSheet.Cells[nDataStart + nDataCount - 1, I + 1]];
-
-        case FColumnParams.Items[I].DataType of
-          ftDate, ftTime, ftDateTime : xlRange.Value := '';
-          ftFloat, ftCurrency, ftBCD : if FColumnParams.Items[I].DecimalPlace > 0 then
-                                          xlRange.NumberFormat := '#' + GetThousandSeparator + '##0' + FormatSettings.DecimalSeparator +
-                                                               CharReplay('0', FColumnParams.Items[I].DecimalPlace)
-                                       else xlRange.NumberFormat := 'General';
-        end;
-
-        if FColumnParams.Items[I].CalcColumn <> ccNone then
-          xlRange.FormulaR1C1 := FColumnParams.Items[I].GetFormula;
-
-        if FColumnParams.Items[I].WrapText then xlRange.WrapText:=true;
-        if FColumnParams.Items[I].DataType in [ftSmallint, ftInteger, ftWord, ftAutoInc, ftLargeint, ftBytes, ftFloat, ftCurrency, ftBCD] then
-           xlRange.HorizontalAlignment := xlRight
-        else xlRange.HorizontalAlignment := xlLeft;
-        xlRange.VerticalAlignment := xlCenter;
-
-        xlRange.Font.Name := FColumnParams.Items[I].Font.Name;
-        xlRange.Font.Size := FColumnParams.Items[I].Font.Size;
-        xlRange.Font.Color := FColumnParams.Items[I].Font.Color;
-        xlRange.Font.Bold := fsBold in FColumnParams.Items[I].Font.Style;
-        xlRange.Font.Italic := fsItalic in FColumnParams.Items[I].Font.Style;
-        xlRange.Font.Underline := fsUnderline in FColumnParams.Items[I].Font.Style;
-
-        if FFooter and (FColumnParams.Items[I].FKind <> skNone) then
+      if FColumnParams.Count > 0 then
         begin
-          xlRange := xlSheet.Range[xlSheet.Cells[nDataStart + nDataCount, J], xlSheet.Cells[nDataStart + nDataCount, I + 1]];
-          xlRange.Merge;
-          xlRange.VerticalAlignment := xlCenter;
-          xlRange.HorizontalAlignment := xlRight;
-          if FColumnParams.Items[I].DataType in [ftFloat, ftCurrency, ftBCD] then
+          J := 1;
+          for I := 0 to nColumnCount - 1 do
           begin
-            if FColumnParams.Items[I].DecimalPlace > 0 then
-               xlRange.NumberFormat := '#' + GetThousandSeparator + '##0' + FormatSettings.DecimalSeparator +
-                                    CharReplay('0', FColumnParams.Items[I].DecimalPlace)
-            else xlRange.NumberFormat := 'General';
+            xlRange := xlSheet.Range[xlSheet.Cells[nDataStart, I + 1], xlSheet.Cells[nDataStart + nDataCount - 1, I + 1]];
+
+            case FColumnParams.Items[I].DataType of
+              ftDate, ftTime, ftDateTime : xlRange.Value := '';
+              ftFloat, ftCurrency, ftBCD : if FColumnParams.Items[I].DecimalPlace > 0 then
+                                              xlRange.NumberFormat := '#' + GetThousandSeparator + '##0' + FormatSettings.DecimalSeparator +
+                                                                   CharReplay('0', FColumnParams.Items[I].DecimalPlace)
+                                           else xlRange.NumberFormat := 'General';
+            end;
+
+            if FColumnParams.Items[I].CalcColumn <> ccNone then
+              xlRange.FormulaR1C1 := FColumnParams.Items[I].GetFormula;
+
+            if FColumnParams.Items[I].WrapText then xlRange.WrapText:=true;
+            if FColumnParams.Items[I].DataType in [ftSmallint, ftInteger, ftWord, ftAutoInc, ftLargeint, ftBytes, ftFloat, ftCurrency, ftBCD] then
+               xlRange.HorizontalAlignment := xlRight
+            else xlRange.HorizontalAlignment := xlLeft;
+            xlRange.VerticalAlignment := xlCenter;
+
+            xlRange.Font.Name := FColumnParams.Items[I].Font.Name;
+            xlRange.Font.Size := FColumnParams.Items[I].Font.Size;
+            xlRange.Font.Color := FColumnParams.Items[I].Font.Color;
+            xlRange.Font.Bold := fsBold in FColumnParams.Items[I].Font.Style;
+            xlRange.Font.Italic := fsItalic in FColumnParams.Items[I].Font.Style;
+            xlRange.Font.Underline := fsUnderline in FColumnParams.Items[I].Font.Style;
+
+            if FFooter and (FColumnParams.Items[I].FKind <> skNone) then
+            begin
+              xlRange := xlSheet.Range[xlSheet.Cells[nDataStart + nDataCount, J], xlSheet.Cells[nDataStart + nDataCount, I + 1]];
+              xlRange.Merge;
+              xlRange.VerticalAlignment := xlCenter;
+              xlRange.HorizontalAlignment := xlRight;
+              if FColumnParams.Items[I].DataType in [ftFloat, ftCurrency, ftBCD] then
+              begin
+                if FColumnParams.Items[I].DecimalPlace > 0 then
+                   xlRange.NumberFormat := '#' + GetThousandSeparator + '##0' + FormatSettings.DecimalSeparator +
+                                        CharReplay('0', FColumnParams.Items[I].DecimalPlace)
+                else xlRange.NumberFormat := 'General';
+              end;
+              case FColumnParams.Items[I].Kind of
+                skSumma : xlRange.FormulaR1C1 := '=SUM(R[-' + IntToStr(nDataCount) + ']C[' + IntToStr(I - J + 1) + ']:R[-1]C[' + IntToStr(I - J + 1) + '])';
+                skMax : xlRange.FormulaR1C1 := '=MAX(R[-' + IntToStr(nDataCount) + ']C[' + IntToStr(I - J + 1) + ']:R[-1]C[' + IntToStr(I - J + 1) + '])';
+                skMin : xlRange.FormulaR1C1 := '=MIN(R[-' + IntToStr(nDataCount) + ']C[' + IntToStr(I - J + 1) + ']:R[-1]C[' + IntToStr(I - J + 1) + '])';
+                skAverage : xlRange.FormulaR1C1 := '=AVERAGE(R[-' + IntToStr(nDataCount) + ']C[' + IntToStr(I - J + 1) + ']:R[-1]C[' + IntToStr(I - J + 1) + '])';
+                skText : xlRange.Value := FColumnParams.Items[I].KindText;
+              end;
+              xlRange.Font.Name := FColumnParams.Items[I].Font.Name;
+              xlRange.Font.Size := FColumnParams.Items[I].Font.Size;
+              xlRange.Font.Color := FColumnParams.Items[I].Font.Color;
+              xlRange.Font.Bold := True;
+              xlRange.Font.Italic := fsItalic in FColumnParams.Items[I].Font.Style;
+              xlRange.Font.Underline := fsUnderline in FColumnParams.Items[I].Font.Style;
+              J := I + 2;
+            end;
           end;
-          case FColumnParams.Items[I].Kind of
-            skSumma : xlRange.FormulaR1C1 := '=SUM(R[-' + IntToStr(nDataCount) + ']C[' + IntToStr(I - J + 1) + ']:R[-1]C[' + IntToStr(I - J + 1) + '])';
-            skMax : xlRange.FormulaR1C1 := '=MAX(R[-' + IntToStr(nDataCount) + ']C[' + IntToStr(I - J + 1) + ']:R[-1]C[' + IntToStr(I - J + 1) + '])';
-            skMin : xlRange.FormulaR1C1 := '=MIN(R[-' + IntToStr(nDataCount) + ']C[' + IntToStr(I - J + 1) + ']:R[-1]C[' + IntToStr(I - J + 1) + '])';
-            skAverage : xlRange.FormulaR1C1 := '=AVERAGE(R[-' + IntToStr(nDataCount) + ']C[' + IntToStr(I - J + 1) + ']:R[-1]C[' + IntToStr(I - J + 1) + '])';
-            skText : xlRange.Value := FColumnParams.Items[I].KindText;
-          end;
-          xlRange.Font.Name := FColumnParams.Items[I].Font.Name;
-          xlRange.Font.Size := FColumnParams.Items[I].Font.Size;
-          xlRange.Font.Color := FColumnParams.Items[I].Font.Color;
-          xlRange.Font.Bold := True;
-          xlRange.Font.Italic := fsItalic in FColumnParams.Items[I].Font.Style;
-          xlRange.Font.Underline := fsUnderline in FColumnParams.Items[I].Font.Style;
-          J := I + 2;
         end;
-      end;
     end;
+
 
       // Выделенный текс
     if FColumnParams.Count > 0 then
@@ -933,7 +943,13 @@ begin
         xlRange.Merge;
         xlRange := xlSheet.Cells[nDataStart + nDataCount + nSignCount, 1];
         xlRange.Value := FSignDataSet.Fields.Fields[0].AsString;
-        xlRange.HorizontalAlignment := xlCenter;
+
+        if Self.name = 'actExportToXLS_project'
+        then if (nSignCount >= 1) and (nSignCount <= 3)
+             then xlRange.HorizontalAlignment := xlRight
+             else xlRange.HorizontalAlignment := xlLeft
+        else xlRange.HorizontalAlignment := xlCenter;
+
         xlRange.VerticalAlignment := xlCenter;
         xlRange.WrapText:=true;
         xlRange.Font.Name := FSignFont.Name;
@@ -957,12 +973,16 @@ begin
       else xlBook.SaveAs(ExtractFilePath(ParamStr(0)) + FileName)
     end;
 
-    xlApp.Application.ScreenUpdating := true;
-    xlApp.WindowState := xlMinimized;
-    xlApp.WindowState := xlMaximized or xlNormal;
-    xlApp.Visible := True;
     // для проекта Project
-    if Self.name = 'actExportToXLS_project' then xlApp.Application.Quit;
+    if Self.name = 'actExportToXLS_project'
+    then xlApp.Application.Quit
+    else begin
+      // для других проектов
+      xlApp.Application.ScreenUpdating := true;
+      xlApp.WindowState := xlMinimized;
+      xlApp.WindowState := xlMaximized or xlNormal;
+      xlApp.Visible := True;
+    end;
   finally
 
   end;

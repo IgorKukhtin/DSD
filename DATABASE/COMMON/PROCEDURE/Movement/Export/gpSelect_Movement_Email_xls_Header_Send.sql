@@ -301,7 +301,7 @@ BEGIN
        SELECT ('               '||tmpData.BankJuridicalAddress_Int) :: TBlob
        FROM tmpData
          UNION ALL
-       SELECT ('               код за ЄДРПОУ '||tmpData.OKPO_To||', IПН '||tmpData.INN_To ||', номер свiдоцтва '||tmpData.NumberVAT_To) :: TBlob
+       SELECT ('               код за ЄДРПОУ '||tmpData.OKPO_To||', IПН '||tmpData.INN_To || CASE WHEN tmpData.NumberVAT_To <> '' THEN ', номер свiдоцтва '||tmpData.NumberVAT_To ELSE '' END) :: TBlob
        FROM tmpData
          UNION ALL
        SELECT ('') :: TBlob
@@ -309,13 +309,18 @@ BEGIN
        SELECT ('Договір:       '||tmpData.ContractKindName||' № '||tmpData.ContractName ||' від '||zfConvert_DateToString (tmpData.ContractSigningDate) ) :: TBlob
        FROM tmpData
          UNION ALL
-       SELECT ('Замовлення:    Замовлення покупця № '||tmpData.InvNumberOrder||'від '||zfConvert_DateToString (tmpData.OperDateOrder) ) :: TBlob
+       SELECT ('Замовлення:    Замовлення покупця № '||tmpData.InvNumberOrder||'  від '||zfConvert_DateToString (tmpData.OperDateOrder) ) :: TBlob
        FROM tmpData
          UNION ALL
        SELECT ('Адреса доставки: '||tmpData.PartnerAddress_To) :: TBlob
        FROM tmpData
+
+         UNION ALL
+       SELECT '' :: TBlob
+         UNION ALL
+       SELECT '' :: TBlob
+
     -- || CHR (13) || 
-          
     ;
 
 END;

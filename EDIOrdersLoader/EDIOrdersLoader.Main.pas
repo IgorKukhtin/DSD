@@ -11,7 +11,7 @@ uses
   Data.DB, Datasnap.DBClient, cxStyles, dxSkinscxPCPainter, cxCustomData,
   cxFilter, cxData, cxDataStorage, cxDBData, dsdInternetAction, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxClasses,
-  cxGridCustomView, cxGrid;
+  cxGridCustomView, cxGrid, dsdExportToXLSAction;
 
 type
   TMainForm = class(TForm)
@@ -85,8 +85,15 @@ type
     Send_EmailCDS: TClientDataSet;
     spSelectSend_Email: TdsdStoredProc;
     mactExport_xls: TMultiAction;
-    spSelect_Export_xls: TdsdStoredProc;
+    spSelectPrintItem: TdsdStoredProc;
+    cbEmailExcel: TCheckBox;
+    PrintSignCDS: TClientDataSet;
+    spSelectPrintHeader: TdsdStoredProc;
+    spSelectPrintSign: TdsdStoredProc;
     actSelect_Export_xls: TdsdExecStoredProc;
+    actExportToXLS_project: TdsdExportToXLS;
+    actGet_Export_FileName_xls: TdsdExecStoredProc;
+    spGet_Export_FileName_xls: TdsdStoredProc;
     procedure TrayIconClick(Sender: TObject);
     procedure AppMinimize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -207,6 +214,7 @@ end;
 procedure TMainForm.FormCreate(Sender: TObject);
 var
   IntervalStr: string;
+  ExcelStr: string;
 begin
   Application.OnMinimize := AppMinimize;
   Timer.Enabled := False;
@@ -215,9 +223,10 @@ begin
   Hour_onDel := -1;
   Hour_onSendEmail:= -1;
 
-  cbLoad.Checked:= TRUE;
-  cbSend.Checked:= TRUE;
-  cbEmail.Checked:= TRUE;
+  cbEmailExcel.Checked:= TRUE; // ParamStr(3) = 'Excel';
+  cbLoad.Checked:=  TRUE; // ParamStr(3) = '';
+  cbSend.Checked:=  TRUE; // ParamStr(3) = '';
+  cbEmail.Checked:= TRUE; // ParamStr(3) = '';
 
   // При запуске считаем что пред день НЕ надо, т.е. он уже обработан
   isPrevDay_begin:= True;
@@ -417,7 +426,7 @@ function TMainForm.fSale_SendEmail : Boolean;
 var Err_str: String;
     i : Integer;
 begin
-     if cbEmail.Checked = FALSE then
+     if (cbEmail.Checked = FALSE)and (cbEmailExcel.Checked = FALSE) then
      begin
           AddToLog('.....');
           AddToLog('ОТКЛЮЧИЛИ отправку Email');
@@ -427,6 +436,7 @@ begin
 
      Result:= false;
 
+     spSelectSend_Email.ParamByName('inIsExcel').Value:= cbEmailExcel.Checked = TRUE;
      spSelectSend_Email.Execute;
      Send_EmailCDS.First;
      if Send_EmailCDS.RecordCount = 0 then

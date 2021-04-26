@@ -1406,11 +1406,11 @@ BEGIN
            , COALESCE (tmpObject_GoodsPropertyValue.Name, '')       AS GoodsName_Juridical
            , COALESCE (tmpObject_GoodsPropertyValue.Amount, 0)      AS AmountInPack_Juridical
            , COALESCE (tmpObject_GoodsPropertyValue.AmountDoc, 0)   AS AmountDocInPack_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValue.BoxCount, COALESCE (tmpObject_GoodsPropertyValueGroup.BoxCount, 0))      AS BoxCount_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValueGroup.Article,    COALESCE (tmpObject_GoodsPropertyValue.Article, ''))    AS Article_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode,    COALESCE (tmpObject_GoodsPropertyValue.BarCode, ''))    AS BarCode_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValueGroup.ArticleGLN, COALESCE (tmpObject_GoodsPropertyValue.ArticleGLN, '')) AS ArticleGLN_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValueGroup.BarCodeGLN, COALESCE (tmpObject_GoodsPropertyValue.BarCodeGLN, '')) AS BarCodeGLN_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValue.BoxCount, tmpObject_GoodsPropertyValueGroup.BoxCount, 0)      AS BoxCount_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValueGroup.Article,    tmpObject_GoodsPropertyValue.Article, '')    AS Article_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode,    tmpObject_GoodsPropertyValue.BarCode, tmpObject_GoodsPropertyValueGroup_basis.BarCode, '') AS BarCode_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValueGroup.ArticleGLN, tmpObject_GoodsPropertyValue.ArticleGLN, '') AS ArticleGLN_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValueGroup.BarCodeGLN, tmpObject_GoodsPropertyValue.BarCodeGLN, '') AS BarCodeGLN_Juridical
 
            , CASE WHEN vbGoodsPropertyId = 83954 -- Метро
                        THEN COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, ''))
@@ -1567,7 +1567,7 @@ BEGIN
             LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = tmpMI.GoodsId
                                                         AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = tmpMI.GoodsKindId
             LEFT JOIN tmpObject_GoodsPropertyValueGroup_basis ON tmpObject_GoodsPropertyValueGroup_basis.GoodsId = tmpMI.GoodsId
-                                                             AND tmpObject_GoodsPropertyValue_basis.GoodsId IS NULL
+                                                           --AND tmpObject_GoodsPropertyValue_basis.GoodsId IS NULL
 
             LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
                                                   AND Object_GoodsByGoodsKind_View.GoodsKindId = Object_GoodsKind.Id

@@ -148,6 +148,14 @@ object MainForm: TMainForm
       Caption = #1090#1086#1083#1100#1082#1086' Email'
       TabOrder = 9
     end
+    object cbEmailExcel: TCheckBox
+      Left = 393
+      Top = 15
+      Width = 84
+      Height = 17
+      Caption = #1090#1086#1083#1100#1082#1086' Excel'
+      TabOrder = 10
+    end
   end
   object ExportXmlGrid: TcxGrid
     Left = 0
@@ -10510,8 +10518,8 @@ object MainForm: TMainForm
     Top = 180
   end
   object ActionList: TActionList
-    Left = 108
-    Top = 252
+    Left = 84
+    Top = 68
     object actSetDefaults: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -10840,13 +10848,10 @@ object MainForm: TMainForm
           Action = actGet_Export_Email
         end
         item
-          Action = actGet_Export_FileName
+          Action = actGet_Export_FileName_xls
         end
         item
-          Action = actSelect_Export_xls
-        end
-        item
-          Action = actExport_Grid
+          Action = actExportToXLS_project
         end
         item
           Action = actSMTPFile
@@ -10862,12 +10867,168 @@ object MainForm: TMainForm
       Category = 'Export_Email'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spSelect_Export_xls
+      StoredProc = spSelectPrintHeader
       StoredProcList = <
         item
-          StoredProc = spSelect_Export_xls
+          StoredProc = spSelectPrintHeader
+        end
+        item
+          StoredProc = spSelectPrintItem
+        end
+        item
+          StoredProc = spSelectPrintSign
         end>
-      Caption = 'actSelect_Export'
+      Caption = 'actExecSelectPrint'
+    end
+    object actExportToXLS_project: TdsdExportToXLS
+      Category = 'Export_Email'
+      MoveParams = <>
+      BeforeAction = actSelect_Export_xls
+      ItemsDataSet = PrintItemsCDS
+      TitleDataSet = PrintHeaderCDS
+      SignDataSet = PrintSignCDS
+      FileName = 'test'
+      FileNameParam.Name = 'FileName_xls'
+      FileNameParam.Value = 'test'
+      FileNameParam.Component = FormParams
+      FileNameParam.ComponentItem = 'FileName_xls'
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      TitleHeight = 1.000000000000000000
+      SignHeight = 1.000000000000000000
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -13
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = [fsBold]
+      HeaderFont.Charset = DEFAULT_CHARSET
+      HeaderFont.Color = clWindowText
+      HeaderFont.Height = -11
+      HeaderFont.Name = 'Tahoma'
+      HeaderFont.Style = [fsBold]
+      SignFont.Charset = DEFAULT_CHARSET
+      SignFont.Color = clWindowText
+      SignFont.Height = -13
+      SignFont.Name = 'Tahoma'
+      SignFont.Style = [fsBold]
+      ColumnParams = <
+        item
+          Caption = #8470
+          FieldName = 'Ord'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end
+        item
+          Caption = #1064#1090#1088#1080#1093#1082#1086#1076
+          FieldName = 'BarCode'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 20
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end
+        item
+          Caption = #1058#1086#1074#1072#1088
+          FieldName = 'GoodsName'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 50
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end
+        item
+          Caption = #1050#1110#1083#1100#1082#1110#1089#1090#1100
+          FieldName = 'Amount'
+          DataType = ftCurrency
+          DecimalPlace = 4
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end
+        item
+          Caption = #1077#1076'.'#1080#1079#1084'.'
+          FieldName = 'MeasureName'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end
+        item
+          Caption = #1062#1110#1085#1072' '#1073#1077#1079' '#1055#1044#1042
+          FieldName = 'PriceNoVAT'
+          DataType = ftCurrency
+          DecimalPlace = 2
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end
+        item
+          Caption = #1057#1091#1084#1072' '#1073#1077#1079' '#1055#1044#1042
+          FieldName = 'AmountSummNoVAT'
+          DataType = ftCurrency
+          DecimalPlace = 2
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end
+        item
+          Caption = #1057#1090#1072#1074#1082#1072' '#1055#1044#1042
+          FieldName = 'VATPercent'
+          DataType = ftCurrency
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end>
+      NumberColumn = True
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' xls'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' xls'
+      ImageIndex = 18
+    end
+    object actGet_Export_FileName_xls: TdsdExecStoredProc
+      Category = 'Export_Email'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_FileName_xls
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_FileName_xls
+        end>
+      Caption = 'actGet_Export_FileName_xls'
     end
   end
   object spHeaderOrder: TdsdStoredProc
@@ -11314,17 +11475,24 @@ object MainForm: TMainForm
       item
         DataSet = Send_EmailCDS
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inIsExcel'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 352
     Top = 384
   end
-  object spSelect_Export_xls: TdsdStoredProc
+  object spSelectPrintItem: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Email_xls_Send'
-    DataSet = ExportCDS
+    DataSet = PrintItemsCDS
     DataSets = <
       item
-        DataSet = ExportCDS
+        DataSet = PrintItemsCDS
       end>
     Params = <
       item
@@ -11336,7 +11504,110 @@ object MainForm: TMainForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 528
-    Top = 386
+    Left = 544
+    Top = 258
+  end
+  object PrintSignCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 628
+    Top = 177
+  end
+  object spSelectPrintHeader: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Email_xls_Header_Send'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'MovementId_sendEmail'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 647
+    Top = 240
+  end
+  object spSelectPrintSign: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Email_xls_Sign_Send'
+    DataSet = PrintSignCDS
+    DataSets = <
+      item
+        DataSet = PrintSignCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'MovementId_sendEmail'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 647
+    Top = 285
+  end
+  object spGet_Export_FileName_xls: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Email_FileName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_sendEmail'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FileName_xls'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDefaultFileExt'
+        Value = Null
+        Component = actExport_Grid
+        ComponentItem = 'DefaultFileExt'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEncodingANSI'
+        Value = Null
+        Component = actExport_Grid
+        ComponentItem = 'EncodingANSI'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = actSMTPFile
+        ComponentItem = 'FileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outExportType'
+        Value = Null
+        Component = actExport_Grid
+        ComponentItem = 'ExportType'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 192
+    Top = 346
   end
 end

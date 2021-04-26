@@ -66,7 +66,8 @@ BEGIN
           , ''                       :: TBlob    AS Body
           , gpGet_Mail.Value                     AS AddressFrom
           -- , tmpExportJuridical.ContactPersonMail :: TVarChar AS AddressTo
-          , CASE WHEN inSession = '5'       AND 1=1 THEN 'ashtu@ua.fm;ashtu@gmail.com'
+          , CASE WHEN inSession = '5'       AND 1=1 THEN 'ashtu@ua.fm'
+               --WHEN tmp.outExportKindId = zc_Enum_ExportKind_Logistik41750857() THEN 'ashtu@ua.fm'
                --WHEN inSession = '1329039' AND 1=1 THEN 'ashtu@ua.fm'
                  ELSE tmpExportJuridical.ContactPersonMail || ';ashtu@ua.fm'
             END :: TVarChar AS AddressTo

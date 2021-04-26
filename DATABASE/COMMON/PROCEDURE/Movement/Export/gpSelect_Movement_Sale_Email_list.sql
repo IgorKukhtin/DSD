@@ -33,14 +33,14 @@ BEGIN
                                     -- только для этого
                                     WHERE tmp.ExportKindId IN (zc_Enum_ExportKind_Glad2514900150()
                                                               )
-                                      AND inIsExcel = FALSE
+                                    --AND inIsExcel = FALSE
                                    UNION
                                     SELECT DISTINCT tmp.PartnerId, tmp.ExportKindId
                                     FROM lpSelect_Object_ExportJuridical_list() AS tmp
                                     -- только для этого
                                     WHERE tmp.ExportKindId IN (zc_Enum_ExportKind_Logistik41750857()
                                                               )
-                                      AND inIsExcel = TRUE
+                                    --AND inIsExcel = TRUE
                                    )
                   , tmpMovement AS (SELECT Movement.Id AS MovementId
                                          , Movement.InvNumber
@@ -61,6 +61,8 @@ BEGIN
                                       AND Movement.DescId = zc_Movement_Sale()
                                       AND Movement.StatusId = zc_Enum_Status_Complete()
                                       AND MovementBoolean_Mail.MovementId IS NULL
+                                    --AND (MovementBoolean_Mail.MovementId IS NULL OR tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Logistik41750857()))
+                                  --LIMIT CASE WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Logistik41750857() THEN 1 ELSE 100 END
                                    )
                , tmpMovProtocol AS (SELECT tmpMovement.*
                                          , MovementProtocol.OperDate AS OperDate_protocol
@@ -127,4 +129,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_Email_list (inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Sale_Email_list (inIsExcel:= TRUE, inSession:= zfCalc_UserAdmin())
