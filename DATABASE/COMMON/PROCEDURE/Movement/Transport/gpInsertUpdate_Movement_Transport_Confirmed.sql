@@ -17,7 +17,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Transport_Confirmed());
      -- определяем ключ доступа
-     --vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Transport_Confirmed());
+     vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Transport_Confirmed());
 
      -- Определяется <Физическое лицо> 
      vbMemberId_user:= CASE WHEN vbUserId = 5 THEN 9457 ELSE
