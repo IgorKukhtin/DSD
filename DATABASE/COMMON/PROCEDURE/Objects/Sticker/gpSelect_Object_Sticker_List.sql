@@ -35,6 +35,7 @@ RETURNS TABLE (Id Integer,Code Integer, Comment TVarChar
              , StickerSkinName_SP    TVarChar
              , BarCode_SP            TVarChar
              , isFix_SP              Boolean
+             , isCK_SP               Boolean
              , Value1_SP             TFloat
              , Value2_SP             TFloat
              , Value3_SP             TFloat
@@ -241,6 +242,7 @@ BEGIN
                             
                                         , ObjectString_BarCode.ValueData     AS BarCode
                                         , ObjectBoolean_Fix.ValueData        AS isFix
+                                        , COALESCE (ObjectBoolean_CK.ValueData, FALSE) ::Boolean AS isCK
                             
                                         , ObjectFloat_Value1.ValueData       AS Value1
                                         , ObjectFloat_Value2.ValueData       AS Value2
@@ -332,7 +334,11 @@ BEGIN
                                          LEFT JOIN ObjectBoolean AS ObjectBoolean_Fix
                                                                  ON ObjectBoolean_Fix.ObjectId = Object_StickerProperty.Id
                                                                 AND ObjectBoolean_Fix.DescId = zc_ObjectBoolean_StickerProperty_Fix()
-                            
+
+                                         LEFT JOIN ObjectBoolean AS ObjectBoolean_CK
+                                                                 ON ObjectBoolean_CK.ObjectId = Object_StickerProperty.Id
+                                                                AND ObjectBoolean_CK.DescId = zc_ObjectBoolean_StickerProperty_CK()
+
                                          LEFT JOIN ObjectString AS ObjectString_BarCode
                                                                 ON ObjectString_BarCode.ObjectId = Object_StickerProperty.Id
                                                                AND ObjectString_BarCode.DescId = zc_ObjectString_StickerProperty_BarCode()
@@ -406,6 +412,7 @@ BEGIN
             , Object_StickerProperty.StickerSkinName
             , Object_StickerProperty.BarCode
             , Object_StickerProperty.isFix
+            , Object_StickerProperty.isCK
             , Object_StickerProperty.Value1   AS Value1_SP
             , Object_StickerProperty.Value2   AS Value2_SP
             , Object_StickerProperty.Value3   AS Value3_SP
@@ -624,6 +631,7 @@ BEGIN
                             
                                         , ObjectString_BarCode.ValueData     AS BarCode
                                         , ObjectBoolean_Fix.ValueData        AS isFix
+                                        , COALESCE (ObjectBoolean_CK.ValueData, FALSE) ::Boolean AS isCK
                             
                                         , ObjectFloat_Value1.ValueData       AS Value1
                                         , ObjectFloat_Value2.ValueData       AS Value2
@@ -719,7 +727,11 @@ BEGIN
                                          LEFT JOIN ObjectBoolean AS ObjectBoolean_Fix
                                                                  ON ObjectBoolean_Fix.ObjectId = Object_StickerProperty.Id
                                                                 AND ObjectBoolean_Fix.DescId = zc_ObjectBoolean_StickerProperty_Fix()
-                            
+
+                                         LEFT JOIN ObjectBoolean AS ObjectBoolean_CK
+                                                                 ON ObjectBoolean_CK.ObjectId = Object_StickerProperty.Id
+                                                                AND ObjectBoolean_CK.DescId = zc_ObjectBoolean_StickerProperty_CK()
+
                                          LEFT JOIN ObjectString AS ObjectString_BarCode
                                                                 ON ObjectString_BarCode.ObjectId = Object_StickerProperty.Id
                                                                AND ObjectString_BarCode.DescId = zc_ObjectString_StickerProperty_BarCode()
@@ -781,6 +793,7 @@ BEGIN
             , Object_StickerProperty.StickerSkinName
             , Object_StickerProperty.BarCode
             , Object_StickerProperty.isFix
+            , Object_StickerProperty.isCK
             , Object_StickerProperty.Value1   AS Value1_SP
             , Object_StickerProperty.Value2   AS Value2_SP
             , Object_StickerProperty.Value3   AS Value3_SP
@@ -809,6 +822,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 26.04.21         * isCK
  14.02.20         *
  20.12.17         *
 */

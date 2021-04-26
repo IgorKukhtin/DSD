@@ -409,6 +409,15 @@ object Sticker_ListForm: TSticker_ListForm
         HeaderHint = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1081' '#1074#1077#1089
         Width = 45
       end
+      object prisCK_SP: TcxGridDBColumn
+        Caption = #1057'/'#1050'+'#1057'/'#1042
+        DataBinding.FieldName = 'isCK_SP'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1099#1074#1086#1076#1080#1090#1100' '#1092#1088#1072#1079#1091' '#1076#1083#1103' '#1057'/'#1050'+'#1057'/'#1042
+        Options.Editing = False
+        Width = 62
+      end
       object prStickerPackName_SP: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1087#1072#1082#1091#1074#1072#1085#1085#1103
         DataBinding.FieldName = 'StickerPackName_SP'
@@ -2133,7 +2142,7 @@ object Sticker_ListForm: TSticker_ListForm
     Params = <
       item
         Name = 'inShowErased'
-        Value = 'False'
+        Value = False
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
@@ -2193,10 +2202,13 @@ object Sticker_ListForm: TSticker_ListForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 648
     Top = 256
   end
@@ -2662,7 +2674,7 @@ object Sticker_ListForm: TSticker_ListForm
       end
       item
         Name = 'inIsJPG'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2676,7 +2688,7 @@ object Sticker_ListForm: TSticker_ListForm
       end
       item
         Name = 'inIsStartEnd'
-        Value = 'True'
+        Value = True
         Component = cbStartEnd
         DataType = ftBoolean
         ParamType = ptInput
@@ -2708,7 +2720,7 @@ object Sticker_ListForm: TSticker_ListForm
       end
       item
         Name = 'inDateStart'
-        Value = 'NULL'
+        Value = Null
         Component = deDateStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -2716,7 +2728,7 @@ object Sticker_ListForm: TSticker_ListForm
       end
       item
         Name = 'inDateTare'
-        Value = 'NULL'
+        Value = Null
         Component = deDateTare
         DataType = ftDateTime
         ParamType = ptInput
@@ -2724,7 +2736,7 @@ object Sticker_ListForm: TSticker_ListForm
       end
       item
         Name = 'inDatePack'
-        Value = 'NULL'
+        Value = Null
         Component = deDatePack
         DataType = ftDateTime
         ParamType = ptInput
@@ -2732,7 +2744,7 @@ object Sticker_ListForm: TSticker_ListForm
       end
       item
         Name = 'inDateProduction'
-        Value = 'NULL'
+        Value = Null
         Component = deDateProduction
         DataType = ftDateTime
         ParamType = ptInput
@@ -2826,7 +2838,7 @@ object Sticker_ListForm: TSticker_ListForm
       end
       item
         Name = 'inIsJPG'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2840,7 +2852,7 @@ object Sticker_ListForm: TSticker_ListForm
       end
       item
         Name = 'inIsStartEnd'
-        Value = 'True'
+        Value = True
         Component = cbStartEnd
         DataType = ftBoolean
         ParamType = ptInput
@@ -2848,7 +2860,7 @@ object Sticker_ListForm: TSticker_ListForm
       end
       item
         Name = 'inIsTare'
-        Value = 'False'
+        Value = False
         Component = cbTare
         DataType = ftBoolean
         ParamType = ptInput
@@ -2856,7 +2868,7 @@ object Sticker_ListForm: TSticker_ListForm
       end
       item
         Name = 'inIsPartion'
-        Value = 'False'
+        Value = False
         Component = cbPartion
         DataType = ftBoolean
         ParamType = ptInput
@@ -2864,7 +2876,7 @@ object Sticker_ListForm: TSticker_ListForm
       end
       item
         Name = 'inIsGoodsName'
-        Value = 'True'
+        Value = True
         Component = cbGoodsName
         DataType = ftBoolean
         ParamType = ptInput
@@ -2940,7 +2952,7 @@ object Sticker_ListForm: TSticker_ListForm
       end
       item
         Name = 'inIsJPG'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2954,7 +2966,7 @@ object Sticker_ListForm: TSticker_ListForm
       end
       item
         Name = 'inIsStartEnd'
-        Value = 'True'
+        Value = True
         Component = cbStartEnd
         DataType = ftBoolean
         ParamType = ptInput
@@ -2962,7 +2974,7 @@ object Sticker_ListForm: TSticker_ListForm
       end
       item
         Name = 'inIsTare'
-        Value = 'False'
+        Value = False
         Component = cbTare
         DataType = ftBoolean
         ParamType = ptInput
@@ -2970,7 +2982,7 @@ object Sticker_ListForm: TSticker_ListForm
       end
       item
         Name = 'inIsPartion'
-        Value = 'False'
+        Value = False
         Component = cbPartion
         DataType = ftBoolean
         ParamType = ptInput
@@ -2978,7 +2990,7 @@ object Sticker_ListForm: TSticker_ListForm
       end
       item
         Name = 'inIsGoodsName'
-        Value = 'True'
+        Value = True
         Component = cbGoodsName
         DataType = ftBoolean
         ParamType = ptInput
