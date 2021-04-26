@@ -287,6 +287,49 @@ object TransportJournalForm: TTransportJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
+      object StartStop: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1085#1072#1095#1072#1083#1072' '#1087#1088#1086#1089#1090#1086#1103
+        DataBinding.FieldName = 'StartStop'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object EndStop: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1087#1088#1086#1089#1090#1086#1103
+        DataBinding.FieldName = 'EndStop'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object HoursStop: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074' '#1087#1088#1086#1089#1090#1086#1103
+        DataBinding.FieldName = 'HoursStop'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.ReadOnly = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object HoursMove: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074' '#1076#1074#1080#1078#1077#1085#1080#1103
+        DataBinding.FieldName = 'HoursMove'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.ReadOnly = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object PartnerCount: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1058#1058
+        DataBinding.FieldName = 'PartnerCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
       object HoursAdd: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1073#1072#1074#1083#1077#1085#1085#1099#1093' '#1095#1072#1089#1086#1074
         DataBinding.FieldName = 'HoursAdd'
@@ -301,6 +344,29 @@ object TransportJournalForm: TTransportJournalForm
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object CommentStop: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1087#1088#1080#1095#1080#1085#1072' '#1087#1088#1086#1089#1090#1086#1103')'
+        DataBinding.FieldName = 'CommentStop'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object Date_UserConfirmedKind: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1087#1086#1076#1090#1074'.)'
+        DataBinding.FieldName = 'Date_UserConfirmedKind'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1087#1086#1076#1090#1074'. '#1087#1088#1080#1095#1080#1085#1099' '#1087#1088#1086#1089#1090#1086#1103')'
+        Width = 70
+      end
+      object UserName_ConfirmedKind: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1087#1086#1076#1090#1074'.)'
+        DataBinding.FieldName = 'UserName_ConfirmedKind'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1087#1086#1076#1090#1074'. '#1087#1088#1080#1095#1080#1085#1099' '#1087#1088#1086#1089#1090#1086#1103')'
         Width = 70
       end
       object AmountCost: TcxGridDBColumn
@@ -1153,6 +1219,7 @@ object TransportJournalForm: TTransportJournalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>

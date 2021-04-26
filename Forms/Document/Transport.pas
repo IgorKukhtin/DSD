@@ -251,6 +251,28 @@ type
     colchisErased: TcxGridDBColumn;
     actPrintRoadList: TdsdPrintAction;
     bbPrintRoadList: TdxBarButton;
+    cxLabel17: TcxLabel;
+    edPartnerCount: TcxCurrencyEdit;
+    cxLabel18: TcxLabel;
+    edStartStop: TcxDateEdit;
+    cxLabel19: TcxLabel;
+    edEndStop: TcxDateEdit;
+    cxLabel20: TcxLabel;
+    edHoursStop: TcxCurrencyEdit;
+    cxLabel21: TcxLabel;
+    edHoursMove: TcxCurrencyEdit;
+    edCommentStop: TcxTextEdit;
+    cxLabel22: TcxLabel;
+    spInsertUpdate_Confirmed_Yes: TdsdStoredProc;
+    spInsertUpdate_Confirmed_No: TdsdStoredProc;
+    actInsertUpdate_Confirmed_Yes: TdsdExecStoredProc;
+    actInsertUpdate_Confirmed_No: TdsdExecStoredProc;
+    bbInsertUpdate_Confirmed_Yes: TdxBarButton;
+    bbInsertUpdate_Confirmed_No: TdxBarButton;
+    cxLabel23: TcxLabel;
+    edDate_UserConfirmedKind: TcxDateEdit;
+    cxLabel24: TcxLabel;
+    edUserName_ConfirmedKind: TcxButtonEdit;
   private
   public
   end;
