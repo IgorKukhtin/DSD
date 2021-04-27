@@ -474,6 +474,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_MarketingDiscount_EndDate() RETURNS Int
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_MarketingDiscount(), 'zc_ObjectDate_MarketingDiscount_EndDate', 'Дата окончания' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_MarketingDiscount_EndDate');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_MarketingDiscount_DateChange() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_MarketingDiscount_DateChange'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_MarketingDiscount(), 'zc_ObjectDate_MarketingDiscount_DateChange', 'Дата, время изменения' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_MarketingDiscount_DateChange');
+
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
  27.04.21                                                                                     * zc_ObjectDate_MarketingDiscount_EndDate
