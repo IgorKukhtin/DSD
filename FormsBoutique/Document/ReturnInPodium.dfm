@@ -2777,12 +2777,12 @@ object ReturnInPodiumForm: TReturnInPodiumForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmount'
+        Name = 'ioAmount'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -3676,7 +3676,7 @@ object ReturnInPodiumForm: TReturnInPodiumForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmount'
+        Name = 'ioAmount'
         Value = 1.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
