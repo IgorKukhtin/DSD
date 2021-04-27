@@ -988,6 +988,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_KilledCodeRecoveryDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_KilledCodeRecoveryDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_KilledCodeRecoveryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_KilledCodeRecoveryForm');
+
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_PromoBonusDiscoDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_PromoBonusDiscoDialogForm');
@@ -1566,9 +1571,9 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckFLForm');
 
     // Отчет по выполнению плана продаж по сотруднику
-}    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ImplementationPlanEmployeeAllForm'));
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ImplementationPlanEmployeeAllForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_ImplementationPlanEmployeeAllForm');
- {   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDataDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TDataDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TDataDialogForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ImplementationPlanEmployeeDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_ImplementationPlanEmployeeDialogForm');

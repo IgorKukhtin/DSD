@@ -4262,6 +4262,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_KilledCodeRecovery: TdsdOpenForm
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
+      MoveParams = <>
+      Caption = 'C'#1080#1089#1090#1077#1084#1072' '#1074#1086#1089#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1103' '#1091#1073#1080#1090#1086#1075#1086' '#1082#1086#1076#1072
+      FormName = 'TReport_KilledCodeRecoveryForm'
+      FormNameParam.Value = 'TReport_KilledCodeRecoveryForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5248,6 +5259,9 @@ inherited MainForm: TMainForm
       end
       object N284: TMenuItem
         Action = actReport_Check_CorrectMarketing
+      end
+      object C1: TMenuItem
+        Action = actReport_KilledCodeRecovery
       end
       object N133: TMenuItem
         Caption = '-'

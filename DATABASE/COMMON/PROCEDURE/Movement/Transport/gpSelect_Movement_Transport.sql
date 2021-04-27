@@ -14,9 +14,12 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Transport(
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , StartRunPlan TDateTime, EndRunPlan TDateTime, StartRun TDateTime, EndRun TDateTime
+             , StartStop TDateTime, EndStop TDateTime
              , HoursWork TFloat, HoursAdd TFloat
+             , HoursStop TFloat, HoursMove TFloat
+             , PartnerCount TFloat
              , AmountCost TFloat, AmountMemberCost TFloat
-             , Comment TVarChar
+             , Comment TVarChar, CommentStop TVarChar
              , BranchCode_ProfitLoss Integer, BranchName_ProfitLoss TVarChar
              , BranchCode Integer, BranchName TVarChar
              , CarName TVarChar, CarModelName TVarChar, CarTrailerName TVarChar
@@ -25,6 +28,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , PersonalName TVarChar
              , UnitForwardingName TVarChar
              , Cost_Info TVarChar
+             , UserId_ConfirmedKind Integer, UserName_ConfirmedKind TVarChar
+             , Date_UserConfirmedKind TDateTime
               )
 AS
 $BODY$
@@ -88,14 +93,21 @@ BEGIN
            , MovementDate_EndRunPlan.ValueData    AS EndRunPlan 
            , MovementDate_StartRun.ValueData      AS StartRun 
            , MovementDate_EndRun.ValueData        AS EndRun           
-          
+
+           , CAST (MovementDate_StartStop.ValueData AS TDateTime) AS StartStop
+           , CAST (MovementDate_EndStop.ValueData AS TDateTime)   AS EndStop
+
            , CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat) AS HoursWork
            , MovementFloat_HoursAdd.ValueData     AS HoursAdd
-                      
+           , COALESCE (MovementFloat_HoursStop.ValueData, 0) :: TFloat AS HoursStop
+           , CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)  AS TFloat) AS HoursMove
+           , CAST (MovementFloat_PartnerCount.ValueData AS TFloat)     AS PartnerCount
+
            , MovementFloat_AmountCost.ValueData       AS AmountCost
            , MovementFloat_AmountMemberCost.ValueData AS AmountMemberCost
 
-           , MovementString_Comment.ValueData     AS Comment
+           , MovementString_Comment.ValueData         AS Comment
+           , MovementString_CommentStop.ValueData     AS CommentStop
 
            , Object_Branch_pl.ObjectCode          AS BranchCode_ProfitLoss
            , Object_Branch_pl.ValueData           AS BranchName_ProfitLoss
@@ -112,7 +124,10 @@ BEGIN
 
            , Object_UnitForwarding.ValueData AS UnitForwardingName
            , tmpCost.Cost_Info ::TVarChar
-   
+
+           , Object_UserConfirmedKind.Id                           AS UserId_ConfirmedKind
+           , Object_UserConfirmedKind.ValueData                    AS UserName_ConfirmedKind
+           , MovementDate_UserConfirmedKind.ValueData :: TDateTime AS Date_UserConfirmedKind
        FROM tmpMovement AS Movement
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -133,6 +148,14 @@ BEGIN
                                    ON MovementDate_EndRun.MovementId = Movement.Id
                                   AND MovementDate_EndRun.DescId = zc_MovementDate_EndRun()
 
+            LEFT JOIN MovementDate AS MovementDate_StartStop
+                                   ON MovementDate_StartStop.MovementId = Movement.Id
+                                  AND MovementDate_StartStop.DescId = zc_MovementDate_StartStop()
+
+            LEFT JOIN MovementDate AS MovementDate_EndStop
+                                   ON MovementDate_EndStop.MovementId = Movement.Id
+                                  AND MovementDate_EndStop.DescId = zc_MovementDate_EndStop()
+
             LEFT JOIN MovementFloat AS MovementFloat_HoursWork
                                     ON MovementFloat_HoursWork.MovementId = Movement.Id
                                    AND MovementFloat_HoursWork.DescId = zc_MovementFloat_HoursWork()
@@ -140,6 +163,14 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_HoursAdd
                                     ON MovementFloat_HoursAdd.MovementId =  Movement.Id
                                    AND MovementFloat_HoursAdd.DescId = zc_MovementFloat_HoursAdd()
+
+            LEFT JOIN MovementFloat AS MovementFloat_HoursStop
+                                    ON MovementFloat_HoursStop.MovementId =  Movement.Id
+                                   AND MovementFloat_HoursStop.DescId = zc_MovementFloat_HoursStop()
+
+            LEFT JOIN MovementFloat AS MovementFloat_PartnerCount
+                                    ON MovementFloat_PartnerCount.MovementId =  Movement.Id
+                                   AND MovementFloat_PartnerCount.DescId = zc_MovementFloat_PartnerCount()
 
              LEFT JOIN MovementFloat AS MovementFloat_AmountCost
                                      ON MovementFloat_AmountCost.MovementId = Movement.Id
@@ -151,6 +182,9 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId =  Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+            LEFT JOIN MovementString AS MovementString_CommentStop
+                                     ON MovementString_CommentStop.MovementId =  Movement.Id
+                                    AND MovementString_CommentStop.DescId = zc_MovementString_CommentStop()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Branch
                                          ON MovementLinkObject_Branch.MovementId = Movement.Id
@@ -196,6 +230,15 @@ BEGIN
                                         AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
             LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = MovementLinkObject_UnitForwarding.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_UserConfirmedKind
+                                         ON MovementLinkObject_UserConfirmedKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_UserConfirmedKind.DescId = zc_MovementLinkObject_UserConfirmedKind()
+            LEFT JOIN Object AS Object_UserConfirmedKind ON Object_UserConfirmedKind.Id = MovementLinkObject_UserConfirmedKind.ObjectId
+
+            LEFT JOIN MovementDate AS MovementDate_UserConfirmedKind
+                                   ON MovementDate_UserConfirmedKind.MovementId = Movement.Id
+                                  AND MovementDate_UserConfirmedKind.DescId = zc_MovementDate_UserConfirmedKind()
+
             LEFT JOIN tmpCost ON tmpCost.Id = Movement.Id
       
          -- AND tmpRoleAccessKey.AccessKeyId IS NOT NULL
@@ -210,6 +253,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 26.04.21         *
  07.10.16         * add inJuridicalBasisId
  29.08.15         * add inIsErased
  06.02.14                                        * add Branch...

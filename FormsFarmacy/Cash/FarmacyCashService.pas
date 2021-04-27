@@ -84,6 +84,7 @@ type
     MEMBERKID   : integer;       //ФИО пациента (МИС «Каштан»)
     //***19.03.21
     ISCORRMARK  : boolean;       //Корректировка суммы маркетинг в ЗП по подразделению
+    ISCORRIA  : boolean;       //Корректировка суммы нелеквидов в ЗП по подразделению
 
   end;
   TBodyRecord = record
@@ -1431,6 +1432,7 @@ begin
                 MEMBERKID := FieldByName('MEMBERKID').AsInteger;
                 //***19.03.21
                 ISCORRMARK := FieldByName('ISCORRMARK').AsBoolean;
+                ISCORRIA := FieldByName('ISCORRIA').AsBoolean;
 
                 FNeedSaveVIP := (MANAGER <> 0);
               end;
@@ -1599,6 +1601,7 @@ begin
                   dsdSave.Params.AddParam('inMemberKashtanID', ftInteger, ptInput, Head.MEMBERKID);
                   //***19.03.21
                   dsdSave.Params.AddParam('isCorrectMarketing', ftBoolean, ptInput, Head.ISCORRMARK);
+                  dsdSave.Params.AddParam('isCorrectIlliquidMarketing', ftBoolean, ptInput, Head.ISCORRIA);
                   // ***24.01.17
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
 

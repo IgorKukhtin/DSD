@@ -10,19 +10,19 @@ inherited CheckForm: TCheckForm
     Top = 261
     Width = 804
     Height = 219
-    ExplicitTop = 242
+    ExplicitTop = 261
     ExplicitWidth = 804
-    ExplicitHeight = 238
+    ExplicitHeight = 219
     ClientRectBottom = 219
     ClientRectRight = 804
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 804
-      ExplicitHeight = 214
+      ExplicitHeight = 195
       inherited cxGrid: TcxGrid
         Width = 804
         Height = 195
         ExplicitWidth = 804
-        ExplicitHeight = 214
+        ExplicitHeight = 195
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -603,6 +603,17 @@ inherited CheckForm: TCheckForm
       ShowHint = True
       TabOrder = 44
       Width = 208
+    end
+    object cbCorrectIlliquidMarketing: TcxCheckBox
+      Left = 219
+      Top = 213
+      Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1089#1091#1084#1084#1099' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072' '#1074' '#1047#1055' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
+      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1089#1091#1084#1084#1099' '#1085#1077#1083#1080#1082#1074#1080#1076#1086#1074' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 45
+      Width = 286
     end
   end
   object edInvNumberOrder: TcxTextEdit [2]
@@ -2676,6 +2687,13 @@ inherited CheckForm: TCheckForm
         Component = cbCorrectMarketing
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isCorrectIlliquidMarketing'
+        Value = Null
+        Component = cbCorrectIlliquidMarketing
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 397
@@ -3217,6 +3235,7 @@ inherited CheckForm: TCheckForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>

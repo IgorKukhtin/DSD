@@ -802,7 +802,8 @@ type
       APartionDateKindId: Integer; AConfirmationCodeSP: string;
       ALoyaltySignID: Integer; ALoyaltySMID: Integer; ALoyaltySMSumma: Currency;
       ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone,
-      ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer; AisCorrectMarketing : Boolean;
+      ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
+      AisCorrectMarketing, AisCorrectIlliquidAssets : Boolean;
       ANeedComplete: Boolean; FiscalCheckNumber: String;
       out AUID: String): Boolean;
 
@@ -1497,6 +1498,7 @@ begin
   FormParams.ParamByName('MemberKashtanId').Value := 0;
   FormParams.ParamByName('MemberKashtanName').Value := '';
   FormParams.ParamByName('isCorrectMarketing').Value := False;
+  FormParams.ParamByName('isCorrectIlliquidAssets').Value := False;
 
   ClearFilterAll;
 
@@ -3045,7 +3047,8 @@ begin
           (FieldByName('AmountMonth').AsInteger = 0) and
           not(actSpecCorr.Checked or actSpec.Checked) and
           (FieldByName('Amount').AsCurrency <> 0) and
-          (FormParams.ParamByName('isCorrectMarketing').Value = False) then
+          (FormParams.ParamByName('isCorrectMarketing').Value = False) and
+          (FormParams.ParamByName('isCorrectIlliquidAssets').Value = False) then
         begin
           ShowMessage('Ошибка.В чеке использован просроченный товар '#13#10 +
             FieldByName('GoodsName').AsString);
@@ -3462,6 +3465,7 @@ begin
         FormParams.ParamByName('MemberKashtanId').Value,
         // ***19.03.21
         FormParams.ParamByName('isCorrectMarketing').Value,
+        FormParams.ParamByName('isCorrectIlliquidAssets').Value,
 
         True, // NeedComplete
         CheckNumber, // FiscalCheckNumber
@@ -5150,6 +5154,7 @@ begin
     , FormParams.ParamByName('MemberKashtanId').Value
     // ***19.03.21
     , FormParams.ParamByName('isCorrectMarketing').Value
+    , FormParams.ParamByName('isCorrectIlliquidAssets').Value
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
@@ -5258,6 +5263,7 @@ begin
     , FormParams.ParamByName('MemberKashtanId').Value
     // ***19.03.21
     , FormParams.ParamByName('isCorrectMarketing').Value
+    , FormParams.ParamByName('isCorrectIlliquidAssets').Value
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
@@ -6159,6 +6165,7 @@ begin
     , FormParams.ParamByName('MemberKashtanId').Value
     // ***19.03.21
     , FormParams.ParamByName('isCorrectMarketing').Value
+    , FormParams.ParamByName('isCorrectIlliquidAssets').Value
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
@@ -7232,6 +7239,12 @@ begin
   if FormParams.ParamByName('isCorrectMarketing').Value then
   begin
     ShowMessage('Чек по корректировки суммы маркетинга в ЗП по сотруднику редактировать запрещено!');
+    exit;
+  end;
+
+  if FormParams.ParamByName('isCorrectIlliquidAssets').Value then
+  begin
+    ShowMessage('Чек по корректировки суммы нелеквидов в ЗП по сотруднику редактировать запрещено!');
     exit;
   end;
 
@@ -8784,6 +8797,7 @@ begin
   FormParams.ParamByName('MemberKashtanId').Value := 0;
   FormParams.ParamByName('MemberKashtanName').Value := '';
   FormParams.ParamByName('isCorrectMarketing').Value := False;
+  FormParams.ParamByName('isCorrectIlliquidAssets').Value := False;
 
   FiscalNumber := '';
   pnlVIP.Visible := false;
@@ -10158,7 +10172,8 @@ function TMainCashForm2.SaveLocal(ADS: TClientDataSet; AManagerId: Integer;
   APartionDateKindId: Integer; AConfirmationCodeSP: string;
   ALoyaltySignID: Integer; ALoyaltySMID: Integer; ALoyaltySMSumma: Currency;
   ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone,
-  ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer; AisCorrectMarketing : Boolean;
+  ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
+  AisCorrectMarketing, AisCorrectIlliquidAssets : Boolean;
   ANeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 var
   NextVIPId: Integer;
@@ -10424,7 +10439,8 @@ begin
           ADistributionPromoList, // Раздача акционных материалов.
           AMedicKashtanId,        // ФИО врача (МИС «Каштан»)
           AMemberKashtanId,       // ФИО пациента (МИС «Каштан»)
-          AisCorrectMarketing     // Корректировка суммы маркетинг в ЗП по подразделению
+          AisCorrectMarketing,    // Корректировка суммы маркетинг в ЗП по подразделению
+          AisCorrectIlliquidAssets // Корректировка суммы нелеквида в ЗП по подразделению
           ]));
       End
       else
@@ -10533,6 +10549,8 @@ begin
         FLocalDataBaseHead.FieldByName('MEMBERKID').Value := AMemberKashtanId;
         // Корректировка суммы маркетинг в ЗП по подразделению
         FLocalDataBaseHead.FieldByName('ISCORRMARK').Value := AisCorrectMarketing;
+        // Корректировка суммы Нелеквида в ЗП по подразделению
+        FLocalDataBaseHead.FieldByName('ISCORRIA').Value := AisCorrectIlliquidAssets;
         FLocalDataBaseHead.Post;
       End;
     except

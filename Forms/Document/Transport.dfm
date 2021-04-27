@@ -3,7 +3,7 @@
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090'>'
   ClientHeight = 563
-  ClientWidth = 1200
+  ClientWidth = 1253
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,8 +21,8 @@
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1200
-    Height = 100
+    Width = 1253
+    Height = 130
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
@@ -201,13 +201,13 @@
       Width = 150
     end
     object edComment: TcxTextEdit
-      Left = 847
+      Left = 845
       Top = 23
       TabOrder = 13
       Width = 340
     end
     object cxLabel12: TcxLabel
-      Left = 847
+      Left = 845
       Top = 5
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '
     end
@@ -286,29 +286,70 @@
       TabOrder = 31
       Width = 160
     end
+    object cxLabel23: TcxLabel
+      Left = 1011
+      Top = 86
+      Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1087#1086#1076#1090#1074'.)'
+    end
+    object edDate_UserConfirmedKind: TcxDateEdit
+      Left = 1011
+      Top = 103
+      EditValue = 42132d
+      Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+      Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+      Properties.Kind = ckDateTime
+      Properties.ReadOnly = True
+      TabOrder = 33
+      Width = 110
+    end
+    object cxLabel24: TcxLabel
+      Left = 1127
+      Top = 86
+      Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1087#1086#1076#1090#1074'.)'
+    end
+    object edUserName_ConfirmedKind: TcxButtonEdit
+      Left = 1127
+      Top = 103
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 35
+      Width = 121
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 126
-    Width = 1200
-    Height = 437
+    Top = 156
+    Width = 1253
+    Height = 407
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 437
-    ClientRectRight = 1200
+    ExplicitTop = 126
+    ExplicitWidth = 1200
+    ExplicitHeight = 437
+    ClientRectBottom = 407
+    ClientRectRight = 1253
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 1200
+      ExplicitHeight = 413
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1200
-        Height = 268
+        Width = 1253
+        Height = 238
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1200
+        ExplicitHeight = 268
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -727,11 +768,13 @@
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 273
-        Width = 1200
+        Top = 243
+        Width = 1253
         Height = 140
         Align = alBottom
         TabOrder = 1
+        ExplicitTop = 273
+        ExplicitWidth = 1200
         object cxGridChildDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -1030,26 +1073,29 @@
       end
       object cxSplitterChild: TcxSplitter
         Left = 0
-        Top = 268
-        Width = 1200
+        Top = 238
+        Width = 1253
         Height = 5
         AlignSplitter = salBottom
         Control = cxGridChild
+        ExplicitTop = 268
+        ExplicitWidth = 1200
       end
     end
     object cxTabSheetIncome: TcxTabSheet
       Caption = #1047#1072#1087#1088#1072#1074#1082#1072
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitWidth = 1200
+      ExplicitHeight = 413
       object cxGridIncome: TcxGrid
         Left = 0
         Top = 0
-        Width = 1200
-        Height = 413
+        Width = 1253
+        Height = 383
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1200
+        ExplicitHeight = 413
         object cxGridIncomeDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = IncomeDS
@@ -1357,16 +1403,17 @@
     object cxTabSheetReport: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitWidth = 1200
+      ExplicitHeight = 413
       object cxGridReport: TcxGrid
         Left = 0
         Top = 0
-        Width = 1200
-        Height = 413
+        Width = 1253
+        Height = 383
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1200
+        ExplicitHeight = 413
         object cxGridReportDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ReportDS
@@ -1503,6 +1550,97 @@
         end
       end
     end
+  end
+  object cxLabel17: TcxLabel
+    Left = 165
+    Top = 85
+    Caption = #1050#1086#1083'-'#1074#1086' '#1058#1058
+  end
+  object edPartnerCount: TcxCurrencyEdit
+    Left = 165
+    Top = 103
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.####'
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 135
+  end
+  object cxLabel18: TcxLabel
+    Left = 305
+    Top = 85
+    Caption = #1044#1072#1090#1072'/'#1042#1088'. '#1085#1072#1095'.'#1087#1088#1086#1089#1090#1086#1103
+  end
+  object edStartStop: TcxDateEdit
+    Left = 305
+    Top = 103
+    EditValue = 42244d
+    Properties.DateButtons = [btnClear, btnToday]
+    Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+    Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+    Properties.InputKind = ikMask
+    Properties.Kind = ckDateTime
+    TabOrder = 9
+    Width = 145
+  end
+  object cxLabel19: TcxLabel
+    Left = 455
+    Top = 85
+    Caption = #1044#1072#1090#1072'/'#1042#1088'. '#1086#1082#1086#1085#1095'. '#1087#1088#1086#1089#1090#1086#1103
+  end
+  object edEndStop: TcxDateEdit
+    Left = 455
+    Top = 103
+    EditValue = 42244d
+    Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+    Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+    Properties.Kind = ckDateTime
+    TabOrder = 11
+    Width = 145
+  end
+  object cxLabel20: TcxLabel
+    Left = 610
+    Top = 86
+    Caption = #1056#1077#1084#1086#1085#1090', '#1095'.'
+  end
+  object edHoursStop: TcxCurrencyEdit
+    Left = 610
+    Top = 103
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.####'
+    Properties.ReadOnly = True
+    TabOrder = 13
+    Width = 75
+  end
+  object cxLabel21: TcxLabel
+    Left = 690
+    Top = 86
+    Caption = #1042' '#1076#1074#1080#1078#1077#1085#1080#1080', '#1095'.'
+  end
+  object edHoursMove: TcxCurrencyEdit
+    Left = 690
+    Top = 103
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.####'
+    Properties.ReadOnly = True
+    TabOrder = 15
+    Width = 147
+  end
+  object edCommentStop: TcxTextEdit
+    Left = 847
+    Top = 103
+    TabOrder = 16
+    Width = 158
+  end
+  object cxLabel22: TcxLabel
+    Left = 847
+    Top = 85
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1087#1088#1080#1095#1080#1085#1072' '#1087#1088#1086#1089#1090#1086#1103')'
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -2315,7 +2453,7 @@
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = IncomeCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -2615,6 +2753,38 @@
         end>
       isShowModal = False
     end
+    object actInsertUpdate_Confirmed_No: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_Confirmed_No
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_Confirmed_No
+        end
+        item
+          StoredProc = spGet
+        end>
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' "'#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1086' '#1087#1088#1080#1095#1080#1085#1072#1093' '#1087#1088#1086#1089#1090#1086#1103'"'
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' "'#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1086' '#1087#1088#1080#1095#1080#1085#1072#1093' '#1087#1088#1086#1089#1090#1086#1103'"'
+      ImageIndex = 52
+    end
+    object actInsertUpdate_Confirmed_Yes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_Confirmed_Yes
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_Confirmed_Yes
+        end
+        item
+          StoredProc = spGet
+        end>
+      Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' "'#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1086' '#1087#1088#1080#1095#1080#1085#1072#1093' '#1087#1088#1086#1089#1090#1086#1103'"'
+      Hint = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' "'#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1086' '#1087#1088#1080#1095#1080#1085#1072#1093' '#1087#1088#1086#1089#1090#1086#1103'"'
+      ImageIndex = 77
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -2828,6 +2998,62 @@
         Value = ''
         Component = StatusGuides
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerCount'
+        Value = Null
+        Component = edPartnerCount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartStop'
+        Value = Null
+        Component = edStartStop
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndStop'
+        Value = Null
+        Component = edEndStop
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'HoursStop'
+        Value = Null
+        Component = edHoursStop
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'HoursMove'
+        Value = Null
+        Component = edHoursMove
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CommentStop'
+        Value = Null
+        Component = edCommentStop
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Date_UserConfirmedKind'
+        Value = Null
+        Component = edDate_UserConfirmedKind
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserName_ConfirmedKind'
+        Value = Null
+        Component = edUserName_ConfirmedKind
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -3136,6 +3362,22 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inStartStop'
+        Value = Null
+        Component = edStartStop
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndStop'
+        Value = Null
+        Component = edEndStop
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inHoursAdd'
         Value = 0.000000000000000000
         Component = edHoursAdd
@@ -3154,6 +3396,14 @@
         Name = 'inComment'
         Value = ''
         Component = edComment
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCommentStop'
+        Value = Null
+        Component = edCommentStop
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3207,8 +3457,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 364
-    Top = 242
+    Left = 460
+    Top = 298
   end
   object GuidesCarTrailer: TdsdGuides
     KeyField = 'Id'
@@ -3236,8 +3486,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 722
-    Top = 91
+    Left = 730
+    Top = 83
   end
   object GuidesPersonalDriver: TdsdGuides
     KeyField = 'Id'
@@ -3270,8 +3520,8 @@
         Value = 8466
         MultiSelectSeparator = ','
       end>
-    Left = 210
-    Top = 59
+    Left = 194
+    Top = 11
   end
   object GuidesPersonalDriverMore: TdsdGuides
     KeyField = 'Id'
@@ -3304,8 +3554,8 @@
         Value = 8466
         MultiSelectSeparator = ','
       end>
-    Left = 786
-    Top = 59
+    Left = 778
+    Top = 35
   end
   object GuidesBranchForwarding: TdsdGuides
     KeyField = 'Id'
@@ -3333,8 +3583,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1082
-    Top = 59
+    Left = 1066
+    Top = 43
   end
   object spInsertUpdateMIChild: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_Transport_Child'
@@ -3574,6 +3824,15 @@
       end
       item
         Control = edComment
+      end
+      item
+        Control = edEndStop
+      end
+      item
+        Control = edStartStop
+      end
+      item
+        Control = edCommentStop
       end>
     GetStoredProc = spGet
     Left = 299
@@ -3689,6 +3948,22 @@
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdate_Confirmed_Yes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdate_Confirmed_No'
         end
         item
           Visible = True
@@ -3849,14 +4124,22 @@
       Action = actPrintRoadList
       Category = 0
     end
+    object bbInsertUpdate_Confirmed_Yes: TdxBarButton
+      Action = actInsertUpdate_Confirmed_Yes
+      Category = 0
+    end
+    object bbInsertUpdate_Confirmed_No: TdxBarButton
+      Action = actInsertUpdate_Confirmed_No
+      Category = 0
+    end
   end
   object RefreshAddOn: TRefreshAddOn
     DataSet = 'ClientDataSet'
     KeyField = 'Id'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
-    Left = 442
-    Top = 267
+    Left = 506
+    Top = 275
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 191
@@ -3869,6 +4152,7 @@
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -3885,6 +4169,7 @@
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -3980,7 +4265,7 @@
       end
       item
         Name = 'ioOperDatePartner'
-        Value = 'NULL'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'OperDatePartner'
         DataType = ftDateTime
@@ -4294,6 +4579,7 @@
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -4500,8 +4786,8 @@
         Value = 81178
         MultiSelectSeparator = ','
       end>
-    Left = 906
-    Top = 59
+    Left = 938
+    Top = 43
   end
   object spErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'
@@ -4552,5 +4838,53 @@
     PackSize = 1
     Left = 798
     Top = 329
+  end
+  object spInsertUpdate_Confirmed_Yes: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_Transport_Confirmed'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisConfirmed'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 348
+    Top = 250
+  end
+  object spInsertUpdate_Confirmed_No: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_Transport_Confirmed'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisConfirmed'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 348
+    Top = 274
   end
 end

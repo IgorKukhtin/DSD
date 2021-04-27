@@ -92,6 +92,10 @@ type
     actFormClose: TdsdFormClose;
     cxLabel29: TcxLabel;
     ceMarketingRepayment: TcxCurrencyEdit;
+    actDblClickIlliquidMarketing: TdsdDblClickAction;
+    actListGoodsIlliquidMarketing: TdsdOpenStaticForm;
+    ceIlliquidAssetsRepayment: TcxCurrencyEdit;
+    cxLabel30: TcxLabel;
   private
     { Private declarations }
   public

@@ -9,10 +9,13 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Transport(
 RETURNS TABLE (Id Integer, IdBarCode TVarChar, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , StartRunPlan TDateTime, EndRunPlan TDateTime, StartRun TDateTime, EndRun TDateTime
+             , StartStop TDateTime, EndStop TDateTime
              , StartPlanHour TFloat, StartPlanMinute TFloat
              , EndPlanHour TFloat, EndPlanMinute   TFloat
              , HoursWork TFloat, HoursAdd TFloat
-             , Comment TVarChar
+             , HoursStop TFloat, HoursMove TFloat
+             , PartnerCount TFloat
+             , Comment TVarChar, CommentStop TVarChar
              , CarId Integer, CarName TVarChar, CarModelName TVarChar
              , CarTrailerId Integer, CarTrailerName TVarChar
              , PersonalDriverId Integer, PersonalDriverName TVarChar, DriverCertificate TVarChar
@@ -20,6 +23,8 @@ RETURNS TABLE (Id Integer, IdBarCode TVarChar, InvNumber TVarChar, OperDate TDat
              , PersonalId Integer, PersonalName TVarChar
              , UnitForwardingId Integer, UnitForwardingName TVarChar
              , JuridicalName TVarChar
+             , UserId_ConfirmedKind Integer, UserName_ConfirmedKind TVarChar
+             , Date_UserConfirmedKind TDateTime
              )
 AS
 $BODY$
@@ -59,8 +64,11 @@ BEGIN
            
            , CAST (DATE_TRUNC ('MINUTE', CURRENT_TIMESTAMP) AS TDateTime) AS StartRunPlan 
            , CAST (DATE_TRUNC ('MINUTE', CURRENT_TIMESTAMP) AS TDateTime) AS EndRunPlan
-           , CAST (DATE_TRUNC ('MINUTE', CURRENT_TIMESTAMP) AS TDateTime) AS StartRun 
-           , CAST (DATE_TRUNC ('MINUTE', CURRENT_TIMESTAMP) AS TDateTime) AS EndRun           
+           , CAST (DATE_TRUNC ('MINUTE', CURRENT_TIMESTAMP) AS TDateTime) AS StartRun
+           , CAST (DATE_TRUNC ('MINUTE', CURRENT_TIMESTAMP) AS TDateTime) AS EndRun
+           
+           , CAST (NULL AS TDateTime) AS StartStop
+           , CAST (NULL AS TDateTime) AS EndStop
           
            , date_part ('HOUR',CURRENT_TIMESTAMP)  ::TFloat AS StartPlanHour
            , date_part ('MINUTE',CURRENT_TIMESTAMP)::TFloat AS StartPlanMinute
@@ -69,8 +77,12 @@ BEGIN
 
            , CAST (0 as TFloat)                    AS HoursWork
            , CAST (0 as TFloat)                    AS HoursAdd
+           , CAST (0 as TFloat)                    AS HoursStop
+           , CAST (0 as TFloat)                    AS HoursMove
+           , CAST (0 as TFloat)                    AS PartnerCount
                       
            , CAST ('' as TVarChar) AS Comment
+           , CAST ('' as TVarChar) AS CommentStop
 
            , 0                     AS CarId
            , CAST ('' as TVarChar) AS CarName
@@ -94,6 +106,10 @@ BEGIN
    
            , CAST ('' as TVarChar) AS JuridicalName
 
+           , 0                     AS UserId_ConfirmedKind
+           , CAST ('' as TVarChar) AS UserName_ConfirmedKind
+           , CAST (NULL AS TDateTime) AS Date_UserConfirmedKind
+
        FROM Object AS Object_Status
             -- LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = lpGetAccessKey (vbUserId, zc_Enum_Process_Get_Movement_Transport()))
             CROSS JOIN tmpUnit AS View_Unit 
@@ -116,6 +132,9 @@ BEGIN
            , CAST (DATE_TRUNC ('MINUTE', COALESCE (MovementDate_StartRun.ValueData, Movement.OperDate))     AS TDateTime) AS StartRun
            , CAST (DATE_TRUNC ('MINUTE', COALESCE (MovementDate_EndRun.ValueData, Movement.OperDate))       AS TDateTime) AS EndRun
 
+           , CAST (MovementDate_StartStop.ValueData AS TDateTime) AS StartStop
+           , CAST (MovementDate_EndStop.ValueData AS TDateTime)   AS EndStop
+           
            , date_part ('HOUR',  COALESCE (MovementDate_StartRunPlan.ValueData, Movement.OperDate))  ::TFloat AS StartPlanHour
            , date_part ('MINUTE',COALESCE (MovementDate_StartRunPlan.ValueData, Movement.OperDate))  ::TFloat AS StartPlanMinute
            , date_part ('HOUR',  COALESCE (MovementDate_EndRunPlan.ValueData, Movement.OperDate))    ::TFloat AS EndPlanHour
@@ -123,8 +142,13 @@ BEGIN
 
            , CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat) AS HoursWork
            , MovementFloat_HoursAdd.ValueData      AS HoursAdd
-                      
+
+           , COALESCE (MovementFloat_HoursStop.ValueData, 0) :: TFloat AS HoursStop
+           , CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)  AS TFloat) AS HoursMove
+           , CAST (MovementFloat_PartnerCount.ValueData AS TFloat)     AS PartnerCount
+
            , MovementString_Comment.ValueData      AS Comment
+           , COALESCE (MovementString_CommentStop.ValueData,'') ::TVarChar AS CommentStop
 
            , Object_Car.Id             AS CarId
            , Object_Car.ValueData      AS CarName
@@ -147,6 +171,10 @@ BEGIN
            , Object_UnitForwarding.ValueData AS UnitForwardingName
 
            , Object_Juridical.ValueData AS JuridicalName
+           
+           , Object_UserConfirmedKind.Id                           AS UserId_ConfirmedKind
+           , Object_UserConfirmedKind.ValueData                    AS UserName_ConfirmedKind
+           , MovementDate_UserConfirmedKind.ValueData :: TDateTime AS Date_UserConfirmedKind
    
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -167,17 +195,40 @@ BEGIN
                                    ON MovementDate_EndRun.MovementId = Movement.Id
                                   AND MovementDate_EndRun.DescId = zc_MovementDate_EndRun()
 
+            LEFT JOIN MovementDate AS MovementDate_StartStop
+                                   ON MovementDate_StartStop.MovementId = Movement.Id
+                                  AND MovementDate_StartStop.DescId = zc_MovementDate_StartStop()
+
+            LEFT JOIN MovementDate AS MovementDate_EndStop
+                                   ON MovementDate_EndStop.MovementId = Movement.Id
+                                  AND MovementDate_EndStop.DescId = zc_MovementDate_EndStop()
+
+            LEFT JOIN MovementDate AS MovementDate_UserConfirmedKind
+                                   ON MovementDate_UserConfirmedKind.MovementId = Movement.Id
+                                  AND MovementDate_UserConfirmedKind.DescId = zc_MovementDate_UserConfirmedKind()
+
             LEFT JOIN MovementFloat AS MovementFloat_HoursWork
-                                    ON MovementFloat_HoursWork.MovementId =  Movement.Id
+                                    ON MovementFloat_HoursWork.MovementId = Movement.Id
                                    AND MovementFloat_HoursWork.DescId = zc_MovementFloat_HoursWork()
             
             LEFT JOIN MovementFloat AS MovementFloat_HoursAdd
-                                    ON MovementFloat_HoursAdd.MovementId =  Movement.Id
+                                    ON MovementFloat_HoursAdd.MovementId = Movement.Id
                                    AND MovementFloat_HoursAdd.DescId = zc_MovementFloat_HoursAdd()
 
+            LEFT JOIN MovementFloat AS MovementFloat_HoursStop
+                                    ON MovementFloat_HoursStop.MovementId = Movement.Id
+                                   AND MovementFloat_HoursStop.DescId = zc_MovementFloat_HoursStop()
+
+            LEFT JOIN MovementFloat AS MovementFloat_PartnerCount
+                                    ON MovementFloat_PartnerCount.MovementId = Movement.Id
+                                   AND MovementFloat_PartnerCount.DescId = zc_MovementFloat_PartnerCount()
+
             LEFT JOIN MovementString AS MovementString_Comment
-                                     ON MovementString_Comment.MovementId =  Movement.Id
+                                     ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+            LEFT JOIN MovementString AS MovementString_CommentStop
+                                     ON MovementString_CommentStop.MovementId = Movement.Id
+                                    AND MovementString_CommentStop.DescId = zc_MovementString_CommentStop()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
                                          ON MovementLinkObject_Car.MovementId = Movement.Id
@@ -211,7 +262,12 @@ BEGIN
                                          ON MovementLinkObject_Personal.MovementId = Movement.Id
                                         AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
             LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = MovementLinkObject_Personal.ObjectId
-           
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_UserConfirmedKind
+                                         ON MovementLinkObject_UserConfirmedKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_UserConfirmedKind.DescId = zc_MovementLinkObject_UserConfirmedKind()
+            LEFT JOIN Object AS Object_UserConfirmedKind ON Object_UserConfirmedKind.Id = MovementLinkObject_UserConfirmedKind.ObjectId
+
             LEFT JOIN ObjectString AS ObjectString_DriverCertificate
                                    ON ObjectString_DriverCertificate.ObjectId = View_PersonalDriver.MemberId 
                                   AND ObjectString_DriverCertificate.DescId = zc_ObjectString_Member_DriverCertificate()
@@ -234,6 +290,7 @@ ALTER FUNCTION gpGet_Movement_Transport (Integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 26.04.21         *
  22.01.20         * add StartPlanHour, StartPlanMinute, 
                         EndPlanHour, EndPlanMinute
  16.12.13                                        * err on DriverCertificate

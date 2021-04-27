@@ -125,6 +125,14 @@ BEGIN
       PERFORM gpInsertUpdate_MovementItem_WagesMarketingRepayment (inMovementID := inMovementId, inSession:= zfCalc_UserAdmin());
     END IF;
 
+    IF EXISTS(SELECT * FROM MovementBoolean AS MovementBoolean_CorrectIlliquidMarketing
+              WHERE MovementBoolean_CorrectIlliquidMarketing.ValueData = True
+                AND MovementBoolean_CorrectIlliquidMarketing.MovementId = inMovementId
+                AND MovementBoolean_CorrectIlliquidMarketing.DescId = zc_MovementBoolean_CorrectIlliquidMarketing()) 
+    THEN
+      PERFORM gpInsertUpdate_MovementItem_WagesIlliquidAssetsRepayment (inMovementID := inMovementId, inSession:= zfCalc_UserAdmin());
+    END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

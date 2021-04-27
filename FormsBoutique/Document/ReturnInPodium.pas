@@ -191,6 +191,15 @@ type
     isLine: TcxGridDBColumn;
     PanelNameFull: TPanel;
     DBLabelNameFull: TcxDBLabel;
+    spInsertUpdate_Movement_Sale: TdsdStoredProc;
+    actInsert_Movement_Sale: TdsdExecStoredProc;
+    actOpenSalePodiumForm: TdsdOpenForm;
+    mact_User_Sale: TMultiAction;
+    spGet_Check_ReturnIn_No: TdsdStoredProc;
+    spGet_Check_ReturnIn_Yes: TdsdStoredProc;
+    actGet_Check_ReturnIn_No: TdsdExecStoredProc;
+    actGet_Check_ReturnIn_Yes: TdsdExecStoredProc;
+    bbact_User_Sale: TdxBarButton;
   private
   public
   end;

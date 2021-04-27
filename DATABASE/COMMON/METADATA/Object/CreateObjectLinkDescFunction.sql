@@ -2515,9 +2515,22 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_UnitCategory_ScaleCalcMarketingPlan() R
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_UnitCategory_ScaleCalcMarketingPlan', 'Связь с Шкала расчета премии/штрафы в план по маркетингу', zc_Object_UnitCategory(), zc_Object_ScaleCalcMarketingPlan() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_UnitCategory_ScaleCalcMarketingPlan');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MarketingDiscount_Goods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MarketingDiscount_Goods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_MarketingDiscount_Goods', 'Связь с Товаром СЕТИ', zc_Object_MarketingDiscount(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MarketingDiscount_Goods');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MarketingDiscount_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MarketingDiscount_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_MarketingDiscount_Unit', 'Связь с Подразделением', zc_Object_MarketingDiscount(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MarketingDiscount_Unit');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MarketingDiscount_Retail() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MarketingDiscount_Retail'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_MarketingDiscount_Retail', 'Связь с Торговой сетью', zc_Object_MarketingDiscount(), zc_Object_Retail() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MarketingDiscount_Retail');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 27.04.21                                                                                      * c_ObjectLink_MarketingDiscount_...
  19.04.21                                                                                      * zc_ObjectLink_UnitCategory_ScaleCalcMarketingPlan
  18.04.21         * zc_ObjectLink_MemberPriceList_PriceList
                     zc_ObjectLink_MemberPriceList_Member

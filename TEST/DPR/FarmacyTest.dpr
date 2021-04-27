@@ -1022,7 +1022,9 @@ uses
   Report_Check_PromoBonusDiscoDialog in '..\..\FormsFarmacy\Report\Report_Check_PromoBonusDiscoDialog.pas' {Report_Check_PromoBonusDiscoDialogForm: TParentForm},
   Report_Check_PromoBonusDisco in '..\..\FormsFarmacy\Report\Report_Check_PromoBonusDisco.pas' {Report_Check_PromoBonusDiscoForm: TParentForm},
   AccommodationLincGoods in '..\..\FormsFarmacy\Cash\AccommodationLincGoods.pas' {AccommodationLincGoodsForm: TParentForm},
-  ScaleCalcMarketingPlan in '..\..\FormsFarmacy\Kind\ScaleCalcMarketingPlan.pas' {ScaleCalcMarketingPlanForm: TParentForm};
+  ScaleCalcMarketingPlan in '..\..\FormsFarmacy\Kind\ScaleCalcMarketingPlan.pas' {ScaleCalcMarketingPlanForm: TParentForm},
+  Report_KilledCodeRecoveryDialog in '..\..\FormsFarmacy\Report\Report_KilledCodeRecoveryDialog.pas' {Report_KilledCodeRecoveryDialogForm: TParentForm},
+  Report_KilledCodeRecovery in '..\..\FormsFarmacy\Report\Report_KilledCodeRecovery.pas' {Report_KilledCodeRecoveryForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

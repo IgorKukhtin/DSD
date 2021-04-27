@@ -2,6 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Transport (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Transport (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat,  TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Transport (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat,  TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Transport (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat,  TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Transport(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -13,10 +15,16 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Transport(
     IN inStartRun            TDateTime , -- Дата/Время выезда факт
     IN inEndRun              TDateTime , -- Дата/Время возвращения факт
 
+    IN inStartStop           TDateTime , -- Дата/Время начала простоя
+    IN inEndStop             TDateTime , -- Дата/Время окончания простоя
+
     IN inHoursAdd            TFloat    , -- Кол-во добавленных рабочих часов
    OUT outHoursWork          TFloat    , -- Кол-во рабочих часов
+   OUT outHoursStop          TFloat    , -- кол-во часов простоя
+   OUT outHoursMove          TFloat    , -- кол-во часов движения
 
     IN inComment             TVarChar  , -- Примечание
+    IN inCommentStop         TVarChar  , -- Примечание причина простоя
     
     IN inCarId                Integer   , -- Автомобиль
     IN inCarTrailerId         Integer   , -- Автомобиль (прицеп)
@@ -81,18 +89,35 @@ BEGIN
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartRun(), ioId, inStartRun);
          -- сохранили связь с <Дата/Время возвращения факт>
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndRun(), ioId, inEndRun);
+
+         -- сохранили связь с <Дата/Время начала простоя>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartStop(), ioId, inStartStop);
+         -- сохранили связь с <Дата/Время окончания простоя>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndStop(), ioId, inEndStop);
+
          -- расчитали свойство <Кол-во рабочих часов>
          outHoursWork := EXTRACT (DAY FROM (inEndRun - inStartRun)) * 24 + EXTRACT (HOUR FROM (inEndRun - inStartRun)) + CAST (EXTRACT (MIN FROM (inEndRun - inStartRun)) / 60 AS NUMERIC (16, 2));
          -- сохранили свойство <Кол-во рабочих часов>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_HoursWork(), ioId, outHoursWork);
+
+         -- расчитали свойство <Кол-во часов простоя / ремонта>
+         outHoursStop := EXTRACT (DAY FROM (inEndStop - inStartStop)) * 24 + EXTRACT (HOUR FROM (inEndStop - inStartStop)) + CAST (EXTRACT (MIN FROM (inEndStop - inStartStop)) / 60 AS NUMERIC (16, 2));
+         -- сохранили свойство <Кол-во часов простоя>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_HoursStop(), ioId, outHoursStop);
 
          -- досчитали что б правильно вернул в контрол свойство <Кол-во рабочих часов> !!!с учетом добавленных!!!
          outHoursWork := outHoursWork + COALESCE (inHoursAdd, 0);
          -- сохранили свойство <Кол-во добавленных рабочих часов>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_HoursAdd(), ioId, inHoursAdd);
 
+         --время движения
+         outHoursMove := (COALESCE (outHoursWork,0) - COALESCE (outHoursStop,0)) :: TFloat;
+         
          -- сохранили свойство <Примечание>
          PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+
+         -- сохранили свойство <Примечание причина простоя>
+         PERFORM lpInsertUpdate_MovementString (zc_MovementString_CommentStop(), ioId, inCommentStop);
 
          -- сохранили связь с <Автомобиль (прицеп)>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CarTrailer(), ioId, inCarTrailerId);
@@ -125,6 +150,11 @@ BEGIN
      -- сохранили связь с <Дата/Время возвращения факт>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndRun(), ioId, inEndRun);
 
+     -- сохранили связь с <Дата/Время начала простоя>
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartStop(), ioId, inStartStop);
+     -- сохранили связь с <Дата/Время окончания простоя>
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndStop(), ioId, inEndStop);
+
      -- расчитали свойство <Кол-во рабочих часов>
      outHoursWork := EXTRACT (DAY FROM (inEndRun - inStartRun)) * 24 + EXTRACT (HOUR FROM (inEndRun - inStartRun)) + CAST (EXTRACT (MIN FROM (inEndRun - inStartRun)) / 60 AS NUMERIC (16, 2));
      -- сохранили свойство <Кол-во рабочих часов>
@@ -133,11 +163,22 @@ BEGIN
      -- досчитали что б правильно вернул в контрол свойство <Кол-во рабочих часов> !!!с учетом добавленных!!!
      outHoursWork := outHoursWork + COALESCE (inHoursAdd, 0);
 
+     -- расчитали свойство <Кол-во часов простоя / ремонта>
+     outHoursStop := EXTRACT (DAY FROM (inEndStop - inStartStop)) * 24 + EXTRACT (HOUR FROM (inEndStop - inStartStop)) + CAST (EXTRACT (MIN FROM (inEndStop - inStartStop)) / 60 AS NUMERIC (16, 2));
+     -- сохранили свойство <Кол-во часов простоя>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_HoursStop(), ioId, outHoursStop);
+
+     -- время движения
+     outHoursMove := (COALESCE (outHoursWork,0) - COALESCE (outHoursStop,0)) :: TFloat;
+
      -- сохранили свойство <Кол-во добавленных рабочих часов>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_HoursAdd(), ioId, inHoursAdd);
 
      -- сохранили свойство <Примечание>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+
+     -- сохранили свойство <Примечание причина простоя>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_CommentStop(), ioId, inCommentStop);
 
      -- сохранили связь с <Автомобиль>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Car(), ioId, inCarId);
@@ -187,6 +228,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.04.21         *
  23.03.14                                        * add vbIsInsert
  23.03.14                                        * add В этом случае сохраняем много свойств и выходим
  04.03.14                                        * add В этом случае сохраняем одно свойство и выходим

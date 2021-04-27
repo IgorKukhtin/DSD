@@ -1647,11 +1647,11 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportJournalForm');
   exit;
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportJournalChoiceForm'));
+  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportJournalChoiceForm');
   }
 end;
@@ -3224,10 +3224,10 @@ end;
 
 procedure TLoadFormTest.LoadStickerFormTest;
 begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSticker_ListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSticker_ListForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerForm');
   {

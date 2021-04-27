@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_MovementItem_WagesUser(
     IN inSession     TVarChar         -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
-             , HolidaysHospital TFloat, Marketing TFloat, MarketingRepayment TFloat, Director TFloat, IlliquidAssets TFloat, PenaltySUN TFloat
+             , HolidaysHospital TFloat, Marketing TFloat, MarketingRepayment TFloat, Director TFloat, IlliquidAssets TFloat, IlliquidAssetsRepayment TFloat, PenaltySUN TFloat
              , AmountCard TFloat, AmountHand TFloat
              , MemberCode Integer, MemberName TVarChar, PositionName TVarChar
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
@@ -242,17 +242,24 @@ BEGIN
                  , CASE WHEN COALESCE(MIFloat_Marketing.ValueData, 0) > 0 THEN Null
                         WHEN COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0) > 0
                         THEN - MIFloat_Marketing.ValueData ELSE MIFloat_MarketingRepayment.ValueData END::TFloat                             AS MarketingRepayment
-                 , MIFloat_Director.ValueData         AS Director
-                 , MIFloat_IlliquidAssets.ValueData   AS IlliquidAssets
-                 , MIFloat_PenaltySUN.ValueData       AS PenaltySUN
-                 , MIF_AmountCard.ValueData           AS AmountCard
+                 , MIFloat_Director.ValueData                   AS Director
+                 , CASE WHEN COALESCE(MIFloat_IlliquidAssets.ValueData, 0) > 0 THEN MIFloat_IlliquidAssets.ValueData
+                        WHEN COALESCE(MIFloat_IlliquidAssets.ValueData, 0) + COALESCE(MIFloat_IlliquidAssetsRepayment.ValueData, 0) > 0
+                        THEN Null ELSE COALESCE(MIFloat_IlliquidAssets.ValueData, 0) + COALESCE(MIFloat_IlliquidAssetsRepayment.ValueData, 0) END::TFloat AS IlliquidAssets
+                 , CASE WHEN COALESCE(MIFloat_IlliquidAssets.ValueData, 0) > 0 THEN Null
+                        WHEN COALESCE(MIFloat_IlliquidAssets.ValueData, 0) + COALESCE(MIFloat_IlliquidAssetsRepayment.ValueData, 0) > 0
+                        THEN - MIFloat_IlliquidAssets.ValueData ELSE MIFloat_IlliquidAssetsRepayment.ValueData END::TFloat                             AS IlliquidAssetsRepayment
+                 , MIFloat_PenaltySUN.ValueData                 AS PenaltySUN
+                 , MIF_AmountCard.ValueData                     AS AmountCard
                  , (MIAmount.Amount +
                     COALESCE (MIFloat_HolidaysHospital.ValueData, 0) +
                     CASE WHEN COALESCE(MIFloat_Marketing.ValueData, 0) > 0 THEN COALESCE(MIFloat_Marketing.ValueData, 0)
                          WHEN COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0) > 0
                          THEN 0 ELSE COALESCE(MIFloat_Marketing.ValueData, 0) + COALESCE(MIFloat_MarketingRepayment.ValueData, 0)  END +
                     COALESCE (MIFloat_Director.ValueData, 0) +
-                    COALESCE (MIFloat_IlliquidAssets.ValueData, 0) +
+                    CASE WHEN COALESCE(MIFloat_IlliquidAssets.ValueData, 0) > 0 THEN COALESCE(MIFloat_IlliquidAssets.ValueData, 0)
+                         WHEN COALESCE(MIFloat_IlliquidAssets.ValueData, 0) + COALESCE(MIFloat_IlliquidAssetsRepayment.ValueData, 0) > 0
+                         THEN 0 ELSE COALESCE(MIFloat_IlliquidAssets.ValueData, 0) + COALESCE(MIFloat_IlliquidAssetsRepayment.ValueData, 0)  END +
                     COALESCE (MIFloat_PenaltySUN.ValueData, 0) -
                     COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
 
@@ -329,6 +336,10 @@ BEGIN
                                               ON MIFloat_IlliquidAssets.MovementItemId = MovementItem.Id
                                              AND MIFloat_IlliquidAssets.DescId = zc_MIFloat_SummaIlliquidAssets()
 
+                  LEFT JOIN MovementItemFloat AS MIFloat_IlliquidAssetsRepayment
+                                              ON MIFloat_IlliquidAssetsRepayment.MovementItemId = MovementItem.Id
+                                             AND MIFloat_IlliquidAssetsRepayment.DescId = zc_MIFloat_IlliquidAssetsRepayment()
+
                   LEFT JOIN MovementItemFloat AS MIFloat_PenaltySUN
                                               ON MIFloat_PenaltySUN.MovementItemId = MovementItem.Id
                                              AND MIFloat_PenaltySUN.DescId = zc_MIFloat_PenaltySUN()
@@ -365,4 +376,5 @@ $BODY$
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
  28.08.19                                                        *
 */
--- select * from gpGet_MovementItem_WagesUser(inOperDate := ('01.03.2020')::TDateTime ,  inSession := '3');
+-- 
+select * from gpGet_MovementItem_WagesUser(inOperDate := ('01.04.2020')::TDateTime ,  inSession := '3');

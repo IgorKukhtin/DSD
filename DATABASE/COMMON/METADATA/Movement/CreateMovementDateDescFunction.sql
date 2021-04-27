@@ -194,9 +194,26 @@ CREATE OR REPLACE FUNCTION zc_MovementDate_Compensation() RETURNS Integer AS $BO
 INSERT INTO MovementDateDesc (Code, ItemName)
   SELECT 'zc_MovementDate_Compensation', 'Дата компенсации' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Compensation');
 
+
+CREATE OR REPLACE FUNCTION zc_MovementDate_StartStop() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_StartStop'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_StartStop', 'Дата/Время начала простоя' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_StartStop');
+
+CREATE OR REPLACE FUNCTION zc_MovementDate_EndStop() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_EndStop'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_EndStop', 'Дата/Время окончания простоя' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_EndStop');
+
+CREATE OR REPLACE FUNCTION zc_MovementDate_UserConfirmedKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_UserConfirmedKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_UserConfirmedKind', 'Дата/время подтверждения' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_UserConfirmedKind');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. А.    Воробкало А.А.   Ярошенко Р.Ф.   Шаблий О.В.
+ 26.04.21         * zc_MovementDate_StartStop
+                    zc_MovementDate_EndStop
+                    zc_MovementDate_UserConfirmedKind
  15.04.21                                                                                                        * zc_MovementDate_Compensation
  19.03.21                                                                                                        * zc_MovementDate_Calculation
  26.05.20                                                                                                        * zc_MovementDate_Deferred

@@ -25,7 +25,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, isLine TVarChar, PartionId Integer
              , BrandName    TVarChar
              , PeriodName   TVarChar
              , PeriodYear   Integer
-             , Amount TFloat, Amount_Sale TFloat, Remains TFloat
+             , Amount TFloat, AmountPartner TFloat, Amount_Sale TFloat, Remains TFloat
              , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat, OperPriceList_curr TFloat
                -- »ÚÓ„Ó ÒÛÏÏ‡ ‚ı. + Ô‡ÈÒ (‚ ÔÓ‰.)
              , TotalSumm TFloat, TotalSummBalance TFloat, TotalSummPriceList TFloat
@@ -220,6 +220,7 @@ BEGIN
                              , MI_Master.PartionId                                       AS PartionId
                              , MI_Master.ObjectId                                        AS GoodsId
                              , MI_Master.Amount                                          AS Amount_master
+                             , COALESCE (MIFloat_AmountPartner.ValueData,0)              AS AmountPartner_master
                              , COALESCE (MIFloat_TotalChangePercent_master.ValueData, 0) AS TotalChangePercent_master
                              , COALESCE (MIFloat_TotalPay_master.ValueData, 0)           AS TotalPay_master
                              , COALESCE (MIFloat_TotalPayOth_master.ValueData, 0)        AS TotalPayOth_master
@@ -268,6 +269,10 @@ BEGIN
                              LEFT JOIN MovementItemString AS MIString_Comment_master
                                                           ON MIString_Comment_master.MovementItemId = MI_Master.Id
                                                          AND MIString_Comment_master.DescId         = zc_MIString_Comment()
+
+                             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                         ON MIFloat_AmountPartner.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
 
                              LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                          ON MIFloat_OperPriceList.MovementItemId = MI_Master.Id
@@ -343,6 +348,7 @@ BEGIN
                              , COALESCE (tmpMI_Master.PartionId, tmpMI_Sale.PartionId) AS PartionId
                              , COALESCE (tmpMI_Master.GoodsId, tmpMI_Sale.GoodsId)     AS GoodsId
                              , COALESCE (tmpMI_Master.Amount_master, 0)                AS Amount
+                             , COALESCE (tmpMI_Master.AmountPartner_master,0)          AS AmountPartner
                              , COALESCE (tmpMI_Master.TotalChangePercent_master, 0)    AS TotalChangePercent
                              , COALESCE (tmpMI_Master.TotalPay_master, 0)              AS TotalPay
                              , COALESCE (tmpMI_Master.TotalPayOth_master, 0)           AS TotalPayOth
@@ -456,6 +462,7 @@ BEGIN
            , Object_PartionGoods.PeriodYear              AS PeriodYear
 
            , tmpMI.Amount                      :: TFloat AS Amount
+           , tmpMI.AmountPartner               :: TFloat AS AmountPartner
            , tmpMI.Amount_Sale                 :: TFloat AS Amount_Sale
            , Container.Amount                  :: TFloat AS Remains
            , 0                                 :: TFloat AS OperPrice
@@ -616,6 +623,7 @@ BEGIN
                              , MI_Master.PartionId                                       AS PartionId
                              , MI_Master.ObjectId                                        AS GoodsId
                              , MI_Master.Amount                                          AS Amount
+                             , MIFloat_AmountPartner.ValueData                           AS AmountPartner
                              , COALESCE (MIFloat_TotalChangePercent_master.ValueData, 0) AS TotalChangePercent
                              , COALESCE (MIFloat_TotalPay_master.ValueData, 0)           AS TotalPay
                              , COALESCE (MIFloat_TotalPayOth_master.ValueData, 0)        AS TotalPayOth
@@ -638,6 +646,10 @@ BEGIN
                              LEFT JOIN MovementItemString AS MIString_Comment_master
                                                           ON MIString_Comment_master.MovementItemId = MI_Master.Id
                                                          AND MIString_Comment_master.DescId         = zc_MIString_Comment()
+
+                             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                         ON MIFloat_AmountPartner.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
 
                              LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent_master
                                                          ON MIFloat_TotalChangePercent_master.MovementItemId = MI_Master.Id
@@ -731,6 +743,7 @@ BEGIN
            , Object_PartionGoods.PeriodYear                                AS PeriodYear
            
            , tmpMI.Amount                                       :: TFloat  AS Amount
+           , tmpMI.AmountPartner                                :: TFloat  AS AmountPartner
            , MI_Sale.Amount                                     :: TFloat  AS Amount_Sale
            , Container.Amount                                   :: TFloat  AS Remains
            , 0                                                  :: TFloat  AS OperPrice
@@ -941,6 +954,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 26.04.21         * AmountPartner
  15.05.20         *
  23.03.18         *
  21.06.17         *

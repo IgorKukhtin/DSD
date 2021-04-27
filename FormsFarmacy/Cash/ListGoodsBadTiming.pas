@@ -353,7 +353,8 @@ begin
     end;
   end;
 
-  Dataset['SummaCheck'] := Dataset['Price'] * Dataset['AmountCheck'];
+  Dataset['SummaCheck'] := GetSumm(Dataset['AmountCheck'], Dataset['Price'] ,
+                           MainCashForm.FormParams.ParamByName('RoundingDown').Value);
 end;
 
 procedure TListGoodsBadTimingForm.ParentFormDestroy(Sender: TObject);

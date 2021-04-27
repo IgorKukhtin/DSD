@@ -482,6 +482,14 @@ inherited CheckJournalForm: TCheckJournalForm
             Options.Editing = False
             Width = 92
           end
+          object isCorrectIlliquidMarketing: TcxGridDBColumn
+            Caption = #1050#1086#1088#1088'-'#1082#1072' '#1089#1091#1084#1084#1099' '#1085#1077#1083#1080#1082#1074#1080#1076#1086#1074' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+            DataBinding.FieldName = 'isCorrectIlliquidMarketing'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 95
+          end
         end
       end
     end

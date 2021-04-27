@@ -1,4 +1,4 @@
-inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
+inherited ListGoodsIlliquidMarketingForm: TListGoodsIlliquidMarketingForm
   BorderIcons = [biSystemMenu]
   Caption = #1055#1088#1086#1089#1088#1086#1095#1082#1072' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
   ClientHeight = 411
@@ -13,10 +13,10 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
   object Label12: TLabel [0]
     Left = 786
     Top = 4
-    Width = 65
+    Width = 68
     Height = 13
     Align = alCustom
-    Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075':  '
+    Caption = #1053#1077#1083#1080#1082#1074#1080#1076#1099':  '
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -11
@@ -24,16 +24,16 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
     Font.Style = []
     ParentFont = False
   end
-  object ListGoodsBadTimingGrid: TcxGrid [1]
+  object ListGoodsIlliquidMarketingGrid: TcxGrid [1]
     Left = 0
     Top = 28
     Width = 1029
     Height = 383
     Align = alClient
     TabOrder = 0
-    object ListGoodsBadTimingGridDBTableView: TcxGridDBTableView
+    object ListGoodsIlliquidMarketingGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = ListGoodsBadTimingDS
+      DataController.DataSource = ListGoodsIlliquidMarketingDS
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -171,9 +171,9 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
         Width = 129
       end
     end
-    object ListGoodsBadTimingGridLevel: TcxGridLevel
+    object ListGoodsIlliquidMarketingGridLevel: TcxGridLevel
       Caption = #1040#1083#1100#1090' (24 '#1087#1086#1079') "*"'
-      GridView = ListGoodsBadTimingGridDBTableView
+      GridView = ListGoodsIlliquidMarketingGridDBTableView
     end
   end
   object edMarketing: TcxCurrencyEdit [2]
@@ -198,10 +198,10 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
     Top = 279
     inherited actRefresh: TdsdDataSetRefresh
       BeforeAction = actCheckSumm
-      StoredProc = spListGoodsBadTiming
+      StoredProc = spListGoodsIlliquidMarketing
       StoredProcList = <
         item
-          StoredProc = spListGoodsBadTiming
+          StoredProc = spListGoodsIlliquidMarketing
         end>
       ShortCut = 0
     end
@@ -219,7 +219,7 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
     end
     object actExportExel: TdsdGridToExcel
       MoveParams = <>
-      Grid = ListGoodsBadTimingGrid
+      Grid = ListGoodsIlliquidMarketingGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -234,19 +234,19 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
       OnExecute = actCheckSummExecute
     end
   end
-  object ListGoodsBadTimingDS: TDataSource
-    DataSet = ListGoodsBadTimingCDS
+  object ListGoodsIlliquidMarketingDS: TDataSource
+    DataSet = ListGoodsIlliquidMarketingCDS
     Left = 528
     Top = 136
   end
-  object ListGoodsBadTimingCDS: TClientDataSet
+  object ListGoodsIlliquidMarketingCDS: TClientDataSet
     Aggregates = <>
     FieldDefs = <>
     IndexDefs = <>
     Params = <>
     StoreDefs = True
-    AfterOpen = ListGoodsBadTimingCDSAfterOpen
-    BeforePost = ListGoodsBadTimingCDSBeforePost
+    AfterOpen = ListGoodsIlliquidMarketingCDSAfterOpen
+    BeforePost = ListGoodsIlliquidMarketingCDSBeforePost
     Left = 360
     Top = 136
   end
@@ -395,12 +395,12 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
       Control = edMarketing
     end
   end
-  object spListGoodsBadTiming: TdsdStoredProc
+  object spListGoodsIlliquidMarketing: TdsdStoredProc
     StoredProcName = 'gpSelect_CashGoodsBadTiming'
-    DataSet = ListGoodsBadTimingCDS
+    DataSet = ListGoodsIlliquidMarketingCDS
     DataSets = <
       item
-        DataSet = ListGoodsBadTimingCDS
+        DataSet = ListGoodsIlliquidMarketingCDS
       end>
     Params = <>
     PackSize = 1
@@ -409,7 +409,7 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
   end
   object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = ListGoodsBadTimingGridDBTableView
+    View = ListGoodsIlliquidMarketingGridDBTableView
     OnDblClickActionList = <
       item
         Action = actAddOne
@@ -429,7 +429,7 @@ inherited ListGoodsBadTimingForm: TListGoodsBadTimingForm
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'Marketing'
+        Name = 'IlliquidAssets'
         Value = Null
         Component = edMarketing
         DataType = ftFloat

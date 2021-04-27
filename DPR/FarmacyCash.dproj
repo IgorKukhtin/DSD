@@ -106,8 +106,8 @@
         <DCC_DebugInformation>0</DCC_DebugInformation>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-        <VerInfo_Keys>CompanyName=;FileVersion=1.1.12.196;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
-        <VerInfo_Build>196</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileVersion=1.1.12.197;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Build>197</VerInfo_Build>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <VerInfo_Release>12</VerInfo_Release>
@@ -378,6 +378,11 @@
         <DCCReference Include="..\FormsFarmacy\Cash\LikiDniproReceipt.pas"/>
         <DCCReference Include="..\FormsFarmacy\Cash\ListGoodsBadTiming.pas">
             <Form>ListGoodsBadTimingForm</Form>
+            <DesignClass>TParentForm</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\FormsFarmacy\Cash\ListGoodsIlliquidMarketing.pas">
+            <Form>ListGoodsIlliquidMarketingForm</Form>
+            <FormType>dfm</FormType>
             <DesignClass>TParentForm</DesignClass>
         </DCCReference>
         <BuildConfiguration Include="Release">
