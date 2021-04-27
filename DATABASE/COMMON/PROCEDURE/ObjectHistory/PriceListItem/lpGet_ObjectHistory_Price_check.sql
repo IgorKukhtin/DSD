@@ -27,18 +27,31 @@ $BODY$
    DECLARE vbPrice_check TFloat;
 BEGIN
 
-       -- !!!нашли!!!
-       SELECT tmp.PriceListId, tmp.OperDate
-              INTO vbPriceListId, vbOperDate_pl
-       FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := inContractId
-                                                 , inPartnerId      := inPartnerId
-                                                 , inMovementDescId := inMovementDescId
-                                                 , inOperDate_order := inOperDate_order
-                                                 , inOperDatePartner:=  inOperDatePartner
-                                                 , inDayPrior_PriceReturn:= inDayPrior_PriceReturn
-                                                 , inIsPrior        := inIsPrior
-                                                 , inOperDatePartner_order:= inOperDatePartner_order
-                                                  ) AS tmp;
+       IF (SELECT FROM Object WHERE Object.Id = inPartnerId AND Object.DescId = zc_Object_Unit())
+       THEN
+           vbPriceListId:= zc_PriceList_Basis();
+           -- 
+           IF inOperDate_order IS NOT NULL
+           THEN
+               vbOperDate_pl:= inOperDate_order;
+           END IF;
+       ELSE
+           
+           -- !!!нашли!!!
+           SELECT tmp.PriceListId, tmp.OperDate
+                  INTO vbPriceListId, vbOperDate_pl
+           FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := inContractId
+                                                     , inPartnerId      := inPartnerId
+                                                     , inMovementDescId := inMovementDescId
+                                                     , inOperDate_order := inOperDate_order
+                                                     , inOperDatePartner:=  inOperDatePartner
+                                                     , inDayPrior_PriceReturn:= inDayPrior_PriceReturn
+                                                     , inIsPrior        := inIsPrior
+                                                     , inOperDatePartner_order:= inOperDatePartner_order
+                                                      ) AS tmp;
+
+       END IF;
+
        -- !!!поиск!!!
        vbPrice_check:= COALESCE ((SELECT tmp.ValuePrice FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := vbOperDate_pl
                                                                                               , inPriceListId:= vbPriceListId
@@ -74,7 +87,7 @@ BEGIN
            -- !!!замена!!!
            IF vbPrice_check > 0 THEN inPrice:= vbPrice_check; END IF;
 
-       ELSEIF COALESCE (inPrice, 0) <> COALESCE (vbPrice_check, 0) AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View AS RoleAccessKeyView WHERE RoleAccessKeyView.UserId = inUserId AND RoleAccessKeyView.AccessKeyId = zc_Enum_Process_Update_MI_OperPrice())
+       ELSEIF COALESCE (inPrice, 0) <> COALESCE (vbPrice_check, 0) -- AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View AS RoleAccessKeyView WHERE RoleAccessKeyView.UserId = inUserId AND RoleAccessKeyView.AccessKeyId = zc_Enum_Process_Update_MI_OperPrice())
        THEN
            RAISE EXCEPTION 'Ошибка.У пользователя <%> нет прав ручного регулирования цены <%>.%Можно ввести цену <%> из прайса <%>.'
                          , lfGet_Object_ValueData_sh (inUserId)

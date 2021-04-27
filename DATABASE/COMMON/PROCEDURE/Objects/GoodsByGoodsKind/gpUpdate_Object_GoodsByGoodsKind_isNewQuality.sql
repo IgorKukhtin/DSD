@@ -66,8 +66,8 @@ BEGIN
 
    END IF;
    
-   -- сохранили свойство <используется в заявках>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsByGoodsKind_NewQuality(), ioId, inisNewQuality);
+   -- сохранили свойство <Новая декларация с параметром "Вжити до">
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsByGoodsKind_NewQuality(), ioId, NOT inIsNewQuality);
    
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

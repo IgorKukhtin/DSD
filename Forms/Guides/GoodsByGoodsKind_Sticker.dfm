@@ -3,7 +3,7 @@ inherited GoodsByGoodsKind_StickerForm: TGoodsByGoodsKind_StickerForm
   ClientHeight = 420
   ClientWidth = 1030
   ExplicitWidth = 1046
-  ExplicitHeight = 458
+  ExplicitHeight = 455
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -570,6 +570,9 @@ inherited GoodsByGoodsKind_StickerForm: TGoodsByGoodsKind_StickerForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
     end
     object bbInsertRecord: TdxBarButton
       Action = InsertRecord

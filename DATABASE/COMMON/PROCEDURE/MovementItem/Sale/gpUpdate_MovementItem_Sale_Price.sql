@@ -18,7 +18,7 @@ $BODY$
    DECLARE vbMovementId_order Integer;
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_MI_Sale_Price());
 
 
      -- определ€ютс€ параметры документа
@@ -75,6 +75,9 @@ BEGIN
      -- сохранили
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), MovementItem.Id, COALESCE (lfObjectHistory_PriceListItem_kind.ValuePrice, lfObjectHistory_PriceListItem.ValuePrice, 0))
      FROM MovementItem
+          LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                      ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
+                                     AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
           -- вид товара
           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -89,7 +92,10 @@ BEGIN
                  AS lfObjectHistory_PriceListItem_kind 
                  ON lfObjectHistory_PriceListItem_kind.GoodsId = MovementItem.ObjectId
                 AND COALESCE (lfObjectHistory_PriceListItem_kind.GoodsKindId,0) = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-     WHERE MovementId = inMovementId;
+     WHERE MovementId = inMovementId
+       -- !!! без акций !!!
+       AND COALESCE (MIFloat_PromoMovement.ValueData, 0) = 0
+     ;
 
 
      -- сохранили протокол
