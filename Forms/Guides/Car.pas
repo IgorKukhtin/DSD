@@ -70,6 +70,7 @@ type
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     KoeffHoursWork: TcxGridDBColumn;
+    PartnerMin: TcxGridDBColumn;
   private
     { Private declarations }
   public

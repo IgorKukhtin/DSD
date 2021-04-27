@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Car(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar 
-             , KoeffHoursWork TFloat
+             , KoeffHoursWork TFloat, PartnerMin TFloat
              , RegistrationCertificate TVarChar, Comment TVarChar
              , CarModelId Integer, CarModelCode Integer, CarModelName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
@@ -41,6 +41,7 @@ BEGIN
            
            
            , COALESCE (ObjectFloat_KoeffHoursWork.ValueData,0) :: TFloat AS KoeffHoursWork
+           , COALESCE (ObjectFloat_PartnerMin.ValueData,0)     :: TFloat AS PartnerMin
            , RegistrationCertificate.ValueData  AS RegistrationCertificate
            , ObjectString_Comment.ValueData        AS Comment
            
@@ -93,6 +94,10 @@ BEGIN
                                   ON ObjectFloat_KoeffHoursWork.ObjectId = Object_Car.Id
                                  AND ObjectFloat_KoeffHoursWork.DescId = zc_ObjectFloat_Car_KoeffHoursWork()
 
+            LEFT JOIN ObjectFloat AS ObjectFloat_PartnerMin
+                                  ON ObjectFloat_PartnerMin.ObjectId = Object_Car.Id
+                                 AND ObjectFloat_PartnerMin.DescId = zc_ObjectFloat_Car_PartnerMin()
+
             LEFT JOIN ObjectLink AS Car_CarModel
                                  ON Car_CarModel.ObjectId = Object_Car.Id
                                 AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
@@ -143,6 +148,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.04.21         * PartnerMin
  30.11.16         * add inShowAll
  28.11.16         * add Asset
  17.12.14         * add Juridical
