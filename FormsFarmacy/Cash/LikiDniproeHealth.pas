@@ -40,12 +40,21 @@ type
     FDispense_valid_from : TDateTime;   // Действителен с
     FDispense_valid_to : TDateTime;     // по
 
+    FSell_Medication_ID : string;
+    FProgram_Medication_Id : string;
+    FSell_qty : Currency;
+    FSell_price : Currency;
+    FSell_amount : Currency;
+    FDiscount_amount : Currency;
+    FDispensed_Code : string;
+
     // Необходимо лргироваться
     FShow_eHealth : Boolean;
     FShow_Location : String;
   protected
     function GetReceiptId : boolean;
     function GetDrugList : boolean;
+    function dispenseRecipe : boolean;
   public
     constructor Create; virtual;
     destructor Destroy; override;
@@ -54,9 +63,13 @@ type
 
   end;
 
+function CheckLikiDniproeHealth_Number(ANumber : string) : boolean;
+
 function GetReceipt(const AReceipt : String; var AID, AIDList, AName : string;
   var AQty : currency; var ADate : TDateTime) : boolean;
-function CheckLikiDniproeHealth_Number(ANumber : string) : boolean;
+
+function CreateNewDispense(AIDSP, AProgramIdSP : string; AQty, APrice, ASell_amount, ADiscount_amount : currency;
+  ACode : string) : boolean;
 
 var LikiDniproeHealthApi : TLikiDniproeHealthApi;
 
@@ -277,6 +290,81 @@ begin
   end else ShowError;
 end;
 
+function TLikiDniproeHealthApi.dispenseRecipe : boolean;
+var
+  jValue, j : TJSONValue;
+  JSONA, JSONAR: TJSONArray;
+  jsonBody: TJSONObject;
+  jsonTemp: TJSONObject;
+  I, L : integer;
+begin
+  Result := False;
+
+  if (FMedication_request_id = '') or (FMedical_program_id = '') then Exit;
+
+  FRESTClient.BaseURL := FLikiDnepr;
+  FRESTClient.ContentType := 'application/x-www-form-urlencoded';
+//  FRESTClient.ContentType := 'application/json';
+
+  FRESTRequest.ClearBody;
+  FRESTRequest.Method := TRESTRequestMethod.rmPOST;
+  FRESTRequest.Resource := 'dispense-recipe/' + FDispensed_Code;
+
+  // required parameters
+  FRESTRequest.Params.Clear;
+  FRESTRequest.AddParameter('Authorization', 'Bearer ' + FAccess_Token, TRESTRequestParameterKind.pkHTTPHEADER,
+                                                                        [TRESTRequestParameterOption.poDoNotEncode]);
+  FRESTRequest.AddParameter('Accept', 'application/json', TRESTRequestParameterKind.pkHTTPHEADER);
+  FRESTRequest.AddParameter('employee_email', FEmployee_Email, TRESTRequestParameterKind.pkGETorPOST);
+
+  jsonBody := TJSONObject.Create;
+  try
+    jsonTemp := TJSONObject.Create;
+    jsonTemp.AddPair('medication_id', FSell_Medication_ID);
+    jsonTemp.AddPair('medication_qty', TJSONNumber.Create(FSell_qty));
+    jsonTemp.AddPair('sell_price', TJSONNumber.Create(FSell_price));
+    jsonTemp.AddPair('sell_amount', TJSONNumber.Create(FSell_amount));
+    jsonTemp.AddPair('discount_amount', TJSONNumber.Create(FDiscount_amount));
+    jsonTemp.AddPair('program_medication_id', FProgram_Medication_Id);
+
+    JSONA := TJSONArray.Create;
+    JSONA.AddElement(jsonTemp);
+
+    jsonTemp := TJSONObject.Create;
+    jsonTemp.AddPair('medication_request_id', FMedication_request_id);
+    jsonTemp.AddPair('medical_program_id', FMedical_program_id);
+    jsonTemp.AddPair('dispense_details', JSONA);
+
+    jsonBody.AddPair('medication_dispense', jsonTemp);
+
+    FRESTRequest.Body.Add(jsonBody.ToString, TRESTContentType.ctAPPLICATION_JSON);
+  finally
+    jsonBody.Destroy;
+  end;
+
+  try
+    FRESTRequest.Execute;
+  except
+  end;
+
+  if (FRESTResponse.StatusCode = 200) and (FRESTResponse.ContentType = 'application/json') then
+  begin
+    Result := False;
+    try
+      JSONA := FRESTResponse.JSONValue.GetValue<TJSONArray>;
+
+        for I := 0 to JSONA.Count - 1 do if JSONA.Items[I].FindValue('medication_id') <> Nil then
+        begin
+          if FMedication_ID_List = '' then FMedication_ID_List := DelDoubleQuote(JSONA.Items[I].FindValue('medication_id').ToString)
+          else FMedication_ID_List := FMedication_ID_List + ',' + DelDoubleQuote(JSONA.Items[I].FindValue('medication_id').ToString);
+        end;
+
+      Result := True;
+    except
+    end
+  end else ShowError;
+end;
+
 
 function InitLikiDniproeHealthApi : boolean;
   var I : integer;
@@ -377,6 +465,30 @@ begin
     ShowMessage('Ошибка неизвестный статус чека.');
   end;
 end;
+
+function CreateNewDispense(AIDSP, AProgramIdSP : string; AQty, APrice, ASell_amount, ADiscount_amount : currency;
+  ACode : string) : boolean;
+begin
+
+  Result := False;
+
+  if not Assigned(LikiDniproeHealthApi) or (LikiDniproeHealthApi.FRequest_number = '') then
+  begin
+    ShowMessage('Ошибка не получена информация о рецепте с сайта МИС "Каштан"...');
+    Exit;
+  end;
+
+  LikiDniproeHealthApi.FSell_Medication_ID := AIDSP;
+  LikiDniproeHealthApi.FProgram_Medication_Id := AProgramIdSP;
+  LikiDniproeHealthApi.FSell_qty := AQty;
+  LikiDniproeHealthApi.FSell_price := APrice;
+  LikiDniproeHealthApi.FSell_amount := ASell_amount;
+  LikiDniproeHealthApi.FDiscount_amount := ADiscount_amount;
+  LikiDniproeHealthApi.FDispensed_Code := ACode;
+
+  Result := LikiDniproeHealthApi.dispenseRecipe;
+end;
+
 
 initialization
   LikiDniproeHealthApi := Nil;

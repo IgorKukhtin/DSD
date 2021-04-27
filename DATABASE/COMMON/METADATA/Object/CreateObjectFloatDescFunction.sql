@@ -1977,9 +1977,22 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_FinalSUAProtocol_ThresholdRemainsLarge
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_FinalSUAProtocol(), 'zc_ObjectFloat_FinalSUAProtocol_ThresholdRemainsLarge', 'Порог остатка верхний' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_FinalSUAProtocol_ThresholdRemainsLarge');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_MarketingDiscount_DiscountPercent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MarketingDiscount_DiscountPercent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_MarketingDiscount(), 'zc_ObjectFloat_MarketingDiscount_DiscountPercent', '% скидки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MarketingDiscount_DiscountPercent');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_MarketingDiscount_DiscountAmount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MarketingDiscount_DiscountAmount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_MarketingDiscount(), 'zc_ObjectFloat_MarketingDiscount_DiscountAmount', 'Сумма скидки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MarketingDiscount_DiscountAmount');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_MarketingDiscount_Multiplicity() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MarketingDiscount_Multiplicity'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_MarketingDiscount(), 'zc_ObjectFloat_MarketingDiscount_Multiplicity', 'Кратность отпуска' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MarketingDiscount_Multiplicity');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 27.04.21                                                                                      * zc_ObjectFloat_MarketingDiscount_...
  14.04.21                                                                                      * zc_ObjectFloat_CashSettings_DayCompensDiscount
  25.03.21         * zc_ObjectFloat_GoodsByGoodsKind_NormRem
                     zc_ObjectFloat_GoodsByGoodsKind_NormOut

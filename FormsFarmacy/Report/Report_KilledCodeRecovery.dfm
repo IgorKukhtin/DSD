@@ -13,19 +13,19 @@ inherited Report_KilledCodeRecoveryForm: TReport_KilledCodeRecoveryForm
     Width = 734
     Height = 488
     TabOrder = 3
-    ExplicitTop = 59
+    ExplicitTop = 79
     ExplicitWidth = 734
-    ExplicitHeight = 508
+    ExplicitHeight = 488
     ClientRectBottom = 488
     ClientRectRight = 734
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 734
-      ExplicitHeight = 508
+      ExplicitHeight = 488
       inherited cxGrid: TcxGrid
         Width = 734
         Height = 488
         ExplicitWidth = 734
-        ExplicitHeight = 508
+        ExplicitHeight = 488
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -60,6 +60,11 @@ inherited Report_KilledCodeRecoveryForm: TReport_KilledCodeRecoveryForm
             item
               Format = ',0.00'
               Kind = skSum
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = GoodsName
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False

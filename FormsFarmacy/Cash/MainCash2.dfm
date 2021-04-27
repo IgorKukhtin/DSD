@@ -97,6 +97,7 @@ inherited MainCashForm2: TMainCashForm2
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Styles.Content = dmMain.cxRemainsCashContentStyle
           Width = 45
         end
         object CheckGridColSummChangePercent: TcxGridDBColumn
