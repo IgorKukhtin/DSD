@@ -395,8 +395,6 @@ object SalePodiumForm: TSalePodiumForm
         Height = 177
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 95
-        ExplicitTop = 43
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1303,7 +1301,7 @@ object SalePodiumForm: TSalePodiumForm
             Width = 70
           end
           object TotalPay_Usd: TcxGridDBColumn
-            Caption = '***'#1054#1087#1083#1072#1090#1072' $'
+            Caption = '***'#1054#1087#1083#1072#1090#1072' USD'
             DataBinding.FieldName = 'TotalPay_Usd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1339,14 +1337,14 @@ object SalePodiumForm: TSalePodiumForm
             Width = 70
           end
           object Amount_USD_Exc: TcxGridDBColumn
-            Caption = '***'#1054#1073#1084' $'
+            Caption = '***'#1054#1073#1084' USD'
             DataBinding.FieldName = 'Amount_USD_Exc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = '***'#1054#1073#1084#1077#1085' $'
+            HeaderHint = #1054#1073#1084#1077#1085' USD'
             Options.Editing = False
             Width = 50
           end
