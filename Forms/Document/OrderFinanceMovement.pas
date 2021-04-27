@@ -98,7 +98,7 @@ type
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     bbCalcAmountPartner: TdxBarControlContainerItem;
-    spInsertMaskMIMaster: TdsdStoredProc;
+    spIDEL: TdsdStoredProc;
     actAddMask: TdsdExecStoredProc;
     bbAddMask: TdxBarButton;
     cxLabel16: TcxLabel;
@@ -179,6 +179,7 @@ type
     spInsert_byMovBankAccount: TdsdStoredProc;
     bbInsert_byMovBankAccount: TdxBarButton;
     actRefreshOFJ: TdsdDataSetRefresh;
+    spInsertMaskMIMaster2: TdsdStoredProc;
   private
   public
   end;
