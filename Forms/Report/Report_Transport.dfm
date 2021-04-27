@@ -177,6 +177,26 @@ object Report_TransportForm: TReport_TransportForm
           Format = ',0.##'
           Kind = skSum
           Column = TotalCountKg_Reestr_zp
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = HoursWork
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = HoursStop
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = HoursMove
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = PartnerCount
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -309,6 +329,26 @@ object Report_TransportForm: TReport_TransportForm
           Format = ',0.##'
           Kind = skSum
           Column = TotalCountKg_Reestr_zp
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = HoursWork
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = HoursStop
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = HoursMove
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = PartnerCount
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -711,6 +751,61 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object PartnerCount: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1058#1058
+        DataBinding.FieldName = 'PartnerCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 54
+      end
+      object HoursWork: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074
+        DataBinding.FieldName = 'HoursWork'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object HoursStop: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074' '#1087#1088#1086#1089#1090#1086#1103
+        DataBinding.FieldName = 'HoursStop'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.ReadOnly = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object HoursMove: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074' '#1076#1074#1080#1078#1077#1085#1080#1103
+        DataBinding.FieldName = 'HoursMove'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.ReadOnly = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object Speed: TcxGridDBColumn
+        Caption = #1057#1082#1086#1088#1086#1089#1090#1100' '#1076#1074#1080#1078#1077#1085#1080#1103' '#1074' '#1087#1091#1090#1080
+        DataBinding.FieldName = 'Speed'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        Properties.ReadOnly = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 49
+      end
+      object CommentStop: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1087#1088#1080#1095#1080#1085#1072' '#1087#1088#1086#1089#1090#1086#1103')'
+        DataBinding.FieldName = 'CommentStop'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -1024,10 +1119,13 @@ object Report_TransportForm: TReport_TransportForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 304
     Top = 296
   end

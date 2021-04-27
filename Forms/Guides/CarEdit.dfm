@@ -20,7 +20,7 @@
     Left = 32
     Top = 62
     TabOrder = 0
-    Width = 273
+    Width = 133
   end
   object cxLabel1: TcxLabel
     Left = 32
@@ -214,9 +214,25 @@
   end
   object cxLabel33: TcxLabel
     Left = 172
-    Top = 5
+    Top = 8
     Hint = #1050#1086#1101#1092#1092'. '#1076#1083#1103' '#1084#1086#1076#1077#1083#1080' '#1088#1072#1073#1086#1095#1077#1077' '#1074#1088#1077#1084#1103' '#1080#1079' '#1087#1091#1090'. '#1083#1080#1089#1090#1072
     Caption = #1050#1086#1101#1092#1092'. '#1076#1083#1103' '#1084#1086#1076#1077#1083#1080' '#1088'.'#1074#1088'.'
+  end
+  object cxLabel11: TcxLabel
+    Left = 172
+    Top = 46
+    Hint = #1050#1086#1101#1092#1092'. '#1076#1083#1103' '#1084#1086#1076#1077#1083#1080' '#1088#1072#1073#1086#1095#1077#1077' '#1074#1088#1077#1084#1103' '#1080#1079' '#1087#1091#1090'. '#1083#1080#1089#1090#1072
+    Caption = #1050#1086#1083'-'#1074#1086' '#1084#1080#1085#1091#1090' '#1085#1072' '#1058#1058
+  end
+  object edPartnerMin: TcxCurrencyEdit
+    Left = 172
+    Top = 62
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 27
+    Width = 133
   end
   object ActionList: TActionList
     Left = 240
@@ -349,6 +365,14 @@
         Name = 'inKoeffHoursWork'
         Value = Null
         Component = edKoeffHoursWork
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerMin'
+        Value = Null
+        Component = edPartnerMin
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -519,6 +543,13 @@
         Component = edKoeffHoursWork
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerMin'
+        Value = Null
+        Component = edPartnerMin
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Top = 40
@@ -535,7 +566,7 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 144
+    Left = 88
     Top = 56
   end
   object dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn

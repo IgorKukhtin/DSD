@@ -960,6 +960,10 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'bbAddMask'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1817,12 +1821,13 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     end
     object actAddMask: TdsdExecStoredProc
       Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertMaskMIMaster
+      StoredProc = spInsertMaskMIMaster2
       StoredProcList = <
         item
-          StoredProc = spInsertMaskMIMaster
+          StoredProc = spInsertMaskMIMaster2
         end
         item
           StoredProc = spSelectMI
@@ -1897,6 +1902,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
           StoredProc = spSelectMI
         end>
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077
     end
     object actGet_Export_FileName: TdsdExecStoredProc
       Category = 'Export_file'
@@ -2205,7 +2211,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end>
     PackSize = 1
     Left = 150
-    Top = 287
+    Top = 263
   end
   object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2601,7 +2607,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Left = 607
     Top = 184
   end
-  object spInsertMaskMIMaster: TdsdStoredProc
+  object spIDEL: TdsdStoredProc
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -3104,5 +3110,79 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     PackSize = 1
     Left = 712
     Top = 176
+  end
+  object spInsertMaskMIMaster2: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_OrderFinance'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'id'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankAccountId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BankAccountId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountStart'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 174
+    Top = 319
   end
 end
