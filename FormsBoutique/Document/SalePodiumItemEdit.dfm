@@ -226,7 +226,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
-    TabOrder = 24
+    TabOrder = 23
     Width = 100
   end
   object cxLabel19: TcxLabel
@@ -873,6 +873,20 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         Name = 'AmountDiff'
         Value = 0.000000000000000000
         Component = ceAmountDiff
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountDiscount'
+        Value = Null
+        Component = ceAmountDiscount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountDiscount_curr'
+        Value = Null
+        Component = ceAmountDiscount_curr
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>

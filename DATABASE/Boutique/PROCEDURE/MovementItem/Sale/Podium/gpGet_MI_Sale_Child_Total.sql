@@ -30,6 +30,10 @@ RETURNS TABLE (-- Информативно - для Диалога
                -- сдача, ГРН
              , AmountDiff          TFloat
 
+               -- Дополнительная скидка
+             , AmountDiscount      TFloat
+             , AmountDiscount_curr TFloat
+
                -- AmountPay - для отладки
              , AmountPay            TFloat
              , AmountPay_curr       TFloat
@@ -100,7 +104,6 @@ BEGIN
                   ELSE 0
              END :: TFloat AS AmountRemains_curr
 
-
              -- Сдача, грн
            , CASE WHEN tmp.AmountDiff < 0
                        -- сумма итак в ГРН
@@ -108,6 +111,18 @@ BEGIN
 
                   ELSE 0
              END :: TFloat AS AmountDiff
+
+             -- Дополнительная скидка - ГРН
+           , CASE WHEN tmp.AmountDiff < 0 AND tmp.AmountDiff <> FLOOR (tmp.AmountDiff)
+                       THEN inAmountDiscount + (tmp.AmountDiff - FLOOR (tmp.AmountDiff))
+                  ELSE inAmountDiscount
+             END :: TFloat AS AmountDiscount
+             -- Дополнительная скидка - EUR
+           , zfCalc_SummIn (1, zfCalc_CurrencyTo (
+             CASE WHEN tmp.AmountDiff < 0 AND tmp.AmountDiff <> FLOOR (tmp.AmountDiff)
+                       THEN inAmountDiscount + (tmp.AmountDiff - FLOOR (tmp.AmountDiff))
+                  ELSE inAmountDiscount
+             END, inCurrencyValueEUR, 1), 1) :: TFloat AS AmountDiscount_curr
 
              -- AmountPay, ГРН
            , tmp.AmountPay_GRN :: TFloat AS AmountPay

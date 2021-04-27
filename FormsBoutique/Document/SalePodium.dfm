@@ -136,15 +136,15 @@ object SalePodiumForm: TSalePodiumForm
       Width = 89
     end
     object cxLabel16: TcxLabel
-      Left = 95
+      Left = 208
       Top = 85
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1044#1086#1082#1091#1084#1077#1085#1090
     end
     object ceComment: TcxTextEdit
-      Left = 95
+      Left = 208
       Top = 103
       TabOrder = 13
-      Width = 462
+      Width = 349
     end
     object cxLabel6: TcxLabel
       Left = 770
@@ -365,12 +365,19 @@ object SalePodiumForm: TSalePodiumForm
       Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082'.)'
     end
     object cbOffer: TcxCheckBox
-      Left = 9
-      Top = 103
+      Left = 30
+      Top = 90
       Caption = #1055#1088#1080#1084#1077#1088#1082#1072
+      ParentFont = False
       Properties.ReadOnly = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -19
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
       TabOrder = 39
-      Width = 75
+      Width = 174
     end
   end
   object cxPageControl: TcxPageControl

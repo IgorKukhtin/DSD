@@ -3679,7 +3679,7 @@ object ReturnInPodiumForm: TReturnInPodiumForm
         Name = 'ioAmount'
         Value = 1.000000000000000000
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
