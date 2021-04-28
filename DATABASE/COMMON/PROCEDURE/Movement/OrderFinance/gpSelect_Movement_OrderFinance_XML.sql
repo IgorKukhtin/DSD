@@ -112,15 +112,16 @@ BEGIN
 
  
      -- Таблица для результата
-     CREATE TEMP TABLE _Result (RowData TBlob) ON COMMIT DROP;
+     CREATE TEMP TABLE _Result (Num Integer, RowData TBlob) ON COMMIT DROP;
 
      -- первые строчки XML
-     INSERT INTO _Result(RowData) VALUES ('<?xml version= "1.0" encoding= "windows-1251"?>');
+     INSERT INTO _Result(Num, RowData) VALUES (1, '<?xml version= "1.0" encoding= "windows-1251"?>');
      
      -- данные
-     INSERT INTO _Result(RowData) VALUES ('<ROWDATA>');
-     INSERT INTO _Result(RowData)
-    SELECT '<ROW '
+     INSERT INTO _Result(Num, RowData) VALUES (2, '<ROWDATA>');
+     INSERT INTO _Result(Num, RowData)
+    SELECT ROW_NUMBER() OVER (ORDER BY tmp.CORRSNAME ASC) + 100
+          , '<ROW '
          || 'AMOUNT ="'||tmp.AMOUNT||'" '                                               --Сумма платежа в копейках                         
          --|| 'CORRSNAME="'||COALESCE (tmp.CORRSNAME,'')::TVarChar||'" '                  -- Наименование получателя платежа                 
          || 'CORRSNAME="'|| replace (substring (COALESCE (tmp.CORRSNAME,''), 1, 36), '"', '&quot;') :: TVarChar||'" ' -- Наименование получателя платежа обрезаем , если больше 36 символов
@@ -144,11 +145,11 @@ BEGIN
      FROM tmpData AS tmp ;
 
      --последнии строчки XML
-     INSERT INTO _Result(RowData) VALUES ('</ROWDATA>');
+     INSERT INTO _Result(Num, RowData) VALUES ((SELECT MAX (_Result.Num) + 1 FROM _Result), '</ROWDATA>');
 
      -- Результат
      RETURN QUERY
-        SELECT _Result.RowData FROM _Result;
+        SELECT _Result.RowData FROM _Result ORDER BY Num;
 
 END;
 $BODY$
@@ -161,4 +162,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpSelect_Movement_OrderFinance_XML(inMovementId :=17617458  , inSession := '3');
+-- SELECT * FROM gpSelect_Movement_OrderFinance_XML(inMovementId :=19727298 , inSession := '3');

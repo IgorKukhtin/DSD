@@ -1007,7 +1007,7 @@ object MainForm: TMainForm
     object cbTaxCorrective: TCheckBox
       Tag = 20
       Left = 134
-      Top = 471
+      Top = 465
       Width = 235
       Height = 17
       Caption = '8.2. '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' Fl'
@@ -1024,7 +1024,7 @@ object MainForm: TMainForm
     object cbReturnInInt: TCheckBox
       Tag = 20
       Left = 3
-      Top = 456
+      Top = 455
       Width = 125
       Height = 17
       Caption = '3.4.'#1042#1086#1079'.'#1086#1090' '#1087#1086#1082'.Int - '#1041#1053
@@ -1097,7 +1097,7 @@ object MainForm: TMainForm
     object cbDeleteInt: TCheckBox
       Tag = 20
       Left = 3
-      Top = 503
+      Top = 492
       Width = 235
       Height = 17
       Caption = '3.0.2.'#1059#1076#1072#1083#1077#1085#1080#1077' Int'
@@ -1114,7 +1114,7 @@ object MainForm: TMainForm
     object cbTaxInt: TCheckBox
       Tag = 20
       Left = 3
-      Top = 471
+      Top = 468
       Width = 125
       Height = 17
       Caption = '8.3. '#1053#1072#1083#1086#1075#1086#1074#1099#1077' Int'
@@ -1130,7 +1130,7 @@ object MainForm: TMainForm
     end
     object cbClearDelete: TCheckBox
       Left = 3
-      Top = 486
+      Top = 479
       Width = 190
       Height = 17
       Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1087#1088#1086#1090#1086#1082#1086#1083' '#1091#1076#1072#1083#1077#1085#1080#1103
@@ -1316,7 +1316,7 @@ object MainForm: TMainForm
     end
     object cbLossDebt: TCheckBox
       Left = 133
-      Top = 502
+      Top = 493
       Width = 107
       Height = 17
       Caption = #1044#1086#1083#1075#1080' Int-'#1053#1040#1051
@@ -1517,6 +1517,20 @@ object MainForm: TMainForm
       Height = 21
       TabOrder = 51
       Text = 'BranchEdit'
+    end
+    object cbTransportList: TCheckBox
+      Left = 3
+      Top = 507
+      Width = 171
+      Height = 17
+      Caption = 'TransportList-PartnerCount'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 52
     end
   end
   object CompleteDocumentPanel: TPanel

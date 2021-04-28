@@ -222,6 +222,7 @@ type
     cbRepl4: TCheckBox;
     cbSnapshot: TCheckBox;
     EditRepl_offset: TEdit;
+    cbTransportList: TCheckBox;
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure StopButtonClick(Sender: TObject);
@@ -292,6 +293,7 @@ type
     procedure pCompleteDocument_ReturnIn_Auto;
     procedure pCompleteDocument_Promo;
     procedure pCompleteDocument_Currency;
+    procedure pUpdateTransport_PartnerCount;
 
     // Documents :
 
@@ -990,6 +992,9 @@ begin
                fOpenSqlFromZQuery ('select DATE_TRUNC (' + FormatToVarCharServer_notNULL('MONTH') + ', CAST ('+FormatToDateServer_notNULL(Date-5)+' AS TDateTime)) + INTERVAL ' + FormatToVarCharServer_notNULL('1 MONTH') + ' - INTERVAL ' + FormatToVarCharServer_notNULL('1 DAY') + ' as RetV');
 
                // !!!этот пересчет - всегда!!!
+               cbTransportList.Checked:=true;
+
+               // !!!этот пересчет - всегда!!!
                cbGoodsListSale.Checked:=true;
 
                // !!!этот пересчет - ночью!!!
@@ -1557,6 +1562,8 @@ begin
      //
      tmpDate1:=NOw;
      //
+     //
+     if not fStop then pUpdateTransport_PartnerCount;
      //
      if not fStop then pLoadGoodsListSale;
      //
@@ -2636,6 +2643,56 @@ begin
      end;
      //
      myDisabledCB(cbCurrency);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pUpdateTransport_PartnerCount;
+var i,SaveRecord:Integer;
+    MSec_complete:Integer;
+    isSale_str:String;
+begin
+     if (not cbTransportList.Checked)or(not cbTransportList.Enabled) then exit;
+     //
+     myEnabledCB(cbTransportList);
+     //
+     // !!!заливка в сибасе!!!
+     fromZConnection.Connected:=false;
+     with fromZQuery,Sql do begin
+        fOpenFromZQuery ('select * from gpUpdate_SelectAll_Sybase_Transport_PartnerCount('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+')'
+                       +' order by OperDate,MovementId,InvNumber');
+        //
+        cbTransportList.Caption:='('+IntToStr(RecordCount)+') TransportList-PartnerCount';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc_two.StoredProcName:='gpUpdate_Movement_Transport_PartnerCount';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
+             if not myExecToStoredProc_two then ;//exit;
+             //
+             Next;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbTransportList);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_Promo;

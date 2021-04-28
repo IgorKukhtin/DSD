@@ -13,6 +13,12 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Currency());
 
+     --  замена
+     IF vbUserId = zfCalc_UserAdmin() :: Integer
+     THEN
+         vbUserId:= zc_Enum_Process_Auto_PrimeCost();
+     END IF;
+
      -- Распроводим Документ
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                   , inUserId     := vbUserId);

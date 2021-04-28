@@ -54,26 +54,6 @@ BEGIN
 
 
 
--- для теста
-if vbUserId = 5 and 1=0
-then
-    --
-    --update MovementLinkMovement set MovementChildId = null where MovementLinkMovement.DescId = zc_MovementLinkMovement_Order() and
-      --     MovementLinkMovement.MovementId = (select Movement.ParentId from Movement where Movement.Id = inMovementId);
-
-
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), MovementItem.Id, null)
-     from MovementItem
-     where  MovementItem.MovementId = 12175588 ;
-    --
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), MovementItem.Id, 0)
-     from MovementItem
-     where  MovementItem.MovementId = 12175588 ;
-    --
-    update Movement set statusId = zc_Enum_Status_UnComplete(), ParentId = null where Movement.Id = inMovementId;
-end if;
-
-
      -- проверка
      IF COALESCE (inMovementId, 0) = 0
      THEN
