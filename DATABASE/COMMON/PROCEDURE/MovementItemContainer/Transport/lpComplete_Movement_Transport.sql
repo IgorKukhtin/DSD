@@ -63,6 +63,9 @@ BEGIN
 
 
      -- пересохран€ем
+     PERFORM lpUpdate_Movement_Transport_PartnerCount (inMovementId_trasport:= inMovementId, inUserId:= inUserId);
+
+     -- пересохран€ем
      IF 1=0
      THEN
                   -- пересохранили свойство <—тавка грн/ч коммандировочных>

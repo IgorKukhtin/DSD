@@ -107,7 +107,13 @@ BEGIN
            , MovementFloat_AmountMemberCost.ValueData AS AmountMemberCost
 
            , MovementString_Comment.ValueData         AS Comment
-           , MovementString_CommentStop.ValueData     AS CommentStop
+           , (CASE WHEN Object_UserConfirmedKind.Id IS NULL
+                    AND (TRIM (MovementString_CommentStop.ValueData) <> ''
+                      OR MovementFloat_HoursStop.ValueData           <> 0
+                        )
+                   THEN '***ме ондрбепфдемн - '
+                   ELSE ''
+              END || MovementString_CommentStop.ValueData) :: TVarChar  AS CommentStop
 
            , Object_Branch_pl.ObjectCode          AS BranchCode_ProfitLoss
            , Object_Branch_pl.ValueData           AS BranchName_ProfitLoss

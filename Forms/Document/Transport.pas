@@ -263,16 +263,19 @@ type
     edHoursMove: TcxCurrencyEdit;
     edCommentStop: TcxTextEdit;
     cxLabel22: TcxLabel;
-    spInsertUpdate_Confirmed_Yes: TdsdStoredProc;
-    spInsertUpdate_Confirmed_No: TdsdStoredProc;
-    actInsertUpdate_Confirmed_Yes: TdsdExecStoredProc;
-    actInsertUpdate_Confirmed_No: TdsdExecStoredProc;
+    spUpdate_Confirmed_Yes: TdsdStoredProc;
+    spUpdate_Confirmed_No: TdsdStoredProc;
+    actUpdate_Confirmed_Yes: TdsdExecStoredProc;
+    actUpdate_Confirmed_No: TdsdExecStoredProc;
     bbInsertUpdate_Confirmed_Yes: TdxBarButton;
     bbInsertUpdate_Confirmed_No: TdxBarButton;
     cxLabel23: TcxLabel;
     edDate_UserConfirmedKind: TcxDateEdit;
     cxLabel24: TcxLabel;
     edUserName_ConfirmedKind: TcxButtonEdit;
+    actUpdate_PartnerCount: TdsdExecStoredProc;
+    spUpdate_PartnerCount: TdsdStoredProc;
+    bbUpdate_PartnerCount: TdxBarButton;
   private
   public
   end;

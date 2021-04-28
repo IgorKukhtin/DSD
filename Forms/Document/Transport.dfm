@@ -330,17 +330,12 @@
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 126
-    ExplicitWidth = 1200
-    ExplicitHeight = 437
     ClientRectBottom = 407
     ClientRectRight = 1253
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 1200
-      ExplicitHeight = 413
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -348,8 +343,6 @@
         Height = 238
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1200
-        ExplicitHeight = 268
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -773,8 +766,6 @@
         Height = 140
         Align = alBottom
         TabOrder = 1
-        ExplicitTop = 273
-        ExplicitWidth = 1200
         object cxGridChildDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -1078,15 +1069,11 @@
         Height = 5
         AlignSplitter = salBottom
         Control = cxGridChild
-        ExplicitTop = 268
-        ExplicitWidth = 1200
       end
     end
     object cxTabSheetIncome: TcxTabSheet
       Caption = #1047#1072#1087#1088#1072#1074#1082#1072
       ImageIndex = 2
-      ExplicitWidth = 1200
-      ExplicitHeight = 413
       object cxGridIncome: TcxGrid
         Left = 0
         Top = 0
@@ -1094,8 +1081,6 @@
         Height = 383
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1200
-        ExplicitHeight = 413
         object cxGridIncomeDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = IncomeDS
@@ -1403,8 +1388,6 @@
     object cxTabSheetReport: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 3
-      ExplicitWidth = 1200
-      ExplicitHeight = 413
       object cxGridReport: TcxGrid
         Left = 0
         Top = 0
@@ -1412,8 +1395,6 @@
         Height = 383
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1200
-        ExplicitHeight = 413
         object cxGridReportDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ReportDS
@@ -1564,7 +1545,7 @@
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
-    TabOrder = 7
+    TabOrder = 5
     Width = 135
   end
   object cxLabel18: TcxLabel
@@ -1581,7 +1562,7 @@
     Properties.EditFormat = 'dd.mm.yyyy hh:mm'
     Properties.InputKind = ikMask
     Properties.Kind = ckDateTime
-    TabOrder = 9
+    TabOrder = 7
     Width = 145
   end
   object cxLabel19: TcxLabel
@@ -1596,7 +1577,7 @@
     Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
     Properties.EditFormat = 'dd.mm.yyyy hh:mm'
     Properties.Kind = ckDateTime
-    TabOrder = 11
+    TabOrder = 9
     Width = 145
   end
   object cxLabel20: TcxLabel
@@ -1612,7 +1593,7 @@
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
-    TabOrder = 13
+    TabOrder = 11
     Width = 75
   end
   object cxLabel21: TcxLabel
@@ -1628,7 +1609,7 @@
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
-    TabOrder = 15
+    TabOrder = 14
     Width = 147
   end
   object edCommentStop: TcxTextEdit
@@ -2678,6 +2659,22 @@
       Status = mtDelete
       Guides = StatusGuides
     end
+    object actUpdate_PartnerCount: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_PartnerCount
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_PartnerCount
+        end
+        item
+          StoredProc = spGet
+        end>
+      Caption = #1056#1072#1089#1095#1077#1090' "'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1058#1058'"'
+      Hint = #1056#1072#1089#1095#1077#1090' "'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1058#1058'"'
+      ImageIndex = 28
+    end
     object TotalRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       TabSheet = cxTabSheetReport
@@ -2753,14 +2750,14 @@
         end>
       isShowModal = False
     end
-    object actInsertUpdate_Confirmed_No: TdsdExecStoredProc
+    object actUpdate_Confirmed_No: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate_Confirmed_No
+      StoredProc = spUpdate_Confirmed_No
       StoredProcList = <
         item
-          StoredProc = spInsertUpdate_Confirmed_No
+          StoredProc = spUpdate_Confirmed_No
         end
         item
           StoredProc = spGet
@@ -2769,14 +2766,14 @@
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' "'#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1086' '#1087#1088#1080#1095#1080#1085#1072#1093' '#1087#1088#1086#1089#1090#1086#1103'"'
       ImageIndex = 52
     end
-    object actInsertUpdate_Confirmed_Yes: TdsdExecStoredProc
+    object actUpdate_Confirmed_Yes: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate_Confirmed_Yes
+      StoredProc = spUpdate_Confirmed_Yes
       StoredProcList = <
         item
-          StoredProc = spInsertUpdate_Confirmed_Yes
+          StoredProc = spUpdate_Confirmed_Yes
         end
         item
           StoredProc = spGet
@@ -3955,15 +3952,19 @@
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbInsertUpdate_Confirmed_Yes'
         end
         item
           Visible = True
           ItemName = 'bbInsertUpdate_Confirmed_No'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_PartnerCount'
         end
         item
           Visible = True
@@ -4063,6 +4064,7 @@
       Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbAddRoute: TdxBarButton
       Action = InsertRecord
@@ -4125,11 +4127,15 @@
       Category = 0
     end
     object bbInsertUpdate_Confirmed_Yes: TdxBarButton
-      Action = actInsertUpdate_Confirmed_Yes
+      Action = actUpdate_Confirmed_Yes
       Category = 0
     end
     object bbInsertUpdate_Confirmed_No: TdxBarButton
-      Action = actInsertUpdate_Confirmed_No
+      Action = actUpdate_Confirmed_No
+      Category = 0
+    end
+    object bbUpdate_PartnerCount: TdxBarButton
+      Action = actUpdate_PartnerCount
       Category = 0
     end
   end
@@ -4160,7 +4166,7 @@
     ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 285
-    Top = 304
+    Top = 326
   end
   object ChildViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -4177,7 +4183,7 @@
     ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 368
-    Top = 328
+    Top = 334
   end
   object IncomeCDS: TClientDataSet
     Aggregates = <>
@@ -4839,13 +4845,13 @@
     Left = 798
     Top = 329
   end
-  object spInsertUpdate_Confirmed_Yes: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_Transport_Confirmed'
+  object spUpdate_Confirmed_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Transport_Confirmed'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inId'
+        Name = 'inMovementId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
@@ -4863,13 +4869,13 @@
     Left = 348
     Top = 250
   end
-  object spInsertUpdate_Confirmed_No: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_Transport_Confirmed'
+  object spUpdate_Confirmed_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Transport_Confirmed'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inId'
+        Name = 'inMovementId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
@@ -4886,5 +4892,22 @@
     PackSize = 1
     Left = 348
     Top = 274
+  end
+  object spUpdate_PartnerCount: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Transport_PartnerCount'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 348
+    Top = 293
   end
 end
