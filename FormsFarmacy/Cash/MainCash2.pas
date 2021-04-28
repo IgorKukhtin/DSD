@@ -2200,9 +2200,10 @@ function TMainCashForm2.ExistsLessAmountMonth(AGoodsId: Integer;
   AAmountMonth: Currency): Boolean;
 var
   nPos: Integer;
-  cFilter, S: string;
+  cFilter, S, cResult: string;
   GoodsId: Integer;
   PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID: Variant;
+  ExpirationDateExpirationDate : TDateTime;
 begin
   Result := false;
   GoodsId := RemainsCDS.FieldByName('Id').AsInteger;
@@ -2237,6 +2238,22 @@ begin
           .AsString + #13#10'есть наличие со сроками: '#13#10 + S +
           #13#10#13#10'Опустить товар в чек ?...', mtConfirmation, mbYesNo,
           0) <> mrYes;
+      end;
+      if UnitConfigCDS.FindField('isMessageByTime').AsBoolean then
+      begin
+        ExpirationDateCDS.First;
+        ExpirationDateExpirationDate :=  ExpirationDateCDS.FindField('ExpirationDate').AsDateTime;
+        while not ExpirationDateCDS.Eof do
+        begin
+          if ExpirationDateExpirationDate <> ExpirationDateCDS.FindField('ExpirationDate').AsDateTime then
+          begin
+            ShowPUSHMessageCash('Проверьте соответствие срока годности с фактическим на товаре!'#13#10 +
+                                'После пробития программа списывает ближайший короткий срок.', cResult);
+            Break;
+          end;
+          ExpirationDateCDS.Next;
+        end;
+
       end;
     except
     end;

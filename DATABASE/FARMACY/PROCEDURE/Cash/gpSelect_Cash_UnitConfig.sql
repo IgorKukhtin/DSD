@@ -26,7 +26,7 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                isGetHardwareData boolean, isPairedOnlyPromo Boolean, 
                DiscountExternalId integer, DiscountExternalCode integer, DiscountExternalName TVarChar,
                GoodsDiscountId integer, GoodsDiscountCode integer, GoodsDiscountName TVarChar,
-               isPromoForSale Boolean, isCheckUKTZED Boolean, isGoodsUKTZEDRRO Boolean,
+               isPromoForSale Boolean, isCheckUKTZED Boolean, isGoodsUKTZEDRRO Boolean, isMessageByTime Boolean,
                LikiDneproURL TVarChar, LikiDneproToken TVarChar, LikiDneproId Integer,
                LikiDneproeHealthURL TVarChar, LikiDneproeHealthToken TVarChar
               ) AS
@@ -272,6 +272,7 @@ BEGIN
        , COALESCE(ObjectString_PromoForSale.ValueData, '') <> ''                   AS isPromoForSale
        , COALESCE (ObjectBoolean_CheckUKTZED.ValueData, FALSE)                     AS isCheckUKTZED
        , COALESCE (ObjectBoolean_GoodsUKTZEDRRO.ValueData, FALSE)                  AS isGoodsUKTZEDRRO
+       , COALESCE (ObjectBoolean_MessageByTime.ValueData, FALSE)                   AS isMessageByTime
 
        , 'https://liki-dnepr.nzt.su/api'::TVarChar                                      AS LikiDneproURL
        , '3bc48397885c039ee40586f4781d10006e3c01b0ba4776f4df5ec1f64af38f2a'::TVarChar   AS LikiDneproToken
@@ -301,6 +302,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsUKTZEDRRO
                                 ON ObjectBoolean_GoodsUKTZEDRRO.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_GoodsUKTZEDRRO.DescId = zc_ObjectBoolean_Unit_GoodsUKTZEDRRO()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_MessageByTime
+                                ON ObjectBoolean_MessageByTime.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_MessageByTime.DescId = zc_ObjectBoolean_Unit_MessageByTime()
 
         LEFT JOIN ObjectString AS ObjectString_PromoForSale
                                ON ObjectString_PromoForSale.ObjectId = Object_Unit.Id 

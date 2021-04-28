@@ -3,6 +3,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 484
   ClientWidth = 1434
   PopupMenu = PopupMenu
+  ExplicitLeft = -98
   ExplicitWidth = 1450
   ExplicitHeight = 523
   PixelsPerInch = 96
@@ -933,6 +934,15 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderHint = #1055#1077#1095#1072#1090#1100' '#1090#1086#1074#1072#1088#1086#1074' '#1087#1086' '#1059#1050#1058#1042#1069#1044' '#1095#1077#1088#1077#1079' '#1056#1056#1054
             Options.Editing = False
             Width = 75
+          end
+          object isMessageByTime: TcxGridDBColumn
+            Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1077' '#1074' '#1082#1072#1089#1089#1077' '#1087#1086' '#1089#1088#1086#1082#1072#1084
+            DataBinding.FieldName = 'isMessageByTime'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1086#1086#1073#1097#1077#1085#1080#1077' '#1074' '#1082#1072#1089#1089#1077' '#1087#1088#1080' '#1086#1087#1091#1089#1082#1072#1085#1080#1080' '#1077#1089#1083#1080' '#1088#1072#1079#1085#1099#1077' '#1089#1088#1086#1082#1080
+            Options.Editing = False
+            Width = 82
           end
         end
       end
@@ -3469,6 +3479,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #9#1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1087#1088#1080' '#1086#1090#1076#1072#1095#1077' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1082' '#1057#1059#1053' - '#1053#1077#1090
       ImageIndex = 48
     end
+    object macExecUpdate_isMessageByTime: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actExecUpdate_isMessageByTime
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1057#1086#1086#1073#1097#1077#1085#1080#1077' '#1074' '#1082#1072#1089#1089#1077' '#1087#1086' '#1089#1088#1086#1082#1072#1084'"?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1057#1086#1086#1073#1097#1077#1085#1080#1077' '#1074' '#1082#1072#1089#1089#1077' '#1087#1086' '#1089#1088#1086#1082#1072#1084'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1057#1086#1086#1073#1097#1077#1085#1080#1077' '#1074' '#1082#1072#1089#1089#1077' '#1087#1086' '#1089#1088#1086#1082#1072#1084'"'
+      ImageIndex = 79
+    end
+    object actExecUpdate_isMessageByTime: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isMessageByTime
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isMessageByTime
+        end>
+      Caption = 'actExecUpdate_isMessageByTime'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -4184,6 +4219,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton18'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton11'
         end>
     end
@@ -4267,6 +4306,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object dxBarButton17: TdxBarButton
       Action = macUpdate_Unit_isSUN_Supplement_Priority_no
+      Category = 0
+    end
+    object dxBarButton18: TdxBarButton
+      Action = macExecUpdate_isMessageByTime
       Category = 0
     end
   end
@@ -6952,5 +6995,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 1352
     Top = 323
+  end
+  object spUpdate_isMessageByTime: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isMessageByTime'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMessageByTime'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isMessageByTime'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1200
+    Top = 219
   end
 end

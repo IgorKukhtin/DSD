@@ -796,6 +796,8 @@ type
     N286: TMenuItem;
     actReport_KilledCodeRecovery: TdsdOpenForm;
     C1: TMenuItem;
+    actMarketingDiscount: TdsdOpenForm;
+    N287: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

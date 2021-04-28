@@ -610,6 +610,55 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
       Caption = 'actUpdateMainDS'
       DataSource = MasterDS
     end
+    object actUnderreportedDE: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1053#1077#1076#1086#1082#1086#1084#1077#1085#1089#1072#1094#1080#1080' '#1087#1086' '#1044#1055
+      Hint = #1053#1077#1076#1086#1082#1086#1084#1077#1085#1089#1072#1094#1080#1080' '#1087#1086' '#1044#1055
+      ImageIndex = 29
+      FormName = 'TReport_MovementCheck_UnderreportedDEForm'
+      FormNameParam.Value = 'TReport_MovementCheck_UnderreportedDEForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'OperDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          ComponentItem = 'Key'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountExternalId'
+          Value = ''
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountExternalName'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -688,11 +737,15 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
         end
         item
           Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarButton3'
         end
         item
           Visible = True
@@ -714,9 +767,19 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
       Action = actPrint
       Category = 0
     end
+    object dxBarButton2: TdxBarButton
+      Caption = 'New Button'
+      Category = 0
+      Hint = 'New Button'
+      Visible = ivAlways
+    end
+    object dxBarButton3: TdxBarButton
+      Action = actUnderreportedDE
+      Category = 0
+    end
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 200
+    Left = 288
     Top = 8
   end
   inherited RefreshDispatcher: TRefreshDispatcher

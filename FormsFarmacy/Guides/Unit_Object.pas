@@ -387,6 +387,11 @@ type
     macUpdate_Unit_isSUN_Supplement_Priority_no: TMultiAction;
     dxBarButton16: TdxBarButton;
     dxBarButton17: TdxBarButton;
+    isMessageByTime: TcxGridDBColumn;
+    macExecUpdate_isMessageByTime: TMultiAction;
+    actExecUpdate_isMessageByTime: TdsdExecStoredProc;
+    dxBarButton18: TdxBarButton;
+    spUpdate_isMessageByTime: TdsdStoredProc;
   private
     { Private declarations }
   public

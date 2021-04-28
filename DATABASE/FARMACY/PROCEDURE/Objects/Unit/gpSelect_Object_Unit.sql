@@ -64,7 +64,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , LayoutId  Integer, LayoutName TVarChar
              , TypeSAUA TVarChar, MasterSAUA TVarChar, PercentSAUA TFloat, isSUA Boolean
              , isShareFromPrice Boolean, isOutUKTZED_SUN1 Boolean
-             , isCheckUKTZED Boolean, isGoodsUKTZEDRRO Boolean
+             , isCheckUKTZED Boolean, isGoodsUKTZEDRRO Boolean, isMessageByTime Boolean
 ) AS
 $BODY$
 BEGIN
@@ -247,6 +247,7 @@ BEGIN
       , COALESCE (ObjectBoolean_OutUKTZED_SUN1.ValueData, FALSE)     :: Boolean          AS isOutUKTZED_SUN1
       , COALESCE (ObjectBoolean_CheckUKTZED.ValueData, FALSE)        :: Boolean          AS isCheckUKTZED
       , COALESCE (ObjectBoolean_GoodsUKTZEDRRO.ValueData, FALSE)     :: Boolean          AS isGoodsUKTZEDRRO
+      , COALESCE (ObjectBoolean_MessageByTime.ValueData, FALSE)      :: Boolean          AS isMessageByTime
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -570,6 +571,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsUKTZEDRRO
                                 ON ObjectBoolean_GoodsUKTZEDRRO.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_GoodsUKTZEDRRO.DescId = zc_ObjectBoolean_Unit_GoodsUKTZEDRRO()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_MessageByTime
+                                ON ObjectBoolean_MessageByTime.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_MessageByTime.DescId = zc_ObjectBoolean_Unit_MessageByTime()
                                
         LEFT JOIN ObjectDate AS ObjectDate_StartServiceNigth
                              ON ObjectDate_StartServiceNigth.ObjectId = Object_Unit.Id

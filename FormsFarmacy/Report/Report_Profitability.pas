@@ -60,6 +60,9 @@ type
     SummSP: TcxGridDBBandedColumn;
     cbNoStaticCodes: TcxCheckBox;
     SummDiscount: TcxGridDBBandedColumn;
+    actUnderreportedDE: TdsdOpenForm;
+    dxBarButton2: TdxBarButton;
+    dxBarButton3: TdxBarButton;
   private
     { Private declarations }
   public

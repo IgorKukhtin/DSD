@@ -628,6 +628,13 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
       Action = matUpdateDateCompensation
       Category = 0
     end
+    object dxBarButton1: TdxBarButton
+      Caption = #1053#1077#1076#1086#1082#1086#1084#1077#1085#1089#1072#1094#1080#1080' '#1087#1086' '#1044#1055
+      Category = 0
+      Hint = #1053#1077#1076#1086#1082#1086#1084#1077#1085#1089#1072#1094#1080#1080' '#1087#1086' '#1044#1055
+      Visible = ivAlways
+      ImageIndex = 29
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
@@ -708,7 +715,7 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
     Params = <
       item
         Name = 'FormName'
-        Value = Null
+        Value = 'TReport_MovementCheck_UnderreportedDEForm'
         DataType = ftString
         MultiSelectSeparator = ','
       end

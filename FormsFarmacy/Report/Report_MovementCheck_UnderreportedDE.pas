@@ -1,4 +1,4 @@
-unit Report_MovementCheck_DiscountExternal;
+unit Report_MovementCheck_UnderreportedDE;
 
 interface
 
@@ -17,39 +17,11 @@ uses
   dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
-  TReport_MovementCheck_DiscountExternalForm = class(TAncestorReportForm)
-    Code: TcxGridDBColumn;
-    Name: TcxGridDBColumn;
-    actRefreshSearch: TdsdExecStoredProc;
-    Amount: TcxGridDBColumn;
-    OperDate: TcxGridDBColumn;
-    InvNumber: TcxGridDBColumn;
-    UnitName: TcxGridDBColumn;
-    gpGetObjectGoods: TdsdStoredProc;
-    Price: TcxGridDBColumn;
-    getMovementForm: TdsdStoredProc;
-    FormParams: TdsdFormParams;
+  TReport_MovementCheck_UnderreportedDEForm = class(TAncestorReportForm)
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    ceDiscountExternal: TcxButtonEdit;
-    cxLabel4: TcxLabel;
-    ceUnit: TcxButtonEdit;
-    cxLabel3: TcxLabel;
-    GuidesDiscountExternal: TdsdGuides;
-    UnitGuides: TdsdGuides;
-    ChangePercent: TcxGridDBColumn;
     SummChangePercent: TcxGridDBColumn;
-    DiscountCardName: TcxGridDBColumn;
-    DiscountExternalName: TcxGridDBColumn;
     FromName: TcxGridDBColumn;
-    PriceWithVAT: TcxGridDBColumn;
-    DateCompensation: TcxGridDBColumn;
-    actUpdateMainDS: TdsdUpdateDataSet;
-    spUpdateDateCompensation: TdsdStoredProc;
-    spUpdateDateCompensationFilter: TdsdStoredProc;
-    matUpdateDateCompensation: TMultiAction;
-    actUpdateDateCompensation: TdsdExecStoredProc;
-    actExecuteDialogDateCompensation: TExecuteDialog;
     bbUpdateDateCompensation: TdxBarButton;
     dxBarButton1: TdxBarButton;
   private
@@ -63,6 +35,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_MovementCheck_DiscountExternalForm);
+  RegisterClass(TReport_MovementCheck_UnderreportedDEForm);
 
 end.
