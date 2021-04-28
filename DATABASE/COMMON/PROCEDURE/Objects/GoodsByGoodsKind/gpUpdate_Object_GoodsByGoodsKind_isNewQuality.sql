@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_GoodsByGoodsKind_isNewQuality(
  INOUT ioId                  Integer  , -- ключ объекта <Товар>
     IN inGoodsId             Integer  , -- Товары
     IN inGoodsKindId         Integer  , -- Виды товаров
-    IN inIsNewQuality        Boolean  , -
+    IN inIsNewQuality        Boolean  , --
     IN inSession             TVarChar 
 )
 RETURNS Integer
