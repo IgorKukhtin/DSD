@@ -926,11 +926,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_SUN_Supplement_Priority() RETUR
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_SUN_Supplement_Priority', 'Работают по СУН - версия 1 дополнение - приоритет' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_SUN_Supplement_Priority');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_MessageByTime() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_MessageByTime'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_MessageByTime', 'Сообщение в кассе при опускании если разные сроки' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_MessageByTime');
+
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 28.04.21                                                                                                          * zc_ObjectBoolean_Unit_MessageByTime
  22.04.21         * zc_ObjectBoolean_StickerProperty_CK
  18.04.21         * zc_ObjectBoolean_GoodsByGoodsKind_NewQuality
  17.04.21                                                                                                          * zc_ObjectBoolean_Unit_SUN_Supplement_Priority

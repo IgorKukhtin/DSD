@@ -1982,17 +1982,21 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_FinalSUAProtocol_ThresholdRemainsLarge
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_FinalSUAProtocol(), 'zc_ObjectFloat_FinalSUAProtocol_ThresholdRemainsLarge', 'Порог остатка верхний' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_FinalSUAProtocol_ThresholdRemainsLarge');
 
-CREATE OR REPLACE FUNCTION zc_ObjectFloat_MarketingDiscount_DiscountPercent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MarketingDiscount_DiscountPercent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_MarketingDiscount_FixPercent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MarketingDiscount_FixPercent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
-  SELECT zc_Object_MarketingDiscount(), 'zc_ObjectFloat_MarketingDiscount_DiscountPercent', '% скидки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MarketingDiscount_DiscountPercent');
+  SELECT zc_Object_MarketingDiscount(), 'zc_ObjectFloat_MarketingDiscount_FixPercent', '% скидки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MarketingDiscount_FixPercent');
 
-CREATE OR REPLACE FUNCTION zc_ObjectFloat_MarketingDiscount_DiscountAmount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MarketingDiscount_DiscountAmount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_MarketingDiscount_FixDiscount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MarketingDiscount_FixDiscount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
-  SELECT zc_Object_MarketingDiscount(), 'zc_ObjectFloat_MarketingDiscount_DiscountAmount', 'Сумма скидки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MarketingDiscount_DiscountAmount');
-
+  SELECT zc_Object_MarketingDiscount(), 'zc_ObjectFloat_MarketingDiscount_FixDiscount', 'Сумма скидки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MarketingDiscount_FixDiscount');
+  
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_MarketingDiscount_Multiplicity() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MarketingDiscount_Multiplicity'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_MarketingDiscount(), 'zc_ObjectFloat_MarketingDiscount_Multiplicity', 'Кратность отпуска' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MarketingDiscount_Multiplicity');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_MarketingDiscount_FixValue() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MarketingDiscount_FixValue'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_MarketingDiscount(), 'zc_ObjectFloat_MarketingDiscount_FixValue', 'Фиксированная цена' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MarketingDiscount_FixValue');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
