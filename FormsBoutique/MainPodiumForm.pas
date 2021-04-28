@@ -145,16 +145,16 @@ type
     miLine82: TMenuItem;
     miLine83: TMenuItem;
     miLine84: TMenuItem;
-    actReport_Goods_RemainsCurrent: TdsdOpenForm;
+    actReport_Goods_RemainsCurrentPodium: TdsdOpenForm;
     miLine51: TMenuItem;
     miReport_Goods_RemainsCurrent: TMenuItem;
     actReport_Goods: TdsdOpenForm;
     miReport_GoodsCode: TMenuItem;
     miReport_GoodsMI_Account: TMenuItem;
-    actReport_GoodsMI_Account: TdsdOpenForm;
+    actReport_GoodsMI_AccountPodium: TdsdOpenForm;
     actReport_SaleReturnInPodium: TdsdOpenForm;
     miReport_SaleReturnIn: TMenuItem;
-    actReport_ClientDebt: TdsdOpenForm;
+    actReport_ClientDebtPodium: TdsdOpenForm;
     miReport_PartnerDebt: TMenuItem;
     miLine61: TMenuItem;
     actGoodsAccount_ReturnIn: TdsdOpenForm;
@@ -182,7 +182,7 @@ type
     miObject_Client_LastError: TMenuItem;
     actReport_Sale_ContainerError: TdsdOpenForm;
     miReport_Sale_ContainerError: TMenuItem;
-    actReport_CollationByClient: TdsdOpenForm;
+    actReport_CollationByClientPodium: TdsdOpenForm;
     miReport_CollationByPartner: TMenuItem;
     miReport_SaleOLAP: TMenuItem;
     actReport_SaleOLAP: TdsdOpenForm;

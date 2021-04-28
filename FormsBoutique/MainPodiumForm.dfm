@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 723
   KeyPreview = True
   ExplicitWidth = 739
-  ExplicitHeight = 223
+  ExplicitHeight = 226
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -212,12 +212,12 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_CollationByClient: TdsdOpenForm [18]
+    object actReport_CollationByClientPodium: TdsdOpenForm [18]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080
-      FormName = 'TReport_CollationByClientForm'
-      FormNameParam.Value = 'TReport_CollationByClientForm'
+      FormName = 'TReport_CollationByClientPodiumForm'
+      FormNameParam.Value = 'TReport_CollationByClientPodiumForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -375,12 +375,12 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_ClientDebt: TdsdOpenForm [31]
+    object actReport_ClientDebtPodium: TdsdOpenForm [31]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1044#1086#1083#1075#1080' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
-      FormName = 'TReport_ClientDebtForm'
-      FormNameParam.Value = 'TReport_ClientDebtForm'
+      FormName = 'TReport_ClientDebtPodiumForm'
+      FormNameParam.Value = 'TReport_ClientDebtPodiumForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -421,12 +421,12 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_GoodsMI_Account: TdsdOpenForm [35]
+    object actReport_GoodsMI_AccountPodium: TdsdOpenForm [35]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1072#1084
-      FormName = 'TReport_GoodsMI_AccountForm'
-      FormNameParam.Value = 'TReport_GoodsMI_AccountForm'
+      FormName = 'TReport_GoodsMI_AccountPodiumForm'
+      FormNameParam.Value = 'TReport_GoodsMI_AccountPodiumForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -490,12 +490,12 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Goods_RemainsCurrent: TdsdOpenForm [41]
+    object actReport_Goods_RemainsCurrentPodium: TdsdOpenForm [41]
       Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
       Caption = #1056#1077#1077#1089#1090#1088' '#1090#1086#1074#1072#1088#1086#1074
-      FormName = 'TReport_Goods_RemainsCurrentForm'
-      FormNameParam.Value = 'TReport_Goods_RemainsCurrentForm'
+      FormName = 'TReport_Goods_RemainsCurrentPodiumForm'
+      FormNameParam.Value = 'TReport_Goods_RemainsCurrentPodiumForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -1267,22 +1267,22 @@ inherited MainForm: TMainForm
         Action = actReport_SaleReturnInPodium
       end
       object miReport_GoodsMI_Account: TMenuItem
-        Action = actReport_GoodsMI_Account
+        Action = actReport_GoodsMI_AccountPodium
       end
       object miLine41: TMenuItem
         Caption = '-'
       end
       object miReport_CollationByPartner: TMenuItem
-        Action = actReport_CollationByClient
+        Action = actReport_CollationByClientPodium
       end
       object miReport_PartnerDebt: TMenuItem
-        Action = actReport_ClientDebt
+        Action = actReport_ClientDebtPodium
       end
       object miLine42: TMenuItem
         Caption = '-'
       end
       object miReport_Goods_RemainsCurrent: TMenuItem
-        Action = actReport_Goods_RemainsCurrent
+        Action = actReport_Goods_RemainsCurrentPodium
       end
       object miClientSMS: TMenuItem
         Action = actClientSMS

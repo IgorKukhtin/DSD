@@ -83,6 +83,7 @@ type
     PSLExportKindName: TcxGridDBColumn;
     ContentType: TcxGridDBColumn;
     OnFlowType: TcxGridDBColumn;
+    isDetail: TcxGridDBColumn;
   private
     { Private declarations }
   public

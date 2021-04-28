@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isSecond Boolean
              , isRecalc Boolean
              , isBankOut Boolean
+             , isDetail Boolean
              , isErased Boolean) AS
 $BODY$
 BEGIN
@@ -68,6 +69,7 @@ BEGIN
            , CAST(FALSE AS Boolean) AS isSecond
            , CAST(FALSE AS Boolean) AS isRecalc
            , CAST(FALSE AS Boolean) AS isBankOut
+           , CAST(FALSE AS Boolean) AS isDetail
 
            , CAST (NULL AS Boolean) AS isErased;
    ELSE
@@ -111,6 +113,7 @@ BEGIN
            , COALESCE (ObjectBoolean_Second.ValueData,FALSE)  ::Boolean AS isSecond
            , COALESCE (ObjectBoolean_Recalc.ValueData,FALSE)  ::Boolean AS isRecalc
            , COALESCE (ObjectBoolean_BankOut.ValueData, FALSE)::Boolean AS isBankOut
+           , COALESCE (ObjectBoolean_Detail.ValueData, FALSE) ::Boolean AS isDetail
 
            , Object_PersonalServiceList.isErased   AS isErased
 
@@ -126,6 +129,10 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_BankOut
                                    ON ObjectBoolean_BankOut.ObjectId = Object_PersonalServiceList.Id 
                                   AND ObjectBoolean_BankOut.DescId = zc_ObjectBoolean_PersonalServiceList_BankOut()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Detail
+                                   ON ObjectBoolean_Detail.ObjectId = Object_PersonalServiceList.Id 
+                                  AND ObjectBoolean_Detail.DescId = zc_ObjectBoolean_PersonalServiceList_Detail()
 
            LEFT JOIN ObjectFloat AS ObjectFloat_Compensation
                                  ON ObjectFloat_Compensation.ObjectId = Object_PersonalServiceList.Id 
@@ -201,6 +208,7 @@ ALTER FUNCTION gpGet_Object_PersonalServiceList(integer, TVarChar) OWNER TO post
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 28.04.21         * add isDetail
  18.08.21         *
  17.11.20         * add isBankOut
  17.01.20         * add isRecalc
