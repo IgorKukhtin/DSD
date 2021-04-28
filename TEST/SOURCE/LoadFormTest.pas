@@ -61,6 +61,7 @@ type
     procedure LoadEmailForm;
     procedure LoadExternalForm;
     procedure LoadFreightFormTest;
+    procedure LoadFineSubjectFormTest;
     procedure LoadFounderFormTest;
     procedure LoadFounderServiceFormTest;
     procedure LoadFuelFormTest;
@@ -3767,6 +3768,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TFounderForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TFounderEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TFounderEditForm');
+end;
+
+procedure TLoadFormTest.LoadFineSubjectFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFineSubjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFineSubjectForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFineSubjectEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFineSubjectEditForm');
 end;
 
 procedure TLoadFormTest.LoadFounderServiceFormTest;
