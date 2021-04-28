@@ -18,7 +18,7 @@ $BODY$
      
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ReturnIn());
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_MI_ReturnIn_Price());
 
 
      -- определ€ютс€ параметры документа
@@ -57,6 +57,10 @@ BEGIN
                                              , COALESCE (tmpPriceList_kind.ValuePrice, tmpPriceList.ValuePrice, 0)
                                              )
      FROM MovementItem
+          LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                      ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
+                                     AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+          -- вид товара
           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -66,7 +70,10 @@ BEGIN
           LEFT JOIN tmpPriceList AS tmpPriceList_kind
                                  ON tmpPriceList_kind.GoodsId = MovementItem.ObjectId
                                 AND COALESCE (tmpPriceList_kind.GoodsKindId, 0) = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)          
-     WHERE MovementId = inMovementId;
+     WHERE MovementId = inMovementId
+       -- !!! без акций !!!
+       AND COALESCE (MIFloat_PromoMovement.ValueData, 0) = 0
+    ;
 
 
      -- сохранили протокол

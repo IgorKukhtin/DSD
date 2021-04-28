@@ -424,6 +424,14 @@ BEGIN
                               WHERE Movement.Id = inMovementId
                               )
    
+           , tmpNewQuality AS (SELECT DISTINCT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId AS GoodsId
+                               FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                    JOIN ObjectBoolean AS ObjectBoolean_NewQuality
+                                                       ON ObjectBoolean_NewQuality.ObjectId  = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                      AND ObjectBoolean_NewQuality.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_NewQuality()
+                                                      AND ObjectBoolean_NewQuality.ValueData = TRUE
+                               WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                              )
       -- Ðåçóëüòàò
       SELECT Movement.Id				                              AS MovementId
            , Movement.InvNumber				                              AS InvNumber
@@ -479,7 +487,7 @@ BEGIN
            , (tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl) :: TDateTime AS OperDate_end
            
              -- 2393 - ÊÎÂÁÀÑÊÈ ÁÀÂÀÐÑÜÊ² Ñ/Ê â/ã ÏÐÅÌ²ß 120 ãð/øò + 2222 + 2369
-           , CASE WHEN tmpMI.ObjectId IN (6048195, 417105, 2617313)
+           , CASE WHEN tmpNewQuality.GoodsId > 0
                        THEN tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl
                   ELSE tmpMovement_QualityParams.OperDateIn
              END :: TDateTime AS OperDate_part
@@ -523,6 +531,8 @@ BEGIN
 
        FROM tmpMI
             INNER JOIN tmpMovement_Params AS Movement ON Movement.Id =  tmpMI.MovementId
+
+            LEFT JOIN tmpNewQuality ON tmpNewQuality.GoodsId = tmpMI.ObjectId
             
             LEFT JOIN tmpMIGoodsByGoodsKind ON tmpMIGoodsByGoodsKind.ObjectId    = tmpMI.ObjectId
                                            AND tmpMIGoodsByGoodsKind.GoodsKindId = tmpMI.GoodsKindId

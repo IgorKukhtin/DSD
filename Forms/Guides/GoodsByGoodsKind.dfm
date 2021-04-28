@@ -3,7 +3,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
   ClientHeight = 420
   ClientWidth = 1030
   ExplicitWidth = 1046
-  ExplicitHeight = 458
+  ExplicitHeight = 455
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -548,13 +548,13 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Width = 110
           end
           object IsNewQuality: TcxGridDBColumn
-            Caption = #1053#1086#1074#1072#1103' '#1076#1077#1082#1083'. '#1089' '#1087#1072#1088#1072#1084'. "'#1042#1078#1080#1090#1080' '#1076#1086'" ('#1044#1072'/'#1053#1077#1090')'
+            Caption = #1053#1086#1074#1072#1103' '#1076#1077#1082#1083#1072#1088'.'
             DataBinding.FieldName = 'IsNewQuality'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1053#1086#1074#1072#1103' '#1076#1077#1082#1083#1072#1088#1072#1094#1080#1103' '#1089' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1084' "'#1042#1078#1080#1090#1080' '#1076#1086'" ('#1044#1072'/'#1053#1077#1090')'
+            HeaderHint = #1053#1086#1074#1072#1103' '#1076#1077#1082#1083#1072#1088#1072#1094#1080#1103' '#1089' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1084' "'#1042#1078#1080#1090#1080' '#1076#1086'"'
             Options.Editing = False
-            Width = 110
+            Width = 70
           end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -637,7 +637,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 60
           end
-          object cxGridDBTableViewColumn2: TcxGridDBColumn
+          object isGoodsTypeKind_Ves: TcxGridDBColumn
             Caption = #1053#1077#1085#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081
             DataBinding.FieldName = 'isGoodsTypeKind_Ves'
             HeaderAlignmentHorz = taCenter
@@ -1112,7 +1112,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
       Caption = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1042#1078#1080#1090#1080' '#1076#1086'" ('#1044#1072'/'#1053#1077#1090')'
       Hint = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1042#1078#1080#1090#1080' '#1076#1086'" ('#1044#1072'/'#1053#1077#1090')'
       ImageIndex = 77
-      ShortCut = 116
+      ShortCut = 16505
       RefreshOnTabSetChanges = True
     end
   end
@@ -1177,6 +1177,9 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
     end
     object bbInsertRecord: TdxBarButton
       Action = InsertRecord

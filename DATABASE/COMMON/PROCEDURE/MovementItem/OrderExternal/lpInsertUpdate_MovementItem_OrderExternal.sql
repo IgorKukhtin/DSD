@@ -147,7 +147,7 @@ BEGIN
                                                    , inOperDatePartner       := NULL
                                                    , inDayPrior_PriceReturn  := NULL
                                                    , inIsPrior               := FALSE -- !!!отказались от старых цен!!!
-                                                   , inOperDatePartner_order :=(SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner()) 
+                                                   , inOperDatePartner_order := (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner()) 
                                                    , inGoodsId               := inGoodsId
                                                    , inGoodsKindId           := inGoodsKindId
                                                    , inPrice                 := ioPrice

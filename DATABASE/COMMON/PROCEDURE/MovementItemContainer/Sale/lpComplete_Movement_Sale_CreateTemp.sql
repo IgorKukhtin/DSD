@@ -10,6 +10,8 @@ BEGIN
      -- таблица - Проводки
      PERFORM lpComplete_Movement_All_CreateTemp();
 
+     -- таблица - Promo-recalc
+     CREATE TEMP TABLE _tmpItem_Promo_recalc (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, OperPrice TFloat, MovementId_promo Integer, OperPrice_promo TFloat, CountForPrice_promo TFloat, isChangePercent_promo Boolean) ON COMMIT DROP;
      -- таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_Goods Integer, ContainerId_ProfitLoss_40208 Integer, ContainerId_ProfitLoss_10500 Integer, ContainerId_ProfitLoss_10400 Integer, ContainerId_ProfitLoss_20200 Integer, ContainerId Integer, AccountId Integer
                                    , ContainerId_Transit Integer

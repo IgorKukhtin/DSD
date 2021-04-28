@@ -44,13 +44,9 @@ BEGIN
 
      -- Сумма Дополнительной скидки - ГРН
      IF inIsDiscount = TRUE THEN
-         IF inAmountDiscount = 0
-         THEN -- НЕ округлили
-              vbAmountDiscount_GRN := inAmountToPay - vbAmountPay_GRN;
+         -- НЕ округлили
+         vbAmountDiscount_GRN := inAmountToPay - vbAmountPay_GRN;
 
-         ELSE -- оставили без изменений
-              vbAmountDiscount_GRN := inAmountDiscount;
-         END IF;
      ELSE
          -- обнулили
          vbAmountDiscount_GRN := 0;

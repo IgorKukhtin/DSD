@@ -38,6 +38,10 @@ type
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocol: TdxBarButton;
     isNotMobile: TcxGridDBColumn;
+    IsNewQuality: TcxGridDBColumn;
+    actUpdateNewQuality: TdsdDataSetRefresh;
+    spUpdateNewQuality: TdsdStoredProc;
+    bbUpdateNewQuality: TdxBarButton;
   private
     { Private declarations }
   public

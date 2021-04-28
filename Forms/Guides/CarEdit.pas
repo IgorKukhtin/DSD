@@ -66,6 +66,8 @@ type
     AssetGuides: TdsdGuides;
     edKoeffHoursWork: TcxCurrencyEdit;
     cxLabel33: TcxLabel;
+    cxLabel11: TcxLabel;
+    edPartnerMin: TcxCurrencyEdit;
   private
     { Private declarations }
   public

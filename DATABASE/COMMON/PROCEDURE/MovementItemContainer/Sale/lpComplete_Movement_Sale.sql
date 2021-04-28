@@ -100,6 +100,8 @@ $BODY$
 
   DECLARE vbPriceListId_begin Integer;
   DECLARE vbOperDate_pl TDateTime;
+  
+  DECLARE vbMovementId_Order Integer;
 
 BEGIN
 
@@ -117,6 +119,8 @@ END IF;*/
      -- !!!временно!!!
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= inMovementId);
 
+     -- !!!обязательно!!! очистили таблицу - Promo-recalc
+     DELETE FROM _tmpItem_Promo_recalc;
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
      DELETE FROM _tmpMIReport_insert;
@@ -411,6 +415,9 @@ END IF;*/
      IF vbIsPriceList_begin_recalc = TRUE
      THEN
          -- !!!нашли!!!
+         vbMovementId_Order:= (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Order());
+
+         -- !!!нашли!!!
          SELECT tmp.PriceListId, tmp.OperDate
                INTO vbPriceListId_begin, vbOperDate_pl
          FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := vbContractId
@@ -426,28 +433,78 @@ END IF;*/
 
          -- Сохранили Прайс
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PriceList(), inMovementId, vbPriceListId_begin);
+         
+         -- текущие элементы
+         INSERT INTO _tmpItem_Promo_recalc (MovementItemId, GoodsId, GoodsKindId, OperPrice, MovementId_promo, OperPrice_promo, CountForPrice_promo, isChangePercent_promo)
+            SELECT MovementItem.Id                               AS MovementItemId
+                 , MovementItem.ObjectId                         AS GoodsId
+                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                 , COALESCE (MIFloat_Price.ValueData, 0)         AS OperPrice
+                 , 0 AS MovementId_promo
+                 , 0 AS OperPrice_promo
+                 , 0 AS CountForPrice_promo
+                 , TRUE AS isChangePercent_promo
+            FROM MovementItem
+                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                 LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                             ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                            AND MIFloat_Price.DescId         = zc_MIFloat_Price()
+            WHERE MovementItem.MovementId = inMovementId
+              AND MovementItem.DescId     = zc_MI_Master()
+              AND MovementItem.isErased   = FALSE
+           ;
+
+         -- !!!нашли Акции!!!
+         UPDATE _tmpItem_Promo_recalc SET MovementId_promo = lpGet.MovementId
+                                        , OperPrice_promo = CASE WHEN /*lpGet.TaxPromo <> 0*/ 1=1 AND vbPriceWithVAT = TRUE THEN lpGet.PriceWithVAT_orig
+                                                                 WHEN /*lpGet.TaxPromo <> 0*/ 1=1 THEN lpGet.PriceWithOutVAT_orig
+                                                                 ELSE 0
+                                                            END
+                                        , CountForPrice_promo = lpGet.CountForPrice
+                                        , isChangePercent_promo = lpGet.isChangePercent
+         FROM _tmpItem_Promo_recalc AS _tmpItem_Promo_recalc_find
+              JOIN lpGet_Movement_Promo_Data (inOperDate   := CASE WHEN vbMovementId_Order <> 0
+                                                               AND TRUE = (SELECT ObjectBoolean_OperDateOrder.ValueData
+                                                                           FROM ObjectLink AS ObjectLink_Juridical
+                                                                                INNER JOIN ObjectLink AS ObjectLink_Retail
+                                                                                                      ON ObjectLink_Retail.ObjectId = ObjectLink_Juridical.ChildObjectId
+                                                                                                     AND ObjectLink_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                                                                INNER JOIN ObjectBoolean AS ObjectBoolean_OperDateOrder
+                                                                                                         ON ObjectBoolean_OperDateOrder.ObjectId = ObjectLink_Retail.ChildObjectId
+                                                                                                        AND ObjectBoolean_OperDateOrder.DescId = zc_ObjectBoolean_Retail_OperDateOrder()
+                                                                           WHERE ObjectLink_Juridical.ObjectId = vbPartnerId_To
+                                                                             AND ObjectLink_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                                                          )
+                                                                   THEN (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_Order)
+                                                              ELSE (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
+                                                         END
+                                       , inPartnerId  := vbPartnerId_To
+                                       , inContractId := vbContractId
+                                       , inUnitId     := vbUnitId_From
+                                       , inGoodsId    := _tmpItem_Promo_recalc_find.GoodsId
+                                       , inGoodsKindId:= _tmpItem_Promo_recalc_find.GoodsKindId
+                                        ) AS lpGet
+              ON lpGet.MovementId > 0
+         WHERE _tmpItem_Promo_recalc.MovementItemId = _tmpItem_Promo_recalc_find.MovementItemId
+        ;
 
 
          -- Сохранили протокол
          PERFORM lpInsert_MovementItemProtocol (tmp.MovementItemId, inUserId, FALSE)
-         FROM (WITH tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
-                                   , MovementItem.ObjectId                         AS GoodsId
-                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                                   , COALESCE (MIFloat_Price.ValueData, 0)         AS OperPrice_old
-                              FROM MovementItem
-                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                                   LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                               ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                              AND MIFloat_Price.DescId         = zc_MIFloat_Price()
-                                   LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
-                                                               ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
-                                                              AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
-                              WHERE MovementItem.MovementId = inMovementId
-                                AND MovementItem.DescId     = zc_MI_Master()
-                                AND MovementItem.isErased   = FALSE
-                                AND COALESCE (MIFloat_PromoMovement.ValueData, 0) = 0
+         FROM (WITH tmpMI AS (SELECT _tmpItem_Promo_recalc.MovementItemId
+                                   , _tmpItem_Promo_recalc.GoodsId
+                                   , _tmpItem_Promo_recalc.GoodsKindId
+                                   , _tmpItem_Promo_recalc.OperPrice   AS OperPrice_old
+                                   , CASE WHEN _tmpItem_Promo_recalc.isChangePercent_promo = TRUE THEN COALESCE (MF_ChangePercent.ValueData, 0) ELSE 0 END AS ChangePercent
+                                   , _tmpItem_Promo_recalc.MovementId_promo
+                                   , _tmpItem_Promo_recalc.OperPrice_promo
+                                   , _tmpItem_Promo_recalc.CountForPrice_promo
+                              FROM _tmpItem_Promo_recalc
+                                   LEFT JOIN MovementFloat AS MF_ChangePercent
+                                                           ON MF_ChangePercent.MovementId = inMovementId
+                                                          AND MF_ChangePercent.DescId     = zc_MovementFloat_ChangePercent()
                              )
                     , tmpPrice AS (SELECT tmpGoods.GoodsId
                                         , COALESCE (ObjectLink_PriceListItem_GoodsKind.ChildObjectId, 0) AS GoodsKindId
@@ -472,17 +529,35 @@ END IF;*/
                                                                      AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
                                   )
                   , tmpAll AS (SELECT tmpMI.MovementItemId
-                                    , COALESCE (tmpPrice_1.OperPrice, tmpPrice_2.OperPrice, 0) AS OperPrice
+                                    , tmpMI.MovementId_promo
+                                    , CASE WHEN tmpMI.MovementId_promo > 0 THEN tmpMI.OperPrice_promo
+                                           ELSE COALESCE (tmpPrice_1.OperPrice, tmpPrice_2.OperPrice, 0)
+                                      END AS OperPrice
+                                    , CASE WHEN tmpMI.MovementId_promo > 0 AND tmpMI.CountForPrice_promo > 0 THEN tmpMI.CountForPrice_promo
+                                           ELSE 1
+                                      END AS CountForPrice
+                                    , tmpMI.ChangePercent
                                FROM tmpMI
                                     LEFT JOIN tmpPrice AS tmpPrice_1 ON tmpPrice_1.GoodsId     = tmpMI.GoodsId
                                                                     AND tmpPrice_1.GoodsKindId = tmpMI.GoodsKindId
                                     LEFT JOIN tmpPrice AS tmpPrice_2 ON tmpPrice_2.GoodsId     = tmpMI.GoodsId
                                                                     AND tmpPrice_2.GoodsKindId = 0
                                WHERE COALESCE (tmpPrice_1.OperPrice, tmpPrice_2.OperPrice, 0) > 0
-                                 AND tmpMI.OperPrice_old <> COALESCE (tmpPrice_1.OperPrice, tmpPrice_2.OperPrice, 0)
+                                 AND (tmpMI.OperPrice_old <> CASE WHEN tmpMI.MovementId_promo > 0 THEN tmpMI.OperPrice_promo
+                                                                  ELSE COALESCE (tmpPrice_1.OperPrice, tmpPrice_2.OperPrice, 0)
+                                                             END
+                                   OR tmpMI.MovementId_promo > 0
+                                     )
                               )
                -- Сохранили Цены
                SELECT lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), tmpAll.MovementItemId, tmpAll.OperPrice)
+                      -- сохранили свойство <MovementId-Акция>
+                    , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PromoMovementId(), tmpAll.MovementItemId, COALESCE (tmpAll.MovementId_promo, 0))
+                       -- сохранили свойство <(-)% Скидки (+)% Наценки>
+                    , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), tmpAll.MovementItemId, tmpAll.ChangePercent)
+                      -- сохранили свойство <Цена за количество>
+                    , lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), tmpAll.MovementItemId, tmpAll.CountForPrice)
+                      --
                     , tmpAll.MovementItemId
                FROM tmpAll
               ) AS tmp;

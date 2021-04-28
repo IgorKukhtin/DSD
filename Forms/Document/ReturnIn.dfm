@@ -3,7 +3,7 @@ inherited ReturnInForm: TReturnInForm
   ClientHeight = 648
   ClientWidth = 1252
   ExplicitWidth = 1268
-  ExplicitHeight = 686
+  ExplicitHeight = 683
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1206,7 +1206,7 @@ inherited ReturnInForm: TReturnInForm
       Top = 63
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
-      Properties.ReadOnly = False
+      Properties.ReadOnly = True
       TabOrder = 19
       Width = 132
     end
@@ -5425,6 +5425,7 @@ inherited ReturnInForm: TReturnInForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -5749,6 +5750,7 @@ inherited ReturnInForm: TReturnInForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>

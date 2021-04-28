@@ -1,4 +1,4 @@
--- Function: lpComplete_Movement_Sale_NEW (Integer, Integer, Boolean)
+-- !!! test !!! - Наверно здесь продажа ОС - забаланс !!! Function: lpComplete_Movement_Sale_NEW (Integer, Integer, Boolean)
 
 DROP FUNCTION IF EXISTS lpComplete_Movement_Sale_NEW (Integer, Integer, Boolean);
 

@@ -45,7 +45,7 @@ BEGIN
                           WHERE table_update_data.Id BETWEEN inId_start AND vbId_End + inRec_count
                             AND (soldtable.Id > 0 OR table_update_data.table_name NOT ILIKE 'soldtable' OR table_update_data.operation ILIKE 'DELETE')
                           ORDER BY table_update_data.Id
-                          LIMIT (inRec_count / 2) :: Integer + 1
+                          LIMIT (inRec_count / 4) :: Integer + 1
                          ) AS tmp
                    );
     END IF;
@@ -152,12 +152,14 @@ BEGIN
     END IF;*/
 
     -- Результат
-    IF vbId_End > 4198017509
+    /*IF vbId_End > 4198017509
     THEN
          RETURN 4198017509;
     ELSE
          RETURN vbId_End;
-    END IF;
+    END IF;*/
+    
+    RETURN vbId_End;
 
 END;
 $BODY$

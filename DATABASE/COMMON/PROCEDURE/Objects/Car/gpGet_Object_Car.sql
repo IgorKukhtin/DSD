@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Car(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , KoeffHoursWork TFloat
+             , KoeffHoursWork TFloat, PartnerMin TFloat
              , RegistrationCertificate TVarChar, Comment TVarChar
              , CarModelId Integer, CarModelCode Integer, CarModelName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
@@ -34,6 +34,7 @@ BEGIN
            , CAST ('' as TVarChar)  AS NAME
 
            , CAST (0 AS TFloat)     AS KoeffHoursWork
+           , CAST (15 AS TFloat)     AS PartnerMin
            
            , CAST ('' as TVarChar)  AS RegistrationCertificate
            , CAST ('' as TVarChar)  AS Comment
@@ -79,6 +80,7 @@ BEGIN
            , Object_Car.ValueData   AS Name
            
            , COALESCE (ObjectFloat_KoeffHoursWork.ValueData,0) :: TFloat AS KoeffHoursWork
+           , COALESCE (ObjectFloat_PartnerMin.ValueData,0)     :: TFloat AS PartnerMin
 
            , RegistrationCertificate.ValueData  AS RegistrationCertificate
            , ObjectString_Comment.ValueData     AS Comment
@@ -125,6 +127,10 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_KoeffHoursWork
                                   ON ObjectFloat_KoeffHoursWork.ObjectId = Object_Car.Id
                                  AND ObjectFloat_KoeffHoursWork.DescId = zc_ObjectFloat_Car_KoeffHoursWork()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_PartnerMin
+                                  ON ObjectFloat_PartnerMin.ObjectId = Object_Car.Id
+                                 AND ObjectFloat_PartnerMin.DescId = zc_ObjectFloat_Car_PartnerMin()
 
             LEFT JOIN ObjectLink AS Car_CarModel 
                                  ON Car_CarModel.ObjectId = Object_Car.Id
@@ -173,6 +179,7 @@ ALTER FUNCTION gpGet_Object_Car (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.04.21         * PartnerMin
  29.10.19         * KoeffHoursWork
  28.11.16         * add Asset
  17.12.14         * add Juridical               

@@ -1006,14 +1006,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInPodiumItemEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInPodiumItemEditForm');
 
-  //
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReturnInForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInItemEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReturnInItemEditForm');
 end;
 //
 //procedure TLoadFormTest.LoadReturnTypeFormTest;

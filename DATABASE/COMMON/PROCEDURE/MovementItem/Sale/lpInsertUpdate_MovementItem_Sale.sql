@@ -113,7 +113,25 @@ BEGIN
  
         END IF;
 
-     -- ELSE !!!обратно из прайса пока не реализовал!!!!
+     ELSE -- !!!обратно из прайса пока не реализовал!!!!
+
+          -- !!!замена!!!
+          ioPrice:= lpGet_ObjectHistory_Price_check (inMovementId            := inMovementId
+                                                   , inMovementItemId        := ioId
+                                                   , inContractId            := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
+                                                   , inPartnerId             := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
+                                                   , inMovementDescId        := zc_Movement_Sale()
+                                                   , inOperDate_order        := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_Order)
+                                                   , inOperDatePartner       := (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner()) 
+                                                   , inDayPrior_PriceReturn  := NULL
+                                                   , inIsPrior               := FALSE -- !!!отказались от старых цен!!!
+                                                   , inOperDatePartner_order := (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId_Order AND MD.DescId = zc_MovementDate_OperDatePartner()) 
+                                                   , inGoodsId               := inGoodsId
+                                                   , inGoodsKindId           := inGoodsKindId
+                                                   , inPrice                 := ioPrice
+                                                   , inCountForPrice         := 1
+                                                   , inUserId                := inUserId
+                                                    );
      END IF;
 
      -- определяется признак Создание/Корректировка

@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn(
    OUT outLineNum               Integer   , -- № п.п.
    OUT outIsLine                TVarChar  , -- № п.п.
     IN inIsPay                  Boolean   , -- добавить с оплатой
-    IN inAmount                 TFloat    , -- Количество
+ INOUT ioAmount                 TFloat    , -- Количество
     IN inAmountPartner          TFloat    , -- Кол-во перенести с примерки в долг
    OUT outOperPrice             TFloat    , -- Цена вх. в валюте
    OUT outCountForPrice         TFloat    , -- Цена за количество
@@ -53,10 +53,11 @@ BEGIN
      -- !!!временно - для Sybase!!!
      -- vbUserId := zc_User_Sybase();
 
-     -- !!!временно - для Sybase!!!
-     IF vbUserId = zc_User_Sybase() AND EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.Id = ioId AND MovementItem.isErased = TRUE)
+
+     -- !!!замена!!!
+     IF ioAmount < inAmountPartner
      THEN
-         RETURN;
+         ioAmount:= inAmountPartner;
      END IF;
 
 
@@ -104,7 +105,7 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не определен элемент Продажи.';
      END IF;
      -- проверка - свойство должно быть установлено
-     IF inAmount < 0 THEN
+     IF ioAmount < 0 THEN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Кол-во>.';
      END IF;
      -- проверка - Уникальный vbPartionMI_Id
@@ -215,33 +216,33 @@ BEGIN
 
 
      -- вернули Сумма вх. в валюте, для грида - Округлили до 2-х Знаков
-     outTotalSumm := zfCalc_SummIn (inAmount, outOperPrice, outCountForPrice);
+     outTotalSumm := zfCalc_SummIn (ioAmount, outOperPrice, outCountForPrice);
      -- вернули сумму вх. в грн по элементу, для грида
      outTotalSummBalance := zfCalc_CurrencyFrom (outTotalSumm, outCurrencyValue, outParValue);
 
      -- расчитали сумму по прайсу по элементу, для грида
-     outTotalSummPriceList := zfCalc_SummPriceList (inAmount, ioOperPriceList);
+     outTotalSummPriceList := zfCalc_SummPriceList (ioAmount, ioOperPriceList);
 
      -- расчитали Итого оплата в возврате ГРН, для грида - !!!из Элемента Продажи!!!
      IF inIsPay = TRUE
      THEN
          IF inSaleMI_Id < 0 AND vbUserId = zc_User_Sybase()
          THEN -- !!!для Sybase!!!
-              outTotalPay:= inAmount * ioOperPriceList;
+              outTotalPay:= ioAmount * ioOperPriceList;
          ELSE
          outTotalPay := COALESCE ((SELECT CASE -- если вернули все - Вся сумма ОПЛАТЫ
-                                               WHEN MovementItem.Amount = inAmount
+                                               WHEN MovementItem.Amount = ioAmount
                                                     THEN COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_TotalPayOth.ValueData, 0)
 
                                                -- если вернули все что осталось - тогда возвращаем Остаток для сумма ОПЛАТЫ к возврату
-                                               WHEN MovementItem.Amount - COALESCE (MIFloat_TotalCountReturn.ValueData, 0) = inAmount
+                                               WHEN MovementItem.Amount - COALESCE (MIFloat_TotalCountReturn.ValueData, 0) = ioAmount
                                                     THEN COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_TotalPayOth.ValueData, 0) - COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
 
                                                -- если возрат * "Цену к оплате" больше чем остаток оплаты - тогда тоже возвращаем Остаток для сумма ОПЛАТЫ к возврату
                                                WHEN (zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData)
                                                    - COALESCE (MIFloat_TotalChangePercent.ValueData, 0) - COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)
                                                     )
-                                                  / MovementItem.Amount * inAmount
+                                                  / MovementItem.Amount * ioAmount
                                                       >= COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_TotalPayOth.ValueData, 0) - COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
 
                                                     THEN COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_TotalPayOth.ValueData, 0) - COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
@@ -250,7 +251,7 @@ BEGIN
                                                ELSE ROUND ((zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData)
                                                           - COALESCE (MIFloat_TotalChangePercent.ValueData, 0) - COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)
                                                            )
-                                                         / MovementItem.Amount * inAmount, 2)
+                                                         / MovementItem.Amount * ioAmount, 2)
                                           END
                                    FROM MovementItem
                                         LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
@@ -292,7 +293,7 @@ BEGIN
      -- расчитали Итого сумма возврата Скидки (в ГРН)
      outTotalChangePercent:=
                              (SELECT CASE -- !!!если вернули ВСЁ!!- тогда вся скидка из продажи
-                                          WHEN MovementItem.Amount = inAmount
+                                          WHEN MovementItem.Amount = ioAmount
                                                THEN COALESCE (MIFloat_TotalChangePercent.ValueData, 0) + COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)
                                                     -- ПЛЮС для Sybase - скидка в Оплатах !!!Расчеты - НЕ ВСЕ Статусы!!!
                                                   + COALESCE ((SELECT SUM (COALESCE (MIFloat_SummChangePercent.ValueData, 0))
@@ -347,9 +348,9 @@ BEGIN
                                                                                  -- AND (tmp.myCount > 1 OR COALESCE (MIBoolean_Close.ValueData, FALSE) = FALSE)
                                                                               ), 0)
                                                THEN -- Пропорционально
-                                                    ROUND (inAmount * COALESCE (MIFloat_TotalChangePercent.ValueData, 0) / MovementItem.Amount, 2)
+                                                    ROUND (ioAmount * COALESCE (MIFloat_TotalChangePercent.ValueData, 0) / MovementItem.Amount, 2)
                                                     -- скидка в Оплатах !!!РАНЬШЕ!!! + !!!Расчеты - ВСЕ Статусы!!!
-                                                  + ROUND (inAmount
+                                                  + ROUND (ioAmount
                                                          * COALESCE ((SELECT SUM (COALESCE (MIFloat_SummChangePercent.ValueData / MovementItem.Amount, 0))
                                                                       FROM MovementItemLinkObject AS MIL_PartionMI
                                                                            INNER JOIN MovementItem ON MovementItem.Id       = MIL_PartionMI.MovementItemId
@@ -386,7 +387,7 @@ BEGIN
                                                                        )
                                                )
 
-                                           -- AND (MovementItem.Amount = inAmount -- !!!если вернули ВСЁ!!
+                                           -- AND (MovementItem.Amount = ioAmount -- !!!если вернули ВСЁ!!
                                            --  OR (COALESCE (MIFloat_TotalPayOth.ValueData, 0) = 0 OR COALESCE (MIFloat_TotalPayOth.ValueData, 0) = 0))
 
                                                -- №п/п = !!!ПОСЛЕДНИЙ!!!
@@ -494,7 +495,7 @@ BEGIN
                                           -- !!!иначе - для Sybase - №п/п<>1!!!
                                           /*WHEN vbUserId = zc_User_Sybase()
                                            AND MIBoolean_Close.ValueData = TRUE
-                                           AND (MovementItem.Amount = inAmount
+                                           AND (MovementItem.Amount = ioAmount
                                              OR (COALESCE (MIFloat_TotalPayOth.ValueData, 0) = 0 OR COALESCE (MIFloat_TotalPayOth.ValueData, 0) = 0))
                                                THEN 0*/
 
@@ -513,7 +514,7 @@ BEGIN
                                                                                   AND MIL_PartionMI.ObjectId = vbPartionMI_Id
 
                                                                                ), 0)
-                                             = inAmount
+                                             = ioAmount
                                                THEN COALESCE (MIFloat_TotalChangePercent.ValueData, 0) + COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)
                                                     -- МИНУС сколько скидки вернули !!!РАНЬШЕ!!!
                                                   - COALESCE ((SELECT SUM (COALESCE (MIFloat_TotalChangePercent.ValueData, 0))
@@ -535,7 +536,7 @@ BEGIN
                                                               ), 0)*/
 
                                           -- если вернули все но не сразу - тогда вся скидка из продажи МИНУС сколько скидки вернули раньше
-                                          WHEN MovementItem.Amount - COALESCE (MIFloat_TotalCountReturn.ValueData, 0)  = inAmount
+                                          WHEN MovementItem.Amount - COALESCE (MIFloat_TotalCountReturn.ValueData, 0)  = ioAmount
                                                THEN COALESCE (MIFloat_TotalChangePercent.ValueData, 0) + COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)
                                                     -- МИНУС сколько скидки вернули раньше
                                                   - COALESCE ((SELECT SUM (COALESCE (MIFloat_TotalChangePercent.ValueData, 0))
@@ -557,7 +558,7 @@ BEGIN
 
                                           ELSE -- иначе почти пропроционально - ОКРУГЛИМ дробную часть после второго знака
                                                ROUND ((COALESCE (MIFloat_TotalChangePercent.ValueData, 0) + COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0))
-                                                    / MovementItem.Amount * inAmount, 2)
+                                                    / MovementItem.Amount * ioAmount, 2)
                                      END
                              FROM MovementItem
                                 LEFT JOIN MovementItemBoolean AS MIBoolean_Close
@@ -596,7 +597,7 @@ BEGIN
                                                 , inGoodsId               := ioGoodsId
                                                 , inPartionId             := inPartionId
                                                 , inPartionMI_Id          := vbPartionMI_Id
-                                                , inAmount                := inAmount
+                                                , inAmount                := ioAmount
                                                 , inAmountPartner         := COALESCE (inAmountPartner,0) ::TFloat
                                                 , inOperPrice             := COALESCE (outOperPrice, 0)
                                                 , inCountForPrice         := COALESCE (outCountForPrice, 0)
@@ -745,7 +746,7 @@ BEGIN
 
     -- вернули Сумма ...
     SELECT CASE -- Сумма к возврату оплаты
-                WHEN inAmount = 0
+                WHEN ioAmount = 0
                      THEN 0
                 ELSE COALESCE (MIFloat_TotalPay.ValueData, 0)
                    + COALESCE (MIFloat_TotalPayOth.ValueData, 0)
@@ -761,7 +762,7 @@ BEGIN
          - COALESCE (MIFloat_TotalReturn.ValueData, 0)
          + COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
            -- если НЕ ПРОВЕЛИ - уменьшаем Долг на сумму из тек. документа
-         - (zfCalc_SummPriceList (inAmount, MIFloat_OperPriceList.ValueData) - outTotalChangePercent)
+         - (zfCalc_SummPriceList (ioAmount, MIFloat_OperPriceList.ValueData) - outTotalChangePercent)
          + outTotalPay
            
            INTO outTotalSummToPay
@@ -824,4 +825,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_ReturnIn(ioId := 0 , inMovementId := 8 , inGoodsId := 446 , inPartionId := 50 , inAmount := 4 , outOperPrice := 100 , ioCountForPrice := 1 ,  inSession := '2');
+-- SELECT * FROM gpInsertUpdate_MovementItem_ReturnIn(ioId := 0 , inMovementId := 8 , inGoodsId := 446 , inPartionId := 50 , ioAmount := 4 , outOperPrice := 100 , ioCountForPrice := 1 ,  inSession := '2');

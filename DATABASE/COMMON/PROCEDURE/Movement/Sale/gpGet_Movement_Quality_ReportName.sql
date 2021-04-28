@@ -18,7 +18,21 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Quality());
      
        --  Œ¬¡¿— » ¡¿¬¿–—‹ ≤ —/  ‚/„ œ–≈Ã≤ﬂ 120 „/¯Ú + 2222 + 2369
-       vbIsGoodsCode_2393:= EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE AND MI.ObjectId IN (6048195, 417105, 2617313));
+       vbIsGoodsCode_2393:= EXISTS (SELECT 1 
+                                    FROM MovementItem AS MI
+                                         JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                                         ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = MI.ObjectId
+                                                        AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                         JOIN ObjectBoolean AS ObjectBoolean_NewQuality
+                                                            ON ObjectBoolean_NewQuality.ObjectId  = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                           AND ObjectBoolean_NewQuality.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_NewQuality()
+                                                           AND ObjectBoolean_NewQuality.ValueData = TRUE
+
+                                    WHERE MI.MovementId = inMovementId
+                                      AND MI.DescId = zc_MI_Master()
+                                      AND MI.isErased = FALSE
+                                    --AND MI.ObjectId IN (6048195, 417105, 2617313)
+                                   );
 
        --
        SELECT CASE WHEN vbIsGoodsCode_2393 = TRUE
