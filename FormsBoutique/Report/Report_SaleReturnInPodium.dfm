@@ -316,6 +316,15 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
             Options.Editing = False
             Width = 100
           end
+          object isOffer: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1088#1082#1072
+            DataBinding.FieldName = 'isOffer'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1084#1077#1088#1082#1072
+            Options.Editing = False
+            Width = 50
+          end
           object BrandName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
             DataBinding.FieldName = 'BrandName'

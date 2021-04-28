@@ -855,8 +855,11 @@ BEGIN
              , CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat) AS HoursWork
              , CAST (COALESCE (MovementFloat_HoursStop.ValueData, 0) AS TFloat)                                                  AS HoursStop
              , CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)  AS TFloat) AS HoursMove
-             , CASE WHEN (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)) <> 0 
-                    THEN SUM (tmpFuel.DistanceFuel) / (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0))
+             , CASE WHEN (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)
+                         - (COALESCE (MovementFloat_PartnerCount.ValueData,0) * (COALESCE (ObjectFloat_PartnerMin.ValueData,15) / 60) ) )  <> 0 
+                    THEN SUM (tmpFuel.DistanceFuel) / (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)
+                                                      - (COALESCE (MovementFloat_PartnerCount.ValueData,0) * (COALESCE (ObjectFloat_PartnerMin.ValueData,15) / 60)
+                                                      ) ) 
                     ELSE 0
                END :: TFloat AS Speed
              , MovementString_CommentStop.ValueData ::TVarChar    AS CommentStop
@@ -909,6 +912,10 @@ BEGIN
                                         ON MovementFloat_PartnerCount.MovementId = tmpFuel.MovementId
                                        AND MovementFloat_PartnerCount.DescId = zc_MovementFloat_PartnerCount()
 
+            LEFT JOIN ObjectFloat AS ObjectFloat_PartnerMin
+                                  ON ObjectFloat_PartnerMin.ObjectId = Object_Car.Id
+                                 AND ObjectFloat_PartnerMin.DescId = zc_ObjectFloat_Car_PartnerMin()
+
         WHERE COALESCE (ViewObject_Unit.BranchId, 0) = inBranchId
            OR inBranchId = 0
            OR (inBranchId = zc_Branch_Basis() AND COALESCE (ViewObject_Unit.BranchId, 0) = 0)
@@ -929,7 +936,8 @@ BEGIN
              , MovementFloat_PartnerCount.ValueData 
              , (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) )
              , (COALESCE (MovementFloat_HoursStop.ValueData, 0) ) 
-             , (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0) ) 
+             , (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)
+                - COALESCE (MovementFloat_PartnerCount.ValueData,0) * (COALESCE (ObjectFloat_PartnerMin.ValueData,15) / 60) ) 
              , MovementString_CommentStop.ValueData 
        ;
 
