@@ -74,6 +74,7 @@ type
     cxLabel10: TcxLabel;
     edOnFlowType: TcxTextEdit;
     cxLabel11: TcxLabel;
+    cbDetail: TcxCheckBox;
   private
     { Private declarations }
   public

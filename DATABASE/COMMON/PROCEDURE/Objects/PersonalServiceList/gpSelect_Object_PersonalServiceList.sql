@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isRecalc Boolean
              , isPersonalOut Boolean
              , isBankOut Boolean
+             , isDetail Boolean
              , isErased Boolean
               )
 AS
@@ -92,6 +93,7 @@ BEGIN
            , COALESCE (ObjectBoolean_Recalc.ValueData,FALSE)  ::Boolean   AS isRecalc
            , COALESCE (ObjectBoolean_PersonalOut.ValueData, FALSE) ::Boolean AS isPersonalOut
            , COALESCE (ObjectBoolean_BankOut.ValueData, FALSE)     ::Boolean AS isBankOut
+           , COALESCE (ObjectBoolean_Detail.ValueData, FALSE)      ::Boolean AS isDetail
 
            , Object_PersonalServiceList.isErased  AS isErased
 
@@ -108,6 +110,10 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_BankOut
                                    ON ObjectBoolean_BankOut.ObjectId = Object_PersonalServiceList.Id 
                                   AND ObjectBoolean_BankOut.DescId = zc_ObjectBoolean_PersonalServiceList_BankOut()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Detail
+                                   ON ObjectBoolean_Detail.ObjectId = Object_PersonalServiceList.Id 
+                                  AND ObjectBoolean_Detail.DescId = zc_ObjectBoolean_PersonalServiceList_Detail()
 
            LEFT JOIN ObjectFloat AS ObjectFloat_Compensation
                                  ON ObjectFloat_Compensation.ObjectId = Object_PersonalServiceList.Id 
@@ -183,6 +189,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                  ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 28.04.21          * isDetail
  17.11.20          * isBankOut
  25.05.20          * isPersonalOut
  17.01.20          * add isRecalc

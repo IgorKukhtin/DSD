@@ -194,6 +194,15 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Options.Editing = False
         Width = 100
       end
+      object isDetail: TcxGridDBColumn
+        Caption = #1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103
+        DataBinding.FieldName = 'isDetail'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103' '#1076#1072#1085#1085#1099#1093
+        Options.Editing = False
+        Width = 50
+      end
       object Compensation: TcxGridDBColumn
         Caption = #1052#1077#1089#1103#1094' '#1082#1086#1084#1087#1077#1085#1089'.'
         DataBinding.FieldName = 'Compensation'
@@ -817,6 +826,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>

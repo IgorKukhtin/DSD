@@ -58,6 +58,7 @@ RETURNS TABLE (MovementId          Integer
              , TotalSummDebt       TFloat
              , InsertDate          TDateTime
              , isChecked           Boolean
+             , isOffer             Boolean
   )
 AS
 $BODY$
@@ -407,6 +408,7 @@ BEGIN
              , MovementDate_Insert.ValueData               AS InsertDate
 
              , tmpData.isChecked :: Boolean
+             , COALESCE (MovementBoolean_Offer.ValueData, FALSE) ::Boolean AS isOffer   -- примерка
 
         FROM tmpData
             LEFT JOIN MovementDesc ON MovementDesc.Id = tmpData.MovementDescId
@@ -436,6 +438,10 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = tmpData.MovementId
                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Offer
+                                      ON MovementBoolean_Offer.MovementId = tmpData.MovementId_Sale
+                                     AND MovementBoolean_Offer.DescId = zc_MovementBoolean_Offer()
 
             LEFT JOIN tmpMI_Child ON tmpMI_Child.MovementId = tmpData.MovementId
                                  AND tmpMI_Child.ParentId = tmpData.MI_Id

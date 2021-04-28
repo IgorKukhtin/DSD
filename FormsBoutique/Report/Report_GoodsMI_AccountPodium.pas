@@ -1,4 +1,4 @@
-unit Report_Profitability;
+unit Report_GoodsMI_AccountPodium;
 
 interface
 
@@ -24,45 +24,52 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxGridBandedTableView, cxGridDBBandedTableView;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxDBLabel,
+  cxImageComboBox;
 
 type
-  TReport_ProfitabilityForm = class(TAncestorReportForm)
+  TReport_GoodsMI_AccountPodiumForm = class(TAncestorReportForm)
     cxLabel3: TcxLabel;
-    ceUnit: TcxButtonEdit;
-    rdUnit: TRefreshDispatcher;
+    edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
     dxBarButton1: TdxBarButton;
-    spGet_UserUnit: TdsdStoredProc;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    actRefreshIsPartion: TdsdDataSetRefresh;
+    ClientName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    actRefreshPartionPrice: TdsdDataSetRefresh;
+    actRefreshSize: TdsdDataSetRefresh;
+    actRefreshIsPartion: TdsdDataSetRefresh;
+    actRefreshPartner: TdsdDataSetRefresh;
+    actRefreshMovement: TdsdDataSetRefresh;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    actRefreshJuridical: TdsdDataSetRefresh;
-    actUpdateMainDS: TdsdUpdateDataSet;
-    spUpdate_Price_MCSIsClose: TdsdStoredProc;
-    cxGridDBBandedTableView1: TcxGridDBBandedTableView;
-    UnitCode: TcxGridDBBandedColumn;
-    UnitName: TcxGridDBBandedColumn;
-    SummaSelling: TcxGridDBBandedColumn;
-    SummaComing: TcxGridDBBandedColumn;
-    SummaIncome: TcxGridDBBandedColumn;
-    WagesAmount: TcxGridDBBandedColumn;
-    ExpensesAmount: TcxGridDBBandedColumn;
-    Remains: TcxGridDBBandedColumn;
-    RemainsSum: TcxGridDBBandedColumn;
-    Profit: TcxGridDBBandedColumn;
-    SummSP: TcxGridDBBandedColumn;
-    cbNoStaticCodes: TcxCheckBox;
-    SummDiscount: TcxGridDBBandedColumn;
-    actUnderreportedDE: TdsdOpenForm;
-    dxBarButton2: TdxBarButton;
-    dxBarButton3: TdxBarButton;
+    spGet_Unit: TdsdStoredProc;
+    PanelNameFull: TPanel;
+    DBLabelNameFull: TcxDBLabel;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    spMovementComplete: TdsdStoredProc;
+    spMovementSetErased: TdsdStoredProc;
+    actSetErased: TdsdExecStoredProc;
+    actComplete: TdsdExecStoredProc;
+    bbComplete: TdxBarButton;
+    bbSetErased: TdxBarButton;
+    actGet_Printer: TdsdExecStoredProc;
+    actGetReportName: TdsdExecStoredProc;
+    actPrintCheck: TdsdPrintAction;
+    mactPrint_Check: TMultiAction;
+    bbPrint_Check: TdxBarButton;
+    FormParams: TdsdFormParams;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spGetReporName: TdsdStoredProc;
+    spGet_Printer: TdsdStoredProc;
+    spSelectPrint_Check: TdsdStoredProc;
+    cbCurrency: TcxCheckBox;
+    CurrencyName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -70,7 +77,7 @@ type
   end;
 
 var
-  Report_ProfitabilityForm: TReport_ProfitabilityForm;
+  Report_GoodsMI_AccountPodiumForm: TReport_GoodsMI_AccountPodiumForm;
 
 implementation
 
@@ -78,5 +85,5 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_ProfitabilityForm)
+  RegisterClass(TReport_GoodsMI_AccountPodiumForm)
 end.

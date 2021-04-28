@@ -4273,6 +4273,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actMarketingDiscount: TdsdOpenForm
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
+      MoveParams = <>
+      Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1077' '#1089#1082#1080#1076#1082#1080
+      FormName = 'TMarketingDiscountForm'
+      FormNameParam.Value = 'TMarketingDiscountForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4675,165 +4686,7 @@ inherited MainForm: TMainForm
         Action = actPriceListLoad_Add
       end
     end
-    object miDocuments: TMenuItem [3]
-      Caption = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
-      object N11: TMenuItem
-        Action = actIncome
-      end
-      object N48: TMenuItem
-        Action = actIncomePharmacy
-      end
-      object N35: TMenuItem
-        Action = actReturnOut
-      end
-      object miReturnOutPharmacy: TMenuItem
-        Action = actReturnOutPharmacy
-      end
-      object N49: TMenuItem
-        Action = actCheck
-      end
-      object N66: TMenuItem
-        Action = actSaleJournal
-      end
-      object miReturnInJournal: TMenuItem
-        Action = actReturnInJournal
-      end
-      object N72: TMenuItem
-        Action = actRepriceJournal
-      end
-      object miRepriceChangeJournal: TMenuItem
-        Action = actRepriceChangeJournal
-      end
-      object N168: TMenuItem
-        Action = actListDiff
-      end
-      object N171: TMenuItem
-        Action = actUnnamedEnterprises
-      end
-      object N175: TMenuItem
-        Action = actReportUnLiquid_Movement
-      end
-      object miReport_GoodsPartionDate: TMenuItem
-        Action = actReport_GoodsPartionDate
-      end
-      object N238: TMenuItem
-        Action = actCheckSummCard
-      end
-      object N33: TMenuItem
-        Caption = '-'
-      end
-      object N43: TMenuItem
-        Action = actSendOnPrice
-      end
-      object N42: TMenuItem
-        Caption = '-'
-      end
-      object N12: TMenuItem
-        Action = actOrderExternal
-      end
-      object N13: TMenuItem
-        Action = actOrderInternal
-      end
-      object N14: TMenuItem
-        Action = actOrderInternalLite
-      end
-      object N15: TMenuItem
-        Action = actPriceList
-      end
-      object N220: TMenuItem
-        Action = actTechnicalRediscount
-      end
-      object N221: TMenuItem
-        Action = actTechnicalRediscountCashier
-      end
-      object N55: TMenuItem
-        Action = actInventoryJournal
-      end
-      object N56: TMenuItem
-        Action = actLossJournal
-      end
-      object N234: TMenuItem
-        Action = actLossFundJournal
-      end
-      object N57: TMenuItem
-        Action = actSendJournal
-      end
-      object N185: TMenuItem
-        Action = actSendMenegerJournal
-      end
-      object VIP1: TMenuItem
-        Action = actSendMenegerVIPJournal
-      end
-      object miLayoutJournal: TMenuItem
-        Action = actLayoutJournal
-      end
-      object miSendPartionDate: TMenuItem
-        Action = actSendPartionDate
-      end
-      object N237: TMenuItem
-        Action = actSendPartionDateChangeJournal
-      end
-      object N84: TMenuItem
-        Action = actOver
-      end
-      object N58: TMenuItem
-        Action = actCreateOrderFromMCS
-      end
-    end
-    object N36: TMenuItem [4]
-      Caption = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
-      object N32: TMenuItem
-        Action = actBankAccountDocument
-      end
-      object N37: TMenuItem
-        Action = actBankLoad
-      end
-      object N67: TMenuItem
-        Action = actPaymentJournal
-      end
-      object N38: TMenuItem
-        Caption = '-'
-      end
-      object N34: TMenuItem
-        Action = actLossDebt
-      end
-      object N73: TMenuItem
-        Action = actChangeIncomePaymentJournal
-      end
-      object N135: TMenuItem
-        Caption = '-'
-      end
-      object N105: TMenuItem
-        Action = actReport_Payment_Plan
-        Caption = #1043#1088#1072#1092#1080#1082' '#1087#1088#1086#1075#1085#1086#1079#1080#1088#1091#1077#1084#1099#1093' '#1087#1083#1072#1090#1077#1078#1077#1081
-        Hint = ' '#1043#1088#1072#1092#1080#1082' '#1087#1088#1086#1075#1085#1086#1079#1080#1088#1091#1077#1084#1099#1093' '#1087#1083#1072#1090#1077#1078#1077#1081
-      end
-      object N199: TMenuItem
-        Caption = '-'
-      end
-      object miReport_JuridicalSold: TMenuItem
-        Action = actReport_JuridicalSold
-      end
-      object miReport_JuridicalCollation: TMenuItem
-        Action = actReport_JuridicalCollation
-      end
-      object N224: TMenuItem
-        Caption = '-'
-      end
-      object miReport_JuridicalRemains: TMenuItem
-        Action = actReport_JuridicalRemains
-      end
-      object miReport_JuridicalSales: TMenuItem
-        Action = actReport_JuridicalSales
-      end
-      object N235: TMenuItem
-        Action = actReport_IncomeVATBalance
-      end
-      object N236: TMenuItem
-        Action = actReport_ImplementationPeriod
-      end
-    end
-    object miReports: TMenuItem [5]
+    object miReports: TMenuItem [3]
       Caption = #1054#1090#1095#1077#1090#1099
       object miBalance: TMenuItem
         Action = actBalance
@@ -4973,6 +4826,164 @@ inherited MainForm: TMainForm
       end
       object N266: TMenuItem
         Action = actReport_ClippedReprice_SaleForm
+      end
+    end
+    object miDocuments: TMenuItem [4]
+      Caption = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      object N11: TMenuItem
+        Action = actIncome
+      end
+      object N48: TMenuItem
+        Action = actIncomePharmacy
+      end
+      object N35: TMenuItem
+        Action = actReturnOut
+      end
+      object miReturnOutPharmacy: TMenuItem
+        Action = actReturnOutPharmacy
+      end
+      object N49: TMenuItem
+        Action = actCheck
+      end
+      object N66: TMenuItem
+        Action = actSaleJournal
+      end
+      object miReturnInJournal: TMenuItem
+        Action = actReturnInJournal
+      end
+      object N72: TMenuItem
+        Action = actRepriceJournal
+      end
+      object miRepriceChangeJournal: TMenuItem
+        Action = actRepriceChangeJournal
+      end
+      object N168: TMenuItem
+        Action = actListDiff
+      end
+      object N171: TMenuItem
+        Action = actUnnamedEnterprises
+      end
+      object N175: TMenuItem
+        Action = actReportUnLiquid_Movement
+      end
+      object miReport_GoodsPartionDate: TMenuItem
+        Action = actReport_GoodsPartionDate
+      end
+      object N238: TMenuItem
+        Action = actCheckSummCard
+      end
+      object N33: TMenuItem
+        Caption = '-'
+      end
+      object N43: TMenuItem
+        Action = actSendOnPrice
+      end
+      object N42: TMenuItem
+        Caption = '-'
+      end
+      object N12: TMenuItem
+        Action = actOrderExternal
+      end
+      object N13: TMenuItem
+        Action = actOrderInternal
+      end
+      object N14: TMenuItem
+        Action = actOrderInternalLite
+      end
+      object N15: TMenuItem
+        Action = actPriceList
+      end
+      object N220: TMenuItem
+        Action = actTechnicalRediscount
+      end
+      object N221: TMenuItem
+        Action = actTechnicalRediscountCashier
+      end
+      object N55: TMenuItem
+        Action = actInventoryJournal
+      end
+      object N56: TMenuItem
+        Action = actLossJournal
+      end
+      object N234: TMenuItem
+        Action = actLossFundJournal
+      end
+      object N57: TMenuItem
+        Action = actSendJournal
+      end
+      object N185: TMenuItem
+        Action = actSendMenegerJournal
+      end
+      object VIP1: TMenuItem
+        Action = actSendMenegerVIPJournal
+      end
+      object miLayoutJournal: TMenuItem
+        Action = actLayoutJournal
+      end
+      object miSendPartionDate: TMenuItem
+        Action = actSendPartionDate
+      end
+      object N237: TMenuItem
+        Action = actSendPartionDateChangeJournal
+      end
+      object N84: TMenuItem
+        Action = actOver
+      end
+      object N58: TMenuItem
+        Action = actCreateOrderFromMCS
+      end
+    end
+    object N36: TMenuItem [5]
+      Caption = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
+      object N32: TMenuItem
+        Action = actBankAccountDocument
+      end
+      object N37: TMenuItem
+        Action = actBankLoad
+      end
+      object N67: TMenuItem
+        Action = actPaymentJournal
+      end
+      object N38: TMenuItem
+        Caption = '-'
+      end
+      object N34: TMenuItem
+        Action = actLossDebt
+      end
+      object N73: TMenuItem
+        Action = actChangeIncomePaymentJournal
+      end
+      object N135: TMenuItem
+        Caption = '-'
+      end
+      object N105: TMenuItem
+        Action = actReport_Payment_Plan
+        Caption = #1043#1088#1072#1092#1080#1082' '#1087#1088#1086#1075#1085#1086#1079#1080#1088#1091#1077#1084#1099#1093' '#1087#1083#1072#1090#1077#1078#1077#1081
+        Hint = ' '#1043#1088#1072#1092#1080#1082' '#1087#1088#1086#1075#1085#1086#1079#1080#1088#1091#1077#1084#1099#1093' '#1087#1083#1072#1090#1077#1078#1077#1081
+      end
+      object N199: TMenuItem
+        Caption = '-'
+      end
+      object miReport_JuridicalSold: TMenuItem
+        Action = actReport_JuridicalSold
+      end
+      object miReport_JuridicalCollation: TMenuItem
+        Action = actReport_JuridicalCollation
+      end
+      object N224: TMenuItem
+        Caption = '-'
+      end
+      object miReport_JuridicalRemains: TMenuItem
+        Action = actReport_JuridicalRemains
+      end
+      object miReport_JuridicalSales: TMenuItem
+        Action = actReport_JuridicalSales
+      end
+      object N235: TMenuItem
+        Action = actReport_IncomeVATBalance
+      end
+      object N236: TMenuItem
+        Action = actReport_ImplementationPeriod
       end
     end
     object N200: TMenuItem [6]
@@ -5225,6 +5236,9 @@ inherited MainForm: TMainForm
       end
       object N65: TMenuItem
         Action = actPromo
+      end
+      object N287: TMenuItem
+        Action = actMarketingDiscount
       end
       object N278: TMenuItem
         Action = actPromoBonus

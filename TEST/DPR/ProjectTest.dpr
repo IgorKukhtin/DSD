@@ -1252,7 +1252,9 @@ uses
   Report_Supply_OlapDialog in '..\..\Forms\Report\Report_Supply_OlapDialog.pas' {Report_Supply_OlapDialogForm: TParentForm},
   ReturnKind in '..\..\Forms\Kind\ReturnKind.pas' {ReturnKindForm: TParentForm},
   MemberPriceList in '..\..\Forms\Guides\MemberPriceList.pas' {MemberPriceListForm: TParentForm},
-  MemberPriceListEdit in '..\..\Forms\Guides\MemberPriceListEdit.pas' {MemberPriceListEditForm: TParentForm};
+  MemberPriceListEdit in '..\..\Forms\Guides\MemberPriceListEdit.pas' {MemberPriceListEditForm: TParentForm},
+  FineSubject in '..\..\Forms\Guides\FineSubject.pas' {FineSubjectForm: TParentForm},
+  FineSubjectEdit in '..\..\Forms\Guides\FineSubjectEdit.pas' {FineSubjectEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

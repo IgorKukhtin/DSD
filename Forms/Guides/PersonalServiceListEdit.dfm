@@ -57,7 +57,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 119
+    Width = 63
   end
   object cxLabel3: TcxLabel
     Left = 10
@@ -126,8 +126,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Width = 177
   end
   object ceisSecond: TcxCheckBox
-    Left = 156
-    Top = 11
+    Left = 85
+    Top = 8
     Caption = #1042#1090#1086#1088#1072#1103' '#1092#1086#1088#1084#1072
     TabOrder = 14
     Width = 95
@@ -197,8 +197,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Width = 138
   end
   object cbRecalc: TcxCheckBox
-    Left = 155
-    Top = 384
+    Left = 154
+    Top = 388
     Hint = #1044#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1074' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1092#1072#1082#1090
     Caption = #1056#1072#1089#1087#1088#1077#1076'. '#1074' '#1074#1077#1076'. '#1092#1072#1082#1090
     ParentShowHint = False
@@ -207,8 +207,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Width = 134
   end
   object edisBankOut: TcxCheckBox
-    Left = 156
-    Top = 39
+    Left = 85
+    Top = 35
     Caption = #1076#1083#1103' '#1059#1074#1086#1083#1077#1085#1085#1099#1093' ('#1073#1072#1085#1082')'
     TabOrder = 24
     Width = 138
@@ -272,9 +272,19 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Top = 456
     Caption = #1042#1080#1076' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1074' '#1073#1072#1085#1082#1077
   end
+  object cbDetail: TcxCheckBox
+    Left = 197
+    Top = 8
+    Hint = #1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103' '#1076#1072#1085#1085#1099#1093
+    Caption = #1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 33
+    Width = 94
+  end
   object ActionList: TActionList
-    Left = 104
-    Top = 40
+    Left = 88
+    Top = 48
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -437,6 +447,14 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisDetail'
+        Value = Null
+        Component = cbDetail
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inContentType'
         Value = Null
         Component = edContentType
@@ -454,7 +472,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
       end>
     PackSize = 1
     Left = 248
-    Top = 64
+    Top = 120
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -669,6 +687,13 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Component = edOnFlowType
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDetail'
+        Value = Null
+        Component = cbDetail
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -686,8 +711,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 176
-    Top = 56
+    Left = 144
+    Top = 80
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 40
@@ -894,8 +919,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 109
-    Top = 336
+    Left = 85
+    Top = 328
   end
   object GuidesBankAccount: TdsdGuides
     KeyField = 'Id'

@@ -1024,7 +1024,10 @@ uses
   AccommodationLincGoods in '..\..\FormsFarmacy\Cash\AccommodationLincGoods.pas' {AccommodationLincGoodsForm: TParentForm},
   ScaleCalcMarketingPlan in '..\..\FormsFarmacy\Kind\ScaleCalcMarketingPlan.pas' {ScaleCalcMarketingPlanForm: TParentForm},
   Report_KilledCodeRecoveryDialog in '..\..\FormsFarmacy\Report\Report_KilledCodeRecoveryDialog.pas' {Report_KilledCodeRecoveryDialogForm: TParentForm},
-  Report_KilledCodeRecovery in '..\..\FormsFarmacy\Report\Report_KilledCodeRecovery.pas' {Report_KilledCodeRecoveryForm: TParentForm};
+  Report_KilledCodeRecovery in '..\..\FormsFarmacy\Report\Report_KilledCodeRecovery.pas' {Report_KilledCodeRecoveryForm: TParentForm},
+  MarketingDiscount in '..\..\FormsFarmacy\Guides\MarketingDiscount.pas' {MarketingDiscountForm: TParentForm},
+  MarketingDiscountDialog in '..\..\FormsFarmacy\Guides\MarketingDiscountDialog.pas' {MarketingDiscountDialogForm: TParentForm},
+  Report_MovementCheck_UnderreportedDE in '..\..\FormsFarmacy\Report\Report_MovementCheck_UnderreportedDE.pas' {Report_MovementCheck_UnderreportedDEForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

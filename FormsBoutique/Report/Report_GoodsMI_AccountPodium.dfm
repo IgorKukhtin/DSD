@@ -1,18 +1,18 @@
-inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
-  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' / '#1074#1086#1079#1074#1088#1072#1090#1072#1084'>'
+inherited Report_GoodsMI_AccountPodiumForm: TReport_GoodsMI_AccountPodiumForm
+  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1088#1072#1089#1095#1077#1090#1072#1084'>'
   ClientHeight = 425
-  ClientWidth = 1065
+  ClientWidth = 1362
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1081
+  ExplicitWidth = 1378
   ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
-    Width = 1065
+    Width = 1362
     Height = 33
-    ExplicitWidth = 1065
+    ExplicitWidth = 1362
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 29
@@ -54,24 +54,32 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
       Width = 329
     end
+    object cbCurrency: TcxCheckBox
+      Left = 696
+      Top = 5
+      Action = actRefresh
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1072#1083#1102#1090#1091' ('#1076#1072'/'#1085#1077#1090')'
+      TabOrder = 6
+      Width = 161
+    end
   end
   inherited PageControl: TcxPageControl [1]
     Top = 59
-    Width = 1065
+    Width = 1362
     Height = 336
     TabOrder = 3
     ExplicitTop = 59
-    ExplicitWidth = 1065
+    ExplicitWidth = 1362
     ExplicitHeight = 336
     ClientRectBottom = 336
-    ClientRectRight = 1065
+    ClientRectRight = 1362
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1065
+      ExplicitWidth = 1362
       ExplicitHeight = 336
       inherited cxGrid: TcxGrid
-        Width = 1065
+        Width = 1362
         Height = 336
-        ExplicitWidth = 1065
+        ExplicitWidth = 1362
         ExplicitHeight = 336
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -88,6 +96,26 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
             item
               Format = ',0.####'
               Kind = skSum
+              Column = TotalPay_Grn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPay_USD
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPay_EUR
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPay_Card
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
               Column = TotalPay
             end
             item
@@ -98,57 +126,7 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalChangePercent
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalPayOth
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalPay_Grn
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalPay_Usd
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalPay_Eur
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalPay_Card
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalCountReturn
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalReturn
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalPayReturn
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummDebt
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummToPay
+              Column = TotalDebt
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -164,42 +142,17 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalPay
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SummChangePercent
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalChangePercent
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalPayOth
-            end
-            item
-              Format = 'C'#1090#1088#1086#1082': ,0'
-              Kind = skCount
-              Column = ClientName
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = TotalPay_Grn
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalPay_Usd
+              Column = TotalPay_USD
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalPay_Eur
+              Column = TotalPay_EUR
             end
             item
               Format = ',0.####'
@@ -209,27 +162,22 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalCountReturn
+              Column = TotalPay
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalReturn
+              Column = SummChangePercent
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = ClientName
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalPayReturn
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummDebt
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = TotalSummToPay
+              Column = TotalDebt
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -270,7 +218,7 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
             DataBinding.FieldName = 'DescName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 55
           end
           object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088'. ('#1089#1086#1079#1076'.)'
@@ -296,6 +244,23 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object OperDate_Sale: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1087#1088'.)'
+            DataBinding.FieldName = 'OperDate_Sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1087#1088#1086#1076#1072#1078#1072')'
+            Width = 70
+          end
+          object InvNumber_Sale: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1087#1088'.'
+            DataBinding.FieldName = 'InvNumber_Sale'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1076#1086#1082'. ('#1087#1088#1086#1076#1072#1078#1072')'
             Width = 55
           end
           object UnitName: TcxGridDBColumn
@@ -339,7 +304,7 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 55
           end
           object PeriodYear: TcxGridDBColumn
             Caption = #1043#1086#1076
@@ -347,15 +312,7 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
-          end
-          object BarCode_item: TcxGridDBColumn
-            Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076' '#1087#1086#1089#1090'.'
-            DataBinding.FieldName = 'BarCode_item'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1064#1090#1088#1080#1093' '#1082#1086#1076' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-            Width = 80
+            Width = 50
           end
           object LabelName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -364,7 +321,7 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Width = 80
           end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
@@ -378,7 +335,7 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 70
           end
           object GoodsSizeName: TcxGridDBColumn
             Caption = #1056#1072#1079#1084#1077#1088
@@ -398,30 +355,15 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
             Width = 40
           end
           object SummChangePercent: TcxGridDBColumn
-            Caption = #1044#1086#1087'. '#1089#1082'. '#1074' '#1087#1088#1086#1076'.'
+            Caption = #1044#1086#1087'. '#1089#1082'. '#1074' '#1076#1086#1082'.'
             DataBinding.FieldName = 'SummChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1072#1103' '#1089#1082#1080#1076#1082#1072' '#1074' '#1087#1088#1086#1076#1072#1078#1077', '#1043#1056#1053
-            Width = 80
-          end
-          object TotalChangePercent: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089#1082'. '#1087#1086' % '#1074' '#1087#1088#1086#1076'.'
-            DataBinding.FieldName = 'TotalChangePercent'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.ReadOnly = False
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1087#1086' % '#1074' '#1087#1088#1086#1076#1072#1078#1077' '#1043#1056#1053
-            Options.Editing = False
-            Width = 80
+            HeaderHint = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1072#1103' '#1089#1082#1080#1076#1082#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077', '#1043#1056#1053
+            Width = 55
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'.'
@@ -444,6 +386,13 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
             HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1074' '#1087#1088#1086#1076#1072#1078#1077', '#1043#1056#1053
             Width = 55
           end
+          object CurrencyName: TcxGridDBColumn
+            Caption = #1042#1072#1083#1102#1090#1072
+            DataBinding.FieldName = 'CurrencyName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
           object TotalPay: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1086#1087#1083#1072#1090#1072' -> '#1043#1056#1053
             DataBinding.FieldName = 'TotalPay'
@@ -453,9 +402,9 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1048#1090#1086#1075#1086' '#1086#1087#1083#1072#1090#1072' '#1074' '#1087#1088#1086#1076#1072#1078#1077' '#1043#1056#1053
+            HeaderHint = #1048#1090#1086#1075#1086' '#1086#1087#1083#1072#1090#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077' '#1043#1056#1053
             Options.Editing = False
-            Width = 80
+            Width = 70
           end
           object TotalPay_Grn: TcxGridDBColumn
             Caption = #1054#1087#1083#1072#1090#1072' '#1043#1056#1053
@@ -467,11 +416,11 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 70
           end
-          object TotalPay_Usd: TcxGridDBColumn
+          object TotalPay_USD: TcxGridDBColumn
             Caption = #1054#1087#1083#1072#1090#1072' $'
-            DataBinding.FieldName = 'TotalPay_Usd'
+            DataBinding.FieldName = 'TotalPay_USD'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -479,11 +428,11 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 70
           end
-          object TotalPay_Eur: TcxGridDBColumn
+          object TotalPay_EUR: TcxGridDBColumn
             Caption = #1054#1087#1083#1072#1090#1072' EUR'
-            DataBinding.FieldName = 'TotalPay_Eur'
+            DataBinding.FieldName = 'TotalPay_EUR'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -491,7 +440,7 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 70
           end
           object TotalPay_Card: TcxGridDBColumn
             Caption = #1054#1087#1083#1072#1090#1072' '#1082#1072#1088#1090#1072
@@ -503,100 +452,31 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 70
+          end
+          object TotalDebt: TcxGridDBColumn
+            Caption = #1044#1086#1083#1075
+            DataBinding.FieldName = 'TotalDebt'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object TotalSummPriceList: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'TotalSummPriceList'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091', '#1043#1056#1053
-            Width = 80
-          end
-          object TotalPayOth: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1086#1087#1083#1072#1090#1072' '#1074' '#1056#1072#1089#1095#1077#1090#1072#1093
-            DataBinding.FieldName = 'TotalPayOth'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.ReadOnly = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object TotalSummDebt: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1076#1086#1083#1075#1072
-            DataBinding.FieldName = 'TotalSummDebt'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1076#1086#1083#1075#1072' '#1074' '#1087#1088#1086#1076#1072#1078#1077' '#1043#1056#1053
-            Options.Editing = False
-            Width = 80
-          end
-          object TotalSummToPay: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1082' '#1086#1087#1083#1072#1090#1077
-            DataBinding.FieldName = 'TotalSummToPay'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.ReadOnly = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1082' '#1086#1087#1083#1072#1090#1077'  '#1074' '#1087#1088#1086#1076#1072#1078#1077' '#1043#1056#1053
-            Options.Editing = False
-            Width = 80
-          end
-          object TotalCountReturn: TcxGridDBColumn
-            Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090
-            DataBinding.FieldName = 'TotalCountReturn'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.ReadOnly = False
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1076#1083#1103' '#1069#1083#1077#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
-            Options.Editing = False
-            Width = 80
-          end
-          object TotalReturn: TcxGridDBColumn
-            Caption = #1048#1058#1054#1043#1054' '#1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072
-            DataBinding.FieldName = 'TotalReturn'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.ReadOnly = False
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1076#1083#1103' '#1069#1083#1077#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
-            Options.Editing = False
-            Width = 80
-          end
-          object TotalPayReturn: TcxGridDBColumn
-            Caption = #1048#1058#1054#1043#1054' '#1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'TotalPayReturn'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.ReadOnly = False
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1076#1083#1103' '#1069#1083#1077#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
-            Options.Editing = False
-            Width = 80
+            Width = 70
           end
           object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupNameFull'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -646,14 +526,6 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
             Options.Editing = False
             Width = 115
           end
-          object PartnerName: TcxGridDBColumn
-            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
-            DataBinding.FieldName = 'PartnerName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
           object DescName_Sale: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1076#1086#1082'. ('#1087#1088#1086#1076#1072#1078#1072')'
             DataBinding.FieldName = 'DescName_Sale'
@@ -662,29 +534,6 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object OperDate_Sale: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1087#1088#1086#1076#1072#1078#1072')'
-            DataBinding.FieldName = 'OperDate_Sale'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object InvNumber_Sale: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. ('#1087#1088#1086#1076#1072#1078#1072')'
-            DataBinding.FieldName = 'InvNumber_Sale'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 73
-          end
-          object isChecked: TcxGridDBColumn
-            Caption = #1042#1086#1079#1074#1088'. > 31'#1076'.'
-            DataBinding.FieldName = 'isChecked'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1056#1072#1079#1088#1077#1096#1077#1085' '#1042#1086#1079#1074#1088#1072#1090' >31 '#1076'. ('#1076#1072'/'#1085#1077#1090')'
-            Options.Editing = False
-            Width = 50
-          end
         end
       end
     end
@@ -692,7 +541,7 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
   object PanelNameFull: TPanel [2]
     Left = 0
     Top = 395
-    Width = 1065
+    Width = 1362
     Height = 30
     Align = alBottom
     BevelOuter = bvNone
@@ -713,8 +562,8 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
       Height = 30
-      Width = 1065
-      AnchorX = 533
+      Width = 1362
+      AnchorX = 681
       AnchorY = 15
     end
   end
@@ -747,165 +596,6 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
         end>
       Caption = 'actGet_UserUnit'
     end
-    object mactPrintCheckPriceReal: TMultiAction
-      Category = 'Print'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGet_Printer
-        end
-        item
-          Action = actPrintCheckPriceReal
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1063#1077#1082' ('#1074' '#1088#1077#1072#1083#1100#1085#1099#1093' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076#1072#1078#1080' ('#1077#1074#1088#1086' '#1080#1083#1080' '#1075#1088#1085'))'
-      Hint = #1055#1077#1095#1072#1090#1100' '#1063#1077#1082' ('#1074' '#1088#1077#1072#1083#1100#1085#1099#1093' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076#1072#1078#1080' ('#1077#1074#1088#1086' '#1080#1083#1080' '#1075#1088#1085'))'
-      ImageIndex = 17
-    end
-    object actPrint: TdsdPrintAction
-      Category = 'Print'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = '0'
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end
-        item
-          FromParam.Value = 43101d
-          FromParam.Component = deStart
-          FromParam.DataType = ftDateTime
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'StartDate'
-          ToParam.Value = Null
-          ToParam.DataType = ftDateTime
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end
-        item
-          FromParam.Value = 43101d
-          FromParam.Component = deEnd
-          FromParam.DataType = ftDateTime
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'EndDate'
-          ToParam.Value = Null
-          ToParam.DataType = ftDateTime
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProc = spReport_BarCode
-      StoredProcList = <
-        item
-          StoredProc = spReport_BarCode
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1087#1086' '#1096'/'#1082
-      Hint = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1087#1086' '#1096'/'#1082
-      ImageIndex = 3
-      DataSets = <
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDItems'
-          IndexFieldNames = 'PartnerName;LabelName;GoodsCode;GoodsSizeName'
-        end>
-      Params = <
-        item
-          Name = 'StartDate'
-          Value = 43101d
-          Component = deStart
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = 43101d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitName'
-          Value = ''
-          Component = GuidesUnit
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintReport_SaleReturnIn_BarCode'
-      ReportNameParam.Value = 'PrintReport_SaleReturnIn_BarCode'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = Null
-      PrinterNameParam.Component = FormParams
-      PrinterNameParam.ComponentItem = 'PrinterName'
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-      PreviewWindowMaximized = False
-    end
-    object actGet_PrinterNull: TdsdExecStoredProc
-      Category = 'Print'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end>
-      Caption = 'Get_Printer'
-    end
-    object actPrintCheckPriceReal: TdsdPrintAction
-      Category = 'Print'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProc = spSelectPrint_Check
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint_Check
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
-      Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'PrinterName'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'PrinterName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      Printer = 'PrinterName'
-      ReportName = 'Print_CheckPodiumRealPrice'
-      ReportNameParam.Name = 'Print_CheckPodiumRealPrice'
-      ReportNameParam.Value = 'Print_CheckPodiumRealPrice'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = Null
-      PrinterNameParam.Component = FormParams
-      PrinterNameParam.ComponentItem = 'PrinterName'
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-      PreviewWindowMaximized = False
-    end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -928,8 +618,8 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_SaleReturnInDialogForm'
-      FormNameParam.Value = 'TReport_SaleReturnInDialogForm'
+      FormName = 'TReport_GoodsMI_AccountDialogForm'
+      FormNameParam.Value = 'TReport_GoodsMI_AccountDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1120,6 +810,91 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
         end>
       isShowModal = False
     end
+    object actPrint: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42736d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'StartDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42736d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'EndDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 'NumGroup;ValueGroup;ClientName;LabelName;GoodsCode;GoodsSizeName'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42736d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42736d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1072#1084
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1072#1084
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1139,24 +914,6 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
-    object actSetErased: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spMovementSetErased
-      StoredProcList = <
-        item
-          StoredProc = spMovementSetErased
-        end
-        item
-          StoredProc = spSelect
-        end>
-      Caption = 'dsdactSetErased'
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 13
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
-      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1091#1076#1072#1083#1077#1085
-    end
     object actComplete: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1169,11 +926,29 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
         item
           StoredProc = spSelect
         end>
-      Caption = 'dsdactComplete'
+      Caption = 'actComplete'
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 12
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
       InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1088#1086#1074#1077#1076#1077#1085
+    end
+    object actSetErased: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spMovementSetErased
+      StoredProcList = <
+        item
+          StoredProc = spMovementSetErased
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = 'actSetErased'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 13
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1091#1076#1072#1083#1077#1085
     end
     object mactPrint_Check: TMultiAction
       Category = 'Print'
@@ -1254,8 +1029,7 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
           MultiSelectSeparator = ','
         end>
       Printer = 'PrinterName'
-      ReportName = 'Print_CheckPodiumRealPrice'
-      ReportNameParam.Value = 'Print_CheckPodiumRealPrice'
+      ReportNameParam.Value = Null
       ReportNameParam.Component = FormParams
       ReportNameParam.ComponentItem = 'ReportNameCheck'
       ReportNameParam.DataType = ftString
@@ -1268,37 +1042,17 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
       PrinterNameParam.MultiSelectSeparator = ','
       PreviewWindowMaximized = False
     end
-    object actUpdate_isChecked: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_isChecked
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_isChecked
-        end
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1056#1072#1079#1088#1077#1096#1080#1090#1100' / '#1086#1090#1084#1077#1085#1080#1090#1100' "'#1042#1086#1079#1074#1088#1072#1090' '#1073#1086#1083#1100#1096#1077' '#1095#1077#1084' '#1079#1072' 31 '#1076#1077#1085#1100'"'
-      Hint = #1056#1072#1079#1088#1077#1096#1080#1090#1100' / '#1086#1090#1084#1077#1085#1080#1090#1100' "'#1042#1086#1079#1074#1088#1072#1090' '#1073#1086#1083#1100#1096#1077' '#1095#1077#1084' '#1079#1072' 31 '#1076#1077#1085#1100'"'
-      ImageIndex = 77
-      QuestionBeforeExecute = 
-        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1088#1072#1079#1088#1077#1096#1080#1090#1100' / '#1086#1090#1084#1077#1085#1080#1090#1100' "'#1042#1086#1079#1074#1088#1072#1090' '#1073#1086#1083#1100#1096#1077' '#1095#1077#1084' '#1079#1072' 31 '#1076#1077#1085 +
-        #1100'"?'
-      InfoAfterExecute = #1056#1072#1079#1088#1077#1096#1077#1085#1086' / '#1086#1090#1084#1077#1085#1077#1085#1086
-    end
   end
   inherited MasterDS: TDataSource
-    Left = 64
-    Top = 168
+    Left = 48
+    Top = 160
   end
   inherited MasterCDS: TClientDataSet
     Left = 16
     Top = 160
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_SaleReturnIn'
+    StoredProcName = 'gpReport_GoodsMI_Account'
     Params = <
       item
         Name = 'inStartDate'
@@ -1331,9 +1085,17 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsCurrency'
+        Value = Null
+        Component = cbCurrency
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 80
-    Top = 208
+    Left = 72
+    Top = 160
   end
   inherited BarManager: TdxBarManager
     Left = 120
@@ -1370,7 +1132,6 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
           ItemName = 'bbRefresh'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -1396,14 +1157,6 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdate_isChecked'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -1412,7 +1165,7 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
         end
         item
           Visible = True
-          ItemName = 'bbactPrintCheckPriceReal'
+          ItemName = 'bbPrint_Check'
         end
         item
           Visible = True
@@ -1458,22 +1211,14 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
       Action = actSetErased
       Category = 0
     end
-    object bbPrintCheck: TdxBarButton
+    object bbPrint_Check: TdxBarButton
       Action = mactPrint_Check
-      Category = 0
-    end
-    object bbUpdate_isChecked: TdxBarButton
-      Action = actUpdate_isChecked
-      Category = 0
-    end
-    object bbactPrintCheckPriceReal: TdxBarButton
-      Action = mactPrintCheckPriceReal
       Category = 0
     end
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 240
-    Top = 144
+    Left = 104
+    Top = 0
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -1481,16 +1226,16 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
         Component = PeriodChoice
       end
       item
-        Component = deEnd
+        Component = deStart
       end
       item
-        Component = deStart
+        Component = deEnd
       end
       item
         Component = GuidesUnit
       end>
-    Left = 720
-    Top = 288
+    Left = 688
+    Top = 280
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -1563,8 +1308,8 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 608
-    Top = 208
+    Left = 496
+    Top = 168
   end
   object spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_byReport'
@@ -1581,13 +1326,13 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
       end
       item
         Name = 'inReportKind'
-        Value = 1
+        Value = 2
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'outStatusCode'
-        Value = 'outStatusCode'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'StatusCode'
         MultiSelectSeparator = ','
@@ -1611,7 +1356,7 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
       end
       item
         Name = 'inReportKind'
-        Value = 1
+        Value = 2
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1625,91 +1370,6 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
     PackSize = 1
     Left = 288
     Top = 280
-  end
-  object PrintHeaderCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 804
-    Top = 193
-  end
-  object PrintItemsCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 804
-    Top = 246
-  end
-  object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Print'
-    DataSet = PrintHeaderCDS
-    DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MovementId_Sale'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 744
-    Top = 168
-  end
-  object spSelectPrint_Check: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Check_Print'
-    DataSet = PrintHeaderCDS
-    DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MovementId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 720
-    Top = 232
-  end
-  object spGetReporName: TdsdStoredProc
-    StoredProcName = 'gpGet_ReportName_SaleReturnId'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = ''
-        Component = MasterCDS
-        ComponentItem = 'MovementId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'gpGet_ReportName_SaleReturnId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'ReportNameCheck'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 664
-    Top = 152
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1729,6 +1389,43 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
       end>
     Left = 416
     Top = 208
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 876
+    Top = 185
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 892
+    Top = 246
+  end
+  object spGetReporName: TdsdStoredProc
+    StoredProcName = 'gpGet_ReportName_SaleReturnId'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_ReportName_SaleReturnId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameCheck'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 664
+    Top = 152
   end
   object spGet_Printer: TdsdStoredProc
     StoredProcName = 'gpGet_PrinterByUnit'
@@ -1752,69 +1449,31 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 360
-    Top = 152
+    Left = 728
+    Top = 160
   end
-  object spReport_BarCode: TdsdStoredProc
-    StoredProcName = 'gpReport_SaleReturnIn_BarCode'
-    DataSet = PrintItemsCDS
+  object spSelectPrint_Check: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Check_Print'
+    DataSet = PrintHeaderCDS
     DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
       item
         DataSet = PrintItemsCDS
       end>
+    OutputType = otMultiDataSet
     Params = <
       item
-        Name = 'inStartDate'
+        Name = 'inMovementId'
         Value = Null
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndDate'
-        Value = Null
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUnitId'
-        Value = Null
-        Component = GuidesUnit
-        ComponentItem = 'Key'
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 504
-    Top = 160
-  end
-  object spUpdate_isChecked: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MI_Checked'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MovementItemId_Sale'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisChecked'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isChecked'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 720
-    Top = 371
+    Left = 728
+    Top = 224
   end
 end
