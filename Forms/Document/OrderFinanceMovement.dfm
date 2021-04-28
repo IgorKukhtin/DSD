@@ -960,6 +960,10 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbAddMask'
         end
         item
@@ -1057,6 +1061,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbInsertUpdateMovement: TdxBarButton
       Action = actInsertUpdateMovement
@@ -3177,6 +3182,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end
       item
         Name = 'inComment'
+        Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
