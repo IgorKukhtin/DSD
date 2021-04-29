@@ -1,28 +1,28 @@
 inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanListForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1083#1072#1085' '#1087#1086' '#1091#1084#1077#1085#1100#1096#1077#1085#1080#1102' '#1082#1086#1083'-'#1074#1086' '#1085#1077#1083#1080#1082#1074#1080#1076#1072' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091'>'
   ClientHeight = 504
-  ClientWidth = 824
+  ClientWidth = 899
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 840
+  ExplicitWidth = 915
   ExplicitHeight = 543
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 79
-    Width = 824
-    Height = 425
+    Top = 83
+    Width = 899
+    Height = 421
     ExplicitTop = 79
     ExplicitWidth = 824
     ExplicitHeight = 425
-    ClientRectBottom = 425
-    ClientRectRight = 824
+    ClientRectBottom = 421
+    ClientRectRight = 899
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 824
       ExplicitHeight = 425
       inherited cxGrid: TcxGrid
-        Top = 49
-        Width = 824
-        Height = 376
+        Top = 89
+        Width = 899
+        Height = 332
         ExplicitTop = 49
         ExplicitWidth = 824
         ExplicitHeight = 376
@@ -207,8 +207,8 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
       object cxGridDetals: TcxGrid
         Left = 0
         Top = 0
-        Width = 824
-        Height = 41
+        Width = 899
+        Height = 81
         Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 1
@@ -245,6 +245,7 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
           OptionsData.Inserting = False
           OptionsView.GroupByBox = False
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderHeight = 50
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object D_AmountAll: TcxGridDBColumn
@@ -253,14 +254,14 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 131
+            Width = 80
           end
           object D_AmountStart: TcxGridDBColumn
             Caption = #1059#1095#1077#1090#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' ('#1073#1077#1079' '#1089#1077#1088#1099#1093')'
             DataBinding.FieldName = 'AmountStart'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 111
+            Width = 80
           end
           object D_AmountSale: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1085#1086' '#1079#1072' '#1087#1077#1088#1080#1086#1076
@@ -268,7 +269,7 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 131
+            Width = 80
           end
           object D_ProcSale: TcxGridDBColumn
             Caption = '% '#1087#1088#1086#1076#1072#1078
@@ -278,7 +279,7 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 89
+            Width = 80
           end
           object D_Color_calc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_calc'
@@ -286,15 +287,56 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 80
+          end
+          object D_SummaPenaltyCount: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' '#1087#1086' '#1082#1086#1083#1080'-'#1074#1091
+            DataBinding.FieldName = 'SummaPenaltyCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object D_SummaSale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078
+            DataBinding.FieldName = 'SummaSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object D_ProcSaleIlliquid: TcxGridDBColumn
+            Caption = #1055#1088#1086#1094#1077#1085#1090' '#1086#1090' '#1089#1091#1084#1084#1099
+            DataBinding.FieldName = 'ProcSaleIlliquid'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object D_SummaPenaltySum: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' '#1087#1086' '#1089#1091#1084#1084#1077
+            DataBinding.FieldName = 'SummaPenaltySum'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object D_SummaPenalty: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072
+            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' '#1080#1090#1086#1075#1086
             DataBinding.FieldName = 'SummaPenalty'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 98
+            Options.Editing = False
+            Width = 80
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -303,20 +345,22 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 41
-        Width = 824
+        Top = 81
+        Width = 899
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salTop
         Control = cxGridDetals
+        ExplicitLeft = -16
+        ExplicitTop = 113
       end
     end
   end
   inherited Panel: TPanel
-    Width = 824
-    Height = 53
+    Width = 899
+    Height = 57
     ExplicitWidth = 824
-    ExplicitHeight = 53
+    ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       EditValue = 43344d
       Properties.DisplayFormat = 'mmmm yyyy'
@@ -328,12 +372,12 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
     end
     inherited deEnd: TcxDateEdit
       Left = 131
-      Top = 56
+      Top = 72
       EditValue = 42491d
       TabOrder = 0
       Visible = False
       ExplicitLeft = 131
-      ExplicitTop = 56
+      ExplicitTop = 72
     end
     inherited cxLabel1: TcxLabel
       Caption = #1052#1077#1089#1103#1094' '#1088#1072#1089#1095#1077#1090#1072':'
@@ -341,10 +385,10 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
     end
     inherited cxLabel2: TcxLabel
       Left = 15
-      Top = 57
+      Top = 73
       Visible = False
       ExplicitLeft = 15
-      ExplicitTop = 57
+      ExplicitTop = 73
     end
     object edUserName: TcxTextEdit
       Left = 348
@@ -368,29 +412,29 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
       Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
     end
     object ceProcUnit: TcxCurrencyEdit
-      Left = 296
+      Left = 253
       Top = 29
       EditValue = 10.000000000000000000
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.##'
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 45
+      Width = 30
     end
     object cxLabel4: TcxLabel
-      Left = 194
+      Left = 151
       Top = 30
       Caption = '% '#1074#1099#1087'. '#1087#1086' '#1072#1087#1090#1077#1082#1077'.'
     end
     object ceProcGoods: TcxCurrencyEdit
-      Left = 120
+      Left = 122
       Top = 29
       EditValue = 20.000000000000000000
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.##'
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 45
+      Width = 24
     end
     object cxLabel5: TcxLabel
       Left = 10
@@ -398,17 +442,17 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
       Caption = '% '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1074#1099#1087'.'
     end
     object cePenalty: TcxCurrencyEdit
-      Left = 543
+      Left = 555
       Top = 29
-      EditValue = 500.000000000000000000
+      EditValue = 250.000000000000000000
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = '0'
       Properties.ReadOnly = True
       TabOrder = 11
-      Width = 47
+      Width = 35
     end
     object cxLabel6: TcxLabel
-      Left = 386
+      Left = 403
       Top = 30
       Caption = #1064#1090#1088#1072#1092' '#1079#1072' 1% '#1085#1077#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
     end
@@ -447,6 +491,20 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
       Style.TextColor = clWindowText
       TabOrder = 15
       Width = 139
+    end
+    object cePlanAmount: TcxCurrencyEdit
+      Left = 369
+      Top = 29
+      EditValue = 7.000000000000000000
+      Properties.DecimalPlaces = 2
+      Properties.DisplayFormat = ',0.##'
+      TabOrder = 16
+      Width = 27
+    end
+    object cxLabel7: TcxLabel
+      Left = 287
+      Top = 30
+      Caption = #1055#1083#1072#1085' '#1086#1090' '#1089#1091#1084#1084#1099
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -578,6 +636,14 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
         Name = 'inProcUnit'
         Value = Null
         Component = ceProcUnit
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPlanAmount'
+        Value = Null
+        Component = cePlanAmount
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

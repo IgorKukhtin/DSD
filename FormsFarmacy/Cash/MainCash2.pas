@@ -920,7 +920,7 @@ implementation
 {$R *.dfm}
 
 uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog,
-  SPDialog, CashWork, MessagesUnit,
+  SPDialog, CashWork, MessagesUnit, LikiDniproeHealth,
   LocalWorkUnit, Splash, DiscountService, UnilWin, ListDiff, ListGoods,
   PromoCodeDialog, ListDiffAddGoods, TlHelp32, EmployeeWorkLog,
   GoodsToExpirationDate, ChoiceGoodsAnalog, Helsi, RegularExpressions,
@@ -2253,7 +2253,6 @@ begin
           end;
           ExpirationDateCDS.Next;
         end;
-
       end;
     except
     end;
@@ -5919,11 +5918,21 @@ var
   I: Integer;
 begin
 
-  if UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger = 0 then
-  Begin
-    ShowMessage('Не определен ID СП !');
-    exit;
-  End;
+//  if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
+//  begin
+    if UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger = 0 then
+    Begin
+      ShowMessage('Не определен ID СП !');
+      exit;
+    End;
+//  end else if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 2 then
+//  begin
+//    if UnitConfigCDS.FieldByName('LikiDneproId').AsInteger = 0 then
+//    Begin
+//      ShowMessage('Не определен ID СП !');
+//      exit;
+//    End;
+//  end;
 
   if pnlHelsiError.Visible then
   begin
@@ -5996,12 +6005,23 @@ begin
       exit;
   end;
 
-  if not GetHelsiReceipt(InvNumberSP, HelsiID, HelsiIDList, HelsiName, HelsiQty,
-    OperDateSP) then
-  begin
-    NewCheck(false);
-    exit;
-  end;
+//  if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
+//  begin
+    if not GetHelsiReceipt(InvNumberSP, HelsiID, HelsiIDList, HelsiName, HelsiQty,
+      OperDateSP) then
+    begin
+      NewCheck(false);
+      exit;
+    end;
+//  end else if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 2 then
+//  begin
+//    if not GetLikiDniproeHealthReceipt(InvNumberSP, HelsiID, HelsiIDList, HelsiName, HelsiQty,
+//      OperDateSP) then
+//    begin
+//      NewCheck(false);
+//      exit;
+//    end;
+//  end;
 
   FormParams.ParamByName('InvNumberSP').Value := InvNumberSP;
   FormParams.ParamByName('OperDateSP').Value := OperDateSP;

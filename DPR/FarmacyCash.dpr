@@ -140,7 +140,8 @@ uses
   EnterRecipeNumber1303 in '..\FormsFarmacy\Cash\EnterRecipeNumber1303.pas' {EnterRecipeNumber1303Form},
   LikiDniproReceipt in '..\FormsFarmacy\Cash\LikiDniproReceipt.pas',
   ListGoodsBadTiming in '..\FormsFarmacy\Cash\ListGoodsBadTiming.pas' {ListGoodsBadTimingForm: TParentForm},
-  ListGoodsIlliquidMarketing in '..\FormsFarmacy\Cash\ListGoodsIlliquidMarketing.pas' {ListGoodsIlliquidMarketingForm: TParentForm};
+  ListGoodsIlliquidMarketing in '..\FormsFarmacy\Cash\ListGoodsIlliquidMarketing.pas' {ListGoodsIlliquidMarketingForm: TParentForm},
+  LikiDniproeHealth in '..\FormsFarmacy\Cash\LikiDniproeHealth.pas';
 
 {$R *.res}
 

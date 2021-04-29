@@ -53,7 +53,7 @@ type
     cxSplitter1: TcxSplitter;
     Color_font: TcxGridDBColumn;
     D_AmountStart: TcxGridDBColumn;
-    D_SummaPenalty: TcxGridDBColumn;
+    D_SummaPenaltyCount: TcxGridDBColumn;
     cbFilter3: TcxCheckBox;
     cbFilter2: TcxCheckBox;
     cbFilter1: TcxCheckBox;
@@ -63,6 +63,12 @@ type
     GoodsGroupName: TcxGridDBColumn;
     ExpirationDate: TcxGridDBColumn;
     SummaSale: TcxGridDBColumn;
+    cePlanAmount: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
+    D_SummaSale: TcxGridDBColumn;
+    D_ProcSaleIlliquid: TcxGridDBColumn;
+    D_SummaPenaltySum: TcxGridDBColumn;
+    D_SummaPenalty: TcxGridDBColumn;
   private
     { Private declarations }
   public
