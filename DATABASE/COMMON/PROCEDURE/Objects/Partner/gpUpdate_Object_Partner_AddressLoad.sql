@@ -390,6 +390,7 @@ IF inPersonalTrade = 'Пономаренко Вікторія' THEN inPersonalTrade:= 'Пономаренко 
                                         , inSchedule        := 'f;f;f;f;f;f;f'
                                         , inPrepareDayCount := 0
                                         , inDocumentDayCount:= 0
+                                        , inCategory        := 0
                                         , inEdiOrdspr       := FALSE
                                         , inEdiInvoice      := FALSE
                                         , inEdiDesadv       := FALSE

@@ -1968,12 +1968,14 @@ end;
 
 procedure TLoadFormTest.LoadPartnerFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerPersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerPersonalForm');
   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerContactForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerContactForm');
   //exit;
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartner_ObjectForm'));
@@ -1981,7 +1983,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerEditForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerJuridicalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerJuridicalEditForm');
 

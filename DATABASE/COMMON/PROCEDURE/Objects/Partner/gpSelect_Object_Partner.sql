@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                StreetId Integer, StreetName TVarChar,
                PrepareDayCount TFloat, DocumentDayCount TFloat,
                GPSN TFloat, GPSE TFloat,
+               Category TFloat,
                EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean,
 
                JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar, /*GLNCode_Juridical TVarChar,*/
@@ -123,8 +124,9 @@ BEGIN
          , ObjectFloat_PrepareDayCount.ValueData  AS PrepareDayCount
          , ObjectFloat_DocumentDayCount.ValueData AS DocumentDayCount
 
-         , COALESCE (Partner_GPSN.ValueData,0) ::Tfloat  AS GPSN
-         , COALESCE (Partner_GPSE.ValueData,0) ::Tfloat  AS GPSE
+         , COALESCE (Partner_GPSN.ValueData,0)         ::Tfloat  AS GPSN
+         , COALESCE (Partner_GPSE.ValueData,0)         ::Tfloat  AS GPSE
+         , COALESCE (ObjectFloat_Category.ValueData,0) ::TFloat  AS Category
 
          , COALESCE (ObjectBoolean_EdiOrdspr.ValueData, CAST (False AS Boolean))     AS EdiOrdspr
          , COALESCE (ObjectBoolean_EdiInvoice.ValueData, CAST (False AS Boolean))    AS EdiInvoice
@@ -277,12 +279,16 @@ BEGIN
                                ON ObjectFloat_DocumentDayCount.ObjectId = Object_Partner.Id
                               AND ObjectFloat_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
 
-           LEFT JOIN ObjectFloat AS Partner_GPSN
-                                 ON Partner_GPSN.ObjectId = Object_Partner.Id
-                                AND Partner_GPSN.DescId = zc_ObjectFloat_Partner_GPSN()
-           LEFT JOIN ObjectFloat AS Partner_GPSE
-                                 ON Partner_GPSE.ObjectId = Object_Partner.Id
-                                AND Partner_GPSE.DescId = zc_ObjectFloat_Partner_GPSE()
+         LEFT JOIN ObjectFloat AS Partner_GPSN
+                               ON Partner_GPSN.ObjectId = Object_Partner.Id
+                              AND Partner_GPSN.DescId = zc_ObjectFloat_Partner_GPSN()
+         LEFT JOIN ObjectFloat AS Partner_GPSE
+                               ON Partner_GPSE.ObjectId = Object_Partner.Id
+                              AND Partner_GPSE.DescId = zc_ObjectFloat_Partner_GPSE()
+
+         LEFT JOIN ObjectFloat AS ObjectFloat_Category
+                               ON ObjectFloat_Category.ObjectId = Object_Partner.Id
+                              AND ObjectFloat_Category.DescId = zc_ObjectFloat_Partner_Category()
 
          LEFT JOIN ObjectBoolean AS ObjectBoolean_EdiOrdspr
                                  ON ObjectBoolean_EdiOrdspr.ObjectId = Object_Partner.Id
@@ -440,6 +446,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 29.04.21         * Category
  19.06.17         * add PersonalMerch
  05.05.17         * add ‚ı.Ô‡‡Ï-˚
  25.12.15         * add GoodsProperty

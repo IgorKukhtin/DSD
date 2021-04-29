@@ -1262,7 +1262,7 @@ inherited SaleExternalJournalForm: TSaleExternalJournalForm
       end>
     PackSize = 1
     Left = 696
-    Top = 272
+    Top = 256
   end
   object GuidesRetail: TdsdGuides
     KeyField = 'Id'
