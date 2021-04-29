@@ -1182,10 +1182,6 @@
 				<Form>Report_SaleReturnInPodiumForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Report\Report_GoodsMI_AccountPodium.pas">
-				<Form>Report_GoodsMI_AccountPodiumForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Report\Report_ClientDebtPodium.pas">
 				<Form>Report_ClientDebtPodiumForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1196,6 +1192,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Report\Report_Goods_RemainsCurrentPodium.pas">
 				<Form>Report_Goods_RemainsCurrentPodiumForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_GoodsMI_AccountPodium.pas">
+				<Form>Report_GoodsMI_AccountPodiumForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

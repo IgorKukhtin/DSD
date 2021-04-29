@@ -342,10 +342,10 @@ uses
   Medoc_J1201212 in '..\..\SOURCE\MeDOC\Medoc_J1201212.pas',
   Medoc_J1201012 in '..\..\SOURCE\MeDOC\Medoc_J1201012.pas',
   Report_SaleReturnInPodium in '..\..\FormsBoutique\Report\Report_SaleReturnInPodium.pas' {Report_SaleReturnInPodiumForm: TParentForm},
-  Report_GoodsMI_AccountPodium in '..\..\FormsBoutique\Report\Report_GoodsMI_AccountPodium.pas' {Report_GoodsMI_AccountPodiumForm: TParentForm},
   Report_ClientDebtPodium in '..\..\FormsBoutique\Report\Report_ClientDebtPodium.pas' {Report_ClientDebtPodiumForm: TParentForm},
   Report_CollationByClientPodium in '..\..\FormsBoutique\Report\Report_CollationByClientPodium.pas' {Report_CollationByClientPodiumForm: TParentForm},
-  Report_Goods_RemainsCurrentPodium in '..\..\FormsBoutique\Report\Report_Goods_RemainsCurrentPodium.pas' {Report_Goods_RemainsCurrentPodiumForm: TParentForm};
+  Report_Goods_RemainsCurrentPodium in '..\..\FormsBoutique\Report\Report_Goods_RemainsCurrentPodium.pas' {Report_Goods_RemainsCurrentPodiumForm: TParentForm},
+  Report_GoodsMI_AccountPodium in '..\..\FormsBoutique\Report\Report_GoodsMI_AccountPodium.pas' {Report_GoodsMI_AccountPodiumForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -369,11 +369,6 @@ begin
   Application.Initialize;
   gc_isSetDefault := true;
   Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TReport_GoodsMI_AccountPodiumForm, Report_GoodsMI_AccountPodiumForm);
-  Application.CreateForm(TReport_ClientDebtPodiumForm, Report_ClientDebtPodiumForm);
-  Application.CreateForm(TReport_CollationByClientPodiumForm, Report_CollationByClientPodiumForm);
-  Application.CreateForm(TReport_CollationByClientPodiumForm, Report_CollationByClientPodiumForm);
-  Application.CreateForm(TReport_Goods_RemainsCurrentPodiumForm, Report_Goods_RemainsCurrentPodiumForm);
   Application.Run;
   DUnitTestRunner.RunRegisteredTests;
 end.
