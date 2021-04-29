@@ -274,7 +274,7 @@ BEGIN
             , COALESCE (Object_PersonalServiceList.ValueData, ''::TVarChar) AS PersonalServiceListName
 
             , COALESCE (Object_FineSubject.Id, 0)        :: Integer  AS FineSubjectId
-            , COALESCE (Object_FineSubject.ValueData, 0) :: TVarChar AS FineSubjectName
+            , COALESCE (Object_FineSubject.ValueData, '') :: TVarChar AS FineSubjectName
 
             , tmpAll.Amount :: TFloat           AS Amount
             , MIFloat_SummToPay.ValueData       AS AmountToPay
@@ -552,7 +552,7 @@ BEGIN
                                    AND ObjectBoolean_BankOut.DescId = zc_ObjectBoolean_PersonalServiceList_BankOut()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_FineSubject
-                                             ON MILinkObject_FineSubject.MovementItemId = MovementItem.Id
+                                             ON MILinkObject_FineSubject.MovementItemId = tmpAll.MovementItemId
                                             AND MILinkObject_FineSubject.DescId = zc_MILinkObject_FineSubject()
             LEFT JOIN Object AS Object_FineSubject ON Object_FineSubject.Id = MILinkObject_FineSubject.ObjectId
 

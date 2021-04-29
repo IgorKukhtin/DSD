@@ -27,7 +27,6 @@ object FineSubjectForm: TFineSubjectForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 853
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -369,52 +368,6 @@ object FineSubjectForm: TFineSubjectForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PersonalDriverId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PersonalDriverId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PersonalDriverCode'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PersonalDriverCode'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PersonalDriverName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PersonalDriverName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'CarModelName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'CarModelName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'NameAll'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'NameAll'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'JuridicalName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'JuridicalName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

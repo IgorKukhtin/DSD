@@ -2363,7 +2363,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       isShowModal = True
     end
     inherited actAddMask: TdsdExecStoredProc
-      Enabled = False
+      TabSheet = tsMain
     end
     object actPersonalServiceListChoice: TOpenChoiceForm
       Category = 'DSDLib'
@@ -3019,6 +3019,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'bbAddMask'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -3196,9 +3200,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
     inherited bbStatic: TdxBarStatic
       ShowCaption = False
-    end
-    inherited bbAddMask: TdxBarButton
-      Visible = ivNever
     end
     object bbPersonalServiceList: TdxBarButton [13]
       Action = mactUpdateMask
@@ -4047,180 +4048,140 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       item
         Name = 'inSummService'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummService'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inSummCardRecalc'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummCardRecalc'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inSummCardSecondRecalc'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummCardSecondRecalc'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inSummCardSecondCash'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummCardSecondCash'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inSummNalogRecalc'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummNalogRecalc'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inSummNalogRet'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummNalogRet'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inSummMinus'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummMinus'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inSummAdd'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummAdd'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inSummAddOthRecalc'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummAddOthRecalc'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inSummHoliday'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummHoliday'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inSummSocialIn'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummSocialIn'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inSummSocialAdd'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummSocialAdd'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inSummChildRecalc'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummChildRecalc'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inSummMinusExtRecalc'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummMinusExtRecalc'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inSummFine'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummFine'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inSummFineOthRecalc'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummFineOthRecalc'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inSummHosp'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummHosp'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inSummHospOthRecalc'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummHospOthRecalc'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inSummCompensationRecalc'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummCompensationRecalc'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inSummAuditAdd'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummAuditAdd'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

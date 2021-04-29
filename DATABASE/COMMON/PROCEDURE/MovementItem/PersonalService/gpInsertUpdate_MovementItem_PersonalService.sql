@@ -93,8 +93,8 @@ BEGIN
         AND vbisDetail = FALSE
         AND EXISTS (SELECT 1
                     FROM MovementItem AS MI 
-                    WHERE MI.MovementId = inMemberId
-                      AND MI.DescId = zc_MI_Master
+                    WHERE MI.MovementId = inMovementId
+                      AND MI.DescId = zc_MI_Master()
                       AND MI.isErased = FALSE
                       AND MI.ObjectId = inPersonalId)
      THEN
@@ -158,7 +158,7 @@ BEGIN
                               ), FALSE);
 
 
-     RAISE EXCEPTION 'Ошибка. %   % .', vbisBankOut, lfGet_Object_ValueData_sh (inPersonalServiceListId);
+     --RAISE EXCEPTION 'Ошибка. %   % .', vbisBankOut, lfGet_Object_ValueData_sh (inPersonalServiceListId);
 
      --
      IF COALESCE (vbisBankOut, FALSE) = TRUE

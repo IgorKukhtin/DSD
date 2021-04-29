@@ -197,6 +197,11 @@ object Report_TransportForm: TReport_TransportForm
           Format = ',0.##'
           Kind = skSum
           Column = PartnerCount
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = HoursPartner_all
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -349,6 +354,11 @@ object Report_TransportForm: TReport_TransportForm
           Format = ',0.##'
           Kind = skSum
           Column = PartnerCount
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = HoursPartner_all
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -785,6 +795,24 @@ object Report_TransportForm: TReport_TransportForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         Properties.ReadOnly = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object HoursPartner_all: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074' '#1074' '#1090#1086#1095#1082#1072#1093
+        DataBinding.FieldName = 'HoursPartner_all'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object HoursPartner: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074' (1 '#1058#1086#1095#1082#1072')'
+        DataBinding.FieldName = 'HoursPartner'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 45
