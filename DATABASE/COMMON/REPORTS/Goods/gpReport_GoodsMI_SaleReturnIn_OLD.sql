@@ -30,7 +30,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , BusinessId Integer, BusinessCode Integer, BusinessName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar/*, OKPO TVarChar*/
              , RetailName TVarChar, RetailReportName TVarChar
-             , AreaName TVarChar, PartnerTagName TVarChar
+             , AreaName TVarChar, PartnerTagName TVarChar, PartnerCategory TFloat
              , Address TVarChar, RegionName TVarChar, ProvinceName TVarChar, CityKindName TVarChar, CityName TVarChar/*, ProvinceCityName TVarChar, StreetKindName TVarChar, StreetName TVarChar*/
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , ContractId Integer, ContractCode Integer, ContractNumber TVarChar, ContractTagName TVarChar, ContractTagGroupName TVarChar
@@ -354,6 +354,7 @@ BEGIN
 
           , View_Partner_Address.AreaName
           , View_Partner_Address.PartnerTagName
+          , ObjectFloat_Category.ValueData ::TFloat AS PartnerCategory
           , ObjectString_Address.ValueData AS Address
           , View_Partner_Address.RegionName
           , View_Partner_Address.ProvinceName
@@ -632,6 +633,10 @@ BEGIN
 
           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpOperationGroup.PartnerId
 
+          LEFT JOIN ObjectFloat AS ObjectFloat_Category
+                                ON ObjectFloat_Category.ObjectId = Object_Partner.Id
+                               AND ObjectFloat_Category.DescId = zc_ObjectFloat_Partner_Category()
+
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
@@ -674,6 +679,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 28.04.21         * add PartnerCategory
  22.03.15                                        * add inIsGoodsKind
  11.01.15                                        * all
  12.12.14                                        * all

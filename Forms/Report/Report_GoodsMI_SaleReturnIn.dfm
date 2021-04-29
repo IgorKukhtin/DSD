@@ -4,9 +4,8 @@
   ClientWidth = 1362
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -572
   ExplicitWidth = 1378
-  ExplicitHeight = 422
+  ExplicitHeight = 425
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -461,6 +460,16 @@
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 95
+          end
+          object PartnerCategory: TcxGridDBColumn
+            Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1058#1058
+            DataBinding.FieldName = 'PartnerCategory'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.;-0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object PartnerTagName: TcxGridDBColumn
             Caption = #1055#1088#1080#1079#1085#1072#1082' '#1058#1058
@@ -1590,7 +1599,7 @@
         end
         item
           Name = 'isBuh'
-          Value = 'false'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -2443,14 +2452,14 @@
     Params = <
       item
         Name = 'ProtocolDateOlapSR'
-        Value = 'NULL'
+        Value = Null
         Component = edProtocolDateOlapSR
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndDateOlapSR'
-        Value = 'NULL'
+        Value = Null
         Component = edEndDateOlapSR
         DataType = ftDateTime
         MultiSelectSeparator = ','

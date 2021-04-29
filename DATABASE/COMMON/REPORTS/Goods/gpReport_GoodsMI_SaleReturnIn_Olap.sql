@@ -36,7 +36,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar/*, OKPO TVarChar*/
              , RetailName TVarChar, RetailReportName TVarChar
-             , AreaName TVarChar, PartnerTagName TVarChar
+             , AreaName TVarChar, PartnerTagName TVarChar, PartnerCategory TFloat
              , Address TVarChar, RegionName TVarChar, ProvinceName TVarChar, CityKindName TVarChar, CityName TVarChar/*, ProvinceCityName TVarChar, StreetKindName TVarChar, StreetName TVarChar*/
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , ContractId Integer, ContractCode Integer, ContractNumber TVarChar, ContractTagName TVarChar, ContractTagGroupName TVarChar
@@ -369,6 +369,7 @@ BEGIN
 
           , Object_Area.ValueData          AS AreaName
           , Object_PartnerTag.ValueData    AS PartnerTagName
+          , ObjectFloat_Category.ValueData ::TFloat AS PartnerCategory
           , ObjectString_Address.ValueData AS Address
           , Object_Region.ValueData        AS RegionName
           , Object_Province.ValueData      AS ProvinceName
@@ -463,6 +464,9 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Address
                                  ON ObjectString_Address.ObjectId = Object_Partner.Id
                                 AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
+          LEFT JOIN ObjectFloat AS ObjectFloat_Category
+                                ON ObjectFloat_Category.ObjectId = Object_Partner.Id
+                               AND ObjectFloat_Category.DescId = zc_ObjectFloat_Partner_Category()
 
           LEFT JOIN Object AS Object_Area ON Object_Area.Id = tmpOperationGroup.AreaId
           LEFT JOIN Object AS Object_PartnerTag ON Object_PartnerTag.Id = tmpOperationGroup.PartnerTagId
@@ -499,6 +503,8 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 28.04.21         * add PartnerCategory
+ 29.04.21         *
  13.02.16                                        *
 */
 
