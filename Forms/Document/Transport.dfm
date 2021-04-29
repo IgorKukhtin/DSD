@@ -294,6 +294,7 @@
     object edDate_UserConfirmedKind: TcxDateEdit
       Left = 1011
       Top = 103
+      Hint = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' "'#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1086' '#1087#1088#1080#1095#1080#1085#1072#1093' '#1087#1088#1086#1089#1090#1086#1103'"'
       EditValue = 42132d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
@@ -310,6 +311,7 @@
     object edUserName_ConfirmedKind: TcxButtonEdit
       Left = 1127
       Top = 103
+      Hint = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' "'#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1086' '#1087#1088#1080#1095#1080#1085#1072#1093' '#1087#1088#1086#1089#1090#1086#1103'"'
       Properties.Buttons = <
         item
           Default = True
@@ -1545,7 +1547,7 @@
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
-    TabOrder = 5
+    TabOrder = 4
     Width = 135
   end
   object cxLabel18: TcxLabel
@@ -1562,7 +1564,7 @@
     Properties.EditFormat = 'dd.mm.yyyy hh:mm'
     Properties.InputKind = ikMask
     Properties.Kind = ckDateTime
-    TabOrder = 7
+    TabOrder = 6
     Width = 145
   end
   object cxLabel19: TcxLabel
@@ -1577,7 +1579,7 @@
     Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
     Properties.EditFormat = 'dd.mm.yyyy hh:mm'
     Properties.Kind = ckDateTime
-    TabOrder = 9
+    TabOrder = 8
     Width = 145
   end
   object cxLabel20: TcxLabel
@@ -1593,7 +1595,7 @@
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
-    TabOrder = 11
+    TabOrder = 10
     Width = 75
   end
   object cxLabel21: TcxLabel
@@ -1609,7 +1611,7 @@
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
-    TabOrder = 14
+    TabOrder = 13
     Width = 147
   end
   object edCommentStop: TcxTextEdit
