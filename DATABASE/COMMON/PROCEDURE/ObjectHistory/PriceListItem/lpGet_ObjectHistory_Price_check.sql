@@ -27,7 +27,7 @@ $BODY$
    DECLARE vbPrice_check TFloat;
 BEGIN
 
-       IF (SELECT FROM Object WHERE Object.Id = inPartnerId AND Object.DescId = zc_Object_Unit())
+       IF (SELECT 1 FROM Object WHERE Object.Id = inPartnerId AND Object.DescId = zc_Object_Unit())
        THEN
            vbPriceListId:= zc_PriceList_Basis();
            -- 
@@ -89,9 +89,11 @@ BEGIN
 
        ELSEIF COALESCE (inPrice, 0) <> COALESCE (vbPrice_check, 0) -- AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View AS RoleAccessKeyView WHERE RoleAccessKeyView.UserId = inUserId AND RoleAccessKeyView.AccessKeyId = zc_Enum_Process_Update_MI_OperPrice())
        THEN
-           RAISE EXCEPTION 'Ошибка.У пользователя <%> нет прав ручного регулирования цены <%>.%Можно ввести цену <%> из прайса <%>.'
+           RAISE EXCEPTION 'Ошибка.У пользователя <%> нет прав ручного регулирования цены <%>.%Для <%>%Можно ввести цену <%> из прайса <%>.'
                          , lfGet_Object_ValueData_sh (inUserId)
                          , zfConvert_FloatToString (inPrice)
+                         , CHR (13)
+                         , lfGet_Object_ValueData (inGoodsId)
                          , CHR (13)
                          , zfConvert_FloatToString (vbPrice_check)
                          , lfGet_Object_ValueData_sh (vbPriceListId)

@@ -34,7 +34,7 @@ BEGIN
            , CAST ('' as TVarChar)  AS NAME
 
            , CAST (0 AS TFloat)     AS KoeffHoursWork
-           , CAST (15 AS TFloat)     AS PartnerMin
+           , CAST (0 AS TFloat)     AS PartnerMin
            
            , CAST ('' as TVarChar)  AS RegistrationCertificate
            , CAST ('' as TVarChar)  AS Comment
