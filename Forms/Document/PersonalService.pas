@@ -218,6 +218,9 @@ type
     spSelectExportDate: TdsdStoredProc;
     actExportToFileZpDate: TdsdStoredProcExportToFile;
     bbExportZPDate: TdxBarButton;
+    cbDetail: TcxCheckBox;
+    FineSubjectName: TcxGridDBColumn;
+    actFineSubjectOpenChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

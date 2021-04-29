@@ -118,6 +118,7 @@ BEGIN
                                                         , inPositionId         := tmpPersonal.PositionId
                                                         , inMemberId               := gpSelect.MemberId                                     -- Физ лицо (кому начисляют алименты)
                                                         , inPersonalServiceListId  := ObjectLink_Personal_PersonalServiceList.ChildObjectId -- на которую происходит распределение Карточки БН
+                                                        , inFineSubjectId          := COALESCE (gpSelect.FineSubjectId,0) ::Integer
                                                         , inUserId             := vbUserId
                                                          ) AS tmp
       FROM (SELECT View_Personal.PersonalId

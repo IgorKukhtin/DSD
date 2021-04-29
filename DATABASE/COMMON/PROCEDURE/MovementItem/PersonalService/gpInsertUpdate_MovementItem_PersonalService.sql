@@ -19,10 +19,15 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, In
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 */
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TVarChar, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
+*/
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
                                                                    
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -62,8 +67,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
     IN inInfoMoneyId           Integer   , -- Статьи назначения
     IN inUnitId                Integer   , -- Подразделение
     IN inPositionId            Integer   , -- Должность
-    IN inMemberId              Integer   , -- юр.лицо
+    IN inMemberId              Integer   , -- 
     IN inPersonalServiceListId Integer   , -- Ведомость начисления
+    IN inFineSubjectId         Integer   , -- Вид нарушения
  INOUT ioBankOutDate           TDateTime ,
     IN inSession               TVarChar    -- сессия пользователя
 )
@@ -71,10 +77,33 @@ RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbisBankOut Boolean;
+   DECLARE vbisDetail Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalService());
 
+     --проверка, если добавляют по маске, то vbisDetail должно быть = TRUE
+     -- получаем свойство PersonalServiceList
+     vbisDetail := COALESCE ((SELECT ObjectBoolean.ValueData
+                              FROM ObjectBoolean
+                              WHERE ObjectBoolean.ObjectId = inPersonalServiceListId 
+                                AND ObjectBoolean.DescId = zc_ObjectBoolean_PersonalServiceList_Detail())
+                             , FALSE) ::Boolean;
+     IF COALESCE (ioId,0) = 0
+        AND vbisDetail = FALSE
+        AND EXISTS (SELECT 1
+                    FROM MovementItem AS MI 
+                    WHERE MI.MovementId = inMemberId
+                      AND MI.DescId = zc_MI_Master
+                      AND MI.isErased = FALSE
+                      AND MI.ObjectId = inPersonalId)
+     THEN
+         --
+         RAISE EXCEPTION 'Ошибка.Для текущей ведомости Нет детализации данных.';
+     END IF;
+     
+     
+     
      -- сохранили
      SELECT tmp.ioId, tmp.outAmount, tmp.outAmountToPay, tmp.outAmountCash
           , tmp.outSummTransport, tmp.outSummTransportAdd, tmp.outSummTransportAddLong, tmp.outSummTransportTaxi, tmp.outSummPhone
@@ -110,6 +139,7 @@ BEGIN
                                                      , inPositionId            := inPositionId
                                                      , inMemberId              := inMemberId
                                                      , inPersonalServiceListId := inPersonalServiceListId
+                                                     , inFineSubjectId         := inFineSubjectId
                                                      , inUserId                := vbUserId
                                                       ) AS tmp;
 

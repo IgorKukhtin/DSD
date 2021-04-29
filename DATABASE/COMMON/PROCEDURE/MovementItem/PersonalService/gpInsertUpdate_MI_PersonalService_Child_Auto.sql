@@ -291,6 +291,7 @@ end if;
                                                                         , inPositionId             := inPositionId
                                                                         , inMemberId               := NULL
                                                                         , inPersonalServiceListId  := inPersonalServiceListId
+                                                                        , inFineSubjectId          := 0
                                                                         , inUserId                 := vbUserId
                                                                          ) AS tmp);
 
@@ -408,6 +409,7 @@ end if;
                                                           , inPositionId             := inPositionId
                                                           , inMemberId               := MILinkObject_Member.ObjectId
                                                           , inPersonalServiceListId  := NULL
+                                                          , inFineSubjectId          := COALESCE (MILinkObject_FineSubject.ObjectId,0)::Integer
                                                           , inUserId                 := vbUserId
                                                            )
        FROM MovementItem
@@ -488,6 +490,9 @@ end if;
             LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalServiceList
                                              ON MILinkObject_PersonalServiceList.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PersonalServiceList.DescId         = zc_MILinkObject_PersonalServiceList() 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_FineSubject
+                                             ON MILinkObject_FineSubject.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_FineSubject.DescId = zc_MILinkObject_FineSubject()
        WHERE MovementItem.Id       = vbId_Master
          AND MovementItem.DescId   = zc_MI_Master()
          AND MovementItem.isErased = FALSE;

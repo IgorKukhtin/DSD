@@ -19,6 +19,7 @@ $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbMovementId_check Integer;
    DECLARE vbIsAll Boolean;
+   DECLARE vbisDetail Boolean;
 BEGIN
      -- !!!
      vbIsAll:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId);
@@ -121,6 +122,12 @@ BEGIN
                         END;
      -- END IF;
 
+     -- получаем свойство PersonalServiceList
+     vbisDetail := COALESCE ((SELECT ObjectBoolean.ValueData
+                              FROM ObjectBoolean
+                              WHERE ObjectBoolean.ObjectId = inPersonalServiceListId 
+                                AND ObjectBoolean.DescId = zc_ObjectBoolean_PersonalServiceList_Detail())
+                             , FALSE) ::Boolean;
 
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -141,6 +148,9 @@ BEGIN
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), ioId, inJuridicalId);
    
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Detail(), ioId, vbisDetail);
+
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
@@ -154,6 +164,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 28.04.21         * add vbisDetail
  01.10.14         * add inJuridicalId
  11.09.14         *
 */

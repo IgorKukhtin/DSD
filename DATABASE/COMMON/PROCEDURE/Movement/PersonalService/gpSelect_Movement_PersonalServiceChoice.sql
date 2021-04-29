@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JurIdicalId Integer, JurIdicalName TVarChar
+             , isDetail Boolean
               )
 AS
 $BODY$
@@ -139,7 +140,7 @@ BEGIN
            , Object_PersonalServiceList.ValueData       AS PersonalServiceListName
            , Object_JurIdical.Id                        AS JurIdicalId
            , Object_JurIdical.ValueData                 AS JurIdicalName
-
+           , COALESCE(MovementBoolean_Detail.ValueData, False) :: Boolean  AS isDetail
        FROM (SELECT Movement.Id
              FROM tmpStatus
                   INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_PersonalService() AND Movement.StatusId = tmpStatus.StatusId
@@ -237,6 +238,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Detail
+                                      ON MovementBoolean_Detail.MovementId = Movement.Id
+                                     AND MovementBoolean_Detail.DescId = zc_MovementBoolean_Detail()
 
             INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
                                           ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id

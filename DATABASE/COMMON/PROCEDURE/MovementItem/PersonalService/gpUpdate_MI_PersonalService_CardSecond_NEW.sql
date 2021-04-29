@@ -289,6 +289,7 @@ BEGIN
                                                         , inPositionId         := _tmpMI.PositionId
                                                         , inMemberId           := NULL
                                                         , inPersonalServiceListId := _tmpMI.PersonalServiceListId
+                                                        , inFineSubjectId      := _tmpMI.FineSubjectId
                                                         , inUserId             := vbUserId
                                                          )
      FROM _tmpMI

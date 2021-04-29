@@ -7,10 +7,15 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, In
 -- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
+/*DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
+*/
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
@@ -53,6 +58,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
     IN inPositionId             Integer   , -- Должность
     IN inMemberId               Integer   , -- Физ лицо (кому начисляют алименты)
     IN inPersonalServiceListId  Integer   , -- Ведомость начисления
+    IN inFineSubjectId          Integer   , -- вид нарушения
     IN inUserId                 Integer     -- пользователь
 )                               
 RETURNS RECORD AS               
@@ -61,6 +67,7 @@ $BODY$
    DECLARE vbAccessKeyId Integer;
 
    DECLARE vbServiceDateId Integer;
+   DECLARE vbisDetail Boolean;
 BEGIN
      -- проверка
      IF COALESCE (inMovementId, 0) = 0
@@ -122,6 +129,19 @@ BEGIN
          END IF;
      END IF;
 
+
+
+     -- проверка записываем zc_MILinkObject_FineSubject - но только для ведомости с признаком zc_ObjectBoolean_PersonalServiceList_Detail  = TRUE 
+     -- получаем свойство PersonalServiceList
+     vbisDetail := COALESCE ((SELECT ObjectBoolean.ValueData
+                              FROM ObjectBoolean
+                              WHERE ObjectBoolean.ObjectId = inPersonalServiceListId 
+                                AND ObjectBoolean.DescId = zc_ObjectBoolean_PersonalServiceList_Detail())
+                             , FALSE) ::Boolean;
+     IF COALESCE (inFineSubjectId,0) <> 0 AND vbisDetail = FALSE
+     THEN
+         RAISE EXCEPTION 'Ошибка.Для текущей ведомости Нет детализации данных.';
+     END IF;
 
      -- !!!ВАЖНО!!!
      -- определяем ключ доступа
@@ -318,6 +338,9 @@ BEGIN
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PersonalServiceList(), ioId, inPersonalServiceListId);
 
+     -- сохранили связь с <>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_FineSubject(), ioId, inFineSubjectId);
+
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
@@ -331,6 +354,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 28.04.21         * inFineSubjectId
  25.03.20         * inSummAuditAdd
  27.01.20         * add inSummCompensationRecalc
  15.10.19         * замена inSummFine, inSummHosp на inSummFineRecalc, inSummHospRecalc
