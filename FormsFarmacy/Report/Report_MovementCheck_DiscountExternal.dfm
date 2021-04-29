@@ -185,13 +185,13 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
             Width = 87
           end
           object DateCompensation: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
+            Caption = #1044#1072#1090#1072' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1087#1088#1086#1076#1072#1078#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1084
             DataBinding.FieldName = 'DateCompensation'
             PropertiesClassName = 'TcxDateEditProperties'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Styles.Content = dmMain.cxHeaderL1Style
-            Width = 73
+            Width = 101
           end
           object DiscountExternalName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1055#1088#1086#1077#1082#1090#1072

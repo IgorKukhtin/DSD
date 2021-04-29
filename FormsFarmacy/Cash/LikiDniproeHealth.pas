@@ -65,17 +65,17 @@ type
 
 function CheckLikiDniproeHealth_Number(ANumber : string) : boolean;
 
-function GetReceipt(const AReceipt : String; var AID, AIDList, AName : string;
+function GetLikiDniproeHealthReceipt(const AReceipt : String; var AID, AIDList, AName : string;
   var AQty : currency; var ADate : TDateTime) : boolean;
 
-function CreateNewDispense(AIDSP, AProgramIdSP : string; AQty, APrice, ASell_amount, ADiscount_amount : currency;
+function CreateLikiDniproeHealthNewDispense(AIDSP, AProgramIdSP : string; AQty, APrice, ASell_amount, ADiscount_amount : currency;
   ACode : string) : boolean;
 
 var LikiDniproeHealthApi : TLikiDniproeHealthApi;
 
 implementation
 
-uses RegularExpressions, System.Generics.Collections, Soap.EncdDecd {, MainCash2};
+uses RegularExpressions, System.Generics.Collections, Soap.EncdDecd , MainCash2;
 
 function DelDoubleQuote(AStr : string) : string;
 begin
@@ -386,22 +386,22 @@ begin
   if not Assigned(LikiDniproeHealthApi) then
   begin
     LikiDniproeHealthApi := TLikiDniproeHealthApi.Create;
-    LikiDniproeHealthApi.FLikiDnepr := 'https://api.preprod.ciet-holding.com/api/v1/medications';
+//    LikiDniproeHealthApi.FLikiDnepr := 'https://api.preprod.ciet-holding.com/api/v1/medications';
 //    LikiDniproeHealthApi.FAccess_Token := '3bc48397885c039ee40586f4781d10006e3c01b0ba4776f4df5ec1f64af38f2a';
-    LikiDniproeHealthApi.FAccess_Token := '98bfd760a1b65cd45641ca2e1d59247d2f846f5a6e75a5d50dc44a213b7f8242';
-    LikiDniproeHealthApi.FEmployee_Email := 'provizor2@yopmail.com';
-    LikiDniproeHealthApi.FShow_Location := 'https://preprod.ciet-holding.com/login';
+//    LikiDniproeHealthApi.FAccess_Token := '98bfd760a1b65cd45641ca2e1d59247d2f846f5a6e75a5d50dc44a213b7f8242';
+//    LikiDniproeHealthApi.FEmployee_Email := 'provizor2@yopmail.com';
+//    LikiDniproeHealthApi.FShow_Location := 'https://preprod.ciet-holding.com/login';
 
 
-//    LikiDniproeHealthApi.FLikiDnepr := MainCashForm.UnitConfigCDS.FieldByName('LikiDneproURL').AsString;
-//    LikiDniproeHealthApi.FAccess_Token := MainCashForm.UnitConfigCDS.FieldByName('LikiDneproToken').AsString;
-//    LikiDniproeHealthApi.FPharmacy_Id := MainCashForm.UnitConfigCDS.FieldByName('LikiDneproId').AsInteger;
+    LikiDniproeHealthApi.FLikiDnepr := MainCashForm.UnitConfigCDS.FieldByName('LikiDneproURL').AsString;
+    LikiDniproeHealthApi.FAccess_Token := MainCashForm.UnitConfigCDS.FieldByName('LikiDneproToken').AsString;
+   // LikiDniproeHealthApi.FPharmacy_Id := MainCashForm.UnitConfigCDS.FieldByName('LikiDneproId').AsInteger;
   end;
 
   Result := True;
 end;
 
-function GetReceipt(const AReceipt : String; var AID, AIDList, AName : string;
+function GetLikiDniproeHealthReceipt(const AReceipt : String; var AID, AIDList, AName : string;
   var AQty : currency; var ADate : TDateTime) : boolean;
 begin
   Result := False;
@@ -466,7 +466,7 @@ begin
   end;
 end;
 
-function CreateNewDispense(AIDSP, AProgramIdSP : string; AQty, APrice, ASell_amount, ADiscount_amount : currency;
+function CreateLikiDniproeHealthNewDispense(AIDSP, AProgramIdSP : string; AQty, APrice, ASell_amount, ADiscount_amount : currency;
   ACode : string) : boolean;
 begin
 

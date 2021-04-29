@@ -13,6 +13,7 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                TimePUSHFinal1 TDateTime, TimePUSHFinal2 TDateTime,
                isSP Boolean, DateSP TDateTime, StartTimeSP TDateTime, EndTimeSP TDateTime,
                FtpDir TVarChar, DividePartionDate Boolean,
+               eHealthApi integer,
                Helsi_IdSP Integer, Helsi_Id TVarChar, Helsi_be TVarChar, Helsi_ClientId TVarChar,
                Helsi_ClientSecret TVarChar, Helsi_IntegrationClient TVarChar,
                isSpotter boolean,
@@ -230,6 +231,7 @@ BEGIN
 
       , COALESCE (ObjectBoolean_DividePartionDate.ValueData, FALSE)  :: Boolean   AS DividePartionDate
 
+      , CASE WHEN inSession = '3' THEN 2 ELSE 1 END          AS eHealthApi
 
       , CASE WHEN COALESCE (ObjectBoolean_RedeemByHandSP.ValueData, FALSE) = FALSE THEN Object_Helsi_IdSP.Id
         ELSE NULL::Integer END                               AS Helsi_IdSP
@@ -435,4 +437,5 @@ LANGUAGE plpgsql VOLATILE;
 
 -- тест
 -- 
-SELECT LoyaltyID, * FROM gpSelect_Cash_UnitConfig('3000497773', '13543334')
+--SELECT LoyaltyID, * FROM gpSelect_Cash_UnitConfig('3000497773', '13543334')
+SELECT LoyaltyID, * FROM gpSelect_Cash_UnitConfig('3000497773', '3')
