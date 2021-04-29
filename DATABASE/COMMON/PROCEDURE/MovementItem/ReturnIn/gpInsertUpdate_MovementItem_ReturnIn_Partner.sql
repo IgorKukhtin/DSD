@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn_Partner(
     IN inMovementId             Integer   , -- Ключ объекта <Документ Возврат покупателя>
     IN inGoodsId                Integer   , -- Товары
     IN inAmountPartner          TFloat    , -- Количество у контрагента
-    IN inPrice                  TFloat    , -- Цена
+ INOUT ioPrice                  TFloat    , -- Цена
  INOUT ioCountForPrice          TFloat    , -- Цена за количество
    OUT outAmountSumm            TFloat    , -- Сумма расчетная
    OUT outAmountSummVat         TFloat    , -- Сумма с НДС расчетная
@@ -64,17 +64,17 @@ BEGIN
 
 
      -- сохранили <Элемент документа>
-     SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
+     SELECT tmp.ioId, tmp.ioPrice, tmp.ioCountForPrice, tmp.outAmountSumm
           , zfCalc_PromoMovementName (tmp.ioMovementId_Promo, NULL, NULL, NULL, NULL)
           , tmp.ioChangePercent
           , tmp.outPricePromo
-            INTO ioId, ioCountForPrice, outAmountSumm, outMovementPromo, outChangePercent, outPricePromo
+            INTO ioId, ioPrice, ioCountForPrice, outAmountSumm, outMovementPromo, outChangePercent, outPricePromo
      FROM lpInsertUpdate_MovementItem_ReturnIn (ioId                 := ioId
                                               , inMovementId         := inMovementId
                                               , inGoodsId            := inGoodsId
                                               , inAmount             := COALESCE ((SELECT Amount FROM MovementItem WHERE Id = ioId AND DescId = zc_MI_Master()), 0)
                                               , inAmountPartner      := inAmountPartner
-                                              , inPrice              := inPrice
+                                              , ioPrice              := ioPrice
                                               , ioCountForPrice      := ioCountForPrice
                                               , inHeadCount          := inHeadCount
                                               , inMovementId_Partion := inMovementId_PartionMI   --COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_MovementId()), 0) :: Integer
@@ -83,16 +83,17 @@ BEGIN
                                               , inAssetId            := inAssetId
                                               , ioMovementId_Promo   := NULL
                                               , ioChangePercent      := NULL
+                                              , inIsCheckPrice       := TRUE
                                               , inUserId             := vbUserId
                                                ) AS tmp;
 
     -- Вернули - Сумма с НДС расчетная
     outAmountSummVat:= CASE WHEN ioCountForPrice > 0
-                            THEN CASE WHEN vbPriceWithVAT = TRUE THEN CAST(inPrice * inAmountPartner/ioCountForPrice AS NUMERIC (16, 2))
-                                                                 ELSE CAST( (( (1 + vbVATPercent / 100)* inPrice) * inAmountPartner/ioCountForPrice) AS NUMERIC (16, 2))
+                            THEN CASE WHEN vbPriceWithVAT = TRUE THEN CAST(ioPrice * inAmountPartner/ioCountForPrice AS NUMERIC (16, 2))
+                                                                 ELSE CAST( (( (1 + vbVATPercent / 100)* ioPrice) * inAmountPartner/ioCountForPrice) AS NUMERIC (16, 2))
                                  END
-                            ELSE CASE WHEN vbPriceWithVAT = TRUE THEN CAST(inPrice * inAmountPartner AS NUMERIC (16, 2))
-                                                                 ELSE CAST( (((1 + vbVATPercent / 100)* inPrice) * inAmountPartner) AS NUMERIC (16, 2) )
+                            ELSE CASE WHEN vbPriceWithVAT = TRUE THEN CAST(ioPrice * inAmountPartner AS NUMERIC (16, 2))
+                                                                 ELSE CAST( (((1 + vbVATPercent / 100)* ioPrice) * inAmountPartner) AS NUMERIC (16, 2) )
                                  END
                         END;
 
@@ -126,4 +127,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_ReturnIn_Partner (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inPrice:= 1, ioCountForPrice:= 1 , inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inAssetId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_MovementItem_ReturnIn_Partner (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, ioPrice:= 1, ioCountForPrice:= 1 , inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inAssetId:= 0, inSession:= '2')

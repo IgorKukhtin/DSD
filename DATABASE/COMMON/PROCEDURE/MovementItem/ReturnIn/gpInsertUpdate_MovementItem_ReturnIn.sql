@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn(
     IN inAmount                 TFloat    , -- Количество
  INOUT ioAmountPartner          TFloat    , -- Количество у контрагента
     IN inIsCalcAmountPartner    Boolean   , -- Признак - будет ли исправлено <Количество у контрагента>
-    IN inPrice                  TFloat    , -- Цена
+ INOUT ioPrice                  TFloat    , -- Цена
  INOUT ioCountForPrice          TFloat    , -- Цена за количество
    OUT outAmountSumm            TFloat    , -- Сумма расчетная
    OUT outAmountSummVat         TFloat    , -- Сумма с НДС расчетная
@@ -71,18 +71,18 @@ BEGIN
 
 
      -- сохранили <Элемент документа>
-     SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
+     SELECT tmp.ioId, tmp.ioPrice, tmp.ioCountForPrice, tmp.outAmountSumm
           , zfCalc_PromoMovementName (tmp.ioMovementId_Promo, NULL, NULL, NULL, NULL)
           , tmp.ioChangePercent
           , tmp.outPricePromo
-            INTO ioId, ioCountForPrice, outAmountSumm, outMovementPromo, outChangePercent, outPricePromo
+            INTO ioId, ioPrice, ioCountForPrice, outAmountSumm, outMovementPromo, outChangePercent, outPricePromo
 
      FROM lpInsertUpdate_MovementItem_ReturnIn (ioId                 := ioId
                                               , inMovementId         := inMovementId
                                               , inGoodsId            := inGoodsId
                                               , inAmount             := inAmount
                                               , inAmountPartner      := ioAmountPartner
-                                              , inPrice              := inPrice
+                                              , ioPrice              := ioPrice
                                               , ioCountForPrice      := ioCountForPrice
                                               , inHeadCount          := inHeadCount
                                               , inMovementId_Partion := inMovementId_PartionMI
@@ -91,16 +91,17 @@ BEGIN
                                               , inAssetId            := inAssetId
                                               , ioMovementId_Promo   := NULL
                                               , ioChangePercent      := NULL
+                                              , inIsCheckPrice       := TRUE
                                               , inUserId             := vbUserId
                                                ) AS tmp;
 
     -- Вернули - Сумма с НДС расчетная
     outAmountSummVat:= CASE WHEN ioCountForPrice > 0
-                            THEN CASE WHEN vbPriceWithVAT = TRUE THEN CAST(inPrice * ioAmountPartner/ioCountForPrice AS NUMERIC (16, 2))
-                                                                 ELSE CAST( (( (1 + vbVATPercent / 100)* inPrice) * ioAmountPartner/ioCountForPrice) AS NUMERIC (16, 2))
+                            THEN CASE WHEN vbPriceWithVAT = TRUE THEN CAST(ioPrice * ioAmountPartner/ioCountForPrice AS NUMERIC (16, 2))
+                                                                 ELSE CAST( (( (1 + vbVATPercent / 100)* ioPrice) * ioAmountPartner/ioCountForPrice) AS NUMERIC (16, 2))
                                  END
-                            ELSE CASE WHEN vbPriceWithVAT = TRUE THEN CAST(inPrice * ioAmountPartner AS NUMERIC (16, 2))
-                                                                 ELSE CAST( (((1 + vbVATPercent / 100)* inPrice) * ioAmountPartner) AS NUMERIC (16, 2) )
+                            ELSE CASE WHEN vbPriceWithVAT = TRUE THEN CAST(ioPrice * ioAmountPartner AS NUMERIC (16, 2))
+                                                                 ELSE CAST( (((1 + vbVATPercent / 100)* ioPrice) * ioAmountPartner) AS NUMERIC (16, 2) )
                                  END
                         END;
 
@@ -139,4 +140,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_ReturnIn (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inPrice:= 1, ioCountForPrice:= 1 , inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inAssetId:= 0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpInsertUpdate_MovementItem_ReturnIn (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, ioPrice:= 1, ioCountForPrice:= 1 , inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inAssetId:= 0, inSession:= zfCalc_UserAdmin())

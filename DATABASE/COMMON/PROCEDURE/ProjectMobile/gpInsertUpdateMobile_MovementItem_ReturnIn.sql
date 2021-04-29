@@ -105,7 +105,7 @@ BEGIN
                                                          , inGoodsId            := inGoodsId
                                                          , inAmount             := inAmount
                                                          , inAmountPartner      := inAmount
-                                                         , inPrice              := inPrice
+                                                         , ioPrice              := inPrice
                                                          , ioCountForPrice      := 0.0
                                                          , inHeadCount          := 0.0
                                                          , inMovementId_Partion := 0
@@ -114,6 +114,7 @@ BEGIN
                                                          , inAssetId            := 0
                                                          , ioMovementId_Promo   := NULL
                                                          , ioChangePercent      := NULL
+                                                         , inIsCheckPrice       := TRUE
                                                          , inUserId             := vbUserId
                                                           );
      

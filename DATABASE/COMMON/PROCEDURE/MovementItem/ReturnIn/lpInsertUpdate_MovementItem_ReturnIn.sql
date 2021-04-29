@@ -1,7 +1,8 @@
 -- Function: lpInsertUpdate_MovementItem_ReturnIn()
 
 -- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, TFloat, Integer);
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, TFloat, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,7 +10,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inAmountPartner       TFloat    , -- Количество у контрагента
-    IN inPrice               TFloat    , -- Цена
+ INOUT ioPrice               TFloat    , -- Цена
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
     IN inHeadCount           TFloat    , -- Количество голов
@@ -20,6 +21,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn(
  INOUT ioMovementId_Promo    Integer   ,
  INOUT ioChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
    OUT outPricePromo         TFloat    ,
+    IN inIsCheckPrice        Boolean   , -- 
     IN inUserId              Integer     -- сессия пользователя
 )
 RETURNS RECORD AS
@@ -39,7 +41,7 @@ BEGIN
                       THEN COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_ChangePercent()), 0)
                  ELSE 0
             END
-          , inPrice
+          , ioPrice
             INTO ioMovementId_Promo, ioChangePercent, outPricePromo
      FROM lpGet_Movement_Promo_Data_all (inOperDate     := (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MovementDate_OperDatePartner())
                                        , inPartnerId    := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
@@ -50,7 +52,7 @@ BEGIN
                                        , inIsReturn     := TRUE
                                         ) AS tmp
      -- !!!только если соответствует цена!!!
-     WHERE inPrice = CASE WHEN TRUE = (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_PriceWithVAT())
+     WHERE ioPrice = CASE WHEN TRUE = (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_PriceWithVAT())
                                THEN tmp.PriceWithVAT
                           WHEN 1=1
                                THEN tmp.PriceWithOutVAT
@@ -61,6 +63,29 @@ BEGIN
      IF zc_isReturnInNAL_bySale() > (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
         OR COALESCE (ioMovementId_Promo, 0) = 0
      THEN ioChangePercent:= COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_ChangePercent()), 0); END IF;
+     
+
+     -- 
+   /*IF COALESCE (ioMovementId_Promo, 0) = 0 AND inIsCheckPrice = TRUE
+     THEN
+          -- !!!замена!!!
+          ioPrice:= lpGet_ObjectHistory_Price_check (inMovementId            := inMovementId
+                                                   , inMovementItemId        := ioId
+                                                   , inContractId            := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
+                                                   , inPartnerId             := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
+                                                   , inMovementDescId        := zc_Movement_ReturnIn()
+                                                   , inOperDate_order        := NULL
+                                                   , inOperDatePartner       := (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner()) 
+                                                   , inDayPrior_PriceReturn  := 14
+                                                   , inIsPrior               := FALSE -- !!!отказались от старых цен!!!
+                                                   , inOperDatePartner_order := NULL
+                                                   , inGoodsId               := inGoodsId
+                                                   , inGoodsKindId           := inGoodsKindId
+                                                   , inPrice                 := ioPrice
+                                                   , inCountForPrice         := 1
+                                                   , inUserId                := inUserId
+                                                    );
+     END IF;*/
 
 
      -- определяется признак Создание/Корректировка
@@ -73,7 +98,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), ioId, inAmountPartner);
 
      -- сохранили свойство <Цена>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, ioPrice);
      -- сохранили свойство <Цена за количество>
      IF COALESCE (ioCountForPrice, 0) = 0 THEN ioCountForPrice := 1; END IF;
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, ioCountForPrice);
@@ -111,8 +136,8 @@ BEGIN
 
      -- расчитали сумму по элементу, для грида
      outAmountSumm := CASE WHEN ioCountForPrice > 0
-                                THEN CAST (inAmountPartner * inPrice / ioCountForPrice AS NUMERIC (16, 2))
-                           ELSE CAST (inAmountPartner * inPrice AS NUMERIC (16, 2))
+                                THEN CAST (inAmountPartner * ioPrice / ioCountForPrice AS NUMERIC (16, 2))
+                           ELSE CAST (inAmountPartner * ioPrice AS NUMERIC (16, 2))
                       END;
 
      -- пересчитали Итоговые суммы по накладной
@@ -140,4 +165,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpInsertUpdate_MovementItem_ReturnIn (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inPrice:= 1, ioCountForPrice:= 1, outAmountSumm:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
+-- SELECT * FROM lpInsertUpdate_MovementItem_ReturnIn (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, ioPrice:= 1, ioCountForPrice:= 1, outAmountSumm:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')

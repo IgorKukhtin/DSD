@@ -29,7 +29,7 @@ BEGIN
                                               , inGoodsId            := inGoodsId
                                               , inAmount             := inAmount
                                               , inAmountPartner      := inAmountPartner
-                                              , inPrice              := inPrice
+                                              , ioPrice              := inPrice
                                               , ioCountForPrice      := inCountForPrice
                                               , inHeadCount          := inHeadCount
                                               , inMovementId_Partion := COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_MovementId()), 0) :: Integer
@@ -38,6 +38,7 @@ BEGIN
                                               , inAssetId            := inAssetId
                                               , ioMovementId_Promo   := inMovementId_Promo
                                               , ioChangePercent      := inChangePercent
+                                              , inIsCheckPrice       := TRUE
                                               , inUserId             := inUserId
                                                ) AS tmp;
 

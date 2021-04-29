@@ -139,13 +139,16 @@ BEGIN
                                                  , inGoodsId            := tmpMI.GoodsId
                                                  , inAmount             := tmpMI.Amount
                                                  , inAmountPartner      := tmpMI.AmountPartner
-                                                 , inPrice              := tmpMI.Price
+                                                 , ioPrice              := tmpMI.Price
                                                  , ioCountForPrice      := 1
                                                  , inHeadCount          := 0
                                                  , inMovementId_Partion := COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = tmpMI.MovementItemId AND DescId = zc_MIFloat_MovementId()), 0) :: Integer
                                                  , inPartionGoods       := ''
                                                  , inGoodsKindId        := tmpMI.GoodsKindId
                                                  , inAssetId            := NULL
+                                                 , ioMovementId_Promo   := NULL
+                                                 , ioChangePercent      := 0
+                                                 , inIsCheckPrice       := FALSE
                                                  , inUserId             := inUserId
                                                   )
      FROM (SELECT MAX (tmpMI.MovementItemId) AS MovementItemId
