@@ -84,9 +84,9 @@ BEGIN
 
 
      -- новые данные - MovementItem
-     CREATE TEMP TABLE _tmpMI (MovementItemId Integer, MemberId Integer, PersonalId Integer, UnitId Integer, PositionId Integer, InfoMoneyId Integer, PersonalServiceListId Integer, SummCardSecondRecalc TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMI (MovementItemId Integer, MemberId Integer, PersonalId Integer, UnitId Integer, PositionId Integer, InfoMoneyId Integer, PersonalServiceListId Integer, FineSubjectId Integer, SummCardSecondRecalc TFloat) ON COMMIT DROP;
      --
-     INSERT INTO _tmpMI (MovementItemId, MemberId, PersonalId, UnitId, PositionId, InfoMoneyId, PersonalServiceListId, SummCardSecondRecalc)
+     INSERT INTO _tmpMI (MovementItemId, MemberId, PersonalId, UnitId, PositionId, InfoMoneyId, PersonalServiceListId, FineSubjectId, SummCardSecondRecalc)
            WITH -- Сотрудники ВСЕ
                 tmpPersonal_all AS (SELECT ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId AS PersonalId
                                          , ObjectLink_Personal_Unit.ChildObjectId                     AS UnitId
@@ -198,6 +198,7 @@ BEGIN
                                , MILinkObject_Unit.ObjectId                             AS UnitId
                                , MILinkObject_Position.ObjectId                         AS PositionId
                                , MILinkObject_PersonalServiceList.ObjectId              AS PersonalServiceListId
+                               , MILinkObject_FineSubject.ObjectId                      AS FineSubjectId
                                , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, MILinkObject_Unit.ObjectId, MILinkObject_Position.ObjectId ORDER BY MovementItem.Id ASC) AS Ord
                           FROM MovementItem
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
@@ -209,6 +210,9 @@ BEGIN
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalServiceList
                                                                 ON MILinkObject_PersonalServiceList.MovementItemId = MovementItem.Id
                                                                AND MILinkObject_PersonalServiceList.DescId         = zc_MILinkObject_PersonalServiceList()
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_FineSubject
+                                                                ON MILinkObject_FineSubject.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_FineSubject.DescId = zc_MILinkObject_FineSubject()
                           WHERE MovementItem.MovementId = inMovementId
                             AND MovementItem.DescId     = zc_MI_Master()
                             AND MovementItem.isErased   = FALSE
@@ -223,6 +227,7 @@ BEGIN
                                     -- если здесь пусто - значит это лишний элемент
                                   , tmpPersonal.PersonalServiceListId                     AS PersonalServiceListId
                                   , tmpPersonal.MemberId                                  AS MemberId
+                                  , tmpMI.FineSubjectId
                              FROM tmpMI
                                   FULL JOIN tmpPersonal ON tmpPersonal.PersonalId            = tmpMI.PersonalId
                                                        AND tmpPersonal.PositionId            = tmpMI.PositionId
@@ -238,6 +243,7 @@ BEGIN
                                , tmpMI.PositionId
                                , tmpMI.InfoMoneyId
                                , tmpMI.PersonalServiceListId
+                               , tmpMI.FineSubjectId
                           FROM tmpListPersonal AS tmpMI
                                INNER JOIN tmpContainer_all ON tmpContainer_all.PersonalId            = tmpMI.PersonalId
                                                           AND tmpContainer_all.UnitId                = tmpMI.UnitId
@@ -252,6 +258,7 @@ BEGIN
                                , tmpContainer.PositionId
                                , tmpContainer.InfoMoneyId
                                , tmpContainer.PersonalServiceListId
+                               , tmpContainer.FineSubjectId
                           FROM tmpContainer
                                INNER JOIN MovementItemContainer AS MIContainer
                                                                 ON MIContainer.ContainerId = tmpContainer.ContainerId
@@ -264,6 +271,7 @@ BEGIN
                                , tmp.PositionId
                                , tmp.InfoMoneyId
                                , tmp.PersonalServiceListId
+                               , tmp.FineSubjectId
                           FROM (SELECT DISTINCT
                                        tmpMIContainer_all.MovementItemId
                                      , tmpMIContainer_all.PersonalId
@@ -271,6 +279,7 @@ BEGIN
                                      , tmpMIContainer_all.PositionId
                                      , tmpMIContainer_all.InfoMoneyId
                                      , tmpMIContainer_all.PersonalServiceListId
+                                     , tmpMIContainer_all.FineSubjectId
                                 FROM tmpMIContainer_all
                                 WHERE tmpMIContainer_all.MovementDescId = zc_Movement_PersonalService()
                                ) AS tmp
@@ -282,6 +291,7 @@ BEGIN
                                  , tmp.PositionId
                                  , tmp.InfoMoneyId
                                  , tmp.PersonalServiceListId
+                                 , tmp.FineSubjectId
                          )
        -- только проводки - сколько уже выплатили (Авансом)
      , tmpMIContainer AS (SELECT SUM (COALESCE (CASE WHEN tmpMIContainer_all.MovementDescId = zc_Movement_BankAccount() THEN 0 ELSE tmpMIContainer_all.Amount END, 0))  AS Amount
@@ -290,12 +300,14 @@ BEGIN
                                , tmpMIContainer_all.PositionId
                                , tmpMIContainer_all.InfoMoneyId
                                , tmpMIContainer_all.PersonalServiceListId
+                               , tmpMIContainer_all.FineSubjectId
                           FROM tmpMIContainer_all
                           GROUP BY tmpMIContainer_all.PersonalId
                                  , tmpMIContainer_all.UnitId
                                  , tmpMIContainer_all.PositionId
                                  , tmpMIContainer_all.InfoMoneyId
                                  , tmpMIContainer_all.PersonalServiceListId
+                                 , tmpMIContainer_all.FineSubjectId
                          )
             -- результат
             SELECT tmpListPersonal.MovementItemId
@@ -305,6 +317,7 @@ BEGIN
                  , tmpListPersonal.PositionId
                  , tmpListPersonal.InfoMoneyId
                  , tmpListPersonal.PersonalServiceListId
+                 , tmpListPersonal.FineSubjectId
                  , CASE WHEN -1 * COALESCE (tmpMIContainer.Amount, 0) - COALESCE (tmpSummCard.Amount, 0) > 0
                                   -- т.к. в проводках долг с минусом
                              THEN -1 * COALESCE (tmpMIContainer.Amount, 0) - COALESCE (tmpSummCard.Amount, 0)
@@ -321,6 +334,7 @@ BEGIN
                                       AND tmpSummCard.PositionId            = tmpListPersonal.PositionId
                                       AND tmpSummCard.InfoMoneyId           = tmpListPersonal.InfoMoneyId
                                       AND tmpSummCard.PersonalServiceListId = tmpListPersonal.PersonalServiceListId
+                                      AND tmpSummCard.FineSubjectId         = tmpListPersonal.FineSubjectId
             WHERE tmpListPersonal.MovementItemId > 0 
                OR -1 * COALESCE (tmpMIContainer.Amount, 0) - COALESCE (tmpSummCard.Amount, 0) > 0 -- !!! т.е. если есть долг по ЗП
           ;
@@ -358,6 +372,7 @@ BEGIN
                                                         , inPositionId         := _tmpMI.PositionId
                                                         , inMemberId           := NULL
                                                         , inPersonalServiceListId := _tmpMI.PersonalServiceListId
+                                                        , inFineSubjectId      := _tmpMI.FineSubjectId
                                                         , inUserId             := vbUserId
                                                          )
      FROM _tmpMI

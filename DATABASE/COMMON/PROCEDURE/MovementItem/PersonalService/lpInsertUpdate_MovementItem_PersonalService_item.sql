@@ -82,6 +82,7 @@ BEGIN
                                                      , inPositionId             := inPositionId
                                                      , inMemberId               := inMemberId
                                                      , inPersonalServiceListId  := inPersonalServiceListId
+                                                     , inFineSubjectId          := 0
                                                      , inUserId                 := inUserId
                                                       ) AS tmp;
 END;

@@ -53,6 +53,7 @@ type
     GuidesPersonalServiceList: TdsdGuides;
     actIsServiceDate: TdsdDataSetRefresh;
     cbIsServiceDate: TcxCheckBox;
+    isDetail: TcxGridDBColumn;
   private
     { Private declarations }
   public

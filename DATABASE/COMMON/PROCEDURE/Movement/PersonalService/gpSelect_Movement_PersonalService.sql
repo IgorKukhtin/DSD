@@ -31,7 +31,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
-             , isAuto Boolean
+             , isAuto Boolean, isDetail Boolean
              , strSign        TVarChar -- ФИО пользователей. - есть эл. подпись
              , strSignNo      TVarChar -- ФИО пользователей. - ожидается эл. подпись
              , MemberName     TVarChar
@@ -244,6 +244,7 @@ BEGIN
            , Object_Juridical.ValueData                 AS JuridicalName
 
            , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
+           , COALESCE(MovementBoolean_Detail.ValueData, False) :: Boolean  AS isDetail
 
            , tmpSign.strSign
            , tmpSign.strSignNo 
@@ -401,7 +402,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
                                       ON MovementBoolean_isAuto.MovementId = Movement.Id
                                      AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
-
+            LEFT JOIN MovementBoolean AS MovementBoolean_Detail
+                                      ON MovementBoolean_Detail.MovementId = Movement.Id
+                                     AND MovementBoolean_Detail.DescId = zc_MovementBoolean_Detail()
             -- эл.подписи
             LEFT JOIN tmpSign ON tmpSign.Id = Movement.Id
             ;
@@ -413,6 +416,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 28.04.21         * 
  04.06.20         * add TotalDayAudit
  25.03.20         * add TotalSummAuditAdd
  27.01.20         *

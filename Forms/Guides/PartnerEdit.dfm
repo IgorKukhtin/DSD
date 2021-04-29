@@ -3,7 +3,7 @@
   ClientHeight = 509
   ClientWidth = 727
   ExplicitWidth = 733
-  ExplicitHeight = 534
+  ExplicitHeight = 537
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -319,7 +319,7 @@
     Caption = #1056#1077#1075#1080#1086#1085
   end
   object ceArea: TcxButtonEdit [43]
-    Left = 158
+    Left = 57
     Top = 415
     Properties.Buttons = <
       item
@@ -328,7 +328,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 43
-    Width = 195
+    Width = 124
   end
   object cxLabel21: TcxLabel [44]
     Left = 15
@@ -689,6 +689,22 @@
     TabOrder = 92
     Width = 195
   end
+  object cxLabel38: TcxLabel [93]
+    Left = 188
+    Top = 416
+    Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1058#1058
+  end
+  object edCategory: TcxCurrencyEdit [94]
+    Left = 261
+    Top = 415
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    Properties.EditFormat = '0'
+    TabOrder = 94
+    Width = 92
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 419
     Top = 339
@@ -860,6 +876,14 @@
         Name = 'inDocumentDayCount'
         Value = 0.000000000000000000
         Component = ceDocumentDayCount
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCategory'
+        Value = Null
+        Component = edCategory
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1646,6 +1670,13 @@
         Component = cbDelivery7
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Category'
+        Value = Null
+        Component = edCategory
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 520
     Top = 352
@@ -1946,7 +1977,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 248
+    Left = 136
     Top = 404
   end
   object PartnerTagGuides: TdsdGuides

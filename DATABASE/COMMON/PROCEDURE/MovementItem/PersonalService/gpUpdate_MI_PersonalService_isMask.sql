@@ -225,6 +225,7 @@ BEGIN
                                                         , inPositionId         := PositionId
                                                         , inMemberId           := MemberId
                                                         , inPersonalServiceListId:= PersonalServiceListId
+                                                        , inFineSubjectId      := 0
                                                         , inUserId             := vbUserId
                                                          )
 

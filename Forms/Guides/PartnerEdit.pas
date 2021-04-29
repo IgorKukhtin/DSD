@@ -132,6 +132,8 @@ type
     cxLabel37: TcxLabel;
     cePersonalMerch: TcxButtonEdit;
     PersonalMerchGuides: TdsdGuides;
+    cxLabel38: TcxLabel;
+    edCategory: TcxCurrencyEdit;
 
   private
     { Private declarations }

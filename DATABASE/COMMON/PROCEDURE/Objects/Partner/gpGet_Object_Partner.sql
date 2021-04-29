@@ -15,7 +15,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar,
                Address TVarChar, HouseNumber TVarChar, CaseNumber TVarChar, RoomNumber TVarChar,
                StreetId Integer, StreetName TVarChar,
                PrepareDayCount TFloat, DocumentDayCount TFloat,
-               GPSN TFloat, GPSE TFloat, 
+               GPSN TFloat, GPSE TFloat,
+               Category TFloat,
 
                EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean,
 
@@ -79,7 +80,8 @@ BEGIN
            , CAST (0 as TFloat)  AS DocumentDayCount
            
            , CAST (0 as TFloat)  AS GPSN
-           , CAST (0 as TFloat)  AS GPSE 
+           , CAST (0 as TFloat)  AS GPSE
+           , CAST (o AS TFloat)  AS Category
 
            , CAST (False AS Boolean) AS EdiOrdspr
            , CAST (False AS Boolean) AS EdiInvoice
@@ -178,6 +180,8 @@ BEGIN
            , COALESCE (Partner_GPSN.ValueData,0) ::Tfloat  AS GPSN
            , COALESCE (Partner_GPSE.ValueData,0) ::Tfloat  AS GPSE 
 
+           , COALESCE (ObjectFloat_Category.ValueData,0) ::TFloat  AS Category
+                              
            , COALESCE (ObjectBoolean_EdiOrdspr.ValueData, CAST (False AS Boolean))     AS EdiOrdspr
            , COALESCE (ObjectBoolean_EdiInvoice.ValueData, CAST (False AS Boolean))    AS EdiInvoice
            , COALESCE (ObjectBoolean_EdiDesadv.ValueData, CAST (False AS Boolean))     AS EdiDesadv
@@ -304,6 +308,10 @@ BEGIN
            LEFT JOIN ObjectFloat AS Partner_GPSE
                                  ON Partner_GPSE.ObjectId = Object_Partner.Id
                                 AND Partner_GPSE.DescId = zc_ObjectFloat_Partner_GPSE()  
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_Category
+                                 ON ObjectFloat_Category.ObjectId = Object_Partner.Id
+                                AND ObjectFloat_Category.DescId = zc_ObjectFloat_Partner_Category()
 
            LEFT JOIN ObjectBoolean AS ObjectBoolean_EdiOrdspr
                                    ON ObjectBoolean_EdiOrdspr.ObjectId = Object_Partner.Id 

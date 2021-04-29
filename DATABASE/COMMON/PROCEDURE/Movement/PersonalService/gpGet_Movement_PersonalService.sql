@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
-             , isAuto Boolean
+             , isAuto Boolean, isDetail Boolean
              , strSign          TVarChar    -- ФИО пользователей. - есть эл. подпись
              , strSignNo        TVarChar    -- ФИО пользователей. - ожидается эл. подпись
              , MemberId         Integer     --
@@ -49,6 +49,7 @@ BEGIN
              , 0                     	 AS JuridicalId
              , CAST ('' AS TVarChar) 	 AS JuridicalName
              , False                     AS isAuto
+             , False                     AS isDetail
              , NULL::TVarChar            AS strSign
              , NULL::TVarChar            AS strSignNo
              , 0                         AS MemberId
@@ -73,6 +74,7 @@ BEGIN
            , Object_Juridical.Id                  AS JuridicalId
            , Object_Juridical.ValueData           AS JuridicalName
            , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
+           , COALESCE(MovementBoolean_Detail.ValueData, False) :: Boolean  AS isDetail
            , tmpSign.strSign
            , tmpSign.strSignNo
            , Object_Member.Id                     AS MemberId
@@ -91,6 +93,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
                                       ON MovementBoolean_isAuto.MovementId = Movement.Id
                                      AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+            LEFT JOIN MovementBoolean AS MovementBoolean_Detail
+                                      ON MovementBoolean_Detail.MovementId = Movement.Id
+                                     AND MovementBoolean_Detail.DescId = zc_MovementBoolean_Detail()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummCardRecalc
                                     ON MovementFloat_TotalSummCardRecalc.MovementId = Movement.Id
@@ -126,6 +131,7 @@ ALTER FUNCTION gpGet_Movement_PersonalService (Integer, TDateTime, TVarChar) OWN
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 28.04.21         *
  20.09.18         *
  21.06.16         *
  01.10.14         * add Juridical

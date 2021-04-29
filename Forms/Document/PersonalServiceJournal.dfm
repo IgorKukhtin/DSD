@@ -466,6 +466,15 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
+          object isDetail: TcxGridDBColumn
+            Caption = #1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103
+            DataBinding.FieldName = 'isDetail'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103' '#1076#1072#1085#1085#1099#1093
+            Options.Editing = False
+            Width = 55
+          end
           object MemberName: TcxGridDBColumn
             Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100') ('#1074#1077#1076'.)'
             DataBinding.FieldName = 'MemberName'
@@ -1871,7 +1880,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime

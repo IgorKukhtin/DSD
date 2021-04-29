@@ -176,6 +176,15 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 200
           end
+          object isDetail: TcxGridDBColumn
+            Caption = #1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103
+            DataBinding.FieldName = 'isDetail'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103' '#1076#1072#1085#1085#1099#1093
+            Options.Editing = False
+            Width = 55
+          end
           object TotalSumm: TcxGridDBColumn
             Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1090#1086#1075')'
             DataBinding.FieldName = 'TotalSumm'
@@ -493,7 +502,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
         end
         item
           Name = 'ServiceDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ServiceDate'
           DataType = ftDateTime
@@ -841,7 +850,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
       end
       item
         Name = 'inisShowAll'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
