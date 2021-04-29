@@ -697,6 +697,15 @@ object ReturnInPodiumForm: TReturnInPodiumForm
             Options.Editing = False
             Width = 50
           end
+          object isOffer: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1088#1082#1072
+            DataBinding.FieldName = 'isOffer'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1084#1077#1088#1082#1072
+            Options.Editing = False
+            Width = 50
+          end
           object OperDate_Sale: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1087#1088#1086#1076#1072#1078#1072') '
             DataBinding.FieldName = 'OperDate_Sale'

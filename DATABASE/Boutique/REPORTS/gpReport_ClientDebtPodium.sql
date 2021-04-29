@@ -49,6 +49,7 @@ RETURNS TABLE (MovementId_Partion   Integer
              , SummToPay              TFloat
              , SummTotalPay           TFloat
              , InsertName             TVarChar
+             , isOffer                Boolean
   )
 AS
 $BODY$
@@ -264,6 +265,7 @@ BEGIN
                - COALESCE (tmpData.TotalPayReturn,0)) ::TFloat AS SummTotalPay
                
              , Object_Insert.ValueData   AS InsertName
+             , COALESCE (MovementBoolean_Offer.ValueData, FALSE)  ::Boolean AS isOffer   -- примерка
 
         FROM tmpData
             LEFT JOIN Object_PartionGoods      ON Object_PartionGoods.MovementItemId  = tmpData.PartionId
@@ -293,6 +295,10 @@ BEGIN
                                          ON MLO_Insert.MovementId = tmpData.MovementId_Sale
                                         AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Offer
+                                      ON MovementBoolean_Offer.MovementId = tmpData.MovementId_Sale
+                                     AND MovementBoolean_Offer.DescId = zc_MovementBoolean_Offer()
           ;
 
  END;

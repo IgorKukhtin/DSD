@@ -74,8 +74,10 @@ RETURNS TABLE (PartionId            Integer
 
              , Remains                 TFloat -- Кол-во - остаток в магазине
              , RemainsDebt             TFloat -- Кол-во - долги по магазину
+             , RemainsDebt_offer       TFloat -- Кол-во - долги по магазину (примерка)
              , RemainsAll              TFloat -- Итого остаток кол-во с учетом долга
              , SummDebt                TFloat -- Сумма ГРН - долги по магазину
+             , SummDebt_offer          TFloat -- Сумма ГРН - долги по магазину(примерка)
              , SummDebt_profit         TFloat -- Сумма ГРН - Прибыль будущих периодов в долгах по магазину
 
              , TotalSumm               TFloat -- Сумма по входным ценам в валюте - остаток итого с учетом долга
@@ -241,7 +243,8 @@ BEGIN
                       )
                        
      -- Остатки + Партии
-   , tmpContainer AS (SELECT Container.WhereObjectId                                   AS UnitId
+   , tmpContainer_all AS 
+                     (SELECT Container.WhereObjectId                                   AS UnitId
                            , Container.PartionId                                       AS PartionId
                            , Container.ObjectId                                        AS GoodsId
                            , CASE WHEN CLO_Client.ContainerId IS NULL THEN Container.Amount ELSE 0 END AS Remains
@@ -282,7 +285,7 @@ BEGIN
                            , Object_PartionGoods.UnitId     AS UnitId_in
                              --  № п/п - только для = 1 возьмем Amount_in
                            , ROW_NUMBER() OVER (PARTITION BY Container.PartionId ORDER BY CASE WHEN Container.WhereObjectId = Object_PartionGoods.UnitId THEN 0 ELSE 1 END ASC) AS Ord
-
+                           , CLO_Client.ContainerId AS ContainerId_debt
                       FROM Container
                            INNER JOIN _tmpUnit ON _tmpUnit.UnitId = Container.WhereObjectId
                            INNER JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = Container.PartionId
@@ -323,6 +326,23 @@ BEGIN
                         AND ((Object_PartionGoods.PeriodYear BETWEEN inStartYear AND inEndYear) OR inIsYear = FALSE)
                      )
 
+   , tmpOffer AS (SELECT tmpContainer_all.ContainerId_debt
+                       , COALESCE (MovementBoolean_Offer.ValueData, FALSE)  ::Boolean AS isOffer
+                  FROM tmpContainer_all
+                       INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_all.ContainerId_debt
+                       INNER JOIN MovementBoolean AS MovementBoolean_Offer
+                                                  ON MovementBoolean_Offer.MovementId = MIContainer.MovementId
+                                                 AND MovementBoolean_Offer.DescId = zc_MovementBoolean_Offer()
+                                                 AND COALESCE (MovementBoolean_Offer.ValueData, FALSE) = TRUE
+                  WHERE COALESCE (tmpContainer_all.ContainerId_debt,0) <> 0
+                  )
+   , tmpContainer AS (SELECT tmpContainer_all.*
+                           , CASE WHEN tmpOffer.isOffer = TRUE THEN tmpContainer_all.RemainsDebt ELSE 0 END AS RemainsDebt_offer
+                           , CASE WHEN tmpOffer.isOffer = TRUE THEN tmpContainer_all.SummDebt    ELSE 0 END AS SummDebt_offer
+                      FROM tmpContainer_all
+                          LEFT JOIN tmpOffer ON tmpOffer.ContainerId_debt = tmpContainer_all.ContainerId_debt
+                      )               
+
        , tmpData_All AS (SELECT tmpContainer.UnitId
                               , tmpContainer.GoodsId
                               , CASE WHEN inisPartion = TRUE AND inIsSize = TRUE THEN tmpContainer.PartionId ELSE 0 END AS PartionId
@@ -362,8 +382,10 @@ BEGIN
 
                               , SUM (tmpContainer.Remains)         AS Remains
                               , SUM (tmpContainer.RemainsDebt)     AS RemainsDebt
+                              , SUM (tmpContainer.RemainsDebt_offer) AS RemainsDebt_offer
                               , SUM (tmpContainer.RemainsAll)      AS RemainsAll
                               , SUM (tmpContainer.SummDebt)        AS SummDebt
+                              , SUM (tmpContainer.SummDebt_offer)  AS SummDebt_offer
                               , SUM (tmpContainer.SummDebt_profit) AS SummDebt_profit
 
 
@@ -527,8 +549,10 @@ BEGIN
 
                           , SUM (tmpData_All.Remains)         AS Remains
                           , SUM (tmpData_All.RemainsDebt)     AS RemainsDebt
+                          , SUM (tmpData_All.RemainsDebt_offer) AS RemainsDebt_offer
                           , SUM (tmpData_All.RemainsAll)      AS RemainsAll
                           , SUM (tmpData_All.SummDebt)        AS SummDebt
+                          , SUM (tmpData_All.SummDebt_offer)  AS SummDebt_offer
                           , SUM (tmpData_All.SummDebt_profit) AS SummDebt_profit
 
                           , SUM (tmpData_All.TotalSummPrice)     AS TotalSummPrice
@@ -780,17 +804,21 @@ BEGIN
              -- Кол-во - остаток в магазине
            , tmpData.Remains                 :: TFloat AS Remains
              -- Кол-во - долги по магазину
-           , tmpData.RemainsDebt             :: TFloat AS RemainsDebt
+           , (COALESCE (tmpData.RemainsDebt,0) - COALESCE (tmpData.RemainsDebt_offer,0)) :: TFloat AS RemainsDebt
+             -- Кол-во - долги по магазину (примерка)
+           , COALESCE (tmpData.RemainsDebt_offer,0) :: TFloat AS RemainsDebt_offer
              -- Итого остаток кол-во с учетом долга
-           , tmpData.RemainsAll              :: TFloat AS RemainsAll
+           , tmpData.RemainsAll                     :: TFloat AS RemainsAll
 
              -- Сумма ГРН - долги по магазину
-           , tmpData.SummDebt                :: TFloat AS SummDebt
+           , (COALESCE (tmpData.SummDebt,0) - COALESCE (tmpData.SummDebt_offer,0)) :: TFloat AS SummDebt
+             -- Сумма ГРН - долги по магазину(примерка)
+           , COALESCE (tmpData.SummDebt_offer,0)    :: TFloat AS SummDebt_offer
              -- Сумма ГРН - Прибыль будущих периодов в долгах по магазину
-           , tmpData.SummDebt_profit         :: TFloat AS SummDebt_profit
+           , tmpData.SummDebt_profit                :: TFloat AS SummDebt_profit
 
              -- Сумма по входным ценам в валюте - остаток итого с учетом долга
-           , tmpData.TotalSummPrice          :: TFloat AS TotalSumm
+           , tmpData.TotalSummPrice                 :: TFloat AS TotalSumm
 
              -- Сумма по входным ценам в ГРН - остаток итого с учетом долга  по курсу на тек.дату
            , CAST (tmpData.TotalSummPrice * tmpData.CurrencyValue / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpData.ParValue <> 0 THEN tmpData.ParValue ELSE 1 END AS NUMERIC (16, 2)) :: TFloat AS TotalSummBalance

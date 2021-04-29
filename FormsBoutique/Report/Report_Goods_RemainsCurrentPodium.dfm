@@ -6,6 +6,7 @@ inherited Report_Goods_RemainsCurrentPodiumForm: TReport_Goods_RemainsCurrentPod
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -203
   ExplicitWidth = 1147
   ExplicitHeight = 601
   PixelsPerInch = 96
@@ -309,6 +310,16 @@ inherited Report_Goods_RemainsCurrentPodiumForm: TReport_Goods_RemainsCurrentPod
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummPriceList_curr
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsDebt_offer
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummDebt_offer
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -375,6 +386,16 @@ inherited Report_Goods_RemainsCurrentPodiumForm: TReport_Goods_RemainsCurrentPod
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummPriceList_curr
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsDebt_offer
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummDebt_offer
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -456,15 +477,6 @@ inherited Report_Goods_RemainsCurrentPodiumForm: TReport_Goods_RemainsCurrentPod
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 108
-          end
-          object isOffer: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1088#1082#1072
-            DataBinding.FieldName = 'isOffer'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1080#1084#1077#1088#1082#1072
-            Options.Editing = False
-            Width = 50
           end
           object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
@@ -610,6 +622,18 @@ inherited Report_Goods_RemainsCurrentPodiumForm: TReport_Goods_RemainsCurrentPod
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' - '#1076#1086#1083#1075#1080' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+            Options.Editing = False
+            Width = 55
+          end
+          object RemainsDebt_offer: TcxGridDBColumn
+            Caption = #1054#1089#1090'. '#1076#1086#1083#1075' ('#1087#1088#1080#1084#1077#1088#1082#1072')'
+            DataBinding.FieldName = 'RemainsDebt_offer'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' - '#1076#1086#1083#1075#1080' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091' ('#1087#1088#1080#1084#1077#1088#1082#1072')'
             Options.Editing = False
             Width = 55
           end
@@ -1041,6 +1065,18 @@ inherited Report_Goods_RemainsCurrentPodiumForm: TReport_Goods_RemainsCurrentPod
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1043#1056#1053' - '#1076#1086#1083#1075#1080' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+            Options.Editing = False
+            Width = 80
+          end
+          object SummDebt_offer: TcxGridDBColumn
+            Caption = #1044#1086#1083#1075' '#1043#1056#1053' ('#1087#1088#1080#1084#1077#1088#1082#1072')'
+            DataBinding.FieldName = 'SummDebt_offer'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1043#1056#1053' - '#1076#1086#1083#1075#1080' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091' ('#1087#1088#1080#1084#1077#1088#1082#1072')'
             Options.Editing = False
             Width = 80
           end

@@ -640,6 +640,15 @@ object GoodsAccountPodiumForm: TGoodsAccountPodiumForm
             Options.Editing = False
             Width = 50
           end
+          object isOffer: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1088#1082#1072
+            DataBinding.FieldName = 'isOffer'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1084#1077#1088#1082#1072
+            Options.Editing = False
+            Width = 50
+          end
           object OperDate_Sale: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1087#1088#1086#1076#1072#1078#1072') '
             DataBinding.FieldName = 'OperDate_Sale'
@@ -1996,7 +2005,7 @@ object GoodsAccountPodiumForm: TGoodsAccountPodiumForm
         end
         item
           Name = 'isPayTotal'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -2045,7 +2054,7 @@ object GoodsAccountPodiumForm: TGoodsAccountPodiumForm
         end
         item
           Name = 'isPayTotal'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -2124,14 +2133,14 @@ object GoodsAccountPodiumForm: TGoodsAccountPodiumForm
         end
         item
           Name = 'isPeriod'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartion'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -2358,6 +2367,7 @@ object GoodsAccountPodiumForm: TGoodsAccountPodiumForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -2370,6 +2380,7 @@ object GoodsAccountPodiumForm: TGoodsAccountPodiumForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 0
       end>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 363
     Top = 345
@@ -2476,7 +2487,7 @@ object GoodsAccountPodiumForm: TGoodsAccountPodiumForm
       end
       item
         Name = 'inOperDate'
-        Value = 0c
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -2550,7 +2561,7 @@ object GoodsAccountPodiumForm: TGoodsAccountPodiumForm
       end
       item
         Name = 'LastDate'
-        Value = 'NULL'
+        Value = Null
         Component = edLastDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -2585,7 +2596,7 @@ object GoodsAccountPodiumForm: TGoodsAccountPodiumForm
       end
       item
         Name = 'HappyDate'
-        Value = ''
+        Value = Null
         Component = edHappyDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -2627,7 +2638,7 @@ object GoodsAccountPodiumForm: TGoodsAccountPodiumForm
       end
       item
         Name = 'InsertDate'
-        Value = 'NULL'
+        Value = Null
         Component = edInsertDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -2786,14 +2797,14 @@ object GoodsAccountPodiumForm: TGoodsAccountPodiumForm
       end
       item
         Name = 'HappyDate'
-        Value = 'NULL'
+        Value = Null
         Component = edHappyDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'LastDate'
-        Value = 'NULL'
+        Value = Null
         Component = edLastDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -3069,7 +3080,7 @@ object GoodsAccountPodiumForm: TGoodsAccountPodiumForm
       end
       item
         Name = 'inOperDate'
-        Value = 0c
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime

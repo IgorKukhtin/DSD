@@ -285,7 +285,7 @@ inherited Report_ClientDebtPodiumForm: TReport_ClientDebtPodiumForm
             Options.Editing = False
             Width = 70
           end
-                    object isOffer: TcxGridDBColumn
+          object isOffer: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1088#1082#1072
             DataBinding.FieldName = 'isOffer'
             HeaderAlignmentHorz = taCenter
