@@ -1,25 +1,25 @@
 inherited Unit_ObjectForm: TUnit_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
   ClientHeight = 484
-  ClientWidth = 1434
+  ClientWidth = 1442
   PopupMenu = PopupMenu
-  ExplicitLeft = -98
-  ExplicitWidth = 1450
+  ExplicitLeft = -106
+  ExplicitWidth = 1458
   ExplicitHeight = 523
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1434
+    Width = 1442
     Height = 458
     ExplicitWidth = 1434
     ExplicitHeight = 458
     ClientRectBottom = 458
-    ClientRectRight = 1434
+    ClientRectRight = 1442
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1434
       ExplicitHeight = 458
       inherited cxGrid: TcxGrid
-        Width = 1434
+        Width = 1442
         Height = 458
         ExplicitWidth = 1434
         ExplicitHeight = 458
@@ -943,6 +943,15 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderHint = #1057#1086#1086#1073#1097#1077#1085#1080#1077' '#1074' '#1082#1072#1089#1089#1077' '#1087#1088#1080' '#1086#1087#1091#1089#1082#1072#1085#1080#1080' '#1077#1089#1083#1080' '#1088#1072#1079#1085#1099#1077' '#1089#1088#1086#1082#1080
             Options.Editing = False
             Width = 82
+          end
+          object isMessageByTimePD: TcxGridDBColumn
+            Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1077' '#1074' '#1082#1072#1089#1089#1077' '#1087#1086' '#1089#1088#1086#1082#1072#1084' '#1087#1086' '#1082#1072#1090#1077#1075#1086#1088#1080#1080
+            DataBinding.FieldName = 'isMessageByTimePD'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1086#1086#1073#1097#1077#1085#1080#1077' '#1074' '#1082#1072#1089#1089#1077' '#1087#1088#1080' '#1086#1087#1091#1089#1082#1072#1085#1080#1080' '#1077#1089#1083#1080' '#1088#1072#1079#1085#1099#1077' '#1089#1088#1086#1082#1080' '#1087#1086' '#1082#1072#1090#1077#1075#1086#1088#1080#1080
+            Options.Editing = False
+            Width = 86
           end
         end
       end
@@ -3504,6 +3513,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end>
       Caption = 'actExecUpdate_isMessageByTime'
     end
+    object macExecUpdate_isMessageByTimePD: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actExecUpdate_isMessageByTimePD
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1057#1086#1086#1073#1097#1077#1085#1080#1077' '#1074' '#1082#1072#1089#1089#1077' '#1087#1086' '#1089#1088#1086#1082#1072#1084' '#1087#1086' '#1082#1072#1090#1077#1075#1086#1088#1080#1080'"?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1057#1086#1086#1073#1097#1077#1085#1080#1077' '#1074' '#1082#1072#1089#1089#1077' '#1087#1086' '#1089#1088#1086#1082#1072#1084' '#1087#1086' '#1082#1072#1090#1077#1075#1086#1088#1080#1080'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1057#1086#1086#1073#1097#1077#1085#1080#1077' '#1074' '#1082#1072#1089#1089#1077' '#1087#1086' '#1089#1088#1086#1082#1072#1084' '#1087#1086' '#1082#1072#1090#1077#1075#1086#1088#1080#1080'"'
+      ImageIndex = 79
+    end
+    object actExecUpdate_isMessageByTimePD: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isMessageByTimePD
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isMessageByTimePD
+        end>
+      Caption = 'actExecUpdate_isMessageByTime'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -4223,6 +4257,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton19'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton11'
         end>
     end
@@ -4310,6 +4348,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object dxBarButton18: TdxBarButton
       Action = macExecUpdate_isMessageByTime
+      Category = 0
+    end
+    object dxBarButton19: TdxBarButton
+      Action = macExecUpdate_isMessageByTimePD
       Category = 0
     end
   end
@@ -7021,5 +7063,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 1200
     Top = 219
+  end
+  object spUpdate_isMessageByTimePD: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isMessageByTimePD'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMessageByTimePD'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isMessageByTimePD'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1200
+    Top = 275
   end
 end

@@ -734,6 +734,7 @@ type
     FSaveCheckToMemData: Boolean;
     FShowMessageCheckConnection: Boolean;
     FNeedFullRemains: Boolean;
+    MessageByTime: Boolean;
 
     FPUSHStart: Boolean;
     FPUSHEnd: TDateTime;
@@ -1546,6 +1547,7 @@ begin
   ExpirationDateView.DataController.Filter.Clear;
   DiscountServiceForm.gCode := 0;
   DiscountServiceForm.isBeforeSale := False;
+  MessageByTime := False;
 
   // Ночные скидки
   SetTaxUnitNight;
@@ -2199,7 +2201,7 @@ end;
 function TMainCashForm2.ExistsLessAmountMonth(AGoodsId: Integer;
   AAmountMonth: Currency): Boolean;
 var
-  nPos: Integer;
+  nPos, nPartionDateKindId: Integer;
   cFilter, S, cResult: string;
   GoodsId: Integer;
   PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID: Variant;
@@ -2239,7 +2241,8 @@ begin
           #13#10#13#10'Опустить товар в чек ?...', mtConfirmation, mbYesNo,
           0) <> mrYes;
       end;
-      if UnitConfigCDS.FindField('isMessageByTime').AsBoolean then
+
+      if UnitConfigCDS.FindField('isMessageByTime').AsBoolean and not MessageByTime then
       begin
         ExpirationDateCDS.First;
         ExpirationDateExpirationDate :=  ExpirationDateCDS.FindField('ExpirationDate').AsDateTime;
@@ -2247,6 +2250,31 @@ begin
         begin
           if ExpirationDateExpirationDate <> ExpirationDateCDS.FindField('ExpirationDate').AsDateTime then
           begin
+            MessageByTime := True;
+            ShowPUSHMessageCash('Проверьте соответствие срока годности с фактическим на товаре!'#13#10 +
+                                'После пробития программа списывает ближайший короткий срок.', cResult);
+            Break;
+          end;
+          ExpirationDateCDS.Next;
+        end;
+      end else if UnitConfigCDS.FindField('isMessageByTimePD').AsBoolean and not MessageByTime then
+      begin
+        nPartionDateKindId := -1;
+        ExpirationDateCDS.First;
+        while not ExpirationDateCDS.Eof do
+        begin
+          if nPartionDateKindId < 0 then
+          begin
+            if PartionDateKindId =  ExpirationDateCDS.FindField('PartionDateKindId').AsVariant then
+            begin
+               if PartionDateKindId = Null then nPartionDateKindId := 0
+               else nPartionDateKindId := PartionDateKindId;
+               ExpirationDateExpirationDate :=  ExpirationDateCDS.FindField('ExpirationDate').AsDateTime;
+            end;
+          end else if (ExpirationDateExpirationDate <> ExpirationDateCDS.FindField('ExpirationDate').AsDateTime) and
+                      (nPartionDateKindId = ExpirationDateCDS.FindField('PartionDateKindId').AsInteger) then
+          begin
+            MessageByTime := True;
             ShowPUSHMessageCash('Проверьте соответствие срока годности с фактическим на товаре!'#13#10 +
                                 'После пробития программа списывает ближайший короткий срок.', cResult);
             Break;
@@ -8870,6 +8898,7 @@ begin
   cbMorionFilter.Enabled := True;
   cbMorionFilter.Checked := False;
   pnlInfo.Visible := False;
+  MessageByTime := False;
 
   pnlLoyaltySaveMoney.Visible := false;
   lblLoyaltySMBuyer.Caption := '';

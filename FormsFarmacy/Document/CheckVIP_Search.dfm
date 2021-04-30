@@ -131,6 +131,7 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
         end
         item
           Name = 'OperDateSP'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDateSP'
           DataType = ftDateTime
@@ -237,7 +238,6 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
         end
         item
           Name = 'isBanAdd'
-          Value = False
           Component = MasterCDS
           ComponentItem = 'isBanAdd'
           DataType = ftBoolean
@@ -245,7 +245,35 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
         end>
     end
   end
-  inherited spSelect: TdsdStoredProc
+  inherited DBViewAddOn: TdsdDBViewAddOn [4]
+  end
+  inherited PopupMenu: TPopupMenu [5]
+  end
+  inherited ClientDataSet1: TClientDataSet [6]
+  end
+  inherited DataSource1: TDataSource [7]
+  end
+  inherited dsdDBViewAddOn1: TdsdDBViewAddOn [8]
+    ColorRuleList = <
+      item
+        ColorValueList = <>
+      end>
+  end
+  inherited spMovementSetErased: TdsdStoredProc [9]
+  end
+  inherited spConfirmedKind_Complete: TdsdStoredProc [10]
+  end
+  inherited spConfirmedKind_UnComplete: TdsdStoredProc [11]
+  end
+  inherited spMovementSetErasedSite: TdsdStoredProc [12]
+  end
+  inherited FormParams: TdsdFormParams [13]
+  end
+  inherited MasterDS: TDataSource [14]
+  end
+  inherited MasterCDS: TClientDataSet [15]
+  end
+  inherited spSelect: TdsdStoredProc [16]
     Params = <
       item
         Name = 'inType'
@@ -254,7 +282,7 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
         MultiSelectSeparator = ','
       end>
   end
-  inherited BarManager: TdxBarManager
+  inherited BarManager: TdxBarManager [17]
     DockControlHeights = (
       0
       0

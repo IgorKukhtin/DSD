@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpReport_GetIlliquidReductionPlanUser(
 RETURNS TABLE (DayCount Integer
              , ProcGoods TFloat
              , ProcUnit TFloat
-             , LabelPenalty TVarChar
+             , PlanAmount TFloat
+             , Penalty TFloat
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -130,11 +131,10 @@ BEGIN
 
        RETURN QUERY
        SELECT MovementFloat_DayCount.ValueData::Integer            AS DayCount
-            , MovementFloat_ProcGoods.ValueData
-            , MovementFloat_ProcUnit.ValueData
-            , CASE WHEN /*inSession = '3' OR*/ CURRENT_DATE > vbDateEnd + INTERVAL '4 day'
-                   THEN 'Штраф за 1% невыполнения: '||to_char(COALESCE(MovementFloat_Penalty.ValueData, 0), 'G999G999D99')
-                   ELSE '' END::TVarChar
+            , 20::TFloat
+            , 10::TFloat
+            , 7::TFloat
+            , 250::TFloat
        FROM Movement
 
             INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -175,4 +175,4 @@ $BODY$
  26.12.19                                                       *
 */
 
--- тест select * from gpReport_GetIlliquidReductionPlanUser(inStartDate := ('27.12.2019')::TDateTime , inSession := '3');
+-- тест select * from gpReport_GetIlliquidReductionPlanUser(inStartDate := ('27.04.2021')::TDateTime , inSession := '3');

@@ -392,6 +392,11 @@ type
     actExecUpdate_isMessageByTime: TdsdExecStoredProc;
     dxBarButton18: TdxBarButton;
     spUpdate_isMessageByTime: TdsdStoredProc;
+    isMessageByTimePD: TcxGridDBColumn;
+    spUpdate_isMessageByTimePD: TdsdStoredProc;
+    macExecUpdate_isMessageByTimePD: TMultiAction;
+    actExecUpdate_isMessageByTimePD: TdsdExecStoredProc;
+    dxBarButton19: TdxBarButton;
   private
     { Private declarations }
   public

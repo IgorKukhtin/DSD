@@ -11,21 +11,21 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
     Top = 83
     Width = 899
     Height = 421
-    ExplicitTop = 79
-    ExplicitWidth = 824
-    ExplicitHeight = 425
+    ExplicitTop = 83
+    ExplicitWidth = 899
+    ExplicitHeight = 421
     ClientRectBottom = 421
     ClientRectRight = 899
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 824
-      ExplicitHeight = 425
+      ExplicitWidth = 899
+      ExplicitHeight = 421
       inherited cxGrid: TcxGrid
         Top = 89
         Width = 899
         Height = 332
-        ExplicitTop = 49
-        ExplicitWidth = 824
-        ExplicitHeight = 376
+        ExplicitTop = 89
+        ExplicitWidth = 899
+        ExplicitHeight = 332
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -351,15 +351,13 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salTop
         Control = cxGridDetals
-        ExplicitLeft = -16
-        ExplicitTop = 113
       end
     end
   end
   inherited Panel: TPanel
     Width = 899
     Height = 57
-    ExplicitWidth = 824
+    ExplicitWidth = 899
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       EditValue = 43344d
@@ -787,8 +785,8 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 296
-    Top = 160
+    Left = 256
+    Top = 152
   end
   object DBViewAddOnDetals: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

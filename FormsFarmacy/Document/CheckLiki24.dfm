@@ -376,12 +376,6 @@ inherited CheckLiki24Form: TCheckLiki24Form
         end>
     end
   end
-  inherited DBViewAddOn: TdsdDBViewAddOn
-    ColorRuleList = <
-      item
-        ColorValueList = <>
-      end>
-  end
   inherited dsdDBViewAddOn1: TdsdDBViewAddOn
     ColorRuleList = <
       item

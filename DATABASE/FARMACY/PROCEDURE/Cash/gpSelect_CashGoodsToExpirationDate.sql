@@ -160,8 +160,8 @@ BEGIN
           , Container.PartionDateKindId                                    AS PartionDateKindId
           , CASE WHEN COALESCE (Container.ExpirationDate, zc_DateEnd()) <= vbDate_0 THEN zc_Color_Red()        -- просрочено
                  WHEN COALESCE (Container.ExpirationDate, zc_DateEnd()) <= vbDate_1 THEN zc_Color_Yelow()      -- ћеньше 1 мес€ца
-                 WHEN COALESCE (Container.ExpirationDate, zc_DateEnd()) <= vbDate_3 THEN zc_Color_Cyan()       -- ћеньше 1 мес€ца
-                 WHEN COALESCE (Container.ExpirationDate, zc_DateEnd()) <= vbDate_6 THEN zc_Color_Cyan()       -- ћеньше 6 мес€ца
+                 WHEN COALESCE (Container.ExpirationDate, zc_DateEnd()) <= vbDate_3 THEN zc_Color_Cyan()       -- ћеньше 3 мес€ца
+                 WHEN COALESCE (Container.ExpirationDate, zc_DateEnd()) <= vbDate_6 THEN zc_Color_Aqua()       -- ћеньше 6 мес€ца
                  ELSE zc_Color_White() END                                         AS Color_calc
      FROM tmpExpirationDate AS Container
 
