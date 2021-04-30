@@ -111,6 +111,7 @@ type
     actChoiceCurrency: TOpenChoiceForm;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
+    cbisChangePrice: TcxCheckBox;
   private
     { Private declarations }
   public

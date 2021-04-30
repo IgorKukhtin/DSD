@@ -707,12 +707,15 @@ end;
 
 procedure TLoadFormTest.LoadPriceListFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListItemForm');
-  {exit;
+  exit;
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItem_CurrencyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListItem_CurrencyForm');
-
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListEditForm'));

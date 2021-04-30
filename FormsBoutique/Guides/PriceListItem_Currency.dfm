@@ -3,7 +3,7 @@ object PriceListItem_CurrencyForm: TPriceListItem_CurrencyForm
   Top = 0
   Caption = #1055#1088#1072#1081#1089' '#1083#1080#1089#1090' - '#1055#1088#1086#1089#1084#1086#1090#1088' / '#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1074#1072#1083#1102#1090#1099
   ClientHeight = 398
-  ClientWidth = 988
+  ClientWidth = 996
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object PriceListItem_CurrencyForm: TPriceListItem_CurrencyForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 88
-    Width = 988
+    Width = 996
     Height = 310
     Align = alClient
     TabOrder = 0
@@ -267,7 +267,6 @@ object PriceListItem_CurrencyForm: TPriceListItem_CurrencyForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
-        Options.Editing = False
         Width = 55
       end
       object GoodsGroupName: TcxGridDBColumn
@@ -432,7 +431,7 @@ object PriceListItem_CurrencyForm: TPriceListItem_CurrencyForm
   object Panel: TPanel
     Left = 0
     Top = 26
-    Width = 988
+    Width = 996
     Height = 62
     Align = alTop
     BevelOuter = bvNone
@@ -456,7 +455,7 @@ object PriceListItem_CurrencyForm: TPriceListItem_CurrencyForm
       Width = 180
     end
     object edShowDate: TcxDateEdit
-      Left = 741
+      Left = 726
       Top = 9
       EditValue = 43831d
       Properties.SaveTime = False
@@ -465,7 +464,7 @@ object PriceListItem_CurrencyForm: TPriceListItem_CurrencyForm
       Width = 96
     end
     object cxLabel2: TcxLabel
-      Left = 647
+      Left = 632
       Top = 10
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1094#1077#1085' '#1085#1072':'
     end
@@ -488,12 +487,12 @@ object PriceListItem_CurrencyForm: TPriceListItem_CurrencyForm
       Width = 180
     end
     object cxLabel5: TcxLabel
-      Left = 283
+      Left = 278
       Top = 11
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072':'
     end
     object edBrand: TcxButtonEdit
-      Left = 373
+      Left = 368
       Top = 10
       Properties.Buttons = <
         item
@@ -505,12 +504,12 @@ object PriceListItem_CurrencyForm: TPriceListItem_CurrencyForm
       Width = 140
     end
     object cxLabel6: TcxLabel
-      Left = 330
+      Left = 325
       Top = 37
       Caption = #1057#1077#1079#1086#1085' :'
     end
     object edPeriod: TcxButtonEdit
-      Left = 373
+      Left = 368
       Top = 36
       Properties.Buttons = <
         item
@@ -522,12 +521,12 @@ object PriceListItem_CurrencyForm: TPriceListItem_CurrencyForm
       Width = 140
     end
     object cxLabel7: TcxLabel
-      Left = 526
+      Left = 515
       Top = 11
       Caption = #1043#1086#1076' '#1089' ...'
     end
     object edStartYear: TcxButtonEdit
-      Left = 578
+      Left = 567
       Top = 9
       Properties.Buttons = <
         item
@@ -539,12 +538,12 @@ object PriceListItem_CurrencyForm: TPriceListItem_CurrencyForm
       Width = 52
     end
     object cxLabel8: TcxLabel
-      Left = 523
+      Left = 512
       Top = 37
       Caption = #1043#1086#1076' '#1087#1086' ...'
     end
     object edEndYear: TcxButtonEdit
-      Left = 578
+      Left = 567
       Top = 36
       Properties.Buttons = <
         item
@@ -556,27 +555,34 @@ object PriceListItem_CurrencyForm: TPriceListItem_CurrencyForm
       Width = 52
     end
     object cxLabel9: TcxLabel
-      Left = 849
-      Top = 16
+      Left = 828
+      Top = 37
       Caption = #1050#1086#1101#1092#1092'. '#1086#1090' '#1074#1093'. '#1094#1077#1085#1099
     end
     object edPriceTax: TcxCurrencyEdit
-      Left = 849
-      Top = 36
+      Left = 934
+      Top = 35
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
       Properties.UseDisplayFormatWhenEditing = True
       TabOrder = 15
-      Width = 105
+      Width = 58
+    end
+    object cbisChangePrice: TcxCheckBox
+      Left = 831
+      Top = 8
+      Caption = #1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099
+      TabOrder = 16
+      Width = 133
     end
   end
   object cxLabel3: TcxLabel
-    Left = 640
+    Left = 625
     Top = 63
     Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1094#1077#1085#1099' '#1089':'
   end
   object edOperDate: TcxDateEdit
-    Left = 741
+    Left = 726
     Top = 62
     EditValue = 43831d
     Properties.SaveTime = False
@@ -1640,6 +1646,70 @@ object PriceListItem_CurrencyForm: TPriceListItem_CurrencyForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'CurrencyId_price'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceListId'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outStartDate'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'StartDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEndDate'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'EndDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioValue'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'ValuePrice'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsLast'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChangePrice'
+        Value = Null
+        Component = cbisChangePrice
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
