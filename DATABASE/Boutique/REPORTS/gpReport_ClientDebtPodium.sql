@@ -40,7 +40,6 @@ RETURNS TABLE (MovementId_Partion   Integer
              , TotalChangePercentPay  TFloat
              , TotalPay               TFloat
              , TotalPayOth            TFloat
-             , TotalPayOth            TFloat
              , TotalCountReturn       TFloat
              , TotalReturn            TFloat
              , TotalPayReturn         TFloat
