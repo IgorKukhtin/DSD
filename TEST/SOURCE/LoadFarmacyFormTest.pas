@@ -2463,26 +2463,20 @@ end;
 
 procedure TLoadFormTest.LoadPriceChangeFormTest;
 begin
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarketingDiscountForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TMarketingDiscountForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceChangeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceChangeForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarketingDiscountDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TMarketingDiscountDialogForm');}
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceChangeHistoryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceChangeHistoryForm');
 
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceChangeForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TPriceChangeForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceChangeHistoryForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TPriceChangeHistoryForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceChangeOnDateForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TPriceChangeOnDateForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceChangeDialogForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TPriceChangeDialogForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceChangeGoodsDialogForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TPriceChangeGoodsDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceChangeOnDateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceChangeOnDateForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceChangeDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceChangeDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceChangeGoodsDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceChangeGoodsDialogForm');
 end;
 
 procedure TLoadFormTest.LoadAlternativeGroupFormTest;

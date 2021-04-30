@@ -88,6 +88,16 @@ type
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
     FixDiscount: TcxGridDBColumn;
+    FixEndDate: TcxGridDBColumn;
+    macUpdateFixDateEnd: TMultiAction;
+    actUpdateFixDateEnd: TdsdExecStoredProc;
+    dxBarButton8: TdxBarButton;
+    macClearFixDateEnd: TMultiAction;
+    actClearFixDateEnd: TdsdExecStoredProc;
+    dxBarButton9: TdxBarButton;
+    spUpdate_FixDateEnd: TdsdStoredProc;
+    spClear_FixDateEnd: TdsdStoredProc;
+    actExecuteDialogFixDateEnd: TExecuteDialog;
   private
     { Private declarations }
   public

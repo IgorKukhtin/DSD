@@ -1,20 +1,21 @@
 inherited PriceChangeForm: TPriceChangeForm
   Caption = #1055#1088#1072#1081#1089' - '#1083#1080#1089#1090' '#1090#1077#1082#1091#1097#1080#1081' ('#1094#1077#1085#1099' '#1057#1054' '#1057#1050#1048#1044#1050#1054#1049')'
   ClientHeight = 413
-  ClientWidth = 767
+  ClientWidth = 866
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 783
+  ExplicitWidth = 882
   ExplicitHeight = 452
   PixelsPerInch = 96
   TextHeight = 13
   object Panel: TPanel [0]
     Left = 0
     Top = 0
-    Width = 767
+    Width = 866
     Height = 56
     Align = alTop
     TabOrder = 6
+    ExplicitWidth = 767
     object deOperDate: TcxDateEdit
       Left = 750
       Top = 6
@@ -53,18 +54,18 @@ inherited PriceChangeForm: TPriceChangeForm
   end
   inherited PageControl: TcxPageControl
     Top = 82
-    Width = 767
+    Width = 866
     Height = 331
     ExplicitTop = 82
     ExplicitWidth = 767
     ExplicitHeight = 331
     ClientRectBottom = 331
-    ClientRectRight = 767
+    ClientRectRight = 866
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 767
       ExplicitHeight = 331
       inherited cxGrid: TcxGrid
-        Width = 767
+        Width = 866
         Height = 331
         ExplicitWidth = 767
         ExplicitHeight = 331
@@ -242,6 +243,13 @@ inherited PriceChangeForm: TPriceChangeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 71
+          end
+          object FixEndDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1076#1077#1081#1089#1090#1074#1080#1103' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'FixEndDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 83
           end
           object Goods_PercentMarkup: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080' ('#1087#1086' '#1089#1077#1090#1080')'
@@ -782,6 +790,78 @@ inherited PriceChangeForm: TPriceChangeForm
       Hint = #1047#1072#1092#1080#1082#1089#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1082#1086#1075#1076#1072' '#1055#1086#1103#1074#1080#1083#1089#1103' '#1085#1072' '#1088#1099#1085#1082#1077
       ImageIndex = 27
     end
+    object macUpdateFixDateEnd: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actExecuteDialogFixDateEnd
+      ActionList = <
+        item
+          Action = actUpdateFixDateEnd
+        end>
+      View = cxGridDBTableView
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
+      ImageIndex = 43
+    end
+    object actUpdateFixDateEnd: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_FixDateEnd
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_FixDateEnd
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
+    end
+    object macClearFixDateEnd: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actClearFixDateEnd
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1090#1091' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080'?'
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1090#1091' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1090#1091' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
+      ImageIndex = 76
+    end
+    object actClearFixDateEnd: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spClear_FixDateEnd
+      StoredProcList = <
+        item
+          StoredProc = spClear_FixDateEnd
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
+    end
+    object actExecuteDialogFixDateEnd: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteDialogFixDateEnd'
+      FormName = 'TDataDialogForm'
+      FormNameParam.Value = 'TDataDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'FixEndDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -933,6 +1013,18 @@ inherited PriceChangeForm: TPriceChangeForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton8'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton9'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbOpenForm'
         end
         item
@@ -942,10 +1034,6 @@ inherited PriceChangeForm: TPriceChangeForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end>
     end
     object dxBarControlContainerItemUnit: TdxBarControlContainerItem
@@ -996,6 +1084,14 @@ inherited PriceChangeForm: TPriceChangeForm
       Action = macUpdate_CheckPrice
       Category = 0
       Visible = ivNever
+    end
+    object dxBarButton8: TdxBarButton
+      Action = macUpdateFixDateEnd
+      Category = 0
+    end
+    object dxBarButton9: TdxBarButton
+      Action = macClearFixDateEnd
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1159,6 +1255,12 @@ inherited PriceChangeForm: TPriceChangeForm
         Name = 'RecalcMCS_Day'
         Value = '5'
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FixEndDate'
+        Value = Null
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 200
     Top = 104
@@ -1209,7 +1311,7 @@ inherited PriceChangeForm: TPriceChangeForm
       end
       item
         Name = 'outDateChange'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'DateChange'
         DataType = ftDateTime
@@ -1217,7 +1319,7 @@ inherited PriceChangeForm: TPriceChangeForm
       end
       item
         Name = 'outStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'StartDate'
         DataType = ftDateTime
@@ -1273,6 +1375,15 @@ inherited PriceChangeForm: TPriceChangeForm
         Component = MasterCDS
         ComponentItem = 'Multiplicity'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFixEndDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'FixEndDate'
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1482,7 +1593,7 @@ inherited PriceChangeForm: TPriceChangeForm
       end
       item
         Name = 'ioCheckPriceDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'CheckPriceDate'
         DataType = ftDateTime
@@ -1521,5 +1632,48 @@ inherited PriceChangeForm: TPriceChangeForm
       end>
     Left = 288
     Top = 24
+  end
+  object spUpdate_FixDateEnd: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_PriceChange_FixDateEnd'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFixEndDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FixEndDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 176
+    Top = 312
+  end
+  object spClear_FixDateEnd: TdsdStoredProc
+    StoredProcName = 'gpClear_Object_PriceChange_FixDateEnd'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 280
+    Top = 312
   end
 end
