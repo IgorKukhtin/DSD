@@ -40,6 +40,7 @@ RETURNS TABLE (MovementId_Partion   Integer
              , TotalChangePercentPay  TFloat
              , TotalPay               TFloat
              , TotalPayOth            TFloat
+             , TotalPayOth            TFloat
              , TotalCountReturn       TFloat
              , TotalReturn            TFloat
              , TotalPayReturn         TFloat
@@ -48,6 +49,15 @@ RETURNS TABLE (MovementId_Partion   Integer
              , SummDebt_profit        TFloat
              , SummToPay              TFloat
              , SummTotalPay           TFloat
+
+             , OperPriceList_curr      TFloat
+             , SummChangePercent_curr  TFloat
+             , TotalChangePercent_curr TFloat
+             , TotalPay_curr           TFloat
+             , TotalPayOth_curr        TFloat
+             , TotalReturn_curr        TFloat
+             , TotalPayReturn_curr     TFloat
+
              , InsertName             TVarChar
              , isOffer                Boolean
   )
@@ -143,6 +153,14 @@ BEGIN
                           , COALESCE (MIFloat_TotalReturn.ValueData, 0)           AS TotalReturn
                           , COALESCE (MIFloat_TotalPayReturn.ValueData, 0)        AS TotalPayReturn
 
+                            -- Цена по прайсу, без скидки - в валюте
+                          , COALESCE (MIFloat_OperPriceList_curr.ValueData, 0)         AS OperPriceList_curr
+                          , COALESCE (MIFloat_SummChangePercent_curr.ValueData, 0)     AS SummChangePercent_curr
+                          , COALESCE (MIFloat_TotalChangePercent_curr.ValueData, 0)    AS TotalChangePercent_curr
+                          , COALESCE (MIFloat_TotalPay_curr.ValueData, 0)              AS TotalPay_curr
+                          , COALESCE (MIFloat_TotalPayOth_curr.ValueData, 0)           AS TotalPayOth_curr
+                          , COALESCE (MIFloat_TotalReturn_curr.ValueData, 0)           AS TotalReturn_curr
+                          , COALESCE (MIFloat_TotalPayReturn_curr.ValueData, 0)        AS TotalPayReturn_curr
                      FROM tmpDataPartion AS tmpData
                           LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                       ON MIFloat_OperPriceList.MovementItemId = tmpData.MovementItemId_Sale
@@ -176,6 +194,29 @@ BEGIN
                           LEFT JOIN MovementItemFloat AS MIFloat_TotalPayReturn
                                                       ON MIFloat_TotalPayReturn.MovementItemId = tmpData.MovementItemId_Sale
                                                      AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()
+                          --
+                          LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList_curr
+                                                      ON MIFloat_OperPriceList_curr.MovementItemId = tmpData.MovementItemId_Sale
+                                                     AND MIFloat_OperPriceList_curr.DescId         = zc_MIFloat_OperPriceList_curr()
+
+                          LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent_curr
+                                                      ON MIFloat_SummChangePercent_curr.MovementItemId = tmpData.MovementItemId_Sale
+                                                     AND MIFloat_SummChangePercent_curr.DescId         = zc_MIFloat_SummChangePercent_curr()
+                          LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent_curr
+                                                      ON MIFloat_TotalChangePercent_curr.MovementItemId = tmpData.MovementItemId_Sale
+                                                     AND MIFloat_TotalChangePercent_curr.DescId         = zc_MIFloat_TotalChangePercent_curr()
+                          LEFT JOIN MovementItemFloat AS MIFloat_TotalPay_curr
+                                                      ON MIFloat_TotalPay_curr.MovementItemId = tmpData.MovementItemId_Sale
+                                                     AND MIFloat_TotalPay_curr.DescId         = zc_MIFloat_TotalPay_curr()
+                          LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth_curr
+                                                      ON MIFloat_TotalPayOth_curr.MovementItemId = tmpData.MovementItemId_Sale
+                                                     AND MIFloat_TotalPayOth_curr.DescId         = zc_MIFloat_TotalPayOth_curr()
+                          LEFT JOIN MovementItemFloat AS MIFloat_TotalReturn_curr
+                                                      ON MIFloat_TotalReturn_curr.MovementItemId = tmpData.MovementItemId_Sale
+                                                     AND MIFloat_TotalReturn_curr.DescId         = zc_MIFloat_TotalReturn_curr()
+                          LEFT JOIN MovementItemFloat AS MIFloat_TotalPayReturn_curr
+                                                      ON MIFloat_TotalPayReturn_curr.MovementItemId = tmpData.MovementItemId_Sale
+                                                     AND MIFloat_TotalPayReturn_curr.DescId         = zc_MIFloat_TotalPayReturn_curr()
                     )
 
      , tmpData  AS  (SELECT tmp.MovementId_Sale
@@ -200,6 +241,14 @@ BEGIN
                           , tmp.CountDebt
                           , tmp.SummDebt
                           , tmp.SummDebt_profit
+
+                          , tmp.OperPriceList_curr
+                          , tmp.SummChangePercent_curr
+                          , tmp.TotalChangePercent_curr
+                          , tmp.TotalPay_curr
+                          , tmp.TotalPayOth_curr
+                          , tmp.TotalReturn_curr
+                          , tmp.TotalPayReturn_curr
                      FROM tmpData_All AS tmp
                      WHERE tmp.CountDebt <> 0 OR tmp.SummDebt <> 0 OR tmp.SummDebt_profit <> 0
                     )
@@ -263,7 +312,15 @@ BEGIN
              , (COALESCE (tmpData.TotalPay,0)
                + COALESCE (tmpData.TotalPayOth,0)
                - COALESCE (tmpData.TotalPayReturn,0)) ::TFloat AS SummTotalPay
-               
+
+             , tmpData.OperPriceList_curr
+             , tmpData.SummChangePercent_curr
+             , tmpData.TotalChangePercent_curr
+             , tmpData.TotalPay_curr
+             , tmpData.TotalPayOth_curr
+             , tmpData.TotalReturn_curr
+             , tmpData.TotalPayReturn_curr
+
              , Object_Insert.ValueData   AS InsertName
              , COALESCE (MovementBoolean_Offer.ValueData, FALSE)  ::Boolean AS isOffer   -- примерка
 
@@ -308,6 +365,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 30.04.21         *
  21.08.17         * на проводках
  04.07.17         *
 */
