@@ -30,6 +30,8 @@ type
     PriceChange: TcxGridDBColumn;
     PercentMarkup: TcxGridDBColumn;
     FixDiscount: TcxGridDBColumn;
+    Multiplicity: TcxGridDBColumn;
+    FixEndDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PriceChangeHistory(
 )
 RETURNS TABLE (Id Integer, PriceChange TFloat, FixValue TFloat, FixPercent TFloat
              , Multiplicity TFloat
-             , PercentMarkupStart TFloat, StartDate TDateTime
+             , PercentMarkupStart TFloat, StartDate TDateTime, FixEndDate TDateTime
              , PriceChangeEnd TFloat, FixValueEnd TFloat, FixPercentEnd TFloat
              , PercentMarkupEnd TFloat
              , StartDateEnd TDateTime
@@ -91,6 +91,7 @@ BEGIN
                , NULL::TFloat      AS RemainsEnd
                , NULL::TFloat      AS SummaRemainsEnd
                , NULL::TFloat      AS PercentMarkup 
+               , NULL::TDateTime   AS FixEndDate
                , NULL::Boolean     AS isErased
             WHERE 1=0;
     ELSEIF inisShowAll = True
@@ -123,6 +124,7 @@ BEGIN
                                 , PriceChange_datechange.valuedata              AS DateChange 
                                 , COALESCE(PriceChange_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup 
                                 , COALESCE (PriceChange_Multiplicity.ValueData, 0) ::TFloat AS Multiplicity
+                                , PriceChange_FixEndDate.ValueData              AS FixEndDate
                            FROM ObjectLink AS ObjectLink_PriceChange_Retail
                                LEFT JOIN ObjectLink AS PriceChange_Goods
                                                     ON PriceChange_Goods.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
@@ -137,6 +139,9 @@ BEGIN
                                LEFT JOIN ObjectDate AS PriceChange_DateChange
                                                     ON PriceChange_DateChange.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
                                                    AND PriceChange_DateChange.DescId = zc_ObjectDate_PriceChange_DateChange()
+                                LEFT JOIN ObjectDate AS PriceChange_FixEndDate
+                                                     ON PriceChange_FixEndDate.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
+                                                    AND PriceChange_FixEndDate.DescId = zc_ObjectDate_PriceChange_FixEndDate()
 
                                LEFT JOIN ObjectFloat AS ObjectFloat_FixValue
                                                      ON ObjectFloat_FixValue.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
@@ -160,6 +165,7 @@ BEGIN
                                 , PriceChange_datechange.valuedata              AS DateChange 
                                 , COALESCE(PriceChange_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup
                                 , COALESCE (PriceChange_Multiplicity.ValueData, 0) ::TFloat AS Multiplicity
+                                , PriceChange_FixEndDate.ValueData                   AS FixEndDate
                            FROM ObjectLink AS ObjectLink_PriceChange_Unit
                                LEFT JOIN ObjectLink AS PriceChange_Goods
                                                     ON PriceChange_Goods.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
@@ -174,6 +180,9 @@ BEGIN
                                LEFT JOIN ObjectDate AS PriceChange_DateChange
                                                     ON PriceChange_DateChange.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
                                                    AND PriceChange_DateChange.DescId = zc_ObjectDate_PriceChange_DateChange()
+                               LEFT JOIN ObjectDate AS PriceChange_FixEndDate
+                                                    ON PriceChange_FixEndDate.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                   AND PriceChange_FixEndDate.DescId = zc_ObjectDate_PriceChange_FixEndDate()
 
                                LEFT JOIN ObjectFloat AS ObjectFloat_FixValue
                                                      ON ObjectFloat_FixValue.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
@@ -193,9 +202,10 @@ BEGIN
                  , COALESCE (ObjectHistoryFloat_PriceChange.ValueData, 0)            :: TFloat    AS PriceChange
                  , COALESCE (ObjectHistoryFloat_FixValue.ValueData, 0)               :: TFloat    AS FixValue
                  , COALESCE (ObjectHistoryFloat_FixPercent.ValueData, 0)             :: TFloat    AS FixPercent
-                 , COALESCE (tmpPriceChange.Multiplicity, 0)                         :: TFloat    AS Multiplicity
+                 , COALESCE (ObjectHistoryFloat_Multiplicity.ValueData, 0)           :: TFloat    AS Multiplicity
                  , COALESCE (ObjectHistoryFloat_PercentMarkup.ValueData, 0)          :: TFloat    AS PercentMarkupStart
                  , COALESCE (ObjectHistory_PriceChange.StartDate, NULL)              :: TDateTime AS StartDate
+                 , ObjectHistoryDate_FixEndDate.ValueData                            :: TDateTime AS FixEndDate
 
                  , COALESCE (ObjectHistoryFloat_PriceChangeEnd.ValueData, 0)         :: TFloat    AS PriceChangeEnd
                  , COALESCE (ObjectHistoryFloat_FixValueEnd.ValueData, 0)            :: TFloat    AS FixValueEnd
@@ -279,6 +289,14 @@ BEGIN
                                              ON ObjectHistoryFloat_PercentMarkupEnd.ObjectHistoryId = ObjectHistory_PriceChangeEnd.Id
                                             AND ObjectHistoryFloat_PercentMarkupEnd.DescId = zc_ObjectHistoryFloat_PriceChange_PercentMarkup()
 
+                LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Multiplicity
+                                             ON ObjectHistoryFloat_Multiplicity.ObjectHistoryId = ObjectHistory_PriceChangeEnd.Id
+                                            AND ObjectHistoryFloat_Multiplicity.DescId = zc_ObjectHistoryFloat_PriceChange_Multiplicity()
+
+                LEFT JOIN ObjectHistoryDate AS ObjectHistoryDate_FixEndDate
+                                            ON ObjectHistoryDate_FixEndDate.ObjectHistoryId = ObjectHistory_PriceChangeEnd.Id
+                                           AND ObjectHistoryDate_FixEndDate.DescId = zc_ObjectHistoryDate_PriceChange_FixEndDate()
+
                 -- условия хранения
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
                                      ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
@@ -317,6 +335,7 @@ and 1=0
                                 , PriceChange_datechange.valuedata              AS DateChange 
                                 , COALESCE(PriceChange_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup
                                 , COALESCE (PriceChange_Multiplicity.ValueData, 0) ::TFloat AS Multiplicity
+                                , PriceChange_FixEndDate.ValueData                   AS FixEndDate
                            FROM ObjectLink AS ObjectLink_PriceChange_Retail
                                LEFT JOIN ObjectLink AS PriceChange_Goods
                                                     ON PriceChange_Goods.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
@@ -331,6 +350,9 @@ and 1=0
                                LEFT JOIN ObjectDate AS PriceChange_DateChange
                                                     ON PriceChange_DateChange.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
                                                    AND PriceChange_DateChange.DescId = zc_ObjectDate_PriceChange_DateChange()
+                               LEFT JOIN ObjectDate AS PriceChange_FixEndDate
+                                                    ON PriceChange_FixEndDate.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
+                                                   AND PriceChange_FixEndDate.DescId = zc_ObjectDate_PriceChange_FixEndDate()
 
                                LEFT JOIN ObjectFloat AS ObjectFloat_FixValue
                                                      ON ObjectFloat_FixValue.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
@@ -354,6 +376,7 @@ and 1=0
                                 , PriceChange_datechange.valuedata              AS DateChange 
                                 , COALESCE(PriceChange_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup
                                 , COALESCE (PriceChange_Multiplicity.ValueData, 0) ::TFloat AS Multiplicity 
+                                , PriceChange_FixEndDate.ValueData                   AS FixEndDate
                            FROM ObjectLink AS ObjectLink_PriceChange_Unit
                                LEFT JOIN ObjectLink AS PriceChange_Goods
                                                     ON PriceChange_Goods.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
@@ -368,6 +391,9 @@ and 1=0
                                LEFT JOIN ObjectDate AS PriceChange_DateChange
                                                     ON PriceChange_DateChange.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
                                                    AND PriceChange_DateChange.DescId = zc_ObjectDate_PriceChange_DateChange()
+                               LEFT JOIN ObjectDate AS PriceChange_FixEndDate
+                                                    ON PriceChange_FixEndDate.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                   AND PriceChange_FixEndDate.DescId = zc_ObjectDate_PriceChange_FixEndDate()
 
                                LEFT JOIN ObjectFloat AS ObjectFloat_FixValue
                                                      ON ObjectFloat_FixValue.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
@@ -387,9 +413,10 @@ and 1=0
                  , COALESCE (ObjectHistoryFloat_PriceChange.ValueData, 0)            :: TFloat    AS PriceChange
                  , COALESCE (ObjectHistoryFloat_FixValue.ValueData, 0)               :: TFloat    AS FixValue
                  , COALESCE (ObjectHistoryFloat_FixPercent.ValueData, 0)             :: TFloat    AS FixPercent
-                 , COALESCE (tmpPriceChange.Multiplicity, 0)                         :: TFloat    AS Multiplicity
+                 , COALESCE (ObjectHistoryFloat_Multiplicity.ValueData, 0)           :: TFloat    AS Multiplicity
                  , COALESCE (ObjectHistoryFloat_PercentMarkup.ValueData, 0)          :: TFloat    AS PercentMarkupStart
                  , COALESCE (ObjectHistory_PriceChange.StartDate, NULL)              :: TDateTime AS StartDate
+                 , ObjectHistoryDate_FixEndDate.ValueData                            :: TDateTime AS FixEndDate
 
                  , COALESCE (ObjectHistoryFloat_PriceChangeEnd.ValueData, 0)         :: TFloat    AS PriceChangeEnd
                  , COALESCE (ObjectHistoryFloat_FixValueEnd.ValueData, 0)            :: TFloat    AS FixValueEnd
@@ -469,6 +496,13 @@ and 1=0
                                              ON ObjectHistoryFloat_PercentMarkupEnd.ObjectHistoryId = ObjectHistory_PriceChangeEnd.Id
                                             AND ObjectHistoryFloat_PercentMarkupEnd.DescId = zc_ObjectHistoryFloat_PriceChange_PercentMarkup()
 
+                LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Multiplicity
+                                             ON ObjectHistoryFloat_Multiplicity.ObjectHistoryId = ObjectHistory_PriceChangeEnd.Id
+                                            AND ObjectHistoryFloat_Multiplicity.DescId = zc_ObjectHistoryFloat_PriceChange_Multiplicity()
+
+                LEFT JOIN ObjectHistoryDate AS ObjectHistoryDate_FixEndDate
+                                            ON ObjectHistoryDate_FixEndDate.ObjectHistoryId = ObjectHistory_PriceChangeEnd.Id
+                                           AND ObjectHistoryDate_FixEndDate.DescId = zc_ObjectHistoryDate_PriceChange_FixEndDate()
                 -- условия хранения
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
                                      ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
@@ -493,3 +527,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Object_PriceChangeHistory(inRetailId:= 4, inUnitId:= 0, inStartDate:= '01.01.2018' ::TDateTime, inisShowAll := 'true' :: Boolean, inisShowDel := 'FALSE' :: Boolean, inSession := '3' :: TVarChar);
+
+select * from gpSelect_Object_PriceChangeHistory(inRetailId := 4 , inUnitId := 0 , inStartDate := ('30.04.2021 14:10:17')::TDateTime , inisShowAll := 'False' , inisShowDel := 'False' ,  inSession := '3');

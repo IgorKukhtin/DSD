@@ -83,6 +83,7 @@ type
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
     RefreshDispatcher: TRefreshDispatcher;
+    FixEndDate: TcxGridDBColumn;
   private
     { Private declarations }
   public
