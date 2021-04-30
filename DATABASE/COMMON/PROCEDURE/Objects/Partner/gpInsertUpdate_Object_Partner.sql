@@ -91,6 +91,15 @@ BEGIN
    vbUserId := lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Partner());
 
 
+   -- Проверка
+   IF (inCategory > 0 OR inCategory <> COALESCE((SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = ioId AND OFl.DescId = zc_ObjectFloat_Partner_Category()), 0))
+   AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId AND Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_Update_Object_Partner_Category())
+   THEN
+       RAISE EXCEPTION 'Ошибка.Нет прав заполнять <Категорию ТТ>.';
+   END IF;
+   
+
+
    -- !!!надо так криво обработать когда добавляют несколько пользователей!!!)
    IF COALESCE (ioId, 0) = 0 AND EXISTS (SELECT 1 FROM Object WHERE Object.DescId = zc_Object_Partner() AND Object.ObjectCode = inCode)
    THEN 

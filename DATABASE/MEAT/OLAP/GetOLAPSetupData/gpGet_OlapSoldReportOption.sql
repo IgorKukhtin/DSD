@@ -192,6 +192,9 @@ BEGIN
                  'Object' :: TVarChar, 'ObjectGoodsKind' :: TVarChar, 'GoodsKindId' :: TVarChar, 'ValueData' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
    UNION SELECT 57, 'dimension' :: TVarChar AS FieldType, 'Ед. изм.' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'MeasureName' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
                  'Object' :: TVarChar, 'ObjectMeasure' :: TVarChar, 'MeasureId' :: TVarChar, 'ValueData' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
+
+   UNION SELECT 58, 'dimension' :: TVarChar AS FieldType, 'Категория ТТ' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'CategoryName' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
+                 'Object_Partner_Category_View' :: TVarChar, 'Object_Partner_Category_View' :: TVarChar, 'PartnerId' :: TVarChar, 'Category' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
      )
                  AS SetupData ORDER BY 1;
 

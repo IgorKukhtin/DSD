@@ -25,6 +25,11 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
 
+     -- Проверка
+     IF inAmount < 0 THEN
+        RAISE EXCEPTION 'Ошибка.Для <%> сумма выплаты <%> не может быть отрицательной.', lfGet_Object_ValueData (inPersonalId), zfConvert_FloatToString (inAmount);
+     END IF;
+
 
      -- сохранили
      ioId:= lpInsertUpdate_MovementItem_Cash_Personal (ioId                 := ioId
