@@ -808,16 +808,16 @@ BEGIN
              , Object_CarModel.ValueData        AS CarModelName
              , Object_Car.ValueData             AS CarName
              , View_PersonalDriver.PersonalName AS PersonalDriverName
-             , Object_Route.ValueData           AS RouteName
-             , Object_RouteKind.ValueData       AS RouteKindName
-             , Object_RateFuelKind.ValueData    AS RateFuelKindName
-             , Object_Fuel.ValueData            AS FuelName
+             , STRING_AGG (DISTINCT Object_Route.ValueData, ';') :: TVarChar AS RouteName
+             , STRING_AGG (DISTINCT Object_RouteKind.ValueData, ';') :: TVarChar       AS RouteKindName
+             , STRING_AGG (DISTINCT Object_RateFuelKind.ValueData, ';') :: TVarChar    AS RateFuelKindName
+             , STRING_AGG (DISTINCT Object_Fuel.ValueData, ';') :: TVarChar            AS FuelName
 
 
              , SUM (tmpFuel.DistanceFuel)    :: TFloat AS DistanceFuel
              , MAX (tmpFuel.RateFuelKindTax) :: TFloat AS RateFuelKindTax
 
-             , MAX (tmpFuel.Weight)          :: TFloat AS Weight
+             , SUM (tmpFuel.Weight)          :: TFloat AS Weight
              , MAX (tmpFuel.WeightTransport) :: TFloat AS WeightTransport
              , MAX (tmpFuel.StartOdometre)   :: TFloat AS StartOdometre
              , MAX (tmpFuel.EndOdometre)     :: TFloat AS EndOdometre
@@ -857,12 +857,12 @@ BEGIN
              , CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat) AS HoursWork
              , CAST (COALESCE (MovementFloat_HoursStop.ValueData, 0) AS TFloat)                                                  AS HoursStop
              , CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)  AS TFloat) AS HoursMove
-             , (COALESCE (MovementFloat_PartnerCount.ValueData,0) * CAST(COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60  AS NUMERIC (16.2))) :: TFloat AS HoursPartner_all  -- общее время в точках
-             , CAST((COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60 )  AS NUMERIC (16.2))                             :: TFloat AS HoursPartner      -- время в точке, часов
+             , (COALESCE (MovementFloat_PartnerCount.ValueData,0) * CAST(COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60  AS NUMERIC (16,2))) :: TFloat AS HoursPartner_all  -- общее время в точках
+             , CAST((COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60 )  AS NUMERIC (16,2))                             :: TFloat AS HoursPartner      -- время в точке, часов
              , CASE WHEN (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)
                          - (COALESCE (MovementFloat_PartnerCount.ValueData,0) * (COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60) ) )  <> 0 
                     THEN SUM (tmpFuel.DistanceFuel) / (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)
-                                                      - (COALESCE (MovementFloat_PartnerCount.ValueData,0) * CAST (COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60 AS NUMERIC (16.2))
+                                                      - (COALESCE (MovementFloat_PartnerCount.ValueData,0) * CAST (COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60 AS NUMERIC (16,2))
                                                       ) ) 
                     ELSE 0
                END :: TFloat AS Speed
@@ -930,10 +930,10 @@ BEGIN
                , Object_CarModel.ValueData
                , Object_Car.ValueData
                , View_PersonalDriver.PersonalName
-               , Object_Route.ValueData
-               , Object_RouteKind.ValueData
-               , Object_RateFuelKind.ValueData
-               , Object_Fuel.ValueData
+               --, Object_Route.ValueData
+               --, Object_RouteKind.ValueData
+               --, Object_RateFuelKind.ValueData
+               --, Object_Fuel.ValueData
                , ViewObject_Unit.BranchName
                , ViewObject_Unit.Name
 
