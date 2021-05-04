@@ -39,7 +39,7 @@ object PriceChangeDialogForm: TPriceChangeDialogForm
   object deOperDate: TcxDateEdit
     Left = 106
     Top = 19
-    EditValue = 42430d
+    EditValue = 44256d
     Properties.DisplayFormat = 'dd.mm.yyyy'
     Properties.EditFormat = 'dd.mm.yyyy'
     TabOrder = 2
@@ -96,7 +96,7 @@ object PriceChangeDialogForm: TPriceChangeDialogForm
     Params = <
       item
         Name = 'OperDate'
-        Value = 424300000c
+        Value = '01.03.2021'
         Component = deOperDate
         DataType = ftDateTime
         ParamType = ptInput

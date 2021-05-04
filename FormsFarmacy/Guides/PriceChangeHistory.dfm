@@ -1,25 +1,25 @@
 inherited PriceChangeHistoryForm: TPriceChangeHistoryForm
   Caption = #1048#1089#1090#1086#1088#1080#1103' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1094#1077#1085#1099' '#1057#1054' '#1057#1050#1048#1044#1050#1054#1049
   ClientHeight = 406
-  ClientWidth = 639
+  ClientWidth = 807
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 655
-  ExplicitHeight = 444
+  ExplicitWidth = 823
+  ExplicitHeight = 445
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 639
+    Width = 807
     Height = 380
     ExplicitWidth = 639
     ExplicitHeight = 380
     ClientRectBottom = 380
-    ClientRectRight = 639
+    ClientRectRight = 807
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 639
       ExplicitHeight = 380
       inherited cxGrid: TcxGrid
-        Width = 639
+        Width = 807
         Height = 380
         ExplicitWidth = 639
         ExplicitHeight = 380
@@ -75,6 +75,20 @@ inherited PriceChangeHistoryForm: TPriceChangeHistoryForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 89
+          end
+          object Multiplicity: TcxGridDBColumn
+            Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1086#1090#1087#1091#1089#1082#1072
+            DataBinding.FieldName = 'Multiplicity'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 73
+          end
+          object FixEndDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1076#1077#1081#1089#1090#1074#1080#1103' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'FixEndDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
         end
       end

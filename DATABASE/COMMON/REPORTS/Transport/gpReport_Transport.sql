@@ -857,12 +857,12 @@ BEGIN
              , CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat) AS HoursWork
              , CAST (COALESCE (MovementFloat_HoursStop.ValueData, 0) AS TFloat)                                                  AS HoursStop
              , CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)  AS TFloat) AS HoursMove
-             , (COALESCE (MovementFloat_PartnerCount.ValueData,0) * CAST(COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60  AS NUMERIC (16.2))) :: TFloat AS HoursPartner_all  -- общее время в точках
-             , CAST((COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60 )  AS NUMERIC (16.2))                             :: TFloat AS HoursPartner      -- время в точке, часов
+             , (COALESCE (MovementFloat_PartnerCount.ValueData,0) * CAST(COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60  AS NUMERIC (16,2))) :: TFloat AS HoursPartner_all  -- общее время в точках
+             , CAST((COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60 )  AS NUMERIC (16,2))           :: TFloat AS HoursPartner      -- время в точке, часов
              , CASE WHEN (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)
                          - (COALESCE (MovementFloat_PartnerCount.ValueData,0) * (COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60) ) )  <> 0 
                     THEN SUM (tmpFuel.DistanceFuel) / (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)
-                                                      - (COALESCE (MovementFloat_PartnerCount.ValueData,0) * CAST (COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60 AS NUMERIC (16.2))
+                                                      - (COALESCE (MovementFloat_PartnerCount.ValueData,0) * CAST (COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60 AS NUMERIC (16,2))
                                                       ) ) 
                     ELSE 0
                END :: TFloat AS Speed
@@ -906,19 +906,24 @@ BEGIN
              LEFT JOIN tmpMovementFloat AS MovementFloat_HoursWork
                                         ON MovementFloat_HoursWork.MovementId = tmpFuel.MovementId
                                        AND MovementFloat_HoursWork.DescId = zc_MovementFloat_HoursWork()
+                                       AND tmpFuel.Ord = 1
              LEFT JOIN tmpMovementFloat AS MovementFloat_HoursAdd
                                         ON MovementFloat_HoursAdd.MovementId = tmpFuel.MovementId
                                        AND MovementFloat_HoursAdd.DescId = zc_MovementFloat_HoursAdd()
+                                       AND tmpFuel.Ord = 1
              LEFT JOIN tmpMovementFloat AS MovementFloat_HoursStop
                                         ON MovementFloat_HoursStop.MovementId = tmpFuel.MovementId
                                        AND MovementFloat_HoursStop.DescId = zc_MovementFloat_HoursStop()
+                                       AND tmpFuel.Ord = 1
              LEFT JOIN tmpMovementFloat AS MovementFloat_PartnerCount
                                         ON MovementFloat_PartnerCount.MovementId = tmpFuel.MovementId
                                        AND MovementFloat_PartnerCount.DescId = zc_MovementFloat_PartnerCount()
+                                       AND tmpFuel.Ord = 1
 
-            LEFT JOIN ObjectFloat AS ObjectFloat_PartnerMin
-                                  ON ObjectFloat_PartnerMin.ObjectId = Object_Car.Id
-                                 AND ObjectFloat_PartnerMin.DescId = zc_ObjectFloat_Car_PartnerMin()
+             LEFT JOIN ObjectFloat AS ObjectFloat_PartnerMin
+                                   ON ObjectFloat_PartnerMin.ObjectId = Object_Car.Id
+                                  AND ObjectFloat_PartnerMin.DescId = zc_ObjectFloat_Car_PartnerMin()
+                                  AND tmpFuel.Ord = 1
 
         WHERE COALESCE (ViewObject_Unit.BranchId, 0) = inBranchId
            OR inBranchId = 0

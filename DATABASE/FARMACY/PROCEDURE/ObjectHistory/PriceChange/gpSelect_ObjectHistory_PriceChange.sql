@@ -10,7 +10,9 @@ RETURNS TABLE (Id Integer, StartDate TDateTime,
                PriceChange TFloat, FixValue TFloat,
                FixPercent TFloat,
                FixDiscount TFloat,
-               PercentMarkup TFloat
+               PercentMarkup TFloat,
+               Multiplicity TFloat,
+               FixEndDate TDateTime
                )
 AS
 $BODY$
@@ -36,6 +38,8 @@ BEGIN
           , ObjectHistoryFloat_PriceChange_FixPercent.ValueData            AS FixPercent
           , ObjectHistoryFloat_PriceChange_FixDiscount.ValueData           AS FixDiscount
           , ObjectHistoryFloat_PriceChange_PercentMarkup.ValueData         AS PercentMarkup
+          , ObjectHistoryFloat_PriceChange_Multiplicity.ValueData          AS Multiplicity
+          , ObjectHistoryDate_PriceChange_FixEndDate.ValueData             AS FixEndDate
         FROM 
             ObjectHistory_PriceChange
             FULL JOIN (
@@ -64,6 +68,14 @@ BEGIN
             LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceChange_PercentMarkup
                                          ON ObjectHistoryFloat_PriceChange_PercentMarkup.ObjectHistoryId = ObjectHistory_PriceChange.Id
                                         AND ObjectHistoryFloat_PriceChange_PercentMarkup.DescId = zc_ObjectHistoryFloat_PriceChange_PercentMarkup()
+
+            LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceChange_Multiplicity
+                                         ON ObjectHistoryFloat_PriceChange_Multiplicity.ObjectHistoryId = ObjectHistory_PriceChange.Id
+                                        AND ObjectHistoryFloat_PriceChange_Multiplicity.DescId = zc_ObjectHistoryFloat_PriceChange_Multiplicity()
+
+            LEFT JOIN ObjectHistoryDate AS ObjectHistoryDate_PriceChange_FixEndDate
+                                        ON ObjectHistoryDate_PriceChange_FixEndDate.ObjectHistoryId = ObjectHistory_PriceChange.Id
+                                       AND ObjectHistoryDate_PriceChange_FixEndDate.DescId = zc_ObjectHistoryDate_PriceChange_FixEndDate()
            ;
 
 
@@ -77,6 +89,7 @@ ALTER FUNCTION gpSelect_ObjectHistory_PriceChange (Integer, TVarChar) OWNER TO p
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 30.04.21                                                                                     * FixEndDate
  04.12.19                                                                                     * FixDiscount
  08.02.19         * FixPercent
  24.02.16         *

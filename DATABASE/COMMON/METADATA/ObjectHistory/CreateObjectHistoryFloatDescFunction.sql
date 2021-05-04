@@ -52,11 +52,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectHistoryFloat_PersentSalary_Value() RETURNS I
 INSERT INTO ObjectHistoryFloatDesc (DescId, Code ,itemname)
  SELECT zc_ObjectHistory_PersentSalary(), 'zc_ObjectHistoryFloat_PersentSalary_Value','% фонда зп' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryFloatDesc WHERE Id = zc_ObjectHistoryFloat_PersentSalary_Value());
 
-
+CREATE OR REPLACE FUNCTION zc_ObjectHistoryFloat_PriceChange_Multiplicity() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectHistoryFloatDesc WHERE Code = 'zc_ObjectHistoryFloat_PriceChange_Multiplicity'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectHistoryFloatDesc (DescId, Code ,itemname)
+ SELECT zc_ObjectHistory_PriceChange(), 'zc_ObjectHistoryFloat_PriceChange_Multiplicity','Кратность отпуска' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryFloatDesc WHERE Id = zc_ObjectHistoryFloat_PriceChange_Multiplicity());
+ 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.   Шаблий О.В.
+ 30.04.21                                                                        * zc_ObjectHistoryFloat_PriceChange_Multiplicity
  16.04.20         * zc_ObjectHistoryFloat_PersentSalary_Value
  04.12.19                                                                        * zc_ObjectHistoryFloat_PriceChange_FixDiscount
  07.02.19         * zc_ObjectHistoryFloat_PriceChange_FixPercent

@@ -101,7 +101,7 @@ object PriceChangeGoodsDialogForm: TPriceChangeGoodsDialogForm
     Params = <
       item
         Name = 'OperDate'
-        Value = 424300000c
+        Value = 42430d
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','

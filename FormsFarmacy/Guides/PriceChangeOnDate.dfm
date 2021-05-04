@@ -4,7 +4,7 @@ inherited PriceChangeOnDateForm: TPriceChangeOnDateForm
   ClientWidth = 1354
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1370
-  ExplicitHeight = 458
+  ExplicitHeight = 459
   PixelsPerInch = 96
   TextHeight = 13
   object Panel: TPanel [0]
@@ -245,6 +245,13 @@ inherited PriceChangeOnDateForm: TPriceChangeOnDateForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1092#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1081' % '#1089#1082#1080#1076#1082#1080
             Width = 53
+          end
+          object FixEndDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1076#1077#1081#1089#1090#1074#1080#1103' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'FixEndDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 81
           end
           object FixPercentEnd: TcxGridDBColumn
             Caption = #1060#1080#1082#1089'. %('#1089#1082'.) ('#1085#1072' '#1086#1082#1086#1085#1095'.'#1076#1085#1103')'
@@ -932,7 +939,7 @@ inherited PriceChangeOnDateForm: TPriceChangeOnDateForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = deOperDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -1192,7 +1199,7 @@ inherited PriceChangeOnDateForm: TPriceChangeOnDateForm
       end
       item
         Name = 'outDateChange'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'DateChange'
         DataType = ftDateTime
@@ -1200,7 +1207,7 @@ inherited PriceChangeOnDateForm: TPriceChangeOnDateForm
       end
       item
         Name = 'outStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'StartDate'
         DataType = ftDateTime
