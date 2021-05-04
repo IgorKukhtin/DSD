@@ -14,14 +14,15 @@ uses
   Datasnap.DBClient, cxGridLevel, cxGridCustomView, cxGrid, cxCurrencyEdit,
   dxSkinsdxBarPainter, dxBar, cxSpinEdit, dxBarExtItems, cxBarEditItem,
   cxBlobEdit, cxCheckBox, cxNavigator,
-  cxDataControllerConditionalFormattingRulesManagerDialog, System.Actions;
+  cxDataControllerConditionalFormattingRulesManagerDialog, System.Actions,
+  dxDateRanges;
 
 type
   TChoiceHelsiUserNameForm = class(TAncestorBaseForm)
     BankPOSTerminalGrid: TcxGrid;
     BankPOSTerminalGridDBTableView: TcxGridDBTableView;
     BankPOSTerminalGridLevel: TcxGridLevel;
-    BankPOSTerminalDS: TDataSource;
+    ChoiceHelsiUserNamelDS: TDataSource;
     colName: TcxGridDBColumn;
     Panel1: TPanel;
     bbCancel: TcxButton;
@@ -50,7 +51,7 @@ begin
   With ChoiceHelsiUserNameForm do
   try
     try
-      BankPOSTerminalDS.DataSet := ADS;
+      ChoiceHelsiUserNamelDS.DataSet := ADS;
       Result := ShowModal = mrOK;
     Except ON E: Exception DO
       MessageDlg(E.Message,mtError,[mbOk],0);

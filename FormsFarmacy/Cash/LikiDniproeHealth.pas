@@ -15,12 +15,17 @@ type
     FRESTRequest: TRESTRequest;
     FRESTClient: TRESTClient;
 
+    // Данные текущего пользователя
+    FUserEmail : String;
+    FPassword : String;
+    FBase64Key : String;
+    FKeyPassword : String;
+
     // Адреса сайтоа
     FLikiDnepr : String;
 
     // Токены доступа
     FAccess_Token : String;
-    FEmployee_Email : String;
 
     // Рецепт
     FNumber : String;
@@ -75,7 +80,8 @@ var LikiDniproeHealthApi : TLikiDniproeHealthApi;
 
 implementation
 
-uses RegularExpressions, System.Generics.Collections, Soap.EncdDecd , MainCash2;
+uses RegularExpressions, System.Generics.Collections, Soap.EncdDecd , MainCash2,
+     LocalWorkUnit, ChoiceHelsiUserName, CommonData;
 
 function DelDoubleQuote(AStr : string) : string;
 begin
@@ -142,7 +148,7 @@ begin
 
   FLikiDnepr := '';
   FAccess_Token := '';
-  FEmployee_Email := '';
+  FUserEmail := '';
   FShow_eHealth := False;
   FShow_Location := '';
 
@@ -158,6 +164,7 @@ end;
 function TLikiDniproeHealthApi.ShowError(AText : string = 'Ошибка получение информации о рецепте') : string;
 var
   jValue : TJSONValue;
+  JSONA: TJSONArray;
   cError : string;
 begin
   cError := '';
@@ -165,6 +172,19 @@ begin
   if jValue.FindValue('message') <> Nil then
   begin
     cError := DelDoubleQuote(jValue.FindValue('message').ToString);
+  end else if jValue.FindValue('error') <> Nil then
+  begin
+    jValue := jValue.FindValue('error') ;
+
+    if jValue.FindValue('invalid') <> Nil then
+    begin
+      JSONA := jValue.GetValue<TJSONArray>('invalid');
+      JSONA := JSONA.Items[0].GetValue<TJSONArray>('rules');
+      if JSONA.Items[0].FindValue('description') <> Nil then
+      begin
+        cError := DelDoubleQuote(JSONA.Items[0].FindValue('description').ToString);
+      end;
+    end;
   end;
 
   if cError = '' then cError := IntToStr(FRESTResponse.StatusCode) + ' - ' + FRESTResponse.StatusText;
@@ -195,7 +215,7 @@ begin
   FRESTRequest.AddParameter('Authorization', 'Bearer ' + FAccess_Token, TRESTRequestParameterKind.pkHTTPHEADER,
                                                                         [TRESTRequestParameterOption.poDoNotEncode]);
   FRESTRequest.AddParameter('Accept', 'application/json', TRESTRequestParameterKind.pkHTTPHEADER);
-  FRESTRequest.AddParameter('employee_email', FEmployee_Email, TRESTRequestParameterKind.pkGETorPOST);
+  FRESTRequest.AddParameter('employee_email', FUserEmail, TRESTRequestParameterKind.pkGETorPOST);
   try
     FRESTRequest.Execute;
   except
@@ -234,7 +254,7 @@ begin
 
           Result := True;
         end;
-      end else if (jValue.FindValue('error') <> Nil) and (DelDoubleQuote(j.FindValue('error').ToString) = 'auth') then
+      end else if (jValue.FindValue('error') <> Nil) and (DelDoubleQuote(jValue.FindValue('error').ToString) = 'auth') then
       begin
         FShow_eHealth := True;
       end else ShowError;
@@ -266,7 +286,7 @@ begin
   FRESTRequest.AddParameter('Authorization', 'Bearer ' + FAccess_Token, TRESTRequestParameterKind.pkHTTPHEADER,
                                                                         [TRESTRequestParameterOption.poDoNotEncode]);
   FRESTRequest.AddParameter('Accept', 'application/json', TRESTRequestParameterKind.pkHTTPHEADER);
-  FRESTRequest.AddParameter('employee_email', FEmployee_Email, TRESTRequestParameterKind.pkGETorPOST);
+  FRESTRequest.AddParameter('employee_email', FUserEmail, TRESTRequestParameterKind.pkGETorPOST);
   try
     FRESTRequest.Execute;
   except
@@ -315,7 +335,7 @@ begin
   FRESTRequest.AddParameter('Authorization', 'Bearer ' + FAccess_Token, TRESTRequestParameterKind.pkHTTPHEADER,
                                                                         [TRESTRequestParameterOption.poDoNotEncode]);
   FRESTRequest.AddParameter('Accept', 'application/json', TRESTRequestParameterKind.pkHTTPHEADER);
-  FRESTRequest.AddParameter('employee_email', FEmployee_Email, TRESTRequestParameterKind.pkGETorPOST);
+  FRESTRequest.AddParameter('employee_email', FUserEmail, TRESTRequestParameterKind.pkGETorPOST);
 
   jsonBody := TJSONObject.Create;
   try
@@ -337,7 +357,8 @@ begin
 
     jsonBody.AddPair('medication_dispense', jsonTemp);
 
-    FRESTRequest.Body.Add(jsonBody.ToString, TRESTContentType.ctAPPLICATION_JSON);
+    FRESTRequest.AddParameter('data', jsonBody.ToString, TRESTRequestParameterKind.pkGETorPOST);
+  //  FRESTRequest.Body.Add(jsonBody.ToString, TRESTContentType.ctAPPLICATION_JSON);
   finally
     jsonBody.Destroy;
   end;
@@ -351,15 +372,39 @@ begin
   begin
     Result := False;
     try
-      JSONA := FRESTResponse.JSONValue.GetValue<TJSONArray>;
+      jValue := FRESTResponse.JSONValue;
+      if jValue.FindValue('medical_program') <> Nil then
+      begin
 
-        for I := 0 to JSONA.Count - 1 do if JSONA.Items[I].FindValue('medication_id') <> Nil then
+        if jValue.FindValue('medical_program') <> Nil then
         begin
-          if FMedication_ID_List = '' then FMedication_ID_List := DelDoubleQuote(JSONA.Items[I].FindValue('medication_id').ToString)
-          else FMedication_ID_List := FMedication_ID_List + ',' + DelDoubleQuote(JSONA.Items[I].FindValue('medication_id').ToString);
-        end;
+          j := jValue.FindValue('medical_program');
+          FMedical_program_id := DelDoubleQuote(j.FindValue('id').ToString);
+        end else FMedical_program_id := '';
 
-      Result := True;
+        if jValue.FindValue('medication_info') <> Nil then
+        begin
+          j := jValue.FindValue('medication_info');
+          FMedication_ID := DelDoubleQuote(j.FindValue('medication_id').ToString);
+          FMedication_Name := DelDoubleQuote(j.FindValue('medication_name').ToString);
+          FMedication_Qty := StrToCurr(StringReplace(StringReplace(j.FindValue('medication_qty').ToString,
+                            ',', FormatSettings.DecimalSeparator, [rfReplaceAll]),
+                            '.', FormatSettings.DecimalSeparator, [rfReplaceAll]));
+
+          FMedication_request_id := DelDoubleQuote(jValue.FindValue('id').ToString);
+          FStatus := DelDoubleQuote(jValue.FindValue('status').ToString);
+          if not StrToDateSite(jValue.FindValue('created_at').ToString, FCreated_at) then Exit;
+          if not StrToDateSite(jValue.FindValue('dispense_valid_from').ToString, FDispense_valid_from) then Exit;
+          if not StrToDateSite(jValue.FindValue('dispense_valid_to').ToString, FDispense_valid_to) then Exit;
+
+          FRequest_number := DelDoubleQuote(jValue.FindValue('request_number').ToString);
+
+          Result := True;
+        end;
+      end else if (jValue.FindValue('error') <> Nil) and (DelDoubleQuote(jValue.FindValue('error').ToString) = 'auth') then
+      begin
+        FShow_eHealth := True;
+      end else ShowError;
     except
     end
   end else ShowError;
@@ -374,13 +419,12 @@ begin
 
   Result := False;
 
-//  if (MainCashForm.UnitConfigCDS.FieldByName('LikiDneproId').AsInteger = 0) or
-//     (MainCashForm.UnitConfigCDS.FieldByName('LikiDneproURL').AsString = '') or
-//     (MainCashForm.UnitConfigCDS.FieldByName('LikiDneproToken').AsString = '')  then
-//  begin
-//    ShowMessage('Ошибка не установлены параметры для подключения к серверу LikiDnepro.');
-//    Exit;
-//  end;
+  if (MainCashForm.UnitConfigCDS.FieldByName('LikiDneproURL').AsString = '') or
+     (MainCashForm.UnitConfigCDS.FieldByName('LikiDneproToken').AsString = '')  then
+  begin
+    ShowMessage('Ошибка не установлены параметры для подключения к серверу LikiDnepro.');
+    Exit;
+  end;
 
 
   if not Assigned(LikiDniproeHealthApi) then
@@ -393,9 +437,52 @@ begin
 //    LikiDniproeHealthApi.FShow_Location := 'https://preprod.ciet-holding.com/login';
 
 
-    LikiDniproeHealthApi.FLikiDnepr := MainCashForm.UnitConfigCDS.FieldByName('LikiDneproURL').AsString;
-    LikiDniproeHealthApi.FAccess_Token := MainCashForm.UnitConfigCDS.FieldByName('LikiDneproToken').AsString;
+    LikiDniproeHealthApi.FLikiDnepr := MainCashForm.UnitConfigCDS.FieldByName('LikiDneproeHealthURL').AsString;
+    LikiDniproeHealthApi.FAccess_Token := MainCashForm.UnitConfigCDS.FieldByName('LikiDneproeHealthToken').AsString;
    // LikiDniproeHealthApi.FPharmacy_Id := MainCashForm.UnitConfigCDS.FieldByName('LikiDneproId').AsInteger;
+
+    try
+      ds := TClientDataSet.Create(nil);
+      try
+        WaitForSingleObject(MutexUserLikiDnipro, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+        try
+          LoadLocalData(ds,UserLikiDnipro_lcl);
+        finally
+          ReleaseMutex(MutexUserLikiDnipro);
+        end;
+
+        if ds.RecordCount <= 0 then
+        begin
+          FreeAndNil(LikiDniproeHealthApi);
+          ShowMessage('По подразделению нет сотрудников для закрытия рецептов...');
+          Exit;
+        end;
+
+        if not ds.Locate('ID', gc_User.Session, []) then
+        begin
+          if not ChoiceHelsiUserNameExecute(ds) then
+          begin
+            FreeAndNil(LikiDniproeHealthApi);
+            Exit;
+          end;
+        end;
+
+        LikiDniproeHealthApi.FUserEmail := ds.FieldByName('UserEmail').AsString;
+        LikiDniproeHealthApi.FPassword := DecodeString(ds.FieldByName('UserPassword').AsString);
+        LikiDniproeHealthApi.FBase64Key := ds.FieldByName('Key').AsString;
+        LikiDniproeHealthApi.FKeyPassword := DecodeString(ds.FieldByName('KeyPassword').AsString);
+
+      finally
+        ds.free;
+      end;
+    except
+      on E: Exception do
+      begin
+        FreeAndNil(LikiDniproeHealthApi);
+        ShowMessage('Ошибка получения учетных данных сотрудника: ' + E.Message);
+        Exit;
+      end;
+    end;
   end;
 
   Result := True;

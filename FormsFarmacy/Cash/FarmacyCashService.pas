@@ -214,6 +214,7 @@ type
     procedure SaveBankPOSTerminal;
     procedure SaveUnitConfig;
     procedure SaveUserHelsi;
+    procedure SaveUserLikiDnipro;
     procedure SaveUserSettings;
     procedure SaveTaxUnitNight;
     procedure SaveGoodsExpirationDate;
@@ -530,6 +531,7 @@ begin   //yes
         SaveUserSettings;
         //Получение Сотрудников для сайта Хелси
         SaveUserHelsi;
+        SaveUserLikiDnipro;
         //Получение остатков
         bError := SaveCashRemains;
         if bError then
@@ -2251,6 +2253,48 @@ begin
   end;
 end;
 
+procedure TMainCashForm2.SaveUserLikiDnipro;
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+begin
+  tiServise.Hint := 'Получение Сотрудников для сайта Хелси';
+  sp := TdsdStoredProc.Create(nil);
+  try
+    try
+      ds := TClientDataSet.Create(nil);
+      try
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
+
+        sp.StoredProcName := 'gpSelect_Cash_UserLikiDnipro';
+        sp.Params.Clear;
+        sp.Execute;
+        Add_Log('Start MutexUserLikiDnipro');
+        WaitForSingleObject(MutexUserLikiDnipro, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+        try
+          SaveLocalData(ds,UserLikiDnipro_lcl);
+        finally
+          Add_Log('End MutexUserLikiDnipro');
+          ReleaseMutex(MutexUserLikiDnipro);
+        end;
+
+      finally
+        ds.free;
+      end;
+    except
+      on E: Exception do
+      begin
+        Add_Log('SaveUserLikiDnipro Exception: ' + E.Message);
+        Exit;
+      end;
+    end;
+  finally
+    freeAndNil(sp);
+    tiServise.Hint := 'Ожидание задания.';
+  end;
+end;
+
 procedure TMainCashForm2.SaveUserHelsi;
 var
   sp : TdsdStoredProc;
@@ -2296,7 +2340,6 @@ begin
     tiServise.Hint := 'Ожидание задания.';
   end;
 end;
-
 procedure TMainCashForm2.SaveUserSettings;
 var
   sp : TdsdStoredProc;

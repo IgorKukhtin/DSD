@@ -40,6 +40,7 @@ function GoodsExpirationDate_lcl: String;
 function GoodsAnalog_lcl: String;
 function CashAttachment_lcl: String;
 function UserHelsi_lcl: String;
+function UserLikiDnipro_lcl: String;
 function UserSettings_lcl: String;
 function EmployeeSchedule_lcl: String;
 function Buyer_lcl: String;
@@ -60,7 +61,7 @@ var
   MutexUserSettings, MutexDBF, MutexDBFDiff,  MutexVip, MutexRemains, MutexAlternative, MutexRefresh,
   MutexAllowedConduct, MutexGoods, MutexDiffCDS, MutexDiffKind, MutexEmployeeWorkLog,
   MutexBankPOSTerminal, MutexUnitConfig, MutexTaxUnitNight, MutexGoodsExpirationDate,
-  MutexGoodsAnalog, MutexUserHelsi, MutexEmployeeSchedule, MutexBuyer, MutexDistributionPromo,
+  MutexGoodsAnalog, MutexUserHelsi, MutexUserLikiDnipro, MutexEmployeeSchedule, MutexBuyer, MutexDistributionPromo,
   MutexImplementationPlanEmployee : THandle;
 
 implementation
@@ -163,6 +164,11 @@ End;
 function UserHelsi_lcl: String;
 Begin
   Result := ExtractFilePath(Application.ExeName) + 'UserHelsi.local';
+End;
+
+function UserLikiDnipro_lcl: String;
+Begin
+  Result := ExtractFilePath(Application.ExeName) + 'UserLikiDnipro.local';
 End;
 
 function UserSettings_lcl: String;
@@ -470,6 +476,8 @@ begin
   LastErr := GetLastError;
   MutexUserHelsi := CreateMutex(nil, false, 'farmacycashMutexUserHelsi');
   LastErr := GetLastError;
+  MutexUserLikiDnipro := CreateMutex(nil, false, 'farmacycashMutexUserLikiDnipro');
+  LastErr := GetLastError;
   MutexEmployeeSchedule := CreateMutex(nil, false, 'farmacycashMutexEmployeeSchedule');
   LastErr := GetLastError;
   MutexBuyer := CreateMutex(nil, false, 'farmacycashMutexBuyer');
@@ -498,6 +506,7 @@ begin
  CloseHandle(MutexGoodsAnalog);
  CloseHandle(MutexEmployeeSchedule);
  CloseHandle(MutexUserHelsi);
+ CloseHandle(MutexUserLikiDnipro);
  CloseHandle(MutexBuyer);
  CloseHandle(MutexDistributionPromo);
 end;

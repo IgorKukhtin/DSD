@@ -90,7 +90,8 @@ BEGIN
         tmpProtocolArc AS (SELECT tmpUser.UserId
                                 , min(ObjectProtocol.OperDate)::TDateTime AS DateInsert
                            FROM tmpUser
-                                INNER JOIN ObjectProtocol_Arc ON ObjectProtocol_Arc.ObjectId = tmpUser.UserId
+                                INNER JOIN ObjectProtocol_Arc AS ObjectProtocol 
+                                                              ON ObjectProtocol.ObjectId = tmpUser.UserId
                            GROUP BY tmpUser.UserId
                            )
 
@@ -126,4 +127,4 @@ ALTER FUNCTION gpSelect_PUSH_CashTestingUser (Integer, Integer, Integer) OWNER T
 
 -- тест
 -- 
-select * from gpSelect_PUSH_CashTestingUser(inMovementID := 0, inUnitID := 0, inUserId := 3);
+select * from gpSelect_PUSH_CashTestingUser(inMovementID := 0, inUnitID := 0, inUserId := 16175938); 3);

@@ -133,8 +133,8 @@ BEGIN
        SELECT MovementFloat_DayCount.ValueData::Integer            AS DayCount
             , 20::TFloat
             , 10::TFloat
-            , 7::TFloat
-            , 250::TFloat
+            , 0::TFloat
+            , 500::TFloat
        FROM Movement
 
             INNER JOIN MovementLinkObject AS MovementLinkObject_Unit

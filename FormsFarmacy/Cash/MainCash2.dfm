@@ -57,6 +57,7 @@ inherited MainCashForm2: TMainCashForm2
         object CheckGridColName: TcxGridDBColumn
           Caption = #1053#1072#1079#1074#1072#1085#1080#1077
           DataBinding.FieldName = 'GoodsName'
+          Styles.OnGetContentStyle = CheckGridColNameStylesGetContentStyle
           Width = 150
         end
         object CheckGridColAmount: TcxGridDBColumn
@@ -97,7 +98,7 @@ inherited MainCashForm2: TMainCashForm2
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Styles.Content = dmMain.cxRemainsCashContentStyle
+          Styles.OnGetContentStyle = CheckGridColNameStylesGetContentStyle
           Width = 45
         end
         object CheckGridColSummChangePercent: TcxGridDBColumn
@@ -106,6 +107,7 @@ inherited MainCashForm2: TMainCashForm2
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Styles.OnGetContentStyle = CheckGridColNameStylesGetContentStyle
           Width = 70
         end
         object CheckGridColAmountOrder: TcxGridDBColumn
@@ -147,6 +149,15 @@ inherited MainCashForm2: TMainCashForm2
           DataBinding.FieldName = 'DivisionPartiesName'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
+        end
+        object CheckFixEndDate: TcxGridDBColumn
+          AlternateCaption = 'dmMain.cxemainsCashContentStyle'
+          Caption = #1044#1072#1090#1072' '#1076#1077#1081#1089#1090#1074#1080#1103' '#1089#1082#1080#1076#1082#1080
+          DataBinding.FieldName = 'FixEndDate'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Styles.OnGetContentStyle = CheckGridColNameStylesGetContentStyle
+          Width = 98
         end
       end
       object CheckGridLevel: TcxGridLevel
@@ -463,6 +474,7 @@ inherited MainCashForm2: TMainCashForm2
           Properties.DisplayFormat = '0.## %'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
+          Styles.OnGetContentStyle = MainFixPercentStylesGetContentStyle
           Width = 57
         end
         object MainFixDiscount: TcxGridDBColumn
@@ -471,14 +483,24 @@ inherited MainCashForm2: TMainCashForm2
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DisplayFormat = ',0.00'
           HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Styles.OnGetContentStyle = MainFixPercentStylesGetContentStyle
           Width = 57
         end
-        object Multiplicity: TcxGridDBColumn
+        object MainMultiplicity: TcxGridDBColumn
           Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1086#1090#1087'. '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
           DataBinding.FieldName = 'Multiplicity'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 68
+        end
+        object MainFixEndDate: TcxGridDBColumn
+          Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1076#1077#1081#1089#1090#1074#1080#1103' '#1089#1082#1080#1076#1082#1080
+          DataBinding.FieldName = 'FixEndDate'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Styles.OnGetContentStyle = MainFixPercentStylesGetContentStyle
+          Width = 89
         end
         object DiffSP1: TcxGridDBColumn
           Caption = #1089#1082'1'
@@ -7027,6 +7049,10 @@ inherited MainCashForm2: TMainCashForm2
       item
         Name = 'isMultiplicityError'
         DataType = ftBoolean
+      end
+      item
+        Name = 'FixEndDate'
+        DataType = ftDateTime
       end>
     IndexDefs = <
       item

@@ -44,7 +44,7 @@ BEGIN
     EXCEPTION
        WHEN others THEN
          GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
-       PERFORM lpLog_Run_Schedule_Function('gpGet_Movement_PUSH_Message', True, text_var1::TVarChar, inUserId);
+       PERFORM lpLog_Run_Schedule_Function('gpGet_Movement_PUSH_Message  run '::inFunction, True, text_var1::TVarChar, inUserId);
     END;
   ELSEif COALESCE(inFunction, '') <> ''
   THEN
@@ -57,7 +57,7 @@ BEGIN
     EXCEPTION
        WHEN others THEN
          GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
-       PERFORM lpLog_Run_Schedule_Function('gpGet_Movement_PUSH_Message', True, text_var1::TVarChar, inUserId);
+       PERFORM lpLog_Run_Schedule_Function('gpGet_Movement_PUSH_Message run '::inFunction, True, text_var1::TVarChar, inUserId);
     END;
 
   ELSE
@@ -82,4 +82,4 @@ $BODY$
 */
 
 -- SELECT * FROM Log_Run_Schedule_Function
--- SELECT * FROM gpGet_Movement_PUSH_Message( 'dddd', 'gpSelect_MovementItem_OrderInternal_WillNotOrder', 'TReport_WillNotOrderForm', 183292 , 3);
+-- SELECT * FROM gpGet_Movement_PUSH_Message( 'dddd'::TBlob, 'gpSelect_MovementItem_OrderInternal_WillNotOrder', 'TReport_WillNotOrderForm', 183292 , 3);

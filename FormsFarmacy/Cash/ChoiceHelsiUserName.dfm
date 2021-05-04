@@ -18,7 +18,7 @@ inherited ChoiceHelsiUserNameForm: TChoiceHelsiUserNameForm
     object BankPOSTerminalGridDBTableView: TcxGridDBTableView
       OnDblClick = BankPOSTerminalGridDBTableViewDblClick
       Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = BankPOSTerminalDS
+      DataController.DataSource = ChoiceHelsiUserNamelDS
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
@@ -83,7 +83,7 @@ inherited ChoiceHelsiUserNameForm: TChoiceHelsiUserNameForm
     Left = 167
     Top = 103
   end
-  object BankPOSTerminalDS: TDataSource
+  object ChoiceHelsiUserNamelDS: TDataSource
     Left = 40
     Top = 32
   end
