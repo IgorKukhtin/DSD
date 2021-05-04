@@ -88,6 +88,8 @@ BEGIN
                       SELECT Object.Id AS LocationId, zc_ContainerLinkObject_Car() AS DescId, inGoodsId AS GoodsId FROM Object WHERE Object.DescId = zc_Object_Car() AND (Object.Id = inLocationId OR (COALESCE(inLocationId, 0) = 0 AND COALESCE(inUnitGroupId, 0) = 0))
                      UNION
                       SELECT Object.Id AS LocationId, zc_ContainerLinkObject_Member() AS DescId, inGoodsId AS GoodsId FROM Object WHERE Object.DescId = zc_Object_Member() AND (Object.Id = inLocationId OR (COALESCE(inLocationId, 0) = 0 AND COALESCE(inUnitGroupId, 0) = 0))
+                     UNION
+                      SELECT Object_Unit.Id AS LocationId, zc_ContainerLinkObject_Unit() AS DescId, inGoodsId AS GoodsId FROM Object AS Object_Unit WHERE Object_Unit.DescId = zc_Object_Unit() AND COALESCE (inLocationId, 0) = 0 AND COALESCE (inUnitGroupId, 0) = 0
                     )
        , tmpContainer_Count AS (SELECT Container.Id          AS ContainerId
                                      , CLO_Location.ObjectId AS LocationId
@@ -273,7 +275,7 @@ BEGIN
 
       , tmpMIContainer_all AS (-- 1.1. Остатки кол-во
                                SELECT -1 AS MovementId
-                                    -- , 0 AS MovementItemId
+                                    , 0 AS MovementItemId
                                     , 0 AS ParentId
                                     , tmpMI_Count.ContainerId
                                     , tmpMI_Count.LocationId
@@ -310,7 +312,7 @@ BEGIN
                               UNION ALL
                                -- 1.2. Движение кол-во
                                SELECT tmpMI_Count.MovementId
-                                    -- , tmpMI_Count.MovementItemId
+                                    , tmpMI_Count.MovementItemId
                                     , COALESCE (MovementItem.ParentId, 0) AS ParentId
                                     , tmpMI_Count.ContainerId
                                     , tmpMI_Count.LocationId
@@ -358,7 +360,7 @@ BEGIN
                               UNION ALL
                                -- 2.1. Остатки суммы
                                SELECT -1 AS MovementId
-                                    -- , 0 AS MovementItemId
+                                    , 0 AS MovementItemId
                                     , 0 ParentId
                                     , tmpMI_Summ.ContainerId
                                     , tmpMI_Summ.LocationId
@@ -396,7 +398,7 @@ BEGIN
                               UNION ALL
                                -- 2.2. Движение суммы
                                SELECT tmpMI_Summ.MovementId
-                                    -- , tmpMI_Summ.MovementItemId
+                                    , tmpMI_Summ.MovementItemId
                                     , COALESCE (MovementItem.ParentId, 0) AS ParentId
                                     , tmpMI_Summ.ContainerId
                                     , tmpMI_Summ.LocationId
@@ -485,7 +487,12 @@ BEGIN
                                         END AS SummOut_branch
                                       , SUM (tmpMIContainer_all.SummPartnerIn)  AS SummPartnerIn
                                       , SUM (tmpMIContainer_all.SummPartnerOut) AS SummPartnerOut
+                                      
+                                      , COALESCE (MIF_Price.ValueData, 0) AS Price_real
                                 FROM tmpMIContainer_all
+                                     LEFT JOIN MovementItemFloat AS MIF_Price
+                                                                 ON MIF_Price.MovementItemId = tmpMIContainer_all.MovementItemId
+                                                                AND MIF_Price.DescId         = zc_MIFloat_Price()
                                  GROUP BY tmpMIContainer_all.MovementId
                                         -- , tmpMIContainer_all.MovementItemId
                                         , tmpMIContainer_all.ParentId
@@ -497,6 +504,7 @@ BEGIN
                                         , tmpMIContainer_all.isActive
                                         , tmpMIContainer_all.isReprice
                                         , tmpMIContainer_all.PartionGoods_item
+                                        , COALESCE (MIF_Price.ValueData, 0)
                                 )
 
   ----
@@ -642,7 +650,10 @@ BEGIN
                                      ELSE 0
                                 END AS TFloat) AS Price_branch_end
                 
-                        , CAST (CASE WHEN tmpMIContainer_group.AmountIn <> 0
+                        , CAST (CASE WHEN tmpMIContainer_group.Price_real > 0 
+                                          THEN tmpMIContainer_group.Price_real
+                                          
+                                     WHEN tmpMIContainer_group.AmountIn <> 0
                                           THEN tmpMIContainer_group.SummPartnerIn / tmpMIContainer_group.AmountIn
                                      WHEN tmpMIContainer_group.AmountOut <> 0
                                           THEN tmpMIContainer_group.SummPartnerOut / tmpMIContainer_group.AmountOut
@@ -868,5 +879,5 @@ ALTER FUNCTION gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, 
 */
 
 -- тест
--- SELECT * FROM gpReport_Goods (inStartDate:= '01.01.2017', inEndDate:= '01.01.2017', inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 1826, inIsPartner:= FALSE, inSession:= zfCalc_UserAdmin());
--- select * from gpReport_Goods(inStartDate := ('02.03.2020')::TDateTime , inEndDate := ('03.03.2020')::TDateTime , inUnitGroupId := 0 , inLocationId := 8451 , inGoodsGroupId := 1858 , inGoodsId := 341913 , inIsPartner := 'False' , inIsPartion := 'False', inSession := '5');
+-- SELECT * FROM gpReport_Goods (inStartDate:= '01.01.2022', inEndDate:= '01.01.2022', inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 1826, inIsPartner:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * from gpReport_Goods(inStartDate := ('02.03.2022')::TDateTime , inEndDate := ('03.03.2022')::TDateTime , inUnitGroupId := 0 , inLocationId := 8451 , inGoodsGroupId := 1858 , inGoodsId := 341913 , inIsPartner := 'False' , inIsPartion := 'False', inSession := '5');

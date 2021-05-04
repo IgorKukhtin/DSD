@@ -40,7 +40,6 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -49,13 +48,13 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         Caption = #1044#1072#1090#1072' '#1089
         DataBinding.FieldName = 'StartDate'
         HeaderAlignmentVert = vaCenter
-        Width = 206
+        Width = 100
       end
       object EndDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1086
         DataBinding.FieldName = 'EndDate'
         HeaderAlignmentVert = vaCenter
-        Width = 188
+        Width = 100
       end
       object ValuePrice: TcxGridDBColumn
         Caption = #1062#1077#1085#1072
@@ -65,7 +64,15 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         Properties.DisplayFormat = ',0.00##;-,0.00##'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 235
+        Width = 100
+      end
+      object PriceListName: TcxGridDBColumn
+        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+        DataBinding.FieldName = 'PriceListName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
       end
       object isErased: TcxGridDBColumn
         DataBinding.FieldName = 'isErased'
@@ -250,6 +257,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       Category = 0
       Hint = '       '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbInsert: TdxBarButton
       Action = actInsert
@@ -410,7 +418,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         end
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'StartDate'
           DataType = ftDateTime
@@ -419,7 +427,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'EndDate'
           DataType = ftDateTime
@@ -507,10 +515,13 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 336
     Top = 168
   end
