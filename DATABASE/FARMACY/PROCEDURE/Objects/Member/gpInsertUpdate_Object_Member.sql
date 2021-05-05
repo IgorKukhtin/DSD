@@ -7,6 +7,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Tblob, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Tblob, Integer, Boolean, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Tblob, Integer, Boolean, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Tblob, Integer, Boolean, Integer, Integer, Boolean, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
@@ -27,7 +28,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
     IN inManagerPharmacy     Boolean   ,    -- Заведующая аптекой
     IN inPositionID          Integer   ,    -- Должность
     IN inUnitID              Integer   ,    -- Подразделение
-    IN isNotSchedule         Boolean   ,    -- Не требовать отмечаться в кассе 
+    IN inisNotSchedule       Boolean   ,    -- Не требовать отмечаться в кассе 
+    IN inisReleasedMarketingPlan Boolean   ,-- Освобожден от плана маркетинга
     
     IN inSession             TVarChar       -- сессия пользователя
 )
@@ -83,7 +85,9 @@ BEGIN
    -- сохранили свойство <Заведующая аптекой>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Member_ManagerPharmacy(), ioId, inManagerPharmacy);
    -- сохранили свойство <Не требовать отмечаться в кассе>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Member_NotSchedule(), ioId, isNotSchedule);
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Member_NotSchedule(), ioId, inisNotSchedule);
+   -- сохранили свойство <Освобожден от плана маркетинга>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Member_ReleasedMarketingPlan(), ioId, inisReleasedMarketingPlan);
 
     -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Member_Position(), ioId, inPositionID);

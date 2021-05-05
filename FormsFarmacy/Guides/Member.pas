@@ -79,6 +79,7 @@ type
     actUnitChoice: TOpenChoiceForm;
     UserList: TcxGridDBColumn;
     isNotSchedule: TcxGridDBColumn;
+    isReleasedMarketingPlan: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -206,6 +206,14 @@ object MemberForm: TMemberForm
         HeaderAlignmentVert = vaCenter
         Width = 91
       end
+      object isReleasedMarketingPlan: TcxGridDBColumn
+        Caption = #1054#1089#1074#1086#1073#1086#1078#1076#1077#1085' '#1086#1090' '#1087#1083#1072#1085#1072' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+        DataBinding.FieldName = 'isReleasedMarketingPlan'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 97
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -757,10 +765,13 @@ object MemberForm: TMemberForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 328
     Top = 264
   end

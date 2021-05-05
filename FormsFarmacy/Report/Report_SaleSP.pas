@@ -96,6 +96,8 @@ type
     spGetNDS: TdsdStoredProc;
     FormParams: TdsdFormParams;
     actGetNDS: TdsdExecStoredProc;
+    actPrintMemberSP: TdsdPrintAction;
+    bbPrintMemberSP: TdxBarButton;
   private
     { Private declarations }
   public

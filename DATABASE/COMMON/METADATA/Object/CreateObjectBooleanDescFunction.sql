@@ -939,11 +939,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_MessageByTimePD() RETURNS Integ
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_MessageByTimePD', 'Сообщение в кассе при опускании если разные сроки по категории' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_MessageByTimePD');
 
-
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Member_ReleasedMarketingPlan() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Member_ReleasedMarketingPlan'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Member(), 'zc_ObjectBoolean_Member_ReleasedMarketingPlan', 'Освобожден от плана маркетинга' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Member_ReleasedMarketingPlan');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 05.05.21                                                                                                          * zc_ObjectBoolean_Member_ReleasedMarketingPlan
  28.04.21         * zc_ObjectBoolean_PersonalServiceList_Detail
  28.04.21                                                                                                          * zc_ObjectBoolean_Unit_MessageByTime
  22.04.21         * zc_ObjectBoolean_StickerProperty_CK
