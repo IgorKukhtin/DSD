@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION lpReport_CheckBonus (
     IN inPaidKindID          Integer   ,
     IN inJuridicalId         Integer   ,
     IN inBranchId            Integer   ,
-    IN inPersonalId          Integer   ,
+    IN inMemberId          Integer   ,
     IN inisMovement          Boolean   , -- по документам
     IN inSessiON             TVarChar    -- сессия пользователя
 )
@@ -82,7 +82,19 @@ BEGIN
 
     RETURN QUERY
       WITH 
-           tmpContract_full AS (SELECT View_Contract.*
+           tmpPersonal_byMember AS (SELECT ObjectLink_Personal_Member.ObjectId AS PersonalId
+                                    FROM ObjectLink AS ObjectLink_Personal_Member
+                                    WHERE ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+                                      AND ObjectLink_Personal_Member.ChildObjectId = inMemberId
+                                      AND COALESCE (inMemberId,0) <> 0
+                                   /*UNION
+                                    SELECT Object_Personal.Id AS PersonalId
+                                    FROM Object AS Object_Personal
+                                    WHERE Object_Personal.DescId = zc_Object_Personal()
+                                      AND COALESCE (inMemberId,0) = 0*/
+                                    )
+
+         , tmpContract_full AS (SELECT View_Contract.*
                                 FROM Object_Contract_View AS View_Contract
                                 WHERE (View_Contract.JuridicalId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
                                 )
@@ -1384,6 +1396,7 @@ BEGIN
                        )
 
 
+
       -- Результат
       SELECT  tmpMovementParams.OperDate        :: TDateTime AS OperDate_Movement
             , tmpMovementParams.OperDatePartner :: TDateTime AS OperDatePartner
@@ -1536,7 +1549,9 @@ BEGIN
                                 AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
             LEFT JOIN Object_Personal_View AS Object_Personal ON Object_Personal.PersonalId = COALESCE (ObjectLink_Partner_Personal.ChildObjectId, tmpPersonal.PersonalId)
 
-       WHERE ((Object_PersonalTrade.PersonalId = inPersonalId AND inPaidKindId = zc_Enum_PaidKind_SecondForm()) OR inPersonalId = 0)
+            -- ограничиваем по супервайзерам, если выбрали физ.лицо
+            LEFT JOIN tmpPersonal_byMember ON tmpPersonal_byMember.PersonalId = Object_Personal.PersonalId 
+       WHERE ((tmpPersonal_byMember.PersonalId IS NOT NULL AND inPaidKindId = zc_Enum_PaidKind_SecondForm()) OR inMemberId = 0)
          OR  inPaidKindId = zc_Enum_PaidKind_FirstForm()
        --
                     
@@ -1637,7 +1652,7 @@ BEGIN
                                                , inPaidKindId   := inPaidKindId
                                                , inJuridicalId  := inJuridicalId
                                                , inBranchId     := inBranchId
-                                               , inPersonalId   := inPersonalId
+                                               , inMemberId     := inMemberId
                                                , inSession      := inSession
                                                 ) AS tmpData
 
@@ -1671,4 +1686,4 @@ $BODY$
 -- select * from lpReport_CheckBonus(inStartDate := ('28.05.2020')::TDateTime , inEndDate := ('28.05.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId := 344240 , inBranchId := 0 ,  inSession := '5');--
 --select * from lpReport_CheckBonus(inStartDate := ('01.07.2020')::TDateTime , inEndDate := ('03.07.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId := 0 , inBranchId := 0 ,  inSession := '5');
 -- select Sum_SaleReturnIn, ContractConditionId, * from lpReport_CheckBonus (inStartDate := ('01.11.2020')::TDateTime , inEndDate := ('30.11.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId := 2012467 , inBranchId := 0 , inisMovement := 'False' ,  inSession := '5');
---select Sum_SaleReturnIn, ContractConditionId, * from lpReport_CheckBonus (inStartDate := ('01.11.2020')::TDateTime , inEndDate := ('02.11.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId := 2012467 , inBranchId := 0 , inPersonalId :=0, inisMovement := 'False' ,  inSession := '5');
+--select Sum_SaleReturnIn, ContractConditionId, * from lpReport_CheckBonus (inStartDate := ('01.11.2020')::TDateTime , inEndDate := ('02.11.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId := 2012467 , inBranchId := 0 , inMemberId :=0, inisMovement := 'False' ,  inSession := '5');

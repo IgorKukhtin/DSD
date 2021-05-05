@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_CheckBonus_PersentSalePart (
     IN inPaidKindId          Integer   ,
     IN inJuridicalId         Integer   ,
     IN inBranchId            Integer   , 
-    IN inPersonalId          Integer   ,
+    IN inMemberId          Integer   ,
     IN inSessiON             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ContractId_master Integer, ContractId_child Integer, ContractId_find Integer
@@ -73,7 +73,14 @@ BEGIN
 
     RETURN QUERY
       WITH 
-           tmpContract_full AS (SELECT View_Contract.*
+           tmpPersonal_byMember AS (SELECT ObjectLink_Personal_Member.ObjectId AS PersonalId
+                                    FROM ObjectLink AS ObjectLink_Personal_Member
+                                    WHERE ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+                                      AND ObjectLink_Personal_Member.ChildObjectId = inMemberId
+                                      AND COALESCE (inMemberId,0) <> 0
+                                    )
+
+         , tmpContract_full AS (SELECT View_Contract.*
                                 FROM Object_Contract_View AS View_Contract
                                 WHERE (View_Contract.JuridicalId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
                                 )
@@ -1015,7 +1022,10 @@ BEGIN
                                 AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
             LEFT JOIN Object_Personal_View AS Object_Personal ON Object_Personal.PersonalId = COALESCE (ObjectLink_Partner_Personal.ChildObjectId, tmpPersonal.PersonalId)
 
-      WHERE ((Object_Personal.PersonalId = inPersonalId AND inPaidKindId = zc_Enum_PaidKind_SecondForm()) OR inPersonalId = 0)
+
+            -- ограничиваем по супервайзерам, если выбрали физ.лицо
+            LEFT JOIN tmpPersonal_byMember ON tmpPersonal_byMember.PersonalId = Object_Personal.PersonalId
+      WHERE ((tmpPersonal_byMember.PersonalId IS NOT NULL AND inPaidKindId = zc_Enum_PaidKind_SecondForm()) OR inMemberId = 0)
            OR tmpData.PaidKindId = zc_Enum_PaidKind_FirstForm()
           ;
 
@@ -1029,4 +1039,4 @@ $BODY$
  13.12.20         *
 */
 
--- select * from gpReport_CheckBonus_PersentSalePart (inStartDate := ('01.12.2020')::TDateTime , inEndDate := ('02.12.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId :=  15158 /*15158 / 862910*/  , inBranchId := 0 , inPersonalId:= 0, inSession := '5');
+-- select * from gpReport_CheckBonus_PersentSalePart (inStartDate := ('01.12.2020')::TDateTime , inEndDate := ('02.12.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId :=  15158 /*15158 / 862910*/  , inBranchId := 0 , inMemberId:= 0, inSession := '5');

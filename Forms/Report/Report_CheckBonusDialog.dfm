@@ -144,9 +144,9 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
   object cxLabel8: TcxLabel
     Left = 11
     Top = 160
-    Caption = #1057#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088':'
+    Caption = #1057#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088' ('#1092#1080#1079'.'#1083#1080#1094#1086'):'
   end
-  object edPersonal: TcxButtonEdit
+  object edMember: TcxButtonEdit
     Left = 11
     Top = 178
     Properties.Buttons = <
@@ -290,17 +290,17 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PersonalId'
+        Name = 'MemberId'
         Value = Null
-        Component = GuidesPersonal
+        Component = GuidesMember
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PersonalName'
+        Name = 'MemberName'
         Value = Null
-        Component = GuidesPersonal
+        Component = GuidesMember
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -429,19 +429,19 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
     Left = 229
     Top = 62
   end
-  object GuidesPersonal: TdsdGuides
+  object GuidesMember: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edPersonal
-    FormNameParam.Value = 'TPersonal_ObjectForm'
+    LookupControl = edMember
+    FormNameParam.Value = 'TMember_ChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPersonal_ObjectForm'
+    FormName = 'TMember_ChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesPersonal
+        Component = GuidesMember
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -450,7 +450,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesPersonal
+        Component = GuidesMember
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

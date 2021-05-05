@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpReport_CheckBonus (
     IN inPaidKindID          Integer   ,
     IN inJuridicalId         Integer   ,
     IN inBranchId            Integer   ,
-    IN inPersonalId          Integer   , 
+    IN inMemberId          Integer   , 
     IN inIsMovement          Boolean   , -- по документам
     IN inSessiON             TVarChar    -- сессия пользователя
 )
@@ -238,7 +238,7 @@ BEGIN
                               , inPaidKindID   := zc_Enum_PaidKind_FirstForm()
                               , inJuridicalId  := inJuridicalId
                               , inBranchId     := inBranchId
-                              , inPersonalId   := inPersonalId
+                              , inMemberId     := inMemberId
                               , inIsMovement   := inIsMovement
                               , inSession      := inSession
                                ) AS tmp
@@ -307,7 +307,7 @@ BEGIN
                               , inPaidKindID    := zc_Enum_PaidKind_SecondForm()
                               , inJuridicalId   := inJuridicalId
                               , inBranchId      := inBranchId
-                              , inPersonalId    := inPersonalId
+                              , inMemberId      := inMemberId
                               , inIsMovement    := inIsMovement
                               , inSession       := inSession
                                ) AS tmp
@@ -359,4 +359,4 @@ $BODY$
 */
 -- тест
 -- select * from gpReport_CheckBonus (inStartDate:= '15.03.2016', inEndDate:= '15.03.2016', inPaidKindID:= zc_Enum_PaidKind_FirstForm(), inJuridicalId:= 0, inBranchId:= 0, inSession:= zfCalc_UserAdmin());
--- select * from gpReport_CheckBonus(inStartDate := ('28.05.2020')::TDateTime , inEndDate := ('28.05.2020')::TDateTime , inPaidKindId := 3 , inJuridicalId := 344240 , inBranchId :=  8374, inPersonalId:=0 ,  inIsMovement := FALSE, inSession := '5');--
+-- select * from gpReport_CheckBonus(inStartDate := ('28.05.2020')::TDateTime , inEndDate := ('28.05.2020')::TDateTime , inPaidKindId := 3 , inJuridicalId := 344240 , inBranchId :=  8374, inMemberId:=0 ,  inIsMovement := FALSE, inSession := '5');--

@@ -47,8 +47,8 @@ type
     edBranch: TcxButtonEdit;
     GuidesBranch: TdsdGuides;
     cxLabel8: TcxLabel;
-    edPersonal: TcxButtonEdit;
-    GuidesPersonal: TdsdGuides;
+    edMember: TcxButtonEdit;
+    GuidesMember: TdsdGuides;
   private
     { Private declarations }
   public

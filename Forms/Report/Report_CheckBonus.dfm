@@ -689,13 +689,13 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       ExplicitTop = 32
     end
     object cxLabel4: TcxLabel
-      Left = 911
+      Left = 933
       Top = 6
       Caption = #1042#1080#1076' '#1041#1086#1085#1091#1089#1072':'
       Visible = False
     end
     object edBonusKind: TcxButtonEdit
-      Left = 982
+      Left = 1000
       Top = 5
       Properties.Buttons = <
         item
@@ -705,7 +705,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       Properties.ReadOnly = True
       TabOrder = 5
       Visible = False
-      Width = 208
+      Width = 190
     end
     object cbMovement: TcxCheckBox
       Left = 841
@@ -782,12 +782,12 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     Width = 85
   end
   object cxLabel8: TcxLabel [8]
-    Left = 664
+    Left = 631
     Top = 6
-    Caption = #1057#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088':'
+    Caption = #1057#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088' ('#1092#1080#1079'.'#1083#1080#1094#1086'):'
   end
-  object edPersonal: TcxButtonEdit [9]
-    Left = 744
+  object edMember: TcxButtonEdit [9]
+    Left = 764
     Top = 5
     Properties.Buttons = <
       item
@@ -796,17 +796,17 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       end>
     Properties.ReadOnly = True
     TabOrder = 13
-    Width = 153
+    Width = 167
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = deEnd
+        Component = deStart
         Properties.Strings = (
           'Date')
       end
       item
-        Component = deStart
+        Component = deEnd
         Properties.Strings = (
           'Date')
       end
@@ -965,17 +965,17 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PersonalId'
+          Name = 'MemberId'
           Value = Null
-          Component = GuidesPersonal
+          Component = GuidesMember
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PersonalName'
+          Name = 'MemberName'
           Value = Null
-          Component = GuidesPersonal
+          Component = GuidesMember
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1070,7 +1070,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         item
           Name = 'PersonalName'
           Value = Null
-          Component = GuidesPersonal
+          Component = GuidesMember
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -1157,7 +1157,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         item
           Name = 'PersonalName'
           Value = Null
-          Component = GuidesPersonal
+          Component = GuidesMember
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -1245,7 +1245,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         item
           Name = 'PersonalName'
           Value = Null
-          Component = GuidesPersonal
+          Component = GuidesMember
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -1581,9 +1581,9 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPersonalId'
+        Name = 'inMemberId'
         Value = Null
-        Component = GuidesPersonal
+        Component = GuidesMember
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1797,7 +1797,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         Component = GuidesBranch
       end
       item
-        Component = GuidesPersonal
+        Component = GuidesMember
       end>
     Left = 192
     Top = 208
@@ -2377,19 +2377,19 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     Left = 440
     Top = 192
   end
-  object GuidesPersonal: TdsdGuides
+  object GuidesMember: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edPersonal
-    FormNameParam.Value = 'TPersonal_ObjectForm'
+    LookupControl = edMember
+    FormNameParam.Value = 'TMember_ChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPersonal_ObjectForm'
+    FormName = 'TMember_ChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesPersonal
+        Component = GuidesMember
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -2398,7 +2398,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesPersonal
+        Component = GuidesMember
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
