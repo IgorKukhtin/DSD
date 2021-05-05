@@ -342,7 +342,12 @@ for ii := 0 to HeaderDataSet.Fields.Count-1 do
    then break;
 ii_date:= ii;
                          try s_err:='inInvNumber - N2_11'; ParamByName('inInvNumber').Value := HeaderDataSet.Fields['N2_11'].Value; s_err:=''; except raise end;
-                         try s_err:='inOperDate - '+HeaderDataSet.Fields[ii_date].Name + '('+IntToStr(ii_date)+')'; ParamByName('inOperDate').Value := VarToDateTime(HeaderDataSet.Fields[ii_date].Value); s_err:=''; except raise end;
+                         try s_err:='inOperDate - '+HeaderDataSet.Fields[ii_date].Name + '('+IntToStr(ii_date)+')';
+                             s_err:=s_err + ' (0) ';
+                             s_err:=s_err + ' (1) ' + VarToStr(HeaderDataSet.Fields[ii_date].Value);
+                             s_err:=s_err + ' (2) ' + DateToStr(VarToDateTime(HeaderDataSet.Fields[ii_date].Value));
+                             ParamByName('inOperDate').Value := VarToDateTime(HeaderDataSet.Fields[ii_date].Value);
+                             s_err:=''; except raise end;
                          try s_err:='inBranchNumber - N2_13'; ParamByName('inBranchNumber').Value := HeaderDataSet.Fields['N2_13'].Value; s_err:=''; except raise end;
                          try s_err:='inContract - N81'; ParamByName('inContract').Value := HeaderDataSet.Fields['N81'].Value; s_err:=''; except raise end;
                          try s_err:='inTotalSumm - A7_11'; ParamByName('inTotalSumm').Value := HeaderDataSet.Fields['A7_11'].Value; s_err:=''; except raise end;

@@ -10,9 +10,14 @@ RETURNS TABLE (SortField Integer, FieldType TVarChar, Caption TVarChar, CaptionC
              , VisibleFieldName TVarChar, VisibleFieldCode TVarChar, SummaryType TVarChar)
 AS
 $BODY$
+   DECLARE vbUserId Integer;
+   DECLARE vbIsCost Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_GoodsByGoodsKind1CLink());
+     vbUserId:= lpGetUserBySession (inSession);
+
+    vbIsCost:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin(), 10898, 326391) AND UserId = vbUserId); -- Отчеты (управленцы) + Аналитики по продажам
+
    
      -- Результат
      RETURN QUERY 
@@ -26,6 +31,7 @@ BEGIN
                  '' :: TVarChar, '' :: TVarChar, '' :: TVarChar, '' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
    UNION SELECT 104 AS SortField, 'data' :: TVarChar AS FieldType, 'С\с продажа' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'Sale_SummCost' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, ',0.00' :: TVarChar, 
                  '' :: TVarChar, '' :: TVarChar, '' :: TVarChar, '' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
+         WHERE vbIsCost = TRUE
 
    UNION SELECT 105 AS SortField, 'data' :: TVarChar AS FieldType, 'Скидка от опт.цен.' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'Sale_Summ_10200' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, ',0.00' :: TVarChar, 
                  '' :: TVarChar, '' :: TVarChar, '' :: TVarChar, '' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
@@ -42,6 +48,7 @@ BEGIN
                  '' :: TVarChar, '' :: TVarChar, '' :: TVarChar, '' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
    UNION SELECT 114 AS SortField, 'data' :: TVarChar AS FieldType, 'С\с возврат' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'Return_SummCost' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, ',0.00' :: TVarChar, 
                  '' :: TVarChar, '' :: TVarChar, '' :: TVarChar, '' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
+         WHERE vbIsCost = TRUE
 
    UNION SELECT 121 AS SortField, 'data' :: TVarChar AS FieldType, 'Кол.вес продажа-возврат' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'SaleReturn_Amount_Weight' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, ',0.###' :: TVarChar, 
                  '' :: TVarChar, '' :: TVarChar, '' :: TVarChar, '' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
@@ -51,6 +58,7 @@ BEGIN
                  '' :: TVarChar, '' :: TVarChar, '' :: TVarChar, '' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
    UNION SELECT 124 AS SortField, 'data' :: TVarChar AS FieldType, 'С\с продажа-возврат' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'SaleReturn_SummCost' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, ',0.00' :: TVarChar, 
                  '' :: TVarChar, '' :: TVarChar, '' :: TVarChar, '' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
+         WHERE vbIsCost = TRUE
 
    UNION SELECT 131 AS SortField, 'data' :: TVarChar AS FieldType, 'Сумма скидки' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'SaleReturn_Summ_10300' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, ',0.00' :: TVarChar, 
                  '' :: TVarChar, '' :: TVarChar, '' :: TVarChar, '' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
@@ -66,12 +74,16 @@ BEGIN
 
    UNION SELECT 141 AS SortField, 'data' :: TVarChar AS FieldType, 'Прибыль продажа' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'Sale_Profit' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, ',0.0' :: TVarChar, 
                  '' :: TVarChar, '' :: TVarChar, '' :: TVarChar, '' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
+         WHERE vbIsCost = TRUE
    UNION SELECT 142 AS SortField, 'data' :: TVarChar AS FieldType, 'Прибыль продажа-бонус' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'SaleBonus_Profit' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, ',0.0' :: TVarChar, 
                  '' :: TVarChar, '' :: TVarChar, '' :: TVarChar, '' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
+         WHERE vbIsCost = TRUE
    UNION SELECT 143 AS SortField, 'data' :: TVarChar AS FieldType, 'Прибыль продажа-возврат' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'SaleReturn_Profit' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, ',0.0' :: TVarChar, 
                  '' :: TVarChar, '' :: TVarChar, '' :: TVarChar, '' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
+         WHERE vbIsCost = TRUE
    UNION SELECT 144 AS SortField, 'data' :: TVarChar AS FieldType, 'Прибыль продажа-возврат-бонус' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'SaleReturnBonus_Profit' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, ',0.0' :: TVarChar, 
                  '' :: TVarChar, '' :: TVarChar, '' :: TVarChar, '' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
+         WHERE vbIsCost = TRUE
 
    UNION SELECT 151 AS SortField, 'data' :: TVarChar AS FieldType, '% рент. продажа' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'Sale_Percent' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, ',0.0' :: TVarChar, 
                  '' :: TVarChar, '' :: TVarChar,
@@ -79,24 +91,28 @@ BEGIN
                 'CASE WHEN SUM(Sale_SummCost) = 0 THEN 0 ELSE SUM(Sale_Profit) / SUM(Sale_SummCost) * 100 END' :: TVarChar AS VisibleFieldName,
                 '' :: TVarChar AS VisibleFieldCode,
                 'stPercent' :: TVarChar AS SummaryType
+         WHERE vbIsCost = TRUE
    UNION SELECT 152 AS SortField, 'data' :: TVarChar AS FieldType, '% рент. продажа-бонус' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'SaleBonus_Percent' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, ',0.0' :: TVarChar, 
                  '' :: TVarChar, '' :: TVarChar,
                  'Sale_SummCost,SaleBonus_Profit' :: TVarChar,
                  'CASE WHEN SUM(Sale_SummCost) = 0 THEN 0 ELSE SUM(SaleBonus_Profit) / SUM(Sale_SummCost) * 100 END' :: TVarChar AS VisibleFieldName,
                  '' :: TVarChar AS VisibleFieldCode,
                  'stPercent' :: TVarChar AS SummaryType
+         WHERE vbIsCost = TRUE
    UNION SELECT 153 AS SortField, 'data' :: TVarChar AS FieldType, '% рент. продажа-возврат' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'SaleReturn_Percent' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, ',0.0' :: TVarChar, 
                  '' :: TVarChar, '' :: TVarChar,
                  'Sale_SummCost,SaleReturn_Profit' :: TVarChar,
                  'CASE WHEN SUM(Sale_SummCost) = 0 THEN 0 ELSE SUM(SaleReturn_Profit) / SUM(Sale_SummCost) * 100 END' :: TVarChar AS VisibleFieldName,
                  '' :: TVarChar AS VisibleFieldCode,
                  'stPercent' :: TVarChar AS SummaryType
+         WHERE vbIsCost = TRUE
    UNION SELECT 154 AS SortField, 'data' :: TVarChar AS FieldType, '% рент. продажа-возврат-бонус' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'SaleReturnBonus_Percent' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, ',0.0' :: TVarChar, 
                  '' :: TVarChar, '' :: TVarChar,
                  'Sale_SummCost,SaleReturnBonus_Profit' :: TVarChar,
                  'CASE WHEN SUM(Sale_SummCost) = 0 THEN 0 ELSE SUM(SaleReturnBonus_Profit) / SUM(Sale_SummCost) * 100 END' :: TVarChar AS VisibleFieldName,
                  '' :: TVarChar AS VisibleFieldCode,
                  'stPercent' :: TVarChar AS SummaryType
+         WHERE vbIsCost = TRUE
 
    UNION SELECT 161 AS SortField, 'data' :: TVarChar AS FieldType, 'План кол.вес' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'Plan_Weight' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, ',0.###' :: TVarChar, 
                  '' :: TVarChar, '' :: TVarChar, '' :: TVarChar, '' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
@@ -113,6 +129,7 @@ BEGIN
                  '' :: TVarChar, '' :: TVarChar, '' :: TVarChar, '' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
    UNION SELECT 165 AS SortField, 'data' :: TVarChar AS FieldType, 'Акции с/с' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'Actions_SummCost' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, ',0.00' :: TVarChar, 
                  '' :: TVarChar, '' :: TVarChar, '' :: TVarChar, '' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
+         WHERE vbIsCost = TRUE
    UNION SELECT 166 AS SortField, 'data' :: TVarChar AS FieldType, 'Акции сумма' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'Actions_Summ' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, ',0.00' :: TVarChar, 
                  '' :: TVarChar, '' :: TVarChar, '' :: TVarChar, '' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
 

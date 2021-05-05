@@ -81,7 +81,7 @@ BEGIN
            
            , CAST (0 as TFloat)  AS GPSN
            , CAST (0 as TFloat)  AS GPSE
-           , CAST (o AS TFloat)  AS Category
+           , CAST (0 AS TFloat)  AS Category
 
            , CAST (False AS Boolean) AS EdiOrdspr
            , CAST (False AS Boolean) AS EdiInvoice

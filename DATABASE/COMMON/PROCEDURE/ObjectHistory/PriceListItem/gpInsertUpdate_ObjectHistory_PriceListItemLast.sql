@@ -30,13 +30,27 @@ BEGIN
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_ObjectHistory_PriceListItem());
 
 
-   -- Ограничение - если роль Бухгалтер ПАВИЛЬОНЫ
-   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 80548 AND UserId = vbUserId)
-      AND COALESCE (inPriceListId, 0) NOT IN (140208 -- Пав-ны приход
-                                            , 140209 -- Пав-ны продажа
-                                             )
+   -- если не назначена роль <Прайс-лист - изменение в любом прайсе>
+   IF NOT EXISTS (SELECT 1 FROM Object_Role_Process_View WHERE ProcessId = zc_Enum_Process_Update_PriceListItem() AND UserId = vbUserId)
+      OR EXISTS (SELECT 1 FROM Object_MemberPriceList_View AS MemberPriceList_View WHERE MemberPriceList_View.UserId = vbUserId)
    THEN
-       RAISE EXCEPTION 'Ошибка. Нет прав корректировать прайс <%>', lfGet_Object_ValueData (inPriceListId);
+       -- поиск в настройках "Доступ к прайсу"
+       IF NOT EXISTS (SELECT 1 FROM Object_MemberPriceList_View AS MemberPriceList_View WHERE MemberPriceList_View.UserId = vbUserId)
+       THEN
+           RAISE EXCEPTION 'Ошибка. Нет прав корректировать прайс <%>', lfGet_Object_ValueData (inPriceListId);
+
+       -- проверка в настройках "Доступ к прайсу" - что это именно тот Прайс
+       ELSEIF NOT EXISTS (SELECT 1 FROM Object_MemberPriceList_View AS MemberPriceList_View WHERE MemberPriceList_View.UserId = vbUserId AND MemberPriceList_View.PriceListId = inPriceListId)
+       THEN
+           RAISE EXCEPTION 'Ошибка. У пользователя <%>.%Нет прав корректировать прайс <%>.%Можно корректировать только такие Прайсы:% %'
+                         , lfGet_Object_ValueData (vbUserId)
+                         , CHR (13)
+                         , lfGet_Object_ValueData (inPriceListId)
+                         , CHR (13)
+                         , CHR (13)
+                         , (SELECT STRING_AGG ('< ' || MemberPriceList_View.PriceListName || ' >', '; ') FROM Object_MemberPriceList_View AS MemberPriceList_View WHERE MemberPriceList_View.UserId = vbUserId)
+                          ;
+       END IF;
    END IF;
 
 

@@ -85,19 +85,18 @@ BEGIN
                                                                   END, 1) AS SummPriceList_curr
 
                               -- AmountToPay
-                            , zfCalc_SummChangePercent (MovementItem.Amount
-                                                      , CASE WHEN vbCurrencyId_Client <> zc_Currency_GRN()
-                                                                  THEN zfCalc_CurrencyFrom (MIFloat_OperPriceList_curr.ValueData, inCurrencyValueEUR, 1)
-                                                             ELSE MIFloat_OperPriceList.ValueData
-                                                        END
-                                                      , MIFloat_ChangePercent.ValueData) AS AmountToPay
+                            , CASE WHEN vbCurrencyId_Client <> zc_Currency_GRN()
+                                        THEN zfCalc_CurrencyFrom (zfCalc_SummChangePercent (MovementItem.Amount, MIFloat_OperPriceList_curr.ValueData, MIFloat_ChangePercent.ValueData)
+                                                                , inCurrencyValueEUR, 1)
+                                        ELSE zfCalc_SummChangePercent (MovementItem.Amount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData)
+                              END AS AmountToPay
                               -- AmountToPay_curr
-                            , zfCalc_SummChangePercent (MovementItem.Amount
-                                                      , CASE WHEN vbCurrencyId_Client <> zc_Currency_GRN()
-                                                                  THEN MIFloat_OperPriceList_curr.ValueData
-                                                             ELSE zfCalc_CurrencyTo (MIFloat_OperPriceList.ValueData, inCurrencyValueEUR, 1)
-                                                        END
-                                                      , MIFloat_ChangePercent.ValueData) AS AmountToPay_curr
+                            , CASE WHEN vbCurrencyId_Client <> zc_Currency_GRN()
+                                        THEN zfCalc_SummChangePercent (MovementItem.Amount, MIFloat_OperPriceList_curr.ValueData, MIFloat_ChangePercent.ValueData)
+                                        ELSE zfCalc_CurrencyTo (zfCalc_SummChangePercent (MovementItem.Amount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData)
+                                                              , inCurrencyValueEUR, 1)
+                              END AS AmountToPay_curr
+
                        FROM MovementItem
                             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                         ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id

@@ -306,11 +306,11 @@ BEGIN
 
            , TRUE AS isPayTotal
 
-           , CASE WHEN tmpMI.AmountGRN      > 0 THEN TRUE ELSE FALSE END AS isGRN
-           , CASE WHEN tmpMI.AmountUSD     <> 0 THEN TRUE ELSE FALSE END AS isUSD
-           , CASE WHEN tmpMI.AmountEUR     <> 0 THEN TRUE ELSE FALSE END AS isEUR
-           , CASE WHEN tmpMI.AmountCard    <> 0 THEN TRUE ELSE FALSE END AS isCard
-           , CASE WHEN vbAmountDiscount_GRN <> 0 THEN TRUE ELSE FALSE END AS isDiscount
+           , CASE WHEN 1=1 AND tmpMI.AmountGRN      > 0 THEN TRUE ELSE FALSE END AS isGRN
+           , CASE WHEN 1=1 AND tmpMI.AmountUSD     <> 0 THEN TRUE ELSE FALSE END AS isUSD
+           , CASE WHEN 1=1 AND tmpMI.AmountEUR     <> 0 THEN TRUE ELSE FALSE END AS isEUR
+           , CASE WHEN 1=1 AND tmpMI.AmountCard    <> 0 THEN TRUE ELSE FALSE END AS isCard
+           , CASE WHEN 1=1 AND vbAmountDiscount_GRN <> 0 THEN TRUE ELSE FALSE END AS isDiscount
 
            , Object_CurrencyClient.Id               AS CurrencyId_Client
            , Object_CurrencyClient.ValueData        AS CurrencyName_Client

@@ -5,7 +5,7 @@ inherited MainForm: TMainForm
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 259
+  ExplicitHeight = 256
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -8775,6 +8775,18 @@ inherited MainForm: TMainForm
       object N178: TMenuItem
         Caption = '-'
       end
+      object miReport_CheckBonus: TMenuItem
+        Action = actReport_CheckBonus
+      end
+      object miReport_Movement_ProfitLossService: TMenuItem
+        Action = actReport_Movement_ProfitLossService
+      end
+      object miReport_CheckBonus_Income: TMenuItem
+        Action = actReport_CheckBonus_Income
+      end
+      object N189: TMenuItem
+        Caption = '-'
+      end
       object miReport_Promo: TMenuItem
         Action = actReport_Promo
       end
@@ -8790,7 +8802,7 @@ inherited MainForm: TMainForm
       object N188: TMenuItem
         Action = actReport_PromoPlan
       end
-      object N189: TMenuItem
+      object N239: TMenuItem
         Caption = '-'
       end
       object miPromoGuide: TMenuItem
@@ -9614,17 +9626,8 @@ inherited MainForm: TMainForm
       object N29: TMenuItem
         Caption = '-'
       end
-      object miReport_CheckBonus: TMenuItem
-        Action = actReport_CheckBonus
-      end
-      object miReport_Movement_ProfitLossService: TMenuItem
-        Action = actReport_Movement_ProfitLossService
-      end
       object miReport_CheckBonus_SaleReturn: TMenuItem
         Action = actReport_CheckBonus_SaleReturn
-      end
-      object miReport_CheckBonus_Income: TMenuItem
-        Action = actReport_CheckBonus_Income
       end
       object miReport_CheckBonusTest: TMenuItem
         Action = actReport_CheckBonusTest

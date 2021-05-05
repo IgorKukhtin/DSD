@@ -48,30 +48,28 @@ BEGIN
          INSERT INTO _tmp_MI_Master (MovementItemId, SummPriceList, SummPriceList_curr, AmountToPay, AmountToPay_curr)
            WITH tmpMI AS (SELECT MovementItem.Id AS MovementItemId
                                  -- SummPriceList
-                               , zfCalc_SummIn (MovementItem.Amount, CASE WHEN vbCurrencyId_Client <> zc_Currency_GRN()
+                               , zfCalc_SummIn (MovementItem.Amount, CASE WHEN inCurrencyId_Client <> zc_Currency_GRN()
                                                                                THEN zfCalc_CurrencyFrom (MIFloat_OperPriceList_curr.ValueData, inCurrencyValueEUR, 1)
                                                                           ELSE MIFloat_OperPriceList.ValueData
                                                                      END, 1) AS SummPriceList
                                  -- SummPriceList_curr
-                               , zfCalc_SummIn (MovementItem.Amount, CASE WHEN vbCurrencyId_Client <> zc_Currency_GRN()
+                               , zfCalc_SummIn (MovementItem.Amount, CASE WHEN inCurrencyId_Client <> zc_Currency_GRN()
                                                                                THEN MIFloat_OperPriceList_curr.ValueData
                                                                           ELSE zfCalc_CurrencyTo (MIFloat_OperPriceList.ValueData, inCurrencyValueEUR, 1)
                                                                      END, 1) AS SummPriceList_curr
    
-                                 -- AmountToPay
-                               , zfCalc_SummChangePercent (MovementItem.Amount
-                                                         , CASE WHEN vbCurrencyId_Client <> zc_Currency_GRN()
-                                                                     THEN zfCalc_CurrencyFrom (MIFloat_OperPriceList_curr.ValueData, inCurrencyValueEUR, 1)
-                                                                ELSE MIFloat_OperPriceList.ValueData
-                                                           END
-                                                         , MIFloat_ChangePercent.ValueData) AS AmountToPay
-                                 -- AmountToPay_curr
-                               , zfCalc_SummChangePercent (MovementItem.Amount
-                                                         , CASE WHEN vbCurrencyId_Client <> zc_Currency_GRN()
-                                                                     THEN MIFloat_OperPriceList_curr.ValueData
-                                                                ELSE zfCalc_CurrencyTo (MIFloat_OperPriceList.ValueData, inCurrencyValueEUR, 1)
-                                                           END
-                                                         , MIFloat_ChangePercent.ValueData) AS AmountToPay_curr
+                                -- AmountToPay
+                              , CASE WHEN inCurrencyId_Client <> zc_Currency_GRN()
+                                          THEN zfCalc_CurrencyFrom (zfCalc_SummChangePercent (MovementItem.Amount, MIFloat_OperPriceList_curr.ValueData, MIFloat_ChangePercent.ValueData)
+                                                                  , inCurrencyValueEUR, 1)
+                                          ELSE zfCalc_SummChangePercent (MovementItem.Amount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData)
+                                END AS AmountToPay
+                                -- AmountToPay_curr
+                              , CASE WHEN inCurrencyId_Client <> zc_Currency_GRN()
+                                          THEN zfCalc_SummChangePercent (MovementItem.Amount, MIFloat_OperPriceList_curr.ValueData, MIFloat_ChangePercent.ValueData)
+                                          ELSE zfCalc_CurrencyTo (zfCalc_SummChangePercent (MovementItem.Amount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData)
+                                                                , inCurrencyValueEUR, 1)
+                                END AS AmountToPay_curr
 
                           FROM MovementItem
                                LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
@@ -99,7 +97,8 @@ BEGIN
            FROM tmpMI
          --WHERE tmpMI.MovementItemId     = inParentId
          --   OR COALESCE (inParentId, 0) = 0;
-            -- SELECT 1, 12550, 12550;
+            -- SELECT 1, 12550, 12550
+          ;
 
      END IF;
      -- !!!ДЛЯ ТЕСТА!!!
@@ -144,18 +143,43 @@ BEGIN
                                 , CASE WHEN inAmountDiscount_GRN = vbTotalAmountToPay
                                             THEN _tmp_MI_Master.AmountToPay
 
-                                       WHEN FLOOR (inAmountDiscount_GRN) <> inAmountDiscount_GRN OR 1=1
+                                       -- если кратна курсу ЕРО или ВСЕГДА
+                                       WHEN FLOOR (zfCalc_CurrencyTo (inAmountDiscount_GRN, inCurrencyValueEUR, inParValueEUR))
+                                                 = zfCalc_CurrencyTo (inAmountDiscount_GRN, inCurrencyValueEUR, inParValueEUR)
+                                       OR 1=1
+                                       THEN -- перевели целую часть обратно в ГРН
+                                            zfCalc_CurrencyFrom (-- целая часть EUR
+                                                                 FLOOR (-- перевели распределение в EUR
+                                                                        ABS (
+                                                                        zfCalc_CurrencyTo (inAmountDiscount_GRN * _tmp_MI_Master.AmountToPay / vbTotalAmountToPay
+                                                                                         , inCurrencyValueEUR, inParValueEUR)
+                                                                       ))
+                                                               , inCurrencyValueEUR, inParValueEUR)
+                                          -- !!!ВЕРНУЛИ ЗНАК!!!
+                                          * CASE WHEN inAmountDiscount_GRN < 0 THEN -1 ELSE 1 END
+
+
+                                       /*WHEN FLOOR (inAmountDiscount_GRN) <> inAmountDiscount_GRN OR 1=1
                                        -- ОКРУЛИЛИ до 2-х зн.
                                        THEN ROUND (inAmountDiscount_GRN * _tmp_MI_Master.AmountToPay / vbTotalAmountToPay, 2)
 
                                        -- отбросили коп.
-                                       ELSE FLOOR (inAmountDiscount_GRN * _tmp_MI_Master.AmountToPay / vbTotalAmountToPay)
+                                       ELSE FLOOR (inAmountDiscount_GRN * _tmp_MI_Master.AmountToPay / vbTotalAmountToPay)*/
+
+                                       ELSE 0
 
                                   END AS AmountDiscount_GRN
 
                                 , ROW_NUMBER() OVER (ORDER BY _tmp_MI_Master.AmountToPay DESC) AS Ord
 
                            FROM _tmp_MI_Master
+                         /*WHERE -- здесь если все списание
+                                 inAmountDiscount_GRN = vbTotalAmountToPay
+                              OR -- или сумма кратна курсу ЕРО
+                                 FLOOR (zfCalc_CurrencyTo (inAmountDiscount_GRN, inCurrencyValueEUR, inParValueEUR))
+                               = zfCalc_CurrencyTo (inAmountDiscount_GRN, inCurrencyValueEUR, inParValueEUR)
+                              OR -- или сумма больше чем сумма 1EUR
+                                 inAmountDiscount_GRN > zfCalc_CurrencyFrom (1, inCurrencyValueEUR, inParValueEUR)*/
                           )
          -- выровняли - Дополнительная скидка - т.е. разницу на коп. при округлении
        , tmp_MI_Master AS (SELECT tmp_MI_Master_all.MovementItemId
@@ -184,8 +208,8 @@ BEGIN
                                 , tmpMI.Amount_all
                                   -- сумма с учетом Доп. скидки - для расч. EUR - !!! грн !!!
                                 , tmpMI.Amount_calc
-                                  -- сумма в !!! грн !!! с учетом Доп. скидки - НАКОПИТЕЛЬНО начиная с минимальной
-                                , SUM (tmpMI.Amount_calc) OVER (ORDER BY tmpMI.Amount_all ASC, tmpMI.MovementItemId ASC) AS Amount_SUM
+                                  -- сумма в !!! грн !!! с учетом Доп. скидки - НАКОПИТЕЛЬНО начиная !!!0 скидки!!! + с минимальной суммы
+                                , SUM (tmpMI.Amount_calc) OVER (ORDER BY ABS (tmpMI.AmountDiscount_GRN) ASC, tmpMI.Amount_all ASC, tmpMI.MovementItemId ASC) AS Amount_SUM
                            FROM (SELECT tmpMI.MovementItemId
                                         -- сумма с учетом Доп. скидки - !!! грн !!!
                                       , tmpMI.AmountToPay - tmpMI.AmountDiscount_GRN AS Amount_all
@@ -195,15 +219,18 @@ BEGIN
                                                   -- дробная часть будет в обмене ...???
                                                   THEN zfCalc_CurrencyFrom (tmpMI.AmountToPay_curr - zfCalc_CurrencyTo (tmpMI.AmountDiscount_GRN, inCurrencyValueEUR, inParValueEUR), inCurrencyValueEUR, inParValueEUR)
                                              --
-                                             WHEN inAmountGRN > 150 OR inAmountCard > 0
+                                           /*WHEN inAmountGRN > 150 OR inAmountCard > 0
                                                   -- считаем что дробной части нет, т.е. она дополнится гривной
                                                   THEN zfCalc_CurrencyFrom (-- Переводим в Валюту + отбросили коп.
                                                                             FLOOR (zfCalc_CurrencyTo (tmpMI.AmountToPay - tmpMI.AmountDiscount_GRN, inCurrencyValueEUR, inParValueEUR))
-                                                                          , inCurrencyValueEUR, inParValueEUR)
-                                             -- иначе дробная часть будет в обмене
+                                                                          , inCurrencyValueEUR, inParValueEUR)*/
+                                             -- ???иначе дробная часть будет в обмене???
                                              ELSE tmpMI.AmountToPay - tmpMI.AmountDiscount_GRN
 
                                         END AS Amount_calc
+                                        -- Доп. скидки
+                                      , tmpMI.AmountDiscount_GRN
+
                                  FROM tmp_MI_Master AS tmpMI
                                 ) AS tmpMI
                           )
@@ -234,7 +261,7 @@ BEGIN
                                                   -- дробная часть будет в обмене ...???
                                                   THEN tmpMI.Amount_all - COALESCE (tmpRes.Amount, 0)
                                              --
-                                             WHEN inAmountGRN > 155 OR inAmountCard > 0
+                                             WHEN inAmountGRN > 155 OR inAmountCard > 0 OR 1=1
                                                   -- считаем что дробной части нет, т.е. она дополнится гривной
                                                   THEN zfCalc_CurrencyFrom (FLOOR (zfCalc_CurrencyTo (tmpMI.Amount_all - COALESCE (tmpRes.Amount, 0), inCurrencyValueUSD, inParValueUSD))
                                                                           , inCurrencyValueUSD, inParValueUSD)
@@ -611,8 +638,8 @@ $BODY$
 
 -- тест
 /*
---WITH tmp AS (SELECT * FROM lpSelect_MI_Child_calc (inMovementId:= 10102, inUnitId:= 6318 , inAmountGRN:= 0, inAmountUSD:= 0, inAmountEUR:= 632 , inAmountCard:= 0, inAmountDiscount_GRN:= 0, inCurrencyValueUSD:= 26.05, inParValueUSD:= 1, inCurrencyValueEUR:= 29.2, inParValueEUR:= 1, inCurrencyId_Client:= zc_Currency_EUR(), inUserId:= zfCalc_UserAdmin() :: Integer))
-WITH tmp AS (SELECT * FROM lpSelect_MI_Child_calc (inMovementId:= 10102, inUnitId:= 6318 , inAmountGRN:= 0, inAmountUSD:= 0, inAmountEUR:= 1176 , inAmountCard:= 0, inAmountDiscount_GRN:= 0, inCurrencyValueUSD:= 26.05, inParValueUSD:= 1, inCurrencyValueEUR:= 29.2, inParValueEUR:= 1, inCurrencyId_Client:= zc_Currency_EUR(), inUserId:= zfCalc_UserAdmin() :: Integer))
+--WITH tmp AS (SELECT * FROM lpSelect_MI_Child_calc (inMovementId:= 10102, inUnitId:= 6318 , inAmountGRN := 0 , inAmountUSD := 500 , inAmountEUR := 580 , inAmountCARD := 0 , inAmountDiscount_GRN := 0.56 , inCurrencyValueUSD := 28 , inParValueUSD := 1 , inCurrencyValueEUR := 32.33 , inParValueEUR := 1, inCurrencyId_Client:= zc_Currency_EUR(), inUserId:= zfCalc_UserAdmin() :: Integer))
+WITH tmp AS (SELECT * FROM lpSelect_MI_Child_calc (inMovementId:= 10102, inUnitId:= 6318 , inAmountGRN := 0 , inAmountUSD := 500 , inAmountEUR := 580 , inAmountCARD := 0 , inAmountDiscount_GRN := 0.56 , inCurrencyValueUSD := 28 , inParValueUSD := 1 , inCurrencyValueEUR := 32.33 , inParValueEUR := 1, inCurrencyId_Client:= zc_Currency_EUR(), inUserId:= zfCalc_UserAdmin() :: Integer))
 SELECT tmpAll.ParentId, tmp_GRN.Amount AS Amount_GRN, tmp_Card.Amount AS Amount_Card, tmp_EUR.Amount AS Amount_EUR, tmp_EUR.Amount_GRN AS Amount_EUR_GRN, tmp_EUR.CurrencyId AS Id_EUR, tmp_USD.Amount AS Amount_USD, tmp_USD.Amount_GRN AS Amount_USD_GRN, tmp_USD.CurrencyId AS Id_USD, tmp_EUR.CurrencyValue, tmp_EUR.ParValue, tmp_USD.CurrencyValue, tmp_USD.ParValue, tmp_EUR.CashId_Exc AS CashId_Exc_fromEUR, tmp_USD.CashId_Exc AS CashId_Exc_fromUSD
 FROM (SELECT DISTINCT tmp.ParentId FROM tmp) AS tmpAll
      LEFT JOIN tmp AS tmp_GRN  ON tmp_GRN.ParentId  = tmpAll.ParentId AND tmp_GRN.CurrencyId  = zc_Currency_GRN() AND COALESCE (tmp_GRN.CashId, 0)      IN (SELECT Id FROM Object WHERE DescId = zc_Object_Cash())
@@ -621,3 +648,4 @@ FROM (SELECT DISTINCT tmp.ParentId FROM tmp) AS tmpAll
      LEFT JOIN tmp AS tmp_USD  ON tmp_USD.ParentId  = tmpAll.ParentId AND tmp_USD.CurrencyId = zc_Currency_USD()
 ORDER BY 1
 */
+select * from gpInsertUpdate_MI_Sale_Child(inMovementId := 10102 , inParentId := 0 , inAmountGRN := 0 , inAmountUSD := 500 , inAmountEUR := 580 , inAmountCARD := 0 , inAmountDiscount := 0.56 , inCurrencyValueUSD := 28 , inParValueUSD := 1 , inCurrencyValueEUR := 32.33 , inParValueEUR := 1 ,  inSession := '2');

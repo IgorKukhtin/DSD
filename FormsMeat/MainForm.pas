@@ -1260,6 +1260,7 @@ type
     N238: TMenuItem;
     actFineSubject: TdsdOpenForm;
     miFineSubject: TMenuItem;
+    N239: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

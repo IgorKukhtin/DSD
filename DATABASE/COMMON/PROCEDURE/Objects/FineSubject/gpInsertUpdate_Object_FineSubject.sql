@@ -16,8 +16,8 @@ $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_FineSubject());
-   vbUserId:= lpGetUserBySession (inSession);
+   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_FineSubject());
+
 
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;

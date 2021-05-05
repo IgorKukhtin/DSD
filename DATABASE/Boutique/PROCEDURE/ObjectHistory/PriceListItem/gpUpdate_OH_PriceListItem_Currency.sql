@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_OH_PriceListItem_Currency(
    OUT outStartDate             TDateTime,  -- Дата действия цены
    OUT outEndDate               TDateTime,  -- Дата действия цены
  INOUT ioValue                  TFloat,     -- Цена
-    IN inIsLast                 Boolean,    -- 
+    IN inIsLast                 Boolean,    --
     IN inisChangePrice          Boolean,    -- Корректировка цены Да/Нет
     IN inSession                TVarChar    -- сессия пользователя
 )
@@ -55,15 +55,15 @@ BEGIN
                                                         , inGoodsId     := inGoodsId     ::Integer    -- Товар
                                                         , inOperDate    := inOperDate    ::TDateTime  -- Дата действия цены
                                                         , inValue       := ioValue       ::TFloat     -- Цена
-                                                        , inIsLast      := inIsLast      ::Boolean    -- 
+                                                        , inIsLast      := inIsLast      ::Boolean    --
                                                         , inSession     := inSession     ::TVarChar    -- сессия пользователя
                                                         ) AS tmp;
   ELSE
      -- вернули тек значения
-    
+
      -- Поиск <Элемент цены>
      vbPriceListItemId := lpGetInsert_Object_PriceListItem (inPriceListId, inGoodsId, vbUserId);
- 
+
      SELECT ObjectHistory.StartDate, ObjectHistory.EndDate, ObjectHistoryFloat_Value.ValueData
     INTO outStartDate, outEndDate, ioValue
      FROM ObjectHistory
@@ -78,9 +78,15 @@ BEGIN
 
   END IF;
 
+ -- !!! ВРЕМЕННО - отладка !!!
+ IF inSession = zfCalc_UserAdmin() AND 1=1 THEN
+    RAISE EXCEPTION 'Admin - Test = OK';
+ END IF;
+
+
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-  
+
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
