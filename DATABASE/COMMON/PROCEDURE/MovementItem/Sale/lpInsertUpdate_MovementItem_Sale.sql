@@ -87,8 +87,20 @@ BEGIN
      THEN
         IF NOT EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = outMovementId_Promo AND MB.DescId = zc_MovementBoolean_Promo() AND MB.ValueData = TRUE)
         THEN
-             -- меняется значение - для Тенедер
-             ioPrice:= outPricePromo;
+            IF COALESCE (ioId, 0) = 0 /*AND vbTaxPromo <> 0*/
+            THEN
+                -- меняется значение - для Тенедер
+                ioPrice:= outPricePromo;
+            ELSEIF COALESCE (ioPrice, 0) <> outPricePromo
+            THEN
+                 RAISE EXCEPTION 'Ошибка.%Для товара = <%> <%>%необходимо ввести тендерную цену = <%>.'
+                               , CHR (13)
+                               , lfGet_Object_ValueData (inGoodsId)
+                               , lfGet_Object_ValueData_sh (inGoodsKindId)
+                               , CHR (13)
+                               , zfConvert_FloatToString (outPricePromo)
+                                ;
+            END IF;
 
         ELSEIF COALESCE (ioId, 0) = 0 /*AND vbTaxPromo <> 0*/
         THEN
@@ -99,15 +111,31 @@ BEGIN
         ELSE 
              IF vbCountForPricePromo > 1
              THEN
-              -- меняется значение
-              ioPrice:= outPricePromo;
-              ioCountForPrice:= vbCountForPricePromo;
+                  -- меняется значение
+                  ioPrice:= outPricePromo;
+                  ioCountForPrice:= vbCountForPricePromo;
              END IF;
 
              -- только проверка
              IF ioId <> 0 AND (ioPrice + 0.06) < outPricePromo /*AND vbTaxPromo <> 0*/
              THEN
-                 RAISE EXCEPTION 'Ошибка.Для товара = <%> <%> необходимо ввести акционную цену = <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData_sh (inGoodsKindId), zfConvert_FloatToString (outPricePromo);
+                 RAISE EXCEPTION 'Ошибка.%Для товара = <%> <%>%необходимо ввести акционную цену = <%>.'
+                               , CHR (13)
+                               , lfGet_Object_ValueData (inGoodsId)
+                               , lfGet_Object_ValueData_sh (inGoodsKindId)
+                               , CHR (13)
+                               , zfConvert_FloatToString (outPricePromo)
+                                ;
+             -- только проверка
+             ELSEIF ioId <> 0 AND (ioPrice - 0.06) > outPricePromo /*AND vbTaxPromo <> 0*/
+             THEN
+                 RAISE EXCEPTION 'Ошибка.%Для товара = <%> <%>%необходимо ввести акционную цену = <%>.'
+                               , CHR (13)
+                               , lfGet_Object_ValueData (inGoodsId)
+                               , lfGet_Object_ValueData_sh (inGoodsKindId)
+                               , CHR (13)
+                               , zfConvert_FloatToString (outPricePromo)
+                                ;
              END IF;
 
  

@@ -9,7 +9,13 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_PriceListGoodsItem(
     IN inGoodsKindId        Integer   , -- Âèä Òîâàðà
     IN inSession            TVarChar    -- ñåññèÿ ïîëüçîâàòåëÿ
 )                              
-RETURNS TABLE (Id Integer, StartDate TDateTime, EndDate TDateTime, ValuePrice TFloat, isErased Boolean)
+RETURNS TABLE (Id Integer
+             , StartDate TDateTime, EndDate TDateTime
+             , ValuePrice    TFloat
+             , PriceListId   Integer
+             , PriceListName TVarChar
+             , isErased Boolean
+              )
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -47,7 +53,12 @@ BEGIN
            , ObjectHistory_PriceListItem.StartDate
            , ObjectHistory_PriceListItem.EndDate
            , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
-           , False AS isErased
+
+           , Object_PriceList.Id        AS PriceListId
+           , Object_PriceList.ValueData AS PriceListName
+
+           , FALSE AS isErased
+
        FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
             LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
                                  ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
@@ -64,7 +75,7 @@ BEGIN
                                         AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
 
        WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
-         AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
+         AND (ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId OR inPriceListId = 0)
          -- AND ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0
          AND ObjectLink_PriceListItem_Goods.ChildObjectId = inGoodsId;     
      ELSE
@@ -75,7 +86,12 @@ BEGIN
            , ObjectHistory_PriceListItem.StartDate
            , ObjectHistory_PriceListItem.EndDate
            , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
-           , False AS isErased
+
+           , Object_PriceList.Id        AS PriceListId
+           , Object_PriceList.ValueData AS PriceListName
+
+           , FALSE AS isErased
+           
        FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
             LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
                                  ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
@@ -92,8 +108,10 @@ BEGIN
                                          ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                         AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
 
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = ObjectLink_PriceListItem_PriceList.ChildObjectId
+
        WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
-         AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
+         AND (ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId OR inPriceListId = 0)
          -- AND ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0
          AND ObjectLink_PriceListItem_Goods.ChildObjectId = inGoodsId;
      END IF;
@@ -101,7 +119,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
---ALTER FUNCTION gpSelect_ObjectHistory_PriceListGoodsItem (Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
@@ -110,5 +127,5 @@ $BODY$
 */
 
 -- òåñò
--- SELECT * FROM gpSelect_ObjectHistory_PriceListGoodsItem (zc_PriceList_ProductionSeparate(), 0, zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_ObjectHistory_PriceListGoodsItem (zc_PriceList_Basis(), 0, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_ObjectHistory_PriceListGoodsItem (zc_PriceList_ProductionSeparate(), 0, 0, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_ObjectHistory_PriceListGoodsItem (zc_PriceList_Basis(), 0, 0, zfCalc_UserAdmin())
