@@ -30,6 +30,9 @@ type
     // Рецепт
     FNumber : String;
 
+    // ID погашения рецепта
+    FDispense_ID : string;
+
     // Данные из рецепта
     FMedication_ID : string;            // dosage_id что выписано
     FMedication_ID_List : String;       // ID что выписано
@@ -60,6 +63,7 @@ type
     function GetReceiptId : boolean;
     function GetDrugList : boolean;
     function dispenseRecipe : boolean;
+    function signRecipe : boolean;
   public
     constructor Create; virtual;
     destructor Destroy; override;
@@ -202,6 +206,7 @@ begin
   FRequest_number := '';
   FMedication_request_id := '';
   FMedication_ID_List := '';
+  FDispense_ID := '';
 
   FRESTClient.BaseURL := FLikiDnepr;
   FRESTClient.ContentType := 'application/x-www-form-urlencoded';
@@ -209,7 +214,7 @@ begin
 
   FRESTRequest.ClearBody;
   FRESTRequest.Method := TRESTRequestMethod.rmPOST;
-  FRESTRequest.Resource := 'get-recipe/'+ FNumber;
+  FRESTRequest.Resource := 'medications/get-recipe/'+ FNumber;
   // required parameters
   FRESTRequest.Params.Clear;
   FRESTRequest.AddParameter('Authorization', 'Bearer ' + FAccess_Token, TRESTRequestParameterKind.pkHTTPHEADER,
@@ -279,7 +284,7 @@ begin
 
   FRESTRequest.ClearBody;
   FRESTRequest.Method := TRESTRequestMethod.rmPOST;
-  FRESTRequest.Resource := 'get-drug-list/' + FMedication_request_id + '/' + FMedical_program_id + '/' + CurrToStr(FMedication_Qty);
+  FRESTRequest.Resource := 'medications/get-drug-list/' + FMedication_request_id + '/' + FMedical_program_id + '/' + CurrToStr(FMedication_Qty);
 
   // required parameters
   FRESTRequest.Params.Clear;
@@ -328,7 +333,7 @@ begin
 
   FRESTRequest.ClearBody;
   FRESTRequest.Method := TRESTRequestMethod.rmPOST;
-  FRESTRequest.Resource := 'dispense-recipe/' + FDispensed_Code;
+  FRESTRequest.Resource := 'medications/dispense-recipe/' + FDispensed_Code;
 
   // required parameters
   FRESTRequest.Params.Clear;
@@ -373,43 +378,64 @@ begin
     Result := False;
     try
       jValue := FRESTResponse.JSONValue;
-      if jValue.FindValue('medical_program') <> Nil then
+      if jValue.FindValue('id') <> Nil then
       begin
-
-        if jValue.FindValue('medical_program') <> Nil then
-        begin
-          j := jValue.FindValue('medical_program');
-          FMedical_program_id := DelDoubleQuote(j.FindValue('id').ToString);
-        end else FMedical_program_id := '';
-
-        if jValue.FindValue('medication_info') <> Nil then
-        begin
-          j := jValue.FindValue('medication_info');
-          FMedication_ID := DelDoubleQuote(j.FindValue('medication_id').ToString);
-          FMedication_Name := DelDoubleQuote(j.FindValue('medication_name').ToString);
-          FMedication_Qty := StrToCurr(StringReplace(StringReplace(j.FindValue('medication_qty').ToString,
-                            ',', FormatSettings.DecimalSeparator, [rfReplaceAll]),
-                            '.', FormatSettings.DecimalSeparator, [rfReplaceAll]));
-
-          FMedication_request_id := DelDoubleQuote(jValue.FindValue('id').ToString);
-          FStatus := DelDoubleQuote(jValue.FindValue('status').ToString);
-          if not StrToDateSite(jValue.FindValue('created_at').ToString, FCreated_at) then Exit;
-          if not StrToDateSite(jValue.FindValue('dispense_valid_from').ToString, FDispense_valid_from) then Exit;
-          if not StrToDateSite(jValue.FindValue('dispense_valid_to').ToString, FDispense_valid_to) then Exit;
-
-          FRequest_number := DelDoubleQuote(jValue.FindValue('request_number').ToString);
-
-          Result := True;
-        end;
-      end else if (jValue.FindValue('error') <> Nil) and (DelDoubleQuote(jValue.FindValue('error').ToString) = 'auth') then
-      begin
-        FShow_eHealth := True;
-      end else ShowError;
+        FDispense_ID := DelDoubleQuote(jValue.FindValue('id').ToString);
+        Result := True;
+      end;
     except
     end
   end else ShowError;
 end;
 
+function TLikiDniproeHealthApi.signRecipe : boolean;
+var
+  jValue, j : TJSONValue;
+  JSONA, JSONAR: TJSONArray;
+  jsonBody: TJSONObject;
+  jsonTemp: TJSONObject;
+  I, L : integer;
+begin
+  Result := False;
+
+  if (FMedication_request_id = '') or (FMedical_program_id = '') then Exit;
+
+  FRESTClient.BaseURL := FLikiDnepr;
+  FRESTClient.ContentType := 'application/x-www-form-urlencoded';
+//  FRESTClient.ContentType := 'application/json';
+
+  FRESTRequest.ClearBody;
+  FRESTRequest.Method := TRESTRequestMethod.rmPOST;
+  FRESTRequest.Resource := 'medications/dispense-recipe/' + FDispensed_Code;
+
+  // required parameters
+  FRESTRequest.Params.Clear;
+  FRESTRequest.AddParameter('employee_email', FDispense_ID, TRESTRequestParameterKind.pkGETorPOST);
+
+
+  try
+    FRESTRequest.Execute;
+  except
+  end;
+
+  if (FRESTResponse.StatusCode = 200) and (FRESTResponse.ContentType = 'application/json') then
+  begin
+    Result := False;
+    try
+      jValue := FRESTResponse.JSONValue;
+      if jValue.FindValue('medical_program') <> Nil then
+      begin
+        if jValue.FindValue('id') <> Nil then
+        begin
+          FDispense_ID := DelDoubleQuote(jValue.FindValue('id').ToString);
+          Result := True;
+        end;
+      end;
+
+    except
+    end
+  end else ShowError;
+end;
 
 function InitLikiDniproeHealthApi : boolean;
   var I : integer;
@@ -574,6 +600,8 @@ begin
   LikiDniproeHealthApi.FDispensed_Code := ACode;
 
   Result := LikiDniproeHealthApi.dispenseRecipe;
+
+  Result := False;
 end;
 
 

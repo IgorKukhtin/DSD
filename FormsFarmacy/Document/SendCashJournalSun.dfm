@@ -1,11 +1,15 @@
 inherited SendCashJournalSunForm: TSendCashJournalSunForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1057#1059#1053'>'
   AddOnFormData.ExecuteDialogAction = nil
+  ExplicitWidth = 857
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     TabOrder = 1
     inherited tsMain: TcxTabSheet
+      ExplicitWidth = 841
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
@@ -13,6 +17,98 @@ inherited SendCashJournalSunForm: TSendCashJournalSunForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          inherited ProvinceCityName_From: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited ProvinceCityName_To: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited TotalSumm: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited TotalSummMVAT: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited TotalSummPVAT: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited isAuto: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited Checked: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited isComplete: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited isSUN_v3: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited isDefSUN: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited isOverdueSUN: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited isNotDisplaySUN: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited isVIP: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited isUrgently: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited isConfirmed: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited MCSPeriod: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited MCSDay: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited PartionDateKindName: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited lInsertName: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited lInsertDate: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited InsertDateDiff: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited UpdateDateDiff: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited ReportInvNumber_full: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
         end
       end
     end
@@ -20,205 +116,42 @@ inherited SendCashJournalSunForm: TSendCashJournalSunForm
   inherited Panel: TPanel
     Visible = False
   end
-  inherited spUpdate_isDeferred_No: TdsdStoredProc [2]
-    Params = <
-      item
-        Name = 'inId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisDeferred'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outisDeferred'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isDeferred'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
+  inherited spMovementUnComplete: TdsdStoredProc [2]
   end
-  inherited spUpdate_isDeferred_Yes: TdsdStoredProc [3]
-    Params = <
-      item
-        Name = 'inId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisDeferred'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outisDeferred'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isDeferred'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
+  inherited spMovementSetErased: TdsdStoredProc [3]
   end
-  inherited spUpdate_Movement_Received: TdsdStoredProc [4]
-    Params = <
-      item
-        Name = 'inMovementId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisReceived'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isReceived'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [4]
   end
-  inherited spUpdate_Movement_Sent: TdsdStoredProc [5]
-    Params = <
-      item
-        Name = 'inMovementId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisSent'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isSent'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
+  inherited ActionList: TActionList [5]
+    inherited actInsert: TdsdInsertUpdateAction
+      FormName = 'TSendCashSUNForm'
+      FormNameParam.Value = 'TSendCashSUNForm'
+    end
+    inherited actUpdate: TdsdInsertUpdateAction
+      FormName = 'TSendCashSUNForm'
+      FormNameParam.Value = 'TSendCashSUNForm'
+    end
   end
-  inherited spUpdate_isDefSun: TdsdStoredProc [6]
-    Params = <
-      item
-        Name = 'inId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisDefSUN'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isDefSUN'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outisDefSUN'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isDefSUN'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
+  inherited cxPropertiesStore: TcxPropertiesStore [6]
   end
-  inherited spUpdate_isSun: TdsdStoredProc [7]
-    Params = <
-      item
-        Name = 'inId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisSUN'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isSUN'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outisSUN'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isSUN'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
-  end
-  inherited spUnCompleteView: TdsdStoredProc [8]
-  end
-  inherited spUpdate_NotDisplaySUN_Yes: TdsdStoredProc [9]
-    Params = <
-      item
-        Name = 'inMovementId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisNotDisplaySUN'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isNotDisplaySUN'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-  end
-  inherited spComplete_Filter: TdsdStoredProc [10]
-  end
-  inherited spSetErased_Filter: TdsdStoredProc [11]
-  end
-  inherited RefreshDispatcher: TRefreshDispatcher [12]
-  end
-  inherited spMovementComplete: TdsdStoredProc [13]
-  end
-  inherited spMovementUnComplete: TdsdStoredProc [14]
-  end
-  inherited spMovementSetErased: TdsdStoredProc [15]
-  end
-  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [16]
-  end
-  inherited ActionList: TActionList [17]
-  end
-  inherited cxPropertiesStore: TcxPropertiesStore [18]
-  end
-  inherited BarManager: TdxBarManager [19]
+  inherited BarManager: TdxBarManager [7]
     DockControlHeights = (
       0
       0
       26
       0)
   end
-  inherited DBViewAddOn: TdsdDBViewAddOn [20]
+  inherited DBViewAddOn: TdsdDBViewAddOn [8]
   end
-  inherited MasterDS: TDataSource [21]
+  inherited MasterDS: TDataSource [9]
   end
-  inherited MasterCDS: TClientDataSet [22]
+  inherited MasterCDS: TClientDataSet [10]
   end
-  inherited PopupMenu: TPopupMenu [23]
+  inherited PopupMenu: TPopupMenu [11]
   end
-  inherited PeriodChoice: TPeriodChoice [24]
+  inherited PeriodChoice: TPeriodChoice [12]
   end
-  inherited spSelect: TdsdStoredProc [25]
+  inherited spSelect: TdsdStoredProc [13]
     Params = <
       item
         Name = 'instartdate'
@@ -280,7 +213,7 @@ inherited SendCashJournalSunForm: TSendCashJournalSunForm
         MultiSelectSeparator = ','
       end>
   end
-  inherited FormParams: TdsdFormParams [26]
+  inherited FormParams: TdsdFormParams [14]
     Params = <
       item
         Name = 'Id'
@@ -342,16 +275,61 @@ inherited SendCashJournalSunForm: TSendCashJournalSunForm
         MultiSelectSeparator = ','
       end>
   end
-  inherited spMovementReComplete: TdsdStoredProc [27]
+  inherited spMovementReComplete: TdsdStoredProc [15]
   end
-  inherited PrintHeaderCDS: TClientDataSet [28]
+  inherited PrintHeaderCDS: TClientDataSet [16]
   end
-  inherited spSelectPrint: TdsdStoredProc [29]
+  inherited spSelectPrint: TdsdStoredProc [17]
   end
-  inherited PrintItemsSverkaCDS: TClientDataSet [30]
+  inherited PrintItemsSverkaCDS: TClientDataSet [18]
   end
-  inherited spUpdate_Movement_OperDate: TdsdStoredProc [31]
+  inherited spUpdate_Movement_OperDate: TdsdStoredProc [19]
   end
-  inherited PrintItemsCDS: TClientDataSet [32]
+  inherited spUpdate_isDeferred_No: TdsdStoredProc [21]
+  end
+  inherited spUpdate_isDeferred_Yes: TdsdStoredProc [22]
+  end
+  inherited spUpdate_Movement_Received: TdsdStoredProc [23]
+  end
+  inherited spUpdate_Movement_Sent: TdsdStoredProc [24]
+  end
+  inherited spUpdate_isDefSun: TdsdStoredProc [25]
+  end
+  inherited spUpdate_isSun: TdsdStoredProc [26]
+  end
+  inherited spUnCompleteView: TdsdStoredProc [27]
+  end
+  inherited spUpdate_NotDisplaySUN_Yes: TdsdStoredProc [28]
+  end
+  inherited spComplete_Filter: TdsdStoredProc [29]
+  end
+  inherited spSetErased_Filter: TdsdStoredProc [30]
+  end
+  inherited RefreshDispatcher: TRefreshDispatcher [31]
+  end
+  inherited spMovementComplete: TdsdStoredProc [32]
+    Params = <
+      item
+        Name = 'inmovementid'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsCurrentData'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outOperDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
   end
 end

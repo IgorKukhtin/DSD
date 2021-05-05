@@ -800,17 +800,16 @@ inherited SendJournalForm: TSendJournalForm
     object actSetReceived: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      AfterAction = actRefresh
       ActionList = <
         item
           Action = actExecSetReceived
-        end
-        item
-          Action = actRefresh
         end>
+      View = cxGridDBTableView
       QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072'"?'
       InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072'"'
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072'"'
+      Caption = #1052#1072#1089#1089#1086#1074#1086#1077' '#1087#1088#1086#1089#1090#1072#1074#1083#1077#1085#1080#1077' '#1087#1088#1080#1079#1085#1072#1082#1072' "'#1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072'"'
+      Hint = #1052#1072#1089#1089#1086#1074#1086#1077' '#1087#1088#1086#1089#1090#1072#1074#1083#1077#1085#1080#1077'  '#1087#1088#1080#1079#1085#1072#1082#1072' "'#1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072'"'
       ImageIndex = 61
     end
     object actExecSetReceived: TdsdExecStoredProc
@@ -828,17 +827,16 @@ inherited SendJournalForm: TSendJournalForm
     object actSetSent: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      AfterAction = actRefresh
       ActionList = <
         item
           Action = actExecSetSent
-        end
-        item
-          Action = actRefresh
         end>
-      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' " '#1054#1090#1087#1088#1072#1074#1083#1077#1085#1086'-'#1076#1072'"?'
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1052#1072#1089#1089#1086#1074#1086' '#1087#1088#1086#1089#1090#1072#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' " '#1054#1090#1087#1088#1072#1074#1083#1077#1085#1086'-'#1076#1072'"?'
       InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' " '#1054#1090#1087#1088#1072#1074#1083#1077#1085#1086' -'#1076#1072'"'
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' " '#1054#1090#1087#1088#1072#1074#1083#1077#1085#1086' -'#1076#1072'"'
+      Caption = #1052#1072#1089#1089#1086#1074#1086#1077' '#1087#1088#1086#1089#1090#1072#1074#1083#1077#1085#1080#1077' '#1087#1088#1080#1079#1085#1072#1082#1072' " '#1054#1090#1087#1088#1072#1074#1083#1077#1085#1086' -'#1076#1072'"'
+      Hint = #1052#1072#1089#1089#1086#1074#1086#1077' '#1087#1088#1086#1089#1090#1072#1074#1083#1077#1085#1080#1077' '#1087#1088#1080#1079#1085#1072#1082#1072' " '#1054#1090#1087#1088#1072#1074#1083#1077#1085#1086' -'#1076#1072'"'
       ImageIndex = 43
     end
     object actExecSetSent: TdsdExecStoredProc
@@ -1471,7 +1469,7 @@ inherited SendJournalForm: TSendJournalForm
     Top = 443
   end
   object spUpdate_Movement_Received: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_Received'
+    StoredProcName = 'gpUpdate_Movement_ReceivedList'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1497,7 +1495,7 @@ inherited SendJournalForm: TSendJournalForm
     Top = 347
   end
   object spUpdate_Movement_Sent: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_Sent'
+    StoredProcName = 'gpUpdate_Movement_SentList'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1519,8 +1517,8 @@ inherited SendJournalForm: TSendJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 688
-    Top = 395
+    Left = 728
+    Top = 403
   end
   object spUpdate_isDefSun: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Send_isDefSUN'

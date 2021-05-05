@@ -2719,16 +2719,18 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceSendForm');
   exit;
-
+}
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
-}
+
 
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendMenegerForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashSUNForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendCashSUNForm');
 
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionDateGoodsListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionDateGoodsListForm');
@@ -2741,9 +2743,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalSunForm'));
+}  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalSunForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalSunForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalSunForm'));
+ { TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalSunForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalSunForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalVIPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalVIPForm');
