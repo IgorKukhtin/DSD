@@ -21,10 +21,18 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbStatusId Integer;
    DECLARE vbOperDate TDateTime;
+   
+   DECLARE vbisIssuedBy Boolean;
+   DECLARE vbHolidaysHospital TFloat;
+   DECLARE vbMarketing TFloat;
+   DECLARE vbDirector TFloat;
+   DECLARE vbIlliquidAssets TFloat;
+   DECLARE vbPenaltySUN TFloat;
+   DECLARE vbAmountCard TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
-    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Wages());
+    vbUserId:= lpGetUserBySession (inSession);
 
     IF COALESCE (ioId, 0) = 0
     THEN
@@ -46,6 +54,9 @@ BEGIN
     
     IF EXISTS(SELECT 1 FROM MovementItem WHERE ID = ioId AND MovementItem.DescId = zc_MI_Sign())
     THEN
+
+      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Wages());
+
       IF COALESCE(inHolidaysHospital, 0) <> 0 OR
          COALESCE(inMarketing, 0) <> 0 OR
          COALESCE(inDirector, 0) <> 0  OR
@@ -75,50 +86,77 @@ BEGIN
       WHERE MovementItem.Id = ioId;
     ELSE
     
-    
-      IF EXISTS( SELECT 1
-        FROM  MovementItem
+      SELECT COALESCE (MIB_isIssuedBy.ValueData, FALSE)
+           , COALESCE (MIFloat_HolidaysHospital.ValueData, 0)
+           , COALESCE (MIFloat_Marketing.ValueData, 0)
+           , COALESCE (MIFloat_Director.ValueData, 0)
+           , COALESCE (MIFloat_IlliquidAssets.ValueData, 0)
+           , COALESCE (MIFloat_PenaltySUN.ValueData, 0)
+           , COALESCE (MIF_AmountCard.ValueData, 0)
+      INTO vbisIssuedBy
+         , vbHolidaysHospital
+         , vbMarketing
+         , vbDirector
+         , vbIlliquidAssets
+         , vbPenaltySUN
+         , vbAmountCard   
+      FROM  MovementItem
 
-              LEFT JOIN MovementItemFloat AS MIFloat_HolidaysHospital
-                                          ON MIFloat_HolidaysHospital.MovementItemId = MovementItem.Id
-                                         AND MIFloat_HolidaysHospital.DescId = zc_MIFloat_HolidaysHospital()
+            LEFT JOIN MovementItemFloat AS MIFloat_HolidaysHospital
+                                        ON MIFloat_HolidaysHospital.MovementItemId = MovementItem.Id
+                                       AND MIFloat_HolidaysHospital.DescId = zc_MIFloat_HolidaysHospital()
 
-              LEFT JOIN MovementItemFloat AS MIFloat_Marketing
-                                          ON MIFloat_Marketing.MovementItemId = MovementItem.Id
-                                         AND MIFloat_Marketing.DescId = zc_MIFloat_Marketing()
+            LEFT JOIN MovementItemFloat AS MIFloat_Marketing
+                                        ON MIFloat_Marketing.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Marketing.DescId = zc_MIFloat_Marketing()
 
-              LEFT JOIN MovementItemFloat AS MIFloat_Director
-                                          ON MIFloat_Director.MovementItemId = MovementItem.Id
-                                         AND MIFloat_Director.DescId = zc_MIFloat_Director()
+            LEFT JOIN MovementItemFloat AS MIFloat_Director
+                                        ON MIFloat_Director.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Director.DescId = zc_MIFloat_Director()
 
-              LEFT JOIN MovementItemFloat AS MIFloat_IlliquidAssets
-                                          ON MIFloat_IlliquidAssets.MovementItemId = MovementItem.Id
-                                         AND MIFloat_IlliquidAssets.DescId = zc_MIFloat_SummaIlliquidAssets()
+            LEFT JOIN MovementItemFloat AS MIFloat_IlliquidAssets
+                                        ON MIFloat_IlliquidAssets.MovementItemId = MovementItem.Id
+                                       AND MIFloat_IlliquidAssets.DescId = zc_MIFloat_SummaIlliquidAssets()
 
-              LEFT JOIN MovementItemFloat AS MIFloat_PenaltySUN
-                                          ON MIFloat_PenaltySUN.MovementItemId = MovementItem.Id
-                                         AND MIFloat_PenaltySUN.DescId = zc_MIFloat_PenaltySUN()
+            LEFT JOIN MovementItemFloat AS MIFloat_PenaltySUN
+                                        ON MIFloat_PenaltySUN.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PenaltySUN.DescId = zc_MIFloat_PenaltySUN()
 
-              LEFT JOIN MovementItemFloat AS MIF_AmountCard
-                                          ON MIF_AmountCard.MovementItemId = MovementItem.Id
-                                         AND MIF_AmountCard.DescId = zc_MIFloat_AmountCard()
+            LEFT JOIN MovementItemFloat AS MIF_AmountCard
+                                        ON MIF_AmountCard.MovementItemId = MovementItem.Id
+                                       AND MIF_AmountCard.DescId = zc_MIFloat_AmountCard()
                                          
-              LEFT JOIN MovementItemBoolean AS MIB_isIssuedBy
-                                            ON MIB_isIssuedBy.MovementItemId = MovementItem.Id
-                                           AND MIB_isIssuedBy.DescId = zc_MIBoolean_isIssuedBy()
+            LEFT JOIN MovementItemBoolean AS MIB_isIssuedBy
+                                          ON MIB_isIssuedBy.MovementItemId = MovementItem.Id
+                                         AND MIB_isIssuedBy.DescId = zc_MIBoolean_isIssuedBy()
 
-        WHERE MovementItem.Id = ioId 
-          AND COALESCE (MIB_isIssuedBy.ValueData, FALSE) = True
-          AND (COALESCE (MIFloat_HolidaysHospital.ValueData, 0) <> COALESCE (inHolidaysHospital, 0)
-            OR COALESCE (MIFloat_Marketing.ValueData, 0) <>  COALESCE (inMarketing, 0)
-            OR COALESCE (MIFloat_Director.ValueData, 0) <>  COALESCE (inDirector, 0)
-            OR COALESCE (MIFloat_IlliquidAssets.ValueData, 0) <>  COALESCE (inIlliquidAssets, 0)
-            OR COALESCE (MIFloat_PenaltySUN.ValueData, 0) <>  COALESCE (inPenaltySUN, 0)
-            OR COALESCE (MIF_AmountCard.ValueData, 0) <>  COALESCE (inAmountCard, 0)))
+      WHERE MovementItem.Id = ioId;
+                            
+      IF vbisIssuedBy = TRUE AND 
+         (vbHolidaysHospital <> COALESCE (inHolidaysHospital, 0) OR
+          vbMarketing <>  COALESCE (inMarketing, 0) OR
+          vbDirector <>  COALESCE (inDirector, 0) OR
+          vbIlliquidAssets <>  COALESCE (inIlliquidAssets, 0) OR
+          vbPenaltySUN <>  COALESCE (inPenaltySUN, 0) OR
+          vbAmountCard <>  COALESCE (inAmountCard, 0))
       THEN
         RAISE EXCEPTION 'Ошибка. Зарплата выдана. Изменение сумм запрещено.';            
       END IF;
         
+      IF vbisIssuedBy <> COALESCE (inisIssuedBy, False) OR
+         vbHolidaysHospital <> COALESCE (inHolidaysHospital, 0) OR
+         vbDirector <>  COALESCE (inDirector, 0) OR
+         vbPenaltySUN <>  COALESCE (inPenaltySUN, 0) OR
+         vbAmountCard <>  COALESCE (inAmountCard, 0)
+      THEN
+        vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Wages());
+      ELSE
+        IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin(), 12084491, 1633980))
+        THEN
+          RAISE EXCEPTION 'Изменение сумм "Маркетинга" и "Нелеквидов" вам запрещено.';
+        END IF;        
+      END IF;
+      
        -- сохранили свойство <Отпуск / Больничный>
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_HolidaysHospital(), ioId, inHolidaysHospital);
        -- сохранили свойство <Маркетинг>

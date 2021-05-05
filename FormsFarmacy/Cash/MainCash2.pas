@@ -315,7 +315,7 @@ type
     actUpdateRemainsCDS1: TMenuItem;
     spDoesNotShare: TdsdStoredProc;
     spInsert_MovementItem_PUSH: TdsdStoredProc;
-    Multiplicity: TcxGridDBColumn;
+    MainMultiplicity: TcxGridDBColumn;
     actOpenCashGoodsOneToExpirationDate: TdsdOpenForm;
     actCashGoodsOneToExpirationDate: TAction;
     MainisGoodsAnalog: TcxGridDBColumn;
@@ -562,6 +562,8 @@ type
     lblInfo: TLabel;
     spPullGoodsCheck: TdsdStoredProc;
     spSelectCheckId: TdsdStoredProc;
+    MainFixEndDate: TcxGridDBColumn;
+    CheckFixEndDate: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -710,6 +712,12 @@ type
     procedure actRecipeNumber1303Execute(Sender: TObject);
     procedure bbPositionNextClick(Sender: TObject);
     procedure cbMorionFilterPropertiesChange(Sender: TObject);
+    procedure MainFixPercentStylesGetContentStyle(
+      Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
+      AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
+    procedure CheckGridColNameStylesGetContentStyle(
+      Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
+      AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
   private
     isScaner: Boolean;
     FSoldRegim: Boolean;
@@ -747,6 +755,7 @@ type
 
     FIsVIP, FIsTabletki, FIsLiki24 : Boolean;
     FStepSecond : Boolean;
+    FStyle: TcxStyle;
 
     aDistributionPromoId : array of Integer;
     aDistributionPromoAmount : array of Currency;
@@ -3377,20 +3386,40 @@ begin
   if (FormParams.ParamByName('HelsiID').Value <> '') then
   begin
     HelsiError := True;
-    if not CreateNewDispense(CheckCDS.FieldByName('IdSP').AsString,
-      CheckCDS.FieldByName('ProgramIdSP').AsString,
-      CheckCDS.FieldByName('CountSP').asCurrency * CheckCDS.FieldByName
-      ('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,
-      RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
-      CheckCDS.FieldByName('PriceSale').asCurrency, -2),
-      RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
-      CheckCDS.FieldByName('PriceRetSP').asCurrency, -2) -
-      RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
-      CheckCDS.FieldByName('PaymentSP').asCurrency, -2), ConfirmationCode) then
+    if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
     begin
-      if Self.ActiveControl <> edAmount then
-        Self.ActiveControl := MainGrid;
-      exit;
+      if not CreateNewDispense(CheckCDS.FieldByName('IdSP').AsString,
+        CheckCDS.FieldByName('ProgramIdSP').AsString,
+        CheckCDS.FieldByName('CountSP').asCurrency * CheckCDS.FieldByName
+        ('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,
+        RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
+        CheckCDS.FieldByName('PriceSale').asCurrency, -2),
+        RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
+        CheckCDS.FieldByName('PriceRetSP').asCurrency, -2) -
+        RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
+        CheckCDS.FieldByName('PaymentSP').asCurrency, -2), ConfirmationCode) then
+      begin
+        if Self.ActiveControl <> edAmount then
+          Self.ActiveControl := MainGrid;
+        exit;
+      end;
+    end else if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 2 then
+    begin
+      if not CreateLikiDniproeHealthNewDispense(CheckCDS.FieldByName('IdSP').AsString,
+        CheckCDS.FieldByName('ProgramIdSP').AsString,
+        CheckCDS.FieldByName('CountSP').asCurrency * CheckCDS.FieldByName
+        ('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,
+        RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
+        CheckCDS.FieldByName('PriceSale').asCurrency, -2),
+        RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
+        CheckCDS.FieldByName('PriceRetSP').asCurrency, -2) -
+        RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
+        CheckCDS.FieldByName('PaymentSP').asCurrency, -2), ConfirmationCode) then
+      begin
+        if Self.ActiveControl <> edAmount then
+          Self.ActiveControl := MainGrid;
+        exit;
+      end;
     end;
   end;
 
@@ -3519,58 +3548,64 @@ begin
 
         if (FormParams.ParamByName('HelsiID').Value <> '') then
         begin
-          HelsiError := not SetPayment(CheckNumber,
-            CheckCDS.FieldByName('Summ').asCurrency);
-          if not HelsiError then
-            HelsiError := not IntegrationClientSign;
-          if not HelsiError then
-            HelsiError := not ProcessSignedDispense;
-
-          if HelsiError then
+          if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
           begin
-            RejectDispense;
-
-            if CreateNewDispense(CheckCDS.FieldByName('IdSP').AsString,
-              CheckCDS.FieldByName('ProgramIdSP').AsString,
-              CheckCDS.FieldByName('CountSP').asCurrency *
-              CheckCDS.FieldByName('Amount').asCurrency,
-              CheckCDS.FieldByName('PriceSale').asCurrency,
-              RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
-              CheckCDS.FieldByName('PriceSale').asCurrency, -2),
-              RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
-              CheckCDS.FieldByName('PriceRetSP').asCurrency, -2) -
-              RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
-              CheckCDS.FieldByName('PaymentSP').asCurrency, -2),
-              ConfirmationCode) then
-            begin
-              HelsiError := not SetPayment(CheckNumber,
-                CheckCDS.FieldByName('Summ').asCurrency);
-              if not HelsiError then
-                HelsiError := not IntegrationClientSign;
-              if not HelsiError then
-                HelsiError := not ProcessSignedDispense;
-            end;
+            HelsiError := not SetPayment(CheckNumber,
+              CheckCDS.FieldByName('Summ').asCurrency);
+            if not HelsiError then
+              HelsiError := not IntegrationClientSign;
+            if not HelsiError then
+              HelsiError := not ProcessSignedDispense;
 
             if HelsiError then
+            begin
               RejectDispense;
-          end;
 
-          if not GetStateReceipt then
-          begin
-            // pnlHelsiError.Visible := True;
-            // edHelsiError.Text := FormParams.ParamByName('InvNumberSP').Value;
+              if CreateNewDispense(CheckCDS.FieldByName('IdSP').AsString,
+                CheckCDS.FieldByName('ProgramIdSP').AsString,
+                CheckCDS.FieldByName('CountSP').asCurrency *
+                CheckCDS.FieldByName('Amount').asCurrency,
+                CheckCDS.FieldByName('PriceSale').asCurrency,
+                RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
+                CheckCDS.FieldByName('PriceSale').asCurrency, -2),
+                RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
+                CheckCDS.FieldByName('PriceRetSP').asCurrency, -2) -
+                RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
+                CheckCDS.FieldByName('PaymentSP').asCurrency, -2),
+                ConfirmationCode) then
+              begin
+                HelsiError := not SetPayment(CheckNumber,
+                  CheckCDS.FieldByName('Summ').asCurrency);
+                if not HelsiError then
+                  HelsiError := not IntegrationClientSign;
+                if not HelsiError then
+                  HelsiError := not ProcessSignedDispense;
+              end;
 
-            nOldColor := Screen.MessageFont.Color;
-            try
-              Screen.MessageFont.Color := clRed;
-              Screen.MessageFont.Size := Screen.MessageFont.Size + 2;
-              MessageDlg
-                ('РЕЦЕПТ НЕ ПРОШЕЛ ПО ХЕЛСИ !!!'#13#10#13#10'Нужно его погасить в FCASH в "Чеки->Сверка Чеков с Хелси"!',
-                mtError, [mbOK], 0);
-            finally
-              Screen.MessageFont.Size := Screen.MessageFont.Size - 2;
-              Screen.MessageFont.Color := nOldColor;
+              if HelsiError then
+                RejectDispense;
             end;
+
+            if not GetStateReceipt then
+            begin
+              // pnlHelsiError.Visible := True;
+              // edHelsiError.Text := FormParams.ParamByName('InvNumberSP').Value;
+
+              nOldColor := Screen.MessageFont.Color;
+              try
+                Screen.MessageFont.Color := clRed;
+                Screen.MessageFont.Size := Screen.MessageFont.Size + 2;
+                MessageDlg
+                  ('РЕЦЕПТ НЕ ПРОШЕЛ ПО ХЕЛСИ !!!'#13#10#13#10'Нужно его погасить в FCASH в "Чеки->Сверка Чеков с Хелси"!',
+                  mtError, [mbOK], 0);
+              finally
+                Screen.MessageFont.Size := Screen.MessageFont.Size - 2;
+                Screen.MessageFont.Color := nOldColor;
+              end;
+            end;
+          end else
+          begin
+            MessageDlg('Не определен механизм подписи рецепта!', mtError, [mbOK], 0);
           end;
         End;
 
@@ -3580,8 +3615,7 @@ begin
       end;
     End;
 
-    if HelsiError then
-      RejectDispense;
+    if HelsiError and (UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1) then RejectDispense;
 
   finally
     ShapeState.Brush.Color := clGreen;
@@ -5946,21 +5980,21 @@ var
   I: Integer;
 begin
 
-//  if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
-//  begin
+  if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
+  begin
     if UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger = 0 then
     Begin
       ShowMessage('Не определен ID СП !');
       exit;
     End;
-//  end else if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 2 then
-//  begin
-//    if UnitConfigCDS.FieldByName('LikiDneproId').AsInteger = 0 then
-//    Begin
-//      ShowMessage('Не определен ID СП !');
-//      exit;
-//    End;
-//  end;
+  end else if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 2 then
+  begin
+    if UnitConfigCDS.FieldByName('LikiDneproeHealthToken').AsString = '' then
+    Begin
+      ShowMessage('Не определен ID СП !');
+      exit;
+    End;
+  end;
 
   if pnlHelsiError.Visible then
   begin
@@ -6033,23 +6067,23 @@ begin
       exit;
   end;
 
-//  if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
-//  begin
+  if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
+  begin
     if not GetHelsiReceipt(InvNumberSP, HelsiID, HelsiIDList, HelsiName, HelsiQty,
       OperDateSP) then
     begin
       NewCheck(false);
       exit;
     end;
-//  end else if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 2 then
-//  begin
-//    if not GetLikiDniproeHealthReceipt(InvNumberSP, HelsiID, HelsiIDList, HelsiName, HelsiQty,
-//      OperDateSP) then
-//    begin
-//      NewCheck(false);
-//      exit;
-//    end;
-//  end;
+  end else if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 2 then
+  begin
+    if not GetLikiDniproeHealthReceipt(InvNumberSP, HelsiID, HelsiIDList, HelsiName, HelsiQty,
+      OperDateSP) then
+    begin
+      NewCheck(false);
+      exit;
+    end;
+  end;
 
   FormParams.ParamByName('InvNumberSP').Value := InvNumberSP;
   FormParams.ParamByName('OperDateSP').Value := OperDateSP;
@@ -6710,6 +6744,16 @@ begin
   end;
 end;
 
+procedure TMainCashForm2.CheckGridColNameStylesGetContentStyle(
+  Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
+  AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
+begin
+  FStyle.Assign(dmMain.cxContentStyle);
+  if (ARecord.Values[CheckGridColChangePercent.Index] <> Null) and (ARecord.Values[CheckGridColChangePercent.Index] <> 0) then
+    FStyle.Color := TColor($FFD784);
+  AStyle := FStyle;
+end;
+
 procedure TMainCashForm2.CheckGridDBTableViewFocusedRecordChanged
   (Sender: TcxCustomGridTableView; APrevFocusedRecord, AFocusedRecord
   : TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
@@ -6790,20 +6834,23 @@ procedure TMainCashForm2.cxButton6Click(Sender: TObject);
 var
   HelsiError: Boolean;
 begin
-  HelsiError := True;
-  if CreateNewDispense then
+  if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
   begin
-    HelsiError := not SetPayment;
-    if not HelsiError then
-      HelsiError := not IntegrationClientSign;
-    if not HelsiError then
-      HelsiError := not ProcessSignedDispense;
-  end;
+    HelsiError := True;
+    if CreateNewDispense then
+    begin
+      HelsiError := not SetPayment;
+      if not HelsiError then
+        HelsiError := not IntegrationClientSign;
+      if not HelsiError then
+        HelsiError := not ProcessSignedDispense;
+    end;
 
-  if HelsiError then
-    RejectDispense;
-  if HelsiError then
-    cxButton5Click(Sender);
+    if HelsiError then
+      RejectDispense;
+    if HelsiError then
+      cxButton5Click(Sender);
+  end;
 end;
 
 procedure TMainCashForm2.cxButton7Click(Sender: TObject);
@@ -7078,6 +7125,7 @@ var
   F: String;
 begin
   inherited;
+  FStyle := TcxStyle.Create(nil);
   FormClassName := Self.ClassName;
 
   Application.OnMessage := AppMsgHandler; // только 2 форма
@@ -7287,6 +7335,7 @@ var
   lMsg: String;
   lGoodsId_bySoldRegim, lTypeDiscount, nRecNo, nId, nGoodsPairSun, nGoodsPairSunMainId: Integer;
   nMultiplicity: Currency;
+  nFixEndDate: Variant;
   Bookmark : TBookmark;
 begin
 
@@ -7294,6 +7343,7 @@ begin
   SetTaxUnitNight;
   nMultiplicity := 0;
   lTypeDiscount := 0;
+  nFixEndDate := Null;
 
   if pnlHelsiError.Visible then
   begin
@@ -7652,56 +7702,78 @@ begin
         then
         begin
 
-          case MessageDlg('Подтверждение цены со скидкой препарата'#13#10#13#10 +
-            'Yes - Цена со скидкой: ' +
-            CurrToStr(CalcTaxUnitNightPrice(SourceClientDataSet.FieldByName
-            ('Price').asCurrency, SourceClientDataSet.FieldByName('PriceChange')
-            .asCurrency)) + #13#10 + 'No - Цена БЕЗ скидки: ' +
-            CurrToStr(CalcTaxUnitNightPrice(SourceClientDataSet.FieldByName
-            ('Price').asCurrency,
-            IfZero(SourceClientDataSet.FieldByName('PricePartionDate').asCurrency,
-            SourceClientDataSet.FieldByName('Price').asCurrency))),
-            mtConfirmation, [mbYes, mbNo, mbCancel], 0) of
-            mrNo:
-              begin
-                CalcPriceSale(lPriceSale, lPrice, lChangePercent,
-                  IfZero(SourceClientDataSet.FieldByName('PricePartionDate')
-                  .asCurrency, SourceClientDataSet.FieldByName('Price')
-                  .asCurrency), 0);
-              end;
-            mrYes:
-              begin
-
-                nMultiplicity := SourceClientDataSet.FieldByName('Multiplicity')
-                  .asCurrency;
-                lTypeDiscount := 1;
-
-                if SourceClientDataSet.FieldByName('Multiplicity').asCurrency <> 0
-                then
+          if not SourceClientDataSet.FieldByName('FixEndDate').IsNull and
+             (SourceClientDataSet.FieldByName('FixEndDate').AsDateTime < Date) then
+          begin
+            ShowMessage('Срок действия акции закончился: ' + SourceClientDataSet.FieldByName('FixEndDate').AsString + '.');
+            CalcPriceSale(lPriceSale, lPrice, lChangePercent,
+              IfZero(SourceClientDataSet.FieldByName('PricePartionDate')
+              .asCurrency, SourceClientDataSet.FieldByName('Price')
+              .asCurrency), 0);
+          end else
+          begin
+            case MessageDlg('Подтверждение цены со скидкой препарата'#13#10#13#10 +
+              'Yes - Цена со скидкой: ' +
+              CurrToStr(CalcTaxUnitNightPrice(SourceClientDataSet.FieldByName
+              ('Price').asCurrency, SourceClientDataSet.FieldByName('PriceChange')
+              .asCurrency)) + #13#10 + 'No - Цена БЕЗ скидки: ' +
+              CurrToStr(CalcTaxUnitNightPrice(SourceClientDataSet.FieldByName
+              ('Price').asCurrency,
+              IfZero(SourceClientDataSet.FieldByName('PricePartionDate').asCurrency,
+              SourceClientDataSet.FieldByName('Price').asCurrency))),
+              mtConfirmation, [mbYes, mbNo, mbCancel], 0) of
+              mrNo:
                 begin
-                  ShowMessage
-                    ('Для медикамента установлена кратность при отпуске со скидкой.'#13#10#13#10
-                    + 'Отпускать со скидкой разрешено кратно ' +
-                    SourceClientDataSet.FieldByName('Multiplicity').AsString +
-                    ' упаковки.');
-                  if trunc(abs(nAmount) / SourceClientDataSet.FieldByName
-                    ('Multiplicity').asCurrency * 100) mod 100 <> 0 then
-                    exit;
+                  CalcPriceSale(lPriceSale, lPrice, lChangePercent,
+                    IfZero(SourceClientDataSet.FieldByName('PricePartionDate')
+                    .asCurrency, SourceClientDataSet.FieldByName('Price')
+                    .asCurrency), 0);
                 end;
+              mrYes:
+                begin
 
-                CalcPriceSale(lPriceSale, lPrice, lChangePercent,
-                  SourceClientDataSet.FieldByName('Price').asCurrency, 0,
-                  SourceClientDataSet.FieldByName('PriceChange').asCurrency);
-              end;
-            mrCancel:
-              exit;
+                  nMultiplicity := SourceClientDataSet.FieldByName('Multiplicity')
+                    .asCurrency;
+                  nFixEndDate := SourceClientDataSet.FieldByName('FixEndDate').AsVariant;
+                  lTypeDiscount := 1;
+
+                  if SourceClientDataSet.FieldByName('Multiplicity').asCurrency <> 0
+                  then
+                  begin
+                    ShowMessage
+                      ('Для медикамента установлена кратность при отпуске со скидкой.'#13#10#13#10
+                      + 'Отпускать со скидкой разрешено кратно ' +
+                      SourceClientDataSet.FieldByName('Multiplicity').AsString +
+                      ' упаковки.');
+                    if trunc(abs(nAmount) / SourceClientDataSet.FieldByName
+                      ('Multiplicity').asCurrency * 100) mod 100 <> 0 then
+                      exit;
+                  end;
+
+                  CalcPriceSale(lPriceSale, lPrice, lChangePercent,
+                    SourceClientDataSet.FieldByName('Price').asCurrency, 0,
+                    SourceClientDataSet.FieldByName('PriceChange').asCurrency);
+                end;
+              mrCancel:
+                exit;
+            end;
           end;
         end
         else
-          // Если есть процент скидки
-          if SourceClientDataSet.FieldByName('FixPercent').asCurrency > 0 then
-          begin
+        // Если есть процент скидки
+        if SourceClientDataSet.FieldByName('FixPercent').asCurrency > 0 then
+        begin
 
+          if not SourceClientDataSet.FieldByName('FixEndDate').IsNull and
+             (SourceClientDataSet.FieldByName('FixEndDate').AsDateTime < Date) then
+          begin
+            ShowMessage('Срок действия акции закончился: ' + SourceClientDataSet.FieldByName('FixEndDate').AsString + '.');
+            CalcPriceSale(lPriceSale, lPrice, lChangePercent,
+              IfZero(SourceClientDataSet.FieldByName('PricePartionDate')
+              .asCurrency, SourceClientDataSet.FieldByName('Price')
+              .asCurrency), 0);
+          end else
+          begin
             case MessageDlg('Подтверждение цены со скидкой препарата'#13#10#13#10
               + 'Yes - Цена со скидкой: ' +
               CurrToStr(CalcTaxUnitNightPrice(SourceClientDataSet.FieldByName
@@ -7727,6 +7799,7 @@ begin
 
                   nMultiplicity := SourceClientDataSet.FieldByName('Multiplicity')
                     .asCurrency;
+                  nFixEndDate := SourceClientDataSet.FieldByName('FixEndDate').AsVariant;
                   lTypeDiscount := 2;
                   if SourceClientDataSet.FieldByName('Multiplicity').asCurrency <> 0
                   then
@@ -7750,75 +7823,87 @@ begin
               mrCancel:
                 exit;
             end;
-          end
-          else
-            // Если есть сумма скидки
-            if SourceClientDataSet.FieldByName('FixDiscount').asCurrency > 0 then
-            begin
+          end;
+        end
+        else
+        // Если есть сумма скидки
+        if SourceClientDataSet.FieldByName('FixDiscount').asCurrency > 0 then
+        begin
 
-              case MessageDlg
-                ('Подтверждение цены со скидкой препарата'#13#10#13#10 +
-                'Yes - Цена со скидкой: ' +
-                CurrToStr(CalcTaxUnitNightPrice(SourceClientDataSet.FieldByName
-                ('Price').asCurrency,
-                IfZero(SourceClientDataSet.FieldByName('PricePartionDate')
-                .asCurrency, SourceClientDataSet.FieldByName('Price').asCurrency)
-                - SourceClientDataSet.FieldByName('FixDiscount').asCurrency)) +
-                #13#10 + 'No - Цена БЕЗ скидки: ' +
-                CurrToStr(CalcTaxUnitNightPrice(SourceClientDataSet.FieldByName
-                ('Price').asCurrency,
-                IfZero(SourceClientDataSet.FieldByName('PricePartionDate')
-                .asCurrency, SourceClientDataSet.FieldByName('Price').asCurrency))
-                ), mtConfirmation, [mbYes, mbNo, mbCancel], 0) of
-                mrNo:
+          if not SourceClientDataSet.FieldByName('FixEndDate').IsNull and
+             (SourceClientDataSet.FieldByName('FixEndDate').AsDateTime < Date) then
+          begin
+            ShowMessage('Срок действия акции закончился: ' + SourceClientDataSet.FieldByName('FixEndDate').AsString + '.');
+            CalcPriceSale(lPriceSale, lPrice, lChangePercent,
+              IfZero(SourceClientDataSet.FieldByName('PricePartionDate')
+              .asCurrency, SourceClientDataSet.FieldByName('Price')
+              .asCurrency), 0);
+          end else
+          begin
+            case MessageDlg
+              ('Подтверждение цены со скидкой препарата'#13#10#13#10 +
+              'Yes - Цена со скидкой: ' +
+              CurrToStr(CalcTaxUnitNightPrice(SourceClientDataSet.FieldByName
+              ('Price').asCurrency,
+              IfZero(SourceClientDataSet.FieldByName('PricePartionDate')
+              .asCurrency, SourceClientDataSet.FieldByName('Price').asCurrency)
+              - SourceClientDataSet.FieldByName('FixDiscount').asCurrency)) +
+              #13#10 + 'No - Цена БЕЗ скидки: ' +
+              CurrToStr(CalcTaxUnitNightPrice(SourceClientDataSet.FieldByName
+              ('Price').asCurrency,
+              IfZero(SourceClientDataSet.FieldByName('PricePartionDate')
+              .asCurrency, SourceClientDataSet.FieldByName('Price').asCurrency))
+              ), mtConfirmation, [mbYes, mbNo, mbCancel], 0) of
+              mrNo:
+                begin
+                  CalcPriceSale(lPriceSale, lPrice, lChangePercent,
+                    IfZero(SourceClientDataSet.FieldByName('PricePartionDate')
+                    .asCurrency, SourceClientDataSet.FieldByName('Price')
+                    .asCurrency), 0);
+                end;
+              mrYes:
+                begin
+
+                  nMultiplicity := SourceClientDataSet.FieldByName
+                    ('Multiplicity').asCurrency;
+                  nFixEndDate := SourceClientDataSet.FieldByName('FixEndDate').AsVariant;
+                  lTypeDiscount := 3;
+                  if SourceClientDataSet.FieldByName('Multiplicity')
+                    .asCurrency <> 0 then
                   begin
-                    CalcPriceSale(lPriceSale, lPrice, lChangePercent,
-                      IfZero(SourceClientDataSet.FieldByName('PricePartionDate')
-                      .asCurrency, SourceClientDataSet.FieldByName('Price')
-                      .asCurrency), 0);
+                    ShowMessage
+                      ('Для медикамента установлена кратность при отпуске со скидкой.'#13#10#13#10
+                      + 'Отпускать со скидкой разрешено кратно ' +
+                      SourceClientDataSet.FieldByName('Multiplicity').AsString +
+                      ' упаковки.');
+                    if trunc(abs(nAmount) / SourceClientDataSet.FieldByName
+                      ('Multiplicity').asCurrency * 100) mod 100 <> 0 then
+                      exit;
                   end;
-                mrYes:
-                  begin
 
-                    nMultiplicity := SourceClientDataSet.FieldByName
-                      ('Multiplicity').asCurrency;
-                    lTypeDiscount := 3;
-                    if SourceClientDataSet.FieldByName('Multiplicity')
-                      .asCurrency <> 0 then
-                    begin
-                      ShowMessage
-                        ('Для медикамента установлена кратность при отпуске со скидкой.'#13#10#13#10
-                        + 'Отпускать со скидкой разрешено кратно ' +
-                        SourceClientDataSet.FieldByName('Multiplicity').AsString +
-                        ' упаковки.');
-                      if trunc(abs(nAmount) / SourceClientDataSet.FieldByName
-                        ('Multiplicity').asCurrency * 100) mod 100 <> 0 then
-                        exit;
-                    end;
-
-                    CalcPriceSale(lPriceSale, lPrice, lChangePercent,
-                      SourceClientDataSet.FieldByName('Price').asCurrency, 0,
-                      IfZero(SourceClientDataSet.FieldByName('PricePartionDate')
-                      .asCurrency, SourceClientDataSet.FieldByName('Price')
-                      .asCurrency) - SourceClientDataSet.FieldByName
-                      ('FixDiscount').asCurrency);
-                  end;
-                mrCancel:
-                  exit;
-              end;
-            end
-            else if SourceClientDataSet.FieldByName('PricePartionDate')
-              .asCurrency <> 0 then
-            begin
-              CalcPriceSale(lPriceSale, lPrice, lChangePercent,
-                SourceClientDataSet.FieldByName('Price').asCurrency, 0,
-                SourceClientDataSet.FieldByName('PricePartionDate').asCurrency);
-            end
-            else
-            begin
-              CalcPriceSale(lPriceSale, lPrice, lChangePercent,
-                SourceClientDataSet.FieldByName('Price').asCurrency, 0);
+                  CalcPriceSale(lPriceSale, lPrice, lChangePercent,
+                    SourceClientDataSet.FieldByName('Price').asCurrency, 0,
+                    IfZero(SourceClientDataSet.FieldByName('PricePartionDate')
+                    .asCurrency, SourceClientDataSet.FieldByName('Price')
+                    .asCurrency) - SourceClientDataSet.FieldByName
+                    ('FixDiscount').asCurrency);
+                end;
+              mrCancel:
+                exit;
             end;
+          end;
+        end
+        else if SourceClientDataSet.FieldByName('PricePartionDate').asCurrency <> 0 then
+        begin
+          CalcPriceSale(lPriceSale, lPrice, lChangePercent,
+            SourceClientDataSet.FieldByName('Price').asCurrency, 0,
+            SourceClientDataSet.FieldByName('PricePartionDate').asCurrency);
+        end
+        else
+        begin
+          CalcPriceSale(lPriceSale, lPrice, lChangePercent,
+            SourceClientDataSet.FieldByName('Price').asCurrency, 0);
+        end;
       end;
 
       // Если скидка по сети и не установлены соц. приект и дисконтная программа
@@ -7862,6 +7947,7 @@ begin
       lPrice := lPriceSale;
       // Кратность упаковки
       nMultiplicity := CheckCDS.FieldByName('Multiplicity').asCurrency;
+      nFixEndDate := CheckCDS.FieldByName('FixEndDate').AsVariant;
     end;
 
     if SoldRegim AND (nAmount > 0) then
@@ -8117,6 +8203,7 @@ begin
             CheckCDS.FieldByName('AccommodationName').AsVariant :=
               SourceClientDataSet.FieldByName('AccommodationName').AsVariant;
           CheckCDS.FieldByName('Multiplicity').AsVariant := nMultiplicity;
+          CheckCDS.FieldByName('FixEndDate').AsVariant := nFixEndDate;
 
           if CheckCDS.FieldByName('isPresent').AsVariant then
             CheckCDS.FieldByName('Color_calc').AsInteger := TColor($FFB0FF);
@@ -8612,7 +8699,11 @@ begin
   begin
      ACanvas.Brush.Color := clHighlight;
      ACanvas.Font.Color := clHighlightText;
+  end else if (AViewInfo.GridRecord.Values[MainFixPercent.Index] <> Null) and (AViewInfo.GridRecord.Values[MainFixPercent.Index] <> 0) then
+  begin
+    ACanvas.Brush.Color := TColor($FFD784);
   end;
+
   ACanvas.FillRect(AViewInfo.Bounds);
   if not VarIsNull(AViewInfo.GridRecord.Values[MainisBanFiscalSale.Index]) and
     AViewInfo.GridRecord.Values[MainisBanFiscalSale.Index] then
@@ -8621,6 +8712,7 @@ begin
     ACanvas.Line(Point(AViewInfo.Bounds.Left + 1, AViewInfo.Bounds.Bottom - 5),
       Point(AViewInfo.Bounds.Right - 1, AViewInfo.Bounds.Bottom - 5));
   end;
+
   AText := AViewInfo.GridRecord.Values[AViewInfo.Item.Index];
   ACanvas.TextOut(AViewInfo.Bounds.Left + 2, AViewInfo.Bounds.Top + 2, AText);
   ADone := True;
@@ -8642,6 +8734,16 @@ procedure TMainCashForm2.MainColReservedGetDisplayText
 begin
   if AText = '0' then
     AText := '';
+end;
+
+procedure TMainCashForm2.MainFixPercentStylesGetContentStyle(
+  Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
+  AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
+begin
+  FStyle.Assign(dmMain.cxContentStyle);
+  if (ARecord.Values[MainFixPercent.Index] <> Null) and (ARecord.Values[MainFixPercent.Index] <> 0) then
+    FStyle.Color := TColor($FFD784);
+  AStyle := FStyle;
 end;
 
 procedure TMainCashForm2.MainGridPriceChangeNightGetDisplayText
@@ -8991,6 +9093,7 @@ procedure TMainCashForm2.ParentFormDestroy(Sender: TObject);
 begin
   inherited;
   CloseMutex;
+  FStyle.Free;
 end;
 
 procedure TMainCashForm2.ParentFormKeyDown(Sender: TObject; var Key: Word;

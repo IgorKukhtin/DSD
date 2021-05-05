@@ -161,8 +161,10 @@ BEGIN
                    , SUM(COALESCE (MI_PromoGoods.Price, 0) - COALESCE (MI_PromoGoods.PriceWithVAT,0))              :: TFloat  AS Price_Diff
                    
                    , AVG (COALESCE (MI_PromoGoods.MainDiscount,0))                                                 ::TFloat   AS MainDiscount
-                   , MAX (MIFloat_PriceIn1.ValueData)                                                              :: TFloat  AS PriceIn1               --себестоимость факт,  за кг
-                   , ObjectString_Goods_GoodsGroupFull.ValueData                                                           AS GoodsGroupNameFull
+                   , MAX (MIFloat_PriceIn1.ValueData)                                                              ::TFloat   AS PriceIn1               --себестоимость факт,  за кг
+                   , MAX (MI_PromoGoods.ContractCondition)                                                         ::TFloat   AS ContractCondition      -- Бонус сети, %
+                   , ObjectString_Goods_GoodsGroupFull.ValueData                                                              AS GoodsGroupNameFull
+                   
               FROM tmpMovement AS Movement_Promo
 
                    LEFT JOIN MovementItem_PromoGoods_View AS MI_PromoGoods
@@ -352,7 +354,7 @@ BEGIN
           , (MI_PromoGoods.Price_Diff * COALESCE (MI_PromoGoods.AmountSaleWeight, 0))    :: TFloat AS Profit_Virt
           , (MI_PromoGoods.Price * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.AmountReal, 0) ELSE COALESCE (MI_PromoGoods.AmountRealWeight, 0) END)         :: TFloat AS SummReal
           , (MI_PromoGoods.PriceWithVAT * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.AmountSale, 0) ELSE COALESCE (MI_PromoGoods.AmountSaleWeight, 0) END ) :: TFloat AS SummPromo
-          , 0                                                                            :: TFloat AS ContractCondition      -- Бонус сети, %
+          , MI_PromoGoods.ContractCondition                                              :: TFloat AS ContractCondition      -- Бонус сети, %
           
           , CASE WHEN COALESCE (MI_PromoGoods.PriceIn1, 0) <> 0 AND COALESCE (MI_PromoGoods.AmountSaleWeight, 0) <> 0
                  THEN (MI_PromoGoods.PriceWithVAT * COALESCE (MI_PromoGoods.AmountSaleWeight, 0))

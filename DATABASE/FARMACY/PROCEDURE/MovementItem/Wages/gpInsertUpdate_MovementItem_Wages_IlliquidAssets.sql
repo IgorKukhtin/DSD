@@ -52,7 +52,7 @@ BEGIN
     END IF; 
 
      -- сохранили свойство <Маркетинг>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_IlliquidAssets(), ioId, inIlliquidAssets);
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaIlliquidAssets(), ioId, inIlliquidAssets);
 
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);

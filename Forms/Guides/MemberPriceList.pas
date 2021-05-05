@@ -58,8 +58,9 @@ type
     bbProtocolOpenForm: TdxBarButton;
     spUpdate: TdsdStoredProc;
     actUpdateObject: TdsdUpdateDataSet;
-    actUnitChoice: TOpenChoiceForm;
+    actPriceListChoice: TOpenChoiceForm;
     bbOpenFormTTN: TdxBarButton;
+    UnitName_Personal: TcxGridDBColumn;
   private
     { Private declarations }
   public

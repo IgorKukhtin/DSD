@@ -308,7 +308,7 @@ inherited SPDialogForm: TSPDialogForm
       end
       item
         Name = 'MasterOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDateSP
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -456,7 +456,7 @@ inherited SPDialogForm: TSPDialogForm
       end
       item
         Name = 'MasterOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDateSP
         DataType = ftDateTime
         MultiSelectSeparator = ','

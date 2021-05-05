@@ -1536,7 +1536,7 @@ BEGIN
                                 AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
             LEFT JOIN Object_Personal_View AS Object_Personal ON Object_Personal.PersonalId = COALESCE (ObjectLink_Partner_Personal.ChildObjectId, tmpPersonal.PersonalId)
 
-       WHERE ((ObjectLink_Partner_Personal.ChildObjectId = inPersonalId AND inPaidKindId = zc_Enum_PaidKind_SecondForm()) OR inPersonalId = 0)
+       WHERE ((Object_PersonalTrade.PersonalId = inPersonalId AND inPaidKindId = zc_Enum_PaidKind_SecondForm()) OR inPersonalId = 0)
          OR  inPaidKindId = zc_Enum_PaidKind_FirstForm()
        --
                     

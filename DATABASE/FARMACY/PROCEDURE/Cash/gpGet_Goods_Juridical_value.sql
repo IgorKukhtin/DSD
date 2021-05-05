@@ -27,6 +27,11 @@ BEGIN
        vbUnitKey := '0';
     END IF;
     vbUnitId := vbUnitKey::Integer;
+    
+    IF inDiscountExternal = 15645454 AND CURRENT_DATE >= '01.08.2021'
+    THEN
+      RAISE EXCEPTION 'Срок действия дисконтной программы завершен.';
+    END IF;
 
     WITH
          tmpDiscountExternal AS (SELECT Object_DiscountExternal.ObjectCode
@@ -99,6 +104,7 @@ BEGIN
                                 LEFT JOIN tmpDiscountExternal ON 1 = 1
 
                           WHERE COALESCE(tmpSupplier.SupplierID, 0) > 0
+                            AND (inDiscountExternal <> 15645454 OR Movement_Income.OperDate < '01.05.2021')
                           GROUP BY MovementLinkObject_From.ObjectId
                                  , COALESCE(tmpSupplier.SupplierID, 0)
                                  , tmpDiscountExternal.isOneSupplier

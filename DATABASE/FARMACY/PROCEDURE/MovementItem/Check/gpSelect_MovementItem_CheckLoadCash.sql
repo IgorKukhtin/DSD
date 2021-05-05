@@ -48,6 +48,7 @@ RETURNS TABLE (Id Integer
              , isPresent Boolean
              , MultiplicitySale TFloat
              , isMultiplicityError boolean
+             , FixEndDate TDateTime
               )
 AS
 $BODY$
@@ -321,6 +322,7 @@ BEGIN
            , MovementItem.isPresent                                              AS isPresent
            , Object_Goods_Main.Multiplicity                                      AS MultiplicitySale
            , Object_Goods_Main.isMultiplicityError                               AS isMultiplicityError
+           , Null::TDateTime                                                     AS FixEndDate 
            
            FROM tmpMI AS MovementItem
 

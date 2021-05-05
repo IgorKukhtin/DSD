@@ -1533,6 +1533,82 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         end>
       Caption = 'actGetNDS'
     end
+    object actPrintMemberSP: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actGetNDS
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303 ('#1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1087#1072#1094#1080#1077#1085#1090#1091')'
+      ImageIndex = 3
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 
+            'MemberSP;JuridicalName;HospitalName;ContractName;isPrintLast;Ope' +
+            'rDate;GoodsName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42736d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42736d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GroupMemberSPName'
+          Value = ''
+          Component = GroupMemberSPGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGroupMemberSP'
+          Value = False
+          Component = cbGroupMemberSP
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Invoice'
+          Value = ''
+          Component = edInvoice
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PercentSP'
+          Value = 0.000000000000000000
+          Component = cePercentSP
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'NDS'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'NDS'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303'
+      ReportNameParam.Value = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -1664,6 +1740,10 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintMemberSP'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1727,6 +1807,10 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
     end
     object bbPrintBill: TdxBarButton
       Action = actPrintBill
+      Category = 0
+    end
+    object bbPrintMemberSP: TdxBarButton
+      Action = actPrintMemberSP
       Category = 0
     end
   end

@@ -158,7 +158,7 @@
       end
       object ceManagerPharmacy: TcxCheckBox
         Left = 143
-        Top = 20
+        Top = 17
         Hint = #1047#1072#1074#1077#1076#1091#1102#1097#1072#1103' '#1072#1087#1090#1077#1082#1086#1081
         Caption = #1047#1072#1074#1077#1076#1091#1102#1097#1072#1103' '#1072#1087#1090#1077#1082#1086#1081
         TabOrder = 19
@@ -183,10 +183,18 @@
       end
       object ceNotSchedule: TcxCheckBox
         Left = 143
-        Top = 39
+        Top = 32
         Hint = #1053#1077' '#1090#1088#1077#1073#1086#1074#1072#1090#1100' '#1086#1090#1084#1077#1095#1072#1090#1100#1089#1103' '#1074' '#1082#1072#1089#1089#1077'  '
         Caption = #1053#1077' '#1090#1088#1077#1073#1086#1074#1072#1090#1100' '#1086#1090#1084#1077#1095#1072#1090#1100#1089#1103' '#1074' '#1082#1072#1089#1089#1077'  '
         TabOrder = 22
+        Width = 211
+      end
+      object cbReleasedMarketingPlan: TcxCheckBox
+        Left = 143
+        Top = 47
+        Hint = #1053#1077' '#1090#1088#1077#1073#1086#1074#1072#1090#1100' '#1086#1090#1084#1077#1095#1072#1090#1100#1089#1103' '#1074' '#1082#1072#1089#1089#1077'  '
+        Caption = #1054#1089#1074#1086#1073#1086#1078#1076#1077#1085' '#1086#1090' '#1087#1083#1072#1085#1072' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+        TabOrder = 23
         Width = 211
       end
     end
@@ -293,7 +301,7 @@
       end
       item
         Name = 'inIsOfficial'
-        Value = 'False'
+        Value = False
         Component = cbOfficial
         DataType = ftBoolean
         ParamType = ptInput
@@ -386,6 +394,14 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisReleasedMarketingPlan'
+        Value = Null
+        Component = cbReleasedMarketingPlan
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 224
     Top = 48
@@ -416,7 +432,7 @@
       end
       item
         Name = 'IsOfficial'
-        Value = 'False'
+        Value = False
         Component = cbOfficial
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -518,6 +534,13 @@
         Name = 'isNotSchedule'
         Value = Null
         Component = ceNotSchedule
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isReleasedMarketingPlan'
+        Value = Null
+        Component = cbReleasedMarketingPlan
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

@@ -38,6 +38,7 @@ RETURNS TABLE (Id Integer, ParentId integer
              , NDSKindId Integer
              , DivisionPartiesId Integer, DivisionPartiesName TVarChar
              , isPresent Boolean
+             , FixEndDate TDateTime
               )
 AS
 $BODY$
@@ -184,6 +185,7 @@ BEGIN
            , Object_DivisionParties.ValueData                                    AS DivisionPartiesName 
            
            , COALESCE (MIBoolean_Present.ValueData, False)                       AS isPresent
+           , Null::TDateTime                                                     AS FixEndDate 
 
            /*, MIFloat_ContainerId.ContainerId  ::TFloat                         AS ContainerId
            , COALESCE (tmpContainer.ExpirationDate, NULL)      :: TDateTime      AS ExpirationDate

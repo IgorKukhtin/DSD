@@ -158,6 +158,7 @@ BEGIN
            , zc_Color_Black()                                                    AS Color_ExpirationDate
            , Null::TVArChar                                                      AS AccommodationName
            , Null::TFloat                                                        AS Multiplicity
+           , Null::TDateTime                                                     AS FixEndDate
            , COALESCE (ObjectBoolean_DoesNotShare.ValueData, FALSE)              AS DoesNotShare
            , Null::TVArChar                                                      AS IdSP
            , Null::TFloat                                                        AS CountSP

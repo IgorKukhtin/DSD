@@ -2,7 +2,7 @@ object MemberPriceListEditForm: TMemberPriceListEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1089#1090#1091#1087' '#1082' '#1048#1079#1084#1077#1085#1077#1085#1080#1103#1084' '#1074' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1077'>'
-  ClientHeight = 218
+  ClientHeight = 239
   ClientWidth = 336
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,18 +18,18 @@ object MemberPriceListEditForm: TMemberPriceListEditForm
   TextHeight = 13
   object edComment: TcxTextEdit
     Left = 21
-    Top = 130
+    Top = 138
     TabOrder = 0
     Width = 284
   end
   object cxLabel1: TcxLabel
     Left = 21
-    Top = 113
+    Top = 121
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 48
-    Top = 183
+    Top = 191
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@ object MemberPriceListEditForm: TMemberPriceListEditForm
   end
   object cxButton2: TcxButton
     Left = 208
-    Top = 183
+    Top = 191
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -80,6 +80,44 @@ object MemberPriceListEditForm: TMemberPriceListEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
+    Width = 284
+  end
+  object cxLabel5: TcxLabel
+    Left = 277
+    Top = 108
+    Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+    Visible = False
+  end
+  object cePosition: TcxButtonEdit
+    Left = 277
+    Top = 125
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Visible = False
+    Width = 284
+  end
+  object cxLabel7: TcxLabel
+    Left = 277
+    Top = 157
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+    Visible = False
+  end
+  object ceUnit: TcxButtonEdit
+    Left = 277
+    Top = 174
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Visible = False
     Width = 284
   end
   object ActionList: TActionList
@@ -167,7 +205,7 @@ object MemberPriceListEditForm: TMemberPriceListEditForm
         MultiSelectSeparator = ','
       end>
     Left = 24
-    Top = 120
+    Top = 128
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_MemberPriceList'
@@ -220,8 +258,8 @@ object MemberPriceListEditForm: TMemberPriceListEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 224
-    Top = 98
+    Left = 240
+    Top = 106
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -239,8 +277,8 @@ object MemberPriceListEditForm: TMemberPriceListEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 296
-    Top = 133
+    Left = 144
+    Top = 173
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Top = 8
@@ -275,10 +313,10 @@ object MemberPriceListEditForm: TMemberPriceListEditForm
   object GuidesMember: TdsdGuides
     KeyField = 'Id'
     LookupControl = edMember
-    FormNameParam.Value = 'TMember_ObjectForm'
+    FormNameParam.Value = 'TMember_ChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMember_ObjectForm'
+    FormName = 'TMember_ChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -298,5 +336,67 @@ object MemberPriceListEditForm: TMemberPriceListEditForm
       end>
     Left = 160
     Top = 61
+  end
+  object GuidesPosition: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePosition
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TPositionForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPositionForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPosition
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPosition
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 292
+    Top = 120
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceUnit
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 301
+    Top = 150
   end
 end

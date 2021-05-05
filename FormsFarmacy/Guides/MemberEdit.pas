@@ -49,6 +49,7 @@ type
     cxLabel12: TcxLabel;
     UnitGuides: TdsdGuides;
     ceNotSchedule: TcxCheckBox;
+    cbReleasedMarketingPlan: TcxCheckBox;
   private
     { Private declarations }
   public

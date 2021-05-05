@@ -25,7 +25,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                StartDateMCSAuto TDateTime, EndDateMCSAuto TDateTime,
                isMCSAuto Boolean, isMCSNotRecalcOld Boolean,
                AccommodationId Integer, AccommodationName TVarChar,
-               PriceChange TFloat, FixPercent TFloat, FixDiscount TFloat, Multiplicity TFloat,
+               PriceChange TFloat, FixPercent TFloat, FixDiscount TFloat, Multiplicity TFloat, FixEndDate TDateTime,
                DoesNotShare boolean, GoodsAnalogId Integer, GoodsAnalogName TVarChar,
                GoodsAnalog TVarChar, GoodsAnalogATC TVarChar, GoodsActiveSubstance TVarChar,
                CountSP TFloat, IdSP TVarChar, ProgramIdSP TVarChar, DosageIdSP TVarChar, PriceRetSP TFloat, PaymentSP TFloat,
@@ -333,11 +333,12 @@ BEGIN
                                WHERE CashSessionSnapShot.CashSessionId = inCashSessionId
                               )
                 -- ÷ена со скидкой
-              , tmpPriceChange AS (SELECT DISTINCT ObjectLink_PriceChange_Goods.ChildObjectId                             AS GoodsId
-                                        , COALESCE (PriceChange_Value_Unit.ValueData, PriceChange_Value_Retail.ValueData) AS PriceChange
-                                        , COALESCE (PriceChange_FixPercent_Unit.ValueData, PriceChange_FixPercent_Retail.ValueData)::TFloat           AS FixPercent
-                                        , COALESCE (PriceChange_FixDiscount_Unit.ValueData, PriceChange_FixDiscount_Retail.ValueData)::TFloat           AS FixDiscount
+              , tmpPriceChange AS (SELECT DISTINCT ObjectLink_PriceChange_Goods.ChildObjectId                                                    AS GoodsId
+                                        , COALESCE (PriceChange_Value_Unit.ValueData, PriceChange_Value_Retail.ValueData)                        AS PriceChange
+                                        , COALESCE (PriceChange_FixPercent_Unit.ValueData, PriceChange_FixPercent_Retail.ValueData)::TFloat      AS FixPercent
+                                        , COALESCE (PriceChange_FixDiscount_Unit.ValueData, PriceChange_FixDiscount_Retail.ValueData)::TFloat    AS FixDiscount
                                         , COALESCE (PriceChange_Multiplicity_Unit.ValueData, PriceChange_Multiplicity_Retail.ValueData) ::TFloat AS Multiplicity
+                                        , COALESCE (PriceChange_FixEndDate_Unit.ValueData, PriceChange_FixEndDate_Retail.ValueData)              AS FixEndDate
                                    FROM Object AS Object_PriceChange
                                         -- скидка по подразд
                                         LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Unit
@@ -364,6 +365,11 @@ BEGIN
                                                               ON PriceChange_Multiplicity_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
                                                              AND PriceChange_Multiplicity_Unit.DescId = zc_ObjectFloat_PriceChange_Multiplicity()
                                                              AND COALESCE (PriceChange_Multiplicity_Unit.ValueData, 0) <> 0
+                                        -- ƒата окончани€ действи€ скидки
+                                        LEFT JOIN ObjectDate AS PriceChange_FixEndDate_Unit
+                                                             ON PriceChange_FixEndDate_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                            AND PriceChange_FixEndDate_Unit.DescId = zc_ObjectDate_PriceChange_FixEndDate()
+
                                         -- скидка по сети
                                         LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Retail
                                                              ON ObjectLink_PriceChange_Retail.ObjectId = Object_PriceChange.Id
@@ -389,6 +395,10 @@ BEGIN
                                                               ON PriceChange_Multiplicity_Retail.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
                                                              AND PriceChange_Multiplicity_Retail.DescId = zc_ObjectFloat_PriceChange_Multiplicity()
                                                              AND COALESCE (PriceChange_Multiplicity_Retail.ValueData, 0) <> 0
+                                        -- ƒата окончани€ действи€ скидки по сети.
+                                        LEFT JOIN ObjectDate AS PriceChange_FixEndDate_Retail
+                                                             ON PriceChange_FixEndDate_Retail.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
+                                                            AND PriceChange_FixEndDate_Retail.DescId = zc_ObjectDate_PriceChange_FixEndDate()
 
                                         LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Goods
                                                              ON ObjectLink_PriceChange_Goods.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
@@ -868,6 +878,7 @@ BEGIN
           , tmpPriceChange.FixPercent
           , tmpPriceChange.FixDiscount
           , tmpPriceChange.Multiplicity
+          , tmpPriceChange.FixEndDate
           , COALESCE (Object_Goods_Main.isDoesNotShare, FALSE)     AS DoesNotShare
           , NULL::Integer                                          AS GoodsAnalogId
           , NULL::TVarChar                                         AS GoodsAnalogName

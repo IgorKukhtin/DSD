@@ -68,6 +68,7 @@ $BODY$
 
    DECLARE vbServiceDateId Integer;
    DECLARE vbisDetail Boolean;
+   DECLARE vbPersonalServiceListId Integer;
 BEGIN
      -- проверка
      IF COALESCE (inMovementId, 0) = 0
@@ -133,9 +134,17 @@ BEGIN
 
      -- проверка записываем zc_MILinkObject_FineSubject - но только для ведомости с признаком zc_ObjectBoolean_PersonalServiceList_Detail  = TRUE 
      -- получаем свойство PersonalServiceList
+     vbPersonalServiceListId:= CASE WHEN COALESCE (inPersonalServiceListId,0) <> 0 THEN inPersonalServiceListId
+                                    ELSE
+                                         (SELECT MovementLinkObject.ObjectId
+                                          FROM MovementLinkObject
+                                          WHERE MovementLinkObject.MovementId = inMovementId
+                                            AND MovementLinkObject.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                                          )
+                               END;
      vbisDetail := COALESCE ((SELECT ObjectBoolean.ValueData
                               FROM ObjectBoolean
-                              WHERE ObjectBoolean.ObjectId = inPersonalServiceListId 
+                              WHERE ObjectBoolean.ObjectId = vbPersonalServiceListId 
                                 AND ObjectBoolean.DescId = zc_ObjectBoolean_PersonalServiceList_Detail())
                              , FALSE) ::Boolean;
      IF COALESCE (inFineSubjectId,0) <> 0 AND vbisDetail = FALSE

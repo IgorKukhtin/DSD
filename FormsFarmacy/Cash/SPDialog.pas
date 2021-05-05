@@ -82,7 +82,7 @@ implementation
 
 {$R *.dfm}
 
-uses IniUtils, DiscountService, RegularExpressions, MainCash, MainCash2, Helsi;
+uses IniUtils, DiscountService, RegularExpressions, MainCash, MainCash2, Helsi, LikiDniproeHealth;
 
 function TSPDialogForm.CheckInvNumberSP(ASPKind : integer; ANumber : string) : boolean;
   var Res: TArray<string>; I, J : Integer; bCheck : boolean;
@@ -154,7 +154,13 @@ begin
       end;
     end else Exit;
 
-    Result := GetHelsiReceipt(ANumber, FHelsiID, FHelsiIDList, FHelsiName, FHelsiQty, FHelsiDate);
+    if MainCash2.MainCashForm.UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
+    begin
+      Result := GetHelsiReceipt(ANumber, FHelsiID, FHelsiIDList, FHelsiName, FHelsiQty, FHelsiDate);
+    end else if MainCash2.MainCashForm.UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 2 then
+    begin
+      Result := GetLikiDniproeHealthReceipt(ANumber, FHelsiID, FHelsiIDList, FHelsiName, FHelsiQty, FHelsiDate);
+    end;
   end;
 end;
 
