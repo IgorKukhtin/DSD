@@ -20,7 +20,7 @@ BEGIN
      -- !!!выход!!!
      IF vbStatusId <> zc_Enum_Status_Complete() THEN RETURN; END IF;
 
-     -- IF vbOperDate BETWEEN '03.05.2020' and '31.05.2020' THEN RETURN; END IF;
+     -- IF vbOperDate BETWEEN '01.04.2021' and '21.04.2021' THEN RETURN; END IF;
      -- IF vbMovementDescId IN (zc_Movement_Inventory()) THEN RETURN; END IF;
      
 

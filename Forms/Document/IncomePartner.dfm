@@ -1448,6 +1448,7 @@ object IncomePartnerForm: TIncomePartnerForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -1585,7 +1586,7 @@ object IncomePartnerForm: TIncomePartnerForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PriceListName'
+        Name = 'outPriceListName'
         Value = Null
         Component = GuidesPriceList
         ComponentItem = 'TextValue'
@@ -1632,11 +1633,11 @@ object IncomePartnerForm: TIncomePartnerForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inChangePercentTo'
+        Name = 'ioChangePercentTo'
         Value = Null
         Component = edChangePercentTo
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

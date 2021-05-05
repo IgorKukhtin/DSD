@@ -16,11 +16,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income_Partner(
 
  INOUT ioPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
  INOUT ioVATPercent          TFloat    , -- % НДС
-    IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки 
+    IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
 
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
-    IN inPaidKindId          Integer   , -- Виды форм оплаты 
+    IN inPaidKindId          Integer   , -- Виды форм оплаты
     IN inContractId          Integer   , -- Договора
     IN inPersonalPackerId    Integer   , -- Сотрудник (заготовитель)
  INOUT ioPriceListId         Integer    , -- Прайс лист
@@ -28,12 +28,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income_Partner(
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
     IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
    OUT outCurrencyValue      TFloat    , -- курс валюты
-    IN inContractToId        Integer   , -- Договора  
-    IN inPaidKindToId        Integer   , -- Виды форм оплаты 
-    IN inChangePercentTo     TFloat    , -- (-)% Скидки (+)% Наценки 
+    IN inContractToId        Integer   , -- Договора
+    IN inPaidKindToId        Integer   , -- Виды форм оплаты
+ INOUT ioChangePercentTo     TFloat    , -- (-)% Скидки (+)% Наценки
     IN inisIncome            Boolean   , -- False признак приход от покупателя
     IN inSession             TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS RECORD
 AS
 $BODY$
@@ -44,7 +44,15 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Income());
 
-     
+
+     -- нашли/замена
+     ioChangePercentTo:= (SELECT Object_ContractCondition_ValueView.ChangePercentPartner
+                          FROM Object_ContractCondition_ValueView
+                          WHERE Object_ContractCondition_ValueView.ContractId = inContractId
+                            AND inOperDatePartner BETWEEN Object_ContractCondition_ValueView.StartDate AND Object_ContractCondition_ValueView.EndDate
+                         );
+
+
      -- сохранили <Документ>
      SELECT tmp.ioId, tmp.ioCurrencyValue, tmp.ioPriceListId, tmp.outPriceListName, tmp.ioPriceWithVAT, tmp.ioVATPercent
             INTO ioId, outCurrencyValue, ioPriceListId, outPriceListName, ioPriceWithVAT, ioVATPercent
@@ -74,8 +82,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKindTo(), ioId, inPaidKindToId);
      -- сохранили связь с <Договора>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ContractTo(), ioId, inContractToId);
-     -- сохранили свойство <(-)% Скидки (+)% Наценки покупателя> 
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercentPartner(), ioId, inChangePercentTo);
+     -- сохранили свойство <(-)% Скидки (+)% Наценки покупателя>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercentPartner(), ioId, ioChangePercentTo);
      -- сохранили свойство <приход>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isIncome(), ioId, inisIncome);
 
