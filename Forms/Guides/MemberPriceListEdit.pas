@@ -44,6 +44,12 @@ type
     edMember: TcxButtonEdit;
     GuidesPriceList: TdsdGuides;
     GuidesMember: TdsdGuides;
+    cxLabel5: TcxLabel;
+    cePosition: TcxButtonEdit;
+    GuidesPosition: TdsdGuides;
+    cxLabel7: TcxLabel;
+    ceUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
   private
     { Private declarations }
   public

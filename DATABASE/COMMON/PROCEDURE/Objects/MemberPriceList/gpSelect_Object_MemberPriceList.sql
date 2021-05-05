@@ -9,6 +9,7 @@ RETURNS TABLE (Id Integer
              , PriceListId Integer, PriceListCode Integer, PriceListName TVarChar
              , MemberId Integer, MemberCode Integer, MemberName TVarChar
              , BranchName_Personal TVarChar
+             , UnitName_Personal TVarChar
              , PositionName_Personal TVarChar
              , Comment TVarChar
              , isErased Boolean) AS
@@ -26,6 +27,7 @@ BEGIN
                                , lfSelect.PersonalId
                                , lfSelect.PositionId
                                , lfSelect.BranchId
+                               , lfSelect.UnitId
                           FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
                           WHERE lfSelect.Ord = 1
                          )
@@ -39,6 +41,7 @@ BEGIN
            , Object_Member.ValueData      AS MemberName 
 
            , Object_Branch.ValueData         AS BranchName_Personal
+           , Object_Unit.ValueData           AS UnitName_Personal
            , Object_Position.ValueData       AS PositionName_Personal
                    
            , ObjectString_Comment.ValueData  AS Comment
@@ -61,6 +64,7 @@ BEGIN
            LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = Object_Member.Id
            LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
            LEFT JOIN Object AS Object_Branch   ON Object_Branch.Id   = tmpPersonal.BranchId
+           LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id   = tmpPersonal.UnitId
             
    WHERE Object_MemberPriceList.DescId = zc_Object_MemberPriceList();
 
