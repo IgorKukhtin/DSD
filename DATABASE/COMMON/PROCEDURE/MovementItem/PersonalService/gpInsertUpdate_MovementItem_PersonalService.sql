@@ -78,15 +78,24 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbisBankOut Boolean;
    DECLARE vbisDetail Boolean;
+   DECLARE vbPersonalServiceListId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalService());
 
      --проверка, если добавляют по маске, то vbisDetail должно быть = TRUE
      -- получаем свойство PersonalServiceList
+     vbPersonalServiceListId:= CASE WHEN COALESCE (inPersonalServiceListId,0) <> 0 THEN inPersonalServiceListId
+                                    ELSE
+                                         (SELECT MovementLinkObject.ObjectId
+                                          FROM MovementLinkObject
+                                          WHERE MovementLinkObject.MovementId = inMovementId
+                                            AND MovementLinkObject.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                                          )
+                               END;
      vbisDetail := COALESCE ((SELECT ObjectBoolean.ValueData
                               FROM ObjectBoolean
-                              WHERE ObjectBoolean.ObjectId = inPersonalServiceListId 
+                              WHERE ObjectBoolean.ObjectId = vbPersonalServiceListId 
                                 AND ObjectBoolean.DescId = zc_ObjectBoolean_PersonalServiceList_Detail())
                              , FALSE) ::Boolean;
      IF COALESCE (ioId,0) = 0

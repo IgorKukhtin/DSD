@@ -58,7 +58,7 @@ object MemberPriceListForm: TMemberPriceListForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = actUnitChoice
+            Action = actPriceListChoice
             Default = True
             Kind = bkEllipsis
           end>
@@ -82,13 +82,6 @@ object MemberPriceListForm: TMemberPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 116
       end
-      object Comment: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-        DataBinding.FieldName = 'Comment'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 143
-      end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -101,10 +94,18 @@ object MemberPriceListForm: TMemberPriceListForm
       object BranchName_Personal: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083' ('#1092'.'#1083'.)'
         DataBinding.FieldName = 'BranchName_Personal'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 82
+      end
+      object UnitName_Personal: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1092'.'#1083'.)'
+        DataBinding.FieldName = 'UnitName_Personal'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object PositionName_Personal: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1092'.'#1083'.)'
@@ -113,6 +114,13 @@ object MemberPriceListForm: TMemberPriceListForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
+      end
+      object Comment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 143
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -475,13 +483,13 @@ object MemberPriceListForm: TMemberPriceListForm
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
     end
-    object actUnitChoice: TOpenChoiceForm
+    object actPriceListChoice: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'TUnit_ObjectForm'
-      FormName = 'TUnit_ObjectForm'
-      FormNameParam.Value = 'TUnit_ObjectForm'
+      Caption = 'TPriceList_ObjectForm'
+      FormName = 'TPriceList_ObjectForm'
+      FormNameParam.Value = 'TPriceList_ObjectForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -489,14 +497,14 @@ object MemberPriceListForm: TMemberPriceListForm
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'UnitId'
+          ComponentItem = 'PriceListId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'UnitName'
+          ComponentItem = 'PriceListName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -507,8 +515,8 @@ object MemberPriceListForm: TMemberPriceListForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'TMember_ObjectForm'
-      FormName = 'TMember_ObjectForm'
-      FormNameParam.Value = 'TMember_ObjectForm'
+      FormName = 'TMember_ChoiceForm'
+      FormNameParam.Value = 'TMember_ChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

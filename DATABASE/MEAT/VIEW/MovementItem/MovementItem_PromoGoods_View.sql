@@ -53,6 +53,7 @@ CREATE OR REPLACE VIEW MovementItem_PromoGoods_View AS
       , Object_GoodsKindComplete.ValueData             AS GoodsKindCompleteName       --Наименование обьекта <Вид товара (примечание)>
       , MIFloat_MainDiscount.ValueData   ::TFloat AS MainDiscount       -- Общая скидка для покупателя, %
       , (MIFloat_OperPriceList.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END)  ::TFloat AS OperPriceList      -- Цена в прайсе
+      , MIFloat_ContractCondition.ValueData    AS ContractCondition      -- Бонус сети, %
     FROM MovementItem
         LEFT JOIN MovementItemFloat AS MIFloat_Price
                                     ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -129,6 +130,10 @@ CREATE OR REPLACE VIEW MovementItem_PromoGoods_View AS
                                     ON ObjectFloat_Goods_Weight.ObjectId = MovementItem.ObjectId
                                    AND ObjectFloat_Goods_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
+        LEFT JOIN MovementItemFloat AS MIFloat_ContractCondition
+                                    ON MIFloat_ContractCondition.MovementItemId = MovementItem.Id
+                                   AND MIFloat_ContractCondition.DescId = zc_MIFloat_ContractCondition()
+                                                     
     WHERE MovementItem.DescId = zc_MI_Master();
 
 
