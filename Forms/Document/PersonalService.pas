@@ -221,6 +221,7 @@ type
     cbDetail: TcxCheckBox;
     FineSubjectName: TcxGridDBColumn;
     actFineSubjectOpenChoiceForm: TOpenChoiceForm;
+    actUnitFineSubjectChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

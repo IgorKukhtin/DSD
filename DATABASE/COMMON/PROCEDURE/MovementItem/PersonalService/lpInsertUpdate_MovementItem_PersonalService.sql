@@ -12,10 +12,15 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, In
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 */
+/*DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer);*/
+
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
-                                                                   , TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+                                                                   , TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
@@ -59,6 +64,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
     IN inMemberId               Integer   , -- Физ лицо (кому начисляют алименты)
     IN inPersonalServiceListId  Integer   , -- Ведомость начисления
     IN inFineSubjectId          Integer   , -- вид нарушения
+    IN inUnitFineSubjectId      Integer   , -- Кем налагается взыскание
     IN inUserId                 Integer     -- пользователь
 )                               
 RETURNS RECORD AS               
@@ -134,23 +140,21 @@ BEGIN
 
      -- проверка записываем zc_MILinkObject_FineSubject - но только для ведомости с признаком zc_ObjectBoolean_PersonalServiceList_Detail  = TRUE 
      -- получаем свойство PersonalServiceList
-     vbPersonalServiceListId:= CASE WHEN COALESCE (inPersonalServiceListId,0) <> 0 THEN inPersonalServiceListId
-                                    ELSE
-                                         (SELECT MovementLinkObject.ObjectId
-                                          FROM MovementLinkObject
-                                          WHERE MovementLinkObject.MovementId = inMovementId
-                                            AND MovementLinkObject.DescId     = zc_MovementLinkObject_PersonalServiceList()
-                                          )
-                               END;
+     vbPersonalServiceListId:= (SELECT MovementLinkObject.ObjectId
+                                FROM MovementLinkObject
+                                WHERE MovementLinkObject.MovementId = inMovementId
+                                  AND MovementLinkObject.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                                );
      vbisDetail := COALESCE ((SELECT ObjectBoolean.ValueData
                               FROM ObjectBoolean
                               WHERE ObjectBoolean.ObjectId = vbPersonalServiceListId 
                                 AND ObjectBoolean.DescId = zc_ObjectBoolean_PersonalServiceList_Detail())
                              , FALSE) ::Boolean;
-     IF COALESCE (inFineSubjectId,0) <> 0 AND vbisDetail = FALSE
+     IF (COALESCE (inFineSubjectId,0) <> 0 OR COALESCE (inUnitFineSubjectId,0) <> 0) AND vbisDetail = FALSE
      THEN
          RAISE EXCEPTION 'Ошибка.Для текущей ведомости Нет детализации данных.';
      END IF;
+
 
      -- !!!ВАЖНО!!!
      -- определяем ключ доступа
@@ -349,7 +353,9 @@ BEGIN
 
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_FineSubject(), ioId, inFineSubjectId);
-
+     -- сохранили связь с <>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_UnitFineSubject(), ioId, inUnitFineSubjectId);
+     
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
@@ -363,6 +369,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.05.21         * inUnitFineSubjectId
  28.04.21         * inFineSubjectId
  25.03.20         * inSummAuditAdd
  27.01.20         * add inSummCompensationRecalc

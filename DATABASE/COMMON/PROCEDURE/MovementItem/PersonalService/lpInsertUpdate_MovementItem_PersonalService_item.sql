@@ -83,6 +83,7 @@ BEGIN
                                                      , inMemberId               := inMemberId
                                                      , inPersonalServiceListId  := inPersonalServiceListId
                                                      , inFineSubjectId          := 0
+                                                     , inUnitFineSubjectId      := 0
                                                      , inUserId                 := inUserId
                                                       ) AS tmp;
 END;
