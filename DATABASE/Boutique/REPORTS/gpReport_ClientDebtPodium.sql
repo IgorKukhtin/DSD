@@ -56,6 +56,7 @@ RETURNS TABLE (MovementId_Partion   Integer
              , TotalPayOth_curr        TFloat
              , TotalReturn_curr        TFloat
              , TotalPayReturn_curr     TFloat
+             , TotalSummDebt_curr      TFloat
 
              , InsertName             TVarChar
              , isOffer                Boolean
@@ -312,13 +313,14 @@ BEGIN
                + COALESCE (tmpData.TotalPayOth,0)
                - COALESCE (tmpData.TotalPayReturn,0)) ::TFloat AS SummTotalPay
 
-             , tmpData.OperPriceList_curr
-             , tmpData.SummChangePercent_curr
-             , tmpData.TotalChangePercent_curr
-             , tmpData.TotalPay_curr
-             , tmpData.TotalPayOth_curr
-             , tmpData.TotalReturn_curr
-             , tmpData.TotalPayReturn_curr
+             , tmpData.OperPriceList_curr       ::TFloat
+             , tmpData.SummChangePercent_curr   ::TFloat
+             , tmpData.TotalChangePercent_curr  ::TFloat
+             , tmpData.TotalPay_curr            ::TFloat
+             , tmpData.TotalPayOth_curr         ::TFloat
+             , tmpData.TotalReturn_curr         ::TFloat
+             , tmpData.TotalPayReturn_curr      ::TFloat
+             , (zfCalc_SummPriceList (tmpData.Amount, tmpData.OperPriceList_curr) - tmpData.TotalChangePercent_curr - tmpData.TotalPay_curr) :: TFloat AS TotalSummDebt_curr
 
              , Object_Insert.ValueData   AS InsertName
              , COALESCE (MovementBoolean_Offer.ValueData, FALSE)  ::Boolean AS isOffer   -- примерка

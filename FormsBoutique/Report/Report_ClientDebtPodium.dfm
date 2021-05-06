@@ -5,7 +5,6 @@ inherited Report_ClientDebtPodiumForm: TReport_ClientDebtPodiumForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -22
   ExplicitWidth = 1081
   ExplicitHeight = 463
   PixelsPerInch = 96
@@ -719,6 +718,18 @@ inherited Report_ClientDebtPodiumForm: TReport_ClientDebtPodiumForm
             HeaderHint = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Options.Editing = False
             Width = 80
+          end
+          object TotalSummDebt_curr: TcxGridDBColumn
+            Caption = #1044#1086#1083#1075' EUR'
+            DataBinding.FieldName = 'TotalSummDebt_curr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1076#1086#1083#1075#1072' '#1074' '#1087#1088#1086#1076#1072#1078#1077', '#1074' '#1074#1072#1083#1102#1090#1077
+            Options.Editing = False
+            Width = 55
           end
           object InvNumber_Partion: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080
