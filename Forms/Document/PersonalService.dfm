@@ -3599,6 +3599,13 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsDetail'
+        Value = Null
+        Component = cbDetail
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 304

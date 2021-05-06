@@ -10,9 +10,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalService(
     IN inComment                TVarChar  , -- Комментерий
     IN inPersonalServiceListId  Integer   , -- 
     IN inJuridicalId            Integer   , -- 
+   OUT outIsDetail              Boolean   , --
     IN inSession                TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -29,7 +30,7 @@ BEGIN
                                                     , inJuridicalId             := inJuridicalId
                                                     , inUserId                  := vbUserId
                                                      );
-
+     outIsDetail := COALESCE ((SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = ioId AND MB.DescId = zc_MovementBoolean_Detail()), FALSE);
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
