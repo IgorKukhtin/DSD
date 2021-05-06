@@ -52,11 +52,13 @@ RETURNS TABLE (MovementId_Partion   Integer
              , OperPriceList_curr      TFloat
              , SummChangePercent_curr  TFloat
              , TotalChangePercent_curr TFloat
+             , TotalChangePercentPay_curr TFloat
              , TotalPay_curr           TFloat
              , TotalPayOth_curr        TFloat
              , TotalReturn_curr        TFloat
              , TotalPayReturn_curr     TFloat
              , TotalSummDebt_curr      TFloat
+             , TotalSummToPay_curr     TFloat
 
              , InsertName             TVarChar
              , isOffer                Boolean
@@ -157,6 +159,7 @@ BEGIN
                           , COALESCE (MIFloat_OperPriceList_curr.ValueData, 0)         AS OperPriceList_curr
                           , COALESCE (MIFloat_SummChangePercent_curr.ValueData, 0)     AS SummChangePercent_curr
                           , COALESCE (MIFloat_TotalChangePercent_curr.ValueData, 0)    AS TotalChangePercent_curr
+                          , COALESCE (MIFloat_TotalChangePercentPay_curr.ValueData, 0) AS TotalChangePercentPay_curr
                           , COALESCE (MIFloat_TotalPay_curr.ValueData, 0)              AS TotalPay_curr
                           , COALESCE (MIFloat_TotalPayOth_curr.ValueData, 0)           AS TotalPayOth_curr
                           , COALESCE (MIFloat_TotalReturn_curr.ValueData, 0)           AS TotalReturn_curr
@@ -178,7 +181,10 @@ BEGIN
                           LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercentPay
                                                       ON MIFloat_TotalChangePercentPay.MovementItemId = tmpData.MovementItemId_Sale
                                                      AND MIFloat_TotalChangePercentPay.DescId         = zc_MIFloat_TotalChangePercentPay()
-
+                          LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercentPay_curr
+                                                      ON MIFloat_TotalChangePercentPay_curr.MovementItemId = tmpData.MovementItemId_Sale
+                                                     AND MIFloat_TotalChangePercentPay_curr.DescId         = zc_MIFloat_TotalChangePercentPay_curr()
+                                                       
                           LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
                                                       ON MIFloat_TotalPay.MovementItemId = tmpData.MovementItemId_Sale
                                                      AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
@@ -245,6 +251,7 @@ BEGIN
                           , tmp.OperPriceList_curr
                           , tmp.SummChangePercent_curr
                           , tmp.TotalChangePercent_curr
+                          , tmp.TotalChangePercentPay_curr
                           , tmp.TotalPay_curr
                           , tmp.TotalPayOth_curr
                           , tmp.TotalReturn_curr
@@ -308,6 +315,7 @@ BEGIN
                - COALESCE (tmpData.TotalChangePercent,0) 
                - COALESCE (tmpData.TotalReturn ,0)
                - COALESCE (tmpData.TotalChangePercentPay,0)) ::TFloat AS SummToPay
+
              --сумма оплаты итого
              , (COALESCE (tmpData.TotalPay,0)
                + COALESCE (tmpData.TotalPayOth,0)
@@ -316,11 +324,18 @@ BEGIN
              , tmpData.OperPriceList_curr       ::TFloat
              , tmpData.SummChangePercent_curr   ::TFloat
              , tmpData.TotalChangePercent_curr  ::TFloat
+             , tmpData.TotalChangePercentPay_curr ::TFloat
              , tmpData.TotalPay_curr            ::TFloat
              , tmpData.TotalPayOth_curr         ::TFloat
              , tmpData.TotalReturn_curr         ::TFloat
              , tmpData.TotalPayReturn_curr      ::TFloat
              , (zfCalc_SummPriceList (tmpData.Amount, tmpData.OperPriceList_curr) - tmpData.TotalChangePercent_curr - tmpData.TotalPay_curr) :: TFloat AS TotalSummDebt_curr
+
+             , (zfCalc_SummPriceList (tmpData.Amount, tmpData.OperPriceList_curr)
+               - COALESCE (tmpData.SummChangePercent_curr,0) 
+               - COALESCE (tmpData.TotalChangePercent_curr,0) 
+               - COALESCE (tmpData.TotalReturn_curr,0)
+               - COALESCE (tmpData.TotalChangePercentPay_curr,0)) ::TFloat AS TotalSummToPay_curr
 
              , Object_Insert.ValueData   AS InsertName
              , COALESCE (MovementBoolean_Offer.ValueData, FALSE)  ::Boolean AS isOffer   -- примерка
