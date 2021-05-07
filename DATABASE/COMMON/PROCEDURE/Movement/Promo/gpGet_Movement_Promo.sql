@@ -1,10 +1,12 @@
 -- Function: gpGet_Movement_Promo()
 
-DROP FUNCTION IF EXISTS gpGet_Movement_Promo (Integer, TDateTime, TVarChar);
+--DROP FUNCTION IF EXISTS gpGet_Movement_Promo (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Promo (Integer, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Promo(
     IN inMovementId        Integer  , -- ключ Документа
     IN inOperDate          TDateTime, -- ключ Документа
+    IN inMask              Boolean  , -- добавить по маске
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id               Integer     --Идентификатор
@@ -59,6 +61,13 @@ BEGIN
     -- vbUserId:= lpGetUserBySession (inSession);
 
     --IF NOT EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId
+     -- создаем док по маске
+     IF COALESCE (inMask, False) = True
+     THEN
+     inMovementId := gpInsert_Movement_Promo_Mask (ioId        := inMovementId
+                                                 , inOperDate  := inOperDate
+                                                 , inSession   := inSession); 
+     END IF;
 
     IF COALESCE (inMovementId, 0) < 0
     THEN
@@ -182,6 +191,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 07.05.21         * add inMask
  13.07.20         * ChangePercent
  01.04.20         *
  01.08.17         * CheckedDate
@@ -190,4 +200,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Promo (inMovementId:= 1, inOperDate:= '30.11.2015', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Movement_Promo (inMovementId:= 1, inOperDate:= '30.11.2015', inMask:= False, inSession:= zfCalc_UserAdmin())
