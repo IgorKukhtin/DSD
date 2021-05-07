@@ -958,6 +958,49 @@ inherited SendJournalForm: TSendJournalForm
         end>
       Caption = 'actExecSetErased_Filter'
     end
+    object macSetDriverSun: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actOpenChoiceDriverSun
+      ActionList = <
+        item
+          Action = actExecSPDriverSun
+        end>
+      View = cxGridDBTableView
+      Caption = #1084#1072#1089#1089#1086#1074#1086#1077' '#1087#1088#1086#1089#1090#1072#1074#1083#1077#1085#1080#1077' "'#1042#1086#1076#1080#1090#1077#1083#1103' '#1087#1086#1083#1091#1095#1080#1074#1096#1077#1075#1086' '#1090#1086#1074#1072#1088'"'
+      Hint = #1084#1072#1089#1089#1086#1074#1086#1077' '#1087#1088#1086#1089#1090#1072#1074#1083#1077#1085#1080#1077' "'#1042#1086#1076#1080#1090#1077#1083#1103' '#1087#1086#1083#1091#1095#1080#1074#1096#1077#1075#1086' '#1090#1086#1074#1072#1088'"'
+      ImageIndex = 55
+    end
+    object actOpenChoiceDriverSun: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenChoiceDriverSun'
+      FormName = 'TDriverSunForm'
+      FormNameParam.Value = 'TDriverSunForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DriverSunId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actExecSPDriverSun: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Movement_DriverSun
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Movement_DriverSun
+        end>
+      Caption = 'actExecSPDriverSun'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1139,6 +1182,10 @@ inherited SendJournalForm: TSendJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton7'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1205,6 +1252,10 @@ inherited SendJournalForm: TSendJournalForm
     end
     object dxBarButton6: TdxBarButton
       Action = actSetErasedFilter
+      Category = 0
+    end
+    object dxBarButton7: TdxBarButton
+      Action = macSetDriverSun
       Category = 0
     end
   end
@@ -1327,6 +1378,11 @@ inherited SendJournalForm: TSendJournalForm
         Name = 'inisVip'
         Value = False
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DriverSunId'
+        Value = Null
         MultiSelectSeparator = ','
       end>
     Left = 400
@@ -1491,8 +1547,8 @@ inherited SendJournalForm: TSendJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 728
-    Top = 347
+    Left = 720
+    Top = 323
   end
   object spUpdate_Movement_Sent: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_SentList'
@@ -1517,8 +1573,8 @@ inherited SendJournalForm: TSendJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 728
-    Top = 403
+    Left = 720
+    Top = 371
   end
   object spUpdate_isDefSun: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Send_isDefSUN'
@@ -1664,5 +1720,30 @@ inherited SendJournalForm: TSendJournalForm
     PackSize = 1
     Left = 600
     Top = 451
+  end
+  object spUpdate_Movement_DriverSun: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_DriverSun'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDriverSunId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DriverSunId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 720
+    Top = 403
   end
 end

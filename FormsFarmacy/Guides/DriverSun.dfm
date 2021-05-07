@@ -26,8 +26,6 @@ object DriverSunForm: TDriverSunForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = 64
-    ExplicitTop = 18
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -170,7 +168,15 @@ object DriverSunForm: TDriverSunForm
           ItemName = 'bbSetUnErased'
         end
         item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
           BeginGroup = True
+          Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -249,6 +255,10 @@ object DriverSunForm: TDriverSunForm
     end
     object bbProtocolOpenForm: TdxBarButton
       Action = ProtocolOpenForm
+      Category = 0
+    end
+    object bbShowErased: TdxBarButton
+      Action = actShowErased
       Category = 0
     end
   end
@@ -412,6 +422,25 @@ object DriverSunForm: TDriverSunForm
       isSetErased = False
       DataSource = DataSource
     end
+    object actShowErased: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = dsdStoredProc
+      StoredProcList = <
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_DriverSun'
@@ -420,7 +449,15 @@ object DriverSunForm: TDriverSunForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inIsErased'
+        Value = Null
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 144
     Top = 152
@@ -467,6 +504,7 @@ object DriverSunForm: TDriverSunForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <
       item
@@ -477,6 +515,7 @@ object DriverSunForm: TDriverSunForm
       end>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 48
     Top = 216

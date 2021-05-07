@@ -225,9 +225,9 @@ BEGIN
             , Container.Id       AS ContainerId
             , CASE WHEN COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE) = FALSE
                      OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 0
-                   THEN Object_Goods.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END  AS NDSKindId
-            , COALESCE(ContainerLinkObject_DivisionParties.ObjectId, 0)                      AS DivisionPartiesId
-            , Container.Amount                                                               AS Amount
+                   THEN Object_Goods.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END             AS NDSKindId
+            , COALESCE(ContainerLinkObject_DivisionParties.ObjectId, 0)                                 AS DivisionPartiesId
+            , CASE WHEN vbDiscountExternalId = 0 THEN Container.Amount ELSE FLOOR(Container.Amount) END AS Amount
             , Movement.OperDate
             , tmpSupplier.JuridicalId
        FROM (SELECT DISTINCT ObjectId FROM _tmpItem) AS tmp
@@ -278,10 +278,10 @@ BEGIN
             LEFT JOIN tmpSupplier ON tmpSupplier.JuridicalId = MovementLinkObject_From.ObjectId
 
        WHERE COALESCE (PDContainer.id, 0) = 0
-         AND (vbDiscountExternalId = 0 OR COALESCE(tmpSupplier.SupplierID, 0) <> 0)
+         AND (vbDiscountExternalId = 0 OR COALESCE(tmpSupplier.SupplierID, 0) <> 0 AND Container.Amount >= 1)
        ;
          
-    IF COALESCE (vbDiscountExternalId, 0) <> 0
+/*    IF COALESCE (vbDiscountExternalId, 0) <> 0
     THEN
 
       IF NOT EXISTS (WITH
@@ -341,7 +341,7 @@ BEGIN
       END IF;
 
       DELETE FROM _tmpItem_remains WHERE Amount = 0;
-    END IF;
+    END IF;*/
 
     -- Проверим что б БЫЛ остаток в целом
     IF EXISTS (SELECT 1

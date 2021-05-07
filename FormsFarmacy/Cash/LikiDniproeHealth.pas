@@ -322,6 +322,7 @@ var
   jsonBody: TJSONObject;
   jsonTemp: TJSONObject;
   I, L : integer;
+  F: TextFile;
 begin
   Result := False;
 
@@ -382,6 +383,12 @@ begin
       begin
         FDispense_ID := DelDoubleQuote(jValue.FindValue('id').ToString);
         Result := True;
+
+        AssignFile(F, 'Dispense.txt');
+        Rewrite(F);
+        Writeln(F, jValue.ToString);
+        Flush(F);
+        CloseFile(F);
       end;
     except
     end

@@ -333,7 +333,7 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
             Width = 80
           end
           object D_SummaPenaltySum: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' '#1087#1086' '#1089#1091#1084#1084#1077
+            Caption = #1064#1090#1088#1072#1092' '#1087#1086' '#1089#1091#1084#1084#1077' '#1086#1079#1085#1072#1082#1086#1084#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'SummaPenaltySum'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -394,7 +394,7 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
       ExplicitTop = 56
     end
     object ceProcUnit: TcxCurrencyEdit
-      Left = 518
+      Left = 537
       Top = 5
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.##'
@@ -403,7 +403,7 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
       Width = 45
     end
     object cxLabel4: TcxLabel
-      Left = 416
+      Left = 435
       Top = 6
       Caption = '% '#1074#1099#1087'. '#1087#1086' '#1072#1087#1090#1077#1082#1077'.'
     end
@@ -422,7 +422,7 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
       Caption = '% '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1074#1099#1087'.'
     end
     object edFilter: TcxTextEdit
-      Left = 101
+      Left = 58
       Top = 29
       TabOrder = 8
       DesignSize = (
@@ -471,7 +471,7 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
       TabOrder = 12
       Width = 139
     end
-    object cePenalty: TcxCurrencyEdit
+    object cePenaltySum: TcxCurrencyEdit
       Left = 670
       Top = 29
       Properties.DecimalPlaces = 0
@@ -481,9 +481,9 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
       Width = 37
     end
     object cxLabel7: TcxLabel
-      Left = 518
-      Top = 30
-      Caption = #1064#1090#1088#1072#1092' '#1079#1072' 1% '#1085#1077#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
+      Left = 614
+      Top = 29
+      Caption = #1086#1090' '#1089#1091#1084#1084#1099
     end
     object cePlanAmount: TcxCurrencyEdit
       Left = 670
@@ -498,6 +498,20 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
       Left = 588
       Top = 6
       Caption = #1055#1083#1072#1085' '#1086#1090' '#1089#1091#1084#1084#1099
+    end
+    object cePenalty: TcxCurrencyEdit
+      Left = 569
+      Top = 29
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      Properties.ReadOnly = True
+      TabOrder = 17
+      Width = 39
+    end
+    object cxLabel8: TcxLabel
+      Left = 435
+      Top = 30
+      Caption = #1064#1090#1088#1072#1092' '#1079#1072' 1% '#1085#1077#1074#1099#1087#1086#1083#1085'.'
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -799,6 +813,13 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
         Name = 'Penalty'
         Value = Null
         Component = cePenalty
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PenaltySum'
+        Value = Null
+        Component = cePenaltySum
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>

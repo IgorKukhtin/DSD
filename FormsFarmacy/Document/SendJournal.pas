@@ -101,6 +101,11 @@ type
     isUrgently: TcxGridDBColumn;
     isConfirmed: TcxGridDBColumn;
     isBanFiscalSale: TcxGridDBColumn;
+    macSetDriverSun: TMultiAction;
+    actOpenChoiceDriverSun: TOpenChoiceForm;
+    dxBarButton7: TdxBarButton;
+    spUpdate_Movement_DriverSun: TdsdStoredProc;
+    actExecSPDriverSun: TdsdExecStoredProc;
   private
     { Private declarations }
   public

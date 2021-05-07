@@ -1233,7 +1233,7 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PercentageOverdueSUNForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_PercentageOverdueSUNForm');
     exit;
-}
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IlliquidReductionPlanAllForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_IlliquidReductionPlanAllForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IlliquidReductionPlanListForm'));
@@ -1242,7 +1242,7 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_IlliquidReductionPlanAllDialogForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IlliquidReductionPlanUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_IlliquidReductionPlanUserForm');
- {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ReturnOutForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ReturnOutForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ReturnOutDialogForm'));
