@@ -70,6 +70,7 @@ type
     actPrint: TdsdPrintAction;
     bbactPrint: TdxBarButton;
     PersonalName: TcxGridDBColumn;
+    PersonalName_main: TcxGridDBColumn;
   private
     { Private declarations }
   public

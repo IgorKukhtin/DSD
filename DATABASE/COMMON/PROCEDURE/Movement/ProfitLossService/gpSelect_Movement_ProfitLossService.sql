@@ -34,7 +34,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_full TVarChar, OperDate
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar
              , BonusKindId Integer, BonusKindName TVarChar
              , BranchId Integer, BranchName TVarChar
-             , PersonalName TVarChar
+             , PersonalName TVarChar, PersonalName_main TVarChar
              , isLoad Boolean
                )
 AS
@@ -139,7 +139,9 @@ BEGIN
            
            , Object_Branch.Id                               AS BranchId
            , Object_Branch.ValueData                        AS BranchName
-           , Object_Personal_View.PersonalName              AS PersonalName
+
+           , Object_PersonalTrade.ValueData                 AS PersonalName
+           , Object_Personal.ValueData                      AS PersonalName_main
 
            , COALESCE (MovementBoolean_isLoad.ValueData, FALSE) AS isLoad
 
@@ -250,7 +252,13 @@ BEGIN
                                 AND (COALESCE (MILinkObject_PaidKind.ObjectId, 0) = zc_Enum_PaidKind_SecondForm()
                                    OR COALESCE (ObjectLink_Contract_PersonalTrade.ChildObjectId,0) = 0
                                      )
-            LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = COALESCE (ObjectLink_Partner_PersonalTrade.ChildObjectId, ObjectLink_Contract_PersonalTrade.ChildObjectId)
+            LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = COALESCE (ObjectLink_Partner_PersonalTrade.ChildObjectId, ObjectLink_Contract_PersonalTrade.ChildObjectId)
+
+            --для нал берем из контрагента          
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
+                                 ON ObjectLink_Partner_Personal.ObjectId = ObjectLink_Partner_Juridical.ObjectId
+                                AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Partner_Personal.ChildObjectId
 
 
        WHERE ( COALESCE (MILinkObject_PaidKind.ObjectId, 0) = inPaidKindId OR inPaidKindId = 0)
