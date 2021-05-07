@@ -58,7 +58,7 @@ BEGIN
                                               , inComment          := 'Перемещение по УКТВЭД'
                                               , inChecked          := FALSE
                                               , inisComplete       := FALSE
-                                              , inNumberSeats      := 0
+                                              , inNumberSeats      := 1
                                               , inDriverSunId      := 0
                                               , inSession          := inSession
                                                ) AS MovementId

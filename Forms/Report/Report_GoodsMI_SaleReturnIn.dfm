@@ -4,6 +4,7 @@
   ClientWidth = 1362
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -366
   ExplicitWidth = 1378
   ExplicitHeight = 425
   PixelsPerInch = 96
@@ -162,6 +163,16 @@
               Format = ',0.####'
               Kind = skSum
               Column = Return_Summ_10700
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SaleReturn_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SaleReturn_Summ
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -303,6 +314,16 @@
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = BranchName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SaleReturn_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SaleReturn_Summ
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -653,6 +674,18 @@
             Options.Editing = False
             Width = 70
           end
+          object SaleReturn_Weight: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076'. '#1073#1077#1079' '#1074#1086#1079#1074#1088'., '#1074#1077#1089' ('#1087#1086#1082#1091#1087')'
+            DataBinding.FieldName = 'SaleReturn_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1076#1072#1078#1080' '#1079#1072' '#1074#1099#1095#1077#1090#1086#1084' '#1074#1086#1079#1074#1088#1072#1090#1086#1074', '#1074#1077#1089
+            Options.Editing = False
+            Width = 70
+          end
           object Sale_AmountPartner_Sh: TcxGridDBColumn
             Caption = #1055#1088#1086#1076', '#1096#1090' ('#1087#1086#1082#1091#1087')'
             DataBinding.FieldName = 'Sale_AmountPartner_Sh'
@@ -699,6 +732,18 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057' '#1091#1095#1077#1090#1086#1084' %'#1089#1082#1080#1076#1082#1080' '#1079#1072' '#1074#1077#1089' '#1080' '#1088#1072#1079#1085#1080#1094#1099' '#1074' '#1074#1077#1089#1077
+            Options.Editing = False
+            Width = 70
+          end
+          object SaleReturn_Summ: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076'. '#1073#1077#1079' '#1074#1086#1079#1074#1088'., '#1075#1088#1085' ('#1087#1086#1082#1091#1087')'
+            DataBinding.FieldName = 'SaleReturn_Summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1076#1072#1078#1080' '#1079#1072' '#1074#1099#1095#1077#1090#1086#1084' '#1074#1086#1079#1074#1088#1072#1090#1086#1074', '#1075#1088#1085
             Options.Editing = False
             Width = 70
           end

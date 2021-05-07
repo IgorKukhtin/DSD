@@ -49,6 +49,13 @@ AS
 $BODY$
 BEGIN
 
+    --проверка период не более 3-х месяцев
+    IF inEndDate > inStartDate + INTERVAL '3 MONTH'
+    THEN
+        inEndDate := inStartDate + INTERVAL '3 MONTH';
+    END IF;    
+    
+    
     CREATE TEMP TABLE _tmpLocation (LocationId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE tmpGoods (GoodsId Integer) ON COMMIT DROP;
     -- группа подразделений или подразделение
@@ -134,6 +141,13 @@ BEGIN
         , tmpListDate AS (SELECT DISTINCT DATE_TRUNC ('Month', generate_series(inStartDate + INTERVAL '1 Month', inEndDate, '1 Month'::interval)) AS OperDate
                     UNION SELECT DATE_TRUNC ('Month', inStartDate) AS OperDate
                          )
+
+        , tmpMIC AS (SELECT *
+                     FROM MovementItemContainer
+                     WHERE MovementItemContainer.ContainerId IN (SELECT DISTINCT _tmpContainer.ContainerId FROM _tmpContainer)
+                       AND MovementItemContainer.OperDate >= inStartDate
+                     )
+
           -- для остатков
         , tmp_Rem AS (SELECT _tmpContainer.ContainerId
                            , _tmpContainer.LocationId
@@ -154,7 +168,7 @@ BEGIN
                           , CASE WHEN _tmpContainer.DescId = zc_Container_Summ()  THEN _tmpContainer.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) ELSE 0 END AS RemainsStart_summ
 
                       FROM _tmpContainer
-                           LEFT JOIN MovementItemContainer AS MIContainer
+                           LEFT JOIN tmpMIC AS MIContainer
                                                            ON MIContainer.ContainerId = _tmpContainer.ContainerId
                                                           AND MIContainer.OperDate > inEndDate
                       GROUP BY _tmpContainer.ContainerId
@@ -221,8 +235,8 @@ BEGIN
                                  , -1 * SUM (CASE WHEN _tmpContainer.DescId = zc_Container_Summ()  THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS RemainsStart_summ
                                  
                              FROM _tmpContainer
-                                  INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = _tmpContainer.ContainerId
-                                                                                 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                  INNER JOIN tmpMIC AS MIContainer ON MIContainer.ContainerId = _tmpContainer.ContainerId
+                                                                  AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                              GROUP BY _tmpContainer.ContainerId
                                     , _tmpContainer.LocationId
                                     , _tmpContainer.GoodsId
@@ -288,15 +302,10 @@ BEGIN
                                   , _tmpContainer.CountOther
                                   , _tmpContainer.SummOther
                                           -- ***REMAINS***
-                                  , _tmpContainer.RemainsStart      + COALESCE (SUM (COALESCE (_tmpContainer_next.RemainsStart, 0)), 0)      AS RemainsStart
-                                  , _tmpContainer.RemainsStart_summ + COALESCE (SUM (COALESCE (_tmpContainer_next.RemainsStart_summ, 0)), 0) AS RemainsStart_summ
+                                  , _tmpContainer.RemainsStart     /* + COALESCE (SUM (COALESCE (_tmpContainer_next.RemainsStart, 0)), 0) */     AS RemainsStart
+                                  , _tmpContainer.RemainsStart_summ /*+ COALESCE (SUM (COALESCE (_tmpContainer_next.RemainsStart_summ, 0)), 0)*/ AS RemainsStart_summ
 
                              FROM _tmpContainer_1 AS _tmpContainer
-
-                                  --нужно отнять движения след . по идее в _tmpContainer_1 и так они уже снято тк.к беру MIContainer.OperDate >= DATE_TRUNC ('Month', MIContainer.OperDate)
-                                  LEFT JOIN _tmpContainer_1 AS _tmpContainer_next
-                                                            ON _tmpContainer_next.MonthDate   > _tmpContainer.MonthDate
-                                                           AND _tmpContainer_next.ContainerId = _tmpContainer.ContainerId
                              GROUP BY _tmpContainer.ContainerId
                                     , _tmpContainer.LocationId
                                     , _tmpContainer.GoodsId
@@ -338,6 +347,53 @@ BEGIN
 
                             FROM tmp_Rem
                                 LEFT JOIN tmpListDate ON 1=1
+                            -- 2 мес.
+                            UNION ALL
+                            SELECT _tmpContainer_1.ContainerId
+                                  , _tmpContainer_1.LocationId
+                                  , _tmpContainer_1.GoodsId
+                                  , _tmpContainer_1.GoodsKindId
+                                  , _tmpContainer_1.MovementId_income
+                                  , _tmpContainer_1.MonthDate - INTERVAL '1 MONTH'
+
+                                    -- ***COUNT***
+                                  , 0 AS CountIncome
+                                  , 0 AS SummIncome
+                                  , 0 AS CountProduction
+                                  , 0 AS SummProduction
+                                  , 0 AS CountOther
+                                  , 0 AS SummOther
+
+                                    -- ***REMAINS***
+                                  , _tmpContainer_1.RemainsStart
+                                  , _tmpContainer_1.RemainsStart_summ
+
+                            FROM _tmpContainer_1
+                            WHERE _tmpContainer_1.MonthDate > inStartDate
+                            -- 3 мес.
+                            UNION ALL
+                            SELECT _tmpContainer_1.ContainerId
+                                  , _tmpContainer_1.LocationId
+                                  , _tmpContainer_1.GoodsId
+                                  , _tmpContainer_1.GoodsKindId
+                                  , _tmpContainer_1.MovementId_income
+                                  , _tmpContainer_1.MonthDate - INTERVAL '2 MONTH'
+
+                                    -- ***COUNT***
+                                  , 0 AS CountIncome
+                                  , 0 AS SummIncome
+                                  , 0 AS CountProduction
+                                  , 0 AS SummProduction
+                                  , 0 AS CountOther
+                                  , 0 AS SummOther
+
+                                    -- ***REMAINS***
+                                  , _tmpContainer_1.RemainsStart
+                                  , _tmpContainer_1.RemainsStart_summ
+
+                            FROM _tmpContainer_1
+                            WHERE _tmpContainer_1.MonthDate > inStartDate + INTERVAL '1 MONTH'
+
                             )
 
         -- оплата идет по уп статье, у приходов товара есть договор а у него zc_ObjectLink_Contract_InfoMoney  --вот самая верхняя группировка - InfoMoney

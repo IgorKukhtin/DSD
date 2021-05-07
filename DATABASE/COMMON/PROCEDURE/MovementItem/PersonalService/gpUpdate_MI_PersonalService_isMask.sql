@@ -226,6 +226,7 @@ BEGIN
                                                         , inMemberId           := MemberId
                                                         , inPersonalServiceListId:= PersonalServiceListId
                                                         , inFineSubjectId      := 0
+                                                        , inUnitFineSubjectId  := 0
                                                         , inUserId             := vbUserId
                                                          )
 

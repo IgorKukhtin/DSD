@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , MemberId Integer, MemberName TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , FineSubjectId Integer, FineSubjectName TVarChar
+             , UnitFineSubjectId Integer, UnitFineSubjectName TVarChar
              , Amount TFloat, AmountToPay TFloat, AmountCash TFloat, SummService TFloat
              , SummCard TFloat, SummCardRecalc TFloat, SummCardSecond TFloat, SummCardSecondRecalc TFloat, SummCardSecondDiff TFloat, SummCardSecondCash TFloat
              , SummNalog TFloat, SummNalogRecalc TFloat
@@ -273,8 +274,11 @@ BEGIN
             , COALESCE (Object_PersonalServiceList.Id, 0)                   AS PersonalServiceListId
             , COALESCE (Object_PersonalServiceList.ValueData, ''::TVarChar) AS PersonalServiceListName
 
-            , COALESCE (Object_FineSubject.Id, 0)        :: Integer  AS FineSubjectId
+            , COALESCE (Object_FineSubject.Id, 0)         :: Integer  AS FineSubjectId
             , COALESCE (Object_FineSubject.ValueData, '') :: TVarChar AS FineSubjectName
+
+            , COALESCE (Object_UnitFineSubject.Id, 0)         :: Integer  AS UnitFineSubjectId
+            , COALESCE (Object_UnitFineSubject.ValueData, '') :: TVarChar AS UnitFineSubjectName
 
             , tmpAll.Amount :: TFloat           AS Amount
             , MIFloat_SummToPay.ValueData       AS AmountToPay
@@ -555,6 +559,11 @@ BEGIN
                                              ON MILinkObject_FineSubject.MovementItemId = tmpAll.MovementItemId
                                             AND MILinkObject_FineSubject.DescId = zc_MILinkObject_FineSubject()
             LEFT JOIN Object AS Object_FineSubject ON Object_FineSubject.Id = MILinkObject_FineSubject.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_UnitFineSubject
+                                             ON MILinkObject_UnitFineSubject.MovementItemId = tmpAll.MovementItemId
+                                            AND MILinkObject_UnitFineSubject.DescId = zc_MILinkObject_UnitFineSubject()
+            LEFT JOIN Object AS Object_UnitFineSubject ON Object_UnitFineSubject.Id = MILinkObject_UnitFineSubject.ObjectId
 
             LEFT JOIN tmpMIChild ON tmpMIChild.ParentId = tmpAll.MovementItemId
       ;

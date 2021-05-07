@@ -57,7 +57,7 @@ BEGIN
                                               , inComment          := 'Распределение товара по сети согласно дополнению к СУН1'
                                               , inChecked          := FALSE
                                               , inisComplete       := FALSE
-                                              , inNumberSeats      := 0
+                                              , inNumberSeats      := 1
                                               , inDriverSunId      := 0
                                               , inSession          := inSession
                                                ) AS MovementId

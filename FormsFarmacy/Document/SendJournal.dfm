@@ -800,17 +800,16 @@ inherited SendJournalForm: TSendJournalForm
     object actSetReceived: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      AfterAction = actRefresh
       ActionList = <
         item
           Action = actExecSetReceived
-        end
-        item
-          Action = actRefresh
         end>
+      View = cxGridDBTableView
       QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072'"?'
       InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072'"'
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072'"'
+      Caption = #1052#1072#1089#1089#1086#1074#1086#1077' '#1087#1088#1086#1089#1090#1072#1074#1083#1077#1085#1080#1077' '#1087#1088#1080#1079#1085#1072#1082#1072' "'#1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072'"'
+      Hint = #1052#1072#1089#1089#1086#1074#1086#1077' '#1087#1088#1086#1089#1090#1072#1074#1083#1077#1085#1080#1077'  '#1087#1088#1080#1079#1085#1072#1082#1072' "'#1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072'"'
       ImageIndex = 61
     end
     object actExecSetReceived: TdsdExecStoredProc
@@ -828,17 +827,16 @@ inherited SendJournalForm: TSendJournalForm
     object actSetSent: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      AfterAction = actRefresh
       ActionList = <
         item
           Action = actExecSetSent
-        end
-        item
-          Action = actRefresh
         end>
-      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' " '#1054#1090#1087#1088#1072#1074#1083#1077#1085#1086'-'#1076#1072'"?'
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1052#1072#1089#1089#1086#1074#1086' '#1087#1088#1086#1089#1090#1072#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' " '#1054#1090#1087#1088#1072#1074#1083#1077#1085#1086'-'#1076#1072'"?'
       InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' " '#1054#1090#1087#1088#1072#1074#1083#1077#1085#1086' -'#1076#1072'"'
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' " '#1054#1090#1087#1088#1072#1074#1083#1077#1085#1086' -'#1076#1072'"'
+      Caption = #1052#1072#1089#1089#1086#1074#1086#1077' '#1087#1088#1086#1089#1090#1072#1074#1083#1077#1085#1080#1077' '#1087#1088#1080#1079#1085#1072#1082#1072' " '#1054#1090#1087#1088#1072#1074#1083#1077#1085#1086' -'#1076#1072'"'
+      Hint = #1052#1072#1089#1089#1086#1074#1086#1077' '#1087#1088#1086#1089#1090#1072#1074#1083#1077#1085#1080#1077' '#1087#1088#1080#1079#1085#1072#1082#1072' " '#1054#1090#1087#1088#1072#1074#1083#1077#1085#1086' -'#1076#1072'"'
       ImageIndex = 43
     end
     object actExecSetSent: TdsdExecStoredProc
@@ -959,6 +957,49 @@ inherited SendJournalForm: TSendJournalForm
           StoredProc = spSetErased_Filter
         end>
       Caption = 'actExecSetErased_Filter'
+    end
+    object macSetDriverSun: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actOpenChoiceDriverSun
+      ActionList = <
+        item
+          Action = actExecSPDriverSun
+        end>
+      View = cxGridDBTableView
+      Caption = #1084#1072#1089#1089#1086#1074#1086#1077' '#1087#1088#1086#1089#1090#1072#1074#1083#1077#1085#1080#1077' "'#1042#1086#1076#1080#1090#1077#1083#1103' '#1087#1086#1083#1091#1095#1080#1074#1096#1077#1075#1086' '#1090#1086#1074#1072#1088'"'
+      Hint = #1084#1072#1089#1089#1086#1074#1086#1077' '#1087#1088#1086#1089#1090#1072#1074#1083#1077#1085#1080#1077' "'#1042#1086#1076#1080#1090#1077#1083#1103' '#1087#1086#1083#1091#1095#1080#1074#1096#1077#1075#1086' '#1090#1086#1074#1072#1088'"'
+      ImageIndex = 55
+    end
+    object actOpenChoiceDriverSun: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenChoiceDriverSun'
+      FormName = 'TDriverSunForm'
+      FormNameParam.Value = 'TDriverSunForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DriverSunId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actExecSPDriverSun: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Movement_DriverSun
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Movement_DriverSun
+        end>
+      Caption = 'actExecSPDriverSun'
     end
   end
   inherited MasterDS: TDataSource
@@ -1141,6 +1182,10 @@ inherited SendJournalForm: TSendJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton7'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1207,6 +1252,10 @@ inherited SendJournalForm: TSendJournalForm
     end
     object dxBarButton6: TdxBarButton
       Action = actSetErasedFilter
+      Category = 0
+    end
+    object dxBarButton7: TdxBarButton
+      Action = macSetDriverSun
       Category = 0
     end
   end
@@ -1329,6 +1378,11 @@ inherited SendJournalForm: TSendJournalForm
         Name = 'inisVip'
         Value = False
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DriverSunId'
+        Value = Null
         MultiSelectSeparator = ','
       end>
     Left = 400
@@ -1471,7 +1525,7 @@ inherited SendJournalForm: TSendJournalForm
     Top = 443
   end
   object spUpdate_Movement_Received: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_Received'
+    StoredProcName = 'gpUpdate_Movement_ReceivedList'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1493,11 +1547,11 @@ inherited SendJournalForm: TSendJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 728
-    Top = 347
+    Left = 720
+    Top = 323
   end
   object spUpdate_Movement_Sent: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_Sent'
+    StoredProcName = 'gpUpdate_Movement_SentList'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1519,8 +1573,8 @@ inherited SendJournalForm: TSendJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 688
-    Top = 395
+    Left = 720
+    Top = 371
   end
   object spUpdate_isDefSun: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Send_isDefSUN'
@@ -1666,5 +1720,30 @@ inherited SendJournalForm: TSendJournalForm
     PackSize = 1
     Left = 600
     Top = 451
+  end
+  object spUpdate_Movement_DriverSun: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_DriverSun'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDriverSunId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DriverSunId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 720
+    Top = 403
   end
 end

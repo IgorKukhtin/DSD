@@ -65,10 +65,10 @@ BEGIN
                            AND ObjectLink_DiscountExternal.ChildObjectId = inDiscountExternal
                          )
        , tmpContainerAll AS (SELECT Container.Id
-                                  , Container.Amount
+                                  , FLOOR(Container.Amount) AS Amount
                              FROM Container
                              WHERE Container.DescId = zc_Container_Count()
-                               AND Container.Amount > 0
+                               AND Container.Amount >= 1
                                AND Container.WhereObjectId = vbUnitId
                                AND Container.ObjectId = inGoodsId
                               )

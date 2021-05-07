@@ -11,6 +11,7 @@ RETURNS TABLE (DayCount Integer
              , ProcUnit TFloat
              , PlanAmount TFloat
              , Penalty TFloat
+             , PenaltySum TFloat
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -133,8 +134,9 @@ BEGIN
        SELECT MovementFloat_DayCount.ValueData::Integer            AS DayCount
             , 20::TFloat
             , 10::TFloat
-            , 0::TFloat
+            , 7::TFloat
             , 500::TFloat
+            , 250::TFloat
        FROM Movement
 
             INNER JOIN MovementLinkObject AS MovementLinkObject_Unit

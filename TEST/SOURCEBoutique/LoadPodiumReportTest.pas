@@ -78,6 +78,10 @@ begin
   LoadReportFromFile('PrintReport_SaleReturnIn_BarCode', ReportPath + '\PrintReport_SaleReturnIn_BarCode.fr3');
   LoadReportFromFile('PrintReport_SaleReturnIn', ReportPath + '\PrintReport_SaleReturnIn.fr3');
   LoadReportFromFile('PrintReport_ClientDebt', ReportPath + '\PrintReport_ClientDebt.fr3');
+  }
+  LoadReportFromFile('PrintReport_ClientDebt_curr', ReportPath + '\PrintReport_ClientDebt_curr.fr3');
+  exit;
+  {
   LoadReportFromFile('PrintReport_Sale', ReportPath + '\PrintReport_Sale.fr3');
   LoadReportFromFile('PrintReport_ReturnIn', ReportPath + '\PrintReport_ReturnIn.fr3');
   LoadReportFromFile('PrintReport_Uniform', ReportPath + '\PrintReport_Uniform.fr3');

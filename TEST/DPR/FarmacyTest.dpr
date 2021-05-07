@@ -1027,7 +1027,8 @@ uses
   Report_KilledCodeRecovery in '..\..\FormsFarmacy\Report\Report_KilledCodeRecovery.pas' {Report_KilledCodeRecoveryForm: TParentForm},
   MarketingDiscount in '..\..\FormsFarmacy\Guides\MarketingDiscount.pas' {MarketingDiscountForm: TParentForm},
   MarketingDiscountDialog in '..\..\FormsFarmacy\Guides\MarketingDiscountDialog.pas' {MarketingDiscountDialogForm: TParentForm},
-  Report_MovementCheck_UnderreportedDE in '..\..\FormsFarmacy\Report\Report_MovementCheck_UnderreportedDE.pas' {Report_MovementCheck_UnderreportedDEForm: TParentForm};
+  Report_MovementCheck_UnderreportedDE in '..\..\FormsFarmacy\Report\Report_MovementCheck_UnderreportedDE.pas' {Report_MovementCheck_UnderreportedDEForm: TParentForm},
+  SendCashSUN in '..\..\FormsFarmacy\Document\SendCashSUN.pas' {SendCashSUNForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

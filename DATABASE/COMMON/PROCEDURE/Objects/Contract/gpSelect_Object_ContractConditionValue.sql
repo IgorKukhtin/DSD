@@ -33,6 +33,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , BankId Integer, BankName TVarChar
              , ContractConditionComment TVarChar 
              , Value TFloat
+             , StartDate_ch TDateTime, EndDate_ch TDateTime
              , InfoMoneyGroupCode_ch Integer, InfoMoneyGroupName_ch TVarChar
              , InfoMoneyDestinationCode_ch Integer, InfoMoneyDestinationName_ch TVarChar
              , InfoMoneyId_ch Integer, InfoMoneyCode_ch Integer, InfoMoneyName_ch TVarChar
@@ -114,9 +115,12 @@ BEGIN
 
        , Object_Bank.Id               AS BankId
        , Object_Bank.ValueData        AS BankName
-              
+
        , tmpContractCondition.Comment      AS ContractConditionComment
-       , ObjectFloat_Value.ValueData       AS Value  
+       , ObjectFloat_Value.ValueData       AS Value
+
+       , COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart())  :: TDateTime AS StartDate_ch
+       , COALESCE (ObjectDate_EndDate.ValueData, zc_DateEnd())      :: TDateTime AS EndDate_ch
 
        , View_InfoMoney_ContractCondition.InfoMoneyGroupCode AS InfoMoneyGroupCode_ch
        , View_InfoMoney_ContractCondition.InfoMoneyGroupName AS InfoMoneyGroupName_ch
@@ -273,6 +277,13 @@ BEGIN
                              ON ObjectLink_ContractCondition_InfoMoney.ObjectId = tmpContractCondition.ContractConditionId
                             AND ObjectLink_ContractCondition_InfoMoney.DescId = zc_ObjectLink_ContractCondition_InfoMoney()
         LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_ContractCondition ON View_InfoMoney_ContractCondition.InfoMoneyId = ObjectLink_ContractCondition_InfoMoney.ChildObjectId
+
+        LEFT JOIN ObjectDate AS ObjectDate_StartDate
+                             ON ObjectDate_StartDate.ObjectId = tmpContractCondition.ContractConditionId
+                            AND ObjectDate_StartDate.DescId = zc_ObjectDate_ContractCondition_StartDate()
+        LEFT JOIN ObjectDate AS ObjectDate_EndDate
+                             ON ObjectDate_EndDate.ObjectId = tmpContractCondition.ContractConditionId
+                            AND ObjectDate_EndDate.DescId = zc_ObjectDate_ContractCondition_EndDate()
    WHERE Object_Contract_View.JuridicalId = inJuridicalId OR inJuridicalId = 0
 
    ;

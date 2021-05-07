@@ -56,6 +56,8 @@ type
     FormParams: TdsdFormParams;
     PanelNameFull: TPanel;
     DBLabelNameFull: TcxDBLabel;
+    actPrint_curr: TdsdPrintAction;
+    bbPrint_curr: TdxBarButton;
   private
     { Private declarations }
   public

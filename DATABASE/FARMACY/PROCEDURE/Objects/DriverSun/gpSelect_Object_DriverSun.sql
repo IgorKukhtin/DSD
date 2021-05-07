@@ -1,8 +1,9 @@
 -- Function: gpSelect_Object_DriverSun()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_DriverSun(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_DriverSun(boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_DriverSun(
+    IN inIsErased    Boolean ,
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -27,13 +28,14 @@ $BODY$BEGIN
         LEFT JOIN ObjectFloat AS DriverSun_ChatIDSendVIP
                               ON DriverSun_ChatIDSendVIP.ObjectId = Object_DriverSun.Id 
                              AND DriverSun_ChatIDSendVIP.DescId = zc_ObjectFloat_DriverSun_ChatIDSendVIP()
-   WHERE Object_DriverSun.DescId = zc_Object_DriverSun();
+   WHERE Object_DriverSun.DescId = zc_Object_DriverSun()
+     AND (Object_DriverSun.isErased = False OR COALESCE(inIsErased, False) = True);
   
 END;$BODY$
 
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_DriverSun(TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_DriverSun(boolean, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
@@ -45,4 +47,4 @@ ALTER FUNCTION gpSelect_Object_DriverSun(TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_DriverSun('3')
+-- SELECT * FROM gpSelect_Object_DriverSun(False, '3')

@@ -65,10 +65,12 @@ type
     D_SummaPenalty: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     SummaSale: TcxGridDBColumn;
-    cePenalty: TcxCurrencyEdit;
+    cePenaltySum: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
     cePlanAmount: TcxCurrencyEdit;
     cxLabel6: TcxLabel;
+    cePenalty: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
   private
     { Private declarations }
   public

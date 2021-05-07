@@ -324,6 +324,24 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 70
       end
+      object StartDate_ch: TcxGridDBColumn
+        Caption = #1044#1077#1081#1089#1090#1074'. '#1089' ('#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075'.)'
+        DataBinding.FieldName = 'StartDate_ch'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 58
+      end
+      object EndDate_ch: TcxGridDBColumn
+        Caption = #1044#1077#1081#1089#1090#1074'. '#1076#1086' ('#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075'.)'
+        DataBinding.FieldName = 'EndDate_ch'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 58
+      end
       object InfoMoneyGroupCode_ch: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055' '#1075#1088#1091#1087#1087#1099' ('#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075'.)'
         DataBinding.FieldName = 'InfoMoneyGroupCode_ch'
@@ -1381,10 +1399,12 @@ object ContractConditionValueForm: TContractConditionValueForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 272
     Top = 184
@@ -1447,7 +1467,7 @@ object ContractConditionValueForm: TContractConditionValueForm
       end
       item
         Name = 'inSigningDate'
-        Value = 'NULL'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'SigningDate'
         DataType = ftDateTime
@@ -1456,7 +1476,7 @@ object ContractConditionValueForm: TContractConditionValueForm
       end
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'StartDate'
         DataType = ftDateTime
@@ -1465,7 +1485,7 @@ object ContractConditionValueForm: TContractConditionValueForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'EndDate'
         DataType = ftDateTime

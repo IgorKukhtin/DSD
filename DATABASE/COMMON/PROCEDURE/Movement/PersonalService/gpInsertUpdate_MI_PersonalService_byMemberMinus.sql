@@ -110,6 +110,7 @@ BEGIN
                                                         , inMemberId              := 0                                                      ::Integer    --COALESCE (tmpMemberMinus.MemberId, tmpMI.MemberId) 
                                                         , inPersonalServiceListId := COALESCE (tmpMemberMinus.PersonalServiceListId, tmpMI.PersonalServiceListId) :: Integer
                                                         , inFineSubjectId         := COALESCE (tmpMI.FineSubjectId,0)                       ::Integer
+                                                        , inUnitFineSubjectId     := COALESCE (tmpMI.UnitFineSubjectId,0)                   ::Integer
                                                         , inUserId                := vbUserId
                                                       ) 
      FROM tmpMemberMinus

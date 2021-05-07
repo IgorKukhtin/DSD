@@ -46,7 +46,8 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , Promo_Summ TFloat, Sale_Summ TFloat, Sale_SummReal TFloat, Sale_Summ_10200 TFloat, Sale_Summ_10250 TFloat, Sale_Summ_10300 TFloat
              , Promo_SummCost TFloat, Sale_SummCost TFloat, Sale_SummCost_10500 TFloat, Sale_SummCost_40200 TFloat
              , Sale_Amount_Weight TFloat, Sale_Amount_Sh TFloat
-             , Promo_AmountPartner_Weight TFloat, Promo_AmountPartner_Sh TFloat, Sale_AmountPartner_Weight TFloat, Sale_AmountPartner_Sh TFloat, Sale_AmountPartnerR_Weight TFloat, Sale_AmountPartnerR_Sh TFloat
+             , Promo_AmountPartner_Weight TFloat, Promo_AmountPartner_Sh TFloat
+             , Sale_AmountPartner_Weight TFloat, Sale_AmountPartner_Sh TFloat, Sale_AmountPartnerR_Weight TFloat, Sale_AmountPartnerR_Sh TFloat
              , Return_Summ TFloat, Return_Summ_10300 TFloat, Return_Summ_10700 TFloat, Return_SummCost TFloat, Return_SummCost_40200 TFloat
              , Return_Amount_Weight TFloat, Return_Amount_Sh TFloat, Return_AmountPartner_Weight TFloat, Return_AmountPartner_Sh TFloat
              , Sale_Amount_10500_Weight TFloat
@@ -55,6 +56,8 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , ReturnPercent TFloat
              , Sale_SummMVAT TFloat, Sale_SummVAT TFloat
              , Return_SummMVAT TFloat, Return_SummVAT TFloat
+             , SaleReturn_Weight  TFloat -- Продажи за вычетом возврата, кг
+             , SaleReturn_Summ    TFloat -- Продажи за вычетом возврата, грн
               )
 AS
 $BODY$
@@ -386,6 +389,8 @@ BEGIN
             , CAST (CASE WHEN SUM (gpReport.Sale_AmountPartner_Weight) > 0 THEN 100 * SUM (gpReport.Return_AmountPartner_Weight) / SUM (gpReport.Sale_AmountPartner_Weight) ELSE 0 END AS NUMERIC (16, 1)) :: TFloat AS ReturnPercent
             , 0 :: TFloat AS Sale_SummMVAT,   0 :: TFloat AS Sale_SummVAT
             , 0 :: TFloat AS Return_SummMVAT, 0 :: TFloat AS Return_SummVAT
+            , (SUM (gpReport.Sale_AmountPartner_Weight) - SUM (gpReport.Return_AmountPartner_Weight)) :: TFloat AS SaleReturn_Weight  -- Продажи за вычетом возврата, кг
+            , (SUM (gpReport.Sale_Summ) - SUM (gpReport.Return_Summ))                                 :: TFloat AS SaleReturn_Summ    -- Продажи за вычетом возврата, грн
        FROM tmpData AS gpReport
        GROUP BY gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
               , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
@@ -807,6 +812,9 @@ BEGIN
          , 0 :: TFloat AS Sale_SummMVAT,   0 :: TFloat AS Sale_SummVAT
          , 0 :: TFloat AS Return_SummMVAT, 0 :: TFloat AS Return_SummVAT
 
+         , (tmpOperationGroup.Sale_AmountPartner_Weight - tmpOperationGroup.Return_AmountPartner_Weight) :: TFloat AS SaleReturn_Weight  -- Продажи за вычетом возврата, кг
+         , (tmpOperationGroup.Sale_Summ - tmpOperationGroup.Return_Summ)                                 :: TFloat AS SaleReturn_Summ    -- Продажи за вычетом возврата, грн
+
      FROM tmpOperationGroup
 
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpOperationGroup.BranchId
@@ -905,6 +913,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.05.21         * 
  29.04.21         * add PartnerCategory
  21.01.16         *
  22.03.15                                        * add inIsGoodsKind

@@ -24,10 +24,15 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, In
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TVarChar, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
 */
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);*/
+
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
-                                                                   , TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
+                                                                   , TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
                                                                    
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -70,6 +75,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
     IN inMemberId              Integer   , -- 
     IN inPersonalServiceListId Integer   , -- Ведомость начисления
     IN inFineSubjectId         Integer   , -- Вид нарушения
+    IN inUnitFineSubjectId     Integer   , -- Кем налагается взыскание
  INOUT ioBankOutDate           TDateTime ,
     IN inSession               TVarChar    -- сессия пользователя
 )
@@ -85,14 +91,11 @@ BEGIN
 
      --проверка, если добавляют по маске, то vbisDetail должно быть = TRUE
      -- получаем свойство PersonalServiceList
-     vbPersonalServiceListId:= CASE WHEN COALESCE (inPersonalServiceListId,0) <> 0 THEN inPersonalServiceListId
-                                    ELSE
-                                         (SELECT MovementLinkObject.ObjectId
-                                          FROM MovementLinkObject
-                                          WHERE MovementLinkObject.MovementId = inMovementId
-                                            AND MovementLinkObject.DescId     = zc_MovementLinkObject_PersonalServiceList()
-                                          )
-                               END;
+     vbPersonalServiceListId:= (SELECT MovementLinkObject.ObjectId
+                                FROM MovementLinkObject
+                                WHERE MovementLinkObject.MovementId = inMovementId
+                                  AND MovementLinkObject.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                                );
      vbisDetail := COALESCE ((SELECT ObjectBoolean.ValueData
                               FROM ObjectBoolean
                               WHERE ObjectBoolean.ObjectId = vbPersonalServiceListId 
@@ -149,6 +152,7 @@ BEGIN
                                                      , inMemberId              := inMemberId
                                                      , inPersonalServiceListId := inPersonalServiceListId
                                                      , inFineSubjectId         := inFineSubjectId
+                                                     , inUnitFineSubjectId     := inUnitFineSubjectId
                                                      , inUserId                := vbUserId
                                                       ) AS tmp;
 
@@ -198,6 +202,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.05.21         * inUnitFineSubjectId
  19.11.20         * ioBankOutDate
  25.03.20         * inSummAuditAdd
  27.01.20         * inSummCompensationRecalc
