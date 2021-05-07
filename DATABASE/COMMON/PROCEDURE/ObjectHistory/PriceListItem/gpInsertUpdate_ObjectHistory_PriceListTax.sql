@@ -1,11 +1,14 @@
 -- Function: gpInsertUpdate_ObjectHistory_PriceListItem()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListTax(Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListTax(Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListTax(Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PriceListTax(
     IN inId                         Integer,    -- ключ объекта <Элемент прайс-листа>
     IN inPriceListFromId            Integer,    -- Прайс-лист
     IN inPriceListToId              Integer,    -- Прайс-лист
+    IN inGoodsGroupId               Integer,    -- если заполнено тогда ограничиваем
+    IN inInfoMoneyId                Integer,    -- если заполнено тогда ограничиваем
     IN inOperDate                   TDateTime,  -- Изменение цены с
     IN inOperDateFrom               TDateTime,  -- Дата цены основания
     IN inTax                        TFloat,     -- (-)% Скидки (+)% Наценки
@@ -57,7 +60,8 @@ BEGIN
                                                                                             , inIsWithVAT    := ObjectBoolean_PriceWithVAT.ValueData
                                                                                              )
                                                      , inUserId      := vbUserId)
-   /*PERFORM  gpInsertUpdate_ObjectHistory_PriceListItemLast
+
+                                     /*PERFORM  gpInsertUpdate_ObjectHistory_PriceListItemLast
                                                       (ioId          := inId
                                                      , inPriceListId := inPriceListToId
                                                      , inGoodsId     := ObjectLink_PriceListItem_Goods.ChildObjectId
@@ -66,6 +70,7 @@ BEGIN
                                                                            + (ObjectHistoryFloat_PriceListItem_Value.ValueData * inTax / 100) AS Numeric (16,2)) ::TFloat
                                                      , inIsLast      := TRUE
                                                      , inSession     := inSession)*/
+                                                     
               FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
                   LEFT JOIN ObjectBoolean AS ObjectBoolean_PriceWithVAT
                                           ON ObjectBoolean_PriceWithVAT.ObjectId = ObjectLink_PriceListItem_PriceList.ChildObjectId
@@ -85,10 +90,21 @@ BEGIN
                   LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
                                                ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                               AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                  
+                  LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                       ON ObjectLink_Goods_GoodsGroup.ObjectId = ObjectLink_PriceListItem_Goods.ChildObjectId
+                                      AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+    
+                  LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                       ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_PriceListItem_Goods.ChildObjectId
+                                      AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
 
               WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
                 AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListFromId
                 AND (ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0 OR ObjectHistory_PriceListItem.StartDate <> zc_DateStart())
+                -- если заполнены  переносить данные только по этим товарам
+                AND (ObjectLink_Goods_GoodsGroup.ChildObjectId = inGoodsGroupId OR inGoodsGroupId = 0)
+                AND (ObjectLink_Goods_InfoMoney.ChildObjectId = inInfoMoneyId OR inInfoMoneyId = 0)
              ;
 
 -- !!! ВРЕМЕННО !!!
@@ -106,6 +122,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.05.21         * inGoodsGroupId, inInfoMoneyId
  11.12.19         * add zc_ObjectLink_PriceListItem_GoodsKind
  21.08.15         *
 */

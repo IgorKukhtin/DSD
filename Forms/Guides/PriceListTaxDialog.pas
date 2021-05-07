@@ -48,6 +48,12 @@ type
     cxLabel1: TcxLabel;
     edOperDateFrom: TcxDateEdit;
     mactUpdate: TMultiAction;
+    cxLabel2: TcxLabel;
+    edGoodsGroup: TcxButtonEdit;
+    GuidesGoodsGroup: TdsdGuides;
+    cxLabel7: TcxLabel;
+    ceInfoMoney: TcxButtonEdit;
+    GuidesInfoMoney: TdsdGuides;
   private
     { Private declarations }
   public
