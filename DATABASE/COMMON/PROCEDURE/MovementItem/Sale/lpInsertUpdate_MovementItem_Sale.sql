@@ -92,6 +92,7 @@ BEGIN
                 -- меняется значение - для Тенедер
                 ioPrice:= outPricePromo;
             ELSEIF COALESCE (ioPrice, 0) <> outPricePromo
+               AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = inUserId AND Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_Update_MI_OperPrice())
             THEN
                  RAISE EXCEPTION 'Ошибка.%Для товара = <%> <%>%необходимо ввести тендерную цену = <%>.'
                                , CHR (13)
@@ -118,6 +119,7 @@ BEGIN
 
              -- только проверка
              IF ioId <> 0 AND (ioPrice + 0.06) < outPricePromo /*AND vbTaxPromo <> 0*/
+                AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = inUserId AND Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_Update_MI_OperPrice())
              THEN
                  RAISE EXCEPTION 'Ошибка.%Для товара = <%> <%>%необходимо ввести акционную цену = <%>.'
                                , CHR (13)
@@ -128,6 +130,7 @@ BEGIN
                                 ;
              -- только проверка
              ELSEIF ioId <> 0 AND (ioPrice - 0.06) > outPricePromo /*AND vbTaxPromo <> 0*/
+                AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = inUserId AND Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_Update_MI_OperPrice())
              THEN
                  RAISE EXCEPTION 'Ошибка.%Для товара = <%> <%>%необходимо ввести акционную цену = <%>.'
                                , CHR (13)

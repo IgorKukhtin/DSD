@@ -1,4 +1,4 @@
--- Function: gpSelect_Object_Process()
+-- Function: lpCheckRight()
 
 DROP FUNCTION IF EXISTS lpCheckRight (TVarChar, Integer, Date);
 
@@ -24,6 +24,8 @@ BEGIN
                                      AND Object_UserRole_Role.ChildObjectId = zc_Enum_Role_Admin()
              WHERE Object_UserRole_User.DescId = zc_ObjectLink_UserRole_User()
                AND Object_UserRole_User.ChildObjectId = vbUserId)
+     -- Расчет с/с
+     OR vbUserId = zc_Enum_Process_Auto_PrimeCost()
   THEN
      RETURN vbUserId;
   ELSE
@@ -64,4 +66,4 @@ ALTER FUNCTION lpCheckRight (TVarChar, Integer, Date)  OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Process('2')
+-- SELECT * FROM lpCheckRight('2')

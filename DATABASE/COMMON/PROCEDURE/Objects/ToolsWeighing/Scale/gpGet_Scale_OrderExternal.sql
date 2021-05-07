@@ -542,7 +542,8 @@ BEGIN
                                                                                                         END
                                                                AND COALESCE (tmpSelect.GoodsId_ReWork, 0) = 0 
                                  )
-           , tmpMLO_PriceList AS (SELECT * FROM MovementLinkObject AS MLO_PriceList
+           , tmpMLO_PriceList AS (SELECT *
+                                  FROM MovementLinkObject AS MLO_PriceList
                                   WHERE MLO_PriceList.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
                                     AND MLO_PriceList.DescId     = zc_MovementLinkObject_PriceList()
                                  )
@@ -554,6 +555,17 @@ BEGIN
                         FROM MovementString AS MS
                         WHERE MS.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                        )
+           , tmpMF AS (SELECT *
+                        FROM MovementFloat AS MF
+                        WHERE MF.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                          AND MF.DescId = zc_MovementFloat_ChangePercent()
+                       )
+           , tmpMLO AS (SELECT *
+                        FROM MovementLinkObject
+                        WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                          AND MovementLinkObject.DescId = zc_MovementLinkObject_Personal()
+                       )
+
        -- Результат
        SELECT tmpMovement.Id                                 AS MovementId
             , tmpMovement.DescId                             AS MovementDescId_order
@@ -706,7 +718,7 @@ BEGIN
                                         AND MovementLinkObject_PriceList.DescId     = zc_MovementLinkObject_PriceList()
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = COALESCE (ObjectLink_Juridical_PriceList.ChildObjectId, CASE WHEN tmpMovement.DescId = zc_Movement_OrderIncome() THEN zc_PriceList_Basis() ELSE MovementLinkObject_PriceList.ObjectId END)
 
-            LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+            LEFT JOIN tmpMF AS MovementFloat_ChangePercent
                                     ON MovementFloat_ChangePercent.MovementId =  tmpMovement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
             LEFT JOIN tmpMS AS MovementString_InvNumberPartner
@@ -730,7 +742,7 @@ BEGIN
                                    AND ObjectBoolean_Partner_EdiDesadv.DescId = zc_ObjectBoolean_Partner_EdiDesadv()
                                    AND MovementLinkMovement_Order.MovementChildId > 0 -- проверка по связи заявки с EDI
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
+            LEFT JOIN tmpMLO AS MovementLinkObject_Personal
                                          ON MovementLinkObject_Personal.MovementId = tmpMovement.Id
                                         AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId

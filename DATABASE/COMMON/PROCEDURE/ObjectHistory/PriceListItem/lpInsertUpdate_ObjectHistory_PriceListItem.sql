@@ -19,8 +19,11 @@ DECLARE
 BEGIN
 
    -- если не назначена роль <Прайс-лист - изменение в любом прайсе>
-   IF NOT EXISTS (SELECT 1 FROM Object_Role_Process_View WHERE ProcessId = zc_Enum_Process_Update_PriceListItem() AND UserId = inUserId)
-      OR EXISTS (SELECT 1 FROM Object_MemberPriceList_View AS MemberPriceList_View WHERE MemberPriceList_View.UserId = inUserId)
+   IF (NOT EXISTS (SELECT 1 FROM Object_Role_Process_View WHERE ProcessId = zc_Enum_Process_Update_PriceListItem() AND UserId = inUserId)
+       OR EXISTS (SELECT 1 FROM Object_MemberPriceList_View AS MemberPriceList_View WHERE MemberPriceList_View.UserId = inUserId)
+      )
+      --
+      AND inUserId <> zc_Enum_Process_Auto_PrimeCost()
    THEN
        -- поиск в настройках "Доступ к прайсу"
        IF NOT EXISTS (SELECT 1 FROM Object_MemberPriceList_View AS MemberPriceList_View WHERE MemberPriceList_View.UserId = inUserId)
