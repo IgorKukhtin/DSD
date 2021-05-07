@@ -55,9 +55,9 @@ DO $$
 BEGIN
 
    -- CREATE OR REPLACE FUNCTION zc_Enum_GlobalConst_ConnectParam()  RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_GlobalConst_ConnectParam' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-   -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_ConnectParam(),       inDescId:= zc_Object_GlobalConst(), inCode:= 3,  inName:= '', inEnumName:= 'zc_Enum_GlobalConst_ConnectParam');
+   -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_ConnectParam(),       inDescId:= zc_Object_GlobalConst(), inCode:= 1001,  inName:= '', inEnumName:= 'zc_Enum_GlobalConst_ConnectParam');
    -- CREATE OR REPLACE FUNCTION zc_Enum_GlobalConst_ConnectReportParam()  RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_GlobalConst_ConnectReportParam' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-   -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_ConnectReportParam(), inDescId:= zc_Object_GlobalConst(), inCode:= 33, inName:= '', inEnumName:= 'zc_Enum_GlobalConst_ConnectReportParam');
+   -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_ConnectReportParam(), inDescId:= zc_Object_GlobalConst(), inCode:= 1002, inName:= '', inEnumName:= 'zc_Enum_GlobalConst_ConnectReportParam');
 
    PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_BankAccountDate(),  inDescId:= zc_Object_GlobalConst(), inCode:= 1, inName:= 'Банковская выписка актуальна на: ', inEnumName:= 'zc_Enum_GlobalConst_BankAccountDate');
 
@@ -70,7 +70,12 @@ BEGIN
    PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_MedocTaxDate(),  inDescId:= zc_Object_GlobalConst(), inCode:= 101, inName:= 'актуальность данных Медок', inEnumName:= 'zc_Enum_GlobalConst_MedocTaxDate');
    
    PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_EndDateOlapSR(),  inDescId:= zc_Object_GlobalConst(), inCode:= 111, inName:= 'По какую дату включительно сформированы данные Олап Продажа/возврат', inEnumName:= 'zc_Enum_GlobalConst_EndDateOlapSR');
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_ProtocolDateOlapSR(),  inDescId:= zc_Object_GlobalConst(), inCode:= 112, inName:= 'Дата формирования данных Олап Продажа/возврат', inEnumName:= 'zc_Enum_GlobalConst_ProtocolDateOlapSR');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_ProtocolDateOlapSR(),  inDescId:= zc_Object_GlobalConst(), inCode:= 112, inName:= 'Дата/время формирования данных Олап Продажа/возврат', inEnumName:= 'zc_Enum_GlobalConst_ProtocolDateOlapSR');
+   
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_StartDate_Auto_PrimeCost(),  inDescId:= zc_Object_GlobalConst(), inCode:= 201, inName:= 'Ночной пересчет С/С для месяца : ', inEnumName:= 'zc_Enum_GlobalConst_StartDate_Auto_PrimeCost');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost(), inDescId:= zc_Object_GlobalConst(), inCode:= 210, inName:= 'Время запуска Ночной пересчет С/С для Главный : ',          inEnumName:= 'zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost(), inDescId:= zc_Object_GlobalConst(), inCode:= 211, inName:= 'Время запуска Ночной пересчет С/С для Филиал Киев : ',      inEnumName:= 'zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost(), inDescId:= zc_Object_GlobalConst(), inCode:= 212, inName:= 'Время запуска Ночной пересчет С/С для Филиал Остальные : ', inEnumName:= 'zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost');
 
 END $$;
 
