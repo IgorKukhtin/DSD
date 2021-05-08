@@ -138,6 +138,40 @@ object PriceListItemForm: TPriceListItemForm
         VisibleForCustomization = False
         Width = 20
       end
+      object InfoMoneyCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1059#1055
+        DataBinding.FieldName = 'InfoMoneyCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object InfoMoneyGroupName: TcxGridDBColumn
+        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyGroupName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object InfoMoneyDestinationName: TcxGridDBColumn
+        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+        DataBinding.FieldName = 'InfoMoneyDestinationName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object InfoMoneyName: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
       object ObjectId: TcxGridDBColumn
         DataBinding.FieldName = 'ObjectId'
         Visible = False
@@ -690,7 +724,7 @@ object PriceListItemForm: TPriceListItemForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = edOperDate
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -772,7 +806,7 @@ object PriceListItemForm: TPriceListItemForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -782,7 +816,7 @@ object PriceListItemForm: TPriceListItemForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -840,7 +874,7 @@ object PriceListItemForm: TPriceListItemForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = edOperDate
           DataType = ftDateTime
           ParamType = ptInput
@@ -920,6 +954,7 @@ object PriceListItemForm: TPriceListItemForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <
       item
@@ -936,6 +971,7 @@ object PriceListItemForm: TPriceListItemForm
         Column = ValuePrice
       end>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 192
     Top = 256
@@ -1013,7 +1049,7 @@ object PriceListItemForm: TPriceListItemForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -1037,7 +1073,7 @@ object PriceListItemForm: TPriceListItemForm
       end
       item
         Name = 'outStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'StartDate'
         DataType = ftDateTime
@@ -1045,7 +1081,7 @@ object PriceListItemForm: TPriceListItemForm
       end
       item
         Name = 'outEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'EndDate'
         DataType = ftDateTime
@@ -1123,7 +1159,7 @@ object PriceListItemForm: TPriceListItemForm
     Params = <
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edShowDate
         DataType = ftDateTime
         ParamType = ptInput

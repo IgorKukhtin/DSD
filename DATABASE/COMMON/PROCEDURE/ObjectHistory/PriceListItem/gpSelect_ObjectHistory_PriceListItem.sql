@@ -30,6 +30,10 @@ RETURNS TABLE (Id Integer , ObjectId Integer
                 , ValuePrice_kg TFloat, ValuePriceWithVAT_kg TFloat
                 , Weight TFloat
                 , Value1 TVarChar, Value2_4 TVarChar, Value5_6 TVarChar
+
+                , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar
+                , InfoMoneyDestinationName TVarChar
+                , InfoMoneyName TVarChar, InfoMoneyId Integer
                )
 AS
 $BODY$
@@ -274,6 +278,11 @@ BEGIN
            , (COALESCE (ObjectString_Value2.ValueData,'')||' / '||COALESCE (ObjectString_Value4.ValueData,'') )::  TVarChar AS Value2_4
            , (COALESCE (ObjectString_Value5.ValueData,'')||' / '||COALESCE (ObjectString_Value6.ValueData,'') )::  TVarChar AS Value5_6
 
+           , Object_InfoMoney_View.InfoMoneyCode
+           , Object_InfoMoney_View.InfoMoneyGroupName
+           , Object_InfoMoney_View.InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyName
+           , Object_InfoMoney_View.InfoMoneyId
        FROM tmpData AS tmpPrice
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpPrice.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpPrice.GoodsKindId
@@ -335,6 +344,11 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Value6							-- Вакуумна упаковка - Термін зберігання порційна нарізка, №11
                                  ON ObjectString_Value6.ObjectId = GoodsQuality_Goods.ObjectId
                                 AND ObjectString_Value6.DescId = zc_ObjectString_GoodsQuality_Value6()
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                               ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
        WHERE Object_Goods.DescId = zc_Object_Goods()
 
@@ -459,6 +473,12 @@ BEGIN
            , (COALESCE (ObjectString_Value2.ValueData,'')||' / '||COALESCE (ObjectString_Value4.ValueData,'') )::  TVarChar AS Value2_4
            , (COALESCE (ObjectString_Value5.ValueData,'')||' / '||COALESCE (ObjectString_Value6.ValueData,'') )::  TVarChar AS Value5_6
 
+           , Object_InfoMoney_View.InfoMoneyCode
+           , Object_InfoMoney_View.InfoMoneyGroupName
+           , Object_InfoMoney_View.InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyName
+           , Object_InfoMoney_View.InfoMoneyId
+
        FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
             LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
                                  ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
@@ -536,6 +556,11 @@ BEGIN
                                  ON ObjectString_Value6.ObjectId = GoodsQuality_Goods.ObjectId
                                 AND ObjectString_Value6.DescId = zc_ObjectString_GoodsQuality_Value6()
 
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                               ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
        WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
          AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
          AND (ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0 OR ObjectHistory_PriceListItem.StartDate <> zc_DateStart())
@@ -551,6 +576,7 @@ ALTER FUNCTION gpSelect_ObjectHistory_PriceListItem (Integer, TDateTime, Boolean
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.05.21         * InfoMoney
  27.11.19         * GoodsKind
  22.10.18         *
  20.08.15         * add inShowAll

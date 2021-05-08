@@ -92,6 +92,7 @@ type
     bbAllPartner: TdxBarButton;
     cbIsAllPartner: TcxCheckBox;
     actRefreshPartner: TdsdDataSetRefresh;
+    actInsertMaskMulti: TMultiAction;
   private
     { Private declarations }
   public

@@ -2034,7 +2034,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPriceListForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListEditForm');
-   }
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListItemForm');
   exit;
@@ -2047,10 +2047,10 @@ begin
     exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceList_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceList_ObjectForm');
-
+ }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListTaxDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListTaxDialogForm');
-  }
+
 end;
 
 procedure TLoadFormTest.LoadQualityFormTest;
@@ -3069,18 +3069,19 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoManagerJournalForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoJournalForm');
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoForm');
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoPartnerForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoContractBonus_DetailForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoContractBonus_DetailForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadPromoKindFormTest;

@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080
-  ClientHeight = 288
-  ClientWidth = 350
+  ClientHeight = 365
+  ClientWidth = 334
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,8 +17,8 @@
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 85
-    Top = 234
+    Left = 73
+    Top = 328
     Width = 75
     Height = 25
     Action = mactUpdate
@@ -27,8 +27,8 @@
     TabOrder = 1
   end
   object cxButton2: TcxButton
-    Left = 189
-    Top = 234
+    Left = 177
+    Top = 328
     Width = 75
     Height = 25
     Action = actFormClose
@@ -114,9 +114,43 @@
     TabOrder = 11
     Width = 121
   end
+  object cxLabel2: TcxLabel
+    Left = 24
+    Top = 220
+    Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
+  end
+  object edGoodsGroup: TcxButtonEdit
+    Left = 24
+    Top = 237
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 13
+    Width = 278
+  end
+  object cxLabel7: TcxLabel
+    Left = 24
+    Top = 271
+    Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103':'
+  end
+  object ceInfoMoney: TcxButtonEdit
+    Left = 24
+    Top = 289
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 15
+    Width = 278
+  end
   object ActionList: TActionList
-    Left = 304
-    Top = 8
+    Left = 288
+    Top = 16
     object actDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -184,8 +218,24 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsGroupId'
+        Value = Null
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inOperDate'
-        Value = ''
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -193,7 +243,7 @@
       end
       item
         Name = 'inOperDateFrom'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDateFrom
         DataType = ftDateTime
         ParamType = ptInput
@@ -232,7 +282,7 @@
       end
       item
         Name = 'OperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -240,7 +290,7 @@
       end
       item
         Name = 'OperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDateFrom
         DataType = ftDateTime
         ParamType = ptInput
@@ -261,8 +311,8 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 288
-    Top = 208
+    Left = 280
+    Top = 200
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 136
@@ -325,5 +375,62 @@
       end>
     Left = 56
     Top = 160
+  end
+  object GuidesGoodsGroup: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsGroup
+    FormNameParam.Value = 'TGoodsGroup_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsGroup_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 96
+    Top = 224
+  end
+  object GuidesInfoMoney: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 184
+    Top = 261
   end
 end

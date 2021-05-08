@@ -112,13 +112,14 @@ BEGIN
                                                         , inSummHosp           := COALESCE (gpSelect.SummHosp, 0)
                                                         , inSummHospOthRecalc  := COALESCE (gpSelect.SummHospOthRecalc, 0)
                                                         , inSummCompensationRecalc := COALESCE (gpSelect.SummCompensationRecalc, 0)
+                                                        , inSummAuditAdd       := COALESCE (gpSelect.SummAuditAdd,0)
                                                         , inComment            := COALESCE (gpSelect.Comment, '')
                                                         , inInfoMoneyId        := COALESCE (gpSelect.InfoMoneyId, zc_Enum_InfoMoney_60101()) -- 60101 Заработная плата + Заработная плата
                                                         , inUnitId             := tmpPersonal.UnitId
                                                         , inPositionId         := tmpPersonal.PositionId
                                                         , inMemberId               := gpSelect.MemberId                                     -- Физ лицо (кому начисляют алименты)
                                                         , inPersonalServiceListId  := ObjectLink_Personal_PersonalServiceList.ChildObjectId -- на которую происходит распределение Карточки БН
-                                                        , inFineSubjectId          := COALESCE (gpSelect.FineSubjectId,0) ::Integer
+                                                        , inFineSubjectId          := COALESCE (gpSelect.FineSubjectId,0)     ::Integer
                                                         , inUnitFineSubjectId      := COALESCE (gpSelect.UnitFineSubjectId,0) ::Integer
                                                         , inUserId             := vbUserId
                                                          ) AS tmp
