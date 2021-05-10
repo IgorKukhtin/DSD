@@ -2,7 +2,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_ObjectHistory_PriceListI
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Get_OH_PriceListItem() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Get_OH_PriceListItem' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Select_OH_PriceListItem() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Select_OH_PriceListItem' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Select_OH_PriceListGoodsItem() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Select_OH_PriceListGoodsItem' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
-
+CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_OH_PriceListItem_zero() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_OH_PriceListItem_zero' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 DO $$
 BEGIN
 
@@ -29,6 +29,12 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_OH_PriceListGo
                                   , inCode:= 4
                                   , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_PriceListItem())||'> - просмотр данных.'
                                   , inEnumName:= 'zc_Enum_Process_Select_OH_PriceListGoodsItem');
+
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_OH_PriceListItem_zero()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 4
+                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_PriceListItem())||'> - изменение данных.'
+                                  , inEnumName:= 'zc_Enum_Process_InsertUpdate_OH_PriceListItem_zero');
 END $$;
 
 

@@ -448,6 +448,14 @@ object PriceListItemForm: TPriceListItemForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertUpdate_Separate'
         end
         item
@@ -547,6 +555,10 @@ object PriceListItemForm: TPriceListItemForm
     end
     object bbStartLoad: TdxBarButton
       Action = actStartLoad
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = macUpdate_Zero
       Category = 0
     end
   end
@@ -773,21 +785,6 @@ object PriceListItemForm: TPriceListItemForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actInsertUpdate_Separate: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      Enabled = False
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate_Separate
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdate_Separate
-        end>
-      Caption = #1088#1072#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1086' '#1076#1085#1103#1084' - '#1086#1073#1074#1072#1083#1082#1072
-      Hint = #1088#1072#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1086' '#1076#1085#1103#1084' - '#1086#1073#1074#1072#1083#1082#1072
-      QuestionBeforeExecute = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1088#1072#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1086' '#1076#1085#1103#1084' - '#1086#1073#1074#1072#1083#1082#1072'?'
-      InfoAfterExecute = #1088#1072#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1086' '#1076#1085#1103#1084' - '#1086#1073#1074#1072#1083#1082#1072' '#1086#1082#1086#1085#1095#1077#1085
-    end
     object actPrintGrid: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -856,6 +853,60 @@ object PriceListItemForm: TPriceListItemForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actInsertUpdate_Separate: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      Enabled = False
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_Separate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_Separate
+        end>
+      Caption = #1088#1072#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1086' '#1076#1085#1103#1084' - '#1086#1073#1074#1072#1083#1082#1072
+      Hint = #1088#1072#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1086' '#1076#1085#1103#1084' - '#1086#1073#1074#1072#1083#1082#1072
+      QuestionBeforeExecute = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1088#1072#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1086' '#1076#1085#1103#1084' - '#1086#1073#1074#1072#1083#1082#1072'?'
+      InfoAfterExecute = #1088#1072#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1086' '#1076#1085#1103#1084' - '#1086#1073#1074#1072#1083#1082#1072' '#1086#1082#1086#1085#1095#1077#1085
+    end
+    object actGet_error: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_error
+      StoredProcList = <
+        item
+          StoredProc = spGet_error
+        end>
+      Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1087#1088#1072#1074' '#1086#1073#1085#1091#1083#1080#1090#1100' '#1094#1077#1085#1091
+      Hint = #1055#1088#1086#1074#1077#1088#1082#1072' '#1087#1088#1072#1074' '#1086#1073#1085#1091#1083#1080#1090#1100' '#1094#1077#1085#1091
+      ImageIndex = 77
+      InfoAfterExecute = #1055#1088#1086#1074#1077#1088#1082#1072' '#1087#1088#1072#1074' '#1086#1073#1085#1091#1083#1080#1090#1100' '#1094#1077#1085#1091
+    end
+    object actInsertUpdate_Zero: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_Zero
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_Zero
+        end>
+      Caption = #1086#1073#1085#1091#1083#1080#1090#1100' '#1094#1077#1085#1091
+      Hint = #1086#1073#1085#1091#1083#1080#1090#1100' '#1094#1077#1085#1091
+      ImageIndex = 77
+      InfoAfterExecute = #1086#1073#1085#1091#1083#1080#1090#1100' '#1094#1077#1085#1091
+    end
+    object macUpdate_Zero_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdate_Zero
+        end>
+      View = cxGridDBTableView
+      Caption = 'O'#1073#1085#1091#1083#1080#1090#1100' '#1094#1077#1085#1091' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1090#1086#1074#1072#1088#1072#1084
+      ImageIndex = 77
+    end
     object actDoLoad: TExecuteImportSettingsAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
@@ -909,6 +960,24 @@ object PriceListItemForm: TPriceListItemForm
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
       ImageIndex = 41
+    end
+    object macUpdate_Zero: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_error
+        end
+        item
+          Action = macUpdate_Zero_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 'O'#1073#1085#1091#1083#1080#1090#1100' '#1094#1077#1085#1091' '#1042#1057#1045#1052' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1090#1086#1074#1072#1088#1072#1084'?'
+      Caption = 'O'#1073#1085#1091#1083#1080#1090#1100' '#1094#1077#1085#1091' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1090#1086#1074#1072#1088#1072#1084
+      Hint = 'O'#1073#1085#1091#1083#1080#1090#1100' '#1094#1077#1085#1091' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1090#1086#1074#1072#1088#1072#1084
+      ImageIndex = 77
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -1216,5 +1285,117 @@ object PriceListItemForm: TPriceListItemForm
     PackSize = 1
     Left = 520
     Top = 264
+  end
+  object spInsertUpdate_Zero: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_ObjectHistory_PriceListItemLast_zero'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceListId'
+        Value = '0'
+        Component = PriceListGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 43831d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsLast'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outStartDate'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'StartDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEndDate'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'EndDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPriceNoVAT'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'PriceNoVAT'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPriceWVAT'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'PriceWVAT'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 72
+    Top = 328
+  end
+  object spGet_error: TdsdStoredProc
+    StoredProcName = 'gpGet_ObjectHistory_PriceListItem_error'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inPriceListId'
+        Value = '0'
+        Component = PriceListGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 168
+    Top = 328
   end
 end
