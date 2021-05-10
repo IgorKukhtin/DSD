@@ -152,12 +152,12 @@ BEGIN
     END IF;*/
 
     -- Результат
-    /*IF vbId_End > 4198017509
+    IF vbId_End > 5602489721
     THEN
-         RETURN 4198017509;
+         RETURN 5602489721;
     ELSE
          RETURN vbId_End;
-    END IF;*/
+    END IF;
     
     RETURN vbId_End;
 

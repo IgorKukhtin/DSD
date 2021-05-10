@@ -223,6 +223,7 @@ type
     cbSnapshot: TCheckBox;
     EditRepl_offset: TEdit;
     cbTransportList: TCheckBox;
+    Timer_Auto_PrimeCost: TTimer;
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure StopButtonClick(Sender: TObject);
@@ -238,10 +239,15 @@ type
     procedure PanelErrDblClick(Sender: TObject);
     procedure OKDocumentButtonClick(Sender: TObject);
     procedure cbSnapshotClick(Sender: TObject);
+    procedure Timer_Auto_PrimeCostTimer(Sender: TObject);
   private
     fStop:Boolean;
     isGlobalLoad,zc_rvYes,zc_rvNo:Integer;
     zc_Enum_PaidKind_FirstForm,zc_Enum_PaidKind_SecondForm:Integer;
+    zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_H,zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H,zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H:Integer;
+    zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_M,zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_M,zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_M:Integer;
+    zc_Enum_GlobalConst_StartDate_Auto_PrimeCost : TDateTime;
+    zc_Enum_Process_Auto_PrimeCost:String;
 
     GroupId_branch : Integer;
     beginVACUUM : Integer;
@@ -452,6 +458,31 @@ begin
      end;
 end;
 
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.Timer_Auto_PrimeCostTimer(Sender: TObject);
+var fEnabled: Boolean;
+  Present: TDateTime;
+  Hour, Min, Sec, MSec: Word;
+begin
+     fEnabled:= true;
+     try
+        Timer_Auto_PrimeCost.Enabled:= false;
+        //
+        Present:= now;
+        DecodeTime(Present, Hour, Min, Sec, MSec);
+        //
+        if ((GroupId_branch = 0) and (((Hour = zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_H) and (Min >= zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_M))or(Hour > zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_H)or((Hour>=0) and (Hour<=4) and (zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_H>=10) and (zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_H<=23))))
+         or((GroupId_branch = 1) and (((Hour = zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H) and (Min >= zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_M))or(Hour > zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H)or((Hour>=0) and (Hour<=4) and (zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H>=10) and (zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H<=23))))
+         or((GroupId_branch = 2) and (((Hour = zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H) and (Min >= zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_M))or(Hour > zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H)or((Hour>=0) and (Hour<=4) and (zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H>=10) and (zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H<=23))))
+        then begin
+            fEnabled:= false;
+            //
+            OKCompleteDocumentButtonClick(Self);
+        end;
+     finally
+        Timer_Auto_PrimeCost.Enabled:= fEnabled;
+     end;
+end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.CloseButtonClick(Sender: TObject);
 begin
@@ -868,12 +899,46 @@ begin
      //
      //cbAllGuide.Checked:=true;
      //
+     //
+     try
+         fOpenSqToQuery ('select (SELECT OD.ValueData FROM ObjectDate AS OD WHERE OD.ObjectId = zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost() AND OD.DescId = zc_ObjectDate_GlobalConst_ActualBankStatement()) AS StartTime0'
+                             + ',(SELECT OD.ValueData FROM ObjectDate AS OD WHERE OD.ObjectId = zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost() AND OD.DescId = zc_ObjectDate_GlobalConst_ActualBankStatement()) AS StartTime1'
+                             + ',(SELECT OD.ValueData FROM ObjectDate AS OD WHERE OD.ObjectId = zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost() AND OD.DescId = zc_ObjectDate_GlobalConst_ActualBankStatement()) AS StartTime2'
+                             + ',(SELECT OD.ValueData FROM ObjectDate AS OD WHERE OD.ObjectId = zc_Enum_GlobalConst_StartDate_Auto_PrimeCost()  AND OD.DescId = zc_ObjectDate_GlobalConst_ActualBankStatement()) AS StartDate'
+                             + ',zc_Enum_Process_Auto_PrimeCost() AS zc_Enum_Process_Auto_PrimeCost'
+                        );
+         //
+         zc_Enum_Process_Auto_PrimeCost:=toSqlQuery.FieldByName('zc_Enum_Process_Auto_PrimeCost').AsString;
+         //
+         zc_Enum_GlobalConst_StartDate_Auto_PrimeCost:=toSqlQuery.FieldByName('StartDate').AsDateTime;
+         // 0
+         Present:= toSqlQuery.FieldByName('StartTime0').AsDateTime;
+         DecodeTime(Present, Hour, Min, Sec, MSec);
+         zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_H:= Hour;
+         zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_M:= Min;
+         // 1
+         Present:= toSqlQuery.FieldByName('StartTime1').AsDateTime;
+         DecodeTime(Present, Hour, Min, Sec, MSec);
+         zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H:= Hour;
+         zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_M:= Min;
+         // 2
+         Present:= toSqlQuery.FieldByName('StartTime2').AsDateTime;
+         DecodeTime(Present, Hour, Min, Sec, MSec);
+         zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H:= Hour;
+         zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_M:= Min;
+
+     except
+          ShowMessage ('not zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost + zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost + zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost');
+     end;
+     //
+     //
      fStop:=true;
      //
      Present:= Now;
      DecodeDate(Present, Year, Month, Day);
      StartDateEdit.Text:=DateToStr(StrToDate('01.'+IntToStr(Month)+'.'+IntToStr(Year)));
-     StartDateCompleteEdit.Text:=StartDateEdit.Text;
+   //StartDateCompleteEdit.Text:=StartDateEdit.Text;
+     StartDateCompleteEdit.Text:=DateToStr(zc_Enum_GlobalConst_StartDate_Auto_PrimeCost);
 
      if Month=12 then begin Month:=1;Year:=Year+1;end else Month:=Month+1;
      EndDateEdit.Text:=DateToStr(StrToDate('01.'+IntToStr(Month)+'.'+IntToStr(Year))-1);
@@ -903,7 +968,6 @@ begin
      except
           ShowMessage ('not gpComplete_SelectAll_Sybase_Currency_List');
      end;
-     //
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.FormShow(Sender: TObject);
@@ -929,35 +993,52 @@ procedure TMainForm.StartProcess;
                except Day_ReComplete:=10
                end;
                //fOpenSqlFromZQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-Day_ReComplete)+') as RetV');
-               fOpenSqlFromZQuery ('select DATE_TRUNC (' + FormatToVarCharServer_notNULL('MONTH') + ', CAST ('+FormatToDateServer_notNULL(Date-Day_ReComplete)+' AS TDateTime)) as RetV');
+             //fOpenSqlFromZQuery ('select DATE_TRUNC (' + FormatToVarCharServer_notNULL('MONTH') + ', CAST ('+FormatToDateServer_notNULL(Date-Day_ReComplete)+' AS TDateTime)) as RetV');
+               fOpenSqlFromZQuery ('select DATE_TRUNC (' + FormatToVarCharServer_notNULL('MONTH') + ', CAST ('+FormatToDateServer_notNULL(zc_Enum_GlobalConst_StartDate_Auto_PrimeCost)+' AS TDateTime)) as RetV');
+
                StartDateCompleteEdit.Text:=DateToStr(fromSqlZQuery.FieldByName('RetV').AsDateTime);
                EndDateCompleteEdit.Text:=DateToStr(Date-1);
 
-               myLogMemo_add('autoALL('+IntToStr(Day_ReComplete)+'Day)');
-               UnitCodeSendOnPriceEdit.Text:='autoALL('+IntToStr(Day_ReComplete)+'Day)';
+             //myLogMemo_add('autoALL('+IntToStr(Day_ReComplete)+'Day)');
+             //UnitCodeSendOnPriceEdit.Text:='autoALL('+IntToStr(Day_ReComplete)+'Day)';
+
+               myLogMemo_add('autoALL ('+IntToStr(GroupId_branch)+') start from '+DateToStr(zc_Enum_GlobalConst_StartDate_Auto_PrimeCost));
+               if GroupId_branch = 0
+               then
+                    myLogMemo_add('wait time ... '+IntToStr(zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_H)+':'+IntToStr(zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_M))
+               else if GroupId_branch = 1
+               then
+                    myLogMemo_add('wait time ... '+IntToStr(zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H)+':'+IntToStr(zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_M))
+               else if GroupId_branch = 2
+               then
+                    myLogMemo_add('wait time ... '+IntToStr(zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H)+':'+IntToStr(zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_M))
+               ;
+
+
+               UnitCodeSendOnPriceEdit.Text:='autoALL('+DateToStr(zc_Enum_GlobalConst_StartDate_Auto_PrimeCost)+')';
 
                //Привязка Возвраты
-               cbReturnIn_Auto.Checked:=true;
+               if GroupId_branch <=0 then cbReturnIn_Auto.Checked:=true;
                //Расчет акций
-               cbPromo.Checked:=true;
+               if GroupId_branch <=0 then cbPromo.Checked:=true;
                //Расчет Currency
-               cbCurrency.Checked:=true;
+               if GroupId_branch <=0 then cbCurrency.Checked:=true;
 
                //Проводим+Распроводим
                cbComplete.Checked:=true;
                cbUnComplete.Checked:=true;
                cbLastComplete.Checked:=false;
                //с/с
-               cbInsertHistoryCost.Checked:=true;
+               if GroupId_branch <=0 then cbInsertHistoryCost.Checked:=true;
                //по списку
                cbComplete_List.Checked:=true;
                //с задержкой
                //cb100MSec.Checked:=true;
 
-               OKCompleteDocumentButtonClick(Self);
+             //OKCompleteDocumentButtonClick(Self);
+               Timer_Auto_PrimeCostTimer(Self);
 end;
 
-var Day_ReComplete:Integer;
 begin
   try
      fStartProcess:= TRUE;
@@ -1362,6 +1443,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fBeginPack_oneDay : Boolean;
 begin
+     fStop:=false;
      cbPack.Checked:= true;
      StartDateCompleteEdit.Text:= DateToStr(now-1);
      EndDateCompleteEdit.Text:= DateToStr(now-1);
@@ -1883,6 +1965,8 @@ begin
      cbOnlySale_save:=cbOnlySale.Checked;
      if isPeriodTwo = TRUE then cbOnlySale.Checked:=false;
      //
+// ShowMessage ('start');
+// exit;
      //
      if (ParamStr(6)<>'next-') or (isPeriodTwo = FALSE) then
      begin
@@ -1921,7 +2005,7 @@ begin
      if (ParamStr(6)='next-') and (isPeriodTwo = true)
      then exit;
      //
-     // перепроведение
+     // !!!перепроведение здесь!!!
      if not fStop then pCompleteDocument_List(FALSE, FALSE, FALSE);
      //
      if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Diff;
@@ -1976,7 +2060,8 @@ begin
      //
      fOpenSqToQuery ('select * from FillSoldTable('+FormatToVarCharServer_isSpace(DateToStr(Date1))
                                                +','+FormatToVarCharServer_isSpace(DateToStr(Date2))
-                                               +',zfCalc_UserAdmin())');
+                                               +','+FormatToVarCharServer_isSpace(zc_Enum_Process_Auto_PrimeCost)
+                                               + ')');
      //
      //
      tmpDate2:=NOw;
@@ -2021,7 +2106,8 @@ begin
      //
      fOpenSqToQuery ('select * from FillSoldTable('+FormatToVarCharServer_isSpace(DateToStr(Date1))
                                                +','+FormatToVarCharServer_isSpace(DateToStr(Date2))
-                                               +',zfCalc_UserAdmin())');
+                                               +','+FormatToVarCharServer_isSpace(zc_Enum_Process_Auto_PrimeCost)
+                                               +')');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadFillAuto;
@@ -2035,7 +2121,8 @@ begin
      // 15 MONTH
      fOpenSqToQuery ('select * from gpUpdate_Object_Goods_In (DATE_TRUNC (' + chr(39) + 'MONTH' + chr(39) + ', CURRENT_DATE - INTERVAL' +  chr(39) + '15 MONTH' + chr(39) + ')'
                                                          + ', CURRENT_DATE'
-                                                         + ', zfCalc_UserAdmin())');
+                                                         + ','+FormatToVarCharServer_isSpace(zc_Enum_Process_Auto_PrimeCost)
+                                                         + ')');
      //
      // 15 MONTH
      fOpenSqToQuery ('select * from gpUpdate_Object_ReportCollation_RemainsCalc'
@@ -2046,7 +2133,8 @@ begin
                                                          + ', 0' // inContractId
                                                          + ', 0' // inPaidKindId
                                                          + ', 0' // inInfoMoneyId
-                                                         + ', zfCalc_UserAdmin())');
+                                                         + ','+FormatToVarCharServer_isSpace(zc_Enum_Process_Auto_PrimeCost)
+                                                         + ')');
      //
      //
      Present:=Now;
@@ -2055,11 +2143,13 @@ begin
      // 15 DAY
      fOpenSqToQuery ('select * from gpInsertUpdate_ObjectHistory_PriceListItem_Separate'
                                                          + ' (CURRENT_DATE -INTERVAL ' + chr(39) + '15 DAY' + chr(39)
-                                                         + ', zfCalc_UserAdmin())');
+                                                         + ','+FormatToVarCharServer_isSpace(zc_Enum_Process_Auto_PrimeCost)
+                                                         + ')');
      //CURRENT_DATE
      fOpenSqToQuery ('select * from gpInsertUpdate_ObjectHistory_PriceListItem_Separate'
                                                          + ' (CURRENT_DATE'
-                                                         + ', zfCalc_UserAdmin())');
+                                                         + ','+FormatToVarCharServer_isSpace(zc_Enum_Process_Auto_PrimeCost)
+                                                         + ')');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_List(isBefoHistoryCost,isPartion,isDiff:Boolean);

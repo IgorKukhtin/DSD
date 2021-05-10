@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MI_Sale_Child()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Sale_Child (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat,  TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Sale_Child (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat,  TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Sale_Child(
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
@@ -9,11 +10,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Sale_Child(
     IN inAmountUSD             TFloat    , -- сумма оплаты
     IN inAmountEUR             TFloat    , -- сумма оплаты
     IN inAmountCard            TFloat    , -- сумма оплаты
-    IN inAmountDiscount        TFloat    , -- Дополнительная скидка в продаже !!! ГРН !!!
+    IN inAmountDiscount_GRN    TFloat    , -- Дополнительная скидка в продаже !!! ГРН !!!
     IN inCurrencyValueUSD      TFloat    , --
     IN inParValueUSD           TFloat    , --
     IN inCurrencyValueEUR      TFloat    , --
     IN inParValueEUR           TFloat    , --
+    IN inCurrencyValueCross    TFloat    , --
+    IN inParValueCross         TFloat    , --
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -30,6 +33,13 @@ BEGIN
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+     -- !!!замена!!! так исправляется списание
+     IF inAmountGRN < 0
+     THEN
+         inAmountDiscount_GRN:= inAmountDiscount_GRN + inAmountGRN;
+         inAmountGRN:= 0;
+     END IF;
 
      -- данные из документа
      vbUnitId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From());
@@ -128,19 +138,21 @@ BEGIN
 
      -- расчет Данных Child
      WITH tmpChild AS (SELECT *
-                       FROM lpSelect_MI_Child_calc (inMovementId        := inMovementId
-                                                  , inUnitId            := vbUnitId
-                                                  , inAmountGRN         := inAmountGRN         -- сумма оплаты
-                                                  , inAmountUSD         := inAmountUSD         -- сумма оплаты
-                                                  , inAmountEUR         := inAmountEUR         -- сумма оплаты
-                                                  , inAmountCard        := inAmountCard        -- сумма оплаты
-                                                  , inAmountDiscount_GRN:= inAmountDiscount    -- Дополнительная скидка  !!! ГРН !!!
-                                                  , inCurrencyValueUSD  := inCurrencyValueUSD
-                                                  , inParValueUSD       := inParValueUSD
-                                                  , inCurrencyValueEUR  := inCurrencyValueEUR
-                                                  , inParValueEUR       := inParValueEUR
-                                                  , inCurrencyId_Client := vbCurrencyId_Client
-                                                  , inUserId            := vbUserId
+                       FROM lpSelect_MI_Child_calc (inMovementId          := inMovementId
+                                                  , inUnitId              := vbUnitId
+                                                  , inAmountGRN           := inAmountGRN          -- сумма оплаты
+                                                  , inAmountUSD           := inAmountUSD          -- сумма оплаты
+                                                  , inAmountEUR           := inAmountEUR          -- сумма оплаты
+                                                  , inAmountCard          := inAmountCard         -- сумма оплаты
+                                                  , inAmountDiscount_GRN  := inAmountDiscount_GRN -- Дополнительная скидка  !!! ГРН !!!
+                                                  , inCurrencyValueUSD    := inCurrencyValueUSD
+                                                  , inParValueUSD         := inParValueUSD
+                                                  , inCurrencyValueEUR    := inCurrencyValueEUR
+                                                  , inParValueEUR         := inParValueEUR
+                                                  , inCurrencyId_Client   := vbCurrencyId_Client
+                                                  , inCurrencyValueCross  := inCurrencyValueCross
+                                                  , inParValueCross       := inParValueCross
+                                                  , inUserId              := vbUserId
                                                    )
                       )
           -- в мастер записать
@@ -233,6 +245,13 @@ BEGIN
          END IF;
 
      END IF;
+
+
+     -- сохранили в Movement - Кросс-курс 
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyCrossValue(), inMovementId, inCurrencyValueCross);
+     -- сохранили в Movement - Номинал для Кросс-курса
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParCrossValue(), inMovementId, inParValueCross);
+
 
      -- "сложно" пересчитали "итоговые" суммы по ВСЕМ элементам
      PERFORM lpUpdate_MI_Sale_Total (MovementItem.Id)

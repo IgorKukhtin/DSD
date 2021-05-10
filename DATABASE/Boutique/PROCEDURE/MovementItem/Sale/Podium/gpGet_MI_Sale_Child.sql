@@ -2,15 +2,21 @@
 
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child (Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child(
     IN inId             Integer  , -- ключ
     IN inMovementId     Integer  , --
+    IN inIsDiscount     Boolean  , --
     IN inSession        TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
-             , CurrencyValue_USD TFloat, ParValue_USD TFloat
-             , CurrencyValue_EUR TFloat, ParValue_EUR TFloat
+             , CurrencyId_Client Integer, CurrencyName_Client TVarChar
+             , CurrencyNum_ToPay Integer, CurrencyNum_ToPay_curr Integer
+
+             , CurrencyValue_USD  TFloat, ParValue_USD  TFloat
+             , CurrencyValue_EUR  TFloat, ParValue_EUR  TFloat
+             , CurrencyValue_Cross TFloat, ParValue_Cross TFloat
 
              , AmountGRN           TFloat
              , AmountUSD           TFloat
@@ -38,10 +44,6 @@ RETURNS TABLE (Id Integer
              , isEUR               Boolean
              , isCard              Boolean
              , isDiscount          Boolean
-
-             , CurrencyId_Client Integer, CurrencyName_Client TVarChar
-
-             , CurrencyNum_ToPay Integer, CurrencyNum_ToPay_curr Integer
               )
 AS
 $BODY$
@@ -56,6 +58,9 @@ $BODY$
    DECLARE vbParValue_USD           TFloat;
    DECLARE vbCurrencyValue_EUR      TFloat;
    DECLARE vbParValue_EUR           TFloat;
+   DECLARE vbCurrencyValue_Cross    TFloat;
+   DECLARE vbParValue_Cross         TFloat;
+
    DECLARE vbAmountDiscount_GRN     TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -93,7 +98,8 @@ BEGIN
      WHERE MovementItem.MovementId = inMovementId
        AND MovementItem.DescId     = zc_MI_Child()
        AND MovementItem.isErased   = FALSE;
-     
+
+
      -- если НЕ нашли
      IF COALESCE (vbCurrencyValue_USD, 0) = 0
      THEN
@@ -108,6 +114,13 @@ BEGIN
          SELECT tmp.Amount, tmp.ParValue INTO vbCurrencyValue_EUR, vbParValue_EUR
          FROM lfSelect_Movement_Currency_byDate (inOperDate:= vbOperDate, inCurrencyFromId:= zc_Currency_Basis(), inCurrencyToId:= zc_Currency_EUR()) AS tmp;
      END IF;
+
+
+     -- Кросс-курс - если вводили или расчет
+     vbCurrencyValue_Cross:= COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_CurrencyCrossValue())
+                                    , zfCalc_CurrencyCross_calc (vbCurrencyValue_EUR, vbCurrencyValue_USD)
+                                     );
+     vbParValue_Cross:= 1;
 
 
      -- Расчет из Мастера
@@ -215,9 +228,8 @@ BEGIN
 
                                   -- AmountGRN_EUR
                                 , zfCalc_CurrencyTo (tmpRes_all.AmountGRN, tmpRes_all.CurrencyValue_EUR, tmpRes_all.ParValue_EUR) AS AmountGRN_EUR
-                                  -- AmountUSD_EUR
-                                , zfCalc_CurrencyTo (zfCalc_CurrencyFrom (tmpRes_all.AmountUSD, tmpRes_all.CurrencyValue_USD, tmpRes_all.ParValue_USD)
-                                                   , tmpRes_all.CurrencyValue_EUR, tmpRes_all.ParValue_EUR) AS AmountUSD_EUR
+                                  -- AmountUSD_EUR - округлили до целых
+                                , zfCalc_CurrencyCross (tmpRes_all.AmountUSD, vbCurrencyValue_Cross, vbParValue_Cross) AS AmountUSD_EUR
                                   -- AmountCard_EUR
                                 , zfCalc_CurrencyTo (tmpRes_all.AmountCard, tmpRes_all.CurrencyValue_EUR, tmpRes_all.ParValue_EUR) AS AmountCard_EUR
 
@@ -252,11 +264,19 @@ BEGIN
                         FROM tmpRes
                        )
       -- 1.4. Результат
-      SELECT 0                   :: Integer AS Id
-           , vbCurrencyValue_USD            AS CurrencyValue_USD
-           , vbParValue_USD                 AS ParValue_USD
-           , vbCurrencyValue_EUR            AS CurrencyValue_EUR
-           , vbParValue_EUR                 AS ParValue_EUR
+      SELECT 0                    :: Integer AS Id
+           , Object_CurrencyClient.Id        AS CurrencyId_Client
+           , Object_CurrencyClient.ValueData AS CurrencyName_Client
+
+           , 1 :: Integer                    AS CurrencyNum_ToPay
+           , 2 :: Integer                    AS CurrencyNum_ToPay_curr
+
+           , vbCurrencyValue_USD             AS CurrencyValue_USD
+           , vbParValue_USD                  AS ParValue_USD
+           , vbCurrencyValue_EUR             AS CurrencyValue_EUR
+           , vbParValue_EUR                  AS ParValue_EUR
+           , vbCurrencyValue_Cross           AS CurrencyValue_Cross
+           , vbParValue_Cross                AS ParValue_Cross
 
              -- из-за обмена может быть < 0
            , CASE WHEN tmpMI.AmountGRN > 0 THEN tmpMI.AmountGRN ELSE 0 END :: TFloat AS AmountGRN
@@ -310,13 +330,7 @@ BEGIN
            , CASE WHEN 1=1 AND tmpMI.AmountUSD     <> 0 THEN TRUE ELSE FALSE END AS isUSD
            , CASE WHEN 1=1 AND tmpMI.AmountEUR     <> 0 THEN TRUE ELSE FALSE END AS isEUR
            , CASE WHEN 1=1 AND tmpMI.AmountCard    <> 0 THEN TRUE ELSE FALSE END AS isCard
-           , CASE WHEN 1=1 AND vbAmountDiscount_GRN <> 0 THEN TRUE ELSE FALSE END AS isDiscount
-
-           , Object_CurrencyClient.Id               AS CurrencyId_Client
-           , Object_CurrencyClient.ValueData        AS CurrencyName_Client
-
-           , 1 :: Integer AS CurrencyNum_ToPay
-           , 2 :: Integer AS CurrencyNum_ToPay_curr
+           , CASE WHEN 1=1 AND vbAmountDiscount_GRN <> 0 THEN inIsDiscount ELSE FALSE END AS isDiscount
 
        FROM tmpMI
             LEFT JOIN Object AS Object_CurrencyClient ON Object_CurrencyClient.Id = vbCurrencyId_Client
@@ -333,4 +347,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_MI_Sale_Child (inId:= 0, inMovementId := 6231, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_MI_Sale_Child (inId:= 0, inMovementId := 6231, inIsDiscount:= FALSE, inSession:= zfCalc_UserAdmin());

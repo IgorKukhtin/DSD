@@ -19,7 +19,7 @@ object MainForm: TMainForm
   object DBGrid: TDBGrid
     Left = 0
     Top = 0
-    Width = 459
+    Width = 423
     Height = 664
     Align = alClient
     DataSource = DataSource
@@ -1058,7 +1058,7 @@ object MainForm: TMainForm
     object OKPOEdit: TEdit
       Left = 6
       Top = 625
-      Width = 104
+      Width = 75
       Height = 21
       TabOrder = 21
     end
@@ -1411,9 +1411,9 @@ object MainForm: TMainForm
       Visible = False
     end
     object UnitCodeSendOnPriceEdit: TEdit
-      Left = 129
+      Left = 85
       Top = 625
-      Width = 104
+      Width = 87
       Height = 21
       TabOrder = 44
       Text = '22121'
@@ -1915,14 +1915,12 @@ object MainForm: TMainForm
       Width = 71
       Height = 17
       Caption = #1055#1088#1086#1076'.'#1087#1086#1082'.'
-      Checked = True
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
       Font.Name = 'MS Sans Serif'
       Font.Style = []
       ParentFont = False
-      State = cbChecked
       TabOrder = 22
       WordWrap = True
     end
@@ -2341,9 +2339,9 @@ object MainForm: TMainForm
     end
   end
   object LogPanel: TPanel
-    Left = 459
+    Left = 423
     Top = 0
-    Width = 244
+    Width = 280
     Height = 664
     Align = alRight
     Font.Charset = DEFAULT_CHARSET
@@ -2356,7 +2354,7 @@ object MainForm: TMainForm
     object PanelErr: TPanel
       Left = 1
       Top = 1
-      Width = 242
+      Width = 278
       Height = 38
       Align = alTop
       Font.Charset = DEFAULT_CHARSET
@@ -2367,6 +2365,7 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 0
       OnDblClick = PanelErrDblClick
+      ExplicitWidth = 242
       object EditRepl1: TEdit
         Left = 120
         Top = 17
@@ -2438,7 +2437,7 @@ object MainForm: TMainForm
     object LogMemo: TMemo
       Left = 1
       Top = 39
-      Width = 242
+      Width = 278
       Height = 309
       Align = alClient
       Font.Charset = DEFAULT_CHARSET
@@ -2450,11 +2449,12 @@ object MainForm: TMainForm
         'LogMemo')
       ParentFont = False
       TabOrder = 1
+      ExplicitWidth = 242
     end
     object LogMemo2: TMemo
       Left = 1
       Top = 348
-      Width = 242
+      Width = 278
       Height = 315
       Align = alBottom
       Font.Charset = DEFAULT_CHARSET
@@ -2467,6 +2467,7 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 2
       Visible = False
+      ExplicitWidth = 242
     end
   end
   object DataSource: TDataSource
@@ -2980,5 +2981,12 @@ object MainForm: TMainForm
       'ORDER BY table_update_data.Id')
     Left = 552
     Top = 392
+  end
+  object Timer_Auto_PrimeCost: TTimer
+    Enabled = False
+    Interval = 20000
+    OnTimer = Timer_Auto_PrimeCostTimer
+    Left = 344
+    Top = 48
   end
 end

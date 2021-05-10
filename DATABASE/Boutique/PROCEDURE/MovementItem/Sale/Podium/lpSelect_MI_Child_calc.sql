@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpSelect_MI_Child_calc (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpSelect_MI_Child_calc (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer);
+DROP FUNCTION IF EXISTS lpSelect_MI_Child_calc (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpSelect_MI_Child_calc(
     IN inMovementId            Integer   , -- Ключ
@@ -15,6 +16,8 @@ CREATE OR REPLACE FUNCTION lpSelect_MI_Child_calc(
     IN inParValueUSD           TFloat    , --
     IN inCurrencyValueEUR      TFloat    , --
     IN inParValueEUR           TFloat    , --
+    IN inCurrencyValueCross    TFloat    , -- Кросс-курс
+    IN inParValueCross         TFloat    , -- Номинал для Кросс-курса
     IN inCurrencyId_Client     Integer   , --
     IN inUserId                Integer     -- Ключ
 )
@@ -37,7 +40,14 @@ AS
 $BODY$
    DECLARE vbTotalAmountToPay      TFloat;
    DECLARE vbTotalAmountToPay_curr TFloat;
+   DECLARE vbCurrencyValueUSD      NUMERIC (20, 10);
 BEGIN
+
+     -- !замена! Курс, будем пересчитывать из-за кросс-курса
+     vbCurrencyValueUSD:= ROUND (inCurrencyValueEUR / CASE WHEN inCurrencyValueCross > 0 THEN inCurrencyValueCross ELSE 1 END, 2);
+   --vbCurrencyValueUSD:= inCurrencyValueEUR / CASE WHEN inCurrencyValueCross > 0 THEN inCurrencyValueCross ELSE 1 END;
+   --vbCurrencyValueUSD:= inCurrencyValueUSD;
+
 
      --
      -- !!!ДЛЯ ТЕСТА!!!
@@ -159,12 +169,12 @@ BEGIN
                                           * CASE WHEN inAmountDiscount_GRN < 0 THEN -1 ELSE 1 END
 
 
-                                       /*WHEN FLOOR (inAmountDiscount_GRN) <> inAmountDiscount_GRN OR 1=1
+                                       WHEN FLOOR (inAmountDiscount_GRN) <> inAmountDiscount_GRN OR 1=1
                                        -- ОКРУЛИЛИ до 2-х зн.
                                        THEN ROUND (inAmountDiscount_GRN * _tmp_MI_Master.AmountToPay / vbTotalAmountToPay, 2)
 
                                        -- отбросили коп.
-                                       ELSE FLOOR (inAmountDiscount_GRN * _tmp_MI_Master.AmountToPay / vbTotalAmountToPay)*/
+                                       /*ELSE FLOOR (inAmountDiscount_GRN * _tmp_MI_Master.AmountToPay / vbTotalAmountToPay)*/
 
                                        ELSE 0
 
@@ -202,7 +212,7 @@ BEGIN
 
                            FROM tmp_MI_Master_all
                           )
-            -- 1.1. остаток для оплаты EUR - с накопительной суммой
+/*            -- 1.1. остаток для оплаты EUR - с накопительной суммой
           , tmp_MI_EUR AS (SELECT tmpMI.MovementItemId
                                   -- сумма с учетом Доп. скидки - !!! ГРН !!!
                                 , tmpMI.Amount_all
@@ -219,11 +229,11 @@ BEGIN
                                                   -- дробная часть будет в обмене ...???
                                                   THEN zfCalc_CurrencyFrom (tmpMI.AmountToPay_curr - zfCalc_CurrencyTo (tmpMI.AmountDiscount_GRN, inCurrencyValueEUR, inParValueEUR), inCurrencyValueEUR, inParValueEUR)
                                              --
-                                           /*WHEN inAmountGRN > 150 OR inAmountCard > 0
-                                                  -- считаем что дробной части нет, т.е. она дополнится гривной
-                                                  THEN zfCalc_CurrencyFrom (-- Переводим в Валюту + отбросили коп.
-                                                                            FLOOR (zfCalc_CurrencyTo (tmpMI.AmountToPay - tmpMI.AmountDiscount_GRN, inCurrencyValueEUR, inParValueEUR))
-                                                                          , inCurrencyValueEUR, inParValueEUR)*/
+                                           --WHEN inAmountGRN > 150 OR inAmountCard > 0
+                                           --      -- считаем что дробной части нет, т.е. она дополнится гривной
+                                           --     THEN zfCalc_CurrencyFrom (-- Переводим в Валюту + отбросили коп.
+                                           --                               FLOOR (zfCalc_CurrencyTo (tmpMI.AmountToPay - tmpMI.AmountDiscount_GRN, inCurrencyValueEUR, inParValueEUR))
+                                           --                             , inCurrencyValueEUR, inParValueEUR)
                                              -- ???иначе дробная часть будет в обмене???
                                              ELSE tmpMI.AmountToPay - tmpMI.AmountDiscount_GRN
 
@@ -263,8 +273,8 @@ BEGIN
                                              --
                                              WHEN inAmountGRN > 155 OR inAmountCard > 0 OR 1=1
                                                   -- считаем что дробной части нет, т.е. она дополнится гривной
-                                                  THEN zfCalc_CurrencyFrom (FLOOR (zfCalc_CurrencyTo (tmpMI.Amount_all - COALESCE (tmpRes.Amount, 0), inCurrencyValueUSD, inParValueUSD))
-                                                                          , inCurrencyValueUSD, inParValueUSD)
+                                                  THEN zfCalc_CurrencyFrom (FLOOR (zfCalc_CurrencyTo (tmpMI.Amount_all - COALESCE (tmpRes.Amount, 0), vbCurrencyValueUSD, inParValueUSD))
+                                                                          , vbCurrencyValueUSD, inParValueUSD)
                                              -- иначе дробная часть будет в обмене
                                              ELSE tmpMI.Amount_all - COALESCE (tmpRes.Amount, 0)
                                         END AS Amount_calc
@@ -276,25 +286,130 @@ BEGIN
       , tmp_MI_USD_res AS (
                            -- результат в ГРН
                            SELECT DD.MovementItemId
-                                , CASE WHEN zfCalc_CurrencyFrom (inAmountUSD, inCurrencyValueUSD, inParValueUSD)  - DD.Amount_SUM > 0
+                                , CASE WHEN zfCalc_CurrencyFrom (inAmountUSD, vbCurrencyValueUSD, inParValueUSD)  - DD.Amount_SUM > 0
                                        -- оплатили полностью
                                        THEN DD.Amount_calc
                                        -- оплатили частично
-                                       ELSE zfCalc_CurrencyFrom (inAmountUSD, inCurrencyValueUSD, inParValueUSD) - (DD.Amount_SUM - DD.Amount_calc)
+                                       ELSE zfCalc_CurrencyFrom (inAmountUSD, vbCurrencyValueUSD, inParValueUSD) - (DD.Amount_SUM - DD.Amount_calc)
 
                                   END AS Amount
                                 , DD.Amount_SUM
                            FROM tmp_MI_USD AS DD
-                           WHERE zfCalc_CurrencyFrom (inAmountUSD, inCurrencyValueUSD, inParValueUSD) - (DD.Amount_SUM - DD.Amount_calc) > 0
+                           WHERE zfCalc_CurrencyFrom (inAmountUSD, vbCurrencyValueUSD, inParValueUSD) - (DD.Amount_SUM - DD.Amount_calc) > 0
+                             AND inAmountUSD > 0
+                          )*/
+
+
+            -- 2.1. остаток для оплаты USD - с накопительной суммой
+          , tmp_MI_USD AS (SELECT tmpMI.MovementItemId
+                                , tmpMI.Amount_all
+                                , tmpMI.Amount_calc
+                                  -- Доп. скидки
+                                , tmpMI.AmountDiscount_GRN
+                                  --
+                                , SUM (tmpMI.Amount_calc) OVER (ORDER BY ABS (tmpMI.AmountDiscount_GRN) DESC, tmpMI.Amount_all ASC, tmpMI.MovementItemId ASC) AS Amount_SUM
+
+                           FROM (SELECT tmpMI.MovementItemId
+                                        -- сумма с учетом Доп. скидки - !!! грн !!!
+                                      , tmpMI.AmountToPay - tmpMI.AmountDiscount_GRN AS Amount_all
+
+                                      , CASE /*WHEN inCurrencyId_Client = zc_Currency_EUR() AND 1=0
+                                                  -- дробная часть будет в обмене ...???
+                                                  THEN zfCalc_CurrencyFrom (tmpMI.AmountToPay_curr - zfCalc_CurrencyTo (tmpMI.AmountDiscount_GRN, vbCurrencyValueUSD, inParValueUSD), vbCurrencyValueUSD, inParValueUSD)*/
+                                             --
+                                             WHEN inAmountGRN > 155 OR inAmountCard > 0 OR 1=1
+                                                  -- считаем что дробной части нет, т.е. она дополнится гривной
+                                                  THEN zfCalc_CurrencyFrom (-- Переводим в Валюту + отбросили коп.
+                                                                            FLOOR (zfCalc_CurrencyTo (tmpMI.AmountToPay - tmpMI.AmountDiscount_GRN, vbCurrencyValueUSD, inParValueUSD))
+                                                                          , vbCurrencyValueUSD, inParValueUSD)
+
+                                             -- ???иначе дробная часть будет в обмене???
+                                             ELSE tmpMI.AmountToPay - tmpMI.AmountDiscount_GRN
+
+                                        END AS Amount_calc
+                                        -- Доп. скидки
+                                      , tmpMI.AmountDiscount_GRN
+
+                                 FROM tmp_MI_Master AS tmpMI
+                                    --LEFT JOIN tmp_MI_EUR_res AS tmpRes ON tmpRes.MovementItemId = tmpMI.MovementItemId
+                                ) AS tmpMI
+                          )
+        -- 2.2. оплата USD результат - !!! грн !!!
+      , tmp_MI_USD_res AS (
+                           -- результат в ГРН
+                           SELECT DD.MovementItemId
+                                , CASE WHEN zfCalc_CurrencyFrom (inAmountUSD, vbCurrencyValueUSD, inParValueUSD)  - DD.Amount_SUM > 0
+                                       -- оплатили полностью
+                                       THEN DD.Amount_calc
+                                       -- оплатили частично
+                                       ELSE zfCalc_CurrencyFrom (inAmountUSD, vbCurrencyValueUSD, inParValueUSD) - (DD.Amount_SUM - DD.Amount_calc)
+
+                                  END AS Amount
+                                , DD.Amount_SUM
+                           FROM tmp_MI_USD AS DD
+                           WHERE zfCalc_CurrencyFrom (inAmountUSD, vbCurrencyValueUSD, inParValueUSD) - (DD.Amount_SUM - DD.Amount_calc) > 0
                              AND inAmountUSD > 0
                           )
+
+            -- 1.1. остаток для оплаты EUR - с накопительной суммой
+          , tmp_MI_EUR AS (SELECT tmpMI.MovementItemId
+                                  -- сумма с учетом Доп. скидки - !!! ГРН !!!
+                                , tmpMI.Amount_all
+                                  -- сумма с учетом Доп. скидки - для расч. EUR - !!! грн !!!
+                                , tmpMI.Amount_calc
+                                  -- сумма в !!! грн !!! с учетом Доп. скидки - НАКОПИТЕЛЬНО начиная !!!0 скидки!!! + с минимальной суммы
+                                , SUM (tmpMI.Amount_calc) OVER (ORDER BY ABS (tmpMI.AmountDiscount_GRN) ASC, tmpMI.Amount_all ASC, tmpMI.MovementItemId ASC) AS Amount_SUM
+                           FROM (SELECT tmpMI.MovementItemId
+
+                                      , tmpMI.Amount_all - COALESCE (tmpRes.Amount, 0) AS Amount_all
+
+                                        -- сумма с учетом Доп. скидки - для расч. EUR - !!! грн !!!
+                                      , CASE /*WHEN inCurrencyId_Client = zc_Currency_EUR() AND 1=0
+                                                  -- дробная часть будет в обмене ...???
+                                                  THEN tmpMI.Amount_all - COALESCE (tmpRes.Amount, 0)*/
+                                             --
+                                             WHEN inAmountGRN > 150 OR inAmountCard > 0
+                                                   -- считаем что дробной части нет, т.е. она дополнится гривной
+                                                  THEN zfCalc_CurrencyFrom (-- Переводим в Валюту + отбросили коп.
+                                                                            FLOOR (zfCalc_CurrencyTo (tmpMI.Amount_all - COALESCE (tmpRes.Amount, 0), inCurrencyValueEUR, inParValueEUR))
+                                                                          , inCurrencyValueEUR, inParValueEUR)
+
+                                             -- иначе дробная часть будет в обмене
+                                             ELSE tmpMI.Amount_all - COALESCE (tmpRes.Amount, 0)
+
+                                        END AS Amount_calc
+                                        -- Доп. скидки
+                                      , tmpMI.AmountDiscount_GRN
+
+                                 FROM tmp_MI_USD AS tmpMI
+                                      LEFT JOIN tmp_MI_USD_res AS tmpRes ON tmpRes.MovementItemId = tmpMI.MovementItemId
+                                ) AS tmpMI
+                          )
+        -- 1.2. оплата EUR результат - !!! грн !!!
+      , tmp_MI_EUR_res AS (
+                           -- результат в ГРН
+                           SELECT DD.MovementItemId
+                                , CASE WHEN zfCalc_CurrencyFrom (inAmountEUR, inCurrencyValueEUR, inParValueEUR)  - DD.Amount_SUM > 0
+                                       -- оплатили полностью
+                                       THEN DD.Amount_calc
+                                       -- оплатили частично
+                                       ELSE zfCalc_CurrencyFrom (inAmountEUR, inCurrencyValueEUR, inParValueEUR) - (DD.Amount_SUM - DD.Amount_calc)
+
+                                  END AS Amount
+                                , DD.Amount_SUM
+                           FROM tmp_MI_EUR AS DD
+                           WHERE zfCalc_CurrencyFrom (inAmountEUR, inCurrencyValueEUR, inParValueEUR) - (DD.Amount_SUM - DD.Amount_calc) > 0
+                             AND inAmountEUR > 0
+                          )
+
+
 
             -- 3.1. остаток для оплаты Грн - с накопительной суммой
           , tmp_MI_GRN AS (SELECT tmpMI.MovementItemId
                                 , tmpMI.Amount_all - COALESCE (tmpRes.Amount, 0) AS Amount_calc
                                 , SUM (tmpMI.Amount_all - COALESCE (tmpRes.Amount, 0)) OVER (ORDER BY tmpMI.Amount_all - COALESCE (tmpRes.Amount, 0) ASC, tmpMI.MovementItemId ASC) AS Amount_SUM
-                           FROM tmp_MI_USD AS tmpMI
-                                LEFT JOIN tmp_MI_USD_res AS tmpRes ON tmpRes.MovementItemId = tmpMI.MovementItemId
+                           FROM tmp_MI_EUR AS tmpMI
+                                LEFT JOIN tmp_MI_EUR_res AS tmpRes ON tmpRes.MovementItemId = tmpMI.MovementItemId
                           )
         -- 3.2. оплата Грн результат
       , tmp_MI_GRN_res AS (
@@ -363,8 +478,8 @@ BEGIN
                                                                                    ROUND (zfCalc_CurrencyTo (tmp_MI_res.Amount_EUR_grn, inCurrencyValueEUR, inParValueEUR), 2)
                                                                                  , inCurrencyValueEUR, inParValueEUR) AS Amount_EUR_grn
                                 , tmp_MI_res.Amount_USD_grn - zfCalc_CurrencyFrom (-- Переводим в Валюту + ОКРУЛИЛИ до 2-х зн.
-                                                                                   ROUND (zfCalc_CurrencyTo (tmp_MI_res.Amount_USD_grn, inCurrencyValueUSD, inParValueUSD), 2)
-                                                                                 , inCurrencyValueUSD, inParValueUSD) AS Amount_USD_grn
+                                                                                   ROUND (zfCalc_CurrencyTo (tmp_MI_res.Amount_USD_grn, vbCurrencyValueUSD, inParValueUSD), 2)
+                                                                                 , vbCurrencyValueUSD, inParValueUSD) AS Amount_USD_grn
                            FROM tmp_MI_res
                           )
       -- 6.1. получили реальные суммы оплаты в валюте - !!!ОНИ НЕ ВСЕГДА ОКРУГЛЕНЫ ВНИЗ ДО КОП!!! + "хвостики" в ГРН
@@ -388,16 +503,16 @@ BEGIN
                                   -- часть USD в ГРН
                                 , tmp_MI_res.Amount_USD_grn - zfCalc_CurrencyFrom (-- Переводим в Валюту + округлили коп. ИЛИ отбросили коп.
                                                                                    CASE WHEN (SELECT SUM (tmp.Amount_USD_grn) FROM tmp_Currency_ROUND AS tmp) = 0
-                                                                                        THEN ROUND (zfCalc_CurrencyTo (tmp_MI_res.Amount_USD_grn, inCurrencyValueUSD, inParValueUSD), 2)
-                                                                                        ELSE FLOOR (100 * zfCalc_CurrencyTo (tmp_MI_res.Amount_USD_grn, inCurrencyValueUSD, inParValueUSD))
+                                                                                        THEN ROUND (zfCalc_CurrencyTo (tmp_MI_res.Amount_USD_grn, vbCurrencyValueUSD, inParValueUSD), 2)
+                                                                                        ELSE FLOOR (100 * zfCalc_CurrencyTo (tmp_MI_res.Amount_USD_grn, vbCurrencyValueUSD, inParValueUSD))
                                                                                            / 100
                                                                                    END
-                                                                                 , inCurrencyValueUSD, inParValueUSD) AS Amount_USD_grn
+                                                                                 , vbCurrencyValueUSD, inParValueUSD) AS Amount_USD_grn
 
                                   -- переводим часть USD в ГРН -> в USD
                                 , CASE WHEN (SELECT SUM (tmp.Amount_USD_grn) FROM tmp_Currency_ROUND AS tmp) = 0
-                                       THEN ROUND (zfCalc_CurrencyTo (tmp_MI_res.Amount_USD_grn, inCurrencyValueUSD, inParValueUSD), 2)
-                                       ELSE FLOOR (100 * zfCalc_CurrencyTo (tmp_MI_res.Amount_USD_grn, inCurrencyValueUSD, inParValueUSD))
+                                       THEN ROUND (zfCalc_CurrencyTo (tmp_MI_res.Amount_USD_grn, vbCurrencyValueUSD, inParValueUSD), 2)
+                                       ELSE FLOOR (100 * zfCalc_CurrencyTo (tmp_MI_res.Amount_USD_grn, vbCurrencyValueUSD, inParValueUSD))
                                           / 100
                                   END AS Amount_USD
 
@@ -417,15 +532,15 @@ BEGIN
                            SELECT  1 * SUM (tmp_Currency.Amount_EUR_grn) AS Amount_EUR_grn
                                 ,  1 * SUM (tmp_Currency.Amount_USD_grn) AS Amount_USD_grn
                                 , zfCalc_CurrencyTo (SUM (tmp_Currency.Amount_EUR_grn), inCurrencyValueEUR, inParValueEUR) AS Amount_EUR
-                                , zfCalc_CurrencyTo (SUM (tmp_Currency.Amount_USD_grn), inCurrencyValueUSD, inParValueUSD) AS Amount_USD
+                                , zfCalc_CurrencyTo (SUM (tmp_Currency.Amount_USD_grn), vbCurrencyValueUSD, inParValueUSD) AS Amount_USD
                            FROM tmp_Currency
                           UNION ALL
                            -- из ИТОГО оплат в валюте
                            SELECT  1 * (zfCalc_CurrencyFrom (inAmountEUR, inCurrencyValueEUR, inParValueEUR) - tmp.Amount_EUR_grn) AS Amount_EUR_grn
-                                ,  1 * (zfCalc_CurrencyFrom (inAmountUSD, inCurrencyValueUSD, inParValueUSD) - tmp.Amount_USD_grn) AS Amount_USD_grn
+                                ,  1 * (zfCalc_CurrencyFrom (inAmountUSD, vbCurrencyValueUSD, inParValueUSD) - tmp.Amount_USD_grn) AS Amount_USD_grn
 
                                 , inAmountEUR - zfCalc_CurrencyTo (tmp.Amount_EUR_grn, inCurrencyValueEUR, inParValueEUR) AS Amount_EUR
-                                , inAmountUSD - zfCalc_CurrencyTo (tmp.Amount_USD_grn, inCurrencyValueUSD, inParValueUSD) AS Amount_USD
+                                , inAmountUSD - zfCalc_CurrencyTo (tmp.Amount_USD_grn, vbCurrencyValueUSD, inParValueUSD) AS Amount_USD
                            FROM -- ИТОГО в ГРН - 1 ЗАПИСЬ
                                 (SELECT SUM (tmp_MI_res.Amount_EUR_grn) AS Amount_EUR_grn
                                       , SUM (tmp_MI_res.Amount_USD_grn) AS Amount_USD_grn
@@ -551,7 +666,7 @@ BEGIN
             , tmp_MI_res.Amount_USD_GRN             :: TFloat AS Amount_GRN
             , zfCalc_CurrencyTo (tmp_MI_res.Amount_USD_GRN, inCurrencyValueEUR, inParValueEUR) :: TFloat AS Amount_EUR
 
-            , inCurrencyValueUSD           AS CurrencyValue
+            , vbCurrencyValueUSD :: TFloat AS CurrencyValue
             , inParValueUSD                AS ParValue
 
             , 0 :: Integer AS CashId_Exc
@@ -610,7 +725,7 @@ BEGIN
             , tmp.Amount_USD_grn :: TFloat AS Amount_GRN
             , 0                  :: TFloat AS Amount_EUR
 
-            , inCurrencyValueUSD           AS CurrencyValue
+            , vbCurrencyValueUSD :: TFloat AS CurrencyValue
             , inParValueUSD                AS ParValue
             , tmpCash_ch.CashId :: Integer AS CashId_Exc
 
@@ -638,8 +753,8 @@ $BODY$
 
 -- тест
 /*
---WITH tmp AS (SELECT * FROM lpSelect_MI_Child_calc (inMovementId:= 10102, inUnitId:= 6318 , inAmountGRN := 0 , inAmountUSD := 500 , inAmountEUR := 580 , inAmountCARD := 0 , inAmountDiscount_GRN := 0.56 , inCurrencyValueUSD := 28 , inParValueUSD := 1 , inCurrencyValueEUR := 32.33 , inParValueEUR := 1, inCurrencyId_Client:= zc_Currency_EUR(), inUserId:= zfCalc_UserAdmin() :: Integer))
-WITH tmp AS (SELECT * FROM lpSelect_MI_Child_calc (inMovementId:= 10102, inUnitId:= 6318 , inAmountGRN := 0 , inAmountUSD := 500 , inAmountEUR := 580 , inAmountCARD := 0 , inAmountDiscount_GRN := 0.56 , inCurrencyValueUSD := 28 , inParValueUSD := 1 , inCurrencyValueEUR := 32.33 , inParValueEUR := 1, inCurrencyId_Client:= zc_Currency_EUR(), inUserId:= zfCalc_UserAdmin() :: Integer))
+--WITH tmp AS (SELECT * FROM lpSelect_MI_Child_calc (inMovementId:= 10102, inUnitId:= 6318 , inAmountGRN := 0 , inAmountUSD := 500 , inAmountEUR := 580 , inAmountCARD := 0 , inAmountDiscount_GRN := 0.56 , vbCurrencyValueUSD := 28 , inParValueUSD := 1 , inCurrencyValueEUR := 32.33 , inParValueEUR := 1, inCurrencyValueCross:= 1, inParValueCross:= 1, inCurrencyId_Client:= zc_Currency_EUR(), inUserId:= zfCalc_UserAdmin() :: Integer))
+WITH tmp AS (SELECT * FROM lpSelect_MI_Child_calc (inMovementId:= 10102, inUnitId:= 6318 , inAmountGRN := 0 , inAmountUSD := 500 , inAmountEUR := 580 , inAmountCARD := 0 , inAmountDiscount_GRN := 0.56 , vbCurrencyValueUSD := 28 , inParValueUSD := 1 , inCurrencyValueEUR := 32.33 , inParValueEUR := 1, inCurrencyValueCross:= 1, inParValueCross:= 1, inCurrencyId_Client:= zc_Currency_EUR(), inUserId:= zfCalc_UserAdmin() :: Integer))
 SELECT tmpAll.ParentId, tmp_GRN.Amount AS Amount_GRN, tmp_Card.Amount AS Amount_Card, tmp_EUR.Amount AS Amount_EUR, tmp_EUR.Amount_GRN AS Amount_EUR_GRN, tmp_EUR.CurrencyId AS Id_EUR, tmp_USD.Amount AS Amount_USD, tmp_USD.Amount_GRN AS Amount_USD_GRN, tmp_USD.CurrencyId AS Id_USD, tmp_EUR.CurrencyValue, tmp_EUR.ParValue, tmp_USD.CurrencyValue, tmp_USD.ParValue, tmp_EUR.CashId_Exc AS CashId_Exc_fromEUR, tmp_USD.CashId_Exc AS CashId_Exc_fromUSD
 FROM (SELECT DISTINCT tmp.ParentId FROM tmp) AS tmpAll
      LEFT JOIN tmp AS tmp_GRN  ON tmp_GRN.ParentId  = tmpAll.ParentId AND tmp_GRN.CurrencyId  = zc_Currency_GRN() AND COALESCE (tmp_GRN.CashId, 0)      IN (SELECT Id FROM Object WHERE DescId = zc_Object_Cash())
@@ -648,4 +763,4 @@ FROM (SELECT DISTINCT tmp.ParentId FROM tmp) AS tmpAll
      LEFT JOIN tmp AS tmp_USD  ON tmp_USD.ParentId  = tmpAll.ParentId AND tmp_USD.CurrencyId = zc_Currency_USD()
 ORDER BY 1
 */
-select * from gpInsertUpdate_MI_Sale_Child(inMovementId := 10102 , inParentId := 0 , inAmountGRN := 0 , inAmountUSD := 500 , inAmountEUR := 580 , inAmountCARD := 0 , inAmountDiscount := 0.56 , inCurrencyValueUSD := 28 , inParValueUSD := 1 , inCurrencyValueEUR := 32.33 , inParValueEUR := 1 ,  inSession := '2');
+-- select * from gpInsertUpdate_MI_Sale_Child(inMovementId := 10102 , inParentId := 0 , inAmountGRN := 0 , inAmountUSD := 500 , inAmountEUR := 580 , inAmountCARD := 0 , inAmountDiscount := 0.56 , vbCurrencyValueUSD := 28 , inParValueUSD := 1 , inCurrencyValueEUR := 32.33 , inParValueEUR := 1 , inSession := '2');

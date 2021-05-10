@@ -53,11 +53,11 @@ type
     dsdDataSetRefreshStart: TdsdDataSetRefresh;
     spGet_Total: TdsdStoredProc;
     actRefreshTotal: TdsdDataSetRefresh;
-    cbisGRN: TcxCheckBox;
-    cbisUSD: TcxCheckBox;
-    cbisEUR: TcxCheckBox;
-    cbisCARD: TcxCheckBox;
-    cbisDiscount: TcxCheckBox;
+    cbIsGRN: TcxCheckBox;
+    cbIsUSD: TcxCheckBox;
+    cbIsEUR: TcxCheckBox;
+    cbIsCARD: TcxCheckBox;
+    cbIsDiscount: TcxCheckBox;
     spGet_isGRN: TdsdStoredProc;
     actRefreshGRN: TdsdDataSetRefresh;
     spGet_isUSD: TdsdStoredProc;
@@ -79,6 +79,8 @@ type
     GuidesCurrencyClient: TdsdGuides;
     ceAmountToPay_GRN: TcxCurrencyEdit;
     ceAmountToPay_EUR: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
+    ceCurrencyValue_Cross: TcxCurrencyEdit;
   private
     { Private declarations }
   public

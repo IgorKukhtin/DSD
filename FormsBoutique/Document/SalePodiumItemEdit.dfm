@@ -161,7 +161,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
     TabOrder = 16
     Width = 100
   end
-  object cbisGRN: TcxCheckBox
+  object cbIsGRN: TcxCheckBox
     Left = 17
     Top = 8
     Action = actRefreshGRN
@@ -169,7 +169,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
     TabOrder = 17
     Width = 104
   end
-  object cbisUSD: TcxCheckBox
+  object cbIsUSD: TcxCheckBox
     Left = 17
     Top = 50
     Action = actRefreshUSD
@@ -177,7 +177,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
     TabOrder = 18
     Width = 104
   end
-  object cbisEUR: TcxCheckBox
+  object cbIsEUR: TcxCheckBox
     Left = 17
     Top = 90
     Action = actRefreshEUR
@@ -185,7 +185,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
     TabOrder = 19
     Width = 104
   end
-  object cbisCARD: TcxCheckBox
+  object cbIsCARD: TcxCheckBox
     Left = 17
     Top = 130
     Action = actRefreshCard
@@ -193,7 +193,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
     TabOrder = 20
     Width = 147
   end
-  object cbisDiscount: TcxCheckBox
+  object cbIsDiscount: TcxCheckBox
     Left = 17
     Top = 170
     Action = actRefreshDiscount
@@ -266,6 +266,19 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
     TabOrder = 31
     Visible = False
     Width = 30
+  end
+  object cxLabel7: TcxLabel
+    Left = 316
+    Top = 114
+    Caption = #1050#1088#1086#1089#1089'-'#1050#1091#1088#1089' (EUR/USD)'
+  end
+  object ceCurrencyValue_Cross: TcxCurrencyEdit
+    Left = 316
+    Top = 130
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 33
+    Width = 100
   end
   object ActionList: TActionList
     Left = 16
@@ -447,7 +460,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountDiscount'
+        Name = 'inAmountDiscount_GRN'
         Value = 2.000000000000000000
         Component = ceAmountDiscount
         DataType = ftFloat
@@ -479,6 +492,21 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
       end
       item
         Name = 'inParValueEUR'
+        Value = 1.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyValueCross'
+        Value = Null
+        Component = ceCurrencyValue_Cross
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParValueCross'
         Value = 1.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
@@ -544,6 +572,43 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inIsDiscount'
+        Value = Null
+        Component = cbIsDiscount
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId_Client'
+        Value = Null
+        Component = GuidesCurrencyClient
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName_Client'
+        Value = Null
+        Component = GuidesCurrencyClient
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyNum_ToPay'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CurrencyNum_ToPay'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyNum_ToPay_curr'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CurrencyNum_ToPay_curr'
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'CurrencyValue_USD'
         Value = Null
         Component = ceCurrencyValue_USD
@@ -558,44 +623,9 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AmountGRN'
+        Name = 'CurrencyValue_Cross'
         Value = Null
-        Component = ceAmountGRN
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountUSD'
-        Value = Null
-        Component = ceAmountUSD
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountEUR'
-        Value = Null
-        Component = ceAmountEUR
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountCard'
-        Value = Null
-        Component = ceAmountCARD
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountDiscount'
-        Value = Null
-        Component = ceAmountDiscount
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountDiscount_curr'
-        Value = Null
-        Component = ceAmountDiscount_curr
+        Component = ceCurrencyValue_Cross
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -642,6 +672,48 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'AmountGRN'
+        Value = Null
+        Component = ceAmountGRN
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountUSD'
+        Value = Null
+        Component = ceAmountUSD
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountEUR'
+        Value = Null
+        Component = ceAmountEUR
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountCard'
+        Value = Null
+        Component = ceAmountCARD
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountDiscount'
+        Value = Null
+        Component = ceAmountDiscount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountDiscount_curr'
+        Value = Null
+        Component = ceAmountDiscount_curr
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'AmountDiff'
         Value = Null
         Component = ceAmountDiff
@@ -658,65 +730,36 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
       item
         Name = 'isGRN'
         Value = Null
-        Component = cbisGRN
+        Component = cbIsGRN
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
         Name = 'isUSD'
         Value = Null
-        Component = cbisUSD
+        Component = cbIsUSD
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
         Name = 'isEUR'
         Value = Null
-        Component = cbisEUR
+        Component = cbIsEUR
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
         Name = 'isCARD'
         Value = Null
-        Component = cbisCARD
+        Component = cbIsCARD
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
         Name = 'isDiscount'
         Value = Null
-        Component = cbisDiscount
+        Component = cbIsDiscount
         DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CurrencyId_Client'
-        Value = Null
-        Component = GuidesCurrencyClient
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CurrencyName_Client'
-        Value = Null
-        Component = GuidesCurrencyClient
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CurrencyNum_ToPay'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'CurrencyNum_ToPay'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CurrencyNum_ToPay_curr'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'CurrencyNum_ToPay_curr'
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -759,6 +802,14 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         Name = 'inCurrencyValueEUR'
         Value = 0.000000000000000000
         Component = ceCurrencyValue_EUR
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyValueCross'
+        Value = Null
+        Component = ceCurrencyValue_Cross
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -889,6 +940,13 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         Component = ceAmountDiscount_curr
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyValueUSD'
+        Value = Null
+        Component = ceCurrencyValue_USD
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 152
@@ -902,7 +960,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
       item
         Name = 'inisGRN'
         Value = False
-        Component = cbisGRN
+        Component = cbIsGRN
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -919,6 +977,14 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         Name = 'inCurrencyValueEUR'
         Value = 0.000000000000000000
         Component = ceCurrencyValue_EUR
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyValueCross'
+        Value = Null
+        Component = ceCurrencyValue_Cross
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -988,6 +1054,13 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'AmountGRN'
+        Value = Null
+        Component = ceAmountGRN
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'AmountRemains'
         Value = 0.000000000000000000
         Component = ceAmountRemains
@@ -1019,13 +1092,6 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         Name = 'AmountDiscount_curr'
         Value = Null
         Component = ceAmountDiscount_curr
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountGRN'
-        Value = Null
-        Component = ceAmountGRN
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -1041,7 +1107,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
       item
         Name = 'inIsUSD'
         Value = False
-        Component = cbisUSD
+        Component = cbIsUSD
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1058,6 +1124,14 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         Name = 'inCurrencyValueEUR'
         Value = 0.000000000000000000
         Component = ceCurrencyValue_EUR
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyValueCross'
+        Value = Null
+        Component = ceCurrencyValue_Cross
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1127,6 +1201,13 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'AmountUSD'
+        Value = 0.000000000000000000
+        Component = ceAmountUSD
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'AmountRemains'
         Value = 0.000000000000000000
         Component = ceAmountRemains
@@ -1158,13 +1239,6 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         Name = 'AmountDiscount_curr'
         Value = Null
         Component = ceAmountDiscount_curr
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountUSD'
-        Value = 0.000000000000000000
-        Component = ceAmountUSD
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -1180,7 +1254,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
       item
         Name = 'inIsEUR'
         Value = False
-        Component = cbisEUR
+        Component = cbIsEUR
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1197,6 +1271,14 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         Name = 'inCurrencyValueEUR'
         Value = 0.000000000000000000
         Component = ceCurrencyValue_EUR
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyValueCross'
+        Value = Null
+        Component = ceCurrencyValue_Cross
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1266,6 +1348,13 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'AmountEUR'
+        Value = 0.000000000000000000
+        Component = ceAmountEUR
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'AmountRemains'
         Value = 0.000000000000000000
         Component = ceAmountRemains
@@ -1297,13 +1386,6 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         Name = 'AmountDiscount_curr'
         Value = Null
         Component = ceAmountDiscount_curr
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountEUR'
-        Value = 0.000000000000000000
-        Component = ceAmountEUR
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -1319,7 +1401,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
       item
         Name = 'inisCARD'
         Value = False
-        Component = cbisCARD
+        Component = cbIsCARD
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1336,6 +1418,14 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         Name = 'inCurrencyValueEUR'
         Value = 0.000000000000000000
         Component = ceCurrencyValue_EUR
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyValueCross'
+        Value = Null
+        Component = ceCurrencyValue_Cross
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1405,6 +1495,13 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'AmountCARD'
+        Value = 0.000000000000000000
+        Component = ceAmountCARD
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'AmountRemains'
         Value = 0.000000000000000000
         Component = ceAmountRemains
@@ -1436,13 +1533,6 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         Name = 'AmountDiscount_curr'
         Value = Null
         Component = ceAmountDiscount_curr
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountCARD'
-        Value = 0.000000000000000000
-        Component = ceAmountCARD
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -1458,7 +1548,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
       item
         Name = 'inIsDiscount'
         Value = False
-        Component = cbisDiscount
+        Component = cbIsDiscount
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1475,6 +1565,14 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         Name = 'inCurrencyValueEUR'
         Value = 0.000000000000000000
         Component = ceCurrencyValue_EUR
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyValueCross'
+        Value = Null
+        Component = ceCurrencyValue_Cross
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1544,6 +1642,20 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'AmountDiscount'
+        Value = 0.000000000000000000
+        Component = ceAmountDiscount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountDiscount_curr'
+        Value = 0.000000000000000000
+        Component = ceAmountDiscount_curr
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'AmountRemains'
         Value = 0.000000000000000000
         Component = ceAmountRemains
@@ -1561,20 +1673,6 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         Name = 'AmountDiff'
         Value = 0.000000000000000000
         Component = ceAmountDiff
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountDiscount'
-        Value = 0.000000000000000000
-        Component = ceAmountDiscount
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountDiscount_curr'
-        Value = 0.000000000000000000
-        Component = ceAmountDiscount_curr
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -1609,6 +1707,9 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
       end
       item
         Control = ceCurrencyValue_EUR
+      end
+      item
+        Control = ceCurrencyValue_Cross
       end>
     Action = actRefreshTotal
     Left = 280

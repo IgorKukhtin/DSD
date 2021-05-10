@@ -3,19 +3,21 @@
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_Total (Integer,Integer,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_Total (TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_Total (TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_Total (TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child_Total(
-    IN inCurrencyValueUSD  TFloat   , --
-    IN inCurrencyValueEUR  TFloat   , --
-    IN inAmountToPay_GRN   TFloat   , -- сумма к оплате, грн
-    IN inAmountToPay_EUR   TFloat   , -- сумма к оплате, EUR
-    IN inAmountGRN         TFloat   , --
-    IN inAmountUSD         TFloat   , --
-    IN inAmountEUR         TFloat   , --
-    IN inAmountCard        TFloat   , --
-    IN inAmountDiscount    TFloat   , -- всегда ГРН
-    IN inCurrencyId_Client Integer  , --
-    IN inSession           TVarChar   -- сессия пользователя
+    IN inCurrencyValueUSD    TFloat   , --
+    IN inCurrencyValueEUR    TFloat   , --
+    IN inCurrencyValueCross  TFloat   , --
+    IN inAmountToPay_GRN     TFloat   , -- сумма к оплате, грн
+    IN inAmountToPay_EUR     TFloat   , -- сумма к оплате, EUR
+    IN inAmountGRN           TFloat   , --
+    IN inAmountUSD           TFloat   , --
+    IN inAmountEUR           TFloat   , --
+    IN inAmountCard          TFloat   , --
+    IN inAmountDiscount      TFloat   , -- всегда ГРН
+    IN inCurrencyId_Client   Integer  , --
+    IN inSession             TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (-- Информативно - для Диалога
                AmountToPay         TFloat -- К оплате, грн
@@ -33,6 +35,9 @@ RETURNS TABLE (-- Информативно - для Диалога
                -- Дополнительная скидка
              , AmountDiscount      TFloat
              , AmountDiscount_curr TFloat
+             
+               -- Курс, может будем пересчитывать из-за кросс-курса
+             , CurrencyValueUSD TFloat
 
                -- AmountPay - для отладки
              , AmountPay            TFloat
@@ -41,16 +46,37 @@ RETURNS TABLE (-- Информативно - для Диалога
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbCurrencyValueUSD      NUMERIC (20, 10);
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
+
+
+     -- !замена! Курс, будем пересчитывать из-за кросс-курса
+     vbCurrencyValueUSD:= ROUND (inCurrencyValueEUR / CASE WHEN inCurrencyValueCross > 0 THEN inCurrencyValueCross ELSE 1 END, 2);
+   --vbCurrencyValueUSD:= inCurrencyValueEUR / CASE WHEN inCurrencyValueCross > 0 THEN inCurrencyValueCross ELSE 1 END;
+   --vbCurrencyValueUSD:= inCurrencyValueUSD;
+
+
+     -- если есть USD, меняем inAmountDiscount, т.к. Кросс-курс
+     IF inAmountUSD > 0 AND inAmountGRN = 0
+     THEN
+         inAmountDiscount:= zfCalc_CurrencyFrom (-- округлили до целых EUR
+                                                 zfCalc_CurrencyCross (inAmountUSD, inCurrencyValueCross, 1)
+                                               , inCurrencyValueEUR, 1)
+                          - zfCalc_CurrencyFrom (inAmountUSD, vbCurrencyValueUSD, 1)
+                           ;
+     END IF;
 
 
      -- Результат
      RETURN QUERY
       WITH tmp1 AS (SELECT -- Сумма оплаты - в ГРН
                             COALESCE (inAmountGRN, 0)
-                          + zfCalc_CurrencyFrom (inAmountUSD, inCurrencyValueUSD, 1)
+                        /*+ zfCalc_CurrencyFrom (-- округлили до целых EUR
+                                                 zfCalc_CurrencyCross (inAmountUSD, inCurrencyValueCross, 1)
+                                               , inCurrencyValueEUR, 1)*/
+                          + zfCalc_CurrencyFrom (inAmountUSD, vbCurrencyValueUSD, 1)
                           + zfCalc_CurrencyFrom (inAmountEUR, inCurrencyValueEUR, 1)
                           + COALESCE (inAmountCard, 0)
                             AS AmountPay_GRN
@@ -107,22 +133,25 @@ BEGIN
              -- Сдача, грн
            , CASE WHEN tmp.AmountDiff < 0
                        -- сумма итак в ГРН
-                       THEN -1 * tmp.AmountDiff
+                       THEN -1 * (tmp.AmountDiff - (tmp.AmountDiff - FLOOR (ROUND(tmp.AmountDiff/10, 0)*10)))
 
                   ELSE 0
              END :: TFloat AS AmountDiff
 
              -- Дополнительная скидка - ГРН
-           , CASE WHEN tmp.AmountDiff < 0 AND tmp.AmountDiff <> FLOOR (tmp.AmountDiff)
-                       THEN inAmountDiscount + (tmp.AmountDiff - FLOOR (tmp.AmountDiff))
+           , CASE WHEN tmp.AmountDiff < 0 AND tmp.AmountDiff <> FLOOR (ROUND(tmp.AmountDiff/10, 0)*10) AND inAmountToPay_GRN > 0
+                       THEN inAmountDiscount + (tmp.AmountDiff - FLOOR (ROUND(tmp.AmountDiff/10, 0)*10))
                   ELSE inAmountDiscount
              END :: TFloat AS AmountDiscount
              -- Дополнительная скидка - EUR
            , zfCalc_SummIn (1, zfCalc_CurrencyTo (
-             CASE WHEN tmp.AmountDiff < 0 AND tmp.AmountDiff <> FLOOR (tmp.AmountDiff)
-                       THEN inAmountDiscount + (tmp.AmountDiff - FLOOR (tmp.AmountDiff))
+             CASE WHEN tmp.AmountDiff < 0 AND tmp.AmountDiff <> FLOOR (ROUND(tmp.AmountDiff/10, 0)*10) AND inAmountToPay_GRN > 0
+                       THEN inAmountDiscount + (tmp.AmountDiff - FLOOR (ROUND(tmp.AmountDiff/10, 0)*10))
                   ELSE inAmountDiscount
              END, inCurrencyValueEUR, 1), 1) :: TFloat AS AmountDiscount_curr
+
+             -- Курс, может будем пересчитывать из-за кросс-курса
+           , vbCurrencyValueUSD AS CurrencyValueUSD
 
              -- AmountPay, ГРН
            , tmp.AmountPay_GRN :: TFloat AS AmountPay
@@ -134,7 +163,7 @@ BEGIN
 
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE; 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -143,4 +172,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_MI_Sale_Child_Total (inCurrencyValueUSD:= 1, inCurrencyValueEUR:= 1, inAmountToPay_GRN:= 1, inAmountToPay_EUR:= 1, inAmountGRN:= 1, inAmountUSD:= 1, inAmountEUR:= 1, inAmountCard:= 1, inAmountDiscount:= 1, inCurrencyId_Client:= zc_Currency_EUR(), inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_MI_Sale_Child_Total (inCurrencyValueUSD:= 1, inCurrencyValueEUR:= 1, inCurrencyValueCross:= 1, inAmountToPay_GRN:= 1, inAmountToPay_EUR:= 1, inAmountGRN:= 1, inAmountUSD:= 1, inAmountEUR:= 1, inAmountCard:= 1, inAmountDiscount:= 1, inCurrencyId_Client:= zc_Currency_EUR(), inSession:= zfCalc_UserAdmin());

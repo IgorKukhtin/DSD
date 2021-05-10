@@ -21,7 +21,7 @@ BEGIN
      -- !!!только Перепроведение с/с - НЕТ ограничений!!!
      IF inUserId IN (zc_Enum_Process_Auto_PrimeCost()
                    , zc_Enum_Process_Auto_ReComplete()
-                   -- , zc_Enum_Process_Auto_Kopchenie(), zc_Enum_Process_Auto_Pack(), zc_Enum_Process_Auto_Send(), zc_Enum_Process_Auto_PartionClose()
+                   , zc_Enum_Process_Auto_Kopchenie(), zc_Enum_Process_Auto_Pack(), zc_Enum_Process_Auto_Send(), zc_Enum_Process_Auto_PartionClose()
                    -- , zc_Enum_Process_Auto_Defroster()
                    -- , zfCalc_UserAdmin() :: Integer -- временно: !!!для Админа - НЕТ ограничений!!!
                     )

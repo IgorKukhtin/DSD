@@ -4,20 +4,22 @@ DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_isEUR (Boolean,TFloat,TFloat,TFloat,
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_isEUR (Boolean,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_isEUR (Boolean,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_isEUR (Boolean,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_isEUR (Boolean,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child_isEUR(
-    IN inIsEUR             Boolean  , --
-    IN inCurrencyValueUSD  TFloat   , --
-    IN inCurrencyValueEUR  TFloat   , --
-    IN inAmountToPay       TFloat   , -- сумма к оплате, грн
-    IN inAmountToPay_curr  TFloat   , -- сумма к оплате, EUR
-    IN inAmountGRN         TFloat   , --
-    IN inAmountUSD         TFloat   , --
-    IN inAmountEUR         TFloat   , --
-    IN inAmountCard        TFloat   , --
-    IN inAmountDiscount    TFloat   , -- или ГРН или EUR
-    IN inCurrencyId_Client Integer  , --
-    IN inSession           TVarChar   -- сессия пользователя
+    IN inIsEUR               Boolean  , --
+    IN inCurrencyValueUSD    TFloat   , --
+    IN inCurrencyValueEUR    TFloat   , --
+    IN inCurrencyValueCross  TFloat   , --
+    IN inAmountToPay         TFloat   , -- сумма к оплате, грн
+    IN inAmountToPay_curr    TFloat   , -- сумма к оплате, EUR
+    IN inAmountGRN           TFloat   , --
+    IN inAmountUSD           TFloat   , --
+    IN inAmountEUR           TFloat   , --
+    IN inAmountCard          TFloat   , --
+    IN inAmountDiscount      TFloat   , -- или ГРН или EUR
+    IN inCurrencyId_Client   Integer  , --
+    IN inSession             TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (AmountRemains       TFloat -- Остаток, грн
              , AmountRemains_curr  TFloat -- Остаток, EUR
@@ -156,4 +158,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_MI_Sale_Child_isEUR (inIsEUR:= TRUE, inCurrencyValueUSD:= 26.25, inCurrencyValueEUR:= 31.2, inAmountToPay:= 5247.4, inAmountToPay_curr:= 123, inAmountGRN:= 1.2, inAmountUSD:= 100, inAmountEUR:= 10, inAmountCard:= 0, inAmountDiscount:= 1, inCurrencyId_Client:= zc_Currency_EUR(), inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_MI_Sale_Child_isEUR (inIsEUR:= TRUE, inCurrencyValueUSD:= 26.25, inCurrencyValueEUR:= 31.2, inCurrencyValueCross:= 1, inAmountToPay:= 5247.4, inAmountToPay_curr:= 123, inAmountGRN:= 1.2, inAmountUSD:= 100, inAmountEUR:= 10, inAmountCard:= 0, inAmountDiscount:= 1, inCurrencyId_Client:= zc_Currency_EUR(), inSession:= zfCalc_UserAdmin());

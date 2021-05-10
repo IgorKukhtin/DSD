@@ -4,20 +4,22 @@ DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_isUSD (Boolean,TFloat,TFloat,TFloat,
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_isUSD (Boolean,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_isUSD (Boolean,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,Integer,TVarChar);
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_isUSD (Boolean,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_isUSD (Boolean,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child_isUSD(
-    IN inIsUSD             Boolean  , --
-    IN inCurrencyValueUSD  TFloat   , --
-    IN inCurrencyValueEUR  TFloat   , --
-    IN inAmountToPay       TFloat   , -- сумма к оплате, грн
-    IN inAmountToPay_curr  TFloat   , -- сумма к оплате, EUR
-    IN inAmountGRN         TFloat   , --
-    IN inAmountUSD         TFloat   , --
-    IN inAmountEUR         TFloat   , --
-    IN inAmountCard        TFloat   , --
-    IN inAmountDiscount    TFloat   , -- или ГРН или EUR
-    IN inCurrencyId_Client Integer  , --
-    IN inSession           TVarChar   -- сессия пользователя
+    IN inIsUSD               Boolean  , --
+    IN inCurrencyValueUSD    TFloat   , --
+    IN inCurrencyValueEUR    TFloat   , --
+    IN inCurrencyValueCross  TFloat   , --
+    IN inAmountToPay         TFloat   , -- сумма к оплате, грн
+    IN inAmountToPay_curr    TFloat   , -- сумма к оплате, EUR
+    IN inAmountGRN           TFloat   , --
+    IN inAmountUSD           TFloat   , --
+    IN inAmountEUR           TFloat   , --
+    IN inAmountCard          TFloat   , --
+    IN inAmountDiscount      TFloat   , -- или ГРН или EUR
+    IN inCurrencyId_Client   Integer  , --
+    IN inSession             TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (AmountRemains       TFloat -- Остаток, грн
              , AmountRemains_curr  TFloat -- Остаток, EUR
@@ -57,7 +59,13 @@ BEGIN
          THEN -- расчет остаток суммы
               vbAmountUSD := CASE WHEN inCurrencyId_Client = zc_Currency_EUR()
                                        THEN -- Округлили к 0 знаков, разница попадет автоматом в списание
-                                            zfCalc_SummPriceList (1, zfCalc_CurrencyTo (inAmountToPay - vbAmountPay_GRN, inCurrencyValueUSD, 1))
+                                            -- zfCalc_SummPriceList (1, zfCalc_CurrencyTo (inAmountToPay - vbAmountPay_GRN, inCurrencyValueUSD, 1))
+
+                                            -- остаток в EUR, потом перевели по кросс-курсу и Округлили к 0 знаков
+                                            ROUND (zfCalc_CurrencyFrom (inAmountToPay_curr - zfCalc_CurrencyTo (vbAmountPay_GRN, inCurrencyValueEUR, 1)
+                                                                      , inCurrencyValueCross, 1
+                                                                       )
+                                                 , 0)
 
                                        ELSE -- НЕ округлили
                                             zfCalc_CurrencyTo (inAmountToPay - vbAmountPay_GRN, inCurrencyValueUSD, 1)
@@ -71,8 +79,12 @@ BEGIN
                   -- если большая сумма
                   IF ABS (vbAmountDiscount_GRN) >= zc_AmountDiscountGRN()
                   THEN
+                      -- списываем ВСЕГДА - на разницу курсов
+                      vbAmountDiscount_GRN:= (inAmountToPay - vbAmountPay_GRN)
+                                           - zfCalc_CurrencyFrom (vbAmountUSD, inCurrencyValueUSD, 1)
+                                            ;
                       -- списываем только КОП.
-                      vbAmountDiscount_GRN:= vbAmountDiscount_GRN - FLOOR (vbAmountDiscount_GRN);
+                      vbAmountDiscount_GRN:= vbAmountDiscount_GRN + (vbAmountDiscount_GRN - vbAmountDiscount_GRN) - FLOOR (vbAmountDiscount_GRN - vbAmountDiscount_GRN);
                   END IF;
 
                   -- пересчитали сумму с учетом нового AmountDiscount
@@ -157,4 +169,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_MI_Sale_Child_isUSD (inIsUSD:= TRUE, inCurrencyValueUSD:= 26.25, inCurrencyValueEUR:= 31.2, inAmountToPay:= 5247.4, inAmountToPay_curr:= 123, inAmountGRN:= 1.2, inAmountEUR:= 0, inAmountUSD:= 10, inAmountCard:= 0, inAmountDiscount:= 0.4, inCurrencyId_Client:= zc_Currency_EUR(), inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_MI_Sale_Child_isUSD(inIsUSD := 'True' , inCurrencyValueUSD := 28 , inCurrencyValueEUR := 32.33 , inCurrencyValueCross := 1.2 , inAmountToPay := 32717.96 , inAmountToPay_curr := 1012 , inAmountGRN := 0 , inAmountUSD := 0 , inAmountEUR := 0 , inAmountCard := 0 , inAmountDiscount := 0 , inCurrencyId_Client := 18101 ,  inSession := '2');
