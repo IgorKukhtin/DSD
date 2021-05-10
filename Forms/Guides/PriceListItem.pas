@@ -101,6 +101,13 @@ type
     actGetImportSetting: TdsdExecStoredProc;
     actStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
+    spInsertUpdate_Zero: TdsdStoredProc;
+    actInsertUpdate_Zero: TdsdExecStoredProc;
+    macUpdate_Zero: TMultiAction;
+    macUpdate_Zero_list: TMultiAction;
+    bb: TdxBarButton;
+    spGet_error: TdsdStoredProc;
+    actGet_error: TdsdExecStoredProc;
   private
     { Private declarations }
   public
