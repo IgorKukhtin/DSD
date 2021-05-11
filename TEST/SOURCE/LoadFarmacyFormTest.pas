@@ -574,6 +574,8 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRecalcMCSShedulerSunDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRecalcMCSShedulerSunDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRecalcMCSShedulerMainDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRecalcMCSShedulerMainDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeekForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeekForm');

@@ -9350,4 +9350,28 @@ inherited MainCashForm2: TMainCashForm2
     Left = 864
     Top = 168
   end
+  object mdVIPCheck: TdxMemData
+    Indexes = <>
+    SortOptions = []
+    Left = 456
+    Top = 96
+    object IntegerField1: TIntegerField
+      FieldName = 'ID'
+    end
+    object IntegerField2: TIntegerField
+      FieldName = 'PDKINDID'
+    end
+    object IntegerField3: TIntegerField
+      FieldName = 'NDSKINDID'
+    end
+    object IntegerField4: TIntegerField
+      FieldName = 'DISCEXTID'
+    end
+    object IntegerField5: TIntegerField
+      FieldName = 'DIVPARTID'
+    end
+    object CurrencyField1: TCurrencyField
+      FieldName = 'AMOUNT'
+    end
+  end
 end

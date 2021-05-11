@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, Integer, Integer, Integer);
-
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Send(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Send(
     IN inAmountManual        TFloat    , -- Кол-во ручное
     IN inAmountStorage       TFloat    , --
     IN inReasonDifferencesId Integer   , -- Причина разногласия
-    IN inCommentTRID         Integer   , -- Комментарий
+    IN inCommentSendID       Integer   , -- Комментарий
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -135,7 +135,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ReasonDifferences(), ioId, inReasonDifferencesId);
      
      -- Сохранили <Комментарий>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_CommentSend(), ioId, inCommentTRID);
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_CommentSend(), ioId, inCommentSendID);
      
      -- Только для IsSUN
      IF vbIsSUN = TRUE

@@ -98,6 +98,28 @@ implementation
 uses RegularExpressions, System.Generics.Collections, Soap.EncdDecd , MainCash2,
      LocalWorkUnit, ChoiceHelsiUserName, CommonData, Clipbrd, CallbackHandler;
 
+const arError : array [0..19, 0..1] of string =
+  (('Active medication dispense already exists', 'Наразі здійснюється погашення цього рецепту'),
+  ('Legal entity is not verified',  'Увага! Ваш заклад не веріфіковано. Зверніться до керівництва Вашого закладу.'),
+  ('Can''t update medication dispense status from PROCESSED to REJECTED', 'Диспенс заекспайрится (рецепт разблокируется) автоматически через 10 мин.'),
+  ('Medication request is not active', 'Увага! Рецепт не може бути погашено, адже дата закінчення лікування за ним прошла. Рекомендуйте пацієнту звернутися до лікаря для виписки нового рецепту із більш тривалим терміном лікування.'),
+  ('Division should be participant of a contract to create dispense', 'Увага! Аптеку в якій Ви працюєте, не включено в діючий договір за програмою "Доступні ліки" з Національною службою здоров''я України. Зверніться до керівництва Вашого закладу'),
+  ('Medication request can not be dispensed. Invoke qualify medication request API to get detailed info', 'Неможливо погасити цей рецепт за програмою "Доступні ліки"! Пацієнту щойно було видано препарат з такою же діючою речовиною. Поки що цей рецепт може бути відпущено тільки поза програмою реімбурсації.'),
+  ('Program cannot be used - no active contract exists', 'Увага! За Вашим закладом відсутній діючий договір за програмою "Доступні ліки" з Національною службою здоров''я України. Зверніться до керівництва Вашого закладу'),
+  ('Can''t update medication dispense status from EXPIRED to PROCESSED', 'Необхідно повторити операцію погашення'),
+  ('Can''t update medication dispense status from REJECTED to PROCESSED', 'Необхідно повторити операцію погашення'),
+  ('Can''t update medication dispense status from REJECTED to REJECTED', 'Необхідно повторити операцію погашення'),
+  ('Does not match the legal entity', 'Помилка! Підпис КЕП не належить юридичній особі. Повторіть спробу використовуючи Ваш коректний КЕП'),
+  ('Does not match the signer drfo', 'Помилка! Підпис КЕП належить іншому співробітнику. Повторіть спробу використовуючи Ваш коректний КЕП'),
+  ('Does not match the signer last name', 'Помилка! Проблема з співставленням прізвища підписувача. Повторіть спробу використовуючи Ваш коректний КЕП'),
+  ('document must contain 1 signature and 0 stamps but contains 0 signatures and 1 stamp', 'Помилка! При підписанні Ви використовуєте не власний КЕП. Повторіть спробу використовуючи Ваш коректний КЕП'),
+  ('Requested discount price does not satisfy allowed reimbursement amount', 'Помилка! Невідповідність суми реімбурсації до умов програми "Доступні ліки".'),
+  ('Medication request is not valid', 'Некоректні параметри запиту на отримання рецепту'),
+  ('Incorrect code', 'Неправельный код подтверждения'),
+  ('Invalid dispense period', 'Увага! Сплив термін дії рецепту. Пацієнту потрібно звернутися до лікаря для виписки нового рецепту'),
+  ('dispensed medication quantity must be equal to medication quantity in Medication Request', 'Количество отпускаемого лекарства должно быть равно количеству выписанного в рецепте лекарства'),
+  ('Certificate verificaton failed', 'Не удалось подтвердить сертификат. Повторите попытку погашения чека.'));
+
 function DelDoubleQuote(AStr : string) : string;
 begin
   Result := StringReplace(AStr, '"', '', [rfReplaceAll]);
@@ -244,28 +266,38 @@ var
   jValue : TJSONValue;
   JSONA: TJSONArray;
   cError : string;
+  I : Integer;
 begin
   cError := '';
   jValue := FRESTResponse.JSONValue ;
-  if jValue.FindValue('message') <> Nil then
+  if jValue <> Nil then
   begin
-    cError := DelDoubleQuote(jValue.FindValue('message').ToString);
-  end else if jValue.FindValue('error') <> Nil then
-  begin
-    jValue := jValue.FindValue('error') ;
-
-    if jValue.FindValue('invalid') <> Nil then
+    if jValue.FindValue('message') <> Nil then
     begin
-      JSONA := jValue.GetValue<TJSONArray>('invalid');
-      JSONA := JSONA.Items[0].GetValue<TJSONArray>('rules');
-      if JSONA.Items[0].FindValue('description') <> Nil then
+      cError := DelDoubleQuote(jValue.FindValue('message').ToString);
+    end else if jValue.FindValue('error') <> Nil then
+    begin
+      jValue := jValue.FindValue('error') ;
+
+      if jValue.FindValue('invalid') <> Nil then
       begin
-        cError := DelDoubleQuote(JSONA.Items[0].FindValue('description').ToString);
+        JSONA := jValue.GetValue<TJSONArray>('invalid');
+        JSONA := JSONA.Items[0].GetValue<TJSONArray>('rules');
+        if JSONA.Items[0].FindValue('description') <> Nil then
+        begin
+          cError := DelDoubleQuote(JSONA.Items[0].FindValue('description').ToString);
+        end;
       end;
     end;
   end;
 
   if cError = '' then cError := IntToStr(FRESTResponse.StatusCode) + ' - ' + FRESTResponse.StatusText;
+
+  for I := 0 to 19 do if (LowerCase(arError[I, 0]) = LowerCase(cError)) then
+  begin
+    cError := arError[I, 1];
+    Break;
+  end;
 
   ShowMessage(AText + ':'#13#10 + cError);
 end;
@@ -302,7 +334,7 @@ begin
   except
   end;
 
-  if (FRESTResponse.StatusCode = 200) and (FRESTResponse.ContentType = 'application/json') then
+  if (FRESTResponse.StatusCode = 200) and (FRESTResponse.JSONValue <> nil) then
   begin
     Result := False;
     try
@@ -388,7 +420,7 @@ begin
       Result := True;
     except
     end
-  end else ShowError('Ошибка погашения рецепта выбранными лекарствами');
+  end else ShowError('Ошибка получения списка лекарств для погашения рецепта');
 end;
 
 function TLikiDniproeHealthApi.dispenseRecipe : boolean;
@@ -398,7 +430,6 @@ var
   jsonBody: TJSONObject;
   jsonTemp: TJSONObject;
   I, L : integer;
-  F: TextFile;
 begin
   Result := False;
 
@@ -460,16 +491,10 @@ begin
         FDispense_ID := DelDoubleQuote(jValue.FindValue('id').ToString);
         FDispense_Data := TextEncodeBase64(jValue.ToString);
         Result := True;
-
-        AssignFile(F, 'Dispense.txt');
-        Rewrite(F);
-        Writeln(F, jValue.ToString);
-        Flush(F);
-        CloseFile(F);
-      end;
+      end else ShowError('Ошибка погашения рецепта выбранными лекарствами');;
     except
     end
-  end else ShowError('Ошибка получения списка лекарств для погашения рецепта');;
+  end else ShowError('Ошибка погашения рецепта выбранными лекарствами');
 end;
 
 function TLikiDniproeHealthApi.signRecipe : boolean;
@@ -543,6 +568,7 @@ begin
   begin
     LikiDniproeHealthApi := TLikiDniproeHealthApi.Create;
     LikiDniproeHealthApi.FLikiDnepr := MainCashForm.UnitConfigCDS.FieldByName('LikiDneproeHealthURL').AsString;
+    LikiDniproeHealthApi.FShow_Location := MainCashForm.UnitConfigCDS.FieldByName('LikiDneproeLocation').AsString;
     LikiDniproeHealthApi.FAccess_Token := MainCashForm.UnitConfigCDS.FieldByName('LikiDneproeHealthToken').AsString;
 
     try
@@ -607,7 +633,11 @@ begin
 
   if LikiDniproeHealthApi.FShow_eHealth then
   begin
+    Clipboard.AsText := LikiDniproeHealthApi.FUserEmail;
     ShellExecute(Screen.ActiveForm.Handle, 'open', PChar(LikiDniproeHealthApi.FShow_Location), nil, nil, SW_SHOWNORMAL);
+    Sleep(500);
+    MessageDlg('Поместить пароль в буфер обмена...', mtInformation, [mbOK], 0);
+    Clipboard.AsText := LikiDniproeHealthApi.FPassword;
     LikiDniproeHealthApi.FShow_eHealth := False;
     Exit;
   end;
@@ -671,7 +701,11 @@ begin
 
   if LikiDniproeHealthApi.FShow_eHealth then
   begin
+    Clipboard.AsText := LikiDniproeHealthApi.FUserEmail;
     ShellExecute(Screen.ActiveForm.Handle, 'open', PChar(LikiDniproeHealthApi.FShow_Location), nil, nil, SW_SHOWNORMAL);
+    Sleep(500);
+    MessageDlg('Поместить пароль в буфер обмена...', mtInformation, [mbOK], 0);
+    Clipboard.AsText := LikiDniproeHealthApi.FPassword;
     LikiDniproeHealthApi.FShow_eHealth := False;
     Exit;
   end;

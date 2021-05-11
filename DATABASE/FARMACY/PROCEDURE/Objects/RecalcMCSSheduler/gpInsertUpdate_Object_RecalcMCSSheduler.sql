@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_RecalcMCSSheduler()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_RecalcMCSSheduler(Integer, Integer, Integer, Boolean,
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_RecalcMCSSheduler(Integer, Integer, Integer, Boolean, TVarChar,
                                                                 Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                                 Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                                 Integer, Integer, Integer, Integer, Integer, Integer, Integer, 
@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_RecalcMCSSheduler(
  INOUT ioUnitId                  Integer,
 
     IN inPharmacyItem            Boolean,
+    IN inComment                 TVarChar,
 
     IN inPeriod                  Integer,
     IN inPeriod1                 Integer,
@@ -147,6 +148,9 @@ BEGIN
    --сохранили
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_RecalcMCSSheduler_AllRetail(), ioId, inAllRetail);
 
+   -- сохранили <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_RecalcMCSSheduler_Comment(), ioId, inComment);
+
    --сохранили
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Unit_PharmacyItem(), ioUnitId, inPharmacyItem);
 
@@ -199,7 +203,7 @@ BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_RecalcMCSSheduler(Integer, Integer, Integer, Boolean,
+ALTER FUNCTION gpInsertUpdate_Object_RecalcMCSSheduler(Integer, Integer, Integer, Boolean, TVarChar,
                                                        Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                        Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                        Integer, Integer, Integer, Integer, Integer, Integer, Integer,

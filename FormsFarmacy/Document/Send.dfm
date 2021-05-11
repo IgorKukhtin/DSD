@@ -2848,7 +2848,7 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCommentTRId'
+        Name = 'inCommentSendId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CommentSendId'
@@ -3605,6 +3605,7 @@ inherited SendForm: TSendForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ValueColumn = chColor_calc

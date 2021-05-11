@@ -107,6 +107,14 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
             Options.Editing = False
             Width = 95
           end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
+          end
           object ProvinceCityName: TcxGridDBColumn
             Caption = #1056#1072#1081#1086#1085
             DataBinding.FieldName = 'ProvinceCityName'
@@ -687,7 +695,7 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
       isShowModal = True
       OpenBeforeShow = True
     end
-    object actUpdateactSun: TMultiAction
+    object actUpdateSun: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       AfterAction = actRefresh
@@ -697,8 +705,8 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
           Action = actExecSPUpdateactSun
         end>
       View = cxGridDBTableView
-      Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074' '#1076#1083#1103' '#1087#1077#1088#1077#1097#1077#1090#1072' '#1087#1086' '#1057#1059#1053
-      Hint = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074' '#1076#1083#1103' '#1087#1077#1088#1077#1097#1077#1090#1072' '#1087#1086' '#1057#1059#1053
+      Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074' '#1076#1083#1103' '#1087#1077#1088#1077#1089#1095#1077#1090#1072' '#1087#1086' '#1057#1059#1053
+      Hint = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074' '#1076#1083#1103' '#1087#1077#1088#1077#1089#1095#1077#1090#1072' '#1087#1086' '#1057#1059#1053
       ImageIndex = 42
     end
     object actExecSPUpdateactSun: TdsdExecStoredProc
@@ -709,6 +717,174 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
       StoredProcList = <
         item
           StoredProc = spUpdateactSun
+        end>
+      Caption = 'actExecSPUpdateactSun'
+    end
+    object actShowErased: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
+    object actExecuteDialogMain: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteDialogMain'
+      FormName = 'TRecalcMCSShedulerMainDialogForm'
+      FormNameParam.Value = 'TRecalcMCSShedulerMainDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Period1'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Period1'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Period2'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Period2'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Period3'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Period3'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Period4'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Period4'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Period5'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Period5'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Period6'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Period6'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Period7'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Period7'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Day1'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Day1'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Day2'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Day2'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Day3'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Day3'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Day4'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Day4'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Day5'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Day5'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Day6'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Day6'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Day7'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Day7'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdateMain: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actExecuteDialogMain
+      ActionList = <
+        item
+          Action = actExecSPUpdateactMain
+        end>
+      View = cxGridDBTableView
+      Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074' '#1076#1083#1103' '#1086#1089#1085#1086#1074#1085#1086#1075#1086' '#1087#1077#1088#1077#1089#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074' '#1076#1083#1103' '#1086#1089#1085#1086#1074#1085#1086#1075#1086' '#1087#1077#1088#1077#1089#1095#1077#1090#1072
+      ImageIndex = 42
+    end
+    object actExecSPUpdateactMain: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateactMain
+      StoredProcList = <
+        item
+          StoredProc = spUpdateactMain
         end>
       Caption = 'actExecSPUpdateactSun'
     end
@@ -723,6 +899,15 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_RecalcMCSSheduler'
+    Params = <
+      item
+        Name = 'inIsErased'
+        Value = Null
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     Left = 112
     Top = 64
   end
@@ -747,6 +932,14 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
         item
           Visible = True
           ItemName = 'dxBarButton5'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
         end
         item
           Visible = True
@@ -791,6 +984,10 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton11'
         end
         item
           Visible = True
@@ -885,7 +1082,15 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
       Category = 0
     end
     object dxBarButton10: TdxBarButton
-      Action = actUpdateactSun
+      Action = actUpdateSun
+      Category = 0
+    end
+    object bbShowErased: TdxBarButton
+      Action = actShowErased
+      Category = 0
+    end
+    object dxBarButton11: TdxBarButton
+      Action = actUpdateMain
       Category = 0
     end
   end
@@ -920,6 +1125,76 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
         Name = 'IdAdd'
         Value = '1'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Period1'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Period2'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Period3'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Period4'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Period5'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Period6'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Period7'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Day1'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Day2'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Day3'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Day4'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Day5'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Day6'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Day7'
+        Value = '0'
         MultiSelectSeparator = ','
       end
       item
@@ -1002,14 +1277,14 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
     Params = <
       item
         Name = 'BeginHolidays'
-        Value = 'NULL'
+        Value = Null
         Component = edBeginHolidays
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndHolidays'
-        Value = 'NULL'
+        Value = Null
         Component = edEndHolidays
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -1255,7 +1530,136 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 368
-    Top = 248
+    Left = 360
+    Top = 224
+  end
+  object spUpdateactMain: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_RecalcMCSSheduler_Main'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriod1'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Period1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriod2'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Period2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriod3'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Period3'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriod4'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Period4'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriod5'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Period5'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriod6'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Period6'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriod7'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Period7'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDay1'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Day1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDay2'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Day2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDay3'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Day3'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDay4'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Day4'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDay5'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Day5'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDay6'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Day6'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDay7'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Day7'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 360
+    Top = 280
   end
 end

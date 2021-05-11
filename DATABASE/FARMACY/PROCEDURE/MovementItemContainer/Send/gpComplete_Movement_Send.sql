@@ -36,7 +36,9 @@ $BODY$
   DECLARE vbisVIP Boolean;
   DECLARE vbisBanFiscalSale Boolean;
   DECLARE vResortFact       TFloat;
+  DECLARE vResortFactCount  Integer;
   DECLARE vResortAdd        TFloat;
+  DECLARE vResortAddCount   Integer;
 BEGIN
     vbUserId:= inSession;
 
@@ -204,7 +206,7 @@ BEGIN
 
                                    INNER JOIN tmpProtocolUnion AS MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
                                    
-                              WHERE  MovementItem.Id = ioId
+                              WHERE  MovementItem.Id in (SELECT tmpMI.ID FROM tmpMI)
                               ) 
          , tmpProtocol AS (SELECT tmpProtocolAll.Id
                                 , tmpProtocolAll.Amount
@@ -212,8 +214,8 @@ BEGIN
                            FROM tmpProtocolAll
                            WHERE tmpProtocolAll.Ord = 1)
 
-      SELECT SUM(tmpProtocol.AmountAuto - tmpProtocolAll.Amount)
-      INTO vResortFact
+      SELECT SUM(tmpProtocol.AmountAuto - tmpProtocol.Amount), Count(*)
+      INTO vResortFact, vResortFactCount
       FROM tmpProtocol;
     
       WITH tmpMI AS (SELECT MovementItem.Id     AS Id
@@ -251,7 +253,7 @@ BEGIN
 
                                    INNER JOIN tmpProtocolUnion AS MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
                                    
-                              WHERE  MovementItem.Id = ioId
+                              WHERE  MovementItem.Id in (SELECT tmpMI.ID FROM tmpMI)
                               ) 
          , tmpProtocol AS (SELECT tmpProtocolAll.Id
                                 , tmpProtocolAll.Amount
@@ -260,11 +262,11 @@ BEGIN
                            WHERE tmpProtocolAll.Ord = 1
                              AND tmpProtocolAll.UserId <> zfCalc_UserAdmin()::Integer)
 
-      SELECT SUM(tmpProtocolAll.Amount)
-      INTO vResortAdd
+      SELECT SUM(tmpProtocol.Amount), Count(*)
+      INTO vResortAdd, vResortAddCount
       FROM tmpProtocol;
       
-      IF COALESCE(vResortFact, 0) <> COALESCE(vResortAdd, 0)
+      IF COALESCE(vResortFact, 0) <> COALESCE(vResortAdd, 0) OR COALESCE(vResortFactCount, 0) <> COALESCE(vResortAddCount, 0)
       THEN 
         RAISE EXCEPTION 'Ошибка. Количество по комменту "Пересорт по факту, отравитель редактирует." не равно количеству добавленных позиций.';
       END IF;

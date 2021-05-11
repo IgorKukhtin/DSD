@@ -88,6 +88,8 @@ type
     cxLabel13: TcxLabel;
     cxLabel14: TcxLabel;
     cxLabel15: TcxLabel;
+    edComment: TcxTextEdit;
+    cxLabel16: TcxLabel;
   private
     { Private declarations }
   public

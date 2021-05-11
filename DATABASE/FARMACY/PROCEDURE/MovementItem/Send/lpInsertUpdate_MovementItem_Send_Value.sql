@@ -24,7 +24,7 @@ BEGIN
                                           , inAmountManual       := 0  ::TFloat
                                           , inAmountStorage      := 0  ::TFloat
                                           , inReasonDifferencesId:= 0
-                                          , inCommentTRID        := 0
+                                          , inCommentSendID      := 0
                                           , inUserId             := inUserId
                                            ) AS tmp);
 

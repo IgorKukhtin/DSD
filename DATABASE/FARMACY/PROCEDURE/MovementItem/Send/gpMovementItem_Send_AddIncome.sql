@@ -56,7 +56,7 @@ BEGIN
                                             , inAmountManual        := MovementItemIncome.Amount
                                             , inAmountStorage       := MovementItemIncome.Amount
                                             , inReasonDifferencesId := 0
-                                            , inCommentTRID         := 0
+                                            , inCommentSendID       := 0
                                             , inUserId              := vbUserId)
     FROM (SELECT MovementItemIncome.ObjectId
                , SUM(MovementItemIncome.Amount) AS Amount

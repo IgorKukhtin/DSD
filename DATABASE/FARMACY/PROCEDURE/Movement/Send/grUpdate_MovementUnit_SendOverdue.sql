@@ -183,7 +183,7 @@
                                               inAmountManual         := COALESCE(SUM(tmpContainerOverdue.Amount), 0)::TFloat,
                                               inAmountStorage        := COALESCE(SUM(tmpContainerOverdue.Amount), 0)::TFloat,
                                               inReasonDifferencesId  := 0,
-                                              inCommentTRID          := 0,
+                                              inCommentSendID        := 0,
                                               inUserId               := vbUserId)
     FROM tmpContainerOverdue
          INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
