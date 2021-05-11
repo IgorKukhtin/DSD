@@ -32,6 +32,10 @@ type
 
     // ID погашения рецепта
     FDispense_ID : string;
+    FDispense_Data : string;
+
+    // Подписанный рецепт
+    FSign_Data : string;
 
     // Данные из рецепта
     FMedication_ID : string;            // dosage_id что выписано
@@ -59,6 +63,9 @@ type
     // Необходимо лргироваться
     FShow_eHealth : Boolean;
     FShow_Location : String;
+
+    FHTTP_Port : Integer;
+    FInterval : Integer;
   protected
     function GetReceiptId : boolean;
     function GetDrugList : boolean;
@@ -74,18 +81,22 @@ type
 
 function CheckLikiDniproeHealth_Number(ANumber : string) : boolean;
 
+function GetLikiDniproeHealthState(const AReceipt : String; var AState : string) : boolean;
+
 function GetLikiDniproeHealthReceipt(const AReceipt : String; var AID, AIDList, AName : string;
   var AQty : currency; var ADate : TDateTime) : boolean;
 
 function CreateLikiDniproeHealthNewDispense(AIDSP, AProgramIdSP : string; AQty, APrice, ASell_amount, ADiscount_amount : currency;
   ACode : string) : boolean;
 
+function SignRecipeLikiDniproeHealth : boolean;
+
 var LikiDniproeHealthApi : TLikiDniproeHealthApi;
 
 implementation
 
 uses RegularExpressions, System.Generics.Collections, Soap.EncdDecd , MainCash2,
-     LocalWorkUnit, ChoiceHelsiUserName, CommonData;
+     LocalWorkUnit, ChoiceHelsiUserName, CommonData, Clipbrd, CallbackHandler;
 
 function DelDoubleQuote(AStr : string) : string;
 begin
@@ -141,6 +152,67 @@ begin
   end;
 end;
 
+function EncodeBase64(const Input: TBytes): string;
+const
+  Base64: array[0..63] of Char =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+
+  function Encode3Bytes(const Byte1, Byte2, Byte3: Byte): string;
+  begin
+    Result := Base64[Byte1 shr 2]
+      + Base64[((Byte1 shl 4) or (Byte2 shr 4)) and $3F]
+      + Base64[((Byte2 shl 2) or (Byte3 shr 6)) and $3F]
+      + Base64[Byte3 and $3F];
+  end;
+
+  function EncodeLast2Bytes(const Byte1, Byte2: Byte): string;
+  begin
+    Result := Base64[Byte1 shr 2]
+      + Base64[((Byte1 shl 4) or (Byte2 shr 4)) and $3F]
+      + Base64[(Byte2 shl 2) and $3F] + '=';
+  end;
+
+  function EncodeLast1Byte(const Byte1: Byte): string;
+  begin
+    Result := Base64[Byte1 shr 2]
+      + Base64[(Byte1 shl 4) and $3F] + '==';
+  end;
+
+var
+  i, iLength: Integer;
+begin
+  Result := '';
+  iLength := Length(Input);
+  i := 0;
+  while i < iLength do
+  begin
+    case iLength - i of
+      3..MaxInt:
+        Result := Result + Encode3Bytes(Input[i], Input[i+1], Input[i+2]);
+      2:
+        Result := Result + EncodeLast2Bytes(Input[i], Input[i+1]);
+      1:
+        Result := Result + EncodeLast1Byte(Input[i]);
+    end;
+    Inc(i, 3);
+  end;
+end;
+
+function TextEncodeBase64(AText : String) : String;
+  var
+      fileStream: TFileStream;
+      base64Stream: TStringStream;
+      S : String;
+begin
+   base64Stream := TStringStream.Create(AText);
+   try
+   Result := EncodeBase64(BytesOf(base64Stream.DataString));
+   finally
+     FreeAndNil(base64Stream);
+   end;
+end;
+
+
   { TLikiDniproeHealthApi }
 constructor TLikiDniproeHealthApi.Create;
 begin
@@ -155,6 +227,8 @@ begin
   FUserEmail := '';
   FShow_eHealth := False;
   FShow_Location := '';
+  FHTTP_Port := 7046;
+  FInterval := 60000;
 
 end;
 
@@ -207,6 +281,8 @@ begin
   FMedication_request_id := '';
   FMedication_ID_List := '';
   FDispense_ID := '';
+  FDispense_Data := '';
+  FSign_Data := '';
 
   FRESTClient.BaseURL := FLikiDnepr;
   FRESTClient.ContentType := 'application/x-www-form-urlencoded';
@@ -262,10 +338,10 @@ begin
       end else if (jValue.FindValue('error') <> Nil) and (DelDoubleQuote(jValue.FindValue('error').ToString) = 'auth') then
       begin
         FShow_eHealth := True;
-      end else ShowError;
+      end else ShowError('Ошибка получения информации по рецепту по программе ДЛ');
     except
     end
-  end else ShowError;
+  end else ShowError('Ошибка получения информации по рецепту по программе ДЛ');
 end;
 
 function TLikiDniproeHealthApi.GetDrugList : boolean;
@@ -312,7 +388,7 @@ begin
       Result := True;
     except
     end
-  end else ShowError;
+  end else ShowError('Ошибка погашения рецепта выбранными лекарствами');
 end;
 
 function TLikiDniproeHealthApi.dispenseRecipe : boolean;
@@ -382,6 +458,7 @@ begin
       if jValue.FindValue('id') <> Nil then
       begin
         FDispense_ID := DelDoubleQuote(jValue.FindValue('id').ToString);
+        FDispense_Data := TextEncodeBase64(jValue.ToString);
         Result := True;
 
         AssignFile(F, 'Dispense.txt');
@@ -392,7 +469,7 @@ begin
       end;
     except
     end
-  end else ShowError;
+  end else ShowError('Ошибка получения списка лекарств для погашения рецепта');;
 end;
 
 function TLikiDniproeHealthApi.signRecipe : boolean;
@@ -413,12 +490,15 @@ begin
 
   FRESTRequest.ClearBody;
   FRESTRequest.Method := TRESTRequestMethod.rmPOST;
-  FRESTRequest.Resource := 'medications/dispense-recipe/' + FDispensed_Code;
+  FRESTRequest.Resource := 'medications/signed-medication-dispense/' + FDispense_ID;
 
   // required parameters
   FRESTRequest.Params.Clear;
-  FRESTRequest.AddParameter('employee_email', FDispense_ID, TRESTRequestParameterKind.pkGETorPOST);
-
+  FRESTRequest.AddParameter('Authorization', 'Bearer ' + FAccess_Token, TRESTRequestParameterKind.pkHTTPHEADER,
+                                                                        [TRESTRequestParameterOption.poDoNotEncode]);
+  FRESTRequest.AddParameter('Accept', 'application/json', TRESTRequestParameterKind.pkHTTPHEADER);
+  FRESTRequest.AddParameter('employee_email', FUserEmail, TRESTRequestParameterKind.pkGETorPOST);
+  FRESTRequest.AddParameter('data', FSign_Data, TRESTRequestParameterKind.pkGETorPOST);
 
   try
     FRESTRequest.Execute;
@@ -434,14 +514,13 @@ begin
       begin
         if jValue.FindValue('id') <> Nil then
         begin
-          FDispense_ID := DelDoubleQuote(jValue.FindValue('id').ToString);
           Result := True;
         end;
-      end;
+      end else ShowError('Ошибка отправки в eHealth подписанного погашенного рецепта');
 
     except
     end
-  end else ShowError;
+  end else ShowError('Ошибка отправки в eHealth подписанного погашенного рецепта');
 end;
 
 function InitLikiDniproeHealthApi : boolean;
@@ -463,16 +542,8 @@ begin
   if not Assigned(LikiDniproeHealthApi) then
   begin
     LikiDniproeHealthApi := TLikiDniproeHealthApi.Create;
-//    LikiDniproeHealthApi.FLikiDnepr := 'https://api.preprod.ciet-holding.com/api/v1/medications';
-//    LikiDniproeHealthApi.FAccess_Token := '3bc48397885c039ee40586f4781d10006e3c01b0ba4776f4df5ec1f64af38f2a';
-//    LikiDniproeHealthApi.FAccess_Token := '98bfd760a1b65cd45641ca2e1d59247d2f846f5a6e75a5d50dc44a213b7f8242';
-//    LikiDniproeHealthApi.FEmployee_Email := 'provizor2@yopmail.com';
-//    LikiDniproeHealthApi.FShow_Location := 'https://preprod.ciet-holding.com/login';
-
-
     LikiDniproeHealthApi.FLikiDnepr := MainCashForm.UnitConfigCDS.FieldByName('LikiDneproeHealthURL').AsString;
     LikiDniproeHealthApi.FAccess_Token := MainCashForm.UnitConfigCDS.FieldByName('LikiDneproeHealthToken').AsString;
-   // LikiDniproeHealthApi.FPharmacy_Id := MainCashForm.UnitConfigCDS.FieldByName('LikiDneproId').AsInteger;
 
     try
       ds := TClientDataSet.Create(nil);
@@ -548,11 +619,11 @@ begin
     Exit;
   end;
 
-//  if LikiDniproeHealthApi.FDispense_valid_to < Date then
-//  begin
-//    ShowMessage('Срок действия рецепта истек...');
-//    Exit;
-//  end;
+  if LikiDniproeHealthApi.FDispense_valid_to < Date then
+  begin
+    ShowMessage('Срок действия рецепта истек...');
+    Exit;
+  end;
 
   if LikiDniproeHealthApi.FStatus = 'ACTIVE' then
   begin
@@ -586,8 +657,48 @@ begin
   end;
 end;
 
+function GetLikiDniproeHealthState(const AReceipt : String; var AState : string) : boolean;
+begin
+  Result := False;
+
+  if not CheckLikiDniproeHealth_Number(AReceipt) then Exit;
+
+  if not InitLikiDniproeHealthApi then Exit;
+
+  LikiDniproeHealthApi.FNumber := AReceipt;
+
+  Result := LikiDniproeHealthApi.GetReceiptId;
+
+  if LikiDniproeHealthApi.FShow_eHealth then
+  begin
+    ShellExecute(Screen.ActiveForm.Handle, 'open', PChar(LikiDniproeHealthApi.FShow_Location), nil, nil, SW_SHOWNORMAL);
+    LikiDniproeHealthApi.FShow_eHealth := False;
+    Exit;
+  end;
+
+  if AReceipt <> LikiDniproeHealthApi.FRequest_number then
+  begin
+    ShowMessage('Ошибка получения информации о рецепте с сайта Хелси...'#13#10 +
+      'Неправельный номер рецепта.');
+    Exit;
+  end;
+
+  if LikiDniproeHealthApi.FDispense_valid_to < Date then
+  begin
+    AState := 'EXPIRED';
+    Exit;
+  end;
+
+  AState := LikiDniproeHealthApi.FStatus;
+  Result := True;
+end;
+
+
+
 function CreateLikiDniproeHealthNewDispense(AIDSP, AProgramIdSP : string; AQty, APrice, ASell_amount, ADiscount_amount : currency;
   ACode : string) : boolean;
+  var fileStream: TMemoryStream;
+      base64Stream: TStringStream;
 begin
 
   Result := False;
@@ -608,9 +719,56 @@ begin
 
   Result := LikiDniproeHealthApi.dispenseRecipe;
 
+  if Result then
+  try
+    Clipboard.AsText := LikiDniproeHealthApi.FKeyPassword;
+
+    try
+      fileStream := TMemoryStream.Create;
+      base64Stream := TStringStream.Create(LikiDniproeHealthApi.FBase64Key);
+      try
+        DecodeStream(base64Stream, fileStream);
+        fileStream.SaveToFile('Key-6.dat');
+      finally
+        FreeAndNil(fileStream);
+        FreeAndNil(base64Stream);
+      end;
+    except
+      Result := False;
+      ShowMessage('Ошибка сохранения файлового ключа.');
+      Exit;
+    end;
+
+    if ShowCallbackHandler(LikiDniproeHealthApi.FLikiDnepr +
+      '/sign3?employee_id=00000000-0001-1001-0110-000000000000#{"callback_url":"http://localhost:' + IntToStr(LikiDniproeHealthApi.FHTTP_Port) +
+      '","data":["' + LikiDniproeHealthApi.FDispense_Data + '"]}',
+      'Ожидание подписи рецепта.', 'Подпишите рецепт ЭЦП', LikiDniproeHealthApi.FHTTP_Port, LikiDniproeHealthApi.FInterval, LikiDniproeHealthApi.FSign_Data) then
+    begin
+      if LikiDniproeHealthApi.FSign_Data = '' then
+      begin
+        Result := False;
+        ShowMessage('Ошибка подписи рецепта.');
+      end;
+    end;
+  finally
+    if FileExists('Key-6.dat') then DeleteFile('Key-6.dat');
+  end;
+
   Result := False;
 end;
 
+function SignRecipeLikiDniproeHealth : boolean;
+begin
+  Result := False;
+
+  if not Assigned(LikiDniproeHealthApi) or (LikiDniproeHealthApi.FSign_Data = '') then
+  begin
+    ShowMessage('Ошибка не произведена подпись рецепта...');
+    Exit;
+  end;
+
+  Result := LikiDniproeHealthApi.signRecipe;
+end;
 
 initialization
   LikiDniproeHealthApi := Nil;

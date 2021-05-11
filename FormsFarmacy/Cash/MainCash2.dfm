@@ -457,6 +457,7 @@ inherited MainCashForm2: TMainCashForm2
           Properties.DisplayFormat = ',0.00'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
+          Styles.OnGetContentStyle = MainFixPercentStylesGetContentStyle
           Width = 55
         end
         object MainGridPriceChangeNight: TcxGridDBColumn

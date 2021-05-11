@@ -3,7 +3,6 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 484
   ClientWidth = 1442
   PopupMenu = PopupMenu
-  ExplicitLeft = -106
   ExplicitWidth = 1458
   ExplicitHeight = 523
   PixelsPerInch = 96
@@ -11,17 +10,17 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   inherited PageControl: TcxPageControl
     Width = 1442
     Height = 458
-    ExplicitWidth = 1434
+    ExplicitWidth = 1442
     ExplicitHeight = 458
     ClientRectBottom = 458
     ClientRectRight = 1442
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1434
+      ExplicitWidth = 1442
       ExplicitHeight = 458
       inherited cxGrid: TcxGrid
         Width = 1442
         Height = 458
-        ExplicitWidth = 1434
+        ExplicitWidth = 1442
         ExplicitHeight = 458
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -473,7 +472,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Width = 85
           end
           object HT_SUN_v2: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1076#1085'. '#1076#1083#1103' HT ('#1057#1059#1053') (V.2)'
+            Caption = #1050#1086#1083'. '#1076#1085'. '#1076#1083#1103' HT ('#1057#1059#1053' '#1080' '#1057#1059#1040') (V.2)'
             DataBinding.FieldName = 'HT_SUN_v2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'

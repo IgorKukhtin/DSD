@@ -141,7 +141,8 @@ uses
   LikiDniproReceipt in '..\FormsFarmacy\Cash\LikiDniproReceipt.pas',
   ListGoodsBadTiming in '..\FormsFarmacy\Cash\ListGoodsBadTiming.pas' {ListGoodsBadTimingForm: TParentForm},
   ListGoodsIlliquidMarketing in '..\FormsFarmacy\Cash\ListGoodsIlliquidMarketing.pas' {ListGoodsIlliquidMarketingForm: TParentForm},
-  LikiDniproeHealth in '..\FormsFarmacy\Cash\LikiDniproeHealth.pas';
+  LikiDniproeHealth in '..\FormsFarmacy\Cash\LikiDniproeHealth.pas',
+  CallbackHandler in '..\FormsFarmacy\Cash\CallbackHandler.pas' {CallbackHandlerForm};
 
 {$R *.res}
 

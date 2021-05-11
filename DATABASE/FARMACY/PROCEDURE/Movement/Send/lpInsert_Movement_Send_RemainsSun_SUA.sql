@@ -1097,11 +1097,16 @@ BEGIN
                                                             AND MovementItem.isErased   = FALSE
                                                             AND MovementItem.Amount     > 0
 
+                                     LEFT JOIN MovementBoolean AS MovementBoolean_SUN
+                                                                ON MovementBoolean_SUN.MovementId = Movement.Id
+                                                               AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
+
                                      LEFT JOIN _tmpUnit_SUN_SUA ON _tmpUnit_SUN_SUA.UnitId = MovementLinkObject_To.ObjectId
 
                                 WHERE Movement.OperDate BETWEEN inOperDate - (vbDaySendSUNAll_max :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
                                   AND Movement.DescId   = zc_Movement_Send()
                                   AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                                  AND COALESCE (MovementBoolean_SUN.ValueData, FALSE)  = FALSE
                                 GROUP BY MovementLinkObject_To.ObjectId
                                        , MovementItem.ObjectId
                                 HAVING SUM (CASE WHEN Movement.OperDate BETWEEN inOperDate - (_tmpUnit_SUN_SUA.DaySendSUNAll :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
