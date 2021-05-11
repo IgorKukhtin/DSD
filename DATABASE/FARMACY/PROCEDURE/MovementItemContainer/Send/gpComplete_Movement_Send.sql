@@ -35,6 +35,8 @@ $BODY$
   DECLARE vbisAuto Boolean;
   DECLARE vbisVIP Boolean;
   DECLARE vbisBanFiscalSale Boolean;
+  DECLARE vResortFact       TFloat;
+  DECLARE vResortAdd        TFloat;
 BEGIN
     vbUserId:= inSession;
 
@@ -158,6 +160,117 @@ BEGIN
       RAISE EXCEPTION 'Ошибка. Коллеги, перемещение по СУН можно проводить тллько с признаком "Получено-да".';
     END IF;
     
+    IF COALESCE (vbisSUN, FALSE) = True AND EXISTS (SELECT 
+                                                    FROM MovementItem
+                                                         INNER JOIN MovementItemLinkObject AS MILinkObject_CommentSend
+                                                                                           ON MILinkObject_CommentSend.MovementItemId = MovementItem.Id
+                                                                                          AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
+                                                                                          AND MILinkObject_CommentSend.ObjectId = 16978916
+                                                    WHERE MovementItem.MovementId = inMovementId
+                                                      AND MovementItem.DescId = zc_MI_Master())
+    THEN
+    
+      WITH tmpMI AS (SELECT MovementItem.Id     AS Id
+                          , MovementItem.Amount AS Amount
+                     FROM MovementItem
+                          INNER JOIN MovementItemLinkObject AS MILinkObject_CommentSend
+                                                            ON MILinkObject_CommentSend.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
+                                                           AND MILinkObject_CommentSend.ObjectId = 16978916
+                     WHERE MovementItem.MovementId = inMovementId
+                       AND MovementItem.DescId = zc_MI_Master()
+                    ) 
+         , tmpProtocolUnion AS (SELECT MovementItemProtocol.Id
+                                     , MovementItemProtocol.MovementItemId
+                                     , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
+                                FROM MovementItemProtocol
+                                WHERE MovementItemProtocol.MovementItemId in (SELECT tmpMI.ID FROM tmpMI)
+                                      AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
+                                      AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
+                                UNION ALL
+                                SELECT MovementItemProtocol.Id
+                                     , MovementItemProtocol.MovementItemId
+                                     , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
+                                FROM movementitemprotocol_arc AS MovementItemProtocol
+                                WHERE MovementItemProtocol.MovementItemId in (SELECT tmpMI.ID FROM tmpMI)
+                                      AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
+                                      AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
+                                )
+         , tmpProtocolAll AS (SELECT MovementItem.Id
+                                   , MovementItemProtocol.ProtocolData
+                                   , MovementItem.Amount
+                                   , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
+                              FROM tmpMI AS MovementItem
+
+                                   INNER JOIN tmpProtocolUnion AS MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
+                                   
+                              WHERE  MovementItem.Id = ioId
+                              ) 
+         , tmpProtocol AS (SELECT tmpProtocolAll.Id
+                                , tmpProtocolAll.Amount
+                                , SUBSTRING(tmpProtocolAll.ProtocolData, 1, POSITION('"' IN tmpProtocolAll.ProtocolData) - 1)::TFloat AS AmountAuto
+                           FROM tmpProtocolAll
+                           WHERE tmpProtocolAll.Ord = 1)
+
+      SELECT SUM(tmpProtocol.AmountAuto - tmpProtocolAll.Amount)
+      INTO vResortFact
+      FROM tmpProtocol;
+    
+      WITH tmpMI AS (SELECT MovementItem.Id     AS Id
+                          , MovementItem.Amount AS Amount
+                     FROM MovementItem
+                          INNER JOIN MovementItemLinkObject AS MILinkObject_CommentSend
+                                                            ON MILinkObject_CommentSend.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
+                                                           AND MILinkObject_CommentSend.ObjectId = 16978916
+                     WHERE MovementItem.MovementId = inMovementId
+                       AND MovementItem.DescId = zc_MI_Master()
+                    ) 
+         , tmpProtocolUnion AS (SELECT MovementItemProtocol.Id
+                                     , MovementItemProtocol.MovementItemId
+                                     , MovementItemProtocol.UserId
+                                     , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
+                                FROM MovementItemProtocol
+                                WHERE MovementItemProtocol.MovementItemId in (SELECT tmpMI.ID FROM tmpMI)
+                                      AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
+                                UNION ALL
+                                SELECT MovementItemProtocol.Id
+                                     , MovementItemProtocol.MovementItemId
+                                     , MovementItemProtocol.UserId
+                                     , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
+                                FROM movementitemprotocol_arc AS MovementItemProtocol
+                                WHERE MovementItemProtocol.MovementItemId in (SELECT tmpMI.ID FROM tmpMI)
+                                      AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
+                                )
+         , tmpProtocolAll AS (SELECT MovementItem.Id
+                                   , MovementItemProtocol.ProtocolData
+                                   , MovementItemProtocol.UserId
+                                   , MovementItem.Amount
+                                   , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
+                              FROM tmpMI AS MovementItem
+
+                                   INNER JOIN tmpProtocolUnion AS MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
+                                   
+                              WHERE  MovementItem.Id = ioId
+                              ) 
+         , tmpProtocol AS (SELECT tmpProtocolAll.Id
+                                , tmpProtocolAll.Amount
+                                , SUBSTRING(tmpProtocolAll.ProtocolData, 1, POSITION('"' IN tmpProtocolAll.ProtocolData) - 1)::TFloat AS AmountAuto
+                           FROM tmpProtocolAll
+                           WHERE tmpProtocolAll.Ord = 1
+                             AND tmpProtocolAll.UserId <> zfCalc_UserAdmin()::Integer)
+
+      SELECT SUM(tmpProtocolAll.Amount)
+      INTO vResortAdd
+      FROM tmpProtocol;
+      
+      IF COALESCE(vResortFact, 0) <> COALESCE(vResortAdd, 0)
+      THEN 
+        RAISE EXCEPTION 'Ошибка. Количество по комменту "Пересорт по факту, отравитель редактирует." не равно количеству добавленных позиций.';
+      END IF;
+    END IF;
+    
+
     IF COALESCE(vbComment, '') = '' AND vbisAuto = FALSE AND vbisVIP = FALSE
        AND COALESCE(vbPartionDateKindId, 0) <> zc_Enum_PartionDateKind_0()
     THEN

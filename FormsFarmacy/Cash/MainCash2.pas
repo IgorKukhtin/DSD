@@ -3603,6 +3603,22 @@ begin
                 Screen.MessageFont.Color := nOldColor;
               end;
             end;
+          end else if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
+          begin
+            if not SignRecipeLikiDniproeHealth then
+            begin
+              nOldColor := Screen.MessageFont.Color;
+              try
+                Screen.MessageFont.Color := clRed;
+                Screen.MessageFont.Size := Screen.MessageFont.Size + 2;
+                MessageDlg
+                  ('РЕЦЕПТ НЕ ПРОШЕЛ ПО ХЕЛСИ !!!'#13#10#13#10'Нужно его погасить в FCASH в "Чеки->Сверка Чеков с Хелси"!',
+                  mtError, [mbOK], 0);
+              finally
+                Screen.MessageFont.Size := Screen.MessageFont.Size - 2;
+                Screen.MessageFont.Color := nOldColor;
+              end;
+            end;
           end else
           begin
             MessageDlg('Не определен механизм подписи рецепта!', mtError, [mbOK], 0);
@@ -8699,7 +8715,9 @@ begin
   begin
      ACanvas.Brush.Color := clHighlight;
      ACanvas.Font.Color := clHighlightText;
-  end else if (AViewInfo.GridRecord.Values[MainFixPercent.Index] <> Null) and (AViewInfo.GridRecord.Values[MainFixPercent.Index] <> 0) then
+  end else if (AViewInfo.GridRecord.Values[MainFixPercent.Index] <> Null) and (AViewInfo.GridRecord.Values[MainFixPercent.Index] <> 0) or
+              (AViewInfo.GridRecord.Values[MainFixDiscount.Index] <> Null) and (AViewInfo.GridRecord.Values[MainFixDiscount.Index] <> 0) or
+              (AViewInfo.GridRecord.Values[MainGridPriceChange.Index] <> Null) and (AViewInfo.GridRecord.Values[MainGridPriceChange.Index] <> 0) then
   begin
     ACanvas.Brush.Color := TColor($FFD784);
   end;
@@ -8741,7 +8759,9 @@ procedure TMainCashForm2.MainFixPercentStylesGetContentStyle(
   AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
 begin
   FStyle.Assign(dmMain.cxContentStyle);
-  if (ARecord.Values[MainFixPercent.Index] <> Null) and (ARecord.Values[MainFixPercent.Index] <> 0) then
+  if (ARecord.Values[MainFixPercent.Index] <> Null) AND (ARecord.Values[MainFixPercent.Index] <> 0) OR
+     (ARecord.Values[MainFixDiscount.Index] <> Null) AND (ARecord.Values[MainFixDiscount.Index] <> 0) OR
+     (ARecord.Values[MainGridPriceChange.Index] <> Null) AND (ARecord.Values[MainGridPriceChange.Index] <> 0) then
     FStyle.Color := TColor($FFD784);
   AStyle := FStyle;
 end;
