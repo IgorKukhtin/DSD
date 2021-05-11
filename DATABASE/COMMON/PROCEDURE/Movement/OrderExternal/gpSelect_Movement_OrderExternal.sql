@@ -1,8 +1,8 @@
 -- Function: gpSelect_Movement_OrderExternal()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_OrderExternal (TDateTime, TDateTime, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_OrderExternal (TDateTime, TDateTime, Boolean, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_OrderExternal (TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_OrderExternal (TDateTime, TDateTime, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderExternal(
     IN inStartDate         TDateTime , --

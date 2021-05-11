@@ -22,8 +22,8 @@ BEGIN
 IF inIsBefoHistoryCost = TRUE
 THEN
     inGroupId:= -1;
--- ELSE
---    inGroupId:= -1; -- Все
+ ELSE
+    inGroupId:= -1; -- Все
 --  inGroupId:=  0; -- ф.Днепр
 --  inGroupId:=  1; -- ф.Киев
 --  inGroupId:=  2; -- остальные филиалы
@@ -38,8 +38,9 @@ END IF;
                 DATE_TRUNC ('MONTH', CURRENT_DATE + INTERVAL '1 DAY')  > (DATE_TRUNC ('MONTH', CURRENT_DATE))
                 -- или прошлый период
              OR DATE_TRUNC ('MONTH', inStartDate) < (DATE_TRUNC ('MONTH', CURRENT_DATE))
-                -- или ПЕРВЫЕ 5 дней месяца
-           --OR DATE_TRUNC ('MONTH', CURRENT_DATE + INTERVAL '5 DAY')  < (DATE_TRUNC ('MONTH', CURRENT_DATE))
+                -- или Суббота
+             OR EXTRACT (DOW FROM CURRENT_DATE) = 6
+             OR EXTRACT (DAY FROM CURRENT_DATE) <= 15
                 ;
      -- !!!НУЖНЫ ли ВОЗВРАТЫ!!!
      vbIsReturnIn:= -- если последние 2 дня месяца
@@ -541,4 +542,4 @@ create table dba._pgMovementReComlete
 -- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.03.2019', inEndDate:= '31.03.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE, inGroupId:= -1)
 -- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.03.2019', inEndDate:= '31.03.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE, inGroupId:= -1)
 -- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.06.2019', inEndDate:= '30.06.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE, inGroupId:= -1)
--- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.10.2019', inEndDate:= '31.10.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE, inGroupId:= -1)
+-- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.05.2021', inEndDate:= '01.05.2021', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE, inGroupId:= -1)

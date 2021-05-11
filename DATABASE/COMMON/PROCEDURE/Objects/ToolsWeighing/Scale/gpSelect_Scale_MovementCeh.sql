@@ -33,6 +33,7 @@ BEGIN
 
      -- !!!временно!!! менется параметр
      IF EXISTS (SELECT ObjectLink_UserRole_View.UserId FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin(), 428386, 447972) AND ObjectLink_UserRole_View.UserId = vbUserId) -- Руководитель склад ГП Днепр + Просмотр СБ
+        OR vbUserId = 343013 -- Нагорная Я.Г.
      THEN vbUserId:= 0;
      END IF;
 

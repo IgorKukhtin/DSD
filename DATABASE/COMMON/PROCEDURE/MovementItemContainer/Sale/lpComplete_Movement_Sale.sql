@@ -1278,7 +1278,7 @@ END IF;*/
      END IF;
 
      -- кроме Админа
-     IF inUserId <> zfCalc_UserAdmin() :: Integer
+     IF inUserId <> zfCalc_UserAdmin() :: Integer AND 1=1
      THEN
          -- !!!Синхронно - пересчитали/провели Пересортица!!! - на основании "Реализация" - !!!важно - здесь очищается _tmpMIContainer_insert, поэтому делаем ДО проводок!!!, но после заполнения _tmpItem
          PERFORM lpComplete_Movement_Sale_Recalc (inMovementId := inMovementId
@@ -3482,7 +3482,7 @@ END IF;*/
                    )
      THEN
           -- Админу только отладка
-          if inUserId <> zfCalc_UserAdmin() :: Integer
+          if inUserId <> zfCalc_UserAdmin() :: Integer AND 1=1
           then
           --
           PERFORM lpInsertUpdate_Movement_Tax_From_Kind (inMovementId            := inMovementId
