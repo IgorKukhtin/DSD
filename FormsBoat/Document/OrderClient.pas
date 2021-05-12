@@ -118,12 +118,6 @@ type
     bbPrintSticker: TdxBarButton;
     bbPrintStickerTermo: TdxBarButton;
     bbMIContainerCost: TdxBarButton;
-    actCheckDescService: TdsdExecStoredProc;
-    actCheckDescTransport: TdsdExecStoredProc;
-    actOpenFormService: TdsdOpenForm;
-    actOpenFormTransport: TdsdOpenForm;
-    macOpenFormService: TMultiAction;
-    macOpenFormTransport: TMultiAction;
     bbOpenFormTransport: TdxBarButton;
     bbOpenFormService: TdxBarButton;
     cxLabel10: TcxLabel;
@@ -384,6 +378,8 @@ type
     actOpenForm_Invoice: TdsdInsertUpdateAction;
     actOpenForm_Invoice1: TdsdOpenForm;
     bbOpenForm_Invoice: TdxBarButton;
+    actOpenBankAccountJournalByInvoice: TdsdOpenForm;
+    bbOpenBankAccountJournalByInvoice: TdxBarButton;
   private
   public
   end;

@@ -2436,7 +2436,6 @@ object OrderClientForm: TOrderClientForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1087#1083#1072#1090#1072' '#1055#1088#1080#1093#1086#1076' '#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
@@ -2449,7 +2448,6 @@ object OrderClientForm: TOrderClientForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1087#1083#1072#1090#1072' '#1056#1072#1089#1093#1086#1076' '#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
@@ -2462,7 +2460,6 @@ object OrderClientForm: TOrderClientForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1048#1090#1086#1075#1086' '#1054#1087#1083#1072#1090#1072
@@ -2475,7 +2472,6 @@ object OrderClientForm: TOrderClientForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1048#1090#1086#1075#1086' '#1054#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1089#1095#1077#1090#1091
@@ -2488,7 +2484,6 @@ object OrderClientForm: TOrderClientForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1089#1095#1077#1090#1091' '#1055#1088#1080#1093#1086#1076
@@ -2501,7 +2496,6 @@ object OrderClientForm: TOrderClientForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1089#1095#1077#1090#1091' '#1056#1072#1089#1093#1086#1076
@@ -2563,6 +2557,7 @@ object OrderClientForm: TOrderClientForm
           object ObjectName: TcxGridDBColumn
             Caption = 'Lieferanten / Kunden'
             DataBinding.FieldName = 'ObjectName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1086#1089#1090#1072#1074#1097#1080#1082' / '#1050#1083#1080#1077#1085#1090
@@ -2633,6 +2628,7 @@ object OrderClientForm: TOrderClientForm
           object ProductCIN: TcxGridDBColumn
             Caption = 'CIN Nr.'
             DataBinding.FieldName = 'ProductCIN'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -2651,6 +2647,7 @@ object OrderClientForm: TOrderClientForm
           object ProductName: TcxGridDBColumn
             Caption = 'Boat'
             DataBinding.FieldName = 'ProductName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = 'Product'
@@ -2668,6 +2665,7 @@ object OrderClientForm: TOrderClientForm
           object InsertName_ch5: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -2676,6 +2674,7 @@ object OrderClientForm: TOrderClientForm
           object InsertDate_ch5: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertDate'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -2684,6 +2683,7 @@ object OrderClientForm: TOrderClientForm
           object UpdateName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1087#1086#1089#1083'. '#1087#1088#1086#1074#1086#1076#1082#1080')'
             DataBinding.FieldName = 'UpdateName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -2692,6 +2692,7 @@ object OrderClientForm: TOrderClientForm
           object UpdateDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1087#1086#1089#1083'. '#1087#1088#1086#1074#1086#1076#1082#1080')'
             DataBinding.FieldName = 'UpdateDate'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -2960,6 +2961,14 @@ object OrderClientForm: TOrderClientForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenBankAccountJournalByInvoice'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExel'
         end
         item
@@ -3091,12 +3100,20 @@ object OrderClientForm: TOrderClientForm
       ImageIndex = 57
     end
     object bbOpenFormTransport: TdxBarButton
-      Action = macOpenFormTransport
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1058#1088#1072#1085#1089#1087#1086#1088#1090'>'
       Category = 0
+      Enabled = False
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1058#1088#1072#1085#1089#1087#1086#1088#1090'>'
+      Visible = ivAlways
+      ImageIndex = 25
     end
     object bbOpenFormService: TdxBarButton
-      Action = macOpenFormService
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
       Category = 0
+      Enabled = False
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
+      Visible = ivAlways
+      ImageIndex = 29
     end
     object bbPrintStructure: TdxBarButton
       Action = actPrintStructure
@@ -3116,6 +3133,10 @@ object OrderClientForm: TOrderClientForm
     end
     object bbOpenForm_Invoice: TdxBarButton
       Action = actOpenForm_Invoice1
+      Category = 0
+    end
+    object bbOpenBankAccountJournalByInvoice: TdxBarButton
+      Action = actOpenBankAccountJournalByInvoice
       Category = 0
     end
   end
@@ -3736,116 +3757,6 @@ object OrderClientForm: TOrderClientForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actCheckDescService: TdsdExecStoredProc
-      Category = 'OpenForm'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end>
-      Caption = 'actCheckRight'
-    end
-    object actCheckDescTransport: TdsdExecStoredProc
-      Category = 'OpenForm'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end>
-      Caption = 'actCheckRight'
-    end
-    object actOpenFormService: TdsdOpenForm
-      Category = 'OpenForm'
-      MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
-      ImageIndex = 29
-      FormName = 'TTransportServiceForm'
-      FormNameParam.Value = 'TTransportServiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = Null
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actOpenFormTransport: TdsdOpenForm
-      Category = 'OpenForm'
-      MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1058#1088#1072#1085#1089#1087#1086#1088#1090'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1058#1088#1072#1085#1089#1087#1086#1088#1090'>'
-      ImageIndex = 29
-      FormName = 'TTransportForm'
-      FormNameParam.Value = 'TTransportForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = Null
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object macOpenFormService: TMultiAction
-      Category = 'OpenForm'
-      MoveParams = <>
-      Enabled = False
-      ActionList = <
-        item
-          Action = actCheckDescService
-        end
-        item
-          Action = actOpenFormService
-        end>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
-      ImageIndex = 29
-    end
-    object macOpenFormTransport: TMultiAction
-      Category = 'OpenForm'
-      MoveParams = <>
-      Enabled = False
-      ActionList = <
-        item
-          Action = actCheckDescTransport
-        end
-        item
-          Action = actOpenFormTransport
-        end>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1058#1088#1072#1085#1089#1087#1086#1088#1090'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1058#1088#1072#1085#1089#1087#1086#1088#1090'>'
-      ImageIndex = 25
-    end
     object actPrintAgilis: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -3974,6 +3885,46 @@ object OrderClientForm: TOrderClientForm
           Component = InvoiceCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenBankAccountJournalByInvoice: TdsdOpenForm
+      Category = 'OpenForm'
+      TabSheet = cxTabSheetInvoice
+      MoveParams = <>
+      Enabled = False
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
+      ImageIndex = 25
+      FormName = 'TBankAccountJournalByInvoiceForm'
+      FormNameParam.Value = 'TBankAccountJournalByInvoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MovementId_Invoice'
+          Value = Null
+          Component = InvoiceCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberFull_Invoice'
+          Value = Null
+          Component = InvoiceCDS
+          ComponentItem = 'InvNumber_Full'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          Component = actShowErased
+          DataType = ftBoolean
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -5807,6 +5758,7 @@ object OrderClientForm: TOrderClientForm
     ChartList = <>
     ColorRuleList = <
       item
+        ValueColumn = Color_Pay
         ColorValueList = <>
       end>
     ColumnAddOnList = <>
