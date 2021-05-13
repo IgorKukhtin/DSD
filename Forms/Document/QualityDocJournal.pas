@@ -60,6 +60,21 @@ type
     spGetReportNameQuality: TdsdStoredProc;
     actPrint_Quality_ReportName: TdsdExecStoredProc;
     mactPrint_QualityDoc: TMultiAction;
+    byPrinterCDS: TClientDataSet;
+    byPrintDS: TDataSource;
+    spSelect_byPrint: TdsdStoredProc;
+    mactPrint_QualityDoc_list: TMultiAction;
+    cxGrid1DBTableView1: TcxGridDBTableView;
+    cxGrid1Level1: TcxGridLevel;
+    cxGrid1: TcxGrid;
+    bbPrint_QualityDoc_list: TdxBarButton;
+    spSelectPrint_list: TdsdStoredProc;
+    actPrint_list: TdsdPrintAction;
+    actPrint_Quality_ReportName_list: TdsdExecStoredProc;
+    spGetReportNameQuality_list: TdsdStoredProc;
+    MovementId_Sale_ch2: TcxGridDBColumn;
+    mactPrint_QualityDoc_All: TMultiAction;
+    actSelect_byPrint: TdsdExecStoredProc;
   private
     { Private declarations }
   public

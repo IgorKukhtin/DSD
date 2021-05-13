@@ -308,6 +308,28 @@ inherited QualityDocJournalForm: TQualityDocJournalForm
           end
         end
       end
+      object cxGrid1: TcxGrid
+        Left = 344
+        Top = 312
+        Width = 258
+        Height = 136
+        TabOrder = 1
+        Visible = False
+        object cxGrid1DBTableView1: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = byPrintDS
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          object MovementId_Sale_ch2: TcxGridDBColumn
+            DataBinding.FieldName = 'MovementId_Sale'
+            Options.Editing = False
+          end
+        end
+        object cxGrid1Level1: TcxGridLevel
+          GridView = cxGrid1DBTableView1
+        end
+      end
     end
   end
   inherited Panel: TPanel
@@ -346,6 +368,120 @@ inherited QualityDocJournalForm: TQualityDocJournalForm
   end
   inherited ActionList: TActionList
     Left = 471
+    object actSelect_byPrint: TdsdExecStoredProc [1]
+      Category = 'Print_QualityDoc'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelect_byPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelect_byPrint
+        end>
+      Caption = 'actSelect_byPrint'
+    end
+    object mactPrint_QualityDoc_All: TMultiAction [2]
+      Category = 'Print_QualityDoc'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSelect_byPrint
+        end
+        item
+          Action = mactPrint_QualityDoc_list
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1042#1089#1077#1093' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1081' '#1087#1086' '#1090#1077#1082'. '#1070#1088'.'#1083#1080#1094#1091
+      Hint = #1055#1077#1095#1072#1090#1100' '#1042#1089#1077#1093' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1081' '#1087#1086' '#1090#1077#1082'. '#1070#1088'.'#1083#1080#1094#1091
+      ImageIndex = 15
+    end
+    object actPrint_Quality_ReportName_list: TdsdExecStoredProc [4]
+      Category = 'Print_QualityDoc'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReportNameQuality_list
+      StoredProcList = <
+        item
+          StoredProc = spGetReportNameQuality_list
+        end>
+      Caption = 'actPrint_Quality_ReportName'
+    end
+    object actPrint_list: TdsdPrintAction [5]
+      Category = 'Print_QualityDoc'
+      MoveParams = <
+        item
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'MovementId_Sale'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_list
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_list
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      ImageIndex = 3
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDMaster2'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Quality'
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameQuality'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object mactPrint_QualityDoc_list: TMultiAction [6]
+      Category = 'Print_QualityDoc'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actPrint_Quality_ReportName_list
+        end
+        item
+          Action = actPrint_list
+        end>
+      View = cxGrid1DBTableView1
+      Caption = #1055#1077#1095#1072#1090#1100' '#1042#1089#1077#1093' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1081' '#1087#1086' '#1090#1077#1082'. '#1070#1088'.'#1083#1080#1094#1091
+      Hint = #1055#1077#1095#1072#1090#1100' '#1042#1089#1077#1093' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1081' '#1087#1086' '#1090#1077#1082'. '#1070#1088'.'#1083#1080#1094#1091
+      ImageIndex = 15
+    end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TQualityDocForm'
       FormNameParam.Value = 'TQualityDocForm'
@@ -398,7 +534,7 @@ inherited QualityDocJournalForm: TQualityDocJournalForm
     inherited actMovementItemContainer: TdsdOpenForm
       Enabled = False
     end
-    object actPrint_Quality_ReportName: TdsdExecStoredProc [20]
+    object actPrint_Quality_ReportName: TdsdExecStoredProc [25]
       Category = 'Print_QualityDoc'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -436,7 +572,6 @@ inherited QualityDocJournalForm: TQualityDocJournalForm
         item
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDMaster2'
-          IndexFieldNames = ''
         end
         item
           DataSet = PrintItemsCDS
@@ -643,6 +778,14 @@ inherited QualityDocJournalForm: TQualityDocJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_QualityDoc_list'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -660,6 +803,10 @@ inherited QualityDocJournalForm: TQualityDocJournalForm
     end
     object bbPrint: TdxBarButton
       Action = mactPrint_QualityDoc
+      Category = 0
+    end
+    object bbPrint_QualityDoc_list: TdxBarButton
+      Action = mactPrint_QualityDoc_All
       Category = 0
     end
   end
@@ -683,8 +830,8 @@ inherited QualityDocJournalForm: TQualityDocJournalForm
       item
         Component = JuridicalBasisGuides
       end>
-    Left = 408
-    Top = 344
+    Left = 312
+    Top = 280
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_QualityDoc'
@@ -791,8 +938,8 @@ inherited QualityDocJournalForm: TQualityDocJournalForm
   object PrintItemsSverkaCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 628
-    Top = 294
+    Left = 828
+    Top = 214
   end
   object JuridicalBasisGuides: TdsdGuides
     KeyField = 'Id'
@@ -871,5 +1018,86 @@ inherited QualityDocJournalForm: TQualityDocJournalForm
     PackSize = 1
     Left = 792
     Top = 344
+  end
+  object byPrinterCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 440
+    Top = 403
+  end
+  object byPrintDS: TDataSource
+    DataSet = byPrinterCDS
+    Left = 512
+    Top = 403
+  end
+  object spSelect_byPrint: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Quality_byPrint'
+    DataSet = byPrinterCDS
+    DataSets = <
+      item
+        DataSet = byPrinterCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 456
+    Top = 355
+  end
+  object spSelectPrint_list: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Quality_Print'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = byPrinterCDS
+        ComponentItem = 'MovementId_Sale'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 599
+    Top = 384
+  end
+  object spGetReportNameQuality_list: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Quality_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = byPrinterCDS
+        ComponentItem = 'MovementId_Sale'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Movement_Quality_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameQuality'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 609
+    Top = 440
   end
 end

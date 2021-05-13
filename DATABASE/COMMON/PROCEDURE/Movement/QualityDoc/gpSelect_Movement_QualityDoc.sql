@@ -35,7 +35,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Результат
-     RETURN QUERY 
+     RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
                        UNION
                         SELECT zc_Enum_Status_UnComplete() AS StatusId
