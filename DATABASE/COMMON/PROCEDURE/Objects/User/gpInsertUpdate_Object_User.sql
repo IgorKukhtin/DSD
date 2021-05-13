@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_User()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_User(
  INOUT ioId               Integer   ,    -- ключ объекта <Пользователь> 
@@ -11,7 +12,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_User(
     IN inSeal             TVarChar  ,    -- Электронная печать
     IN inKey              TVarChar  ,    -- Электроный Ключ 
     IN inProjectMobile    TVarChar  ,    -- Серийный № моб устр-ва
+    IN inPhoneAuthent     TVarChar  ,    -- № телефона для Аутентификации
     IN inisProjectMobile  Boolean   ,    -- признак - это Торговый агент
+    IN inisProjectAuthent Boolean   ,    -- Аутентификация
     IN inMemberId         Integer   ,    -- физ. лицо
     IN inSession          TVarChar       -- сессия пользователя
 )
@@ -39,6 +42,10 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_Key(), ioId, inKey);
 
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_ProjectMobile(), ioId, inProjectMobile);
+   
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_PhoneAuthent(), ioId, inPhoneAuthent);
+   
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_User_ProjectAuthent(), ioId, inisProjectAuthent);
 
    IF inisProjectMobile = TRUE
    THEN
@@ -65,6 +72,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.05.21         *
  21.04.17         *
  12.09.16         *
  07.06.13                                        * lpCheckRight

@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
-  ClientHeight = 433
+  ClientHeight = 476
   ClientWidth = 303
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1051#1086#1075#1080#1085
   end
   object cxButton1: TcxButton
-    Left = 45
-    Top = 403
+    Left = 37
+    Top = 443
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 189
-    Top = 403
+    Left = 181
+    Top = 443
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -144,6 +144,25 @@
     TabOrder = 18
     Width = 82
   end
+  object cxLabel8: TcxLabel
+    Left = 13
+    Top = 390
+    Caption = #8470' '#1090#1077#1083#1077#1092#1086#1085#1072' '#1076#1083#1103' '#1040#1091#1090#1077#1085#1090#1080#1092#1080#1082#1072#1094#1080#1080
+  end
+  object edPhoneAuthent: TcxTextEdit
+    Left = 13
+    Top = 410
+    Properties.PasswordChar = '*'
+    TabOrder = 20
+    Width = 185
+  end
+  object cbisProjectAuthent: TcxCheckBox
+    Left = 204
+    Top = 410
+    Caption = #1040#1091#1090#1077#1085#1090'-'#1094#1080#1103
+    TabOrder = 21
+    Width = 87
+  end
   object ActionList: TActionList
     Left = 269
     Top = 72
@@ -246,9 +265,25 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPhoneAuthent'
+        Value = Null
+        Component = edPhoneAuthent
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisProjectMobile'
         Value = Null
         Component = ceisProjectMobile
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisProjectAuthent'
+        Value = Null
+        Component = cbisProjectAuthent
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -356,6 +391,20 @@
         Name = 'isProjectMobile'
         Value = Null
         Component = ceisProjectMobile
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PhoneAuthent'
+        Value = Null
+        Component = edPhoneAuthent
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProjectAuthent'
+        Value = Null
+        Component = cbisProjectAuthent
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

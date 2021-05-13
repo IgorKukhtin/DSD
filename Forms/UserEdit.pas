@@ -41,6 +41,9 @@ type
     cxLabel7: TcxLabel;
     edProjectMobile: TcxTextEdit;
     ceisProjectMobile: TcxCheckBox;
+    cxLabel8: TcxLabel;
+    edPhoneAuthent: TcxTextEdit;
+    cbisProjectAuthent: TcxCheckBox;
   private
     { Private declarations }
   public

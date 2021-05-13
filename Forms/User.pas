@@ -93,6 +93,10 @@ type
     MobileVesion: TcxGridDBColumn;
     MobileVesionSDK: TcxGridDBColumn;
     Code_ch1: TcxGridDBColumn;
+    spUpdate_PhoneAuthent: TdsdStoredProc;
+    macUpdate_PhoneAuthent: TMultiAction;
+    actUpdate_PhoneAuthent: TdsdExecStoredProc;
+    bbUpdate_PhoneAuthent: TdxBarButton;
   private
     { Private declarations }
   public

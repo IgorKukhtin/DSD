@@ -17,6 +17,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , UpdateMobileFrom TDateTime, UpdateMobileTo TDateTime
              , isDateOut Boolean
              , DateOut TDateTime
+             , PhoneAuthent TVarChar
+             , isProjectAuthent Boolean
+             , GUID TVarChar
+             , Data_GUID TDateTime
               )
 AS
 $BODY$
@@ -77,6 +81,12 @@ END IF;
        
        , COALESCE (tmpPersonal.isDateOut, FALSE) :: Boolean AS isDateOut
        , CASE WHEN COALESCE (tmpPersonal.isDateOut, FALSE) = FALSE THEN NULL ELSE tmpPersonal.DateOut END :: TDateTime AS DateOut
+       
+       , COALESCE (ObjectString_PhoneAuthent.ValueData, '')       ::TVarChar AS PhoneAuthent
+       , COALESCE (ObjectBoolean_ProjectAuthent.ValueData, FALSE) ::Boolean AS isProjectAuthent
+       
+       , ObjectString_GUID.ValueData ::TVarChar AS GUID
+       , COALESCE (ObjectDate_User_GUID.ValueData, NULL) ::TDateTime AS Data_GUID
    FROM Object AS Object_User
         LEFT JOIN ObjectString AS ObjectString_User_
                                ON ObjectString_User_.ObjectId = Object_User.Id
@@ -106,6 +116,18 @@ END IF;
                                ON ObjectString_MobileVesionSDK.ObjectId = Object_User.Id
                               AND ObjectString_MobileVesionSDK.DescId   = zc_ObjectString_User_MobileVesionSDK()
 
+        LEFT JOIN ObjectString AS ObjectString_PhoneAuthent
+                               ON ObjectString_PhoneAuthent.ObjectId = Object_User.Id
+                              AND ObjectString_PhoneAuthent.DescId   = zc_ObjectString_User_PhoneAuthent()
+
+        LEFT JOIN ObjectString AS ObjectString_GUID
+                               ON ObjectString_GUID.ObjectId = Object_User.Id
+                              AND ObjectString_GUID.DescId   = zc_ObjectString_User_GUID()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_ProjectAuthent
+                                ON ObjectBoolean_ProjectAuthent.ObjectId = Object_User.Id
+                               AND ObjectBoolean_ProjectAuthent.DescId = zc_ObjectBoolean_User_ProjectAuthent()
+
         LEFT JOIN ObjectBoolean AS ObjectBoolean_ProjectMobile
                                 ON ObjectBoolean_ProjectMobile.ObjectId = Object_User.Id
                                AND ObjectBoolean_ProjectMobile.DescId = zc_ObjectBoolean_User_ProjectMobile()
@@ -133,6 +155,10 @@ END IF;
                              ON ObjectDate_User_UpdateMobileTo.ObjectId = Object_User.Id
                             AND ObjectDate_User_UpdateMobileTo.DescId = zc_ObjectDate_User_UpdateMobileTo()
 
+        LEFT JOIN ObjectDate AS ObjectDate_User_GUID
+                             ON ObjectDate_User_GUID.ObjectId = Object_User.Id
+                            AND ObjectDate_User_GUID.DescId = zc_ObjectDate_User_GUID()
+
    WHERE Object_User.DescId = zc_Object_User();
   
 END;
@@ -144,6 +170,7 @@ ALTER FUNCTION gpSelect_Object_User (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».  ﬂÓ¯ÂÌÍÓ –.‘.
+ 13.05.21         *
  02.05.17                                                       * zc_ObjectDate_User_UpdateMobileFrom, zc_ObjectDate_User_UpdateMobileTo
  21.04.17         *
  12.09.16         *

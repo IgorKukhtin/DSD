@@ -778,7 +778,7 @@ object MobileEmployeeForm: TMobileEmployeeForm
     Params = <
       item
         Name = 'inShowAll'
-        Value = 0
+        Value = False
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
@@ -830,10 +830,13 @@ object MobileEmployeeForm: TMobileEmployeeForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 834
     Top = 225
   end

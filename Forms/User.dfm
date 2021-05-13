@@ -202,6 +202,24 @@ object UserForm: TUserForm
         Options.Editing = False
         Width = 70
       end
+      object PhoneAuthent: TcxGridDBColumn
+        Caption = #8470' '#1090#1077#1083'. ('#1040#1091#1090#1077#1085#1090#1080#1092#1080#1082#1072#1094#1080#1103')'
+        DataBinding.FieldName = 'PhoneAuthent'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #8470' '#1090#1077#1083#1077#1092#1086#1085#1072' '#1076#1083#1103' '#1040#1091#1090#1077#1085#1090#1080#1092#1080#1082#1072#1094#1080#1080
+        Options.Editing = False
+        Width = 85
+      end
+      object isProjectAuthent: TcxGridDBColumn
+        Caption = #1040#1091#1090#1077#1085#1090#1080#1092#1080#1082#1072#1094#1080#1103
+        DataBinding.FieldName = 'isProjectAuthent'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1040#1091#1090#1077#1085#1090#1080#1092#1080#1082#1072#1094#1080#1103' ('#1044#1072'/'#1053#1077#1090')'
+        Options.Editing = False
+        Width = 63
+      end
       object BillNumberMobile: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'. '#1089' '#1084#1086#1073'. '#1091#1089#1090#1088'-'#1074#1072
         DataBinding.FieldName = 'BillNumberMobile'
@@ -226,6 +244,24 @@ object UserForm: TUserForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+      end
+      object GUID: TcxGridDBColumn
+        Caption = 'UUID '#1089#1077#1089#1089#1080#1080
+        DataBinding.FieldName = 'GUID'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = 'UUID '#1089#1077#1089#1089#1080#1080' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
+        Options.Editing = False
+        Width = 85
+      end
+      object Data_GUID: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1082#1086#1085'. '#1080#1089#1087'. UUID-'#1089#1077#1089#1089#1080#1080
+        DataBinding.FieldName = 'Data_GUID'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1076#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1103' UUID-'#1089#1077#1089#1089#1080#1080
+        Options.Editing = False
+        Width = 85
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -498,6 +534,14 @@ object UserForm: TUserForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_PhoneAuthent'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpen'
         end
         item
@@ -567,6 +611,10 @@ object UserForm: TUserForm
     end
     object bbProtocolRole: TdxBarButton
       Action = actProtocolRoleForm
+      Category = 0
+    end
+    object bbUpdate_PhoneAuthent: TdxBarButton
+      Action = macUpdate_PhoneAuthent
       Category = 0
     end
   end
@@ -910,6 +958,36 @@ object UserForm: TUserForm
         end>
       isShowModal = False
     end
+    object macUpdate_PhoneAuthent: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_PhoneAuthent
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#8470' '#1090#1077#1083#1077#1092#1086#1085#1086#1074' '#1080#1079' '#1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072' <'#1052#1086#1073#1080#1083#1100#1085#1099#1077' '#1090#1077#1083#1077#1092#1086#1085#1099' '#1089#1086#1090#1088#1091#1076#1085 +
+        #1080#1082#1086#1074'>'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#8470' '#1090#1077#1083#1077#1092#1086#1085#1086#1074' '#1080#1079' '#1057#1087#1088'. <'#1052#1086#1073#1080#1083#1100#1085#1099#1077' '#1090#1077#1083#1077#1092#1086#1085#1099' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074'>'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#8470' '#1090#1077#1083#1077#1092#1086#1085#1086#1074' '#1080#1079' '#1057#1087#1088'. <'#1052#1086#1073#1080#1083#1100#1085#1099#1077' '#1090#1077#1083#1077#1092#1086#1085#1099' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074'>'
+      ImageIndex = 41
+    end
+    object actUpdate_PhoneAuthent: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_PhoneAuthent
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_PhoneAuthent
+        end>
+      Caption = 'actUpdate_PhoneAuthent'
+      ImageIndex = 41
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_User'
@@ -944,10 +1022,13 @@ object UserForm: TUserForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 248
     Top = 232
   end
@@ -978,10 +1059,13 @@ object UserForm: TUserForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 392
     Top = 96
   end
@@ -1065,10 +1149,13 @@ object UserForm: TUserForm
     OnDblClickActionList = <>
     ActionItemList = <>
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 472
     Top = 216
   end
@@ -1228,5 +1315,14 @@ object UserForm: TUserForm
     PackSize = 1
     Left = 120
     Top = 224
+  end
+  object spUpdate_PhoneAuthent: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_User_PhoneAuthent'
+    DataSets = <>
+    OutputType = otResult
+    Params = <>
+    PackSize = 1
+    Left = 40
+    Top = 208
   end
 end
