@@ -81,10 +81,18 @@ type
     PeriodSun6: TcxGridDBColumn;
     PeriodSun7: TcxGridDBColumn;
     actExecuteSunDialog: TExecuteDialog;
-    actUpdateactSun: TMultiAction;
+    actUpdateSun: TMultiAction;
     actExecSPUpdateactSun: TdsdExecStoredProc;
     spUpdateactSun: TdsdStoredProc;
     dxBarButton10: TdxBarButton;
+    actShowErased: TBooleanStoredProcAction;
+    bbShowErased: TdxBarButton;
+    Comment: TcxGridDBColumn;
+    actExecuteDialogMain: TExecuteDialog;
+    actUpdateMain: TMultiAction;
+    actExecSPUpdateactMain: TdsdExecStoredProc;
+    spUpdateactMain: TdsdStoredProc;
+    dxBarButton11: TdxBarButton;
   private
     { Private declarations }
   public

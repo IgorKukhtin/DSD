@@ -280,7 +280,7 @@ BEGIN
                            , inMovementId   := vbMovementTRId
                            , inGoodsId      := MISend.GoodsId
                            , inAmount       := CASE WHEN COALESCE (MISend.CommentTRId, 0) <> 0 AND COALESCE (MISend.AmountDelta, 0) > 0 THEN - MISend.AmountDelta ELSE 0 END
-                           , inCommentTRID  := COALESCE (MISend.CommentTRId, MILinkObject_CommentTR.ObjectId)
+                           , inCommentSendID:= COALESCE (MISend.CommentTRId, MILinkObject_CommentTR.ObjectId)
                            , isExplanation  := COALESCE (MIString_Explanation.ValueData , '')
                            , isComment      := 'Коррекция СУН'
                            , inUserId       := vbUserId)                                  AS MITechnicalRediscountId

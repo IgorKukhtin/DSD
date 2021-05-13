@@ -1238,11 +1238,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_BuyerForSite_Phone() RETURNS Integer 
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_BuyerForSite_Phone', zc_Object_BuyerForSite(), 'Телефон' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_BuyerForSite_Phone');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_RecalcMCSSheduler_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_RecalcMCSSheduler_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_RecalcMCSSheduler_Comment', zc_Object_RecalcMCSSheduler(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_RecalcMCSSheduler_Comment');
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 11.05.21                                                                                                         * zc_ObjectString_RecalcMCSSheduler_Comment  
  28.04.21         * zc_ObjectString_FineSubject_Comment
  20.04.21                                                                                                         * zc_ObjectString_BuyerForSite_Phone  
  18.04.21         * zc_ObjectString_MemberPriceList_Comment

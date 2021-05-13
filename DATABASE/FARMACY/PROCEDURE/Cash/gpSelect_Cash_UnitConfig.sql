@@ -29,7 +29,7 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                GoodsDiscountId integer, GoodsDiscountCode integer, GoodsDiscountName TVarChar,
                isPromoForSale Boolean, isCheckUKTZED Boolean, isGoodsUKTZEDRRO Boolean, isMessageByTime Boolean, isMessageByTimePD Boolean,
                LikiDneproURL TVarChar, LikiDneproToken TVarChar, LikiDneproId Integer,
-               LikiDneproeHealthURL TVarChar, LikiDneproeHealthToken TVarChar
+               LikiDneproeHealthURL TVarChar, LikiDneproeLocation TVarChar, LikiDneproeHealthToken TVarChar
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -231,6 +231,7 @@ BEGIN
 
       , COALESCE (ObjectBoolean_DividePartionDate.ValueData, FALSE)  :: Boolean   AS DividePartionDate
 
+--      , 1                                                    AS eHealthApi
       , CASE WHEN inSession = '3' THEN 2 ELSE 1 END          AS eHealthApi
 
       , CASE WHEN COALESCE (ObjectBoolean_RedeemByHandSP.ValueData, FALSE) = FALSE THEN Object_Helsi_IdSP.Id
@@ -281,7 +282,8 @@ BEGIN
        , '3bc48397885c039ee40586f4781d10006e3c01b0ba4776f4df5ec1f64af38f2a'::TVarChar   AS LikiDneproToken
        , 92                                                                             AS LikiDneproId
 
-       , 'https://api.preprod.ciet-holding.com/api/v1/medications'::TVarChar            AS LikiDneproeHealthURL
+       , 'https://api.preprod.ciet-holding.com/api/v1'::TVarChar                        AS LikiDneproeHealthURL
+       , 'https://preprod.ciet-holding.com/login'::TVarChar                             AS LikiDneproeLocation
        , '98bfd760a1b65cd45641ca2e1d59247d2f846f5a6e75a5d50dc44a213b7f8242'::TVarChar   AS LikiDneproeHealthToken
 
 

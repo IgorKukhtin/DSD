@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1083#1072#1085#1080#1088#1086#1074#1097#1080#1082' '#1087#1077#1088#1077#1097#1077#1090#1072' '#1053#1058#1047'>'
-  ClientHeight = 376
-  ClientWidth = 578
+  ClientHeight = 433
+  ClientWidth = 590
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,8 +17,8 @@
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 49
-    Top = 343
+    Left = 41
+    Top = 374
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -27,8 +27,8 @@
     TabOrder = 21
   end
   object cxButton2: TcxButton
-    Left = 294
-    Top = 343
+    Left = 286
+    Top = 374
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -38,36 +38,36 @@
     TabOrder = 22
   end
   object Код: TcxLabel
-    Left = 40
+    Left = 32
     Top = 3
     Caption = #1050#1086#1076
   end
   object ceCode: TcxCurrencyEdit
-    Left = 40
-    Top = 26
+    Left = 32
+    Top = 25
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 0
     Width = 84
   end
   object cxLabel3: TcxLabel
-    Left = 40
-    Top = 55
+    Left = 32
+    Top = 47
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object cxLabel2: TcxLabel
-    Left = 128
-    Top = 103
+    Left = 120
+    Top = 134
     Caption = #1044#1085#1077#1081' '#1076#1083#1103' '#1072#1085#1072#1083#1080#1079#1072
   end
   object cxLabel4: TcxLabel
-    Left = 32
-    Top = 293
+    Left = 24
+    Top = 324
     Caption = #1047#1072#1087#1091#1089#1082#1072#1090#1100' '#1087#1086#1076' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1084
   end
   object ceUser: TcxButtonEdit
-    Left = 32
-    Top = 316
+    Left = 24
+    Top = 347
     Properties.Buttons = <
       item
         Default = True
@@ -84,182 +84,182 @@
     Width = 158
   end
   object edUnitName: TcxTextEdit
-    Left = 40
-    Top = 76
+    Left = 32
+    Top = 68
     TabOrder = 3
     Width = 353
   end
   object cxLabel1: TcxLabel
-    Left = 230
-    Top = 103
+    Left = 222
+    Top = 134
     Caption = #1057#1090#1088#1072#1093#1086#1074#1086#1081' '#1079#1072#1087#1072#1089' '#1053#1058#1047
   end
   object cxLabel5: TcxLabel
-    Left = 40
-    Top = 127
+    Left = 32
+    Top = 158
     Caption = #1055#1088#1072#1079#1076#1085#1080#1082
   end
   object cePeriod: TcxCurrencyEdit
-    Left = 128
-    Top = 126
+    Left = 120
+    Top = 157
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 4
     Width = 84
   end
   object ceDay: TcxCurrencyEdit
-    Left = 230
-    Top = 126
+    Left = 222
+    Top = 157
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
     Width = 84
   end
   object ceDay1: TcxCurrencyEdit
-    Left = 230
-    Top = 146
+    Left = 222
+    Top = 177
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 7
     Width = 84
   end
   object cePeriod1: TcxCurrencyEdit
-    Left = 128
-    Top = 146
+    Left = 120
+    Top = 177
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 6
     Width = 84
   end
   object cxLabel6: TcxLabel
-    Left = 40
-    Top = 147
+    Left = 32
+    Top = 178
     Caption = #1055#1086#1085#1077#1076#1077#1083#1100#1085#1080#1082
   end
   object ceDay2: TcxCurrencyEdit
-    Left = 230
-    Top = 166
+    Left = 222
+    Top = 197
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 9
     Width = 84
   end
   object cePeriod2: TcxCurrencyEdit
-    Left = 128
-    Top = 166
+    Left = 120
+    Top = 197
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 8
     Width = 84
   end
   object cxLabel7: TcxLabel
-    Left = 40
-    Top = 167
+    Left = 32
+    Top = 198
     Caption = #1042#1090#1086#1088#1085#1080#1082
   end
   object ceDay3: TcxCurrencyEdit
-    Left = 230
-    Top = 186
+    Left = 222
+    Top = 217
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 11
     Width = 84
   end
   object cePeriod3: TcxCurrencyEdit
-    Left = 128
-    Top = 186
+    Left = 120
+    Top = 217
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 10
     Width = 84
   end
   object cxLabel8: TcxLabel
-    Left = 40
-    Top = 187
+    Left = 32
+    Top = 218
     Caption = #1057#1088#1077#1076#1072
   end
   object ceDay4: TcxCurrencyEdit
-    Left = 230
-    Top = 206
+    Left = 222
+    Top = 237
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 13
     Width = 84
   end
   object cePeriod4: TcxCurrencyEdit
-    Left = 128
-    Top = 206
+    Left = 120
+    Top = 237
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 12
     Width = 84
   end
   object cxLabel9: TcxLabel
-    Left = 40
-    Top = 207
+    Left = 32
+    Top = 238
     Caption = #1063#1077#1090#1074#1077#1088#1075
   end
   object ceDay5: TcxCurrencyEdit
-    Left = 230
-    Top = 226
+    Left = 222
+    Top = 257
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 15
     Width = 84
   end
   object cePeriod5: TcxCurrencyEdit
-    Left = 128
-    Top = 226
+    Left = 120
+    Top = 257
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 14
     Width = 84
   end
   object cxLabel10: TcxLabel
-    Left = 40
-    Top = 227
+    Left = 32
+    Top = 258
     Caption = #1055#1103#1090#1085#1080#1094#1072
   end
   object ceDay6: TcxCurrencyEdit
-    Left = 230
-    Top = 246
+    Left = 222
+    Top = 277
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 17
     Width = 84
   end
   object cePeriod6: TcxCurrencyEdit
-    Left = 128
-    Top = 246
+    Left = 120
+    Top = 277
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 16
     Width = 84
   end
   object cxLabel11: TcxLabel
-    Left = 40
-    Top = 247
+    Left = 32
+    Top = 278
     Caption = #1057#1091#1073#1073#1086#1090#1072
   end
   object ceDay7: TcxCurrencyEdit
-    Left = 230
-    Top = 266
+    Left = 222
+    Top = 297
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 19
     Width = 84
   end
   object cePeriod7: TcxCurrencyEdit
-    Left = 128
-    Top = 266
+    Left = 120
+    Top = 297
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 18
     Width = 84
   end
   object cxLabel12: TcxLabel
-    Left = 40
-    Top = 267
+    Left = 32
+    Top = 298
     Caption = #1042#1086#1089#1082#1088#1077#1089#1077#1085#1100#1077
   end
   object cbPharmacyItem: TcxCheckBox
@@ -277,125 +277,125 @@
     Width = 158
   end
   object ceDaySun3: TcxCurrencyEdit
-    Left = 478
-    Top = 186
+    Left = 470
+    Top = 217
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 37
     Width = 84
   end
   object ceDaySun7: TcxCurrencyEdit
-    Left = 478
-    Top = 266
+    Left = 470
+    Top = 297
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 38
     Width = 84
   end
   object cePeriodSun7: TcxCurrencyEdit
-    Left = 376
-    Top = 266
+    Left = 368
+    Top = 297
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 39
     Width = 84
   end
   object ceDaySun6: TcxCurrencyEdit
-    Left = 478
-    Top = 246
+    Left = 470
+    Top = 277
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 40
     Width = 84
   end
   object cePeriodSun6: TcxCurrencyEdit
-    Left = 376
-    Top = 246
+    Left = 368
+    Top = 277
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 41
     Width = 84
   end
   object ceDaySun5: TcxCurrencyEdit
-    Left = 478
-    Top = 226
+    Left = 470
+    Top = 257
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 42
     Width = 84
   end
   object cePeriodSun5: TcxCurrencyEdit
-    Left = 376
-    Top = 226
+    Left = 368
+    Top = 257
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 43
     Width = 84
   end
   object ceDaySun4: TcxCurrencyEdit
-    Left = 478
-    Top = 206
+    Left = 470
+    Top = 237
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 44
     Width = 84
   end
   object cePeriodSun4: TcxCurrencyEdit
-    Left = 376
-    Top = 206
+    Left = 368
+    Top = 237
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 45
     Width = 84
   end
   object cePeriodSun3: TcxCurrencyEdit
-    Left = 376
-    Top = 186
+    Left = 368
+    Top = 217
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 46
     Width = 84
   end
   object ceDaySun2: TcxCurrencyEdit
-    Left = 478
-    Top = 166
+    Left = 470
+    Top = 197
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 47
     Width = 84
   end
   object cePeriodSun2: TcxCurrencyEdit
-    Left = 376
-    Top = 166
+    Left = 368
+    Top = 197
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 48
     Width = 84
   end
   object ceDaySun1: TcxCurrencyEdit
-    Left = 478
-    Top = 146
+    Left = 470
+    Top = 177
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 49
     Width = 84
   end
   object cePeriodSun1: TcxCurrencyEdit
-    Left = 376
-    Top = 146
+    Left = 368
+    Top = 177
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 50
     Width = 84
   end
   object cxLabel13: TcxLabel
-    Left = 478
-    Top = 103
+    Left = 470
+    Top = 134
     Caption = #1057#1090#1088#1072#1093#1086#1074#1086#1081' '#1079#1072#1087#1072#1089' '#1053#1058#1047
   end
   object cxLabel14: TcxLabel
-    Left = 367
-    Top = 103
+    Left = 359
+    Top = 134
     Caption = #1044#1085#1077#1081' '#1076#1083#1103' '#1072#1085#1072#1083#1080#1079#1072
   end
   object cxLabel15: TcxLabel
@@ -403,9 +403,20 @@
     Top = 84
     Caption = #1044#1083#1103' '#1087#1077#1088#1077#1097#1077#1090#1072' '#1087#1086' '#1057#1059#1053
   end
+  object edComment: TcxTextEdit
+    Left = 32
+    Top = 109
+    TabOrder = 54
+    Width = 522
+  end
+  object cxLabel16: TcxLabel
+    Left = 32
+    Top = 90
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+  end
   object ActionList: TActionList
-    Left = 16
-    Top = 32
+    Left = 136
+    Top = 16
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -470,6 +481,14 @@
         Value = Null
         Component = cbPharmacyItem
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -769,6 +788,13 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inComment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Period'
         Value = Null
         Component = cePeriod
@@ -993,12 +1019,12 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 16
-    Top = 64
+    Left = 136
+    Top = 48
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 16
-    Top = 104
+    Left = 8
+    Top = 135
   end
   object UserGuides: TdsdGuides
     KeyField = 'Id'
@@ -1026,7 +1052,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 208
-    Top = 309
+    Left = 200
+    Top = 340
   end
 end

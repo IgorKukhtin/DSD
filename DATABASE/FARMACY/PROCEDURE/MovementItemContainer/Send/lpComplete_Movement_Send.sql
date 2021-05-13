@@ -395,7 +395,7 @@ end if;*/
                            AND MovementItem.IsErased   = FALSE
                            AND MovementItem.Amount     > 0
                            -- если это сроковый документ
-                           AND vbPartionDateId <> 0
+                           -- AND vbPartionDateId <> 0
                          GROUP BY Container.Id, Container.ParentId, Container.ObjectId, MovementItem.Id
                        )
            -- находим товары для сети куда идет перемещение, если они разные
@@ -1303,6 +1303,10 @@ end if;*/
             FROM tmpItem;
     END IF;
     
+    
+    -- ФИНИШ - Обязательно сохранили
+    PERFORM lpInsertUpdate_MovementItemContainer_byTable();
+
     -- Проверили правельность проводок
     IF EXISTS(SELECT 1
               FROM Movement
@@ -1323,17 +1327,12 @@ end if;*/
                                                   AND movementitemcontainer.descid = zc_Container_Count()
                                                   AND movementitemcontainer.Amount < 0
                                                    
-              WHERE Movement.ID = 22059675  
+              WHERE Movement.ID = inMovementId  
               GROUP BY COALESCE(movementitem_Child.ID, movementitem.id), COALESCE(movementitem_Child.amount, movementitem.amount)
               HAVING COALESCE(movementitem_Child.amount, movementitem.amount) + COALESCE(SUM(movementitemcontainer.amount), 0) <> 0)
     THEN
       RAISE EXCEPTION 'Ошибка проведения перемещения. Повторите проведение если повториться обратитесь к системному администратору.';
     END IF;
-    
-
-     -- ФИНИШ - Обязательно сохранили
-     PERFORM lpInsertUpdate_MovementItemContainer_byTable();
-
 
      IF vbIsDeferred = FALSE
      THEN

@@ -1,8 +1,9 @@
 -- Function: gpSelect_Object_RecalcMCSSheduler()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_RecalcMCSSheduler(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_RecalcMCSSheduler(Boolean ,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_RecalcMCSSheduler(
+    IN inIsErased    Boolean ,
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Ord Integer, ID Integer, Code Integer, Name TVarChar
@@ -11,7 +12,7 @@ RETURNS TABLE (Ord Integer, ID Integer, Code Integer, Name TVarChar
              , RetailId Integer, RetailName TVarChar
              , ProvinceCityName TVarChar
              , PharmacyItem boolean
-
+             , Comment TVarChar
 
              , UserId Integer
              , UserName TVarChar
@@ -63,6 +64,7 @@ BEGIN
            , Object_Retail.ValueData                          AS RetailName
            , Object_ProvinceCity.ValueData                    AS ProvinceCityName
            , COALESCE(ObjectBoolean_PharmacyItem.ValueData, False) AS PharmacyItem
+           , ObjectString_Comment.ValueData                   AS Comment
 
            , Object_User.Id                                   AS UnitId
            , Object_User.ValueData                            AS UnitName
@@ -142,6 +144,10 @@ BEGIN
            LEFT JOIN ObjectDate AS ObjectDate_DateRunSun
                                 ON ObjectDate_DateRunSun.ObjectId = Object_RecalcMCSSheduler.Id
                                AND ObjectDate_DateRunSun.DescId = zc_ObjectFloat_RecalcMCSSheduler_DateRunSun()
+
+           LEFT JOIN ObjectString AS ObjectString_Comment
+                                  ON ObjectString_Comment.ObjectId = Object_RecalcMCSSheduler.Id
+                                 AND ObjectString_Comment.DescId = zc_ObjectString_RecalcMCSSheduler_Comment()
 
            LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                 ON ObjectLink_Unit_Juridical.ObjectId = ObjectLink_Unit.ChildObjectId
@@ -277,12 +283,13 @@ BEGIN
                                    ON ObjectBoolean_SelectRun.ObjectId = Object_RecalcMCSSheduler.Id
                                   AND ObjectBoolean_SelectRun.DescId = zc_ObjectBoolean_RecalcMCSSheduler_SelectRun()
 
-       WHERE Object_RecalcMCSSheduler.DescId = zc_Object_RecalcMCSSheduler();
+       WHERE Object_RecalcMCSSheduler.DescId = zc_Object_RecalcMCSSheduler()
+         AND (Object_RecalcMCSSheduler.isErased = False OR COALESCE(inIsErased, False) = True);
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Object_RecalcMCSSheduler (TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_RecalcMCSSheduler (Boolean ,TVarChar) OWNER TO postgres;
 
 
 /*
@@ -294,4 +301,5 @@ ALTER FUNCTION gpSelect_Object_RecalcMCSSheduler (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- select * from gpSelect_Object_RecalcMCSSheduler(inSession := '3');
+--
+ select * from gpSelect_Object_RecalcMCSSheduler(inIsErased := False, inSession := '3');

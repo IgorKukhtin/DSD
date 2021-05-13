@@ -85,6 +85,7 @@ type
     dxBarButton6: TdxBarButton;
     actChoiceCancelReason: TOpenChoiceForm;
     TypeChech: TcxGridDBColumn;
+    AccommodationName: TcxGridDBColumn;
   private
     { Private declarations }
   public

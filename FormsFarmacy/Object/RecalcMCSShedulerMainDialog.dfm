@@ -1,8 +1,8 @@
-object RecalcMCSShedulerSunDialogForm: TRecalcMCSShedulerSunDialogForm
+object RecalcMCSShedulerMainDialogForm: TRecalcMCSShedulerMainDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = #1044#1083#1103' '#1087#1077#1088#1089#1095#1077#1090#1072' '#1087#1086' '#1089#1091#1085
+  Caption = #1044#1083#1103' '#1086#1089#1085#1086#1074#1085#1086#1075#1086' '#1087#1077#1088#1089#1095#1077#1090#1072
   ClientHeight = 277
   ClientWidth = 354
   Color = clBtnFace
@@ -37,7 +37,7 @@ object RecalcMCSShedulerSunDialogForm: TRecalcMCSShedulerSunDialogForm
     ModalResult = 2
     TabOrder = 1
   end
-  object ceDaySun7: TcxCurrencyEdit
+  object ceDay7: TcxCurrencyEdit
     Left = 236
     Top = 186
     Properties.DecimalPlaces = 0
@@ -45,7 +45,7 @@ object RecalcMCSShedulerSunDialogForm: TRecalcMCSShedulerSunDialogForm
     TabOrder = 2
     Width = 84
   end
-  object cePeriodSun7: TcxCurrencyEdit
+  object cePeriod7: TcxCurrencyEdit
     Left = 118
     Top = 186
     Properties.DecimalPlaces = 0
@@ -53,7 +53,7 @@ object RecalcMCSShedulerSunDialogForm: TRecalcMCSShedulerSunDialogForm
     TabOrder = 3
     Width = 84
   end
-  object ceDaySun6: TcxCurrencyEdit
+  object ceDay6: TcxCurrencyEdit
     Left = 236
     Top = 166
     Properties.DecimalPlaces = 0
@@ -61,7 +61,7 @@ object RecalcMCSShedulerSunDialogForm: TRecalcMCSShedulerSunDialogForm
     TabOrder = 4
     Width = 84
   end
-  object cePeriodSun6: TcxCurrencyEdit
+  object cePeriod6: TcxCurrencyEdit
     Left = 118
     Top = 166
     Properties.DecimalPlaces = 0
@@ -69,7 +69,7 @@ object RecalcMCSShedulerSunDialogForm: TRecalcMCSShedulerSunDialogForm
     TabOrder = 5
     Width = 84
   end
-  object ceDaySun5: TcxCurrencyEdit
+  object ceDay5: TcxCurrencyEdit
     Left = 236
     Top = 146
     Properties.DecimalPlaces = 0
@@ -77,7 +77,7 @@ object RecalcMCSShedulerSunDialogForm: TRecalcMCSShedulerSunDialogForm
     TabOrder = 6
     Width = 84
   end
-  object cePeriodSun5: TcxCurrencyEdit
+  object cePeriod5: TcxCurrencyEdit
     Left = 118
     Top = 146
     Properties.DecimalPlaces = 0
@@ -85,7 +85,7 @@ object RecalcMCSShedulerSunDialogForm: TRecalcMCSShedulerSunDialogForm
     TabOrder = 7
     Width = 84
   end
-  object ceDaySun4: TcxCurrencyEdit
+  object ceDay4: TcxCurrencyEdit
     Left = 236
     Top = 126
     Properties.DecimalPlaces = 0
@@ -93,7 +93,7 @@ object RecalcMCSShedulerSunDialogForm: TRecalcMCSShedulerSunDialogForm
     TabOrder = 8
     Width = 84
   end
-  object cePeriodSun4: TcxCurrencyEdit
+  object cePeriod4: TcxCurrencyEdit
     Left = 118
     Top = 126
     Properties.DecimalPlaces = 0
@@ -101,7 +101,7 @@ object RecalcMCSShedulerSunDialogForm: TRecalcMCSShedulerSunDialogForm
     TabOrder = 9
     Width = 84
   end
-  object ceDaySun3: TcxCurrencyEdit
+  object ceDay3: TcxCurrencyEdit
     Left = 236
     Top = 106
     Properties.DecimalPlaces = 0
@@ -109,7 +109,7 @@ object RecalcMCSShedulerSunDialogForm: TRecalcMCSShedulerSunDialogForm
     TabOrder = 10
     Width = 84
   end
-  object cePeriodSun3: TcxCurrencyEdit
+  object cePeriod3: TcxCurrencyEdit
     Left = 118
     Top = 106
     Properties.DecimalPlaces = 0
@@ -117,7 +117,7 @@ object RecalcMCSShedulerSunDialogForm: TRecalcMCSShedulerSunDialogForm
     TabOrder = 11
     Width = 84
   end
-  object ceDaySun2: TcxCurrencyEdit
+  object ceDay2: TcxCurrencyEdit
     Left = 236
     Top = 86
     Properties.DecimalPlaces = 0
@@ -125,7 +125,7 @@ object RecalcMCSShedulerSunDialogForm: TRecalcMCSShedulerSunDialogForm
     TabOrder = 12
     Width = 84
   end
-  object cePeriodSun2: TcxCurrencyEdit
+  object cePeriod2: TcxCurrencyEdit
     Left = 118
     Top = 86
     Properties.DecimalPlaces = 0
@@ -133,7 +133,7 @@ object RecalcMCSShedulerSunDialogForm: TRecalcMCSShedulerSunDialogForm
     TabOrder = 13
     Width = 84
   end
-  object ceDaySun1: TcxCurrencyEdit
+  object ceDay1: TcxCurrencyEdit
     Left = 236
     Top = 66
     Properties.DecimalPlaces = 0
@@ -141,7 +141,7 @@ object RecalcMCSShedulerSunDialogForm: TRecalcMCSShedulerSunDialogForm
     TabOrder = 14
     Width = 84
   end
-  object cePeriodSun1: TcxCurrencyEdit
+  object cePeriod1: TcxCurrencyEdit
     Left = 118
     Top = 66
     Properties.DecimalPlaces = 0
@@ -224,87 +224,87 @@ object RecalcMCSShedulerSunDialogForm: TRecalcMCSShedulerSunDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PeriodSun1'
+        Name = 'Period1'
         Value = Null
-        Component = cePeriodSun1
+        Component = cePeriod1
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PeriodSun2'
+        Name = 'Period2'
         Value = Null
-        Component = cePeriodSun2
+        Component = cePeriod2
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PeriodSun3'
+        Name = 'Period3'
         Value = Null
-        Component = cePeriodSun3
+        Component = cePeriod3
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PeriodSun4'
+        Name = 'Period4'
         Value = Null
-        Component = cePeriodSun4
+        Component = cePeriod4
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PeriodSun5'
+        Name = 'Period5'
         Value = Null
-        Component = cePeriodSun5
+        Component = cePeriod5
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PeriodSun6'
+        Name = 'Period6'
         Value = Null
-        Component = cePeriodSun6
+        Component = cePeriod6
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PeriodSun7'
+        Name = 'Period7'
         Value = Null
-        Component = cePeriodSun7
+        Component = cePeriod7
         MultiSelectSeparator = ','
       end
       item
-        Name = 'DaySun1'
+        Name = 'Day1'
         Value = Null
-        Component = ceDaySun1
+        Component = ceDay1
         MultiSelectSeparator = ','
       end
       item
-        Name = 'DaySun2'
+        Name = 'Day2'
         Value = Null
-        Component = ceDaySun2
+        Component = ceDay2
         MultiSelectSeparator = ','
       end
       item
-        Name = 'DaySun3'
+        Name = 'Day3'
         Value = Null
-        Component = ceDaySun3
+        Component = ceDay3
         MultiSelectSeparator = ','
       end
       item
-        Name = 'DaySun4'
+        Name = 'Day4'
         Value = Null
-        Component = ceDaySun4
+        Component = ceDay4
         MultiSelectSeparator = ','
       end
       item
-        Name = 'DaySun5'
+        Name = 'Day5'
         Value = Null
-        Component = ceDaySun5
+        Component = ceDay5
         MultiSelectSeparator = ','
       end
       item
-        Name = 'DaySun6'
+        Name = 'Day6'
         Value = Null
-        Component = ceDaySun6
+        Component = ceDay6
         MultiSelectSeparator = ','
       end
       item
-        Name = 'DaySun7'
+        Name = 'Day7'
         Value = Null
-        Component = ceDaySun7
+        Component = ceDay7
         MultiSelectSeparator = ','
       end>
     Left = 29
@@ -336,87 +336,87 @@ object RecalcMCSShedulerSunDialogForm: TRecalcMCSShedulerSunDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PeriodSun1'
+        Name = 'Period1'
         Value = 0.000000000000000000
-        Component = cePeriodSun1
+        Component = cePeriod1
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PeriodSun2'
+        Name = 'Period2'
         Value = 0.000000000000000000
-        Component = cePeriodSun2
+        Component = cePeriod2
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PeriodSun3'
+        Name = 'Period3'
         Value = 0.000000000000000000
-        Component = cePeriodSun3
+        Component = cePeriod3
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PeriodSun4'
+        Name = 'Period4'
         Value = 0.000000000000000000
-        Component = cePeriodSun4
+        Component = cePeriod4
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PeriodSun5'
+        Name = 'Period5'
         Value = 0.000000000000000000
-        Component = cePeriodSun5
+        Component = cePeriod5
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PeriodSun6'
+        Name = 'Period6'
         Value = 0.000000000000000000
-        Component = cePeriodSun6
+        Component = cePeriod6
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PeriodSun7'
+        Name = 'Period7'
         Value = 0.000000000000000000
-        Component = cePeriodSun7
+        Component = cePeriod7
         MultiSelectSeparator = ','
       end
       item
-        Name = 'DaySun1'
+        Name = 'Day1'
         Value = 0.000000000000000000
-        Component = ceDaySun1
+        Component = ceDay1
         MultiSelectSeparator = ','
       end
       item
-        Name = 'DaySun2'
+        Name = 'Day2'
         Value = 0.000000000000000000
-        Component = ceDaySun2
+        Component = ceDay2
         MultiSelectSeparator = ','
       end
       item
-        Name = 'DaySun3'
+        Name = 'Day3'
         Value = 0.000000000000000000
-        Component = ceDaySun3
+        Component = ceDay3
         MultiSelectSeparator = ','
       end
       item
-        Name = 'DaySun4'
+        Name = 'Day4'
         Value = 0.000000000000000000
-        Component = ceDaySun4
+        Component = ceDay4
         MultiSelectSeparator = ','
       end
       item
-        Name = 'DaySun5'
+        Name = 'Day5'
         Value = 0.000000000000000000
-        Component = ceDaySun5
+        Component = ceDay5
         MultiSelectSeparator = ','
       end
       item
-        Name = 'DaySun6'
+        Name = 'Day6'
         Value = 0.000000000000000000
-        Component = ceDaySun6
+        Component = ceDay6
         MultiSelectSeparator = ','
       end
       item
-        Name = 'DaySun7'
+        Name = 'Day7'
         Value = 0.000000000000000000
-        Component = ceDaySun7
+        Component = ceDay7
         MultiSelectSeparator = ','
       end>
     PackSize = 1

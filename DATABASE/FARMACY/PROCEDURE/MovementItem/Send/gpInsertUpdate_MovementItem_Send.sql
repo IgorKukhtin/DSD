@@ -17,7 +17,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
    OUT outAmountDiff         TFloat    , -- Загружаемое кол-во  минус  Факт кол-во точки-получателя
    OUT outAmountStorageDiff  TFloat    , -- Загружаемое кол-во  минус  Факт кол-во точки-отправителя
     IN inReasonDifferencesId Integer   , -- Причина разногласия
-    IN inCommentTRID         Integer   , -- Комментарий
+    IN inCommentSendID       Integer   , -- Комментарий
     IN inSession             TVarChar    -- сессия пользователя
 )
 AS
@@ -53,6 +53,8 @@ $BODY$
    DECLARE vbTRStatusId    Integer;
    DECLARE vbisDeferred    Boolean;
    DECLARE vHT_SUN         Integer;
+   DECLARE vbisSent        Boolean;
+   DECLARE vbisReceived    Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
@@ -71,7 +73,10 @@ BEGIN
          , COALESCE (MovementFloat_TotalCount.ValueData, 0)
          , COALESCE (ObjectFloat_CashSettings_DaySaleForSUN.ValueData, 0)::Integer
          , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean
-    INTO vbStatusId, vbOperDate, vbUnitId, vbFromId, vbIsSUN, vbIsSUN_v2, vbIsSUN_v3, vbIsDefSUN, vbInsertDate, vbTotalCountOld, vbDaySaleForSUN, vbisDeferred
+         , COALESCE (MovementBoolean_Sent.ValueData, FALSE) ::Boolean
+         , COALESCE (MovementBoolean_Received.ValueData, FALSE) ::Boolean
+    INTO vbStatusId, vbOperDate, vbUnitId, vbFromId, vbIsSUN, vbIsSUN_v2, vbIsSUN_v3, vbIsDefSUN, vbInsertDate, 
+         vbTotalCountOld, vbDaySaleForSUN, vbisDeferred, vbisSent, vbisReceived       
     FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = Movement.Id
@@ -99,6 +104,13 @@ BEGIN
                                     ON MovementBoolean_Deferred.MovementId = Movement.Id
                                    AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
 
+          LEFT JOIN MovementBoolean AS MovementBoolean_Sent
+                                    ON MovementBoolean_Sent.MovementId = Movement.Id
+                                   AND MovementBoolean_Sent.DescId = zc_MovementBoolean_Sent()
+          LEFT JOIN MovementBoolean AS MovementBoolean_Received
+                                    ON MovementBoolean_Received.MovementId = Movement.Id
+                                   AND MovementBoolean_Received.DescId = zc_MovementBoolean_Received()
+
           LEFT JOIN MovementDate AS MovementDate_Insert
                                  ON MovementDate_Insert.MovementId = Movement.Id
                                 AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
@@ -114,7 +126,7 @@ BEGIN
                                
     WHERE Movement.Id = inMovementId;
     
-    IF COALESCE (inCommentTRID, 0) <> 0
+    IF COALESCE (inCommentSendID, 0) <> 0 AND COALESCE(vbCommentSendID, 0) = 16978916
     THEN
        WITH tmpProtocolUnion AS (SELECT  MovementItemProtocol.Id
                                        , MovementItemProtocol.MovementItemId
@@ -163,7 +175,16 @@ BEGIN
     END IF;
     
     IF COALESCE (ioId, 0) = 0 AND (vbIsSUN = TRUE OR vbIsSUN_v2 = TRUE OR vbIsSUN_v3 = TRUE) AND
-      NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+      NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin()) AND
+      (vbisReceived = FALSE OR NOT EXISTS(SELECT 1    
+                                          FROM MovementItem 
+                                               INNER JOIN MovementItemLinkObject AS MILinkObject_CommentSend
+                                                                                 ON MILinkObject_CommentSend.MovementItemId = MovementItem.Id
+                                                                                AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
+                                                                                AND MILinkObject_CommentSend.ObjectId = 16978916
+                                          WHERE MovementItem.MovementId = inMovementId
+                                            AND MovementItem.DescId = zc_MI_Master()
+                                            AND MovementItem.isErased = FALSE))
     THEN
       RAISE EXCEPTION 'Ошибка. В перемещения по СУН добавление товара запрещено.';
     END IF;
@@ -200,14 +221,14 @@ BEGIN
                                      
     WHERE MovementItem.Id = ioId;
     
-    IF (vbAmount <> inAmount OR COALESCE(vbCommentSendId, 0) <> COALESCE(inCommentTRID, 0))
+    IF (vbAmount <> inAmount OR COALESCE(vbCommentSendId, 0) <> COALESCE(inCommentSendID, 0))
        AND COALESCE (vbTRStatusId, zc_Enum_Status_UnComplete()) = zc_Enum_Status_Complete()
     THEN
       RAISE EXCEPTION 'Ошибка. Технический переучет <%> проведен. Изменять количество или причину уменьшения количества запрещено.', vbTRInvNumber;    
     END IF;
 
     IF vbisSUN = TRUE AND COALESCE (ioId, 0) <> 0
-       AND COALESCE (vbCommentSendId, 0) <> COALESCE (inCommentTRID, 0)
+       AND COALESCE (vbCommentSendId, 0) <> COALESCE (inCommentSendID, 0)
        AND (COALESCE (vbStatusId, 0) <> zc_Enum_Status_UnComplete() OR vbisDeferred = TRUE)
        AND COALESCE (vbAmount, 0) = COALESCE (inAmount, 0)
        AND COALESCE (vbAmountManual, 0) = COALESCE (vbAmountManual, 0)
@@ -215,13 +236,13 @@ BEGIN
        AND EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin(), zc_Enum_Role_TechnicalRediscount()))
     THEN
       -- Сохранили <Комментарий>
-      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_CommentSend(), ioId, inCommentTRID);
+      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_CommentSend(), ioId, inCommentSendID);
 
       IF COALESCE ((SELECT ChildObjectId FROM ObjectLink
                     WHERE ObjectId = vbCommentSendId
                       AND DescId = zc_ObjectLink_CommentSend_CommentTR()), 0) <>
          COALESCE ((SELECT ChildObjectId FROM ObjectLink
-                    WHERE ObjectId = inCommentTRID
+                    WHERE ObjectId = inCommentSendID
                       AND DescId = zc_ObjectLink_CommentSend_CommentTR()), 0) AND
          (COALESCE (vbStatusId, 0) = zc_Enum_Status_Complete() OR COALESCE (vbTotalCountOld, 0) = 0 OR vbisDeferred = TRUE)
       THEN
@@ -367,7 +388,7 @@ BEGIN
         END IF;
 */
 
-        IF vbIsSUN = TRUE AND vbInsertDate >= '25.08.2020' AND COALESCE (inCommentTRID, 0) = 0 AND COALESCE(vbAmount, 0) <> COALESCE(inAmount, 0)
+        IF vbIsSUN = TRUE AND vbInsertDate >= '25.08.2020' AND COALESCE (inCommentSendID, 0) = 0 AND COALESCE(vbAmount, 0) <> COALESCE(inAmount, 0)
         THEN
            WITH tmpProtocolAll AS (SELECT  MovementItem.Id
                                          , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
@@ -409,9 +430,9 @@ BEGIN
         END IF;
       END IF;
 
-      IF COALESCE(inCommentTRID, 0) <> 0 AND COALESCE(inCommentTRID, 0) <> COALESCE(vbCommentSendId, 0)
+      IF COALESCE(inCommentSendID, 0) <> 0 AND COALESCE(inCommentSendID, 0) <> COALESCE(vbCommentSendId, 0)
          AND EXISTS(SELECT 1 FROM ObjectBoolean
-                    WHERE ObjectBoolean.ObjectId = inCommentTRID
+                    WHERE ObjectBoolean.ObjectId = inCommentSendID
                       AND ObjectBoolean.DescId = zc_ObjectBoolean_CommentSun_Promo()
                       AND ObjectBoolean.ValueData = TRUE)
       THEN
@@ -510,7 +531,7 @@ BEGIN
         IF COALESCE (vbAmountPromo * vbUserUnit, 0) < (COALESCE (vbRemains, 0) - COALESCE (vbAmountAuto, 0))
         THEN
           RAISE EXCEPTION 'Ошибка. Остаток с учетом зануления <%> больше чем в плане по точке <%> использование коментария <%> запрещено.',
-                           COALESCE (vbRemains, 0) - COALESCE (vbAmountAuto, 0), COALESCE (vbAmountPromo * vbUserUnit, 0), (SELECT Object.ValueData FROM Object WHERE Object.ID = inCommentTRID);
+                           COALESCE (vbRemains, 0) - COALESCE (vbAmountAuto, 0), COALESCE (vbAmountPromo * vbUserUnit, 0), (SELECT Object.ValueData FROM Object WHERE Object.ID = inCommentSendID);
         END IF;
       END IF;
 
@@ -529,14 +550,14 @@ BEGIN
 
     END IF;
 
-/*    IF COALESCE(inCommentTRID, 0) = 14883331
+/*    IF COALESCE(inCommentSendID, 0) = 14883331
        AND NOT EXISTS(SELECT 1 FROM Object_Goods_Retail WHERE Object_Goods_Retail.ID = inGoodsId AND COALESCE(Object_Goods_Retail.GoodsPairSunId, 0) <> 0)
     THEN
        RAISE EXCEPTION 'Ошибка. Использование коментария <%> с товаром <%> запрещено.',
                            (SELECT Object.ValueData FROM Object WHERE Object.ID = 14883331), (SELECT Object.ValueData FROM Object WHERE Object.ID = inGoodsId);
     END IF;
 */
-    IF COALESCE(inCommentTRID, 0) = 14911561
+    IF COALESCE(inCommentSendID, 0) = 14911561
     THEN
        IF NOT EXISTS(SELECT MovementItem.ObjectId         AS GoodsId
                      FROM Movement
@@ -563,7 +584,7 @@ BEGIN
        END IF;
     END IF;
 
-    IF COALESCE(inCommentTRID, 0) = 14883299 AND COALESCE (vbDaySaleForSUN, 0) > 0 AND
+    IF COALESCE(inCommentSendID, 0) = 14883299 AND COALESCE (vbDaySaleForSUN, 0) > 0 AND
        NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
     THEN
       IF EXISTS(SELECT 1
@@ -605,7 +626,7 @@ BEGIN
       END IF;
     END IF;
     
-    IF COALESCE(inCommentTRID, 0) = 14957072
+    IF COALESCE(inCommentSendID, 0) = 14957072
        AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
     THEN
        IF NOT EXISTS(WITH GoodsPromo AS (SELECT Object_Goods_Retail.GoodsMainId                                                     AS GoodsId  
@@ -633,6 +654,20 @@ BEGIN
            , (SELECT ValueData FROM Object WHERE ID = inGoodsId);
        END IF;
     END IF;
+
+    IF COALESCE(inCommentSendID, 0) = 16978916 OR COALESCE(vbCommentSendID, 0) = 16978916
+    THEN
+       IF vbisReceived = FALSE AND COALESCE(inCommentSendID, 0) = 16978916
+       THEN 
+         RAISE EXCEPTION 'Ошибка. Коммент "Пересорт по факту, отравитель редактирует." можно установить только после получения аптекой получателем.';
+       END IF;
+       
+       IF COALESCE (vbUnitId, 0) <> COALESCE (vbUserUnitId, 0) AND
+          NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+       THEN
+         RAISE EXCEPTION 'Ошибка. Коммент "Пересорт по факту, отравитель редактирует." изменять ращрешено сотруднику аптеки получателя';
+       END IF;       
+    END IF; 
 
     IF vbIsSUN = TRUE AND COALESCE (inReasonDifferencesId, 0) <> 0
     THEN
@@ -673,7 +708,7 @@ BEGIN
                                             , inAmountManual       := inAmountManual
                                             , inAmountStorage      := inAmountStorage
                                             , inReasonDifferencesId:= inReasonDifferencesId
-                                            , inCommentTRID        := inCommentTRID
+                                            , inCommentSendID      := inCommentSendID
                                             , inUserId             := vbUserId
                                              );
 

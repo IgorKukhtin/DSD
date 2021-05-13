@@ -564,6 +564,13 @@ type
     spSelectCheckId: TdsdStoredProc;
     MainFixEndDate: TcxGridDBColumn;
     CheckFixEndDate: TcxGridDBColumn;
+    mdVIPCheck: TdxMemData;
+    IntegerField1: TIntegerField;
+    IntegerField2: TIntegerField;
+    IntegerField3: TIntegerField;
+    IntegerField4: TIntegerField;
+    IntegerField5: TIntegerField;
+    CurrencyField1: TCurrencyField;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -777,6 +784,8 @@ type
       APartionDateKindId: Integer = 0; ANDSKindId: Integer = 0; ADiscountExternalID: Integer = 0;
       ADivisionPartiesID: Integer = 0;  AisPresent: Boolean = False;
       AAmount: Currency = 0; APriceSale: Currency = 0);
+    // Обрабатывает количество для ВИП чеков
+    procedure UpdateRemainsFromVIPCheck(ALoadCheck : Boolean);
 
     // Находится "ИТОГО" кол-во - сколько уже набрали в продаже и к нему плюсуется или минусуется "новое" кол-во
     function fGetCheckAmountTotal(AGoodsId: Integer = 0; AAmount: Currency = 0)
@@ -1962,6 +1971,9 @@ begin
       CheckCDS.Next;
     end;
     CheckCDS.First;
+
+    // Вычтем из резерва
+    UpdateRemainsFromVIPCheck(True);
   finally
     CheckCDS.Filtered := True;
     CheckCDS.EnableControls;
@@ -6765,7 +6777,7 @@ procedure TMainCashForm2.CheckGridColNameStylesGetContentStyle(
   AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
 begin
   FStyle.Assign(dmMain.cxContentStyle);
-  if (ARecord.Values[CheckGridColChangePercent.Index] <> Null) and (ARecord.Values[CheckGridColChangePercent.Index] <> 0) then
+  if (ARecord.Values[CheckGridColSummChangePercent.Index] <> Null) and (ARecord.Values[CheckGridColSummChangePercent.Index] <> 0) then
     FStyle.Color := TColor($FFD784);
   AStyle := FStyle;
 end;
@@ -10110,6 +10122,95 @@ begin
     CheckCDS.Filtered := True;
     if AGoodsId <> 0 then
       CheckCDS.Locate('GoodsId', AGoodsId, []);
+    CheckCDS.EnableControls;
+  end;
+end;
+
+// Обрабатывает количество для ВИП чеков
+procedure TMainCashForm2.UpdateRemainsFromVIPCheck(ALoadCheck : Boolean);
+var
+  GoodsId: Integer;
+  PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID: Variant;
+  nDelta: Currency;
+  oldFilterExpirationDate: String;
+  // lPriceSale : Currency;
+begin
+  // Если пусто - ничего не делаем
+  mdVIPCheck.Close;
+  CheckCDS.DisableControls;
+  CheckCDS.Filtered := false;
+  if CheckCDS.isempty then
+  Begin
+    CheckCDS.Filtered := True;
+    CheckCDS.EnableControls;
+    exit;
+  End;
+  mdVIPCheck.Open;
+  // открючаем реакции
+  ExpirationDateCDS.DisableControls;
+  oldFilterExpirationDate := ExpirationDateCDS.Filter;
+  RemainsCDS.AfterScroll := Nil;
+  GoodsId := RemainsCDS.FieldByName('Id').AsInteger;
+  PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
+  NDSKindId := RemainsCDS.FieldByName('NDSKindId').AsVariant;
+  DiscountExternalID := RemainsCDS.FieldByName('DiscountExternalID').AsVariant;
+  DivisionPartiesID := RemainsCDS.FieldByName('DivisionPartiesID').AsVariant;
+  RemainsCDS.DisableControls;
+  RemainsCDS.Filtered := false;
+  try
+    CheckCDS.First;
+    while not CheckCDS.Eof do
+    begin
+      if RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
+        VarArrayOf([CheckCDS.FieldByName('GoodsId').AsInteger,
+        CheckCDS.FieldByName('PartionDateKindID').AsVariant,
+        CheckCDS.FieldByName('NDSKindId').AsVariant,
+        CheckCDS.FieldByName('DiscountExternalID').AsVariant,
+        CheckCDS.FieldByName('DivisionPartiesID').AsVariant]), []) then
+      Begin
+        RemainsCDS.Edit;
+        if RemainsCDS.FieldByName('Reserved').asCurrency >= CheckCDS.FieldByName('Amount').asCurrency then
+          RemainsCDS.FieldByName('Reserved').asCurrency :=
+            RemainsCDS.FieldByName('Reserved').asCurrency -
+            CheckCDS.FieldByName('Amount').asCurrency
+        else
+          RemainsCDS.FieldByName('Reserved').asCurrency :=0;
+        RemainsCDS.Post;
+      End;
+
+      if mdVIPCheck.Locate('ID;PDKINDID;NDSKINDId;DISCEXTID;DIVPARTID',
+        VarArrayOf([CheckCDS.FieldByName('GoodsId').AsInteger,
+        CheckCDS.FieldByName('PartionDateKindId').AsVariant,
+        CheckCDS.FieldByName('NDSKindId').AsVariant,
+        CheckCDS.FieldByName('DiscountExternalID').AsVariant,
+        CheckCDS.FieldByName('DivisionPartiesID').AsVariant]), []) then
+        mdVIPCheck.Edit
+      else
+      begin
+        mdVIPCheck.Append;
+        mdVIPCheck.FieldByName('ID').AsInteger := CheckCDS.FieldByName('GoodsId').AsInteger;
+        mdVIPCheck.FieldByName('PDKINDID').AsVariant := CheckCDS.FieldByName('PartionDateKindId').AsVariant;
+        mdVIPCheck.FieldByName('NDSKINDID').AsVariant := CheckCDS.FieldByName('NDSKindId').AsVariant;
+        mdVIPCheck.FieldByName('DISCEXTID').AsVariant := CheckCDS.FieldByName('DiscountExternalID').AsVariant;
+        mdVIPCheck.FieldByName('DIVPARTID').AsVariant := CheckCDS.FieldByName('DivisionPartiesID').AsVariant;
+      end;
+      mdVIPCheck.FieldByName('Amount').asCurrency := mdCheck.FieldByName('Amount').asCurrency + CheckCDS.FieldByName('Amount').asCurrency;
+      mdVIPCheck.Post;
+
+      CheckCDS.Next;
+    end;
+    CheckCDS.First;
+
+  finally
+    RemainsCDS.Filtered := True;
+    RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
+      VarArrayOf([GoodsId, PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID]), []);
+    RemainsCDS.EnableControls;
+    // AlternativeCDS.Filtered := true;
+    // AlternativeCDS.EnableControls;
+    ExpirationDateCDS.Filter := oldFilterExpirationDate;
+    ExpirationDateCDS.EnableControls;
+    CheckCDS.Filtered := True;
     CheckCDS.EnableControls;
   end;
 end;

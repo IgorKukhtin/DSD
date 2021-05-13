@@ -346,6 +346,14 @@ inherited CheckDeferred_SearchForm: TCheckDeferred_SearchForm
             Options.Editing = False
             Width = 62
           end
+          object AccommodationName: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087#1088#1080#1074'.'
+            DataBinding.FieldName = 'AccommodationName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
+          end
           object Color_Calc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_Calc'
             Visible = False
@@ -517,7 +525,7 @@ inherited CheckDeferred_SearchForm: TCheckDeferred_SearchForm
         end
         item
           Name = 'OperDateSP'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDateSP'
           DataType = ftDateTime
@@ -905,6 +913,7 @@ inherited CheckDeferred_SearchForm: TCheckDeferred_SearchForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         BackGroundValueColumn = Color_Calc
@@ -913,6 +922,7 @@ inherited CheckDeferred_SearchForm: TCheckDeferred_SearchForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     SearchAsFilter = False
     PropertiesCellList = <>
     Left = 544
