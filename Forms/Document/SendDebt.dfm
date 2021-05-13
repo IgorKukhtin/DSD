@@ -4,7 +4,7 @@
   ClientWidth = 594
   AddOnFormData.isSingle = False
   ExplicitWidth = 600
-  ExplicitHeight = 466
+  ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -444,6 +444,7 @@
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     inherited actRefresh: TdsdDataSetRefresh [2]
@@ -685,7 +686,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1117,70 +1118,18 @@
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'ContractFromId'
-        Value = ''
+        Name = 'Key'
+        Value = Null
         Component = ContractFromGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ContractFromName'
-        Value = ''
+        Name = 'TextValue'
+        Value = Null
         Component = ContractFromGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'JuridicalFromId'
-        Value = ''
-        Component = ContractJuridicalFromGuides
-        ComponentItem = 'JuridicalId'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'JuridicalFromName'
-        Value = ''
-        Component = ContractJuridicalFromGuides
-        ComponentItem = 'JuridicalName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-        Component = PaidKindFromGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        Component = PaidKindFromGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InfoMoneyId'
-        Value = ''
-        Component = InfoMoneyFromGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InfoMoneyName'
-        Value = ''
-        Component = InfoMoneyFromGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPaidKindId'
-        Value = '0'
-        Component = FormParams
-        ComponentItem = 'inPaidKindId'
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -1304,14 +1253,14 @@
       item
         Name = 'Key'
         Value = ''
-        Component = ContractJuridicalToGuides
+        Component = ContractToGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = ContractJuridicalToGuides
+        Component = ContractToGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
