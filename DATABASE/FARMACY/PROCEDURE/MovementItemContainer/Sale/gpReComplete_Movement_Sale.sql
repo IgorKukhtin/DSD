@@ -28,10 +28,12 @@ BEGIN
         --распроводим документ
         PERFORM gpUpdate_Status_Sale(inMovementId := inMovementId,
                                      inStatusCode := zc_Enum_StatusCode_UnComplete(),
+                                     inisReCalcPrice := TRUE,
                                      inSession    := inSession);
         --ѕроводим документ
         PERFORM gpUpdate_Status_Sale(inMovementId := inMovementId,
                                      inStatusCode := zc_Enum_StatusCode_Complete(),
+                                     inisReCalcPrice:= TRUE,
                                      inSession    := inSession);
     END IF;
 END;
