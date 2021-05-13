@@ -79,6 +79,12 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     spGet_AmountCurr: TdsdStoredProc;
     actRefreshAmountCurr: TdsdDataSetRefresh;
+    actCheckRight: TdsdExecStoredProc;
+    spCheckRight: TdsdStoredProc;
+    OpenChoiceFormContractFrom: TOpenChoiceForm;
+    macCheckRight_From: TMultiAction;
+    OpenChoiceFormContractTo: TOpenChoiceForm;
+    macCheckRight_To: TMultiAction;
   private
     { Private declarations }
   public

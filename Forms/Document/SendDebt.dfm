@@ -4,7 +4,7 @@
   ClientWidth = 594
   AddOnFormData.isSingle = False
   ExplicitWidth = 600
-  ExplicitHeight = 463
+  ExplicitHeight = 466
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -56,6 +56,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 6
     Width = 128
   end
@@ -67,6 +68,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 7
     Width = 273
   end
@@ -87,6 +89,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 5
     Width = 273
   end
@@ -98,12 +101,13 @@
   object ceContractFrom: TcxButtonEdit [12]
     Left = 153
     Top = 262
-    Enabled = False
     Properties.Buttons = <
       item
+        Action = macCheckRight_From
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 4
     Width = 128
   end
@@ -149,6 +153,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 19
     Width = 273
   end
@@ -165,6 +170,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 21
     Width = 273
   end
@@ -186,18 +192,20 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 24
     Width = 128
   end
   object ceContractTo: TcxButtonEdit [25]
     Left = 456
     Top = 262
-    Enabled = False
     Properties.Buttons = <
       item
+        Action = macCheckRight_To
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 25
     Width = 128
   end
@@ -450,6 +458,128 @@
     inherited actRefresh: TdsdDataSetRefresh [2]
     end
     inherited FormClose: TdsdFormClose [3]
+    end
+    object actCheckRight: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCheckRight
+      StoredProcList = <
+        item
+          StoredProc = spCheckRight
+        end>
+      Caption = #1087#1088#1086#1074#1077#1088#1082#1072' '#1087#1088#1072#1074' '#1085#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
+    end
+    object OpenChoiceFormContractTo: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'OpenChoiceFormContractFrom'
+      FormName = 'TContractChoiceForm'
+      FormNameParam.Value = 'TContractChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = ''
+          Component = ContractToGuides
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = ''
+          Component = ContractToGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalId'
+          Value = Null
+          Component = ContractJuridicalToGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalName'
+          Value = Null
+          Component = ContractJuridicalToGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object OpenChoiceFormContractFrom: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'OpenChoiceFormContractFrom'
+      FormName = 'TContractChoiceForm'
+      FormNameParam.Value = 'TContractChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ContractFromGuides
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ContractFromGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalId'
+          Value = Null
+          Component = ContractJuridicalFromGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalName'
+          Value = Null
+          Component = ContractJuridicalFromGuides
+          ComponentItem = 'TextValue'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object macCheckRight_To: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actCheckRight
+        end
+        item
+          Action = OpenChoiceFormContractTo
+        end>
+      Caption = 'macCheckRight_To'
+    end
+    object macCheckRight_From: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actCheckRight
+        end
+        item
+          Action = OpenChoiceFormContractFrom
+        end>
+      Caption = 'macCheckRight_From'
     end
   end
   inherited FormParams: TdsdFormParams
@@ -1132,7 +1262,7 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 216
+    Left = 200
     Top = 256
   end
   object ContractJuridicalFromGuides: TdsdGuides
@@ -1490,8 +1620,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 224
-    Top = 88
+    Left = 208
+    Top = 112
   end
   object PartnerToGuides: TdsdGuides
     KeyField = 'Id'
@@ -1821,5 +1951,14 @@
     PackSize = 1
     Left = 288
     Top = 96
+  end
+  object spCheckRight: TdsdStoredProc
+    StoredProcName = 'gpCheckRight_Movement_SendDebt_Contract'
+    DataSets = <>
+    OutputType = otResult
+    Params = <>
+    PackSize = 1
+    Left = 432
+    Top = 93
   end
 end
