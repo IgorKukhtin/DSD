@@ -489,7 +489,7 @@ begin
       if jValue.FindValue('id') <> Nil then
       begin
         FDispense_ID := DelDoubleQuote(jValue.FindValue('id').ToString);
-        FDispense_Data := TextEncodeBase64(jValue.ToString);
+        FDispense_Data := EncodeBase64(TBytes(AnsiToUtf8(jValue.ToString)));
         Result := True;
       end else ShowError('Ошибка погашения рецепта выбранными лекарствами');;
     except

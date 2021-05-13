@@ -100,82 +100,85 @@ BEGIN
             inUnitId = 0
         );
 
+    WITH tmpData AS (SELECT
+                            date_trunc('day', MovementCheck.OperDate)::TDateTime  AS PlanDate,
+                            date_part('dow',MovementCheck.OperDate)               AS DayOfWeek,
+                            MovementCheck.UnitId                                  AS UnitID,
+                            MovementCheck.TotalSumm                               AS FactAmount
+                     FROM Movement_Check_View AS MovementCheck
+                          LEFT JOIN MovementBoolean AS MovementBoolean_CorrectMarketing
+                                                    ON MovementBoolean_CorrectMarketing.MovementId = MovementCheck.Id
+                                                   AND MovementBoolean_CorrectMarketing.DescId in (zc_MovementBoolean_CorrectMarketing(), zc_MovementBoolean_CorrectIlliquidMarketing())
+                                                   AND MovementBoolean_CorrectMarketing.ValueData = True
+                     WHERE MovementCheck.OperDate >= vbStartDate
+                       AND MovementCheck.OperDate < vbEndDate
+                       AND MovementCheck.StatusId = zc_Enum_Status_Complete()
+                       AND (MovementCheck.UnitId = inUnitId or inUnitId = 0)
+                       AND COALESCE(MovementBoolean_CorrectMarketing.ValueData, False) = False
+                       AND MovementCheck.Id NOT IN (22653173, 22653613, 22653819)
+                     UNION ALL
+                     SELECT
+                            date_trunc('day', MovementSale.OperDate)::TDateTime  AS PlanDate,
+                            date_part('dow',MovementSale.OperDate)               AS DayOfWeek,
+                            MovementSale.UnitId                                  AS UnitID,
+                            MovementSale.TotalSumm                               AS FactAmount
+                     FROM Movement_Sale_View AS MovementSale
+                     WHERE MovementSale.OperDate >= vbStartDate
+                       AND MovementSale.OperDate < vbEndDate
+                       AND MovementSale.StatusId = zc_Enum_Status_Complete()
+                       AND (MovementSale.UnitId = inUnitId or inUnitId = 0)
+                     )
+    
     INSERT INTO _TMP(PlanDate,DayOfWeek,UnitId,FactAmount)
     SELECT
-        date_trunc('day', MovementCheck.OperDate)::TDateTime  AS PlanDate,
-        date_part('dow',MovementCheck.OperDate)               AS DayOfWeek,
-        MovementCheck.UnitId                                  AS UnitID,
-        SUM(TotalSumm)                                        AS FactAmount
-    FROM
-        Movement_Check_View AS MovementCheck
-    WHERE
-        MovementCheck.OperDate >= vbStartDate
-        AND
-        MovementCheck.OperDate < vbEndDate
-        AND
-        MovementCheck.StatusId = zc_Enum_Status_Complete()
-        AND
-        (
-            MovementCheck.UnitId = inUnitId
-            or
-            inUnitId = 0
-        )
-    GROUP BY
-        date_trunc('day', MovementCheck.OperDate)::TDateTime,
-        date_part('dow',MovementCheck.OperDate),
-        MovementCheck.UnitID;
+        Movement.PlanDate                                    AS PlanDate,
+        Movement.DayOfWeek                                    AS DayOfWeek,
+        Movement.UnitId                                       AS UnitID,
+        SUM(Movement.FactAmount)                              AS FactAmount
+    FROM tmpData AS Movement
+    GROUP BY Movement.PlanDate,
+             Movement.DayOfWeek,
+             Movement.UnitId;
         
     IF COALESCE (inisSP, FALSE) = TRUE
     THEN
                       
        UPDATE _TMP SET FactAmount = _TMP.FactAmount + COALESCE (SP.Summa, 0)
-       FROM (SELECT date_trunc('day', MovementCheck.OperDate)::TDateTime  AS PlanDate,
-                    MovementCheck.UnitId                                  AS UnitID,
-                    SUM(MovementCheck.TotalSummChangePercent)             AS Summa
-                FROM
-                    Movement_Check_View AS MovementCheck
-                WHERE
-                    MovementCheck.OperDate >= vbStartDate
-                    AND
-                    MovementCheck.OperDate < vbEndDate
-                    AND
-                    MovementCheck.StatusId = zc_Enum_Status_Complete()
-                    AND
-                    COALESCE( MovementCheck.SPKindId, 0) <> 0
-                    AND
-                    (
-                        MovementCheck.UnitId = inUnitId
-                        or
-                        inUnitId = 0
-                    )
-                GROUP BY
-                    date_trunc('day', MovementCheck.OperDate)::TDateTime,
-                    MovementCheck.UnitID) AS SP
-       WHERE _TMP.PlanDate = SP.PlanDate AND _TMP.UnitId = SP.UnitId;
-                      
-       UPDATE _TMP SET FactAmount = _TMP.FactAmount + COALESCE (SP.Summa, 0)
-       FROM (SELECT date_trunc('day', MovementSale.OperDate)::TDateTime  AS PlanDate,
-                    MovementSale.UnitId                                  AS UnitID,
-                    SUM(MovementSale.TotalSummSale)                      AS Summa
-                FROM
-                    Movement_Sale_View AS MovementSale
-                WHERE
-                    MovementSale.OperDate >= vbStartDate
-                    AND
-                    MovementSale.OperDate < vbEndDate
-                    AND
-                    MovementSale.StatusId = zc_Enum_Status_Complete()
-                    AND
-                    COALESCE( MovementSale.SPKindId, 0) <> 0
-                    AND
-                    (
-                        MovementSale.UnitId = inUnitId
-                        or
-                        inUnitId = 0
-                    )
-                GROUP BY
-                    date_trunc('day', MovementSale.OperDate)::TDateTime,
-                    MovementSale.UnitID) AS SP
+       FROM (WITH tmpData AS (SELECT
+                                    date_trunc('day', MovementCheck.OperDate)::TDateTime  AS PlanDate,
+                                    MovementCheck.UnitId                                  AS UnitID,
+                                    MovementCheck.TotalSummChangePercent                  AS Summa
+                             FROM Movement_Check_View AS MovementCheck
+                                  LEFT JOIN MovementBoolean AS MovementBoolean_CorrectMarketing
+                                                            ON MovementBoolean_CorrectMarketing.MovementId = MovementCheck.Id
+                                                           AND MovementBoolean_CorrectMarketing.DescId in (zc_MovementBoolean_CorrectMarketing(), zc_MovementBoolean_CorrectIlliquidMarketing())
+                                                           AND MovementBoolean_CorrectMarketing.ValueData = True
+                             WHERE MovementCheck.OperDate >= vbStartDate
+                               AND MovementCheck.OperDate < vbEndDate
+                               AND MovementCheck.StatusId = zc_Enum_Status_Complete()
+                               AND (MovementCheck.UnitId = inUnitId or inUnitId = 0)
+                               AND COALESCE( MovementCheck.SPKindId, 0) <> 0
+                               AND COALESCE(MovementBoolean_CorrectMarketing.ValueData, False) = False
+                               AND MovementCheck.Id NOT IN (22653173, 22653613, 22653819)
+                             UNION ALL
+                             SELECT
+                                    date_trunc('day', MovementSale.OperDate)::TDateTime  AS PlanDate,
+                                    MovementSale.UnitId                                  AS UnitID,
+                                    MovementSale.TotalSummSale - MovementSale.TotalSumm  AS Summa
+                             FROM Movement_Sale_View AS MovementSale
+                             WHERE MovementSale.OperDate >= vbStartDate
+                               AND MovementSale.OperDate < vbEndDate
+                               AND MovementSale.StatusId = zc_Enum_Status_Complete()
+                               AND (MovementSale.UnitId = inUnitId or inUnitId = 0)
+                               AND COALESCE( MovementSale.SPKindId, 0) <> 0
+                             )
+
+          SELECT Movement.PlanDate           AS PlanDate,
+                 Movement.UnitId             AS UnitID,
+                 SUM(Movement.Summa)         AS Summa
+          FROM tmpData AS Movement
+          GROUP BY Movement.PlanDate,
+                   Movement.UnitId) AS SP
        WHERE _TMP.PlanDate = SP.PlanDate AND _TMP.UnitId = SP.UnitId;
     END IF;
         
@@ -185,26 +188,32 @@ BEGIN
     THEN
 
        UPDATE _TMP SET FactAmount = _TMP.FactAmount - COALESCE (StaticCodes.Summa, 0)
-       FROM (SELECT date_trunc('day', MovementItemContainer.OperDate)                                 AS PlanDate
-                   , MovementItemContainer.WhereObjectId_analyzer                                     AS UnitId
-                   , SUM(ROUND(-1 * MovementItemContainer.Amount * MovementItemContainer.Price, 2))   AS Summa
+       FROM (SELECT date_trunc('day', MovementItemContainer.OperDate)                             AS PlanDate
+                   , Container.WhereObjectId                                                      AS UnitId
+                   , SUM(ROUND(-1 * MovementItemContainer.Amount * MIFloat_Price.ValueData, 2))   AS Summa
               FROM MovementItemContainer
 
-                    LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItemContainer.ObjectId_analyzer
+                    INNER JOIN Container ON Container.ID = MovementItemContainer.ContainerID
+
+                    LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                ON MIFloat_Price.MovementItemId = MovementItemContainer.MovementItemId
+                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                               
+                    LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = Container.ObjectId
 
                WHERE MovementItemContainer.OperDate >= vbStartDate
                  AND MovementItemContainer.OperDate <= vbEndDate
-                 AND MovementItemContainer.MovementDescId = zc_Movement_Check()
+                 AND MovementItemContainer.MovementDescId in (zc_Movement_Check(), zc_Movement_Sale())
                  AND MovementItemContainer.DescId = zc_MIContainer_Count()
-                 AND (MovementItemContainer.WhereObjectId_analyzer = inUnitId
+                 AND (Container.WhereObjectId = inUnitId
                       or
                       inUnitId = 0)
-                 AND MovementItemContainer.ObjectId_analyzer IN (SELECT Object_Goods_Retail.ID
-                                                                 FROM Object_Goods_Retail
-                                                                 WHERE COALESCE (Object_Goods_Retail.SummaWages, 0) <> 0
-                                                                    OR COALESCE (Object_Goods_Retail.PercentWages, 0) <> 0)
+                 AND Container.ObjectId IN (SELECT Object_Goods_Retail.ID
+                                            FROM Object_Goods_Retail
+                                            WHERE COALESCE (Object_Goods_Retail.SummaWages, 0) <> 0
+                                               OR COALESCE (Object_Goods_Retail.PercentWages, 0) <> 0)
                GROUP BY date_trunc('day', MovementItemContainer.OperDate)
-                      , MovementItemContainer.WhereObjectId_analyzer) AS StaticCodes
+                      , Container.WhereObjectId) AS StaticCodes
        WHERE _TMP.PlanDate = StaticCodes.PlanDate AND _TMP.UnitId = StaticCodes.UnitId;
 
     END IF;
@@ -233,15 +242,23 @@ BEGIN
                                       SELECT
                                           date_part('dow', MovementCheck.OperDate) AS DayOfWeek,
                                           MovementCheck.UnitId                     AS UnitID,
-                                          SUM(TotalSumm)                           AS FactAmount
+                                          SUM(MovementCheck.TotalSumm)             AS FactAmount
                                       FROM
                                           Movement_Check_View AS MovementCheck
+                                          LEFT JOIN MovementBoolean AS MovementBoolean_CorrectMarketing
+                                                                    ON MovementBoolean_CorrectMarketing.MovementId = MovementCheck.Id
+                                                                   AND MovementBoolean_CorrectMarketing.DescId in (zc_MovementBoolean_CorrectMarketing(), zc_MovementBoolean_CorrectIlliquidMarketing())
+                                                                   AND MovementBoolean_CorrectMarketing.ValueData = True
                                       WHERE
                                           MovementCheck.OperDate >= (vbStartDate-INTERVAL '56 DAY')
                                           AND
                                           MovementCheck.OperDate < vbStartDate
                                           AND
                                           MovementCheck.StatusId = zc_Enum_Status_Complete()
+                                          AND 
+                                          COALESCE(MovementBoolean_CorrectMarketing.ValueData, False) = False
+                                          AND 
+                                          MovementCheck.Id NOT IN (22653173, 22653613, 22653819)
                                           AND
                                           (
                                               MovementCheck.UnitId = inUnitId
@@ -252,27 +269,55 @@ BEGIN
                                           date_part('dow', MovementCheck.OperDate),
                                           MovementCheck.UnitID
                                       UNION ALL
-                                      SELECT date_part('dow', MovementItemContainer.OperDate)                            AS PlanDate
-                                           , MovementItemContainer.WhereObjectId_analyzer                                AS UnitId
-                                           , SUM(ROUND(MovementItemContainer.Amount * MovementItemContainer.Price, 2))   AS Summa
+                                      SELECT
+                                          date_part('dow', MovementSale.OperDate) AS DayOfWeek,
+                                          MovementSale.UnitId                     AS UnitID,
+                                          SUM(MovementSale.TotalSumm)             AS FactAmount
+                                      FROM
+                                          Movement_Sale_View AS MovementSale
+                                      WHERE
+                                          MovementSale.OperDate >= (vbStartDate-INTERVAL '56 DAY')
+                                          AND
+                                          MovementSale.OperDate < vbStartDate
+                                          AND
+                                          MovementSale.StatusId = zc_Enum_Status_Complete()
+                                          AND
+                                          (
+                                              MovementSale.UnitId = inUnitId
+                                              or
+                                              inUnitId = 0
+                                          )
+                                      GROUP BY
+                                          date_part('dow', MovementSale.OperDate),
+                                          MovementSale.UnitID
+                                      UNION ALL
+                                      SELECT date_part('dow', MovementItemContainer.OperDate)                             AS PlanDate
+                                           , Container.WhereObjectId                                                      AS UnitId
+                                           , SUM(ROUND(-1 * MovementItemContainer.Amount * MIFloat_Price.ValueData, 2))   AS Summa
                                       FROM MovementItemContainer
 
-                                            LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItemContainer.ObjectId_analyzer
+                                           INNER JOIN Container ON Container.ID = MovementItemContainer.ContainerID
+
+                                           LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                                       ON MIFloat_Price.MovementItemId = MovementItemContainer.MovementItemId
+                                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                                       
+                                           LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = Container.ObjectId
 
                                        WHERE MovementItemContainer.OperDate >= (vbStartDate-INTERVAL '56 DAY')
                                          AND MovementItemContainer.OperDate < vbStartDate
-                                         AND MovementItemContainer.MovementDescId = zc_Movement_Check()
+                                         AND MovementItemContainer.MovementDescId in (zc_Movement_Check(), zc_Movement_Sale())
                                          AND MovementItemContainer.DescId = zc_MIContainer_Count()
-                                         AND (MovementItemContainer.WhereObjectId_analyzer = inUnitId
+                                         AND (Container.WhereObjectId = inUnitId
                                               or
                                               inUnitId = 0)
-                                         AND MovementItemContainer.ObjectId_analyzer IN (SELECT Object_Goods_Retail.ID
-                                                                                         FROM Object_Goods_Retail
-                                                                                         WHERE COALESCE (Object_Goods_Retail.SummaWages, 0) <> 0
-                                                                                            OR COALESCE (Object_Goods_Retail.PercentWages, 0) <> 0)
+                                         AND Container.ObjectId IN (SELECT Object_Goods_Retail.ID
+                                                                     FROM Object_Goods_Retail
+                                                                     WHERE COALESCE (Object_Goods_Retail.SummaWages, 0) <> 0
+                                                                        OR COALESCE (Object_Goods_Retail.PercentWages, 0) <> 0)
                                          AND inisNoStaticCodes = TRUE
                                        GROUP BY date_part('dow', MovementItemContainer.OperDate)
-                                              , MovementItemContainer.WhereObjectId_analyzer) AS T1
+                                              , Container.WhereObjectId) AS T1
                                  GROUP BY T1.DayOfWeek, T1.UnitID
                                 ) AS T0
                             ) AS SOLD
@@ -384,4 +429,4 @@ ALTER FUNCTION gpSelect_Report_SoldDay (TDateTime, Integer, Boolean, Boolean, Bo
 */
 
 
-select * from gpSelect_Report_SoldDay(inMonth := ('24.11.2020')::TDateTime , inUnitId := 183292 , inQuasiSchedule := 'False' , inisNoStaticCodes := 'False' , inisSP := 'True' , inSession := '3');
+select * from gpSelect_Report_SoldDay(inMonth := ('31.03.2021')::TDateTime , inUnitId := 183292 , inQuasiSchedule := 'True' , inisNoStaticCodes := 'True' , inisSP := 'True' ,  inSession := '3');

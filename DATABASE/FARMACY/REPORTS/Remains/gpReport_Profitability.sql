@@ -168,7 +168,8 @@ BEGIN
 
                    LEFT JOIN MovementBoolean AS MovementBoolean_CorrectMarketing
                                              ON MovementBoolean_CorrectMarketing.MovementId = Movement.Id
-                                            AND MovementBoolean_CorrectMarketing.DescId = zc_MovementBoolean_CorrectMarketing()
+                                            AND MovementBoolean_CorrectMarketing.DescId in (zc_MovementBoolean_CorrectMarketing(), zc_MovementBoolean_CorrectIlliquidMarketing())
+                                            AND MovementBoolean_CorrectMarketing.ValueData = True
 
               WHERE Movement.OperDate >= inDateStart 
                 AND Movement.OperDate < inDateFinal

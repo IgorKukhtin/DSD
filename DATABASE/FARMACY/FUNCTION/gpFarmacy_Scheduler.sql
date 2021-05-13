@@ -291,6 +291,17 @@ BEGIN
       END;    
     END IF;    
 
+    -- Списание товара с комментарием "Нетоварный вид"
+    BEGIN
+      IF date_part('HOUR',  CURRENT_TIME)::Integer = 22 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 21
+      THEN
+          PERFORM gpInsert_Movement_Loss_NonCommodity (inOperDate := CURRENT_DATE, inSession := zfCalc_UserAdmin());    
+      END IF;
+    EXCEPTION
+       WHEN others THEN
+         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+       PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpInsert_Movement_Loss_NonCommodity', True, text_var1::TVarChar, vbUserId);
+    END;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

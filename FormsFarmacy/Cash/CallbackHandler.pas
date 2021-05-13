@@ -108,7 +108,7 @@ begin
     Res := TRegEx.Split(ARequestInfo.Params.Strings[I], '=');
     if Res[0] = 'callback_result' then
     begin
-      FCallback := COPY(Res[1], 2, Length(Res[1]) - 2);
+      FCallback := COPY(Res[1], 2, Length(Res[1]) - 4);
       Timer.Enabled := False;
       ModalResult := mrOk;
       Break;

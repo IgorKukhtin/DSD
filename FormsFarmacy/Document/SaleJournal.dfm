@@ -16,17 +16,17 @@ inherited SaleJournalForm: TSaleJournalForm
     Width = 747
     Height = 434
     TabOrder = 3
-    ExplicitWidth = 745
+    ExplicitWidth = 747
     ExplicitHeight = 434
     ClientRectBottom = 434
     ClientRectRight = 747
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 745
+      ExplicitWidth = 747
       ExplicitHeight = 434
       inherited cxGrid: TcxGrid
         Width = 747
         Height = 434
-        ExplicitWidth = 745
+        ExplicitWidth = 747
         ExplicitHeight = 434
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -287,7 +287,7 @@ inherited SaleJournalForm: TSaleJournalForm
   end
   inherited Panel: TPanel
     Width = 747
-    ExplicitWidth = 745
+    ExplicitWidth = 747
   end
   inherited ActionList: TActionList
     Left = 55
@@ -547,7 +547,7 @@ inherited SaleJournalForm: TSaleJournalForm
     Top = 152
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 424
+    Left = 472
     Top = 8
   end
   inherited RefreshDispatcher: TRefreshDispatcher
@@ -608,7 +608,7 @@ inherited SaleJournalForm: TSaleJournalForm
       end
       item
         Name = 'OperDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end

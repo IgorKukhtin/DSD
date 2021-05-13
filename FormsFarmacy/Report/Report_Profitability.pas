@@ -63,6 +63,8 @@ type
     actUnderreportedDE: TdsdOpenForm;
     dxBarButton2: TdxBarButton;
     dxBarButton3: TdxBarButton;
+    actPUSHInfo: TdsdShowPUSHMessage;
+    spPUSH: TdsdStoredProc;
   private
     { Private declarations }
   public

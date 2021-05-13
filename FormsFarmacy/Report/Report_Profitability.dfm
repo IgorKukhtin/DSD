@@ -432,6 +432,9 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
     end
   end
   inherited ActionList: TActionList
+    inherited actRefresh: TdsdDataSetRefresh
+      BeforeAction = actPUSHInfo
+    end
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -658,6 +661,19 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actPUSHInfo: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSH
+      StoredProcList = <
+        item
+          StoredProc = spPUSH
+        end
+        item
+        end>
+      Caption = 'actPUSHInfo'
+      PUSHMessageType = pmtInformation
     end
   end
   inherited MasterDS: TDataSource
@@ -889,5 +905,47 @@ inherited Report_ProfitabilityForm: TReport_ProfitabilityForm
     PackSize = 1
     Left = 688
     Top = 240
+  end
+  object spPUSH: TdsdStoredProc
+    StoredProcName = 'gpReport_Profitability_ShowPUSH'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDateStart'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateFinal'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 314
+    Top = 296
   end
 end
