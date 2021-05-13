@@ -46,20 +46,28 @@ RETURNS TABLE (-- Информативно - для Диалога
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCurrencyValueUSD      NUMERIC (20, 10);
+   DECLARE vbCurrencyValueUSD NUMERIC (20, 10);
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- !замена! Курс, будем пересчитывать из-за кросс-курса
-     vbCurrencyValueUSD:= ROUND (inCurrencyValueEUR / CASE WHEN inCurrencyValueCross > 0 THEN inCurrencyValueCross ELSE 1 END, 2);
-   --vbCurrencyValueUSD:= inCurrencyValueEUR / CASE WHEN inCurrencyValueCross > 0 THEN inCurrencyValueCross ELSE 1 END;
-   --vbCurrencyValueUSD:= inCurrencyValueUSD;
+     -- !замена! Курс, будем пересчитывать из-за кросс-курса, 2 знака
+     vbCurrencyValueUSD:= zfCalc_CurrencyTo_Cross (inCurrencyValueEUR, inCurrencyValueCross);
 
+
+     -- если Оплата = 0 + НЕ все списание
+     IF inAmountToPay_GRN <> inAmountDiscount
+        AND inAmountGRN      = 0
+        AND inAmountUSD      = 0
+        AND inAmountEUR      = 0
+        AND inAmountCard     = 0
+     THEN
+         -- обнулили
+         inAmountDiscount:= 0;
 
      -- если есть USD, меняем inAmountDiscount, т.к. Кросс-курс
-     IF inAmountUSD > 0 AND inAmountGRN = 0
+     ELSEIF inAmountUSD > 0 AND inAmountDiscount = 0 -- inAmountGRN = 0 AND 1=0
      THEN
          inAmountDiscount:= zfCalc_CurrencyFrom (-- округлили до целых EUR
                                                  zfCalc_CurrencyCross (inAmountUSD, inCurrencyValueCross, 1)
@@ -133,16 +141,24 @@ BEGIN
              -- Сдача, грн
            , CASE WHEN tmp.AmountDiff < 0
                        -- сумма итак в ГРН
-                       THEN -1 * (tmp.AmountDiff - (tmp.AmountDiff - FLOOR (ROUND(tmp.AmountDiff/10, 0)*10)))
+                     --THEN -1 * (tmp.AmountDiff - (tmp.AmountDiff - FLOOR (ROUND(tmp.AmountDiff/10, 0)*10)))
+                       THEN -1 * tmp.AmountDiff
 
                   ELSE 0
              END :: TFloat AS AmountDiff
 
              -- Дополнительная скидка - ГРН
            , CASE WHEN tmp.AmountDiff < 0 AND tmp.AmountDiff <> FLOOR (ROUND(tmp.AmountDiff/10, 0)*10) AND inAmountToPay_GRN > 0
+                       -- добавляем к скидке так, чтоб сдача делилась на 10грн
                        THEN inAmountDiscount + (tmp.AmountDiff - FLOOR (ROUND(tmp.AmountDiff/10, 0)*10))
+
+                  WHEN tmp.AmountDiff > 0 AND zfCalc_CurrencyTo (tmp.AmountDiff, inCurrencyValueEUR, 1) <> FLOOR (zfCalc_CurrencyTo (tmp.AmountDiff, inCurrencyValueEUR, 1))
+                       -- добавляем к скидке так, чтоб остаток EUR - был целым
+                       THEN inAmountDiscount + zfCalc_CurrencyFrom (zfCalc_CurrencyTo (tmp.AmountDiff, inCurrencyValueEUR, 1) - ROUND (zfCalc_CurrencyTo (tmp.AmountDiff, inCurrencyValueEUR, 1), 0), inCurrencyValueEUR, 1)
+
                   ELSE inAmountDiscount
              END :: TFloat AS AmountDiscount
+
              -- Дополнительная скидка - EUR
            , zfCalc_SummIn (1, zfCalc_CurrencyTo (
              CASE WHEN tmp.AmountDiff < 0 AND tmp.AmountDiff <> FLOOR (ROUND(tmp.AmountDiff/10, 0)*10) AND inAmountToPay_GRN > 0
@@ -151,7 +167,7 @@ BEGIN
              END, inCurrencyValueEUR, 1), 1) :: TFloat AS AmountDiscount_curr
 
              -- Курс, может будем пересчитывать из-за кросс-курса
-           , vbCurrencyValueUSD AS CurrencyValueUSD
+           , inCurrencyValueUSD :: TFLoat AS CurrencyValueUSD
 
              -- AmountPay, ГРН
            , tmp.AmountPay_GRN :: TFloat AS AmountPay

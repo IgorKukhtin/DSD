@@ -22,6 +22,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SalePodium(
    OUT outTotalSumm                     TFloat    , -- +Сумма вх. в валюте
    OUT outTotalSummBalance              TFloat    , -- +Сумма вх. ГРН
  INOUT ioOperPriceList                  TFloat    , -- *** - Цена факт ГРН
+   OUT outOperPriceListReal_curr        TFloat    , -- *** - Цена факт в валюте
 
    OUT outTotalSummPriceList            TFloat    , -- +Сумма по прайсу в ГРН
    OUT outTotalSummPriceList_curr       TFloat    , -- +Сумма по прайсу в валюте***
@@ -779,6 +780,9 @@ BEGIN
 -- then
 --    RAISE EXCEPTION 'Ошибка.<%>', ioOperPriceList;
 -- end if;
+
+     -- посчитали на финише
+     outOperPriceListReal_curr:= ROUND (zfCalc_CurrencyTo (ioOperPriceList, vbCurrencyValue_pl, vbParValue_pl), 2);
 
 
      -- Обнуляем Цену вх. для грида - т.к. у пользователя Магазина НЕТ Прав

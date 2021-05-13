@@ -2449,7 +2449,6 @@ object MainForm: TMainForm
         'LogMemo')
       ParentFont = False
       TabOrder = 1
-      ExplicitWidth = 242
     end
     object LogMemo2: TMemo
       Left = 1
@@ -2467,7 +2466,6 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 2
       Visible = False
-      ExplicitWidth = 242
     end
   end
   object DataSource: TDataSource

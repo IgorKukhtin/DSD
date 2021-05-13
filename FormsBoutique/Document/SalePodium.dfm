@@ -1081,6 +1081,18 @@ object SalePodiumForm: TSalePodiumForm
             HeaderAlignmentVert = vaCenter
             Width = 46
           end
+          object OperPriceListReal_curr: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1092#1072#1082#1090' EUR'
+            DataBinding.FieldName = 'OperPriceListReal_curr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1092#1072#1082#1090' '#1074' '#1074#1072#1083#1102#1090#1077', '#1089#1086' '#1074#1089#1077#1084#1080' '#1089#1082#1080#1076#1082#1072#1084#1080
+            Options.Editing = False
+            Width = 70
+          end
           object OperPriceListReal: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1092#1072#1082#1090' '#1043#1056#1053
             DataBinding.FieldName = 'OperPriceListReal'
@@ -3221,6 +3233,14 @@ object SalePodiumForm: TSalePodiumForm
         ComponentItem = 'OperPriceListReal'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outOperPriceListReal_curr'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPriceListReal_curr'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item

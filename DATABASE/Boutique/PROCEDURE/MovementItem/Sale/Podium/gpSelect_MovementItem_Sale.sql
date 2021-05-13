@@ -22,7 +22,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, PartionId Integer
              , DiscountSaleKindId Integer, DiscountSaleKindName TVarChar
              , Amount TFloat, Remains TFloat
              , OperPrice TFloat, CountForPrice TFloat
-             , OperPriceList TFloat, OperPriceList_curr TFloat, OperPriceList_original TFloat, OperPriceListReal TFloat
+             , OperPriceList TFloat, OperPriceList_curr TFloat, OperPriceList_original TFloat, OperPriceListReal TFloat, OperPriceListReal_curr TFloat
              , SummChangePercent_curr     TFloat
              , TotalChangePercent_curr    TFloat
              , TotalChangePercentPay_curr TFloat
@@ -335,6 +335,8 @@ BEGIN
            , tmpMI.OperPriceList_original  :: TFloat AS OperPriceList_curr
              -- Цена факт ГРН, со всеми скидками
            , tmpMI.OperPriceListReal       :: TFloat AS OperPriceListReal
+             -- Цена факт в валюте, со всеми скидками
+           , ROUND (zfCalc_CurrencyTo (tmpMI.OperPriceListReal, CASE WHEN tmpMI_Child.CurrencyValue_eur > 0 THEN tmpMI_Child.CurrencyValue_eur ELSE tmpMI.CurrencyValue END, 1), 2)  :: TFloat AS OperPriceListReal_curr
 
            , tmpMI.SummChangePercent_curr                                   :: TFloat AS SummChangePercent_curr     -- Итого сумма Скидки: 2)дополнительная
            , (tmpMI.TotalChangePercent_curr - tmpMI.SummChangePercent_curr) :: TFloat AS TotalChangePercent_curr    -- Итого сумма Скидки: 1)по %скидки

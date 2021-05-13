@@ -21,6 +21,7 @@ $BODY$
   DECLARE vbExtraChargesPercent TFloat;
 
   DECLARE vbPartnerId        Integer;
+  DECLARE vbJuridicalId      Integer;
   DECLARE vbUnitId_From      Integer;
   DECLARE vbArticleLoss_From Integer;
   DECLARE vbContractId       Integer;
@@ -51,6 +52,7 @@ BEGIN
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN Object_From.Id ELSE 0 END, 0) AS UnitId_From
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_ArticleLoss() THEN Object_From.Id ELSE 0 END, 0) AS ArticleLoss_From
           , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
+          , COALESCE (OL_Juridical.ChildObjectId, 0)           AS JuridicalId
           
           , CASE WHEN COALESCE (Object_Route.ValueData, '')    ILIKE '%самовывоз%'
                    OR COALESCE (Object_Contract.ValueData, '') ILIKE '%обмен%'
@@ -61,7 +63,7 @@ BEGIN
             END AS isLessWeigth
 
             INTO vbOperDatePartner, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
-               , vbPartnerId, vbUnitId_From, vbArticleLoss_From, vbContractId, vbIsLessWeigth
+               , vbPartnerId, vbUnitId_From, vbArticleLoss_From, vbContractId, vbJuridicalId, vbIsLessWeigth
      FROM Movement
           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                  ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -107,6 +109,48 @@ BEGIN
      IF COALESCE (vbContractId, 0) = 0 AND vbUnitId_From = 0 AND vbArticleLoss_From = 0
      THEN
          RAISE EXCEPTION 'Ошибка.В документе не определен <Договор>.Проведение невозможно.';
+     END IF;
+
+
+     -- проверка
+     IF COALESCE (vbJuridicalId, 0) <> COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbContractId AND OL.DescId = zc_ObjectLink_Contract_Juridical()), 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе выбран договор%для Юридического лица = <%>.%Необходимо выбрать договор%для Юридического лица = <%>.'
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbContractId AND OL.DescId = zc_ObjectLink_Contract_Juridical()))
+                       , CHR (13)
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (vbJuridicalId)
+                        ;
+/*
+select Object_Juridical_contract .ValueData, Object_Juridical_partner.ValueData, Movement.*, Object_From.*
+     FROM Movement
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                       ON MovementLinkObject_From.MovementId = Movement.Id
+                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+          LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_ContractFrom
+                                       ON MovementLinkObject_ContractFrom.MovementId = Movement.Id
+                                      AND MovementLinkObject_ContractFrom.DescId = zc_MovementLinkObject_Contract()
+          LEFT JOIN ObjectLink AS ObjectLink_ContractFrom_Juridical
+                               ON ObjectLink_ContractFrom_Juridical.ObjectId = MovementLinkObject_ContractFrom.ObjectId
+                              AND ObjectLink_ContractFrom_Juridical.DescId    = zc_ObjectLink_Contract_Juridical()
+
+          LEFT JOIN Object AS Object_Juridical_contract ON Object_Juridical_contract.Id = ObjectLink_ContractFrom_Juridical.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_PartnerFrom_Juridical
+                               ON ObjectLink_PartnerFrom_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                              AND ObjectLink_PartnerFrom_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+          LEFT JOIN Object AS Object_Juridical_partner ON Object_Juridical_partner.Id = ObjectLink_PartnerFrom_Juridical.ChildObjectId
+
+     WHERE Movement.DescId IN (zc_Movement_OrderExternal())
+       AND Movement.StatusId = zc_Enum_Status_Complete() -- IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
+       -- AND Movement.OperDate between '01.05.2020' and '01.12.2020'
+       AND Movement.OperDate between '01.01.2021' and '01.12.2021'
+--       AND Movement.Id = 17522252 
+ and ObjectLink_PartnerFrom_Juridical.ChildObjectId <> ObjectLink_ContractFrom_Juridical.ChildObjectId
+order by Movement.OperDate*/
      END IF;
 
 

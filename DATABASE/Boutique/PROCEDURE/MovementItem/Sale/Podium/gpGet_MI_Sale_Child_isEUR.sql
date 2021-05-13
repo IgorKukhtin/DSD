@@ -37,14 +37,19 @@ $BODY$
    DECLARE vbAmountPay_GRN      TFloat;
    DECLARE vbAmountEUR          TFloat;
    DECLARE vbAmountDiscount_GRN TFloat;
+   DECLARE vbCurrencyValueUSD   NUMERIC (20, 10);
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     -- !замена! Курс, будем пересчитывать из-за кросс-курса, 2 знака
+     vbCurrencyValueUSD:= zfCalc_CurrencyTo_Cross (inCurrencyValueEUR, inCurrencyValueCross);
+
+
      -- сумма оплаты - ГРН
      vbAmountPay_GRN := COALESCE (inAmountGRN, 0)
-                      + zfCalc_CurrencyFrom (inAmountUSD, inCurrencyValueUSD, 1)
+                      + zfCalc_CurrencyFrom (inAmountUSD, vbCurrencyValueUSD, 1)
                       + COALESCE (inAmountCard, 0)
                       + COALESCE (inAmountDiscount, 0)
                        ;

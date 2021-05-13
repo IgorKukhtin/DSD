@@ -403,6 +403,21 @@ END IF;*/
        AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SaleAsset())
        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
+
+
+     -- проверка
+     IF COALESCE (vbJuridicalId_To, 0) <> COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbContractId AND OL.DescId = zc_ObjectLink_Contract_Juridical()), 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе выбран договор%для Юридического лица = <%>.%Необходимо выбрать договор%для Юридического лица = <%>.'
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbContractId AND OL.DescId = zc_ObjectLink_Contract_Juridical()))
+                       , CHR (13)
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (vbJuridicalId_To)
+                        ;
+     END IF;
+
+
      -- Эти параметры прайс-листа нужны для ...
      SELECT lfGet.PriceWithVAT, lfGet.VATPercent INTO vbPriceWithVAT_PriceList, vbVATPercent_PriceList FROM lfGet_Object_PriceList (zc_PriceList_Basis()) AS lfGet;
      -- Эти параметры СПЕЦ. прайс-листа нужны для ...

@@ -206,6 +206,7 @@ type
     mactPrintCheckPriceReal: TMultiAction;
     actPrintCheckPriceReal: TdsdPrintAction;
     bbact_User_PriceReal: TdxBarButton;
+    OperPriceListReal_curr: TcxGridDBColumn;
   private
   public
   end;

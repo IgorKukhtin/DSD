@@ -1448,6 +1448,8 @@ begin
      StartDateCompleteEdit.Text:= DateToStr(now-1);
      EndDateCompleteEdit.Text:= DateToStr(now-1);
      pCompleteDocument_Pack;
+     //
+     fStop:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fBeginPartion_Period : Boolean;

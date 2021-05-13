@@ -43,10 +43,8 @@ $BODY$
    DECLARE vbCurrencyValueUSD      NUMERIC (20, 10);
 BEGIN
 
-     -- !замена! Курс, будем пересчитывать из-за кросс-курса
-     vbCurrencyValueUSD:= ROUND (inCurrencyValueEUR / CASE WHEN inCurrencyValueCross > 0 THEN inCurrencyValueCross ELSE 1 END, 2);
-   --vbCurrencyValueUSD:= inCurrencyValueEUR / CASE WHEN inCurrencyValueCross > 0 THEN inCurrencyValueCross ELSE 1 END;
-   --vbCurrencyValueUSD:= inCurrencyValueUSD;
+     -- !замена! Курс, будем пересчитывать из-за кросс-курса, 2 знака
+     vbCurrencyValueUSD:= zfCalc_CurrencyTo_Cross (inCurrencyValueEUR, inCurrencyValueCross);
 
 
      --
@@ -666,7 +664,8 @@ BEGIN
             , tmp_MI_res.Amount_USD_GRN             :: TFloat AS Amount_GRN
             , zfCalc_CurrencyTo (tmp_MI_res.Amount_USD_GRN, inCurrencyValueEUR, inParValueEUR) :: TFloat AS Amount_EUR
 
-            , vbCurrencyValueUSD :: TFloat AS CurrencyValue
+              -- !!!вернули что было!!!
+            , inCurrencyValueUSD :: TFloat AS CurrencyValue
             , inParValueUSD                AS ParValue
 
             , 0 :: Integer AS CashId_Exc
@@ -725,7 +724,8 @@ BEGIN
             , tmp.Amount_USD_grn :: TFloat AS Amount_GRN
             , 0                  :: TFloat AS Amount_EUR
 
-            , vbCurrencyValueUSD :: TFloat AS CurrencyValue
+              -- !!!вернули что было!!!
+            , inCurrencyValueUSD :: TFloat AS CurrencyValue
             , inParValueUSD                AS ParValue
             , tmpCash_ch.CashId :: Integer AS CashId_Exc
 

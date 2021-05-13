@@ -27,7 +27,7 @@ $BODY$
    DECLARE vbTmp    Integer;
    DECLARE vbCurrencyId_Client Integer;
    DECLARE vbCurrencyValue_pl_old TFloat;
-   DECLARE vbParValue_pl_old TFloat;
+   DECLARE vbParValue_pl_old      TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());

@@ -3,10 +3,15 @@
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child (Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child (Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child (Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child(
     IN inId             Integer  , -- ключ
     IN inMovementId     Integer  , --
+    IN inIsGRN          Boolean  , --
+    IN inIsUSD          Boolean  , --
+    IN inIsEUR          Boolean  , --
+    IN inIsCard         Boolean  , --
     IN inIsDiscount     Boolean  , --
     IN inSession        TVarChar   -- сессия пользователя
 )
@@ -222,7 +227,9 @@ BEGIN
                                 , tmpRes_all.AmountCard
 
                                   -- AmountUSD_GRN
-                                , zfCalc_CurrencyFrom (tmpRes_all.AmountUSD, tmpRes_all.CurrencyValue_USD, tmpRes_all.ParValue_USD) AS AmountUSD_GRN
+                              --, zfCalc_CurrencyFrom (tmpRes_all.AmountUSD, tmpRes_all.CurrencyValue_USD, tmpRes_all.ParValue_USD) AS AmountUSD_GRN
+                                  -- !замена! Курс, будем пересчитывать из-за кросс-курса, 2 знака
+                                , zfCalc_CurrencyFrom (tmpRes_all.AmountUSD, zfCalc_CurrencyTo_Cross (tmpRes_all.CurrencyValue_EUR, vbCurrencyValue_Cross), tmpRes_all.ParValue_USD) AS AmountUSD_GRN
                                   -- AmountEUR_GRN
                                 , zfCalc_CurrencyFrom (tmpRes_all.AmountEUR, tmpRes_all.CurrencyValue_EUR, tmpRes_all.ParValue_EUR) AS AmountEUR_GRN
 
@@ -347,4 +354,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_MI_Sale_Child (inId:= 0, inMovementId := 6231, inIsDiscount:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_MI_Sale_Child (inId:= 0, inMovementId := 6231, inIsDiscount:= FALSE, inIsGRN:= FALSE, inIsUSD:= FALSE, inIsEUR:= FALSE, inIsCard:= FALSE, inSession:= zfCalc_UserAdmin());

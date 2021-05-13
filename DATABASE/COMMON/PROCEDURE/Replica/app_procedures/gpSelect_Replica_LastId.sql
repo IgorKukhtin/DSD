@@ -23,32 +23,6 @@ BEGIN
                                           WHERE Id BETWEEN inId_start AND inId_start + inRec_count
                                          )
                 );
-                
-    -- если кол-во записей слишком много
-    IF inRec_count * 2 < (SELECT COUNT(Id) FROM _replica.table_update_data WHERE Id BETWEEN inId_start AND vbId_End)
-       OR EXISTS (SELECT 1
-                  FROM _replica.table_update_data
-                     --INNER JOIN soldtable ON soldtable.Id = _replica.zfCalc_WordText_Split_replica (table_update_data.pk_values, 1) :: BigInt
-                  WHERE table_update_data.Id BETWEEN inId_start AND vbId_End
-                    AND table_update_data.table_name ILIKE 'soldtable'
-                    AND table_update_data.operation  NOT ILIKE 'DELETE')
-    THEN
-        -- разорвем транзакцию
-        vbId_End:= (SELECT MAX (tmp.Id)
-                    FROM (SELECT table_update_data.Id
-                          FROM _replica.table_update_data
-                               LEFT JOIN soldtable ON soldtable.Id = CASE WHEN table_update_data.table_name ILIKE 'soldtable'
-                                                                           AND table_update_data.operation  NOT ILIKE 'DELETE'
-                                                                               THEN CAST (_replica.zfCalc_WordText_Split_replica (table_update_data.pk_values, 1) AS BigInt)
-                                                                          ELSE NULL
-                                                                     END
-                          WHERE table_update_data.Id BETWEEN inId_start AND vbId_End + inRec_count
-                            AND (soldtable.Id > 0 OR table_update_data.table_name NOT ILIKE 'soldtable' OR table_update_data.operation ILIKE 'DELETE')
-                          ORDER BY table_update_data.Id
-                          LIMIT (inRec_count / 4) :: Integer + 1
-                         ) AS tmp
-                   );
-    END IF;
 
 
     -- могли не найти, т.к. следующий Id за границей диапазона
@@ -66,7 +40,7 @@ BEGIN
                     );
 
     END IF;
-    
+
     -- если нет данных для команд, т.е. они уже удалены
     IF 1 < COALESCE ((SELECT SUM (CASE WHEN Object.Id IS NULL THEN 1 ELSE 0 END) - SUM (CASE WHEN Object.Id > 0 THEN 1 ELSE 0 END)
                       FROM _replica.table_update_data
@@ -93,12 +67,23 @@ BEGIN
         END IF;
 
     END IF;
-    
-    -- если реальное кол-во записей не соответсвует разнице по Id, значит вклинились транзакции, которые не видно, хотя могут быть и "потерянные" Id
-   /*IF (vbId_End - inId_start + 1) <> (SELECT COUNT(*) FROM _replica.table_update_data WHERE Id BETWEEN inId_start AND vbId_End)
+
+    -- если реальное кол-во записей не соответсвует разнице по Id, значит вклинились транзакции, которых не видно, хотя могут быть и "потерянные" Id
+    IF (vbId_End - inId_start + 1) <> (SELECT COUNT(*) FROM _replica.table_update_data WHERE Id BETWEEN inId_start AND vbId_End)
     THEN
+        -- делаем задержку на 200 MIN
+        vbId_End:= COALESCE ((SELECT MAX (Id) FROM _replica.table_update_data
+                              WHERE Id BETWEEN inId_start AND vbId_End
+                                AND last_modified < timezone('utc'::text, CURRENT_TIMESTAMP) - CASE WHEN EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 10 AND 16
+                                                                                                    THEN INTERVAL '30 MINUTES'
+                                                                                                    WHEN EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 17 AND 23
+                                                                                                    THEN INTERVAL '100 MINUTES'
+                                                                                                    ELSE INTERVAL '200 MINUTES'
+                                                                                               END -- :: INTERVAL
+                             ), inId_start - 1);
+
        -- нашли время начала этой транзакции - здесь значение без timezone
-       vbLast_modified:= (SELECT MAX (last_modified) FROM _replica.table_update_data WHERE Id BETWEEN vbId_End AND vbId_End);
+     /*vbLast_modified:= (SELECT MAX (last_modified) FROM _replica.table_update_data WHERE Id BETWEEN vbId_End AND vbId_End);
 
        -- Активные процессы
        CREATE TEMP TABLE _tmp_pg_stat_activity ON COMMIT DROP AS SELECT * FROM pg_stat_activity WHERE state ILIKE 'active'
@@ -147,18 +132,45 @@ BEGIN
                , vbId_End
                  -- здесь значение без timezone
                , vbLast_modified
-          FROM _tmp_pg_stat_activity AS tmp;
+          FROM _tmp_pg_stat_activity AS tmp;*/
 
-    END IF;*/
+    END IF;
+
+    -- если кол-во записей слишком много
+    IF inRec_count * 2 < (SELECT COUNT(Id) FROM _replica.table_update_data WHERE Id BETWEEN inId_start AND vbId_End)
+       OR EXISTS (SELECT 1
+                  FROM _replica.table_update_data
+                     --INNER JOIN soldtable ON soldtable.Id = _replica.zfCalc_WordText_Split_replica (table_update_data.pk_values, 1) :: BigInt
+                  WHERE table_update_data.Id BETWEEN inId_start AND vbId_End
+                    AND table_update_data.table_name ILIKE 'soldtable'
+                    AND table_update_data.operation  NOT ILIKE 'DELETE')
+    THEN
+        -- разорвем транзакцию
+        vbId_End:= (SELECT MAX (tmp.Id)
+                    FROM (SELECT table_update_data.Id
+                          FROM _replica.table_update_data
+                               LEFT JOIN soldtable ON soldtable.Id = CASE WHEN table_update_data.table_name ILIKE 'soldtable'
+                                                                           AND table_update_data.operation  NOT ILIKE 'DELETE'
+                                                                               THEN CAST (_replica.zfCalc_WordText_Split_replica (table_update_data.pk_values, 1) AS BigInt)
+                                                                          ELSE NULL
+                                                                     END
+                          WHERE table_update_data.Id BETWEEN inId_start AND vbId_End + inRec_count
+                            AND (soldtable.Id > 0 OR table_update_data.table_name NOT ILIKE 'soldtable' OR table_update_data.operation ILIKE 'DELETE')
+                          ORDER BY table_update_data.Id
+                          LIMIT (inRec_count / 4) :: Integer + 1
+                         ) AS tmp
+                   );
+    END IF;
+
 
     -- Результат
-    IF vbId_End > 5602489721
+  /*IF vbId_End > 5602489721
     THEN
          RETURN 5602489721;
     ELSE
          RETURN vbId_End;
-    END IF;
-    
+    END IF;*/
+
     RETURN vbId_End;
 
 END;
@@ -189,4 +201,4 @@ $BODY$
          , (SELECT Id_end FROM tmpRes) - (SELECT Id_start FROM tmpParams) + 1 AS Rec_count_calc
          , (SELECT Rec_count      FROM tmpParams) AS Rec_count
 */
--- SELECT _replica.gpSelect_Replica_LastId (4167545902, 100000) -- 4167192256 
+-- SELECT _replica.gpSelect_Replica_LastId (4167545902, 100000) -- 4167192256

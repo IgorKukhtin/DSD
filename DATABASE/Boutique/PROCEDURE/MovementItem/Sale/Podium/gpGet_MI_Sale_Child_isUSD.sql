@@ -38,9 +38,14 @@ $BODY$
    DECLARE vbAmountPay_GRN      TFloat;
    DECLARE vbAmountUSD          TFloat;
    DECLARE vbAmountDiscount_GRN TFloat;
+   DECLARE vbCurrencyValueUSD   NUMERIC (20, 10);
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
+
+
+     -- !замена! Курс, будем пересчитывать из-за кросс-курса, 2 знака
+     vbCurrencyValueUSD:= zfCalc_CurrencyTo_Cross (inCurrencyValueEUR, inCurrencyValueCross);
 
 
      -- сумма оплаты - ГРН
@@ -68,21 +73,21 @@ BEGIN
                                                  , 0)
 
                                        ELSE -- НЕ округлили
-                                            zfCalc_CurrencyTo (inAmountToPay - vbAmountPay_GRN, inCurrencyValueUSD, 1)
+                                            zfCalc_CurrencyTo (inAmountToPay - vbAmountPay_GRN, vbCurrencyValueUSD, 1)
                              END;
               -- если нет скидки, сформируем её и спишим "хвостик"
               IF vbAmountDiscount_GRN = 0
               THEN
                   -- пробуем списать весь остаток
-                  vbAmountDiscount_GRN:= inAmountToPay - zfCalc_CurrencyFrom (vbAmountUSD, inCurrencyValueUSD, 1);
+                  vbAmountDiscount_GRN:= inAmountToPay - zfCalc_CurrencyFrom (vbAmountUSD, vbCurrencyValueUSD, 1);
 
                   -- если большая сумма
                   IF ABS (vbAmountDiscount_GRN) >= zc_AmountDiscountGRN()
                   THEN
                       -- списываем ВСЕГДА - на разницу курсов
-                      vbAmountDiscount_GRN:= (inAmountToPay - vbAmountPay_GRN)
-                                           - zfCalc_CurrencyFrom (vbAmountUSD, inCurrencyValueUSD, 1)
-                                            ;
+                    --vbAmountDiscount_GRN:= (inAmountToPay - vbAmountPay_GRN)
+                    --                     - zfCalc_CurrencyFrom (vbAmountUSD, inCurrencyValueUSD, 1)
+                    --                      ;
                       -- списываем только КОП.
                       vbAmountDiscount_GRN:= vbAmountDiscount_GRN + (vbAmountDiscount_GRN - vbAmountDiscount_GRN) - FLOOR (vbAmountDiscount_GRN - vbAmountDiscount_GRN);
                   END IF;
@@ -98,7 +103,7 @@ BEGIN
 
      ELSE
          -- обнулили
-         vbAmountUSD := 0;
+         vbAmountUSD:= 0;
 
          -- если все 0
          IF inAmountGRN  = 0
@@ -120,7 +125,7 @@ BEGIN
      -- Результат
      RETURN QUERY
       WITH -- остаток к оплате - ГРН
-           tmpData_all AS (SELECT inAmountToPay - (vbAmountPay_GRN + zfCalc_CurrencyFrom (vbAmountUSD, inCurrencyValueUSD, 1)) AS AmountDiff
+           tmpData_all AS (SELECT inAmountToPay - (vbAmountPay_GRN + zfCalc_CurrencyFrom (vbAmountUSD, vbCurrencyValueUSD, 1)) AS AmountDiff
                           )
               -- данные - ГРН
             , tmpData AS (SELECT CASE WHEN tmpData_all.AmountDiff > 0
@@ -142,7 +147,7 @@ BEGIN
       SELECT -- Остаток, грн
              tmpData.AmountRemains :: TFloat AS AmountRemains
              -- Остаток, EUR
-           , zfCalc_SummIn (1, zfCalc_CurrencyTo (tmpData.AmountRemains, inCurrencyValueUSD, 1), 1) :: TFloat AS AmountRemains_curr
+           , zfCalc_SummIn (1, zfCalc_CurrencyTo (tmpData.AmountRemains, vbCurrencyValueUSD, 1), 1) :: TFloat AS AmountRemains_curr
 
              -- Сдача, грн
            , tmpData.AmountDiff :: TFloat AS AmountDiff
