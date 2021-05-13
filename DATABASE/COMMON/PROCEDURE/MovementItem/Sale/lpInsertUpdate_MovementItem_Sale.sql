@@ -101,6 +101,9 @@ BEGIN
                                , CHR (13)
                                , zfConvert_FloatToString (outPricePromo)
                                 ;
+            ELSEIF COALESCE (ioPrice, 0) <> outPricePromo
+            THEN
+                outMovementId_Promo:= NULL;
             END IF;
 
         ELSEIF COALESCE (ioId, 0) = 0 /*AND vbTaxPromo <> 0*/
