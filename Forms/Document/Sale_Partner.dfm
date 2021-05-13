@@ -21,7 +21,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       inherited cxGrid: TcxGrid
         Width = 1275
         Height = 300
-        ExplicitLeft = -3
         ExplicitWidth = 1275
         ExplicitHeight = 300
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1823,7 +1822,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         item
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDMaster2'
-          IndexFieldNames = ''
         end>
       Params = <
         item
@@ -1884,7 +1882,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'OperDate_TransportGoods'
           DataType = ftDateTime
@@ -2736,6 +2734,30 @@ inherited Sale_PartnerForm: TSale_PartnerForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Sale'
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStatusCode'
+        Value = ''
+        Component = StatusGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisReCalcPrice'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     Left = 128
     Top = 56
   end
@@ -2752,7 +2774,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -3034,7 +3056,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'OperDate_TransportGoods'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'OperDate_TransportGoods'
         DataType = ftDateTime
@@ -3112,7 +3134,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'PartionGoodsDate'
-        Value = 'NULL'
+        Value = Null
         Component = edPartionGoodsDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -3425,43 +3447,11 @@ inherited Sale_PartnerForm: TSale_PartnerForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Sale_Partner_SetErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 718
     Top = 544
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Sale_Partner_SetUnErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 718
     Top = 464
   end
@@ -3821,7 +3811,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4286,7 +4276,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'ChangePercent'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = edChangePercent
         DataType = ftFloat
         ParamType = ptInput
@@ -4339,7 +4329,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDatePartner
         DataType = ftDateTime
         MultiSelectSeparator = ','

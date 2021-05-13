@@ -933,6 +933,15 @@ inherited Sale_OrderForm: TSale_OrderForm
       TabOrder = 58
       Width = 102
     end
+    object cbReCalcPrice: TcxCheckBox
+      Left = 8
+      Top = 121
+      Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1088#1080' '#1087'/'#1087
+      Properties.ReadOnly = False
+      State = cbsChecked
+      TabOrder = 59
+      Width = 135
+    end
   end
   object edChangePercentAmount: TcxCurrencyEdit [2]
     Left = 171
@@ -1900,7 +1909,6 @@ inherited Sale_OrderForm: TSale_OrderForm
         item
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDMaster2'
-          IndexFieldNames = ''
         end>
       Params = <
         item
@@ -1974,7 +1982,7 @@ inherited Sale_OrderForm: TSale_OrderForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'OperDate_TransportGoods'
           DataType = ftDateTime
@@ -2970,6 +2978,14 @@ inherited Sale_OrderForm: TSale_OrderForm
         Component = cbPrinted
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisReCalcPrice'
+        Value = Null
+        Component = cbReCalcPrice
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 128
     Top = 56
@@ -2987,7 +3003,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -3276,7 +3292,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Name = 'OperDate_TransportGoods'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'OperDate_TransportGoods'
         DataType = ftDateTime
@@ -3361,7 +3377,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Name = 'PartionGoodsDate'
-        Value = 'NULL'
+        Value = Null
         Component = edPartionGoodsDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -3677,43 +3693,11 @@ inherited Sale_OrderForm: TSale_OrderForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Sale_SetErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 718
     Top = 512
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Sale_SetUnErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 718
     Top = 464
   end
@@ -4189,7 +4173,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4667,7 +4651,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Name = 'ChangePercent'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = edChangePercent
         DataType = ftFloat
         ParamType = ptInput
@@ -4720,7 +4704,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDatePartner
         DataType = ftDateTime
         MultiSelectSeparator = ','

@@ -1,11 +1,13 @@
 -- Function: gpUpdate_Status_Sale()
 
-DROP FUNCTION IF EXISTS gpUpdate_Status_Sale (Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpUpdate_Status_Sale (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Status_Sale (Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Status_Sale(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inStatusCode          Integer   , -- Статус документа. Возвращается который должен быть
    OUT outPrinted            Boolean   ,
+    IN inisReCalcPrice       Boolean   , -- Пересчет цен при п/п
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Boolean AS

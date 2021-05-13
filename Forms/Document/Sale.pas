@@ -252,6 +252,7 @@ type
     actUpdate_InvnumberDialog: TExecuteDialog;
     macUpdate_Invnumber: TMultiAction;
     bbUpdate_Invnumber: TdxBarButton;
+    cbReCalcPrice: TcxCheckBox;
   private
     { Private declarations }
   public

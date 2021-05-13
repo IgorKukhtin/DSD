@@ -1,27 +1,27 @@
 inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
   ClientHeight = 645
-  ClientWidth = 1293
+  ClientWidth = 1278
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1309
-  ExplicitHeight = 680
+  ExplicitWidth = 1294
+  ExplicitHeight = 683
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 166
-    Width = 1293
-    Height = 479
+    Top = 167
+    Width = 1278
+    Height = 478
     ExplicitTop = 166
     ExplicitWidth = 1293
     ExplicitHeight = 479
-    ClientRectBottom = 479
-    ClientRectRight = 1293
+    ClientRectBottom = 478
+    ClientRectRight = 1278
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1293
       ExplicitHeight = 455
       inherited cxGrid: TcxGrid
-        Width = 1293
-        Height = 455
+        Width = 1278
+        Height = 454
         ExplicitWidth = 1293
         ExplicitHeight = 455
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -517,11 +517,11 @@ inherited SaleForm: TSaleForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1293
-    Height = 140
+    Width = 1278
+    Height = 141
     TabOrder = 3
-    ExplicitWidth = 1293
-    ExplicitHeight = 140
+    ExplicitWidth = 1430
+    ExplicitHeight = 141
     inherited edInvNumber: TcxTextEdit
       Left = 8
       ExplicitLeft = 8
@@ -1012,6 +1012,15 @@ inherited SaleForm: TSaleForm
     Properties.ShowTime = False
     TabOrder = 27
     Width = 102
+  end
+  object cbReCalcPrice: TcxCheckBox [24]
+    Left = 8
+    Top = 121
+    Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1088#1080' '#1087'/'#1087
+    Properties.ReadOnly = False
+    State = cbsChecked
+    TabOrder = 28
+    Width = 135
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -3137,9 +3146,17 @@ inherited SaleForm: TSaleForm
         Component = cbPrinted
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisReCalcPrice'
+        Value = Null
+        Component = cbReCalcPrice
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 176
-    Top = 32
+    Left = 120
+    Top = 8
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale'
@@ -5222,8 +5239,8 @@ inherited SaleForm: TSaleForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 188
-    Top = 16
+    Left = 100
+    Top = 8
   end
   object spSelectPrint_ExpPack: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_ExpPack_Print'
