@@ -542,6 +542,7 @@ BEGIN
            , Object_PartionDateKind.Id                                           AS PartionDateKindId
            , Object_PartionDateKind.ValueData                                    AS PartionDateKindName
            , MovementItem.PricePartionDate                                       AS PricePartionDate
+           , Object_Accommodation.ValueData                                   AS AccommodationName
 
        FROM tmpMI_Sum AS MovementItem
 
@@ -571,6 +572,13 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_Month
                                 ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
                                AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
+
+          LEFT OUTER JOIN AccommodationLincGoods AS Accommodation
+                                                 ON Accommodation.UnitId = vbUnitId
+                                                AND Accommodation.GoodsId = MovementItem.ObjectId 
+                                                AND Accommodation.isErased = False
+          -- Размещение товара
+          LEFT JOIN Object AS Object_Accommodation  ON Object_Accommodation.ID = Accommodation.AccommodationId
 
        WHERE Movement.isDeferred = True
          AND (inType = 0 OR inType = 1 AND Movement.isShowVIP = TRUE OR inType = 2 AND Movement.isShowTabletki = TRUE OR inType = 3 AND Movement.isShowLiki24 = TRUE)

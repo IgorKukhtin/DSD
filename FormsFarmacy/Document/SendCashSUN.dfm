@@ -225,15 +225,6 @@ inherited SendCashSUNForm: TSendCashSUNForm
     TabOrder = 5
   end
   inherited ActionList: TActionList
-    inherited actPrint: TdsdPrintAction
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-        end
-        item
-          DataSet = PrintItemsCDS
-        end>
-    end
     inherited actPartionGoodsChoiceForm: TOpenChoiceForm
       GuiParams = <
         item
@@ -293,16 +284,19 @@ inherited SendCashSUNForm: TSendCashSUNForm
     inherited actClearCommentSend: TdsdSetDefaultParams
       DefaultParams = <
         item
+          Param.Value = Null
           Param.ComponentItem = 'CommentSendId'
           Param.MultiSelectSeparator = ','
           Value = Null
         end
         item
+          Param.Value = Null
           Param.ComponentItem = 'CommentSendCode'
           Param.MultiSelectSeparator = ','
           Value = Null
         end
         item
+          Param.Value = Null
           Param.ComponentItem = 'CommentSendName'
           Param.DataType = ftString
           Param.MultiSelectSeparator = ','
