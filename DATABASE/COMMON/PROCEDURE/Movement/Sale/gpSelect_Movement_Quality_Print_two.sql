@@ -35,7 +35,7 @@ BEGIN
                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                 );
 
-     -- выбираем все док для печати качественных   (1 или все)
+   /*  -- выбираем все док для печати качественных   (1 или все)
      CREATE TEMP TABLE tmpMovement (Id Integer) ON COMMIT DROP;
      INSERT INTO tmpMovement (Id)
           SELECT DISTINCT Movement_Sale.Id AS Id
@@ -85,27 +85,128 @@ BEGIN
                                  ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                                 AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
        ;
+*/
+     CREATE TEMP TABLE tmpCursor1 (MovementId Integer
+                              , InvNumber  TVarChar
+                              , OperDate TDateTime
+                              , InvNumberPartner TVarChar
+                              , OperDatePartner TDateTime
+                              , JuridicalName_From  TVarChar
+                              , JuridicalAddress_From  TVarChar
+                              , Phone_From  TVarChar
+                              , ContractName  TVarChar
+                              , PartnerName  TVarChar
+                              , GoodsGroupName  TVarChar
+                              , MeasureName  TVarChar
+                              , GoodsCode  TVarChar
+                              , CodeUKTZED TVarChar
+                              , Article_Juridical  TVarChar
+                              , Quality2_Juridical  TVarChar
+                              , Quality10_Juridical  TVarChar
+                              , GoodsName TVarChar 
+                              , GoodsKindName TVarChar
+                              , AmountPartner  TFloat
+                              , AmountPartner_str TVarChar
+                              , Amount5 TFloat
+                              , Amount9  TFloat
+                              , Amount13 TFloat
+                              , OperDateIn TDateTime
+                              , OperDateIn_str4 TDateTime
+                              , OperDateOut TDateTime
+                              , OperDate_end TDateTime
+                              , OperDate_part TDateTime
+                              , NormInDays_gk_str TVarChar
+                              , CarModelName TVarChar
+                              , CarName TVarChar
+                              , isJuridicalBasis Boolean
+                              , QualityCode TVarChar
+                              , QualityName TVarChar
+                              , QualityComment Text
+                              , Value17  Text
+                              , Value1 TVarChar
+                              , Value2 TVarChar
+                              , Value3 TVarChar
+                              , Value4 TVarChar
+                              , Value5 TVarChar
+                              , Value6 TVarChar
+                              , Value7 TVarChar
+                              , Value8 TVarChar
+                              , Value9 TVarChar
+                              , Value10 TVarChar
+                              , Value11_gk TVarChar
+                              , InvNumber_Quality TVarChar
+                              , OperDate_Quality TDateTime
+                              , OperDateCertificate TVarChar
+                              , CertificateNumber TVarChar
+                              , CertificateSeries TVarChar
+                              , CertificateSeriesNumber TVarChar
+                              , ExpertPrior Text
+                              , ExpertLast Text
+                              , QualityNumber TVarChar
+                              , QualityComment_Movement Text
+                              , ReportType TVarChar
+                              , InvNumber_Order TVarChar) ON COMMIT DROP;
+     INSERT INTO tmpCursor1 (MovementId, InvNumber, OperDate, InvNumberPartner, OperDatePartner
+                        , JuridicalName_From, JuridicalAddress_From, Phone_From, ContractName, PartnerName
+                        , GoodsGroupName, MeasureName, GoodsCode, CodeUKTZED, Article_Juridical
+                        , Quality2_Juridical, Quality10_Juridical
+                        , GoodsName , GoodsKindName , AmountPartner, AmountPartner_str
+                        , Amount5 , Amount9, Amount13 
+                        , OperDateIn, OperDateIn_str4 , OperDateOut , OperDate_end , OperDate_part 
+                        , NormInDays_gk_str , CarModelName, CarName
+                        , isJuridicalBasis 
+                        , QualityCode, QualityName, QualityComment
+                        , Value17  , Value1 , Value2, Value3, Value4, Value5, Value6, Value7, Value8, Value9, Value10, Value11_gk
+                        , InvNumber_Quality, OperDate_Quality, OperDateCertificate, CertificateNumber, CertificateSeries, CertificateSeriesNumber
+                        , ExpertPrior, ExpertLast
+                        , QualityNumber, QualityComment_Movement
+                        , ReportType, InvNumber_Order)
+  WITH
+  tmpMovement AS (
+          SELECT DISTINCT Movement_Sale.Id AS Id
+          FROM Movement
+              LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
+                                             ON MovementLinkMovement_Child.MovementId = Movement.Id 
+                                            AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
+              INNER JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MovementLinkMovement_Child.MovementChildId
+                                                  AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
+              INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                            ON MovementLinkObject_To.MovementId = Movement_Sale.Id
+                                           AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                           AND MovementLinkObject_To.ObjectId = vbToId
+          WHERE Movement.DescId = zc_Movement_QualityDoc()
+            AND Movement.OperDate = vbOperDate
+            AND Movement.StatusId = zc_Enum_Status_Complete()
+            AND inisAll = TRUE
+         UNION ALL
+          SELECT inMovementId AS Id
+          WHERE inisAll = FALSE
+         )
+     
+   , tmpGoodsProperty AS(
+       SELECT DISTINCT Movement.Id AS MovementId
+            , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId
+                                    , COALESCE (ObjectLink_Partner_Juridical.ChildObjectId
+                                    , MovementLinkObject_To.ObjectId)
+                                    , MovementLinkObject_To.ObjectId
+                                     ) AS GoodsPropertyId
+       FROM tmpMovement AS Movement
+            LEFT JOIN MovementLinkMovement AS MLM_Child
+                                           ON MLM_Child.MovementChildId = Movement.Id 
+                                          AND MLM_Child.DescId          = zc_MovementLinkMovement_Child()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                         ON MovementLinkObject_Contract.MovementId = MLM_Child.MovementId
+                                        AND MovementLinkObject_Contract.DescId     = zc_MovementLinkObject_Contract()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = MLM_Child.MovementChildId
+                                        AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+      )
 
-
-    -- очень важная проверка
-    IF COALESCE ((SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId), 0) <> zc_Enum_Status_Complete()
-    THEN
-        IF (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId) = zc_Enum_Status_Erased()
-        THEN
-            RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> удален.', (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId)), (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId), (SELECT DATE (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId);
-        END IF;
-        IF (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId) = zc_Enum_Status_UnComplete()
-        THEN
-            RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> не проведен.', (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId)), (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId), (SELECT DATE (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId);
-        END IF;
-        -- это уже странная ошибка
-        RAISE EXCEPTION 'Ошибка.Документ <%>.', (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId));
-    END IF;
-
-
-     -- Данные: заголовок + строчная часть для ФОРМЫ 1
-     OPEN Cursor1 FOR
-       WITH tmpMI AS
+,  
+tmpMI AS
             (SELECT MovementItem.MovementId
                   , MovementItem.ObjectId
                   , SUM (MovementItem.Amount) :: TFloat AS Amount
@@ -578,12 +679,115 @@ BEGIN
              , Object_Goods.ValueData
              , Object_GoodsKind.ValueData
       ;
-     RETURN NEXT Cursor1;
+      
+      
+----Cursor 2
+     CREATE TEMP TABLE tmpCursor2 (MovementId Integer
+                              , InvNumber  TVarChar
+                              , OperDate TDateTime
+                              , InvNumberPartner TVarChar
+                              , OperDatePartner TDateTime
+                              , JuridicalName_From  TVarChar
+                              , JuridicalAddress_From  TVarChar
+                              , PartnerName  TVarChar
+                              , GoodsGroupName  TVarChar
+                              , MeasureName  TVarChar
+                              , GoodsCode  TVarChar
+                              , CodeUKTZED TVarChar
+                              , GoodsName TVarChar 
+                              , GoodsKindName TVarChar
+                              , AmountPartner  TFloat
+                              , Amount5 TFloat
+                              , Amount9  TFloat
+                              , Amount13 TFloat
+                              , OperDateIn TDateTime
+                              , OperDateIn_str4 TVarChar
+                              , OperDateOut TDateTime
+                              , OperDate_end TDateTime
+                              , NormInDays_gk_str TVarChar
+                            
+                              , CarModelName TVarChar
+                              , CarName TVarChar
+                              , isJuridicalBasis Boolean
+                              
+                              , NumberPrint TFloat
+                              , QualityCode TVarChar
+                              , QualityName TVarChar
+                              , QualityComment Text
+                              , Value17  Text, Value1 TVarChar, Value2 TVarChar, Value3 TVarChar, Value4 TVarChar, Value5 TVarChar, Value6 TVarChar, Value7 TVarChar, Value8 TVarChar, Value9 TVarChar, Value10 TVarChar
+                              , InvNumber_Quality TVarChar
+                              , OperDate_Quality TDateTime
+                              , OperDateCertificate TVarChar
+                              , CertificateNumber TVarChar
+                              , CertificateSeries TVarChar
+                              , CertificateSeriesNumber TVarChar
+                              , ExpertPrior Text
+                              , ExpertLast Text
+                              , QualityNumber TVarChar
+                              , QualityComment_Movement Text
+                              , ReportType TVarChar
+                              , MovementId_find Integer) ON COMMIT DROP;
 
+     INSERT INTO tmpCursor2 (MovementId, InvNumber, OperDate, InvNumberPartner, OperDatePartner
+                        , JuridicalName_From, JuridicalAddress_From, PartnerName
+                        , GoodsGroupName, MeasureName, GoodsCode, CodeUKTZED
+                        , GoodsName , GoodsKindName , AmountPartner
+                        , Amount5 , Amount9, Amount13 
+                        , OperDateIn, OperDateIn_str4 , OperDateOut , OperDate_end 
+                        , NormInDays_gk_str , CarModelName, CarName
+                        , isJuridicalBasis , NumberPrint
+                        , QualityCode, QualityName, QualityComment
+                        , Value17  , Value1 , Value2, Value3, Value4, Value5, Value6, Value7, Value8, Value9, Value10
+                        , InvNumber_Quality, OperDate_Quality, OperDateCertificate, CertificateNumber, CertificateSeries, CertificateSeriesNumber
+                        , ExpertPrior, ExpertLast
+                        , QualityNumber, QualityComment_Movement
+                        , ReportType, MovementId_find)
 
-     -- Данные: заголовок + строчная часть ДЛЯ ФОРМЫ 2
-     OPEN Cursor2 FOR
-       WITH tmpMI AS
+       WITH
+       tmpMovement AS (
+          SELECT DISTINCT Movement_Sale.Id AS Id
+          FROM Movement
+              LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
+                                             ON MovementLinkMovement_Child.MovementId = Movement.Id 
+                                            AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
+              INNER JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MovementLinkMovement_Child.MovementChildId
+                                                  AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
+              INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                            ON MovementLinkObject_To.MovementId = Movement_Sale.Id
+                                           AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                           AND MovementLinkObject_To.ObjectId = vbToId
+          WHERE Movement.DescId = zc_Movement_QualityDoc()
+            AND Movement.OperDate = vbOperDate
+            AND Movement.StatusId = zc_Enum_Status_Complete()
+            AND inisAll = TRUE
+         UNION ALL
+          SELECT inMovementId AS Id
+          WHERE inisAll = FALSE
+         )
+     
+   , tmpGoodsProperty AS(
+       SELECT DISTINCT Movement.Id AS MovementId
+            , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId
+                                    , COALESCE (ObjectLink_Partner_Juridical.ChildObjectId
+                                    , MovementLinkObject_To.ObjectId)
+                                    , MovementLinkObject_To.ObjectId
+                                     ) AS GoodsPropertyId
+       FROM tmpMovement AS Movement
+            LEFT JOIN MovementLinkMovement AS MLM_Child
+                                           ON MLM_Child.MovementChildId = Movement.Id 
+                                          AND MLM_Child.DescId          = zc_MovementLinkMovement_Child()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                         ON MovementLinkObject_Contract.MovementId = MLM_Child.MovementId
+                                        AND MovementLinkObject_Contract.DescId     = zc_MovementLinkObject_Contract()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = MLM_Child.MovementChildId
+                                        AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+      )
+
+     , tmpMI AS
                     (SELECT MovementItem.MovementId
                           , MovementItem.ObjectId
                           , SUM (MovementItem.Amount) :: TFloat AS Amount
@@ -1006,8 +1210,19 @@ BEGIN
       ORDER BY Movement.Id
              , tmpGoodsQuality.QualityCode
              , Object_Goods.ValueData, Object_GoodsKind.ValueData
+       ;
+      
+     -- Данные: заголовок + строчная часть для ФОРМЫ 1
+     OPEN Cursor1 FOR
+      SELECT *
+      FROM tmpCursor1;
+     RETURN NEXT Cursor1;
 
-      ;
+
+     -- Данные: заголовок + строчная часть ДЛЯ ФОРМЫ 2
+     OPEN Cursor2 FOR
+      SELECT *
+      FROM tmpCursor2;
      RETURN NEXT Cursor2;
 
 
@@ -1026,5 +1241,6 @@ $BODY$
  11.02.15                                                       *
 */
 
--- тест
--- SELECT * FROM gpSelect_Movement_Quality_Print (inMovementId:= 19042873, inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 1>";
+
+--select * from gpSelect_Movement_Quality_Print_two(inMovementId := 19042873 , inisAll := 'True' ,  inSession := '5');
+--FETCH ALL "<unnamed portal 9>";
