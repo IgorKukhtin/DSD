@@ -75,6 +75,9 @@ type
     MovementId_Sale_ch2: TcxGridDBColumn;
     mactPrint_QualityDoc_All: TMultiAction;
     actSelect_byPrint: TdsdExecStoredProc;
+    actPrint_two: TdsdPrintAction;
+    mactPrint_QualityDoc_two: TMultiAction;
+    spSelectPrint_two: TdsdStoredProc;
   private
     { Private declarations }
   public
