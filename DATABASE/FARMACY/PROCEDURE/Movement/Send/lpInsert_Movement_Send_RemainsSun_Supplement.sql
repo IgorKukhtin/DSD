@@ -96,6 +96,12 @@ BEGIN
        CREATE TEMP TABLE _tmpGoods_PromoUnit_Supplement (UnitId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
      END IF;
 
+     -- Товары дисконтных проектов
+     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpGoods_DiscountExternal_Supplement'))
+     THEN
+       CREATE TEMP TABLE _tmpGoods_DiscountExternal_Supplement  (UnitId Integer, GoodsId Integer) ON COMMIT DROP;
+     END IF;
+
      -- Исключения по техническим переучетам по Аптекам - если есть в непроведенных ТП то исключаем из распределения
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpGoods_TP_exception_Supplement'))
      THEN
@@ -134,6 +140,8 @@ BEGIN
      DELETE FROM _tmpGoodsLayout_SUN_Supplement;
      -- Маркетинговый план для точек
      DELETE FROM _tmpGoods_PromoUnit_Supplement;
+     -- Товары дисконтных проектов
+     DELETE FROM _tmpGoods_DiscountExternal_Supplement;
      -- Исключения по техническим переучетам по Аптекам - если есть в непроведенных ТП то исключаем из распределения
      DELETE FROM _tmpGoods_TP_exception_Supplement;
      -- Уже использовано в текущем СУН
@@ -177,6 +185,44 @@ BEGIN
           AND (COALESCE (ObjectBoolean_SUN_Supplement_in.ValueData, FALSE) = TRUE 
             OR COALESCE (ObjectBoolean_SUN_Supplement_out.ValueData, FALSE) = TRUE)         
        ;
+
+     -- Товары дисконтных проектов
+     
+      WITH tmpUnitDiscount AS (SELECT ObjectLink_DiscountExternal.ChildObjectId     AS DiscountExternalId 
+                                    , ObjectLink_Unit.ChildObjectId                 AS UnitId
+                               FROM Object AS Object_DiscountExternalTools
+                                     LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
+                                                          ON ObjectLink_DiscountExternal.ObjectId = Object_DiscountExternalTools.Id
+                                                         AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountExternalTools_DiscountExternal()
+                                     LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                          ON ObjectLink_Unit.ObjectId = Object_DiscountExternalTools.Id
+                                                         AND ObjectLink_Unit.DescId = zc_ObjectLink_DiscountExternalTools_Unit()
+                                WHERE Object_DiscountExternalTools.DescId = zc_Object_DiscountExternalTools()
+                                  AND Object_DiscountExternalTools.isErased = False
+                                )
+      INSERT INTO _tmpGoods_DiscountExternal_Supplement
+      SELECT 
+             ObjectLink_BarCode_Goods.ChildObjectId AS GoodsId
+           , tmpUnitDiscount.UnitId  
+                                               
+      FROM Object AS Object_BarCode
+           LEFT JOIN ObjectLink AS ObjectLink_BarCode_Goods
+                                ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
+                               AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
+                                     
+           LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
+                                ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
+                               AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
+           LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId           
+
+           LEFT JOIN tmpUnitDiscount ON tmpUnitDiscount.DiscountExternalId = ObjectLink_BarCode_Object.ChildObjectId 
+
+      WHERE Object_BarCode.DescId = zc_Object_BarCode()
+        AND Object_BarCode.isErased = False
+        AND Object_Object.isErased = False
+        AND COALESCE (tmpUnitDiscount.DiscountExternalId, 0) <> 0
+      GROUP BY ObjectLink_BarCode_Goods.ChildObjectId
+             , tmpUnitDiscount.UnitId;
 
 
      -- Исключения по техническим переучетам по Аптекам - если есть в непроведенных ТП то исключаем из распределения
@@ -785,6 +831,11 @@ BEGIN
 
                   LEFT JOIN _tmpUnit_SUN_Supplement ON _tmpUnit_SUN_Supplement.UnitId = _tmpRemains_all_Supplement.UnitId
 
+                  -- найдем дисконтній товар
+                  LEFT JOIN _tmpGoods_DiscountExternal_Supplement AS _tmpGoods_DiscountExternal
+                                                                 ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_all_Supplement.UnitId
+                                                                AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_all_Supplement.GoodsId
+
              WHERE (CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
                     CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
                          THEN - _tmpRemains_all_Supplement.AmountRemains
@@ -800,6 +851,7 @@ BEGIN
                AND _tmpRemains_all_Supplement.GoodsId = vbGoodsId
                AND _tmpUnit_SUN_Supplement.isSUN_Supplement_in = True
                AND (COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0) = 0 OR COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0) <> _tmpRemains_all_Supplement.UnitId)
+               AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
              ORDER BY (CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
                             THEN - _tmpRemains_all_Supplement.AmountRemains
                             ELSE (_tmpRemains_all_Supplement.Need  -_tmpRemains_all_Supplement.AmountRemains)::Integer

@@ -100,6 +100,8 @@ BEGIN
 
      -- все Подразделения для схемы SUN
      DELETE FROM _tmpUnit_SUN;
+     DELETE FROM _tmpGoods_DiscountExternal;
+     DELETE FROM _tmpGoods_DiscountExternal;
      -- баланс по Аптекам - если не соответствует, соотв приход или расход блокируется
      IF inStep = 1 THEN DELETE FROM _tmpUnit_SUN_balance; END IF;
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
@@ -182,6 +184,43 @@ BEGIN
                 ;
      END IF;
         
+     -- Товары дисконтных проектов
+     
+      WITH tmpUnitDiscount AS (SELECT ObjectLink_DiscountExternal.ChildObjectId     AS DiscountExternalId 
+                                    , ObjectLink_Unit.ChildObjectId                 AS UnitId
+                               FROM Object AS Object_DiscountExternalTools
+                                     LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
+                                                          ON ObjectLink_DiscountExternal.ObjectId = Object_DiscountExternalTools.Id
+                                                         AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountExternalTools_DiscountExternal()
+                                     LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                          ON ObjectLink_Unit.ObjectId = Object_DiscountExternalTools.Id
+                                                         AND ObjectLink_Unit.DescId = zc_ObjectLink_DiscountExternalTools_Unit()
+                                WHERE Object_DiscountExternalTools.DescId = zc_Object_DiscountExternalTools()
+                                  AND Object_DiscountExternalTools.isErased = False
+                                )
+      INSERT INTO _tmpGoods_DiscountExternal
+      SELECT 
+             ObjectLink_BarCode_Goods.ChildObjectId AS GoodsId
+           , tmpUnitDiscount.UnitId  
+                                               
+      FROM Object AS Object_BarCode
+           LEFT JOIN ObjectLink AS ObjectLink_BarCode_Goods
+                                ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
+                               AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
+                                     
+           LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
+                                ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
+                               AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
+           LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId           
+
+           LEFT JOIN tmpUnitDiscount ON tmpUnitDiscount.DiscountExternalId = ObjectLink_BarCode_Object.ChildObjectId 
+
+      WHERE Object_BarCode.DescId = zc_Object_BarCode()
+        AND Object_BarCode.isErased = False
+        AND Object_Object.isErased = False
+        AND COALESCE (tmpUnitDiscount.DiscountExternalId, 0) <> 0
+      GROUP BY ObjectLink_BarCode_Goods.ChildObjectId
+             , tmpUnitDiscount.UnitId;
 
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
      -- CREATE TEMP TABLE _tmpRemains_all (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
@@ -1257,8 +1296,13 @@ BEGIN
                                AND _tmpSumm_limit.Summ >= vbSumm_limit
                              GROUP BY _tmpSumm_limit.UnitId_to
                             ) AS tmpSumm_limit ON tmpSumm_limit.UnitId_to = _tmpRemains_calc.UnitId
+                 -- найдем дисконтній товар
+                 LEFT JOIN _tmpGoods_DiscountExternal AS _tmpGoods_DiscountExternal
+                                                      ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_calc.UnitId
+                                                     AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_calc.GoodsId
             WHERE _tmpRemains_calc.GoodsId = vbGoodsId
               AND _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) > 0
+              AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
               -- !!!только в те аптеки, которые удовлетворяют ЛИМИТУ!!!
               --!!! AND _tmpRemains_calc.UnitId IN (SELECT DISTINCT _tmpSumm_limit.UnitId_to FROM _tmpSumm_limit WHERE _tmpSumm_limit.UnitId_from = vbUnitId_from AND _tmpSumm_limit.Summ >= vbSumm_limit)
             ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_calc.UnitId
@@ -1401,6 +1445,10 @@ BEGIN
                                              AND _tmpResult_Partion.UnitId_to   = _tmpRemains_calc.UnitId
                                              AND _tmpResult_Partion.GoodsId     = vbGoodsId
                                              AND _tmpResult_Partion.Amount      > 0
+                 -- найдем дисконтній товар
+                 LEFT JOIN _tmpGoods_DiscountExternal AS _tmpGoods_DiscountExternal
+                                                      ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_calc.UnitId
+                                                     AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_calc.GoodsId
 
             WHERE _tmpRemains_calc.GoodsId = vbGoodsId
               AND _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) > 0
@@ -1408,6 +1456,7 @@ BEGIN
               AND _tmpResult_Partion.GoodsId IS NULL
               -- !!!НЕ DefSUN
               AND _tmpList_DefSUN.GoodsId IS NULL
+              AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
               -- !!!НЕ DefSUN-all
               --AND _tmpList_DefSUN_all.GoodsId IS NULL
               -- !!!без лимита

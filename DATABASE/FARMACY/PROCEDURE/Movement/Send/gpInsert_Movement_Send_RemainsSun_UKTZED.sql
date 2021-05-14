@@ -22,6 +22,8 @@ BEGIN
      -- все Подразделения для схемы SUN UKTZED
        CREATE TEMP TABLE _tmpUnit_SUN_UKTZED (UnitId Integer, Value_T1 TFloat, Value_T2 TFloat, DayIncome Integer, DaySendSUN Integer, DaySendSUNAll Integer, Limit_N TFloat, isOutUKTZED_SUN1 Boolean) ON COMMIT DROP;
 --     CREATE TEMP TABLE _tmpUnit_SUN_UKTZED (UnitId Integer, DeySupplSun1 Integer, MonthSupplSun1 Integer, isOutUKTZED_SUN1 Boolean) ON COMMIT DROP;
+     -- Товары дисконтных проектов
+     CREATE TEMP TABLE _tmpGoods_DiscountExternal_UKTZED  (UnitId Integer, GoodsId Integer) ON COMMIT DROP;
 
      -- Исключения по техническим переучетам по Аптекам - если есть в непроведенных ТП то исключаем из распределения
      CREATE TEMP TABLE _tmpGoods_TP_exception_UKTZED   (UnitId Integer, GoodsId Integer) ON COMMIT DROP;

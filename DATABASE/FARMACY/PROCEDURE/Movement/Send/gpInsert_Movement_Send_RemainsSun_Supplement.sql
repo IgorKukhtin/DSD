@@ -21,6 +21,8 @@ BEGIN
 
      -- все Подразделения для схемы SUN Supplement
      CREATE TEMP TABLE _tmpUnit_SUN_Supplement   (UnitId Integer, DeySupplSun1 Integer, MonthSupplSun1 Integer, isSUN_Supplement_in Boolean, isSUN_Supplement_out Boolean, isSUN_Supplement_Priority Boolean) ON COMMIT DROP;
+     -- Товары дисконтных проектов
+     CREATE TEMP TABLE _tmpGoods_DiscountExternal_Supplement  (UnitId Integer, GoodsId Integer) ON COMMIT DROP;
 
      -- Исключения по техническим переучетам по Аптекам - если есть в непроведенных ТП то исключаем из распределения
      CREATE TEMP TABLE _tmpGoods_TP_exception_Supplement   (UnitId Integer, GoodsId Integer) ON COMMIT DROP;

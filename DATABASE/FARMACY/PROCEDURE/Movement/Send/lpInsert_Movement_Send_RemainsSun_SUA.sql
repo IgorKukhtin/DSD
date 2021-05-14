@@ -87,6 +87,12 @@ BEGIN
        CREATE TEMP TABLE _tmpGoods_PromoUnit_SUA (UnitId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
      END IF;
 
+     -- Товары дисконтных проектов
+     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpGoods_DiscountExternal_SUA'))
+     THEN
+       CREATE TEMP TABLE _tmpGoods_DiscountExternal_SUA  (UnitId Integer, GoodsId Integer) ON COMMIT DROP;
+     END IF;
+
      -- Исключения по техническим переучетам по Аптекам - если есть в непроведенных ТП то исключаем из распределения
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpGoods_TP_exception_SUA'))
      THEN
@@ -182,6 +188,8 @@ BEGIN
      DELETE FROM _tmpGoodsLayout_SUN_SUA;
      -- Маркетинговый план для точек
      DELETE FROM _tmpGoods_PromoUnit_SUA;
+     -- Товары дисконтных проектов
+     DELETE FROM _tmpGoods_DiscountExternal_SUA;
      -- Исключения по техническим переучетам по Аптекам - если есть в непроведенных ТП то исключаем из распределения
      DELETE FROM _tmpGoods_TP_exception_SUA;
      -- Уже использовано в текущем СУН
@@ -242,6 +250,44 @@ BEGIN
           -- если указан день недели - проверим его
           AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = '')
        ;
+
+     -- Товары дисконтных проектов
+     
+      WITH tmpUnitDiscount AS (SELECT ObjectLink_DiscountExternal.ChildObjectId     AS DiscountExternalId 
+                                    , ObjectLink_Unit.ChildObjectId                 AS UnitId
+                               FROM Object AS Object_DiscountExternalTools
+                                     LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
+                                                          ON ObjectLink_DiscountExternal.ObjectId = Object_DiscountExternalTools.Id
+                                                         AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountExternalTools_DiscountExternal()
+                                     LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                          ON ObjectLink_Unit.ObjectId = Object_DiscountExternalTools.Id
+                                                         AND ObjectLink_Unit.DescId = zc_ObjectLink_DiscountExternalTools_Unit()
+                                WHERE Object_DiscountExternalTools.DescId = zc_Object_DiscountExternalTools()
+                                  AND Object_DiscountExternalTools.isErased = False
+                                )
+      INSERT INTO _tmpGoods_DiscountExternal_SUA
+      SELECT 
+             ObjectLink_BarCode_Goods.ChildObjectId AS GoodsId
+           , tmpUnitDiscount.UnitId  
+                                               
+      FROM Object AS Object_BarCode
+           LEFT JOIN ObjectLink AS ObjectLink_BarCode_Goods
+                                ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
+                               AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
+                                     
+           LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
+                                ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
+                               AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
+           LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId           
+
+           LEFT JOIN tmpUnitDiscount ON tmpUnitDiscount.DiscountExternalId = ObjectLink_BarCode_Object.ChildObjectId 
+
+      WHERE Object_BarCode.DescId = zc_Object_BarCode()
+        AND Object_BarCode.isErased = False
+        AND Object_Object.isErased = False
+        AND COALESCE (tmpUnitDiscount.DiscountExternalId, 0) <> 0
+      GROUP BY ObjectLink_BarCode_Goods.ChildObjectId
+             , tmpUnitDiscount.UnitId;
 
      -- находим максимальный
      vbDayIncome_max:= (SELECT MAX (_tmpUnit_SUN_SUA.DayIncome) FROM _tmpUnit_SUN_SUA);
@@ -1670,6 +1716,11 @@ return;
                   LEFT JOIN _tmpGoods_SUN_SUA ON _tmpGoods_SUN_SUA.GoodsID = _tmpRemains_calc_SUA.GoodsId
                   LEFT JOIN _tmpUnit_SUN_SUA ON _tmpUnit_SUN_SUA.UnitId = _tmpRemains_calc_SUA.UnitId
 
+                  -- найдем дисконтній товар
+                  LEFT JOIN _tmpGoods_DiscountExternal_SUA AS _tmpGoods_DiscountExternal
+                                                           ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_calc_SUA.UnitId
+                                                          AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_calc_SUA.GoodsId
+
              WHERE (CASE WHEN COALESCE (_tmpGoods_SUN_SUA.KoeffSUN, 0) = 0 THEN
                       FLOOR (_tmpRemains_calc_SUA.AmountResult  - _tmpRemains_calc_SUA.AmountUse)
                     ELSE
@@ -1678,6 +1729,7 @@ return;
                     END) >= 1
                AND _tmpRemains_calc_SUA.GoodsId = vbGoodsId
                AND _tmpRemains_calc_SUA.UnitId <> vbUnitId_from
+               AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
              ORDER BY 2 DESC
                     , _tmpRemains_calc_SUA.UnitId;
          -- начало цикла по курсору2 - остаток сроковых - под него надо найти Автозаказ

@@ -120,6 +120,7 @@ BEGIN
      DELETE FROM _tmpUnit_SUN;
      DELETE FROM _tmpGoods_Layout;
      DELETE FROM _tmpGoods_PromoUnit;
+     DELETE FROM _tmpGoods_DiscountExternal;
      -- 1. все остатки, продажи => получаем ВСЕ кол-ва EXPRESS
      DELETE FROM _tmpRemains_all;
      DELETE FROM _tmpRemains;
@@ -171,6 +172,44 @@ BEGIN
         --AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = '')
         */
        ;
+
+     -- Товары дисконтных проектов
+     
+      WITH tmpUnitDiscount AS (SELECT ObjectLink_DiscountExternal.ChildObjectId     AS DiscountExternalId 
+                                    , ObjectLink_Unit.ChildObjectId                 AS UnitId
+                               FROM Object AS Object_DiscountExternalTools
+                                     LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
+                                                          ON ObjectLink_DiscountExternal.ObjectId = Object_DiscountExternalTools.Id
+                                                         AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountExternalTools_DiscountExternal()
+                                     LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                          ON ObjectLink_Unit.ObjectId = Object_DiscountExternalTools.Id
+                                                         AND ObjectLink_Unit.DescId = zc_ObjectLink_DiscountExternalTools_Unit()
+                                WHERE Object_DiscountExternalTools.DescId = zc_Object_DiscountExternalTools()
+                                  AND Object_DiscountExternalTools.isErased = False
+                                )
+      INSERT INTO _tmpGoods_DiscountExternal
+      SELECT 
+             ObjectLink_BarCode_Goods.ChildObjectId AS GoodsId
+           , tmpUnitDiscount.UnitId  
+                                               
+      FROM Object AS Object_BarCode
+           LEFT JOIN ObjectLink AS ObjectLink_BarCode_Goods
+                                ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
+                               AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
+                                     
+           LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
+                                ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
+                               AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
+           LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId           
+
+           LEFT JOIN tmpUnitDiscount ON tmpUnitDiscount.DiscountExternalId = ObjectLink_BarCode_Object.ChildObjectId 
+
+      WHERE Object_BarCode.DescId = zc_Object_BarCode()
+        AND Object_BarCode.isErased = False
+        AND Object_Object.isErased = False
+        AND COALESCE (tmpUnitDiscount.DiscountExternalId, 0) <> 0
+      GROUP BY ObjectLink_BarCode_Goods.ChildObjectId
+             , tmpUnitDiscount.UnitId;
 
      -- все Товары для схемы SUN-v3
      INSERT INTO _tmpGoods_express (GoodsId, KoeffSUN)
@@ -889,8 +928,13 @@ BEGIN
                              --AND _tmpSumm_limit.Summ >= vbSumm_limit
                              GROUP BY _tmpSumm_limit.UnitId_to
                             ) AS tmpSumm_limit ON tmpSumm_limit.UnitId_to = _tmpRemains.UnitId
+                 -- найдем дисконтній товар
+                 LEFT JOIN _tmpGoods_DiscountExternal AS _tmpGoods_DiscountExternal
+                                                      ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains.UnitId
+                                                     AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains.GoodsId
             WHERE _tmpRemains.GoodsId = vbGoodsId
               AND _tmpRemains.AmountResult - COALESCE (tmp.Amount, 0) > 0
+              AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
             ORDER BY --начинаем с аптек, где ПОТРЕБНОСТЬ - максимальным
                      _tmpRemains.AmountResult - COALESCE (tmp.Amount, 0) DESC
                    , tmpSumm_limit.Summ DESC

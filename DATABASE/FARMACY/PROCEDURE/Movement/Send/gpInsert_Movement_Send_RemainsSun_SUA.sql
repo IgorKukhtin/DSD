@@ -27,6 +27,8 @@ BEGIN
 
      -- Маркетинговый план для точек
      CREATE TEMP TABLE _tmpGoods_PromoUnit_SUA (UnitId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
+     -- Товары дисконтных проектов
+     CREATE TEMP TABLE _tmpGoods_DiscountExternal_SUA  (UnitId Integer, GoodsId Integer) ON COMMIT DROP;
 
      -- Исключения по техническим переучетам по Аптекам - если есть в непроведенных ТП то исключаем из распределения
      CREATE TEMP TABLE _tmpGoods_TP_exception_SUA   (UnitId Integer, GoodsId Integer) ON COMMIT DROP;

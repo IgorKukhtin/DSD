@@ -221,12 +221,12 @@ BEGIN
       WITH tmpMI AS (SELECT MovementItem.Id     AS Id
                           , MovementItem.Amount AS Amount
                      FROM MovementItem
-                          INNER JOIN MovementItemLinkObject AS MILinkObject_CommentSend
-                                                            ON MILinkObject_CommentSend.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
-                                                           AND MILinkObject_CommentSend.ObjectId = 16978916
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentSend
+                                                           ON MILinkObject_CommentSend.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
                      WHERE MovementItem.MovementId = inMovementId
                        AND MovementItem.DescId = zc_MI_Master()
+                       AND COALESCE(MILinkObject_CommentSend.ObjectId, 0) = 0
                     ) 
          , tmpProtocolUnion AS (SELECT MovementItemProtocol.Id
                                      , MovementItemProtocol.MovementItemId
@@ -268,7 +268,8 @@ BEGIN
       
       IF COALESCE(vResortFact, 0) <> COALESCE(vResortAdd, 0) OR COALESCE(vResortFactCount, 0) <> COALESCE(vResortAddCount, 0)
       THEN 
-        RAISE EXCEPTION 'Ошибка. Количество по комменту "Пересорт по факту, отравитель редактирует." не равно количеству добавленных позиций.';
+        RAISE EXCEPTION 'Ошибка. Количество по комменту "Пересорт по факту, отравитель редактирует." не равно количеству добавленных позиций. Занулено - %; Добавлено  %; Занулено строк - %; Добавлено строк - %',
+          COALESCE(vResortFact, 0), COALESCE(vResortAdd, 0), COALESCE(vResortFactCount, 0), COALESCE(vResortAddCount, 0);
       END IF;
     END IF;
     

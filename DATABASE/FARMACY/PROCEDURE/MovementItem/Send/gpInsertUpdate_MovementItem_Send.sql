@@ -655,7 +655,7 @@ BEGIN
        END IF;
     END IF;
 
-    IF COALESCE(inCommentSendID, 0) = 16978916 OR COALESCE(vbCommentSendID, 0) = 16978916
+    IF (COALESCE(inCommentSendID, 0) <> COALESCE(vbCommentSendID, 0)) AND (COALESCE(inCommentSendID, 0) = 16978916 OR COALESCE(vbCommentSendID, 0) = 16978916)
     THEN
        IF vbisReceived = FALSE AND COALESCE(inCommentSendID, 0) = 16978916
        THEN 
@@ -665,7 +665,7 @@ BEGIN
        IF COALESCE (vbUnitId, 0) <> COALESCE (vbUserUnitId, 0) AND
           NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
        THEN
-         RAISE EXCEPTION 'Ошибка. Коммент "Пересорт по факту, отравитель редактирует." изменять ращрешено сотруднику аптеки получателя';
+         RAISE EXCEPTION 'Ошибка. Коммент "Пересорт по факту, отравитель редактирует." изменять разрешено сотруднику аптеки получателя';
        END IF;       
     END IF; 
 

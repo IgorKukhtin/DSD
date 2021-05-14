@@ -523,7 +523,7 @@ begin
                                                                         [TRESTRequestParameterOption.poDoNotEncode]);
   FRESTRequest.AddParameter('Accept', 'application/json', TRESTRequestParameterKind.pkHTTPHEADER);
   FRESTRequest.AddParameter('employee_email', FUserEmail, TRESTRequestParameterKind.pkGETorPOST);
-  FRESTRequest.AddParameter('data', FSign_Data, TRESTRequestParameterKind.pkGETorPOST);
+  FRESTRequest.AddParameter('data', FSign_Data, TRESTRequestParameterKind.pkGETorPOST, [TRESTRequestParameterOption.poDoNotEncode]);
 
   try
     FRESTRequest.Execute;
@@ -646,12 +646,14 @@ begin
   begin
     ShowMessage('Ошибка получения информации о рецепте с сайта Хелси...'#13#10 +
       'Неправельный номер рецепта.');
+    Result := False;
     Exit;
   end;
 
   if LikiDniproeHealthApi.FDispense_valid_to < Date then
   begin
     ShowMessage('Срок действия рецепта истек...');
+    Result := False;
     Exit;
   end;
 
@@ -661,6 +663,7 @@ begin
     if LikiDniproeHealthApi.FMedical_program_id = '' then
     begin
       ShowMessage('Нет в чеке информации о соц проекте...');
+      Result := False;
       Exit;
     end;
 
@@ -674,14 +677,17 @@ begin
     Result := True;
   end else if LikiDniproeHealthApi.FStatus = 'EXPIRED' then
   begin
+    Result := False;
     LikiDniproeHealthApi.FRequest_number := '';
     ShowMessage('Ошибка чек пророчен.');
   end else if LikiDniproeHealthApi.FStatus = 'COMPLETED' then
   begin
+    Result := False;
     LikiDniproeHealthApi.FRequest_number := '';
     ShowMessage('Ошибка чек погашен.');
   end else
   begin
+    Result := False;
     LikiDniproeHealthApi.FRequest_number := '';
     ShowMessage('Ошибка неизвестный статус чека.');
   end;
@@ -787,8 +793,6 @@ begin
   finally
     if FileExists('Key-6.dat') then DeleteFile('Key-6.dat');
   end;
-
-  Result := False;
 end;
 
 function SignRecipeLikiDniproeHealth : boolean;
