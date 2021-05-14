@@ -182,6 +182,10 @@ type
     seStartNewReplicaInterval: TSpinEdit;
     lbStartNewReplica: TLabel;
     tmrStartNewReplica: TTimer;
+    lbSsnMinDTime: TLabel;
+    lbSsnMaxDTime: TLabel;
+    lbAllMinDTime: TLabel;
+    lbAllMaxDTime: TLabel;
     {$WARNINGS ON}
     procedure chkShowLogClick(Sender: TObject);
     procedure btnLibLocationClick(Sender: TObject);
@@ -242,8 +246,12 @@ type
     FApplyScriptThrd: TApplyScriptThread;
     FMoveProcToSlaveThrd: TMoveProcToSlaveThread;
     FAlterSlaveSequencesThrd: TAlterSlaveSequencesThread;
+
     FSsnMinId: Int64;
     FSsnMaxId: Int64;
+    FSsnMinDate: TDateTime;
+    FSsnMaxDate: TDateTime;
+
     FSsnStep: Double;
     FStartTimeReplica: TDateTime;
     FStartTimeSession: TDateTime;
@@ -285,8 +293,8 @@ type
 
     procedure WMCheckReplicaMaxMin(var Msg: TMessage); message WM_CHECK_REPLICA_MAXMIN;
 
-    procedure OnChangeStartId(const ANewStartId: Int64);
-    procedure OnNewSession(const AStart: TDateTime; const AMinId, AMaxId: Int64; const ARecCount, ASessionNumber: Integer);
+    procedure OnChangeStartId(const ANewStartId: Int64; const ANewDT: TDateTime);
+    procedure OnNewSession(const AStart: TDateTime; const AMinId, AMaxId: Int64; const AMinDT, AMaxDT: TDateTime; const ARecCount, ASessionNumber: Integer);
     procedure OnEndSession(Sender: TObject);
     procedure OnNeedReplicaRestart(Sender: TObject);
     procedure OnCompareRecCountMS(const aSQL: string);
@@ -1038,7 +1046,8 @@ end;
 
 procedure TfrmMain.btnUseMinIdClick(Sender: TObject);
 begin
-  edtSsnMinId.Text   := IntToStr(FData.MinId);
+  edtSsnMinId.Text     := IntToStr(FData.MinId);
+  lbSsnMinDTime.Caption:= DateTimeToStr(FData.MinDT);
   TSettings.ReplicaLastId := '0';
 end;
 
@@ -1394,11 +1403,12 @@ begin
   SendMessage((Sender as TMemo).Handle, EM_LINESCROLL, 0, (Sender as TMemo).Lines.Count);
 end;
 
-procedure TfrmMain.OnChangeStartId(const ANewStartId: Int64);
+procedure TfrmMain.OnChangeStartId(const ANewStartId: Int64; const ANewDT: TDateTime);
 var
   iReplicaMax, iRecCount: Int64;
 begin
   edtSsnMinId.Text := IntToStr(ANewStartId);
+  lbSsnMinDTime.Caption:= DateTimeToStr(ANewDT);
 
   if FSsnStep > 0 then
   begin
@@ -1464,11 +1474,13 @@ begin
   end;
 end;
 
-procedure TfrmMain.OnNewSession(const AStart: TDateTime; const AMinId, AMaxId: Int64; const ARecCount, ASessionNumber: Integer);
+procedure TfrmMain.OnNewSession(const AStart: TDateTime; const AMinId, AMaxId: Int64; const AMinDT, AMaxDT: TDateTime; const ARecCount, ASessionNumber: Integer);
 begin
   edtSsnMinId.Text    := IntToStr(AMinId);
   edtSsnMaxId.Text    := IntToStr(AMaxId);
   edtSsnRecCount.Text := IntToStr(ARecCount);
+  lbSsnMinDTime.Caption:= DateTimeToStr(AMinDT);
+  lbSsnMaxDTime.Caption:= DateTimeToStr(AMaxDT);
 
   FStartTimeSession := AStart;
 
@@ -1482,6 +1494,9 @@ begin
 
   FSsnMinId := AMinId;
   FSsnMaxId := AMaxId;
+  FSsnMinDate:= AMinDT;
+  FSsnMaxDate:= AMaxDT;
+
   if ARecCount > 0 then
     FSsnStep  := (FSsnMaxId - FSsnMinId) / ARecCount
   else
@@ -1608,12 +1623,15 @@ end;
 procedure TfrmMain.OnTerminateLastId(Sender: TObject);
 var
   iResult: Int64;
+  iDT: TDateTime;
   tmpThread: TWorkerThread;
 begin
   tmpThread := Sender as TWorkerThread;
   iResult := tmpThread.MyReturnValue;
+  iDT:= tmpThread.MyReturnDT;
 
   edtSsnMinId.Text := IntToStr(iResult + 1); // стартовый Id реплики
+  lbSsnMinDTime.Caption:= DateTimeToStr(iDT);
 
   btnStartReplication.Enabled         := True;
   btnMoveProcsToSlave.Enabled         := True;
@@ -1641,6 +1659,8 @@ begin
       edtAllMinId.Text    := IntToStr(P^.MinId);
       edtAllMaxId.Text    := IntToStr(P^.MaxId);
       edtAllRecCount.Text := IntToStr(P^.RecCount);
+      lbAllMinDTime.Caption:= DateTimeToStr(P^.MinDT);
+      lbAllMaxDTime.Caption:= DateTimeToStr(P^.MaxDT);
 
       iStart := StrToIntDef(edtSsnMinId.Text, 0);
       UpdateProgBarPosition(pbAll, P^.MaxId, iStart, P^.RecCount);

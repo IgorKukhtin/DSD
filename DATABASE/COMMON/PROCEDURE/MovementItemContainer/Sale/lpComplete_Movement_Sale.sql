@@ -1,11 +1,13 @@
 -- Function: lpComplete_Movement_Sale (Integer, Integer, Boolean)
 
 DROP FUNCTION IF EXISTS lpComplete_Movement_Sale (Integer, Integer, Boolean);
+DROP FUNCTION IF EXISTS lpComplete_Movement_Sale (Integer, Integer, Boolean, Boolean);
 
 CREATE OR REPLACE FUNCTION lpComplete_Movement_Sale(
     IN inMovementId        Integer               , -- ключ Документа
     IN inUserId            Integer               , -- Пользователь
-    IN inIsLastComplete    Boolean  DEFAULT False  -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
+    IN inIsLastComplete    Boolean  DEFAULT FALSE, -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
+    IN inIsRecalcPrice     Boolean  DEFAULT TRUE   -- Пересчет цен из Прайса или Акций при Проведении
 )
 RETURNS VOID
 AS
@@ -427,7 +429,7 @@ END IF;*/
      vbIsPriceList_begin_recalc:= inUserId IN (6131893, /*2030723,*/ 5) AND vbOperDate >= '01.04.2021';
 
      -- !!!Пересчет цен - если надо!!!!
-     IF vbIsPriceList_begin_recalc = TRUE
+     IF vbIsPriceList_begin_recalc = TRUE AND inIsRecalcPrice = TRUE
      THEN
          -- !!!нашли!!!
          vbMovementId_Order:= (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Order());

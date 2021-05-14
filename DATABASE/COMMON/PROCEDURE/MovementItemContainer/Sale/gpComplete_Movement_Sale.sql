@@ -1,10 +1,12 @@
 -- Function: gpComplete_Movement_Sale(integer, boolean, tvarchar)
 
 DROP FUNCTION IF EXISTS gpComplete_Movement_Sale (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_Sale (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Sale(
     IN inMovementId        Integer               , -- ключ Документа
     IN inIsLastComplete    Boolean  DEFAULT FALSE, -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
+    IN inIsRecalcPrice     Boolean  DEFAULT TRUE , -- Пересчет цен из Прайса или Акций при Проведении
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )                              
 RETURNS VOID
@@ -21,13 +23,17 @@ BEGIN
 if vbUserId IN (9459, 5) AND 1=0 THEN
      -- Проводим Документ
      PERFORM lpComplete_Movement_Sale22 (inMovementId     := inMovementId
-                                     , inUserId         := vbUserId
-                                     , inIsLastComplete := inIsLastComplete);
+                                       , inUserId         := vbUserId
+                                       , inIsLastComplete := inIsLastComplete
+                                       , inIsRecalcPrice  := inIsRecalcPrice
+                                        );
 ELSE
      -- Проводим Документ
      PERFORM lpComplete_Movement_Sale (inMovementId     := inMovementId
                                      , inUserId         := vbUserId
-                                     , inIsLastComplete := inIsLastComplete);
+                                     , inIsLastComplete := inIsLastComplete
+                                     , inIsRecalcPrice  := inIsRecalcPrice
+                                      );
 END IF;
 
 if inSession = '5'

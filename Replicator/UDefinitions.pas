@@ -5,8 +5,8 @@ interface
 type
   TLogMessageType = (lmtPlain, lmtError);
   TNotifyMessage = procedure(const AMsg: string; const AFileName: string = ''; const aUID: Cardinal = 0; AMsgType: TLogMessageType = lmtPlain) of object;
-  TOnChangeStartId = procedure (const ANewStartId: Int64) of object;
-  TOnNewSession = procedure(const AStart: TDateTime; const AMinId, AMaxId: Int64; const ARecCount, ASessionNumber: Integer) of object;
+  TOnChangeStartId = procedure (const ANewStartId: Int64; const ANewDT: TDateTime ) of object;
+  TOnNewSession = procedure(const AStart: TDateTime; const AMinId, AMaxId: Int64; const AMinDT, AMaxDT: TDateTime; const ARecCount, ASessionNumber: Integer) of object;
   TOnCompareRecCountMS = procedure(const AIntermediateResultSQL: string) of object;
   TConditionFunc = reference to function(): Boolean;
 
@@ -17,6 +17,8 @@ type
 
   PMinMaxId = ^TMinMaxId;
   TMinMaxId = record
+    MinDT: TDateTime;
+    MaxDT: TDateTime;
     MinId: Int64;
     MaxId: Int64;
     RecCount: Int64;
@@ -59,6 +61,7 @@ type
 
   TDataRec = record
     Id: Int64;
+    DT : TDateTime;
     TransId: Int64;
     SQL: string;
   end;

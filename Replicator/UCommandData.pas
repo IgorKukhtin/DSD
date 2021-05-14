@@ -21,6 +21,7 @@ type
     function GetPosition(const AId: Int64): Integer;
     function GetId(const APos: Integer): Int64;
   public
+    iDT_new: TDateTime;
     procedure Add(const AId, ATransId: Int64; const ASQL: string);
     procedure BuildData(ADataSet: TDataSet);
     procedure Clear;
@@ -84,12 +85,13 @@ procedure TCommandData.BuildData(ADataSet: TDataSet);
 type
   TDataTemp = record
     Id: Int64;
+    DT:TDateTime;
     TransId: Int64;
     SQL: string;
     IsDuplicate: Boolean;
   end;
 var
-  I, J, iUniqSize, idxId, idxTran, idxResult: Integer;
+  I, J, iUniqSize, idxId, idxTran, idxResult, idxDT: Integer;
   sSQL, sPrevSQL: string;
   arrTemp: array of TDataTemp;
 //  fakeArr: TDataRecArray;
@@ -106,11 +108,13 @@ begin
   idxId := -1;
   idxTran := -1;
   idxResult := -1;
+  idxDT := -1;
 
   for I := 0 to Pred(ADataSet.FieldCount) do
     if      SameText(ADataSet.Fields[I].FieldName, 'id')             then idxId := I
     else if SameText(ADataSet.Fields[I].FieldName, 'transaction_id') then idxTran := I
-    else if SameText(ADataSet.Fields[I].FieldName, 'result')         then idxResult := I;
+    else if SameText(ADataSet.Fields[I].FieldName, 'result')         then idxResult := I
+    else if SameText(ADataSet.Fields[I].FieldName, 'last_modified')  then idxDT := I;
 
 
   I := 0;
@@ -132,6 +136,7 @@ begin
       sSQL := Fields[idxResult].AsString;
 
       arrTemp[I].Id          := Fields[idxId].AsLargeInt;
+      arrTemp[I].DT          := Fields[idxDT].AsDateTime;
       arrTemp[I].TransId     := Fields[idxTran].AsLargeInt;
       arrTemp[I].SQL         := sSQL;
       arrTemp[I].IsDuplicate := SameText(sSQL, sPrevSQL);
@@ -157,6 +162,7 @@ begin
     if not arrTemp[I].IsDuplicate then
     begin
       FRecArray[J].Id      := arrTemp[I].Id;
+      FRecArray[J].DT      := arrTemp[I].DT;
       FRecArray[J].TransId := arrTemp[I].TransId;
       FRecArray[J].SQL     := arrTemp[I].SQL + ';';
       Inc(J);
@@ -300,6 +306,7 @@ function TCommandData.NearestId(const AId: Int64; const ARange: Integer): Int64;
 var
   I, iIndx: Integer;
   iMaxId, iNewTransId: Int64;
+  iDT : TDateTime;
 begin
   Result := -1;
 
@@ -313,9 +320,13 @@ begin
 
   // Result не должен превышать максимальное значение Id в массиве FRecArray
   iMaxId := FRecArray[High(FRecArray)].Id;
+  iDT    := FRecArray[High(FRecArray)].DT;
 
   if Result >= iMaxId then
+  begin
+    iDT_new:= iDT;
     Exit(iMaxId);
+  end;
 
   // Элементы массива FRecArray упорядочены по Id, но могут иметь разрывы в последовательности.
   // Ищем элемент, который наиболее близок к заданному значению

@@ -4,26 +4,26 @@ inherited SaleForm: TSaleForm
   ClientWidth = 1278
   AddOnFormData.OnLoadAction = actSetDefaults
   ExplicitWidth = 1294
-  ExplicitHeight = 683
+  ExplicitHeight = 680
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 167
     Width = 1278
     Height = 478
-    ExplicitTop = 166
-    ExplicitWidth = 1293
-    ExplicitHeight = 479
+    ExplicitTop = 167
+    ExplicitWidth = 1278
+    ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1278
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1293
-      ExplicitHeight = 455
+      ExplicitWidth = 1278
+      ExplicitHeight = 454
       inherited cxGrid: TcxGrid
         Width = 1278
         Height = 454
-        ExplicitWidth = 1293
-        ExplicitHeight = 455
+        ExplicitWidth = 1278
+        ExplicitHeight = 454
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -520,7 +520,7 @@ inherited SaleForm: TSaleForm
     Width = 1278
     Height = 141
     TabOrder = 3
-    ExplicitWidth = 1430
+    ExplicitWidth = 1278
     ExplicitHeight = 141
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1016,8 +1016,13 @@ inherited SaleForm: TSaleForm
   object cbReCalcPrice: TcxCheckBox [24]
     Left = 8
     Top = 121
+    Hint = 
+      #1055#1077#1088#1077#1089#1095#1077#1090' '#1094#1077#1085' '#1080#1079' '#1055#1088#1072#1081#1089#1072' '#1080#1083#1080' '#1040#1082#1094#1080#1081' '#1087#1088#1080' '#1055#1088#1086#1074#1077#1076#1077#1085#1080#1080', '#1089' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077#1084' ' +
+      #1055#1088#1072#1074
     Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1088#1080' '#1087'/'#1087
+    ParentShowHint = False
     Properties.ReadOnly = False
+    ShowHint = True
     State = cbsChecked
     TabOrder = 28
     Width = 135

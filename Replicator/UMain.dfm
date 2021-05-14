@@ -21,7 +21,7 @@ object frmMain: TfrmMain
     Top = 0
     Width = 984
     Height = 662
-    ActivePage = tsCompare
+    ActivePage = tsLog
     Align = alClient
     TabOrder = 0
     object tsLog: TTabSheet
@@ -85,6 +85,20 @@ object frmMain: TfrmMain
             Height = 13
             Caption = #1087#1088#1086#1096#1083#1086
           end
+          object lbAllMinDTime: TLabel
+            Left = 51
+            Top = 46
+            Width = 64
+            Height = 13
+            Caption = 'lbAllMinDTime'
+          end
+          object lbAllMaxDTime: TLabel
+            Left = 206
+            Top = 46
+            Width = 68
+            Height = 13
+            Caption = 'lbAllMaxDTime'
+          end
           object edtAllMinId: TEdit
             Left = 51
             Top = 21
@@ -111,7 +125,7 @@ object frmMain: TfrmMain
           end
           object pbAll: TProgressBar
             Left = 18
-            Top = 56
+            Top = 63
             Width = 893
             Height = 8
             Anchors = [akLeft, akTop, akRight]
@@ -122,7 +136,7 @@ object frmMain: TfrmMain
           Left = 21
           Top = 95
           Width = 932
-          Height = 113
+          Height = 118
           Anchors = [akLeft, akTop, akRight]
           Caption = '  '#1057#1077#1089#1089#1080#1103'  '
           Color = clCream
@@ -131,31 +145,31 @@ object frmMain: TfrmMain
           TabOrder = 1
           DesignSize = (
             932
-            113)
+            118)
           object lbSsnMinId: TLabel
             Left = 18
-            Top = 62
+            Top = 57
             Width = 29
             Height = 13
             Caption = 'min Id'
           end
           object lbSsnMaxId: TLabel
             Left = 169
-            Top = 62
+            Top = 57
             Width = 33
             Height = 13
             Caption = 'max Id'
           end
           object lbSsnRecCount: TLabel
             Left = 329
-            Top = 62
+            Top = 57
             Width = 71
             Height = 13
             Caption = #1074#1089#1077#1075#1086' '#1079#1072#1087#1080#1089#1077#1081
           end
           object lbSsnStart: TLabel
             Left = 526
-            Top = 62
+            Top = 57
             Width = 72
             Height = 13
             Caption = #1085#1072#1095#1072#1083#1086' '#1089#1077#1089#1089#1080#1080
@@ -188,9 +202,23 @@ object frmMain: TfrmMain
             Height = 13
             Caption = #1089#1077#1089#1089#1080#1103' '#8470' '
           end
+          object lbSsnMinDTime: TLabel
+            Left = 51
+            Top = 78
+            Width = 70
+            Height = 13
+            Caption = 'lbSsnMinDTime'
+          end
+          object lbSsnMaxDTime: TLabel
+            Left = 206
+            Top = 78
+            Width = 74
+            Height = 13
+            Caption = 'lbSsnMaxDTime'
+          end
           object edtSsnMinId: TEdit
             Left = 51
-            Top = 59
+            Top = 54
             Width = 100
             Height = 21
             ReadOnly = True
@@ -198,7 +226,7 @@ object frmMain: TfrmMain
           end
           object edtSsnMaxId: TEdit
             Left = 206
-            Top = 59
+            Top = 54
             Width = 100
             Height = 21
             ReadOnly = True
@@ -206,7 +234,7 @@ object frmMain: TfrmMain
           end
           object edtSsnRecCount: TEdit
             Left = 404
-            Top = 59
+            Top = 54
             Width = 100
             Height = 21
             ReadOnly = True
@@ -238,7 +266,7 @@ object frmMain: TfrmMain
           end
           object pbSession: TProgressBar
             Left = 18
-            Top = 91
+            Top = 103
             Width = 893
             Height = 8
             Anchors = [akLeft, akTop, akRight]

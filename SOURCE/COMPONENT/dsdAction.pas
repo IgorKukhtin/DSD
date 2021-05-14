@@ -3146,6 +3146,8 @@ var
   Stream: TStringStream;
   ExpandedStr: String;
   ExpandedIdx: Integer;
+  frxPDFExport1: TfrxPDFExport;
+  frxPDFExport_find: Boolean;
 begin
   DataSetList := TList.Create;
   MemTableList := TList.Create;
@@ -3311,12 +3313,18 @@ begin
     end;
     //*******************************************************
 
-
     with FReport do
     Begin
       LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport(AReportName));
+      // это НЕ выгрузка в PFD
+      frxPDFExport_find:=false;
+      //
       for i := 0 to AParams.Count - 1 do
       begin
+        // если есть такой параметр, тогда это выгрузка в PFD
+        if AnsiUpperCase(AParams[i].Name) = AnsiUpperCase('frxPDFExport_find')
+        then frxPDFExport_find:= true;
+        //
         case AParams[i].DataType of
           ftString, ftDate, ftDateTime:
             Variables[AParams[i].Name] := chr(39) + AParams[i].AsString + chr(39);
@@ -3369,7 +3377,13 @@ begin
             then PrintOptions.Printer := APrinter
             else PrintOptions.Printer := GetDefaultPrinter;
             PrepareReport;
-            ShowPreparedReport;
+            //
+            if frxPDFExport_find = true then
+            begin
+                 frxPDFExport1:= TfrxPDFExport.Create(Self);
+                 FReport.Export(frxPDFExport1);
+            end
+            else ShowPreparedReport;
           end;
         finally //Previre
           for I := 0 to DataSetList.Count - 1 do

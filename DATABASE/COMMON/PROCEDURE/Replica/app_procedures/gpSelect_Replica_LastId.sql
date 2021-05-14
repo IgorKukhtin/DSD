@@ -7,7 +7,9 @@ CREATE OR REPLACE FUNCTION _replica.gpSelect_Replica_LastId (
     IN inId_start     BigInt, -- значение table_update_data.Id, начиная с которого будем реплицировать данные
     IN inRec_count    BigInt  -- количество записей из table_update_data, которое предполагается реплицировать
 )
-RETURNS BigInt
+RETURNS TABLE (NextId    Bigint
+             , NextDT    TDateTime
+              )
 AS
 $BODY$
     DECLARE vbId_End    BigInt;
@@ -62,7 +64,8 @@ BEGIN
                  )*/
         THEN
             -- !!!Рекурсия!!!
-            RETURN (_replica.gpSelect_Replica_LastId (vbId_End, CASE WHEN inRec_count >= 100000 THEN inRec_count / 100 ELSE inRec_count END :: Integer));
+            RETURN QUERY
+              SELECT NextId, NextDT FROM _replica.gpSelect_Replica_LastId (vbId_End, CASE WHEN inRec_count >= 100000 THEN inRec_count / 100 ELSE inRec_count END :: Integer);
 
         END IF;
 
@@ -166,12 +169,11 @@ BEGIN
     -- Результат
   /*IF vbId_End > 5602489721
     THEN
-         RETURN 5602489721;
-    ELSE
-         RETURN vbId_End;
+         vbId_End:=5602489721;
     END IF;*/
 
-    RETURN vbId_End;
+    RETURN QUERY
+      SELECT vbId_End AS NextId, (SELECT last_modified FROM _replica.table_update_data WHERE Id = vbId_End) :: TDateTime AS NextDT;
 
 END;
 $BODY$
@@ -201,4 +203,4 @@ $BODY$
          , (SELECT Id_end FROM tmpRes) - (SELECT Id_start FROM tmpParams) + 1 AS Rec_count_calc
          , (SELECT Rec_count      FROM tmpParams) AS Rec_count
 */
--- SELECT _replica.gpSelect_Replica_LastId (4167545902, 100000) -- 4167192256
+-- SELECT NextId - 5784418604, * FROM _replica.gpSelect_Replica_LastId (5784556682, 100000) 

@@ -637,36 +637,36 @@ BEGIN
                          , MAX (tmpAll.RouteKindId)     AS RouteKindId
                          , MAX (tmpAll.RateFuelKindId)  AS RateFuelKindId
                          , (tmpAll.FuelId)              AS FuelId
-      
+
                          , SUM (tmpAll.DistanceFuel)    AS DistanceFuel
                          , MAX (tmpAll.RateFuelKindTax) AS RateFuelKindTax
-      
+
                          , MAX (tmpAll.Weight)          AS Weight
                          , MAX (tmpAll.WeightTransport) AS WeightTransport
                          , MAX (tmpAll.StartOdometre)   AS StartOdometre
                          , MAX (tmpAll.EndOdometre)     AS EndOdometre
-      
+
                          , SUM (tmpAll.AmountFuel_Start) AS AmountFuel_Start
                          , SUM (tmpAll.AmountFuel_In)    AS AmountFuel_In
                          , SUM (tmpAll.AmountFuel_Out)   AS AmountFuel_Out
                          , SUM (tmpAll.AmountFuel_Start + tmpAll.AmountFuel_In - tmpAll.AmountFuel_Out) AS AmountFuel_End
-      
+
                          , SUM (tmpAll.ColdHour)     AS ColdHour
                          , SUM (tmpAll.ColdDistance) AS ColdDistance
-      
+
                          , MAX (tmpAll.AmountFuel)         AS AmountFuel
                          , MAX (tmpAll.AmountColdHour)     AS AmountColdHour
                          , MAX (tmpAll.AmountColdDistance) AS AmountColdDistance
-      
+
                          , SUM (tmpAll.Amount_Distance_calc)     AS Amount_Distance_calc
                          , SUM (tmpAll.Amount_ColdHour_calc)     AS Amount_ColdHour_calc
                          , SUM (tmpAll.Amount_ColdDistance_calc) AS Amount_ColdDistance_calc
-      
+
                          , MAX (tmpAll.SumTransportAdd)          AS SumTransportAdd
                          , MAX (tmpAll.SumTransportAddLong)      AS SumTransportAddLong
                          , MAX (tmpAll.SumTransportTaxi)         AS SumTransportTaxi
                          , MAX (tmpAll.SumRateExp)               AS SumRateExp
-      
+
                          , ROW_NUMBER() OVER (PARTITION BY tmpAll.MovementId ORDER BY tmpAll.MovementId, MAX (tmpAll.Weight) desc) AS Ord
 
                     FROM (-- 2.1. Ќачальный остаток (!!!расчетный!!!) + –асход топлива
@@ -679,36 +679,36 @@ BEGIN
                                , tmpTransport.RouteKindId
                                , tmpTransport.RateFuelKindId
                                , tmpTransport.FuelId
-      
+
                                , tmpTransport.DistanceFuel
                                , tmpTransport.RateFuelKindTax
-      
+
                                , tmpTransport.Weight
                                , tmpTransport.WeightTransport
-      
+
                                , tmpTransport.StartOdometre
                                , tmpTransport.EndOdometre
-      
+
                                , tmpTransport.AmountFuel_Start
                                , 0 AS AmountFuel_In
                                , tmpTransport.AmountFuel_Out
-      
+
                                , tmpTransport.ColdHour
                                , tmpTransport.ColdDistance
-      
+
                                , tmpTransport.AmountFuel
                                , tmpTransport.AmountColdHour
                                , tmpTransport.AmountColdDistance
-      
+
                                , tmpTransport.Amount_Distance_calc
                                , tmpTransport.Amount_ColdHour_calc
                                , tmpTransport.Amount_ColdDistance_calc
-      
+
                                , tmpTransport.SumTransportAdd
                                , tmpTransport.SumTransportAddLong
                                , tmpTransport.SumTransportTaxi
                                , tmpTransport.SumRateExp
-      
+
                           FROM tmpTransport
                          UNION ALL
                           -- 2.2. ѕриход топлива
@@ -721,10 +721,10 @@ BEGIN
                                , 0 AS RouteKindId
                                , 0 AS RateFuelKindId
                                , MIContainer.ObjectId_Analyzer AS FuelId
-      
+
                                , 0 AS DistanceFuel
                                , 0 AS RateFuelKindTax
-      
+
                                , 0 AS Weight
                                , 0 AS WeightTransport
                                , 0 AS StartOdometre
@@ -732,23 +732,23 @@ BEGIN
                                , 0 AS AmountFuel_Start
                                , MIContainer.Amount AS AmountFuel_In
                                , 0 AS AmountFuel_Out
-      
+
                                , 0 AS ColdHour
                                , 0 AS ColdDistance
-      
+
                                , 0 AS AmountFuel
                                , 0 AS AmountColdHour
                                , 0 AS AmountColdDistance
-      
+
                                , 0 AS Amount_Distance_calc
                                , 0 AS Amount_ColdHour_calc
                                , 0 AS Amount_ColdDistance_calc
-      
+
                                , 0 AS SumTransportAdd
                                , 0 AS SumTransportAddLong
                                , 0 AS SumTransportTaxi
                                , 0 AS SumRateExp
-      
+
                           FROM Container
                                -- так ограничили приходы только на јвтомобиль
                                JOIN ContainerLinkObject AS ContainerLO_Car
@@ -760,19 +760,19 @@ BEGIN
                                                          AND MIContainer.MovementDescId = zc_Movement_Income()
                                                          AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
-      
+
                                LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                                             ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
                                                            AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
                                LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
                                                             ON MovementLinkObject_Route.MovementId = Movement.Id
                                                            AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
-      
+
                                LEFT JOIN Movement AS Movement_Transport
                                                   ON Movement_Transport.Id     = Movement.ParentId
                                                  AND Movement_Transport.DescId = zc_Movement_Transport()
                           WHERE Container.DescId = zc_container_Count()
-      
+
                          ) AS tmpAll
                     GROUP BY tmpAll.MovementId
                          , tmpAll.InvNumber
@@ -781,7 +781,7 @@ BEGIN
                          , tmpAll.PersonalDriverId
                          , tmpAll.FuelId
                          , tmpAll.RouteId
-                    ) 
+                    )
 
          , tmpMovementString AS (SELECT *
                                  FROM MovementString
@@ -860,10 +860,11 @@ BEGIN
              , (COALESCE (MovementFloat_PartnerCount.ValueData,0) * CAST(COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60  AS NUMERIC (16,2))) :: TFloat AS HoursPartner_all  -- общее врем€ в точках
              , CAST((COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60 )  AS NUMERIC (16,2))           :: TFloat AS HoursPartner      -- врем€ в точке, часов
              , CASE WHEN (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)
-                         - (COALESCE (MovementFloat_PartnerCount.ValueData,0) * (COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60) ) )  <> 0 
+                        - (COALESCE (MovementFloat_PartnerCount.ValueData,0) * CAST (COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60 AS NUMERIC (16,2)))
+                         ) <> 0
                     THEN SUM (tmpFuel.DistanceFuel) / (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)
-                                                      - (COALESCE (MovementFloat_PartnerCount.ValueData,0) * CAST (COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60 AS NUMERIC (16,2))
-                                                      ) ) 
+                                                     - (COALESCE (MovementFloat_PartnerCount.ValueData,0) * CAST (COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60 AS NUMERIC (16,2)))
+                                                      )
                     ELSE 0
                END :: TFloat AS Speed
              , MovementString_CommentStop.ValueData ::TVarChar    AS CommentStop
@@ -942,13 +943,19 @@ BEGIN
                , ViewObject_Unit.BranchName
                , ViewObject_Unit.Name
 
-             , MovementFloat_PartnerCount.ValueData 
+             , MovementFloat_PartnerCount.ValueData
              , (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) )
-             , (COALESCE (MovementFloat_HoursStop.ValueData, 0) ) 
-             , (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)
-                - COALESCE (MovementFloat_PartnerCount.ValueData,0) * (COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60) ) 
+             , (COALESCE (MovementFloat_HoursStop.ValueData, 0) )
+             , CASE WHEN (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)
+                        - (COALESCE (MovementFloat_PartnerCount.ValueData,0) * CAST (COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60 AS NUMERIC (16,2)))
+                         ) <> 0
+                    THEN (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)
+                        - (COALESCE (MovementFloat_PartnerCount.ValueData,0) * CAST (COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60 AS NUMERIC (16,2)))
+                         )
+                    ELSE 0
+               END
+             , (COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60)
              , MovementString_CommentStop.ValueData
-             , (COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60) 
        ;
 
 END;
@@ -971,4 +978,4 @@ ALTER FUNCTION gpReport_Transport (TDateTime, TDateTime, Integer, Integer, TVarC
 
 -- тест
 -- SELECT * FROM gpReport_Transport (inStartDate:= '06.03.2021', inEndDate:= '10.03.2021', inCarId:= null,  inBranchId:= 1, inSession:= zfCalc_UserAdmin());
---select * from gpReport_Transport(inStartDate := ('04.03.2020')::TDateTime , inEndDate := ('05.03.2020')::TDateTime , inCarId := 0 , inBranchId := 8380 ,  inSession := '5');
+-- select * from gpReport_Transport(inStartDate := ('04.03.2020')::TDateTime , inEndDate := ('05.03.2020')::TDateTime , inCarId := 0 , inBranchId := 8380 ,  inSession := '5');

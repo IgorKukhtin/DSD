@@ -37,6 +37,7 @@ type
   strict private
     FStartId: Int64;
     FLastId: Int64;
+    FStartDT, FLastDT : TDateTime;
     FSelectRange: Integer;
     FPacketRange: Integer;
     FPacketNumber: Integer; // порядковый номер пакета в сессии
@@ -95,6 +96,9 @@ type
     property LastId_DDL: Int64 read GetLastId_DDL write SetLastId_DDL;
 
   public
+    MinDT: TDateTime;
+    MaxDT: TDateTime;
+
     constructor Create(AOwner: TComponent; AMsgProc: TNotifyMessage); reintroduce; overload;
     constructor Create(AOwner: TComponent; const AStartId: Int64; const ASelectRange, APacketRange: Integer;
       AMsgProc: TNotifyMessage); reintroduce; overload;
@@ -140,12 +144,13 @@ type
     FOnEndSession: TNotifyEvent;
     FOnNeedRestart: TNotifyEvent;
   strict private
-    procedure InnerChangeStartId(const ANewStartId: Int64);
-    procedure InnerNewSession(const AStart: TDateTime; const AMinId, AMaxId: Int64; const ARecCount, ASessionNumber: Integer);
+    procedure InnerChangeStartId(const ANewStartId: Int64; const ANewStartDT : TDateTime );
+    procedure InnerNewSession(const AStart: TDateTime; const AMinId, AMaxId: Int64; const AMinDT, AMaxDT: TDateTime; const ARecCount, ASessionNumber: Integer);
     procedure InnerEndSession(Sender: TObject);
     procedure InnerNeedRestart(Sender: TObject);
   protected
     FReturnValue: Int64;
+    FReturnDT: TDateTime;
   protected
     procedure InnerMsgProc(const AMsg, AFileName: string; const aUID: Cardinal; AMsgType: TLogMessageType);
     procedure MySleep(const AInterval: Cardinal);
@@ -161,6 +166,7 @@ type
     property OnEndSession: TNotifyEvent read FOnEndSession write FOnEndSession;
     property OnNeedRestart: TNotifyEvent read FOnNeedRestart write FOnNeedRestart;
     property MyReturnValue: Int64 read FReturnValue;
+    property MyReturnDT: TDateTime read FReturnDT;
   end;
 
   TSinglePacket = class(TWorkerThread)
@@ -497,8 +503,10 @@ begin
     qrySelectReplicaCmd.First;
     if qrySelectReplicaCmd.RecordCount = 0 then
       FStartId := 0
-    else
+    else begin
       FStartId := qrySelectReplicaCmd.FieldByName('Id').AsLargeInt; // откорректируем значение StartId в соответствии с реальными данными
+      FStartDT := qrySelectReplicaCmd.FieldByName('last_modified').AsDateTime; //
+    end;
     LogMsg(Format(cElapsedFetch, [IntToStr(qrySelectReplicaCmd.RecordCount), Elapsed(crdStartFetch)]), crdStartFetch);
 
     if FStopped then Exit;
@@ -516,10 +524,11 @@ begin
 
     // сохраним правую границу сессии для последующего использования
     FLastId := FCommandData.Data.Id;
+    FLastDT := FCommandData.Data.DT;
 
     // показать инфу о новой сессии в GUI
     if (FStartId > 0) and (FLastId > 0) and (FStartId <= FLastId) and  Assigned(FOnNewSession) then
-      FOnNewSession(dtmStart, FStartId, FLastId, FCommandData.Count, FSessionNumber);
+      FOnNewSession(dtmStart, FStartId, FLastId, FStartDT, FLastDT, FCommandData.Count, FSessionNumber);
   except
     on E: Exception do
     begin
@@ -658,7 +667,7 @@ begin
     // строка "№2 <56477135-56513779> ок = 0 записей error = 0 записей за  "
     LogMsg(Format(cAttempt2, [iStartId, iMaxId, iSuccCount, iFailCount, EmptyStr]), crdStart);
     crdLogMsg := GetTickCount;
-    
+
     try
       
       while not FCommandData.EOF and (FCommandData.Data.Id <= iMaxId) and not FStopped do
@@ -1677,6 +1686,9 @@ begin
   Result.MaxId := -1;
   Result.RecCount := 0;
 
+  Result.MinDT := 0;
+  Result.MaxDT := 0;
+
   try
     if IsMasterConnected then
       with qryMasterHelper do
@@ -1686,11 +1698,15 @@ begin
         SQL.Add(cSelect);
         Open;
 
-        if not FieldByName('MinId').IsNull then
+        if not FieldByName('MinId').IsNull then begin
           Result.MinId := FieldByName('MinId').AsLargeInt;
+          Result.MinDT := FieldByName('MinDT').AsDateTime;
+        end;
 
-        if not FieldByName('MaxId').IsNull then
+        if not FieldByName('MaxId').IsNull then begin
           Result.MaxId := FieldByName('MaxId').AsLargeInt;
+          Result.MaxDT := FieldByName('MaxDT').AsDateTime;
+        end;
 
         if not FieldByName('RecCount').IsNull then
           Result.RecCount := FieldByName('RecCount').AsLargeInt;
@@ -1718,7 +1734,10 @@ begin
         Open;
 
         if not Fields[0].IsNull then
+        begin
           Result := Fields[0].AsLargeInt;
+          MaxDT  := Fields[1].AsDateTime;
+        end;
 
         Close;
       end;
@@ -1743,7 +1762,10 @@ begin
         Open;
 
         if not Fields[0].IsNull then
+        begin
           Result := Fields[0].AsLargeInt;
+          MinDT:=   Fields[1].AsDateTime;
+        end;
 
         Close;
       end;
@@ -2113,7 +2135,7 @@ begin
   begin
     FStartId := AValue;
     if Assigned(FOnChangeStartId) then
-      FOnChangeStartId(FStartId);
+      FOnChangeStartId(FStartId,FStartDT);
   end;
 end;
 
@@ -2161,11 +2183,11 @@ end;
 //  Result := ReturnValue;
 //end;
 
-procedure TWorkerThread.InnerChangeStartId(const ANewStartId: Int64);
+procedure TWorkerThread.InnerChangeStartId(const ANewStartId: Int64; const ANewStartDT : TDateTime );
 begin
   TThread.Queue(nil, procedure
                      begin
-                       if Assigned(FOnChangeStartId) then FOnChangeStartId(ANewStartId);
+                       if Assigned(FOnChangeStartId) then FOnChangeStartId(ANewStartId, ANewStartDT);
                      end);
 end;
 
@@ -2193,11 +2215,11 @@ begin
                      end);
 end;
 
-procedure TWorkerThread.InnerNewSession(const AStart: TDateTime; const AMinId, AMaxId: Int64; const ARecCount, ASessionNumber: Integer);
+procedure TWorkerThread.InnerNewSession(const AStart: TDateTime; const AMinId, AMaxId: Int64; const AMinDT, AMaxDT: TDateTime; const ARecCount, ASessionNumber: Integer);
 begin
   TThread.Queue(nil, procedure
                      begin
-                       if Assigned(FOnNewSession) then FOnNewSession(AStart, AMinId, AMaxId, ARecCount, ASessionNumber);
+                       if Assigned(FOnNewSession) then FOnNewSession(AStart, AMinId, AMaxId, AMinDT, AMaxDT, ARecCount, ASessionNumber);
                      end);
 end;
 
@@ -2249,6 +2271,8 @@ begin
   P^.MinId := tmpMinMax.MinId;
   P^.MaxId := tmpMinMax.MaxId;
   P^.RecCount := tmpMinMax.RecCount;
+  P^.MinDT := tmpMinMax.MinDT;
+  P^.MaxDT := tmpMinMax.MaxDT;
   FReturnValue := LongWord(P);
   Terminate;
 end;

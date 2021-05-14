@@ -19,7 +19,7 @@ BEGIN
     -- Нужно передать в gpSelect_Replica_union значения Id из _replica.table_update_data в диапазоне "inId_start..(inId_start + inRec_count)"
     -- и при этом соблюсти условие - "все соответствующие transaction_id находятся в передаваемом диапазоне".
     -- Для этого нужно определить правую границу, которая будет удовлетворять такому условию.
-    vbId_End := _replica.gpSelect_Replica_LastId (inId_start, inRec_count);
+    vbId_End := (SELECT NextId FROM _replica.gpSelect_Replica_LastId (inId_start, inRec_count));
 
   --RAISE EXCEPTION 'Ошибка. inId_start=<%>  vbId_End=<%>', inId_start, vbId_End;
 

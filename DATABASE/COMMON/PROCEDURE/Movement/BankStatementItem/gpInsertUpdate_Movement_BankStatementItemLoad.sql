@@ -106,6 +106,11 @@ BEGIN
        vbMovementId := lpInsertUpdate_Movement (0, zc_Movement_BankStatement(), NEXTVAL ('Movement_BankStatement_seq') :: TVarChar, inOperDate, NULL);
        --
        PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_BankAccount(), vbMovementId, vbMainBankAccountId);
+       -- сохранили протокол
+       PERFORM lpInsert_MovementProtocol (vbMovementId, vbUserId, TRUE);
+    ELSE 
+       -- сохранили протокол
+       PERFORM lpInsert_MovementProtocol (vbMovementId, vbUserId, FALSE);
     END IF;
 
 
@@ -524,7 +529,7 @@ BEGIN
     PERFORM lpInsert_MovementProtocol (vbMovementItemId, vbUserId, TRUE);
 
 
- if inSession = '5' 
+ if inSession = '5' AND 1=0
  then
     RAISE EXCEPTION 'ok1 %   %    %    %  %',  lfGet_Object_ValueData (vbJuridicalId), vbContractId, lfGet_Object_ValueData (vbContractId), lfGet_Object_ValueData (vbInfoMoneyId), inComment;
  end if;
