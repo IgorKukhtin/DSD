@@ -278,6 +278,10 @@ type
     mactExport: TMultiAction;
     macExportAll: TMultiAction;
     bbExport: TdxBarButton;
+    spSelectPrint_two: TdsdStoredProc;
+    actPrint_two: TdsdPrintAction;
+    mactPrint_QualityDoc_two: TMultiAction;
+    bbPrint_QualityDoc_two: TdxBarButton;
   private
     { Private declarations }
   public

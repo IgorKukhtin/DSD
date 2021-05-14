@@ -5,10 +5,8 @@ inherited SaleJournalForm: TSaleJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -593
-  ExplicitTop = -219
   ExplicitWidth = 1382
-  ExplicitHeight = 676
+  ExplicitHeight = 679
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -3439,6 +3437,83 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1042#1057#1045#1052' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084
       ImageIndex = 55
     end
+    object actPrint_two: TdsdPrintAction
+      Category = 'Print_QualityDoc'
+      MoveParams = <
+        item
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_two
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_two
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      ImageIndex = 17
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDMaster2'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'MovementId;QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Quality'
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameQuality'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object mactPrint_QualityDoc_two: TMultiAction
+      Category = 'Print_QualityDoc'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actPrint_Quality_ReportName
+        end
+        item
+          Action = actPrint_two
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1042#1089#1077#1093' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1081' '#1087#1086' '#1090#1077#1082'. '#1070#1088'.'#1083#1080#1094#1091
+      Hint = #1055#1077#1095#1072#1090#1100' '#1042#1089#1077#1093' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1081' '#1087#1086' '#1090#1077#1082'. '#1070#1088'.'#1083#1080#1094#1091
+      ImageIndex = 17
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -3706,6 +3781,10 @@ inherited SaleJournalForm: TSaleJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_QualityDoc_two'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -3917,6 +3996,10 @@ inherited SaleJournalForm: TSaleJournalForm
     end
     object bbExport: TdxBarButton
       Action = mactExport
+      Category = 0
+    end
+    object bbPrint_QualityDoc_two: TdxBarButton
+      Action = mactPrint_QualityDoc_two
       Category = 0
     end
   end
@@ -5495,5 +5578,36 @@ inherited SaleJournalForm: TSaleJournalForm
     PackSize = 1
     Left = 168
     Top = 552
+  end
+  object spSelectPrint_two: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Quality_Print_two'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAll'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 967
+    Top = 424
   end
 end
