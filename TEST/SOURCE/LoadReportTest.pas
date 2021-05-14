@@ -138,18 +138,18 @@ var
 begin
  { LoadReportFromFile('PrintMovement_Sale32437180', ReportPath + '\Товарный Учет\PrintMovement_Sale32437180.fr3');
    exit;
-   }
+
    LoadReportFromFile('Печать документов начислений по бонусам', ReportPath + '\Отчеты (финансы)\Печать документов начислений по бонусам.fr3');
-  {
+
   LoadReportFromFile('Проверка начислений по бонусам (итоги)', ReportPath + '\Отчеты (финансы)\Проверка начислений по бонусам (итоги).fr3');
   //exit;
 
   LoadReportFromFile('Отчет внешние продажи', ReportPath + '\Отчеты (товарные)\Отчет внешние продажи.fr3');
   //exit;
-   }
+
   LoadReportFromFile('Проверка начислений по бонусам для подписи', ReportPath + '\Отчеты (финансы)\Проверка начислений по бонусам для подписи.fr3');
   exit;
-  {
+
   //LoadReportFromFile('Проверка начислений по бонусам поставщиков', ReportPath + '\Отчеты (финансы)\Проверка начислений по бонусам поставщиков.fr3');
   //exit;
 
@@ -480,10 +480,10 @@ begin
   exit;
 
   LoadReportFromFile('PrintMovement_SalePack', ReportPath + '\Товарный Учет\PrintMovement_SalePack.fr3');
-
+  }
   LoadReportFromFile('PrintMovement_Quality', ReportPath + '\Товарный Учет\PrintMovement_Quality.fr3');
   exit;
-
+  {
   LoadReportFromFile('PrintMovement_Quality32049199', ReportPath + '\Товарный Учет\PrintMovement_Quality32049199.fr3');
 
   LoadReportFromFile('PrintMovement_Quality32294926', ReportPath + '\Товарный Учет\PrintMovement_Quality32294926.fr3');
