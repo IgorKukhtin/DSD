@@ -1927,6 +1927,14 @@ object SalePodiumForm: TSalePodiumForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertMI_byReturn_offer'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdate_isChecked'
         end
         item
@@ -2080,6 +2088,10 @@ object SalePodiumForm: TSalePodiumForm
     end
     object bbact_User_PriceReal: TdxBarButton
       Action = mact_User_PriceReal
+      Category = 0
+    end
+    object bbInsertMI_byReturn_offer: TdxBarButton
+      Action = macInsertMI_byReturn_offer
       Category = 0
     end
   end
@@ -3055,6 +3067,68 @@ object SalePodiumForm: TSalePodiumForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actInsertMI_byReturn: TdsdExecStoredProc
+      Category = 'offer'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertMI_byReturn
+      StoredProcList = <
+        item
+          StoredProc = spInsertMI_byReturn
+        end>
+      Caption = 'actInsertMI_byReturn'
+      ImageIndex = 27
+    end
+    object ExecuteDialog_offer: TExecuteDialog
+      Category = 'offer'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1042#1086#1076#1080#1090#1077#1083#1103'/'#1069#1082#1089#1087#1077#1076#1080#1090#1086#1088#1072'/'#1040#1074#1090#1086
+      ImageIndex = 27
+      FormName = 'TDatePeriodDialogForm'
+      FormNameParam.Value = 'TDatePeriodDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inStartDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inStartDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inEndDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inEndDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macInsertMI_byReturn_offer: TMultiAction
+      Category = 'offer'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialog_offer
+        end
+        item
+          Action = actInsertMI_byReturn
+        end
+        item
+          Action = actRefreshMI
+        end>
+      QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074#1086#1079#1074#1088#1072#1090#1099' '#1089' '#1087#1088#1080#1084#1077#1088#1082#1080'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074#1086#1079#1074#1088#1072#1090#1099' '#1089' '#1087#1088#1080#1084#1077#1088#1082#1080
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074#1086#1079#1074#1088#1072#1090#1099' '#1089' '#1087#1088#1080#1084#1077#1088#1082#1080
+      ImageIndex = 27
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -3527,8 +3601,8 @@ object SalePodiumForm: TSalePodiumForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 362
-    Top = 216
+    Left = 338
+    Top = 232
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -4678,5 +4752,40 @@ object SalePodiumForm: TSalePodiumForm
       end>
     Left = 1008
     Top = 88
+  end
+  object spInsertMI_byReturn: TdsdStoredProc
+    StoredProcName = 'gpInsert_MI_SalePodium_Offer_byReturn'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inStartDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inEndDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 402
+    Top = 184
   end
 end
