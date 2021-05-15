@@ -45,7 +45,7 @@ BEGIN
                                                inAmountManual        := COALESCE(MIFloat_AmountManual.ValueData,0),
                                                inAmountStorage       := COALESCE(MIFloat_AmountStorage.ValueData,0),
                                                inReasonDifferencesId := COALESCE(MILinkObject_ReasonDifferences.ObjectId, 0),
-                                               inCommentTRID         := inCommentSendId,
+                                               inCommentSendID       := inCommentSendId,
                                                inSession             := inSession)
      FROM MovementItem
 
@@ -73,3 +73,4 @@ $BODY$
 */
 
 -- тест select * from gpUpdate_MI_TechnicalRediscount_CommentSend(inMovementItemId := 371775078 , inCommentSendId := 14883321 ,  inSession := '3');
+--select * from gpUpdate_MI_TechnicalRediscount_CommentSend(inMovementItemId := 427715976 , inCommentSendId := 14887488 ,  inSession := '3');
