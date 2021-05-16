@@ -1003,6 +1003,7 @@ procedure TLoadFormTest.LoadSaleFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSalePodiumForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSalePodiumForm');
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSalePodiumJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSalePodiumJournalForm');
@@ -1449,6 +1450,10 @@ end;
 //
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDatePeriodDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDatePeriodDialogForm');
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeKoeffEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeKoeffEditForm');
 //

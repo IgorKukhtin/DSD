@@ -207,6 +207,11 @@ type
     actPrintCheckPriceReal: TdsdPrintAction;
     bbact_User_PriceReal: TdxBarButton;
     OperPriceListReal_curr: TcxGridDBColumn;
+    spInsertMI_byReturn: TdsdStoredProc;
+    actInsertMI_byReturn: TdsdExecStoredProc;
+    ExecuteDialog_offer: TExecuteDialog;
+    macInsertMI_byReturn_offer: TMultiAction;
+    bbInsertMI_byReturn_offer: TdxBarButton;
   private
   public
   end;

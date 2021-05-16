@@ -1198,6 +1198,10 @@
 				<Form>Report_GoodsMI_AccountPodiumForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\System\DatePeriodDialog.pas">
+				<Form>DatePeriodDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

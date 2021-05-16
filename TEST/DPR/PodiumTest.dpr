@@ -345,7 +345,8 @@ uses
   Report_ClientDebtPodium in '..\..\FormsBoutique\Report\Report_ClientDebtPodium.pas' {Report_ClientDebtPodiumForm: TParentForm},
   Report_CollationByClientPodium in '..\..\FormsBoutique\Report\Report_CollationByClientPodium.pas' {Report_CollationByClientPodiumForm: TParentForm},
   Report_Goods_RemainsCurrentPodium in '..\..\FormsBoutique\Report\Report_Goods_RemainsCurrentPodium.pas' {Report_Goods_RemainsCurrentPodiumForm: TParentForm},
-  Report_GoodsMI_AccountPodium in '..\..\FormsBoutique\Report\Report_GoodsMI_AccountPodium.pas' {Report_GoodsMI_AccountPodiumForm: TParentForm};
+  Report_GoodsMI_AccountPodium in '..\..\FormsBoutique\Report\Report_GoodsMI_AccountPodium.pas' {Report_GoodsMI_AccountPodiumForm: TParentForm},
+  DatePeriodDialog in '..\..\FormsBoutique\System\DatePeriodDialog.pas' {DatePeriodDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
