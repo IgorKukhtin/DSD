@@ -973,13 +973,6 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         Component = ceAmountDiscount_curr
         DataType = ftFloat
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CurrencyValueUSD'
-        Value = Null
-        Component = ceCurrencyValue_USD
-        DataType = ftFloat
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 152

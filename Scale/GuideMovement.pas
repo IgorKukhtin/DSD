@@ -128,6 +128,7 @@ type
     MovementId_Order: TcxGridDBColumn;
     SubjectDocName: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
+    bbQualityDoc_list: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -160,6 +161,7 @@ type
     procedure bbPrintStickerTermoClick(Sender: TObject);
     procedure bbPrintPackWeight_FozzyClick(Sender: TObject);
     procedure bbExport_EmailClick(Sender: TObject);
+    procedure bbQualityDoc_listClick(Sender: TObject);
   private
     fStartWrite:Boolean;
 
@@ -660,6 +662,11 @@ end;
 procedure TGuideMovementForm.bbPrintStickerTermoClick(Sender: TObject);
 begin
      with CDS do Print_Sticker(CDS.FieldByName('MovementDescId').AsInteger, CDS.FieldByName('MovementId_parent').AsInteger,TRUE);
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.bbQualityDoc_listClick(Sender: TObject);
+begin
+     with CDS do Print_QualityDoc_list(CDS.FieldByName('MovementDescId').AsInteger, CDS.FieldByName('MovementId_parent').AsInteger,TRUE);
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.bbEDI_DesadvClick(Sender: TObject);

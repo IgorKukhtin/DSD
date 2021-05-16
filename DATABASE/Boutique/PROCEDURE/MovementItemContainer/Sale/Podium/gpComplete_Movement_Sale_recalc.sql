@@ -233,7 +233,7 @@ BEGIN
                 , COALESCE (_tmpCash.CurrencyId, tmpMI.CurrencyId)                AS CurrencyId
                 , CASE WHEN _tmpCash.CashId > 0 THEN _tmpCash.TotalPay ELSE 0 END AS Amount
                 , COALESCE (tmpMI.CurrencyValue, 0)                               AS CurrencyValue
-                , COALESCE (tmpMI.CurrencyId, 0)                                  AS ParValue
+                , COALESCE (tmpMI.ParValue, 1)                                    AS ParValue
            FROM (SELECT DISTINCT _tmpItem_recalc.MovementItemId, _tmpItem_recalc.CashId, _tmpItem_recalc.CurrencyId_cash AS CurrencyId, _tmpItem_recalc.TotalPay FROM _tmpItem_recalc
                 ) AS _tmpCash
                 FULL JOIN tmpMI ON tmpMI.CashId   = _tmpCash.CashId

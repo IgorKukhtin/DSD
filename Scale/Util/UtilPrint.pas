@@ -142,6 +142,9 @@ type
     spSelectPrint_ProductionUnion: TdsdStoredProc;
     spGet_Movement: TdsdStoredProc;
     actGet_Movement: TdsdExecStoredProc;
+    spSelectPrint_Quality_list: TdsdStoredProc;
+    actPrint_QualityDoc_list: TdsdPrintAction;
+    mactPrint_QualityDoc_list: TMultiAction;
   private
   end;
 
@@ -160,6 +163,7 @@ type
   function Print_Sticker (MovementDescId,MovementId:Integer; isPreview:Boolean):Boolean;
   function Print_Sticker_Wms (MovementDescId,MovementId,MovementItemId:Integer; isPreview:Boolean):Boolean;
   function Print_Sticker_Ceh (MovementDescId,MovementId,MovementItemId:Integer; isPreview:Boolean):Boolean;
+  function Print_QualityDoc_list(MovementDescId,MovementId:Integer; isPreview:Boolean):Boolean;
   function Print_ReportGoodsBalance (StartDate,EndDate:TDateTime; UnitId : Integer; UnitName : String; isGoodsKind, isPartionGoods:Boolean):Boolean;
 
   procedure SendEDI_Invoice (MovementId: Integer);
@@ -359,6 +363,14 @@ begin
   UtilPrintForm.actPrint_QualityDoc.CopiesCount:=myPrintCount;
   UtilPrintForm.actPrint_QualityDoc.WithOutPreview:= not isPreview;
   UtilPrintForm.mactPrint_QualityDoc.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+procedure Print_QualityDocument_list (MovementId: Integer; isPreview:Boolean);
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.actPrint_QualityDoc.CopiesCount:=1;
+  UtilPrintForm.actPrint_QualityDoc.WithOutPreview:= not isPreview;
+  UtilPrintForm.mactPrint_QualityDoc_list.Execute;
 end;
 //------------------------------------------------------------------------------------------------
 procedure Print_Sale_OrderDocument(MovementId_order,MovementId_by:Integer; isDiff:Boolean; isDiffTax:Boolean);
@@ -705,6 +717,26 @@ begin
              else begin ShowMessage ('Ошибка.'+#10+#13+'№ заявки не установлен.'+#10+#13+'Печать <Сравнение Заявка/Отгрузка> не сформирована.');exit;end;
           except
                 ShowMessage('Ошибка.Печать <Сравнение Заявка/Отгрузка> не сформирована.');
+                exit;
+          end;
+     Result:=true;
+end;
+//------------------------------------------------------------------------------------------------
+function Print_QualityDoc_list(MovementDescId,MovementId:Integer; isPreview:Boolean):Boolean;
+begin
+     UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsSverkaCDS.IndexFieldNames:='';
+     //
+     Result:=false;
+          //
+          try
+             //Print
+             if (MovementDescId = zc_Movement_Sale)
+             then Print_QualityDocument_list(MovementId,isPreview)
+             else begin ShowMessage ('Ошибка.Форма печати <Качественное> возможно только для продажи.');exit;end;
+          except
+                ShowMessage('Ошибка.Печать <Качественное> не сформирована.');
                 exit;
           end;
      Result:=true;

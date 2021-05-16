@@ -145,7 +145,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbViewMIClick
       end
       object bbEDI_Invoice: TSpeedButton
-        Left = 522
+        Left = 543
         Top = 3
         Width = 31
         Height = 29
@@ -190,7 +190,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbEDI_InvoiceClick
       end
       object bbEDI_Ordspr: TSpeedButton
-        Left = 552
+        Left = 573
         Top = 3
         Width = 31
         Height = 29
@@ -235,7 +235,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbEDI_OrdsprClick
       end
       object bbEDI_Desadv: TSpeedButton
-        Left = 582
+        Left = 603
         Top = 3
         Width = 31
         Height = 29
@@ -385,7 +385,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbSale_Order_diffTaxClick
       end
       object bbPrintStickerTermo: TSpeedButton
-        Left = 631
+        Left = 642
         Top = 2
         Width = 31
         Height = 29
@@ -409,7 +409,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbPrintStickerTermoClick
       end
       object bbPrintPackWeight_Fozzy: TSpeedButton
-        Left = 475
+        Left = 506
         Top = 3
         Width = 31
         Height = 29
@@ -476,6 +476,25 @@ object GuideMovementForm: TGuideMovementForm
         ParentShowHint = False
         ShowHint = True
         OnClick = bbExport_EmailClick
+      end
+      object bbQualityDoc_list: TSpeedButton
+        Left = 468
+        Top = 2
+        Width = 31
+        Height = 29
+        Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1042#1057#1045' '#1082#1072#1095#1077#1089#1090#1074#1077#1085#1085#1099#1077' '#1074' PDF'
+        Glyph.Data = {
+          F6000000424DF600000000000000760000002800000010000000100000000100
+          0400000000008000000000000000000000001000000000000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
+          888888888880088888888888809770888888888097F8870888888097F8707870
+          888899F870999787088898709999997870889099999999978708899999999999
+          7808889999999999978888899999999999888888999999999908888889999999
+          0888888888999908888888888889088888888888888888888888}
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbQualityDoc_listClick
       end
     end
     object cxDBGrid: TcxGrid
@@ -1275,6 +1294,7 @@ object GuideMovementForm: TGuideMovementForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>

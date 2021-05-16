@@ -195,6 +195,8 @@ BEGIN
             LEFT JOIN Object AS Object_CurrencyClient ON Object_CurrencyClient.Id = vbCurrencyId_Client
             ;
 
+--    RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from _tmpItem_group);
+    
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

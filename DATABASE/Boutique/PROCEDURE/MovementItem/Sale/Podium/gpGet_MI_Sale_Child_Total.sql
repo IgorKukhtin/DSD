@@ -154,7 +154,7 @@ BEGIN
 
                   WHEN tmp.AmountDiff > 0 AND zfCalc_CurrencyTo (tmp.AmountDiff, inCurrencyValueEUR, 1) <> FLOOR (zfCalc_CurrencyTo (tmp.AmountDiff, inCurrencyValueEUR, 1))
                        -- добавляем к скидке так, чтоб остаток EUR - был целым
-                       THEN inAmountDiscount + zfCalc_CurrencyFrom (zfCalc_CurrencyTo (tmp.AmountDiff, inCurrencyValueEUR, 1) - ROUND (zfCalc_CurrencyTo (tmp.AmountDiff, inCurrencyValueEUR, 1), 0), inCurrencyValueEUR, 1)
+                       THEN inAmountDiscount + (tmp.AmountDiff - zfCalc_CurrencyFrom (ROUND (zfCalc_CurrencyTo (tmp.AmountDiff, inCurrencyValueEUR, 1), 0), inCurrencyValueEUR, 1))
 
                   ELSE inAmountDiscount
              END :: TFloat AS AmountDiscount
