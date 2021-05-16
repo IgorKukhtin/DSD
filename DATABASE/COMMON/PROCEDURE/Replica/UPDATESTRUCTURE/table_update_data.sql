@@ -45,7 +45,7 @@ DO $$
           operation text,
           transaction_id bigint,
           user_name text,
-          last_modified timestamp without time zone DEFAULT timezone('utc'::text, now()),
+          last_modified timestamp without time zone DEFAULT timezone('utc'::text, CLOCK_TIMESTAMP()),
           parentid bigint,
           movementid bigint,
           CONSTRAINT table_update_data_pkey PRIMARY KEY (id)
@@ -88,7 +88,7 @@ DO $$
           operation text,
           transaction_id bigint,
           user_name text,
-          last_modified timestamp without time zone DEFAULT timezone('utc'::text, now()),
+          last_modified timestamp without time zone DEFAULT timezone('utc'::text, CLOCK_TIMESTAMP()),
           parentid bigint,
           movementid bigint,
           CONSTRAINT table_update_data_two_pkey PRIMARY KEY (id)

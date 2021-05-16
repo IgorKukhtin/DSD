@@ -78,9 +78,9 @@ BEGIN
         vbId_End:= COALESCE ((SELECT MAX (Id) FROM _replica.table_update_data
                               WHERE Id BETWEEN inId_start AND vbId_End
                                 AND last_modified < timezone('utc'::text, CURRENT_TIMESTAMP) - CASE WHEN EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 10 AND 16
-                                                                                                    THEN INTERVAL '30 MINUTES'
+                                                                                                    THEN INTERVAL '80 MINUTES'
                                                                                                     WHEN EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 17 AND 23
-                                                                                                    THEN INTERVAL '100 MINUTES'
+                                                                                                    THEN INTERVAL '120 MINUTES'
                                                                                                     ELSE INTERVAL '200 MINUTES'
                                                                                                END -- :: INTERVAL
                              ), inId_start - 1);
