@@ -724,6 +724,7 @@ inherited CheckDeferred_SearchForm: TCheckDeferred_SearchForm
     object actChoiceCancelReason: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      BeforeAction = actPUSHSetErased
       PostDataSetBeforeExecute = False
       Caption = 'actChoiceCancelReason'
       FormName = 'TCancelReasonForm'
@@ -739,6 +740,18 @@ inherited CheckDeferred_SearchForm: TCheckDeferred_SearchForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object actPUSHSetErased: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSHSetErased
+      StoredProcList = <
+        item
+          StoredProc = spPUSHSetErased
+        end
+        item
+        end>
+      Caption = 'actPUSHSetErased'
     end
   end
   inherited MasterDS: TDataSource
@@ -1073,5 +1086,39 @@ inherited CheckDeferred_SearchForm: TCheckDeferred_SearchForm
       end>
     Left = 40
     Top = 144
+  end
+  object spPUSHSetErased: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSH_ChechSetErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 314
+    Top = 256
   end
 end

@@ -1,25 +1,25 @@
 inherited CheckDeferredForm: TCheckDeferredForm
   Caption = #1054#1090#1083#1086#1078#1077#1085#1085#1099#1077' '#1095#1077#1082#1080'     '
-  ClientHeight = 382
-  ClientWidth = 668
+  ClientHeight = 421
+  ClientWidth = 736
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 684
-  ExplicitHeight = 421
+  ExplicitWidth = 752
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 668
-    Height = 356
+    Width = 736
+    Height = 395
     ExplicitWidth = 668
     ExplicitHeight = 356
-    ClientRectBottom = 356
-    ClientRectRight = 668
+    ClientRectBottom = 395
+    ClientRectRight = 736
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 668
       ExplicitHeight = 356
       inherited cxGrid: TcxGrid
         Width = 273
-        Height = 356
+        Height = 395
         Align = alLeft
         ExplicitWidth = 273
         ExplicitHeight = 356
@@ -207,11 +207,13 @@ inherited CheckDeferredForm: TCheckDeferredForm
       object cxGrid1: TcxGrid
         Left = 281
         Top = 0
-        Width = 387
-        Height = 356
+        Width = 455
+        Height = 395
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 387
+        ExplicitHeight = 356
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource1
@@ -352,9 +354,10 @@ inherited CheckDeferredForm: TCheckDeferredForm
         Left = 273
         Top = 0
         Width = 8
-        Height = 356
+        Height = 395
         HotZoneClassName = 'TcxMediaPlayer8Style'
         Control = cxGrid
+        ExplicitHeight = 356
       end
     end
   end
@@ -796,6 +799,7 @@ inherited CheckDeferredForm: TCheckDeferredForm
     object actChoiceCancelReason: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      BeforeAction = actPUSHSetErased
       PostDataSetBeforeExecute = False
       Caption = 'actChoiceCancelReason'
       FormName = 'TCancelReasonForm'
@@ -811,6 +815,18 @@ inherited CheckDeferredForm: TCheckDeferredForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object actPUSHSetErased: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSHSetErased
+      StoredProcList = <
+        item
+          StoredProc = spPUSHSetErased
+        end
+        item
+        end>
+      Caption = 'actPUSHSetErased'
     end
   end
   inherited MasterDS: TDataSource
@@ -1259,5 +1275,39 @@ inherited CheckDeferredForm: TCheckDeferredForm
       end>
     Left = 40
     Top = 144
+  end
+  object spPUSHSetErased: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSH_ChechSetErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 314
+    Top = 256
   end
 end

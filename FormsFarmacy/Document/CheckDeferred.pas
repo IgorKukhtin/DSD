@@ -86,6 +86,8 @@ type
     actChoiceCancelReason: TOpenChoiceForm;
     TypeChech: TcxGridDBColumn;
     AccommodationName: TcxGridDBColumn;
+    actPUSHSetErased: TdsdShowPUSHMessage;
+    spPUSHSetErased: TdsdStoredProc;
   private
     { Private declarations }
   public

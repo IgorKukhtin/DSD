@@ -65,6 +65,21 @@ inherited Report_KilledCodeRecoveryForm: TReport_KilledCodeRecoveryForm
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaOrder
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = AmountOrder
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = Remains
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -121,6 +136,70 @@ inherited Report_KilledCodeRecoveryForm: TReport_KilledCodeRecoveryForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 77
+          end
+          object Remains: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082
+            DataBinding.FieldName = 'Remains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object Price_min: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1079#1072#1082#1091#1087#1082#1080' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'Price_min'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object AmountOrder: TcxGridDBColumn
+            Caption = #1047#1072#1082#1072#1079
+            DataBinding.FieldName = 'AmountOrder'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 57
+          end
+          object SummaOrder: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072
+            DataBinding.FieldName = 'SummaOrder'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 59
+          end
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
+          object ContractName: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088
+            DataBinding.FieldName = 'ContractName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 81
+          end
+          object ExpirationDate: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            DataBinding.FieldName = 'ExpirationDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 116
           end
         end
       end

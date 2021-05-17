@@ -44,6 +44,13 @@ type
     cxDBTextEdit1: TcxDBTextEdit;
     cxDBTextEdit2: TcxDBTextEdit;
     cxLabel7: TcxLabel;
+    Remains: TcxGridDBColumn;
+    Price_min: TcxGridDBColumn;
+    AmountOrder: TcxGridDBColumn;
+    SummaOrder: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    ContractName: TcxGridDBColumn;
+    ExpirationDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -17,6 +17,15 @@ RETURNS TABLE (
               , CountSelling Integer
               , CountUnitAll Integer
               , GoodsCount Integer
+              , Remains TFloat
+              , Price_min TFloat
+              , AmountOrder TFloat
+              , SummaOrder TFloat
+              , JuridicalId       Integer    -- Поставщик (по которому найдена миним цена)
+              , JuridicalName     TVarChar   -- Поставщик (по которому найдена миним цена)
+              , ContractId        Integer    -- Договор (по которому найдена миним цена)
+              , ContractName      TVarChar   -- Договор (по которому найдена миним цена)
+              , ExpirationDate    TDateTime -- срок годности (по которому найдена миним цена)
   )
 AS
 $BODY$
@@ -176,21 +185,89 @@ BEGIN
                                WHERE tmpSelling.AmountCheck >= inSalesThreshold
                                GROUP BY tmpSelling.GoodsId
                                ),
-           tmpDate AS (SELECT tmpGoods.UnitName
+           tmpMinPrice_List AS (SELECT MinPriceList.GoodsId,
+                                       MinPriceList.GoodsCode,
+                                       MinPriceList.GoodsName,
+                                       MinPriceList.PartionGoodsDate,
+                                       MinPriceList.Partner_GoodsId,
+                                       MinPriceList.Partner_GoodsCode,
+                                       MinPriceList.Partner_GoodsName,
+                                       MinPriceList.MakerName,
+                                       MinPriceList.ContractId,
+                                       MinPriceList.AreaId,
+                                       MinPriceList.JuridicalId,
+                                       MinPriceList.JuridicalName,
+                                       MinPriceList.Price,
+                                       MinPriceList.SuperFinalPrice,
+                                       MinPriceList.isTop,
+                                       MinPriceList.isOneJuridical
+                                FROM (SELECT DISTINCT tmpGoods.GoodsId FROM tmpGoods) AS GoodsList_all
+                                     INNER JOIN MinPrice_ForSite AS MinPriceList
+                                                                 ON GoodsList_all.GoodsId = MinPriceList.GoodsId),
+           tmpNDSKind AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId
+                                , ObjectFloat_NDSKind_NDS.ValueData
+                          FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
+                          WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+                         ),
+           tmpDate AS (SELECT tmpGoods.UnitId
+                            , tmpGoods.UnitName
                             , tmpGoods.GoodsId
                             , tmpGoods.GoodsCode
                             , tmpGoods.GoodsName
                             , tmpGoods.MCSIsCloseDateChange
                             , tmpGoodsUnitCount.CountUnit::Integer     AS CountUnit
                             , tmpSellingCount.CountSelling::Integer    AS CountSelling
+                            , ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2) :: TFloat  AS Price_min
+                            , MinPrice_List.JuridicalId
+                            , MinPrice_List.JuridicalName
+                            , MinPrice_List.ContractId
+                            , Object_Contract.ValueData       AS ContractName
+                            , MinPrice_List.PartionGoodsDate  AS ExpirationDate
                        FROM tmpGoods
 
                             INNER JOIN tmpGoodsUnitCount ON tmpGoodsUnitCount.GoodsId = tmpGoods.GoodsId
 
                             INNER JOIN tmpSellingCount ON tmpSellingCount.GoodsId = tmpGoods.GoodsId
-                                                      AND tmpSellingCount.CountSelling >= CEIL((vbUnitCount - tmpGoodsUnitCount.CountUnit) * inPercePharmaciesd / 100)),
-           tmpGoodsCount AS (SELECT Count(DISTINCT tmpDate.GoodsId) as GoodsCount FROM tmpDate)
+                                                      AND tmpSellingCount.CountSelling >= CEIL((vbUnitCount - tmpGoodsUnitCount.CountUnit) * inPercePharmaciesd / 100)
+                                                      
+                            LEFT JOIN ObjectLink AS OL_Unit_Area
+                                                 ON OL_Unit_Area.ObjectId = tmpGoods.UnitId
+                                                AND OL_Unit_Area.DescId   = zc_ObjectLink_Unit_Area()
 
+                            LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
+                                                 ON ObjectLink_Goods_NDSKind.ObjectId = tmpGoods.GoodsId
+                                                AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
+                            LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
+                            LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
+                                                 ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId
+ 
+                            LEFT JOIN tmpMinPrice_List AS MinPrice_List  ON MinPrice_List.GoodsId  = tmpGoods.GoodsId
+                                                                        AND MinPrice_List.AreaId   =
+                                                                            CASE WHEN COALESCE (OL_Unit_Area.ChildObjectId, zc_Area_Basis())  <> 12487449  
+                                                                                 THEN COALESCE (OL_Unit_Area.ChildObjectId, zc_Area_Basis()) 
+                                                                                 ELSE zc_Area_Basis() END
+                                                                        AND MinPrice_List.PartionGoodsDate >= CURRENT_DATE + INTERVAL '1 YEAR'
+                            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MinPrice_List.ContractId
+                       ),
+           tmpGoodsCount AS (SELECT Count(DISTINCT tmpDate.GoodsId) as GoodsCount FROM tmpDate) ,  
+           tmpContainer AS (SELECT Container.ObjectId
+                                 , Container.WhereObjectId
+                                 , Container.Amount
+                            FROM
+                                Container
+                            WHERE Container.DescId = zc_Container_Count()
+                              AND Container.ObjectId in (SELECT DISTINCT tmpDate.GoodsId FROM tmpDate)
+                              AND Container.WhereObjectId in (SELECT DISTINCT tmpDate.UnitId FROM tmpDate)
+                              AND Container.Amount <> 0),
+           tmpRemains AS (SELECT Container.ObjectId           AS GoodsId
+                               , Container.WhereObjectId      AS UnitId
+                               , SUM (Container.Amount)       AS Amount
+                              FROM tmpContainer AS Container
+                              GROUP BY Container.ObjectId
+                                     , Container.WhereObjectId
+                             )
+
+           
     SELECT tmpDate.UnitName
          , tmpDate.GoodsCode
          , tmpDate.GoodsName
@@ -199,9 +276,21 @@ BEGIN
          , tmpDate.CountSelling
          , vbUnitCount
          , tmpGoodsCount.GoodsCount::Integer
+         , tmpRemains.Amount::TFloat   
+         , tmpDate.Price_min
+         , CASE WHEN COALESCE (tmpDate.Price_min, 0) > 0 AND COALESCE (tmpRemains.Amount, 0) < 1 THEN 1 ELSE 0 END::TFloat                  AS AmountOrder
+         , CASE WHEN COALESCE (tmpDate.Price_min, 0) > 0 AND COALESCE (tmpRemains.Amount, 0) < 1 THEN tmpDate.Price_min ELSE 0 END::TFloat  AS SummaOrder
+         , tmpDate.JuridicalId
+         , tmpDate.JuridicalName
+         , tmpDate.ContractId
+         , tmpDate.ContractName
+         , tmpDate.ExpirationDate
     FROM tmpDate
 
          INNER JOIN tmpGoodsCount ON 1 = 1
+         
+         LEFT JOIN tmpRemains ON tmpRemains.GoodsId =  tmpDate.GoodsId
+                             AND tmpRemains.UnitId =  tmpDate.UnitId 
 
     ;
 
@@ -216,6 +305,6 @@ $BODY$
  26.04.21                                                       *
 */
 
--- тест
+-- тест SELECT * FROM gpSelect_KilledCodeRecovery(200, 60, 1, '3')
 
-SELECT * FROM gpSelect_KilledCodeRecovery(200, 60, 1, '3')
+select * from gpSelect_KilledCodeRecovery(inRangeOfDays := 200 , inPercePharmaciesd := 60 , inSalesThreshold := 1 ,  inSession := '3');

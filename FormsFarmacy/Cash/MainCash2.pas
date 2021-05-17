@@ -738,7 +738,7 @@ type
     ASalerCash: Currency;
     ASalerCashAdd: Currency;
     PaidType: TPaidType;
-    FiscalNumber: String;
+    FFiscalNumber: String;
     difUpdate: Boolean; // только 2 форма
     VipCDS, VIPListCDS: TClientDataSet;
     VIPForm: TParentForm;
@@ -783,7 +783,7 @@ type
     procedure UpdateRemainsFromCheck(AGoodsId: Integer = 0;
       APartionDateKindId: Integer = 0; ANDSKindId: Integer = 0; ADiscountExternalID: Integer = 0;
       ADivisionPartiesID: Integer = 0;  AisPresent: Boolean = False;
-      AAmount: Currency = 0; APriceSale: Currency = 0);
+      AAmount: Currency = 0; APriceSale: Currency = 0; ALoadVipCheck : Boolean = False);
     // Обрабатывает количество для ВИП чеков
     procedure UpdateRemainsFromVIPCheck(ALoadCheck, ASaveCheck : Boolean);
 
@@ -797,7 +797,7 @@ type
     procedure Add_Log_XML(AMessage: String);
     // Пробивает чек через ЭККА
     function PutCheckToCash(SalerCash, SalerCashAdd: Currency;
-      PaidType: TPaidType; out AFiscalNumber, ACheckNumber: String;
+      PaidType: TPaidType; var AFiscalNumber, ACheckNumber: String;
       APOSTerminalCode: Integer = 0; isFiscal: Boolean = True): Boolean;
     // подключение к локальной базе данных
     function InitLocalStorage: Boolean;
@@ -1521,7 +1521,7 @@ begin
 
   ClearFilterAll;
 
-  FiscalNumber := '';
+  FFiscalNumber := '';
   fPrint := False;
   pnlVIP.Visible := false;
   edPrice.Value := 0.0;
@@ -1570,7 +1570,7 @@ begin
   // Ночные скидки
   SetTaxUnitNight;
   // Вычтем из резерва если ВИП чек
-  if FormParams.ParamByName('CheckId').Value <> 0 then UpdateRemainsFromVIPCheck(False, False);
+  UpdateRemainsFromVIPCheck(False, False);
 end;
 
 procedure TMainCashForm2.actClearMoneyExecute(Sender: TObject);
@@ -3489,7 +3489,7 @@ begin
 
     Add_Log('Печать чека');
     if PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.ASalerCashAdd,
-      MainCashForm.PaidType, FiscalNumber, CheckNumber, nPOSTerminalCode) then
+      MainCashForm.PaidType, FFiscalNumber, CheckNumber, nPOSTerminalCode) then
     Begin
       Add_Log('Печать чека завершена');
 
@@ -3988,7 +3988,8 @@ begin
             vipList.FieldByName('DivisionPartiesID').AsInteger,
             vipList.FieldByName('isPresent').AsBoolean,
             vipList.FieldByName('Amount').AsFloat,
-            vipList.FieldByName('PriceSale').asCurrency);
+            vipList.FieldByName('PriceSale').asCurrency,
+            True);
         vipList.Next;
       End;
     End;
@@ -7136,7 +7137,7 @@ var
   CheckNumber: string;
 begin
   PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.ASalerCashAdd,
-    MainCashForm.PaidType, FiscalNumber, CheckNumber, 0, false);
+    MainCashForm.PaidType, FFiscalNumber, CheckNumber, 0, false);
 end;
 
 procedure TMainCashForm2.mmSaveToExcelClick(Sender: TObject);
@@ -9004,7 +9005,7 @@ begin
   FormParams.ParamByName('isCorrectMarketing').Value := False;
   FormParams.ParamByName('isCorrectIlliquidAssets').Value := False;
 
-  FiscalNumber := '';
+  FFiscalNumber := '';
   pnlVIP.Visible := false;
   edPrice.Value := 0.0;
   edPrice.Visible := false;
@@ -9238,7 +9239,7 @@ begin
 end;
 
 function TMainCashForm2.PutCheckToCash(SalerCash, SalerCashAdd: Currency;
-  PaidType: TPaidType; out AFiscalNumber, ACheckNumber: String;
+  PaidType: TPaidType; var AFiscalNumber, ACheckNumber: String;
   APOSTerminalCode: Integer = 0; isFiscal: Boolean = True): Boolean;
 var
   str_log_xml: String;
@@ -9656,7 +9657,7 @@ end;
 procedure TMainCashForm2.UpdateRemainsFromCheck(AGoodsId: Integer = 0;
   APartionDateKindId: Integer = 0; ANDSKindId: Integer = 0; ADiscountExternalID: Integer = 0;
   ADivisionPartiesID: Integer = 0; AisPresent: Boolean = False;
-  AAmount: Currency = 0; APriceSale: Currency = 0);
+  AAmount: Currency = 0; APriceSale: Currency = 0; ALoadVipCheck : Boolean = False);
 var
   GoodsId: Integer;
   PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID: Variant;
@@ -9688,15 +9689,15 @@ begin
   // AlternativeCDS.Filtered := False;
   try
     CheckCDS.First;
+    if not ALoadVipCheck then
     while not CheckCDS.Eof do
     begin
-      if (CheckCDS.FieldByName('Id').AsInteger = 0) AND
-        ((AGoodsId = 0) or ((CheckCDS.FieldByName('GoodsId').AsInteger = AGoodsId)
+      if (AGoodsId = 0) or ((CheckCDS.FieldByName('GoodsId').AsInteger = AGoodsId)
         and (CheckCDS.FieldByName('PartionDateKindId').AsInteger = APartionDateKindId)
         and (CheckCDS.FieldByName('NDSKindId').AsInteger = ANDSKindId)
         and (CheckCDS.FieldByName('DiscountExternalID').AsInteger = ADiscountExternalID)
         and (CheckCDS.FieldByName('DivisionPartiesID').AsInteger = ADivisionPartiesID)
-        and (CheckCDS.FieldByName('PriceSale').asCurrency = APriceSale))) then
+        and (CheckCDS.FieldByName('PriceSale').asCurrency = APriceSale)) then
       Begin
         if RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
           VarArrayOf([CheckCDS.FieldByName('GoodsId').AsInteger,
@@ -10200,7 +10201,7 @@ begin
           mdVIPCheck.FieldByName('DISCEXTID').AsVariant := CheckCDS.FieldByName('DiscountExternalID').AsVariant;
           mdVIPCheck.FieldByName('DIVPARTID').AsVariant := CheckCDS.FieldByName('DivisionPartiesID').AsVariant;
         end;
-        mdVIPCheck.FieldByName('Amount').asCurrency := mdCheck.FieldByName('Amount').asCurrency + CheckCDS.FieldByName('Amount').asCurrency;
+        mdVIPCheck.FieldByName('Amount').asCurrency := mdVIPCheck.FieldByName('Amount').asCurrency + CheckCDS.FieldByName('Amount').asCurrency;
         mdVIPCheck.Post;
 
         CheckCDS.Next;
@@ -10270,21 +10271,23 @@ begin
       begin
         if RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
           VarArrayOf([mdVIPCheck.FieldByName('Id').AsInteger,
-          mdVIPCheck.FieldByName('PartionDateKindID').AsVariant,
-          mdVIPCheck.FieldByName('NDSKindId').AsVariant,
-          mdVIPCheck.FieldByName('DiscountExternalID').AsVariant,
-          mdVIPCheck.FieldByName('DivisionPartiesID').AsVariant]), []) then
+          mdVIPCheck.FieldByName('PDKINDID').AsVariant,
+          mdVIPCheck.FieldByName('NDSKINDID').AsVariant,
+          mdVIPCheck.FieldByName('DISCEXTID').AsVariant,
+          mdVIPCheck.FieldByName('DIVPARTID').AsVariant]), []) then
         Begin
           RemainsCDS.Edit;
           RemainsCDS.FieldByName('Reserved').asCurrency :=
             RemainsCDS.FieldByName('Reserved').asCurrency +
-            mdVIPCheck.FieldByName('Amount').asCurrency;
+            mdVIPCheck.FieldByName('AMOUNT').asCurrency;
+          RemainsCDS.FieldByName('Remains').asCurrency :=
+              RemainsCDS.FieldByName('Remains').asCurrency -
+              mdVIPCheck.FieldByName('AMOUNT').asCurrency;
           RemainsCDS.Post;
         End;
 
-        CheckCDS.Next;
+        mdVIPCheck.Next;
       end;
-      CheckCDS.First;
 
     finally
       RemainsCDS.Filtered := True;
@@ -10751,7 +10754,7 @@ begin
           AUID, // uid чека
           Now, // дата/Время чека
           Integer(PaidType), // тип оплаты
-          FiscalNumber, // серийник аппарата
+          FFiscalNumber, // серийник аппарата
           AManagerId, // Id Менеджера (VIP)
           ABayerName, // Покупатель (VIP)
           false, // Распечатан на фискальном регистраторе
@@ -10822,7 +10825,7 @@ begin
         FLocalDataBaseHead.FieldByName('DATE').Value := Now; // дата оплаты
         FLocalDataBaseHead.FieldByName('PAIDTYPE').Value := Integer(PaidType);
         // тип оплаты
-        FLocalDataBaseHead.FieldByName('CASH').Value := FiscalNumber;
+        FLocalDataBaseHead.FieldByName('CASH').Value := FFiscalNumber;
         // серийник аппарата
         FLocalDataBaseHead.FieldByName('MANAGER').Value := AManagerId;
         // Id Менеджера (VIP)
@@ -11077,7 +11080,7 @@ begin
   // что б отловить ошибки - запишим в лог чек - во время СОХРАНЕНИЯ чека, т.е. ПОСЛЕ пробития через ЭККА
   Add_Log_XML('<Save now="' + FormatDateTime('YYYY.MM.DD hh:mm:ss', Now) + '">'
     + #10 + #13 + '<AUID>"' + AUID + '"</AUID>' + '<CheckNumber>"' +
-    FiscalCheckNumber + '"</CheckNumber>' + '<FiscalNumber>"' + FiscalNumber +
+    FiscalCheckNumber + '"</CheckNumber>' + '<FiscalNumber>"' + FFiscalNumber +
     '"</FiscalNumber>' + #10 + #13 + str_log_xml + #10 + #13 + '</Save>');
 
   // update VIP
