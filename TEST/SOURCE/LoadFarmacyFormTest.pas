@@ -393,6 +393,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccommodationLincGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccommodationLincGoodsForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsDivisionLockForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsDivisionLockForm');
+
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdueChangeCashPUSHSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOverdueChangeCashPUSHSendForm');
 

@@ -2527,9 +2527,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_MarketingDiscount_Retail() RETURNS Inte
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_MarketingDiscount_Retail', 'Связь с Торговой сетью', zc_Object_MarketingDiscount(), zc_Object_Retail() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MarketingDiscount_Retail');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsDivisionLock_Goods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsDivisionLock_Goods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_GoodsDivisionLock_Goods', 'Товар', zc_Object_GoodsDivisionLock(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsDivisionLock_Goods');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsDivisionLock_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsDivisionLock_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_GoodsDivisionLock_Unit', 'Подразделение', zc_Object_GoodsDivisionLock(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsDivisionLock_Unit');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 17.05.21                                                                                      * zc_ObjectLink_GoodsDivisionLock_...
  27.04.21                                                                                      * c_ObjectLink_MarketingDiscount_...
  19.04.21                                                                                      * zc_ObjectLink_UnitCategory_ScaleCalcMarketingPlan
  18.04.21         * zc_ObjectLink_MemberPriceList_PriceList

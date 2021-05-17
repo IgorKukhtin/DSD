@@ -798,6 +798,8 @@ type
     C1: TMenuItem;
     actMarketingDiscount: TdsdOpenForm;
     N287: TMenuItem;
+    actGoodsDivisionLock: TdsdOpenForm;
+    N288: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
