@@ -309,6 +309,8 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
     Top = 251
   end
   inherited ActionList: TActionList
+    Left = 47
+    Top = 178
     inherited actInsert: TdsdInsertUpdateAction
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       FormName = 'TPersonalReportForm'
@@ -450,7 +452,7 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
       GuiParams = <
         item
           Name = 'inStartDate'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
@@ -458,7 +460,7 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
         end
         item
           Name = 'inEndDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
@@ -512,6 +514,57 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object ExecuteDialog_Data: TExecuteDialog
+      Category = 'Insert'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1042#1086#1076#1080#1090#1077#1083#1103'/'#1069#1082#1089#1087#1077#1076#1080#1090#1086#1088#1072'/'#1040#1074#1090#1086
+      ImageIndex = 27
+      FormName = 'TDataDialogForm'
+      FormNameParam.Value = 'TDataDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inOperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actInsert_byReport: TdsdExecStoredProc
+      Category = 'Insert'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_byReport
+      StoredProcList = <
+        item
+          StoredProc = spInsert_byReport
+        end>
+      Caption = 'actInsertMI_byReturn'
+      ImageIndex = 27
+    end
+    object macInsert_byReport: TMultiAction
+      Category = 'Insert'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsert_byReport
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1086' '#1042#1089#1077#1084' '#1087#1086#1076#1086#1090#1095#1077#1090#1072#1084'?'
+      InfoAfterExecute = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1074#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1057#1074#1077#1088#1085#1091#1090#1100' '#1086#1089#1090#1072#1090#1082#1080
+      Hint = #1057#1074#1077#1088#1085#1091#1090#1100' '#1086#1089#1090#1072#1090#1082#1080
+      ImageIndex = 27
     end
   end
   inherited MasterDS: TDataSource
@@ -569,8 +622,8 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
     Top = 288
   end
   inherited BarManager: TdxBarManager
-    Left = 160
-    Top = 128
+    Left = 96
+    Top = 184
     DockControlHeights = (
       0
       0
@@ -626,7 +679,15 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbOpenReportForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsert_byReport'
         end
         item
           Visible = True
@@ -657,8 +718,12 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
           ItemName = 'dxBarStatic'
         end>
     end
-    object bb: TdxBarButton
+    object bbOpenReportForm: TdxBarButton
       Action = actOpenReportForm
+      Category = 0
+    end
+    object bbInsert_byReport: TdxBarButton
+      Action = macInsert_byReport
       Category = 0
     end
   end
@@ -731,14 +796,14 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
       end
       item
         Name = 'StartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -852,5 +917,22 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
     PackSize = 1
     Left = 824
     Top = 48
+  end
+  object spInsert_byReport: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_PersonalReport_byReport'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 650
+    Top = 184
   end
 end
