@@ -709,7 +709,7 @@ ALTER FUNCTION gpSelect_CashRemains_CashSession (TVarChar) OWNER TO postgres;
  13.05.19                                                                                                    *
  24.04.19                                                                                                    * Helsi
  04.04.19                                                                                                    * GoodsAnalog
- 06.03.19                                                                                                    * DoesNotShare
+ 06.03.19                                                                                                    * 
  11.02.19                                                                                                    *
  30.10.18                                                                                                    *
  01.10.18         * tmpPriceChange - учет скидки подразделения

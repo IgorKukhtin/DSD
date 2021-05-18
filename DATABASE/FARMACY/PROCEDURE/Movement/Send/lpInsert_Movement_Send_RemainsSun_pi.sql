@@ -340,8 +340,8 @@ BEGIN
                                 )
       INSERT INTO _tmpGoods_DiscountExternal
       SELECT 
-             ObjectLink_BarCode_Goods.ChildObjectId AS GoodsId
-           , tmpUnitDiscount.UnitId  
+             tmpUnitDiscount.UnitId  
+           , ObjectLink_BarCode_Goods.ChildObjectId AS GoodsId
                                                
       FROM Object AS Object_BarCode
            LEFT JOIN ObjectLink AS ObjectLink_BarCode_Goods
