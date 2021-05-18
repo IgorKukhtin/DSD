@@ -1008,8 +1008,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSalePodiumJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSalePodiumJournalForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSalePodiumItemEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSalePodiumItemEditForm');
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSalePodiumItemEditForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TSalePodiumItemEditForm');
 end;
 procedure TLoadFormTest.LoadReturnInFormTest;
 begin
