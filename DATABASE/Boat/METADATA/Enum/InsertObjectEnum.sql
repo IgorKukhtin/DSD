@@ -1454,7 +1454,7 @@ BEGIN
     -- Создаем Тип загрузки 
     vbImportTypeId := gpInsertUpdate_Object_ImportType(ioId            := COALESCE(vbImportTypeId,0), 
                                                        inCode          := COALESCE(vbImportTypeCode,0), 
-                                                       inName          := 'Загрузка Партнеров', 
+                                                       inName          := 'Загрузка Постащиков', 
                                                        inProcedureName := 'gpInsertUpdate_Object_Partner_From_Excel', 
                                                        inJSONParamName := '' ::TVarChar,
                                                        inSession       := vbUserId::TVarChar);
@@ -1463,7 +1463,7 @@ BEGIN
     --Создаём настройку загрузки
     vbImportSettingId := gpInsertUpdate_Object_ImportSettings(ioId           := COALESCE(vbImportSettingId,0),
                                                               inCode         := COALESCE(vbImportSettingCode,0),
-                                                              inName         := 'Загрузка Партнеров',
+                                                              inName         := 'Загрузка Постащиков',
                                                               inJuridicalId  := NULL::Integer,
                                                               inContractId   := NULL::Integer,
                                                               inFileTypeId   := zc_Enum_FileTypeKind_Excel(),
@@ -1495,7 +1495,7 @@ BEGIN
     vbImportSettingsItem := 0;
     Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
     PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
-                                                      inName              := 'B',
+                                                      inName              := 'A',
                                                       inImportSettingsId  := vbImportSettingId,
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
@@ -1730,7 +1730,7 @@ BEGIN
                                                       inSession           := vbUserId::TVarChar);
 
     vbImportTypeItemId := 0;
-    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inwww';
+    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name ILIKE 'inWWW';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
                                                                 inParamNumber   := 14, 
                                                                 inName          := 'inWWW', 

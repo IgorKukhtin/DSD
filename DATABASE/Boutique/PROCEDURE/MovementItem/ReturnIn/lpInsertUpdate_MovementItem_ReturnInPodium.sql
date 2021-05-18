@@ -19,8 +19,8 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, 
                                                            , TVarChar, Integer);                                                           
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, Integer, Integer
-                                                           , TFloat, TFloat, TFloat, TFloat
                                                            , TFloat, TFloat, TFloat, TFloat, TFloat
+                                                           , TFloat, TFloat, TFloat
                                                            , TVarChar, Integer);  
 
 
@@ -36,6 +36,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn(
     IN inOperPrice             TFloat    , -- Цена
     IN inCountForPrice         TFloat    , -- Цена за количество
     IN inOperPriceList         TFloat    , -- Цена по прайсу
+
     IN inCurrencyValue         TFloat    , -- 
     IN inParValue              TFloat    , -- 
     IN inTotalChangePercent    TFloat    , -- 

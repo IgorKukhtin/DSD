@@ -131,14 +131,15 @@ else RETURN;
                                                  );
        END IF;
 
-       RETURN;
+       RAISE EXCEPTION 'Ошибка.???';
+
    END IF;
 
 
 
    IF COALESCE (inGoodsGroupCode, 0) <> 0
    THEN
-       -- пробуем найти группу артикула
+       -- пробуем найти группу Комплектующих
        vbGoodsGroupId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsGroup() AND Object.ObjectCode = inGoodsGroupCode);
 
        --если нет такой группы создаем
@@ -340,6 +341,7 @@ else RETURN;
                                               , inUnitId           := 0                :: Integer
                                               , inDiscountParnerId := vbDiscountParnerId    :: Integer
                                               , inTaxKindId        := vbTaxKindId      :: Integer
+                                              , inEngineId         := NULL
                                               , inSession          := inSession        :: TVarChar
                                               );
    ELSE
@@ -361,7 +363,7 @@ else RETURN;
                                          , inEmpfPrice        := CASE WHEN COALESCE (inEmpfPrice, 0) <> 0 THEN inEmpfPrice ELSE tmp.EmpfPrice END  :: TFloat
                                          , inGoodsGroupId     := CASE WHEN COALESCE (vbGoodsGroupId, 0) <> 0 THEN vbGoodsGroupId ELSE tmp.GoodsGroupId END  :: Integer
                                          , inMeasureId        := CASE WHEN COALESCE (tmp.MeasureId, 0) <> 0 THEN tmp.MeasureId ELSE vbMeasureId END      :: Integer
-                                         , inGoodsTagId       := 0 -- tmp.GoodsTagId
+                                         , inGoodsTagId       := tmp.GoodsTagId
                                          , inGoodsTypeId      := CASE WHEN COALESCE (vbGoodsTypeId, 0) <> 0 THEN vbGoodsTypeId ELSE tmp.GoodsTypeId END    :: Integer
                                          , inGoodsSizeId      := CASE WHEN COALESCE (vbGoodsSizeId, 0) <> 0 THEN vbGoodsSizeId ELSE tmp.GoodsSizeId END    :: Integer
                                          , inProdColorId      := CASE WHEN COALESCE (vbProdColorId, 0) <> 0 THEN vbProdColorId ELSE tmp.ProdColorId END    :: Integer
@@ -369,6 +371,7 @@ else RETURN;
                                          , inUnitId           := tmp.UnitId                :: Integer
                                          , inDiscountParnerId := CASE WHEN COALESCE (vbDiscountParnerId, 0) <> 0 THEN vbDiscountParnerId ELSE tmp.DiscountParnerId END :: Integer
                                          , inTaxKindId        := CASE WHEN COALESCE (vbTaxKindId, 0) <> 0 THEN vbTaxKindId ELSE tmp.TaxKindId END :: Integer
+                                         , inEngineId         := tmp.EngineId
                                          , inSession          := inSession        :: TVarChar
                                          )
        FROM gpSelect_Object_Goods(FALSE, inSession) AS tmp

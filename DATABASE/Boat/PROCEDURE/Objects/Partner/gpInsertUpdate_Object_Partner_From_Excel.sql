@@ -54,14 +54,15 @@ BEGIN
    ELSE
        RETURN;
    END IF;
+
    
-   inName := REPLACE (REPLACE (REPLACE (REPLACE(inName, 'o','$') , 'a','$'), 'u','$'), '?','$');
+/*   inName := REPLACE (REPLACE (REPLACE (REPLACE(inName, 'o','$') , 'a','$'), 'u','$'), '?','$');
    inName2 := REPLACE (REPLACE (REPLACE (REPLACE(inName2, 'o','$') , 'a','$'), 'u','$'), '?','$');
    inName3 := REPLACE (REPLACE (REPLACE (REPLACE(inName3, 'o','$') , 'a','$'), 'u','$'), '?','$');
    inStreet := REPLACE (REPLACE (REPLACE (REPLACE(inStreet, 'o','$') , 'a','$'), 'u','$'), '?','$');
    inCity := REPLACE (REPLACE (REPLACE (REPLACE(inCity, 'o','$') , 'a','$'), 'u','$'), '?','$');
    inMember := REPLACE (REPLACE (REPLACE (REPLACE(inMember, 'o','$') , 'a','$'), 'u','$'), '?','$');
-   
+  */ 
    IF COALESCE (inBankName, '') <> ''
    THEN
        -- пробуем найти банк
@@ -145,27 +146,41 @@ BEGIN
                                            , inWWW      := TRIM (inWWW)    :: TVarChar
                                            , inEmail    := TRIM (inEmail)  :: TVarChar
                                            , inCodeDB   := TRIM (inCodeDB) :: TVarChar
+                                           , inTaxNumber    := ''
+                                           , inDiscountTax  := 0
+                                           , inDayCalendar  := 3
+                                           , inDayBank      := 3
                                            , inBankId   := COALESCE (vbBankId,0) :: Integer  
                                            , inPLZId    := COALESCE (vbPLZId,0)  :: Integer 
-                                           , inSession  := inSession       :: TVarChar);
+                                           , inInfoMoneyId:= zc_Enum_InfoMoney_10101()
+                                           , inTaxKindId  := zc_Enum_TaxKind_Basis() -- 19.0%
+                                           , inSession  := inSession       :: TVarChar
+                                            );
    ELSE
        -- обновляем данные
-       PERFORM gpInsertUpdate_Object_Partner(ioId       := tmp.Id          :: Integer
-                                           , ioCode     := tmp.Code        :: Integer
-                                           , inName     := tmp.Name        :: TVarChar
-                                           , inComment  := tmp.Comment     :: TVarChar
-                                           , inFax      := COALESCE (tmp.Fax,    TRIM (inFax))    :: TVarChar
-                                           , inPhone    := COALESCE (tmp.Phone,  TRIM (inPhone))  :: TVarChar
-                                           , inMobile   := COALESCE (tmp.Mobile, TRIM (inMobile)) :: TVarChar
-                                           , inIBAN     := COALESCE (tmp.IBAN,   TRIM (inIBAN))   :: TVarChar
-                                           , inStreet   := COALESCE (tmp.Street, TRIM (inStreet)) :: TVarChar
-                                           , inMember   := COALESCE (tmp.Member, TRIM (inMember)) :: TVarChar
-                                           , inWWW      := COALESCE (tmp.WWW,    TRIM (inWWW))    :: TVarChar
-                                           , inEmail    := COALESCE (tmp.Email,  TRIM (inEmail))  :: TVarChar
-                                           , inCodeDB   := COALESCE (tmp.CodeDB, TRIM (inCodeDB)) :: TVarChar
-                                           , inBankId   := COALESCE (tmp.BankId, vbBankId)        :: Integer  
-                                           , inPLZId    := COALESCE (tmp.PLZId, vbPLZId)          :: Integer 
-                                           , inSession  := inSession                              :: TVarChar)
+       PERFORM gpInsertUpdate_Object_Partner(ioId       := tmp.Id
+                                           , ioCode     := tmp.Code
+                                           , inName     := TRIM (TRIM (inName)||' '||TRIM (inName2)||' '||TRIM (inName3))
+                                           , inComment  := tmp.Comment
+                                           , inFax      := TRIM (inFax)
+                                           , inPhone    := TRIM (inPhone)
+                                           , inMobile   := TRIM (inMobile)
+                                           , inIBAN     := TRIM (inIBAN)
+                                           , inStreet   := TRIM (inStreet)
+                                           , inMember   := TRIM (inMember)
+                                           , inWWW      := TRIM (inWWW)
+                                           , inEmail    := TRIM (inEmail)
+                                           , inCodeDB   := TRIM (inCodeDB)
+                                           , inTaxNumber    := COALESCE (tmp.TaxNumber, '')
+                                           , inDiscountTax  := COALESCE (tmp.DiscountTax, 0)
+                                           , inDayCalendar  := COALESCE (tmp.DayCalendar, 3)
+                                           , inDayBank      := COALESCE (tmp.DayBank, 3)
+                                           , inBankId       := vbBankId
+                                           , inPLZId        := vbPLZId
+                                           , inInfoMoneyId  := COALESCE (tmp.InfoMoneyId, zc_Enum_InfoMoney_10101())
+                                           , inTaxKindId    := COALESCE (tmp.TaxKindId, zc_Enum_TaxKind_Basis())
+                                           , inSession      := inSession                              :: TVarChar
+                                            )
        FROM gpSelect_Object_Partner(FALSE, inSession) AS tmp
        WHERE tmp.Id = vbPartnerId;
    END IF;

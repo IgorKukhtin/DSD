@@ -64,8 +64,7 @@ BEGIN
                  )*/
         THEN
             -- !!!Рекурсия!!!
-            RETURN QUERY
-              SELECT NextId, NextDT FROM _replica.gpSelect_Replica_LastId (vbId_End, CASE WHEN inRec_count >= 100000 THEN inRec_count / 100 ELSE inRec_count END :: Integer);
+            vbId_End:= (SELECT gpSelect.NextId FROM _replica.gpSelect_Replica_LastId (vbId_End, CASE WHEN inRec_count >= 100000 THEN inRec_count / 100 ELSE inRec_count END :: Integer) AS gpSelect);
 
         END IF;
 
@@ -73,6 +72,7 @@ BEGIN
 
     -- если реальное кол-во записей не соответсвует разнице по Id, значит вклинились транзакции, которых не видно, хотя могут быть и "потерянные" Id
     IF (vbId_End - inId_start + 1) <> (SELECT COUNT(*) FROM _replica.table_update_data WHERE Id BETWEEN inId_start AND vbId_End)
+       OR EXTRACT (HOUR FROM CURRENT_TIMESTAMP) NOT BETWEEN 10 AND 16
     THEN
         -- делаем задержку на 200 MIN
         vbId_End:= COALESCE ((SELECT MAX (Id) FROM _replica.table_update_data
@@ -203,4 +203,4 @@ $BODY$
          , (SELECT Id_end FROM tmpRes) - (SELECT Id_start FROM tmpParams) + 1 AS Rec_count_calc
          , (SELECT Rec_count      FROM tmpParams) AS Rec_count
 */
--- SELECT NextId - 5784418604, * FROM _replica.gpSelect_Replica_LastId (5784556682, 100000) 
+-- SELECT NextId - 5940705656, * FROM _replica.gpSelect_Replica_LastId (5940705656, 100000) 

@@ -1,33 +1,50 @@
 ﻿-- Function: gpGet_Object_Form()
 
---DROP FUNCTION gpGet_Object_Form();
+-- DROP FUNCTION gpGet_Object_Form();
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Form(
     IN inFormName    TVarChar,      -- Форма 
     IN inSession     TVarChar       -- текущий пользователь
 )
-RETURNS TBlob AS
+RETURNS TBlob
+AS
 $BODY$
-DECLARE
-  Data TBlob;
+   DECLARE vbData   TBlob;
+   DECLARE vbUserId Integer;
 BEGIN
+   -- проверка прав пользователя на вызов процедуры
+   vbUserId:= lpGetUserBySession (inSession);
+   
+   -- Временно так
+   IF vbUserId IN (81245 -- Кирпичева О.А.
+                  )
+      AND (inFormName ILIKE 'Плановая Прибыль'
+        OR inFormName ILIKE 'Плановая Прибыль (Факт)'
+        OR inFormName ILIKE 'Плановая Прибыль (Факт себестоимость и расходы и прайс)'
+        OR inFormName ILIKE 'Плановая Прибыль (Факт себестоимость и расходы) по дате покуп'
+        OR inFormName ILIKE 'Плановая Прибыль (чистая прибыль)'
+--      OR inFormName ILIKE 'Плановая Прибыль (цена себестоимость и расходы)'
+        OR inFormName ILIKE 'Плановая Прибыль (сравнение цен)'
+--      OR inFormName ILIKE 'Плановая Прибыль (сравнение цен себестоимости)'
+        OR inFormName ILIKE 'Плановая Прибыль (Факт себестоимость и расходы и прайс)'
+          )
+   THEN
+       RAISE EXCEPTION 'Ошибка.Нет прав формировать Отчет <%>.', inFormName;
+   END IF;
 
-   --PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
    SELECT 
-       ObjectBLOB_FormData.ValueData INTO Data
+       ObjectBLOB_FormData.ValueData INTO vbData
    FROM Object
-   JOIN ObjectBLOB AS ObjectBLOB_FormData 
-     ON ObjectBLOB_FormData.DescId = zc_ObjectBlob_Form_Data() 
-    AND ObjectBLOB_FormData.ObjectId = Object.Id
+        JOIN ObjectBLOB AS ObjectBLOB_FormData 
+          ON ObjectBLOB_FormData.DescId = zc_ObjectBlob_Form_Data() 
+         AND ObjectBLOB_FormData.ObjectId = Object.Id
    WHERE Object.ValueData = inFormName AND Object.DescId = zc_Object_Form();
     
-   RETURN DATA; 
+   RETURN vbData; 
   
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION gpGet_Object_Form(TVarChar, TVarChar)
-  OWNER TO postgres;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
 
--- SELECT length(gpGet_Object_Form), gpGet_Object_Form AS FormValue  FROM gpGet_Object_Form('Form1', '')
+-- SELECT length(gpGet_Object_Form), gpGet_Object_Form AS FormValue  FROM gpGet_Object_Form('Плановая Прибыль (Факт)', '81245')

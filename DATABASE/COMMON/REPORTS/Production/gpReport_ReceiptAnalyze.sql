@@ -448,4 +448,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_ReceiptAnalyze (inGoodsGroupId:= 0, inGoodsId:=0, inPriceListId_1:= 0, inPriceListId_2:= 0, inPriceListId_3:= 0, inPriceListId_sale:= 0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_ReceiptAnalyze (inGoodsGroupId:= 0, inGoodsId:=6694178, inPriceListId_1:= 18886, inPriceListId_2:= 18887, inPriceListId_3:= 18873, inPriceListId_sale:= 18840, inSession:= zfCalc_UserAdmin()) -- FETCH ALL "<unnamed portal 1>";
+
