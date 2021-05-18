@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_PersonalReport()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PersonalReport (integer, tvarchar, TDateTime, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PersonalReport (Integer, TVarChar, TDateTime, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PersonalReport(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
@@ -10,17 +10,15 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PersonalReport(
     IN inComment                  TVarChar  , -- Примечание
     IN inMemberId                 Integer   ,
     IN inInfoMoneyId              Integer   , -- Статьи назначения
-    IN inContractId               Integer   , -- Договора
-    IN inUnitId                   Integer   ,
     IN inMoneyPlaceId             Integer   ,
     IN inCarId                    Integer   ,
+    IN inContainerId              Integer   ,
     IN inUserId                   Integer    -- пользователь
 )
 RETURNS Integer AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbMovementItemId Integer;
-   DECLARE vbAmount TFloat;
    DECLARE vbIsInsert Boolean;
 BEGIN
 
@@ -36,14 +34,13 @@ BEGIN
      -- сохранили <Элемент документа>
      vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inMemberId, ioId, inAmount, NULL);
 
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContainerId(), vbMovementItemId, inContainerId);
+
      -- сохранили свойство <Примечание>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
      -- сохранили связь с <Управленческие статьи>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), vbMovementItemId, inInfoMoneyId);
-     -- сохранили связь с <Договором>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), vbMovementItemId, inContractId);
-     -- сохранили связь с <Подразделением>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbMovementItemId, inUnitId);
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_MoneyPlace(), vbMovementItemId, inMoneyPlaceId);
      -- сохранили связь с <>

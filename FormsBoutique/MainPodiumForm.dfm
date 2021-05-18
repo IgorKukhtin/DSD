@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 723
   KeyPreview = True
   ExplicitWidth = 739
-  ExplicitHeight = 226
+  ExplicitHeight = 223
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -340,8 +340,8 @@ inherited MainForm: TMainForm
       MoveParams = <>
       Caption = #1056#1072#1089#1095#1077#1090#1099
       Hint = #1057#1086#1079#1076#1072#1085#1080#1077' - '#1056#1072#1089#1095#1077#1090#1099' '#1089' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1084' '#1079#1072' '#1055#1088#1086#1076#1072#1078#1091
-      FormName = 'TGoodsAccountForm'
-      FormNameParam.Value = 'TGoodsAccountForm'
+      FormName = 'TGoodsAccountPodiumForm'
+      FormNameParam.Value = 'TGoodsAccountPodiumForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

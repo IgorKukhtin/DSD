@@ -164,7 +164,8 @@ uses Storage, CommonData, TypInfo, UtilConvert, System.SysUtils, cxTextEdit, VCL
      dsdAddOn, cxDBData, cxGridDBTableView, Authentication, Document, Controls,
      cxButtonEdit, EDI, ExternalSave, Medoc, UnilWin, FormStorage, cxDateNavigator,
      cxMemo, cxImage, cxDropDownEdit, cxMaskEdit, dsdInternetAction, ParentForm,
-     Vcl.ActnList, System.Rtti;
+     Vcl.ActnList, System.Rtti
+     ,Log;
 
 procedure Register;
 begin
@@ -502,8 +503,9 @@ begin
      FDataXML := FDataXML + '<dataitem>' + FillParams + '</dataitem>';
   // Увеличиваем счетчик
   CurrentPackSize := CurrentPackSize + 1;
-  // Выполняем
-  if (CurrentPackSize = PackSize) or ExecPack then begin
+  //
+  // Выполняем, ИЛИ всегда при логировании
+  if (CurrentPackSize = PackSize) or ExecPack {or Logger.Enabled} then begin
      CurrentPackSize := 0;
      try
        TStorageFactory.GetStorage.ExecuteProc(GetXML);

@@ -206,6 +206,12 @@ BEGIN
                                                               THEN zc_Enum_Account_30205() -- ЕКСПЕРТ-АГРОТРЕЙД
                                                     END
 
+                                          -- сотрудники (подотчетные лица)
+                                          WHEN _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_40500() -- Финансовая деятельность + Ссуды
+                                           AND _tmpItem.AccountDirectionId     = zc_Enum_AccountDirection_30500()      -- сотрудники (подотчетные лица)
+                                               THEN zc_Enum_Account_30514()
+
+
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40300() AND 0 < (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = _tmpItem.ObjectId AND OL.DescId = zc_ObjectLink_BankAccount_Account())
                                                -- THEN zc_Enum_Account_40302() -- рассчетный овердрафт
                                                THEN (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = _tmpItem.ObjectId AND OL.DescId = zc_ObjectLink_BankAccount_Account())
@@ -728,7 +734,10 @@ end if;
                                                                             , inDescId_1          := zc_ContainerLinkObject_Member()
                                                                             , inObjectId_1        := _tmpItem.ObjectId
                                                                             , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
-                                                                            , inObjectId_2        := _tmpItem.InfoMoneyId
+                                                                            , inObjectId_2        := CASE WHEN _tmpItem.AccountId = zc_Enum_Account_30514() -- сотрудники (подотчетные лица)
+                                                                                                               THEN 0
+                                                                                                          ELSE _tmpItem.InfoMoneyId
+                                                                                                     END
                                                                             , inDescId_3          := zc_ContainerLinkObject_Branch()
                                                                             , inObjectId_3        := _tmpItem.BranchId_Balance
                                                                             , inDescId_4          := zc_ContainerLinkObject_Car()

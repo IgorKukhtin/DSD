@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsert_Movement_PersonalReport_byReport (TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Movement_PersonalReport_byReport(
-    IN inOperDate        TDateTime  ,  -- 
+    IN inOperDate        TDateTime  ,  --
     IN inSession         TVarChar      -- сессия пользователя
 )
 RETURNS VOID
@@ -14,37 +14,71 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
       vbUserId := lpCheckRight (inSession, zc_Enum_Process_Insert_Movement_PersonalReport_byReport());
 
-   CREATE TEMP TABLE tmpReport (MemberId Integer, MoneyPlaceId Integer, EndAmount TFloat) ON COMMIT DROP;
-     INSERT INTO tmpReport (MemberId, MoneyPlaceId, EndAmount)
-        SELECT tmp.MemberId
-             , tmp.MoneyPlaceId
-             , tmp.EndAmount
-        FROM gpReport_Member(inStartDate := inOperDate ::TDateTime
-                           , inEndDate   := inOperDate ::TDateTime
-                           , inAccountId := 0
-                           , inBranchId  := 0
-                           , inInfoMoneyId      := 0
-                           , inInfoMoneyGroupId := 0
-                           , inInfoMoneyDestinationId := 0
-                           , inMemberId  := 0
-                           , inSession   := inSession) AS tmp
-        WHERE COALESCE (tmp.EndAmount,0) <> 0;
+      -- 
+      CREATE TEMP TABLE tmpReport (ContainerId Integer, MemberId Integer, InfoMoneyId Integer, CarId Integer, EndAmount TFloat) ON COMMIT DROP;
+      WITH tmpContainer AS (SELECT CLO_Member.ContainerId AS ContainerId
+                                 , Container.Amount
+                                 , COALESCE (ObjectLink_Personal_Member_find.ChildObjectId, CLO_Member.ObjectId) AS MemberId
+                                 , CLO_InfoMoney.ObjectId AS InfoMoneyId
+                                 , CLO_Car.ObjectId       AS CarId
+                            FROM ContainerLinkObject AS CLO_Member
+                                 INNER JOIN Container ON Container.Id = CLO_Member.ContainerId AND Container.DescId = zc_Container_Summ()
 
-   --
-   PERFORM lpInsertUpdate_Movement_PersonalReport(ioId                := 0                            :: Integer   -- Ключ объекта <Документ>
-                                                , inInvNumber         := CAST (NEXTVAL ('movement_personalreport_seq') AS TVarChar)       :: TVarChar   -- Номер документа
-                                                , inOperDate          := inOperDate                   :: TDateTime  -- Дата документа
-                                                , inAmount            := tmpReport.EndAmount          :: TFloat     -- Сумма операции
-                                                , inComment           := ''                           :: TVarChar   -- Примечание
-                                                , inMemberId          := tmpReport.MemberId           :: Integer   
-                                                , inInfoMoneyId       := 0                            :: Integer    -- Статьи назначения
-                                                , inContractId        := 0                            :: Integer    -- Договора
-                                                , inUnitId            := 0                            :: Integer   
-                                                , inMoneyPlaceId      := tmpReport.MoneyPlaceId       :: Integer   
-                                                , inCarId             := 0                            :: Integer   
-                                                , inUserId            := vbUserId                     :: Integer    -- пользователь
-                                                )
-   FROM tmpReport;
+                                 LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
+                                                               ON CLO_InfoMoney.ContainerId = Container.Id
+                                                              AND CLO_InfoMoney.DescId      = zc_ContainerLinkObject_InfoMoney()
+
+                                 LEFT JOIN ContainerLinkObject AS CLO_Car
+                                                               ON CLO_Car.ContainerId = Container.Id
+                                                              AND CLO_Car.DescId = zc_ContainerLinkObject_Car()
+
+                                 LEFT JOIN ObjectLink AS ObjectLink_Account_AccountDirection
+                                                      ON ObjectLink_Account_AccountDirection.ObjectId = Container.ObjectId
+                                                     AND ObjectLink_Account_AccountDirection.DescId   = zc_ObjectLink_Account_AccountDirection()
+                                 LEFT JOIN ObjectLink AS ObjectLink_Personal_Member_find
+                                                      ON ObjectLink_Personal_Member_find.ObjectId = CLO_Member.ObjectId
+                                                     AND ObjectLink_Personal_Member_find.DescId   = zc_ObjectLink_Personal_Member()
+
+                            WHERE CLO_Member.DescId = zc_ContainerLinkObject_Member()
+                              AND ObjectLink_Account_AccountDirection.ChildObjectId = zc_Enum_AccountDirection_30500() -- сотрудники (подотчетные лица)
+                              AND Container.ObjectId <> zc_Enum_Account_30510()
+                           )
+          , tmpReport AS (SELECT tmpContainer.ContainerId
+                               , tmpContainer.MemberId
+                               , tmpContainer.InfoMoneyId
+                               , tmpContainer.CarId
+                               , tmpContainer.Amount - COALESCE(SUM (MIContainer.Amount), 0) AS EndAmount
+                          FROM tmpContainer
+                               LEFT JOIN MovementItemContainer AS MIContainer
+                                                               ON MIContainer.ContainerId = tmpContainer.ContainerId
+                                                              AND MIContainer.OperDate    > inOperDate
+                          GROUP BY tmpContainer.ContainerId, tmpContainer.Amount, tmpContainer.MemberId, tmpContainer.InfoMoneyId, tmpContainer.CarId
+                          HAVING tmpContainer.Amount - COALESCE(SUM (MIContainer.Amount), 0) <> 0
+                         )
+      --
+      INSERT INTO tmpReport (ContainerId, MemberId, InfoMoneyId, CarId, EndAmount)
+         SELECT tmpReport.ContainerId
+              , tmpReport.MemberId
+              , tmpReport.InfoMoneyId
+              , tmpReport.CarId
+              , tmpReport.EndAmount
+         FROM tmpReport
+        ;
+
+    --
+    PERFORM lpInsertUpdate_Movement_PersonalReport(ioId                := 0
+                                                 , inInvNumber         := CAST (NEXTVAL ('movement_personalreport_seq') AS TVarChar)       :: TVarChar   -- Номер документа
+                                                 , inOperDate          := inOperDate
+                                                 , inAmount            := -1 * tmpReport.EndAmount
+                                                 , inComment           := ''
+                                                 , inMemberId          := tmpReport.MemberId
+                                                 , inInfoMoneyId       := tmpReport.InfoMoneyId
+                                                 , inMoneyPlaceId      := tmpReport.MemberId
+                                                 , inCarId             := tmpReport.CarId
+                                                 , inContainerId       := tmpReport.ContainerId
+                                                 , inUserId            := vbUserId
+                                                  )
+    FROM tmpReport;
 
 
 END;

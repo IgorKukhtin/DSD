@@ -150,7 +150,7 @@ BEGIN
              -- Дополнительная скидка - ГРН
            , CASE WHEN tmp.AmountDiff < 0 AND tmp.AmountDiff <> FLOOR (ROUND(tmp.AmountDiff/10, 0)*10) AND inAmountToPay_GRN > 0
                        -- добавляем к скидке так, чтоб сдача делилась на 10грн
-                       THEN inAmountDiscount + (tmp.AmountDiff - FLOOR (ROUND(tmp.AmountDiff/10, 0)*10))
+                       THEN inAmountDiscount -- + (tmp.AmountDiff - FLOOR (ROUND(tmp.AmountDiff/10, 0)*10))
 
                   WHEN tmp.AmountDiff > 0 AND zfCalc_CurrencyTo (tmp.AmountDiff, inCurrencyValueEUR, 1) <> FLOOR (zfCalc_CurrencyTo (tmp.AmountDiff, inCurrencyValueEUR, 1))
                        -- добавляем к скидке так, чтоб остаток EUR - был целым
@@ -162,7 +162,7 @@ BEGIN
              -- Дополнительная скидка - EUR
            , zfCalc_SummIn (1, zfCalc_CurrencyTo (
              CASE WHEN tmp.AmountDiff < 0 AND tmp.AmountDiff <> FLOOR (ROUND(tmp.AmountDiff/10, 0)*10) AND inAmountToPay_GRN > 0
-                       THEN inAmountDiscount + (tmp.AmountDiff - FLOOR (ROUND(tmp.AmountDiff/10, 0)*10))
+                       THEN inAmountDiscount -- + (tmp.AmountDiff - FLOOR (ROUND(tmp.AmountDiff/10, 0)*10))
                   ELSE inAmountDiscount
              END, inCurrencyValueEUR, 1), 1) :: TFloat AS AmountDiscount_curr
 

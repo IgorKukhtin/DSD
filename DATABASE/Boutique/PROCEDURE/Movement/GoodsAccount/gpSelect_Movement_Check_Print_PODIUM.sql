@@ -325,7 +325,7 @@ BEGIN
            , Object_Goods.ValueData         AS GoodsName
            , Object_Measure.ValueData       AS MeasureName
 
-           , Object_CompositionGroup.ValueData   AS CompositionGroupName  
+           , Object_CompositionGroup.ValueData AS CompositionGroupName  
            , Object_Composition.ValueData   AS CompositionName
            , Object_GoodsInfo.ValueData     AS GoodsInfoName
            , Object_LineFabrica.ValueData   AS LineFabricaName
@@ -342,8 +342,11 @@ BEGIN
            , tmpMI.CountForPrice  ::TFloat
            , COALESCE (MIFloat_OperPriceList.ValueData,      tmpMI.OperPriceList)      :: TFloat AS OperPriceList
            , COALESCE (MIFloat_OperPriceList_curr.ValueData, tmpMI.OperPriceList_curr) :: TFloat AS OperPriceList_curr
+           
+           , zfCalc_SummChangePercent (1, tmpMI.OperPriceList_curr, COALESCE (MIFloat_ChangePercent.ValueData, tmpMI.ChangePercent)) :: TFloat AS OperPriceList_curr_real
+           
 
-           -- чек в ценах покупателя
+             -- чек в ценах покупателя
            , CASE WHEN vbCurrencyId_Client = zc_Currency_GRN()
                   THEN tmpMI.OperPriceList - COALESCE (tmpMI.SummChangePercent, 0)
                   ELSE tmpMI.OperPriceList_curr - COALESCE (tmpMI.TotalChangePercent_curr, 0)

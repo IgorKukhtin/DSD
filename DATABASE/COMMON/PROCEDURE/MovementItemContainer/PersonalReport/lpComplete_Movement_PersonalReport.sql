@@ -31,7 +31,7 @@ BEGIN
                          , ProfitLossGroupId, ProfitLossDirectionId
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_Balance, BusinessId_ProfitLoss, JuridicalId_Basis
-                         , UnitId, PositionId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
+                         , UnitId, CarId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
                          , IsActive, IsMaster
                           )
         SELECT Movement.DescId
@@ -41,9 +41,13 @@ BEGIN
              , MovementItem.Amount AS OperSumm
              , MovementItem.Id AS MovementItemId
 
-             , 0 AS ContainerId                                                     -- сформируем позже
-             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId         -- сформируем позже
-             , 0 AS ProfitLossGroupId, 0 AS ProfitLossDirectionId                   -- не используется
+               -- сформируем позже или...
+             , COALESCE (MIFloat_ContainerId.ValueData, 0) AS ContainerId
+               -- сформируем позже или...
+             , 0 AS AccountGroupId, 0 AS AccountDirectionId
+             , COALESCE (Container. ObjectId, 0) AS AccountId
+               -- здесь не используется
+             , 0 AS ProfitLossGroupId, 0 AS ProfitLossDirectionId                   -- 
 
                -- Управленческие группы назначения
              , COALESCE (View_InfoMoney.InfoMoneyGroupId, 0) AS InfoMoneyGroupId
@@ -61,10 +65,15 @@ BEGIN
              , zc_Juridical_Basis()
 
              , 0 AS UnitId     -- не используется
-             , 0 AS PositionId -- не используется
+               -- используется
+             , COALESCE (CLO_Car.ObjectId, 0) AS CarId
 
                -- Филиал Баланс: !!!определяется Филиал по Пользователю!!!, иначе всегда на Главном филиале
-             , CASE WHEN inMovementId = 8869232 /*3810 - 31.03.2018 - Івденко Андрій Леонідович*/ THEN 0 ELSE vbBranchId_Member END
+             , CASE WHEN inMovementId = 8869232 /*3810 - 31.03.2018 - Івденко Андрій Леонідович*/
+                         THEN 0
+                    ELSE COALESCE (CLO_Branch.ObjectId, vbBranchId_Member)
+               END AS BranchId_Balance
+
                -- Филиал ОПиУ: не используется
              , 0 AS BranchId_ProfitLoss
 
@@ -82,6 +91,16 @@ BEGIN
              LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                               ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                              AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+             LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                         ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
+                                        AND MIFloat_ContainerId.DescId         = zc_MIFloat_ContainerId()
+             LEFT JOIN Container ON Container.Id = MIFloat_ContainerId.ValueData :: Integer
+             LEFT JOIN ContainerLinkObject AS CLO_Car
+                                           ON CLO_Car.ContainerId = Container.Id
+                                          AND CLO_Car.DescId      = zc_ContainerLinkObject_Car()
+             LEFT JOIN ContainerLinkObject AS CLO_Branch
+                                           ON CLO_Branch.ContainerId = Container.Id
+                                          AND CLO_Branch.DescId      = zc_ContainerLinkObject_Branch()
 
              LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
@@ -115,7 +134,7 @@ BEGIN
                          , ProfitLossGroupId, ProfitLossDirectionId
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_Balance, BusinessId_ProfitLoss, JuridicalId_Basis
-                         , UnitId, PositionId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
+                         , UnitId, CarId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
                          , IsActive, IsMaster
                           )
         SELECT _tmpItem.MovementDescId
@@ -150,7 +169,8 @@ BEGIN
              , _tmpItem.JuridicalId_Basis
 
              , COALESCE (MILinkObject_Unit.ObjectId, 0)     AS UnitId
-             , 0 AS PositionId -- не используется
+                -- используется - для ГСМ
+             , CASE WHEN _tmpItem.ContainerId > 0 AND _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_20401() THEN _tmpItem.CarId ELSE 0 END AS CarId
 
                -- Филиал Баланс: всегда из предыдущей проводки (нужен для НАЛ долгов) или у контрагента
              , COALESCE (ObjectLink_Partner_Branch.ChildObjectId, _tmpItem.BranchId_Balance)
@@ -191,7 +211,7 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = MILinkObject_Unit.ObjectId
                                                            AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
              LEFT JOIN ObjectLink AS ObjectLink_Partner_Branch ON ObjectLink_Partner_Branch.ObjectId = MILinkObject_MoneyPlace.ObjectId
-                                                              AND ObjectLink_Partner_Branch.DescId = zc_ObjectLink_Unit_Branch() -- !!!не ошибка!!!
+                                                              AND ObjectLink_Partner_Branch.DescId   = zc_ObjectLink_Unit_Branch() -- !!!не ошибка!!!
              LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = MILinkObject_Unit.ObjectId
                                                                                                           AND Object.Id IS NULL -- !!!нужен только для затрат!!!
        ;
@@ -200,7 +220,9 @@ BEGIN
      -- проверка
      PERFORM lpCheck_Movement_PersonalReport (inMovementId:= -1 * ObjectDescId, inComment:= 'проведен', inUserId:= inUserId)
      FROM _tmpItem
-     WHERE _tmpItem.IsMaster = FALSE;
+     WHERE _tmpItem.IsMaster = FALSE
+       AND NOT EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.ContainerId > 0)
+      ;
 
 
      -- 5.1. ФИНИШ - формируем/сохраняем Проводки

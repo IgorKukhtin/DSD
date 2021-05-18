@@ -11,19 +11,21 @@ RETURNS TFloat
 AS
 $BODY$
    DECLARE vbSumm TFloat;
+   DECLARE vbOperPrice TFloat;
 BEGIN
-    -- Округление до 0 знаков
-    vbSumm:= zfCalc_SummPriceList (inAmount, inOperPriceList);
-
     IF zc_Enum_GlobalConst_isTerry() = TRUE
     THEN
+        -- Округление до 0 знаков
+        vbSumm:= zfCalc_SummPriceList (inAmount, inOperPriceList);
         -- еще раз округлили до 0 знаков
         RETURN vbSumm
              - CAST (vbSumm * COALESCE (inChangePercent, 0) / 100 AS NUMERIC (16, 0));
     ELSE
+        -- Округление до 0 знаков
+        vbOperPrice:= CAST (inOperPriceList * (1 - COALESCE (inChangePercent, 0) / 100) AS NUMERIC (16, 0));
         -- еще раз округлили до 0 знаков
-        RETURN vbSumm
-             - CAST (vbSumm * COALESCE (inChangePercent, 0) / 100 AS NUMERIC (16, 0));
+        RETURN zfCalc_SummPriceList (inAmount, vbOperPrice);
+
     END IF;
                 
 END;

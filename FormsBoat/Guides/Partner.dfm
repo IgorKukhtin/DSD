@@ -166,7 +166,6 @@ object PartnerForm: TPartnerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        HeaderHint = #1085#1072#1096' '#1082#1086#1076' '#1074' '#1073#1072#1079#1077' '#1087#1072#1088#1090#1085#1077#1088#1072
         Options.Editing = False
         Width = 80
       end
@@ -791,6 +790,7 @@ object PartnerForm: TPartnerForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>

@@ -418,7 +418,16 @@ end if;*/
            LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = tmpReportOperation.InfoMoneyId
            -- LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View_Detail ON Object_InfoMoney_View_Detail.InfoMoneyId = CASE WHEN COALESCE (tmpReportOperation.InfoMoneyId_Detail, 0) = 0 THEN tmpReportOperation.InfoMoneyId ELSE tmpReportOperation.InfoMoneyId_Detail END
            -- LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (BankAccountId, COALESCE (CashId, COALESCE (JuridicalId, CASE WHEN CarId <> 0 THEN CarId WHEN MemberId <> 0 THEN MemberId ELSE UnitId END)))
-           LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (BankAccountId, COALESCE (CashId, COALESCE (JuridicalId, COALESCE (CarId, COALESCE (MemberId, UnitId)))))
+           LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (BankAccountId
+                                                         , COALESCE (CashId
+                                                         , COALESCE (JuridicalId
+                                                         , COALESCE (CASE WHEN -- сотрудники (подотчетные лица)
+                                                                               Object_Account_View.AccountDirectionId = zc_Enum_AccountDirection_30500()
+                                                                               AND 1=1
+                                                                               THEN NULL
+                                                                          ELSE CarId
+                                                                     END
+                                                         , COALESCE (MemberId, UnitId)))))
            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = GoodsId
            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = CurrencyId
 
@@ -460,4 +469,4 @@ ALTER FUNCTION gpReport_Balance (TDateTime, TDateTime, TVarChar) OWNER TO postgr
 */
 
 -- тест
--- SELECT * FROM gpReport_Balance (inStartDate:= '01.08.2019', inEndDate:= '31.08.2019', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_Balance (inStartDate:= '01.08.2021', inEndDate:= '31.08.2021', inSession:= zfCalc_UserAdmin())

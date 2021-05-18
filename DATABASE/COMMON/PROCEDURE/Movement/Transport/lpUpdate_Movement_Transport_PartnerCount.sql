@@ -29,7 +29,9 @@ BEGIN
                             LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
                                                     ON MovementFloat_MovementItemId.ValueData = MovementItem.Id
                                                    AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
-                            -- вес накладных
+                            -- накладная
+                            INNER JOIN Movement AS Movement_Sale ON Movement_Sale.Id       = MovementFloat_MovementItemId.MovementId
+                                                                AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
 
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                          ON MovementLinkObject_To.MovementId = MovementFloat_MovementItemId.MovementId

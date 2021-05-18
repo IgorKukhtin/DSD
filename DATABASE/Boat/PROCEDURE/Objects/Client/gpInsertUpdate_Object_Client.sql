@@ -77,7 +77,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Client_Email(), ioId, inEmail);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Client_CodeDB(), ioId, inCodeDB);
-   -- сохранили свойство <>
+   -- сохранили свойство <Налоговый номер>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Client_TaxNumber(), ioId, inTaxNumber);
    
 

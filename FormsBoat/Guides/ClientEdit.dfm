@@ -285,7 +285,7 @@ object ClientEditForm: TClientEditForm
   object cxLabel20: TcxLabel
     Left = 153
     Top = 273
-    Caption = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#8470
+    Caption = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#1085#1086#1084#1077#1088
   end
   object edTaxNumber: TcxTextEdit
     Left = 153

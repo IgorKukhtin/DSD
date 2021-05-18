@@ -212,6 +212,7 @@ type
     ExecuteDialog_offer: TExecuteDialog;
     macInsertMI_byReturn_offer: TMultiAction;
     bbInsertMI_byReturn_offer: TdxBarButton;
+    bbPrintCheckPriceReal: TdxBarButton;
   private
   public
   end;

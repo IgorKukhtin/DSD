@@ -136,6 +136,7 @@ BEGIN
              WHERE CLO_Member.DescId = zc_ContainerLinkObject_Member()
                AND (CLO_Member.ObjectId = inMemberId OR COALESCE (inMemberId, 0) = 0)
                AND CLO_Goods.ContainerId IS NULL
+               AND Movement.DescId <> zc_Movement_PersonalReport()
 
             UNION
              SELECT 0 AS ContainerId

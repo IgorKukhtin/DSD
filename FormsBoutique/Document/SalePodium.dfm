@@ -894,6 +894,7 @@ object SalePodiumForm: TSalePodiumForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1967,14 +1968,6 @@ object SalePodiumForm: TSalePodiumForm
         end
         item
           Visible = True
-          ItemName = 'bbact_User_PriceReal'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbMIContainer'
         end
         item
@@ -1984,6 +1977,14 @@ object SalePodiumForm: TSalePodiumForm
         item
           Visible = True
           ItemName = 'bbPrintCheck'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintCheckPriceReal'
         end
         item
           Visible = True
@@ -2092,6 +2093,10 @@ object SalePodiumForm: TSalePodiumForm
     end
     object bbInsertMI_byReturn_offer: TdxBarButton
       Action = macInsertMI_byReturn_offer
+      Category = 0
+    end
+    object bbPrintCheckPriceReal: TdxBarButton
+      Action = mactPrintCheckPriceReal
       Category = 0
     end
   end
@@ -2261,7 +2266,7 @@ object SalePodiumForm: TSalePodiumForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
       Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
-      ImageIndex = 15
+      ImageIndex = 22
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -3017,8 +3022,8 @@ object SalePodiumForm: TSalePodiumForm
           Action = actPrintCheckPriceReal
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
-      Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
-      ImageIndex = 15
+      Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072' ('#1094#1077#1085#1099' '#1074' '#1074#1072#1083#1102#1090#1077')'
+      ImageIndex = 22
     end
     object mactPrintCheck: TMultiAction
       Category = 'DSDLib'
@@ -3031,7 +3036,7 @@ object SalePodiumForm: TSalePodiumForm
           Action = actPrintCheck
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
-      Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072' ('#1094#1077#1085#1099' '#1074' '#1069#1050#1042'.)'
       ImageIndex = 15
     end
     object actUpdate_isChecked: TdsdExecStoredProc
