@@ -23,7 +23,7 @@ RETURNS TABLE (ContainerId Integer, MemberId Integer, MemberCode Integer, Member
              , DebetSumm TFloat, KreditSumm TFloat
              , MoneySumm TFloat, ReportSumm TFloat, AccountSumm TFloat, SendSumm TFloat
              , EndAmount TFloat, EndAmountD TFloat, EndAmountK TFloat
-             , MoneyPlaceName TVarChar, ItemName TVarChar
+             , MoneyPlaceId Integer, MoneyPlaceName TVarChar, ItemName TVarChar
              , Comment TVarChar
               )
 AS
@@ -97,6 +97,7 @@ BEGIN
         CASE WHEN Operation.EndAmount > 0 THEN Operation.EndAmount ELSE 0 END :: TFloat             AS EndAmountD,
         CASE WHEN Operation.EndAmount < 0 THEN -1 * Operation.EndAmount ELSE 0 END :: TFloat        AS EndAmountK
 
+       , Object_by.Id        AS MoneyPlaceId
        , Object_by.ValueData AS MoneyPlaceName
        , ObjectDesc.ItemName
        , Operation.Comment :: TVarChar                                                              AS Comment

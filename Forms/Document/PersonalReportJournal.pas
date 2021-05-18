@@ -45,7 +45,12 @@ type
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     actOpenReportForm: TdsdOpenForm;
-    bb: TdxBarButton;
+    bbOpenReportForm: TdxBarButton;
+    spInsert_byReport: TdsdStoredProc;
+    ExecuteDialog_Data: TExecuteDialog;
+    actInsert_byReport: TdsdExecStoredProc;
+    macInsert_byReport: TMultiAction;
+    bbInsert_byReport: TdxBarButton;
   private
     { Private declarations }
   public

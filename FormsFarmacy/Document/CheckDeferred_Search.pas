@@ -76,6 +76,8 @@ type
     dxBarButton4: TdxBarButton;
     TypeChech: TcxGridDBColumn;
     AccommodationName: TcxGridDBColumn;
+    spPUSHSetErased: TdsdStoredProc;
+    actPUSHSetErased: TdsdShowPUSHMessage;
   private
     { Private declarations }
   public

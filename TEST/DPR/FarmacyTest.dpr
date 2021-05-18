@@ -1029,7 +1029,8 @@ uses
   MarketingDiscountDialog in '..\..\FormsFarmacy\Guides\MarketingDiscountDialog.pas' {MarketingDiscountDialogForm: TParentForm},
   Report_MovementCheck_UnderreportedDE in '..\..\FormsFarmacy\Report\Report_MovementCheck_UnderreportedDE.pas' {Report_MovementCheck_UnderreportedDEForm: TParentForm},
   SendCashSUN in '..\..\FormsFarmacy\Document\SendCashSUN.pas' {SendCashSUNForm: TParentForm},
-  RecalcMCSShedulerMainDialog in '..\..\FormsFarmacy\Object\RecalcMCSShedulerMainDialog.pas' {RecalcMCSShedulerMainDialogForm: TParentForm};
+  RecalcMCSShedulerMainDialog in '..\..\FormsFarmacy\Object\RecalcMCSShedulerMainDialog.pas' {RecalcMCSShedulerMainDialogForm: TParentForm},
+  GoodsDivisionLock in '..\..\FormsFarmacy\Cash\GoodsDivisionLock.pas' {GoodsDivisionLockForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

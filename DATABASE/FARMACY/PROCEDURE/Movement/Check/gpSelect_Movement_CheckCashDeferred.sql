@@ -370,8 +370,23 @@ BEGIN
 
     OPEN Cursor2 FOR (
         WITH
-            tmpMI_all AS (SELECT MovementItem.Id, MovementItem.Amount, MovementItem.ObjectId, MovementItem.MovementId
+              tmpGoodsPairSun AS (SELECT Object_Goods_Retail.Id
+                                      , Object_Goods_Retail.GoodsPairSunId
+                                 FROM Object_Goods_Retail 
+                                 WHERE COALESCE (Object_Goods_Retail.GoodsPairSunId, 0) <> 0
+                                   AND Object_Goods_Retail.RetailId = 4)
+           , tmpMI_all AS (SELECT MovementItem.Id, MovementItem.Amount, MovementItem.ObjectId, MovementItem.MovementId
+                               , Object_Goods_PairSun.ID                                AS GoodsPairSunId  
+                               , Object_Goods_PairSun_Main.GoodsPairSunId               AS GoodsPairSunMainId
+                               , COALESCE (MIBoolean_Present.ValueData, False)          AS isPresent                               
                           FROM MovementItem
+                               LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun 
+                                                         ON Object_Goods_PairSun.GoodsPairSunId = MovementItem.ObjectId
+                               LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun_Main
+                                                         ON Object_Goods_PairSun_Main.Id = MovementItem.ObjectId
+                               LEFT JOIN MovementItemBoolean AS MIBoolean_Present
+                                                             ON MIBoolean_Present.MovementItemId = MovementItem.Id
+                                                            AND MIBoolean_Present.DescId         = zc_MIBoolean_Present()
                           WHERE MovementItem.MovementId in (SELECT DISTINCT tmpMov.Id FROM tmpMov)
                             AND MovementItem.DescId     = zc_MI_Master()
                             AND MovementItem.isErased   = FALSE
@@ -508,6 +523,15 @@ BEGIN
                                                              ON MIString_UID.MovementItemId = MovementItem.Id
                                                             AND MIString_UID.DescId = zc_MIString_UID()
                             )
+           , tmpGoodsUKTZED AS (SELECT Object_Goods_Juridical.GoodsMainId
+                                     , REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')::TVarChar AS UKTZED
+                                     , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Juridical.GoodsMainId 
+                                                    ORDER BY COALESCE(Object_Goods_Juridical.AreaId, 0), Object_Goods_Juridical.JuridicalId) AS Ord
+                                FROM Object_Goods_Juridical
+                                WHERE COALESCE (Object_Goods_Juridical.UKTZED, '') <> ''
+                                  AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')) <= 10
+                                  AND Object_Goods_Juridical.GoodsMainId <> 0
+                                )
            , tmpMILinkObject AS (SELECT * FROM MovementItemLinkObject
                                  WHERE MovementItemId IN (SELECT DISTINCT tmpMI_all.Id FROM tmpMI_all))
 
@@ -521,7 +545,7 @@ BEGIN
            , tmpRemains.Amount_remains :: TFloat AS Amount_remains
            , MovementItem.Amount      AS Amount
            , MovementItem.Price       AS Price
-           , MovementItem.AmountSumm
+           , MovementItem.AmountSumm  AS Summ
            , COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0)::TFloat  AS NDS
            , MovementItem.PriceSale              AS PriceSale
            , MovementItem.ChangePercent          AS ChangePercent
@@ -542,7 +566,21 @@ BEGIN
            , Object_PartionDateKind.Id                                           AS PartionDateKindId
            , Object_PartionDateKind.ValueData                                    AS PartionDateKindName
            , MovementItem.PricePartionDate                                       AS PricePartionDate
-           , Object_Accommodation.ValueData                                   AS AccommodationName
+           , Object_Accommodation.ValueData                                      AS AccommodationName
+           
+           , 0::Integer                                                          AS TypeDiscount
+           , COALESCE(MovementItem.PricePartionDate, MovementItem.PriceSale)     AS PriceDiscount
+           , COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods_Main.NDSKindId) AS  NDSKindId
+           , Object_DiscountExternal.ID                                          AS DiscountCardId
+           , Object_DiscountExternal.ValueData                                   AS DiscountCardName
+           , tmpGoodsUKTZED.UKTZED                                               AS UKTZED
+           , MovementItem.GoodsPairSunId                                         AS GoodsPairSunId     
+           , MovementItem.GoodsPairSunMainId                                     AS GoodsPairSunMainId
+           , Object_DivisionParties.Id                                           AS DivisionPartiesId 
+           , Object_DivisionParties.ValueData                                    AS DivisionPartiesName 
+           , MovementItem.isPresent                                              AS isPresent
+           , Object_Goods_Main.Multiplicity                                      AS MultiplicitySale
+           , Object_Goods_Main.isMultiplicityError                               AS isMultiplicityError
 
        FROM tmpMI_Sum AS MovementItem
 
@@ -579,6 +617,20 @@ BEGIN
                                                 AND Accommodation.isErased = False
           -- Размещение товара
           LEFT JOIN Object AS Object_Accommodation  ON Object_Accommodation.ID = Accommodation.AccommodationId
+
+          LEFT JOIN tmpMILinkObject AS MILinkObject_DiscountExternal
+                                           ON MILinkObject_DiscountExternal.MovementItemId = MovementItem.Id
+                                          AND MILinkObject_DiscountExternal.DescId         = zc_MILinkObject_DiscountExternal()
+          LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = MILinkObject_DiscountExternal.ObjectId
+
+          -- Коды UKTZED
+          LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods.GoodsMainId
+                                  AND tmpGoodsUKTZED.Ord = 1
+
+          LEFT JOIN tmpMILinkObject AS MILinkObject_DivisionParties
+                                           ON MILinkObject_DivisionParties.MovementItemId = MovementItem.Id
+                                          AND MILinkObject_DivisionParties.DescId         = zc_MILinkObject_DivisionParties()
+          LEFT JOIN Object AS Object_DivisionParties ON Object_DivisionParties.Id = MILinkObject_DivisionParties.ObjectId
 
        WHERE Movement.isDeferred = True
          AND (inType = 0 OR inType = 1 AND Movement.isShowVIP = TRUE OR inType = 2 AND Movement.isShowTabletki = TRUE OR inType = 3 AND Movement.isShowLiki24 = TRUE)
