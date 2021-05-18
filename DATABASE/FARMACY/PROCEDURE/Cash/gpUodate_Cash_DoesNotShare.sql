@@ -10,9 +10,20 @@ CREATE OR REPLACE FUNCTION gpUodate_Cash_DoesNotShare(
 RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbUnitId Integer;
+   DECLARE vbUnitKey TVarChar;
+
    DECLARE text_var1 text;
 BEGIN
 
+   -- проверка прав пользователя на вызов процедуры
+    vbUserId:= lpGetUserBySession (inSession);
+    vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+    IF vbUnitKey = '' THEN
+        RAISE EXCEPTION 'Не определено подразделение';
+    END IF;
+    vbUnitId := vbUnitKey::Integer;
+    
    IF COALESCE(inGoodsID, 0) = 0 THEN
       RETURN;
    END IF;
@@ -33,6 +44,12 @@ BEGIN
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inGoodsID, vbUserId);
+   
+   PERFORM gpInsertUpdate_Object_GoodsDivisionLock(ioId       := 0
+                                                 , inGoodsId  := inGoodsID
+                                                 , inUnitId   := vbUnitId
+                                                 , inisLock   := inDoesNotShare
+                                                 , inSession  := inSession);   
 
 END;$BODY$
 

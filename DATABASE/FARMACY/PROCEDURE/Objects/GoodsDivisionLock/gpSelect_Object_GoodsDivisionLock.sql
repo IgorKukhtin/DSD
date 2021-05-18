@@ -50,7 +50,7 @@ BEGIN
                                  AND ObjectBoolean_GoodsDivisionLock_Lock.DescId = zc_ObjectBoolean_GoodsDivisionLock_Lock()
 
      WHERE Object_GoodsDivisionLock.DescId = zc_Object_GoodsDivisionLock()
-       AND (inUnitId = 0 OR ObjectLink_GoodsDivisionLock_Goods.ChildObjectId = inUnitId);
+       AND (inUnitId = 0 OR ObjectLink_GoodsDivisionLock_Unit.ChildObjectId = inUnitId);
     
 END;
 $BODY$

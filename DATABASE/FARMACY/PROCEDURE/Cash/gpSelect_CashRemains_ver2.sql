@@ -653,6 +653,20 @@ BEGIN
                                                                 AND MovementItem.isErased = FALSE))
                                                    
                                             GROUP BY MI_DistributionPromoMaster.ObjectId)
+                 , tmpGoodsDivisionLock AS (SELECT ObjectLink_GoodsDivisionLock_Goods.ChildObjectId  AS GoodsId
+                                                 , ObjectBoolean_GoodsDivisionLock_Lock.ValueData    AS isLock
+                                            FROM ObjectLink AS ObjectLink_GoodsDivisionLock_Unit
+                                                 INNER JOIN ObjectLink AS ObjectLink_GoodsDivisionLock_Goods
+                                                                       ON ObjectLink_GoodsDivisionLock_Goods.ObjectId = ObjectLink_GoodsDivisionLock_Unit.ObjectId
+                                                                      AND ObjectLink_GoodsDivisionLock_Goods.DescId = zc_ObjectLink_GoodsDivisionLock_Goods()
+                                                 INNER JOIN ObjectBoolean AS ObjectBoolean_GoodsDivisionLock_Lock
+                                                                          ON ObjectBoolean_GoodsDivisionLock_Lock.ObjectId  = ObjectLink_GoodsDivisionLock_Unit.ObjectId
+                                                                         AND ObjectBoolean_GoodsDivisionLock_Lock.DescId    = zc_ObjectBoolean_GoodsDivisionLock_Lock()
+                                                                         AND ObjectBoolean_GoodsDivisionLock_Lock.ValueData = True
+                                            WHERE ObjectLink_GoodsDivisionLock_Unit.DescId        = zc_ObjectLink_GoodsDivisionLock_Unit()
+                                              AND ObjectLink_GoodsDivisionLock_Unit.ChildObjectId = vbUnitId
+                                            )
+ 
 
         -- Результат
         SELECT
@@ -879,7 +893,7 @@ BEGIN
           , tmpPriceChange.FixDiscount
           , tmpPriceChange.Multiplicity
           , tmpPriceChange.FixEndDate
-          , COALESCE (Object_Goods_Main.isDoesNotShare, FALSE)     AS DoesNotShare
+          , COALESCE (tmpGoodsDivisionLock.isLock, FALSE)          AS DoesNotShare
           , NULL::Integer                                          AS GoodsAnalogId
           , NULL::TVarChar                                         AS GoodsAnalogName
           , Object_Goods_Main.Analog                               AS GoodsAnalog
@@ -943,6 +957,8 @@ BEGIN
                                       ON Object_Goods_PairSun_Main.Id = Object_Goods_Retail.Id
                                       
             LEFT JOIN tmpDistributionPromo ON tmpDistributionPromo.GoodsGroupId =  Object_Goods_Main.GoodsGroupId
+            
+            LEFT JOIN tmpGoodsDivisionLock ON tmpGoodsDivisionLock.GoodsId =  CashSessionSnapShot.ObjectId
 
             LEFT JOIN tmpMCSAuto ON tmpMCSAuto.ObjectId = CashSessionSnapShot.ObjectId
             LEFT OUTER JOIN ObjectLink AS Link_Goods_AlternativeGroup
@@ -1033,6 +1049,7 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (TVarChar, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
+ 18.05.21                                                                                                    * GoodsDivisionLock
  14.08.20                                                                                                    * DivisionPartiesID
  19.06.20                                                                                                    * DiscountExternalID
  19.02.20                                                                                                    *
