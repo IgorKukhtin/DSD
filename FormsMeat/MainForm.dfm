@@ -1,9 +1,11 @@
 inherited MainForm: TMainForm
+  Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1081' '#1059#1095#1077#1090' '#171'Project'#187' 32bit'
   ClientHeight = 201
   ClientWidth = 1360
   KeyPreview = True
   Position = poDesigned
   OnClose = FormClose
+  ExplicitLeft = -657
   ExplicitWidth = 1376
   ExplicitHeight = 256
   PixelsPerInch = 96
