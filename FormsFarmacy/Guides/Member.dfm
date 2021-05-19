@@ -909,6 +909,15 @@ object MemberForm: TMemberForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisReleasedMarketingPlan'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isReleasedMarketingPlan'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 560

@@ -115,6 +115,9 @@ type
     cxGridLevel2: TcxGridLevel;
     UnitsRecipientDS: TDataSource;
     UnitAssortmentDS: TDataSource;
+    spGet: TdsdStoredProc;
+    actGet_AutoCalculation_SAUA: TAction;
+    dxBarButton7: TdxBarButton;
     procedure ParentFormCreate(Sender: TObject);
     procedure ParentFormClose(Sender: TObject; var Action: TCloseAction);
     procedure actCalculationExecute(Sender: TObject);
@@ -122,6 +125,7 @@ type
     procedure UnitAssortmentCDSAfterPost(DataSet: TDataSet);
     procedure risCheckedPropertiesEditValueChanged(Sender: TObject);
     procedure aisCheckedPropertiesEditValueChanged(Sender: TObject);
+    procedure actGet_AutoCalculation_SAUAExecute(Sender: TObject);
   private
     { Private declarations }
   public
@@ -198,6 +202,68 @@ begin
    FormParams.ParamByName('RecipientList').Value := cRecipient;
    FormParams.ParamByName('AssortmentList').Value := cAssortment;
    spCalculation.Execute;
+end;
+
+procedure TCalculation_SAUAForm.actGet_AutoCalculation_SAUAExecute(
+  Sender: TObject);
+begin
+  if MessageDlg('Заполнить параметры по данным для автоматического расчета СУА?', mtInformation, mbOKCancel, 0) <> mrOk then exit;
+
+  spGet.Execute;
+  try
+    UnitsRecipientCDS.DisableControls;
+    UnitsRecipientCDS.First;
+    while not UnitsRecipientCDS.Eof do
+     Begin
+       Application.ProcessMessages;
+       if UnitsRecipientCDS.FieldByName('isChecked').AsBoolean then
+       begin
+         UnitsRecipientCDS.Edit;
+         UnitsRecipientCDS.FieldByName('isChecked').AsBoolean := False;
+         UnitsRecipientCDS.Post;
+       end;
+       UnitsRecipientCDS.Next;
+     End;
+
+     if UnitsRecipientCDS.Locate('Id', FormParams.ParamByName('UnitId').Value, []) then
+     begin
+       UnitsRecipientCDS.Edit;
+       UnitsRecipientCDS.FieldByName('isChecked').AsBoolean := True;
+       UnitsRecipientCDS.Post;
+     end;
+  finally
+    UnitsRecipientCDS.EnableControls;
+  end;
+
+  try
+    UnitAssortmentCDS.DisableControls;
+    UnitAssortmentCDS.First;
+    while not UnitAssortmentCDS.Eof do
+     Begin
+       Application.ProcessMessages;
+       if Pos(',' + UnitAssortmentCDS.FieldByName('Id').AsString + ',', ',' + FormParams.ParamByName('UnitAssortment').Value + ',') > 0 then
+       begin
+         UnitAssortmentCDS.Edit;
+         UnitAssortmentCDS.FieldByName('isChecked').AsBoolean := True;
+         UnitAssortmentCDS.Post;
+       end else if UnitAssortmentCDS.FieldByName('isChecked').AsBoolean then
+       begin
+         UnitAssortmentCDS.Edit;
+         UnitAssortmentCDS.FieldByName('isChecked').AsBoolean := False;
+         UnitAssortmentCDS.Post;
+       end;
+       UnitAssortmentCDS.Next;
+      End;
+  finally
+    UnitAssortmentCDS.EnableControls;
+  end;
+
+  cbMCSValue.Checked := False;
+  cbRemains.Checked := False;
+  ceThresholdMCS.Value := 0;
+  ceThresholdMCSLarge.Value := 0;
+  ceThresholdRemains.Value := 0;
+  ceThresholdRemainsLarge.Value := 0;
 end;
 
 procedure TCalculation_SAUAForm.aisCheckedPropertiesEditValueChanged(

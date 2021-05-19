@@ -12,18 +12,20 @@ CREATE OR REPLACE FUNCTION gpSelect_Report_SoldDay(
 )
 RETURNS TABLE (
 
-    PlanDate          TDateTime,  --Месяц плана
-    UnitJuridical     TVarChar,   --Юрлицо
-    UnitName          TVarChar,   --подразделение
-    ProvinceCityName  TVarChar,   -- район
-    PlanAmount        TFloat,     --План
-    PlanAmountAccum   TFloat,     --План с накоплением
-    FactAmount        TFloat,     --Факт
-    FactAmountAccum   TFloat,     --Факт с накоплением
-    DiffAmount        TFloat,     --Разница (Факт - План)
-    DiffAmountAccum   TFloat,     --Разница в накоплении (Факт с накоплением - План с накоплением)
-    PercentMake       TFloat,     --% выполнение плана
-    PercentMakeAccum  TFloat      --% выпонения по накоплению
+    PlanDate            TDateTime,  --Месяц плана
+    UnitJuridical       TVarChar,   --Юрлицо
+    UnitName            TVarChar,   --подразделение
+    ProvinceCityName    TVarChar,   -- район
+    PlanAmount          TFloat,     --План
+    PlanAmountAccum     TFloat,     --План с накоплением
+    FactAmount          TFloat,     --Факт
+    FactAmountAccum     TFloat,     --Факт с накоплением
+    FactAmountSale      TFloat,     --Факт безнал
+    FactAmountSaleAccum TFloat,     --Факт безнал с накоплением
+    DiffAmount          TFloat,     --Разница (Факт - План)
+    DiffAmountAccum     TFloat,     --Разница в накоплении (Факт с накоплением - План с накоплением)
+    PercentMake         TFloat,     --% выполнение плана
+    PercentMakeAccum    TFloat      --% выпонения по накоплению
 )
 
 AS
@@ -54,19 +56,21 @@ BEGIN
         ) ON COMMIT DROP;
 
     CREATE TEMP TABLE _TMP(
-        PlanDate          TDateTime,  --Месяц плана
-        DayOfWeek         Integer,    --День в неделе
-        UnitId            Integer,    --ИД подразделения
-        UnitName          TVarChar,   --подразделение
-        PlanMonthAmount   NUMERIC(20,10),     --План в Месяц
-        PlanAmount        NUMERIC(20,10),     --План в день
-        PlanAmountAccum   NUMERIC(20,10),     --План с накоплением
-        FactAmount        NUMERIC(20,10),     --Факт в день
-        FactAmountAccum   NUMERIC(20,10),     --Факт с накоплением
-        DiffAmount        NUMERIC(20,10),     --Разница (Факт - План)
-        DiffAmountAccum   NUMERIC(20,10),     --Разница в накоплении (Факт с накоплением - План с накоплением)
-        PercentMake       NUMERIC(20,10),     --% выполнение плана
-        PercentMakeAccum  NUMERIC(20,10)      --% выпонения по накоплению
+        PlanDate              TDateTime,  --Месяц плана
+        DayOfWeek             Integer,    --День в неделе
+        UnitId                Integer,    --ИД подразделения
+        UnitName              TVarChar,   --подразделение
+        PlanMonthAmount       NUMERIC(20,10),     --План в Месяц
+        PlanAmount            NUMERIC(20,10),     --План в день
+        PlanAmountAccum       NUMERIC(20,10),     --План с накоплением
+        FactAmount            NUMERIC(20,10),     --Факт в день
+        FactAmountAccum       NUMERIC(20,10),     --Факт с накоплением
+        FactAmountSale        NUMERIC(20,10),     --Факт в день
+        FactAmountSaleAccum   NUMERIC(20,10),     --Факт с накоплением
+        DiffAmount            NUMERIC(20,10),     --Разница (Факт - План)
+        DiffAmountAccum       NUMERIC(20,10),     --Разница в накоплении (Факт с накоплением - План с накоплением)
+        PercentMake           NUMERIC(20,10),     --% выполнение плана
+        PercentMakeAccum      NUMERIC(20,10)      --% выпонения по накоплению
     ) ON COMMIT DROP;
 
     --Заполняем днями пусографку
@@ -104,7 +108,8 @@ BEGIN
                             date_trunc('day', MovementCheck.OperDate)::TDateTime  AS PlanDate,
                             date_part('dow',MovementCheck.OperDate)               AS DayOfWeek,
                             MovementCheck.UnitId                                  AS UnitID,
-                            MovementCheck.TotalSumm                               AS FactAmount
+                            MovementCheck.TotalSumm                               AS FactAmount,
+                            0.0::TFloat                                           AS FactAmountSale
                      FROM Movement_Check_View AS MovementCheck
                           LEFT JOIN MovementBoolean AS MovementBoolean_CorrectMarketing
                                                     ON MovementBoolean_CorrectMarketing.MovementId = MovementCheck.Id
@@ -121,7 +126,8 @@ BEGIN
                             date_trunc('day', MovementSale.OperDate)::TDateTime  AS PlanDate,
                             date_part('dow',MovementSale.OperDate)               AS DayOfWeek,
                             MovementSale.UnitId                                  AS UnitID,
-                            MovementSale.TotalSumm                               AS FactAmount
+                            MovementSale.TotalSumm                               AS FactAmount,
+                            MovementSale.TotalSumm                               AS FactAmountSale
                      FROM Movement_Sale_View AS MovementSale
                      WHERE MovementSale.OperDate >= vbStartDate
                        AND MovementSale.OperDate < vbEndDate
@@ -129,25 +135,28 @@ BEGIN
                        AND (MovementSale.UnitId = inUnitId or inUnitId = 0)
                      )
     
-    INSERT INTO _TMP(PlanDate,DayOfWeek,UnitId,FactAmount)
+    INSERT INTO _TMP(PlanDate,DayOfWeek,UnitId,FactAmount,FactAmountSale)
     SELECT
-        Movement.PlanDate                                    AS PlanDate,
+        Movement.PlanDate                                     AS PlanDate,
         Movement.DayOfWeek                                    AS DayOfWeek,
         Movement.UnitId                                       AS UnitID,
-        SUM(Movement.FactAmount)                              AS FactAmount
+        COALESCE(SUM(Movement.FactAmount), 0)                 AS FactAmount,
+        COALESCE(SUM(Movement.FactAmountSale), 0)             AS FactAmountSale
     FROM tmpData AS Movement
     GROUP BY Movement.PlanDate,
              Movement.DayOfWeek,
              Movement.UnitId;
-        
+                          
     IF COALESCE (inisSP, FALSE) = TRUE
     THEN
                       
        UPDATE _TMP SET FactAmount = _TMP.FactAmount + COALESCE (SP.Summa, 0)
+                     , FactAmountSale = _TMP.FactAmountSale + COALESCE (SP.SummaSale, 0)
        FROM (WITH tmpData AS (SELECT
                                     date_trunc('day', MovementCheck.OperDate)::TDateTime  AS PlanDate,
                                     MovementCheck.UnitId                                  AS UnitID,
-                                    MovementCheck.TotalSummChangePercent                  AS Summa
+                                    MovementCheck.TotalSummChangePercent                  AS Summa,
+                                    0.0::TFloat                                           AS SummaSale
                              FROM Movement_Check_View AS MovementCheck
                                   LEFT JOIN MovementBoolean AS MovementBoolean_CorrectMarketing
                                                             ON MovementBoolean_CorrectMarketing.MovementId = MovementCheck.Id
@@ -164,7 +173,8 @@ BEGIN
                              SELECT
                                     date_trunc('day', MovementSale.OperDate)::TDateTime  AS PlanDate,
                                     MovementSale.UnitId                                  AS UnitID,
-                                    MovementSale.TotalSummSale - MovementSale.TotalSumm  AS Summa
+                                    MovementSale.TotalSummSale - MovementSale.TotalSumm  AS Summa,
+                                    MovementSale.TotalSummSale - MovementSale.TotalSumm  AS SummaSale
                              FROM Movement_Sale_View AS MovementSale
                              WHERE MovementSale.OperDate >= vbStartDate
                                AND MovementSale.OperDate < vbEndDate
@@ -175,7 +185,8 @@ BEGIN
 
           SELECT Movement.PlanDate           AS PlanDate,
                  Movement.UnitId             AS UnitID,
-                 SUM(Movement.Summa)         AS Summa
+                 SUM(Movement.Summa)         AS Summa,
+                 SUM(Movement.SummaSale)     AS SummaSale
           FROM tmpData AS Movement
           GROUP BY Movement.PlanDate,
                    Movement.UnitId) AS SP
@@ -188,9 +199,12 @@ BEGIN
     THEN
 
        UPDATE _TMP SET FactAmount = _TMP.FactAmount - COALESCE (StaticCodes.Summa, 0)
+                     , FactAmountSale = _TMP.FactAmountSale - COALESCE (StaticCodes.SummaSale, 0)
        FROM (SELECT date_trunc('day', MovementItemContainer.OperDate)                             AS PlanDate
                    , Container.WhereObjectId                                                      AS UnitId
                    , SUM(ROUND(-1 * MovementItemContainer.Amount * MIFloat_Price.ValueData, 2))   AS Summa
+                   , SUM(CASE WHEN MovementItemContainer.MovementDescId = zc_Movement_Sale() 
+                              THEN ROUND(-1 * MovementItemContainer.Amount * MIFloat_Price.ValueData, 2) ELSE 0 END)   AS SummaSale
               FROM MovementItemContainer
 
                     INNER JOIN Container ON Container.ID = MovementItemContainer.ContainerID
@@ -367,6 +381,9 @@ BEGIN
            ,T0.FactAmount::TFloat                                               AS FactAmount
            ,(SUM(T0.FactAmount)OVER(PARTITION BY T0.UnitId
                                     ORDER BY T0.PlanDate))::TFloat              AS FactAmountAccum
+           ,T0.FactAmountSale::TFloat                                           AS FactAmountSale
+           ,(SUM(T0.FactAmountSale)OVER(PARTITION BY T0.UnitId
+                                    ORDER BY T0.PlanDate))::TFloat              AS FactAmountSaleAccum
            ,T0.DiffAmount::TFloat                                               AS DiffAmount
            ,(SUM(T0.DiffAmount)OVER(PARTITION BY T0.UnitId
                                     ORDER BY T0.PlanDate))::TFloat              AS DiffAmountAccum
@@ -388,8 +405,9 @@ BEGIN
             SELECT
                 _PartDay.PlanDate
                ,_PartDay.UnitId
-               ,COALESCE(SUM(_TMP.PlanAmount),0) AS PlanAmount
-               ,COALESCE(SUM(_TMP.FactAmount),0) AS FactAmount
+               ,COALESCE(SUM(_TMP.PlanAmount),0)    AS PlanAmount
+               ,COALESCE(SUM(_TMP.FactAmount),0)     AS FactAmount
+               ,COALESCE(SUM(_TMP.FactAmountSale),0) AS FactAmountSale
                ,COALESCE(SUM(_TMP.FactAmount),0)-COALESCE(SUM(_TMP.PlanAmount),0) AS DiffAmount
             FROM
                 _PartDay
@@ -428,5 +446,4 @@ ALTER FUNCTION gpSelect_Report_SoldDay (TDateTime, Integer, Boolean, Boolean, Bo
  28.09.15                                                                        *
 */
 
-
-select * from gpSelect_Report_SoldDay(inMonth := ('31.03.2021')::TDateTime , inUnitId := 183292 , inQuasiSchedule := 'True' , inisNoStaticCodes := 'True' , inisSP := 'True' ,  inSession := '3');
+select * from gpSelect_Report_SoldDay(inMonth := ('01.05.2021')::TDateTime , inUnitId := 377613 , inQuasiSchedule := 'False' , inisNoStaticCodes := 'True' , inisSP := 'True' ,  inSession := '3');
