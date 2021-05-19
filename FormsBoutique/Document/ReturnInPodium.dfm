@@ -1758,14 +1758,6 @@ object ReturnInPodiumForm: TReturnInPodiumForm
         end
         item
           Visible = True
-          ItemName = 'bbact_User_Sale'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbMIContainer'
         end
         item
