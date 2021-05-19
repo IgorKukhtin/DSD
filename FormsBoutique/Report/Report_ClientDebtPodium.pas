@@ -58,6 +58,8 @@ type
     DBLabelNameFull: TcxDBLabel;
     actPrint_curr: TdsdPrintAction;
     bbPrint_curr: TdxBarButton;
+    bbPrint_CheckPodium: TdxBarButton;
+    actPrint_CheckPodium: TdsdPrintAction;
   private
     { Private declarations }
   public

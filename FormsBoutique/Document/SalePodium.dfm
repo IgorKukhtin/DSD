@@ -2271,10 +2271,6 @@ object SalePodiumForm: TSalePodiumForm
         item
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
         end>
       Params = <
         item

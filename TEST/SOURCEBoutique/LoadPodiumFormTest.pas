@@ -804,22 +804,25 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionByClientForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionByClientDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionByClientDialogForm');
+
   //текущие долги
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ClientDebtForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ClientDebtForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ClientDebtDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ClientDebtDialogForm');
+   exit;
   //Report_GoodsMI_SaleReturnInForm
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleReturnInPodiumForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleReturnInPodiumForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_AccountPodiumForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_AccountPodiumForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ClientDebtPodiumForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ClientDebtPodiumForm');
-
+   exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CollationByClientPodiumForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CollationByClientPodiumForm');
 

@@ -80,6 +80,7 @@ begin
   LoadReportFromFile('PrintReport_ClientDebt', ReportPath + '\PrintReport_ClientDebt.fr3');
   }
   LoadReportFromFile('PrintReport_ClientDebt_curr', ReportPath + '\PrintReport_ClientDebt_curr.fr3');
+  LoadReportFromFile('PrintReport_ClientDebt_Check', ReportPath + '\PrintReport_ClientDebt_Check.fr3');
   exit;
   {
   LoadReportFromFile('PrintReport_Sale', ReportPath + '\PrintReport_Sale.fr3');

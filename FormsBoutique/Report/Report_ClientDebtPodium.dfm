@@ -1259,6 +1259,83 @@ inherited Report_ClientDebtPodiumForm: TReport_ClientDebtPodiumForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrint_CheckPodium: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 43101d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'StartDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 43101d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'EndDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' (Check)'
+      Hint = #1055#1077#1095#1072#1090#1100' (Check)'
+      ImageIndex = 15
+      DataSets = <
+        item
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 'ClientName;OperDate_Sale;LabelName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 43101d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 43101d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintReport_ClientDebt_Check'
+      ReportNameParam.Value = 'PrintReport_ClientDebt_Check'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -1424,6 +1501,14 @@ inherited Report_ClientDebtPodiumForm: TReport_ClientDebtPodiumForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_CheckPodium'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1456,6 +1541,10 @@ inherited Report_ClientDebtPodiumForm: TReport_ClientDebtPodiumForm
     end
     object bbPrint_curr: TdxBarButton
       Action = actPrint_curr
+      Category = 0
+    end
+    object bbPrint_CheckPodium: TdxBarButton
+      Action = actPrint_CheckPodium
       Category = 0
     end
   end
