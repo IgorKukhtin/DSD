@@ -81,6 +81,9 @@ type
     actPrintCheckPriceReal: TdsdPrintAction;
     mactPrintCheckPriceReal: TMultiAction;
     bbactPrintCheckPriceReal: TdxBarButton;
+    spUpdate_isOffer: TdsdStoredProc;
+    actUpdate_isOffer: TdsdExecStoredProc;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public
