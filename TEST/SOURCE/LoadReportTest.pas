@@ -136,6 +136,8 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+  LoadReportFromFile('Проверка начислений по бонусам для подписи(детально)', ReportPath + '\Отчеты (финансы)\Проверка начислений по бонусам для подписи(детально).fr3');
+  exit;
  { LoadReportFromFile('PrintMovement_Sale32437180', ReportPath + '\Товарный Учет\PrintMovement_Sale32437180.fr3');
    exit;
 

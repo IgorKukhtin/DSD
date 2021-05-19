@@ -812,7 +812,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_ClientDebtDialogForm');
    exit;
   //Report_GoodsMI_SaleReturnInForm
-   }
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleReturnInPodiumForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleReturnInPodiumForm');
   exit;

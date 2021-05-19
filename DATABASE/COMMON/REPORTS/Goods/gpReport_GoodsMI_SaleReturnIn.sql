@@ -58,6 +58,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , Return_SummMVAT TFloat, Return_SummVAT TFloat
              , SaleReturn_Weight  TFloat -- Продажи за вычетом возврата, кг
              , SaleReturn_Summ    TFloat -- Продажи за вычетом возврата, грн
+             , Sale_Summ_opt      TFloat -- сумма по опт прайсу, грн
               )
 AS
 $BODY$
@@ -814,6 +815,8 @@ BEGIN
 
          , (tmpOperationGroup.Sale_AmountPartner_Weight - tmpOperationGroup.Return_AmountPartner_Weight) :: TFloat AS SaleReturn_Weight  -- Продажи за вычетом возврата, кг
          , (tmpOperationGroup.Sale_Summ - tmpOperationGroup.Return_Summ)                                 :: TFloat AS SaleReturn_Summ    -- Продажи за вычетом возврата, грн
+         
+         , (COALESCE (tmpOperationGroup.Sale_Summ,0) + COALESCE (tmpOperationGroup.Sale_Summ_10200,0) + COALESCE (tmpOperationGroup.Sale_Summ_10250,0) + COALESCE (tmpOperationGroup.Sale_Summ_10300,0)) ::TFloat AS Sale_Summ_opt  --сумма по опт прайсу
 
      FROM tmpOperationGroup
 
