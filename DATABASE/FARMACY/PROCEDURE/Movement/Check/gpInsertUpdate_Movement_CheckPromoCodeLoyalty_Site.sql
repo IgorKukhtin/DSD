@@ -195,6 +195,8 @@ BEGIN
     -- сохранили связь с <Статус заказа (Состояние VIP-чека)>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ConfirmedKind(), ioId, zc_Enum_ConfirmedKind_UnComplete());
 
+    inBayer := translate(inBayer, chr('8296')||chr('8297'), '');
+
     IF COALESCE (inBayerId, 0) <> 0
     THEN
       -- сохранили связь с <Статус заказа (Состояние VIP-чека)>
