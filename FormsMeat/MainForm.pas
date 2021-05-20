@@ -1261,6 +1261,8 @@ type
     actFineSubject: TdsdOpenForm;
     miFineSubject: TMenuItem;
     N239: TMenuItem;
+    actReport_Supply_Remains: TdsdOpenForm;
+    miReport_Supply_Remains: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

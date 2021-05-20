@@ -1254,7 +1254,9 @@ uses
   MemberPriceList in '..\..\Forms\Guides\MemberPriceList.pas' {MemberPriceListForm: TParentForm},
   MemberPriceListEdit in '..\..\Forms\Guides\MemberPriceListEdit.pas' {MemberPriceListEditForm: TParentForm},
   FineSubject in '..\..\Forms\Guides\FineSubject.pas' {FineSubjectForm: TParentForm},
-  FineSubjectEdit in '..\..\Forms\Guides\FineSubjectEdit.pas' {FineSubjectEditForm: TParentForm};
+  FineSubjectEdit in '..\..\Forms\Guides\FineSubjectEdit.pas' {FineSubjectEditForm: TParentForm},
+  Report_Supply_RemainsDialog in '..\..\Forms\Report\Report_Supply_RemainsDialog.pas' {Report_Supply_RemainsDialogForm: TParentForm},
+  Report_Supply_Remains in '..\..\Forms\Report\Report_Supply_Remains.pas' {Report_Supply_RemainsForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
