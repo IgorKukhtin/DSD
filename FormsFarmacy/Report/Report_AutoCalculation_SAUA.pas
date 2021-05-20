@@ -58,6 +58,12 @@ type
     AmountCheck: TcxGridDBBandedColumn;
     CountUnit: TcxGridDBBandedColumn;
     Assortment: TcxGridDBBandedColumn;
+    spUpdateAutoUnit: TdsdStoredProc;
+    actChoiceUnit: TOpenChoiceForm;
+    actChangeAutoUnit: TdsdExecStoredProc;
+    dxBarButton2: TdxBarButton;
+    actUnitAutoSUAForm: TdsdOpenForm;
+    dxBarButton3: TdxBarButton;
   private
     { Private declarations }
   public

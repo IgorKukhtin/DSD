@@ -14,17 +14,17 @@ inherited Report_AutoCalculation_SAUAForm: TReport_AutoCalculation_SAUAForm
     Height = 371
     TabOrder = 3
     ExplicitTop = 196
-    ExplicitWidth = 788
+    ExplicitWidth = 809
     ExplicitHeight = 371
     ClientRectBottom = 371
     ClientRectRight = 809
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 788
+      ExplicitWidth = 809
       ExplicitHeight = 371
       inherited cxGrid: TcxGrid
         Width = 809
         Height = 371
-        ExplicitWidth = 788
+        ExplicitWidth = 809
         ExplicitHeight = 371
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.DataSource = nil
@@ -217,7 +217,7 @@ inherited Report_AutoCalculation_SAUAForm: TReport_AutoCalculation_SAUAForm
   inherited Panel: TPanel
     Width = 809
     Height = 170
-    ExplicitWidth = 788
+    ExplicitWidth = 809
     ExplicitHeight = 170
     inherited deStart: TcxDateEdit
       Left = 172
@@ -570,14 +570,60 @@ inherited Report_AutoCalculation_SAUAForm: TReport_AutoCalculation_SAUAForm
       DataSource = MasterDS
       IdFieldName = 'UnitId'
     end
+    object actChoiceUnit: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceUnit'
+      FormName = 'TUnitTreeForm'
+      FormNameParam.Value = 'TUnitTreeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'UnitAutoId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actChangeAutoUnit: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actChoiceUnit
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateAutoUnit
+      StoredProcList = <
+        item
+          StoredProc = spUpdateAutoUnit
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1076#1083#1103' '#1089#1083#1077#1076#1091#1102#1097#1077#1075#1086' '#1072#1074#1090#1086#1088#1072#1089#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1076#1083#1103' '#1089#1083#1077#1076#1091#1102#1097#1077#1075#1086' '#1072#1074#1090#1086#1088#1072#1089#1095#1077#1090#1072
+      ImageIndex = 8
+    end
+    object actUnitAutoSUAForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1076#1083#1103' '#1072#1074#1090#1086' '#1088#1072#1089#1095#1077#1090#1072' '#1057#1059#1040
+      Hint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1076#1083#1103' '#1072#1074#1090#1086' '#1088#1072#1089#1095#1077#1090#1072' '#1057#1059#1040
+      ImageIndex = 42
+      FormName = 'TUnitAutoSUAForm'
+      FormNameParam.Value = 'TUnitAutoSUAForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 24
-    Top = 144
+    Top = 120
   end
   inherited MasterCDS: TClientDataSet
-    Left = 208
-    Top = 168
+    Left = 224
+    Top = 120
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Calculation_SAUA'
@@ -725,7 +771,7 @@ inherited Report_AutoCalculation_SAUAForm: TReport_AutoCalculation_SAUAForm
   end
   inherited BarManager: TdxBarManager
     Left = 152
-    Top = 144
+    Top = 120
     DockControlHeights = (
       0
       0
@@ -755,15 +801,23 @@ inherited Report_AutoCalculation_SAUAForm: TReport_AutoCalculation_SAUAForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton3'
         end>
     end
     object bbGoodsPartyReport: TdxBarButton
@@ -778,6 +832,14 @@ inherited Report_AutoCalculation_SAUAForm: TReport_AutoCalculation_SAUAForm
     end
     object dxBarButton1: TdxBarButton
       Action = actOpenSalesOfTermDrugsUnit
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actChangeAutoUnit
+      Category = 0
+    end
+    object dxBarButton3: TdxBarButton
+      Action = actUnitAutoSUAForm
       Category = 0
     end
   end
@@ -806,7 +868,7 @@ inherited Report_AutoCalculation_SAUAForm: TReport_AutoCalculation_SAUAForm
       item
       end>
     Left = 96
-    Top = 144
+    Top = 120
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -829,5 +891,22 @@ inherited Report_AutoCalculation_SAUAForm: TReport_AutoCalculation_SAUAForm
       end>
     Left = 638
     Top = 84
+  end
+  object spUpdateAutoUnit: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_AutoSUA'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitAutoId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 120
+    Top = 328
   end
 end

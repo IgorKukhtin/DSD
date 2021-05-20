@@ -1032,7 +1032,8 @@ uses
   RecalcMCSShedulerMainDialog in '..\..\FormsFarmacy\Object\RecalcMCSShedulerMainDialog.pas' {RecalcMCSShedulerMainDialogForm: TParentForm},
   GoodsDivisionLock in '..\..\FormsFarmacy\Cash\GoodsDivisionLock.pas' {GoodsDivisionLockForm: TParentForm},
   Report_AutoCalculation_SAUADialog in '..\..\FormsFarmacy\Report\Report_AutoCalculation_SAUADialog.pas' {Report_AutoCalculation_SAUADialogForm: TParentForm},
-  Report_AutoCalculation_SAUA in '..\..\FormsFarmacy\Report\Report_AutoCalculation_SAUA.pas' {Report_AutoCalculation_SAUAForm: TParentForm};
+  Report_AutoCalculation_SAUA in '..\..\FormsFarmacy\Report\Report_AutoCalculation_SAUA.pas' {Report_AutoCalculation_SAUAForm: TParentForm},
+  UnitAutoSUA in '..\..\FormsFarmacy\Guides\UnitAutoSUA.pas' {UnitAutoSUAForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

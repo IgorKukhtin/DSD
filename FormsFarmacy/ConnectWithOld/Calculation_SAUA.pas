@@ -117,6 +117,12 @@ type
     UnitAssortmentDS: TDataSource;
     spGet: TdsdStoredProc;
     actGet_AutoCalculation_SAUA: TAction;
+    bbGet_AutoCalculation_SAUA: TdxBarButton;
+    actChangeAutoUnit: TdsdExecStoredProc;
+    actChoiceUnit: TOpenChoiceForm;
+    spUpdateAutoUnit: TdsdStoredProc;
+    bbChangeAutoUnit: TdxBarButton;
+    actUnitAutoSUAForm: TdsdOpenForm;
     dxBarButton7: TdxBarButton;
     procedure ParentFormCreate(Sender: TObject);
     procedure ParentFormClose(Sender: TObject; var Action: TCloseAction);

@@ -621,6 +621,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_AutoCalculation_SAUADialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AutoCalculation_SAUAForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_AutoCalculation_SAUAForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitAutoSUAForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnitAutoSUAForm');
 end;
 
 procedure TLoadFormTest.LoadFiscalFormTest;
