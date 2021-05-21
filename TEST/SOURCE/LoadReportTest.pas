@@ -136,9 +136,10 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+{
   LoadReportFromFile('Проверка начислений по бонусам для подписи(детально)', ReportPath + '\Отчеты (финансы)\Проверка начислений по бонусам для подписи(детально).fr3');
   exit;
- { LoadReportFromFile('PrintMovement_Sale32437180', ReportPath + '\Товарный Учет\PrintMovement_Sale32437180.fr3');
+  LoadReportFromFile('PrintMovement_Sale32437180', ReportPath + '\Товарный Учет\PrintMovement_Sale32437180.fr3');
    exit;
 
    LoadReportFromFile('Печать документов начислений по бонусам', ReportPath + '\Отчеты (финансы)\Печать документов начислений по бонусам.fr3');
@@ -406,10 +407,10 @@ begin
    exit;
 
   LoadReportFromFile('Заявка на упаковку', ReportPath + '\Производство\Заявка на упаковку.fr3');
-
+   }
   LoadReportFromFile('Заявка на сырье', ReportPath + '\Производство\Заявка на сырье.fr3');
   exit;
-
+  {
   LoadReportFromFile('Заявка на упаковку (остатки)', ReportPath + '\Производство\Заявка на упаковку (остатки).fr3');
 
   LoadReportFromFile('Заявка на упаковку (меньше заказа)', ReportPath + '\Производство\Заявка на упаковку (меньше заказа).fr3');

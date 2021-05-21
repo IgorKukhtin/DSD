@@ -137,20 +137,20 @@ BEGIN
                                              ELSE 0
                                         END) AS CountIncome
                                  --потребление
-                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                 , SUM (CASE WHEN COALESCE (MIContainer.Amount,0) < 0 --MIContainer.MovementDescId IN (zc_Movement_Send(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
                                                   THEN MIContainer.Amount --* (-1)
+                                                  
                                              ELSE 0
                                         END) AS CountProduction
                                  -- прочее
-                                 , SUM (CASE WHEN MIContainer.MovementDescId NOT IN (zc_Movement_Income(), zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) 
+                                 , SUM (CASE WHEN COALESCE (MIContainer.Amount,0) > 0 AND MIContainer.MovementDescId NOT IN (zc_Movement_Income()) 
                                                   THEN MIContainer.Amount
-                                             
                                              ELSE 0
                                         END) AS CountOther
 
                                          -- ***REMAINS***
                                  , -1 * SUM (CASE WHEN MIContainer.OperDate >= inStartDate THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS RemainsStart
-                                 , -1 * SUM (CASE WHEN MIContainer.OperDate > inEndDate   THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS RemainsEnd
+                                 , -1 * SUM (CASE WHEN MIContainer.OperDate > inEndDate    THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS RemainsEnd
 
                              FROM _tmpContainer
                                   INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = _tmpContainer.ContainerId
@@ -218,8 +218,8 @@ BEGIN
                            , SUM (CASE WHEN tmpMIContainer.LocationId = 8449   THEN tmpMIContainer.CountProduction ELSE 0 END) AS CountProduction4 --8449   ЦЕХ с/к
                            , SUM (CASE WHEN tmpMIContainer.LocationId = 8451   THEN tmpMIContainer.CountProduction ELSE 0 END) AS CountProduction5 --8451   ЦЕХ упаковки
                            , SUM (CASE WHEN tmpMIContainer.LocationId = 951601 THEN tmpMIContainer.CountProduction ELSE 0 END) AS CountProduction6 --951601 ЦЕХ упаковки МЯСО
-                           , SUM (CASE WHEN tmpMIContainer.LocationId = 8457   THEN tmpMIContainer.CountProduction ELSE 0 END) AS CountProduction7 --8457   Склад Реализация + Склад База
-                           , SUM (CASE WHEN tmpMIContainer.LocationId NOT IN (8448, 8447, 8450, 8449, 8451, 8457, 951601)
+                           , SUM (CASE WHEN tmpMIContainer.LocationId IN (8457, 1078643,8458,8459) THEN tmpMIContainer.CountProduction ELSE 0 END) AS CountProduction7 --8457   Склад Реализация + Склад База  -- 1078643
+                           , SUM (CASE WHEN tmpMIContainer.LocationId NOT IN (8448, 8447, 8450, 8449, 8451, 8457, 951601, 1078643,8458,8459)
                                        THEN tmpMIContainer.CountProduction
                                        ELSE 0
                                   END)                                                                                         AS CountProduction8 --       другие
