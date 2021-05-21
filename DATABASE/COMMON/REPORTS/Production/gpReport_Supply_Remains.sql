@@ -27,6 +27,8 @@ RETURNS TABLE ( GoodsId Integer
               , CountIncome_Weight       TFloat -- Приходы
               , CountProduction          TFloat -- Потребление
               , CountProduction_Weight   TFloat -- Потребление
+              , CountProduction_dop      TFloat
+              , CountProduction_dop_Weight TFloat
               , CountOther               TFloat
               , CountOther_Weight        TFloat
               
@@ -132,21 +134,20 @@ BEGIN
                                   , _tmpContainer.GoodsKindId
                           
                                    -- Приход
-                                 , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income()
+                                 , SUM (CASE WHEN COALESCE (MIContainer.Amount,0) > 0 --MIContainer.MovementDescId = zc_Movement_Income()
                                              THEN MIContainer.Amount
                                              ELSE 0
                                         END) AS CountIncome
-                                 --потребление
-                                 , SUM (CASE WHEN COALESCE (MIContainer.Amount,0) < 0 --MIContainer.MovementDescId IN (zc_Movement_Send(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
-                                                  THEN MIContainer.Amount --* (-1)
-                                                  
-                                             ELSE 0
-                                        END) AS CountProduction
-                                 -- прочее
-                                 , SUM (CASE WHEN COALESCE (MIContainer.Amount,0) > 0 AND MIContainer.MovementDescId NOT IN (zc_Movement_Income()) 
+                                 -- весь расход считать, кроме перемещения
+                                 , SUM (CASE WHEN COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId NOT IN (zc_Movement_Send())
                                                   THEN MIContainer.Amount
                                              ELSE 0
-                                        END) AS CountOther
+                                        END) AS CountProduction
+                                 -- 1) расход произв+списание
+                                 , SUM (CASE WHEN COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId IN (zc_Movement_Loss(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) --MIContainer.MovementDescId IN (zc_Movement_Send(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                                  THEN MIContainer.Amount
+                                             ELSE 0
+                                        END) AS CountProduction_dop
 
                                          -- ***REMAINS***
                                  , -1 * SUM (CASE WHEN MIContainer.OperDate >= inStartDate THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS RemainsStart
@@ -160,16 +161,16 @@ BEGIN
                                     , _tmpContainer.GoodsId
                                     , _tmpContainer.GoodsKindId
                                     , CASE WHEN MIContainer.MovementDescId = zc_Movement_Income() THEN MIContainer.MovementId ELSE 0 END
-                             HAVING SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income()
-                                                   THEN MIContainer.Amount
-                                              ELSE 0
-                                         END) <> 0
+                             HAVING SUM (CASE WHEN COALESCE (MIContainer.Amount,0) > 0
+                                             THEN MIContainer.Amount
+                                             ELSE 0
+                                        END) <> 0
                                   --потребление
-                                 OR SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
-                                                   THEN MIContainer.Amount
-                                              ELSE 0
-                                         END) <> 0
-                                 OR SUM (CASE WHEN MIContainer.MovementDescId NOT IN (zc_Movement_Income(), zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                 OR SUM (CASE WHEN COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId NOT IN (zc_Movement_Send())
+                                                  THEN MIContainer.Amount
+                                             ELSE 0
+                                        END) <> 0
+                                 OR SUM (CASE WHEN COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId IN (zc_Movement_Loss(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) --MIContainer.MovementDescId IN (zc_Movement_Send(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
                                                   THEN MIContainer.Amount
                                              ELSE 0
                                         END) <> 0
@@ -186,7 +187,7 @@ BEGIN
                                     -- ***COUNT***
                                   , 0 AS CountIncome
                                   , 0 AS CountProduction
-                                  , 0 AS CountOther
+                                  , 0 AS CountProduction_dop
                                     -- ***REMAINS***
                                  , _tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS RemainsStart
                                  , _tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS RemainsEnd
@@ -208,9 +209,10 @@ BEGIN
                            , CASE WHEN inisGoodsKind = TRUE THEN tmpMIContainer.GoodsKindId ELSE 0 END AS GoodsKindId
                            , STRING_AGG (Object_GoodsKind.ValueData, ',') ::TVarChar AS GoodsKindName
 
-                           , SUM (tmpMIContainer.CountIncome)      AS CountIncome
-                           , SUM (tmpMIContainer.CountProduction)  AS CountProduction
-                           , SUM (tmpMIContainer.CountOther)       AS CountOther
+                           , SUM (tmpMIContainer.CountIncome)         AS CountIncome
+                           , SUM (tmpMIContainer.CountProduction)     AS CountProduction
+                           , SUM (tmpMIContainer.CountProduction_dop) AS CountProduction_dop
+                           , SUM (COALESCE (tmpMIContainer.CountProduction,0) - COALESCE (tmpMIContainer.CountProduction_dop,0)) AS CountOther
                            
                            , SUM (CASE WHEN tmpMIContainer.LocationId = 8448   THEN tmpMIContainer.CountProduction ELSE 0 END) AS CountProduction1 --8448   ЦЕХ деликатесов
                            , SUM (CASE WHEN tmpMIContainer.LocationId = 8447   THEN tmpMIContainer.CountProduction ELSE 0 END) AS CountProduction2 --8447   ЦЕХ колбасный
@@ -233,14 +235,16 @@ BEGIN
                              , CASE WHEN inisGoodsKind = TRUE THEN tmpMIContainer.GoodsKindId ELSE 0 END
                       HAVING  SUM (tmpMIContainer.CountIncome) <> 0
                            OR SUM (tmpMIContainer.CountProduction) <> 0
+                           OR SUM (tmpMIContainer.CountProduction_dop) <> 0
+                           OR SUM (COALESCE (tmpMIContainer.CountProduction,0) - COALESCE (tmpMIContainer.CountProduction_dop,0)) <> 0
                            OR SUM (CASE WHEN tmpMIContainer.LocationId = 8448   THEN tmpMIContainer.CountProduction ELSE 0 END) <> 0
                            OR SUM (CASE WHEN tmpMIContainer.LocationId = 8447   THEN tmpMIContainer.CountProduction ELSE 0 END) <> 0
                            OR SUM (CASE WHEN tmpMIContainer.LocationId = 8450   THEN tmpMIContainer.CountProduction ELSE 0 END) <> 0
                            OR SUM (CASE WHEN tmpMIContainer.LocationId = 8449   THEN tmpMIContainer.CountProduction ELSE 0 END) <> 0
                            OR SUM (CASE WHEN tmpMIContainer.LocationId = 8451   THEN tmpMIContainer.CountProduction ELSE 0 END) <> 0
                            OR SUM (CASE WHEN tmpMIContainer.LocationId = 951601 THEN tmpMIContainer.CountProduction ELSE 0 END) <> 0
-                           OR SUM (CASE WHEN tmpMIContainer.LocationId = 8457   THEN tmpMIContainer.CountProduction ELSE 0 END) <> 0
-                           OR SUM (CASE WHEN tmpMIContainer.LocationId NOT IN (8448, 8447, 8450, 8449, 8451, 8457, 951601)
+                           OR SUM (CASE WHEN tmpMIContainer.LocationId IN (8457, 1078643,8458,8459) THEN tmpMIContainer.CountProduction ELSE 0 END) <> 0
+                           OR SUM (CASE WHEN tmpMIContainer.LocationId NOT IN (8448, 8447, 8450, 8449, 8451, 8457, 951601, 1078643,8458,8459)
                                        THEN tmpMIContainer.CountProduction
                                        ELSE 0
                                   END) <> 0
@@ -264,6 +268,9 @@ BEGIN
 
                           , tmpData.CountProduction   ::TFloat
                           , (tmpData.CountProduction * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS CountProduction_Weight
+
+                          , tmpData.CountProduction_dop   ::TFloat
+                          , (tmpData.CountProduction_dop * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS CountProduction_dop_Weight
 
                           , tmpData.CountOther   ::TFloat
                           , (tmpData.CountOther * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS CountOther_Weight
@@ -318,6 +325,8 @@ BEGIN
               , tmpData.CountIncome1_Weight    ::TFloat
               , tmpData.CountProduction        ::TFloat
               , tmpData.CountProduction_Weight ::TFloat
+              , tmpData.CountProduction_dop        ::TFloat
+              , tmpData.CountProduction_dop_Weight ::TFloat
               , tmpData.CountOther             ::TFloat
               , tmpData.CountOther_Weight      ::TFloat
 
