@@ -53,15 +53,33 @@ BEGIN
                        AND ObjectBoolean_Unit_SUA.ValueData = True
                      ORDER BY Object_Juridical.ValueData
                             , Object_Unit.ValueData
-                     )                              
+                     )
+       , tmpMaxData AS (SELECT Max(ObjectDate_AutoSUA.ValueData)                       AS MaxDateAuto 
+                        FROM tmpUnit
+                             INNER JOIN ObjectDate AS ObjectDate_AutoSUA
+                                                   ON ObjectDate_AutoSUA.ObjectId = tmpUnit.UnitId
+                                                  AND ObjectDate_AutoSUA.DescId = zc_ObjectDate_Unit_AutoSUA()
+                        WHERE ObjectDate_AutoSUA.ValueData IS NOT NULL)
+       , tmpUnitDataInterim AS (SELECT tmpUnit.UnitId
+                                     , tmpMaxData.MaxDateAuto 
+                                     , ROW_NUMBER()OVER(ORDER BY tmpUnit.ORD) AS ORD
+                               FROM tmpUnit
+                                    INNER JOIN tmpMaxData ON 1 = 1
+                                    LEFT JOIN ObjectDate AS ObjectDate_AutoSUA
+                                                         ON ObjectDate_AutoSUA.ObjectId = tmpUnit.UnitId
+                                                        AND ObjectDate_AutoSUA.DescId = zc_ObjectDate_Unit_AutoSUA()
+                               WHERE ObjectDate_AutoSUA.ValueData is NULL)
+       , tmpUnitData AS (SELECT tmpUnitDataInterim.UnitId
+                              , tmpUnitDataInterim.MaxDateAuto + ((7 * tmpUnitDataInterim.Ord)::tvarchar||' DAY')::INTERVAL   AS DateAuto
+                        FROM tmpUnitDataInterim)
                               
     SELECT tmpUnit.UnitId
          , tmpUnit.UnitName
          , tmpUnit.JuridicalName
-         , ObjectDate_AutoSUA.ValueData                            AS DateAuto 
-         , ObjectString_Latitude.ValueData                         AS Latitude 
-         , ObjectString_Longitude.ValueData                        AS Longitude
-         , tmpUnit.ORD::Integer                                    AS ORD
+         , COALESCE(ObjectDate_AutoSUA.ValueData, tmpUnitData.DateAuto)::TDateTime  AS DateAuto 
+         , ObjectString_Latitude.ValueData                                          AS Latitude 
+         , ObjectString_Longitude.ValueData                                         AS Longitude
+         , tmpUnit.ORD::Integer                                                     AS ORD
     FROM tmpUnit
          LEFT JOIN ObjectString AS ObjectString_Latitude
                                 ON ObjectString_Latitude.ObjectId = tmpUnit.UnitId
@@ -72,6 +90,7 @@ BEGIN
          LEFT JOIN ObjectDate AS ObjectDate_AutoSUA
                               ON ObjectDate_AutoSUA.ObjectId = tmpUnit.UnitId
                              AND ObjectDate_AutoSUA.DescId = zc_ObjectDate_Unit_AutoSUA()
+         LEFT JOIN tmpUnitData ON tmpUnitData.UnitId = tmpUnit.UnitId
     ORDER BY tmpUnit.ORD;
              
 

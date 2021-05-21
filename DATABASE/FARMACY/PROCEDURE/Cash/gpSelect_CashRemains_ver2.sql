@@ -909,14 +909,18 @@ BEGIN
             WHEN zc_Enum_PartionDateKind_Good() THEN vbDay_6 / 30.0 + 1.0
             WHEN zc_Enum_PartionDateKind_Cat_5() THEN vbDay_6 / 30.0 - 1.0
             ELSE Object_PartionDateKind.AmountMonth END::TFloat AS AmountMonth
-          , CASE WHEN COALESCE(CashSessionSnapShot.PartionDateKindId, 0) <> 0 AND COALESCE(CashSessionSnapShot.PartionDateDiscount, 0) <> 0 THEN
+          , CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                  AND ObjectFloat_Goods_Price.ValueData > 0
+                 THEN  CashSessionSnapShot.Price
+            ELSE
+            CASE WHEN COALESCE(CashSessionSnapShot.PartionDateKindId, 0) <> 0 AND COALESCE(CashSessionSnapShot.PartionDateDiscount, 0) <> 0 THEN
                      CASE WHEN CashSessionSnapShot.Price > CashSessionSnapShot.PriceWithVAT
                           THEN ROUND(CashSessionSnapShot.Price - (CashSessionSnapShot.Price - CashSessionSnapShot.PriceWithVAT) *
                                      CashSessionSnapShot.PartionDateDiscount / 100, 2)
                           ELSE CashSessionSnapShot.Price
                      END
                  ELSE NULL
-            END                                          :: TFloat AS PricePartionDate
+            END END                                      :: TFloat AS PricePartionDate
           , CashSessionSnapShot.PartionDateDiscount                AS PartionDateDiscount
           , COALESCE(tmpNotSold.GoodsID, 0) <> 0                   AS NotSold
           , COALESCE(tmpIlliquidUnit.GoodsID, 0) <> 0              AS NotSold60
@@ -1021,6 +1025,14 @@ BEGIN
                                    AND tmpGoodsUKTZED.Ord = 1
 
            LEFT JOIN tmpDeferredSendIn ON tmpDeferredSendIn.GoodsId = CashSessionSnapShot.ObjectId
+
+           -- Фикс цена для всей Сети
+           LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
+                                  ON ObjectFloat_Goods_Price.ObjectId =  CashSessionSnapShot.ObjectId
+                                 AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                   ON ObjectBoolean_Goods_TOP.ObjectId =  CashSessionSnapShot.ObjectId
+                                  AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
 
         WHERE
             CashSessionSnapShot.CashSessionId = inCashSessionId

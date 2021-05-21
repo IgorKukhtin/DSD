@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isVIP Boolean, isUrgently Boolean, isConfirmed Boolean, ConfirmedText TVarChar
              , NumberSeats Integer
              , isBanFiscalSale Boolean
+             , isSendLoss Boolean
               )
 AS
 $BODY$
@@ -72,6 +73,7 @@ BEGIN
              , CAST ('Не определено' AS TVarChar)               AS ConfirmedText
              , CAST (0 AS Integer)                              AS NumberSeats
              , FALSE                                            AS isBanFiscalSale
+             , FALSE                                            AS isSendLoss
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -116,6 +118,7 @@ BEGIN
                   ELSE 'Не подтвержден' END ::TVarChar          AS ConfirmedText
            , MovementFloat_NumberSeats.ValueData::Integer       AS NumberSeats
            , COALESCE (MovementBoolean_BanFiscalSale.ValueData, FALSE)    ::Boolean AS isBanFiscalSale           
+           , COALESCE (MovementBoolean_SendLoss.ValueData, FALSE)         ::Boolean AS isSendLoss           
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -201,6 +204,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_BanFiscalSale
                                       ON MovementBoolean_BanFiscalSale.MovementId = Movement.Id
                                      AND MovementBoolean_BanFiscalSale.DescId = zc_MovementBoolean_BanFiscalSale()
+            LEFT JOIN MovementBoolean AS MovementBoolean_SendLoss
+                                      ON MovementBoolean_SendLoss.MovementId = Movement.Id
+                                     AND MovementBoolean_SendLoss.DescId = zc_MovementBoolean_SendLoss()
 
             LEFT JOIN MovementFloat AS MovementFloat_MCSPeriod
                                     ON MovementFloat_MCSPeriod.MovementId =  Movement.Id

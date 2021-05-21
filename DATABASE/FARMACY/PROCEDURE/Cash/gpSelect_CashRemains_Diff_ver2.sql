@@ -429,6 +429,10 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                  WHEN zc_Enum_PartionDateKind_Good() THEN vbDay_6 / 30.0 + 1.0
                  WHEN zc_Enum_PartionDateKind_Cat_5() THEN vbDay_6 / 30.0 - 1.0
                  ELSE Object_PartionDateKind.AmountMonth END::TFloat AS AmountMonth,
+            CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                  AND ObjectFloat_Goods_Price.ValueData > 0
+                 THEN _DIFF.Price 
+            ELSE
             CASE WHEN COALESCE(_DIFF.PartionDateKindId, 0) <> 0 AND COALESCE(_DIFF.PartionDateDiscount, 0) <> 0 THEN
                      CASE WHEN _DIFF.Price > _DIFF.PriceWithVAT
                           THEN ROUND(_DIFF.Price - (_DIFF.Price - _DIFF.PriceWithVAT) *
@@ -436,7 +440,7 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                           ELSE _DIFF.Price
                      END
                  ELSE NULL
-            END                                          :: TFloat AS PricePartionDate,
+            END END                                          :: TFloat AS PricePartionDate,
             CASE WHEN COALESCE (Object_Goods_Retail.isFirst, FALSE) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc,
             _DIFF.DeferredSend,
             RemainsSUN TFloat,
@@ -485,6 +489,13 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
             -- Коды UKTZED
             LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods_Retail.GoodsMainId
                                     AND tmpGoodsUKTZED.Ord = 1
+            -- Фикс цена для всей Сети
+            LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
+                                   ON ObjectFloat_Goods_Price.ObjectId = _DIFF.ObjectId
+                                  AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                    ON ObjectBoolean_Goods_TOP.ObjectId = _DIFF.ObjectId
+                                   AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
             ;
 
     -- !!!Протокол - отладка Скорости!!!
