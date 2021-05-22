@@ -2075,6 +2075,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Supply_RemainsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Supply_RemainsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Supply_RemainsDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Supply_RemainsDialogForm');
+  exit;
  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Supply_OlapForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Supply_OlapForm');
@@ -2352,8 +2357,8 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SaleReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SaleReturnInForm');
-  exit;
-  {
+  {exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SaleReturnIn_BUHForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SaleReturnIn_BUHForm');
   exit;

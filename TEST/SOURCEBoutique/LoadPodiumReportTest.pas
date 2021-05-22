@@ -78,10 +78,11 @@ begin
   LoadReportFromFile('PrintReport_SaleReturnIn_BarCode', ReportPath + '\PrintReport_SaleReturnIn_BarCode.fr3');
   LoadReportFromFile('PrintReport_SaleReturnIn', ReportPath + '\PrintReport_SaleReturnIn.fr3');
   LoadReportFromFile('PrintReport_ClientDebt', ReportPath + '\PrintReport_ClientDebt.fr3');
-  }
+
   LoadReportFromFile('PrintReport_ClientDebt_curr', ReportPath + '\PrintReport_ClientDebt_curr.fr3');
+  LoadReportFromFile('PrintReport_ClientDebt_Check', ReportPath + '\PrintReport_ClientDebt_Check.fr3');
   exit;
-  {
+
   LoadReportFromFile('PrintReport_Sale', ReportPath + '\PrintReport_Sale.fr3');
   LoadReportFromFile('PrintReport_ReturnIn', ReportPath + '\PrintReport_ReturnIn.fr3');
   LoadReportFromFile('PrintReport_Uniform', ReportPath + '\PrintReport_Uniform.fr3');
@@ -91,8 +92,11 @@ begin
   LoadReportFromFile('Print_Check_GoodsAccount', ReportPath + '\Print_Check_GoodsAccount.fr3');
   LoadReportFromFile('Print_Check', ReportPath + '\Print_Check.fr3');
   }
-  LoadReportFromFile('Print_CheckPodiumRealPrice', ReportPath + '\Print_CheckPodiumRealPrice.fr3');
+  LoadReportFromFile('Print_Check', ReportPath + '\Podium\Print_Check.fr3');
   exit;
+
+  LoadReportFromFile('Print_CheckPodiumRealPrice', ReportPath + '\Print_CheckPodiumRealPrice.fr3');
+
   LoadReportFromFile('Движение по покупателю (Акт сверки)', ReportPath + '\Движение по покупателю (Акт сверки).fr3');
   LoadReportFromFile('Движение по покупателю', ReportPath + '\Движение по покупателю.fr3');
   LoadReportFromFile('Отчет по расчетам', ReportPath + '\Отчет по расчетам.fr3');

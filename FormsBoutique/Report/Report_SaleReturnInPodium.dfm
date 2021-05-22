@@ -906,122 +906,6 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
       PrinterNameParam.MultiSelectSeparator = ','
       PreviewWindowMaximized = False
     end
-    object actRefreshStart: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spGet_Unit
-      StoredProcList = <
-        item
-          StoredProc = spGet_Unit
-        end
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object ExecuteDialog: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
-      ImageIndex = 35
-      FormName = 'TReport_SaleReturnInDialogForm'
-      FormNameParam.Value = 'TReport_SaleReturnInDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'StartDate'
-          Value = 41579d
-          Component = deStart
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = 41608d
-          Component = deEnd
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitId'
-          Value = ''
-          Component = GuidesUnit
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitName'
-          Value = ''
-          Component = GuidesUnit
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      RefreshDispatcher = RefreshDispatcher
-      OpenBeforeShow = True
-    end
-    object actRefreshMovement: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
-      Hint = #1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object actRefreshSize: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1087#1086' '#1056#1072#1079#1084#1077#1088#1072#1084
-      Hint = #1087#1086' '#1056#1072#1079#1084#1077#1088#1072#1084
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object actRefreshPartner: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
-      Hint = #1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object actRefreshIsPartion: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
-      Hint = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
     object actReport_Goods: TdsdOpenForm
       Category = 'DSDLib'
       TabSheet = tsMain
@@ -1120,6 +1004,93 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
         end>
       isShowModal = False
     end
+    object actRefreshMovement: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      Hint = #1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshSize: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1087#1086' '#1056#1072#1079#1084#1077#1088#1072#1084
+      Hint = #1087#1086' '#1056#1072#1079#1084#1077#1088#1072#1084
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_SaleReturnInDialogForm'
+      FormNameParam.Value = 'TReport_SaleReturnInDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41579d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 41608d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
+    object actRefreshPartner: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
+      Hint = #1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1138,6 +1109,19 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1089#1090#1072#1090#1091#1089#1099
       ImageIndexTrue = 62
       ImageIndexFalse = 63
+    end
+    object actRefreshIsPartion: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
+      Hint = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actSetErased: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1174,6 +1158,59 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
       ImageIndex = 12
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
       InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1088#1086#1074#1077#1076#1077#1085
+    end
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_Unit
+      StoredProcList = <
+        item
+          StoredProc = spGet_Unit
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actUpdate_isChecked: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isChecked
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isChecked
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1056#1072#1079#1088#1077#1096#1080#1090#1100' / '#1086#1090#1084#1077#1085#1080#1090#1100' "'#1042#1086#1079#1074#1088#1072#1090' '#1073#1086#1083#1100#1096#1077' '#1095#1077#1084' '#1079#1072' 31 '#1076#1077#1085#1100'"'
+      Hint = #1056#1072#1079#1088#1077#1096#1080#1090#1100' / '#1086#1090#1084#1077#1085#1080#1090#1100' "'#1042#1086#1079#1074#1088#1072#1090' '#1073#1086#1083#1100#1096#1077' '#1095#1077#1084' '#1079#1072' 31 '#1076#1077#1085#1100'"'
+      ImageIndex = 77
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1088#1072#1079#1088#1077#1096#1080#1090#1100' / '#1086#1090#1084#1077#1085#1080#1090#1100' "'#1042#1086#1079#1074#1088#1072#1090' '#1073#1086#1083#1100#1096#1077' '#1095#1077#1084' '#1079#1072' 31 '#1076#1077#1085 +
+        #1100'"?'
+      InfoAfterExecute = #1056#1072#1079#1088#1077#1096#1077#1085#1086' / '#1086#1090#1084#1077#1085#1077#1085#1086
+    end
+    object actUpdate_isOffer: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isOffer
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isOffer
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1055#1088#1080#1084#1077#1088#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
+      Hint = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1055#1088#1080#1084#1077#1088#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
+      ImageIndex = 76
+      QuestionBeforeExecute = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1055#1088#1080#1084#1077#1088#1082#1072' ('#1076#1072'/'#1085#1077#1090')?'
     end
     object mactPrint_Check: TMultiAction
       Category = 'Print'
@@ -1267,26 +1304,6 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
       PreviewWindowMaximized = False
-    end
-    object actUpdate_isChecked: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_isChecked
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_isChecked
-        end
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1056#1072#1079#1088#1077#1096#1080#1090#1100' / '#1086#1090#1084#1077#1085#1080#1090#1100' "'#1042#1086#1079#1074#1088#1072#1090' '#1073#1086#1083#1100#1096#1077' '#1095#1077#1084' '#1079#1072' 31 '#1076#1077#1085#1100'"'
-      Hint = #1056#1072#1079#1088#1077#1096#1080#1090#1100' / '#1086#1090#1084#1077#1085#1080#1090#1100' "'#1042#1086#1079#1074#1088#1072#1090' '#1073#1086#1083#1100#1096#1077' '#1095#1077#1084' '#1079#1072' 31 '#1076#1077#1085#1100'"'
-      ImageIndex = 77
-      QuestionBeforeExecute = 
-        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1088#1072#1079#1088#1077#1096#1080#1090#1100' / '#1086#1090#1084#1077#1085#1080#1090#1100' "'#1042#1086#1079#1074#1088#1072#1090' '#1073#1086#1083#1100#1096#1077' '#1095#1077#1084' '#1079#1072' 31 '#1076#1077#1085 +
-        #1100'"?'
-      InfoAfterExecute = #1056#1072#1079#1088#1077#1096#1077#1085#1086' / '#1086#1090#1084#1077#1085#1077#1085#1086
     end
   end
   inherited MasterDS: TDataSource
@@ -1404,6 +1421,14 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -1468,6 +1493,10 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
     end
     object bbactPrintCheckPriceReal: TdxBarButton
       Action = mactPrintCheckPriceReal
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actUpdate_isOffer
       Category = 0
     end
   end
@@ -1815,6 +1844,32 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
       end>
     PackSize = 1
     Left = 720
+    Top = 371
+  end
+  object spUpdate_isOffer: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Sale_isOffer'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Sale'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOffer'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isOffer'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 800
     Top = 371
   end
 end

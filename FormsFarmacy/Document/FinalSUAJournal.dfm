@@ -362,6 +362,19 @@ inherited FinalSUAJournalForm: TFinalSUAJournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actAutoCalculation_SAUA: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080#1081' '#1088#1072#1089#1095#1077#1090' '#1057#1059#1040
+      Hint = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080#1081' '#1088#1072#1089#1095#1077#1090' '#1057#1059#1040
+      ImageIndex = 38
+      FormName = 'TReport_AutoCalculation_SAUAForm'
+      FormNameParam.Value = 'TReport_AutoCalculation_SAUAForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -408,6 +421,79 @@ inherited FinalSUAJournalForm: TFinalSUAJournalForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEdit'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDelete'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
+        end>
+    end
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
@@ -439,6 +525,10 @@ inherited FinalSUAJournalForm: TFinalSUAJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' % '#1089#1082#1080#1076#1082#1080' '#1076#1083#1103' '#1089#1088#1086#1082#1086#1074#1086#1075#1086' '#1090#1086#1074#1072#1088#1072
       Visible = ivAlways
       ImageIndex = 43
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actAutoCalculation_SAUA
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

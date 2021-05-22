@@ -117,7 +117,9 @@ BEGIN
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpRemains_all_Supplement'))
      THEN
-       CREATE TEMP TABLE _tmpRemains_all_Supplement   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountRemains TFloat, AmountNotSend TFloat, AmountSalesDay TFloat, AmountSalesMonth TFloat, AverageSalesMonth TFloat, Need TFloat, AmountUse TFloat, MinExpirationDate TDateTime, isCloseMCS boolean) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpRemains_all_Supplement   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountRemains TFloat, AmountNotSend TFloat, 
+                                                       AmountSalesDay TFloat, AmountSalesMonth TFloat, AverageSalesMonth TFloat, Need TFloat, GiveAway TFloat, AmountUse TFloat, 
+                                                       MinExpirationDate TDateTime, isCloseMCS boolean) ON COMMIT DROP;
      END IF;
 
      -- 2. все остатки, НТЗ, и коэф. товарного запаса
@@ -665,6 +667,22 @@ BEGIN
                                               AND _tmpGoods_Sun_exception_Supplement.GoodsId = tmpObject_Price.GoodsId
 
        ;
+       
+     IF CURRENT_DATE <= '24.05.2021'
+     THEN
+
+       UPDATE _tmpRemains_all_Supplement SET GiveAway = (SELECT FLOOR(Container.Amount) FROM Container WHERE Container.ID = 22295653)
+       WHERE _tmpRemains_all_Supplement.UnitId = 183292
+         AND _tmpRemains_all_Supplement.GoodsId = 1204616;
+       
+       UPDATE _tmpRemains_all_Supplement SET GiveAway = - CEIL((SELECT FLOOR(Container.Amount) FROM Container WHERE Container.ID = 22295653) / 
+                                                               (SELECT count(*) FROM _tmpRemains_all_Supplement
+                                                                WHERE _tmpRemains_all_Supplement.UnitId <> 183292
+                                                                  AND _tmpRemains_all_Supplement.GoodsId = 1204616))
+       WHERE _tmpRemains_all_Supplement.UnitId <> 183292
+         AND _tmpRemains_all_Supplement.GoodsId = 1204616;
+
+     END IF;
 
      -- 2. все остатки, НТЗ, и коэф. товарного запаса
      --
@@ -734,7 +752,8 @@ BEGIN
      OPEN curPartion_next FOR
         SELECT _tmpRemains_all_Supplement.UnitId
              , _tmpRemains_all_Supplement.GoodsId
-             , - CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
+             , CASE WHEN COALESCE (GiveAway, 0) > 0 THEN COALESCE (GiveAway, 0) ELSE 
+               - CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
                  CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 OR _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = True
                       THEN - _tmpRemains_all_Supplement.AmountRemains
                       ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains 
@@ -756,7 +775,7 @@ BEGIN
                                                                           ELSE COALESCE(_tmpGoodsLayout_SUN_Supplement.Layout, 0) 
                                                                              + COALESCE(_tmpGoods_PromoUnit_Supplement.Amount, 0) END)::Integer
                              END / COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)) * COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
-                 END AS Need
+                 END END AS Need
              , COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
        FROM _tmpRemains_all_Supplement
 
@@ -770,7 +789,8 @@ BEGIN
             LEFT JOIN _tmpGoods_PromoUnit_Supplement ON _tmpGoods_PromoUnit_Supplement.GoodsID = _tmpRemains_all_Supplement.GoodsId
                                                     AND _tmpGoods_PromoUnit_Supplement.UnitId = _tmpRemains_all_Supplement.UnitId  
                                                                             
-       WHERE CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
+       WHERE CASE WHEN COALESCE (GiveAway, 0) > 0 THEN - COALESCE (GiveAway, 0) ELSE
+             CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
                  CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 OR _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = True
                       THEN - _tmpRemains_all_Supplement.AmountRemains
                       ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains 
@@ -792,7 +812,8 @@ BEGIN
                                                                           ELSE COALESCE(_tmpGoodsLayout_SUN_Supplement.Layout, 0) 
                                                                              + COALESCE(_tmpGoods_PromoUnit_Supplement.Amount, 0) END)::Integer
                              END / COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)) * COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
-                 END < 0
+                 END END < 0
+                 
          AND _tmpUnit_SUN_Supplement.isSUN_Supplement_out = True
          AND (COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0) = 0 OR COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0) = _tmpRemains_all_Supplement.UnitId)
        ORDER BY _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority DESC
@@ -813,7 +834,8 @@ BEGIN
          -- курсор2. - Потребность для vbGoodsId
          OPEN curResult_next FOR
              SELECT _tmpRemains_all_Supplement.UnitId
-                  , CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
+                  , CASE WHEN COALESCE (GiveAway, 0) < 0 THEN - COALESCE (GiveAway, 0) ELSE 
+                    CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
                     CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
                          THEN - _tmpRemains_all_Supplement.AmountRemains
                          ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
@@ -824,7 +846,7 @@ BEGIN
                                  ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
                                  END  - _tmpRemains_all_Supplement.AmountUse) / COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)) * COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
 
-                    END
+                    END END
              FROM _tmpRemains_all_Supplement
 
                   LEFT JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsID = _tmpRemains_all_Supplement.GoodsId
@@ -981,7 +1003,7 @@ $BODY$
  10.06.20                                                     *
 */
 
- SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '1 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
+ SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '4 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 
 -- 
 --select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('19.04.2021')::TDateTime ,  inSession := '3');

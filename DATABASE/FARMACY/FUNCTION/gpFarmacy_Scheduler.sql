@@ -302,6 +302,19 @@ BEGIN
          GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
        PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpInsert_Movement_Loss_NonCommodity', True, text_var1::TVarChar, vbUserId);
     END;
+    
+    -- Автоматическое формирование FinalSUA
+    BEGIN
+      IF date_part('DOW', CURRENT_DATE)::Integer = 5 AND date_part('HOUR',  CURRENT_TIME)::Integer = 18 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 21
+      THEN
+          PERFORM gpInsert_Movement_FinalSUA_Auto (inSession := zfCalc_UserAdmin());    
+      END IF;
+    EXCEPTION
+       WHEN others THEN
+         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+       PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpInsert_Movement_FinalSUA_Auto', True, text_var1::TVarChar, vbUserId);
+    END;
+    
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

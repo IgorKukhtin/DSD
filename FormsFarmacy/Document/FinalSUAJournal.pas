@@ -43,6 +43,8 @@ type
     bbDeferredNo: TdxBarButton;
     dxBarButton1: TdxBarButton;
     Calculation: TcxGridDBColumn;
+    actAutoCalculation_SAUA: TdsdOpenForm;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

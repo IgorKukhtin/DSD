@@ -800,6 +800,10 @@ type
     N287: TMenuItem;
     actGoodsDivisionLock: TdsdOpenForm;
     N288: TMenuItem;
+    N289: TMenuItem;
+    N290: TMenuItem;
+    N291: TMenuItem;
+    N292: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

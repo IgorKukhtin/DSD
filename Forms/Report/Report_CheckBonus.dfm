@@ -264,16 +264,17 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 104
+            Width = 95
           end
           object ConditionKindName: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
             DataBinding.FieldName = 'ConditionKindName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 75
+            Width = 76
           end
           object Value: TcxGridDBColumn
             Caption = '% '#1073#1086#1085#1091#1089#1072
@@ -997,6 +998,93 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actPrintSingDetail: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42370d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'StartDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42370d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'EndDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1087#1086#1076#1087#1080#1089#1080' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1087#1086#1076#1087#1080#1089#1080' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      ImageIndex = 21
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 
+            'RetailName;JuridicalName;PartnerName;PaidKindName_Child;Personal' +
+            'Name;ConditionKindName;Value;PersonalName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchName'
+          Value = ''
+          Component = GuidesBranch
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalName'
+          Value = ''
+          Component = GuidesMember
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' '#1076#1083#1103' '#1087#1086#1076#1087#1080#1089#1080'('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      ReportNameParam.Value = #1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' '#1076#1083#1103' '#1087#1086#1076#1087#1080#1089#1080'('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrintSing: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -1035,7 +1123,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       StoredProcList = <>
       Caption = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1087#1086#1076#1087#1080#1089#1080
       Hint = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1087#1086#1076#1087#1080#1089#1080
-      ImageIndex = 3
+      ImageIndex = 15
       DataSets = <
         item
           UserName = 'frxDBDMaster'
@@ -1703,6 +1791,14 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintSingDetail'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintGroup'
         end
         item
@@ -1757,7 +1853,6 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     object bbPrintSing: TdxBarButton
       Action = actPrintSing
       Category = 0
-      ImageIndex = 15
     end
     object bbPrintGroup: TdxBarButton
       Action = actPrintGroup
@@ -1769,6 +1864,10 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     end
     object bbInsertUpdate_ByGrid: TdxBarButton
       Action = macInsertUpdate_ByGrid
+      Category = 0
+    end
+    object bbPrintSingDetail: TdxBarButton
+      Action = actPrintSingDetail
       Category = 0
     end
   end

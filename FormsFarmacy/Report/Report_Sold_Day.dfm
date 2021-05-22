@@ -64,6 +64,11 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
               Format = '+,0.00;-,0.00;0.00;'
               Kind = skSum
               Column = DiffAmount
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = FactAmountSale
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -162,6 +167,16 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
           end
+          object FactAmountSale: TcxGridDBColumn
+            Caption = #1041#1077#1079#1085#1072#1083
+            DataBinding.FieldName = 'FactAmountSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
+          end
           object PercentMake: TcxGridDBColumn
             AlternateCaption = '% '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
             Caption = '% '#1074#1099#1087'.'
@@ -251,6 +266,8 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
         Groups = <>
         OptionsView.RowGrandTotalWidth = 118
         TabOrder = 0
+        ExplicitLeft = -40
+        ExplicitTop = -3
         object pcolPlanDate: TcxDBPivotGridField
           AreaIndex = 2
           AllowedAreas = [faColumn, faRow, faFilter]
@@ -318,6 +335,16 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
           DataBinding.FieldName = 'DiffAmount'
           Visible = True
           UniqueName = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077
+        end
+        object pcolFactAmountSale: TcxDBPivotGridField
+          Area = faData
+          AreaIndex = 3
+          AllowedAreas = [faFilter, faData]
+          IsCaptionAssigned = True
+          Caption = #1041#1077#1079#1085#1072#1083
+          DataBinding.FieldName = 'FactAmountSale'
+          Visible = True
+          UniqueName = #1041#1077#1079#1085#1072#1083
         end
         object pcolDayOfWeek: TcxDBPivotGridField
           AreaIndex = 1

@@ -725,6 +725,58 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
       GuiParams = <>
       isShowModal = False
     end
+    object actGet_AutoCalculation_SAUA: TAction
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1076#1083#1103' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1086#1075#1086' '#1088#1072#1089#1095#1077#1090#1072' '#1057#1059#1040
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1076#1083#1103' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1086#1075#1086' '#1088#1072#1089#1095#1077#1090#1072' '#1057#1059#1040
+      ImageIndex = 79
+      OnExecute = actGet_AutoCalculation_SAUAExecute
+    end
+    object actChoiceUnit: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceUnit'
+      FormName = 'TUnitTreeForm'
+      FormNameParam.Value = 'TUnitTreeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'UnitAutoId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actChangeAutoUnit: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actChoiceUnit
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateAutoUnit
+      StoredProcList = <
+        item
+          StoredProc = spUpdateAutoUnit
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1076#1083#1103' '#1089#1083#1077#1076#1091#1102#1097#1077#1075#1086' '#1072#1074#1090#1086#1088#1072#1089#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1076#1083#1103' '#1089#1083#1077#1076#1091#1102#1097#1077#1075#1086' '#1072#1074#1090#1086#1088#1072#1089#1095#1077#1090#1072
+      ImageIndex = 8
+    end
+    object actUnitAutoSUAForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1076#1083#1103' '#1072#1074#1090#1086' '#1088#1072#1089#1095#1077#1090#1072' '#1057#1059#1040
+      Hint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1076#1083#1103' '#1072#1074#1090#1086' '#1088#1072#1089#1095#1077#1090#1072' '#1057#1059#1040
+      ImageIndex = 42
+      FormName = 'TUnitAutoSUAForm'
+      FormNameParam.Value = 'TUnitAutoSUAForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -798,6 +850,30 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         item
           Visible = True
           ItemName = 'dxBarButton6'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGet_AutoCalculation_SAUA'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChangeAutoUnit'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton7'
         end
         item
           Visible = True
@@ -903,6 +979,18 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
     end
     object bbFinalSUAProtocol: TdxBarButton
       Action = actFinalSUAProtocol
+      Category = 0
+    end
+    object bbGet_AutoCalculation_SAUA: TdxBarButton
+      Action = actGet_AutoCalculation_SAUA
+      Category = 0
+    end
+    object bbChangeAutoUnit: TdxBarButton
+      Action = actChangeAutoUnit
+      Category = 0
+    end
+    object dxBarButton7: TdxBarButton
+      Action = actUnitAutoSUAForm
       Category = 0
     end
   end
@@ -1153,6 +1241,28 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         Value = Null
         DataType = ftWideString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitRecipient'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitAssortment'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitAutoId'
+        Value = Null
+        MultiSelectSeparator = ','
       end>
     Left = 200
     Top = 448
@@ -1355,5 +1465,134 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
     DataSet = UnitAssortmentCDS
     Left = 792
     Top = 32
+  end
+  object spGet: TdsdStoredProc
+    StoredProcName = 'gpGet_AutoCalculation_SAUA'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'DateStart'
+        Value = 44197d
+        Component = deStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DateEnd'
+        Value = 44197d
+        Component = deEnd
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitAssortmentName'
+        Value = ''
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Threshold'
+        Value = 1.000000000000000000
+        Component = ceThreshold
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DaysStock'
+        Value = 10.000000000000000000
+        Component = ceDaysStock
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CountPharmacies'
+        Value = 1.000000000000000000
+        Component = ceCountPharmacies
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isGoodsClose'
+        Value = True
+        Component = cbGoodsClose
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMCSIsClose'
+        Value = False
+        Component = cbMCSIsClose
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isNotCheckNoMCS'
+        Value = False
+        Component = cbNotCheckNoMCS
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAssortmentRound'
+        Value = False
+        Component = cbAssortmentRound
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isNeedRound'
+        Value = False
+        Component = cbNeedRound
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitRecipient'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitRecipient'
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitAssortment'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitAssortment'
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 360
+    Top = 360
+  end
+  object spUpdateAutoUnit: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_AutoSUA'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitAutoId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 360
+    Top = 416
   end
 end

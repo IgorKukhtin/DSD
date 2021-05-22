@@ -3670,6 +3670,18 @@
 				<Form>GoodsDivisionLockForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_AutoCalculation_SAUADialog.pas">
+				<Form>Report_AutoCalculation_SAUADialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_AutoCalculation_SAUA.pas">
+				<Form>Report_AutoCalculation_SAUAForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\UnitAutoSUA.pas">
+				<Form>UnitAutoSUAForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

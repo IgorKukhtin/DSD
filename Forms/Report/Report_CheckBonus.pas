@@ -107,6 +107,8 @@ type
     cxLabel8: TcxLabel;
     GuidesMember: TdsdGuides;
     edMember: TcxButtonEdit;
+    actPrintSingDetail: TdsdPrintAction;
+    bbPrintSingDetail: TdxBarButton;
   private
     { Private declarations }
   public

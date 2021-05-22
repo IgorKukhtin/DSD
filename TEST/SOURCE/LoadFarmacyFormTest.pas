@@ -384,7 +384,7 @@ end;
 
 procedure TLoadFormTest.LoadCashRegisterFormTest;
 begin
-
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSP_CashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSP_CashForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsUnitRetail_CashForm'));
@@ -396,7 +396,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsDivisionLockForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsDivisionLockForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdueChangeCashPUSHSendForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdueChangeCashPUSHSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOverdueChangeCashPUSHSendForm');
 
 
@@ -616,6 +616,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TFinalSUAForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TFinalSUAJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TFinalSUAJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AutoCalculation_SAUADialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_AutoCalculation_SAUADialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AutoCalculation_SAUAForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_AutoCalculation_SAUAForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitAutoSUAForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnitAutoSUAForm');
 end;
 
 procedure TLoadFormTest.LoadFiscalFormTest;
@@ -1599,12 +1607,12 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SoldForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_SoldForm');
-
+}
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sold_DayForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Sold_DayForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sold_DayUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Sold_DayUserForm');
-
+ {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ByPartionGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ByPartionGoodsForm');
 

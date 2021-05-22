@@ -71,6 +71,8 @@ type
     bbNoStaticCodes: TdxBarButton;
     actSP: TBooleanStoredProcAction;
     dxBarButton1: TdxBarButton;
+    FactAmountSale: TcxGridDBColumn;
+    pcolFactAmountSale: TcxDBPivotGridField;
   private
     { Private declarations }
   public

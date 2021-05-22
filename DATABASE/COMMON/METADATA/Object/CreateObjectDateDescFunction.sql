@@ -484,8 +484,13 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_MarketingDiscount_DateChange() RETURNS 
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_MarketingDiscount(), 'zc_ObjectDate_MarketingDiscount_DateChange', 'Дата, время изменения' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_MarketingDiscount_DateChange');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Unit_AutoSUA() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_AutoSUA'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectDate_Unit_AutoSUA', 'Дата автоматического расчета по СУА' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_AutoSUA');
+
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 19.05.21                                                                                     * zc_ObjectDate_Unit_AutoSUA
  13.05.21         * zc_ObjectDate_User_GUID
  27.04.21                                                                                     * zc_ObjectDate_MarketingDiscount_EndDate
  24.03.21                                                                                     * zc_ObjectDate_FinalSUAProtocol_...

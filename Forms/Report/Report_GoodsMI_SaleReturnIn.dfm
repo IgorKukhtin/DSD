@@ -4,7 +4,6 @@
   ClientWidth = 1362
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -366
   ExplicitWidth = 1378
   ExplicitHeight = 425
   PixelsPerInch = 96
@@ -173,6 +172,11 @@
               Format = ',0.####'
               Kind = skSum
               Column = SaleReturn_Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_Summ_opt
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -324,6 +328,11 @@
               Format = ',0.####'
               Kind = skSum
               Column = SaleReturn_Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_Summ_opt
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -734,6 +743,18 @@
             HeaderHint = #1057' '#1091#1095#1077#1090#1086#1084' %'#1089#1082#1080#1076#1082#1080' '#1079#1072' '#1074#1077#1089' '#1080' '#1088#1072#1079#1085#1080#1094#1099' '#1074' '#1074#1077#1089#1077
             Options.Editing = False
             Width = 70
+          end
+          object Sale_Summ_opt: TcxGridDBColumn
+            Caption = 'C'#1091#1084#1084#1072' '#1087#1086' '#1086#1087#1090' '#1087#1088#1072#1081#1089#1091', '#1075#1088#1085' ('#1087#1088#1086#1076'.)'
+            DataBinding.FieldName = 'Sale_Summ_opt'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = 'C'#1091#1084#1084#1072' '#1087#1086' '#1086#1087#1090' '#1087#1088#1072#1081#1089#1091', '#1075#1088#1085' ('#1087#1088#1086#1076'.)'
+            Options.Editing = False
+            Width = 79
           end
           object SaleReturn_Summ: TcxGridDBColumn
             Caption = #1055#1088#1086#1076'. '#1073#1077#1079' '#1074#1086#1079#1074#1088'., '#1075#1088#1085' ('#1087#1086#1082#1091#1087')'
