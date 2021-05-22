@@ -41,7 +41,31 @@ BEGIN
             FROM MovementItemProtocol
                  JOIN Object AS Object_User ON Object_User.Id = MovementItemProtocol.UserId
             WHERE MovementItemProtocol.MovementItemId = inMovementItemId
+           UNION ALL
+            SELECT
+               MovementItemProtocol.OperDate,
+               MovementItemProtocol.ProtocolData::Text,
+               Object_User.ValueData AS UserName,
+               MovementItemProtocol.MovementItemId
+            FROM MovementItem
+                 JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
+                 JOIN Object AS Object_User ON Object_User.Id = MovementItemProtocol.UserId
+            WHERE MovementItem.ParentId = inMovementItemId
+
+           UNION ALL
+            SELECT
+               MovementItemProtocol.OperDate,
+               MovementItemProtocol.ProtocolData::Text,
+               Object_User.ValueData AS UserName,
+               MovementItemProtocol.MovementItemId
+            FROM MovementItem
+                 JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
+                 JOIN Object AS Object_User ON Object_User.Id = MovementItemProtocol.UserId
+            WHERE MovementItem.MovementId IN (SELECT DISTINCT MovementItem.MovementId FROM MovementItem WHERE MovementItem.Id = inMovementItemId)
+              AND MovementItem.DescId = zc_MI_Child()
+              AND MovementItem.ParentId IS NULL
            ;
+
      ELSE
           RAISE EXCEPTION 'Ошибка.Просмотр протокола недоступен.';
      END IF;

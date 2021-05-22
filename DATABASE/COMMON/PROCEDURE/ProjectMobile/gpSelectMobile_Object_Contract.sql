@@ -170,7 +170,9 @@ BEGIN
                                                  ON tmpDelayDayBank.ContractId = Object_Contract.Id
                                                 AND tmpDelayDayBank.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayDayBank()
              WHERE Object_Contract.DescId   = zc_Object_Contract()
+           --LIMIT CASE WHEN inSession = '1072129' THEN 0 ELSE 500000 END
             ;
+
       END IF;
 END;
 $BODY$

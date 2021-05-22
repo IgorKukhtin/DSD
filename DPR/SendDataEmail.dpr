@@ -22,7 +22,7 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Авто-Отправка Email', 'АвтоОтправка2315Email', gc_User);
-//  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+//  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
   Application.CreateForm(TMainForm, MainForm);
   Application.Run;
 end.

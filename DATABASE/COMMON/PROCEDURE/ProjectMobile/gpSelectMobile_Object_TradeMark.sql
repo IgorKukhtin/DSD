@@ -76,6 +76,7 @@ BEGIN
                   -- JOIN tmpTradeMark ON tmpTradeMark.TradeMarkId = Object_TradeMark.Id
              WHERE Object_TradeMark.DescId = zc_Object_TradeMark()
                AND Object_TradeMark.isErased = FALSE
+           --LIMIT CASE WHEN inSession = '1072129' THEN 0 ELSE 500000 END
             ;  
 
       END IF;

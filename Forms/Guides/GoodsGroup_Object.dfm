@@ -3,7 +3,7 @@ object GoodsGroup_ObjectForm: TGoodsGroup_ObjectForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1088#1091#1087#1087#1099' '#1090#1086#1074#1072#1088#1086#1074'>'
   ClientHeight = 376
-  ClientWidth = 728
+  ClientWidth = 671
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object GoodsGroup_ObjectForm: TGoodsGroup_ObjectForm
   object cxDBTreeList: TcxDBTreeList
     Left = 0
     Top = 26
-    Width = 728
+    Width = 671
     Height = 350
     Align = alClient
     Bands = <
@@ -32,17 +32,17 @@ object GoodsGroup_ObjectForm: TGoodsGroup_ObjectForm
     Images = dmMain.TreeImageList
     Navigator.Buttons.CustomButtons = <>
     OptionsBehavior.IncSearch = True
+    OptionsCustomizing.BandsQuickCustomization = True
     OptionsCustomizing.ColumnHiding = True
     OptionsCustomizing.ColumnsQuickCustomization = True
     OptionsData.Editing = False
     OptionsData.Deleting = False
-    OptionsView.ColumnAutoWidth = True
     OptionsView.HeaderAutoHeight = True
     OptionsView.Indicator = True
     RootValue = -1
     Styles.StyleSheet = dmMain.cxTreeListStyleSheet
     TabOrder = 4
-    ExplicitWidth = 600
+    ExplicitWidth = 728
     object Name: TcxDBTreeListColumn
       Caption.Text = #1053#1072#1079#1074#1072#1085#1080#1077
       DataBinding.FieldName = 'Name'
@@ -256,6 +256,7 @@ object GoodsGroup_ObjectForm: TGoodsGroup_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -263,12 +264,14 @@ object GoodsGroup_ObjectForm: TGoodsGroup_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TradeMarkId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'TradeMarkId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TradeMarkName'
@@ -276,12 +279,14 @@ object GoodsGroup_ObjectForm: TGoodsGroup_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'TradeMarkName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsTagId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'GoodsTagId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsTagName'
@@ -289,12 +294,14 @@ object GoodsGroup_ObjectForm: TGoodsGroup_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'GoodsTagName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupAnalystId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'GoodsGroupAnalystId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupAnalystName'
@@ -302,12 +309,14 @@ object GoodsGroup_ObjectForm: TGoodsGroup_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'GoodsGroupAnalystName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsPlatformId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'GoodsPlatformId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsPlatformName'
@@ -315,12 +324,14 @@ object GoodsGroup_ObjectForm: TGoodsGroup_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'GoodsPlatformName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -328,6 +339,7 @@ object GoodsGroup_ObjectForm: TGoodsGroup_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

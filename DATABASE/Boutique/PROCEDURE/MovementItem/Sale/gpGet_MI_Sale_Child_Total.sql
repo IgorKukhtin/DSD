@@ -2,19 +2,16 @@
 
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_Total (Integer,Integer,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_Total (TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
-DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_Total (TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child_Total(
     IN inCurrencyValueUSD  TFloat   , --
     IN inCurrencyValueEUR  TFloat   , --
-    IN inAmountToPay_GRN   TFloat   , -- сумма к оплате, грн
-    IN inAmountToPay_EUR   TFloat   , -- сумма к оплате, EUR
+    IN inAmountToPay       TFloat   , -- сумма к оплате, грн
     IN inAmountGRN         TFloat   , --
     IN inAmountUSD         TFloat   , --
     IN inAmountEUR         TFloat   , --
     IN inAmountCard        TFloat   , --
     IN inAmountDiscount    TFloat   , -- или ГРН или EUR
-    IN inCurrencyId_Client Integer  , -- 
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (AmountRemains       TFloat -- Остаток, грн

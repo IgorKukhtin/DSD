@@ -156,7 +156,10 @@ BEGIN
                                        ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
                                       AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
              WHERE Object_Juridical.DescId   = zc_Object_Juridical()
-               AND Object_Juridical.isErased = FALSE;
+               AND Object_Juridical.isErased = FALSE
+           --LIMIT CASE WHEN inSession = '1072129' THEN 2 ELSE 500000 END
+            ;
+
       END IF;
 
 END;

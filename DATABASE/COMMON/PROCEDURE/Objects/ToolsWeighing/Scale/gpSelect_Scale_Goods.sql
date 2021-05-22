@@ -114,7 +114,19 @@ BEGIN
         -- параметры из документа - Order
         SELECT COALESCE (MovementLinkObject_Retail.ObjectId, 0)        AS RetailId
              , COALESCE (MovementLinkObject_From.ObjectId, 0)          AS FromId
-               INTO vbRetailId, vbFromId
+             , CASE WHEN COALESCE (vbFromId_group, 0) = 0 
+                         THEN CASE WHEN ObjectLink_Unit_Parent_0.ChildObjectId = 8439
+                                     OR ObjectLink_Unit_Parent_1.ChildObjectId = 8439
+                                     OR ObjectLink_Unit_Parent_2.ChildObjectId = 8439
+                                     OR ObjectLink_Unit_Parent_3.ChildObjectId = 8439
+                                     OR ObjectLink_Unit_Parent_4.ChildObjectId = 8439
+                                     OR ObjectLink_Unit_Parent_5.ChildObjectId = 8439
+                                        THEN 8439 -- ”часток м€сного сырь€
+                                   ELSE ObjectLink_Unit_Parent_0.ChildObjectId
+                              END
+                    ELSE vbFromId_group
+               END
+               INTO vbRetailId, vbFromId, vbFromId_group
         FROM Movement
              LEFT JOIN MovementLinkObject AS MovementLinkObject_Retail
                                           ON MovementLinkObject_Retail.MovementId = Movement.Id
@@ -122,6 +134,27 @@ BEGIN
              LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                           ON MovementLinkObject_From.MovementId = Movement.Id
                                          AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                          ON MovementLinkObject_To.MovementId = Movement.Id
+                                         AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent_0
+                                  ON ObjectLink_Unit_Parent_0.ObjectId = MovementLinkObject_To.ObjectId
+                                 AND ObjectLink_Unit_Parent_0.DescId   = zc_ObjectLink_Unit_Parent()
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent_1
+                                  ON ObjectLink_Unit_Parent_1.ObjectId = ObjectLink_Unit_Parent_0.ChildObjectId
+                                 AND ObjectLink_Unit_Parent_1.DescId   = zc_ObjectLink_Unit_Parent()
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent_2
+                                  ON ObjectLink_Unit_Parent_2.ObjectId = ObjectLink_Unit_Parent_1.ChildObjectId
+                                 AND ObjectLink_Unit_Parent_2.DescId   = zc_ObjectLink_Unit_Parent()
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent_3
+                                  ON ObjectLink_Unit_Parent_3.ObjectId = ObjectLink_Unit_Parent_2.ChildObjectId
+                                 AND ObjectLink_Unit_Parent_3.DescId   = zc_ObjectLink_Unit_Parent()
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent_4
+                                  ON ObjectLink_Unit_Parent_4.ObjectId = ObjectLink_Unit_Parent_3.ChildObjectId
+                                 AND ObjectLink_Unit_Parent_4.DescId   = zc_ObjectLink_Unit_Parent()
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent_5
+                                  ON ObjectLink_Unit_Parent_5.ObjectId = ObjectLink_Unit_Parent_4.ChildObjectId
+                                 AND ObjectLink_Unit_Parent_5.DescId   = zc_ObjectLink_Unit_Parent()
         WHERE Movement.Id = inOrderExternalId;
 
 

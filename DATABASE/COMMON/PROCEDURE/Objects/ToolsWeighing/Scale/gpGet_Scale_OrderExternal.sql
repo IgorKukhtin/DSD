@@ -104,7 +104,7 @@ BEGIN
                                   --AND Movement.StatusId <> zc_Enum_Status_Erased()
                                     AND inBranchCode BETWEEN 301 AND 310
                                  UNION
-                                  -- по № документа
+                                  -- 1.1. по № документа
                                   SELECT Movement.Id
                                        , Movement.InvNumber
                                        , Movement.DescId
@@ -118,7 +118,24 @@ BEGIN
                                        LEFT JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
                                                                              AND MLO_To.DescId     = zc_MovementLinkObject_To()
                                   WHERE inBranchCode NOT BETWEEN 201 AND 210
-                                      OR MLO_To.ObjectId <> 8459 -- Склад Реализации
+
+                                 UNION
+                                  -- 1.2. по № документа
+                                  SELECT Movement.Id
+                                       , Movement.InvNumber
+                                       , Movement.DescId
+                                       , Movement.OperDate
+                                       , Movement.StatusId
+                                  FROM tmpInvNumber AS tmp
+                                       INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode
+                                                          AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal())
+                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '18 DAY' AND inOperDate + INTERVAL '8 DAY'
+                                                        --AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                       LEFT JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
+                                                                             AND MLO_To.DescId     = zc_MovementLinkObject_To()
+                                  WHERE inBranchCode BETWEEN 201 AND 210
+                                    AND MLO_To.ObjectId <> 8459 -- Склад Реализации
+
                                  UNION
                                   -- по № документа - Приход, т.к. период 80 дней
                                   SELECT Movement.Id
@@ -236,7 +253,7 @@ BEGIN
 
                                         -- Для Мясного сырья - замена
                                         WHEN tmpMovement.DescId = zc_Movement_OrderInternal()
-                                         AND inBranchCode BETWEEN 201 AND 210
+                                          AND inBranchCode BETWEEN 201 AND 210
                                              THEN inToId
 
                                         -- Для остальных - Заявка покупателя или SendOnPrice или ReturnIn

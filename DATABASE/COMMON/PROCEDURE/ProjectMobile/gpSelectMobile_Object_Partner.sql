@@ -402,7 +402,9 @@ BEGIN
              WHERE Object_Partner.DescId   = zc_Object_Partner()
                AND Object_Partner.isErased = FALSE
                -- AND (COALESCE (tmpDebt.PaidKindId, ObjectLink_Contract_PaidKind.ChildObjectId) = 4 or inSession <> '1839161')
+           --LIMIT CASE WHEN inSession = '1072129' THEN 2 ELSE 500000 END
             ;
+
       END IF;
 
 END;
@@ -419,4 +421,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelectMobile_Object_Partner (inSyncDateIn:= zc_DateStart(), inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpSelectMobile_Object_Partner (inSyncDateIn:= zc_DateStart(), inSession:= '5416822')
+-- SELECT * FROM gpSelectMobile_Object_Partner (inSyncDateIn:= zc_DateStart(), inSession:= '1072129')

@@ -70,7 +70,7 @@ BEGIN
                                                  , inInvNumber         := CAST (NEXTVAL ('movement_personalreport_seq') AS TVarChar)       :: TVarChar   -- Номер документа
                                                  , inOperDate          := inOperDate
                                                  , inAmount            := -1 * tmpReport.EndAmount
-                                                 , inComment           := ''
+                                                 , inComment           := 'взаимозачет'
                                                  , inMemberId          := tmpReport.MemberId
                                                  , inInfoMoneyId       := tmpReport.InfoMoneyId
                                                  , inMoneyPlaceId      := tmpReport.MemberId

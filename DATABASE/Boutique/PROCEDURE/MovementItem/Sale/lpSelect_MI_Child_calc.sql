@@ -25,7 +25,6 @@ RETURNS TABLE (MovementItemId      Integer
              , AmountDiscount      TFloat  -- Сумма скидки, грн
              , Amount              TFloat  -- Сумма оплаты
              , Amount_GRN          TFloat  -- Сумма ИТОГО оплаты в ГРН
-             , Amount_EUR          TFloat  -- Сумма ИТОГО оплаты в EUR
              , CurrencyValue       TFloat
              , ParValue            TFloat
              , CashId_Exc          Integer -- касса в ГРН - из которой будет Расход/Приход(если возврат) сумма для Обмена

@@ -23,6 +23,8 @@ BEGIN
 
      -- формирование
      IF 1=1 AND zc_Enum_GlobalConst_isTerry() = FALSE AND zfCalc_User_PriceListReal (vbUserId) = TRUE
+        -- магазин Киев
+        AND EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.ObjectId = 6319 AND MLO.DescId = zc_MovementLinkObject_From())
      THEN
          PERFORM gpComplete_Movement_Sale_recalc (inMovementId := inMovementId
                                                 , inSession    := inSession

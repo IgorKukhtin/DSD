@@ -46,7 +46,6 @@ object Asset_ObjectForm: TAsset_ObjectForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
-      OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -557,7 +556,7 @@ object Asset_ObjectForm: TAsset_ObjectForm
         end
         item
           Name = 'Release'
-          Value = 'NULL'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Release'
           DataType = ftDateTime
@@ -701,10 +700,12 @@ object Asset_ObjectForm: TAsset_ObjectForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 448
     Top = 112

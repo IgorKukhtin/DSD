@@ -43,7 +43,7 @@ BEGIN
    -- Получили - 
    vbUnitId:= (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_User_Unit() AND OL.ObjectId = vbUserId);
    -- Проверка
-   IF zc_Enum_GlobalConst_isTerry() = TRUE AND COALESCE (vbUnitId, 0) =  0 THEN
+   IF zc_Enum_GlobalConst_isTerry() = TRUE AND COALESCE (vbUnitId, 0) =  0 AND COALESCE (ioId, 0) = 0 THEN
       RAISE EXCEPTION 'Ошибка.Нет прав добавлять Покупателя.';
    END IF;
    -- Получили - показывать ЛИ 

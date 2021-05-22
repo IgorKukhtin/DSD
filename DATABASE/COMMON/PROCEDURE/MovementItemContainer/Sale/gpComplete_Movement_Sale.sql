@@ -36,7 +36,7 @@ ELSE
                                       );
 END IF;
 
-if inSession = '5'
+if inSession = '5' AND 1=1
 then
     RAISE EXCEPTION 'Ошибка.Test - ok';
 end if;

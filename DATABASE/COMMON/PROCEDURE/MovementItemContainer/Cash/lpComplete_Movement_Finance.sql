@@ -209,6 +209,7 @@ BEGIN
                                           -- сотрудники (подотчетные лица)
                                           WHEN _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_40500() -- Финансовая деятельность + Ссуды
                                            AND _tmpItem.AccountDirectionId     = zc_Enum_AccountDirection_30500()      -- сотрудники (подотчетные лица)
+                                           AND (_tmpItem.OperDate              >= '01.05.2021' OR inUserId = 5)
                                                THEN zc_Enum_Account_30514()
 
 

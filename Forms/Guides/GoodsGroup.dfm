@@ -32,11 +32,11 @@ object GoodsGroupForm: TGoodsGroupForm
     Images = dmMain.TreeImageList
     Navigator.Buttons.CustomButtons = <>
     OptionsBehavior.IncSearch = True
+    OptionsCustomizing.BandsQuickCustomization = True
     OptionsCustomizing.ColumnHiding = True
     OptionsCustomizing.ColumnsQuickCustomization = True
     OptionsData.Editing = False
     OptionsData.Deleting = False
-    OptionsView.ColumnAutoWidth = True
     OptionsView.HeaderAutoHeight = True
     OptionsView.Indicator = True
     RootValue = -1

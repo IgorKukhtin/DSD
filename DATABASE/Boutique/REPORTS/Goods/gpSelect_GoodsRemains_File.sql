@@ -56,14 +56,14 @@ BEGIN
 */
 
      -- таблица остатков
-     CREATE TEMP TABLE _tmpData (UnitId Integer, UnitName TVarChar, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, LabelName TVarChar
+     CREATE TEMP TABLE _tmpData (UnitId Integer, UnitName TVarChar, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, LabelName TVarChar, GoodsInfoName TVarChar
                                , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupId_parent Integer, PartnerName TVarChar
                                , BrandName TVarChar, PeriodName TVarChar, PeriodYear TVarChar, SizeName TVarChar, CurrencyName TVarChar, CurrencyName_curr TVarChar
                                , Amount TFloat, OperPriceList TFloat, OperPriceList_curr TFloat
                                , OperPriceList_grn TFloat, OperPriceList_grn_curr TFloat, OperPriceList_grn_curr_disc TFloat
                                , AmountCurrency TFloat, AmountCurrency_curr TFloat, DiscountTax TFloat
                                 ) ON COMMIT DROP;
-     INSERT INTO _tmpData (UnitId, UnitName, GoodsId, GoodsCode, GoodsName, LabelName, GoodsGroupId, GoodsGroupName, GoodsGroupId_parent
+     INSERT INTO _tmpData (UnitId, UnitName, GoodsId, GoodsCode, GoodsName, LabelName, GoodsInfoName, GoodsGroupId, GoodsGroupName, GoodsGroupId_parent
                          , PartnerName, BrandName, PeriodName, PeriodYear, SizeName, CurrencyName, CurrencyName_curr
                          , Amount, OperPriceList, OperPriceList_curr
                          , OperPriceList_grn, OperPriceList_grn_curr, OperPriceList_grn_curr_disc
@@ -132,6 +132,7 @@ BEGIN
                                , Object_PartionGoods.GoodsSizeId       -- SizeId
                                , Object_PartionGoods.GoodsGroupId      -- categoryId
                                , Object_PartionGoods.LabelId           -- description
+                               , Object_PartionGoods.GoodsInfoId       --
                                , Object_PartionGoods.CurrencyId        -- currencyId ????
                           FROM Container
                                INNER JOIN _tmpUnit ON _tmpUnit.UnitId = Container.WhereObjectId
@@ -148,10 +149,10 @@ BEGIN
                                                             AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
                           WHERE Container.DescId = zc_Container_Count()
                             AND (Container.Amount > 0)
-                            AND (Object_PartionGoods.PeriodYear > 2020
+                          /*AND (Object_PartionGoods.PeriodYear > 2020
                                  -- Весна-Лето
                               OR (Object_PartionGoods.PeriodYear = 2020 AND ObjectLink_Partner_Period.ChildObjectId = 1074)
-                                )
+                                )*/
                          -- AND CLO_Client.ContainerId IS NULL
                          -- LIMIT 1
                          )
@@ -197,6 +198,7 @@ BEGIN
                            , tmpContainer_all.GoodsSizeId       -- SizeId
                            , tmpContainer_all.GoodsGroupId      -- categoryId
                            , tmpContainer_all.LabelId           -- description
+                           , tmpContainer_all.GoodsInfoId       -- 
                            , tmpContainer_all.CurrencyId        -- currencyId ????
 
                              -- currencyId - первая цена
@@ -255,6 +257,7 @@ BEGIN
           , Object_Goods.ObjectCode                                 AS GoodsCode
           , Object_Goods.ValueData                                  AS GoodsName           -- артикул
           , zfStrToXmlStr (Object_Label.ValueData)      :: TVarChar AS LabelName           -- description
+          , zfStrToXmlStr (Object_GoodsInfo.ValueData)  :: TVarChar AS GoodsInfoName       -- 
           , Object_GoodsGroup.Id                                    AS GoodsGroupId        -- categoryId
           , zfStrToXmlStr (Object_GoodsGroup.ValueData) :: TVarChar AS GoodsGroupName      -- categoryId
           , Object_Parent.Id                                        AS GoodsGroupId_parent -- categoryId
@@ -302,6 +305,7 @@ BEGIN
           LEFT JOIN Object AS Object_Partner    ON Object_Partner.Id    = tmpContainer.PartnerId
           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = tmpContainer.GoodsGroupId
           LEFT JOIN Object AS Object_Label      ON Object_Label.Id      = tmpContainer.LabelId
+          LEFT JOIN Object AS Object_GoodsInfo  ON Object_GoodsInfo.Id  = tmpContainer.GoodsInfoId
           LEFT JOIN Object AS Object_GoodsSize  ON Object_GoodsSize.Id  = tmpContainer.GoodsSizeId
           LEFT JOIN Object AS Object_Brand      ON Object_Brand.Id      = tmpContainer.BrandId
           LEFT JOIN Object AS Object_Period     ON Object_Period.Id     = tmpContainer.PeriodId
@@ -412,18 +416,29 @@ BEGIN
          || '<vat>NO_VAT</vat>'
          || '<categoryId>'|| COALESCE (tmp.GoodsGroupId, 0) :: TVarChar ||'</categoryId>'
          || '<name>'|| COALESCE (tmp.BrandName, '') || '</name>'
+
+         || CASE WHEN inSession = zfCalc_UserAdmin() THEN '<PeriodName>'|| COALESCE (tmp.PeriodName, '') || '</PeriodName>' ELSE '' END
+         || CASE WHEN inSession = zfCalc_UserAdmin() THEN '<PeriodYear>'|| COALESCE (tmp.PeriodYear :: TVarChar, '') || '</PeriodYear>' ELSE '' END
+
+         || CASE WHEN inSession = zfCalc_UserAdmin() THEN '<LabelName>'|| COALESCE (tmp.LabelName, '') || '</LabelName>' ELSE '' END
+         || CASE WHEN inSession = zfCalc_UserAdmin() THEN '<GoodsInfoName>'|| COALESCE (tmp.GoodsInfoName, '') || '</GoodsInfoName>' ELSE '' END
+         || CASE WHEN inSession = zfCalc_UserAdmin() THEN '<UnitName>'|| COALESCE (tmp.unitname, '') || '</UnitName>' ELSE '' END
+
          || '<description>'
          || '<![CDATA['|| COALESCE (tmp.LabelName, '') || ']]>'
          || '</description>'
          || '</offer>'
 
      FROM (--если inUnitId = 0 группируем товары вместе
-           SELECT CASE WHEN inUnitId <> 0 THEN _tmpData.UnitName ELSE '' END AS UnitName
+           SELECT CASE WHEN inUnitId <> 0 OR inSession = zfCalc_UserAdmin() THEN _tmpData.UnitName ELSE '' END AS UnitName
                 , _tmpData.GoodsCode
                 , _tmpData.SizeName
                 , _tmpData.GoodsGroupId
                 , _tmpData.BrandName
+                , _tmpData.PeriodName
+                , _tmpData.PeriodYear
                 , _tmpData.LabelName
+                , _tmpData.GoodsInfoName
 
                   -- первая цена
                 , _tmpData.OperPriceList
@@ -450,12 +465,15 @@ BEGIN
 
            FROM _tmpData
            WHERE (_tmpData.UnitId = inUnitId OR inUnitId = 0)
-           GROUP BY CASE WHEN inUnitId <> 0 THEN _tmpData.UnitName ELSE '' END
+           GROUP BY CASE WHEN inUnitId <> 0 OR inSession = zfCalc_UserAdmin() THEN _tmpData.UnitName ELSE '' END
                   , _tmpData.GoodsCode
                   , _tmpData.SizeName
                   , _tmpData.GoodsGroupId
                   , _tmpData.BrandName
+                  , _tmpData.PeriodName
+                  , _tmpData.PeriodYear
                   , _tmpData.LabelName
+                  , _tmpData.GoodsInfoName
 
                     -- первая цена
                   , _tmpData.OperPriceList

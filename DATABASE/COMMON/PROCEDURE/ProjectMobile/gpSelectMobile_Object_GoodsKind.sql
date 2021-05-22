@@ -75,7 +75,9 @@ BEGIN
              FROM Object AS Object_GoodsKind
                   JOIN tmpFilter ON tmpFilter.GoodsKindId = Object_GoodsKind.Id
                   LEFT JOIN tmpGoodsKind ON tmpGoodsKind.GoodsKindId = Object_GoodsKind.Id
-             WHERE Object_GoodsKind.DescId = zc_Object_GoodsKind();
+             WHERE Object_GoodsKind.DescId = zc_Object_GoodsKind()
+           --LIMIT CASE WHEN inSession = '1072129' THEN 0 ELSE 500000 END
+            ;
            
       END IF;
 

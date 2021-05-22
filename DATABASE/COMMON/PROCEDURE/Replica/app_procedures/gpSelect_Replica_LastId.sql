@@ -73,6 +73,7 @@ BEGIN
     -- если реальное кол-во записей не соответсвует разнице по Id, значит вклинились транзакции, которых не видно, хотя могут быть и "потерянные" Id
     IF (vbId_End - inId_start + 1) <> (SELECT COUNT(*) FROM _replica.table_update_data WHERE Id BETWEEN inId_start AND vbId_End)
        OR EXTRACT (HOUR FROM CURRENT_TIMESTAMP) NOT BETWEEN 10 AND 16
+       OR 1=1
     THEN
         -- делаем задержку на 200 MIN
         vbId_End:= COALESCE ((SELECT MAX (Id) FROM _replica.table_update_data

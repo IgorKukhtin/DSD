@@ -2,21 +2,17 @@
 
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_isGRN (Boolean,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_isGRN (Boolean,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
-DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_isGRN (Boolean,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,Integer,TVarChar);
-DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_isGRN (Boolean,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child_isGRN(
     IN inIsGRN             Boolean  , --
     IN inCurrencyValueUSD  TFloat   , --
     IN inCurrencyValueEUR  TFloat   , --
-    IN inAmountToPay       TFloat   , -- сумма к оплате, грн
-    IN inAmountToPay_curr  TFloat   , -- сумма к оплате, EUR
+    IN inAmount            TFloat   , -- сумма к оплате, грн
     IN inAmountGRN         TFloat   , --
     IN inAmountUSD         TFloat   , --
     IN inAmountEUR         TFloat   , --
     IN inAmountCard        TFloat   , --
     IN inAmountDiscount    TFloat   , --
-    IN inCurrencyId_Client Integer  , --
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (AmountRemains       TFloat
