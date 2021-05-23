@@ -180,7 +180,7 @@ BEGIN
 
      END IF;                   
 
-if inSession = '5' 
+if vbUserId = 5 
 then
     RAISE EXCEPTION 'Admin.<%> <%> <%> <%> <%> <%>'
                       , zfConvert_DateToString (inOperDate)

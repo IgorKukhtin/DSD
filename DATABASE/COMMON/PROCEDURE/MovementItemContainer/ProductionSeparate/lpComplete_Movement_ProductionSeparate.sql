@@ -660,7 +660,7 @@ BEGIN
         FROM tmpFix
         ;
 
-/*if inSession = '5'
+/*if vbUserId = 5
 then
     RAISE EXCEPTION '<%>   %  % %'
     , (select sum (_tmpItemSumm.OperSumm) from _tmpItemSumm)

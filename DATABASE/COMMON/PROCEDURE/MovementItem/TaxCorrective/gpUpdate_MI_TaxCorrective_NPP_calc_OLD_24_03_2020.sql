@@ -147,7 +147,7 @@ BEGIN
        -- AND MovementItem.Amount     <> 0
          ;
 
-     IF inSession = '5' AND 1=0
+     IF vbUserId = 5 AND 1=0
      THEN
          -- пересчитали Итоговые суммы по накладной
          PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);

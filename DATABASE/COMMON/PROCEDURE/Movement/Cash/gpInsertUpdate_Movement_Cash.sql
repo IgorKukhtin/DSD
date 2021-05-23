@@ -47,7 +47,7 @@ BEGIN
 
      -- Заработная плата
      IF EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMoneyPlaceId AND Object.DescId = zc_Object_Personal())
-     AND inSession IN (zfCalc_UserAdmin(), zfCalc_UserMain() :: TVarChar)
+     AND vbUserId IN (5, zfCalc_UserMain())
      THEN
          -- !!!замена!!!
          inMoneyPlaceId:= (WITH tmpServiceDate AS (SELECT lpInsertFind_Object_ServiceDate (inOperDate:= DATE_TRUNC ('MONTH', inServiceDate)) AS ServiceDateId)

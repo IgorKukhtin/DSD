@@ -95,7 +95,7 @@ BEGIN
      -- определ€етс€ <Ќалоговый документ> и его параметры
      SELECT COALESCE (tmpMovement.MovementId_TaxCorrective, 0) AS MovementId_TaxCorrective
           , Movement_TaxCorrective.StatusId                    AS StatusId_TaxCorrective
-          , CASE WHEN (CURRENT_DATE >= '01.03.2021'  OR inSession = '5') AND COALESCE (MovementString_InvNumberRegistered.ValueData, '') = ''
+          , CASE WHEN (CURRENT_DATE >= '01.03.2021'  OR vbUserId = 5) AND COALESCE (MovementString_InvNumberRegistered.ValueData, '') = ''
                       THEN '01.03.2021'
                  WHEN MovementDate_DateRegistered.ValueData > Movement_TaxCorrective.OperDate
                       THEN MovementDate_DateRegistered.ValueData
@@ -1273,7 +1273,7 @@ BEGIN
                               WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                  , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
                                AND tmpData_all.AmountTax_calc = tmpData_all.Amount
-                                   THEN (tmpData_all.KindCode :: Integer + case when inSession = '5' then 10 else 0 end) :: TVarChar
+                                   THEN (tmpData_all.KindCode :: Integer + case when vbUserId = 5 then 10 else 0 end) :: TVarChar
 
                               WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                  , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())

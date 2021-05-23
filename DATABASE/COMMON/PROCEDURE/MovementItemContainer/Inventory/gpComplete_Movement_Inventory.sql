@@ -997,7 +997,7 @@ BEGIN
        WHERE (_tmpItem.OperCountCount - COALESCE (_tmpRemainsCount.OperCountCount, 0)) <> 0;
 
 
--- if inSession = '5' -- OR inUserId = 5 OR inMovementId = 691308 
+-- if vbUserId = 5 -- OR inUserId = 5 OR inMovementId = 691308 
 -- then
 --    RAISE EXCEPTION 'Ошибка.<%>'
 --     , (select _tmpRemainsCount.OperCountCount from _tmpRemainsCount where _tmpRemainsCount.ContainerId_count = 3050116)
@@ -1274,7 +1274,7 @@ BEGIN
        ;
 
 /*/
-if inSession = '5'
+if vbUserId = 5
 then
     RAISE EXCEPTION '<%> %  %  %', vbIsLastOnMonth
  , (select sum (_tmpItemSumm.OperSumm) from _tmpItemSumm  JOIN _tmpItem ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId and _tmpItem.GoodsId =  2066 )

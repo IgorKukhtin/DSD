@@ -33,7 +33,7 @@ BEGIN
                                                 ) AS tmp;
 
 -- дл€ отладки
-if inSession = '5' AND 1=1
+if vbUserId = 5 AND 1=1
 then
     RAISE EXCEPTION 'gpInsertUpdate_Movement_Tax_From_Kind - Adim';
     -- 'ѕовторите действие через 3 мин.'

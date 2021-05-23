@@ -34,6 +34,7 @@ BEGIN
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
     vbUserId:= lpGetUserBySession (inSession);
 
+    
     -- последнее число месяца
     vbEndDate := DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY';
 
@@ -108,7 +109,7 @@ BEGIN
                            WHERE ObjectString_WorkTimeKind_ShortName.ValueData = 'FM99/' || SPLIT_PART (UPPER (TRIM (ioValue)), '/', 2)
                              AND ObjectString_WorkTimeKind_ShortName.DescId = zc_ObjectString_WorkTimeKind_ShortName()
                           )
-               -- AND inSession = '5'
+               -- AND vbUserId = 5
             THEN
                ioTypeId:= (SELECT ObjectString_WorkTimeKind_ShortName.ObjectId
                            FROM ObjectString AS ObjectString_WorkTimeKind_ShortName
@@ -230,7 +231,7 @@ BEGIN
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);
 
-if inSession = '5' 
+if vbUserId = 5 
 then
     RAISE EXCEPTION 'Admin.<%> <%> <%> <%> <%>'
                       , zfConvert_DateToString (inOperDate)

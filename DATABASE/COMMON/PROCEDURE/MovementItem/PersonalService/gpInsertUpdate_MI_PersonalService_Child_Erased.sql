@@ -21,6 +21,7 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalService_Child());
      vbUserId:= lpGetUserBySession (inSession);
 
+     
      inPositionId := COALESCE (inPositionId, 0);
 
      -- проверка
@@ -30,7 +31,7 @@ BEGIN
      END IF;
 
 
-if inSession = '5' 
+if vbUserId = 5 
 then
     -- поиск документа (ключ - Месяц начислений + ведомость) - ТОЛЬКО ОДИН
     vbMovementId:= (SELECT MovementDate_ServiceDate.MovementId

@@ -357,7 +357,7 @@ BEGIN
      END IF;
 
 
-    IF (1=0 AND inSession = '5') OR EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete())
+    IF (1=0 AND vbUserId = 5) OR EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete())
     THEN
         RAISE EXCEPTION 'Ошибка.Документ в статусе <%>. Проверка: <%> <%>.'
           , lfGet_Object_ValueData_sh (zc_Enum_Status_Complete())
@@ -611,7 +611,7 @@ BEGIN
           AND MovementItem.isErased = FALSE
        ;
 
-    IF inSession = '5'
+    IF vbUserId = 5
     THEN
         RAISE EXCEPTION 'Ошибка.Admin <%> <%> <%>   <%> <%>   <%> <%> <%>'
           , (SELECT DISTINCT MIF.ValueData

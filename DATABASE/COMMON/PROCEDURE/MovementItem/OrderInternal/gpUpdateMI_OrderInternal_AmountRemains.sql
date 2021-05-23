@@ -514,7 +514,7 @@ end if;*/
       ;
 
 
-if inSession = '5'
+if vbUserId = 5
 then
     RAISE EXCEPTION 'Ошибка. end <%>  %   %', (select sum (tmpAll.Amount_start) from tmpAll where tmpAll.GoodsId = 5215077  and tmpAll.GoodsKindId = 8335)
     , (select max (tmpAll.Amount_start) from tmpAll where tmpAll.GoodsId = 5215077  and tmpAll.GoodsKindId = 8335)

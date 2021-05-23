@@ -16,6 +16,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpGetUserBySession (inSession);
 
+
      IF COALESCE (inMovementId, 0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка. Документ не сохранен';
@@ -188,7 +189,7 @@ BEGIN
 
 
 -- !!! ВРЕМЕННО !!!
- IF inSession = '5' AND 1=0 THEN
+ IF vbUserId = 5 AND 1=0 THEN
     RAISE EXCEPTION 'Admin - Test = OK : %'
   , DATE_TRUNC ('YEAR', vbOperDate) - INTERVAL '1 DAY'
    ;

@@ -49,7 +49,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- определяем ключ доступа
-     IF inSession = '6044123' -- Авто-Загрузка WMS
+     IF vbUserId = 6044123 -- Авто-Загрузка WMS
      THEN 
          vbAccessKeyId:= zc_Enum_Process_AccessKey_DocumentDnepr();
      ELSE

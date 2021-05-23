@@ -283,7 +283,7 @@ BEGIN
             , tmpAll.Amount :: TFloat           AS Amount
             , MIFloat_SummToPay.ValueData       AS AmountToPay
             , (COALESCE (MIFloat_SummToPay.ValueData, 0)
-            + (-1) *  CASE WHEN 1=0 AND inSession = '5'
+            + (-1) *  CASE WHEN 1=0 AND vbUserId = 5
                                THEN 0
                           ELSE COALESCE (MIFloat_SummCard.ValueData, 0)
                              + COALESCE (MIFloat_SummCardSecond.ValueData, 0)

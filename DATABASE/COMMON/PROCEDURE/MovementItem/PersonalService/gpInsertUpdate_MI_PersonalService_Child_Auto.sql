@@ -148,7 +148,7 @@ BEGIN
      END IF;
 
 
-if inSession = '5' 
+if vbUserId = 5 
 then
     -- поиск документа (ключ - Месяц начислений + ведомость) - ТОЛЬКО ОДИН
     SELECT MovementDate_ServiceDate.MovementId
@@ -204,7 +204,7 @@ end if;
       IF COALESCE (vbMovementId, 0) = 0
       THEN
           -- сохранили новый <Документ>
-if inSession = '5' 
+if vbUserId = 5 
 then
           vbMovementId := lpInsertUpdate_Movement_PersonalService (ioId                      := 0
                                                                  , inInvNumber               := CAST (NEXTVAL ('Movement_PersonalService_seq') AS TVarChar) --inInvNumber

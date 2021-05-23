@@ -158,7 +158,7 @@ order by 4*/
           -- , ObjectLink_Juridical_GoodsProperty.ChildObjectId         AS GoodsPropertyId
           -- , ObjectLink_JuridicalBasis_GoodsProperty.ChildObjectId    AS GoodsPropertyId_basis
 
-          , CASE WHEN (CURRENT_DATE >= '01.03.2021'  OR inSession = '5') AND COALESCE (MovementString_InvNumberRegistered.ValueData, '') = ''
+          , CASE WHEN (CURRENT_DATE >= '01.03.2021'  OR vbUserId = 5) AND COALESCE (MovementString_InvNumberRegistered.ValueData, '') = ''
                       THEN '01.03.2021'
                  WHEN MovementDate_DateRegistered.ValueData > Movement_Tax.OperDate
                       THEN MovementDate_DateRegistered.ValueData

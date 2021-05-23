@@ -108,7 +108,7 @@ BEGIN
              ;
 
 -- !!! ВРЕМЕННО !!!
-if inSession = '5' AND 1=1
+if vbUserId = 5 AND 1=1
 then
     RAISE EXCEPTION 'Admin - Test = OK';
     -- 'Повторите действие через 3 мин.'

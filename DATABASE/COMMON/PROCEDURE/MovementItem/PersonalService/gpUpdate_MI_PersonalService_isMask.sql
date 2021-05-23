@@ -269,7 +269,7 @@ BEGIN
          ;
 
 
-if inSession = '5'
+if vbUserId = 5
 then
     RAISE EXCEPTION 'admin - Net Prav';
 end if;
