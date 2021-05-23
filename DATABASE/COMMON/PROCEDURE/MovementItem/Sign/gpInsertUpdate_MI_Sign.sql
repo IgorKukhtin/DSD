@@ -23,7 +23,8 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_IncomeFuel_Sign());
-     vbUserId := inSession;
+     vbUserId:= lpGetUserBySession (inSession);
+
 
      -- выбираем все Id пользователей
      SELECT -- Модель для подписи

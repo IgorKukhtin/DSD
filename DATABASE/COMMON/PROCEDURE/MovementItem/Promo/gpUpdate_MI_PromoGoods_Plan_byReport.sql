@@ -35,9 +35,9 @@ $BODY$
    DECLARE vbGoodsWeight     TFloat;
    DECLARE vbUserId_PersonalTrade Integer;
 BEGIN
-
     -- проверка прав пользователя на вызов процедуры
-    vbUserId := inSession;
+    vbUserId:= lpGetUserBySession (inSession);
+
     
     -- находим пользователя PersonalTrade
     vbUserId_PersonalTrade := (SELECT ObjectLink_User_Member.ObjectId

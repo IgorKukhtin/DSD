@@ -15,10 +15,10 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_StoragePlace());
-     vbUserId := inSession;
+     vbUserId:= lpGetUserBySession (inSession);
+
 
      RETURN QUERY
         SELECT 

@@ -20,7 +20,8 @@ $BODY$
 
   DECLARE vbMovementDescId Integer;
   DECLARE vbObjectDescId Integer;
-  DECLARE vbObjectId Integer;  
+  DECLARE vbObjectId Integer;
+  DECLARE vbSignInternalId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_IncomeFuel());

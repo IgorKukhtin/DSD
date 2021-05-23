@@ -4,7 +4,6 @@
 DROP FUNCTION IF EXISTS gpGet_Movement_ProductionUnion (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_ProductionUnion (Integer, TDateTime, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpGet_Movement_ProductionUnion(
     IN inMovementId  Integer,       -- ключ Документа
     IN inOperDate    TDateTime,     -- дата Документа
@@ -146,9 +145,7 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_ProductionUnion (Integer, TDateTime, TVarChar) OWNER TO postgres;
-
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
