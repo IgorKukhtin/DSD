@@ -73,9 +73,13 @@ RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber
               )  
 AS
 $BODY$
+    DECLARE vbUserId Integer;
 --    DECLARE inisMovement  Boolean ; -- по документам
     DECLARE vbEndDate     TDateTime;
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
+     vbUserId:= lpGetUserBySession (inSession);
 
      --inisMovement:= FALSE;
      vbEndDate := inEndDate + INTERVAL '1 Day';
@@ -944,7 +948,7 @@ BEGIN
                                   , COALESCE (tmpMovement.MovementId,0) AS MovementId
                                   , tmpMovement.MovementDescId
                                   , COALESCE (tmpMovement.BranchId,0)   AS BranchId
-                                --, CASE WHEN inSessiON = '5' THEN tmpContract.ContractConditionId ELSE 0 END AS ContractConditionId
+                                --, CASE WHEN vbUserId = 5 THEN tmpContract.ContractConditionId ELSE 0 END AS ContractConditionId
                                   , 0                                   AS ContractConditionId
                              FROM tmpContract
                                   INNER JOIN tmpMovement ON tmpMovement.JuridicalId         = tmpContract.JuridicalId
@@ -1263,7 +1267,7 @@ BEGIN
                     WHERE (tmpAll.Sum_CheckBonus <> 0
                        OR tmpAll.Sum_Bonus <> 0
                        OR tmpAll.Sum_BonusFact <> 0)
-                     --OR inSessiON = '5'
+                     --OR vbUserId = 5
                     )
 
       , tmpMovementParams AS (SELECT tmpMov.MovementId

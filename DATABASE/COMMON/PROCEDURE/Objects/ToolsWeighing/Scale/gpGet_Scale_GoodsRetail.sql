@@ -37,7 +37,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-    -- IF inSession = '5'
+    -- IF vbUserId = 5
     -- THEN
     --     RAISE EXCEPTION '<%>', lfGet_Object_ValueData (inGoodsPropertyId);
     -- END IF;

@@ -584,8 +584,8 @@ BEGIN
     , tmpGoodsWeight AS (
                    SELECT tmpGoodsCount.BranchId 
                         , tmpGoodsCount.UnitId
-                          -- CASE WHEN inSession = '5' THEN tmpGoodsCount.GoodsId ELSE tmpGoodsCount.BranchId END AS BranchId
-                          -- CASE WHEN inSession = '5' THEN tmpGoodsCount.UnitId ELSE tmpGoodsCount.BranchId END AS BranchId
+                          -- CASE WHEN vbUserId = 5 THEN tmpGoodsCount.GoodsId ELSE tmpGoodsCount.BranchId END AS BranchId
+                          -- CASE WHEN vbUserId = 5 THEN tmpGoodsCount.UnitId ELSE tmpGoodsCount.BranchId END AS BranchId
                         , CAST (tmpGoodsCount.CountStart * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END                   AS TFloat) AS CountStart
                         , CAST (tmpGoodsCount.CountEnd * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END                     AS TFloat) AS CountEnd
                         , CAST (tmpGoodsCount.CountIn * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END                      AS TFloat) AS CountIn

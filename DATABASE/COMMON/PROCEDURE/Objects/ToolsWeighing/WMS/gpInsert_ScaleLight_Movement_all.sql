@@ -150,7 +150,7 @@ BEGIN
 
 
 
-if inSession = '5' AND 1=0
+if vbUserId = 5 AND 1=0
 then
     RAISE EXCEPTION 'Admin - Errr _end <%>', (select count(*) from _tmpMovement_WeighingProduction);
     -- 'Повторите действие через 3 мин.'

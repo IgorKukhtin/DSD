@@ -79,6 +79,7 @@ BEGIN
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Insert_Scale_MI());
      vbUserId:= lpGetUserBySession (inSession);
 
+
 -- IF inBranchCode BETWEEN 201 AND 210 AND COALESCE (inBoxCount, 0) = 0 THEN inBoxCount:= 1; END IF;
 
      -- сразу запомнили время начала выполнения Проц.
@@ -545,7 +546,7 @@ BEGIN
                                                          
                                                        , inBoxId               := vbBoxId
                                                        , inMovementId_Promo    := COALESCE (inMovementId_Promo, 0)
-                                                       , inIsBarCode           := CASE WHEN inSession = '5' THEN TRUE ELSE inIsBarCode END
+                                                       , inIsBarCode           := CASE WHEN vbUserId = 5 THEN TRUE ELSE inIsBarCode END
                                                        , inSession             := inSession
                                                         );
 
@@ -560,7 +561,7 @@ BEGIN
 
 
 -- !!! ВРЕМЕННО !!!
-IF inSession = '5' AND 1=0 AND inBranchCode < 1000 THEN
+IF vbUserId = 5 AND 1=0 AND inBranchCode < 1000 THEN
     RAISE EXCEPTION 'Admin - Test = OK  Amount = <%> Price = <%> HeadCount = <%>'
                   , (SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = vbId)
                   , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = vbId AND MIF.DescId = zc_MIFloat_Price())

@@ -33,7 +33,7 @@ $BODY$
 BEGIN
     -- проверка прав пользовател€ на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
-
+    
     -- !!!замена!!!
     IF CHAR_LENGTH (TRIM (inBoxBarCode)) > 5
     THEN
@@ -101,7 +101,7 @@ BEGIN
                            WHERE Object_BarCodeBox.ObjectCode = vbBoxCode
                              AND Object_BarCodeBox.DescId     = zc_Object_BarCodeBox()
                              -- временно - только дл€ теста
-                             AND (Object_BarCodeBox.isErased   = FALSE OR inSession = zfCalc_UserAdmin() OR 1=1)
+                             AND (Object_BarCodeBox.isErased   = FALSE OR vbUserId = 5 OR 1=1)
                           );
 
      ELSEIF TRIM (vbBoxBarCode) <> ''
@@ -112,7 +112,7 @@ BEGIN
                            WHERE Object_BarCodeBox.ValueData = vbBoxBarCode
                              AND Object_BarCodeBox.DescId    = zc_Object_BarCodeBox()
                              -- временно - только дл€ теста
-                             AND (Object_BarCodeBox.isErased   = FALSE OR inSession = zfCalc_UserAdmin() OR 1=1)
+                             AND (Object_BarCodeBox.isErased   = FALSE OR vbUserId = 5 OR 1=1)
                           );
          -- если не нашли - ƒќЅј¬»ћ
          IF COALESCE (vbBarCodeBoxId, 0) = 0

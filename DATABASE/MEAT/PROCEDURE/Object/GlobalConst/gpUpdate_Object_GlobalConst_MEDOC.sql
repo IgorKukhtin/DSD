@@ -9,7 +9,7 @@ $BODY$
    DECLARE vbCode_calc Integer;   
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- сохранили <Дату разнесения выписок>
    PERFORM lpInsertUpdate_ObjectDate(zc_ObjectDate_GlobalConst_ActualBankStatement(), zc_Enum_GlobalConst_MedocTaxDate(), CURRENT_DATE);
@@ -20,7 +20,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpUpdate_Object_GlobalConst_MEDOC (TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

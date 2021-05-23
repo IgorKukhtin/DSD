@@ -16,13 +16,13 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbId Integer;
 BEGIN
-      
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
 
+
       -- testm
-      IF inSession = '1123966' -- testm
+      IF vbUserId = 1123966 -- testm
       THEN
           RAISE EXCEPTION 'Ошибка.Нет Прав.';
       END IF;

@@ -43,8 +43,8 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Balance());
      vbUserId:= lpGetUserBySession (inSession);
 
--- if inSession = '973007'
-/*if inSession <> '5'
+-- if vbUserId = 973007
+/*if vbUserId <> 5
 then
     RAISE EXCEPTION 'Извините. Отчет временно не доступен.', 'Повторите действие после 15:00.';
 end if;*/

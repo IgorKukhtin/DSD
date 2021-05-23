@@ -26,16 +26,16 @@ BEGIN
 
 
       -- testm
-      IF inSession = '1123966' -- testm
+      IF vbUserId = 1123966 -- testm
       THEN
           RAISE EXCEPTION 'Ошибка.Нет Прав.';
       END IF;
 
 -- Хаджиева В.С.
--- IF inGUID = '?13' AND inSession = '1156045' THEN RETURN 0; END IF;
- IF inSession = '1156045' THEN RETURN 0; END IF;
- -- testm
- IF inSession = '1123966 ' THEN RETURN 0; END IF;
+-- IF inGUID = '?13' AND vbUserId = 1156045 THEN RETURN 0; END IF;
+--  IF vbUserId = 1156045 THEN RETURN 0; END IF;
+-- testm
+--  IF vbUserId = 1123966 THEN RETURN 0; END IF;
  
 
 

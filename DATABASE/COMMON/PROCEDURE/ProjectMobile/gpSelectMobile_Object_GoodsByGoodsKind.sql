@@ -39,7 +39,7 @@ BEGIN
       THEN
 
 
-IF inSession = '1717523' -- Иордатий А.Ю.
+IF vbUserId = 1717523 -- Иордатий А.Ю.
 THEN
            -- Результат
            RETURN QUERY
@@ -208,7 +208,7 @@ ELSE
              FROM tmpGoodsOrder_all
                   LEFT JOIN tmpRemains ON tmpRemains.GoodsId     = tmpGoodsOrder_all.GoodsId
                                       AND tmpRemains.GoodsKindId = tmpGoodsOrder_all.GoodsKindId
-           --LIMIT CASE WHEN inSession = '1072129' THEN 100 ELSE 500000 END
+           --LIMIT CASE WHEN vbUserId = 1072129 THEN 100 ELSE 500000 END
             ;
 
       END IF;

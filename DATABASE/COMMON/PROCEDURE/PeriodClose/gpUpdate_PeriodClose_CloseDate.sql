@@ -13,8 +13,10 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
+     vbUserId:= lpGetUserBySession (inSession);
+
     --
-    IF inSession = '9464' THEN vbUserId := 9464;
+    IF vbUserId = 9464 THEN vbUserId := 9464;
     ELSE
        -- проверка прав пользователя на вызов процедуры
        vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Object_User()); -- не ошибка, просто будем использовать этот процесс

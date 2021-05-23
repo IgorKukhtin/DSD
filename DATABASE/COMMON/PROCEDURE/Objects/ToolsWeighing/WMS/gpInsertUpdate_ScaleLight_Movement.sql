@@ -39,7 +39,7 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_ScaleCeh_Movement());
      vbUserId:= lpGetUserBySession (inSession);
 
--- if inSession = '5'
+-- if vbUserId = 5
 -- then
 -- RAISE EXCEPTION 'Ошибка.ok';
 -- end if;

@@ -602,7 +602,7 @@ BEGIN
                    /*WHEN (tmpMovement.DescId = zc_Movement_OrderExternal()
                     AND tmpMovement.FromId = 3080691 -- Ñךכאה ÃÏ פ.Ëüגמג
                     AND tmpMovement.ToId   = 8411    -- Ñךכאה ÃÏ פ.Êטוג
-                    ) -- or inSession = '5'
+                    ) -- or vbUserId = 5
                         THEN zc_Movement_Send()*/
 
                    WHEN tmpMovement.DescId_From = zc_Object_Unit()

@@ -39,6 +39,7 @@ BEGIN
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_Member());
    vbUserId:= lpGetUserBySession (inSession);
 
+   
    vbIsAllUnit:= NOT EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE UnitId_PersonalService <> 0 AND UserId = vbUserId)
                  OR vbUserId = 80373   -- Прохорова С.А.
                  OR vbUserId = 80830   -- Кисличная Т.А.
@@ -49,7 +50,7 @@ BEGIN
    vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
    vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0;
 /*
-if inSession = '80971'
+if vbUserId = 80971
 then
     RAISE EXCEPTION '<%>  %   %', vbIsAllUnit, vbObjectId_Constraint, vbIsConstraint; -- Полякова
 end if;

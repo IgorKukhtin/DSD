@@ -10,7 +10,10 @@ RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-   IF inSession = '2731040' -- Зянько В.Я.
+   vbUserId:= lpGetUserBySession (inSession);
+
+
+   IF vbUserId = 2731040 -- Зянько В.Я.
       AND EXISTS (SELECT 1 FROM Object WHERE Object.Id = inObjectId AND Object.isErased = TRUE)
    THEN
        -- НЕТ проверки прав пользователя на вызов процедуры

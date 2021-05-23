@@ -88,7 +88,7 @@ BEGIN
                   JOIN tmpFilter ON tmpFilter.GoodsGroupId = Object_GoodsGroup.Id
                   LEFT JOIN tmpGoodsGroup ON tmpGoodsGroup.GoodsGroupId = Object_GoodsGroup.Id
              WHERE Object_GoodsGroup.DescId = zc_Object_GoodsGroup()
-           --LIMIT CASE WHEN inSession = '1072129' THEN 0 ELSE 500000 END
+           --LIMIT CASE WHEN vbUserId = 1072129 THEN 0 ELSE 500000 END
             ;  
 
       END IF;

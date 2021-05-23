@@ -67,11 +67,11 @@ BEGIN
      -- нашли параметры
      SELECT ObjectLink_User_Member.ChildObjectId AS MemberId
           , lfSelect.PersonalId                  AS PersonalId
-          , CASE WHEN inSession = '5866615' -- Матіюк В.Ю.
+          , CASE WHEN vbUserId = 5866615 -- Матіюк В.Ю.
                       THEN 8411 -- Склад ГП ф.Киев
                  ELSE lfSelect.UnitId                      
             END AS UnitId
-          , CASE WHEN inSession = '5866615' -- Матіюк В.Ю.
+          , CASE WHEN vbUserId = 5866615 -- Матіюк В.Ю.
                       THEN 8379 -- филиал Киев
                  WHEN ObjectLink_Unit_Branch.ChildObjectId = 8377 -- филиал Кр.Рог
                       THEN zc_Branch_Basis()
@@ -85,8 +85,8 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                ON ObjectLink_Unit_Branch.ObjectId = lfSelect.UnitId
                               AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
-     WHERE ObjectLink_User_Member.ObjectId = CASE WHEN inSession = '5'       THEN 893469 -- !!!ВРЕМЕННО - ДЛЯ ТЕСТА!!! - Админ    -> 893469  - Волошина Е.А.
-                                                  WHEN inSession = '1123966' THEN 893469 -- !!!ВРЕМЕННО - ДЛЯ ТЕСТА!!! - test_mob -> 1000168 - Молдован Е.А.
+     WHERE ObjectLink_User_Member.ObjectId = CASE WHEN vbUserId = 5       THEN 893469 -- !!!ВРЕМЕННО - ДЛЯ ТЕСТА!!! - Админ    -> 893469  - Волошина Е.А.
+                                                  WHEN vbUserId = 1123966 THEN 893469 -- !!!ВРЕМЕННО - ДЛЯ ТЕСТА!!! - test_mob -> 1000168 - Молдован Е.А.
                                                   ELSE vbUserId
                                              END
        AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()

@@ -71,7 +71,7 @@ BEGIN
      PERFORM lpInsert_ObjectProtocol (inObjectId:= vbId, inUserId:= vbUserId, inIsUpdate:= FALSE);
 
 
-if inSession = '5' AND 1=1
+if vbUserId = 5 AND 1=1
 then
     RAISE EXCEPTION 'Admin - Errr _end <%>', inBarCode;
     -- 'Повторите действие через 3 мин.'

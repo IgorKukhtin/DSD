@@ -295,7 +295,7 @@ BEGIN
                
            END IF;
 
-/*if inSession = '5'
+/*if vbUserId = 5
 then
     RAISE EXCEPTION '<%>  %', (SELECT _tmpMI_noPromo.Price FROM _tmpMI_noPromo)
                             , (SELECT MIF_Price.ValueData

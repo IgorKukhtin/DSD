@@ -31,16 +31,18 @@ BEGIN
 
       -- !!!ВРЕМЕННО!!!
       vbSession_save:=inSession;
-      if inSession = '5' then inSession = '1000137'; end if;
+
+      -- проверка прав пользователя на вызов процедуры
+      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
+      vbUserId:= lpGetUserBySession (inSession);
+
+      if vbUserId = 5 then vbUserId:= 1000137; end if;
 
       -- if inSession = '1000137' then return; end if;
 
       -- !!! ВРЕМЕННО будем выгружать все
       inSyncDateIn:= zc_DateStart();
 
-      -- проверка прав пользователя на вызов процедуры
-      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
-      vbUserId:= lpGetUserBySession (inSession);
 
       -- определяем идентификатор торгового агента
       SELECT PersonalId, ReturnDayCount INTO vbPersonalId, vbReturnDayCount FROM gpGetMobile_Object_Const (inSession);

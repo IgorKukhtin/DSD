@@ -15,7 +15,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-     IF 1=1 AND inSession = '5'
+     IF 1=1 AND vbUserId = 5
      THEN
          -- Результат
          RETURN QUERY

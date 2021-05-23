@@ -565,7 +565,7 @@ AS  (SELECT
                             , tmpMovement_all.GoodsKindComplete_ToId
                             , tmpMovement_all.StorageLineId_From
                             , tmpMovement_all.StorageLineId_To
-                            , CASE WHEN inSession = '5' THEN tmpMovement_all.MovementId ELSE 0 END AS MovementId
+                            , CASE WHEN vbUserId = 5 THEN tmpMovement_all.MovementId ELSE 0 END AS MovementId
                          FROM tmpMovement_all
                               LEFT JOIN tmpGoodsMaster_out ON tmpGoodsMaster_out.MovementId = tmpMovement_all.MovementId
                                                           AND tmpMovement_all.IsActive      = TRUE
@@ -587,7 +587,7 @@ AS  (SELECT
                             , tmpMovement_all.GoodsKindComplete_ToId
                             , tmpMovement_all.StorageLineId_From
                             , tmpMovement_all.StorageLineId_To
-                            , CASE WHEN inSession = '5' THEN tmpMovement_all.MovementId ELSE 0 END
+                            , CASE WHEN vbUserId = 5 THEN tmpMovement_all.MovementId ELSE 0 END
                         )
          -- Модели начисления + необходимые документы для расчета по Кол-во голов
        , tmpMovement_HeadCount AS
@@ -732,7 +732,7 @@ AS  (SELECT
                   END)
            , 2) :: TFloat AS Amount
 
-           , CASE WHEN inSession = '5' THEN tmpMovement.MovementId ELSE 0 END AS MovementId
+           , CASE WHEN vbUserId = 5 THEN tmpMovement.MovementId ELSE 0 END AS MovementId
 
         FROM Setting_Wage_1 AS Setting
              LEFT JOIN tmpMovement ON tmpMovement.MovementDescId = Setting.MovementDescId
@@ -784,7 +784,7 @@ AS  (SELECT
 
         GROUP BY
              Setting.StaffListId
-           , CASE WHEN inSession = '5' THEN tmpMovement.MovementId ELSE 0 END
+           , CASE WHEN vbUserId = 5 THEN tmpMovement.MovementId ELSE 0 END
            , Setting.UnitId
            , Setting.PositionId
            , Setting.PositionLevelId

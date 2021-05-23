@@ -234,7 +234,7 @@ BEGIN
 
 
 
-    IF inIsOLAP = TRUE -- AND inSession = '5'
+    IF inIsOLAP = TRUE -- AND vbUserId = 5
     AND EXISTS (SELECT 1 FROM SoldTable WHERE SoldTable.OperDate >= inStartDate)
    -- AND EXISTS (SELECT 1 FROM (SELECT MAX (SoldTable.OperDate) AS OperDate FROM SoldTable) AS tmp WHERE inStartDate >= '01.07.2015' AND inEndDate <= tmp.OperDate)
     THEN

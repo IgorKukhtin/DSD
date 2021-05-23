@@ -18,7 +18,7 @@ BEGIN
 
 
    -- проверка - что б Админ ничего не ломал
-   IF inSession = zfCalc_UserAdmin()
+   IF vbUserId = 5
    THEN
        RAISE EXCEPTION 'Ошибка.Нет прав - что б Админ ничего не ломал.';
    END IF;

@@ -525,7 +525,7 @@ BEGIN
                              THEN COALESCE (tmpPrice_10100.Price1, 0)
 
                     /*WHEN (View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
-                        OR tmpGoods_20900.GoodsId > 0) and inSession = '5'
+                        OR tmpGoods_20900.GoodsId > 0) and vbUserId = 5
                          --THEN COALESCE (tmpPrice_20900.Price1, 0)
                            THEN tmpResult.SummOut_sale*/
 
@@ -542,7 +542,7 @@ BEGIN
                              THEN COALESCE (tmpPrice_10100.Price2, 0)
 
                       /*WHEN (View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
-                          OR tmpGoods_20900.GoodsId > 0) and inSession = '5'
+                          OR tmpGoods_20900.GoodsId > 0) and vbUserId = 5
                            --THEN COALESCE (tmpPrice_20900.Price1, 0)
                              THEN tmpResult.OperCount_sale*/
 

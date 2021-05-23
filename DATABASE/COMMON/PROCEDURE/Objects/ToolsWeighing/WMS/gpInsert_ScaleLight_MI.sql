@@ -98,7 +98,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-/* if inSession = '5'
+/* if vbUserId = 5
  then
  RAISE EXCEPTION 'Ошибка.ok  %  %' ,
       inWeightMin_Sh       ,

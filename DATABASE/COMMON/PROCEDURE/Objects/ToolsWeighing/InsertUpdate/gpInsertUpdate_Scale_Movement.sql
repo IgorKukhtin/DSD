@@ -148,12 +148,12 @@ BEGIN
 
 -- !!! ВРЕМЕННО !!!
 
-if inSession = '6044123' AND 1=0-- Авто-Загрузка WMS
+if vbUserId = 6044123 AND 1=0-- Авто-Загрузка WMS
 then
     RAISE EXCEPTION 'Admin - Test = OK - %', inToId;
     -- 'Повторите действие через 3 мин.'
 end if;
-if inSession = '5' AND 1=0
+if vbUserId= 5 AND 1=0
 then
     RAISE EXCEPTION 'Admin - Test = OK - %', inToId;
     -- 'Повторите действие через 3 мин.'

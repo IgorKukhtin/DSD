@@ -151,7 +151,7 @@ BEGIN
      END IF;
 
      -- проверка - Количество вложение
-     IF vbMovementDescId = zc_Movement_Sale() -- AND inSession = '5'
+     IF vbMovementDescId = zc_Movement_Sale() -- AND vbUserId = 5
      THEN
          WITH -- GoodsProperty
               tmpGoodsProperty AS (SELECT zfCalc_GoodsPropertyId ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
@@ -535,7 +535,7 @@ BEGIN
                       WHERE MovementLinkMovement.MovementId = inMovementId
                         AND MovementLinkMovement.DescId     = zc_MovementLinkMovement_Order()
                      )
-               --OR inSession = '5'
+               --OR vbUserId = 5
               THEN
                   RAISE EXCEPTION 'Ошибка.Для заявки № <%> от <%> сформировано 2 документа: <№ % от %> + <№ % от %>'
                                 , (SELECT Movement.InvNumber FROM MovementLinkMovement AS MLM_Order JOIN Movement ON Movement.Id = MLM_Order.MovementChildId WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order())
@@ -1792,7 +1792,7 @@ BEGIN
 end if;*/
 
 -- !!! ВРЕМЕННО !!!
- IF inSession = '5' AND 1=1 THEN
+ IF vbUserId = 5 AND 1=1 THEN
 -- IF inSession = '1162887' AND 1=1 THEN
     RAISE EXCEPTION 'Admin - Test = OK : %  %  %  % % % % %'
   , inBranchCode -- 'Повторите действие через 3 мин.'

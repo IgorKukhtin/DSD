@@ -10,11 +10,15 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, EnumName TVarChar
              , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar
              , isAuto Boolean
              , isErased Boolean
-) AS
-$BODY$BEGIN
+)
+AS
+$BODY$
+    DECLARE vbUserId Integer;
+BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_DocumentKind());
+    vbUserId:= lpGetUserBySession (inSession);
 
-   -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_DocumentKind());
 
    RETURN QUERY 
    SELECT
@@ -56,7 +60,7 @@ $BODY$BEGIN
    WHERE Object_DocumentKind.DescId = zc_Object_DocumentKind()
      AND (ObjectString_Enum.ObjectId IS NULL
        OR Object_DocumentKind.Id IN (zc_Enum_DocumentKind_PackDiff())
-       OR inSession IN (zfCalc_UserAdmin(), zfCalc_UserMain() :: TVarChar)
+       OR vbUserId IN (5, zfCalc_UserMain())
          )
   ;
   

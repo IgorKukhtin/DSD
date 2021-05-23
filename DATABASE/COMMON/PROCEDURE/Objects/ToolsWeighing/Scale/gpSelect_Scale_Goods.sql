@@ -59,8 +59,8 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpGetUserBySession (inSession);
 
--- if inSession = '5' then return; end if;
--- if inSession = '5' then inMovementId:= 7505643; end if;
+-- if vbUserId = 5 then return; end if;
+-- if vbUserId = 5 then inMovementId:= 7505643; end if;
 
 
    IF (inBranchCode > 1000)

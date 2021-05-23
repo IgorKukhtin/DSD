@@ -98,7 +98,7 @@ BEGIN
                                        ON ObjectLink_GoodsGroup_TradeMark.ObjectId = ObjectLink_Goods_GoodsGroup.ChildObjectId
                                       AND ObjectLink_GoodsGroup_TradeMark.DescId = zc_ObjectLink_GoodsGroup_TradeMark() 
              WHERE Object_Goods.DescId = zc_Object_Goods()
-           --LIMIT CASE WHEN inSession = '1072129' THEN 100 ELSE 500000 END
+           --LIMIT CASE WHEN vbUserId = 1072129 THEN 100 ELSE 500000 END
             ;
 
       END IF;

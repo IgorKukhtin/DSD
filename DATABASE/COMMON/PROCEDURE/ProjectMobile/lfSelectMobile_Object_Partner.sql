@@ -17,9 +17,14 @@ RETURNS TABLE (Id               Integer
               )
 AS
 $BODY$
+   DECLARE vbUserId     Integer;
    DECLARE vbPersonalId Integer;
    DECLARE vbMemberId   Integer;
 BEGIN
+      -- проверка прав пользователя на вызов процедуры
+      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
+      vbUserId:= lpGetUserBySession (inSession);
+
       -- Определяем сотрудника для пользователя
       vbPersonalId:= (SELECT PersonalId FROM gpGetMobile_Object_Const (inSession));
       -- Определяем
@@ -52,13 +57,13 @@ BEGIN
                                  WHERE OL.ChildObjectId IN (SELECT tmpPersonal.PersonalId FROM tmpPersonal)
                                    AND OL.DescId        = zc_ObjectLink_Partner_PersonalMerch()
                                  UNION
-                                 -- если inSession = testm
+                                 -- если vbUserId = testm
                                  SELECT * FROM
                                 (SELECT OL.ObjectId AS PartnerId
                                  FROM ObjectLink AS OL
                                  WHERE OL.ChildObjectId = 344877 -- Альфа 641 ТОВ
                                    AND OL.DescId        = zc_ObjectLink_Partner_Juridical()
-                                   AND inSession        IN ('1123966', '5')
+                                   AND vbUserId        IN (1123966, 5)
                                  LIMIT 1) AS tmp
                                 )
                 , tmpIsErased AS (SELECT FALSE AS isErased UNION SELECT inIsErased AS isErased)
