@@ -41,7 +41,8 @@ $BODY$
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
-    vbUserId := inSession::Integer;
+    vbUserId:= lpGetUserBySession (inSession);
+
 
     -- Таблица - Данные для расчета
     /*CREATE TEMP TABLE Setting_Wage_2(

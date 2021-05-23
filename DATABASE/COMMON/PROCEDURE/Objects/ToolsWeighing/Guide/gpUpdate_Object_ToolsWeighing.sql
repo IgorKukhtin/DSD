@@ -15,10 +15,10 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbName TVarChar;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ToolsWeighing());
-   vbUserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
+
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_ToolsWeighing(), inCode, inValueData);

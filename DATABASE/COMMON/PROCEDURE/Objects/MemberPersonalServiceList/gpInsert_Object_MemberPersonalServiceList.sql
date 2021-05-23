@@ -11,10 +11,9 @@ CREATE OR REPLACE FUNCTION gpInsert_Object_MemberPersonalServiceList(
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_MemberPersonalServiceList());
-   --vbUserId := inSession;
+
 
    IF COALESCE (inMemberId, 0) = 0
    THEN
@@ -28,6 +27,7 @@ BEGIN
                                                         ,  ioIsAll                  := FALSE   :: Boolean
                                                         ,  inComment                := ''      :: TVarChar
                                                         ,  inSession                := inSession
+                                                          )
    FROM Object AS PersonalServiceList
    WHERE PersonalServiceList.DescId = zc_Object_PersonalServiceList() 
      AND PersonalServiceList.isErased = FALSE

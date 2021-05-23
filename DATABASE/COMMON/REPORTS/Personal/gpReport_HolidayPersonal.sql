@@ -55,7 +55,8 @@ $BODY$
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
-    vbUserId := inSession::Integer;
+    vbUserId:= lpGetUserBySession (inSession);
+
 
     -- начальная дата - ровно год
     vbStartDate := DATE_TRUNC ('YEAR', inStartDate);

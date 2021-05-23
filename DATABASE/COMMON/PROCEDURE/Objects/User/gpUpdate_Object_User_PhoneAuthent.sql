@@ -11,10 +11,10 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_User());
-   vbUserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
+
 
    --выбираем тел из zc_Object_MobileEmployee
    

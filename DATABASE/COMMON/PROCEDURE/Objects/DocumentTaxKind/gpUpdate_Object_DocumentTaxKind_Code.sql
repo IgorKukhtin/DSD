@@ -16,10 +16,9 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_DocumentTaxKind_Code());
-   -- vbUserId := inSession;
+
 
    -- сохранили свойство <Код причины>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_DocumentTaxKind_Code(), inId, inCode);

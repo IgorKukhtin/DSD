@@ -14,10 +14,10 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_StaffListCost());
-   vbUserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
+
    
     -- проверка
    IF COALESCE (inStaffListId, 0) = 0

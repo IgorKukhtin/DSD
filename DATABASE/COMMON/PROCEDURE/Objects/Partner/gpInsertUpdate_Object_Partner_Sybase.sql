@@ -21,10 +21,10 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
 BEGIN
-   
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Partner());
-   vbUserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
+
 
    -- Проверка установки значений
    IF COALESCE (inJuridicalId, 0) = 0  THEN

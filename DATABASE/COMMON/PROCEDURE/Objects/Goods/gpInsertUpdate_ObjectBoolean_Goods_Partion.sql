@@ -12,10 +12,10 @@ RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_ObjectString_Goods_Partion());
-   vbUserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
+
    
    -- сохранили свойство <Партии поставщика в учете количеств>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_PartionCount(), inId, inPartionCount);

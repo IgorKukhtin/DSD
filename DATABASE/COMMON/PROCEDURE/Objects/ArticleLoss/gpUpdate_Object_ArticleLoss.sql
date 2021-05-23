@@ -14,10 +14,9 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_ArticleLoss(
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ArticleLoss());
-   --vbUserId := inSession;
+
 
    -- сохранили связь с <Бизнес>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ArticleLoss_Business(), inId, inBusinessId);

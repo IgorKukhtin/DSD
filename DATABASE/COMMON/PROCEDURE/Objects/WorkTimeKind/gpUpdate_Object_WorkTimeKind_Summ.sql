@@ -11,10 +11,9 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_WorkTimeKind_Summ(
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-   
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_WorkTimeKind_Summ());
-   --vbUserId := inSession;
+
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_WorkTimeKind_Summ(), inId, inSumm);
@@ -22,7 +21,9 @@ BEGIN
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
 
-END;$BODY$ LANGUAGE plpgsql;
+END;
+$BODY$
+  LANGUAGE plpgsql;
 
 /*-------------------------------------------------------------------------------*/
 /*

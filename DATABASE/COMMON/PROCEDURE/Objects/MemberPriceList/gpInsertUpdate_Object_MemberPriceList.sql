@@ -15,10 +15,9 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_MemberPriceList());
-   --vbUserId := inSession;
+
 
    -- проверка
    IF COALESCE (inPriceListId, 0) = 0

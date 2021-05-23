@@ -14,10 +14,10 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_BankAccountContract()());
-   vbUserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
+
    
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_BankAccountContract(), 0, '');
@@ -49,4 +49,3 @@ LANGUAGE PLPGSQL VOLATILE;
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_BankAccountContract ()
-    

@@ -29,9 +29,9 @@ $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
+   vbUserId:= lpGetUserBySession (inSession);
 
-  vbUserId := inSession;
-
+  
   vbCashRegisterKindName := 'Datecs FP 3141';
   Select Id INTO vbCashRegisterKindId
   from Object

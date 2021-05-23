@@ -11,10 +11,10 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_CashRegister_GetHardwareData(
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
---   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_CashRegister());
-   vbUserId := inSession;
+   -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_CashRegister());
+   vbUserId:= lpGetUserBySession (inSession);
+
 
    IF COALESCE(inId, 0) = 0 OR
       COALESCE((SELECT ObjectBoolean.ValueData FROM ObjectBoolean 

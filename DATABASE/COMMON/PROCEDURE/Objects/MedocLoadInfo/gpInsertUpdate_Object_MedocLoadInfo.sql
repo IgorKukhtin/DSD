@@ -12,10 +12,10 @@ $BODY$
    DECLARE vbId Integer;   
    
 BEGIN
-
    -- проверка прав пользовател€ на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_ContractKind());
-   vbUserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
+
    
    -- ѕериод привели к началу мес€ца
    inPeriod := date_trunc('month', inPeriod);

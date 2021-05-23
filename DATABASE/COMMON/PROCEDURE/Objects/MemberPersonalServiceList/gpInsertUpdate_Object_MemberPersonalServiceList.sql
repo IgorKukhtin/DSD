@@ -16,10 +16,9 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_MemberSheetWorkTime());
-   --vbUserId := inSession;
+
 
    -- проверка
    IF COALESCE (inPersonalServiceListId, 0) = 0 AND COALESCE (ioIsAll, FALSE) = FALSE

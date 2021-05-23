@@ -16,11 +16,10 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId    Integer;
    DECLARE vbCode_calc Integer;
-
 BEGIN
-    -- проверка прав пользователя на вызов процедуры
+   -- проверка прав пользователя на вызов процедуры
    -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_BarCodeBox());
-   vbUserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
 
 
     -- проверка <inName>

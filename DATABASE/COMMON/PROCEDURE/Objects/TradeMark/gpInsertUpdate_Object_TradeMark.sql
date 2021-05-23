@@ -15,12 +15,11 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE Code_max Integer;   
- 
 BEGIN
- 
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_TradeMark());
-   vbUserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
+
 
    -- Если код не установлен, определяем его как последний+1
    IF COALESCE (inCode, 0) = 0

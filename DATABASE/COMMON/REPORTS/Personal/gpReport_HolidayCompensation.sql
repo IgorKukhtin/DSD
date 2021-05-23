@@ -39,10 +39,10 @@ $BODY$
     DECLARE vbDayHoliday   TFloat;
     --DECLARE vbCountDay     TFloat;
 BEGIN
-
     -- проверка прав пользовател€ на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
-    vbUserId := inSession::Integer;
+    vbUserId:= lpGetUserBySession (inSession);
+
 
     -- кол-во мес€цев после чего положен отпуск - 1 отпуск - после 6 м. непрерывного стажа
     vbMonthHoliday := 6;

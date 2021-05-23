@@ -16,10 +16,10 @@ $BODY$
   DECLARE vbUserId Integer;
   DECLARE Code_max Integer;  
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_User());
-   vbUserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
+
 
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_Sign(), inId, inSign);
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_Seal(), inId, inSeal);

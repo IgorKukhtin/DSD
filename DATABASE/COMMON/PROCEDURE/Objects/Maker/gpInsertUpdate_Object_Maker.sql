@@ -16,7 +16,8 @@ $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Maker());
-   vbUserId := inSession; 
+   vbUserId:= lpGetUserBySession (inSession);
+
 
    -- Если код не установлен, определяем его каи последний+1
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Maker()); 

@@ -14,7 +14,8 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_ObjectString_Goods_Partion());
-     vbUserId := inSession;
+     vbUserId:= lpGetUserBySession (inSession);
+
 
      -- меняется признак
      inisPartionCount:= NOT inisPartionCount;

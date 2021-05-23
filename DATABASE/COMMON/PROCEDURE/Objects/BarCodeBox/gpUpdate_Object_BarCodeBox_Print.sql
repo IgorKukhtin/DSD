@@ -12,7 +12,7 @@ $BODY$
    DECLARE vbUserId    Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_BarCodeBox_Print(), inId, inAmountPrint);
@@ -30,3 +30,6 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  04.05.20         *
 */
+
+-- тест
+-- SELECT * FROM gpUpdate_Object_BarCodeBox_Print()

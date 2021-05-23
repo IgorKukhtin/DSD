@@ -12,10 +12,9 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_WorkTimeKind(
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-   
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_WorkTimeKind());
-   vbUserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- сохранили св-во <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_WorkTimeKind_ShortName(), inId, inShortName);
@@ -26,7 +25,9 @@ BEGIN
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
 
-END;$BODY$ LANGUAGE plpgsql;
+END;
+$BODY$
+  LANGUAGE plpgsql;
 
 /*-------------------------------------------------------------------------------*/
 /*

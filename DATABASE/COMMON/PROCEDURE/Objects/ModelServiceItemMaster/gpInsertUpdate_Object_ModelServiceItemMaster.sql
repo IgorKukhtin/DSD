@@ -20,10 +20,10 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ModelServiceItemMaster());
-   vbUserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
+
    
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_ModelServiceItemMaster(), 0, '');

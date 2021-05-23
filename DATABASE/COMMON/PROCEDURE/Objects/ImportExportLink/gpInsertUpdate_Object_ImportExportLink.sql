@@ -18,10 +18,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ImportExportLink(
 $BODY$
    DECLARE vbUserId Integer;   
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsKind());
-   vbUserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
+
 
    --проверить что бы связи типа zc_Enum_ImportExportLinkType_UploadCompliance редактировались только админом
    IF 1 = 0 AND (inImportExportLinkTypeId = zc_Enum_ImportExportLinkType_UploadCompliance())

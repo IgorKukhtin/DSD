@@ -15,10 +15,10 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode Integer;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsKindWeighingGroup());
-   vbUserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
+
 
    -- Если код не установлен, определяем его каи последний+1
    IF COALESCE (inCode, 0) = 0

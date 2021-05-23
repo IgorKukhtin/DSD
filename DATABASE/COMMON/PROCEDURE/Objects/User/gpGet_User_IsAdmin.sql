@@ -9,7 +9,8 @@ RETURNS BOOLEAN AS
 $BODY$
 DECLARE vbUserId integer;
 BEGIN
-    vbUserId := inSession::Integer;
+    vbUserId:= lpGetUserBySession (inSession);
+
     IF EXISTS(Select * from gpSelect_Object_UserRole(inSession) Where UserId = vbUserId AND Id = zc_Enum_Role_Admin())
     THEN
         RETURN True;
