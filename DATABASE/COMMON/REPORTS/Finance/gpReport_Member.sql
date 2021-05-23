@@ -39,7 +39,7 @@ BEGIN
                                 , Container.Amount
                                 , Container.ObjectId
                                 , COALESCE (ObjectLink_Personal_Member_find.ChildObjectId, CLO_Member.ObjectId) AS MemberId
-                                , CLO_InfoMoney.ObjectId AS InfoMoneyId, CLO_Branch.ObjectId AS BranchId
+                                , COALESCE (CLO_InfoMoney.ObjectId, 0) AS InfoMoneyId, CLO_Branch.ObjectId AS BranchId
                            FROM ContainerLinkObject AS CLO_Member
                                 INNER JOIN Container ON Container.Id = CLO_Member.ContainerId AND Container.DescId = zc_Container_Summ()
                                 LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
@@ -103,11 +103,12 @@ BEGIN
        , Operation.Comment :: TVarChar                                                              AS Comment
 
      FROM
-         (SELECT MAX (Operation_all.ContainerId) AS ContainerId
+         (SELECT (Operation_all.ContainerId) AS ContainerId
                , MAX (Operation_all.ObjectId) AS ObjectId
                , Operation_all.MemberId
                  -- —суды
-               , MAX (CASE WHEN Operation_all.InfoMoneyId = zc_Enum_InfoMoney_40501() THEN 0 ELSE Operation_all.InfoMoneyId END) AS InfoMoneyId
+             --, CASE WHEN Operation_all.InfoMoneyId = zc_Enum_InfoMoney_40501() THEN Operation_all.InfoMoneyId ELSE 0 END AS InfoMoneyId
+               , CASE WHEN Operation_all.InfoMoneyId = zc_Enum_InfoMoney_40501() THEN Operation_all.InfoMoneyId ELSE Operation_all.InfoMoneyId END AS InfoMoneyId
                  --
                , MAX (CLO_Car.ObjectId) AS CarId
                , MAX (Operation_all.BranchId) AS BranchId
@@ -235,9 +236,11 @@ BEGIN
                                              ON CLO_Car.ContainerId = Operation_all.ContainerId
                                             AND CLO_Car.DescId = zc_ContainerLinkObject_Car()
 
-          GROUP BY /*Operation_all.ContainerId,*/
+          GROUP BY Operation_all.ContainerId,
                    /*Operation_all.ObjectId, */
-                    Operation_all.MemberId
+                   Operation_all.MemberId
+               --, CASE WHEN Operation_all.InfoMoneyId = zc_Enum_InfoMoney_40501() THEN Operation_all.InfoMoneyId ELSE 0 END
+                 , CASE WHEN Operation_all.InfoMoneyId = zc_Enum_InfoMoney_40501() THEN Operation_all.InfoMoneyId ELSE Operation_all.InfoMoneyId END
                /*, Operation_all.InfoMoneyId, CLO_Car.ObjectId*/
                /*, Operation_all.BranchId*/
                /*, Operation_all.ObjectId_by, Operation_all.Comment*/
@@ -246,7 +249,7 @@ BEGIN
             LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Operation.ObjectId
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = Operation.MemberId
             -- —суды
-            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = CASE WHEN Operation.InfoMoneyId = 0 THEN zc_Enum_InfoMoney_40501() ELSE Operation.InfoMoneyId END
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId
             --
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = Operation.CarId
             LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Operation.BranchId
