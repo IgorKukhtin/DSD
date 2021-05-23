@@ -552,5 +552,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_WeighingPartner_Item (inStartDate:= '01.08.2016', inEndDate:= '01.08.2016', inGoodsGroupId:= 0, inGoodsId:= 0, inJuridicalBasisId:= zc_Juridical_Basis(), inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
- select * from gpSelect_Movement_WeighingPartner_Item22(inStartDate := ('02.04.2018')::TDateTime , inEndDate := ('03.04.2018')::TDateTime , inGoodsGroupId := 0 , inGoodsId := 0 , inJuridicalBasisId := 9399 , inIsErased := 'False' ,  inSession := '5');
-
+-- select * from gpSelect_Movement_WeighingPartner_Item22(inStartDate := ('16.11.2020')::TDateTime , inEndDate := ('16.11.2020')::TDateTime , inGoodsGroupId := 0 , inGoodsId := 0 , inJuridicalBasisId := 9399 , inIsErased := 'False' ,  inSession := '5');
