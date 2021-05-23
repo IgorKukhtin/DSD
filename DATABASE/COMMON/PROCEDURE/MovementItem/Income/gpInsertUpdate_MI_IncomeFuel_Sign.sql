@@ -13,7 +13,8 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_IncomeFuel_Sign());
-     vbUserId := inSession;
+     vbUserId:= lpGetUserBySession (inSession);
+
 
      -- сохранили
      PERFORM gpInsertUpdate_MI_Sign (inMovementId, inIsSign, inSession);

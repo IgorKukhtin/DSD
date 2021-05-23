@@ -100,7 +100,7 @@ BEGIN
                        )*/
 
           , tmpMovement AS (SELECT DISTINCT MovementLinkObject_Unit.ObjectId AS UnitId, DATE_TRUNC ('MONTH', Movement.OperDate) AS OperDate
-                                          , CASE WHEN inSession = zfCalc_UserAdmin() THEN Movement.Id ELSE 0 END AS MovementId
+                                          , CASE WHEN vbUserId = zfCalc_UserAdmin() :: Integer THEN Movement.Id ELSE 0 END AS MovementId
                             FROM Movement
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                               ON MovementLinkObject_Unit.MovementId = Movement.Id

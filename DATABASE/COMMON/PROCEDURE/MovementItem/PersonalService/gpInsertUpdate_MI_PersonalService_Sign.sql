@@ -21,11 +21,10 @@ $BODY$
   DECLARE vbIndex          Integer; -- № пользователя среди подписанных
   DECLARE vbIndexNo        Integer; -- № пользователя среди НЕ подписанных
 BEGIN
-     
-     -- 
      -- проверка прав пользователя на вызов процедуры
-     --lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalService());
-     vbUserId := inSession;
+     -- lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalService());
+     vbUserId:= lpGetUserBySession (inSession);
+
      
      -- выбираем все Id пользователей
      SELECT tmp.SignInternalId, tmp.strMIIdSign, tmp.strIdSign, tmp.strIdSignNo

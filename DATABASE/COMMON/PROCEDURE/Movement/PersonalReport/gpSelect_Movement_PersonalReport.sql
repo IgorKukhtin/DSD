@@ -96,7 +96,7 @@ BEGIN
                   , MIContainer.OperDate
                   , MIContainer.MovementItemId
                   , MIContainer.Amount /** CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Passive() THEN -1 ELSE 1 END*/ AS Amount
-                  , CLO_InfoMoney.ObjectId AS InfoMoneyId
+                  , CASE WHEN CLO_InfoMoney.ObjectId > 0 THEN CLO_InfoMoney.ObjectId ELSE MILinkObject_InfoMoney.ObjectId END AS InfoMoneyId
                   , CLO_Branch.ObjectId    AS BranchId
                   -- , 0 AS UnitId
                   , COALESCE (ContainerLO_Member_inf.ObjectId, COALESCE (ContainerLO_Cash_inf.ObjectId, COALESCE (ContainerLO_BankAccount_inf.ObjectId, ContainerLO_Juridical_inf.ObjectId))) AS MoneyPlaceId
@@ -133,10 +133,13 @@ BEGIN
                   LEFT JOIN ContainerLinkObject AS ContainerLO_Juridical_inf ON ContainerLO_Juridical_inf.ContainerId = MIContainer.ContainerId_Analyzer
                                                                             AND ContainerLO_Juridical_inf.DescId = zc_ContainerLinkObject_Juridical()
                                                                             AND ContainerLO_Juridical_inf.ObjectId > 0
+                  LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                                   ON MILinkObject_InfoMoney.MovementItemId = MIContainer.MovementItemId
+                                                  AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
              WHERE CLO_Member.DescId = zc_ContainerLinkObject_Member()
                AND (CLO_Member.ObjectId = inMemberId OR COALESCE (inMemberId, 0) = 0)
                AND CLO_Goods.ContainerId IS NULL
-               AND Movement.DescId <> zc_Movement_PersonalReport()
+             --AND Movement.DescId <> zc_Movement_PersonalReport()
 
             UNION
              SELECT 0 AS ContainerId

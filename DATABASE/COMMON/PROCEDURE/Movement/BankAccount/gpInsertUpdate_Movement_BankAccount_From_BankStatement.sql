@@ -219,9 +219,9 @@ end if;
      WHERE ParentId = inMovementId AND DescId = zc_Movement_BankStatementItem();
 
 
-if inSession = '5' OR  inMovementId = 15504781
+if vbUserId = 5 OR  inMovementId = 15504781
 then
-    RAISE EXCEPTION 'inSession = 5';
+    RAISE EXCEPTION 'vbUserId = 5';
     -- 'Повторите действие через 3 мин.'
 /*
 if vb1 < 0 and exists (select 1 from MovementItem as MI_Child where MI_Child.MovementId = inMovementId

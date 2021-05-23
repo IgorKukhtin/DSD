@@ -238,7 +238,7 @@ BEGIN
                                                  ) AS tmp;
 
 
--- if inSession = 5
+-- if vbUserId = 5
 -- then
 --     RAISE EXCEPTION 'Ошибка.1';
 -- end if;

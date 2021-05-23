@@ -24,11 +24,10 @@ $BODY$
   DECLARE vbIsQuestionRead   Boolean;
   DECLARE vbIsAnswerRead     Boolean;
 BEGIN
-     
-     -- 
      -- проверка прав пользователя на вызов процедуры
      --lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalService());
-     vbUserId := inSession;
+     vbUserId:= lpGetUserBySession (inSession);
+
      
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;

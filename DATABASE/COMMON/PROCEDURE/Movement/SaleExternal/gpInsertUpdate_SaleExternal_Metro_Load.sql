@@ -43,7 +43,7 @@ BEGIN
      IF COALESCE (vbAmount,0) = 0
      THEN
          -- проверка
-         IF inSession = '5'
+         IF vbUserId = 5
          THEN
              RAISE EXCEPTION 'Ошибка.Не установлено кол-во.';
          END IF;

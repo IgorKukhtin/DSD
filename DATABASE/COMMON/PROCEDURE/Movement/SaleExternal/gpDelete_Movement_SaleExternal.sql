@@ -17,7 +17,7 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_SaleExternal());
 
      -- проверка
-   --IF inSession = '5'
+   --IF vbUserId = 5
    --THEN
    --    RETURN;
    --END IF;

@@ -19,7 +19,8 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_Promo());
-     vbUserId := inSession;
+     vbUserId:= lpGetUserBySession (inSession);
+
 
      -- Signing
      vbIsUserSigning1:= vbUserId IN (112324);  -- Колосинская С.А.

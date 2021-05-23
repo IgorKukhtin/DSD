@@ -34,12 +34,15 @@ BEGIN
 
 
    SELECT 
-       ObjectBLOB_FormData.ValueData INTO vbData
+         ObjectBLOB_FormData.ValueData
+         INTO vbData
    FROM Object
         JOIN ObjectBLOB AS ObjectBLOB_FormData 
-          ON ObjectBLOB_FormData.DescId = zc_ObjectBlob_Form_Data() 
-         AND ObjectBLOB_FormData.ObjectId = Object.Id
-   WHERE Object.ValueData = inFormName AND Object.DescId = zc_Object_Form();
+                        ON ObjectBLOB_FormData.ObjectId = Object.Id
+                       AND ObjectBLOB_FormData.DescId   = zc_ObjectBlob_Form_Data() 
+   WHERE Object.ValueData = inFormName
+     AND Object.DescId = zc_Object_Form()
+    ;
     
    RETURN vbData; 
   
@@ -47,4 +50,12 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
--- SELECT length(gpGet_Object_Form), gpGet_Object_Form AS FormValue  FROM gpGet_Object_Form('Плановая Прибыль (Факт)', '81245')
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.05.21                                        *
+*/
+
+-- тест
+-- SELECT LENGTH (gpGet_Object_Form), gpGet_Object_Form AS FormValue  FROM gpGet_Object_Form('Плановая Прибыль (Факт)', '81245')

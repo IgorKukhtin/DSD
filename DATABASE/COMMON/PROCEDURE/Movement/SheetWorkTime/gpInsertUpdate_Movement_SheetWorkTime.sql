@@ -13,10 +13,10 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_SheetWorkTime());
-     vbUserId := inSession;
+     vbUserId:= lpGetUserBySession (inSession);
+
 
      PERFORM lpInsertUpdate_Movement_SheetWorkTime(ioId, inInvNumber, inOperDate, inUnitId);
 

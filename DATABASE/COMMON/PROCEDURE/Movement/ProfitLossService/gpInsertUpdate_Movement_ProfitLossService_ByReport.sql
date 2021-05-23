@@ -40,7 +40,7 @@ BEGIN
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_Finance_CreateTemp();
 
-/* if inSession = '5' 
+/* if vbUserId = '5' 
  then
      RAISE EXCEPTION 'Ошибка. test <%>'
                   , (SELECT SUM COALESCE (Value, 0)

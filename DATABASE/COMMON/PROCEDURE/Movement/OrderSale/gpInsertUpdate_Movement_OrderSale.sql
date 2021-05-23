@@ -20,7 +20,7 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderSale());
-     --vbUserId := inSession;
+
 
      -- если не внесли дату документа берем дату из журнала
      IF COALESCE (ioOperDate, zc_DateStart()) = zc_DateStart()

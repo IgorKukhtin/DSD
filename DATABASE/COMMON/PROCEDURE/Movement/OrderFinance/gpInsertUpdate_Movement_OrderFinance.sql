@@ -18,7 +18,7 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderFinance());
-     --vbUserId := inSession;
+
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement_OrderFinance (ioId               := ioId

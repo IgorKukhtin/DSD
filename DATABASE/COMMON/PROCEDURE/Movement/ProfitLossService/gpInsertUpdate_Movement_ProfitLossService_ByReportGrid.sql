@@ -64,7 +64,7 @@ BEGIN
        AND tmp.isSend = TRUE
      ;
 
--- if inSession = '5' 
+-- if vbUserId = 5 
 -- then
 --     RAISE EXCEPTION 'Ошибка. test end';
 -- end if;

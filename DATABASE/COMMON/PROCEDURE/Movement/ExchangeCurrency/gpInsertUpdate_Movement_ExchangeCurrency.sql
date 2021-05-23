@@ -19,10 +19,9 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ExchangeCurrency());
-     vbUserId := inSession;
+     vbUserId:= lpGetUserBySession (inSession);
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ExchangeCurrency(), inInvNumber, inOperDate, NULL);

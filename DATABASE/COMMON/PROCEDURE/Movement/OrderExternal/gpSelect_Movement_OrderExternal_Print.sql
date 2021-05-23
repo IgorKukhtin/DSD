@@ -88,7 +88,7 @@ BEGIN
      WHERE Movement.Id = inMovementId;
      
 
--- if inSession = '5'
+-- if vbUserId = 5
 -- then
 --     RAISE EXCEPTION '<%>', lfGet_Object_ValueData(vbGoodsPropertyId);
 -- end if;
