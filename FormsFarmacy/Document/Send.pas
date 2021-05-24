@@ -194,6 +194,10 @@ type
     spErasedMIMasterDetail: TdsdStoredProc;
     spUnErasedMIMasterDetail: TdsdStoredProc;
     cbisBanFiscalSale: TcxCheckBox;
+    cbSendLoss: TcxCheckBox;
+    actUpdteSendLoss: TdsdExecStoredProc;
+    bbUpdteSendLoss: TdxBarButton;
+    spUpdateSendLoss: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -1041,6 +1041,17 @@ inherited SendForm: TSendForm
       TabOrder = 36
       Width = 126
     end
+    object cbSendLoss: TcxCheckBox
+      Left = 799
+      Top = 95
+      Hint = #1055#1077#1088#1077#1084#1077#1097#1072#1090#1100' '#1090#1086#1074#1072#1088' '#1090#1086#1083#1100#1082#1086' '#1079#1072#1087#1088#1077#1097#1077#1085#1085#1099#1081' '#1082' '#1092#1080#1089#1082#1072#1083#1100#1085#1086#1081' '#1087#1088#1086#1076#1072#1078#1077
+      Caption = #1042' '#1087#1086#1083#1085#1086#1077' '#1089#1087#1080#1089#1072#1085#1080#1077
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 37
+      Width = 126
+    end
   end
   object ceChecked: TcxCheckBox [2]
     Left = 732
@@ -1899,6 +1910,21 @@ inherited SendForm: TSendForm
       isSetErased = False
       DataSource = DetailDS
     end
+    object actUpdteSendLoss: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateSendLoss
+      StoredProcList = <
+        item
+          StoredProc = spUpdateSendLoss
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1042' '#1087#1086#1083#1085#1086#1077' '#1089#1087#1080#1089#1072#1085#1080#1077'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1042' '#1087#1086#1083#1085#1086#1077' '#1089#1087#1080#1089#1072#1085#1080#1077'"'
+      ImageIndex = 77
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1042' '#1087#1086#1083#1085#1086#1077' '#1089#1087#1080#1089#1072#1085#1080#1077'"?'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 424
@@ -2114,8 +2140,22 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdteSendLoss'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      Width = 16
+    end
+    inherited bbStatic: TdxBarStatic
+      Width = 16
     end
     inherited bbAddMask: TdxBarButton
       Visible = ivNever
@@ -2184,6 +2224,10 @@ inherited SendForm: TSendForm
     end
     object bbMISetUnErasedDetail: TdxBarButton
       Action = actMISetUnErasedDetail
+      Category = 0
+    end
+    object bbUpdteSendLoss: TdxBarButton
+      Action = actUpdteSendLoss
       Category = 0
     end
   end
@@ -2556,6 +2600,13 @@ inherited SendForm: TSendForm
         Name = 'isBanFiscalSale'
         Value = Null
         Component = cbisBanFiscalSale
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSendLoss'
+        Value = Null
+        Component = cbSendLoss
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
@@ -4083,5 +4134,30 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 582
     Top = 544
+  end
+  object spUpdateSendLoss: TdsdStoredProc
+    StoredProcName = 'grUpdate_Movement_SendLoss'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSendLoss'
+        Value = Null
+        Component = cbSendLoss
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 886
+    Top = 496
   end
 end

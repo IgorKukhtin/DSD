@@ -39,6 +39,7 @@ $BODY$
   DECLARE vResortFactCount  Integer;
   DECLARE vResortAdd        TFloat;
   DECLARE vResortAddCount   Integer;
+  DECLARE vbisSendLoss      Boolean;
 BEGIN
     vbUserId:= inSession;
 
@@ -64,8 +65,8 @@ BEGIN
         COALESCE (MovementBoolean_isAuto.ValueData, FALSE), 
         COALESCE (MovementBoolean_VIP.ValueData, FALSE),
         COALESCE (MovementString_Comment.ValueData, ''), 
-        COALESCE (MovementBoolean_BanFiscalSale.ValueData, FALSE)
-        
+        COALESCE (MovementBoolean_BanFiscalSale.ValueData, FALSE),
+        COALESCE (MovementBoolean_SendLoss.ValueData, FALSE)
     INTO
         outOperDate,
         vbInvNumber,
@@ -79,7 +80,8 @@ BEGIN
         vbisAuto,
         vbisVIP,
         vbComment,
-        vbisBanFiscalSale
+        vbisBanFiscalSale,
+        vbisSendLoss
     FROM Movement
         INNER JOIN MovementLinkObject AS Movement_From
                                       ON Movement_From.MovementId = Movement.Id
@@ -114,6 +116,9 @@ BEGIN
         LEFT JOIN MovementBoolean AS MovementBoolean_BanFiscalSale
                                   ON MovementBoolean_BanFiscalSale.MovementId = Movement.Id
                                  AND MovementBoolean_BanFiscalSale.DescId = zc_MovementBoolean_BanFiscalSale()
+        LEFT JOIN MovementBoolean AS MovementBoolean_SendLoss
+                                  ON MovementBoolean_SendLoss.MovementId = Movement.Id
+                                 AND MovementBoolean_SendLoss.DescId = zc_MovementBoolean_SendLoss()
     WHERE Movement.Id = inMovementId;
     
     IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
@@ -157,7 +162,7 @@ BEGIN
       RAISE EXCEPTION 'Ошибка. Коллеги, отложенные переиещение по СУН проводить нельзя.';
     END IF;
     
-    IF COALESCE (vbisSUN, FALSE) = True AND COALESCE (vbisReceived, False) = False
+    IF COALESCE (vbisSUN, FALSE) = True AND COALESCE (vbisReceived, False) = False AND COALESCE (vbisSendLoss, False) = False
     THEN
       RAISE EXCEPTION 'Ошибка. Коллеги, перемещение по СУН можно проводить тллько с признаком "Получено-да".';
     END IF;

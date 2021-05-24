@@ -106,6 +106,7 @@ type
     dxBarButton7: TdxBarButton;
     spUpdate_Movement_DriverSun: TdsdStoredProc;
     actExecSPDriverSun: TdsdExecStoredProc;
+    isSendLoss: TcxGridDBColumn;
   private
     { Private declarations }
   public

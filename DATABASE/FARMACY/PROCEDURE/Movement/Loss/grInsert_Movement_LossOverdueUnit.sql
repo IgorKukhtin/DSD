@@ -10,6 +10,7 @@
   RETURNS Integer AS
   $BODY$
      DECLARE vbUserId Integer;
+     DECLARE vbStatusId Integer;
   BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -110,35 +111,118 @@
                             AND Container.WhereObjectId = inUnitID
                             AND Container.Amount > 0
                             AND ObjectDate_ExpirationDate.ValueData < date_trunc('month', CURRENT_DATE - INTERVAL '85 DAY')
-                            AND COALESCE (ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = FALSE)
+                            AND COALESCE (ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = FALSE),
+         --  Перемещения в списания
+         tmpMovementSend AS (SELECT MovementItem.ObjectId                   AS GoodsId 
+                                  , Sum(MovementItem.Amount)                AS Amount
+                             FROM Movement 
+                                  INNER JOIN MovementBoolean AS MovementBoolean_SendLoss
+                                                             ON MovementBoolean_SendLoss.MovementId = Movement.Id
+                                                            AND MovementBoolean_SendLoss.DescId = zc_MovementBoolean_SendLoss()
+                                                            AND MovementBoolean_SendLoss.ValueData = TRUE
+                                  INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                ON MovementLinkObject_From.MovementId = Movement.Id
+                                                               AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                  INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                ON MovementLinkObject_To.MovementId = Movement.Id
+                                                               AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                  INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                         AND MovementItem.DescId = zc_MI_Master()
+                                                         AND MovementItem.Amount > 0
+                                                         AND MovementItem.isErased = FALSE 
+                              WHERE Movement.OperDate BETWEEN date_trunc('month', CURRENT_DATE) AND date_trunc('month', CURRENT_DATE) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'  
+                                AND Movement.DescId = zc_Movement_Send() 
+                                AND Movement.StatusId = zc_Enum_Status_Complete()
+                                AND (MovementLinkObject_From.ObjectId =  inUnitID
+                                  OR MovementLinkObject_To.ObjectId = inUnitID)
+                              GROUP BY MovementItem.ObjectId  
+                              HAVING Sum(MovementItem.Amount) > 0)
          -- Содержимое документа
 
     INSERT INTO tmpContainerOverdueLoss (GoodsId, ContainerId, Amount)
     SELECT Container.GoodsId
          , Container.Id
          , Container.Amount
-    FROM tmpContainer AS Container;
+    FROM tmpContainer AS Container
+    UNION ALL 
+    SELECT tmpMovementSend.GoodsId
+         , 0
+         , tmpMovementSend.Amount  
+    FROM tmpMovementSend;
+
+    IF EXISTS(SELECT Movement.Id
+              FROM Movement 
+
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                 ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                AND MovementLinkObject_UNit.DescId     = zc_MovementLinkObject_Unit()
+                                                AND MovementLinkObject_Unit.ObjectId   = inUnitID
+
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
+                                                 ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
+                                                AND MovementLinkObject_ArticleLoss.DescId     = zc_MovementLinkObject_ArticleLoss()
+                                                AND MovementLinkObject_ArticleLoss.ObjectId   = 13892113
+
+              WHERE Movement.DescId = zc_Movement_Loss()
+                AND Movement.StatusId <> zc_Enum_Status_Erased()
+                AND Movement.OperDate = date_trunc('month', CURRENT_DATE) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
+    THEN
+      SELECT Movement.Id, Movement.StatusId
+      INTO outMovementID, vbStatusId
+      FROM Movement 
+
+           INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                        AND MovementLinkObject_UNit.DescId     = zc_MovementLinkObject_Unit()
+                                        AND MovementLinkObject_Unit.ObjectId   = inUnitID
+
+           INNER JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
+                                         ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
+                                        AND MovementLinkObject_ArticleLoss.DescId     = zc_MovementLinkObject_ArticleLoss()
+                                        AND MovementLinkObject_ArticleLoss.ObjectId   = 13892113
+
+      WHERE Movement.DescId = zc_Movement_Loss()
+        AND Movement.StatusId <> zc_Enum_Status_Erased()
+        AND Movement.OperDate = date_trunc('month', CURRENT_DATE) + INTERVAL '1 MONTH' - INTERVAL '1 DAY';
+       
+      IF vbStatusId = zc_Enum_Status_Complete()
+      THEN
+        PERFORM gpUnComplete_Movement_Loss (inMovementId  := outMovementID
+                                          , inSession     := inSession);
+      END IF;
+      
+    ELSE 
+      outMovementID := 0;
+    END IF;
 
     IF EXISTS(SELECT 1 FROM  tmpContainerOverdueLoss)
     THEN
         -- сохранили <Документ>
-        outMovementID := lpInsertUpdate_Movement_Loss (ioId                 := 0
-                                                     , inInvNumber          := CAST (NEXTVAL ('Movement_Loss_seq') AS TVarChar)
-                                                     , inOperDate           := CURRENT_DATE
-                                                     , inUnitId             := inUnitId
-                                                     , inArticleLossId      := 13892113
-                                                     , inComment            := ''
-                                                     , inConfirmedMarketing := ''
-                                                     , inUserId             := vbUserId
-                                                      );
+        IF COALESCE (outMovementID, 0) = 0
+        THEN
+          outMovementID := lpInsertUpdate_Movement_Loss (ioId                 := 0
+                                                       , inInvNumber          := CAST (NEXTVAL ('Movement_Loss_seq') AS TVarChar)
+                                                       , inOperDate           := date_trunc('month', CURRENT_DATE) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
+                                                       , inUnitId             := inUnitId
+                                                       , inArticleLossId      := 13892113
+                                                       , inComment            := ''
+                                                       , inConfirmedMarketing := ''
+                                                       , inUserId             := vbUserId
+                                                        );
+        END IF;
 
-        PERFORM lpInsertUpdate_MovementItem_Loss (ioId                := 0
+        PERFORM lpInsertUpdate_MovementItem_Loss (ioId                := MovementItem.Id
                                                 , inMovementId        := outMovementID
                                                 , inGoodsId           := tmpContainerOverdueLoss.GoodsId
                                                 , inAmount            := Sum(tmpContainerOverdueLoss.Amount)
                                                 , inUserId            := vbUserId)
         FROM tmpContainerOverdueLoss
-        GROUP BY GoodsId
+
+           LEFT JOIN MovementItem ON MovementItem.MovementId = outMovementID
+                                 AND MovementItem.DescId     = zc_MI_Master()
+                                 AND MovementItem.ObjectId   = tmpContainerOverdueLoss.GoodsId
+
+        GROUP BY MovementItem.Id, GoodsId
         HAVING Sum(tmpContainerOverdueLoss.Amount) > 0;
 
         -- Проводим списание
@@ -163,7 +247,7 @@
     WHERE Object_Unit.DescId = zc_Object_Unit()
       AND Object_Unit.Id = inUnitID
       AND COALESCE (ObjectLink_Unit_UnitOverdue.ChildObjectId, 0) <> 0;
-
+      
   END;
   $BODY$
     LANGUAGE plpgsql VOLATILE;
@@ -174,5 +258,5 @@
  27.03.20                                                         *
    */
 
--- тест SELECT * FROM grInsert_Movement_LossOverdueUnit (inUnitID := 3457773    , inSession:= '3')
+-- тест SELECT * FROM grInsert_Movement_LossOverdueUnit (inUnitID := 11152911, inSession:= '3')
 -- SELECT grInsert_Movement_LossOverdue (inSession := zfCalc_UserAdmin());

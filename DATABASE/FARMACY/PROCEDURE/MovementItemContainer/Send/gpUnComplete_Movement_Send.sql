@@ -20,6 +20,7 @@ $BODY$
   DECLARE vbisDefSUN Boolean;
   DECLARE vbisNotDisplaySUN Boolean;
   DECLARE vbInsertDate TDateTime;
+  DECLARE vbisSendLoss Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Send());
@@ -73,7 +74,8 @@ BEGIN
         COALESCE (MovementBoolean_SUN.ValueData, FALSE), 
         COALESCE (MovementBoolean_DefSUN.ValueData, FALSE), 
         COALESCE (MovementBoolean_NotDisplaySUN.ValueData, FALSE),
-        DATE_TRUNC ('DAY', MovementDate_Insert.ValueData)
+        DATE_TRUNC ('DAY', MovementDate_Insert.ValueData), 
+        COALESCE (MovementBoolean_SendLoss.ValueData, FALSE)
     INTO
         vbOperDate,
         vbStatusID,
@@ -82,7 +84,8 @@ BEGIN
         vbisSUN,
         vbisDefSUN,
         vbisNotDisplaySUN,
-        vbInsertDate
+        vbInsertDate,
+        vbisSendLoss
     FROM Movement
         INNER JOIN MovementLinkObject AS Movement_From
                                       ON Movement_From.MovementId = Movement.Id
@@ -102,8 +105,16 @@ BEGIN
         LEFT JOIN MovementDate AS MovementDate_Insert
                                ON MovementDate_Insert.MovementId = Movement.Id
                               AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+        LEFT JOIN MovementBoolean AS MovementBoolean_SendLoss
+                                  ON MovementBoolean_SendLoss.MovementId = Movement.Id
+                                 AND MovementBoolean_SendLoss.DescId = zc_MovementBoolean_SendLoss()
     WHERE Movement.Id = inMovementId;
     
+    IF vbisSendLoss = TRUE
+    THEN 
+      RAISE EXCEPTION 'Ошибка. Распроводить перемещение с признаком <В полное списание> запрещено. Снимите признак <В полное списание>';     
+    END IF;     
+
     IF vbisSUN = TRUE AND vbOperDate < CURRENT_DATE 
        AND  NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
     THEN 

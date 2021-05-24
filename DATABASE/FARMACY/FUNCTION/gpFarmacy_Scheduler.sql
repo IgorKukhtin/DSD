@@ -83,7 +83,7 @@ BEGIN
        PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpSelect_Calculation_Unit_Fund', True, text_var1::TVarChar, vbUserId);
     END;
 
-    -- Создание полгого списания
+    -- Создание полного списания
     BEGIN
       IF CURRENT_DATE = date_trunc('month', CURRENT_DATE) + INTERVAL '1 MONTH' - INTERVAL '1 DAY' AND date_part('HOUR',  CURRENT_TIME)::Integer = 21
          AND NOT EXISTS(SELECT 1 FROM Movement

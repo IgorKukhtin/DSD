@@ -40,7 +40,21 @@ BEGIN
               AND MovementLinkObject_ConfirmedKind.ObjectId = zc_Enum_ConfirmedKind_Complete())
   THEN
     outShowMessage := True;
-    outPUSHType := 4;
+    outPUSHType := 2;
+
+    IF EXISTS(SELECT * FROM MovementLinkObject AS MovementLinkObject_ConfirmedKindClient
+              WHERE MovementLinkObject_ConfirmedKindClient.MovementId = inMovementID
+                AND MovementLinkObject_ConfirmedKindClient.DescId = zc_MovementLinkObject_ConfirmedKindClient()
+                AND MovementLinkObject_ConfirmedKindClient.ObjectId = zc_Enum_ConfirmedKind_SmsYes())
+    THEN
+      outText := 'Товар подтвержден и клиент получил СМС уведомление.'||CHR(13)||CHR(13)||' Удаление чека запрещено.';    
+    ELSE
+      outText := 'Товар подтвержден.'||CHR(13)||CHR(13)||' Удаление чека запрещено.';    
+    END IF;
+
+    RETURN;
+
+/*    outPUSHType := 4;
 
     IF EXISTS(SELECT * FROM MovementLinkObject AS MovementLinkObject_ConfirmedKindClient
               WHERE MovementLinkObject_ConfirmedKindClient.MovementId = inMovementID
@@ -52,7 +66,7 @@ BEGIN
       outText := 'Товар подтвержден.'||CHR(13)||CHR(13)||' Удалить чек?';    
     END IF;
 
-    RETURN;
+    RETURN;*/
   END IF;
   
   
@@ -163,16 +177,19 @@ BEGIN
   
   IF vbAmount_mi > 0 AND vbAmount_mi = vbAmount_remains
   THEN
-    vbText := 'По заказу есть наличие по всему товару'||CHR(13)||CHR(13)||' Удалить полностью чек?';
+--    vbText := 'По заказу есть наличие по всему товару'||CHR(13)||CHR(13)||' Удалить полностью чек?';
+    vbText := 'По заказу есть наличие по всему товару'||CHR(13)||CHR(13)||' Удаление чека запрещено.';
   ELSEIF vbAmount_remains > 0
   THEN
-    vbText := 'По заказу есть наличие на часть товара. Можно удалить только некоторые позиции, а не весь заказ. '||CHR(13)||CHR(13)||' Удалить полностью чек?';  
+--    vbText := 'По заказу есть наличие на часть товара. Можно удалить только некоторые позиции, а не весь заказ. '||CHR(13)||CHR(13)||' Удалить полностью чек?';  
+    vbText := 'По заказу есть наличие на часть товара. Можно удалить только некоторые позиции, а не весь заказ. '||CHR(13)||CHR(13)||' Удаление чека запрещено.';  
   END IF;
 
   IF COALESCE(vbText, '') <> ''
   THEN
     outShowMessage := True;
-    outPUSHType := 4;
+    outPUSHType := 2;
+--    outPUSHType := 4;
     outText := vbText;
   END IF;
 
@@ -188,5 +205,4 @@ LANGUAGE plpgsql VOLATILE;
 
 */
 
--- 
-SELECT * FROM gpSelect_ShowPUSH_ChechSetErased(23344851   , '3')
+-- SELECT * FROM gpSelect_ShowPUSH_ChechSetErased(23344851   , '3')
