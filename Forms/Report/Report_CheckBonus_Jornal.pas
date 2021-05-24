@@ -1,4 +1,4 @@
-unit Report_CheckBonus;
+unit Report_CheckBonus_Jornal;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxSkinXmas2008Blue;
 
 type
-  TReport_CheckBonusForm = class(TAncestorReportForm)
+  TReport_CheckBonus_JornalForm = class(TAncestorReportForm)
     InvNumber_master: TcxGridDBColumn;
     Value: TcxGridDBColumn;
     Sum_CheckBonus: TcxGridDBColumn;
@@ -45,11 +45,6 @@ type
     InvNumber_find: TcxGridDBColumn;
     InfoMoneyName_child: TcxGridDBColumn;
     InfoMoneyName_find: TcxGridDBColumn;
-    bbDocBonus: TdxBarButton;
-    actDocBonus: TdsdExecStoredProc;
-    spInsertUpdate: TdsdStoredProc;
-    Sum_CheckBonusFact: TcxGridDBColumn;
-    Sum_SaleFact: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
@@ -70,20 +65,6 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     isSend: TcxGridDBColumn;
-    spUpdateSend_No: TdsdStoredProc;
-    spUpdateSend_Yes: TdsdStoredProc;
-    actUpdateSend_Yes: TdsdExecStoredProc;
-    actUpdateSend_No: TdsdExecStoredProc;
-    macUpdateSend_Yes: TMultiAction;
-    macUpdateSend_No: TMultiAction;
-    bbUpdateSend_Yes: TdxBarButton;
-    bbUpdateSend_No: TdxBarButton;
-    actInsertByReportGrid: TdsdExecStoredProc;
-    macInsertByReportGrid: TMultiAction;
-    bbInsertByReportGrid: TdxBarButton;
-    spInsertByReportGrid: TdsdStoredProc;
-    spUpdateSend: TdsdStoredProc;
-    actUpdateDataSet: TdsdUpdateDataSet;
     actOpenReportDetailForm: TdsdOpenForm;
     bbOpenReportDetail: TdxBarButton;
     actPrintSing: TdsdPrintAction;
@@ -95,8 +76,6 @@ type
     AmountKg: TcxGridDBColumn;
     AmountSh: TcxGridDBColumn;
     PartKg: TcxGridDBColumn;
-    ProtocolReportBonusForm: TdsdOpenForm;
-    bbProtocolReportBonusForm: TdxBarButton;
     cxLabel7: TcxLabel;
     edOperDate: TcxDateEdit;
     macInsertUpdate_ByGrid: TMultiAction;
@@ -119,6 +98,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TReport_CheckBonusForm);
+  RegisterClass(TReport_CheckBonus_JornalForm);
 
 end.
