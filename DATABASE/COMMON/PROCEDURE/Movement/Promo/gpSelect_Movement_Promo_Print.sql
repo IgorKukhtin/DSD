@@ -20,7 +20,7 @@ $BODY$
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Promo());
-    vbUserId:= inSession;
+    vbUserId:= lpGetUserBySession (inSession);
 
     SELECT COUNT(*) INTO vbCountGoods
     FROM (SELECT DISTINCT MI_PromoGoods.GoodsName

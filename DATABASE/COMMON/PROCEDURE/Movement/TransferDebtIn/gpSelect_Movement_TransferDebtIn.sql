@@ -35,7 +35,7 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_TransferDebtIn());
-     vbUserId:= inSession;
+     vbUserId:= lpGetUserBySession (inSession);
 
      --
      RETURN QUERY

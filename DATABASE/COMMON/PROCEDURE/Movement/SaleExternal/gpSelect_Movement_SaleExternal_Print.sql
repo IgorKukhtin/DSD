@@ -19,7 +19,7 @@ $BODY$
  
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= inSession;
+     vbUserId:= lpGetUserBySession (inSession);
 
 
      -- параметры из документа

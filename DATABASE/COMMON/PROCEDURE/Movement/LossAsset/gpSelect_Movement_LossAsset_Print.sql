@@ -15,7 +15,7 @@ $BODY$
     DECLARE Cursor2 refcursor;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= inSession;
+     vbUserId:= lpGetUserBySession (inSession);
 
     OPEN Cursor1 FOR
        SELECT

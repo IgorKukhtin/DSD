@@ -21,7 +21,7 @@ BEGIN
    
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ReplServer());
-   vbUserId:= inSession;
+   vbUserId:= lpGetUserBySession (inSession);
 
     -- Если код не установлен, определяем его как последний+1
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_ReplServer()); 

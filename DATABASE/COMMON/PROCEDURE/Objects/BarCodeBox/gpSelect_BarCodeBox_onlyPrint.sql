@@ -19,7 +19,7 @@ BEGIN
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_BarCodeBox());
    
    -- проверка прав пользователя на вызов процедуры
-   vbUserId:= inSession;
+   vbUserId:= lpGetUserBySession (inSession);
    
    vbBarCode2 := (inBarCode1 + inAmount - 1) :: Integer;
    

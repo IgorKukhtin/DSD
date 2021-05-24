@@ -11,7 +11,7 @@ $BODY$
   DECLARE vbUserId      Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId:= inSession;
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- !!!удаляем данные по текущему пользователю
    DELETE FROM ObjectPrint WHERE ObjectPrint.UserId = vbUserId;

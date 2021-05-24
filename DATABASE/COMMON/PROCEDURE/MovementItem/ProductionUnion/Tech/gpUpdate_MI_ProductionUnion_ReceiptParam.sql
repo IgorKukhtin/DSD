@@ -15,7 +15,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId:= inSession; --lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ProductionUnionTech());
+   vbUserId:= lpGetUserBySession (inSession); --lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ProductionUnionTech());
 
 
    -- !!!Проверка закрытия периода только для <Технолог Днепр>!!!
