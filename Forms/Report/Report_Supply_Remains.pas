@@ -43,6 +43,8 @@ type
     actRefreshGK: TdsdDataSetRefresh;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    actReport_Goods: TdsdOpenForm;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public
