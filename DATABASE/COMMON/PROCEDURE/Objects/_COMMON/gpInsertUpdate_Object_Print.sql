@@ -14,7 +14,7 @@ $BODY$
   DECLARE vbInsertDate  TDateTime;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId:= inSession;
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- !!!СНАЧАЛА удаляем данные ВСЕХ Пользователей БОЛЬШЕ чем за 7 дней!!!
    --DELETE FROM ObjectPrint WHERE InsertDate < CURRENT_DATE - INTERVAL '7 DAY';

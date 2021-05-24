@@ -17,6 +17,7 @@ $BODY$
   DECLARE vbisDefSUN Boolean;
   DECLARE vbIsSUN Boolean;
   DECLARE vbIsVIP Boolean;
+  DECLARE vbisSendLoss Boolean;
   DECLARE vbInsertDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -30,14 +31,16 @@ BEGIN
         COALESCE (MovementBoolean_DefSUN.ValueData, FALSE),
         COALESCE (MovementBoolean_SUN.ValueData, FALSE),
         DATE_TRUNC ('DAY', MovementDate_Insert.ValueData),
-        COALESCE (MovementBoolean_VIP.ValueData, FALSE)
+        COALESCE (MovementBoolean_VIP.ValueData, FALSE), 
+        COALESCE (MovementBoolean_SendLoss.ValueData, FALSE)
     INTO
         vbFromId,
         vbUnitId,
         vbisDefSUN,
         vbIsSUN,
         vbInsertDate,
-        vbIsVIP
+        vbIsVIP,
+        vbisSendLoss
     FROM Movement
         INNER JOIN MovementLinkObject AS Movement_From
                                       ON Movement_From.MovementId = Movement.Id
@@ -57,8 +60,16 @@ BEGIN
         LEFT JOIN MovementBoolean AS MovementBoolean_VIP
                                   ON MovementBoolean_VIP.MovementId = Movement.Id
                                  AND MovementBoolean_VIP.DescId = zc_MovementBoolean_VIP()
+        LEFT JOIN MovementBoolean AS MovementBoolean_SendLoss
+                                  ON MovementBoolean_SendLoss.MovementId = Movement.Id
+                                 AND MovementBoolean_SendLoss.DescId = zc_MovementBoolean_SendLoss()
     WHERE Movement.Id = inMovementId;     
     
+    IF vbisSendLoss = TRUE
+    THEN 
+      RAISE EXCEPTION 'Ошибка. Распроводить перемещение с признаком <В полное списание> запрещено. Снимите признак <В полное списание>';     
+    END IF;     
+
     IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
               WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_CashierPharmacy()) -- Для роли "Кассир аптеки"
     THEN

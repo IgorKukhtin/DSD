@@ -14,7 +14,7 @@ BEGIN
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_BarCodeBox());
    
    -- проверка прав пользователя на вызов процедуры
-   vbUserId:= inSession;
+   vbUserId:= lpGetUserBySession (inSession);
    
    RETURN QUERY
    WITH 
@@ -46,8 +46,7 @@ BEGIN
                                   AND COALESCE (ObjectFloat_Print.ValueData,0) <> 0
 
             LEFT JOIN tmpList ON tmpList.Amount = ObjectFloat_Print.ValueData
-      WHERE 
-      ORDER BY Object_BarCodeBox.ValueData;
+       ORDER BY Object_BarCodeBox.ValueData;
 
 END;
 $BODY$

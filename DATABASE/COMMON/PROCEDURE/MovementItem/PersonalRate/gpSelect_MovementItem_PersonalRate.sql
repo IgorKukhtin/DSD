@@ -28,7 +28,7 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_PersonalRate());
-     vbUserId:= inSession;
+     vbUserId:= lpGetUserBySession (inSession);
 
      --Дата тек.документа
      vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);

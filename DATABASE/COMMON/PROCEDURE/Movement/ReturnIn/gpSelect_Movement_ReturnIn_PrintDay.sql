@@ -39,7 +39,7 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ReturnIn());
-     vbUserId:= inSession;
+     vbUserId:= lpGetUserBySession (inSession);
 
    -- параметры из документа продажи
    SELECT Movement.DescId

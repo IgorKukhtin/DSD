@@ -16,7 +16,7 @@ $BODY$
 BEGIN
      -- проверка
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= inSession; 
+     vbUserId:= lpGetUserBySession (inSession); 
 
      -- определили признак
      ioParam:= NOT ioParam;

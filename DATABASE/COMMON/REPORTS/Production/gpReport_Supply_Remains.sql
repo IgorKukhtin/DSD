@@ -25,6 +25,8 @@ RETURNS TABLE ( GoodsId Integer
               , RemainsEnd_Weight        TFloat -- Остатки на конец
               , CountIncome              TFloat -- Приходы
               , CountIncome_Weight       TFloat -- Приходы
+              , CountIncome_dop          TFloat
+              , CountIncome_dop_Weight   TFloat
               , CountProduction          TFloat -- Потребление
               , CountProduction_Weight   TFloat -- Потребление
               , CountProduction_dop      TFloat
@@ -52,6 +54,7 @@ RETURNS TABLE ( GoodsId Integer
               , CountProduction_avg        TFloat -- среднесуточный расход
               , CountProduction_Weight_avg TFloat -- среднесуточный расход
               , CountDays             TFloat -- Запас дней
+              , CountDays_all         TFloat -- итого дней для расчета среднего
  
               )
 AS
@@ -96,8 +99,13 @@ BEGIN
 
     -- колво дней в выбранном периоде 
     vbCountDays := (SELECT DATE_PART('Day', inEndDate - inStartDate) + 1);
-    -- с  каждой недели снимим 1 выходной
-    vbCountDays := vbCountDays - ROUND (vbCountDays/7);
+    -- снимим воскресенья
+    vbCountDays := vbCountDays - COALESCE ( (SELECT SUM( CASE EXTRACT (DOW FROM OperDate) WHEN 0 THEN 1 ELSE 0 END) AS DayWeek
+                                             FROM (
+                                                   SELECT DATE_TRUNC ('day', generate_series(inStartDate, inEndDate, '1 day'::interval)) AS OperDate
+                                                   ) AS tmp
+                                             )
+                                            ,0);
 
     --сначала выбираем проводки во временную таблицу
     CREATE TEMP TABLE _tmpContainer (ContainerId Integer, LocationId Integer, GoodsId Integer, GoodsKindId Integer, Amount TFloat) ON COMMIT DROP;
@@ -134,18 +142,22 @@ BEGIN
                                   , _tmpContainer.GoodsKindId
                           
                                    -- Приход
-                                 , SUM (CASE WHEN COALESCE (MIContainer.Amount,0) > 0 --MIContainer.MovementDescId = zc_Movement_Income()
+                                 , SUM (CASE WHEN COALESCE (MIContainer.Amount,0) > 0 AND MIContainer.MovementDescId NOT IN (zc_Movement_Inventory())
                                              THEN MIContainer.Amount
                                              ELSE 0
                                         END) AS CountIncome
+                                 , SUM (CASE WHEN COALESCE (MIContainer.Amount,0) > 0 AND MIContainer.MovementDescId IN (zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                             THEN MIContainer.Amount
+                                             ELSE 0
+                                        END) AS CountIncome_dop
                                  -- весь расход считать, кроме перемещения
-                                 , SUM (CASE WHEN COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId NOT IN (zc_Movement_Send())
-                                                  THEN MIContainer.Amount
+                                 , SUM (CASE WHEN (COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId NOT IN (zc_Movement_Send())) OR MIContainer.MovementDescId IN (zc_Movement_Inventory())
+                                                  THEN MIContainer.Amount * (-1)
                                              ELSE 0
                                         END) AS CountProduction
                                  -- 1) расход произв+списание
-                                 , SUM (CASE WHEN COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId IN (zc_Movement_Loss(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) --MIContainer.MovementDescId IN (zc_Movement_Send(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
-                                                  THEN MIContainer.Amount
+                                 , SUM (CASE WHEN COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId IN (zc_Movement_Loss(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate(), zc_Movement_Inventory())
+                                                  THEN MIContainer.Amount * (-1)
                                              ELSE 0
                                         END) AS CountProduction_dop
 
@@ -165,13 +177,17 @@ BEGIN
                                              THEN MIContainer.Amount
                                              ELSE 0
                                         END) <> 0
-                                  --потребление
-                                 OR SUM (CASE WHEN COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId NOT IN (zc_Movement_Send())
-                                                  THEN MIContainer.Amount
+                                 OR SUM (CASE WHEN COALESCE (MIContainer.Amount,0) > 0 AND MIContainer.MovementDescId IN (zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                             THEN MIContainer.Amount
                                              ELSE 0
                                         END) <> 0
-                                 OR SUM (CASE WHEN COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId IN (zc_Movement_Loss(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) --MIContainer.MovementDescId IN (zc_Movement_Send(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
-                                                  THEN MIContainer.Amount
+                                  --потребление
+                                 OR SUM (CASE WHEN COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId NOT IN (zc_Movement_Send())
+                                                  THEN MIContainer.Amount * (-1)
+                                             ELSE 0
+                                        END) <> 0
+                                 OR SUM (CASE WHEN COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId IN (zc_Movement_Loss(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate(), zc_Movement_Inventory()) --MIContainer.MovementDescId IN (zc_Movement_Send(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                                  THEN MIContainer.Amount * (-1)
                                              ELSE 0
                                         END) <> 0
                                    -- ***REMAINS***
@@ -186,6 +202,7 @@ BEGIN
 
                                     -- ***COUNT***
                                   , 0 AS CountIncome
+                                  , 0 AS CountIncome_dop
                                   , 0 AS CountProduction
                                   , 0 AS CountProduction_dop
                                     -- ***REMAINS***
@@ -210,6 +227,7 @@ BEGIN
                            , STRING_AGG (Object_GoodsKind.ValueData, ',') ::TVarChar AS GoodsKindName
 
                            , SUM (tmpMIContainer.CountIncome)         AS CountIncome
+                           , SUM (tmpMIContainer.CountIncome_dop)     AS CountIncome_dop
                            , SUM (tmpMIContainer.CountProduction)     AS CountProduction
                            , SUM (tmpMIContainer.CountProduction_dop) AS CountProduction_dop
                            , SUM (COALESCE (tmpMIContainer.CountProduction,0) - COALESCE (tmpMIContainer.CountProduction_dop,0)) AS CountOther
@@ -234,6 +252,7 @@ BEGIN
                       GROUP BY tmpMIContainer.GoodsId
                              , CASE WHEN inisGoodsKind = TRUE THEN tmpMIContainer.GoodsKindId ELSE 0 END
                       HAVING  SUM (tmpMIContainer.CountIncome) <> 0
+                           OR SUM (tmpMIContainer.CountIncome_dop) <> 0
                            OR SUM (tmpMIContainer.CountProduction) <> 0
                            OR SUM (tmpMIContainer.CountProduction_dop) <> 0
                            OR SUM (COALESCE (tmpMIContainer.CountProduction,0) - COALESCE (tmpMIContainer.CountProduction_dop,0)) <> 0
@@ -264,7 +283,10 @@ BEGIN
                           , (tmpData.RemainsEnd   * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS RemainsEnd_Weight
 
                           , tmpData.CountIncome       ::TFloat
-                          , (tmpData.CountIncome * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS CountIncome1_Weight
+                          , (tmpData.CountIncome * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS CountIncome_Weight
+
+                          , tmpData.CountIncome_dop       ::TFloat
+                          , (tmpData.CountIncome_dop * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS CountIncome_dop_Weight
 
                           , tmpData.CountProduction   ::TFloat
                           , (tmpData.CountProduction * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS CountProduction_Weight
@@ -322,7 +344,9 @@ BEGIN
               , tmpData.RemainsEnd_Weight   ::TFloat
 
               , tmpData.CountIncome            ::TFloat
-              , tmpData.CountIncome1_Weight    ::TFloat
+              , tmpData.CountIncome_Weight     ::TFloat
+              , tmpData.CountIncome_dop        ::TFloat
+              , tmpData.CountIncome_dop_Weight ::TFloat
               , tmpData.CountProduction        ::TFloat
               , tmpData.CountProduction_Weight ::TFloat
               , tmpData.CountProduction_dop        ::TFloat
@@ -346,16 +370,45 @@ BEGIN
               , tmpData.CountProduction7_Weight ::TFloat
               , tmpData.CountProduction8        ::TFloat
               , tmpData.CountProduction8_Weight ::TFloat
-
-              , CASE WHEN COALESCE (vbCountDays,0) <> 0 THEN tmpData.CountProduction/ vbCountDays        ELSE 0 END ::TFloat  AS CountProduction_avg -- среднесуточный расход
-              , CASE WHEN COALESCE (vbCountDays,0) <> 0 THEN tmpData.CountProduction_Weight/ vbCountDays ELSE 0 END ::TFloat  AS CountProduction_Weight_avg -- среднесуточный расход
               
-              , (CASE WHEN (CASE WHEN COALESCE (vbCountDays,0) <> 0 THEN tmpData.CountProduction_Weight/ vbCountDays ELSE 0 END) < 0
-                      THEN tmpData.RemainsEnd_Weight / CASE WHEN COALESCE (vbCountDays,0) <> 0 THEN tmpData.CountProduction_Weight/ vbCountDays ELSE 0 END
-                      WHEN (CASE WHEN COALESCE (vbCountDays,0) <> 0 THEN tmpData.CountProduction/ vbCountDays ELSE 0 END) < 0
-                      THEN tmpData.RemainsEnd / CASE WHEN COALESCE (vbCountDays,0) <> 0 THEN tmpData.CountProduction/ vbCountDays ELSE 0 END
+/*
+округление среднесуточный, если он меньше 1, тогда 4 знака
+если меньше 10 - 2 знака
+если меньше 100 - 1 знак
+остальное до целого
+
+дни тоже, меньше 7 - 1 знак
+остальные до целого
+*/
+              , CASE WHEN COALESCE (vbCountDays,0) <> 0 THEN CASE WHEN tmpData.CountProduction/ vbCountDays < 1 THEN CAST (tmpData.CountProduction/ vbCountDays AS NUMERIC (16,4))
+                                                                  WHEN tmpData.CountProduction/ vbCountDays > 1 AND tmpData.CountProduction/ vbCountDays < 10 THEN CAST (tmpData.CountProduction/ vbCountDays AS NUMERIC (16,2))
+                                                                  WHEN tmpData.CountProduction/ vbCountDays > 10 AND tmpData.CountProduction/ vbCountDays < 100 THEN CAST (tmpData.CountProduction/ vbCountDays AS NUMERIC (16,1))
+                                                                  ELSE CAST (tmpData.CountProduction/ vbCountDays AS NUMERIC (16,0))
+                                                             END
+                     ELSE 0
+                END ::TFloat  AS CountProduction_avg -- среднесуточный расход
+
+              , CASE WHEN COALESCE (vbCountDays,0) <> 0 THEN CASE WHEN tmpData.CountProduction_Weight/ vbCountDays < 1 THEN CAST (tmpData.CountProduction_Weight/ vbCountDays AS NUMERIC (16,4))
+                                                                  WHEN tmpData.CountProduction_Weight/ vbCountDays > 1 AND tmpData.CountProduction_Weight/ vbCountDays < 10 THEN CAST (tmpData.CountProduction_Weight/ vbCountDays AS NUMERIC (16,2))
+                                                                  WHEN tmpData.CountProduction_Weight/ vbCountDays > 10 AND tmpData.CountProduction_Weight/ vbCountDays < 100 THEN CAST (tmpData.CountProduction_Weight/ vbCountDays AS NUMERIC (16,1))
+                                                                  ELSE CAST (tmpData.CountProduction_Weight/ vbCountDays AS NUMERIC (16,0))
+                                                             END
+                     ELSE 0
+                END ::TFloat  AS CountProduction_Weight_avg -- среднесуточный расход
+
+              , (CASE WHEN (CASE WHEN COALESCE (vbCountDays,0) <> 0 THEN tmpData.CountProduction_Weight/ vbCountDays ELSE 0 END) > 0
+                      THEN CASE WHEN (tmpData.RemainsEnd_Weight / CASE WHEN COALESCE (vbCountDays,0) <> 0 THEN tmpData.CountProduction_Weight/ vbCountDays ELSE 0 END) < 7 THEN CAST (tmpData.RemainsEnd_Weight / CASE WHEN COALESCE (vbCountDays,0) <> 0 THEN tmpData.CountProduction_Weight/ vbCountDays ELSE 0 END AS NUMERIC (16,1))
+                                ELSE CAST (tmpData.RemainsEnd_Weight / CASE WHEN COALESCE (vbCountDays,0) <> 0 THEN tmpData.CountProduction_Weight/ vbCountDays ELSE 0 END AS NUMERIC (16,0))
+                           END
+                      
+                      WHEN (CASE WHEN COALESCE (vbCountDays,0) <> 0 THEN tmpData.CountProduction/ vbCountDays ELSE 0 END) > 0
+                      THEN CASE WHEN (tmpData.RemainsEnd / CASE WHEN COALESCE (vbCountDays,0) <> 0 THEN tmpData.CountProduction/ vbCountDays ELSE 0 END) < 7 THEN CAST (tmpData.RemainsEnd / CASE WHEN COALESCE (vbCountDays,0) <> 0 THEN tmpData.CountProduction/ vbCountDays ELSE 0 END AS NUMERIC (16,1))
+                                ELSE CAST (tmpData.RemainsEnd / CASE WHEN COALESCE (vbCountDays,0) <> 0 THEN tmpData.CountProduction/ vbCountDays ELSE 0 END AS NUMERIC (16,0))
+                           END
                       ELSE 0
-                 END * (-1))                            :: TFloat AS CountDays-- Запас дней
+                 END )                            :: TFloat AS CountDays-- Запас дней
+                 
+              , vbCountDays ::TFloat AS CountDays_all
 
          FROM tmpRez AS tmpData
          

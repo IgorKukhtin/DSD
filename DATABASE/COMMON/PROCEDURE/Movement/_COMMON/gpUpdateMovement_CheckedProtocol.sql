@@ -17,7 +17,7 @@ $BODY$
 BEGIN
      -- проверка
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= inSession;  --  lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Sale());
+     vbUserId:= lpGetUserBySession (inSession);  --  lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Sale());
 
      -- Определяется <Физическое лицо> - кто сканировал документ / ставит отметку  проверен
      vbMemberId_user:= CASE WHEN vbUserId = 5 THEN 9457 ELSE

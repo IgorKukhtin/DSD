@@ -13,7 +13,7 @@ $BODY$
     DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= inSession;
+     vbUserId:= lpGetUserBySession (inSession);
 
      -- определили признак
      ioIsCalculated:= NOT ioIsCalculated;

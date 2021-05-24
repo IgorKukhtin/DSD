@@ -181,6 +181,16 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
               Format = ',0.####'
               Kind = skSum
               Column = CountProduction_dop_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountIncome_dop
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountIncome_dop_Weight
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -342,6 +352,16 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
               Format = ',0.####'
               Kind = skSum
               Column = CountProduction_dop_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountIncome_dop
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountIncome_dop_Weight
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -467,6 +487,31 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object CountIncome_dop: TcxGridDBColumn
+            Caption = #1042#1085'. '#1087#1088#1080#1093#1086#1076', '#1082#1086#1083'. '
+            DataBinding.FieldName = 'CountIncome_dop'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1087#1088#1080#1093#1086#1076', '#1082#1086#1083'. '
+            Options.Editing = False
+            Width = 55
+          end
+          object CountIncome_dop_Weight: TcxGridDBColumn
+            Caption = #1042#1085'. '#1087#1088#1080#1093#1086#1076', '#1074#1077#1089
+            DataBinding.FieldName = 'CountIncome_dop_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1087#1088#1080#1093#1086#1076', '#1074#1077#1089
             Options.Editing = False
             Width = 70
           end
@@ -728,7 +773,7 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
             DataBinding.FieldName = 'CountProduction_avg'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1088#1077#1076#1085#1077#1089#1091#1090#1086#1095#1085#1099#1081' '#1088#1072#1089#1093#1086#1076' '#1074' '#1076#1077#1085#1100
@@ -740,7 +785,7 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
             DataBinding.FieldName = 'CountProduction_Weight_avg'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1088#1077#1076#1085#1077#1089#1091#1090#1086#1095#1085#1099#1081' '#1088#1072#1089#1093#1086#1076' '#1074' '#1076#1077#1085#1100
@@ -763,10 +808,22 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
             DataBinding.FieldName = 'CountDays'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1047#1072#1087#1072#1089' '#1085#1072' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081
+            Options.Editing = False
+            Width = 55
+          end
+          object CountDays_all: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1076#1085#1077#1081' '#1076#1083#1103' '#1088#1072#1089#1095#1077#1090#1072' '#1057#1088'.'#1089#1091#1090'. '#1088#1072#1089#1093#1086#1076#1072
+            DataBinding.FieldName = 'CountDays_all'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1080#1090#1086#1075#1086' '#1076#1085#1077#1081' '#1076#1083#1103' '#1088#1072#1089#1095#1077#1090#1072' '#1057#1088'.'#1089#1091#1090'. '#1088#1072#1089#1093#1086#1076#1072
             Options.Editing = False
             Width = 55
           end
@@ -952,6 +1009,106 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actReport_Goods: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
+      ImageIndex = 26
+      FormName = 'TReport_GoodsForm'
+      FormNameParam.Value = 'TReport_GoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupId'
+          Value = ''
+          Component = GuidesUnitGroup
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupName'
+          Value = ''
+          Component = GuidesUnitGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationId'
+          Value = Null
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationName'
+          Value = Null
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsGroupId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsGroupName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsPartner'
+          Value = True
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 264
@@ -1015,6 +1172,8 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
     Top = 168
   end
   inherited BarManager: TdxBarManager
+    Left = 120
+    Top = 88
     DockControlHeights = (
       0
       0
@@ -1044,6 +1203,18 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1053,6 +1224,10 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actReport_Goods
       Category = 0
     end
   end

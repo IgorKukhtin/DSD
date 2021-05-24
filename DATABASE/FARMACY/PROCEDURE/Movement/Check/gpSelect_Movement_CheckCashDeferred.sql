@@ -191,7 +191,7 @@ BEGIN
             , CASE WHEN tmpMov.isShowTabletki = TRUE THEN 'Таблетки' 
                    WHEN tmpMov.isShowLiki24 = TRUE THEN 'Liki24' 
                    ELSE 'VIP' END::TVarChar  AS TypeChech
-            , CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Tabletki() THEN TRUE ELSE FALSE END AS isBanAdd
+            , CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) in (zc_Enum_CheckSourceKind_Tabletki(), zc_Enum_CheckSourceKind_Liki24()) THEN TRUE ELSE FALSE END AS isBanAdd
        FROM tmpMov
             LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id
             LEFT JOIN Movement ON Movement.Id = tmpMov.Id

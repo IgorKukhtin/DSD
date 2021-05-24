@@ -126,7 +126,7 @@ BEGIN
                    CASE WHEN COALESCE(MovementFloat_TotalSummChangePercent.ValueData, 0) < MI_PromoCode.Amount THEN
                       COALESCE(MovementFloat_TotalSummChangePercent.ValueData, 0) ELSE COALESCE(MI_PromoCode.Amount, 0) END ELSE 0 END::TFloat AS LoyaltyChangeSumma
             , COALESCE(MovementFloat_TotalSummCard.ValueData, 0)::TFloat                AS SummCard
-            , CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Tabletki() THEN TRUE ELSE FALSE END AS isBanAdd
+            , CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) in (zc_Enum_CheckSourceKind_Tabletki(), zc_Enum_CheckSourceKind_Liki24()) THEN TRUE ELSE FALSE END AS isBanAdd
        FROM Movement
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId

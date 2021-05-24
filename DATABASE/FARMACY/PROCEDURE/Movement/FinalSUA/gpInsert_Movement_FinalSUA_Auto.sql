@@ -13,7 +13,7 @@ $BODY$
 
   DECLARE vbUnitName TVarChar;
   DECLARE vbMovementId Integer;
-
+	
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -32,6 +32,11 @@ BEGIN
       RETURN;
     END IF;
 
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpCalculation'))
+     THEN
+       DROP TABLE tmpCalculation;
+     END IF;
+    
     CREATE TEMP TABLE tmpCalculation ON COMMIT DROP AS
     SELECT Calculation.*
     FROM gpGet_AutoCalculation_SAUA(inSession := inSession) AS Get

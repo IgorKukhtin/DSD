@@ -12,7 +12,7 @@ $BODY$
   DECLARE vbUserId      Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId:= inSession;
+   vbUserId:= lpGetUserBySession (inSession);
    
    --проверка. если выбрали штрихкод с префиксом
    IF (SELECT POSITION ('-' IN Object.ValueData) FROM Object WHERE Object.Id = inId) > 0

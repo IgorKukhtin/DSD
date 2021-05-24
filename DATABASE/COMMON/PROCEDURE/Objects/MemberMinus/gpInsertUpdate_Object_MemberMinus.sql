@@ -34,7 +34,7 @@ BEGIN
    
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_MemberMinus());
-   vbUserId:= inSession;
+   vbUserId:= lpGetUserBySession (inSession);
    
    -- inBankAccountFromId заполнять из верхнего контрола (inBankAccountId_main) при добавлении, или когда вводят в гриде и "IBAN плательщика" не заполнен
    IF COALESCE (ioBankAccountFromId,0) = 0 AND COALESCE (inBankAccountId_main,0) <> 0
