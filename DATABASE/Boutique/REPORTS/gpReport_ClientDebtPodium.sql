@@ -29,6 +29,7 @@ RETURNS TABLE (MovementId_Partion   Integer
              , LabelName        TVarChar
              , GoodsSizeId Integer, GoodsSizeName    TVarChar
              , BrandName        TVarChar
+             , CountryBrandName TVarChar
              , PeriodName       TVarChar
              , PeriodYear       Integer
              , ChangePercent    TFloat
@@ -290,6 +291,7 @@ BEGIN
              , Object_GoodsSize.Id            AS GoodsSizeId
              , Object_GoodsSize.ValueData     AS GoodsSizeName
              , Object_Brand.ValueData         AS BrandName
+             , Object_CountryBrand.ValueData  AS CountryBrandName
              , Object_Period.ValueData        AS PeriodName
              , Object_PartionGoods.PeriodYear ::Integer
 
@@ -359,6 +361,11 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = Object_PartionGoods.GoodsSizeId
             LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = Object_PartionGoods.BrandId
             LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = Object_PartionGoods.PeriodId
+
+            LEFT JOIN ObjectLink AS Object_Brand_CountryBrand
+                                 ON Object_Brand_CountryBrand.ObjectId = Object_Brand.Id
+                                AND Object_Brand_CountryBrand.DescId = zc_ObjectLink_Brand_CountryBrand()
+            LEFT JOIN Object AS Object_CountryBrand ON Object_CountryBrand.Id = Object_Brand_CountryBrand.ChildObjectId
 
             LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
                                    ON ObjectString_GoodsGroupFull.ObjectId = Object_Goods.Id

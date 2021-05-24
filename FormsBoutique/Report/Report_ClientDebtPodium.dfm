@@ -5,8 +5,9 @@ inherited Report_ClientDebtPodiumForm: TReport_ClientDebtPodiumForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -292
   ExplicitWidth = 1081
-  ExplicitHeight = 463
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -517,6 +518,13 @@ inherited Report_ClientDebtPodiumForm: TReport_ClientDebtPodiumForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
+          end
+          object CountryBrandName: TcxGridDBColumn
+            Caption = #1057#1090#1088#1072#1085#1072
+            DataBinding.FieldName = 'CountryBrandName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1074' '#1087#1072#1088#1090#1080#1080' '#1087#1088#1086#1076'.'

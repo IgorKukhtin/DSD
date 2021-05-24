@@ -6,7 +6,7 @@ inherited SaleJournalForm: TSaleJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1382
-  ExplicitHeight = 679
+  ExplicitHeight = 676
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -4048,7 +4048,7 @@ inherited SaleJournalForm: TSaleJournalForm
     StoredProcName = 'gpComplete_Movement_Sale'
     Params = <
       item
-        Name = 'inmovementid'
+        Name = 'inMovementId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
@@ -4056,8 +4056,15 @@ inherited SaleJournalForm: TSaleJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inislastcomplete'
+        Name = 'inIsLastComplete'
         Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsRecalcPrice'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4169,7 +4176,6 @@ inherited SaleJournalForm: TSaleJournalForm
     Top = 216
   end
   inherited spMovementReComplete: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_Sale'
     Params = <
       item
         Name = 'inMovementId'

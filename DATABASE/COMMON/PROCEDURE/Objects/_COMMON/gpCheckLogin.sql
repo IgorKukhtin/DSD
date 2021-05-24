@@ -18,9 +18,11 @@ BEGIN
 
      -- Определися пользователь + сессия (потом будем шифровать)
     SELECT CASE WHEN Object_User.Id = 5
+                THEN FALSE
+                WHEN Object_User.Id = 5 OR 1=0
                 THEN CASE WHEN COALESCE (ObjectDate_User_GUID.ValueData, zc_DateStart()) < CURRENT_TIMESTAMP
                             OR COALESCE (ObjectDate_User_GUID.ValueData, zc_DateStart()) > CURRENT_TIMESTAMP + INTERVAL '25 HOUR'
-                               THEN TRUE --
+                               THEN TRUE
                                ELSE FALSE
                           END
                 ELSE FALSE
@@ -46,7 +48,7 @@ BEGIN
        RAISE EXCEPTION 'Неправильный логин или пароль.';
     ELSE
 
-        IF vbUserId = 5
+        IF vbUserId = 5 OR 1=0
         THEN IF vbIsCreate = TRUE
              THEN
                  --

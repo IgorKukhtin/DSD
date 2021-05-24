@@ -60,6 +60,7 @@ type
     bbPrint_curr: TdxBarButton;
     bbPrint_CheckPodium: TdxBarButton;
     actPrint_CheckPodium: TdsdPrintAction;
+    CountryBrandName: TcxGridDBColumn;
   private
     { Private declarations }
   public

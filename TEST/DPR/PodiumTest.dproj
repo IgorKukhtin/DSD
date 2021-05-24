@@ -818,10 +818,6 @@
 				<Form>MovementItemContainerForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Report\Report_Goods_RemainsCurrent.pas">
-				<Form>Report_Goods_RemainsCurrentForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Report\Report_Goods_RemainsCurrentDialog.pas">
 				<Form>Report_Goods_RemainsCurrentDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -846,20 +842,8 @@
 				<Form>Report_GoodsMI_AccountDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Report\Report_GoodsMI_Account.pas">
-				<Form>Report_GoodsMI_AccountForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Report\Report_SaleReturnIn.pas">
-				<Form>Report_SaleReturnInForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Report\Report_SaleReturnInDialog.pas">
 				<Form>Report_SaleReturnInDialogForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Report\Report_ClientDebt.pas">
-				<Form>Report_ClientDebtForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Report\Report_ClientDebtDialog.pas">
@@ -923,10 +907,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Report\Report_CollationByClientDialog.pas">
 				<Form>Report_CollationByClientDialogForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Report\Report_CollationByClient.pas">
-				<Form>Report_CollationByClientForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Guides\Unit_Dialog.pas">

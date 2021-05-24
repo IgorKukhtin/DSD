@@ -7,27 +7,31 @@ IN inContractDocumentId  Integer,       /* Форма */
 IN inSession             TVarChar       /* текущий пользователь */)
 RETURNS TBlob AS
 $BODY$
-DECLARE
-  Data TBlob;
-  UserId Integer;
+  DECLARE vbData   TBlob;
+  DECLARE vbUserId Integer;
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_User());
+     vbUserId:= lpGetUserBySession (inSession);
 
-   --PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
-
-   UserId := to_number(inSession, '00000000000');   
 
    SELECT 
-       ObjectBlob_ContractDocument_Data.ValueData INTO Data
+       ObjectBlob_ContractDocument_Data.ValueData INTO vbData
    FROM ObjectBLOB AS ObjectBlob_ContractDocument_Data
   WHERE ObjectBlob_ContractDocument_Data.DescId = zc_ObjectBlob_ContractDocument_Data() 
     AND ObjectBlob_ContractDocument_Data.ObjectId = inContractDocumentId;
     
-   RETURN DATA; 
+   RETURN vbData; 
   
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION gpGet_Object_ContractDocument(Integer, TVarChar)
-  OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
 
--- SELECT length(gpGet_Object_Form) FROM gpGet_Object_UserFormSettings('Form1', '2')
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.05.21                                        *
+*/
+
+-- тест
+-- SELECT length(gpGet_Object_ContractDocument) FROM gpGet_Object_ContractDocument(1, '5')

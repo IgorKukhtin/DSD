@@ -6,7 +6,7 @@ inherited Report_GoodsMI_AccountPodiumForm: TReport_GoodsMI_AccountPodiumForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1378
-  ExplicitHeight = 463
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -16,12 +16,12 @@ inherited Report_GoodsMI_AccountPodiumForm: TReport_GoodsMI_AccountPodiumForm
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 29
-      EditValue = 43101d
+      EditValue = 44197d
       ExplicitLeft = 29
     end
     inherited deEnd: TcxDateEdit
       Left = 142
-      EditValue = 43101d
+      EditValue = 44197d
       ExplicitLeft = 142
     end
     inherited cxLabel1: TcxLabel

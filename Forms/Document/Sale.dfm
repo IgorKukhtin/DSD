@@ -3153,15 +3153,15 @@ inherited SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisReCalcPrice'
+        Name = 'inIsReCalcPrice'
         Value = Null
         Component = cbReCalcPrice
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 120
-    Top = 8
+    Left = 136
+    Top = 64
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale'

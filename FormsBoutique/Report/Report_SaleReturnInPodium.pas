@@ -80,7 +80,7 @@ type
     bbUpdate_isChecked: TdxBarButton;
     actPrintCheckPriceReal: TdsdPrintAction;
     mactPrintCheckPriceReal: TMultiAction;
-    bbactPrintCheckPriceReal: TdxBarButton;
+    bbPrint_Check: TdxBarButton;
     spUpdate_isOffer: TdsdStoredProc;
     actUpdate_isOffer: TdsdExecStoredProc;
     bb: TdxBarButton;

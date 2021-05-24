@@ -3807,7 +3807,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     StoredProcName = 'gpComplete_Movement_Sale'
     Params = <
       item
-        Name = 'inmovementid'
+        Name = 'inMovementId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
@@ -3815,8 +3815,15 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inislastcomplete'
+        Name = 'inIsLastComplete'
         Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsRecalcPrice'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3928,7 +3935,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     Top = 200
   end
   inherited spMovementReComplete: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_Sale'
     Params = <
       item
         Name = 'inMovementId'

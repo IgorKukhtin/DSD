@@ -5,8 +5,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -335
-  ExplicitTop = -113
   ExplicitWidth = 1124
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -3199,7 +3197,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     StoredProcName = 'gpComplete_Movement_Sale'
     Params = <
       item
-        Name = 'inmovementid'
+        Name = 'inMovementId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
@@ -3207,8 +3205,15 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inislastcomplete'
+        Name = 'inIsLastComplete'
         Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsRecalcPrice'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3305,7 +3310,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     Top = 200
   end
   inherited spMovementReComplete: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_Sale'
     Params = <
       item
         Name = 'inMovementId'

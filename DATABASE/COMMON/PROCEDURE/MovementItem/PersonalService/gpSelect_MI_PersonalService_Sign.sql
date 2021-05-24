@@ -38,7 +38,7 @@ BEGIN
      RETURN QUERY 
         WITH -- данные из ћодели дл€ данного документа
              tmpObject AS (SELECT * 
-                           FROM lpSelect_Object_SignInternalItem (0, vbSignInternalId, vbMovementDescId, 0, 0) AS tmp
+                           FROM lpSelect_Object_SignInternalItem (vbSignInternalId, vbMovementDescId, 0, 0) AS tmp
                          --WHERE tmp.SignInternalId = vbSignInternalId
                          --   OR (COALESCE (vbSignInternalId,0) = 0 AND tmp.isMain = TRUE)
                            )

@@ -2985,7 +2985,7 @@ inherited Sale_OrderForm: TSale_OrderForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisReCalcPrice'
+        Name = 'inIsReCalcPrice'
         Value = Null
         Component = cbReCalcPrice
         DataType = ftBoolean

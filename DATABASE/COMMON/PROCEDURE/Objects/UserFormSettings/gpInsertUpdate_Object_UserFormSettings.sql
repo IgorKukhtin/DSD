@@ -14,8 +14,9 @@ DECLARE
   vbId Integer;
   vbUserId Integer;
 BEGIN
-   --UserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_Forms());
-   vbUserId := to_number(inSession, '00000000000');   
+   -- проверка прав пользователя на вызов процедуры
+   --vbUserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_Forms());
+   vbUserId:= lpGetUserBySession (inSession);
                
    --
    vbId:= (SELECT Object_UserFormSettings.Id

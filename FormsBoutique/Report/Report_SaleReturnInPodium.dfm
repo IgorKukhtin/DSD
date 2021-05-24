@@ -6,7 +6,7 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1081
-  ExplicitHeight = 463
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -16,12 +16,12 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 29
-      EditValue = 43101d
+      EditValue = 44197d
       ExplicitLeft = 29
     end
     inherited deEnd: TcxDateEdit
       Left = 142
-      EditValue = 43101d
+      EditValue = 44197d
       ExplicitLeft = 142
     end
     inherited cxLabel1: TcxLabel
@@ -757,8 +757,8 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
         item
           Action = actPrintCheckPriceReal
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1063#1077#1082' ('#1074' '#1088#1077#1072#1083#1100#1085#1099#1093' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076#1072#1078#1080' ('#1077#1074#1088#1086' '#1080#1083#1080' '#1075#1088#1085'))'
-      Hint = #1055#1077#1095#1072#1090#1100' '#1063#1077#1082' ('#1074' '#1088#1077#1072#1083#1100#1085#1099#1093' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076#1072#1078#1080' ('#1077#1074#1088#1086' '#1080#1083#1080' '#1075#1088#1085'))'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1063#1077#1082
+      Hint = #1055#1077#1095#1072#1090#1100' '#1063#1077#1082
       ImageIndex = 17
     end
     object actPrint: TdsdPrintAction
@@ -893,9 +893,9 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
           MultiSelectSeparator = ','
         end>
       Printer = 'PrinterName'
-      ReportName = 'Print_CheckPodiumRealPrice'
-      ReportNameParam.Name = 'Print_CheckPodiumRealPrice'
-      ReportNameParam.Value = 'Print_CheckPodiumRealPrice'
+      ReportName = 'Print_Check'
+      ReportNameParam.Name = 'Print_Check'
+      ReportNameParam.Value = 'Print_Check'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1437,7 +1437,7 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
         end
         item
           Visible = True
-          ItemName = 'bbactPrintCheckPriceReal'
+          ItemName = 'bbPrint_Check'
         end
         item
           Visible = True
@@ -1491,8 +1491,8 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
       Action = actUpdate_isChecked
       Category = 0
     end
-    object bbactPrintCheckPriceReal: TdxBarButton
-      Action = mactPrintCheckPriceReal
+    object bbPrint_Check: TdxBarButton
+      Action = mactPrint_Check
       Category = 0
     end
     object bb: TdxBarButton

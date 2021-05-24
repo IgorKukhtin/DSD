@@ -597,20 +597,31 @@ begin
               //
               // если надо - сначала уточним подразделение
               if (GetArrayList_Value_byName (Default_Array,'isGet_Unit') = AnsiUpperCase('TRUE'))
-              //and ()
               then
               begin
-                    fGetUnit_OrderInternal(FromId_calc, ToId_calc, EditBarCode.Text);
-                    if FromId_calc = 0 then
-                    begin
-                         ShowMessage('Ошибка.Подразделение не выбрано.');
-                         exit;
+                    FromId_calc:=0;
+                    ToId_calc:=0;
+                    //поиск по номеру или ш-к
+                    if SettingMain.isCeh = TRUE
+                    then isOrderExternal:=DMMainScaleCehForm.gpGet_Scale_OrderExternal(ParamsMovement_local,EditBarCode.Text, FromId_calc, ToId_calc)
+                    else isOrderExternal:=DMMainScaleForm.gpGet_Scale_OrderExternal(ParamsMovement_local,EditBarCode.Text, FromId_calc, ToId_calc);
+
+                    if (isOrderExternal=true)and(ParamsMovement_local.ParamByName('OrderExternal_DescId').AsInteger = zc_Movement_OrderInternal)
+                    then begin
+                              fGetUnit_OrderInternal(FromId_calc, ToId_calc, EditBarCode.Text);
+                              if FromId_calc = 0 then
+                              begin
+                                   ShowMessage('Ошибка.Подразделение не выбрано.');
+                                   exit;
+                              end;
+                             //еще раз
+                             //поиск по номеру или ш-к
+                             if SettingMain.isCeh = TRUE
+                             then isOrderExternal:=DMMainScaleCehForm.gpGet_Scale_OrderExternal(ParamsMovement_local,EditBarCode.Text, FromId_calc, ToId_calc)
+                             else isOrderExternal:=DMMainScaleForm.gpGet_Scale_OrderExternal(ParamsMovement_local,EditBarCode.Text, FromId_calc, ToId_calc);
                     end;
               end;
-              //поиск по номеру или ш-к
-              if SettingMain.isCeh = TRUE
-              then isOrderExternal:=DMMainScaleCehForm.gpGet_Scale_OrderExternal(ParamsMovement_local,EditBarCode.Text, FromId_calc, ToId_calc)
-              else isOrderExternal:=DMMainScaleForm.gpGet_Scale_OrderExternal(ParamsMovement_local,EditBarCode.Text, FromId_calc, ToId_calc);
+              //
               if isOrderExternal=false then
               begin
                    ShowMessage('Ошибка.'+#10+#13+'Значение <Код операции/№ "основания"/Штрих код "основания"> не найдено.');

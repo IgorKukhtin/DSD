@@ -134,7 +134,7 @@ BEGIN
                                        LEFT JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
                                                                              AND MLO_To.DescId     = zc_MovementLinkObject_To()
                                   WHERE inBranchCode BETWEEN 201 AND 210
-                                    AND MLO_To.ObjectId <> 8459 -- Склад Реализации
+                                    AND MLO_To.ObjectId = 133049 -- Склад реализации мясо
 
                                  UNION
                                   -- по № документа - Приход, т.к. период 80 дней

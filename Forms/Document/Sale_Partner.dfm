@@ -3,7 +3,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
   ClientHeight = 490
   ClientWidth = 1275
   ExplicitWidth = 1291
-  ExplicitHeight = 528
+  ExplicitHeight = 525
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2752,7 +2752,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisReCalcPrice'
+        Name = 'inIsReCalcPrice'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
