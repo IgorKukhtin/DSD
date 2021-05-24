@@ -181,6 +181,16 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
               Format = ',0.####'
               Kind = skSum
               Column = CountProduction_dop_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountIncome_dop
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountIncome_dop_Weight
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -342,6 +352,16 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
               Format = ',0.####'
               Kind = skSum
               Column = CountProduction_dop_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountIncome_dop
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountIncome_dop_Weight
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -467,6 +487,31 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object CountIncome_dop: TcxGridDBColumn
+            Caption = #1042#1085'. '#1087#1088#1080#1093#1086#1076', '#1082#1086#1083'. '
+            DataBinding.FieldName = 'CountIncome_dop'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1087#1088#1080#1093#1086#1076', '#1082#1086#1083'. '
+            Options.Editing = False
+            Width = 55
+          end
+          object CountIncome_dop_Weight: TcxGridDBColumn
+            Caption = #1042#1085'. '#1087#1088#1080#1093#1086#1076', '#1074#1077#1089
+            DataBinding.FieldName = 'CountIncome_dop_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1087#1088#1080#1093#1086#1076', '#1074#1077#1089
             Options.Editing = False
             Width = 70
           end
