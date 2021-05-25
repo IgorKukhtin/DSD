@@ -620,7 +620,12 @@ begin
                              then isOrderExternal:=DMMainScaleCehForm.gpGet_Scale_OrderExternal(ParamsMovement_local,EditBarCode.Text, FromId_calc, ToId_calc)
                              else isOrderExternal:=DMMainScaleForm.gpGet_Scale_OrderExternal(ParamsMovement_local,EditBarCode.Text, FromId_calc, ToId_calc);
                     end;
-              end;
+              end
+              else
+                  if SettingMain.isCeh = TRUE
+                  then isOrderExternal:=DMMainScaleCehForm.gpGet_Scale_OrderExternal(ParamsMovement_local,EditBarCode.Text, FromId_calc, ToId_calc)
+                  else isOrderExternal:=DMMainScaleForm.gpGet_Scale_OrderExternal(ParamsMovement_local,EditBarCode.Text, FromId_calc, ToId_calc);
+                 ;
               //
               if isOrderExternal=false then
               begin
