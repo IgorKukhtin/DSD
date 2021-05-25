@@ -12,9 +12,13 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                        TFloat, TFloat, Boolean, Boolean, Boolean,
                                                        Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                        TDateTime, TDateTime, Integer);   */         
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
+/*DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
                                                        TFloat, TFloat, TFloat, Boolean, Boolean, Boolean,
                                                        Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                       TDateTime, TDateTime, Integer);*/ 
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
+                                                       TFloat, TFloat, TFloat, Boolean, Boolean, Boolean,
+                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                        TDateTime, TDateTime, Integer); 
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
@@ -37,6 +41,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
 
     IN inJuridicalId         Integer   ,    -- Юридическое лицо
     IN inRouteId             Integer   ,    -- Маршрут
+    IN inRouteId_30201       Integer   ,    -- Маршрут мясное сырье 
     IN inRouteSortingId      Integer   ,    -- Сортировка маршрутов
     
     IN inMemberTakeId        Integer   ,    -- Физ лицо (сотрудник экспедитор)
@@ -49,6 +54,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
     IN inGoodsPropertyId     Integer   ,    -- Классификаторы свойств товаров
                         
     IN inPriceListId         Integer   ,    -- Прайс-лист
+    IN inPriceListId_30201   Integer   ,    -- Прайс-лист мясное сырье
     IN inPriceListPromoId    Integer   ,    -- Прайс-лист(Акционный)
     IN inStartPromo          TDateTime ,    -- Дата начала акции
     IN inEndPromo            TDateTime ,    -- Дата окончания акции     
@@ -104,6 +110,10 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Juridical(), ioId, inJuridicalId);
    -- сохранили связь с <Маршруты>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Route(), ioId, inRouteId);
+
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Route30201(), ioId, inRouteId_30201);
+   
    -- сохранили связь с <Сортировки маршрутов>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_RouteSorting(), ioId, inRouteSortingId);
    -- сохранили связь с <Физ лицо (сотрудник экспедитор)>
@@ -125,6 +135,9 @@ BEGIN
 
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner_PriceList(), ioId, inPriceListId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner_PriceList30201(), ioId, inPriceListId_30201);
+
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Partner_PriceListPromo(), ioId, inPriceListPromoId);
 
@@ -149,6 +162,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.05.21         *
  29.04.21         * Category
  19.06.17         * add inPersonalMerchId
  07.03.17         * add Schedule

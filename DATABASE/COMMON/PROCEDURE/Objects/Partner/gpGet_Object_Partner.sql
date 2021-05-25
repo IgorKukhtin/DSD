@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar,
 
                JuridicalId Integer, JuridicalName TVarChar, 
                RouteId Integer, RouteName TVarChar,
+               RouteId_30201 Integer, RouteName_30201 TVarChar,
                RouteSortingId Integer, RouteSortingName TVarChar,
                MemberTakeId Integer, MemberTakeName TVarChar,
                
@@ -33,7 +34,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar,
 
                GoodsPropertyId Integer, GoodsPropertyName TVarChar,
               
-               PriceListId Integer, PriceListName TVarChar, 
+               PriceListId Integer, PriceListName TVarChar,
+               PriceListId_30201 Integer, PriceListName_30201 TVarChar,
                PriceListPromoId Integer, PriceListPromoName TVarChar,
                StartPromo TDateTime, EndPromo TDateTime,
                
@@ -93,6 +95,9 @@ BEGIN
            , CAST (0 as Integer)    AS RouteId
            , CAST ('' as TVarChar)  AS RouteName
 
+           , CAST (0 as Integer)    AS RouteId_30201
+           , CAST ('' as TVarChar)  AS RouteName_30201
+
            , CAST (0 as Integer)    AS RouteSortingId
            , CAST ('' as TVarChar)  AS RouteSortingName
            
@@ -119,6 +124,9 @@ BEGIN
 
            , CAST (0 as Integer)    AS PriceListId 
            , CAST ('' as TVarChar)  AS PriceListName 
+
+           , CAST (0 as Integer)    AS PriceListId_30201
+           , CAST ('' as TVarChar)  AS PriceListName_30201
 
            , CAST (0 as Integer)    AS PriceListPromoId 
            , CAST ('' as TVarChar)  AS PriceListPromoName 
@@ -192,6 +200,9 @@ BEGIN
            , Object_Route.Id           AS RouteId
            , Object_Route.ValueData    AS RouteName
 
+           , Object_Route_30201.Id          AS RouteId_30201
+           , Object_Route_30201.ValueData   AS RouteName_30201
+
            , Object_RouteSorting.Id         AS RouteSortingId
            , Object_RouteSorting.ValueData  AS RouteSortingName
            
@@ -218,6 +229,9 @@ BEGIN
            
            , Object_PriceList.Id         AS PriceListId 
            , Object_PriceList.ValueData  AS PriceListName 
+
+           , Object_PriceList_30201.Id         AS PriceListId_30201
+           , Object_PriceList_30201.ValueData  AS PriceListName_30201
 
            , Object_PriceListPromo.Id         AS PriceListPromoId 
            , Object_PriceListPromo.ValueData  AS PriceListPromoName 
@@ -348,7 +362,12 @@ BEGIN
                                 ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id 
                                AND ObjectLink_Partner_Route.DescId = zc_ObjectLink_Partner_Route()
            LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Partner_Route.ChildObjectId
-         
+
+           LEFT JOIN ObjectLink AS ObjectLink_Partner_Route_30201
+                                ON ObjectLink_Partner_Route_30201.ObjectId = Object_Partner.Id
+                               AND ObjectLink_Partner_Route_30201.DescId = zc_ObjectLink_Partner_Route30201()
+           LEFT JOIN Object AS Object_Route_30201 ON Object_Route_30201.Id = ObjectLink_Partner_Route_30201.ChildObjectId
+
            LEFT JOIN ObjectLink AS ObjectLink_Partner_RouteSorting
                                 ON ObjectLink_Partner_RouteSorting.ObjectId = Object_Partner.Id 
                                AND ObjectLink_Partner_RouteSorting.DescId = zc_ObjectLink_Partner_RouteSorting()
@@ -389,6 +408,11 @@ BEGIN
                                AND ObjectLink_Partner_PriceList.DescId = zc_ObjectLink_Partner_PriceList()
            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = ObjectLink_Partner_PriceList.ChildObjectId
 
+           LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList_30201
+                                ON ObjectLink_Partner_PriceList_30201.ObjectId = Object_Partner.Id
+                               AND ObjectLink_Partner_PriceList_30201.DescId = zc_ObjectLink_Partner_PriceList30201()
+           LEFT JOIN Object AS Object_PriceList_30201 ON Object_PriceList_30201.Id = ObjectLink_Partner_PriceList_30201.ChildObjectId
+
            LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceListPromo 
                                 ON ObjectLink_Partner_PriceListPromo.ObjectId = Object_Partner.Id 
                                AND ObjectLink_Partner_PriceListPromo.DescId = zc_ObjectLink_Partner_PriceListPromo()
@@ -427,6 +451,7 @@ ALTER FUNCTION gpGet_Object_Partner (Integer, Integer, Integer, TVarChar) OWNER 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 25.05.21         *
  19.06.17         * add PersonalMerch
  25.12.15         * add GoodsProperty
  10.02.15         * add remine  05.02.15

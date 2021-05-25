@@ -160,7 +160,7 @@ BEGIN
                                              ELSE 0
                                         END) AS CountProduction
                                  -- 1) расход произв+списание 
-                                 , SUM (CASE WHEN COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId IN (zc_Movement_Loss(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate(), zc_Movement_Inventory())
+                                 , SUM (CASE WHEN (COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId IN (zc_Movement_Loss(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())) OR MIContainer.MovementDescId IN (zc_Movement_Inventory())
                                                   THEN MIContainer.Amount * (-1)
                                              ELSE 0
                                         END) AS CountProduction_dop
@@ -194,7 +194,7 @@ BEGIN
                                                   THEN MIContainer.Amount * (-1)
                                              ELSE 0
                                         END) <> 0
-                                 OR SUM (CASE WHEN COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId IN (zc_Movement_Loss(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate(), zc_Movement_Inventory())
+                                 OR SUM (CASE WHEN (COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId IN (zc_Movement_Loss(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())) OR MIContainer.MovementDescId IN (zc_Movement_Inventory())
                                                   THEN MIContainer.Amount * (-1)
                                              ELSE 0
                                         END) <> 0
@@ -529,7 +529,7 @@ SELECT _tmpContainer.ContainerId
                                  , SUM ( MIContainer.Amount 
                                              ) AS CountSend
                                  -- 1) внутр. расход
-                                 , SUM (CASE WHEN COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId IN (zc_Movement_Loss(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate(), zc_Movement_Inventory())
+                                 , SUM (CASE WHEN (COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId IN (zc_Movement_Loss(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())) OR MIContainer.MovementDescId IN (zc_Movement_Inventory())
                                                   THEN MIContainer.Amount * (-1)
                                              ELSE 0
                                         END) AS CountProduction_dop
@@ -561,7 +561,7 @@ SELECT _tmpContainer.ContainerId
                                                   THEN MIContainer.Amount * (-1)
                                              ELSE 0
                                         END) <> 0
-                                 OR SUM (CASE WHEN COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId IN (zc_Movement_Loss(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate(), zc_Movement_Inventory()) --MIContainer.MovementDescId IN (zc_Movement_Send(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                 OR SUM (CASE WHEN (COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId IN (zc_Movement_Loss(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())) OR OR MIContainer.MovementDescId IN (zc_Movement_Inventory())
                                                   THEN MIContainer.Amount * (-1)
                                              ELSE 0
                                         END) <> 0

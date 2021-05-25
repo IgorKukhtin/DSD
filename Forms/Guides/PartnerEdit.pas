@@ -134,6 +134,12 @@ type
     PersonalMerchGuides: TdsdGuides;
     cxLabel38: TcxLabel;
     edCategory: TcxCurrencyEdit;
+    cxLabel39: TcxLabel;
+    GuidesRoute30201: TdsdGuides;
+    edRoute30201: TcxButtonEdit;
+    cxLabel40: TcxLabel;
+    cePriceList30201: TcxButtonEdit;
+    GuidesPriceList30201: TdsdGuides;
 
   private
     { Private declarations }

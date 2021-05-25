@@ -100,13 +100,14 @@
     Width = 195
   end
   object cxLabel7: TcxLabel [14]
-    Left = 15
-    Top = 276
+    Left = -10
+    Top = 292
     Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
+    Visible = False
   end
   object ceRouteSorting: TcxButtonEdit [15]
-    Left = 158
-    Top = 275
+    Left = 15
+    Top = 291
     Properties.Buttons = <
       item
         Default = True
@@ -114,7 +115,8 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 13
-    Width = 195
+    Visible = False
+    Width = 57
   end
   object cxLabel8: TcxLabel [16]
     Left = 15
@@ -161,9 +163,10 @@
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
   end
   object cxLabel10: TcxLabel [21]
-    Left = 380
-    Top = 339
+    Left = 650
+    Top = 360
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1040#1082#1094#1080#1086#1085#1085#1099#1081')'
+    Visible = False
   end
   object cePriceList: TcxButtonEdit [22]
     Left = 515
@@ -178,8 +181,8 @@
     Width = 204
   end
   object cePriceListPromo: TcxButtonEdit [23]
-    Left = 515
-    Top = 338
+    Left = 702
+    Top = 358
     Properties.Buttons = <
       item
         Default = True
@@ -187,7 +190,8 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 23
-    Width = 204
+    Visible = False
+    Width = 54
   end
   object cxLabel11: TcxLabel [24]
     Left = 380
@@ -705,9 +709,43 @@
     TabOrder = 94
     Width = 92
   end
-  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 419
+  object cxLabel39: TcxLabel [95]
+    Left = 15
+    Top = 275
+    Caption = #1052#1072#1088#1096#1088#1091#1090' ('#1052#1103#1089#1085#1086#1077' '#1089#1099#1088#1100#1077')'
+  end
+  object edRoute30201: TcxButtonEdit [96]
+    Left = 158
+    Top = 274
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 96
+    Width = 195
+  end
+  object cxLabel40: TcxLabel [97]
+    Left = 380
+    Top = 340
+    Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1052#1103#1089#1085#1086#1077' '#1089#1099#1088#1100#1077')'
+  end
+  object cePriceList30201: TcxButtonEdit [98]
+    Left = 529
     Top = 339
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 98
+    Width = 190
+  end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 355
+    Top = 331
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Top = 200
@@ -929,6 +967,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inRouteId_30201'
+        Value = Null
+        Component = GuidesRoute30201
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inRouteSortingId'
         Value = ''
         Component = dsdRouteSortingGuides
@@ -996,6 +1042,14 @@
         Name = 'inPriceListId'
         Value = ''
         Component = dsdPriceListGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceListId_30201'
+        Value = Null
+        Component = GuidesPriceList30201
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1144,8 +1198,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 648
-    Top = 363
+    Left = 656
+    Top = 427
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Partner'
@@ -1677,9 +1731,39 @@
         Component = edCategory
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListId_30201'
+        Value = Null
+        Component = GuidesPriceList30201
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListName_30201'
+        Value = Null
+        Component = GuidesPriceList30201
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RouteId_30201'
+        Value = Null
+        Component = GuidesRoute30201
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RouteName_30201'
+        Value = Null
+        Component = GuidesRoute30201
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 520
-    Top = 352
+    Left = 560
+    Top = 424
   end
   object dsdJuridicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -1768,8 +1852,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 224
-    Top = 253
+    Left = 24
+    Top = 277
   end
   object dsdRouteGuides: TdsdGuides
     KeyField = 'Id'
@@ -1798,8 +1882,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 160
-    Top = 236
+    Left = 152
+    Top = 228
   end
   object dsdPriceListGuides: TdsdGuides
     KeyField = 'Id'
@@ -1828,7 +1912,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 520
+    Left = 600
     Top = 326
   end
   object dsdPriceListPromoGuides: TdsdGuides
@@ -1858,8 +1942,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 656
-    Top = 326
+    Left = 664
+    Top = 350
   end
   object StreetGuides: TdsdGuides
     KeyField = 'Id'
@@ -2243,5 +2327,65 @@
       end>
     Left = 208
     Top = 365
+  end
+  object GuidesRoute30201: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edRoute30201
+    FormNameParam.Value = 'TRouteForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRouteForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRoute30201
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRoute30201
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 200
+    Top = 264
+  end
+  object GuidesPriceList30201: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePriceList30201
+    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPriceListForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPriceList30201
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPriceList30201
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 560
+    Top = 333
   end
 end
