@@ -33,6 +33,7 @@ RETURNS TABLE ( GoodsId Integer
               , CountProduction_dop_Weight TFloat
               , CountOther               TFloat
               , CountOther_Weight        TFloat
+              , CountSend                TFloat
               
               , CountProduction1          TFloat -- Потребление -ЦЕХ деликатесов
               , CountProduction1_Weight   TFloat -- Потребление -
@@ -135,8 +136,10 @@ BEGIN
     -- Результат
     RETURN QUERY
           WITH 
-        --
-          tmpMIContainer AS (SELECT _tmpContainer.ContainerId
+          --
+          tmpAccountNo AS (SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE Object_Account_View.AccountGroupId = zc_Enum_AccountGroup_110000()) -- Транзит
+
+        , tmpMIContainer AS (SELECT _tmpContainer.ContainerId
                                   , _tmpContainer.LocationId
                                   , _tmpContainer.GoodsId
                                   , _tmpContainer.GoodsKindId
@@ -160,14 +163,18 @@ BEGIN
                                                   THEN MIContainer.Amount * (-1)
                                              ELSE 0
                                         END) AS CountProduction_dop
-
+                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send())
+                                                  THEN MIContainer.Amount * (-1)
+                                             ELSE 0
+                                        END) AS CountSend
                                          -- ***REMAINS***
-                                 , -1 * SUM (CASE WHEN MIContainer.OperDate > inStartDate THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS RemainsStart
-                                 , -1 * SUM (CASE WHEN MIContainer.OperDate >= inEndDate    THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS RemainsEnd
+                                 , -1 * SUM (CASE WHEN MIContainer.OperDate >= inStartDate THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS RemainsStart
+                                 , -1 * SUM (CASE WHEN MIContainer.OperDate > inEndDate    THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS RemainsEnd
 
                              FROM _tmpContainer
                                   INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = _tmpContainer.ContainerId
                                                                                  AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                             WHERE COALESCE (MIContainer.AccountId, 0) NOT IN (SELECT tmpAccountNo.AccountId FROM tmpAccountNo)-- zc_Enum_Account_110101()-- товар в пути
                              GROUP BY _tmpContainer.ContainerId
                                     , _tmpContainer.LocationId
                                     , _tmpContainer.GoodsId
@@ -190,9 +197,13 @@ BEGIN
                                                   THEN MIContainer.Amount * (-1)
                                              ELSE 0
                                         END) <> 0
+                                 OR SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send())
+                                                  THEN MIContainer.Amount * (-1)
+                                             ELSE 0
+                                        END) <> 0
                                    -- ***REMAINS***
-                                 OR SUM (CASE WHEN MIContainer.OperDate > inStartDate THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) <> 0
-                                 OR SUM (CASE WHEN MIContainer.OperDate >= inEndDate    THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) <> 0
+                                 OR SUM (CASE WHEN MIContainer.OperDate >= inStartDate THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) <> 0
+                                 OR SUM (CASE WHEN MIContainer.OperDate > inEndDate    THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) <> 0
 
                             UNION ALL
                              --для расчета остатков
@@ -206,6 +217,7 @@ BEGIN
                                   , 0 AS CountIncome_dop
                                   , 0 AS CountProduction
                                   , 0 AS CountProduction_dop
+                                  , 0 AS CountSend
                                     -- ***REMAINS***
                                  , _tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS RemainsStart
                                  , _tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS RemainsEnd
@@ -232,6 +244,7 @@ BEGIN
                            , SUM (tmpMIContainer.CountProduction)     AS CountProduction
                            , SUM (tmpMIContainer.CountProduction_dop) AS CountProduction_dop
                            , SUM (COALESCE (tmpMIContainer.CountProduction,0) - COALESCE (tmpMIContainer.CountProduction_dop,0)) AS CountOther
+                           , SUm (COALESCE (tmpMIContainer.CountSend,0)) AS CountSend
                            
                            , SUM (CASE WHEN tmpMIContainer.LocationId = 8448   THEN tmpMIContainer.CountProduction ELSE 0 END) AS CountProduction1 --8448   ЦЕХ деликатесов
                            , SUM (CASE WHEN tmpMIContainer.LocationId = 8447   THEN tmpMIContainer.CountProduction ELSE 0 END) AS CountProduction2 --8447   ЦЕХ колбасный
@@ -297,6 +310,7 @@ BEGIN
 
                           , tmpData.CountOther   ::TFloat
                           , (tmpData.CountOther * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS CountOther_Weight
+                          , tmpData.CountSend :: TFloat
 
                           , tmpData.CountProduction1   ::TFloat
                           , (tmpData.CountProduction1 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS CountProduction1_Weight
@@ -354,6 +368,7 @@ BEGIN
               , tmpData.CountProduction_dop_Weight ::TFloat
               , tmpData.CountOther             ::TFloat
               , tmpData.CountOther_Weight      ::TFloat
+              , tmpData.CountSend              ::TFloat
 
               , tmpData.CountProduction1        ::TFloat
               , tmpData.CountProduction1_Weight ::TFloat

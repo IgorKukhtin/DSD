@@ -23,8 +23,6 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
       inherited cxGrid: TcxGrid
         Width = 1079
         Height = 254
-        ExplicitLeft = 368
-        ExplicitTop = 16
         ExplicitWidth = 1079
         ExplicitHeight = 254
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -193,6 +191,11 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
               Format = ',0.####'
               Kind = skSum
               Column = CountIncome_dop_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountSend
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -364,6 +367,11 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
               Format = ',0.####'
               Kind = skSum
               Column = CountIncome_dop_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountSend
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -514,6 +522,18 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1087#1088#1080#1093#1086#1076', '#1074#1077#1089
+            Options.Editing = False
+            Width = 70
+          end
+          object CountSend: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103', '#1082#1086#1083'.'
+            DataBinding.FieldName = 'CountSend'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
