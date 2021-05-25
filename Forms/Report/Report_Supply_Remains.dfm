@@ -23,6 +23,8 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
       inherited cxGrid: TcxGrid
         Width = 1079
         Height = 254
+        ExplicitLeft = 368
+        ExplicitTop = 16
         ExplicitWidth = 1079
         ExplicitHeight = 254
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -491,7 +493,7 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
             Width = 70
           end
           object CountIncome_dop: TcxGridDBColumn
-            Caption = #1042#1085'. '#1087#1088#1080#1093#1086#1076', '#1082#1086#1083'. '
+            Caption = #1042#1085#1091#1090#1088'. '#1087#1088#1080#1093#1086#1076', '#1082#1086#1083'. '
             DataBinding.FieldName = 'CountIncome_dop'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -504,7 +506,7 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
             Width = 55
           end
           object CountIncome_dop_Weight: TcxGridDBColumn
-            Caption = #1042#1085'. '#1087#1088#1080#1093#1086#1076', '#1074#1077#1089
+            Caption = #1042#1085#1091#1090#1088'. '#1087#1088#1080#1093#1086#1076', '#1074#1077#1089
             DataBinding.FieldName = 'CountIncome_dop_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -723,7 +725,7 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
             Width = 70
           end
           object CountProduction_dop: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1088#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074'+'#1089#1087#1080#1089#1072#1085#1080#1077', '#1082#1086#1083'.'
+            Caption = #1042#1085#1091#1090#1088'. '#1088#1072#1089#1093#1086#1076', '#1082#1086#1083'.'
             DataBinding.FieldName = 'CountProduction_dop'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -735,7 +737,7 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
             Width = 70
           end
           object CountProduction_dop_Weight: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1088#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074'+'#1089#1087#1080#1089#1072#1085#1080#1077', '#1074#1077#1089
+            Caption = #1042#1085#1091#1090#1088'. '#1088#1072#1089#1093#1086#1076', '#1074#1077#1089
             DataBinding.FieldName = 'CountProduction_dop_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -746,7 +748,7 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
             Width = 70
           end
           object CountOther: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1087#1088#1086#1095#1077#1077' '#1082#1086#1083'.'
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1074#1085'. '#1088#1072#1089#1093#1086#1076#1072' '#1089' '#1080#1090#1086#1075#1086', '#1082#1086#1083'.'
             DataBinding.FieldName = 'CountOther'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -758,7 +760,7 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
             Width = 70
           end
           object CountOther_Weight: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1087#1088#1086#1095#1077#1077', '#1074#1077#1089
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1074#1085'. '#1088#1072#1089#1093#1086#1076#1072' '#1089' '#1080#1090#1086#1075#1086', '#1074#1077#1089
             DataBinding.FieldName = 'CountOther_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4

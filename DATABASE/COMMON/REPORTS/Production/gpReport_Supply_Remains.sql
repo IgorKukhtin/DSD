@@ -140,9 +140,9 @@ BEGIN
                                   , _tmpContainer.LocationId
                                   , _tmpContainer.GoodsId
                                   , _tmpContainer.GoodsKindId
-                          
+
                                    -- Приход
-                                 , SUM (CASE WHEN COALESCE (MIContainer.Amount,0) > 0 AND MIContainer.MovementDescId NOT IN (zc_Movement_Inventory())
+                                 , SUM (CASE WHEN COALESCE (MIContainer.Amount,0) > 0 AND MIContainer.MovementDescId NOT IN (zc_Movement_Inventory(), zc_Movement_Send())
                                              THEN MIContainer.Amount
                                              ELSE 0
                                         END) AS CountIncome
@@ -155,15 +155,15 @@ BEGIN
                                                   THEN MIContainer.Amount * (-1)
                                              ELSE 0
                                         END) AS CountProduction
-                                 -- 1) расход произв+списание
+                                 -- 1) расход произв+списание 
                                  , SUM (CASE WHEN COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId IN (zc_Movement_Loss(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate(), zc_Movement_Inventory())
                                                   THEN MIContainer.Amount * (-1)
                                              ELSE 0
                                         END) AS CountProduction_dop
 
                                          -- ***REMAINS***
-                                 , -1 * SUM (CASE WHEN MIContainer.OperDate >= inStartDate THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS RemainsStart
-                                 , -1 * SUM (CASE WHEN MIContainer.OperDate > inEndDate    THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS RemainsEnd
+                                 , -1 * SUM (CASE WHEN MIContainer.OperDate > inStartDate THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS RemainsStart
+                                 , -1 * SUM (CASE WHEN MIContainer.OperDate >= inEndDate    THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS RemainsEnd
 
                              FROM _tmpContainer
                                   INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = _tmpContainer.ContainerId
@@ -172,8 +172,8 @@ BEGIN
                                     , _tmpContainer.LocationId
                                     , _tmpContainer.GoodsId
                                     , _tmpContainer.GoodsKindId
-                                    , CASE WHEN MIContainer.MovementDescId = zc_Movement_Income() THEN MIContainer.MovementId ELSE 0 END
-                             HAVING SUM (CASE WHEN COALESCE (MIContainer.Amount,0) > 0
+
+                             HAVING SUM (CASE WHEN COALESCE (MIContainer.Amount,0) > 0 AND MIContainer.MovementDescId NOT IN (zc_Movement_Inventory(), zc_Movement_Send()) 
                                              THEN MIContainer.Amount
                                              ELSE 0
                                         END) <> 0
@@ -182,16 +182,17 @@ BEGIN
                                              ELSE 0
                                         END) <> 0
                                   --потребление
-                                 OR SUM (CASE WHEN COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId NOT IN (zc_Movement_Send())
+                                 OR SUM (CASE WHEN (COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId NOT IN (zc_Movement_Send())) OR MIContainer.MovementDescId IN (zc_Movement_Inventory())
                                                   THEN MIContainer.Amount * (-1)
                                              ELSE 0
                                         END) <> 0
-                                 OR SUM (CASE WHEN COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId IN (zc_Movement_Loss(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate(), zc_Movement_Inventory()) --MIContainer.MovementDescId IN (zc_Movement_Send(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                 OR SUM (CASE WHEN COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId IN (zc_Movement_Loss(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate(), zc_Movement_Inventory())
                                                   THEN MIContainer.Amount * (-1)
                                              ELSE 0
                                         END) <> 0
                                    -- ***REMAINS***
-                                 OR SUM (MIContainer.Amount) <> 0
+                                 OR SUM (CASE WHEN MIContainer.OperDate > inStartDate THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) <> 0
+                                 OR SUM (CASE WHEN MIContainer.OperDate >= inEndDate    THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) <> 0
 
                             UNION ALL
                              --для расчета остатков
@@ -446,4 +447,118 @@ select * from gpReport_Supply_Remains(
      inisGoodsKind    :=TRUE,
      inSession        := '5' ::     TVarChar    -- сессия пользователя
 )
+*/
+
+
+/*
+
+WITH _tmpLocation AS (
+           SELECT Object.Id AS LocationId
+           FROM Object
+           WHERE Object.DescId = zc_Object_Unit()
+             AND Object.isErased = False
+          )
+
+  , tmpGoods AS (
+           SELECT Object.Id as GoodsId
+           FROM Object
+           WHERE Object.DescId = zc_Object_Goods()
+             AND Object.isErased = False
+        and  Object.Id  = 7984
+        )
+
+   ,  _tmpContainer AS  (
+           SELECT CLO_Unit.ContainerId
+                , _tmpLocation.LocationId
+                , tmpGoods.GoodsId
+                , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
+                , COALESCE (Container.Amount,0)        AS Amount
+           FROM _tmpLocation
+                INNER JOIN ContainerLinkObject AS CLO_Unit
+                                               ON CLO_Unit.ObjectId = _tmpLocation.LocationId
+                                              AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                LEFT JOIN Container ON Container.Id = CLO_Unit.ContainerId
+                                   AND Container.DescId = zc_Container_Count()
+
+                INNER JOIN tmpGoods ON tmpGoods.GoodsId = Container.ObjectId
+                
+                LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                              ON CLO_GoodsKind.ContainerId = Container.Id
+                                             AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+         )
+
+  , tmpMIContainer AS (
+SELECT _tmpContainer.ContainerId
+                                  , _tmpContainer.LocationId
+                                  , _tmpContainer.GoodsId
+                                  , _tmpContainer.GoodsKindId
+, MIContainer.MovementDescId
+                                   -- Приход
+                                 , SUM (CASE WHEN COALESCE (MIContainer.Amount,0) > 0 AND MIContainer.MovementDescId NOT IN (zc_Movement_Inventory(), zc_Movement_Send())
+                                             THEN MIContainer.Amount
+                                             ELSE 0
+                                        END) AS CountIncome
+                                    -- внутр. приход
+                                 , SUM (CASE WHEN COALESCE (MIContainer.Amount,0) > 0 AND MIContainer.MovementDescId IN (zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                             THEN MIContainer.Amount
+                                             ELSE 0
+                                        END) AS CountIncome_dop
+                                 -- весь расход считать, кроме перемещения
+                                 , SUM (CASE WHEN (COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId NOT IN (zc_Movement_Send())) OR MIContainer.MovementDescId IN (zc_Movement_Inventory())
+                                                  THEN MIContainer.Amount * (-1)
+                                             ELSE 0
+                                        END) AS CountProduction
+                                 , SUM ( MIContainer.Amount 
+                                             ) AS CountSend
+                                 -- 1) внутр. расход
+                                 , SUM (CASE WHEN COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId IN (zc_Movement_Loss(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate(), zc_Movement_Inventory())
+                                                  THEN MIContainer.Amount * (-1)
+                                             ELSE 0
+                                        END) AS CountProduction_dop
+
+                                         -- ***REMAINS***
+                               --  , -1 * SUM (CASE WHEN MIContainer.OperDate > '01.05.2021' THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS RemainsStart
+                               --  , -1 * SUM (CASE WHEN MIContainer.OperDate > '31.05.2021'    THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS RemainsEnd
+
+                             FROM _tmpContainer
+                                  INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = _tmpContainer.ContainerId
+                                                                                 AND MIContainer.OperDate BETWEEN '01.05.2021' AND '31.05.2021'
+                             GROUP BY _tmpContainer.ContainerId
+                                    , _tmpContainer.LocationId
+                                    , _tmpContainer.GoodsId
+                                    , _tmpContainer.GoodsKindId
+                                   
+, MIContainer.MovementDescId
+--, MIContainer.MovementId
+                             HAVING SUM (CASE WHEN COALESCE (MIContainer.Amount,0) > 0 AND MIContainer.MovementDescId NOT IN (zc_Movement_Inventory(), zc_Movement_Send())
+                                             THEN MIContainer.Amount
+                                             ELSE 0
+                                        END) <> 0
+                                 OR SUM (CASE WHEN COALESCE (MIContainer.Amount,0) > 0 AND MIContainer.MovementDescId IN (zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                             THEN MIContainer.Amount
+                                             ELSE 0
+                                        END) <> 0
+                                  --потребление
+                                 OR SUM (CASE WHEN COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId NOT IN (zc_Movement_Send())
+                                                  THEN MIContainer.Amount * (-1)
+                                             ELSE 0
+                                        END) <> 0
+                                 OR SUM (CASE WHEN COALESCE (MIContainer.Amount,0) < 0 AND MIContainer.MovementDescId IN (zc_Movement_Loss(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate(), zc_Movement_Inventory()) --MIContainer.MovementDescId IN (zc_Movement_Send(),zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                                  THEN MIContainer.Amount * (-1)
+                                             ELSE 0
+                                        END) <> 0
+                                   -- ***REMAINS***
+                                 OR SUM (MIContainer.Amount) <> 0
+OR SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send())
+                                                  THEN MIContainer.Amount * (-1)
+                                             ELSE 0
+                                        END) <> 0
+or SUM ( MIContainer.Amount 
+                                             ) <> 0
+)
+
+select * from tmpMIContainer
+left join MovementDesc on MovementDesc.Id = tmpMIContainer.MovementDescId
+where COALESCE (CountProduction,0) <> 0 OR COALESCE (CountIncome,0) <> 0 
+
 */
