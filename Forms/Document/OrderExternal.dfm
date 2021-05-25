@@ -1374,7 +1374,7 @@ inherited OrderExternalForm: TOrderExternalForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 5
       end>
-    Left = 710
+    Left = 742
     Top = 241
   end
   inherited PopupMenu: TPopupMenu
@@ -2034,6 +2034,9 @@ inherited OrderExternalForm: TOrderExternalForm
       end
       item
         Control = ceComment
+      end
+      item
+        Control = cbPrintComment
       end>
     Left = 232
     Top = 193
