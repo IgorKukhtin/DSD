@@ -34,6 +34,7 @@ RETURNS TABLE ( GoodsId Integer
               , CountOther               TFloat
               , CountOther_Weight        TFloat
               , CountSend                TFloat
+              , CountSend_Weight         TFloat
               
               , CountProduction1          TFloat -- Потребление -ЦЕХ деликатесов
               , CountProduction1_Weight   TFloat -- Потребление -
@@ -311,6 +312,7 @@ BEGIN
                           , tmpData.CountOther   ::TFloat
                           , (tmpData.CountOther * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS CountOther_Weight
                           , tmpData.CountSend :: TFloat
+                          , (tmpData.CountSend * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS CountSend_Weight
 
                           , tmpData.CountProduction1   ::TFloat
                           , (tmpData.CountProduction1 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS CountProduction1_Weight
@@ -369,6 +371,7 @@ BEGIN
               , tmpData.CountOther             ::TFloat
               , tmpData.CountOther_Weight      ::TFloat
               , tmpData.CountSend              ::TFloat
+              , tmpData.CountSend_Weight       ::TFloat
 
               , tmpData.CountProduction1        ::TFloat
               , tmpData.CountProduction1_Weight ::TFloat

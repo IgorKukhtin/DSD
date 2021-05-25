@@ -196,6 +196,11 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
               Format = ',0.####'
               Kind = skSum
               Column = CountSend
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountSend_Weight
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -372,6 +377,11 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
               Format = ',0.####'
               Kind = skSum
               Column = CountSend
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountSend_Weight
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -522,18 +532,6 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1087#1088#1080#1093#1086#1076', '#1074#1077#1089
-            Options.Editing = False
-            Width = 70
-          end
-          object CountSend: TcxGridDBColumn
-            Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103', '#1082#1086#1083'.'
-            DataBinding.FieldName = 'CountSend'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
@@ -813,6 +811,30 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
             HeaderHint = #1057#1088#1077#1076#1085#1077#1089#1091#1090#1086#1095#1085#1099#1081' '#1088#1072#1089#1093#1086#1076' '#1074' '#1076#1077#1085#1100
             Options.Editing = False
             Width = 75
+          end
+          object CountSend: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1088#1072#1089#1093#1086#1076', '#1082#1086#1083'.'
+            DataBinding.FieldName = 'CountSend'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object CountSend_Weight: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1088#1072#1089#1093#1086#1076', '#1074#1077#1089
+            DataBinding.FieldName = 'CountSend_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object RemainsEnd_Weight: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1082#1086#1085#1077#1095#1085'. '#1074#1077#1089
