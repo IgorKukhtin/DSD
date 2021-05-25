@@ -28,6 +28,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , DayCount TFloat
              , isPrinted Boolean
+             , isPrintComment Boolean
              , isPromo Boolean
              , isAuto Boolean
              , Comment TVarChar
@@ -104,6 +105,7 @@ BEGIN
              -- , (1 + EXTRACT (DAY FROM ((inOperDate - INTERVAL '1 DAY') - (inOperDate - INTERVAL '7 DAY')))) :: TFloat AS DayCount
              , (1 + EXTRACT (DAY FROM ((CURRENT_DATE - INTERVAL '1 DAY') - (CURRENT_DATE - INTERVAL '7 DAY')))) :: TFloat AS DayCount
              , CAST (FALSE AS Boolean)                          AS isPrinted
+             , CAST (FALSE AS Boolean)                          AS isPrintComment
              , CAST (FALSE AS Boolean)                          AS isPromo 
              , CAST (TRUE  AS Boolean)                          AS isAuto
              , CAST ('' as TVarChar) 		                AS Comment
@@ -197,6 +199,7 @@ BEGIN
                                    - COALESCE (MovementDate_OperDateStart.ValueData, Movement.OperDate - (INTERVAL '7 DAY')) :: TDateTime)
                           )) :: TFloat AS DayCount
            , COALESCE (MovementBoolean_Print.ValueData, FALSE) AS isPrinted
+           , COALESCE (MovementBoolean_PrintComment.ValueData, FALSE) AS isPrintComment
            , COALESCE (MovementBoolean_Promo.ValueData, FALSE) AS isPromo 
            , COALESCE (MovementBoolean_isAuto.ValueData, TRUE) AS isAuto
            , MovementString_Comment.ValueData       AS Comment
@@ -225,6 +228,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Print
                                       ON MovementBoolean_Print.MovementId = Movement.Id
                                      AND MovementBoolean_Print.DescId = zc_MovementBoolean_Print()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_PrintComment
+                                      ON MovementBoolean_PrintComment.MovementId = Movement.Id
+                                     AND MovementBoolean_PrintComment.DescId = zc_MovementBoolean_PrintComment()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Promo
                                       ON MovementBoolean_Promo.MovementId = Movement.Id
@@ -330,6 +337,7 @@ ALTER FUNCTION gpGet_Movement_OrderExternal (Integer, TDateTime, TVarChar) OWNER
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 25.05.21         * isPrintComment
  05.08.20         *
  20.06.18         * add isAuto
  25.11.15         * add Promo

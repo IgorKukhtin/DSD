@@ -714,6 +714,13 @@ inherited OrderExternalForm: TOrderExternalForm
       TabOrder = 42
       Width = 168
     end
+    object cbPrintComment: TcxCheckBox
+      Left = 894
+      Top = 108
+      Caption = #1055#1077#1095#1072#1090#1072#1090#1100' '#1055#1088#1080#1084'. '#1074' '#1056#1072#1089#1093'. '#1085#1072#1082#1083'. ('#1076#1072'/'#1085#1077#1090')'
+      TabOrder = 43
+      Width = 227
+    end
   end
   object cxLabel21: TcxLabel [2]
     Left = 1223
@@ -1494,7 +1501,7 @@ inherited OrderExternalForm: TOrderExternalForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1533,7 +1540,7 @@ inherited OrderExternalForm: TOrderExternalForm
       end
       item
         Name = 'OperDatePartner_sale'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDatePartner_sale
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -1758,6 +1765,13 @@ inherited OrderExternalForm: TOrderExternalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPrintComment'
+        Value = Null
+        Component = cbPrintComment
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1806,7 +1820,7 @@ inherited OrderExternalForm: TOrderExternalForm
       end
       item
         Name = 'outOperDatePartner_sale'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDatePartner_sale
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -1930,18 +1944,19 @@ inherited OrderExternalForm: TOrderExternalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisPrintComment'
+        Value = True
+        Component = cbPrintComment
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = ceComment
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = True
-        Component = cbAuto
-        DataType = ftBoolean
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 162
@@ -2029,43 +2044,11 @@ inherited OrderExternalForm: TOrderExternalForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderExternal_SetErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 518
     Top = 320
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderExternal_SetUnErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 582
     Top = 304
   end
@@ -2194,14 +2177,14 @@ inherited OrderExternalForm: TOrderExternalForm
       end
       item
         Name = 'inAmount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inAmountSecond'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2523,7 +2506,7 @@ inherited OrderExternalForm: TOrderExternalForm
       end
       item
         Name = 'ChangePercent'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = edChangePercent
         DataType = ftFloat
         ParamType = ptInput
@@ -2836,7 +2819,7 @@ inherited OrderExternalForm: TOrderExternalForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -2895,7 +2878,7 @@ inherited OrderExternalForm: TOrderExternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 856
-    Top = 96
+    Left = 816
+    Top = 72
   end
 end

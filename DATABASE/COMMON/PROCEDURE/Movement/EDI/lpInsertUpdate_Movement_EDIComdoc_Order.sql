@@ -356,6 +356,7 @@ BEGIN
                                                                                                         ), vbMemberTakeId)
                                                                    , inPriceListId         := vbPriceListId
                                                                    , inPartnerId           := COALESCE ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = vbMovementId_Order AND DescId = zc_MovementLinkObject_Partner()), 0)
+                                                                   , inisPrintComment      := COALESCE ((SELECT ValueData FROM MovementBoolean WHERE MovementId = vbMovementId_Order AND DescId = zc_MovementBoolean_PrintComment()), FALSE) ::Boolean
                                                                    , inUserId              := inUserId
                                                                     );
     
@@ -517,6 +518,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.05.21         * inisPrintComment
  11.12.19         * tmpPriceList 
  19.10.14                                        *
 */

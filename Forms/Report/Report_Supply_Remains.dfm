@@ -201,6 +201,16 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
               Format = ',0.####'
               Kind = skSum
               Column = CountSend_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountProduction9
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountProduction9_Weight
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -382,6 +392,16 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
               Format = ',0.####'
               Kind = skSum
               Column = CountSend_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountProduction9
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountProduction9_Weight
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -688,6 +708,29 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
           object CountProduction7_Weight: TcxGridDBColumn
             Caption = #1057#1082#1083#1072#1076' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' + '#1057#1082#1083#1072#1076' '#1041#1072#1079#1072', '#1074#1077#1089
             DataBinding.FieldName = 'CountProduction7_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object CountProduction9: TcxGridDBColumn
+            Caption = #1062#1045#1061' '#1058#1091#1096#1077#1085#1082#1072', '#1082#1086#1083'.'
+            DataBinding.FieldName = 'CountProduction9'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object CountProduction9_Weight: TcxGridDBColumn
+            Caption = #1062#1045#1061' '#1058#1091#1096#1077#1085#1082#1072', '#1074#1077#1089
+            DataBinding.FieldName = 'CountProduction9_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'

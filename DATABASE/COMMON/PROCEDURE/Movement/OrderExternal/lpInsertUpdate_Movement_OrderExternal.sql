@@ -1,5 +1,6 @@
 -- Function: lpInsertUpdate_Movement_OrderExternal()
 
+--DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderExternal(
@@ -21,6 +22,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderExternal(
     IN inPersonalId          Integer   , -- Сотрудник (экспедитор)
     IN inPriceListId         Integer   , -- Прайс лист
     IN inPartnerId           Integer   , -- Контрагент
+    IN inisPrintComment      Boolean   , -- печатать Примечание в Расходной накладной (да/нет)
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer AS
@@ -74,6 +76,9 @@ BEGIN
 
      -- сохранили свойство <Цена с НДС (да/нет)>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
+     -- сохранили свойство <печатать Примечание в Расходной накладной(да/нет)>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PrintComment(), ioId, inisPrintComment);
+
      -- сохранили свойство <% НДС>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, inVATPercent);
      -- сохранили свойство <(-)% Скидки (+)% Наценки >
@@ -124,6 +129,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.05.21         * add inisPrintComment
  26.05.15         * add inPartnerId
  19.02.15         * add OperDateStart, OperDateEnd
  25.08.14                                        *

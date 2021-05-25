@@ -24,7 +24,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PriceListId Integer, PriceListName TVarChar
              , PartnerId Integer, PartnerName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
-             , PriceWithVAT Boolean, isPrinted Boolean,VATPercent TFloat, ChangePercent TFloat
+             , PriceWithVAT Boolean, isPrinted Boolean, isPrintComment Boolean
+             , VATPercent TFloat, ChangePercent TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat, TotalCountSecond TFloat
              , isEDI Boolean, isPromo Boolean
@@ -135,6 +136,7 @@ BEGIN
            , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
            , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
            , COALESCE (MovementBoolean_Print.ValueData, False) AS isPrinted
+           , COALESCE (MovementBoolean_PrintComment.ValueData, FALSE) AS isPrintComment
 
            , MovementFloat_VATPercent.ValueData             AS VATPercent
            , MovementFloat_ChangePercent.ValueData          AS ChangePercent
@@ -281,6 +283,10 @@ BEGIN
                                       ON MovementBoolean_Print.MovementId = Movement.Id
                                      AND MovementBoolean_Print.DescId = zc_MovementBoolean_Print()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_PrintComment
+                                      ON MovementBoolean_PrintComment.MovementId = Movement.Id
+                                     AND MovementBoolean_PrintComment.DescId = zc_MovementBoolean_PrintComment()
+
             LEFT JOIN MovementBoolean AS MovementBoolean_Promo
                                       ON MovementBoolean_Promo.MovementId =  Movement.Id
                                      AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
@@ -367,6 +373,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 25.05.21         *
  02.05.19         *
  05.10.16         * add inJuridicalBasisId
  25.11.15         * add isPromo

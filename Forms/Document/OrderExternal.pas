@@ -122,6 +122,7 @@ type
     ChangeGuidesStatuswms1: TChangeGuidesStatus;
     ChangeGuidesStatuswms2: TChangeGuidesStatus;
     ChangeGuidesStatuswms3: TChangeGuidesStatus;
+    cbPrintComment: TcxCheckBox;
   private
     { Private declarations }
   public

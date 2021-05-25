@@ -52,7 +52,9 @@ RETURNS TABLE ( GoodsId Integer
               , CountProduction7_Weight   TFloat -- Потребление -
               , CountProduction8          TFloat -- Потребление -другие склады
               , CountProduction8_Weight   TFloat -- Потребление -
-              
+              , CountProduction9          TFloat -- Потребление -Цех тушенка 2790412 
+              , CountProduction9_Weight   TFloat -- Потребление -
+
               , CountProduction_avg        TFloat -- среднесуточный расход
               , CountProduction_Weight_avg TFloat -- среднесуточный расход
               , CountDays             TFloat -- Запас дней
@@ -259,6 +261,8 @@ BEGIN
                                        ELSE 0
                                   END)                                                                                         AS CountProduction8 --       другие
 
+                           , SUM (CASE WHEN tmpMIContainer.LocationId = 2790412 THEN tmpMIContainer.CountProduction ELSE 0 END) AS CountProduction9 --  --Цех тушенка 2790412 
+
                            , SUM (tmpMIContainer.RemainsStart) AS RemainsStart
                            , SUM (tmpMIContainer.RemainsEnd)   AS RemainsEnd
                            
@@ -282,6 +286,7 @@ BEGIN
                                        THEN tmpMIContainer.CountProduction
                                        ELSE 0
                                   END) <> 0
+                           OR SUM (CASE WHEN tmpMIContainer.LocationId = 2790412 THEN tmpMIContainer.CountProduction ELSE 0 END) <> 0
                            OR SUM (tmpMIContainer.RemainsStart) <> 0
                            OR SUM (tmpMIContainer.RemainsEnd) <> 0
                       )
@@ -330,6 +335,8 @@ BEGIN
                           , (tmpData.CountProduction7 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS CountProduction7_Weight
                           , tmpData.CountProduction8   ::TFloat
                           , (tmpData.CountProduction8 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS CountProduction8_Weight
+                          , tmpData.CountProduction9   ::TFloat
+                          , (tmpData.CountProduction9 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS CountProduction9_Weight
                      FROM tmpData
                           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                                 ON ObjectFloat_Weight.ObjectId = tmpData.GoodsId
@@ -389,7 +396,9 @@ BEGIN
               , tmpData.CountProduction7_Weight ::TFloat
               , tmpData.CountProduction8        ::TFloat
               , tmpData.CountProduction8_Weight ::TFloat
-              
+              , tmpData.CountProduction9        ::TFloat
+              , tmpData.CountProduction9_Weight ::TFloat
+                            
 /*
 округление среднесуточный, если он меньше 1, тогда 4 знака
 если меньше 10 - 2 знака
