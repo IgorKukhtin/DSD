@@ -1,27 +1,27 @@
 inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanListForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1083#1072#1085' '#1087#1086' '#1091#1084#1077#1085#1100#1096#1077#1085#1080#1102' '#1082#1086#1083'-'#1074#1086' '#1085#1077#1083#1080#1082#1074#1080#1076#1072' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091'>'
   ClientHeight = 504
-  ClientWidth = 899
+  ClientWidth = 1305
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 915
+  ExplicitWidth = 1321
   ExplicitHeight = 543
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 899
+    Width = 1305
     Height = 421
     ExplicitTop = 83
     ExplicitWidth = 899
     ExplicitHeight = 421
     ClientRectBottom = 421
-    ClientRectRight = 899
+    ClientRectRight = 1305
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 899
       ExplicitHeight = 421
       inherited cxGrid: TcxGrid
         Top = 89
-        Width = 899
+        Width = 1305
         Height = 332
         ExplicitTop = 89
         ExplicitWidth = 899
@@ -207,11 +207,12 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
       object cxGridDetals: TcxGrid
         Left = 0
         Top = 0
-        Width = 899
+        Width = 1305
         Height = 81
         Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 899
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetalsDS
@@ -248,20 +249,28 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
           OptionsView.HeaderHeight = 50
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object D_UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1085#1077#1083#1080#1082#1074#1080#1076#1086#1074
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 123
+          end
           object D_AmountAll: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088#1086#1074' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078
             DataBinding.FieldName = 'AmountAll'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 71
           end
           object D_AmountStart: TcxGridDBColumn
             Caption = #1059#1095#1077#1090#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' ('#1073#1077#1079' '#1089#1077#1088#1099#1093')'
             DataBinding.FieldName = 'AmountStart'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 75
           end
           object D_AmountSale: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1085#1086' '#1079#1072' '#1087#1077#1088#1080#1086#1076
@@ -269,7 +278,7 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 69
           end
           object D_ProcSale: TcxGridDBColumn
             Caption = '% '#1087#1088#1086#1076#1072#1078
@@ -279,7 +288,7 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 75
           end
           object D_Color_calc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_calc'
@@ -296,7 +305,7 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 69
           end
           object D_SummaSale: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078
@@ -306,7 +315,7 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 67
           end
           object D_ProcSaleIlliquid: TcxGridDBColumn
             Caption = #1055#1088#1086#1094#1077#1085#1090' '#1086#1090' '#1089#1091#1084#1084#1099
@@ -316,7 +325,7 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 73
           end
           object D_SummaPenaltySum: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' '#1087#1086' '#1089#1091#1084#1084#1077
@@ -326,7 +335,7 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 75
           end
           object D_SummaPenalty: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' '#1080#1090#1086#1075#1086
@@ -336,7 +345,7 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 76
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -346,16 +355,17 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 81
-        Width = 899
+        Width = 1305
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salTop
         Control = cxGridDetals
+        ExplicitWidth = 899
       end
     end
   end
   inherited Panel: TPanel
-    Width = 899
+    Width = 1305
     Height = 57
     ExplicitWidth = 899
     ExplicitHeight = 57

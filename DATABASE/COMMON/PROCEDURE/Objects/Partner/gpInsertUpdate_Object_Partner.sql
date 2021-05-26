@@ -14,12 +14,17 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                      , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer
                                                      , TFloat, TFloat, TFloat, Boolean, Boolean, Boolean
                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                      , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
-
+*/
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer
+                                                     , TFloat, TFloat, TFloat, Boolean, Boolean, Boolean
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
@@ -46,7 +51,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
 
     IN inJuridicalId         Integer   ,    -- Юридическое лицо
     IN inRouteId             Integer   ,    -- Маршрут
+    IN inRouteId_30201       Integer   ,    -- Маршрут мясное сырье    
     IN inRouteSortingId      Integer   ,    -- Сортировка маршрутов
+
   
     IN inMemberTakeId        Integer   ,    -- Физ лицо(сотрудник экспедитор) 
     IN inPersonalId          Integer   ,    -- Физ лицо (ответственное лицо)
@@ -58,7 +65,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inGoodsPropertyId     Integer   ,    -- Классификаторы свойств товаров
     
     IN inPriceListId         Integer   ,    -- Прайс-лист
+    IN inPriceListId_30201   Integer   ,    -- Прайс-лист мясное сырье
     IN inPriceListPromoId    Integer   ,    -- Прайс-лист(Акционный)
+
     IN inStartPromo          TDateTime ,    -- Дата начала акции
     IN inEndPromo            TDateTime ,    -- Дата окончания акции     
 
@@ -132,6 +141,7 @@ BEGIN
                                         , inEdiDesadv       := inEdiDesadv
                                         , inJuridicalId     := inJuridicalId
                                         , inRouteId         := inRouteId
+                                        , inRouteId_30201   := inRouteId_30201
                                         , inRouteSortingId  := inRouteSortingId
                                         , inMemberTakeId    := inMemberTakeId
                                         , inPersonalId      := inPersonalId
@@ -141,10 +151,10 @@ BEGIN
                                         , inPartnerTagId    := inPartnerTagId
                                         , inGoodsPropertyId := inGoodsPropertyId           
                                         , inPriceListId     := inPriceListId
+                                        , inPriceListId_30201 := inPriceListId_30201
                                         , inPriceListPromoId:= inPriceListPromoId
                                         , inStartPromo      := inStartPromo
                                         , inEndPromo        := inEndPromo
-
                                         , inUserId          := vbUserId
                                          );
 
@@ -178,6 +188,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.05.21         *
  29.04.21         * inCategory
  19.06.17         * add inPersonalMerchId
  07.03.17         * add Schedule

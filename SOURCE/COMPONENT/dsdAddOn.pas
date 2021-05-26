@@ -3397,6 +3397,7 @@ begin
       Self.ValueColumn := ValueColumn;
       Self.ValueBoldColumn := ValueBoldColumn;
       Self.ColorInValueColumn := ColorInValueColumn;
+      Self.BackGroundValueColumn := BackGroundValueColumn;
       Self.ColorValueList.Assign(ColorValueList);
     end
   else
@@ -3429,6 +3430,7 @@ begin
       Self.ValueColumn := ValueColumn;
       Self.ValueBoldColumn := ValueBoldColumn;
       Self.ColorInValueColumn := ColorInValueColumn;
+      Self.BackGroundValueColumn := BackGroundValueColumn;
       Self.ColorValueList.Assign(ColorValueList);
     end
   else

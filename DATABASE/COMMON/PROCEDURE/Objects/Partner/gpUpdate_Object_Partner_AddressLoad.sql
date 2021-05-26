@@ -396,6 +396,7 @@ IF inPersonalTrade = 'Пономаренко Вікторія' THEN inPersonalTrade:= 'Пономаренко 
                                         , inEdiDesadv       := FALSE
                                         , inJuridicalId     := vbJuridicalId
                                         , inRouteId         := NULL
+                                        , inRouteId_30201   := NULL
                                         , inRouteSortingId  := NULL
                                         , inMemberTakeId    := NULL
                                         , inPersonalId      := NULL
@@ -405,6 +406,7 @@ IF inPersonalTrade = 'Пономаренко Вікторія' THEN inPersonalTrade:= 'Пономаренко 
                                         , inGoodsPropertyId := NULL
            
                                         , inPriceListId     := NULL
+                                        , inPriceListId_30201:= NULL
                                         , inPriceListPromoId:= NULL
                                         , inStartPromo      := NULL
                                         , inEndPromo        := NULL

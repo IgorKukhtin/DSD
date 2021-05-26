@@ -23,8 +23,6 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
       inherited cxGrid: TcxGrid
         Width = 1079
         Height = 254
-        ExplicitLeft = 368
-        ExplicitTop = 16
         ExplicitWidth = 1079
         ExplicitHeight = 254
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -193,6 +191,26 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
               Format = ',0.####'
               Kind = skSum
               Column = CountIncome_dop_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountSend
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountSend_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountProduction9
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountProduction9_Weight
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -364,6 +382,26 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
               Format = ',0.####'
               Kind = skSum
               Column = CountIncome_dop_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountSend
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountSend_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountProduction9
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountProduction9_Weight
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -678,6 +716,29 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
             Options.Editing = False
             Width = 70
           end
+          object CountProduction9: TcxGridDBColumn
+            Caption = #1062#1045#1061' '#1058#1091#1096#1077#1085#1082#1072', '#1082#1086#1083'.'
+            DataBinding.FieldName = 'CountProduction9'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object CountProduction9_Weight: TcxGridDBColumn
+            Caption = #1062#1045#1061' '#1058#1091#1096#1077#1085#1082#1072', '#1074#1077#1089
+            DataBinding.FieldName = 'CountProduction9_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object CountProduction8: TcxGridDBColumn
             Caption = #1076#1088#1091#1075#1080#1077' '#1089#1082#1083#1072#1076#1099', '#1082#1086#1083'.'
             DataBinding.FieldName = 'CountProduction8'
@@ -793,6 +854,30 @@ inherited Report_Supply_RemainsForm: TReport_Supply_RemainsForm
             HeaderHint = #1057#1088#1077#1076#1085#1077#1089#1091#1090#1086#1095#1085#1099#1081' '#1088#1072#1089#1093#1086#1076' '#1074' '#1076#1077#1085#1100
             Options.Editing = False
             Width = 75
+          end
+          object CountSend: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1088#1072#1089#1093#1086#1076', '#1082#1086#1083'.'
+            DataBinding.FieldName = 'CountSend'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object CountSend_Weight: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1088#1072#1089#1093#1086#1076', '#1074#1077#1089
+            DataBinding.FieldName = 'CountSend_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object RemainsEnd_Weight: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1082#1086#1085#1077#1095#1085'. '#1074#1077#1089

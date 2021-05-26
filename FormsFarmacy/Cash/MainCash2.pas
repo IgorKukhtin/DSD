@@ -3621,7 +3621,7 @@ begin
                 Screen.MessageFont.Color := nOldColor;
               end;
             end;
-          end else if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
+          end else if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 2 then
           begin
             if not SignRecipeLikiDniproeHealth then
             begin

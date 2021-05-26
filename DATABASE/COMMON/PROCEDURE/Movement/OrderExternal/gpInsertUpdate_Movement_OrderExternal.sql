@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_OrderExternal()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternal(
  INOUT ioId                      Integer   , -- Ключ объекта <Документ Перемещение>
@@ -24,6 +25,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternal(
  INOUT ioPriceListId             Integer   , -- Прайс лист
    OUT outPriceListName          TVarChar  , -- Прайс лист
     IN inPartnerId               Integer   , -- Контрагент
+    IN inisPrintComment          Boolean   , -- печатать Примечание в Расходной накладной (да/нет)
     IN inComment                 TVarChar  , -- Примечание
     IN inSession                 TVarChar    -- сессия пользователя
 )
@@ -145,6 +147,7 @@ BEGIN
                                                  , inPersonalId          := ioPersonalId
                                                  , inPriceListId         := ioPriceListId
                                                  , inPartnerId           := inPartnerId
+                                                 , inisPrintComment      := inisPrintComment
                                                  , inUserId              := vbUserId
                                                   );
 
@@ -163,6 +166,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.05.21         * inisPrintComment
  20.06.18         *
  13.09.15         * add ioPersonalId, ioPersonalName
  26.05.15         * add inPartnerId

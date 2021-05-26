@@ -71,6 +71,7 @@ type
     cxLabel6: TcxLabel;
     cePenalty: TcxCurrencyEdit;
     cxLabel8: TcxLabel;
+    D_UnitName: TcxGridDBColumn;
   private
     { Private declarations }
   public

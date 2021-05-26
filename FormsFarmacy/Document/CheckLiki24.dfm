@@ -277,7 +277,41 @@ inherited CheckLiki24Form: TCheckLiki24Form
         end>
     end
   end
-  inherited spSelect: TdsdStoredProc
+  inherited DBViewAddOn: TdsdDBViewAddOn [4]
+  end
+  inherited PopupMenu: TPopupMenu [5]
+  end
+  inherited ClientDataSet1: TClientDataSet [6]
+  end
+  inherited DataSource1: TDataSource [7]
+  end
+  inherited dsdDBViewAddOn1: TdsdDBViewAddOn [8]
+  end
+  inherited spMovementSetErased: TdsdStoredProc [9]
+  end
+  inherited spConfirmedKind_Complete: TdsdStoredProc [10]
+  end
+  inherited spConfirmedKind_UnComplete: TdsdStoredProc [11]
+  end
+  inherited spUpdateMovementItemAmount: TdsdStoredProc [12]
+  end
+  inherited spSmashCheck: TdsdStoredProc [13]
+  end
+  inherited spUpdateOperDate: TdsdStoredProc [14]
+  end
+  inherited spMovementSetErasedSite: TdsdStoredProc [15]
+  end
+  inherited FormParams: TdsdFormParams [16]
+  end
+  inherited spPUSHSetErased: TdsdStoredProc [17]
+  end
+  inherited SPUpdate_NotMCS: TdsdStoredProc [18]
+  end
+  inherited MasterDS: TDataSource [19]
+  end
+  inherited MasterCDS: TClientDataSet [20]
+  end
+  inherited spSelect: TdsdStoredProc [21]
     Params = <
       item
         Name = 'inType'
@@ -286,7 +320,7 @@ inherited CheckLiki24Form: TCheckLiki24Form
         MultiSelectSeparator = ','
       end>
   end
-  inherited BarManager: TdxBarManager
+  inherited BarManager: TdxBarManager [22]
     DockControlHeights = (
       0
       0
@@ -375,11 +409,5 @@ inherited CheckLiki24Form: TCheckLiki24Form
           ItemName = 'bbGridToExcel'
         end>
     end
-  end
-  inherited dsdDBViewAddOn1: TdsdDBViewAddOn
-    ColorRuleList = <
-      item
-        ColorValueList = <>
-      end>
   end
 end

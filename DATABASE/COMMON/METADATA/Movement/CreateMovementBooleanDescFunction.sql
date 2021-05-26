@@ -113,6 +113,9 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_Detail() RETURNS integer AS $BODY$
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_Detail', 'Детализация данных'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_Detail');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_PrintComment() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_PrintComment'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_PrintComment', 'Печатать Примечание в Расходной накладной (да/нет)'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_PrintComment');
 
 
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Аптека
@@ -298,10 +301,16 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_SendLoss() RETURNS integer AS $BOD
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_SendLoss', 'В полное списание'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_SendLoss');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_Supplement() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_Supplement'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_Supplement', 'Использовать товар в дополнении СУН'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_Supplement');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 25.05.21                                                                                    * zc_MovementBoolean_Supplement
+ 25.05.21         * zc_MovementBoolean_PrintComment
  21.05.21                                                                                    * zc_MovementBoolean_SendLoss
  28.04.21         * zc_MovementBoolean_Detail
  23.04.21                                                                                    * zc_MovementBoolean_CorrectIlliquidMarketing

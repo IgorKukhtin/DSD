@@ -435,6 +435,15 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object isPrintComment: TcxGridDBColumn
+            Caption = #1055#1077#1095#1072#1090#1072#1090#1100' '#1055#1088#1080#1084'. '#1074' '#1056#1072#1089#1093'. '#1085#1072#1082#1083'.'
+            DataBinding.FieldName = 'isPrintComment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1077#1095#1072#1090#1072#1090#1100' '#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1074' '#1056#1072#1089#1093#1086#1076#1085#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+            Options.Editing = False
+            Width = 82
+          end
           object PartnerName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
             DataBinding.FieldName = 'PartnerName'
@@ -1063,7 +1072,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime

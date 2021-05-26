@@ -93,6 +93,7 @@ BEGIN
                                                  , inPersonalId          := inPersonalId
                                                  , inPriceListId         := ioPriceListId
                                                  , inPartnerId           := inPartnerId
+                                                 , inisPrintComment      := FALSE ::Boolean
                                                  , inUserId              := vbUserId
                                                   );
 
@@ -119,6 +120,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.05.21         * inisPrintComment
  21.05.15         * add inRetailId, inPartnerId
  11.02.15         *
 */

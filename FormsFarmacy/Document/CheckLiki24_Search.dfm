@@ -320,10 +320,28 @@ inherited CheckLiki24_SearchForm: TCheckLiki24_SearchForm
         end>
     end
   end
-  inherited dsdDBViewAddOn1: TdsdDBViewAddOn
-    ColorRuleList = <
-      item
-        ColorValueList = <>
-      end>
+  inherited dsdDBViewAddOn1: TdsdDBViewAddOn [8]
+  end
+  inherited spMovementSetErased: TdsdStoredProc [9]
+  end
+  inherited spConfirmedKind_Complete: TdsdStoredProc [10]
+  end
+  inherited spConfirmedKind_UnComplete: TdsdStoredProc [11]
+  end
+  inherited spMovementSetErasedSite: TdsdStoredProc [12]
+  end
+  inherited FormParams: TdsdFormParams [13]
+  end
+  inherited spPUSHSetErased: TdsdStoredProc [14]
+  end
+  inherited SPUpdate_NotMCS: TdsdStoredProc [15]
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn [16]
+  end
+  inherited PopupMenu: TPopupMenu [17]
+  end
+  inherited ClientDataSet1: TClientDataSet [18]
+  end
+  inherited DataSource1: TDataSource [19]
   end
 end
