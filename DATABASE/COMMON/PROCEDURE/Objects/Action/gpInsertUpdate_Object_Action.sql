@@ -8,15 +8,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Action(
     IN inName           TVarChar  ,     -- Название объекта <Действия>
     IN inSession        TVarChar        -- сессия пользователя
 )
-  RETURNS integer AS
+RETURNS Integer
+AS
 $BODY$
-   DECLARE UserId Integer;
+   DECLARE vbUserId Integer;
 BEGIN
-   
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Action());
-
-   UserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- Если код не установлен, определяем его каи последний+1
    inCode := lfGet_ObjectCode(inCode, zc_Object_Action()); 
@@ -30,20 +29,16 @@ BEGIN
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Action(), inCode, inName);
    
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Action (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  23.09.13                         *
-
 */
 
 -- тест
