@@ -39,7 +39,7 @@ type
     InfoMoneyName_master: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edBonusKind: TcxButtonEdit;
-    GuidesDocumentTaxKind: TdsdGuides;
+    GuidesDocumentBonusKind: TdsdGuides;
     Sum_BonusFact: TcxGridDBColumn;
     InvNumber_child: TcxGridDBColumn;
     InvNumber_find: TcxGridDBColumn;
@@ -88,6 +88,7 @@ type
     edMember: TcxButtonEdit;
     actPrintSingDetail: TdsdPrintAction;
     bbPrintSingDetail: TdxBarButton;
+    cbisReport: TcxCheckBox;
   private
     { Private declarations }
   public
