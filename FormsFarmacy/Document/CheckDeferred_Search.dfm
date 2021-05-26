@@ -211,6 +211,13 @@ inherited CheckDeferred_SearchForm: TCheckDeferred_SearchForm
             Options.Editing = False
             Width = 62
           end
+          object isNotMCS: TcxGridDBColumn
+            Caption = #1053#1077' '#1076#1083#1103' '#1053#1058#1047
+            DataBinding.FieldName = 'isNotMCS'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 53
+          end
           object Color_CalcDoc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_CalcDoc'
             Visible = False
@@ -753,6 +760,20 @@ inherited CheckDeferred_SearchForm: TCheckDeferred_SearchForm
         end>
       Caption = 'actPUSHSetErased'
     end
+    object actUpdateNotMCS: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = SPUpdate_NotMCS
+      StoredProcList = <
+        item
+          StoredProc = SPUpdate_NotMCS
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1076#1083#1103' '#1053#1058#1047'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1076#1083#1103' '#1053#1058#1047'"'
+      ImageIndex = 36
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1076#1083#1103' '#1053#1058#1047'"?'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -854,11 +875,15 @@ inherited CheckDeferred_SearchForm: TCheckDeferred_SearchForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'bbUpdateNotMCS'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end>
     end
     inherited dxBarStatic: TdxBarStatic
@@ -890,6 +915,10 @@ inherited CheckDeferred_SearchForm: TCheckDeferred_SearchForm
     end
     object dxBarButton4: TdxBarButton
       Action = actDeleteCheckSite
+      Category = 0
+    end
+    object bbUpdateNotMCS: TdxBarButton
+      Action = actUpdateNotMCS
       Category = 0
     end
   end
@@ -1120,5 +1149,39 @@ inherited CheckDeferred_SearchForm: TCheckDeferred_SearchForm
     PackSize = 1
     Left = 314
     Top = 256
+  end
+  object SPUpdate_NotMCS: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check__NotMCS'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotMCS'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isNotMCS'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisNotMCS'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isNotMCS'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 354
+    Top = 304
   end
 end

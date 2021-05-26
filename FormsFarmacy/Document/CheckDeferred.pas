@@ -88,6 +88,10 @@ type
     AccommodationName: TcxGridDBColumn;
     actPUSHSetErased: TdsdShowPUSHMessage;
     spPUSHSetErased: TdsdStoredProc;
+    SPUpdate_NotMCS: TdsdStoredProc;
+    actUpdateNotMCS: TdsdExecStoredProc;
+    bbUpdateNotMCS: TdxBarButton;
+    isNotMCS: TcxGridDBColumn;
   private
     { Private declarations }
   public

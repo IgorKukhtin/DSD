@@ -241,7 +241,35 @@ inherited CheckSite_SearchForm: TCheckSite_SearchForm
         end>
     end
   end
-  inherited spSelect: TdsdStoredProc
+  inherited DBViewAddOn: TdsdDBViewAddOn [4]
+  end
+  inherited PopupMenu: TPopupMenu [5]
+  end
+  inherited ClientDataSet1: TClientDataSet [6]
+  end
+  inherited DataSource1: TDataSource [7]
+  end
+  inherited dsdDBViewAddOn1: TdsdDBViewAddOn [8]
+  end
+  inherited spMovementSetErased: TdsdStoredProc [9]
+  end
+  inherited spConfirmedKind_Complete: TdsdStoredProc [10]
+  end
+  inherited spConfirmedKind_UnComplete: TdsdStoredProc [11]
+  end
+  inherited spMovementSetErasedSite: TdsdStoredProc [12]
+  end
+  inherited FormParams: TdsdFormParams [13]
+  end
+  inherited spPUSHSetErased: TdsdStoredProc [14]
+  end
+  inherited SPUpdate_NotMCS: TdsdStoredProc [15]
+  end
+  inherited MasterDS: TDataSource [16]
+  end
+  inherited MasterCDS: TClientDataSet [17]
+  end
+  inherited spSelect: TdsdStoredProc [18]
     Params = <
       item
         Name = 'inType'
@@ -250,17 +278,11 @@ inherited CheckSite_SearchForm: TCheckSite_SearchForm
         MultiSelectSeparator = ','
       end>
   end
-  inherited BarManager: TdxBarManager
+  inherited BarManager: TdxBarManager [19]
     DockControlHeights = (
       0
       0
       26
       0)
-  end
-  inherited dsdDBViewAddOn1: TdsdDBViewAddOn
-    ColorRuleList = <
-      item
-        ColorValueList = <>
-      end>
   end
 end

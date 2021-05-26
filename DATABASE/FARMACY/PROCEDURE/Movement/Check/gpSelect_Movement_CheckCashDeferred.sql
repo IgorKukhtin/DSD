@@ -192,6 +192,7 @@ BEGIN
                    WHEN tmpMov.isShowLiki24 = TRUE THEN 'Liki24' 
                    ELSE 'VIP' END::TVarChar  AS TypeChech
             , CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) in (zc_Enum_CheckSourceKind_Tabletki(), zc_Enum_CheckSourceKind_Liki24()) THEN TRUE ELSE FALSE END AS isBanAdd
+            , COALESCE(MovementBoolean_NotMCS.ValueData,FALSE)   AS isNotMCS
        FROM tmpMov
             LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id
             LEFT JOIN Movement ON Movement.Id = tmpMov.Id
@@ -362,6 +363,11 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_BookingId
                                      ON MovementString_BookingId.MovementId = Movement.Id
                                     AND MovementString_BookingId.DescId = zc_MovementString_BookingId()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_NotMCS
+                                      ON MovementBoolean_NotMCS.MovementId = Movement.Id
+                                     AND MovementBoolean_NotMCS.DescId = zc_MovementBoolean_NotMCS()
+
        WHERE tmpMov.isDeferred = True
          AND (inType = 0 OR inType = 1 AND tmpMov.isShowVIP = TRUE OR inType = 2 AND tmpMov.isShowTabletki = TRUE OR inType in (1, 3) AND tmpMov.isShowLiki24 = TRUE)
        );

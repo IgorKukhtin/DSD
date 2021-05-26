@@ -10,19 +10,19 @@ inherited CheckDeferredForm: TCheckDeferredForm
   inherited PageControl: TcxPageControl
     Width = 736
     Height = 395
-    ExplicitWidth = 668
-    ExplicitHeight = 356
+    ExplicitWidth = 736
+    ExplicitHeight = 395
     ClientRectBottom = 395
     ClientRectRight = 736
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 668
-      ExplicitHeight = 356
+      ExplicitWidth = 736
+      ExplicitHeight = 395
       inherited cxGrid: TcxGrid
         Width = 273
         Height = 395
         Align = alLeft
         ExplicitWidth = 273
-        ExplicitHeight = 356
+        ExplicitHeight = 395
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -195,6 +195,14 @@ inherited CheckDeferredForm: TCheckDeferredForm
             Options.Editing = False
             Width = 60
           end
+          object isNotMCS: TcxGridDBColumn
+            Caption = #1053#1077' '#1076#1083#1103' '#1053#1058#1047
+            DataBinding.FieldName = 'isNotMCS'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 57
+          end
           object Color_CalcDoc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_CalcDoc'
             Visible = False
@@ -212,8 +220,6 @@ inherited CheckDeferredForm: TCheckDeferredForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 387
-        ExplicitHeight = 356
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource1
@@ -357,7 +363,6 @@ inherited CheckDeferredForm: TCheckDeferredForm
         Height = 395
         HotZoneClassName = 'TcxMediaPlayer8Style'
         Control = cxGrid
-        ExplicitHeight = 356
       end
     end
   end
@@ -828,6 +833,20 @@ inherited CheckDeferredForm: TCheckDeferredForm
         end>
       Caption = 'actPUSHSetErased'
     end
+    object actUpdateNotMCS: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = SPUpdate_NotMCS
+      StoredProcList = <
+        item
+          StoredProc = SPUpdate_NotMCS
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1076#1083#1103' '#1053#1058#1047'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1076#1083#1103' '#1053#1058#1047'"'
+      ImageIndex = 36
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1076#1083#1103' '#1053#1058#1047'"?'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -949,6 +968,14 @@ inherited CheckDeferredForm: TCheckDeferredForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateNotMCS'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end>
     end
@@ -991,6 +1018,10 @@ inherited CheckDeferredForm: TCheckDeferredForm
     end
     object dxBarButton6: TdxBarButton
       Action = actDeleteCheckSite
+      Category = 0
+    end
+    object bbUpdateNotMCS: TdxBarButton
+      Action = actUpdateNotMCS
       Category = 0
     end
   end
@@ -1309,5 +1340,39 @@ inherited CheckDeferredForm: TCheckDeferredForm
     PackSize = 1
     Left = 314
     Top = 256
+  end
+  object SPUpdate_NotMCS: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check__NotMCS'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotMCS'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isNotMCS'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisNotMCS'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isNotMCS'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 306
+    Top = 312
   end
 end
