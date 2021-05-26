@@ -14,7 +14,7 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      IF inSession = zc_Enum_Process_Auto_PrimeCost() :: TVarChar
-     THEN vbUserId:= lpGetUserBySession (inSession) :: Integer;
+     THEN vbUserId:= lpGetUserBySession (inSession);
      ELSE vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Send());
      END IF;
 
