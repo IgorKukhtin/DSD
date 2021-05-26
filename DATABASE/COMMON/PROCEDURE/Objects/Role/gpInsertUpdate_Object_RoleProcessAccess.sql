@@ -10,13 +10,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_RoleProcessAccess(
 )
   RETURNS integer AS
 $BODY$
-   DECLARE UserId Integer;
+   DECLARE vbUserId Integer;
 BEGIN
    
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_RoleProcess());
 
-   UserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_RoleProcessAccess(), 0, '');
@@ -25,10 +25,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_RoleProcessAccess_Role(), ioId, inRoleId);
    -- сохранили связь с <Действием>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_RoleProcessAccess_Process(), ioId, inProcessId);
-
    
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;$BODY$
 

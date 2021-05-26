@@ -3,21 +3,21 @@
 -- DROP FUNCTION gpInsertUpdate_Object_Business(Integer,Integer,TVarChar,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Business(
- INOUT ioId	                 Integer,       -- ключ объекта < Бизнес>
+ INOUT ioId	             Integer,       -- ключ объекта < Бизнес>
     IN inCode                Integer,       -- Код объекта <Бизнес>
     IN inName                TVarChar,      -- Наименование объекта <Бизнес>
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS integer AS
 $BODY$
-   DECLARE UserId Integer;
+   DECLARE vbUserId Integer;
    DECLARE Code_max Integer;   
 
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Business());
-   UserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- Если код не установлен, определяем его каи последний+1
    IF COALESCE (inCode, 0) = 0
@@ -36,7 +36,7 @@ BEGIN
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Business(), Code_max, inName);
 
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE

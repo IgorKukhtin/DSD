@@ -10,20 +10,20 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_PSLExportKind(
 )
 RETURNS VOID AS
 $BODY$
-   DECLARE UserId Integer;
+   DECLARE vbUserId Integer;
    DECLARE Code_max Integer;   
    
 BEGIN
  
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_PSLExportKind());
-   UserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
    
    -- сохранили <Объект>
    PERFORM lpInsertUpdate_Object (ioId, zc_Object_PSLExportKind(), inCode, inName);
    
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
 
