@@ -801,7 +801,11 @@ BEGIN
            , CASE WHEN OH_JuridicalDetails_To.OKPO IN ('02147345') THEN '' ELSE MovementSale_Comment.ValueData END :: TVarChar AS SaleComment
            , CASE WHEN OH_JuridicalDetails_To.OKPO IN ('02147345') THEN MovementSale_Comment.ValueData ELSE '' END :: TVarChar AS SaleComment_02147345
 
-           , CASE WHEN vbIsInfoMoney_30200 = FALSE AND TRIM (MovementOrder_Comment.ValueData) <> TRIM (COALESCE (MovementSale_Comment.ValueData, '')) THEN MovementOrder_Comment.ValueData ELSE '' END AS OrderComment
+           , CASE WHEN vbIsInfoMoney_30200 = FALSE AND TRIM (MovementOrder_Comment.ValueData) <> TRIM (COALESCE (MovementSale_Comment.ValueData, ''))
+                   AND (vbPaidKindId = zc_Enum_PaidKind_SecondForm() OR Position(UPPER('ξαμεν') in UPPER(View_Contract.InvNumber)) > 0)
+                       THEN MovementOrder_Comment.ValueData
+                  ELSE ''
+             END :: TVarChar AS OrderComment
            , CASE WHEN Movement.DescId = zc_Movement_Loss() THEN TRUE ELSE FALSE END isMovementLoss
 
            , CASE WHEN Position(UPPER('ξαμεν') in UPPER(View_Contract.InvNumber)) > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPrintText
