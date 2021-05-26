@@ -1,4 +1,4 @@
-unit Report_CheckBonus_Jornal;
+unit Report_CheckBonus_Journal;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxSkinXmas2008Blue;
 
 type
-  TReport_CheckBonus_JornalForm = class(TAncestorReportForm)
+  TReport_CheckBonus_JournalForm = class(TAncestorReportForm)
     InvNumber_master: TcxGridDBColumn;
     Value: TcxGridDBColumn;
     Sum_CheckBonus: TcxGridDBColumn;
@@ -99,6 +99,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TReport_CheckBonus_JornalForm);
+  RegisterClass(TReport_CheckBonus_JournalForm);
 
 end.

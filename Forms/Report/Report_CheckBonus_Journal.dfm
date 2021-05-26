@@ -1,4 +1,4 @@
-inherited Report_CheckBonus_JornalForm: TReport_CheckBonus_JornalForm
+inherited Report_CheckBonus_JournalForm: TReport_CheckBonus_JournalForm
   Caption = #1046#1091#1088#1085#1072#1083' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084'>'
   ClientHeight = 341
   ClientWidth = 1180

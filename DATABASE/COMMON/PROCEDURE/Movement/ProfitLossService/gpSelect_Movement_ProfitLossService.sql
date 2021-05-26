@@ -119,7 +119,7 @@ BEGIN
 
            , MIString_Comment.ValueData                     AS Comment
            , Object_Juridical.Id                            AS JuridicalId
-           , Object_Juridical.ObjectCode                    AS JuridicalCode
+           , Object_Juridical.ObjectCode          ::Integer AS JuridicalCode
            , Object_Juridical.ValueData                     AS JuridicalName
            , ObjectDesc.ItemName
 

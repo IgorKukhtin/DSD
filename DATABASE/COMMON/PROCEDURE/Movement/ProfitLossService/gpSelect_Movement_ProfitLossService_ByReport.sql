@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ProfitLossService_ByReport(
     IN inisReport           Boolean ,   -- Данные из отчета (да/нет)
     IN inSession            TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_full TVarChar, OperDate TDateTime
+RETURNS TABLE(Id Integer, InvNumber TVarChar, InvNumber_full TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , ServiceDate  TDateTime
              , TotalSumm  TFloat
@@ -24,7 +24,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_full TVarChar, OperDate
              , BonusValue TFloat, AmountPartner TFloat, Summ TFloat
              , Summ_51201 TFloat
              , Comment TVarChar
-             , JuridicalCode Integer, JuridicalName TVarChar, ItemName TVarChar, OKPO TVarChar
+             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, ItemName TVarChar, OKPO TVarChar
              , JuridicalCode_Child Integer, JuridicalName_Child TVarChar, OKPO_Child TVarChar
              , RetailId Integer, RetailName TVarChar
              , PartnerCode Integer, PartnerName TVarChar, ItemName_Partner TVarChar
@@ -63,7 +63,7 @@ BEGIN
                                                                     , inPaidKindId      := inPaidKindId
                                                                     , inIsErased        := false::Boolean
                                                                     , inSession         := inSession) AS tmp
-                           WHERE tmp.JuridicalId = inJuridicalId
+                           WHERE (tmp.JuridicalId = inJuridicalId OR inJuridicalId = 0) 
                            )
 
   
