@@ -25,7 +25,6 @@ type
   TReport_CheckBonusDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
-    deEnd: TcxDateEdit;
     deStart: TcxDateEdit;
     PeriodChoice: TPeriodChoice;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
@@ -49,6 +48,7 @@ type
     cxLabel8: TcxLabel;
     edMember: TcxButtonEdit;
     GuidesMember: TdsdGuides;
+    deEnd: TcxDateEdit;
   private
     { Private declarations }
   public

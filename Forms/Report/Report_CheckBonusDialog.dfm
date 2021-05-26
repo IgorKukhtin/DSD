@@ -36,20 +36,12 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
     ModalResult = 2
     TabOrder = 1
   end
-  object deEnd: TcxDateEdit
-    Left = 121
-    Top = 27
-    EditValue = 42005d
-    Properties.ShowTime = False
-    TabOrder = 2
-    Width = 90
-  end
   object deStart: TcxDateEdit
     Left = 11
     Top = 27
     EditValue = 42005d
     Properties.ShowTime = False
-    TabOrder = 3
+    TabOrder = 2
     Width = 90
   end
   object edBonusKind: TcxButtonEdit
@@ -61,7 +53,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 4
+    TabOrder = 3
     Visible = False
     Width = 89
   end
@@ -79,7 +71,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
   object cxLabel7: TcxLabel
     Left = 121
     Top = 7
-    Caption = #1044#1072#1090#1072' '#1087#1086' :'
+    Caption = #1044#1072#1090#1072' '#1087#1086'  :'
   end
   object cxLabel2: TcxLabel
     Left = 11
@@ -95,7 +87,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 9
+    TabOrder = 8
     Width = 122
   end
   object cxLabel1: TcxLabel
@@ -112,7 +104,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 11
+    TabOrder = 10
     Width = 319
   end
   object cbMovement: TcxCheckBox
@@ -120,7 +112,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
     Top = 213
     Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     Caption = #1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
-    TabOrder = 12
+    TabOrder = 11
     Visible = False
     Width = 104
   end
@@ -138,7 +130,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 14
+    TabOrder = 13
     Width = 172
   end
   object cxLabel8: TcxLabel
@@ -155,8 +147,16 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 16
+    TabOrder = 15
     Width = 319
+  end
+  object deEnd: TcxDateEdit
+    Left = 121
+    Top = 27
+    EditValue = 42005d
+    Properties.ShowTime = False
+    TabOrder = 16
+    Width = 90
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -284,7 +284,6 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
       item
         Name = 'OperDate'
         Value = Null
-        Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
