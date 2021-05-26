@@ -523,7 +523,15 @@ begin
                                                                         [TRESTRequestParameterOption.poDoNotEncode]);
   FRESTRequest.AddParameter('Accept', 'application/json', TRESTRequestParameterKind.pkHTTPHEADER);
   FRESTRequest.AddParameter('employee_email', FUserEmail, TRESTRequestParameterKind.pkGETorPOST);
-  FRESTRequest.AddParameter('data', FSign_Data, TRESTRequestParameterKind.pkGETorPOST, [TRESTRequestParameterOption.poDoNotEncode]);
+
+  jsonBody := TJSONObject.Create;
+  try
+    jsonBody.AddPair('signed_medication_dispense', FSign_Data);
+
+    FRESTRequest.AddParameter('data', jsonBody.ToString, TRESTRequestParameterKind.pkGETorPOST);
+  finally
+    jsonBody.Destroy;
+  end;
 
   try
     FRESTRequest.Execute;
@@ -532,15 +540,11 @@ begin
 
   if (FRESTResponse.StatusCode = 200) and (FRESTResponse.ContentType = 'application/json') then
   begin
-    Result := False;
     try
       jValue := FRESTResponse.JSONValue;
-      if jValue.FindValue('medical_program') <> Nil then
+      if jValue.FindValue('error') = Nil then
       begin
-        if jValue.FindValue('id') <> Nil then
-        begin
-          Result := True;
-        end;
+        Result := True;
       end else ShowError('Ошибка отправки в eHealth подписанного погашенного рецепта');
 
     except
@@ -757,9 +761,7 @@ begin
   LikiDniproeHealthApi.FDiscount_amount := ADiscount_amount;
   LikiDniproeHealthApi.FDispensed_Code := ACode;
 
-  Result := LikiDniproeHealthApi.dispenseRecipe;
-
-  if Result then
+  if LikiDniproeHealthApi.dispenseRecipe then
   try
     Clipboard.AsText := LikiDniproeHealthApi.FKeyPassword;
 
@@ -784,12 +786,10 @@ begin
       '","data":["' + LikiDniproeHealthApi.FDispense_Data + '"]}',
       'Ожидание подписи рецепта.', 'Подпишите рецепт ЭЦП', LikiDniproeHealthApi.FHTTP_Port, LikiDniproeHealthApi.FInterval, LikiDniproeHealthApi.FSign_Data) then
     begin
-      if LikiDniproeHealthApi.FSign_Data = '' then
-      begin
-        Result := False;
-        ShowMessage('Ошибка подписи рецепта.');
-      end;
+      Result :=  LikiDniproeHealthApi.FSign_Data <> '';
     end;
+
+    if not Result then ShowMessage('Ошибка подписи рецепта.');
   finally
     if FileExists('Key-6.dat') then DeleteFile('Key-6.dat');
   end;

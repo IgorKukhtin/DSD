@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, Registry,
   cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Menus,
   Vcl.ExtCtrls, Vcl.StdCtrls, cxButtons, cxGroupBox, cxRadioGroup, cxLabel,
   cxTextEdit, cxCurrencyEdit, Vcl.ActnList, cxClasses, cxPropertiesStore,  dxSkinsCore,
@@ -49,6 +49,26 @@ implementation
 
 {$R *.dfm}
 
+function GetDefaultBrowser: String;
+var
+    ExecName: array[0..MAX_PATH] of Char;
+    FHandle: THandle;
+    MyPath: String;
+begin
+    Result := '';
+    MyPath := '';
+    FHandle := System.SysUtils.FileCreate('AFile.htm');
+
+    if FHandle <> INVALID_HANDLE_VALUE then
+    begin
+        FillChar(ExecName, Length(ExecName), #0);
+        if FindExecutable('AFile.htm', PChar(MyPath), ExecName) > 32 then
+            Result := ExecName;
+        System.SysUtils.FileClose(FHandle);
+        System.SysUtils.DeleteFile(MyPath + 'AFile.htm');
+    end;
+end;
+
   {TCallbackHandlerForm}
 
 procedure TCallbackHandlerForm.cxButton1Click(Sender: TObject);
@@ -80,22 +100,46 @@ begin
 end;
 
 procedure TCallbackHandlerForm.FormShow(Sender: TObject);
+var
+  StartUpInfo: TStartUpInfo;
+  ProcessInfo: TProcessInformation;
 begin
   if FURL <> '' then
-  begin
+  try
     IdHTTPServer.Active := True;
     Timer.Enabled := True;
-    FillChar(FExecInfo, SizeOf(TShellExecuteInfo), 0);
-    with FExecInfo do
-    begin
-      cbSize := SizeOf(TShellExecuteInfo);
-      fMask := SEE_MASK_NOCLOSEPROCESS;
-      Wnd := Handle;
-      lpFile := PChar(FURL);
-      nShow := SW_SHOWNORMAL;
-    end;
-    ShellExecuteEx(@FExecInfo);
+//    FillChar(FExecInfo, SizeOf(TShellExecuteInfo), 0);
+//    with FExecInfo do
+//    begin
+//      cbSize := SizeOf(TShellExecuteInfo);
+//      fMask := SEE_MASK_NOCLOSEPROCESS;
+//      Wnd := Handle;
+//      lpFile := PChar(FURL);
+//      nShow := SW_SHOWNORMAL;
+//    end;
+//    ShellExecuteEx(@FExecInfo);
 //    FHandle := ShellExecute(Screen.ActiveForm.Handle, 'open', PChar(FURL), nil, nil, SW_SHOWNORMAL);
+//    WinExec(PAnsichar(FURL), SW_SHOWNORMAL);
+
+    FillChar(StartUpInfo, SizeOf(TStartUpInfo), 0);
+    with StartUpInfo do
+    begin
+      cb := SizeOf(TStartUpInfo);
+      dwFlags := STARTF_USESHOWWINDOW or STARTF_FORCEONFEEDBACK;
+      wShowWindow := SW_SHOWNORMAL;
+    end;
+
+    FillChar(ProcessInfo, SizeOf(ProcessInfo), 0);
+
+    try
+      CreateProcess(nil, PWideChar('"' + GetDefaultBrowser + '" ' + StringReplace(FURL, '"', '\"', [rfReplaceAll])), nil, nil, false, NORMAL_PRIORITY_CLASS, nil, nil, StartUpInfo, ProcessInfo);
+    finally
+      CloseHandle(ProcessInfo.hThread);
+      CloseHandle(ProcessInfo.hProcess);
+    end;
+
+  finally
+    if not FileExists('ShowHandler.cmd') then DeleteFile('ShowHandler.cmd');
   end;
 end;
 
@@ -108,7 +152,7 @@ begin
     Res := TRegEx.Split(ARequestInfo.Params.Strings[I], '=');
     if Res[0] = 'callback_result' then
     begin
-      FCallback := COPY(Res[1], 2, Length(Res[1]) - 4);
+      FCallback := COPY(Res[1], 3, Length(Res[1]) - 4);
       Timer.Enabled := False;
       ModalResult := mrOk;
       Break;

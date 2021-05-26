@@ -69,6 +69,7 @@ type
     D_ProcSaleIlliquid: TcxGridDBColumn;
     D_SummaPenaltySum: TcxGridDBColumn;
     D_SummaPenalty: TcxGridDBColumn;
+    D_UnitName: TcxGridDBColumn;
   private
     { Private declarations }
   public

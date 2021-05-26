@@ -2518,6 +2518,10 @@ BEGIN
                          INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovementChek.Id
                                                 AND MovementItem.DescId     = zc_MI_Master()
                                                 AND MovementItem.isErased   = FALSE
+                         LEFT JOIN MovementBoolean AS MovementBoolean_NotMCS
+                                                   ON MovementBoolean_NotMCS.MovementId = tmpMovementChek.Id
+                                                  AND MovementBoolean_NotMCS.DescId     = zc_MovementBoolean_NotMCS()
+                    WHERE COALESCE (MovementBoolean_NotMCS.ValueData, False) = False
                     GROUP BY MovementItem.ObjectId
                     )
 
@@ -4226,6 +4230,10 @@ BEGIN
                          INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovementChek.Id
                                                 AND MovementItem.DescId     = zc_MI_Master()
                                                 AND MovementItem.isErased   = FALSE
+                         LEFT JOIN MovementBoolean AS MovementBoolean_NotMCS
+                                                   ON MovementBoolean_NotMCS.MovementId = tmpMovementChek.Id
+                                                  AND MovementBoolean_NotMCS.DescId     = zc_MovementBoolean_NotMCS()
+                    WHERE COALESCE (MovementBoolean_NotMCS.ValueData, False) = False
                     GROUP BY MovementItem.ObjectId
                     )
 
