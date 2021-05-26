@@ -13,7 +13,7 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_ZakazInternal());
-     vbUserId = inSession;
+     vbUserId:= lpGetUserBySession (inSession);
 
      RETURN QUERY 
        SELECT
