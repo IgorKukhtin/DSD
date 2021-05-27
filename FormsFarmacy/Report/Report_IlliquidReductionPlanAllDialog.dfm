@@ -4,7 +4,7 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
   ClientHeight = 290
-  ClientWidth = 340
+  ClientWidth = 431
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -119,6 +119,20 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
     Top = 215
     Caption = #1064#1090#1088#1072#1092' '#1079#1072' 1% '#1085#1077#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1086#1090' '#1089#1091#1084#1084#1099
   end
+  object cbPenaltyInfo: TcxCheckBox
+    Left = 318
+    Top = 139
+    Caption = #1054#1079#1085#1072#1082#1086#1084#1083#1077#1085#1080#1077
+    TabOrder = 14
+    Width = 99
+  end
+  object cbPenaltySumInfo: TcxCheckBox
+    Left = 318
+    Top = 214
+    Caption = #1054#1079#1085#1072#1082#1086#1084#1083#1077#1085#1080#1077
+    TabOrder = 15
+    Width = 99
+  end
   object PeriodChoice: TPeriodChoice
     Left = 119
     Top = 80
@@ -184,6 +198,20 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
         Value = Null
         Component = cePenaltySum
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPenaltyInfo'
+        Value = Null
+        Component = cbPenaltyInfo
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPenaltySumInfo'
+        Value = Null
+        Component = cbPenaltySumInfo
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 54

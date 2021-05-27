@@ -1981,5 +1981,6 @@ end;
 initialization
 
   XML := TXMLDocument.Create(nil);
+  RegisterClass(TExportSalesForSuppForm);
 
 end.

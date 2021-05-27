@@ -331,35 +331,6 @@ BEGIN
         WHERE Object_Goods_Retail.RetailID = vbObjectId
           AND COALESCE(_tmpGoods_SUN_Supplement.GoodsId, 0) = 0;
 
-     -- Товары из маркетинговых контрактов
-     WITH tmpMovementPromo AS (SELECT DISTINCT MovementItem.ObjectId
-                               FROM Movement
-                                
-                                    INNER JOIN MovementBoolean AS MovementBoolean_Supplement
-                                                               ON MovementBoolean_Supplement.MovementId =  Movement.Id
-                                                              AND MovementBoolean_Supplement.DescId = zc_MovementBoolean_Supplement()
-                                                              AND MovementBoolean_Supplement.ValueData = True
-
-                                    INNER JOIN MovementItem ON MovementItem.MovementID = Movement.ID
-                                                           AND MovementItem.DescId = zc_MI_Master()
-                                                           AND MovementItem.isErased = FALSE  
-                                
-                                WHERE Movement.DescId = zc_Movement_Promo()
-                                  AND Movement.StatusId = zc_Enum_Status_Complete())
-                                  
-     INSERT INTO _tmpGoods_SUN_Supplement (GoodsId, KoeffSUN, UnitOutId)
-        SELECT Object_Goods_Retail.ID
-             , Object_Goods_Retail.KoeffSUN_Supplementv1
-             , Object_Goods_Main.UnitSupplementSUN1OutId
-        FROM tmpMovementPromo
-        
-             INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = tmpMovementPromo.ObjectId
-                                           AND Object_Goods_Retail.RetailID = vbObjectId
-             INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
-
-             LEFT JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsId = Object_Goods_Retail.ID
-        WHERE COALESCE(_tmpGoods_SUN_Supplement.GoodsId, 0) = 0;
-
      -- Выкладки
      WITH tmpLayoutMovement AS (SELECT Movement.Id                                             AS Id
                                      , COALESCE(MovementBoolean_PharmacyItem.ValueData, FALSE) AS isPharmacyItem

@@ -256,7 +256,7 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
     end
     object cxSplitter2: TcxSplitter
       Left = 1
-      Top = 257
+      Top = 668
       Width = 263
       Height = 8
       AlignSplitter = salTop

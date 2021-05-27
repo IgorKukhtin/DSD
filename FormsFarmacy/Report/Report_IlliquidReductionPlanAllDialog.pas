@@ -35,6 +35,8 @@ type
     cxLabel5: TcxLabel;
     cePenaltySum: TcxCurrencyEdit;
     cxLabel6: TcxLabel;
+    cbPenaltyInfo: TcxCheckBox;
+    cbPenaltySumInfo: TcxCheckBox;
   private
     { Private declarations }
   public

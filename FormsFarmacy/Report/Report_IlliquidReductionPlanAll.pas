@@ -14,7 +14,7 @@ uses
   cxLabel, cxCurrencyEdit, cxButtonEdit, Vcl.DBActns, cxMaskEdit, Vcl.ExtCtrls,
   Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod, cxDropDownEdit, cxCalendar,
   dsdGuides, dxBarBuiltInMenu, cxNavigator, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox;
 
 type
   TReport_IlliquidReductionPlanAllForm = class(TAncestorReportForm)
@@ -45,6 +45,8 @@ type
     DaysWorked: TcxGridDBColumn;
     cePenaltySum: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
+    cbPenaltySumInfo: TcxCheckBox;
+    cbPenaltyInfo: TcxCheckBox;
   private
     { Private declarations }
   public

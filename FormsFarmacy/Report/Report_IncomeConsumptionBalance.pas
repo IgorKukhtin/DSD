@@ -284,4 +284,7 @@ begin
   UserSettingsStorageAddOn.LoadUserSettings;
 end;
 
+initialization
+  RegisterClass(TReport_IncomeConsumptionBalanceForm);
+
 end.

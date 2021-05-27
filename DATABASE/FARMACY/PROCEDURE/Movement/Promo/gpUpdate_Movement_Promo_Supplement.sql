@@ -23,6 +23,40 @@ BEGIN
     -- сохранили <Использовать товар в дополнении СУН>
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Supplement(), inMovementId, not inisSupplement);
     
+    -- Прописали в товары сети
+    IF inisSupplement = FALSE
+    THEN
+      PERFORM gpUpdate_Goods_inSupplementSUN1(inGoodsMainId       := Object_Goods_Main.Id 
+                                            , inisSupplementSUN1  := True
+                                            , inSession           := inSession)
+      FROM MovementItem
+        
+           INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItem.ObjectId
+                                         AND Object_Goods_Retail.RetailID = 4
+           INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
+                                       AND Object_Goods_Main.isSupplementSUN1 = False
+                                       
+      WHERE MovementItem.MovementID = inMovementId
+        AND MovementItem.DescId = zc_MI_Master()
+        AND MovementItem.isErased = FALSE;
+        
+    ELSE
+      PERFORM gpUpdate_Goods_inSupplementSUN1(inGoodsMainId       := Object_Goods_Main.Id 
+                                            , inisSupplementSUN1  := False
+                                            , inSession           := inSession)
+      FROM MovementItem
+        
+           INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItem.ObjectId
+                                         AND Object_Goods_Retail.RetailID = 4
+           INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
+                                       AND Object_Goods_Main.isSupplementSUN1 = True
+                                       
+      WHERE MovementItem.MovementID = inMovementId
+        AND MovementItem.DescId = zc_MI_Master()
+        AND MovementItem.isErased = FALSE;
+
+    END IF;
+                    
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, False);
 

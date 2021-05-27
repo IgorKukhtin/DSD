@@ -560,4 +560,7 @@ begin
   dsdUserSettingsStorageAddOn.LoadUserSettings
 end;
 
+initialization
+  RegisterClass(TRepriceUnit_testForm);
+
 end.

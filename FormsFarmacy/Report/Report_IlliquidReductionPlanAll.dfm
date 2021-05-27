@@ -11,18 +11,19 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
     Top = 77
     Width = 949
     Height = 427
+    ExplicitTop = 77
     ExplicitWidth = 949
-    ExplicitHeight = 447
+    ExplicitHeight = 427
     ClientRectBottom = 427
     ClientRectRight = 949
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 949
-      ExplicitHeight = 447
+      ExplicitHeight = 427
       inherited cxGrid: TcxGrid
         Width = 949
         Height = 427
         ExplicitWidth = 949
-        ExplicitHeight = 447
+        ExplicitHeight = 427
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -302,6 +303,20 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
       Top = 27
       Caption = #1064#1090#1088#1072#1092' '#1079#1072' 1% '#1085#1077#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1086#1090' '#1089#1091#1084#1084#1099
     end
+    object cbPenaltySumInfo: TcxCheckBox
+      Left = 801
+      Top = 26
+      Caption = #1054#1079#1085#1072#1082#1086#1084#1083#1077#1085#1080#1077
+      TabOrder = 14
+      Width = 99
+    end
+    object cbPenaltyInfo: TcxCheckBox
+      Left = 801
+      Top = 5
+      Caption = #1054#1079#1085#1072#1082#1086#1084#1083#1077#1085#1080#1077
+      TabOrder = 15
+      Width = 99
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 51
@@ -326,6 +341,41 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
           'Left'
           'Top'
           'Width')
+      end
+      item
+        Component = ceProcGoods
+        Properties.Strings = (
+          'Value')
+      end
+      item
+        Component = ceProcUnit
+        Properties.Strings = (
+          'Value')
+      end
+      item
+        Component = cePlanAmount
+        Properties.Strings = (
+          'Value')
+      end
+      item
+        Component = cePenalty
+        Properties.Strings = (
+          'Value')
+      end
+      item
+        Component = cePenaltySum
+        Properties.Strings = (
+          'Value')
+      end
+      item
+        Component = cbPenaltyInfo
+        Properties.Strings = (
+          'Checked')
+      end
+      item
+        Component = cbPenaltySumInfo
+        Properties.Strings = (
+          'Checked')
       end>
     Left = 48
     Top = 240
@@ -411,6 +461,20 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
           Component = cePenaltySum
           DataType = ftFloat
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPenaltyInfo'
+          Value = Null
+          Component = cbPenaltyInfo
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPenaltySumInfo'
+          Value = Null
+          Component = cbPenaltySumInfo
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -476,6 +540,20 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
           Component = cePenaltySum
           DataType = ftFloat
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPenaltyInfo'
+          Value = Null
+          Component = cbPenaltyInfo
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPenaltySumInfo'
+          Value = Null
+          Component = cbPenaltySumInfo
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -534,10 +612,26 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisPenaltyInfo'
+        Value = Null
+        Component = cbPenaltyInfo
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inPenaltySum'
         Value = Null
         Component = cePenaltySum
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPenaltySumInfo'
+        Value = Null
+        Component = cbPenaltySumInfo
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
