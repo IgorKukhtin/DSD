@@ -44,7 +44,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , isPersonal Boolean
              , isUnique Boolean
              
-             , PriceListId Integer, PriceListName TVarChar
+             --, PriceListId Integer, PriceListName TVarChar
              , PriceListPromoId Integer, PriceListPromoName TVarChar
              , StartPromo TDateTime, EndPromo TDateTime
              
@@ -140,8 +140,8 @@ BEGIN
            , CAST (false as Boolean)   AS isPersonal 
            , CAST (false as Boolean)   AS isUnique
 
-           , CAST (0 as Integer)       AS PriceListId 
-           , CAST ('' as TVarChar)     AS PriceListName 
+           --, CAST (0 as Integer)       AS PriceListId 
+           --, CAST ('' as TVarChar)     AS PriceListName 
 
            , CAST (0 as Integer)       AS PriceListPromoId 
            , CAST ('' as TVarChar)     AS PriceListPromoName 
@@ -241,8 +241,8 @@ BEGIN
            , COALESCE (ObjectBoolean_Personal.ValueData, False)  AS isPersonal
            , COALESCE (ObjectBoolean_Unique.ValueData, False)    AS isUnique
            
-           , Object_PriceList.Id         AS PriceListId 
-           , Object_PriceList.ValueData  AS PriceListName 
+           --, Object_PriceList.Id         AS PriceListId 
+           --, Object_PriceList.ValueData  AS PriceListName 
 
            , Object_PriceListPromo.Id         AS PriceListPromoId 
            , Object_PriceListPromo.ValueData  AS PriceListPromoName 
@@ -385,10 +385,12 @@ BEGIN
                                  ON ObjectDate_EndPromo.ObjectId = Object_Contract_View.ContractId
                                 AND ObjectDate_EndPromo.DescId = zc_ObjectDate_Contract_EndPromo()
                                 
-            LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
+            /*LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
                                  ON ObjectLink_Contract_PriceList.ObjectId = Object_Contract_View.ContractId
                                 AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = ObjectLink_Contract_PriceList.ChildObjectId
+            */
+
             LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceListPromo
                                  ON ObjectLink_Contract_PriceListPromo.ObjectId = Object_Contract_View.ContractId
                                 AND ObjectLink_Contract_PriceListPromo.DescId = zc_ObjectLink_Contract_PriceListPromo()
@@ -455,4 +457,4 @@ ALTER FUNCTION gpGet_Object_Contract (Integer, TVarChar) OWNER TO postgres;
 
 -- тест
 -- SELECT * FROM gpGet_Object_Contract (inId := 2, inSession := zfCalc_UserAdmin())
-select * from gpGet_Object_Contract(Id := 3325401 ,  inSession := '5');
+--select * from gpGet_Object_Contract(inId := 3325401 ,  inSession := '5');

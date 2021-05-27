@@ -406,6 +406,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractEditForm');
   exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionValueForm'));
@@ -421,8 +424,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoicePartnerOrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoicePartnerOrderForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TContractEditForm');
 
   // Состояние договора
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractStateKindForm'));

@@ -283,7 +283,6 @@ type
     ContractStateKindName_Key: TcxGridDBColumn;
     Code_Key: TcxGridDBColumn;
     InvNumber_Key: TcxGridDBColumn;
-    PriceListName: TcxGridDBColumn;
     PriceListGoodsName: TcxGridDBColumn;
     GoodsPropertyName: TcxGridDBColumn;
     isVat: TcxGridDBColumn;

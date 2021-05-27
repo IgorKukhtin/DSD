@@ -1496,15 +1496,6 @@
           Options.Editing = False
           Width = 80
         end
-        object PriceListName: TcxGridDBColumn
-          Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
-          DataBinding.FieldName = 'PriceListName'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 60
-        end
         object PriceListGoodsName: TcxGridDBColumn
           Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'('#1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103')'
           DataBinding.FieldName = 'PriceListGoodsName'

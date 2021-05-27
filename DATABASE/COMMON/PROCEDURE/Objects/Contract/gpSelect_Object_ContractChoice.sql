@@ -24,7 +24,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , OKPO TVarChar
              , ChangePercent TFloat
              , JuridicalBasisId Integer, JuridicalBasisName TVarChar
-             , isErased Boolean 
+             , isErased Boolean
               )
 AS
 $BODY$
@@ -44,7 +44,6 @@ BEGIN
    vbBranchId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
    vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0 OR COALESCE (vbBranchId_Constraint, 0) > 0;
 
-
    -- ограничение
    CREATE TEMP TABLE _tmpPaidKind (PaidKindId Integer, PaidKindName TVarChar) ON COMMIT DROP;
    IF COALESCE (inPaidKindId,0) <> 0 
@@ -56,13 +55,13 @@ BEGIN
           SELECT Object.Id, Object.ValueData FROM Object WHERE Object.DescId = zc_Object_PaidKind();
    END IF;
 
-
    IF inShowAll= TRUE AND inJuridicalId <> 0 THEN
    -- 1.1. Результат такой
-   
+
     Select Object.DescId INTO vbJuridicalDescId
-    FROM Object Where Object.Id = inJuridicalId;
-    
+    FROM Object
+    Where Object.Id = inJuridicalId;
+
     RETURN QUERY 
    WITH tmpListBranch_Constraint AS (SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
                                      FROM ObjectLink AS ObjectLink_Unit_Branch

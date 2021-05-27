@@ -18,11 +18,18 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarCh
                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                       , Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, TDateTime, TDateTime, TVarChar);
 */
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                      , Tfloat, Tfloat, TDateTime, TDateTime, TDateTime
+                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, TDateTime, TDateTime, TVarChar);
+                                                      */
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                       , Tfloat, Tfloat, TDateTime, TDateTime, TDateTime
                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                       , Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, TDateTime, TDateTime, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
  INOUT ioId                  Integer,       -- Ключ объекта <Договор>
@@ -71,7 +78,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inisPersonal          Boolean  ,     -- Служебная записка
     IN inisUnique            Boolean  ,     -- Без группировки 
 
-    IN inPriceListId         Integer   ,    -- Прайс-лист
+    --IN inPriceListId         Integer   ,    -- Прайс-лист
     IN inPriceListPromoId    Integer   ,    -- Прайс-лист(Акционный)
     IN inStartPromo          TDateTime ,    -- Дата начала акции
     IN inEndPromo            TDateTime ,    -- Дата окончания акции
@@ -117,6 +124,7 @@ BEGIN
    -- PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Contract(), inInvNumber);
 
 
+/*
    -- пытаемся найти <Прайс-лист>
    IF COALESCE (ioId, 0) = 0 AND COALESCE (inPriceListId, 0) = 0
    THEN
@@ -203,6 +211,7 @@ BEGIN
                          END
       ;
    END IF;
+   */
 
    -- проверка уникальность <Номер договора> для !!!одного!! Юр. лица и !!!одной!! Статьи
    IF TRIM (inInvNumber) <> '' AND TRIM (inInvNumber) <> '-' -- and inInvNumber <> '100398' and inInvNumber <> '877' and inInvNumber <> '24849' and inInvNumber <> '19' and inInvNumber <> 'б/н' and inInvNumber <> '369/1' and inInvNumber <> '63/12' and inInvNumber <> '4600034104' and inInvNumber <> '19М'
@@ -381,7 +390,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_Bank(), ioId, inBankId);
    
    -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Contract_PriceList(), ioId, inPriceListId);
+   --PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Contract_PriceList(), ioId, inPriceListId);
 
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Contract_PriceListPromo(), ioId, inPriceListPromoId);
@@ -412,6 +421,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.05.21         * del inPriceListId
+ 
  04.02.19         * inBankAccountPartner
  18.01.19         * DefaultOut
  05.10.18         * add PartnerCode
