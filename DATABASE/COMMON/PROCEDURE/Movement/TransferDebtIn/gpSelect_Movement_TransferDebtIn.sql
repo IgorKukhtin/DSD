@@ -1,6 +1,6 @@
 -- Function: gpSelect_Movement_TransferDebtIn()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_TransferDebtIn (TDateTime, TDateTime, Boolean,TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Movement_TransferDebtIn (TDateTime, TDateTime, Boolean,TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_TransferDebtIn (TDateTime, TDateTime, Integer, Boolean,TVarChar);
 
 

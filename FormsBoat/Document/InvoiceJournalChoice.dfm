@@ -96,15 +96,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
             Options.Editing = False
             Width = 55
           end
-          inherited colInvNumber: TcxGridDBColumn
-            Caption = 'Interne Nr'
-            Visible = False
-            GroupIndex = 0
-            HeaderAlignmentHorz = taCenter
-            Options.Editing = False
-            Width = 63
-          end
-          object InvNumberPartner: TcxGridDBColumn [3]
+          object InvNumberPartner: TcxGridDBColumn [2]
             Caption = 'Externe Nr'
             DataBinding.FieldName = 'InvNumberPartner'
             Visible = False
@@ -114,10 +106,16 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
             Options.Editing = False
             Width = 55
           end
+          inherited colInvNumber: TcxGridDBColumn
+            Caption = 'Interne Nr'
+            HeaderAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 55
+          end
           inherited colOperDate: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 48
+            Width = 55
           end
           object PlanDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' ('#1087#1083#1072#1085')'
@@ -126,6 +124,7 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
             FooterAlignmentHorz = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085#1086#1074#1072#1103' '#1076#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1057#1095#1077#1090#1091
             Options.Editing = False
             Width = 89
           end
@@ -307,7 +306,6 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' ('#1080#1085#1092'.)'
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 44
           end
         end

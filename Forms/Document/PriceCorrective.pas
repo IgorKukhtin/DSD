@@ -173,6 +173,8 @@ type
     actTaxCorrective: TdsdExecStoredProc;
     spTaxCorrective: TdsdStoredProc;
     bbTaxCorrective: TdxBarButton;
+    actMIChildProtocolOpenForm: TdsdOpenForm;
+    bbMIChildProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

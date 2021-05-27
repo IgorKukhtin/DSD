@@ -216,6 +216,7 @@ object IncomeJournalForm: TIncomeJournalForm
       object InvNumberPartner: TcxGridDBColumn
         Caption = 'External Nr'
         DataBinding.FieldName = 'InvNumberPartner'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55

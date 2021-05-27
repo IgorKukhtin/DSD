@@ -2,6 +2,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099'>'
   ClientHeight = 660
   ClientWidth = 1042
+  ExplicitLeft = -269
   ExplicitWidth = 1058
   ExplicitHeight = 695
   PixelsPerInch = 96
@@ -526,9 +527,6 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -1263,7 +1261,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         end
         item
           Name = 'OperDate_Tax'
-          Value = 'NULL'
+          Value = Null
           Component = TaxCorrectiveCDS
           ComponentItem = 'OperDate_Child'
           DataType = ftDateTime
@@ -1353,20 +1351,20 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         end
         item
           Name = 'inmask'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = TaxCorrectiveCDS
           ComponentItem = 'OperDate_Child'
           DataType = ftDateTime
@@ -1398,17 +1396,47 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         end
         item
           Name = 'inmask'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = TaxCorrectiveCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actMIChildProtocolOpenForm: TdsdOpenForm [20]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1087#1088#1080#1074#1103#1079#1082#1080'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1087#1088#1080#1074#1103#1079#1082#1080'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -2246,6 +2274,14 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         end
         item
           Visible = True
+          ItemName = 'bbMIChildProtocolOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -2320,6 +2356,10 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     end
     object bbTaxCorrective: TdxBarButton
       Action = actTaxCorrective
+      Category = 0
+    end
+    object bbMIChildProtocolOpenForm: TdxBarButton
+      Action = actMIChildProtocolOpenForm
       Category = 0
     end
   end
@@ -2422,7 +2462,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -2460,7 +2500,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -2652,7 +2692,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       end
       item
         Name = 'inPriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         ParamType = ptInput
@@ -3358,7 +3398,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3628,10 +3668,13 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 751
     Top = 332
   end
@@ -3757,6 +3800,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -3769,7 +3813,9 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = -1
       end>
+    ShowFieldImageList = <>
     SearchAsFilter = False
+    PropertiesCellList = <>
     Left = 414
     Top = 569
   end
@@ -3939,7 +3985,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -1,12 +1,12 @@
 inherited Union_IncomeOrderJournalChoiceForm: TUnion_IncomeOrderJournalChoiceForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076#1099' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'/ '#1047#1072#1082#1072#1079#1099' '#1082#1083#1080#1077#1085#1090#1072'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1099#1073#1086#1088' '#1076#1083#1103' '#1089#1095#1077#1090#1072'>'
   ClientHeight = 356
   ClientWidth = 1028
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1044
-  ExplicitHeight = 394
+  ExplicitHeight = 391
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -79,48 +79,41 @@ inherited Union_IncomeOrderJournalChoiceForm: TUnion_IncomeOrderJournalChoiceFor
           Styles.Footer = nil
           Styles.Header = nil
           object DescName: TcxGridDBColumn [0]
-            Caption = #1069#1083#1077#1084#1077#1085#1090
+            Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'DescName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
-          inherited colInvNumber: TcxGridDBColumn [1]
-            HeaderAlignmentHorz = taCenter
-            Options.Editing = False
-            Width = 76
-          end
-          inherited colStatus: TcxGridDBColumn [2]
+          inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 69
           end
-          object InvNumber_Full: TcxGridDBColumn [3]
-            Caption = #8470' '#1076#1086#1082'. ('#1080#1085#1092'.)'
-            DataBinding.FieldName = 'InvNumber_Full'
+          inherited colInvNumber: TcxGridDBColumn
+            Caption = 'Interne Nr'
+            HeaderAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 76
+          end
+          object InvNumberPartner: TcxGridDBColumn [3]
+            Caption = 'External Nr'
+            DataBinding.FieldName = 'InvNumberPartner'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' ('#1080#1085#1092'.)'
-            Options.Editing = False
-            Width = 44
+            Width = 55
           end
           inherited colOperDate: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 48
           end
-          object InvNumberPartner: TcxGridDBColumn
-            Caption = 'External Nr'
-            DataBinding.FieldName = 'InvNumberPartner'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
           object OperDatePartner: TcxGridDBColumn
             Caption = 'External Dt'
             DataBinding.FieldName = 'OperDatePartner'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -136,13 +129,22 @@ inherited Union_IncomeOrderJournalChoiceForm: TUnion_IncomeOrderJournalChoiceFor
           object ToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1084#1091
             Width = 91
           end
+          object PaidKindName: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaidKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 52
+          end
           object TotalCount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
+            Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -162,7 +164,7 @@ inherited Union_IncomeOrderJournalChoiceForm: TUnion_IncomeOrderJournalChoiceFor
             Width = 80
           end
           object DiscountTax: TcxGridDBColumn
-            Caption = '(-)% '#1089#1082'. (+)% '#1085#1072#1094
+            Caption = '% '#1089#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'DiscountTax'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -225,7 +227,7 @@ inherited Union_IncomeOrderJournalChoiceForm: TUnion_IncomeOrderJournalChoiceFor
             Width = 60
           end
           object InvNumber_Invoice: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
+            Caption = #8470' '#1076#1086#1082'. Invoice'
             DataBinding.FieldName = 'InvNumber_Invoice'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -282,6 +284,14 @@ inherited Union_IncomeOrderJournalChoiceForm: TUnion_IncomeOrderJournalChoiceFor
             Options.Editing = False
             Width = 80
           end
+          object ProductCIN: TcxGridDBColumn
+            Caption = 'CIN Nr.'
+            DataBinding.FieldName = 'ProductCIN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
           object ProductCode: TcxGridDBColumn
             Caption = 'Interne Nr (Boat)'
             DataBinding.FieldName = 'ProductCode'
@@ -301,22 +311,6 @@ inherited Union_IncomeOrderJournalChoiceForm: TUnion_IncomeOrderJournalChoiceFor
             Options.Editing = False
             Width = 78
           end
-          object ProductCIN: TcxGridDBColumn
-            Caption = 'CIN Nr.'
-            DataBinding.FieldName = 'ProductCIN'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 100
-          end
-          object PaidKindName: TcxGridDBColumn
-            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PaidKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 52
-          end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
@@ -324,6 +318,15 @@ inherited Union_IncomeOrderJournalChoiceForm: TUnion_IncomeOrderJournalChoiceFor
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 107
+          end
+          object InvNumber_Full: TcxGridDBColumn
+            DataBinding.FieldName = 'InvNumber_Full'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' ('#1080#1085#1092'.)'
+            Options.Editing = False
+            Width = 44
           end
         end
       end

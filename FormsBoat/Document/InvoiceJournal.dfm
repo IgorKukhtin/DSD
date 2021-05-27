@@ -23,7 +23,6 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       inherited cxGrid: TcxGrid
         Width = 1028
         Height = 299
-        ExplicitLeft = -3
         ExplicitWidth = 1028
         ExplicitHeight = 299
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -199,6 +198,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             FooterAlignmentHorz = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085#1086#1074#1072#1103' '#1076#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1057#1095#1077#1090#1091
             Options.Editing = False
             Width = 70
           end
