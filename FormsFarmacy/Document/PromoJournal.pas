@@ -36,6 +36,11 @@ type
     Prescribe: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     bbChoiceGuides: TdxBarButton;
+    isSupplement: TcxGridDBColumn;
+    macUpdate_Supplement: TMultiAction;
+    actUpdate_Supplement: TdsdExecStoredProc;
+    spUpdate_Supplement: TdsdStoredProc;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

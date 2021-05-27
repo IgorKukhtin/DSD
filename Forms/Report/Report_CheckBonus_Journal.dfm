@@ -1,10 +1,10 @@
-inherited Report_CheckBonus_JornalForm: TReport_CheckBonus_JornalForm
+inherited Report_CheckBonus_JournalForm: TReport_CheckBonus_JournalForm
   Caption = #1046#1091#1088#1085#1072#1083' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084'>'
   ClientHeight = 341
   ClientWidth = 1180
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1196
-  ExplicitHeight = 376
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -597,7 +597,7 @@ inherited Report_CheckBonus_JornalForm: TReport_CheckBonus_JornalForm
       Width = 190
     end
     object cbMovement: TcxCheckBox
-      Left = 841
+      Left = 1029
       Top = 32
       Action = actRefreshMovement
       TabOrder = 6
@@ -620,6 +620,14 @@ inherited Report_CheckBonus_JornalForm: TReport_CheckBonus_JornalForm
       Properties.ReadOnly = True
       TabOrder = 8
       Width = 153
+    end
+    object cbisReport: TcxCheckBox
+      Left = 854
+      Top = 31
+      Action = actRefreshMovement
+      Caption = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1086#1090#1095#1077#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
+      TabOrder = 9
+      Width = 169
     end
   end
   object cxLabel3: TcxLabel [2]
@@ -746,7 +754,7 @@ inherited Report_CheckBonus_JornalForm: TReport_CheckBonus_JornalForm
         item
           Name = 'BonusKindId'
           Value = ''
-          Component = GuidesDocumentTaxKind
+          Component = GuidesDocumentBonusKind
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -754,7 +762,7 @@ inherited Report_CheckBonus_JornalForm: TReport_CheckBonus_JornalForm
         item
           Name = 'BonusKindName'
           Value = ''
-          Component = GuidesDocumentTaxKind
+          Component = GuidesDocumentBonusKind
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1354,7 +1362,7 @@ inherited Report_CheckBonus_JornalForm: TReport_CheckBonus_JornalForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_CheckBonus'
+    StoredProcName = 'gpSelect_Movement_ProfitLossService_ByReport'
     Params = <
       item
         Name = 'inStartDate'
@@ -1369,6 +1377,22 @@ inherited Report_CheckBonus_JornalForm: TReport_CheckBonus_JornalForm
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBonusKindId'
+        Value = False
+        Component = GuidesDocumentBonusKind
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1405,8 +1429,9 @@ inherited Report_CheckBonus_JornalForm: TReport_CheckBonus_JornalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisMovement'
-        Value = False
+        Name = 'inisReport'
+        Value = Null
+        Component = cbisReport
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1548,7 +1573,7 @@ inherited Report_CheckBonus_JornalForm: TReport_CheckBonus_JornalForm
         Component = PeriodChoice
       end
       item
-        Component = GuidesDocumentTaxKind
+        Component = GuidesDocumentBonusKind
       end
       item
         Component = GuidesJuridical
@@ -1565,7 +1590,7 @@ inherited Report_CheckBonus_JornalForm: TReport_CheckBonus_JornalForm
     Left = 192
     Top = 208
   end
-  object GuidesDocumentTaxKind: TdsdGuides
+  object GuidesDocumentBonusKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edBonusKind
     FormNameParam.Value = 'TDocumentBonusKindForm'
@@ -1577,7 +1602,7 @@ inherited Report_CheckBonus_JornalForm: TReport_CheckBonus_JornalForm
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesDocumentTaxKind
+        Component = GuidesDocumentBonusKind
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1586,13 +1611,14 @@ inherited Report_CheckBonus_JornalForm: TReport_CheckBonus_JornalForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesDocumentTaxKind
+        Component = GuidesDocumentBonusKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1064
+    Left = 1072
+    Top = 8
   end
   object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
@@ -1652,7 +1678,7 @@ inherited Report_CheckBonus_JornalForm: TReport_CheckBonus_JornalForm
         MultiSelectSeparator = ','
       end>
     Left = 429
-    Top = 22
+    Top = 14
   end
   object GuidesBranch: TdsdGuides
     KeyField = 'Id'

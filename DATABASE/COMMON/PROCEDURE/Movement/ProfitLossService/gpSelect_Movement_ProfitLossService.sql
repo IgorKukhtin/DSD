@@ -15,11 +15,15 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ProfitLossService(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_full TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
+             , ServiceDate  TDateTime
+             , TotalSumm  TFloat
+             , PercentRet TFloat
+             , PartKg     TFloat
              , AmountIn TFloat, AmountOut TFloat
              , BonusValue TFloat, AmountPartner TFloat, Summ TFloat
              , Summ_51201 TFloat
              , Comment TVarChar
-             , JuridicalCode Integer, JuridicalName TVarChar, ItemName TVarChar, OKPO TVarChar
+             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, ItemName TVarChar, OKPO TVarChar
              , JuridicalCode_Child Integer, JuridicalName_Child TVarChar, OKPO_Child TVarChar
              , RetailId Integer, RetailName TVarChar
              , PartnerCode Integer, PartnerName TVarChar, ItemName_Partner TVarChar
@@ -34,8 +38,11 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_full TVarChar, OperDate
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar
              , BonusKindId Integer, BonusKindName TVarChar
              , BranchId Integer, BranchName TVarChar
-             , PersonalName TVarChar, PersonalName_main TVarChar
+             , PersonalId Integer, PersonalName TVarChar
+             , PersonalId_main Integer, PersonalName_main TVarChar
+             , PaidKindId_Child Integer, PaidKindName_Child TVarChar
              , isLoad Boolean
+             
                )
 AS
 $BODY$
@@ -76,6 +83,13 @@ BEGIN
                             GROUP BY tmpMovement.Id
                             )
 
+          , tmpMovementFloat AS (SELECT *
+                                 FROM MovementFloat
+                                 WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                   AND MovementFloat.DescId IN (zc_MovementFloat_TotalSumm()
+                                                              , zc_MovementFloat_PercentRet()
+                                                              , zc_MovementFloat_PartKg())
+                                )
        SELECT
              Movement.Id                                    AS Id
            , Movement.InvNumber                             AS InvNumber
@@ -83,6 +97,12 @@ BEGIN
            , Movement.OperDate                              AS OperDate
            , Object_Status.ObjectCode                       AS StatusCode
            , Object_Status.ValueData                        AS StatusName
+           , MovementDate_ServiceDate.ValueData  ::TDateTime AS ServiceDate 
+           
+           , MovementFloat_TotalSumm.ValueData   ::TFloat   AS TotalSumm
+           , MovementFloat_PercentRet.ValueData  ::TFloat   AS PercentRet
+           , MovementFloat_PartKg.ValueData      ::TFloat   AS PartKg
+
            , CASE WHEN MovementItem.Amount > 0
                        THEN MovementItem.Amount
                   ELSE 0
@@ -98,7 +118,8 @@ BEGIN
            , COALESCE (tmpMI_Child.Amount, 0)     :: TFloat AS Summ_51201
 
            , MIString_Comment.ValueData                     AS Comment
-           , Object_Juridical.ObjectCode                    AS JuridicalCode
+           , Object_Juridical.Id                            AS JuridicalId
+           , Object_Juridical.ObjectCode          ::Integer AS JuridicalCode
            , Object_Juridical.ValueData                     AS JuridicalName
            , ObjectDesc.ItemName
 
@@ -140,14 +161,48 @@ BEGIN
            , Object_Branch.Id                               AS BranchId
            , Object_Branch.ValueData                        AS BranchName
 
-           , Object_PersonalTrade.ValueData                 AS PersonalName
-           , Object_Personal.ValueData                      AS PersonalName_main
-
+           , COALESCE (Object_PersonalTrade.Id, Object_PersonalTrade_inf.Id)               AS PersonalId
+           , COALESCE (Object_PersonalTrade.ValueData, Object_PersonalTrade_inf.ValueData) AS PersonalName
+           , COALESCE (Object_PersonalMain.Id, Object_Personal_inf.Id)                     AS PersonalId_main
+           , COALESCE (Object_PersonalMain.ValueData, Object_Personal_inf.ValueData)       AS PersonalName_main
+           
+           , Object_PaidKind_Child.Id                      AS PaidKindId_Child
+           , Object_PaidKind_Child.ValueData               AS PaidKindName_Child
+           
            , COALESCE (MovementBoolean_isLoad.ValueData, FALSE) AS isLoad
 
        FROM tmpMovement AS Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
             LEFT JOIN  MovementDesc ON MovementDesc.Id = Movement.DescId
+
+            LEFT JOIN MovementDate AS MovementDate_ServiceDate
+                                   ON MovementDate_ServiceDate.MovementId = Movement.Id
+                                  AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalTrade
+                                         ON MovementLinkObject_PersonalTrade.MovementId = Movement.Id
+                                        AND MovementLinkObject_PersonalTrade.DescId = zc_MovementLinkObject_PersonalTrade()
+            LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = MovementLinkObject_PersonalTrade.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalMain
+                                         ON MovementLinkObject_PersonalMain.MovementId = Movement.Id
+                                        AND MovementLinkObject_PersonalMain.DescId = zc_MovementLinkObject_PersonalMain()
+            LEFT JOIN Object AS Object_PersonalMain ON Object_PersonalMain.Id = MovementLinkObject_PersonalMain.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+            LEFT JOIN Object AS Object_PaidKind_Child ON Object_PaidKind_Child.Id = MovementLinkObject_PaidKind.ObjectId
+
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSumm
+                                       ON MovementFloat_TotalSumm.MovementId = Movement.Id
+                                      AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+            LEFT JOIN tmpMovementFloat AS MovementFloat_PercentRet
+                                       ON MovementFloat_PercentRet.MovementId = Movement.Id
+                                      AND MovementFloat_PercentRet.DescId = zc_MovementFloat_PercentRet()
+            LEFT JOIN tmpMovementFloat AS MovementFloat_PartKg
+                                       ON MovementFloat_PartKg.MovementId = Movement.Id
+                                      AND MovementFloat_PartKg.DescId = zc_MovementFloat_PartKg()
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 
@@ -252,13 +307,13 @@ BEGIN
                                 AND (COALESCE (MILinkObject_PaidKind.ObjectId, 0) = zc_Enum_PaidKind_SecondForm()
                                    OR COALESCE (ObjectLink_Contract_PersonalTrade.ChildObjectId,0) = 0
                                      )
-            LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = COALESCE (ObjectLink_Partner_PersonalTrade.ChildObjectId, ObjectLink_Contract_PersonalTrade.ChildObjectId)
+            LEFT JOIN Object AS Object_PersonalTrade_inf ON Object_PersonalTrade_inf.Id = COALESCE (ObjectLink_Partner_PersonalTrade.ChildObjectId, ObjectLink_Contract_PersonalTrade.ChildObjectId)
 
             --для нал берем из контрагента          
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
                                  ON ObjectLink_Partner_Personal.ObjectId = ObjectLink_Partner_Juridical.ObjectId
                                 AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
-            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Partner_Personal.ChildObjectId
+            LEFT JOIN Object AS Object_Personal_inf ON Object_Personal_inf.Id = ObjectLink_Partner_Personal.ChildObjectId
 
 
        WHERE ( COALESCE (MILinkObject_PaidKind.ObjectId, 0) = inPaidKindId OR inPaidKindId = 0)

@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderInternal_child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, TDateTime, TVarChar, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderInternal_child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, TDateTime, TVarChar, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderInternal_child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, TDateTime, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderInternal_child(
  INOUT ioId                        Integer   , --  люч объекта <Ёлемент документа>
@@ -15,6 +16,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderInternal_child(
     IN inPriceListMovementItemId   Integer   , -- 
     IN inPartionGoods              TDateTime , -- 
     IN inMaker                     TVarChar  , -- 
+    IN inGoodsCode                 TVarChar  , -- 
+    IN inGoodsName                 TVarChar  , -- 
     IN inJuridicalId               Integer   , --
     IN inContractId                Integer   , --
     IN inUserId                    Integer     -- сесси€ пользовател€
@@ -52,6 +55,10 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoods);
     -- сохранили свойство
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Maker(), ioId, inMaker);
+    -- сохранили свойство
+    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GoodsCode(), ioId, inGoodsCode);
+    -- сохранили свойство
+    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GoodsName(), ioId, inGoodsName);
 
      -- сохранили св€зь
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Juridical(), ioId, inJuridicalId);

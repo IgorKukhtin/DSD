@@ -1256,7 +1256,8 @@ uses
   FineSubject in '..\..\Forms\Guides\FineSubject.pas' {FineSubjectForm: TParentForm},
   FineSubjectEdit in '..\..\Forms\Guides\FineSubjectEdit.pas' {FineSubjectEditForm: TParentForm},
   Report_Supply_RemainsDialog in '..\..\Forms\Report\Report_Supply_RemainsDialog.pas' {Report_Supply_RemainsDialogForm: TParentForm},
-  Report_Supply_Remains in '..\..\Forms\Report\Report_Supply_Remains.pas' {Report_Supply_RemainsForm: TParentForm};
+  Report_Supply_Remains in '..\..\Forms\Report\Report_Supply_Remains.pas' {Report_Supply_RemainsForm: TParentForm},
+  Report_CheckBonus_Journal in '..\..\Forms\Report\Report_CheckBonus_Journal.pas' {Report_CheckBonus_JournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

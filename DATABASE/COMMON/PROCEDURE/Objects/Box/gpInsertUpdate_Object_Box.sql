@@ -10,20 +10,18 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Box(
     IN inBoxVolume    TFloat,       --
     IN inBoxWeight    TFloat,       --
     IN inBoxHeight    TFloat  ,     -- 
-    IN inBoxLength    TFloat  ,     -- 
+    IN inBoxLength    TFloat  ,     --
     IN inBoxWidth     TFloat  ,     --
     IN inSession      TVarChar      -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
-   DECLARE UserId Integer;
+   DECLARE vbUserId Integer;
    DECLARE Code_max Integer;
-
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Box());
-   UserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- Если код не установлен, определяем его как последний+1
    IF COALESCE (inCode, 0) = 0
@@ -37,7 +35,6 @@ BEGIN
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Box(), inName);
    -- проверка уникальности для свойства <Код Единицы измерения>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Box(), Code_max);
-
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Box(), Code_max, inName);
@@ -53,7 +50,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Box_Width(), ioId, inBoxWidth);
 
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
 

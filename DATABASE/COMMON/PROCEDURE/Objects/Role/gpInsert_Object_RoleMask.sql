@@ -11,13 +11,13 @@ CREATE OR REPLACE FUNCTION gpInsert_Object_RoleMask(
   RETURNS integer AS
 $BODY$
    DECLARE vbId Integer;
-   DECLARE UserId Integer;
+   DECLARE vbUserId Integer;
 BEGIN
    
    -- проверка прав пользовател€ на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Role());
 
-   UserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- ≈сли код не установлен, определ€ем его каи последний+1
    inCode := lfGet_ObjectCode(inCode, zc_Object_Role()); 
@@ -66,7 +66,7 @@ BEGIN
     ioId := vbId;
    
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;
 $BODY$

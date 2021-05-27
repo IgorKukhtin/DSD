@@ -359,21 +359,11 @@ end;
 function TCashFP3530T_NEW.FiscalNumber: String;
 begin
   Result := FPrinter.FNUM[Password];
-  if not СообщениеКА(FPrinter.GETERROR) then
-  begin
-    Result := FPrinter.FNUM[Password];
-    if not СообщениеКА(FPrinter.GETERROR) then Result := '';
-  end;
 end;
 
 function TCashFP3530T_NEW.SerialNumber:String;
 begin
   Result := FPrinter.ZNUM[Password];
-  if not СообщениеКА(FPrinter.GETERROR) then
-  begin
-    Result := FPrinter.ZNUM[Password];
-    if not СообщениеКА(FPrinter.GETERROR) then Result := '';
-  end;
 end;
 
 function TCashFP3530T_NEW.XReport: boolean;

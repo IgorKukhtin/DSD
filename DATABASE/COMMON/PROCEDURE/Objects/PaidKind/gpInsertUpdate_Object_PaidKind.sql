@@ -10,14 +10,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PaidKind(
 )
 RETURNS Integer AS
 $BODY$
-   DECLARE UserId Integer;
+   DECLARE vbUserId Integer;
    DECLARE Code_max Integer;   
    
 BEGIN
  
    -- проверка прав пользовател€ на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_PaidKind());
-   UserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- ≈сли код не установлен, определ€ем его каи последний+1
    IF COALESCE (inCode, 0) = 0
@@ -36,7 +36,7 @@ BEGIN
    ioId := lpInsertUpdate_Object (ioId, zc_Object_PaidKind(), Code_max, inName);
    
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
 

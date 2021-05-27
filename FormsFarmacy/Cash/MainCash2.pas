@@ -9242,10 +9242,11 @@ function TMainCashForm2.PutCheckToCash(SalerCash, SalerCashAdd: Currency;
   PaidType: TPaidType; var AFiscalNumber, ACheckNumber: String;
   APOSTerminalCode: Integer = 0; isFiscal: Boolean = True): Boolean;
 var
-  str_log_xml: String;
+  str_log_xml, cResult: String;
   Disc, nSumAll: Currency;
   I, PosDisc: Integer;
   pPosTerm: IPos;
+  n : Int64;
   { ------------------------------------------------------------------------------ }
   function PutOneRecordToCash: Boolean; // Продажа одного наименования
   var
@@ -9313,7 +9314,16 @@ begin
   try
     try
       if Assigned(Cash) AND NOT Cash.AlwaysSold and isFiscal then
-        AFiscalNumber := Cash.FiscalNumber
+      begin
+        AFiscalNumber := Cash.FiscalNumber;
+        if not TryStrToInt64(AFiscalNumber, n) then
+        begin
+          if ShowPUSHMessageCash('После проведения предыдущего чека возникла ошибка…'#13#10 +
+                                 'Повторите пробитие чека!'#13#10 +
+                                 'Если не пройдет - сделайте X отчет и повторите пробитие.', cResult) then actPutCheckToCashExecute(Nil);
+          Exit;
+        end;
+      end
       else
         AFiscalNumber := '';
       Disc := 0;

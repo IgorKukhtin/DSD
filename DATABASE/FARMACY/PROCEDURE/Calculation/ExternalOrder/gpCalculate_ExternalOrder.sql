@@ -55,8 +55,14 @@ BEGIN
        -- вернем обратно, что б gpSelect вернул "текущие" данные
        PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Document(), inInternalOrder, FALSE);
 
-       CREATE TEMP TABLE _tmpMI_OrderInternal_Master (MovementItemId Integer, PartionGoods TDateTime, MinimumLot TFloat, MCS TFloat, PriceFrom TFloat, JuridicalPrice TFloat, DefermentPrice TFloat, Remains TFloat, Reserved TFloat, Income TFloat, CheckAmount TFloat, SendAmount TFloat, AmountDeferred TFloat, Maker TVarChar, isClose Boolean, isFirst Boolean, isSecond Boolean, isTOP Boolean, isUnitTOP Boolean, isMCSNotRecalc Boolean, isMCSIsClose Boolean, GoodsId_partner Integer, JuridicalId Integer, ContractId Integer) ON COMMIT DROP;
-       CREATE TEMP TABLE _tmpMI_OrderInternal_Child  (MovementItemId Integer, GoodsId Integer, PartionGoods TDateTime, Price TFloat, JuridicalPrice TFloat, DefermentPrice TFloat, PriceListMovementItemId Integer, Maker TVarChar, JuridicalId Integer, ContractId Integer) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpMI_OrderInternal_Master (MovementItemId Integer, PartionGoods TDateTime, MinimumLot TFloat, MCS TFloat, PriceFrom TFloat, 
+                 JuridicalPrice TFloat, DefermentPrice TFloat, Remains TFloat, Reserved TFloat, Income TFloat, CheckAmount TFloat, 
+                 SendAmount TFloat, AmountDeferred TFloat, Maker TVarChar, PartnerGoodsCode TVarChar, PartnerGoodsName TVarChar, 
+                 isClose Boolean, isFirst Boolean, isSecond Boolean, isTOP Boolean, isUnitTOP Boolean, isMCSNotRecalc Boolean, isMCSIsClose Boolean, 
+                 GoodsId_partner Integer, JuridicalId Integer, ContractId Integer) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpMI_OrderInternal_Child  (MovementItemId Integer, GoodsId Integer, PartionGoods TDateTime, Price TFloat, JuridicalPrice TFloat, 
+                 DefermentPrice TFloat, PriceListMovementItemId Integer, Maker TVarChar, GoodsCode TVarChar, GoodsName TVarChar, 
+                 JuridicalId Integer, ContractId Integer) ON COMMIT DROP;
 
        -- Поменял на разитые процедуры
 /*       SELECT zfCalc_Word_Split (tmp.CurName_all, ';', 1) AS CurName1
@@ -81,12 +87,24 @@ BEGIN
        END LOOP;
        */
 
-       INSERT INTO _tmpMI_OrderInternal_Master (MovementItemId, PartionGoods, MinimumLot, MCS, PriceFrom, JuridicalPrice, DefermentPrice, Remains, Reserved, Income, CheckAmount, SendAmount, AmountDeferred, Maker, isClose, isFirst, isSecond, isTOP, isUnitTOP, isMCSNotRecalc, isMCSIsClose, GoodsId_partner, JuridicalId, ContractId)
-         SELECT vbRec.Id, vbRec.PartionGoodsDate, vbRec.MinimumLot, vbRec.MCS, vbRec.Price, vbRec.SuperFinalPrice, vbRec.SuperFinalPrice_Deferment, vbRec.RemainsInUnit, vbRec.Reserved, vbRec.Income_Amount, vbRec.CheckAmount, vbRec.SendAmount, vbRec.AmountDeferred, vbRec.MakerName, vbRec.isClose, vbRec.isFirst, vbRec.isSecond, vbRec.isTOP, vbRec.isTOP_Price, vbRec.MCSNotRecalc, vbRec.MCSIsClose, COALESCE (vbRec.PartnerGoodsId, 0), COALESCE (vbRec.JuridicalId, 0), COALESCE (vbRec.ContractId, 0)
+       INSERT INTO _tmpMI_OrderInternal_Master (MovementItemId, PartionGoods, MinimumLot, MCS, PriceFrom, 
+                 JuridicalPrice, DefermentPrice, Remains, Reserved, Income, CheckAmount, 
+                 SendAmount, AmountDeferred, Maker, PartnerGoodsCode, PartnerGoodsName,
+                 isClose, isFirst, isSecond, isTOP, isUnitTOP, isMCSNotRecalc, isMCSIsClose, 
+                 GoodsId_partner, JuridicalId, ContractId)
+         SELECT vbRec.Id, vbRec.PartionGoodsDate, vbRec.MinimumLot, vbRec.MCS, vbRec.Price, 
+                vbRec.SuperFinalPrice, vbRec.SuperFinalPrice_Deferment, vbRec.RemainsInUnit, vbRec.Reserved, vbRec.Income_Amount, vbRec.CheckAmount, 
+                vbRec.SendAmount, vbRec.AmountDeferred, vbRec.MakerName,  vbRec.PartnerGoodsCode, vbRec.PartnerGoodsName,
+                vbRec.isClose, vbRec.isFirst, vbRec.isSecond, vbRec.isTOP, vbRec.isTOP_Price, vbRec.MCSNotRecalc, vbRec.MCSIsClose, 
+                COALESCE (vbRec.PartnerGoodsId, 0), COALESCE (vbRec.JuridicalId, 0), COALESCE (vbRec.ContractId, 0)
          FROM gpSelect_MovementItem_OrderInternal_Master (inInternalOrder, FALSE, FALSE, FALSE, inSession) AS vbRec;
 
-       INSERT INTO _tmpMI_OrderInternal_Child (MovementItemId, GoodsId, PartionGoods, Price, JuridicalPrice, DefermentPrice, PriceListMovementItemId, Maker, JuridicalId, ContractId)
-         SELECT vbRec.MovementItemId, COALESCE (vbRec.GoodsId, 0), vbRec.PartionGoodsDate, vbRec.Price, vbRec.SuperFinalPrice, vbRec.SuperFinalPrice_Deferment, vbRec.PriceListMovementItemId, vbRec.MakerName, COALESCE (vbRec.JuridicalId, 0), COALESCE (vbRec.ContractId, 0)
+       INSERT INTO _tmpMI_OrderInternal_Child (MovementItemId, GoodsId, PartionGoods, Price, JuridicalPrice, 
+                 DefermentPrice, PriceListMovementItemId, Maker, GoodsCode, GoodsName,
+                 JuridicalId, ContractId)
+         SELECT vbRec.MovementItemId, COALESCE (vbRec.GoodsId, 0), vbRec.PartionGoodsDate, vbRec.Price, vbRec.SuperFinalPrice, 
+                vbRec.SuperFinalPrice_Deferment, vbRec.PriceListMovementItemId, vbRec.MakerName,  vbRec.GoodsCode, vbRec.GoodsName,
+                COALESCE (vbRec.JuridicalId, 0), COALESCE (vbRec.ContractId, 0)
          FROM gpSelect_MovementItem_OrderInternal_Child (inInternalOrder, FALSE, FALSE, FALSE, inSession) AS vbRec;
 
        -- Сохранили
@@ -103,6 +121,8 @@ BEGIN
              , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_DefermentPrice(), MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.DefermentPrice, 0))
              , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_Income()        , MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.Income, 0))
              , lpInsertUpdate_MovementItemString  (zc_MIString_Maker()        , MovementItem.Id, _tmpMI_OrderInternal_Master.Maker)
+             , lpInsertUpdate_MovementItemString  (zc_MIString_GoodsCode()    , MovementItem.Id, _tmpMI_OrderInternal_Master.PartnerGoodsCode)
+             , lpInsertUpdate_MovementItemString  (zc_MIString_GoodsName()    , MovementItem.Id, _tmpMI_OrderInternal_Master.PartnerGoodsName)
              , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Close()       , MovementItem.Id, _tmpMI_OrderInternal_Master.isClose)
              , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_First()       , MovementItem.Id, _tmpMI_OrderInternal_Master.isFirst)
              , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Second()      , MovementItem.Id, _tmpMI_OrderInternal_Master.isSecond)
@@ -138,6 +158,8 @@ BEGIN
                                                               , inPriceListMovementItemId   := COALESCE (_tmpMI_OrderInternal_Child.PriceListMovementItemId, 0)
                                                               , inPartionGoods              := _tmpMI_OrderInternal_Child.PartionGoods  :: TDateTime
                                                               , inMaker                     := _tmpMI_OrderInternal_Child.Maker         :: TVarChar
+                                                              , inGoodsCode                 := _tmpMI_OrderInternal_Child.GoodsCode     :: TVarChar
+                                                              , inGoodsName                 := _tmpMI_OrderInternal_Child.GoodsName     :: TVarChar
                                                               , inJuridicalId               := COALESCE (MovementItem.JuridicalId, _tmpMI_OrderInternal_Child.JuridicalId)
                                                               , inContractId                := COALESCE (MovementItem.ContractId, _tmpMI_OrderInternal_Child.ContractId)
                                                               , inUserId                    := vbUserId
@@ -377,4 +399,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpCalculate_ExternalOrder (inInternalOrder:= 2333613, inSession:= '3');
--- SELECT * FROM gpCalculate_ExternalOrder (inInternalOrder:= 19059714 , inSession:= '3');
+-- SELECT * FROM gpCalculate_ExternalOrder (inInternalOrder:= 23412080  , inSession:= '3');

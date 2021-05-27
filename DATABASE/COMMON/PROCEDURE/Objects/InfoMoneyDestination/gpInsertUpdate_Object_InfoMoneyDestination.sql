@@ -3,14 +3,14 @@
 -- DROP FUNCTION gpInsertUpdate_Object_InfoMoneyDestination();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_InfoMoneyDestination(
- INOUT ioId	         Integer   ,   	-- ключ  Управленческие аналитики - назначение
+ INOUT ioId	     Integer   ,   	-- ключ  Управленческие аналитики - назначение
     IN inCode        Integer   ,    -- код
     IN inName        TVarChar  ,    -- Наименование
     IN inSession     TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
-   DECLARE UserId Integer;
+   DECLARE vbUserId Integer;
    DECLARE Code_calc Integer;   
 
 BEGIN
@@ -19,7 +19,7 @@ BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_InfoMoneyDestination());
-   UserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- Если код не установлен, определяем его как последний+1
    Code_calc:=lfGet_ObjectCode (inCode, zc_Object_InfoMoneyDestination()); 
@@ -33,7 +33,7 @@ BEGIN
    ioId := lpInsertUpdate_Object(ioId, zc_Object_InfoMoneyDestination(), Code_calc, inName);
 
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
