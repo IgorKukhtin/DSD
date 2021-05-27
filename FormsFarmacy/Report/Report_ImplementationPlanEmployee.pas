@@ -849,4 +849,7 @@ begin
   FUnitCategory.Free;
 end;
 
+initialization
+  RegisterClass(TReport_ImplementationPlanEmployeeForm);
+
 end.

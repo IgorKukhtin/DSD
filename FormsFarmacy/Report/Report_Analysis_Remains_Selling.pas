@@ -258,4 +258,7 @@ begin
   UserSettingsStorageAddOn.LoadUserSettings;
 end;
 
+initialization
+  RegisterClass(TReport_Analysis_Remains_SellingForm);
+
 end.

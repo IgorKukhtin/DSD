@@ -1,30 +1,30 @@
 inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanListForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1083#1072#1085' '#1087#1086' '#1091#1084#1077#1085#1100#1096#1077#1085#1080#1102' '#1082#1086#1083'-'#1074#1086' '#1085#1077#1083#1080#1082#1074#1080#1076#1072' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091'>'
   ClientHeight = 504
-  ClientWidth = 1305
+  ClientWidth = 1185
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1321
+  ExplicitWidth = 1201
   ExplicitHeight = 543
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 83
-    Width = 1305
-    Height = 421
+    Top = 98
+    Width = 1185
+    Height = 406
     ExplicitTop = 83
-    ExplicitWidth = 899
+    ExplicitWidth = 1185
     ExplicitHeight = 421
-    ClientRectBottom = 421
-    ClientRectRight = 1305
+    ClientRectBottom = 406
+    ClientRectRight = 1185
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 899
+      ExplicitWidth = 1185
       ExplicitHeight = 421
       inherited cxGrid: TcxGrid
         Top = 89
-        Width = 1305
-        Height = 332
+        Width = 1185
+        Height = 317
         ExplicitTop = 89
-        ExplicitWidth = 899
+        ExplicitWidth = 1185
         ExplicitHeight = 332
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -207,12 +207,11 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
       object cxGridDetals: TcxGrid
         Left = 0
         Top = 0
-        Width = 1305
+        Width = 1185
         Height = 81
         Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 899
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetalsDS
@@ -355,20 +354,20 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 81
-        Width = 1305
+        Width = 1185
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salTop
         Control = cxGridDetals
-        ExplicitWidth = 899
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1305
-    Height = 57
-    ExplicitWidth = 899
-    ExplicitHeight = 57
+    Width = 1185
+    Height = 72
+    ExplicitTop = 1
+    ExplicitWidth = 1185
+    ExplicitHeight = 72
     inherited deStart: TcxDateEdit
       EditValue = 43344d
       Properties.DisplayFormat = 'mmmm yyyy'
@@ -421,22 +420,22 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
     end
     object ceProcUnit: TcxCurrencyEdit
       Left = 253
-      Top = 29
+      Top = 26
       EditValue = 10.000000000000000000
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.##'
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 30
+      Width = 35
     end
     object cxLabel4: TcxLabel
       Left = 151
-      Top = 30
+      Top = 29
       Caption = '% '#1074#1099#1087'. '#1087#1086' '#1072#1087#1090#1077#1082#1077'.'
     end
     object ceProcGoods: TcxCurrencyEdit
       Left = 122
-      Top = 29
+      Top = 28
       EditValue = 20.000000000000000000
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.##'
@@ -446,27 +445,27 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
     end
     object cxLabel5: TcxLabel
       Left = 10
-      Top = 30
+      Top = 29
       Caption = '% '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1074#1099#1087'.'
     end
     object cePenalty: TcxCurrencyEdit
-      Left = 555
-      Top = 29
+      Left = 495
+      Top = 26
       EditValue = 250.000000000000000000
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = '0'
       Properties.ReadOnly = True
       TabOrder = 11
-      Width = 35
+      Width = 47
     end
     object cxLabel6: TcxLabel
-      Left = 403
-      Top = 30
+      Left = 293
+      Top = 27
       Caption = #1064#1090#1088#1072#1092' '#1079#1072' 1% '#1085#1077#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
     end
     object cbFilter3: TcxCheckBox
-      Left = 596
-      Top = 33
+      Left = 659
+      Top = 45
       Caption = #1058#1086#1074#1072#1088' '#1086#1090#1089#1091#1090#1089#1090#1074#1091#1077#1090' '
       ParentBackground = False
       ParentColor = False
@@ -477,8 +476,8 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
       Width = 139
     end
     object cbFilter2: TcxCheckBox
-      Left = 596
-      Top = 18
+      Left = 659
+      Top = 25
       Caption = #1041#1077#1079' '#1087#1088#1086#1076#1072#1078#1080
       ParentBackground = False
       ParentColor = False
@@ -489,8 +488,8 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
       Width = 139
     end
     object cbFilter1: TcxCheckBox
-      Left = 596
-      Top = 0
+      Left = 659
+      Top = 6
       Caption = #1055#1088#1086#1076#1072#1078#1072' '#1085#1077#1083#1080#1082#1074#1080#1076#1072' '
       ParentBackground = False
       ParentColor = False
@@ -501,18 +500,46 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
       Width = 139
     end
     object cePlanAmount: TcxCurrencyEdit
-      Left = 369
-      Top = 29
+      Left = 252
+      Top = 48
       EditValue = 7.000000000000000000
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.##'
       TabOrder = 16
-      Width = 27
+      Width = 35
     end
     object cxLabel7: TcxLabel
-      Left = 287
-      Top = 30
+      Left = 151
+      Top = 49
       Caption = #1055#1083#1072#1085' '#1086#1090' '#1089#1091#1084#1084#1099
+    end
+    object cePenaltySum: TcxCurrencyEdit
+      Left = 495
+      Top = 48
+      EditValue = 250.000000000000000000
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      TabOrder = 18
+      Width = 47
+    end
+    object cxLabel8: TcxLabel
+      Left = 293
+      Top = 49
+      Caption = #1064#1090#1088#1072#1092' '#1079#1072' 1% '#1085#1077#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1086#1090' '#1089#1091#1084#1084#1099
+    end
+    object cbPenaltySumInfo: TcxCheckBox
+      Left = 548
+      Top = 48
+      Caption = #1054#1079#1085#1072#1082#1086#1084#1083#1077#1085#1080#1077
+      TabOrder = 20
+      Width = 99
+    end
+    object cbPenaltyInfo: TcxCheckBox
+      Left = 548
+      Top = 26
+      Caption = #1054#1079#1085#1072#1082#1086#1084#1083#1077#1085#1080#1077
+      TabOrder = 21
+      Width = 99
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -663,6 +690,30 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPenaltyInfo'
+        Value = Null
+        Component = cbPenaltyInfo
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPenaltySum'
+        Value = Null
+        Component = cePenaltySum
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPenaltySumInfo'
+        Value = Null
+        Component = cbPenaltySumInfo
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 112
@@ -777,10 +828,38 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
         MultiSelectSeparator = ','
       end
       item
+        Name = 'PlanAmount'
+        Value = Null
+        Component = cePlanAmount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Penalty'
         Value = Null
         Component = cePenalty
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PenaltySum'
+        Value = Null
+        Component = cePenaltySum
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPenaltyInfo'
+        Value = Null
+        Component = cbPenaltyInfo
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPenaltySumInfo'
+        Value = Null
+        Component = cbPenaltySumInfo
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 56

@@ -1,10 +1,10 @@
 inherited OrderInternalJournalForm: TOrderInternalJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1080' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077' - '#1054#1073#1097#1080#1081' '#1079#1072#1082#1072#1079'>'
   ClientHeight = 535
   ClientWidth = 828
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 844
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -21,8 +21,6 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
       inherited cxGrid: TcxGrid
         Width = 828
         Height = 478
-        ExplicitLeft = 264
-        ExplicitTop = 16
         ExplicitWidth = 828
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -459,7 +457,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptUnknown
         MultiSelectSeparator = ','

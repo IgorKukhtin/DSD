@@ -3,8 +3,8 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
-  ClientHeight = 265
-  ClientWidth = 290
+  ClientHeight = 290
+  ClientWidth = 431
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,8 +18,8 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 33
-    Top = 218
+    Left = 64
+    Top = 247
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 175
-    Top = 217
+    Left = 203
+    Top = 246
     Width = 75
     Height = 28
     Caption = #1054#1090#1084#1077#1085#1072
@@ -37,7 +37,7 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
     TabOrder = 1
   end
   object deOperDate: TcxDateEdit
-    Left = 188
+    Left = 222
     Top = 21
     EditValue = 42705d
     Properties.ShowTime = False
@@ -50,7 +50,7 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
     Caption = #1044#1072#1090#1072' '#1086#1090#1095#1077#1090#1072
   end
   object ceProcUnit: TcxCurrencyEdit
-    Left = 188
+    Left = 222
     Top = 99
     EditValue = 10.000000000000000000
     Properties.DecimalPlaces = 2
@@ -64,7 +64,7 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
     Caption = '% '#1074#1099#1087'. '#1087#1086' '#1072#1087#1090#1077#1082#1077'.'
   end
   object ceProcGoods: TcxCurrencyEdit
-    Left = 188
+    Left = 222
     Top = 59
     EditValue = 20.000000000000000000
     Properties.DecimalPlaces = 2
@@ -78,8 +78,8 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
     Caption = '% '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1074#1099#1087'.'
   end
   object cePenalty: TcxCurrencyEdit
-    Left = 188
-    Top = 179
+    Left = 222
+    Top = 139
     EditValue = 250.000000000000000000
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.##'
@@ -88,12 +88,12 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
   end
   object cxLabel2: TcxLabel
     Left = 11
-    Top = 180
+    Top = 140
     Caption = #1064#1090#1088#1072#1092' '#1079#1072' 1% '#1085#1077#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
   end
   object cePlanAmount: TcxCurrencyEdit
-    Left = 188
-    Top = 139
+    Left = 222
+    Top = 179
     EditValue = 7.000000000000000000
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.##'
@@ -102,8 +102,36 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
   end
   object cxLabel5: TcxLabel
     Left = 11
-    Top = 140
+    Top = 180
     Caption = #1055#1083#1072#1085' '#1086#1090' '#1089#1091#1084#1084#1099
+  end
+  object cePenaltySum: TcxCurrencyEdit
+    Left = 222
+    Top = 214
+    EditValue = 250.000000000000000000
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.##'
+    TabOrder = 12
+    Width = 90
+  end
+  object cxLabel6: TcxLabel
+    Left = 11
+    Top = 215
+    Caption = #1064#1090#1088#1072#1092' '#1079#1072' 1% '#1085#1077#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1086#1090' '#1089#1091#1084#1084#1099
+  end
+  object cbPenaltyInfo: TcxCheckBox
+    Left = 318
+    Top = 139
+    Caption = #1054#1079#1085#1072#1082#1086#1084#1083#1077#1085#1080#1077
+    TabOrder = 14
+    Width = 99
+  end
+  object cbPenaltySumInfo: TcxCheckBox
+    Left = 318
+    Top = 214
+    Caption = #1054#1079#1085#1072#1082#1086#1084#1083#1077#1085#1080#1077
+    TabOrder = 15
+    Width = 99
   end
   object PeriodChoice: TPeriodChoice
     Left = 119
@@ -163,6 +191,27 @@ object Report_IlliquidReductionPlanAllDialogForm: TReport_IlliquidReductionPlanA
         Value = Null
         Component = cePenalty
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PenaltySum'
+        Value = Null
+        Component = cePenaltySum
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPenaltyInfo'
+        Value = Null
+        Component = cbPenaltyInfo
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPenaltySumInfo'
+        Value = Null
+        Component = cbPenaltySumInfo
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 54

@@ -70,6 +70,10 @@ type
     D_SummaPenaltySum: TcxGridDBColumn;
     D_SummaPenalty: TcxGridDBColumn;
     D_UnitName: TcxGridDBColumn;
+    cePenaltySum: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
+    cbPenaltySumInfo: TcxCheckBox;
+    cbPenaltyInfo: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -525,4 +525,7 @@ begin
   UserSettingsStorageAddOn.LoadUserSettings
 end;
 
+initialization
+  RegisterClass(TReprice—hangeRetailForm);
+
 end.

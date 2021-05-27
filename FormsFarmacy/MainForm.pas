@@ -418,12 +418,10 @@ type
     actGoods_NDS_diff: TdsdOpenForm;
     miGoods_NDS_diff: TMenuItem;
     N2: TMenuItem;
-    actReport_Analysis_Remains_Selling: TAction;
     actReportMovementCheckFLForm: TdsdOpenForm;
     miReportMovementCheckFLForm: TMenuItem;
     actReport_ImplementationPlanEmployee: TAction;
     N3: TMenuItem;
-    actReport_IncomeConsumptionBalance: TAction;
     N116: TMenuItem;
     actReport_ImplementationPlanEmployeeAll: TdsdOpenForm;
     N163: TMenuItem;
@@ -804,15 +802,17 @@ type
     N290: TMenuItem;
     N291: TMenuItem;
     N292: TMenuItem;
+    N293: TMenuItem;
+    N294: TMenuItem;
+    N295: TMenuItem;
+    actRepriceUnit: TdsdOpenStaticForm;
+    actReprice—hangeRetail: TdsdOpenStaticForm;
+    actReport_Analysis_Remains_Selling: TdsdOpenStaticForm;
+    actReport_IncomeConsumptionBalance: TdsdOpenStaticForm;
     procedure actSaveDataExecute(Sender: TObject);
-
-    procedure miRepriceClick(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
-    procedure actReport_Analysis_Remains_SellingExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure actReport_IncomeConsumptionBalanceExecute(Sender: TObject);
-    procedure miRepriceChangeClick(Sender: TObject);
     procedure miReprice_testClick(Sender: TObject);
     procedure TimerPUSHTimer(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -840,29 +840,10 @@ uses
   RepricePromoUnit;
 
 
-procedure TMainForm.actReport_Analysis_Remains_SellingExecute(Sender: TObject);
-begin
-  with TReport_Analysis_Remains_SellingForm.Create(Self) do
-  try
-     Show;
-  finally
-  end;
-end;
-
 procedure TMainForm.actReport_ImplementationPlanEmployeeExecute(
   Sender: TObject);
 begin
   with TReport_ImplementationPlanEmployeeForm.Create(Self) do
-  try
-     Show;
-  finally
-  end;
-end;
-
-procedure TMainForm.actReport_IncomeConsumptionBalanceExecute(Sender: TObject);
-begin
-  inherited;
-  with TReport_IncomeConsumptionBalanceForm.Create(Self) do
   try
      Show;
   finally
@@ -892,9 +873,6 @@ procedure TMainForm.FormShow(Sender: TObject);
 begin
   inherited;
 
-  actReport_Analysis_Remains_Selling.Visible := actReport_CheckPromo.Visible or (gc_User.Session = '11263040');
-  actReport_IncomeConsumptionBalance.Visible := actReport_CheckPromo.Visible;
-
   if (gc_User.Session = '3') or (gc_User.Session = '4183126') then
   begin
     cxGrid.Visible := True;
@@ -913,16 +891,6 @@ end;
 procedure TMainForm.actExportSalesForSuppClickExecute(Sender: TObject);
 begin
   TExportSalesForSuppForm.Create(Self).Show;
-end;
-
-procedure TMainForm.miRepriceClick(Sender: TObject);
-begin
-  with TRepriceUnitForm.Create(Self) do
-  try
-     Show;
-  finally
-     //Free;
-  end;
 end;
 
 procedure TMainForm.miRepricePromoClick(Sender: TObject);
@@ -1001,16 +969,6 @@ begin
   finally
     TimerPUSH.Enabled := True;
     if PUSHDS.IsEmpty then PUSHDS.Close;
-  end;
-end;
-
-procedure TMainForm.miRepriceChangeClick(Sender: TObject);
-begin
-  with TReprice—hangeRetailForm.Create(Self) do
-  try
-     Show;
-  finally
-     //Free;
   end;
 end;
 

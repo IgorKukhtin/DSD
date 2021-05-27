@@ -220,4 +220,7 @@ begin
   if ProgressBar1.Position=100 then edt1Exit(Sender);
 end;
 
+initialization
+  RegisterClass(TSearchByCaptionForm);
+
 End.

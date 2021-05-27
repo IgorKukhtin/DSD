@@ -36,12 +36,19 @@ $BODY$
     DECLARE vbOperSumm_PVAT TFloat;
     DECLARE vbTotalCountKg  TFloat;
     DECLARE vbTotalCountSh  TFloat;
-
+    
+    DECLARE vbWeighingCount   Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- кол-во Взвешиваний / паллет
+     vbWeighingCount:= (SELECT COUNT(*)
+                        FROM Movement
+                        WHERE Movement.ParentId = inMovementId AND Movement.DescId IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction())
+                          AND Movement.StatusId = zc_Enum_Status_Complete()
+                       );
 
      -- параметры из документа
      SELECT Movement.DescId
@@ -160,6 +167,7 @@ BEGIN
            , OH_JuridicalDetails_To.Phone               AS Phone_To
            , ObjectString_BuyerGLNCode.ValueData        AS BuyerGLNCode
            , ObjectString_DELIVERYPLACEGLNCode.ValueData AS DELIVERYPLACEGLNCode
+           , '' ::TVarChar AS Sign_
 
 
            , OH_JuridicalDetails_From.JuridicalId       AS JuridicalId_From
@@ -221,6 +229,8 @@ BEGIN
                   WHEN View_CurrencyPartner.Code = 643
                   THEN 'российских рублях'
              ELSE '' END                                        AS IntCurNameAllName
+           
+           , vbWeighingCount ::TFloat AS WeighingCount
 
        FROM Movement
             LEFT JOIN Object_Currency_View AS View_CurrencyPartner ON View_CurrencyPartner.Id = vbCurrencyPartnerId
@@ -468,6 +478,7 @@ BEGIN
        SELECT
              Object_Goods.ObjectCode         AS GoodsCode
            , Object_GoodsGroup.ValueData     AS GoodsGroupName
+           , 'Колбасные изделия в ассортименте и консервы тушеные' ::TVarChar AS GoodsGroupName_1801161421 -- группа товара для ООО Абоа
            , Object_TradeMark.ValueData      AS TradeMarkName
            , CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END AS GoodsName
            , (CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName_two
@@ -509,6 +520,12 @@ BEGIN
            , COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, ''))    AS Article_Juridical
            , COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')    AS BarCode_Juridical
 
+           , CAST ((COALESCE (tmpMI.AmountPartner, 0) * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat) AS Netto_Weight
+           , CAST ((COALESCE (tmpMI.AmountPartner, 0) * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) + (COALESCE (tmpMI.BoxCount_summ, 0)) AS TFloat) AS Brutto_Weight
+           , CAST (COALESCE (tmpMI.Box_Count, 0)  AS TFloat) AS Box_Count
+
+           , CASE WHEN COALESCE (tmpMI.AmountPartner_all,0) <> 0 THEN vbWeighingCount * COALESCE (tmpMI.AmountPartner, 0)* (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ) / tmpMI.AmountPartner_all ELSE 0 END ::TFloat AS WeighingCount
+
        FROM (SELECT MovementItem.ObjectId AS GoodsId
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
 
@@ -521,7 +538,11 @@ BEGIN
 
                   , MIFloat_CountForPrice.ValueData AS CountForPrice
                   , SUM (MovementItem.Amount) AS Amount
-                  , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner
+                  , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0))    AS AmountPartner
+
+                  , COALESCE (MIFloat_BoxCount.ValueData, 0)               AS Box_Count
+                  , SUM (COALESCE (OF_Box_Weight.ValueData, 0) * COALESCE (MIFloat_BoxCount.ValueData, 0)) AS BoxCount_summ
+                  , SUM ( SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) ) OVER ()               AS AmountPartner_all
              FROM MovementItem
                   INNER JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -539,6 +560,17 @@ BEGIN
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+                  LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
+                                              ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
+                                             AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
+                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Box
+                                                   ON MILinkObject_Box.MovementItemId = MovementItem.Id
+                                                  AND MILinkObject_Box.DescId = zc_MILinkObject_Box()
+                  LEFT JOIN ObjectFloat AS OF_Box_Weight
+                                        ON OF_Box_Weight.ObjectId = MILinkObject_Box.ObjectId
+                                       AND OF_Box_Weight.DescId = zc_ObjectFloat_Box_Weight()
+
              WHERE MovementItem.MovementId = inMovementId
                AND MovementItem.DescId     = zc_MI_Master()
                AND MovementItem.isErased   = FALSE
@@ -546,6 +578,7 @@ BEGIN
                     , MILinkObject_GoodsKind.ObjectId
                     , MIFloat_Price.ValueData
                     , MIFloat_CountForPrice.ValueData
+                    , COALESCE (MIFloat_BoxCount.ValueData, 0)
 
             ) AS tmpMI
 
@@ -579,6 +612,7 @@ BEGIN
                                                        AND tmpObject_GoodsPropertyValue.GoodsId IS NULL
             LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = tmpMI.GoodsId
                                                         AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = tmpMI.GoodsKindId
+
        WHERE tmpMI.AmountPartner <> 0
        ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData
        ;

@@ -107,6 +107,18 @@ BEGIN
      FROM (SELECT DISTINCT _tmpResult_Supplement.MovementId FROM _tmpResult_Supplement WHERE _tmpResult_Supplement.MovementId > 0
           ) AS tmp;
 
+     -- Частим маркетинговые контракты
+     PERFORM  gpUpdate_Movement_Promo_Supplement(Movement.Id, TRUE, inSession)
+     FROM Movement
+                                
+          INNER JOIN MovementBoolean AS MovementBoolean_Supplement
+                                     ON MovementBoolean_Supplement.MovementId =  Movement.Id
+                                    AND MovementBoolean_Supplement.DescId = zc_MovementBoolean_Supplement()
+                                    AND MovementBoolean_Supplement.ValueData = True
+                           
+     WHERE Movement.DescId = zc_Movement_Promo();
+        
+        
      --raise notice 'Value 05: %', (select Count(*) from _tmpResult_Supplement WHERE _tmpResult_Supplement.MovementId > 0);      
      --RAISE EXCEPTION '<ok>';
 
