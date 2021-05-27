@@ -1,30 +1,30 @@
 inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanListForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1083#1072#1085' '#1087#1086' '#1091#1084#1077#1085#1100#1096#1077#1085#1080#1102' '#1082#1086#1083'-'#1074#1086' '#1085#1077#1083#1080#1082#1074#1080#1076#1072' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091'>'
   ClientHeight = 504
-  ClientWidth = 1305
+  ClientWidth = 1185
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1321
+  ExplicitWidth = 1201
   ExplicitHeight = 543
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 1305
+    Width = 1185
     Height = 421
     ExplicitTop = 83
-    ExplicitWidth = 899
+    ExplicitWidth = 1305
     ExplicitHeight = 421
     ClientRectBottom = 421
-    ClientRectRight = 1305
+    ClientRectRight = 1185
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 899
+      ExplicitWidth = 1305
       ExplicitHeight = 421
       inherited cxGrid: TcxGrid
         Top = 89
-        Width = 1305
+        Width = 1185
         Height = 332
         ExplicitTop = 89
-        ExplicitWidth = 899
+        ExplicitWidth = 1305
         ExplicitHeight = 332
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -207,12 +207,12 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
       object cxGridDetals: TcxGrid
         Left = 0
         Top = 0
-        Width = 1305
+        Width = 1185
         Height = 81
         Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 899
+        ExplicitWidth = 1305
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetalsDS
@@ -355,19 +355,20 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 81
-        Width = 1305
+        Width = 1185
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salTop
         Control = cxGridDetals
-        ExplicitWidth = 899
+        ExplicitWidth = 1305
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1305
+    Width = 1185
     Height = 57
-    ExplicitWidth = 899
+    ExplicitLeft = -1
+    ExplicitWidth = 1305
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       EditValue = 43344d
@@ -465,7 +466,7 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
       Caption = #1064#1090#1088#1072#1092' '#1079#1072' 1% '#1085#1077#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
     end
     object cbFilter3: TcxCheckBox
-      Left = 596
+      Left = 707
       Top = 33
       Caption = #1058#1086#1074#1072#1088' '#1086#1090#1089#1091#1090#1089#1090#1074#1091#1077#1090' '
       ParentBackground = False
@@ -477,7 +478,7 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
       Width = 139
     end
     object cbFilter2: TcxCheckBox
-      Left = 596
+      Left = 707
       Top = 18
       Caption = #1041#1077#1079' '#1087#1088#1086#1076#1072#1078#1080
       ParentBackground = False
@@ -489,7 +490,7 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
       Width = 139
     end
     object cbFilter1: TcxCheckBox
-      Left = 596
+      Left = 707
       Top = 0
       Caption = #1055#1088#1086#1076#1072#1078#1072' '#1085#1077#1083#1080#1082#1074#1080#1076#1072' '
       ParentBackground = False
@@ -513,6 +514,20 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
       Left = 287
       Top = 30
       Caption = #1055#1083#1072#1085' '#1086#1090' '#1089#1091#1084#1084#1099
+    end
+    object cePenaltySum: TcxCurrencyEdit
+      Left = 652
+      Top = 29
+      EditValue = 250.000000000000000000
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      TabOrder = 18
+      Width = 47
+    end
+    object cxLabel8: TcxLabel
+      Left = 596
+      Top = 30
+      Caption = #1086#1090' '#1089#1091#1084#1084#1099
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -663,6 +678,14 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPenaltySum'
+        Value = Null
+        Component = cePenaltySum
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 112
@@ -777,9 +800,23 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
         MultiSelectSeparator = ','
       end
       item
+        Name = 'PlanAmount'
+        Value = Null
+        Component = cePlanAmount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Penalty'
         Value = Null
         Component = cePenalty
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PenaltySum'
+        Value = Null
+        Component = cePenaltySum
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>

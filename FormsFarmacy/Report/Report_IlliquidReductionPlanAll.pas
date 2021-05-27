@@ -43,6 +43,8 @@ type
     SummaPenaltyCount: TcxGridDBColumn;
     SummaPenaltySum: TcxGridDBColumn;
     DaysWorked: TcxGridDBColumn;
+    cePenaltySum: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
   private
     { Private declarations }
   public

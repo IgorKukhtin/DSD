@@ -42,7 +42,7 @@ BEGIN
                                                             , inIlliquidAssets  := T1.SummaPenalty
                                                             , inSession         := inSession)
     FROM (SELECT COALESCE(MovementItem.id, 0) AS Id, IPE.UnitID, IPE.UserID, ROUND(COALESCE (- IPE.SummaPenalty, 0)) AS SummaPenalty
-          FROM gpReport_IlliquidReductionPlanAll(inStartDate := DATE_TRUNC ('MONTH', inOperDate) - INTERVAL '1 DAY', inPenalty := 500 ,  inProcGoods := 20 , inProcUnit := 10, inPlanAmount := 0, inSession := inSession) AS IPE
+          FROM gpReport_IlliquidReductionPlanAll(inStartDate := DATE_TRUNC ('MONTH', inOperDate) - INTERVAL '1 DAY',  inProcGoods := 20 , inProcUnit := 10, inPlanAmount := 0, inPenalty := 500, inPenaltySum := 0, inSession := inSession) AS IPE
          
                LEFT JOIN MovementItem ON MovementItem.MovementId = vbMovementId
                                      AND MovementItem.ObjectId = IPE.UserID
