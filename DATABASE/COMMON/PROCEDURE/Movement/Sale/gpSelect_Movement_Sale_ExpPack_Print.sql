@@ -20,10 +20,38 @@ $BODY$
 
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
+
+    DECLARE vbWeighingCount   Integer;
+    DECLARE vbOperDate TDateTime;
+    DECLARE vbIsLongUKTZED Boolean;
+
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= lpGetUserBySession (inSession);
+
+     -- кол-во Взвешиваний / паллет
+     vbWeighingCount:= (SELECT COUNT(*)
+                        FROM Movement
+                        WHERE Movement.ParentId = inMovementId AND Movement.DescId IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction())
+                          AND Movement.StatusId = zc_Enum_Status_Complete()
+                       );
+
+     -- параметры из документа
+     SELECT Movement.OperDate
+          , COALESCE (ObjectBoolean_isLongUKTZED.ValueData, TRUE)    AS isLongUKTZED
+          
+  INTO vbOperDate, vbIsLongUKTZED
+     FROM Movement
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                       ON MovementLinkObject_To.MovementId = Movement.Id
+                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_isLongUKTZED
+                                  ON ObjectBoolean_isLongUKTZED.ObjectId = MovementLinkObject_To.ObjectId
+                                 AND ObjectBoolean_isLongUKTZED.DescId = zc_ObjectBoolean_Juridical_isLongUKTZED()
+
+      WHERE Movement.Id = inMovementId AND Movement.DescId <> zc_Movement_SendOnPrice()
+    ;
 
 
      -- определяется параметр
@@ -119,6 +147,62 @@ BEGIN
                                   ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
        )
+
+ -- строки док
+ , tmpMI AS (SELECT MovementItem.*
+                  , ObjectLink_GoodsGroup.ChildObjectId    AS GoodsGroupId
+             FROM MovementItem
+                  LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
+                                       ON ObjectLink_GoodsGroup.ObjectId = MovementItem.ObjectId
+                                      AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+             WHERE MovementItem.MovementId = inMovementId
+               AND MovementItem.DescId     = zc_MI_Master()
+               AND MovementItem.isErased   = FALSE
+             )
+
+     , tmpMIFloat_AmountPartner AS (SELECT MIFloat_AmountPartner.*
+                                         , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) OVER () AS AmountPartner_all
+                                    FROM MovementItemFloat AS MIFloat_AmountPartner
+                                    WHERE MIFloat_AmountPartner.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                      AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                                   )
+
+
+
+      , tmpUKTZED AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (tmp.GoodsGroupId) AS CodeUKTZED
+                      FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp
+                     )
+
+      , tmpSticker AS (SELECT ObjectLink_Sticker_Goods.ChildObjectId AS GoodsId
+                            , Object_StickerSort.ValueData           AS StickerSortName
+                            , Object_StickerNorm.ValueData           AS StickerNormName
+                            , ObjectBlob_Info.ValueData              AS Info
+                       FROM (SELECT Object_Sticker.Id
+                             FROM Object AS Object_Sticker 
+                             WHERE Object_Sticker.DescId = zc_Object_Sticker()
+                               AND Object_Sticker.isErased = false
+                              ) AS Object_Sticker
+                       LEFT JOIN ObjectLink AS ObjectLink_Sticker_Goods
+                                            ON ObjectLink_Sticker_Goods.ObjectId = Object_Sticker.Id
+                                           AND ObjectLink_Sticker_Goods.DescId = zc_ObjectLink_Sticker_Goods()
+                      
+                       LEFT JOIN ObjectLink AS ObjectLink_Sticker_StickerSort
+                                            ON ObjectLink_Sticker_StickerSort.ObjectId = Object_Sticker.Id 
+                                           AND ObjectLink_Sticker_StickerSort.DescId = zc_ObjectLink_Sticker_StickerSort()
+                       LEFT JOIN Object AS Object_StickerSort ON Object_StickerSort.Id = ObjectLink_Sticker_StickerSort.ChildObjectId
+
+                       LEFT JOIN ObjectLink AS ObjectLink_Sticker_StickerNorm
+                                            ON ObjectLink_Sticker_StickerNorm.ObjectId = Object_Sticker.Id 
+                                           AND ObjectLink_Sticker_StickerNorm.DescId = zc_ObjectLink_Sticker_StickerNorm()
+                       LEFT JOIN Object AS Object_StickerNorm ON Object_StickerNorm.Id = ObjectLink_Sticker_StickerNorm.ChildObjectId
+
+                       LEFT JOIN ObjectBlob AS ObjectBlob_Info
+                                            ON ObjectBlob_Info.ObjectId = Object_Sticker.Id 
+                                           AND ObjectBlob_Info.DescId = zc_ObjectBlob_Sticker_Info()
+                        )
+
+
+
       SELECT Movement.Id				                                AS MovementId
            , Movement.InvNumber				                                AS InvNumber
            , Movement.OperDate				                                AS OperDate
@@ -137,6 +221,7 @@ BEGIN
 
            , OH_JuridicalDetails_To.FullName                                AS JuridicalName_To
            , OH_JuridicalDetails_To.JuridicalAddress                        AS JuridicalAddress_To
+           , OH_JuridicalDetails_To.OKPO                                    AS OKPO_To
 
            , OH_JuridicalDetails_From.FullName                              AS JuridicalName_From
            , OH_JuridicalDetails_From.JuridicalAddress                      AS JuridicalAddress_From
@@ -165,6 +250,29 @@ BEGIN
 
            , 'Україна, м.Дніпро' :: TVarChar AS LoadingPlace
 
+           , vbWeighingCount ::TFloat AS WeighingCount  --итого кол-во паллет / взвешиваний
+           , CASE WHEN COALESCE (MIFloat_AmountPartner.AmountPartner_all,0) <> 0 THEN vbWeighingCount * COALESCE (MIFloat_AmountPartner.ValueData, 0)* (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ) / MIFloat_AmountPartner.AmountPartner_all ELSE 0 END ::TFloat AS WeighingCount_part --для тек товара кол-во паллет / взвешиваний
+
+           , CASE WHEN vbOperDate < '01.01.2017'
+                       THEN ''
+
+                  WHEN ObjectString_Goods_UKTZED.ValueData <> ''
+                       THEN CASE WHEN vbIsLongUKTZED = TRUE THEN ObjectString_Goods_UKTZED.ValueData ELSE SUBSTRING (ObjectString_Goods_UKTZED.ValueData FROM 1 FOR 4) END
+
+                  WHEN tmpUKTZED.CodeUKTZED <> ''
+                       THEN CASE WHEN vbIsLongUKTZED = TRUE THEN tmpUKTZED.CodeUKTZED ELSE SUBSTRING (tmpUKTZED.CodeUKTZED FROM 1 FOR 4) END
+
+                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101())
+                       THEN '1601'
+                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_21001(), zc_Enum_InfoMoney_30102())
+                       THEN '1602'
+                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30103()
+                       THEN '1905'
+                  ELSE '0'
+              END :: TVarChar AS GoodsCodeUKTZED
+
+           , (tmpSticker.StickerSortName ||' '||tmpSticker.StickerNormName||' '||tmpSticker.Info) :: TBlob AS StickerInfo
+
        FROM tmpMovement
 /*
             LEFT JOIN MovementFloat AS MovementFloat_Amount
@@ -172,15 +280,13 @@ BEGIN
                                    AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
 */
 
+            INNER JOIN tmpMI AS MovementItem
+                             ON MovementItem.MovementId =  tmpMovement.Id
+                            AND MovementItem.Amount <> 0
 
-            INNER JOIN MovementItem ON MovementItem.MovementId =  tmpMovement.Id
-                                   AND MovementItem.DescId     = zc_MI_Master()
-                                   AND MovementItem.isErased   = FALSE
-                                   AND MovementItem.Amount <> 0
-
-            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                        ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                       AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+            LEFT JOIN tmpMIFloat_AmountPartner AS MIFloat_AmountPartner
+                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
 
             LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
                                         ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
@@ -288,6 +394,16 @@ BEGIN
                                    ON ObjectString_ToAddress.ObjectId = MovementLinkObject_To.ObjectId
                                   AND ObjectString_ToAddress.DescId = zc_ObjectString_Partner_Address()
 
+            LEFT JOIN tmpUKTZED ON tmpUKTZED.GoodsGroupId = MovementItem.GoodsGroupId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
+                                   ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
+
+            LEFT JOIN tmpSticker ON tmpSticker.GoodsId = MovementItem.ObjectId
       ORDER BY MovementItem.MovementId, MovementItem.Id
 --       ORDER BY MovementString_InvNumberPartner.ValueData
       ;

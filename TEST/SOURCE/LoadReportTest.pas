@@ -407,10 +407,10 @@ begin
    exit;
 
   LoadReportFromFile('Заявка на упаковку', ReportPath + '\Производство\Заявка на упаковку.fr3');
-   }
+
   LoadReportFromFile('Заявка на сырье', ReportPath + '\Производство\Заявка на сырье.fr3');
   exit;
-  {
+
   LoadReportFromFile('Заявка на упаковку (остатки)', ReportPath + '\Производство\Заявка на упаковку (остатки).fr3');
 
   LoadReportFromFile('Заявка на упаковку (меньше заказа)', ReportPath + '\Производство\Заявка на упаковку (меньше заказа).fr3');
@@ -471,22 +471,20 @@ begin
 
   LoadReportFromFile('PrintMovement_Sale2_3683763', ReportPath + '\Товарный Учет\PrintMovement_Sale2_3683763.fr3');
   exit;
-
+  }
   LoadReportFromFile('PrintMovement_SaleInvoice', ReportPath + '\Товарный Учет\PrintMovement_SaleInvoice.fr3');
   LoadReportFromFile('PrintMovement_SaleSpec', ReportPath + '\Товарный Учет\PrintMovement_SaleSpec.fr3');
-
-  LoadReportFromFile('PrintMovement_SaleTotal', ReportPath + '\Товарный Учет\PrintMovement_SaleTotal.fr3');
+  LoadReportFromFile('PrintMovement_SalePack', ReportPath + '\Товарный Учет\PrintMovement_SalePack.fr3');
+  exit;
+  {LoadReportFromFile('PrintMovement_SaleTotal', ReportPath + '\Товарный Учет\PrintMovement_SaleTotal.fr3');
 //  LoadReportFromFile('PrintMovement_SendOnPriceIn', ReportPath + '\Товарный Учет\PrintMovement_SendOnPriceIn.fr3');
 //  LoadReportFromFile('PrintMovement_SendOnPriceOut', ReportPath + '\Товарный Учет\PrintMovement_SendOnPriceOut.fr3');
 
   LoadReportFromFile('PrintMovement_SendOnPrice', ReportPath + '\Товарный Учет\PrintMovement_SendOnPrice.fr3');
   exit;
 
-  LoadReportFromFile('PrintMovement_SalePack', ReportPath + '\Товарный Учет\PrintMovement_SalePack.fr3');
-  }
   LoadReportFromFile('PrintMovement_Quality', ReportPath + '\Товарный Учет\PrintMovement_Quality.fr3');
-  exit;
-  {
+
   LoadReportFromFile('PrintMovement_Quality32049199', ReportPath + '\Товарный Учет\PrintMovement_Quality32049199.fr3');
 
   LoadReportFromFile('PrintMovement_Quality32294926', ReportPath + '\Товарный Учет\PrintMovement_Quality32294926.fr3');
