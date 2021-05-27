@@ -933,6 +933,10 @@ CREATE OR REPLACE FUNCTION zc_Object_FineSubject() RETURNS integer AS $BODY$BEGI
 INSERT INTO ObjectDesc(Code, ItemName)
 SELECT 'zc_Object_FineSubject', 'Вид нарушения' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_FineSubject');
 
+CREATE OR REPLACE FUNCTION zc_Object_ContractPriceList() RETURNS integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ContractPriceList'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_ContractPriceList', 'История Прайс-листов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ContractPriceList');
+
 
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 --!!! Аптека
@@ -1410,6 +1414,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 27.05.21         * zc_Object_ContractPriceList  
  17.05.21                                                                                        * zc_Object_GoodsDivisionLock
  28.04.21         * zc_Object_FineSubject
  27.04.21                                                                                        * zc_Object_MarketingDiscount

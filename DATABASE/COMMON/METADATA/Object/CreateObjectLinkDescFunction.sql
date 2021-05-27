@@ -1058,11 +1058,22 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ContractCondition_PaidKind() RETURNS In
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_ContractCondition_PaidKind', ' 	Форма оплаты', zc_Object_ContractCondition(), zc_Object_PaidKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContractCondition_PaidKind');
 
+--
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ContractPriceList_Contract() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContractPriceList_Contract'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ContractPriceList_Contract', 'Договор', zc_Object_ContractPriceList(), zc_Object_Contract() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContractPriceList_Contract');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ContractPriceList_PriceList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContractPriceList_PriceList'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ContractPriceList_PriceList', 'Прайс-лист', zc_Object_ContractPriceList(), zc_Object_PriceList() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContractPriceList_PriceList');
+
+
 
 -- !!!zc_Object_ContractKind!!!
 CREATE OR REPLACE FUNCTION zc_ObjectLink_ContractKind_AccountKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContractKind_AccountKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_ContractKind_AccountKind', 'Типы Счетов', zc_Object_ContractKind(), zc_Object_AccountKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContractKind_AccountKind');
+
 
 -- !!!zc_Object_ModelService!!!
 CREATE OR REPLACE FUNCTION zc_ObjectLink_ModelService_ModelServiceKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ModelService_ModelServiceKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -2538,6 +2549,8 @@ SELECT 'zc_ObjectLink_GoodsDivisionLock_Unit', 'Подразделение', zc_Object_GoodsD
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 27.05.21         * zc_ObjectLink_ContractPriceList_Contract
+                    zc_ObjectLink_ContractPriceList_PriceList
  17.05.21                                                                                      * zc_ObjectLink_GoodsDivisionLock_...
  27.04.21                                                                                      * c_ObjectLink_MarketingDiscount_...
  19.04.21                                                                                      * zc_ObjectLink_UnitCategory_ScaleCalcMarketingPlan

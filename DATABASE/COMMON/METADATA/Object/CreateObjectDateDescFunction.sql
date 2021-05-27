@@ -205,6 +205,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_ContractGoods_End() RETURNS Integer AS 
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_ContractGoods(), 'zc_ObjectDate_ContractGoods_End', 'Дата действия цены по ...' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ContractGoods_End');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_ContractPriceList_StartDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ContractPriceList_StartDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ContractPriceList(), 'zc_ObjectDate_ContractPriceList_StartDate', 'Дата действия c ...' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ContractPriceList_StartDate');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_ContractPriceList_EndDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ContractPriceList_EndDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ContractPriceList(), 'zc_ObjectDate_ContractPriceList_EndDate', 'Дата действия по ...' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ContractPriceList_EndDate');
+
 --!!!FARMACY
 
 CREATE OR REPLACE FUNCTION zc_ObjectDate_Price_DateChange() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Price_DateChange'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -490,6 +498,8 @@ INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 27.05.21         * zc_ObjectDate_ContractPriceList_StartDate
+                    zc_ObjectDate_ContractPriceList_EndDate
  19.05.21                                                                                     * zc_ObjectDate_Unit_AutoSUA
  13.05.21         * zc_ObjectDate_User_GUID
  27.04.21                                                                                     * zc_ObjectDate_MarketingDiscount_EndDate
