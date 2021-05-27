@@ -33,6 +33,14 @@ BEGIN
 
      -- сохранили связь с <Товаром из прайса>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), ioId, inGoodsId);
+     
+     -- сохранили связь с <Данные поставщика>
+     PERFORM lpInsertUpdate_MovementItemString  (zc_MIString_Maker()        , ioId, Object_Goods_Juridical.MakerName)
+           , lpInsertUpdate_MovementItemString  (zc_MIString_GoodsCode()    , ioId, Object_Goods_Juridical.Code)
+           , lpInsertUpdate_MovementItemString  (zc_MIString_GoodsName()    , ioId, Object_Goods_Juridical.Name)
+     FROM Object_Goods_Juridical
+     WHERE Object_Goods_Juridical.ID = inGoodsId;
+     
 
      IF NOT (inPartionGoodsDate IS NULL) THEN 
         -- сохранили свойство <Партия товара>
@@ -45,7 +53,7 @@ BEGIN
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
-
+ 
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;

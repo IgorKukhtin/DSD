@@ -180,7 +180,8 @@ WITH tmpOF_NDSKind_NDS AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId, ObjectFloat_
              END        :: TFloat AS Amount_ListFiff
             ,Goods_NDS.Code                           AS Code
             ,Goods_NDS.Name                           AS Name
-            ,MI_Income_View.PartnerGoodsName          AS PartnerGoodsName
+            ,COALESCE(MIString_GoodsName.ValueData, 
+                      MI_Income_View.PartnerGoodsName)AS PartnerGoodsName
             ,MI_Income_View.MakerName                 AS MakerName
 
             ,Goods_NDS.NDSKindName                    AS NDSKindName
@@ -230,6 +231,10 @@ WITH tmpOF_NDSKind_NDS AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId, ObjectFloat_
                                  AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
 
         LEFT JOIN MovementItem_Income_View AS MI_Income_View ON MI_Income_View.Id = CASE WHEN Movement.DescId = zc_Movement_ReturnOut() THEN  Movement.ParentId ELSE Movement.MovementItemId END
+
+        LEFT JOIN MovementItemString AS MIString_GoodsName
+                                     ON MIString_GoodsName.MovementItemId = MI_Income_View.Id
+                                    AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
 
         LEFT JOIN tmpMIFloat AS MIFloat_Price
                              ON MIFloat_Price.MovementItemId = Movement.MovementItemId
@@ -339,3 +344,5 @@ ALTER FUNCTION gpReport_OrderGoodsSearch (Integer, TDateTime, TDateTime, TVarCha
 
 -- тест
 --SELECT * FROM gpReport_OrderGoodsSearch (inGoodsId:= 9247, inStartDate:= '01.01.2019', inEndDate:= '01.12.2019', inSession:= '183242')
+
+select * from gpReport_OrderGoodsSearch(inGoodsId := 2848982 , inStartDate := ('01.10.2020')::TDateTime , inEndDate := ('31.10.2020')::TDateTime ,  inSession := '3');

@@ -331,6 +331,35 @@ BEGIN
         WHERE Object_Goods_Retail.RetailID = vbObjectId
           AND COALESCE(_tmpGoods_SUN_Supplement.GoodsId, 0) = 0;
 
+     -- Товары из маркетинговых контрактов
+     WITH tmpMovementPromo AS (SELECT DISTINCT MovementItem.ObjectId
+                               FROM Movement
+                                
+                                    INNER JOIN MovementBoolean AS MovementBoolean_Supplement
+                                                               ON MovementBoolean_Supplement.MovementId =  Movement.Id
+                                                              AND MovementBoolean_Supplement.DescId = zc_MovementBoolean_Supplement()
+                                                              AND MovementBoolean_Supplement.ValueData = True
+
+                                    INNER JOIN MovementItem ON MovementItem.MovementID = Movement.ID
+                                                           AND MovementItem.DescId = zc_MI_Master()
+                                                           AND MovementItem.isErased = FALSE  
+                                
+                                WHERE Movement.DescId = zc_Movement_Promo()
+                                  AND Movement.StatusId = zc_Enum_Status_Complete())
+                                  
+     INSERT INTO _tmpGoods_SUN_Supplement (GoodsId, KoeffSUN, UnitOutId)
+        SELECT Object_Goods_Retail.ID
+             , Object_Goods_Retail.KoeffSUN_Supplementv1
+             , Object_Goods_Main.UnitSupplementSUN1OutId
+        FROM tmpMovementPromo
+        
+             INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = tmpMovementPromo.ObjectId
+                                           AND Object_Goods_Retail.RetailID = vbObjectId
+             INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
+
+             LEFT JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsId = Object_Goods_Retail.ID
+        WHERE COALESCE(_tmpGoods_SUN_Supplement.GoodsId, 0) = 0;
+
      -- Выкладки
      WITH tmpLayoutMovement AS (SELECT Movement.Id                                             AS Id
                                      , COALESCE(MovementBoolean_PharmacyItem.ValueData, FALSE) AS isPharmacyItem
@@ -668,7 +697,7 @@ BEGIN
 
        ;
        
-     IF CURRENT_DATE <= '24.05.2021'
+/*     IF CURRENT_DATE <= '24.05.2021'
      THEN
 
        UPDATE _tmpRemains_all_Supplement SET GiveAway = (SELECT FLOOR(Container.Amount) FROM Container WHERE Container.ID = 22295653)
@@ -682,7 +711,7 @@ BEGIN
        WHERE _tmpRemains_all_Supplement.UnitId <> 183292
          AND _tmpRemains_all_Supplement.GoodsId = 1204616;
 
-     END IF;
+     END IF;*/
 
      -- 2. все остатки, НТЗ, и коэф. товарного запаса
      --
@@ -870,6 +899,8 @@ BEGIN
                                  END  - _tmpRemains_all_Supplement.AmountUse) / COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)) * COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
 
                     END) > 0
+               AND _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = False
+               AND _tmpRemains_all_Supplement.UnitId <> vbUnitId_from
                AND _tmpRemains_all_Supplement.GoodsId = vbGoodsId
                AND _tmpUnit_SUN_Supplement.isSUN_Supplement_in = True
                AND (COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0) = 0 OR COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0) <> _tmpRemains_all_Supplement.UnitId)
@@ -1003,7 +1034,7 @@ $BODY$
  10.06.20                                                     *
 */
 
- SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '4 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
+-- SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '4 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 
 -- 
---select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('19.04.2021')::TDateTime ,  inSession := '3');
+select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('31.05.2021')::TDateTime ,  inSession := '3');

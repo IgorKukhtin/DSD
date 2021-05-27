@@ -1,7 +1,7 @@
 inherited PromoJournalForm: TPromoJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' <'#1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090'>'
   ClientHeight = 491
-  ClientWidth = 769
+  ClientWidth = 776
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.AddOnFormRefresh.SelfList = 'Promo'
@@ -9,27 +9,24 @@ inherited PromoJournalForm: TPromoJournalForm
   AddOnFormData.AddOnFormRefresh.KeyField = 'Id'
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
   AddOnFormData.AddOnFormRefresh.GetStoredProc = spGet_Movement_Promo
-  ExplicitLeft = 4
-  ExplicitTop = -69
-  ExplicitWidth = 785
-  ExplicitHeight = 526
+  ExplicitWidth = 792
+  ExplicitHeight = 530
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 769
+    Width = 776
     Height = 434
     TabOrder = 3
     ExplicitWidth = 769
     ExplicitHeight = 434
     ClientRectBottom = 434
-    ClientRectRight = 769
+    ClientRectRight = 776
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 769
       ExplicitHeight = 434
       inherited cxGrid: TcxGrid
-        Width = 769
+        Width = 776
         Height = 434
-        ExplicitLeft = -3
         ExplicitWidth = 769
         ExplicitHeight = 434
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -155,12 +152,20 @@ inherited PromoJournalForm: TPromoJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 147
           end
+          object isSupplement: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' '#1074' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053
+            DataBinding.FieldName = 'isSupplement'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 95
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 769
+    Width = 776
     ExplicitWidth = 769
   end
   inherited ActionList: TActionList
@@ -232,7 +237,7 @@ inherited PromoJournalForm: TPromoJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -270,7 +275,7 @@ inherited PromoJournalForm: TPromoJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -343,6 +348,31 @@ inherited PromoJournalForm: TPromoJournalForm
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       ImageIndex = 7
       DataSource = MasterDS
+    end
+    object macUpdate_Supplement: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_Supplement
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1058#1086#1074#1072#1088' '#1074' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'"?'
+      Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1088#1080#1079#1085#1072#1082#1072' "'#1058#1086#1074#1072#1088' '#1074' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'"'
+      Hint = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1088#1080#1079#1085#1072#1082#1072' "'#1058#1086#1074#1072#1088' '#1074' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'"'
+      ImageIndex = 30
+    end
+    object actUpdate_Supplement: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Supplement
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Supplement
+        end>
+      Caption = 'actUpdate_Supplement'
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -453,6 +483,10 @@ inherited PromoJournalForm: TPromoJournalForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end>
     end
     object bbOpenReportForm: TdxBarButton
@@ -470,6 +504,10 @@ inherited PromoJournalForm: TPromoJournalForm
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = macUpdate_Supplement
       Category = 0
     end
   end
@@ -542,7 +580,7 @@ inherited PromoJournalForm: TPromoJournalForm
       end
       item
         Name = 'OperDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
@@ -589,5 +627,31 @@ inherited PromoJournalForm: TPromoJournalForm
     PackSize = 1
     Left = 240
     Top = 267
+  end
+  object spUpdate_Supplement: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Promo_Supplement'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSupplement'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSupplement'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 568
+    Top = 200
   end
 end

@@ -173,9 +173,14 @@ CREATE OR REPLACE FUNCTION zc_MIString_InvNumberWeek5() RETURNS Integer AS $BODY
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_InvNumberWeek5', 'Документы за пятую неделю' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_InvNumberWeek5');
 
+CREATE OR REPLACE FUNCTION zc_MIString_GoodsCode() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_GoodsCode'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_GoodsCode', 'Код товара' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_GoodsCode');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 26.05.22                                                                                      * zc_MIString_GoodsCode
  03.09.20                                                                                      * zc_MIString_InvNumberWeek...
  18.03.20                                                                                      * zc_MIString_ItemId
  05.03.20                                                                                      * zc_MIString_Result
