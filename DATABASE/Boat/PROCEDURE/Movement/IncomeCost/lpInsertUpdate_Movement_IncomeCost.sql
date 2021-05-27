@@ -21,6 +21,12 @@ BEGIN
 
      vbDescId := (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId);
 
+     -- проверка
+     IF COALESCE (inMovementId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ Счет не выбран.';
+     END IF;   
+
      -- сохранили <Документ>
      IF COALESCE (ioId, 0) = 0
      THEN

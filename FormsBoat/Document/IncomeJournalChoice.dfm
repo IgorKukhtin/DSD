@@ -4,8 +4,9 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
   ClientWidth = 765
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
+  ExplicitTop = -96
   ExplicitWidth = 781
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -167,18 +168,28 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
-            Width = 55
+            Width = 70
           end
-          object InvNumberPartner: TcxGridDBColumn
+          inherited colInvNumber: TcxGridDBColumn
+            Caption = 'Interne Nr'
+            HeaderAlignmentHorz = taCenter
+          end
+          object InvNumberPartner: TcxGridDBColumn [2]
             Caption = 'External Nr'
             DataBinding.FieldName = 'InvNumberPartner'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          inherited colOperDate: TcxGridDBColumn
+            HeaderAlignmentHorz = taCenter
+            Width = 70
+          end
           object OperDatePartner: TcxGridDBColumn
             Caption = 'External Dt'
             DataBinding.FieldName = 'OperDatePartner'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -200,7 +211,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
             Width = 91
           end
           object TotalCount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
+            Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -220,12 +231,11 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
             Width = 80
           end
           object DiscountTax: TcxGridDBColumn
-            Caption = '(-)% '#1089#1082'. (+)% '#1085#1072#1094
+            Caption = '% '#1089#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'DiscountTax'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 51
@@ -244,7 +254,6 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 42

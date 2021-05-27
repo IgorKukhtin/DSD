@@ -3,7 +3,7 @@
   ClientHeight = 503
   ClientWidth = 351
   ExplicitWidth = 357
-  ExplicitHeight = 531
+  ExplicitHeight = 528
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -82,12 +82,12 @@
   end
   object cxLabel5: TcxLabel [11]
     Left = 15
-    Top = 255
+    Top = 205
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
   object ceInfoMoney: TcxButtonEdit [12]
     Left = 15
-    Top = 275
+    Top = 225
     Properties.Buttons = <
       item
         Default = True
@@ -134,8 +134,8 @@
     Width = 100
   end
   object ceUnit: TcxButtonEdit [18]
-    Left = 14
-    Top = 225
+    Left = 15
+    Top = 275
     Properties.Buttons = <
       item
         Default = True
@@ -146,18 +146,18 @@
     Width = 320
   end
   object cxLabel14: TcxLabel [19]
-    Left = 14
-    Top = 205
+    Left = 15
+    Top = 255
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object cxLabel15: TcxLabel [20]
     Left = 15
-    Top = 301
+    Top = 352
     Caption = 'Boat'
   end
   object ceProduct: TcxButtonEdit [21]
     Left = 15
-    Top = 322
+    Top = 373
     Properties.Buttons = <
       item
         Default = True
@@ -171,7 +171,7 @@
   object cxLabel17: TcxLabel [22]
     Left = 234
     Top = 5
-    Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
+    Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' ('#1087#1083#1072#1085')'
   end
   object cePlanDate: TcxDateEdit [23]
     Left = 234
@@ -228,12 +228,12 @@
   end
   object cxLabel4: TcxLabel [30]
     Left = 15
-    Top = 352
+    Top = 301
     Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079' / '#1055#1088#1080#1093#1086#1076
   end
   object ceParent: TcxButtonEdit [31]
     Left = 15
-    Top = 373
+    Top = 322
     Properties.Buttons = <
       item
         Default = True

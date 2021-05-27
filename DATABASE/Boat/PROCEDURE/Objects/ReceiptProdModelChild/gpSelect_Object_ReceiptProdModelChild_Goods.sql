@@ -94,7 +94,7 @@ BEGIN
 
         WHERE Object_ReceiptProdModelChild.DescId   = zc_Object_ReceiptProdModelChild()
           AND (Object_ReceiptProdModelChild.isErased = FALSE OR inIsErased = TRUE)
-          AND (ObjectLink_ReceiptLevel.ChildObjectId = inReceiptLevelId OR inReceiptLevelId = 0)
+        --AND (ObjectLink_ReceiptLevel.ChildObjectId = inReceiptLevelId OR inReceiptLevelId = 0)
        );
 
      -- раскладываем ReceiptProdModelChild
@@ -365,5 +365,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ReceiptProdModelChild_Goods (0,false, zfCalc_UserAdmin());
---FETCH ALL "<unnamed portal 89>";
+-- SELECT * FROM gpSelect_Object_ReceiptProdModelChild_Goods (0,false, zfCalc_UserAdmin()); --FETCH ALL "<unnamed portal 89>";

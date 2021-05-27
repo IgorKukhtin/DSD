@@ -13,15 +13,47 @@ CREATE OR REPLACE FUNCTION gpInsert_Object_ReceiptProdModelChild_Load(
 )
 RETURNS VOID AS
 $BODY$
-    DECLARE vbUserId Integer;
+    DECLARE vbUserId  Integer;
+    DECLARE vbId      Integer;
     DECLARE vbGoodsId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_ObjectHistory_PriceListItem());
     vbUserId:= lpGetUserBySession (inSession);
+    
 
-    -- поиск товара по коду
-    vbGoodsId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND Object.ObjectCode = inGoodsCode);
+    IF inArticle ILIKE 'Int. Arbeitseinheiten' THEN RETURN; END IF;
+
+    
+    IF inGoodsCode > 0
+    THEN
+        -- поиск товара по коду
+        vbGoodsId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND Object.ObjectCode = inGoodsCode);
+    ELSE
+        -- поиск товара по коду
+        vbGoodsId := (SELECT Object.Id
+                      FROM Object
+                           INNER JOIN ObjectString AS ObjectString_Article
+                                                   ON ObjectString_Article.ObjectId  = Object.Id
+                                                  AND ObjectString_Article.DescId    = zc_ObjectString_Article()
+                                                  AND ObjectString_Article.ValueData ILIKE inArticle
+                      WHERE Object.DescId = zc_Object_Goods()
+                     );
+    END IF;
+
+    
+    -- поиск ReceiptProdModelChild
+    vbId:= (SELECT Object_ReceiptProdModelChild.Id
+            FROM Object AS Object_ReceiptProdModelChild
+                 JOIN ObjectLink AS ObjectLink_Object
+                                 ON ObjectLink_Object.ObjectId      = Object_ReceiptProdModelChild.Id
+                                AND ObjectLink_Object.ChildObjectId = vbGoodsId
+                                AND ObjectLink_Object.DescId        = zc_ObjectLink_ReceiptGoodsChild_Object()
+            WHERE Object_ReceiptProdModelChild.DescId   = zc_Object_ReceiptProdModelChild()
+              AND Object_ReceiptProdModelChild.isErased = FALSE
+           );
+
+
 
     IF COALESCE (vbGoodsId, 0) = 0
     THEN
@@ -32,17 +64,17 @@ BEGIN
                                              , inParam1        := inGoodsCode :: TVarChar
                                              , inParam2        := inGoodsName :: TVarChar
                                              , inParam3        := inArticle   :: TVarChar
-                                             );
+                                              );
     END IF;
 
 
     --
-    PERFORM gpInsertUpdate_Object_ReceiptProdModelChild (ioId                 := 0                     ::Integer
+    PERFORM gpInsertUpdate_Object_ReceiptProdModelChild (ioId                 := vbId
                                                        , inComment            := inGoodsName           ::TVarChar
                                                        , inReceiptProdModelId := inReceiptProdModelId  ::Integer
                                                        , inObjectId           := vbGoodsId             ::Integer
-                                                       , inReceiptLevelId_top := inReceiptLevelId_top  ::Integer
-                                                       , inReceiptLevelId     := 0                     ::Integer
+                                                       , inReceiptLevelId_top := inReceiptLevelId_top
+                                                       , inReceiptLevelId     := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbId AND OL.DescId = zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel())
                                                        , ioValue              := inAmount              ::TFloat
                                                        , ioValue_service      := 0                     ::TFloat
                                                        , inSession            := inSession             ::TVarChar

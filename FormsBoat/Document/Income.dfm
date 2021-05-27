@@ -36,7 +36,7 @@ object IncomeForm: TIncomeForm
     object cxLabel1: TcxLabel
       Left = 9
       Top = 5
-      Caption = #8470' '#1076#1086#1082'.'
+      Caption = 'Interne Nr'
     end
     object edOperDate: TcxDateEdit
       Left = 171
@@ -2191,8 +2191,7 @@ object IncomeForm: TIncomeForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      >
+      end>
     PackSize = 1
     Left = 150
     Top = 287
@@ -2208,6 +2207,7 @@ object IncomeForm: TIncomeForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>

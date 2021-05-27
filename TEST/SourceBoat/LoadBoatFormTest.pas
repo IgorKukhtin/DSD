@@ -15,8 +15,6 @@ type
     procedure SetUp; override;
   published
     procedure MainFormTest;
-    procedure LoadServiceFormTest;
-    procedure LoadLanguageFormTest;
     procedure LoadAccountFormTest;
     procedure LoadBankFormTest;
     procedure LoadBankAccountFormTest;
@@ -40,6 +38,7 @@ type
     procedure LoadImportTypeFormTest;
     procedure LoadInfoMoneyFormTest;
     procedure LoadKindFormTest;
+    procedure LoadLanguageFormTest;
     procedure LoadMemberFormTest;
     procedure LoadMeasureFormTest;
     procedure LoadModelEtiketenFormTest;
@@ -67,6 +66,7 @@ type
     procedure LoadReceiptGoodsFormTest;
     procedure LoadReceiptServiceFormTest;
     procedure LoadReportFormTest;
+    procedure LoadServiceFormTest;
     procedure LoadTranslateMessageFormTest;
     procedure LoadTranslateWordFormTest;
     procedure LoadUnionFormTest;
@@ -157,7 +157,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMovementProtocolForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolForm');
-  exit;
+
 //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectDescForm'));
   TdsdFormStorageFactory.GetStorage.Load('TObjectDescForm');
@@ -185,6 +185,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescDataForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementDescDataForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemContainerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementItemContainerForm');
 
 end;
 
@@ -284,16 +287,13 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInvoiceJournalForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInvoiceForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInvoiceJournalChoiceForm');
-  exit;
- {
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_PeriodDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TMovement_PeriodDialogForm');
-  }
+
 end;
 
 procedure TLoadFormTest.LoadIncomeFormTest;
@@ -642,11 +642,16 @@ begin
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderClientForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderClientForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderClientDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderClientDialogForm');
-  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsDialogForm'));
@@ -680,7 +685,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnion_IncomeOrderJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnion_IncomeOrderJournalChoiceForm');
-  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnion_Goods_ReceiptServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnion_Goods_ReceiptServiceForm');
 
@@ -689,15 +694,6 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMoneyPlace_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMoneyPlace_ObjectForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemContainerForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TMovementItemContainerForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceDialogForm');
 
 end;
 

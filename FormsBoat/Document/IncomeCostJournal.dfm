@@ -140,7 +140,7 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
         item
           Format = #1057#1090#1088#1086#1082': ,0'
           Kind = skCount
-          Column = clComment
+          Column = Comment
         end
         item
           Format = ',0.####'
@@ -223,7 +223,7 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
         Options.Editing = False
         Width = 99
       end
-      object clStatus: TcxGridDBColumn
+      object StatusCode: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089' ('#1079#1072#1090#1088#1072#1090#1099')'
         DataBinding.FieldName = 'StatusCode'
         PropertiesClassName = 'TcxImageComboBoxProperties'
@@ -268,7 +268,7 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
         Options.Editing = False
         Width = 79
       end
-      object clComment: TcxGridDBColumn
+      object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1079#1072#1090#1088#1072#1090#1099')'
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
@@ -386,38 +386,6 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 120
-      end
-      object InsertName: TcxGridDBColumn
-        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
-        DataBinding.FieldName = 'InsertName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 101
-      end
-      object InsertDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
-        DataBinding.FieldName = 'InsertDate'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 78
-      end
-      object UpdateName: TcxGridDBColumn
-        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1087#1086#1089#1083'. '#1087#1088#1086#1074#1086#1076#1082#1080')'
-        DataBinding.FieldName = 'UpdateName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 101
-      end
-      object UpdateDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' ('#1087#1086#1089#1083'. '#1087#1088#1086#1074#1086#1076#1082#1080')'
-        DataBinding.FieldName = 'UpdateDate'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 78
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -1463,6 +1431,7 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
