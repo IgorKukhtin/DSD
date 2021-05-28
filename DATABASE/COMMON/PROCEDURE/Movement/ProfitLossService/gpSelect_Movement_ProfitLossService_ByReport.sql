@@ -135,7 +135,7 @@ BEGIN
             , tmpMovement.BonusKindId
             , tmpMovement.BonusKindName
             
-            , Object_InfoMoney_master.ValueData      AS InfoMoneyName_master
+            , tmpMovement.InfoMoneyName  --Object_InfoMoney_master.ValueData      AS InfoMoneyName_master
             , Object_InfoMoney_child.ValueData       AS InfoMoneyName_child
             , 0 ::TVarChar                            AS InfoMoneyName_find
             
@@ -209,9 +209,10 @@ BEGIN
             , tmp.Sum_Sale_weight
             , tmp.Sum_ReturnIn_weight
             , tmp.PercentRetBonus_diff_weight
-            
             , tmp.BonusKindId, tmp.BonusKindName
             , tmp.InfoMoneyName_master, tmp.InfoMoneyName_child, tmp.InfoMoneyName_find
+            
+            
             , tmp.PaidKindId, tmp.PaidKindName
             , tmp.PaidKindName_Child
             , tmp.RetailName
