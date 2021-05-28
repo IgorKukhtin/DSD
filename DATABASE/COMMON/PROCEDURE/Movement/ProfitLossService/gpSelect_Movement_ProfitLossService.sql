@@ -26,15 +26,17 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_full TVarChar, OperDate
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, ItemName TVarChar, OKPO TVarChar
              , JuridicalCode_Child Integer, JuridicalName_Child TVarChar, OKPO_Child TVarChar
              , RetailId Integer, RetailName TVarChar
-             , PartnerCode Integer, PartnerName TVarChar, ItemName_Partner TVarChar
+             , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar, ItemName_Partner TVarChar
              , InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , ContractCode Integer, ContractInvNumber TVarChar, ContractTagName TVarChar
-             , ContractMasterId Integer, ContractMasterInvNumber TVarChar, ContractTagName_master TVarChar
-             , ContractChildId Integer, ContractChildInvNumber TVarChar, ContractTagName_child TVarChar
+             , ContractMasterId Integer, ContractMasterInvNumber TVarChar
+             , ContractTagId_master Integer, ContractTagName_master TVarChar
+             , ContractChildId Integer, ContractChildInvNumber TVarChar
+             , ContractTagId_child Integer, ContractTagName_child TVarChar
              , UnitName TVarChar
-             , PaidKindName TVarChar
+             , PaidKindId Integer, PaidKindName TVarChar
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar
              , BonusKindId Integer, BonusKindName TVarChar
              , BranchId Integer, BranchName TVarChar
@@ -131,6 +133,7 @@ BEGIN
            , Object_Retail.Id                               AS RetailId
            , Object_Retail.ValueData                        AS RetailName
 
+           , Object_Partner.Id                              AS PartnerId
            , Object_Partner.ObjectCode                      AS PartnerCode
            , Object_Partner.ValueData                       AS PartnerName
            , ObjectDesc_Partner.ItemName                    AS ItemName_Partner
@@ -145,12 +148,15 @@ BEGIN
            , View_Contract_InvNumber.ContractTagName
            , View_Contract_InvNumber_master.ContractId      AS ContractMasterId
            , View_Contract_InvNumber_master.InvNumber       AS ContractMasterInvNumber
+           , View_Contract_InvNumber_master.ContractTagId   AS ContractTagId_master
            , View_Contract_InvNumber_master.ContractTagName AS ContractTagName_master
            , View_Contract_InvNumber_child.ContractId       AS ContractChildId
            , View_Contract_InvNumber_child.InvNumber        AS ContractChildInvNumber
+           , View_Contract_InvNumber_child.ContractTagId    AS ContractTagId_child
            , View_Contract_InvNumber_child.ContractTagName  AS ContractTagName_child
 
            , Object_Unit.ValueData                          AS UnitName
+           , Object_PaidKind.Id                             AS PaidKindId
            , Object_PaidKind.ValueData                      AS PaidKindName
            , Object_ContractConditionKind.Id                AS ContractConditionKindId
            , Object_ContractConditionKind.ValueData         AS ContractConditionKindName

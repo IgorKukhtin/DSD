@@ -89,6 +89,9 @@ type
     actPrintSingDetail: TdsdPrintAction;
     bbPrintSingDetail: TdxBarButton;
     cbisReport: TcxCheckBox;
+    StatusCode: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
   private
     { Private declarations }
   public
