@@ -3105,8 +3105,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 99
-    Top = 489
+    Left = 67
+    Top = 481
   end
   object ContractTagGuides: TdsdGuides
     KeyField = 'Id'
@@ -3316,8 +3316,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 48
-    Top = 548
+    Left = 72
+    Top = 556
   end
   object CurrencyGuides: TdsdGuides
     KeyField = 'Id'
