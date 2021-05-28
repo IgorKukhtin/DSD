@@ -1002,7 +1002,12 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_UnderreportedDEForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SalesGoods_SUADialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SalesGoods_SUADialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SalesGoods_SUAForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SalesGoods_SUAForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_UnderreportedDEForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_UnderreportedDEForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_KilledCodeRecoveryDialogForm'));
@@ -1010,7 +1015,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_KilledCodeRecoveryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_KilledCodeRecoveryForm');
 
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_PromoBonusDiscoDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_PromoBonusDiscoDialogForm');
 
@@ -2226,7 +2231,6 @@ procedure TLoadFormTest.LoadOrderInternalFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalForm');
-  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalLiteForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalLiteForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalJournalForm'));
@@ -2260,7 +2264,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalForm');
-  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalForm');
 

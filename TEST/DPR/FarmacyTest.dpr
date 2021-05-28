@@ -1033,7 +1033,9 @@ uses
   GoodsDivisionLock in '..\..\FormsFarmacy\Cash\GoodsDivisionLock.pas' {GoodsDivisionLockForm: TParentForm},
   Report_AutoCalculation_SAUADialog in '..\..\FormsFarmacy\Report\Report_AutoCalculation_SAUADialog.pas' {Report_AutoCalculation_SAUADialogForm: TParentForm},
   Report_AutoCalculation_SAUA in '..\..\FormsFarmacy\Report\Report_AutoCalculation_SAUA.pas' {Report_AutoCalculation_SAUAForm: TParentForm},
-  UnitAutoSUA in '..\..\FormsFarmacy\Guides\UnitAutoSUA.pas' {UnitAutoSUAForm: TParentForm};
+  UnitAutoSUA in '..\..\FormsFarmacy\Guides\UnitAutoSUA.pas' {UnitAutoSUAForm: TParentForm},
+  Report_SalesGoods_SUADialog in '..\..\FormsFarmacy\Report\Report_SalesGoods_SUADialog.pas' {Report_SalesGoods_SUADialogForm: TParentForm},
+  Report_SalesGoods_SUA in '..\..\FormsFarmacy\Report\Report_SalesGoods_SUA.pas' {Report_SalesGoods_SUAForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

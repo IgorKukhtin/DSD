@@ -146,9 +146,8 @@ BEGIN
                   FROM lpSelect_Object_JuridicalArea_byUnit (vbUnitId, 0) AS tmp;
 
     -- !!!Только для таких документов - 1-ая ВЕТКА (ВСЕГО = 3)!!!
-    IF vbisDocument = TRUE AND vbStatusId = zc_Enum_Status_Complete() /*AND inSession <> '3'*/ AND inMovementId <> 10804217 AND inMovementId <> 10795784
+    IF vbisDocument = TRUE AND vbStatusId = zc_Enum_Status_Complete() 
     AND (inShowAll = FALSE OR inSession <> '3')
-    -- AND inSession <> '3'
     THEN
 
      PERFORM lpCreateTempTable_OrderInternal_MI(inMovementId, vbObjectId, 0, vbUserId);
@@ -371,9 +370,9 @@ BEGIN
              , MIFloat_Price.ValueData             ::TFLoat              AS Price
              , COALESCE(MIDate_PartionGoods.ValueData, NULL) ::TDateTime AS PartionGoodsDate
              , tmpMI.GoodsId
-             , tmpGoods.GoodsCode                                        AS GoodsCode
-             , tmpGoods.GoodsName
-             , Null :: TVarChar                                          AS MainGoodsName
+             , COALESCE(MIString_GoodsCode.ValueData, tmpGoods.GoodsCode) AS GoodsCode
+             , COALESCE(MIString_GoodsName.ValueData, tmpGoods.GoodsName) AS GoodsName
+             , Null :: TVarChar                                           AS MainGoodsName
              , CASE WHEN COALESCE (tmpLoadPriceList_NDS.GoodsNDS,'0') <> '0' THEN COALESCE (tmpLoadPriceList_NDS.GoodsNDS,'') ELSE '' END  :: TVarChar AS NDS_PriceList
              , COALESCE(MI_Child.JuridicalId, tmpMI.JuridicalId)
              , COALESCE(MI_Child.JuridicalName, tmpMI.JuridicalName)
@@ -451,6 +450,15 @@ BEGIN
 
             LEFT JOIN tmpLoadPriceList_NDS ON tmpLoadPriceList_NDS.PartnerGoodsId = tmpMI.PartnerGoodsId
                                           AND tmpLoadPriceList_NDS.JuridicalId = tmpMI.JuridicalId
+
+            LEFT JOIN MovementItemString AS MIString_GoodsCode 
+                                         ON MIString_GoodsCode.MovementItemId = MI_Child.Id
+                                        AND MIString_GoodsCode.DescId = zc_MIString_GoodsCode()     
+                                        AND vbStatusId = zc_Enum_Status_Complete() 
+            LEFT JOIN MovementItemString AS MIString_GoodsName 
+                                         ON MIString_GoodsName.MovementItemId = MI_Child.Id
+                                        AND MIString_GoodsName.DescId = zc_MIString_GoodsName()                                  
+                                        AND vbStatusId = zc_Enum_Status_Complete()                             
           ;
 
 
@@ -990,6 +998,7 @@ BEGIN
 
              LEFT JOIN tmpLoadPriceList_NDS ON tmpLoadPriceList_NDS.PartnerGoodsId = _tmpMI.GoodsId
                                            AND tmpLoadPriceList_NDS.JuridicalId = _tmpMI.JuridicalId
+
 ;
 
 
@@ -1608,4 +1617,4 @@ where Movement.DescId = zc_Movement_OrderInternal()
 
 --select * from gpSelect_MovementItem_OrderInternal_Child(inMovementId := 22066168  , inShowAll := 'True' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
 
-select * from gpSelect_MovementItem_OrderInternal_Child(inMovementId := 22460334 , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3')
+select * from gpSelect_MovementItem_OrderInternal_Child(inMovementId := 23494456 , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');

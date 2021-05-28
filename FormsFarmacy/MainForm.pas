@@ -809,6 +809,8 @@ type
     actReprice—hangeRetail: TdsdOpenStaticForm;
     actReport_Analysis_Remains_Selling: TdsdOpenStaticForm;
     actReport_IncomeConsumptionBalance: TdsdOpenStaticForm;
+    actReport_SalesGoods_SUA: TdsdOpenForm;
+    N296: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);
