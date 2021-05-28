@@ -153,6 +153,9 @@ type
     cxLabel23: TcxLabel;
     edJuridicalDocument: TcxButtonEdit;
     JuridicalDocumentGuides: TdsdGuides;
+    cxLabel24: TcxLabel;
+    cePriceList: TcxButtonEdit;
+    dsdPriceListGuides: TdsdGuides;
     cxLabel25: TcxLabel;
     cePriceListPromo: TcxButtonEdit;
     cxLabel26: TcxLabel;

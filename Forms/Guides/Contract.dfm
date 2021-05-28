@@ -572,7 +572,7 @@
     Width = 239
     Height = 254
     Align = alClient
-    TabOrder = 7
+    TabOrder = 6
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
@@ -2086,6 +2086,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1076#1086#1075#1086#1074#1086#1088#1072')>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1076#1086#1075#1086#1074#1086#1088#1072')>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ContractPriceListDS
     end
@@ -2111,9 +2112,10 @@
         item
           StoredProc = spErasedUnErased_ContractPriceList
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1076#1086#1075#1086#1074#1086#1088#1072')>'
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1076#1086#1075#1086#1074#1086#1088#1072')>'
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ContractPriceListDS
@@ -3640,6 +3642,7 @@
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
+    View = cxGridDBTableView
     OnDblClickActionList = <
       item
         Action = actUpdate
@@ -4481,13 +4484,7 @@
   object dsdDBViewAddOnContractPriceList: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableViewContractPriceList
-    OnDblClickActionList = <
-      item
-        Action = actUpdate
-      end
-      item
-        Action = dsdChoiceGuides
-      end>
+    OnDblClickActionList = <>
     ActionItemList = <
       item
         Action = dsdChoiceGuides
@@ -4574,7 +4571,7 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1016
-    Top = 224
+    Left = 984
+    Top = 200
   end
 end

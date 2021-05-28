@@ -569,7 +569,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 35
-    Width = 327
+    Width = 161
   end
   object cxLabel16: TcxLabel [35]
     Left = 16
@@ -730,16 +730,33 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 54
+    TabOrder = 55
     Width = 162
   end
-  object cxLabel25: TcxLabel [55]
+  object cxLabel24: TcxLabel [55]
+    Left = 185
+    Top = 598
+    Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+  end
+  object cePriceList: TcxButtonEdit [56]
+    Left = 184
+    Top = 615
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 57
+    Width = 160
+  end
+  object cxLabel25: TcxLabel [57]
     Left = 352
     Top = 526
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1040#1082#1094#1080#1086#1085#1085#1099#1081')'
     Visible = False
   end
-  object cePriceListPromo: TcxButtonEdit [56]
+  object cePriceListPromo: TcxButtonEdit [58]
     Left = 367
     Top = 540
     Properties.Buttons = <
@@ -748,35 +765,18 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 57
+    TabOrder = 59
     Visible = False
     Width = 161
   end
-  object cxLabel26: TcxLabel [57]
+  object cxLabel26: TcxLabel [59]
     Left = 352
     Top = 567
     Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
     Visible = False
   end
-  object edStartPromo: TcxDateEdit [58]
+  object edStartPromo: TcxDateEdit [60]
     Left = 352
-    Top = 582
-    EditValue = 0d
-    Properties.SaveTime = False
-    Properties.ShowTime = False
-    Properties.ValidateOnEnter = False
-    TabOrder = 59
-    Visible = False
-    Width = 100
-  end
-  object cxLabel27: TcxLabel [59]
-    Left = 458
-    Top = 567
-    Caption = #1044#1072#1090#1072' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103' '#1072#1082#1094#1080#1080
-    Visible = False
-  end
-  object edEndPromo: TcxDateEdit [60]
-    Left = 460
     Top = 582
     EditValue = 0d
     Properties.SaveTime = False
@@ -786,12 +786,29 @@
     Visible = False
     Width = 100
   end
-  object cxLabel28: TcxLabel [61]
+  object cxLabel27: TcxLabel [61]
+    Left = 458
+    Top = 567
+    Caption = #1044#1072#1090#1072' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103' '#1072#1082#1094#1080#1080
+    Visible = False
+  end
+  object edEndPromo: TcxDateEdit [62]
+    Left = 460
+    Top = 582
+    EditValue = 0d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    Properties.ValidateOnEnter = False
+    TabOrder = 63
+    Visible = False
+    Width = 100
+  end
+  object cxLabel28: TcxLabel [63]
     Left = 16
     Top = 639
     Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
   end
-  object ceGoodsProperty: TcxButtonEdit [62]
+  object ceGoodsProperty: TcxButtonEdit [64]
     Left = 16
     Top = 656
     Properties.Buttons = <
@@ -801,30 +818,30 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 62
+    TabOrder = 64
     Width = 160
   end
-  object edTerm: TcxCurrencyEdit [63]
+  object edTerm: TcxCurrencyEdit [65]
     Left = 16
     Top = 167
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 3
     Properties.DisplayFormat = ',0.###'
-    TabOrder = 65
+    TabOrder = 67
     Width = 104
   end
-  object cxLabel29: TcxLabel [64]
+  object cxLabel29: TcxLabel [66]
     Left = 18
     Top = 150
     Caption = #1055#1077#1088#1080#1086#1076' '#1087#1088#1086#1083#1086#1085#1075'.'
   end
-  object cxLabel30: TcxLabel [65]
+  object cxLabel30: TcxLabel [67]
     Left = 127
     Top = 150
     Caption = #1058#1080#1087' '#1087#1088#1086#1083#1086#1085#1075#1072#1094#1080#1080
   end
-  object edContractTermKind: TcxButtonEdit [66]
+  object edContractTermKind: TcxButtonEdit [68]
     Left = 127
     Top = 167
     Properties.Buttons = <
@@ -833,15 +850,15 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 67
+    TabOrder = 69
     Width = 125
   end
-  object cxLabel31: TcxLabel [67]
+  object cxLabel31: TcxLabel [69]
     Left = 17
     Top = 480
     Caption = 'C'#1086#1090#1088#1091#1076#1085#1080#1082' ('#1087#1086#1076#1087#1080#1089#1072#1085#1090')'
   end
-  object edPersonalSigning: TcxButtonEdit [68]
+  object edPersonalSigning: TcxButtonEdit [70]
     Left = 16
     Top = 495
     Properties.Buttons = <
@@ -850,15 +867,15 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 69
+    TabOrder = 71
     Width = 162
   end
-  object cxLabel32: TcxLabel [69]
+  object cxLabel32: TcxLabel [71]
     Left = 264
     Top = 150
     Caption = #1042#1072#1083#1102#1090#1072
   end
-  object ceCurrency: TcxButtonEdit [70]
+  object ceCurrency: TcxButtonEdit [72]
     Left = 264
     Top = 167
     Properties.Buttons = <
@@ -867,30 +884,30 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 70
+    TabOrder = 72
     Width = 80
   end
-  object edDayTaxSummary: TcxCurrencyEdit [71]
+  object edDayTaxSummary: TcxCurrencyEdit [73]
     Left = 239
     Top = 86
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 3
     Properties.DisplayFormat = ',0.###'
-    TabOrder = 73
+    TabOrder = 75
     Width = 105
   end
-  object cxLabel33: TcxLabel [72]
+  object cxLabel33: TcxLabel [74]
     Left = 239
     Top = 69
     Caption = #1050#1086#1083'. '#1076#1085'. '#1089#1074#1086#1076#1085'. '#1053#1053
   end
-  object cxLabel34: TcxLabel [73]
+  object cxLabel34: TcxLabel [75]
     Left = 184
     Top = 231
     Caption = #1070#1088'. '#1083#1080#1094#1086' ('#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082')'
   end
-  object edJuridicalInvoice: TcxButtonEdit [74]
+  object edJuridicalInvoice: TcxButtonEdit [76]
     Left = 184
     Top = 249
     Properties.Buttons = <
@@ -899,10 +916,10 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 75
+    TabOrder = 77
     Width = 160
   end
-  object cxLabel35: TcxLabel [75]
+  object cxLabel35: TcxLabel [77]
     Left = 3
     Top = 43
     Hint = #1050#1086#1076' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
@@ -910,23 +927,23 @@
     ParentShowHint = False
     ShowHint = True
   end
-  object edPartnerCode: TcxTextEdit [76]
+  object edPartnerCode: TcxTextEdit [78]
     Left = 55
     Top = 41
-    TabOrder = 76
+    TabOrder = 78
     Width = 50
   end
-  object cbisDefaultOut: TcxCheckBox [77]
+  object cbisDefaultOut: TcxCheckBox [79]
     Left = 212
     Top = 41
     Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1080#1089#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1080#1089#1093'. '#1087#1083'.)'
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 78
+    TabOrder = 80
     Width = 155
   end
-  object cxLabel36: TcxLabel [78]
+  object cxLabel36: TcxLabel [80]
     Left = 184
     Top = 557
     Hint = 
@@ -934,13 +951,13 @@
       #1082#1077
     Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')'
   end
-  object edBankAccountPartner: TcxTextEdit [79]
+  object edBankAccountPartner: TcxTextEdit [81]
     Left = 184
     Top = 574
     Hint = 
       #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103') - '#1076#1083#1103' '#1086#1073#1088#1072#1073#1086#1090#1082#1080' '#1087#1083#1072#1090#1077#1078#1072' '#1074' '#1073#1072#1085#1082'.'#1074#1099#1087#1080#1089 +
       #1082#1077
-    TabOrder = 83
+    TabOrder = 85
     Width = 161
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1643,6 +1660,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPriceListId'
+        Value = Null
+        Component = dsdPriceListGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inPriceListPromoId'
         Value = Null
         Component = dsdPriceListPromoGuides
@@ -2014,6 +2039,21 @@
         Value = False
         Component = ceIsUnique
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListId'
+        Value = Null
+        Component = dsdPriceListGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListName'
+        Value = Null
+        Component = dsdPriceListGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -3127,6 +3167,37 @@
       end>
     Left = 205
     Top = 226
+  end
+  object dsdPriceListGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePriceList
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPriceListForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = dsdPriceListGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = dsdPriceListGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 249
+    Top = 603
   end
   object dsdPriceListPromoGuides: TdsdGuides
     KeyField = 'Id'

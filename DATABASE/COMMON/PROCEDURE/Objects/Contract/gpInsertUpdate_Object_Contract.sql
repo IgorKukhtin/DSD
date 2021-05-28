@@ -28,8 +28,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarCh
                                                       , Tfloat, Tfloat, TDateTime, TDateTime, TDateTime
                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
-                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, TDateTime, TDateTime, TVarChar);
-
+                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Integer, TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
  INOUT ioId                  Integer,       -- Ключ объекта <Договор>
