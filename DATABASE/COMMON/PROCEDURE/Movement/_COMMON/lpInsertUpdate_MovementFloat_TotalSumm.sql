@@ -173,10 +173,10 @@ BEGIN
                                    AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
            LEFT JOIN MovementFloat AS MovementFloat_CurrencyPartnerValue
                                    ON MovementFloat_CurrencyPartnerValue.MovementId = Movement.Id
-                                  AND MovementFloat_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()
+                                  AND MovementFloat_CurrencyPartnerValue.DescId = CASE WHEN Movement.DescId = zc_Movement_Income() THEN zc_MovementFloat_CurrencyValue() ELSE zc_MovementFloat_CurrencyPartnerValue() END
            LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
                                    ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
-                                  AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
+                                  AND MovementFloat_ParPartnerValue.DescId = CASE WHEN Movement.DescId = zc_Movement_Income() THEN zc_MovementFloat_ParValue() ELSE zc_MovementFloat_ParPartnerValue() END
 
       WHERE Movement.Id = inMovementId;
 
@@ -295,7 +295,7 @@ BEGIN
             -- Сумма в валюте
           , CAST (CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() THEN OperSumm_Partner_Currency ELSE OperSumm_Partner END
                   -- так переводится в валюту CurrencyPartnerId
-                * CASE WHEN vbMovementDescId <> zc_Movement_Invoice()
+                * CASE WHEN vbMovementDescId <> zc_Movement_Invoice() AND vbMovementDescId <> zc_Movement_Income()
                        THEN CASE WHEN vbCurrencyPartnerId <> vbCurrencyDocumentId THEN CASE WHEN vbParPartnerValue = 0 THEN 0 ELSE vbCurrencyPartnerValue / vbParPartnerValue END ELSE CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN 0 ELSE 1 END END
                        ELSE 1
                   END
@@ -1592,7 +1592,6 @@ BEGIN
          THEN vbOperSumm_MVAT:= vbOperSumm_Partner;
          END IF;
      END IF;
-
 
      -- Тест
      -- RAISE EXCEPTION '%', vbOperCount_Master;
